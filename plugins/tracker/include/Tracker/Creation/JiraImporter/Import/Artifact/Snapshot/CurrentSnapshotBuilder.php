@@ -118,8 +118,8 @@ class CurrentSnapshotBuilder
             $mapping->getBindType() === Tracker_FormElement_Field_List_Bind_Users::TYPE &&
             $mapping->getType() === \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE
         ) {
-            $user = $this->jira_user_retriever->getAssignedTuleapUser(
-                $value['accountId']
+            $user = $this->jira_user_retriever->retrieveUserFromAPIData(
+                $value
             );
 
             $value = $this->creation_state_list_value_formatter->formatListValue(
@@ -134,11 +134,11 @@ class CurrentSnapshotBuilder
             $selected_users_ids = [];
 
             foreach ($value as $user_representation) {
-                $user = $this->jira_user_retriever->getAssignedTuleapUser(
-                    $user_representation['accountId']
+                $user = $this->jira_user_retriever->retrieveUserFromAPIData(
+                    $user_representation
                 );
 
-                if ((int) $user->getId() === (int) TrackerImporterUser::ID) {
+                if ((int) $user->getId() === TrackerImporterUser::ID) {
                     continue;
                 }
 

@@ -138,8 +138,8 @@ final class ReplayImportCommand extends Command
             $platform_configuration_collection,
             $tracker_xml,
             'https://jira.example.com',
-            'SBX',
-            new IssueType('10102', 'Bogue', false),
+            'IXMC',
+            new IssueType('10105', 'Bogue', false),
             new FieldAndValueIDGenerator(),
             new LinkedIssuesCollection(),
         );

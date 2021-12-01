@@ -1,0 +1,962 @@
+[
+    {
+        "self": "https://jira.example.com/rest/api/2/issuetype/10105",
+        "id": "10105",
+        "name": "Tâche",
+        "subtask": false,
+        "statuses": [
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10115",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Ouvert",
+                "id": "10115",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "À faire"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10121",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Terminé",
+                "id": "10121",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10200",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "A planifier",
+                "id": "10200",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "À faire"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10201",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "Planifié",
+                "id": "10201",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10105",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En cours",
+                "id": "10105",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10108",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Fermé",
+                "id": "10108",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10106",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Annulé",
+                "id": "10106",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10101",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente du support",
+                "id": "10101",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10102",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente du client",
+                "id": "10102",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            }
+        ]
+    },
+    {
+        "self": "https://jira.example.com/rest/api/2/issuetype/10101",
+        "id": "10101",
+        "name": "Demande de service",
+        "subtask": false,
+        "statuses": [
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10101",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente du support",
+                "id": "10101",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10102",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente du client",
+                "id": "10102",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10104",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Résolu",
+                "id": "10104",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10105",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En cours",
+                "id": "10105",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10106",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Annulé",
+                "id": "10106",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10108",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Fermé",
+                "id": "10108",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            }
+        ]
+    },
+    {
+        "self": "https://jira.example.com/rest/api/2/issuetype/10106",
+        "id": "10106",
+        "name": "Sous-tâche",
+        "subtask": true,
+        "statuses": [
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10115",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Ouvert",
+                "id": "10115",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "À faire"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10121",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Terminé",
+                "id": "10121",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10200",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "A planifier",
+                "id": "10200",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "À faire"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10201",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "Planifié",
+                "id": "10201",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10105",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En cours",
+                "id": "10105",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10108",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Fermé",
+                "id": "10108",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10106",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Annulé",
+                "id": "10106",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10101",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente du support",
+                "id": "10101",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10102",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente du client",
+                "id": "10102",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            }
+        ]
+    },
+    {
+        "self": "https://jira.example.com/rest/api/2/issuetype/10000",
+        "id": "10000",
+        "name": "Incident",
+        "subtask": false,
+        "statuses": [
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10115",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Ouvert",
+                "id": "10115",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "À faire"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10108",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Fermé",
+                "id": "10108",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10106",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Annulé",
+                "id": "10106",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10105",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En cours",
+                "id": "10105",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10121",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Terminé",
+                "id": "10121",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10101",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente du support",
+                "id": "10101",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10102",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente du client",
+                "id": "10102",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            }
+        ]
+    },
+    {
+        "self": "https://jira.example.com/rest/api/2/issuetype/10104",
+        "id": "10104",
+        "name": "Problème",
+        "subtask": false,
+        "statuses": [
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10115",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Ouvert",
+                "id": "10115",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "À faire"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10103",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente",
+                "id": "10103",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10108",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Fermé",
+                "id": "10108",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10106",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Annulé",
+                "id": "10106",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10119",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "À l'étude",
+                "id": "10119",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "À faire"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10105",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En cours",
+                "id": "10105",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10121",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Terminé",
+                "id": "10121",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            }
+        ]
+    },
+    {
+        "self": "https://jira.example.com/rest/api/2/issuetype/10103",
+        "id": "10103",
+        "name": "Changement",
+        "subtask": false,
+        "statuses": [
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10115",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Ouvert",
+                "id": "10115",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "À faire"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10121",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Terminé",
+                "id": "10121",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10200",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "A planifier",
+                "id": "10200",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "À faire"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10201",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "Planifié",
+                "id": "10201",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10105",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En cours",
+                "id": "10105",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10108",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Fermé",
+                "id": "10108",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10106",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Annulé",
+                "id": "10106",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10101",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente du support",
+                "id": "10101",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10102",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente du client",
+                "id": "10102",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            }
+        ]
+    },
+    {
+        "self": "https://jira.example.com/rest/api/2/issuetype/10102",
+        "id": "10102",
+        "name": "Demande de service avec approbations",
+        "subtask": false,
+        "statuses": [
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10101",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente du support",
+                "id": "10101",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10102",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente du client",
+                "id": "10102",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10104",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Résolu",
+                "id": "10104",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10105",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En cours",
+                "id": "10105",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10109",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente d'approbation",
+                "id": "10109",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10106",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Annulé",
+                "id": "10106",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10108",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Fermé",
+                "id": "10108",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            }
+        ]
+    },
+    {
+        "self": "https://jira.example.com/rest/api/2/issuetype/10200",
+        "id": "10200",
+        "name": "Changement avec approbations",
+        "subtask": false,
+        "statuses": [
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10103",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente",
+                "id": "10103",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10121",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Terminé",
+                "id": "10121",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10200",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "A planifier",
+                "id": "10200",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "À faire"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10201",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                "name": "Planifié",
+                "id": "10201",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10105",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En cours",
+                "id": "10105",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10108",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Fermé",
+                "id": "10108",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10106",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "Annulé",
+                "id": "10106",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Terminé"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10109",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente d'approbation",
+                "id": "10109",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10101",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente du support",
+                "id": "10101",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            },
+            {
+                "self": "https://jira.example.com/rest/api/2/status/10102",
+                "description": "",
+                "iconUrl": "https://jira.example.com/images/icons/status_generic.gif",
+                "name": "En attente du client",
+                "id": "10102",
+                "statusCategory": {
+                    "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "En cours"
+                }
+            }
+        ]
+    }
+]
