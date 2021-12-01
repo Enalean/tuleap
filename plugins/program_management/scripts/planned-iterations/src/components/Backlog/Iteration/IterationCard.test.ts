@@ -56,6 +56,18 @@ describe("IterationCard", () => {
         };
     });
 
+    it("Display the iteration with a closed state", async () => {
+        const wrapper = await getWrapper();
+
+        expect(
+            wrapper.get("[data-test=planned-iteration-toggle-icon]").classes("fa-caret-right")
+        ).toBe(true);
+        expect(
+            wrapper.get("[data-test=planned-iteration-toggle-icon]").classes("fa-caret-down")
+        ).toBe(false);
+        expect(wrapper.find("[data-test=planned-iteration-content]").exists()).toBe(false);
+    });
+
     it("displays the content of an iteration", async () => {
         const wrapper = await getWrapper();
 

@@ -73,3 +73,31 @@
 .planned-iteration-header-with-button {
     display: flex;
 }
+
+.planned-iteration-content {
+    position: relative;
+    padding: var(--tlp-small-spacing);
+    border: 1px solid var(--tlp-neutral-normal-color);
+    border-top: 0;
+    border-radius: 0 0 var(--tlp-large-radius) var(--tlp-large-radius);
+    background: var(--tlp-fade-background-color);
+
+    &:last-child {
+        border-bottom: 1px solid var(--tlp-neutral-normal-color);
+    }
+}
+
+.planned-iteration-info {
+    display: flex;
+    align-items: center;
+    padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
+    border: 1px solid var(--tlp-neutral-normal-color);
+    border-top: 0;
+    border-bottom-color: var(--tlp-neutral-light-color);
+    background: var(--tlp-white-color);
+}
+
+.planned-iteration-no-content {
+    display: block;
+    margin: var(--tlp-large-spacing) auto;
+}
