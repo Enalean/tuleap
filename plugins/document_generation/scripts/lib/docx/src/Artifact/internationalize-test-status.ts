@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GetText } from "../../../../../../src/scripts/tuleap/gettext/gettext-init";
-import type { ArtifactFieldValueStatus } from "@tuleap/plugin-docgen-docx";
+import type { GettextProvider } from "@tuleap/gettext";
+import type { ArtifactFieldValueStatus } from "../type";
 
 export function getInternationalizedTestStatus(
-    gettext_provider: GetText,
+    gettext_provider: GettextProvider,
     test_status: ArtifactFieldValueStatus
 ): string {
     switch (test_status) {

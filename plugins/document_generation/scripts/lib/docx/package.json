@@ -13,9 +13,14 @@
     "test": "jest"
   },
   "dependencies": {
-    "@tuleap/tlp-fetch": "file:../../../../../src/scripts/lib/tlp-fetch"
+    "@tuleap/gettext": "file:../../../../../src/scripts/lib/gettext",
+    "@tuleap/tlp-fetch": "file:../../../../../src/scripts/lib/tlp-fetch",
+    "docx": "^7.2.0",
+    "dompurify": "^2.2.9",
+    "sprintf-js": "^1.1.2"
   },
   "devDependencies": {
-    "docx": "^7.2.0"
+    "@types/dompurify": "^2.3.1",
+    "@types/sprintf-js": "^1.1.2"
   }
 }

@@ -33,7 +33,7 @@ import {
     UnderlineType,
     WidthType,
 } from "docx";
-import * as image_loader from "@tuleap/plugin-docgen-docx";
+import * as image_loader from "../Image/image-loader";
 import * as style_extractor from "./extract-style-html-element";
 import * as list_instance_id_generator from "./list-instance-id-generator";
 

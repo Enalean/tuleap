@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,15 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { FormattedArtifact } from "../../type";
-import { getAnchorToArtifactContent } from "./sections-anchor";
-
-describe("sections-anchor", () => {
-    it("builds an anchor to the content of an artifact", () => {
-        const formatted_artifact: FormattedArtifact = {
-            id: 123,
-        } as FormattedArtifact;
-
-        expect(getAnchorToArtifactContent(formatted_artifact)).toBe("artifact-123");
-    });
-});
+declare module "*.po" {
+    import type { GettextParserPoFile } from "@tuleap/gettext";
+    const content: GettextParserPoFile;
+    export default content;
+}

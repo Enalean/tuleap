@@ -19,7 +19,7 @@
 
 import { TableOfContentsPrefilled } from "./table-of-contents";
 import type { IContext } from "docx";
-import type { FormattedArtifact } from "../../../type";
+import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx";
 import { EMPTY_TOC, TOC_WITH_CONTENT } from "./table-of-contents-test-samples";
 
 describe("Table of contents", () => {
