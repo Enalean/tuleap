@@ -19,7 +19,11 @@
 
 <template>
     <div class="tlp-pane-container planned-iteration-display">
-        <div class="tlp-pane-header planned-iteration-header">
+        <div
+            class="tlp-pane-header planned-iteration-header"
+            data-test="iteration-card-header"
+            v-bind:data-test-iteration-id="iteration.id"
+        >
             <span
                 class="tlp-pane-title planned-iteration-header-label"
                 data-test="iteration-header-label"

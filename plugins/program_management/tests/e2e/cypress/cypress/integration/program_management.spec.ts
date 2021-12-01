@@ -37,8 +37,10 @@ describe("Program management", () => {
         createProjects(program_project_name, team_project_name);
         configureProgram(program_project_name, team_project_name);
         createAndPlanFeature(program_project_name, team_project_name);
+        createIteration();
         checkThatProgramAndTeamsAreCorrect(program_project_name, team_project_name);
-        updateProgramIncrement(program_project_name, team_project_name);
+        updateProgramIncrementAndIteration(program_project_name);
+        checkThatMirrorsAreSynchronized(team_project_name);
     });
 });
 
@@ -171,6 +173,17 @@ function createAndPlanFeature(program_project_name: string, team_project_name: s
     });
 }
 
+function createIteration(): void {
+    cy.log("Create an iteration");
+    cy.get("[data-test=program-increment-toggle]").click();
+    cy.get("[data-test=program-increment-plan-iterations-link]").click();
+    cy.get("[data-test=planned-iterations-add-iteration-button]").click();
+    cy.get("[data-test=iteration_name]").type("Iteration One");
+    cy.get("[data-test=date-time-start_date]").type("2021-08-03");
+    cy.get("[data-test=date-time-end_date]").type("2021-08-13");
+    cy.get("[data-test=artifact-submit-button]").click();
+}
+
 function checkThatProgramAndTeamsAreCorrect(
     program_project_name: string,
     team_project_name: string
@@ -179,7 +192,7 @@ function checkThatProgramAndTeamsAreCorrect(
     cy.log("Check sidebar for program");
     cy.get("[data-test=nav-bar-linked-projects]").contains(team_project_name);
 
-    cy.log("Check that feature is linked to PI");
+    cy.log("Check that feature is linked to program increment");
     cy.get("[data-test=program-increment-toggle]").click();
     cy.get("[data-test=program-increment-content]").contains("My awesome feature");
 
@@ -187,16 +200,19 @@ function checkThatProgramAndTeamsAreCorrect(
     cy.visitProjectService(team_project_name, "Agile Dashboard");
     cy.get("[data-test=nav-bar-linked-projects]").contains(program_project_name);
 
-    cy.log("Check mirrored release has been created");
-    cy.get("[data-test=go-to-top-backlog]").click();
-    cy.get("[data-test=expand-collapse-milestone]").contains("My first PI");
+    cy.log("Check that mirror program increment has been created");
+    cy.get("[data-test=home-releases]").contains("My first PI");
+    cy.log("Check that mirror iteration has been created");
+    cy.get("[data-test=home-sprint-title]").contains("Iteration One");
 
-    cy.log("Check that user story linked to feature have been planned in Mirrored release");
+    cy.log("Check that user story linked to feature has been planned in mirror program increment");
+    cy.get("[data-test=go-to-top-backlog]").click();
     cy.get("[data-test=expand-collapse-milestone]").click();
     cy.get("[data-test=milestone-backlog-items]").contains("My US");
 }
 
-function updateProgramIncrement(program_project_name: string, team_project_name: string): void {
+function updateProgramIncrementAndIteration(program_project_name: string): void {
+    cy.log("Edit program increment and iteration");
     cy.visitProjectService(program_project_name, "Program");
     cy.get("[data-test=program-increment-toggle]").click();
     cy.get("[data-test=program-increment-info-edit-link]").click();
@@ -204,10 +220,24 @@ function updateProgramIncrement(program_project_name: string, team_project_name:
     cy.get("[data-test=program_increment_name]").type("{end} updated");
     cy.get("[data-test=artifact-submit]").click();
 
-    cy.log("Check mirrored release has been updated");
+    cy.get("[data-test=program-increment-toggle]").click();
+    cy.get("[data-test=program-increment-plan-iterations-link]").click();
+    // There is no "edit" link yet, so we go to Trackers directly
+    cy.get("[data-test=iteration-card-header]").then(($card) => {
+        const iteration_id = String($card[0].dataset.testIterationId);
+        cy.visit("https://tuleap/plugins/tracker/?&aid=" + iteration_id);
+        cy.get("[data-test=edit-field-iteration_name]").type("{end} updated");
+        cy.get("[data-test=artifact-submit]").click();
+    });
+}
+
+function checkThatMirrorsAreSynchronized(team_project_name: string): void {
+    cy.log("Check that mirror program increment is synchronized");
     cy.visitProjectService(team_project_name, "Agile Dashboard");
-    cy.get("[data-test=go-to-top-backlog]").click();
-    cy.get("[data-test=expand-collapse-milestone]").contains("My first PI updated");
+
+    cy.get("[data-test=home-releases]").contains("My first PI updated");
+    cy.log("Check that mirror iteration is synchronized");
+    cy.get("[data-test=home-sprint-title]").contains("Iteration One updated");
 }
 
 type CypressWrapper = Cypress.Chainable<JQuery<HTMLElement>>;
