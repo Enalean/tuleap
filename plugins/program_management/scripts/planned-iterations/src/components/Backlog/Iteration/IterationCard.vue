@@ -22,6 +22,7 @@
     <div class="tlp-pane-container planned-iteration-display">
         <div
             class="tlp-pane-header planned-iteration-header"
+            v-on:click="toggleIsOpen"
             data-test="iteration-card-header"
             v-bind:data-test-iteration-id="iteration.id"
         >
@@ -29,7 +30,12 @@
                 class="tlp-pane-title planned-iteration-header-label"
                 data-test="iteration-header-label"
             >
-                <i class="tlp-pane-title-icon fas fa-fw fa-caret-right" aria-hidden="true" />
+                <i
+                    class="tlp-pane-title-icon fas fa-fw"
+                    v-bind:class="[is_open ? 'fa-caret-down' : 'fa-caret-right']"
+                    data-test="planned-iteration-toggle-icon"
+                    aria-hidden="true"
+                />
                 {{ iteration.title }}
             </span>
             <div>
@@ -51,6 +57,13 @@
                 </span>
             </div>
         </div>
+        <section
+            class="tlp-pane-section planned-iteration-content"
+            v-if="is_open"
+            data-test="planned-iteration-content"
+        >
+            <iteration-user-story-list v-if="is_open" />
+        </section>
     </div>
 </template>
 
@@ -61,8 +74,10 @@ import { Component, Prop } from "vue-property-decorator";
 import { formatDateYearMonthDay } from "@tuleap/date-helper";
 
 import type { Iteration } from "../../../type";
-
-@Component
+import IterationUserStoryList from "./IterationUserStoryList.vue";
+@Component({
+    components: { IterationUserStoryList },
+})
 export default class IterationCard extends Vue {
     @Prop({ required: true })
     readonly iteration!: Iteration;
@@ -70,8 +85,14 @@ export default class IterationCard extends Vue {
     @State
     readonly user_locale!: string;
 
+    private is_open = false;
+
     formatDate(date: string): string {
         return formatDateYearMonthDay(this.user_locale, date);
+    }
+
+    toggleIsOpen(): void {
+        this.is_open = !this.is_open;
     }
 }
 </script>
