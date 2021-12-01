@@ -56,6 +56,10 @@ final class PossibleParentHandlerTest extends TestCase
     private \Project $project;
     private \Tracker $tracker;
     private \PFUser $user;
+    private RetrieveRootPlanningStub $retrieve_planning;
+    private PossibleParentSelector $event;
+    private PossibleParentHandler $possible_parent;
+    private PossibleParentSelectorProxy $possible_parent_selector;
 
     protected function setUp(): void
     {
@@ -71,28 +75,21 @@ final class PossibleParentHandlerTest extends TestCase
 
         $this->retrieve_open_feature_count = RetrieveOpenFeatureCountStub::withValue(0);
 
-        $this->user              = UserTestBuilder::buildWithDefaults();
-        $this->project           = ProjectTestBuilder::aProject()->withId(555)->build();
-        $this->tracker           = TrackerTestBuilder::aTracker()
-                                                     ->withId(789)
-                                                     ->withProject($this->project)
-                                                     ->build();
-        $this->retrieve_artifact = RetrieveArtifactStub::withArtifacts(ArtifactTestBuilder::anArtifact(self::FEATURE_ID)->build());
-    }
+        $this->user    = UserTestBuilder::buildWithDefaults();
+        $this->project = ProjectTestBuilder::aProject()->withId(555)->build();
+        $this->tracker = TrackerTestBuilder::aTracker()
+                                           ->withId(789)
+                                           ->withProject($this->project)
+                                           ->build();
 
-    public function testItHasOneParent(): void
-    {
-        $event                    = new PossibleParentSelector($this->user, $this->tracker, 0, 10);
-        $retrieve_planning        = RetrieveRootPlanningStub::withProjectAndBacklogTracker(
+        $this->event = new PossibleParentSelector($this->user, $this->tracker, 0, 10);
+
+        $this->retrieve_planning = RetrieveRootPlanningStub::withProjectAndBacklogTracker(
             (int) $this->project->getID(),
             $this->tracker->getId()
         );
-        $possible_parent_selector = PossibleParentSelectorProxy::fromEvent(
-            $event,
-            $retrieve_planning,
-            $this->retrieve_artifact
-        );
-        $possible_parent          = new PossibleParentHandler(
+
+        $this->possible_parent = new PossibleParentHandler(
             VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
@@ -100,34 +97,53 @@ final class PossibleParentHandlerTest extends TestCase
             $this->retrieve_open_feature_count
         );
 
-        $possible_parent->handle($possible_parent_selector);
 
-        self::assertNotNull($event->getPossibleParents());
+        $this->retrieve_artifact = RetrieveArtifactStub::withArtifacts(
+            ArtifactTestBuilder::anArtifact(self::FEATURE_ID)->build()
+        );
+
+        $this->possible_parent_selector = PossibleParentSelectorProxy::fromEvent(
+            $this->event,
+            $this->retrieve_planning,
+            $this->retrieve_artifact
+        );
+    }
+
+    public function testItHasOneParent(): void
+    {
+        $this->possible_parent->handle($this->possible_parent_selector);
+
+        self::assertNotNull($this->event->getPossibleParents());
 
         assertEquals(
             [self::FEATURE_ID],
-            array_map(static fn(Artifact $feature): int => $feature->getId(), $event->getPossibleParents()->getArtifacts())
+            array_map(
+                static fn(Artifact $feature): int => $feature->getId(),
+                $this->event->getPossibleParents()->getArtifacts()
+            )
         );
         assertEquals(
             ["A fine feature"],
-            array_map(static fn(Artifact $feature): ?string => $feature->getTitle(), $event->getPossibleParents()->getArtifacts())
+            array_map(
+                static fn(Artifact $feature): ?string => $feature->getTitle(),
+                $this->event->getPossibleParents()->getArtifacts()
+            )
         );
     }
 
     public function testItHasOffsetAndLimit(): void
     {
-        $event                             = new PossibleParentSelector($this->user, $this->tracker, 100, 50);
-        $retrieve_planning                 = RetrieveRootPlanningStub::withProjectAndBacklogTracker(
-            (int) $this->project->getID(),
-            $this->tracker->getId()
-        );
-        $possible_parent_selector          = PossibleParentSelectorProxy::fromEvent(
+        $event = new PossibleParentSelector($this->user, $this->tracker, 100, 50);
+
+        $possible_parent_selector = PossibleParentSelectorProxy::fromEvent(
             $event,
-            $retrieve_planning,
+            $this->retrieve_planning,
             $this->retrieve_artifact
         );
+
         $this->retrieve_open_feature_count = RetrieveOpenFeatureCountStub::withValue(200);
-        $possible_parent                   = new PossibleParentHandler(
+
+        $possible_parent = new PossibleParentHandler(
             VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
@@ -142,44 +158,36 @@ final class PossibleParentHandlerTest extends TestCase
         assertEquals(200, $event->getPossibleParents()?->getTotalSize());
     }
 
-    public function testDisableCreateWhenInTheContextOfTeamAttachedToProgramToAvoidCrossProjectRedirections(): void
+    public function testItContinueIfProgramAccessExceptionIsThrow(): void
     {
-        $event                    = new PossibleParentSelector($this->user, $this->tracker, 0, 10);
-        $retrieve_planning        = RetrieveRootPlanningStub::withProjectAndBacklogTracker(
-            (int) $this->project->getID(),
-            $this->tracker->getId()
-        );
-        $possible_parent_selector = PossibleParentSelectorProxy::fromEvent(
-            $event,
-            $retrieve_planning,
-            $this->retrieve_artifact
-        );
-        $possible_parent          = new PossibleParentHandler(
-            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
-            BuildProgramStub::stubValidProgram(),
+        $this->retrieve_open_feature_count = RetrieveOpenFeatureCountStub::withValue(0);
+        $search_open_features              = SearchOpenFeaturesStub::withRows([]);
+
+        $possible_parent = new PossibleParentHandler(
+            VerifyFeatureIsVisibleByProgramStub::withNotVisibleFeature(),
+            BuildProgramStub::stubInvalidProgramAccess(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
-            $this->search_open_features,
+            $search_open_features,
             $this->retrieve_open_feature_count
         );
 
-        $possible_parent->handle($possible_parent_selector);
+        $possible_parent->handle($this->possible_parent_selector);
 
-        assertFalse($event->canCreate());
+        assertEquals(0, $this->event->offset);
+        assertEquals(10, $this->event->limit);
+        assertEquals(0, $this->event->getPossibleParents()?->getTotalSize());
+    }
+
+    public function testDisableCreateWhenInTheContextOfTeamAttachedToProgramToAvoidCrossProjectRedirections(): void
+    {
+        $this->possible_parent->handle($this->possible_parent_selector);
+
+        assertFalse($this->event->canCreate());
     }
 
     public function testItDoesntFillPossibleParentWhenTrackerIsNotInATeam(): void
     {
-        $event                    = new PossibleParentSelector($this->user, $this->tracker, 0, 10);
-        $retrieve_planning        = RetrieveRootPlanningStub::withProjectAndBacklogTracker(
-            (int) $this->project->getID(),
-            $this->tracker->getId()
-        );
-        $possible_parent_selector = PossibleParentSelectorProxy::fromEvent(
-            $event,
-            $retrieve_planning,
-            $this->retrieve_artifact
-        );
-        $possible_parent          = new PossibleParentHandler(
+        $possible_parent = new PossibleParentHandler(
             VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(),
@@ -187,47 +195,32 @@ final class PossibleParentHandlerTest extends TestCase
             $this->retrieve_open_feature_count
         );
 
-        $possible_parent->handle($possible_parent_selector);
+        $possible_parent->handle($this->possible_parent_selector);
 
-        assertNull($event->getPossibleParents());
+        assertNull($this->event->getPossibleParents());
     }
 
     public function testAnArtifactThatCannotBeInTeamProjectBacklogWillNotHavePossibleParents(): void
     {
-        $event                    = new PossibleParentSelector($this->user, $this->tracker, 0, 10);
-        $retrieve_planning        = RetrieveRootPlanningStub::withProjectAndBacklogTracker((int) $this->project->getID(), 666);
+        $retrieve_planning        = RetrieveRootPlanningStub::withProjectAndBacklogTracker(
+            (int) $this->project->getID(),
+            666
+        );
         $possible_parent_selector = PossibleParentSelectorProxy::fromEvent(
-            $event,
+            $this->event,
             $retrieve_planning,
             $this->retrieve_artifact
         );
 
-        $possible_parent = new PossibleParentHandler(
-            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
-            BuildProgramStub::stubValidProgram(),
-            SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
-            $this->search_open_features,
-            $this->retrieve_open_feature_count
-        );
 
-        $possible_parent->handle($possible_parent_selector);
+        $this->possible_parent->handle($possible_parent_selector);
 
-        assertNull($event->getPossibleParents());
+        assertNull($this->event->getPossibleParents());
     }
 
     public function testItDoesntAddToPossibleParentsAnArtifactThatIsNotVisible(): void
     {
-        $event                    = new PossibleParentSelector($this->user, $this->tracker, 0, 10);
-        $retrieve_planning        = RetrieveRootPlanningStub::withProjectAndBacklogTracker(
-            (int) $this->project->getID(),
-            $this->tracker->getId()
-        );
-        $possible_parent_selector = PossibleParentSelectorProxy::fromEvent(
-            $event,
-            $retrieve_planning,
-            $this->retrieve_artifact
-        );
-        $possible_parent          = new PossibleParentHandler(
+        $possible_parent = new PossibleParentHandler(
             VerifyFeatureIsVisibleByProgramStub::withNotVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
@@ -235,24 +228,14 @@ final class PossibleParentHandlerTest extends TestCase
             $this->retrieve_open_feature_count
         );
 
-        $possible_parent->handle($possible_parent_selector);
+        $possible_parent->handle($this->possible_parent_selector);
 
-        assertEquals([], $event->getPossibleParents()?->getArtifacts());
+        assertEquals([], $this->event->getPossibleParents()?->getArtifacts());
     }
 
     public function testItLooksForProgramsAtOnce(): void
     {
-        $event                    = new PossibleParentSelector($this->user, $this->tracker, 0, 10);
-        $retrieve_planning        = RetrieveRootPlanningStub::withProjectAndBacklogTracker(
-            (int) $this->project->getID(),
-            $this->tracker->getId()
-        );
-        $possible_parent_selector = PossibleParentSelectorProxy::fromEvent(
-            $event,
-            $retrieve_planning,
-            $this->retrieve_artifact
-        );
-        $possible_parent          = new PossibleParentHandler(
+        $possible_parent = new PossibleParentHandler(
             VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1, self::PROGRAM_ID_2),
@@ -260,8 +243,7 @@ final class PossibleParentHandlerTest extends TestCase
             $this->retrieve_open_feature_count
         );
 
-        $possible_parent->handle($possible_parent_selector);
-
+        $possible_parent->handle($this->possible_parent_selector);
 
         assertEquals(
             [self::PROGRAM_ID_1, self::PROGRAM_ID_2],
