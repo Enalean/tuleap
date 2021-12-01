@@ -44,9 +44,8 @@ final class VisibleIterationTrackerRetriever implements RetrieveVisibleIteration
         ProgramIdentifier $program,
         UserIdentifier $user_identifier,
     ): ?TrackerReference {
-        $program_id           = $program->getId();
         $iteration_tracker_id = $this->iteration_tracker_retriever->getIterationTrackerId(
-            $program_id
+            $program
         );
 
         if (! $iteration_tracker_id) {

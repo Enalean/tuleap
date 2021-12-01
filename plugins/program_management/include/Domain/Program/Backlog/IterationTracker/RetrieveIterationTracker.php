@@ -23,9 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 interface RetrieveIterationTracker
 {
-    public function getIterationTrackerId(int $project_id): ?int;
+    public function getIterationTrackerId(ProgramIdentifier $program_identifier): ?int;
     public function getIterationTrackerIdFromIteration(IterationIdentifier $iteration): int;
 }
