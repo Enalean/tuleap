@@ -36,6 +36,7 @@ describe("buildMilestoneBacklog", () => {
             user_timezone: "UTC",
             user_locale: "en_US",
             milestone_name: "Tuleap 13.3",
+            parent_milestone_name: "",
             milestone_url: "/path/to/13.3",
         };
 

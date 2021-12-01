@@ -75,6 +75,12 @@ class TestPlanPresenterBuilder
         $milestone_artifact = $milestone->getArtifact();
         $project            = $milestone->getProject();
 
+        $parent_milestone       = $milestone->getParent();
+        $parent_milestone_title = "";
+        if ($parent_milestone) {
+            $parent_milestone_title = $parent_milestone->getArtifactTitle() ?? "";
+        }
+
         $details_pane = new DetailsPaneInfo($milestone);
 
         return new TestPlanPresenter(
@@ -82,6 +88,7 @@ class TestPlanPresenterBuilder
             $this->user_helper->getDisplayNameFromUser($user),
             (int) $milestone_artifact->getId(),
             $milestone_artifact->getTitle() ?? '',
+            $parent_milestone_title,
             \Tuleap\ServerHostname::HTTPSUrl() . $details_pane->getUri(),
             (int) $project->getID(),
             $project->getPublicName(),

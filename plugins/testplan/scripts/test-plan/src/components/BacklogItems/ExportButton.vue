@@ -103,6 +103,9 @@ export default class ExportButton extends Vue {
     readonly milestone_title!: string;
 
     @State
+    readonly parent_milestone_title!: string;
+
+    @State
     readonly user_display_name!: string;
 
     @State
@@ -203,6 +206,7 @@ export default class ExportButton extends Vue {
                     user_timezone: this.user_timezone,
                     user_locale: this.user_locale,
                     milestone_name: this.milestone_title,
+                    parent_milestone_name: this.parent_milestone_title,
                     milestone_url: this.milestone_url,
                 },
                 this,
