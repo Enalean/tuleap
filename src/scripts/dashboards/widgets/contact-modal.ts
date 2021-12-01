@@ -27,7 +27,9 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
     massmail_project_member_links.forEach((massmail_project_member_link) => {
-        massmail_project_member_link.addEventListener("click", function () {
+        massmail_project_member_link.addEventListener("click", function (event: Event): void {
+            event.preventDefault();
+
             const project_id_element = document.getElementById(
                 "massmail-project-members-project-id"
             );
