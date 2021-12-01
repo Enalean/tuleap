@@ -24,15 +24,13 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
 use DateTimeImmutable;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraCloudUser;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
 class CommentXMLValueEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    protected function tearDown(): void
-    {
-        \Mockery::close();
-    }
+    use MockeryPHPUnitIntegration;
 
     public function testItAddsTheNameOfTheJiraUserWhoAddTheCommentInTheContent(): void
     {
@@ -40,7 +38,7 @@ class CommentXMLValueEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
         $commenter = \Mockery::mock(\PFUser::class);
         $commenter->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
 
-        $comment = new Comment(
+        $comment = new JiraCloudComment(
             new ActiveJiraCloudUser([
                 'displayName' => 'userO1',
                 'accountId' => 'e12ds5123sw'
@@ -69,7 +67,7 @@ class CommentXMLValueEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $comment = new Comment(
+        $comment = new JiraCloudComment(
             $update_author,
             new DateTimeImmutable(),
             "<p>Comment 01</p>"

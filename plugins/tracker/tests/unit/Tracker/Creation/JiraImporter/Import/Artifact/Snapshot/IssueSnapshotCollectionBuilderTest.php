@@ -32,6 +32,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntr
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\JiraCloudChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\Comment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraCloudComment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
@@ -454,7 +455,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildCommentSnapshot(): Comment
     {
-        return new Comment(
+        return new JiraCloudComment(
             new ActiveJiraCloudUser([
                 'displayName' => 'userO1',
                 'accountId' => 'e12ds5123sw'
@@ -466,7 +467,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildCommentSnapshotWithSameTimestampOfInitialChangelog(): Comment
     {
-        return new Comment(
+        return new JiraCloudComment(
             new ActiveJiraCloudUser([
                 'displayName' => 'userO1',
                 'accountId' => 'e12ds5123sw'

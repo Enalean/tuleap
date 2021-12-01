@@ -24,68 +24,21 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
 use DateTimeImmutable;
-use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraCloudUser;
-use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraCloudUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
 
 /**
  * @psalm-immutable
  */
-class Comment
+interface Comment
 {
     /**
-     * @var DateTimeImmutable
+     * @throw CommentAPIResponseNotWellFormedException
      */
-    private $date;
+    public static function buildFromAPIResponse(array $comment_response): self;
 
-    /**
-     * @var string
-     */
-    private $rendered_value;
+    public function getDate(): DateTimeImmutable;
 
-    /**
-     * @var JiraCloudUser
-     */
-    private $update_author;
+    public function getRenderedValue(): string;
 
-    public function __construct(
-        JiraCloudUser $update_author,
-        DateTimeImmutable $date,
-        string $rendered_value
-    ) {
-        $this->update_author  = $update_author;
-        $this->date           = $date;
-        $this->rendered_value = $rendered_value;
-    }
-
-    public static function buildFromAPIResponse(array $comment_response): self
-    {
-        if (
-            ! isset($comment_response['updateAuthor']) ||
-            ! isset($comment_response['updated']) ||
-            ! isset($comment_response['renderedBody'])
-        ) {
-            throw new CommentAPIResponseNotWellFormedException();
-        }
-
-        return new self(
-            new ActiveJiraCloudUser($comment_response['updateAuthor']),
-            new DateTimeImmutable($comment_response['updated']),
-            (string) $comment_response['renderedBody']
-        );
-    }
-
-    public function getDate(): DateTimeImmutable
-    {
-        return $this->date;
-    }
-
-    public function getRenderedValue(): string
-    {
-        return $this->rendered_value;
-    }
-
-    public function getUpdateAuthor(): JiraCloudUser
-    {
-        return $this->update_author;
-    }
+    public function getUpdateAuthor(): JiraUser;
 }

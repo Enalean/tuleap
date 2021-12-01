@@ -28,7 +28,7 @@ use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertInstanceOf;
 
-class ChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
+class JiraCloudChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsARepresentationFromAPIResponse(): void
     {
