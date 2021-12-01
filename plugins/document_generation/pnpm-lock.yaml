@@ -5,14 +5,14 @@ specifiers:
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
   '@types/dompurify': ^2.3.1
   '@types/sprintf-js': ^1.1.2
-  docx: ^7.1.2
+  docx: ^7.2.0
   dompurify: ^2.2.9
   sprintf-js: ^1.1.2
 
 dependencies:
   '@tuleap/concurrency-limit-pool': link:../../src/scripts/lib/concurrency-limit-pool
   '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
-  docx: 7.1.2
+  docx: 7.2.0
   dompurify: 2.3.3
   sprintf-js: 1.1.2
 
@@ -44,8 +44,8 @@ packages:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
     dev: false
 
-  /docx/7.1.2:
-    resolution: {integrity: sha512-uzdkDh0u1KNRmIprxuZ9x2ti2/3xn+TfBGfjIPplR6WFdhK13hL1NcgdJsu9+QsASAqjuogiJiiEap5fv8ubow==}
+  /docx/7.2.0:
+    resolution: {integrity: sha512-NtkbNpBALNxjvmlF635Ruqz+q6508aC5g2ydw54ndLOcgd/G5Jp8Bs9mZy4eWULDSoHQRuP8CVUzqU8ZBRnHIg==}
     engines: {node: '>=10'}
     dependencies:
       '@types/node': 16.10.2

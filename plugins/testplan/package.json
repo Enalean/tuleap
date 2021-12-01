@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/concurrency-limit-pool": "file:../../src/scripts/lib/concurrency-limit-pool",
-    "docx": "^7.1.2",
+    "docx": "^7.2.0",
     "vue": "^2.6.14",
     "vue-gettext": "^2.1.12",
     "vuex": "^3.6.2",
