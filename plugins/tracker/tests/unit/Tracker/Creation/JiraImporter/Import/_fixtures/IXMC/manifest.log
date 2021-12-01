@@ -1,0 +1,8 @@
+https://jira.example.com/rest/api/2/issuetype/10105 0c5326100b58e96b944ddb4dc3705341adfd2643.json 200
+https://jira.example.com/rest/api/2/mypermissions?projectKey=IXMC 2473a89f8ae7abab13b347fe1a8e75e6a198904d.json 200
+https://jira.example.com/rest/api/2/project/IXMC/statuses a4fe0b816f7208078942441c89c1ddd16dc72c18.json 200
+https://jira.example.com/rest/api/2/issue/createmeta?projectKeys=IXMC&issuetypeIds=10105&expand=projects.issuetypes.fields fc9c36f7926867002b6ba6f679dfb6848195e30d.json 200
+https://jira.example.com/rest/api/2/search?jql=project%3DIXMC+AND+issuetype%3D10105&fields=%2Aall&expand=renderedFields&startAt=0 0b9c774dd9c88048aa56716efe12f68bb4044e59.json 200
+https://jira.example.com/rest/api/2/issue/IXMC-680?expand=changelog IXMC-680.json 200
+https://jira.example.com/rest/api/2/user?username=user_3@example.com user_3.json 200
+https://jira.example.com/rest/api/2/issue/IXMC-680?expand=renderedFields IXMC-680.json 200

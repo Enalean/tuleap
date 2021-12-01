@@ -1,0 +1,353 @@
+{
+    "expand": "projects",
+    "projects": [
+        {
+            "expand": "issuetypes",
+            "self": "https://jira.example.com/rest/api/2/project/10401",
+            "id": "10401",
+            "key": "IXMC",
+            "name": "IXM - Consulting",
+            "avatarUrls": {
+                "48x48": "https://jira.example.com/secure/projectavatar?pid=10401&avatarId=10901",
+                "24x24": "https://jira.example.com/secure/projectavatar?size=small&pid=10401&avatarId=10901",
+                "16x16": "https://jira.example.com/secure/projectavatar?size=xsmall&pid=10401&avatarId=10901",
+                "32x32": "https://jira.example.com/secure/projectavatar?size=medium&pid=10401&avatarId=10901"
+            },
+            "issuetypes": [
+                {
+                    "self": "https://jira.example.com/rest/api/2/issuetype/10105",
+                    "id": "10105",
+                    "description": "",
+                    "iconUrl": "https://jira.example.com/secure/viewavatar?size=xsmall&avatarId=10607&avatarType=issuetype",
+                    "name": "Tâche",
+                    "subtask": false,
+                    "expand": "fields",
+                    "fields": {
+                        "customfield_10701": {
+                            "required": false,
+                            "schema": {
+                                "type": "option",
+                                "custom": "com.atlassian.jira.plugin.system.customfieldtypes:select",
+                                "customId": 10701
+                            },
+                            "name": "Astreinte",
+                            "fieldId": "customfield_10701",
+                            "hasDefaultValue": false,
+                            "operations": [
+                                "set"
+                            ],
+                            "allowedValues": [
+                                {
+                                    "self": "https://jira.example.com/rest/api/2/customFieldOption/10402",
+                                    "value": "Yes",
+                                    "id": "10402",
+                                    "disabled": false
+                                },
+                                {
+                                    "self": "https://jira.example.com/rest/api/2/customFieldOption/10403",
+                                    "value": "No",
+                                    "id": "10403",
+                                    "disabled": false
+                                }
+                            ]
+                        },
+                        "priority": {
+                            "required": false,
+                            "schema": {
+                                "type": "priority",
+                                "system": "priority"
+                            },
+                            "name": "Priorité",
+                            "fieldId": "priority",
+                            "hasDefaultValue": true,
+                            "operations": [
+                                "set"
+                            ],
+                            "allowedValues": [
+                                {
+                                    "self": "https://jira.example.com/rest/api/2/priority/1",
+                                    "iconUrl": "https://jira.example.com/images/icons/priorities/major.svg",
+                                    "name": "Très haute",
+                                    "id": "1"
+                                },
+                                {
+                                    "self": "https://jira.example.com/rest/api/2/priority/2",
+                                    "iconUrl": "https://jira.example.com/images/icons/priorities/high.svg",
+                                    "name": "Haute",
+                                    "id": "2"
+                                },
+                                {
+                                    "self": "https://jira.example.com/rest/api/2/priority/3",
+                                    "iconUrl": "https://jira.example.com/images/icons/priorities/medium.svg",
+                                    "name": "Moyenne",
+                                    "id": "3"
+                                },
+                                {
+                                    "self": "https://jira.example.com/rest/api/2/priority/4",
+                                    "iconUrl": "https://jira.example.com/images/icons/priorities/low.svg",
+                                    "name": "Basse",
+                                    "id": "4"
+                                },
+                                {
+                                    "self": "https://jira.example.com/rest/api/2/priority/5",
+                                    "iconUrl": "https://jira.example.com/images/icons/priorities/minor.svg",
+                                    "name": "Très basse",
+                                    "id": "5"
+                                },
+                                {
+                                    "self": "https://jira.example.com/rest/api/2/priority/10000",
+                                    "iconUrl": "https://jira.example.com/images/icons/priorities/blocker.svg",
+                                    "name": "Bloquante",
+                                    "id": "10000"
+                                },
+                                {
+                                    "self": "https://jira.example.com/rest/api/2/priority/10001",
+                                    "iconUrl": "https://jira.example.com/images/icons/priorities/trivial.svg",
+                                    "name": "Mineure",
+                                    "id": "10001"
+                                }
+                            ],
+                            "defaultValue": {
+                                "self": "https://jira.example.com/rest/api/2/priority/4",
+                                "iconUrl": "https://jira.example.com/images/icons/priorities/low.svg",
+                                "name": "Basse",
+                                "id": "4"
+                            }
+                        },
+                        "summary": {
+                            "required": true,
+                            "schema": {
+                                "type": "string",
+                                "system": "summary"
+                            },
+                            "name": "Résumé",
+                            "fieldId": "summary",
+                            "hasDefaultValue": false,
+                            "operations": [
+                                "set"
+                            ]
+                        },
+                        "reporter": {
+                            "required": true,
+                            "schema": {
+                                "type": "user",
+                                "system": "reporter"
+                            },
+                            "name": "Rapporteur",
+                            "fieldId": "reporter",
+                            "autoCompleteUrl": "https://jira.example.com/rest/api/latest/user/search?username=",
+                            "hasDefaultValue": false,
+                            "operations": [
+                                "set"
+                            ]
+                        },
+                        "customfield_10000": {
+                            "required": false,
+                            "schema": {
+                                "type": "array",
+                                "items": "user",
+                                "custom": "com.atlassian.servicedesk:sd-request-participants",
+                                "customId": 10000
+                            },
+                            "name": "Request participants",
+                            "fieldId": "customfield_10000",
+                            "hasDefaultValue": false,
+                            "operations": [
+                                "add",
+                                "set",
+                                "remove"
+                            ]
+                        },
+                        "customfield_10104": {
+                            "required": false,
+                            "schema": {
+                                "type": "array",
+                                "items": "user",
+                                "custom": "com.atlassian.jira.plugin.system.customfieldtypes:multiuserpicker",
+                                "customId": 10104
+                            },
+                            "name": "Approbateurs",
+                            "fieldId": "customfield_10104",
+                            "autoCompleteUrl": "https://jira.example.com/rest/api/1.0/users/picker?fieldName=customfield_10104&query=",
+                            "hasDefaultValue": false,
+                            "operations": [
+                                "add",
+                                "set",
+                                "remove"
+                            ]
+                        },
+                        "attachment": {
+                            "required": false,
+                            "schema": {
+                                "type": "array",
+                                "items": "attachment",
+                                "system": "attachment"
+                            },
+                            "name": "Pièce jointe",
+                            "fieldId": "attachment",
+                            "hasDefaultValue": false,
+                            "operations": []
+                        },
+                        "description": {
+                            "required": false,
+                            "schema": {
+                                "type": "string",
+                                "system": "description"
+                            },
+                            "name": "Descriptif",
+                            "fieldId": "description",
+                            "hasDefaultValue": false,
+                            "operations": [
+                                "set"
+                            ]
+                        },
+                        "components": {
+                            "required": false,
+                            "schema": {
+                                "type": "array",
+                                "items": "component",
+                                "system": "components"
+                            },
+                            "name": "Composants",
+                            "fieldId": "components",
+                            "hasDefaultValue": false,
+                            "operations": [
+                                "add",
+                                "set",
+                                "remove"
+                            ],
+                            "allowedValues": [
+                                {
+                                    "self": "https://jira.example.com/rest/api/2/component/12206",
+                                    "id": "12206",
+                                    "name": "Infrastructure"
+                                },
+                                {
+                                    "self": "https://jira.example.com/rest/api/2/component/12205",
+                                    "id": "12205",
+                                    "name": "Security"
+                                }
+                            ]
+                        },
+                        "customfield_10002": {
+                            "required": false,
+                            "schema": {
+                                "type": "array",
+                                "items": "sd-customerorganization",
+                                "custom": "com.atlassian.servicedesk:sd-customer-organizations",
+                                "customId": 10002
+                            },
+                            "name": "Organizations",
+                            "fieldId": "customfield_10002",
+                            "autoCompleteUrl": "https://jira.example.com/rest/servicedesk/1/customer/organisations/project/10401/search?query=",
+                            "hasDefaultValue": false,
+                            "operations": [
+                                "add",
+                                "set",
+                                "remove"
+                            ]
+                        },
+                        "customfield_10204": {
+                            "required": false,
+                            "schema": {
+                                "type": "account",
+                                "custom": "com.tempoplugin.tempo-accounts:accounts.customfield",
+                                "customId": 10204
+                            },
+                            "name": "Compte client",
+                            "fieldId": "customfield_10204",
+                            "hasDefaultValue": false,
+                            "operations": [
+                                "set"
+                            ]
+                        },
+                        "timetracking": {
+                            "required": false,
+                            "schema": {
+                                "type": "timetracking",
+                                "system": "timetracking"
+                            },
+                            "name": "Suivi temporel",
+                            "fieldId": "timetracking",
+                            "hasDefaultValue": false,
+                            "operations": [
+                                "set",
+                                "edit"
+                            ]
+                        },
+                        "assignee": {
+                            "required": false,
+                            "schema": {
+                                "type": "user",
+                                "system": "assignee"
+                            },
+                            "name": "Responsable",
+                            "fieldId": "assignee",
+                            "autoCompleteUrl": "https://jira.example.com/rest/api/latest/user/assignable/search?issueKey=null&username=",
+                            "hasDefaultValue": false,
+                            "operations": [
+                                "set"
+                            ]
+                        },
+                        "project": {
+                            "required": true,
+                            "schema": {
+                                "type": "project",
+                                "system": "project"
+                            },
+                            "name": "Projet",
+                            "fieldId": "project",
+                            "hasDefaultValue": false,
+                            "operations": [
+                                "set"
+                            ],
+                            "allowedValues": [
+                                {
+                                    "self": "https://jira.example.com/rest/api/2/project/10401",
+                                    "id": "10401",
+                                    "key": "IXMC",
+                                    "name": "IXM - Consulting",
+                                    "projectTypeKey": "service_desk",
+                                    "avatarUrls": {
+                                        "48x48": "https://jira.example.com/secure/projectavatar?pid=10401&avatarId=10901",
+                                        "24x24": "https://jira.example.com/secure/projectavatar?size=small&pid=10401&avatarId=10901",
+                                        "16x16": "https://jira.example.com/secure/projectavatar?size=xsmall&pid=10401&avatarId=10901",
+                                        "32x32": "https://jira.example.com/secure/projectavatar?size=medium&pid=10401&avatarId=10901"
+                                    },
+                                    "projectCategory": {
+                                        "self": "https://jira.example.com/rest/api/2/projectCategory/10402",
+                                        "id": "10402",
+                                        "description": "",
+                                        "name": "Maintenance"
+                                    }
+                                }
+                            ]
+                        },
+                        "issuetype": {
+                            "required": true,
+                            "schema": {
+                                "type": "issuetype",
+                                "system": "issuetype"
+                            },
+                            "name": "Type de ticket",
+                            "fieldId": "issuetype",
+                            "hasDefaultValue": false,
+                            "operations": [],
+                            "allowedValues": [
+                                {
+                                    "self": "https://jira.example.com/rest/api/2/issuetype/10105",
+                                    "id": "10105",
+                                    "description": "",
+                                    "iconUrl": "https://jira.example.com/secure/viewavatar?size=xsmall&avatarId=10607&avatarType=issuetype",
+                                    "name": "Tâche",
+                                    "subtask": false,
+                                    "avatarId": 10607
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

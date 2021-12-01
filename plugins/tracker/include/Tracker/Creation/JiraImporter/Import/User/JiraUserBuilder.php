@@ -26,32 +26,29 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 /**
  * @psalm-immutable
  */
-final class ActiveJiraServerUser implements JiraUser
+final class JiraUserBuilder
 {
-    private function __construct(private string $username, private string $display_name, private string $email_address)
+    public static function getUserFromPayload(array $user_payload): JiraUser
     {
-    }
+        if (isset($user_payload['displayName'], $user_payload['accountId'])) {
+            return new ActiveJiraCloudUser($user_payload);
+        }
 
-    /**
-     * @param array{name: string, displayName: string, emailAddress?: string} $user_json
-     */
-    public static function buildFromPayload(array $user_json): self
-    {
-        return new self($user_json['name'], $user_json['displayName'], $user_json['emailAddress'] ?? JiraUser::NO_EMAIL_ADDRESS_SHARED);
-    }
+        if (
+            isset($user_payload['displayName'], $user_payload['name'])
+            && is_string($user_payload['displayName'])
+            && is_string($user_payload['name'])
+            && (
+                ! isset($user_payload['emailAddress'])
+                || (
+                    isset($user_payload['emailAddress'])
+                    && is_string($user_payload['emailAddress'])
+                )
+            )
+        ) {
+            return ActiveJiraServerUser::buildFromPayload($user_payload);
+        }
 
-    public function getDisplayName(): string
-    {
-        return $this->display_name;
-    }
-
-    public function getEmailAddress(): string
-    {
-        return $this->email_address;
-    }
-
-    public function getUniqueIdentifier(): string
-    {
-        return $this->username;
+        throw new JiraMinimalUserInformationMissingException();
     }
 }

@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 
+use org\bovigo\vfs\vfsStream;
 use Psr\Log\NullLogger;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
@@ -78,15 +80,56 @@ use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Tracker\XML\XMLTracker;
+use UserXMLExportedCollection;
 use UserXMLExporter;
+use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 
 class JiraXmlExporterTest extends TestCase
 {
+    use ForgeConfigSandbox;
 
-    public function testImportFromDebugTraces(): void
+    public function debugTracesProvider(): iterable
     {
-        $jira_client = JiraClientReplay::buildJiraServer(__DIR__ . '/_fixtures/SBX');
+        yield 'SBX' => [
+            'fixtures_path' => __DIR__ . '/_fixtures/SBX',
+            'users' => [
+                'john.doe@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('john_doe')->build(),
+            ],
+            'jira_issue_key' => 'SBX',
+            'jira_issue_type_id' => '10102',
+            'tests' => function (\SimpleXMLElement $tracker_xml) {
+                self::assertCount(3, $tracker_xml->xpath('//artifacts/artifact'));
+            },
+        ];
+
+        yield 'IXMC' => [
+            'fixtures_path' => __DIR__ . '/_fixtures/IXMC',
+            'users' => [
+                'user_1@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('user_1')->build(),
+                'user_2@example.com' => UserTestBuilder::anActiveUser()->withId(102)->withUserName('user_2')->build(),
+                'user_3@example.com' => UserTestBuilder::anActiveUser()->withId(103)->withUserName('user_3')->build(),
+                'user_4@example.com' => UserTestBuilder::anActiveUser()->withId(104)->withUserName('user_4')->build(),
+                'user_5@example.com' => UserTestBuilder::anActiveUser()->withId(104)->withUserName('user_5')->build(),
+            ],
+            'jira_issue_key' => 'IXMC',
+            'jira_issue_type_id' => '10105',
+            'tests' => function (\SimpleXMLElement $tracker_xml) {
+                self::assertCount(1, $tracker_xml->xpath('//artifacts/artifact'));
+            },
+        ];
+    }
+
+    /**
+     * @dataProvider debugTracesProvider
+     */
+    public function testImportFromDebugTraces(string $fixture_path, array $users, string $jira_issue_key, string $jira_issue_type_id, callable $tests): void
+    {
+        $root = vfsStream::setup();
+
+        \ForgeConfig::set('tmp_dir', $root->url());
+
+        $jira_client = JiraClientReplay::buildJiraServer($fixture_path);
 
         $logger = new NullLogger();
 
@@ -114,8 +157,16 @@ class JiraXmlExporterTest extends TestCase
 
         $forge_user = UserTestBuilder::buildWithId(TrackerImporterUser::ID);
 
-        $user_manager->method('getUserById')->with(TrackerImporterUser::ID)->willReturn($forge_user);
-        $user_manager->method('getAllUsersByEmail')->with('john.doe@example.com')->willReturn([UserTestBuilder::anActiveUser()->withId(101)->withUserName('john_doe')->build()]);
+        $user_email_map = [];
+        $user_id_map    = [
+            [TrackerImporterUser::ID, $forge_user],
+        ];
+        foreach ($users as $email => $user) {
+            $user_email_map[] = [$email, [$user]];
+            $user_id_map[]    = [(string) $user->getId(), $user];
+        }
+        $user_manager->method('getAllUsersByEmail')->willReturnMap($user_email_map);
+        $user_manager->method('getUserById')->willReturnMap($user_id_map);
 
         $jira_user_on_tuleap_cache = new JiraUserOnTuleapCache(
             new JiraTuleapUsersMapping(),
@@ -163,7 +214,13 @@ class JiraXmlExporterTest extends TestCase
                         ),
                         new FieldChangeListBuilder(
                             new XML_SimpleXMLCDATAFactory(),
-                            UserXMLExporter::build()
+                            new UserXMLExporter(
+                                $user_manager,
+                                new UserXMLExportedCollection(
+                                    new XML_RNGValidator(),
+                                    new XML_SimpleXMLCDATAFactory()
+                                )
+                            )
                         ),
                         new FieldChangeFileBuilder(),
                         new FieldChangeArtifactLinksBuilder(
@@ -253,12 +310,12 @@ class JiraXmlExporterTest extends TestCase
             $platform_configuration_collection,
             $tracker_xml,
             'https://jira.example.com',
-            'SBX',
-            new IssueType('10102', 'Bogue', false),
+            $jira_issue_key,
+            new IssueType($jira_issue_type_id, 'Bogue', false),
             new FieldAndValueIDGenerator(),
             new LinkedIssuesCollection(),
         );
 
-        self::assertCount(3, $tracker_xml->xpath('//artifacts/artifact'));
+        $tests($tracker_xml);
     }
 }

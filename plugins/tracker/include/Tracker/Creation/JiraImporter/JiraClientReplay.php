@@ -83,6 +83,6 @@ final class JiraClientReplay implements JiraClient
 
     public function getAttachmentContents(Attachment $attachment): string
     {
-        throw new \RuntimeException('Not implemented yet');
+        return 'fake data';
     }
 }

@@ -38,27 +38,29 @@ class JiraUserInfoQuerier
     /**
      * @throws JiraConnectionException
      */
-    public function retrieveUserFromJiraAPI(string $account_id): JiraCloudUser
+    public function retrieveUserFromJiraAPI(string $unique_account_identifier): JiraUser
     {
-        $this->logger->debug("User with account id $account_id is unknown, querying /user?accountId=$account_id ...");
-        $user_response = $this->wrapper->getUrl(
-            $this->getUserUrl($account_id)
-        );
+        $url = $this->getUserUrl($unique_account_identifier);
+        $this->logger->debug("User with account id $unique_account_identifier is unknown, querying $url ...");
+        $user_response = $this->wrapper->getUrl($url);
 
         if ($user_response === null) {
-            throw JiraConnectionException::canNotRetrieveUserInfoException($account_id);
+            throw JiraConnectionException::canNotRetrieveUserInfoException($unique_account_identifier);
         }
 
-        $jira_user = new ActiveJiraCloudUser($user_response);
+        $jira_user = JiraUserBuilder::getUserFromPayload($user_response);
 
         $this->logger->debug('Information of user ' . $jira_user->getDisplayName() . ' have been retrieved.');
 
         return $jira_user;
     }
 
-    private function getUserUrl(string $account_id): string
+    private function getUserUrl(string $unique_account_identifier): string
     {
-        $params = ['accountId' => $account_id];
-        return ClientWrapper::JIRA_CORE_BASE_URL . '/user?' . http_build_query($params);
+        if ($this->wrapper->isJiraCloud()) {
+            $params = ['accountId' => $unique_account_identifier];
+            return ClientWrapper::JIRA_CORE_BASE_URL . '/user?' . http_build_query($params);
+        }
+        return ClientWrapper::JIRA_CORE_BASE_URL . '/user?username=' . $unique_account_identifier;
     }
 }
