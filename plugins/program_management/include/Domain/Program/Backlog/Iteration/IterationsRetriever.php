@@ -87,6 +87,29 @@ final class IterationsRetriever
             }
         }
 
-        return $iteration_list;
+        return $this->sortIterationCollectionByDateFromMostToLessRecent($iteration_list);
+    }
+
+    /**
+     * @param Iteration[] $iterations
+     * @return Iteration[]
+     */
+    private function sortIterationCollectionByDateFromMostToLessRecent(array $iterations): array
+    {
+        usort($iterations, static function (Iteration $a, Iteration $b) {
+            if ($a->start_date === $b->start_date) {
+                return 0;
+            }
+            if ($a->start_date === null) {
+                return -1;
+            }
+            if ($b->start_date === null) {
+                return 1;
+            }
+
+            return $a->start_date > $b->start_date ? -1 : 1;
+        });
+
+        return $iterations;
     }
 }
