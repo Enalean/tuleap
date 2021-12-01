@@ -37,7 +37,7 @@ class ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker
 
     public function checkFieldConsistency(
         ProjectRegistrationSubmittedFieldsCollection $field_collection,
-        ProjectRegistrationErrorsCollection $errors_collection
+        ProjectRegistrationErrorsCollection $errors_collection,
     ): void {
         $mandatory_fields = [];
         $optional_field   = [];

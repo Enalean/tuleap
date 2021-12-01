@@ -59,7 +59,7 @@ class PreviousResultRepresentation
         UserRepresentation $submitted_by,
         ?string $status,
         string $result,
-        bool $has_been_run_at_least_once
+        bool $has_been_run_at_least_once,
     ) {
         $this->submitted_on               = JsonCast::toDate($submitted_on);
         $this->submitted_by               = $submitted_by;

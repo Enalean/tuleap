@@ -75,7 +75,7 @@ final class DefinitionCommonmarkRepresentation extends MinimalDefinitionRepresen
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
         ?Tracker_Artifact_Changeset $changeset = null,
-        ?Artifact $requirement = null
+        ?Artifact $requirement = null,
     ) {
         parent::__construct($artifact, $form_element_factory, $user, $changeset);
 
@@ -145,7 +145,7 @@ final class DefinitionCommonmarkRepresentation extends MinimalDefinitionRepresen
         PFUser $user,
         ?Tracker_Artifact_Changeset $changeset,
         Artifact $artifact,
-        string $field_shortname
+        string $field_shortname,
     ): string {
         return $html_purifier->purify(
             DefinitionRepresentationBuilder::getTextChangesetValue(
@@ -167,7 +167,7 @@ final class DefinitionCommonmarkRepresentation extends MinimalDefinitionRepresen
     private static function getCommonmarkContentWithReferences(
         ContentInterpretor $interpreter,
         string $commonmark_description,
-        Artifact $artifact
+        Artifact $artifact,
     ): string {
         return $interpreter->getInterpretedContentWithReferences(
             $commonmark_description,

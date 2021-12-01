@@ -110,7 +110,7 @@ class KanbanRepresentation
         KanbanArchiveInfoRepresentation $archive,
         bool $user_can_add_columns,
         bool $user_can_reorder_columns,
-        bool $user_can_add_artifact
+        bool $user_can_add_artifact,
     ) {
         $this->id                       = $id;
         $this->tracker_id               = $tracker_id;
@@ -135,7 +135,7 @@ class KanbanRepresentation
         $user_can_reorder_columns,
         $user_can_add_in_place,
         bool $user_can_add_artifact,
-        PFUser $user
+        PFUser $user,
     ): self {
         $kanban_id  = $kanban->getId();
         $kanban_uri = self::ROUTE . '/' . $kanban_id;
@@ -149,11 +149,11 @@ class KanbanRepresentation
             self::getColumns($kanban, $column_factory, $kanban_actions_checker, $user_can_add_in_place, $user),
             [
                 'backlog' => [
-                    'uri' => $kanban_uri . '/' . self::BACKLOG_ROUTE
+                    'uri' => $kanban_uri . '/' . self::BACKLOG_ROUTE,
                 ],
                 'items' => [
-                    'uri' => $kanban_uri . '/' . self::ITEMS_ROUTE
-                ]
+                    'uri' => $kanban_uri . '/' . self::ITEMS_ROUTE,
+                ],
             ],
             new KanbanBacklogInfoRepresentation('Backlog', $user_preferences->isBacklogOpen($kanban, $user), $user_can_add_in_place),
             new KanbanArchiveInfoRepresentation('Archive', $user_preferences->isArchiveOpen($kanban, $user)),
@@ -171,7 +171,7 @@ class KanbanRepresentation
         AgileDashboard_KanbanColumnFactory $column_factory,
         AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
         bool $user_can_add_in_place,
-        PFUser $user
+        PFUser $user,
     ): array {
         $column_representations = [];
         $columns                = $column_factory->getAllKanbanColumnsForAKanban($kanban, $user);

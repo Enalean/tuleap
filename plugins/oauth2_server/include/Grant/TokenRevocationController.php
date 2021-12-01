@@ -68,7 +68,7 @@ final class TokenRevocationController extends DispatchablePSR15Compatible implem
         OAuth2RefreshTokenRevoker $refresh_token_revoker,
         OAuth2AccessTokenRevoker $access_token_revoker,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->response_factory      = $response_factory;

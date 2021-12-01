@@ -79,7 +79,7 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilder implements N
         InlineCommentCodeContextExtractor $code_context_extractor,
         FilterUserFromCollection $filter_user_from_collection,
         UserHelper $user_helper,
-        HTMLURLBuilder $html_url_builder
+        HTMLURLBuilder $html_url_builder,
     ) {
         $this->user_manager                = $user_manager;
         $this->pull_request_factory        = $pull_request_factory;
@@ -123,7 +123,7 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilder implements N
                     $pull_request_owners,
                     $comment,
                     $this->code_context_extractor
-                )
+                ),
             ];
         } catch (InlineCommentCodeContextException $exception) {
             return [];

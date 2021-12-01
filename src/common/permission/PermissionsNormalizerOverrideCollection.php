@@ -56,7 +56,7 @@ class PermissionsNormalizerOverrideCollection
                     [
                         permission_get_name($permission_type),
                         $this->getUGroupNameImplode($override_ids),
-                        $this->getUGroupNameById($catch_all_ugroup_id)
+                        $this->getUGroupNameById($catch_all_ugroup_id),
                     ]
                 )
             );

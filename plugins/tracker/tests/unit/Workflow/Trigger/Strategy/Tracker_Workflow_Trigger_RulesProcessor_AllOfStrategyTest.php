@@ -81,7 +81,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
                 new Tracker_Workflow_Trigger_FieldValue(
                     $this->trigger_field,
                     $this->trigger_value
-                )
+                ),
             ]
         );
 
@@ -112,7 +112,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
                 new Tracker_Workflow_Trigger_FieldValue(
                     $trigger_field_2,
                     $this->trigger_value_2
-                )
+                ),
             ]
         );
 

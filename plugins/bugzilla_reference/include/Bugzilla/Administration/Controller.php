@@ -61,7 +61,7 @@ class Controller
         AdminPageRenderer $renderer,
         ReferenceSaver $reference_saver,
         ReferenceRetriever $reference_retriever,
-        ReferenceDestructor $reference_destructor
+        ReferenceDestructor $reference_destructor,
     ) {
         $this->renderer             = $renderer;
         $this->csrf_token           = new CSRFSynchronizerToken(BUGZILLA_REFERENCE_BASE_URL . '/admin/');

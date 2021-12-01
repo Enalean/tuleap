@@ -43,7 +43,7 @@ class SwitchToPresenterBuilder
 
     public function __construct(
         ProjectPresentersBuilder $project_presenters_builder,
-        SearchFormPresenterBuilder $search_form_presenter_builder
+        SearchFormPresenterBuilder $search_form_presenter_builder,
     ) {
         $this->project_presenters_builder    = $project_presenters_builder;
         $this->search_form_presenter_builder = $search_form_presenter_builder;

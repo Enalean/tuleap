@@ -93,7 +93,7 @@ final class GenericProvider implements Provider
         string $client_secret,
         bool $is_unique_authentication_endpoint,
         string $icon,
-        string $color
+        string $color,
     ) {
         $this->id                                = $id;
         $this->name                              = $name;

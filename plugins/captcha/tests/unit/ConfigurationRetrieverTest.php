@@ -33,7 +33,7 @@ class ConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao = \Mockery::mock(DataAccessObject::class);
         $dao->shouldReceive('getConfiguration')->andReturns([
             'site_key'   => 'site_key',
-            'secret_key' => 'secret_key'
+            'secret_key' => 'secret_key',
         ]);
 
         $configuration_retriever = new ConfigurationRetriever($dao);

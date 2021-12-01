@@ -63,7 +63,7 @@ class MyArtifactsRepresentation
         string $html_url,
         ?string $title,
         string $xref,
-        MinimalTrackerRepresentation $tracker
+        MinimalTrackerRepresentation $tracker,
     ) {
         $this->id       = $id;
         $this->uri      = $uri;

@@ -65,7 +65,7 @@ class ActionAuthorizationRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
         $dao->shouldReceive('searchExistingOIDsForAuthorizedActionByExpirationAndOIDs')->andReturns([
-            'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
+            'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',
         ]);
 
         $dao->shouldReceive('deleteByExpirationDate')->once();

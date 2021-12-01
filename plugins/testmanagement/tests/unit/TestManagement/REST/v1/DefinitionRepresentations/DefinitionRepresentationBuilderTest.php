@@ -256,7 +256,7 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockDefinitionArtifact(
         PFUser $user,
-        int $tracker_id
+        int $tracker_id,
     ): Artifact {
         $definition_artifact = Mockery::mock(Artifact::class);
 
@@ -286,7 +286,7 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         Artifact $definition_artifact,
         Tracker_Artifact_Changeset $changeset,
         \Tracker_FormElement_Field $field,
-        Tracker_Artifact_ChangesetValue_Text $text_field
+        Tracker_Artifact_ChangesetValue_Text $text_field,
     ): void {
         $definition_artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
         $definition_artifact->shouldReceive('getValue')->with($field, $changeset)->andReturn($text_field, null);

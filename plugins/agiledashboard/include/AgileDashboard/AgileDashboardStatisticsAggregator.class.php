@@ -41,7 +41,7 @@ class AgileDashboardStatisticsAggregator
     {
         $params = [
             'project_id'     => $project_id,
-            'statistic_name' => $type
+            'statistic_name' => $type,
         ];
         $this->event_manager->processEvent('aggregate_statistics', $params);
     }
@@ -89,7 +89,7 @@ class AgileDashboardStatisticsAggregator
             'statistic_name' => $statistic_name,
             'date_start'     => $date_start,
             'date_end'       => $date_end,
-            'result'         => &$statistics_data
+            'result'         => &$statistics_data,
         ];
         $this->event_manager->processEvent('get_statistics_aggregation', $params);
 

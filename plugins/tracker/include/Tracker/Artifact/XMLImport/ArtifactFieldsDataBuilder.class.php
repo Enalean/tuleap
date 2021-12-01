@@ -65,7 +65,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
         TrackerXmlFieldsMapping $xml_fields_mapping,
         Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
         Tracker_ArtifactFactory $tracker_artifact_factory,
-        TypeDao $type_dao
+        TypeDao $type_dao,
     ) {
         $this->formelement_factory = $formelement_factory;
         $this->tracker             = $tracker;
@@ -98,7 +98,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
                 $tracker_artifact_factory,
                 $type_dao,
             ),
-            self::FIELDTYPE_COMPUTED => new XMLImportFieldStrategyComputed()
+            self::FIELDTYPE_COMPUTED => new XMLImportFieldStrategyComputed(),
         ];
 
         $this->getExternalStrategies();
@@ -137,7 +137,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Artifact $artifact,
-        array &$data
+        array &$data,
     ) {
         $field = $this->formelement_factory->getUsedFieldByName(
             $this->tracker->getId(),
@@ -153,7 +153,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
     }
 
     private function forceTrackerSoThatFieldDoesNotLoadAFreshNewTrackerAndLooseTheDisabledStateOnWorkflow(
-        Tracker_FormElement_Field $field
+        Tracker_FormElement_Field $field,
     ) {
         $field->setTracker($this->tracker);
     }
@@ -163,7 +163,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
-        Artifact $artifact
+        Artifact $artifact,
     ) {
         try {
             $submitted_value = $this->getFieldData($field, $field_change, $submitted_by, $artifact);
@@ -199,7 +199,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
-        Artifact $artifact
+        Artifact $artifact,
     ) {
         $type = (string) $field_change['type'];
 

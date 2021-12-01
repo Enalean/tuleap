@@ -63,9 +63,9 @@ class ComputedFieldsDefaultValueTest extends TrackerBase
             'values'  => [
                 [
                     'field_id' => $string_field_id,
-                    'value' => 'Title 01'
-                ]
-            ]
+                    'value' => 'Title 01',
+                ],
+            ],
         ];
 
         $response = $this->getResponse(

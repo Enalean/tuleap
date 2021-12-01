@@ -47,7 +47,7 @@ class HomepagePanePresenterBuilder
     public function __construct(
         SystemEventDao $dao,
         EventManager $event_manager,
-        SystemEventManager $system_event_manager
+        SystemEventManager $system_event_manager,
     ) {
         $this->dao                  = $dao;
         $this->event_manager        = $event_manager;
@@ -65,7 +65,7 @@ class HomepagePanePresenterBuilder
     {
         $event = new GetSystemEventQueuesEvent(
             [
-                SystemEventQueue::NAME => new SystemEventQueue()
+                SystemEventQueue::NAME => new SystemEventQueue(),
             ]
         );
         $this->event_manager->processEvent(

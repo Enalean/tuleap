@@ -48,7 +48,7 @@ class PermissionPerGroupBuilder
 
         $ugroups = [
             'dynamic' => [],
-            'static'  => []
+            'static'  => [],
         ];
         $this->addDynamicUgroups($project, $ugroups['dynamic']);
         $this->addStaticUgroups($project, $ugroups['static']);

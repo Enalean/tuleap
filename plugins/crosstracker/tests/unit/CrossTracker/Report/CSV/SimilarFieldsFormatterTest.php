@@ -66,7 +66,7 @@ class SimilarFieldsFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->last_changeset        = Mockery::mock(\Tracker_Artifact_Changeset::class);
         $this->artifact->shouldReceive(
             [
-                'getLastChangeset' => $this->last_changeset
+                'getLastChangeset' => $this->last_changeset,
             ]
         );
     }
@@ -142,7 +142,7 @@ class SimilarFieldsFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
             $formatted_string_field,
             $formatted_text_field,
             $formatted_float_field,
-            $formatted_date_field
+            $formatted_date_field,
         ], $result);
     }
 

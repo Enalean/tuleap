@@ -39,7 +39,7 @@ class ChangesetsForDiffRetriever
 
     public function __construct(
         \Tracker_Artifact_ChangesetFactory $changeset_factory,
-        \Tracker_FormElementFactory $field_factory
+        \Tracker_FormElementFactory $field_factory,
     ) {
         $this->changeset_factory = $changeset_factory;
         $this->field_factory     = $field_factory;

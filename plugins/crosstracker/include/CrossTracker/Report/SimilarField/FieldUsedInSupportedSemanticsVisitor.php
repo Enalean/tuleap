@@ -58,7 +58,7 @@ class FieldUsedInSupportedSemanticsVisitor implements \Tracker_FormElement_Field
     public function __construct(
         \Tracker_Semantic_Title $title_semantic,
         \Tracker_Semantic_Description $description_semantic,
-        \Tracker_Semantic_Status $status_semantic
+        \Tracker_Semantic_Status $status_semantic,
     ) {
         $this->title_semantic       = $title_semantic;
         $this->description_semantic = $description_semantic;

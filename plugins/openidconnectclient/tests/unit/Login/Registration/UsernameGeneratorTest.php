@@ -52,7 +52,7 @@ class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $generated_username = $username_generator->getUsername(
             [
-                'preferred_username' => $username
+                'preferred_username' => $username,
             ]
         );
 
@@ -75,7 +75,7 @@ class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $generated_username = $username_generator->getUsername(
             [
                 'given_name'  => 'Given Name',
-                'family_name' => 'Family Name'
+                'family_name' => 'Family Name',
             ]
         );
         $this->assertEquals($username, $generated_username);
@@ -96,7 +96,7 @@ class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $generated_username = $username_generator->getUsername(
             [
-                'family_name' => 'Family Name'
+                'family_name' => 'Family Name',
             ]
         );
         $this->assertEquals($username, $generated_username);
@@ -116,7 +116,7 @@ class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $generated_username = $username_generator->getUsername(
             [
-                'given_name' => 'Given Name'
+                'given_name' => 'Given Name',
             ]
         );
         $this->assertEquals($username, $generated_username);
@@ -153,7 +153,7 @@ class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $username_generator->getUsername(
             [
                 'given_name'  => 'IncompatibleGivenName',
-                'family_name' => 'IncompatibleFamilyName'
+                'family_name' => 'IncompatibleFamilyName',
             ]
         );
     }
@@ -179,7 +179,7 @@ class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'preferred_username' => 'incompatiblepreferredusername',
                 'given_name'         => 'Given Name',
-                'family_name'        => 'Family Name'
+                'family_name'        => 'Family Name',
             ]
         );
         $this->assertEquals($username, $generated_username);

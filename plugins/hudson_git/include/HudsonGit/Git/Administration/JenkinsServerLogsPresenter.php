@@ -50,7 +50,7 @@ class JenkinsServerLogsPresenter
         string $repository_name,
         string $formatted_push_date,
         array $triggered_jobs,
-        ?int $status_code
+        ?int $status_code,
     ) {
         $this->repository_name = $repository_name;
         $this->push_date       = $formatted_push_date;

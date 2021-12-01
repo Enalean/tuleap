@@ -41,8 +41,8 @@ class LockResponseLockRepresentation implements LockResponse
             "path" => $this->lock->getPath(),
             "locked_at" => $this->lock->getCreationDate()->format(DateTimeInterface::ATOM),
             "owner" => [
-                "name" => $this->lock->getOwner()->getRealName()
-            ]
+                "name" => $this->lock->getOwner()->getRealName(),
+            ],
         ];
     }
 }

@@ -46,7 +46,7 @@ class CustomMetadataRepresentationRetriever
     public function __construct(
         \Docman_MetadataFactory $factory,
         MetadataListOfValuesElementListBuilder $list_values_builder,
-        CustomMetadataCollectionBuilder $collection_builder
+        CustomMetadataCollectionBuilder $collection_builder,
     ) {
         $this->factory             = $factory;
         $this->list_values_builder = $list_values_builder;
@@ -195,14 +195,14 @@ class CustomMetadataRepresentationRetriever
                     $this->checkSimpleMetadataListValues($metadata_representation, $metadata);
                     $representations[] = [
                         'id'    => (int) $metadata->getId(),
-                        'value' => $metadata_representation->value
+                        'value' => $metadata_representation->value,
                     ];
                 }
             } else {
                 $this->checkMetadataValue($metadata_representation);
                 $representations[] = [
                     'id'    => (int) $metadata->getId(),
-                    'value' => $metadata_representation->value
+                    'value' => $metadata_representation->value,
                 ];
             }
         }
@@ -278,7 +278,7 @@ class CustomMetadataRepresentationRetriever
      */
     private function checkRequiredMetadataAreProvidedAtItemCreation(
         Docman_Item $parent_item,
-        ?array $common_representation
+        ?array $common_representation,
     ): void {
         $this->factory->appendItemMetadataList($parent_item);
 

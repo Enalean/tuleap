@@ -45,7 +45,7 @@ class TimeController
 
     public function __construct(
         TimeUpdater $time_updater,
-        TimeRetriever $time_retriever
+        TimeRetriever $time_retriever,
     ) {
         $this->time_updater   = $time_updater;
         $this->time_retriever = $time_retriever;
@@ -60,7 +60,7 @@ class TimeController
         Codendi_Request $request,
         PFUser $user,
         Artifact $artifact,
-        CSRFSynchronizerToken $csrf
+        CSRFSynchronizerToken $csrf,
     ) {
         $csrf->check();
 
@@ -80,7 +80,7 @@ class TimeController
         Codendi_Request $request,
         PFUser $user,
         Artifact $artifact,
-        CSRFSynchronizerToken $csrf
+        CSRFSynchronizerToken $csrf,
     ) {
         $csrf->check();
 
@@ -100,7 +100,7 @@ class TimeController
         Codendi_Request $request,
         PFUser $user,
         Artifact $artifact,
-        CSRFSynchronizerToken $csrf
+        CSRFSynchronizerToken $csrf,
     ) {
         $csrf->check();
 

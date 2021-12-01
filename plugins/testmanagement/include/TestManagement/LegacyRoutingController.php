@@ -48,7 +48,7 @@ final class LegacyRoutingController implements DispatchableWithRequest, Dispatch
     public function __construct(
         Router $legacy_router,
         IncludeAssets $testmanagement_assets,
-        IncludeAssets $include_core_js_assets
+        IncludeAssets $include_core_js_assets,
     ) {
         $this->legacy_router          = $legacy_router;
         $this->include_core_js_assets = $include_core_js_assets;

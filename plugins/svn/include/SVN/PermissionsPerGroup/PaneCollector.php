@@ -33,7 +33,7 @@ class PaneCollector
     private $group_pane_builder;
 
     public function __construct(
-        PermissionPerGroupSVNServicePaneBuilder $group_pane_builder
+        PermissionPerGroupSVNServicePaneBuilder $group_pane_builder,
     ) {
         $this->group_pane_builder = $group_pane_builder;
     }

@@ -38,7 +38,7 @@ final class ArtifactCreatedEventStub implements ArtifactCreatedEvent
         private ArtifactIdentifier $artifact,
         private TrackerIdentifier $tracker,
         private UserIdentifier $user,
-        private ChangesetIdentifier $changeset
+        private ChangesetIdentifier $changeset,
     ) {
     }
 
@@ -46,7 +46,7 @@ final class ArtifactCreatedEventStub implements ArtifactCreatedEvent
         int $artifact_id,
         int $tracker_id,
         int $user_id,
-        int $changeset_id
+        int $changeset_id,
     ): self {
         $changeset = DomainChangeset::fromId(VerifyIsChangesetStub::withValidChangeset(), $changeset_id);
         if (! $changeset) {

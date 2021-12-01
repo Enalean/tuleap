@@ -111,12 +111,12 @@ class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItTriggersRepositoryHooks(): void
     {
         $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn([
-            ['jenkins_server_url' => 'https://example.com/jenkins', 'is_commit_reference_needed' => true]
+            ['jenkins_server_url' => 'https://example.com/jenkins', 'is_commit_reference_needed' => true],
         ]);
 
         $polling_response = Mockery::mock(PollingResponse::class);
         $polling_response->shouldReceive('getJobPaths')->andReturn([
-            'https://example.com/jenkins/job01'
+            'https://example.com/jenkins/job01',
         ]);
         $polling_response->shouldReceive('getBody')->andReturn('Response body');
         $this->jenkins_client->shouldReceive('pushGitNotifications')
@@ -151,12 +151,12 @@ class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItTriggersRepositoryHooksWithoutCommitReference(): void
     {
         $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn([
-            ['jenkins_server_url' => 'https://example.com/jenkins', 'is_commit_reference_needed' => false]
+            ['jenkins_server_url' => 'https://example.com/jenkins', 'is_commit_reference_needed' => false],
         ]);
 
         $polling_response = Mockery::mock(PollingResponse::class);
         $polling_response->shouldReceive('getJobPaths')->andReturn([
-            'https://example.com/jenkins/job01'
+            'https://example.com/jenkins/job01',
         ]);
         $polling_response->shouldReceive('getBody')->andReturn('Response body');
         $this->jenkins_client->shouldReceive('pushGitNotifications')
@@ -191,12 +191,12 @@ class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItTriggersEachTransportsInRepositoryHooks(): void
     {
         $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn([
-            ['jenkins_server_url' => 'https://example.com/jenkins', 'is_commit_reference_needed' => true]
+            ['jenkins_server_url' => 'https://example.com/jenkins', 'is_commit_reference_needed' => true],
         ]);
 
         $polling_response = Mockery::mock(PollingResponse::class);
         $polling_response->shouldReceive('getJobPaths')->andReturn([
-            'https://example.com/jenkins/job01'
+            'https://example.com/jenkins/job01',
         ]);
         $polling_response->shouldReceive('getBody')->andReturn('Response body');
 
@@ -239,12 +239,12 @@ class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', $this->project);
         $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([
-            $jenkins_server
+            $jenkins_server,
         ]);
 
         $polling_response = Mockery::mock(PollingResponse::class);
         $polling_response->shouldReceive('getJobPaths')->andReturn([
-            'https://example.com/jenkins/job01'
+            'https://example.com/jenkins/job01',
         ]);
         $polling_response->shouldReceive('getBody')->andReturn('Response body');
         $this->jenkins_client->shouldReceive('pushGitNotifications')->times(2)->andReturn($polling_response);
@@ -276,12 +276,12 @@ class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', $this->project);
         $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([
-            $jenkins_server
+            $jenkins_server,
         ]);
 
         $polling_response = Mockery::mock(PollingResponse::class);
         $polling_response->shouldReceive('getJobPaths')->andReturn([
-            'https://example.com/jenkins/job01'
+            'https://example.com/jenkins/job01',
         ]);
         $polling_response->shouldReceive('getBody')->andReturn('Response body');
 
@@ -324,12 +324,12 @@ class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', $this->project);
         $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([
-            $jenkins_server
+            $jenkins_server,
         ]);
 
         $polling_response = Mockery::mock(PollingResponse::class);
         $polling_response->shouldReceive('getJobPaths')->andReturn([
-            'https://example.com/jenkins/job01'
+            'https://example.com/jenkins/job01',
         ]);
         $polling_response->shouldReceive('getBody')->andReturn('Response body');
         $this->jenkins_client->shouldReceive('pushGitNotifications')->times(2)->andReturn($polling_response);

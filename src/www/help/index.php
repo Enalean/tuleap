@@ -23,7 +23,7 @@ require_once __DIR__ . '/../include/pre.php';
 
 $HTML->header([
     'title' => $Language->getText('include_layout', 'Help'),
-    'main_classes' => ['tlp-framed']
+    'main_classes' => ['tlp-framed'],
 ]);
 $HTML->displayHelpPage();
 $HTML->footer([]);

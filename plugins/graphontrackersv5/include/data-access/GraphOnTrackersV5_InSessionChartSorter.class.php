@@ -58,7 +58,7 @@ class GraphOnTrackersV5_InSessionChartSorter
 
     private function removeElementFromCollection(
         array &$charts,
-        GraphOnTrackersV5_Chart $edited_chart
+        GraphOnTrackersV5_Chart $edited_chart,
     ) {
         foreach ($charts as $key => $chart) {
             if ($chart->getId() === $edited_chart->getId()) {
@@ -70,7 +70,7 @@ class GraphOnTrackersV5_InSessionChartSorter
     private function addElementInCollection(
         array &$charts,
         GraphOnTrackersV5_Chart $edited_chart,
-        $wanted_position
+        $wanted_position,
     ) {
         if ($wanted_position === 0 || $wanted_position === '0') {
             $wanted_position = self::BEGINNING;

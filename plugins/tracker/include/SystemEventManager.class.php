@@ -40,7 +40,7 @@ class Tracker_SystemEventManager extends SystemEventManager
         $name,
         $description,
         $short_name,
-        bool $keep_original_ids
+        bool $keep_original_ids,
     ) {
         $this->system_event_manager->createEvent(
             SystemEvent_TRACKER_V3_MIGRATION::NAME,

@@ -162,12 +162,12 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $references = [
             new WebhookTuleapReference(123),
-            new WebhookTuleapReference(59)
+            new WebhookTuleapReference(59),
         ];
 
         $references_presenter = [
             new BotCommentReferencePresenter(123, "https://example.fr"),
-            new BotCommentReferencePresenter(59, "https://example.fr")
+            new BotCommentReferencePresenter(59, "https://example.fr"),
         ];
 
         $this->bot_comment_reference_presenter_builder

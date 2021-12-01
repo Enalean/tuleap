@@ -37,7 +37,7 @@ final class ProjectRegistrationPermissionsChecker implements ProjectRegistration
 
     public function collectAllErrorsForProjectRegistration(
         PFUser $user,
-        ProjectCreationData $project_creation_data
+        ProjectCreationData $project_creation_data,
     ): ProjectRegistrationErrorsCollection {
         $errors_collection = new ProjectRegistrationErrorsCollection();
 

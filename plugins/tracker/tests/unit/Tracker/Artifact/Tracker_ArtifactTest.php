@@ -75,7 +75,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $changesets = [
             \Mockery::mock(\Tracker_Artifact_Changeset::class),
             \Mockery::mock(\Tracker_Artifact_Changeset::class),
-            $last_changeset
+            $last_changeset,
         ];
 
         $artifact->setChangesets($changesets);
@@ -206,7 +206,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         // Valid
         $fields_data = [
             101 => '123',
-            102 => '456'
+            102 => '456',
         ];
 
         $submitted_on      = $_SERVER['REQUEST_TIME'];
@@ -574,7 +574,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
 
         $updated_fields_data_by_workflow = [
             101 => '123',
-            102 => '456'
+            102 => '456',
         ];
         $workflow->shouldReceive('checkGlobalRules')->with($updated_fields_data_by_workflow)->once()->andThrows(
             new Tracker_Workflow_GlobalRulesViolationException()
@@ -784,7 +784,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
                 'user_id'     => 101,
                 'language_id' => 'en',
                 'user_name'   => 'user_01',
-                'ldap_id'     => 'ldap_O1'
+                'ldap_id'     => 'ldap_O1',
             ]
         );
 

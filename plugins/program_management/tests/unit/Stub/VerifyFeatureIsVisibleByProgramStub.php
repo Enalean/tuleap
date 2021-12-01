@@ -40,7 +40,7 @@ final class VerifyFeatureIsVisibleByProgramStub implements VerifyFeatureIsVisibl
         int $feature_id,
         UserIdentifier $user_identifier,
         ProgramIdentifier $program,
-        ?PermissionBypass $bypass
+        ?PermissionBypass $bypass,
     ): bool {
         return $this->is_visible;
     }

@@ -41,17 +41,17 @@ class SectionsPresenter
         $this->report_config_panel = dgettext('tuleap-tracker', 'Report');
 
         $this->emailgateway_url  = TRACKER_BASE_URL . '/config.php?' . http_build_query([
-            'action'   => 'emailgateway'
+            'action'   => 'emailgateway',
         ]);
         $this->types_url         = TRACKER_BASE_URL . '/config.php?' . http_build_query([
-            'action'   => 'types'
+            'action'   => 'types',
         ]);
         $this->report_config_url = TRACKER_BASE_URL . '/config.php?' . http_build_query([
-            'action' => 'report-config'
+            'action' => 'report-config',
         ]);
 
         $this->artifacts_deletion_url = TRACKER_BASE_URL . '/config.php?' . http_build_query([
-            'action' => 'artifacts-deletion'
+            'action' => 'artifacts-deletion',
         ]);
     }
 }

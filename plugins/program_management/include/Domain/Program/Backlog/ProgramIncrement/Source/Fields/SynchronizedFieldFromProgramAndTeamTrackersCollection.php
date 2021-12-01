@@ -43,7 +43,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
         private LogMessage $logger,
         private RetrieveTrackerFromField $retrieve_tracker_from_field,
         private VerifyFieldPermissions $retrieve_field_permission,
-        private RetrieveProjectFromTracker $retrieve_project_from_tracker
+        private RetrieveProjectFromTracker $retrieve_project_from_tracker,
     ) {
     }
 
@@ -52,7 +52,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
      */
     public function canUserSubmitAndUpdateAllFields(
         UserIdentifier $user_identifier,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
     ): bool {
         $can_submit = true;
         foreach ($this->synchronized_fields as $synchronized_field) {

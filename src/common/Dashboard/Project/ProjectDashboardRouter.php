@@ -38,7 +38,7 @@ class ProjectDashboardRouter
 
     public function __construct(
         ProjectDashboardController $project_dashboard_controller,
-        WidgetDashboardController $widget_dashboard_controller
+        WidgetDashboardController $widget_dashboard_controller,
     ) {
         $this->project_dashboard_controller = $project_dashboard_controller;
         $this->widget_dashboard_controller  = $widget_dashboard_controller;

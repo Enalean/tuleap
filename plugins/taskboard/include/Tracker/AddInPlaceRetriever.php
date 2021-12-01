@@ -37,7 +37,7 @@ class AddInPlaceRetriever
     public function retrieveAddInPlace(
         TaskboardTracker $taskboard_tracker,
         \PFUser $user,
-        MappedFieldsCollection $mapped_fields_collection
+        MappedFieldsCollection $mapped_fields_collection,
     ): ?AddInPlace {
         $tracker        = $taskboard_tracker->getTracker();
         $child_trackers = $tracker->getChildren();
@@ -78,7 +78,7 @@ class AddInPlaceRetriever
     private function areTitleAndMappedFieldTheOnlyRequiredField(
         \Tracker $tracker,
         \Tracker_FormElement_Field $field_title,
-        \Tracker_FormElement_Field_Selectbox $mapped_field
+        \Tracker_FormElement_Field_Selectbox $mapped_field,
     ): bool {
         $title_field_id  = $field_title->getId();
         $mapped_field_id = $mapped_field->getId();

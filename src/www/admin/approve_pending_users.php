@@ -250,7 +250,7 @@ if (count($users) === 0) {
         [
             'title'   => $title,
             'msg'     => $msg,
-            'go_back' => $GLOBALS['Language']->getText('admin_approve_pending_users', 'go_back')
+            'go_back' => $GLOBALS['Language']->getText('admin_approve_pending_users', 'go_back'),
         ]
     );
 } else {

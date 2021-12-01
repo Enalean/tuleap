@@ -33,7 +33,7 @@ final class SearchVisibleTeamsOfProgramStub implements SearchVisibleTeamsOfProgr
     private function __construct(
         private array $team_ids,
         private bool $is_error_not_visible,
-        private bool $has_no_team
+        private bool $has_no_team,
     ) {
     }
 

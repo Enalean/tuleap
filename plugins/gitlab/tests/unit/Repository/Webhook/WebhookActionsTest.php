@@ -112,7 +112,7 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
                     1608110510,
                     'john-snow@example.com',
                     'John Snow'
-                )
+                ),
             ]
         );
 

@@ -36,7 +36,7 @@ class BuildParams
             self::BUILD_PARAMETER_PROJECT    => $repository->getProject()->getUnixName(),
             self::BUILD_PARAMETER_USER       => $commit_info->getUser(),
             self::BUILD_PARAMETER_REPOSITORY => $repository->getName(),
-            self::BUILD_PARAMETER_PATH       => implode("\n", $commit_info->getChangedDirectories())
+            self::BUILD_PARAMETER_PATH       => implode("\n", $commit_info->getChangedDirectories()),
         ];
     }
 }

@@ -38,7 +38,7 @@ class ApprovalTableStateMapper
             PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED  => dgettext('tuleap-docman', 'Approved'),
             PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED  => dgettext('tuleap-docman', 'Rejected'),
             PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED => dgettext('tuleap-docman', 'Commented'),
-            PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED  => dgettext('tuleap-docman', 'Declined')
+            PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED  => dgettext('tuleap-docman', 'Declined'),
         ];
 
         if (! isset($statuses_map[$state_id])) {

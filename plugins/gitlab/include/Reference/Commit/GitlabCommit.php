@@ -58,7 +58,7 @@ class GitlabCommit
         string $commit_title,
         string $commit_branch_name,
         string $commit_author_name,
-        string $commit_author_email
+        string $commit_author_email,
     ) {
         $this->commit_sha1         = $commit_sha1;
         $this->commit_date         = $commit_date;

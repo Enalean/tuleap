@@ -34,7 +34,7 @@ final class ProjectAdministrationLinkPresenter
     public static function fromProject(
         VerifyUserCanAccessProjectAdministration $access_verifier,
         \Project $project,
-        \PFUser $user
+        \PFUser $user,
     ): ?self {
         if (! $access_verifier->canUserAccessProjectAdministration($user, $project)) {
             return null;

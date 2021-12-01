@@ -156,12 +156,12 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'filetype'     => 'text/plain',
             'field_id'     => 1001,
             'filesize'     => 5,
-            'filename'     => 'Readme.mkd'
+            'filename'     => 'Readme.mkd',
         ];
         $this->ongoing_upload_dao->shouldReceive(
             [
                 'searchFileOngoingUploadByIDUserIDAndExpirationDate' => $row,
-                'searchFileOngoingUploadById'                        => $row
+                'searchFileOngoingUploadById'                        => $row,
             ]
         );
 
@@ -174,14 +174,14 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->shouldReceive(
             [
                 'getUsedFormElementFieldById' => $this->field,
-                'isFieldAFileField'           => true
+                'isFieldAFileField'           => true,
             ]
         );
 
         $this->field->shouldReceive(
             [
                 'getTracker'  => $this->tracker,
-                'userCanRead' => true
+                'userCanRead' => true,
             ]
         );
 
@@ -232,12 +232,12 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'filetype'     => 'image/png',
             'field_id'     => 1001,
             'filesize'     => 5,
-            'filename'     => 'toto.png'
+            'filename'     => 'toto.png',
         ];
         $this->ongoing_upload_dao->shouldReceive(
             [
                 'searchFileOngoingUploadByIDUserIDAndExpirationDate' => $row,
-                'searchFileOngoingUploadById'                        => $row
+                'searchFileOngoingUploadById'                        => $row,
             ]
         );
 
@@ -251,14 +251,14 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->shouldReceive(
             [
                 'getUsedFormElementFieldById' => $this->field,
-                'isFieldAFileField'           => true
+                'isFieldAFileField'           => true,
             ]
         );
 
         $this->field->shouldReceive(
             [
                 'getTracker'  => $this->tracker,
-                'userCanRead' => true
+                'userCanRead' => true,
             ]
         );
 
@@ -294,7 +294,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->ongoing_upload_dao->shouldReceive(
             [
-                'searchFileOngoingUploadByIDUserIDAndExpirationDate' => null
+                'searchFileOngoingUploadByIDUserIDAndExpirationDate' => null,
             ]
         );
 
@@ -322,7 +322,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->ongoing_upload_dao->shouldReceive(
             [
-                'searchFileOngoingUploadByIDUserIDAndExpirationDate' => null
+                'searchFileOngoingUploadByIDUserIDAndExpirationDate' => null,
             ]
         );
 
@@ -350,7 +350,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->ongoing_upload_dao->shouldReceive(
             [
-                'searchFileOngoingUploadByIDUserIDAndExpirationDate' => null
+                'searchFileOngoingUploadByIDUserIDAndExpirationDate' => null,
             ]
         );
 
@@ -385,12 +385,12 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'filetype'     => 'text/plain',
             'field_id'     => 1001,
             'filesize'     => 5,
-            'filename'     => 'Readme.mkd'
+            'filename'     => 'Readme.mkd',
         ];
         $this->ongoing_upload_dao->shouldReceive(
             [
                 'searchFileOngoingUploadByIDUserIDAndExpirationDate' => $row,
-                'searchFileOngoingUploadById'                        => $row
+                'searchFileOngoingUploadById'                        => $row,
             ]
         );
 
@@ -429,12 +429,12 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'filetype'     => 'text/plain',
             'field_id'     => 1001,
             'filesize'     => 5,
-            'filename'     => 'TaylorSwift.jpg'
+            'filename'     => 'TaylorSwift.jpg',
         ];
         $this->ongoing_upload_dao->shouldReceive(
             [
                 'searchFileOngoingUploadByIDUserIDAndExpirationDate' => $row,
-                'searchFileOngoingUploadById'                        => $row
+                'searchFileOngoingUploadById'                        => $row,
             ]
         );
 
@@ -473,12 +473,12 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'filetype'     => 'text/plain',
             'field_id'     => 1001,
             'filesize'     => 5,
-            'filename'     => 'Readme.mkd'
+            'filename'     => 'Readme.mkd',
         ];
         $this->ongoing_upload_dao->shouldReceive(
             [
                 'searchFileOngoingUploadByIDUserIDAndExpirationDate' => $row,
-                'searchFileOngoingUploadById'                        => $row
+                'searchFileOngoingUploadById'                        => $row,
             ]
         );
 
@@ -523,12 +523,12 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'filetype'     => 'text/plain',
             'field_id'     => 1001,
             'filesize'     => 5,
-            'filename'     => 'Readme.mkd'
+            'filename'     => 'Readme.mkd',
         ];
         $this->ongoing_upload_dao->shouldReceive(
             [
                 'searchFileOngoingUploadByIDUserIDAndExpirationDate' => $row,
-                'searchFileOngoingUploadById'                        => $row
+                'searchFileOngoingUploadById'                        => $row,
             ]
         );
 
@@ -539,7 +539,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->shouldReceive(
             [
                 'getUsedFormElementFieldById' => $this->field,
-                'isFieldAFileField'           => false
+                'isFieldAFileField'           => false,
             ]
         );
 
@@ -574,12 +574,12 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'filetype'     => 'text/plain',
             'field_id'     => 1001,
             'filesize'     => 5,
-            'filename'     => 'Readme.mkd'
+            'filename'     => 'Readme.mkd',
         ];
         $this->ongoing_upload_dao->shouldReceive(
             [
                 'searchFileOngoingUploadByIDUserIDAndExpirationDate' => $row,
-                'searchFileOngoingUploadById'                        => $row
+                'searchFileOngoingUploadById'                        => $row,
             ]
         );
 
@@ -590,13 +590,13 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->shouldReceive(
             [
                 'getUsedFormElementFieldById' => $this->field,
-                'isFieldAFileField'           => true
+                'isFieldAFileField'           => true,
             ]
         );
 
         $this->field->shouldReceive(
             [
-                'getTracker' => null
+                'getTracker' => null,
             ]
         );
 
@@ -631,12 +631,12 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'filetype'     => 'text/plain',
             'field_id'     => 1001,
             'filesize'     => 5,
-            'filename'     => 'Readme.mkd'
+            'filename'     => 'Readme.mkd',
         ];
         $this->ongoing_upload_dao->shouldReceive(
             [
                 'searchFileOngoingUploadByIDUserIDAndExpirationDate' => $row,
-                'searchFileOngoingUploadById'                        => $row
+                'searchFileOngoingUploadById'                        => $row,
             ]
         );
 
@@ -647,13 +647,13 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->shouldReceive(
             [
                 'getUsedFormElementFieldById' => $this->field,
-                'isFieldAFileField'           => true
+                'isFieldAFileField'           => true,
             ]
         );
 
         $this->field->shouldReceive(
             [
-                'getTracker' => $this->tracker
+                'getTracker' => $this->tracker,
             ]
         );
 
@@ -696,12 +696,12 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'filetype'     => 'text/plain',
             'field_id'     => 1001,
             'filesize'     => 5,
-            'filename'     => 'Readme.mkd'
+            'filename'     => 'Readme.mkd',
         ];
         $this->ongoing_upload_dao->shouldReceive(
             [
                 'searchFileOngoingUploadByIDUserIDAndExpirationDate' => $row,
-                'searchFileOngoingUploadById'                        => $row
+                'searchFileOngoingUploadById'                        => $row,
             ]
         );
 
@@ -712,14 +712,14 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->shouldReceive(
             [
                 'getUsedFormElementFieldById' => $this->field,
-                'isFieldAFileField'           => true
+                'isFieldAFileField'           => true,
             ]
         );
 
         $this->field->shouldReceive(
             [
                 'getTracker'  => $this->tracker,
-                'userCanRead' => false
+                'userCanRead' => false,
             ]
         );
 
@@ -768,12 +768,12 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'filetype'     => 'text/plain',
             'field_id'     => 1001,
             'filesize'     => 5,
-            'filename'     => 'readme.mkd'
+            'filename'     => 'readme.mkd',
         ];
         $this->ongoing_upload_dao->shouldReceive(
             [
                 'searchFileOngoingUploadByIDUserIDAndExpirationDate' => $row,
-                'searchFileOngoingUploadById'                        => $row
+                'searchFileOngoingUploadById'                        => $row,
             ]
         );
 
@@ -786,14 +786,14 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->shouldReceive(
             [
                 'getUsedFormElementFieldById' => $this->field,
-                'isFieldAFileField'           => true
+                'isFieldAFileField'           => true,
             ]
         );
 
         $this->field->shouldReceive(
             [
                 'getTracker'  => $this->tracker,
-                'userCanRead' => true
+                'userCanRead' => true,
             ]
         );
 
@@ -866,7 +866,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $fileinfo->shouldReceive(
             [
                 'getFilename' => 'Readme.mkd',
-                'getId'       => 42
+                'getId'       => 42,
             ]
         );
 
@@ -909,7 +909,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $fileinfo->shouldReceive(
             [
                 'getFilename' => 'Readme.mkd',
-                'getId'       => 42
+                'getId'       => 42,
             ]
         );
 
@@ -959,7 +959,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->field->shouldReceive(
             [
                 'getTracker'  => $this->tracker,
-                'userCanRead' => true
+                'userCanRead' => true,
             ]
         );
 
@@ -976,7 +976,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getId'       => 42,
                 'getField'    => $this->field,
                 'getPath'     => $path . '/42',
-                'getFiletype' => 'text/plain'
+                'getFiletype' => 'text/plain',
             ]
         );
 

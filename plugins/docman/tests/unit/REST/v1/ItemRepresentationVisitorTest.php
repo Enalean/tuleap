@@ -92,7 +92,7 @@ class ItemRepresentationVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
                 null,
                 null,
                 null,
-                null
+                null,
             ]
         )->once();
 
@@ -105,7 +105,7 @@ class ItemRepresentationVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user   = Mockery::mock(\PFUser::class);
         $params = [
             'current_user' => $user,
-            'with_size' => true
+            'with_size' => true,
         ];
 
         $this->item_factory->shouldReceive('getItemTree')->with(

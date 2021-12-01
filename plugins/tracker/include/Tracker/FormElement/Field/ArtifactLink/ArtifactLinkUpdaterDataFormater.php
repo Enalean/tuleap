@@ -30,7 +30,7 @@ class ArtifactLinkUpdaterDataFormater
         Tracker_FormElement_Field_ArtifactLink $artifactlink_field,
         array $elements_to_be_linked,
         array $elements_to_be_unlinked,
-        string $type
+        string $type,
     ): array {
         $field_datas                                                 = [];
         $field_datas[$artifactlink_field->getId()]['new_values']     = $this->formatLinkedElementForNewChangeset(
@@ -70,7 +70,7 @@ class ArtifactLinkUpdaterDataFormater
         Tracker_FormElement_Field_ArtifactLink $artifactlink_field,
         array $elements_to_be_linked,
         array &$field_datas,
-        string $type
+        string $type,
     ): void {
         $tracker = $artifactlink_field->getTracker();
 

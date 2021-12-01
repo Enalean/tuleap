@@ -41,7 +41,7 @@ class ReferenceGetTooltipChainLegacy extends ReferenceGetTooltipChain
         \Project $project,
         \PFUser $user,
         string $keyword,
-        string $value
+        string $value,
     ): void {
         $event = new ReferenceGetTooltipContentEvent($reference, $project, $user, $keyword, $value);
         $this->event_manager->processEvent($event);

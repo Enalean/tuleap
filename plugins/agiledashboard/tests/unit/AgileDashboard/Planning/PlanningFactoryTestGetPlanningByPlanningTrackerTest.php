@@ -90,7 +90,7 @@ class PlanningFactoryTestGetPlanningByPlanningTrackerTest extends \Tuleap\Test\P
             'group_id'            => 102,
             'planning_tracker_id' => 1,
             'backlog_title'       => 'Release Backlog',
-            'plan_title'          => 'Sprint Plan'
+            'plan_title'          => 'Sprint Plan',
         ];
 
         $this->planning_dao->shouldReceive('searchBacklogTrackersByPlanningId')->andReturn([['tracker_id' => 2]]);

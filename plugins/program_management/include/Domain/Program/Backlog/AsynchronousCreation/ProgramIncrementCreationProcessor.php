@@ -58,7 +58,7 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
         private RetrieveFieldValuesGatherer $values_retriever,
         private RetrieveChangesetSubmissionDate $submission_date_retriever,
         private RetrieveProgramOfProgramIncrement $program_retriever,
-        private BuildProgram $program_builder
+        private BuildProgram $program_builder,
     ) {
     }
 

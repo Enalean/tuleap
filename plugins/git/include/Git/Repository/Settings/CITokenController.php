@@ -42,7 +42,7 @@ class CITokenController extends SettingsController
     public function __construct(
         RepositoryFromRequestRetriever $repository_retriever,
         CITokenManager $manager,
-        BuildStatusChangePermissionManager $build_status_change_manager
+        BuildStatusChangePermissionManager $build_status_change_manager,
     ) {
         parent::__construct($repository_retriever);
         $this->manager                     = $manager;
@@ -79,7 +79,7 @@ class CITokenController extends SettingsController
         $project_id = $request->getProject()->getID();
         $pane_url   = GIT_BASE_URL . '/?' . http_build_query([
             'group_id' => $project_id,
-            'pane' => CIBuilds::ID
+            'pane' => CIBuilds::ID,
         ]);
         $token      = new CSRFSynchronizerToken($pane_url);
         $token->check();
@@ -91,7 +91,7 @@ class CITokenController extends SettingsController
             'action' => 'repo_management',
             'group_id' => $repository->getProjectId(),
             'repo_id' => $repository->getId(),
-            'pane' => CIBuilds::ID
+            'pane' => CIBuilds::ID,
         ]);
 
         $GLOBALS['Response']->redirect($redirect_url);

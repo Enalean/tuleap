@@ -111,7 +111,7 @@ class BacklogItemRepresentation
         \AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
         array $card_fields,
         BackgroundColor $background_color,
-        ProjectBackgroundConfiguration $project_background_configuration
+        ProjectBackgroundConfiguration $project_background_configuration,
     ) {
         $this->id               = JsonCast::toInt($backlog_item->id());
         $this->label            = $backlog_item->title();

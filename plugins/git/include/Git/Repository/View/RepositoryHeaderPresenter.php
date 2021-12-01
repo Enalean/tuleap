@@ -63,7 +63,7 @@ class RepositoryHeaderPresenter
         GerritStatusPresenter $gerrit_status_presenter,
         array $forked_repositories_presenters,
         array $navigation_tabs_presenters,
-        ?ParentRepositoryPresenter $parent_repository_presenter = null
+        ?ParentRepositoryPresenter $parent_repository_presenter = null,
     ) {
         $this->project_id                     = $repository->getProjectId();
         $this->repository_id                  = $repository->getId();

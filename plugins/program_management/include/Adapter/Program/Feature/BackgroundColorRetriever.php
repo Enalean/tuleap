@@ -36,7 +36,7 @@ final class BackgroundColorRetriever implements RetrieveBackgroundColor
     public function __construct(
         private BackgroundColorBuilder $background_color_builder,
         private RetrieveFullArtifact $artifact_retriever,
-        private RetrieveUser $retrieve_user
+        private RetrieveUser $retrieve_user,
     ) {
     }
 

@@ -45,7 +45,7 @@ class GitlabCommitCrossReferenceEnhancer
     public function __construct(
         \UserManager $user_manager,
         \UserHelper $user_helper,
-        TlpRelativeDatePresenterBuilder $relative_date_builder
+        TlpRelativeDatePresenterBuilder $relative_date_builder,
     ) {
         $this->user_manager          = $user_manager;
         $this->user_helper           = $user_helper;
@@ -55,7 +55,7 @@ class GitlabCommitCrossReferenceEnhancer
     public function getCrossReferencePresenterWithCommitInformation(
         CrossReferencePresenter $basic_cross_reference_presenter,
         GitlabCommit $gitlab_commit,
-        \PFUser $user
+        \PFUser $user,
     ): CrossReferencePresenter {
         return $basic_cross_reference_presenter
             ->withTitle($gitlab_commit->getCommitTitle(), null)
@@ -83,7 +83,7 @@ class GitlabCommitCrossReferenceEnhancer
 
         return [
             $branch_badge,
-            $commit_badge
+            $commit_badge,
         ];
     }
 

@@ -42,7 +42,7 @@ class RepositoryFromRequestRetriever
 
     public function __construct(
         GitRepositoryFactory $factory,
-        GitPermissionsManager $permissions_manager
+        GitPermissionsManager $permissions_manager,
     ) {
         $this->factory             = $factory;
         $this->permissions_manager = $permissions_manager;

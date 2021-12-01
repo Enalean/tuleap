@@ -384,7 +384,7 @@ $pref_params = ['group_id'   => $group_id,
                      'advsrch'    => $advsrch,
                      'msort'      => $msort,
                      'offset'     => $offset,
-                     'set'        => $set
+                     'set'        => $set,
 ];
 $em->processEvent('tracker_user_pref', $pref_params);
 

@@ -59,7 +59,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         GerritHTTPClientFactory $client_factory,
         RequestFactoryInterface $request_factory,
         StreamFactoryInterface $stream_factory,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
     ) {
         $this->client_factory  = $client_factory;
         $this->request_factory = $request_factory;
@@ -70,7 +70,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
     public function createProject(
         Git_RemoteServer_GerritServer $server,
         GitRepository $repository,
-        $parent_project_name
+        $parent_project_name,
     ) {
         $gerrit_project_name = $this->getGerritProjectName($repository);
         $this->logger->info("Gerrit REST driver: Create project $gerrit_project_name");
@@ -83,7 +83,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
                 json_encode(
                     [
                         'description' => "Migration of $gerrit_project_name from Tuleap",
-                        'parent' => $parent_project_name
+                        'parent' => $parent_project_name,
                     ],
                     JSON_THROW_ON_ERROR
                 )
@@ -102,7 +102,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
     public function createProjectWithPermissionsOnly(
         Git_RemoteServer_GerritServer $server,
         Project $project,
-        $admin_group_name
+        $admin_group_name,
     ) {
         $parent_project_name = $project->getUnixName();
 
@@ -118,7 +118,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
                     [
                         'description' => "Migration of $parent_project_name from Tuleap",
                         'permissions_only' => true,
-                        'owners' => [$admin_group_name]
+                        'owners' => [$admin_group_name],
                     ],
                     JSON_THROW_ON_ERROR
                 )
@@ -300,7 +300,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
     public function removeUserFromGroup(
         Git_RemoteServer_GerritServer $server,
         Git_Driver_Gerrit_User $user,
-        $group_name
+        $group_name,
     ) {
         $this->logger->info("Gerrit REST driver: Remove user " . $user->getSSHUserName() . " from group $group_name");
         $response = $this->sendRequest(
@@ -397,7 +397,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
     public function addSSHKeyToAccount(
         Git_RemoteServer_GerritServer $server,
         Git_Driver_Gerrit_User $user,
-        string $ssh_key
+        string $ssh_key,
     ): void {
         $this->logger->info("Gerrit REST driver: Add ssh key for user " . $user->getSSHUserName());
         $response             = $this->sendRequest(
@@ -418,7 +418,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
     public function removeSSHKeyFromAccount(
         Git_RemoteServer_GerritServer $server,
         Git_Driver_Gerrit_User $user,
-        $ssh_key
+        $ssh_key,
     ) {
         $this->logger->info("Gerrit REST driver: Remove ssh key for user " . $user->getSSHUserName());
 
@@ -439,7 +439,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
      */
     private function getAllSSHKeysForUser(
         Git_RemoteServer_GerritServer $server,
-        Git_Driver_Gerrit_User $user
+        Git_Driver_Gerrit_User $user,
     ) {
         $this->logger->info("Gerrit REST driver: Get all ssh keys for user " . $user->getSSHUserName());
         $response = $this->sendRequest(
@@ -564,7 +564,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
 
     private function getAllMembers(
         Git_RemoteServer_GerritServer $server,
-        $group_name
+        $group_name,
     ) {
         $response = $this->sendRequest(
             $server,
@@ -586,7 +586,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
 
     private function getAllIncludedGroups(
         Git_RemoteServer_GerritServer $server,
-        $group_name
+        $group_name,
     ) {
         $response = $this->sendRequest(
             $server,
@@ -639,7 +639,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
     private function actionRemoveSSHKey(
         Git_RemoteServer_GerritServer $server,
         Git_Driver_Gerrit_User $user,
-        $gerrit_key_id
+        $gerrit_key_id,
     ) {
         $response = $this->sendRequest(
             $server,
@@ -707,7 +707,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
 
     public function setUserAccountInactive(
         Git_RemoteServer_GerritServer $server,
-        PFUser $user
+        PFUser $user,
     ) {
         $response = $this->sendRequest(
             $server,

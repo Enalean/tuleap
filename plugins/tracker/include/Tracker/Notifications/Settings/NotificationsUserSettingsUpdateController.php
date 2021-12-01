@@ -44,7 +44,7 @@ class NotificationsUserSettingsUpdateController implements DispatchableWithReque
     public function __construct(
         TrackerFactory $tracker_factory,
         UserNotificationSettingsDAO $user_notification_settings_dao,
-        \ProjectHistoryDao $project_history_dao
+        \ProjectHistoryDao $project_history_dao,
     ) {
         $this->tracker_factory                = $tracker_factory;
         $this->user_notification_settings_dao = $user_notification_settings_dao;

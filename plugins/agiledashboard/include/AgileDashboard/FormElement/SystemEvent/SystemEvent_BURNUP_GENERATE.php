@@ -89,7 +89,7 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreL
         BurnupCacheDao $cache_dao,
         CountElementsCacheDao $count_elements_cache_dao,
         LoggerInterface $logger,
-        BurnupCacheDateRetriever $date_retriever
+        BurnupCacheDateRetriever $date_retriever,
     ) {
         $this->artifact_factory                 = $artifact_factory;
         $this->semantic_timeframe_builder       = $semantic_timeframe_builder;

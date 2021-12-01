@@ -123,7 +123,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
                 'user_id'               => $expected_user->getId(),
                 'verifier'              => 'wrong_hashed_verification_string',
                 'expiration_date'       => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
-                'has_already_been_used' => 0
+                'has_already_been_used' => 0,
             ]
         );
         $this->hasher->method('verifyHash')->willReturn(false);
@@ -145,7 +145,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
                 'user_id'               => $expected_user->getId(),
                 'verifier'              => 'wrong_hashed_verification_string',
                 'expiration_date'       => (new DateTimeImmutable('yesterday'))->getTimestamp(),
-                'has_already_been_used' => 0
+                'has_already_been_used' => 0,
             ]
         );
         $this->hasher->method('verifyHash')->willReturn(true);
@@ -167,7 +167,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
                 'user_id'               => 404,
                 'verifier'              => 'expected_hashed_verification_string',
                 'expiration_date'       => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
-                'has_already_been_used' => 0
+                'has_already_been_used' => 0,
             ]
         );
         $this->dao->expects(self::once())->method('markAuthorizationCodeAsUsed')->with($auth_code->getID());
@@ -188,7 +188,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
                 'user_id'               => 102,
                 'verifier'              => 'expected_hashed_verification_string',
                 'expiration_date'       => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
-                'has_already_been_used' => 1
+                'has_already_been_used' => 1,
             ]
         );
         $this->dao->expects(self::once())->method('deleteAuthorizationCodeByID')->with($auth_code->getID());
@@ -212,7 +212,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
                 'user_id'               => $expected_user->getId(),
                 'verifier'              => 'expected_hashed_verification_string',
                 'expiration_date'       => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
-                'has_already_been_used' => 0
+                'has_already_been_used' => 0,
             ]
         );
         $this->dao->expects(self::once())->method('markAuthorizationCodeAsUsed')->with($auth_code->getID());

@@ -33,8 +33,8 @@ class GitlabTagTest extends \Tuleap\Test\PHPUnit\TestCase
             "name" => "v1.0.2",
             "message" => "Message from tag",
             "commit" => [
-                "id" => "commit_sha1"
-            ]
+                "id" => "commit_sha1",
+            ],
         ];
 
         $gitlab_tap_api = GitlabTag::buildFromAPIResponse($response);
@@ -49,8 +49,8 @@ class GitlabTagTest extends \Tuleap\Test\PHPUnit\TestCase
         $response = [
             "message" => "Message from tag",
             "commit" => [
-                "id" => "commit_sha1"
-            ]
+                "id" => "commit_sha1",
+            ],
         ];
 
         $this->expectException(GitlabResponseAPIException::class);
@@ -63,8 +63,8 @@ class GitlabTagTest extends \Tuleap\Test\PHPUnit\TestCase
         $response = [
             "name" => "v1.0.2",
             "commit" => [
-                "id" => "commit_sha1"
-            ]
+                "id" => "commit_sha1",
+            ],
         ];
 
         $this->expectException(GitlabResponseAPIException::class);
@@ -89,7 +89,7 @@ class GitlabTagTest extends \Tuleap\Test\PHPUnit\TestCase
         $response = [
             "name" => "v1.0.2",
             "message" => "Message from tag",
-            "commit" => []
+            "commit" => [],
         ];
 
         $this->expectException(GitlabResponseAPIException::class);

@@ -96,7 +96,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         \UserManager $user_manager,
         DBTransactionExecutor $transaction_executor,
         DocmanItemsEventAdder $event_adder,
-        \ProjectManager $project_manager
+        \ProjectManager $project_manager,
     ) {
         $this->logger                         = $logger;
         $this->document_upload_path_allocator = $document_upload_path_allocator;
@@ -173,7 +173,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
                     'user_id'           => $document_row['user_id'],
                     'status'            => $document_row['status'],
                     'obsolescence_date' => $document_row['obsolescence_date'],
-                    'item_type'         => PLUGIN_DOCMAN_ITEM_TYPE_FILE
+                    'item_type'         => PLUGIN_DOCMAN_ITEM_TYPE_FILE,
                 ],
                 null
             );
@@ -190,7 +190,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
                 'filesize'  => $document_row['filesize'],
                 'filetype'  => $this->getFiletype($document_row['filename'], $file_path),
                 'path'      => $file_path,
-                'date'      => $current_time
+                'date'      => $current_time,
             ]);
             if (! $has_version_been_created) {
                 $this->docman_item_dao->delete($item_id);
@@ -234,7 +234,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
                 'group_id' => $item->getGroupId(),
                 'parent' => $this->docman_item_factory->getItemFromDb($item->getParentId()),
                 'item' => $item,
-                'user' => $user
+                'user' => $user,
             ]
         );
         $this->event_manager->processEvent('send_notifications', []);
@@ -244,7 +244,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
                 'group_id' => $item->getGroupId(),
                 'item' => $item,
                 'version' => $item_version,
-                'user' => $user
+                'user' => $user,
             ]
         );
     }

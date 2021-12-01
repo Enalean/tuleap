@@ -46,7 +46,7 @@ class PlanningPermissionsRepresentationBuilder
     public function __construct(
         PlanningPermissionsManager $planning_permissions_manager,
         PermissionsManager $permissions_manager,
-        PermissionPerGroupUGroupRepresentationBuilder $ugroup_builder
+        PermissionPerGroupUGroupRepresentationBuilder $ugroup_builder,
     ) {
         $this->planning_permissions_manager = $planning_permissions_manager;
         $this->permissions_manager          = $permissions_manager;
@@ -75,7 +75,7 @@ class PlanningPermissionsRepresentationBuilder
     private function getPlanningPrioritizers(
         Planning $planning,
         Project $project,
-        ?ProjectUGroup $user_group = null
+        ?ProjectUGroup $user_group = null,
     ) {
         $planning_prioritizers = [];
         $prioritizers          = $this->planning_permissions_manager->getGroupIdsWhoHasPermissionOnPlanning(
@@ -122,7 +122,7 @@ class PlanningPermissionsRepresentationBuilder
             [
                 "group_id"    => $planning->getGroupId(),
                 "planning_id" => $planning->getId(),
-                "action"      => 'edit'
+                "action"      => 'edit',
             ]
         );
 

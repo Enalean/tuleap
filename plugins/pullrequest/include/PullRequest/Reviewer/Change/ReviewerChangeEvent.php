@@ -62,7 +62,7 @@ final class ReviewerChangeEvent implements EventSubjectToNotification
     public function toWorkerEventPayload(): array
     {
         return [
-            'change_id' => $this->change_id
+            'change_id' => $this->change_id,
         ];
     }
 }

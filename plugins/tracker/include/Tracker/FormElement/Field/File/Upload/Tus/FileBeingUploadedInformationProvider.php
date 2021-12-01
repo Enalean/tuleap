@@ -44,7 +44,7 @@ class FileBeingUploadedInformationProvider implements TusFileInformationProvider
 
     public function __construct(
         PathAllocator $path_allocator,
-        FileOngoingUploadDao $dao
+        FileOngoingUploadDao $dao,
     ) {
         $this->path_allocator = $path_allocator;
         $this->dao            = $dao;

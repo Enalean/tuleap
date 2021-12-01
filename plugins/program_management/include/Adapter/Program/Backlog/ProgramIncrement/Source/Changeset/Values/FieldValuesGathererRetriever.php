@@ -32,7 +32,7 @@ final class FieldValuesGathererRetriever implements RetrieveFieldValuesGatherer
 {
     public function __construct(
         private RetrieveFullArtifact $artifact_retriever,
-        private \Tracker_FormElementFactory $form_element_factory
+        private \Tracker_FormElementFactory $form_element_factory,
     ) {
     }
 

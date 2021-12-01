@@ -37,7 +37,7 @@ class ArtifactLinkInformationPrepender
 
     public function __construct(
         HierarchyOfFolderBuilder $hierarchy_builder,
-        FolderHierarchicalRepresentationCollectionBuilder $builder
+        FolderHierarchicalRepresentationCollectionBuilder $builder,
     ) {
         $this->hierarchy_builder = $hierarchy_builder;
         $this->builder           = $builder;
@@ -48,7 +48,7 @@ class ArtifactLinkInformationPrepender
         PFUser $current_user,
         $reverse_artifact_links,
         $read_only,
-        array $additional_classes
+        array $additional_classes,
     ) {
         if ($reverse_artifact_links) {
             return '';
@@ -96,7 +96,7 @@ class ArtifactLinkInformationPrepender
         Artifact $artifact,
         PFUser $current_user,
         array $additional_classes,
-        ?Artifact $current_folder = null
+        ?Artifact $current_folder = null,
     ) {
         $class = "";
         if (count($additional_classes) === 0) {

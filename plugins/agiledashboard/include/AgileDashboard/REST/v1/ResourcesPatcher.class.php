@@ -47,7 +47,7 @@ class ResourcesPatcher
     public function __construct(
         ArtifactLinkUpdater $artifactlink_updater,
         Tracker_ArtifactFactory $artifact_factory,
-        Tracker_Artifact_PriorityManager $priority_manager
+        Tracker_Artifact_PriorityManager $priority_manager,
     ) {
         $this->artifactlink_updater = $artifactlink_updater;
         $this->artifact_factory     = $artifact_factory;

@@ -118,7 +118,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
         $f->shouldReceive('getId')->andReturns(66);
 
         $fields_data = [
-            '102' => '123'
+            '102' => '123',
         ];
         $this->assertNull($f->augmentDataFromRequest($fields_data));
         $this->assertSame([], $fields_data[66]);
@@ -131,7 +131,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
         $f->shouldReceive('getId')->andReturns(66);
 
         $fields_data = [
-            '102' => '123'
+            '102' => '123',
         ];
         $this->assertNull($f->augmentDataFromRequest($fields_data));
         $this->assertSame([], $fields_data[66]);
@@ -167,7 +167,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
         $f->shouldReceive('getId')->andReturns(66);
 
         $fields_data = [
-            '102' => '123'
+            '102' => '123',
         ];
         $this->assertNull($f->augmentDataFromRequest($fields_data));
         $this->assertSame(
@@ -217,7 +217,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
         $f->shouldReceive('getId')->andReturns(66);
 
         $fields_data = [
-            '102' => '123'
+            '102' => '123',
         ];
         $this->assertNull($f->augmentDataFromRequest($fields_data));
         $this->assertSame(
@@ -285,7 +285,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
         $f->shouldReceive('getId')->andReturns(66);
 
         $fields_data = [
-            '102' => '123'
+            '102' => '123',
         ];
         $this->assertNull($f->augmentDataFromRequest($fields_data));
         $this->assertSame(
@@ -338,7 +338,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
         $f->shouldReceive('getId')->andReturns(66);
 
         $fields_data = [
-            '102' => '123'
+            '102' => '123',
         ];
         $this->assertNull($f->augmentDataFromRequest($fields_data));
         $this->assertSame([], $fields_data[66]);
@@ -396,7 +396,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
                 'tmp_name'    => '',
                 'error'       => UPLOAD_ERR_NO_FILE,
                 'size'        => 0,
-            ]
+            ],
         ];
 
         $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
@@ -430,7 +430,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
                 'tmp_name'    => '',
                 'error'       => UPLOAD_ERR_NO_FILE,
                 'size'        => 0,
-            ]
+            ],
         ];
 
         $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
@@ -456,7 +456,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
                 'tmp_name'    => '',
                 'error'       => UPLOAD_ERR_NO_FILE,
                 'size'        => 0,
-            ]
+            ],
         ];
 
         $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
@@ -481,7 +481,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
                 'tmp_name'    => '',
                 'error'       => UPLOAD_ERR_PARTIAL,
                 'size'        => 0,
-            ]
+            ],
         ];
 
         $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
@@ -506,7 +506,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
                 'tmp_name'    => $this->tmp_name,
                 'error'       => UPLOAD_ERR_OK,
                 'size'        => 0,
-            ]
+            ],
         ];
 
         $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
@@ -531,7 +531,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
                 'tmp_name'    => $this->tmp_name,
                 'error'       => UPLOAD_ERR_OK,
                 'size'        => 0,
-            ]
+            ],
         ];
 
         $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
@@ -560,7 +560,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
                 'tmp_name'    => $this->another_tmp_name,
                 'error'       => UPLOAD_ERR_OK,
                 'size'        => 456,
-            ]
+            ],
         ];
 
         $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
@@ -593,7 +593,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
                 'tmp_name'    => $this->another_tmp_name,
                 'error'       => UPLOAD_ERR_PARTIAL,
                 'size'        => 0,
-            ]
+            ],
         ];
 
         $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
@@ -626,7 +626,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
                 'tmp_name'    => '',
                 'error'       => UPLOAD_ERR_NO_FILE,
                 'size'        => 0,
-            ]
+            ],
         ];
 
         $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
@@ -660,7 +660,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
                 'tmp_name'    => '',
                 'error'       => UPLOAD_ERR_NO_FILE,
                 'size'        => 0,
-            ]
+            ],
         ];
 
         $artifact = Mockery::mock(Artifact::class);
@@ -683,7 +683,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
                 'tmp_name'    => '',
                 'error'       => UPLOAD_ERR_NO_FILE,
                 'size'        => 0,
-            ]
+            ],
         ];
 
         $file       = new Tracker_FileInfo(123, '*', '*', 'Description 123', 'file123.txt', 123, 'text/xml');
@@ -711,7 +711,7 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
                 'tmp_name'    => '',
                 'error'       => UPLOAD_ERR_NO_FILE,
                 'size'        => 0,
-            ]
+            ],
         ];
 
         $file       = new Tracker_FileInfo(123, '*', '*', 'Description 123', 'file123.txt', 123, 'text/xml');

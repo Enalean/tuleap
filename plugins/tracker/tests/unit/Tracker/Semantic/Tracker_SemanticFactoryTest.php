@@ -69,7 +69,7 @@ class Tracker_SemanticFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'F8'  => 108,
             'F9'  => 109,
             'F16' => 116,
-            'F14' => 114
+            'F14' => 114,
         ];
 
         //Title

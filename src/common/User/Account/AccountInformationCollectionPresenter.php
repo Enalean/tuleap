@@ -110,7 +110,7 @@ final class AccountInformationCollectionPresenter
         CSRFSynchronizerToken $csrf_token,
         PFUser $user,
         AccountInformationCollection $account_information_collection,
-        string $default_avatar_data_url
+        string $default_avatar_data_url,
     ) {
         $this->tabs                    = $tabs;
         $this->csrf_token              = $csrf_token;

@@ -174,7 +174,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         $id,
         $owner_id,
         $owner_type,
-        MappingRegistry $mapping_registry
+        MappingRegistry $mapping_registry,
     ) {
         $dao = new WidgetEmbeddedDao();
 
@@ -387,7 +387,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
                 'group_id' => $item->getGroupId(),
                 'item'     => $item,
                 'version'  => $version->getNumber(),
-                'user'     => UserManager::instance()->getCurrentUser()
+                'user'     => UserManager::instance()->getCurrentUser(),
             ]);
             $mime = explode('/', $version->getFiletype());
             if (in_array($mime[1], ['plain', 'css', 'javascript'])) {

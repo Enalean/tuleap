@@ -220,7 +220,7 @@ final class MailFilterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->project,
             [
                 $this->user_registered->getEmail(),
-                $this->user_active->getEmail()
+                $this->user_active->getEmail(),
             ]
         );
         $expected_mails = [$this->user_registered->getEmail(), $this->user_active->getEmail()];
@@ -240,7 +240,7 @@ final class MailFilterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->project,
             [
                 $this->user_registered->getEmail(),
-                $this->user_active->getEmail()
+                $this->user_active->getEmail(),
             ]
         );
         $expected_mails = [$this->user_registered->getEmail(), $this->user_active->getEmail()];
@@ -256,7 +256,7 @@ final class MailFilterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->project,
             [
                 'user1@example.com',
-                'user1@example.com'
+                'user1@example.com',
             ]
         );
 
@@ -272,7 +272,7 @@ final class MailFilterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 null,
                 'user-active@example.com',
-                'user1@example.com'
+                'user1@example.com',
             ]
         );
 
@@ -288,7 +288,7 @@ final class MailFilterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 false,
                 'user-active@example.com',
-                'user1@example.com'
+                'user1@example.com',
             ]
         );
 

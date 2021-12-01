@@ -59,7 +59,7 @@ class StepsResultsFilterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 $first_step_definition,
                 $second_step_definition,
-                $third_step_definition
+                $third_step_definition,
             ]
         );
 
@@ -75,7 +75,7 @@ class StepsResultsFilterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 $first_step_result,
                 $second_step_result,
-                $third_step_result
+                $third_step_result,
             ]
         );
 
@@ -91,7 +91,7 @@ class StepsResultsFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->definition_value->method('getValue')->willReturn(
             [
-                $first_step_definition, $second_step_definition
+                $first_step_definition, $second_step_definition,
             ]
         );
 
@@ -100,7 +100,7 @@ class StepsResultsFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->execution_value->method('getValue')->willReturn(
             [
-                $first_step_result, $second_step_result
+                $first_step_result, $second_step_result,
             ]
         );
 
@@ -108,7 +108,7 @@ class StepsResultsFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             [
-                $first_step_result, $second_step_result
+                $first_step_result, $second_step_result,
             ],
             $result
         );

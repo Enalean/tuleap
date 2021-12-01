@@ -165,7 +165,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
                                        // (for development only)
                     'noT'           => false,  // don't display the T link
                                      // (for development only)
-                    'debug'         => false
+                    'debug'         => false,
             ]
         );
     }

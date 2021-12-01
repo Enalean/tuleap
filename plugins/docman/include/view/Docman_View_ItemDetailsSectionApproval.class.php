@@ -452,7 +452,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
                             'action'  => 'details',
                             'section' => 'approval',
                             'id'      => $this->item->getId(),
-                            'version' => $table->getVersionNumber()
+                            'version' => $table->getVersionNumber(),
                         ]
                     );
                     $href = '<a href="' . $url . '">' . $table->getVersionNumber() . '</a>';

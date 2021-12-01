@@ -43,7 +43,7 @@ class TypeIsChildLinkRetriever
 
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
-        ArtifactLinkFieldValueDao $artifact_link_dao
+        ArtifactLinkFieldValueDao $artifact_link_dao,
     ) {
         $this->factory           = $artifact_factory;
         $this->artifact_link_dao = $artifact_link_dao;
@@ -61,7 +61,7 @@ class TypeIsChildLinkRetriever
     private function addParentsOfArtifactToCollection(
         Artifact $artifact,
         ParentOfArtifactCollection $collection,
-        array $already_seen_artifacts
+        array $already_seen_artifacts,
     ) {
         if (isset($already_seen_artifacts[$artifact->getId()])) {
             return;

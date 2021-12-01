@@ -83,7 +83,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'isError'          => false,
                 'isActive'         => true,
                 'allowsRestricted' => false,
-                'getId'            => 101
+                'getId'            => 101,
             ]
         );
 
@@ -110,7 +110,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'isError'          => false,
                 'isActive'         => true,
                 'allowsRestricted' => true,
-                'getId'            => 101
+                'getId'            => 101,
             ]
         );
 
@@ -137,7 +137,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'isError'          => false,
                 'isActive'         => true,
                 'allowsRestricted' => true,
-                'getId'            => 101
+                'getId'            => 101,
             ]
         );
 
@@ -158,7 +158,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getID'     => 42,
                 'isError'   => false,
                 'isActive'  => true,
-                'getAccess' => Project::ACCESS_PRIVATE_WO_RESTRICTED
+                'getAccess' => Project::ACCESS_PRIVATE_WO_RESTRICTED,
             ]
         );
 
@@ -187,7 +187,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getID'     => 42,
                 'isError'   => false,
                 'isActive'  => true,
-                'getAccess' => Project::ACCESS_PRIVATE
+                'getAccess' => Project::ACCESS_PRIVATE,
             ]
         );
 
@@ -212,7 +212,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getID'     => 110,
                 'isActive'  => true,
                 'isError'   => false,
-                'getAccess' => Project::ACCESS_PRIVATE
+                'getAccess' => Project::ACCESS_PRIVATE,
             ]
         );
 
@@ -246,7 +246,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getID'    => 110,
                 'isPublic' => true,
                 'isActive' => true,
-                'isError'  => false
+                'isError'  => false,
             ]
         );
 
@@ -271,7 +271,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getID'            => 110,
                 'isActive'         => true,
                 'isError'          => false,
-                'allowsRestricted' => false
+                'allowsRestricted' => false,
             ]
         );
 
@@ -298,7 +298,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getID'     => 110,
                 'isActive'  => true,
                 'isError'   => false,
-                'getAccess' => Project::ACCESS_PUBLIC
+                'getAccess' => Project::ACCESS_PUBLIC,
             ]
         );
 
@@ -323,7 +323,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getID'    => 110,
                 'isPublic' => false,
                 'isActive' => true,
-                'isError'  => false
+                'isError'  => false,
             ]
         );
 
@@ -353,7 +353,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'isPublic'         => true,
                 'isActive'         => true,
                 'isError'          => false,
-                'allowsRestricted' => false
+                'allowsRestricted' => false,
             ]
         );
 
@@ -381,7 +381,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'isActive'    => false,
                 'isError'     => false,
                 'isSuspended' => false,
-                'getStatus'   => Project::STATUS_DELETED
+                'getStatus'   => Project::STATUS_DELETED,
             ]
         );
 
@@ -408,7 +408,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'isActive'    => false,
                 'isError'     => false,
                 'isSuspended' => true,
-                'getStatus'   => Project::STATUS_DELETED
+                'getStatus'   => Project::STATUS_DELETED,
             ]
         );
 
@@ -426,7 +426,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getID'    => 110,
                 'isError'  => true,
                 'isPublic' => true,
-                'isActive' => true
+                'isActive' => true,
             ]
         );
 
@@ -451,7 +451,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getID'    => 110,
                 'isPublic' => false,
                 'isActive' => false,
-                'isError'  => false
+                'isError'  => false,
             ]
         );
 
@@ -476,7 +476,7 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getID'    => 110,
                 'isPublic' => false,
                 'isActive' => true,
-                'isError'  => false
+                'isError'  => false,
             ]
         );
 

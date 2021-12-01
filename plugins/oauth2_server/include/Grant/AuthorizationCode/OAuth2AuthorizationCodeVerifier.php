@@ -57,7 +57,7 @@ class OAuth2AuthorizationCodeVerifier
         UserManager $user_manager,
         OAuth2AuthorizationCodeDAO $authorization_code_dao,
         OAuth2ScopeRetriever $authorization_code_scope_retriever,
-        DBTransactionExecutor $db_transaction_executor
+        DBTransactionExecutor $db_transaction_executor,
     ) {
         $this->hasher                             = $hasher;
         $this->user_manager                       = $user_manager;

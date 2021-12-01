@@ -72,7 +72,7 @@ final class IterationRepresentation
         bool $user_can_update,
         ?string $status,
         ?int $start_date,
-        ?int $end_date
+        ?int $end_date,
     ) {
         $this->id              = $id;
         $this->uri             = $uri;

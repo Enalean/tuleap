@@ -77,7 +77,7 @@ class Tracker_Rule_List_Dao extends \Tuleap\DB\DataAccessObject
                     'tracker_rule',
                     [
                         'tracker_id' => $rule_id,
-                        'rule_type'  => Tracker_Rule::RULETYPE_VALUE
+                        'rule_type'  => Tracker_Rule::RULETYPE_VALUE,
                     ]
                 );
 
@@ -109,7 +109,7 @@ class Tracker_Rule_List_Dao extends \Tuleap\DB\DataAccessObject
                     'tracker_rule',
                     [
                         'tracker_id' => $tracker_id,
-                        'rule_type' => Tracker_Rule::RULETYPE_VALUE
+                        'rule_type' => Tracker_Rule::RULETYPE_VALUE,
                     ]
                 );
 

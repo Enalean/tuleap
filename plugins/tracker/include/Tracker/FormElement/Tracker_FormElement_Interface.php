@@ -41,6 +41,6 @@ interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface, 
         SimpleXMLElement $parent_node,
         array &$xmlMapping,
         bool $project_export_context,
-        UserXMLExporter $user_xml_exporter
+        UserXMLExporter $user_xml_exporter,
     ): SimpleXMLElement;
 }

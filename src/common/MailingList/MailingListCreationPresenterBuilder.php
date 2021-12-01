@@ -44,7 +44,7 @@ class MailingListCreationPresenterBuilder
         \PFUser $current_user,
         \CSRFSynchronizerToken $csrf,
         string $sys_lists_domain,
-        string $intro
+        string $intro,
     ): MailingListCreationPresenter {
         $existing_lists = [];
         foreach ($this->dao->searchByProject((int) $project->getID()) as $row) {

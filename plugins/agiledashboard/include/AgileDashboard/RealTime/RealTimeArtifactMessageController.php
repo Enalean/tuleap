@@ -41,7 +41,7 @@ class RealTimeArtifactMessageController
 
     public function __construct(
         AgileDashboard_KanbanFactory $kanban_factory,
-        KanbanArtifactMessageSender $kanban_artifact_message_sender
+        KanbanArtifactMessageSender $kanban_artifact_message_sender,
     ) {
         $this->kanban_factory                 = $kanban_factory;
         $this->kanban_artifact_message_sender = $kanban_artifact_message_sender;

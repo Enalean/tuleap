@@ -55,7 +55,7 @@ class PreCommit
         Svnlook $svnlook,
         LoggerInterface $logger,
         CommitMessageValidator $commit_message_validator,
-        PathValidator ...$path_validators
+        PathValidator ...$path_validators,
     ) {
         $this->logger                   = $logger;
         $this->svnlook                  = $svnlook;

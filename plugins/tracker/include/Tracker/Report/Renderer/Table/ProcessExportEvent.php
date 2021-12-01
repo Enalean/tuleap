@@ -50,7 +50,7 @@ class ProcessExportEvent implements Dispatchable
         array $renderer_parameters,
         \Tracker_Report_Renderer_Table $renderer_table,
         \PFUser $current_user,
-        $server_url
+        $server_url,
     ) {
         $this->renderer_parameters = $renderer_parameters;
         $this->renderer_table      = $renderer_table;

@@ -43,7 +43,7 @@ class ForListBindStatic implements FieldFromWhereBuilder, ListBindStaticFromWher
 
     public function __construct(
         FromWhereEmptyNotEqualComparisonFieldBuilder $empty_comparison_builder,
-        FromWhereNotEqualComparisonListFieldBuilder $comparison_builder
+        FromWhereNotEqualComparisonListFieldBuilder $comparison_builder,
     ) {
         $this->empty_comparison_builder = $empty_comparison_builder;
         $this->comparison_builder       = $comparison_builder;

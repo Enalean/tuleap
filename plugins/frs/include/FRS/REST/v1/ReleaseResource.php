@@ -215,7 +215,7 @@ class ReleaseResource extends AuthenticatedResource
             'name'       => $body->name,
             'notes'      => $body->release_note,
             'changes'    => $body->changelog,
-            'status_id'  => $this->getStatusIdFromLiteralStatus($body->status)
+            'status_id'  => $this->getStatusIdFromLiteralStatus($body->status),
         ];
 
         $id = $this->release_factory->create($release_array);
@@ -347,7 +347,7 @@ class ReleaseResource extends AuthenticatedResource
         $package_id = (int) $release->getPackageID();
 
         $release_array = [
-            'release_id' => $release_id
+            'release_id' => $release_id,
         ];
 
         if ($body->name) {

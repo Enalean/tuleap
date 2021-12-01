@@ -51,7 +51,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $rows    = [
             ['id' => 1, 'name' => 'Jenkins', 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1],
-            ['id' => 2, 'name' => 'My custom REST client', 'redirect_endpoint' => 'https://my-custom-client.example.com', 'use_pkce' => 0]
+            ['id' => 2, 'name' => 'My custom REST client', 'redirect_endpoint' => 'https://my-custom-client.example.com', 'use_pkce' => 0],
         ];
         $project = ProjectTestBuilder::aProject()->build();
         $this->app_dao->expects(self::once())->method('searchByProject')
@@ -62,7 +62,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, $project),
-                new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', false, $project)
+                new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', false, $project),
             ],
             $result
         );
@@ -72,7 +72,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $rows = [
             ['id' => 3, 'name' => 'Jenkins', 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1],
-            ['id' => 4, 'name' => 'My custom REST client', 'redirect_endpoint' => 'https://my-custom-client.example.com', 'use_pkce' => 0]
+            ['id' => 4, 'name' => 'My custom REST client', 'redirect_endpoint' => 'https://my-custom-client.example.com', 'use_pkce' => 0],
         ];
         $this->app_dao->expects(self::once())->method('searchSiteLevelApps')->willReturn($rows);
 
@@ -80,7 +80,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             [
                 new OAuth2App(3, 'Jenkins', 'https://jenkins.example.com', true, null),
-                new OAuth2App(4, 'My custom REST client', 'https://my-custom-client.example.com', false, null)
+                new OAuth2App(4, 'My custom REST client', 'https://my-custom-client.example.com', false, null),
             ],
             $result
         );
@@ -146,22 +146,22 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                 'name'              => 'Jenkins',
                 'redirect_endpoint' => 'https://jenkins.example.com',
                 'project_id'        => 204,
-                'use_pkce'          => 1
+                'use_pkce'          => 1,
             ],
             [
                 'id'                => 2,
                 'name'              => 'My custom REST client',
                 'redirect_endpoint' => 'https://my-custom-client.example.com',
                 'project_id'        => 205,
-                'use_pkce'          => 0
+                'use_pkce'          => 0,
             ],
             [
                 'id'                => 3,
                 'name'              => 'A site level OAuth2 app',
                 'redirect_endpoint' => 'https://site-level-app.example.com',
                 'project_id'        => null,
-                'use_pkce'          => 1
-            ]
+                'use_pkce'          => 1,
+            ],
         ];
         $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->app_dao->expects(self::once())->method('searchAuthorizedAppsByUser')
@@ -192,14 +192,14 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                 'name'              => 'Jenkins',
                 'redirect_endpoint' => 'https://jenkins.example.com',
                 'project_id'        => 204,
-                'use_pkce'          => 1
+                'use_pkce'          => 1,
             ], [
                 'id'                => 4,
                 'name'              => 'Project is invalid',
                 'redirect_endpoint' => 'https://example.com',
                 'project_id'        => 404,
-                'use_pkce'          => 1
-            ]
+                'use_pkce'          => 1,
+            ],
         ];
         $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->app_dao->expects(self::once())->method('searchAuthorizedAppsByUser')

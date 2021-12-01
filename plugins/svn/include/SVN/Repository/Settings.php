@@ -64,7 +64,7 @@ class Settings
         array $mail_notification,
         array $access_file_history,
         $used_version,
-        $is_access_file_already_purged
+        $is_access_file_already_purged,
     ) {
         $this->commit_rules                  = $commit_rules;
         $this->immutable_tag                 = $immutable_tag;

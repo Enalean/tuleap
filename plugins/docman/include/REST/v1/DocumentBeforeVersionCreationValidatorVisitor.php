@@ -63,7 +63,7 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
         \Docman_PermissionsManager $permission_manager,
         ApprovalTableUpdateActionChecker $approval_table_update_action_checker,
         \Docman_ItemFactory $item_factory,
-        ApprovalTableRetriever $approval_table_retriever
+        ApprovalTableRetriever $approval_table_retriever,
     ) {
         $this->permission_manager                   = $permission_manager;
         $this->approval_table_update_action_checker = $approval_table_update_action_checker;

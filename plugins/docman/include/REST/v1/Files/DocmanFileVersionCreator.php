@@ -56,7 +56,7 @@ class DocmanFileVersionCreator
         DocmanFileVersionPOSTRepresentation $representation,
         \DateTimeImmutable $current_time,
         int $status,
-        int $obsolesence_date
+        int $obsolesence_date,
     ): CreatedItemFilePropertiesRepresentation {
         try {
             $document_to_upload = $this->creator->create(
@@ -94,7 +94,7 @@ class DocmanFileVersionCreator
         FilePropertiesPOSTPATCHRepresentation $representation,
         \DateTimeImmutable $current_time,
         int $status,
-        int $obsolesence_date
+        int $obsolesence_date,
     ): CreatedItemFilePropertiesRepresentation {
         $is_item_locked = $this->lock_factory->itemIsLocked($item);
         try {

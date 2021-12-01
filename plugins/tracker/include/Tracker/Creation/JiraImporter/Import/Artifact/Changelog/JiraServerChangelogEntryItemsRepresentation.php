@@ -33,7 +33,7 @@ class JiraServerChangelogEntryItemsRepresentation implements ChangelogEntryItems
         private ?string $from,
         private ?string $from_string,
         private ?string $to,
-        private ?string $toString
+        private ?string $toString,
     ) {
     }
 

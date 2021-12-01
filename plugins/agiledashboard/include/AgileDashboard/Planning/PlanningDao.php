@@ -68,7 +68,7 @@ class PlanningDao extends DataAccessObject
             'plugin_agiledashboard_planning_backlog_tracker',
             [
                 'planning_id' => $planning_id,
-                'tracker_id'  => $backlog_tracker_id
+                'tracker_id'  => $backlog_tracker_id,
             ]
         );
     }

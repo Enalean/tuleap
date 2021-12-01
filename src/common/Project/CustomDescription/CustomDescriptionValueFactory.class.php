@@ -44,7 +44,7 @@ class Project_CustomDescription_CustomDescriptionValueFactory
         while ($row = $results->getRow()) {
             $description_fields_values[] = [
                 'id'    => $row['group_desc_id'],
-                'value' => $row['value']
+                'value' => $row['value'],
             ];
         }
         return $description_fields_values;

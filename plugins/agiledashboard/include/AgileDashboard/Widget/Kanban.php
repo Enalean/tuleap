@@ -107,7 +107,7 @@ abstract class Kanban extends Widget
         WidgetKanbanConfigRetriever $widget_kanban_config_retriever,
         WidgetKanbanConfigUpdater $widget_kanban_config_updater,
         Tracker_ReportFactory $tracker_report_factory,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
     ) {
         parent::__construct($id);
         $this->owner_id                       = $owner_id;
@@ -339,7 +339,7 @@ abstract class Kanban extends Widget
         $id,
         $owner_id,
         $owner_type,
-        MappingRegistry $mapping_registry
+        MappingRegistry $mapping_registry,
     ) {
         $this->loadContent($id);
 

@@ -57,7 +57,7 @@ class DocmanItemUpdator
         ApprovalTableUpdateActionChecker $approval_table_action_checker,
         PostUpdateEventAdder $post_update_event_adder,
         Docman_ItemFactory $docman_item_factory,
-        Docman_LockFactory $lock_factory
+        Docman_LockFactory $lock_factory,
     ) {
         $this->approval_table_updater        = $approval_table_updater;
         $this->approval_table_action_checker = $approval_table_action_checker;
@@ -71,7 +71,7 @@ class DocmanItemUpdator
         bool $should_lock_item,
         \PFUser $user,
         ?string $approval_table_action,
-        ?Version $version
+        ?Version $version,
     ): void {
         if ($approval_table_action) {
             $this->updateApprovalTable($item, $user, $approval_table_action);
@@ -83,7 +83,7 @@ class DocmanItemUpdator
         \Docman_Item $item,
         bool $should_lock_item,
         \PFUser $user,
-        ?Version $version
+        ?Version $version,
     ): void {
         if ($should_lock_item) {
             $this->lock_factory->lock($item, $user);

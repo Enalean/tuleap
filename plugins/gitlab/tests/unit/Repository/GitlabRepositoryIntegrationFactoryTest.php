@@ -53,7 +53,7 @@ final class GitlabRepositoryIntegrationFactoryTest extends \Tuleap\Test\PHPUnit\
                         'last_push_date'         => 1603371803,
                         'project_id'             => 101,
                         'allow_artifact_closure' => 1,
-                    ]
+                    ],
                 ]
             );
 

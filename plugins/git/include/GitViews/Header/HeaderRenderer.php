@@ -60,7 +60,7 @@ class HeaderRenderer
         GitCrumbBuilder $service_crumb_builder,
         ServiceAdministrationCrumbBuilder $administration_crumb_builder,
         RepositoryCrumbBuilder $repository_crumb_builder,
-        RepositorySettingsCrumbBuilder $settings_crumbs_builder
+        RepositorySettingsCrumbBuilder $settings_crumbs_builder,
     ) {
         $this->event_manager                = $event_manager;
         $this->service_crumb_builder        = $service_crumb_builder;
@@ -100,7 +100,7 @@ class HeaderRenderer
         HTTPRequest $request,
         PFUser $user,
         Project $project,
-        GitRepository $repository
+        GitRepository $repository,
     ) {
         $breadcrumbs = $this->getRepositoryBreadCrumbs($user, $project, $repository);
         $this->renderHeader($request, $project, $breadcrumbs);
@@ -110,7 +110,7 @@ class HeaderRenderer
         HTTPRequest $request,
         PFUser $user,
         Project $project,
-        GitRepository $repository
+        GitRepository $repository,
     ) {
         $breadcrumbs = $this->getRepositoryBreadCrumbs($user, $project, $repository);
         $breadcrumbs->addBreadCrumb($this->settings_crumbs_builder->build($repository));
@@ -121,7 +121,7 @@ class HeaderRenderer
     private function getRepositoryBreadCrumbs(
         PFUser $user,
         Project $project,
-        GitRepository $repository
+        GitRepository $repository,
     ) {
         $breadcrumbs = new BreadCrumbCollection();
         $breadcrumbs->addBreadCrumb(
@@ -137,7 +137,7 @@ class HeaderRenderer
     private function renderHeader(
         HTTPRequest $request,
         Project $project,
-        BreadCrumbCollection $breadcrumbs
+        BreadCrumbCollection $breadcrumbs,
     ) {
         $headers = new GitViewHeader(
             $this->event_manager

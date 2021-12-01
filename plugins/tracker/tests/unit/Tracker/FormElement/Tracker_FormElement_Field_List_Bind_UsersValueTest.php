@@ -76,7 +76,7 @@ final class Tracker_FormElement_Field_List_Bind_UsersValueTest extends \Tuleap\T
                 'username'     => 'neo',
                 'realname'     => 'Le roi arthur',
                 'avatar_url'   => '',
-                'display_name' => 'Le roi arthur (neo)'
+                'display_name' => 'Le roi arthur (neo)',
             ],
             $json
         );

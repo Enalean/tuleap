@@ -131,7 +131,7 @@ class InvalidComparisonCollectorVisitor implements Visitor
         InvalidMetadata\BetweenComparisonChecker $metadata_between_comparison_checker,
         InvalidMetadata\InComparisonChecker $metadata_in_comparison_checker,
         InvalidMetadata\NotInComparisonChecker $metadata_not_in_comparison_checker,
-        InvalidSearchableCollectorVisitor $invalid_searchable_collector_visitor
+        InvalidSearchableCollectorVisitor $invalid_searchable_collector_visitor,
     ) {
         $this->field_equal_comparison_visitor                   = $field_equal_comparison_visitor;
         $this->field_not_equal_comparison_visitor               = $field_not_equal_comparison_visitor;
@@ -155,7 +155,7 @@ class InvalidComparisonCollectorVisitor implements Visitor
 
     public function collectErrors(
         Visitable $parsed_query,
-        InvalidSearchablesCollection $invalid_searchables_collection
+        InvalidSearchablesCollection $invalid_searchables_collection,
     ) {
         $parsed_query->accept($this, new InvalidComparisonCollectorParameters($invalid_searchables_collection));
     }
@@ -281,7 +281,7 @@ class InvalidComparisonCollectorVisitor implements Visitor
         Comparison $comparison,
         InvalidFields\IProvideTheInvalidFieldCheckerForAComparison $checker_provider,
         InvalidMetadata\ICheckMetadataForAComparison $metadata_checker,
-        InvalidComparisonCollectorParameters $parameters
+        InvalidComparisonCollectorParameters $parameters,
     ) {
         $comparison->getSearchable()->accept(
             $this->invalid_searchable_collector_visitor,

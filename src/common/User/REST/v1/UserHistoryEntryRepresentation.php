@@ -85,7 +85,7 @@ class UserHistoryEntryRepresentation
         ?string $small_icon,
         ?string $icon,
         MinimalProjectRepresentation $project,
-        array $quick_links
+        array $quick_links,
     ) {
         $this->visit_time  = $visit_time;
         $this->xref        = $xref;

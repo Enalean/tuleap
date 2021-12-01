@@ -50,7 +50,7 @@ class ChangesetRepresentationBuilder
         \UserManager $user_manager,
         \Tracker_FormElementFactory $form_element_factory,
         CommentRepresentationBuilder $comment_builder,
-        PermissionChecker $comment_permission_checker
+        PermissionChecker $comment_permission_checker,
     ) {
         $this->user_manager               = $user_manager;
         $this->form_element_factory       = $form_element_factory;
@@ -65,7 +65,7 @@ class ChangesetRepresentationBuilder
         \Tracker_Artifact_Changeset $changeset,
         string $filter_mode,
         \PFUser $current_user,
-        ?\Tracker_Artifact_Changeset $previous_changeset
+        ?\Tracker_Artifact_Changeset $previous_changeset,
     ): ?ChangesetRepresentation {
         $last_comment = $this->getCommentOrDefaultWithNull($changeset, $current_user);
         if ($filter_mode === \Tracker_Artifact_Changeset::FIELDS_COMMENTS && $last_comment->hasEmptyBody()) {
@@ -87,7 +87,7 @@ class ChangesetRepresentationBuilder
         \Tracker_Artifact_Changeset $changeset,
         PFUser $current_user,
         \Tracker_Artifact_Changeset_Comment $last_comment,
-        ?\Tracker_Artifact_Changeset $previous_changeset
+        ?\Tracker_Artifact_Changeset $previous_changeset,
     ): bool {
         if ($previous_changeset === null) {
             return true;
@@ -103,7 +103,7 @@ class ChangesetRepresentationBuilder
     private function isThereDiffToDisplayWithPreviousChangeset(
         \Tracker_Artifact_Changeset $changeset,
         PFUser $user,
-        \Tracker_Artifact_Changeset $previous_item
+        \Tracker_Artifact_Changeset $previous_item,
     ): bool {
         foreach ($changeset->getChangesetValuesHasChanged() as $current_changeset_value) {
             $field = $current_changeset_value->getField();
@@ -143,7 +143,7 @@ class ChangesetRepresentationBuilder
      */
     public function buildWithFieldValuesWithoutPermissions(
         \Tracker_Artifact_Changeset $changeset,
-        \PFUser $user
+        \PFUser $user,
     ): ChangesetRepresentation {
         $last_comment = $this->getCommentOrDefaultWithNullWithoutPermission($changeset);
         $field_values = $this->getRESTFieldValuesWithoutPermissions($changeset, $user);
@@ -167,7 +167,7 @@ class ChangesetRepresentationBuilder
         \Tracker_Artifact_Changeset $changeset,
         \Tracker_Artifact_Changeset_Comment $last_comment,
         array $values,
-        PFUser $user
+        PFUser $user,
     ): ChangesetRepresentation {
         $submitted_by_id      = (int) $changeset->getSubmittedBy();
         $submitted_by_user    = $this->user_manager->getUserById($submitted_by_id);

@@ -43,7 +43,7 @@ class CollectionOfUserInvolvedInNotificationPresenterBuilder
     public function __construct(
         UsersToNotifyDao $users_to_notify_dao,
         UnsubscribersNotificationDAO $unsubscribers_notification_dao,
-        \UserManager $user_manager
+        \UserManager $user_manager,
     ) {
         $this->users_to_notify_dao            = $users_to_notify_dao;
         $this->unsubscribers_notification_dao = $unsubscribers_notification_dao;

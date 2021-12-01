@@ -125,8 +125,8 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
             [
                 [
                     'tracker_id' => self::ANOTHER_TRACKER_ID,
-                    'implied_from_tracker_id' => self::CURRENT_TRACKER_ID
-                ]
+                    'implied_from_tracker_id' => self::CURRENT_TRACKER_ID,
+                ],
             ]
         );
 
@@ -149,8 +149,8 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
             [
                 [
                     'tracker_name' => 'User Story',
-                    'tracker_semantic_timeframe_admin_url' => '/plugins/tracker/?tracker=150&func=admin-semantic&semantic=timeframe'
-                ]
+                    'tracker_semantic_timeframe_admin_url' => '/plugins/tracker/?tracker=150&func=admin-semantic&semantic=timeframe',
+                ],
             ],
             $presenter->semantics_implied_from_current_tracker
         );

@@ -48,7 +48,7 @@ final class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends \Tul
         $this->field_string_f15 = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns(1)->getMock();
         $this->xml_mapping      = [
             'F14' => $this->field_string,
-            'F15' => $this->field_string_f15
+            'F15' => $this->field_string_f15,
         ];
     }
 

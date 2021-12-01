@@ -54,7 +54,7 @@ final class TaskRepresentationBuilderForTrackerCache implements ICacheTaskRepres
         SemanticTimeframeBuilder $semantic_timeframe_builder,
         IRetrieveDependencies $dependencies_retriever,
         SemanticProgressBuilder $progress_builder,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->semantic_timeframe_builder = $semantic_timeframe_builder;
         $this->progress_builder           = $progress_builder;

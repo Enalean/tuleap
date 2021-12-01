@@ -85,8 +85,8 @@ class PackTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             [
                 'objects' => [
-                    'pack' => []
-                ]
+                    'pack' => [],
+                ],
             ]
         );
         $this->pack_archive_file = vfsStream::newFile('pack-' . self::SHA1_PACK . '.pack')->at(

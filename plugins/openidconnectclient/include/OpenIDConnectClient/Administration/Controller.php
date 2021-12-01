@@ -83,7 +83,7 @@ class Controller
         IconPresenterFactory $icon_presenter_factory,
         ColorPresenterFactory $color_presenter_factory,
         AdminPageRenderer $admin_page_renderer,
-        IncludeAssets $assets
+        IncludeAssets $assets,
     ) {
         $this->provider_manager                               = $provider_manager;
         $this->generic_provider_manager                       = $generic_provider_manager;

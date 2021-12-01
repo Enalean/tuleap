@@ -125,13 +125,13 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     public function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = []
+        $submitted_values = [],
     ) {
     }
 
     public function fetchArtifactValueReadOnly(
         Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null
+        ?Tracker_Artifact_ChangesetValue $value = null,
     ) {
         $user                      = UserManager::instance()->getCurrentUser();
         $can_burnup_be_regenerated = $artifact->getTracker()->userIsAdmin($user);
@@ -197,7 +197,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text'
+        $format = 'text',
     ) {
     }
 
@@ -322,7 +322,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     protected function keepValue(
         $artifact,
         $changeset_value_id,
-        Tracker_Artifact_ChangesetValue $previous_changesetvalue
+        Tracker_Artifact_ChangesetValue $previous_changesetvalue,
     ) {
     }
 
@@ -334,7 +334,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
         array $fields_data,
-        ?Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null,
     ) {
     }
 
@@ -343,7 +343,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
         return false;
     }

@@ -48,7 +48,7 @@ class TransitionCreator
     public function __construct(
         \TransitionFactory $transition_factory,
         TransitionReplicator $conditions_replicator,
-        TransitionExtractor $transition_extractor
+        TransitionExtractor $transition_extractor,
     ) {
         $this->transition_factory    = $transition_factory;
         $this->transition_replicator = $conditions_replicator;

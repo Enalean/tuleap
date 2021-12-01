@@ -38,7 +38,7 @@ class TrackerCreationSettings
 
     public function __construct(
         bool $is_displayed_in_new_dropdown,
-        bool $is_private_comment_used
+        bool $is_private_comment_used,
     ) {
         $this->is_displayed_in_new_dropdown = $is_displayed_in_new_dropdown;
         $this->is_private_comment_used      = $is_private_comment_used;

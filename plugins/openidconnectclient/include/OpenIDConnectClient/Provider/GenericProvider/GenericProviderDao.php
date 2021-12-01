@@ -36,7 +36,7 @@ class GenericProviderDao extends DataAccessObject
         $client_id,
         $client_secret,
         $icon,
-        $color
+        $color,
     ): int {
         return $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use (
@@ -84,7 +84,7 @@ class GenericProviderDao extends DataAccessObject
         $client_id,
         $client_secret,
         $icon,
-        $color
+        $color,
     ): void {
         $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use (

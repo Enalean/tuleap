@@ -51,7 +51,7 @@ class Cardwall_CardInCellPresenterBuilder
         Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
         PFUser $user,
         BackgroundColorBuilder $background_color_builder,
-        AccentColorBuilder $accent_color_builder
+        AccentColorBuilder $accent_color_builder,
     ) {
         $this->card_in_cell_presenter_factory = $card_in_cell_presenter_factory;
         $this->card_fields                    = $card_fields;

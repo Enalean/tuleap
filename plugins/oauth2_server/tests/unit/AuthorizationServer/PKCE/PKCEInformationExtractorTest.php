@@ -43,7 +43,7 @@ final class PKCEInformationExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->buildApp(true),
             [
                 'code_challenge' => sodium_bin2base64($expected_code_challenge, SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING),
-                'code_challenge_method' => 'S256'
+                'code_challenge_method' => 'S256',
             ]
         );
 
@@ -77,7 +77,7 @@ final class PKCEInformationExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->buildApp(true),
             [
                 'code_challenge'        => sodium_bin2base64(hash('sha256', 'random_data', true), SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING),
-                'code_challenge_method' => 'plain'
+                'code_challenge_method' => 'plain',
             ]
         );
     }
@@ -98,7 +98,7 @@ final class PKCEInformationExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->buildApp(true),
             [
                 'code_challenge'        => sodium_bin2base64('not_sha256_length', SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING),
-                'code_challenge_method' => 'S256'
+                'code_challenge_method' => 'S256',
             ]
         );
     }

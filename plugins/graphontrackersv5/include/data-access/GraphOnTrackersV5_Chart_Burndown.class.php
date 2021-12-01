@@ -221,7 +221,7 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
                     'chart[duration]',
                     $this->getDuration(),
                     4
-                )
+                ),
             ]
         );
     }

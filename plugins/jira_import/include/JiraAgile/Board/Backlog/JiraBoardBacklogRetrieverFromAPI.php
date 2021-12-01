@@ -65,7 +65,7 @@ final class JiraBoardBacklogRetrieverFromAPI implements JiraBoardBacklogRetrieve
         return JiraBoardsRetrieverFromAPI::BOARD_URL . '/' . (string) $jira_board->id . '/backlog?' .
             http_build_query(
                 [
-                    "jql"     => "issuetype not in subtaskIssueTypes()"
+                    "jql"     => "issuetype not in subtaskIssueTypes()",
                 ]
             );
     }

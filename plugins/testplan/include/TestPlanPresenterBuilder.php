@@ -56,7 +56,7 @@ class TestPlanPresenterBuilder
         Config $testmanagement_config,
         TrackerFactory $tracker_factory,
         TestPlanTestDefinitionTrackerRetriever $definition_tracker_retriever,
-        UserHelper $user_helper
+        UserHelper $user_helper,
     ) {
         $this->pane_factory                 = $pane_factory;
         $this->testmanagement_config        = $testmanagement_config;
@@ -69,7 +69,7 @@ class TestPlanPresenterBuilder
         \Planning_ArtifactMilestone $milestone,
         \PFUser $user,
         int $expand_backlog_item_id,
-        int $highlight_test_definition_id
+        int $highlight_test_definition_id,
     ): TestPlanPresenter {
         $presenter_data     = $this->pane_factory->getPanePresenterData($milestone);
         $milestone_artifact = $milestone->getArtifact();

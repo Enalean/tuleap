@@ -61,7 +61,7 @@ class WebhookActions
         PostPushWebhookActionProcessor $post_push_webhook_action_processor,
         PostMergeRequestWebhookActionProcessor $post_merge_request_action_processor,
         TagPushWebhookActionProcessor $tag_push_webhook_action_processor,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->gitlab_repository_dao               = $gitlab_repository_dao;
         $this->post_push_webhook_action_processor  = $post_push_webhook_action_processor;
@@ -76,7 +76,7 @@ class WebhookActions
     public function performActions(
         GitlabRepositoryIntegration $gitlab_repository_integration,
         WebhookData $webhook_data,
-        DateTimeImmutable $webhook_reception_date
+        DateTimeImmutable $webhook_reception_date,
     ): void {
         $this->checkWebhookDataIsSupported($webhook_data);
         $this->updateLastPushDateForRepository($gitlab_repository_integration, $webhook_reception_date);
@@ -100,7 +100,7 @@ class WebhookActions
 
     private function updateLastPushDateForRepository(
         GitlabRepositoryIntegration $gitlab_repository_integration,
-        DateTimeImmutable $webhook_reception_date
+        DateTimeImmutable $webhook_reception_date,
     ): void {
         $this->gitlab_repository_dao->updateLastPushDateForIntegration(
             $gitlab_repository_integration->getId(),

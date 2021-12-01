@@ -35,7 +35,7 @@ class CreateBranchPrefixUpdater
 
     public function __construct(
         GitlabRepositoryIntegrationFactory $integration_factory,
-        CreateBranchPrefixDao $create_branch_prefix_dao
+        CreateBranchPrefixDao $create_branch_prefix_dao,
     ) {
         $this->integration_factory      = $integration_factory;
         $this->create_branch_prefix_dao = $create_branch_prefix_dao;

@@ -38,7 +38,7 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand impl
 
     public function __construct(
         Tracker_FormElement_Field_ArtifactLink $field,
-        Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager
+        Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
     ) {
         $this->field                 = $field;
         $this->trigger_rules_manager = $trigger_rules_manager;
@@ -52,7 +52,7 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand impl
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
         array $fields_data,
-        ?Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null,
     ) {
         if ($this->hasChanges($new_changeset, $previous_changeset)) {
             $this->trigger_rules_manager->processChildrenTriggers($artifact);
@@ -61,7 +61,7 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand impl
 
     private function hasChanges(
         Tracker_Artifact_Changeset $new_changeset,
-        ?Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null,
     ) {
         if (! $previous_changeset) {
             return true;

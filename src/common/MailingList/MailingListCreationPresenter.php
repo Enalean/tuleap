@@ -75,7 +75,7 @@ class MailingListCreationPresenter
         array $existing_lists,
         string $purified_intro,
         string $default_name_value,
-        string $do_create_url
+        string $do_create_url,
     ) {
         $this->group_id           = $group_id;
         $this->csrf_token         = $csrf;

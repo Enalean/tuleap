@@ -59,7 +59,7 @@ class DocmanWikiDeletor
         \Docman_PermissionsManager $permission_manager,
         \Docman_ItemFactory $item_factory,
         \Docman_ItemDao $item_dao,
-        \EventManager $event_manager
+        \EventManager $event_manager,
     ) {
         $this->wiki_page_retriever = $wiki_page_retriever;
         $this->permission_manager  = $permission_manager;
@@ -94,7 +94,7 @@ class DocmanWikiDeletor
                         'group_id'   => $wiki->getGroupId(),
                         'wiki_page'  => $wiki->getPagename(),
                         'referenced' => false,
-                        'user'       => $user
+                        'user'       => $user,
                     ]
                 );
             }

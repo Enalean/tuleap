@@ -50,7 +50,7 @@ class Git_Driver_Gerrit_MembershipManager
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         \Psr\Log\LoggerInterface $logger,
         UGroupManager $ugroup_manager,
-        ProjectManager $project_manager
+        ProjectManager $project_manager,
     ) {
         $this->dao                   = $dao;
         $this->driver_factory        = $driver_factory;
@@ -250,7 +250,7 @@ class Git_Driver_Gerrit_MembershipManager
     private function createGroupOnServerWithoutCheckingUGroupValidity(
         Git_RemoteServer_GerritServer $server,
         ProjectUGroup $ugroup,
-        ProjectUGroup $admin_ugroup
+        ProjectUGroup $admin_ugroup,
     ) {
         $admin_group_name  = $this->getFullyQualifiedUGroupName($admin_ugroup);
         $gerrit_group_name = $this->getFullyQualifiedUGroupName($ugroup);

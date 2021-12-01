@@ -62,8 +62,8 @@ class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     [
                         'ugroup_id'       => 2,
-                        'permission_type' => 'PLUGIN_DOCMAN_READ'
-                    ]
+                        'permission_type' => 'PLUGIN_DOCMAN_READ',
+                    ],
                 ]
             );
 
@@ -96,8 +96,8 @@ class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     [
                         'ugroup_id'       => 102,
-                        'permission_type' => 'PLUGIN_DOCMAN_READ'
-                    ]
+                        'permission_type' => 'PLUGIN_DOCMAN_READ',
+                    ],
                 ]
             );
 

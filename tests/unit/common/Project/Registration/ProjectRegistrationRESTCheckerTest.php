@@ -176,7 +176,7 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
         {
             public function checkFieldConsistency(
                 ProjectRegistrationSubmittedFieldsCollection $field_collection,
-                ProjectRegistrationErrorsCollection $errors_collection
+                ProjectRegistrationErrorsCollection $errors_collection,
             ): void {
                 $errors_collection->addError(
                     new class extends \Exception implements RegistrationErrorException
@@ -230,7 +230,7 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
         {
             public function checkFieldConsistency(
                 ProjectRegistrationSubmittedFieldsCollection $field_collection,
-                ProjectRegistrationErrorsCollection $errors_collection
+                ProjectRegistrationErrorsCollection $errors_collection,
             ): void {
                 $errors_collection->addError(
                     new class extends \Exception implements RegistrationErrorException

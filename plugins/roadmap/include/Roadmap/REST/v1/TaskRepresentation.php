@@ -67,7 +67,7 @@ final class TaskRepresentation
         bool $is_open,
         string $time_period_error_message,
         array $dependencies,
-        ProjectReference $project
+        ProjectReference $project,
     ) {
         $this->id         = $id;
         $this->xref       = $xref;

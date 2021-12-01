@@ -43,7 +43,7 @@ final class MirroredTimeboxFirstChangeset
         public TrackerIdentifier $mirrored_timebox_tracker,
         public MirroredTimeboxChangesetValues $values,
         public UserIdentifier $user,
-        public SubmissionDate $submission_date
+        public SubmissionDate $submission_date,
     ) {
     }
 
@@ -56,7 +56,7 @@ final class MirroredTimeboxFirstChangeset
         TrackerIdentifier $mirrored_timebox_tracker,
         SourceTimeboxChangesetValues $source_values,
         ArtifactLinkValue $artifact_link_value,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): self {
         $fields = SynchronizedFieldReferences::fromTrackerIdentifier(
             $fields_gatherer,

@@ -43,7 +43,7 @@ class SetDateValueRepository
 
     public function __construct(
         Transition_PostAction_Field_DateDao $set_date_value_dao,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->set_date_value_dao   = $set_date_value_dao;
         $this->transaction_executor = $transaction_executor;

@@ -64,7 +64,7 @@ class CrossReferenceArtifactOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'getCurrentUser'              => $user,
                     'getCrossReferencePresenters' => [
                         CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
-                    ]
+                    ],
                 ]
             )->getMock();
 
@@ -125,7 +125,7 @@ class CrossReferenceArtifactOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
                             'getTracker' => Mockery::mock(\Tracker::class)
                                 ->shouldReceive(
                                     [
-                                        'getColor' => TrackerColor::fromName('fiesta-red')
+                                        'getColor' => TrackerColor::fromName('fiesta-red'),
                                     ]
                                 )->getMock(),
                         ]
@@ -182,7 +182,7 @@ class CrossReferenceArtifactOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
                             'getTracker' => Mockery::mock(\Tracker::class)
                                 ->shouldReceive(
                                     [
-                                        'getColor' => TrackerColor::fromName('fiesta-red')
+                                        'getColor' => TrackerColor::fromName('fiesta-red'),
                                     ]
                                 )->getMock(),
                         ]

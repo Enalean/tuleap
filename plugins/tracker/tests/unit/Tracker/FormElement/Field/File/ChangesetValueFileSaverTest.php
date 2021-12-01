@@ -187,7 +187,7 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $value = [
-            'delete' => [70]
+            'delete' => [70],
         ];
 
         $savior = \Mockery::mock(ChangesetValueFileSaver::class . '[initFolder]', [$dao, $attachment_creator]);
@@ -229,14 +229,14 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             'name'        => 'readme.mkd',
             'size'        => 123,
             'type'        => 'text/plain',
-            'tmp_name'    => '/var/tmp/1'
+            'tmp_name'    => '/var/tmp/1',
         ];
         $submitted_file_2 = [
             'description' => '',
             'name'        => 'BradPitt.jpg',
             'size'        => 456,
             'type'        => 'image/jpg',
-            'tmp_name'    => '/var/tmp/2'
+            'tmp_name'    => '/var/tmp/2',
         ];
 
         $value = [$submitted_file_1, $submitted_file_2];
@@ -291,14 +291,14 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             'name'        => 'readme.mkd',
             'size'        => 123,
             'type'        => 'text/plain',
-            'tmp_name'    => '/var/tmp/1'
+            'tmp_name'    => '/var/tmp/1',
         ];
         $submitted_file_2 = [
             'description' => '',
             'name'        => 'BradPitt.jpg',
             'size'        => 456,
             'type'        => 'image/jpg',
-            'tmp_name'    => '/var/tmp/2'
+            'tmp_name'    => '/var/tmp/2',
         ];
 
         $value = [$submitted_file_1, $submitted_file_2];
@@ -353,14 +353,14 @@ class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             'name'        => 'readme.mkd',
             'size'        => 123,
             'type'        => 'text/plain',
-            'tmp_name'    => '/var/tmp/1'
+            'tmp_name'    => '/var/tmp/1',
         ];
         $submitted_file_2 = [
             'description' => '',
             'name'        => 'BradPitt.jpg',
             'size'        => 456,
             'type'        => 'image/jpg',
-            'tmp_name'    => '/var/tmp/2'
+            'tmp_name'    => '/var/tmp/2',
         ];
 
         $value = [$submitted_file_1, $submitted_file_2];

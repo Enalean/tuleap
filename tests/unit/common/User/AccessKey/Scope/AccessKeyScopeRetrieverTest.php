@@ -79,7 +79,7 @@ final class AccessKeyScopeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testOnlyRetrievesBuildableScopes(): void
     {
         $this->scope_dao->shouldReceive('searchScopeKeysByAccessKeyID')->andReturn([
-            ['scope_key' => 'foo:baz']
+            ['scope_key' => 'foo:baz'],
         ]);
 
         $this->key_scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')->andReturn(null);

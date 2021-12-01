@@ -73,7 +73,7 @@ final class CreateProjectFromJiraCommand extends Command
     public function __construct(
         UserManager $user_manager,
         JiraProjectBuilder $jira_project_builder,
-        CreateProjectFromJira $create_project_from_jira
+        CreateProjectFromJira $create_project_from_jira,
     ) {
         parent::__construct(self::NAME);
         $this->user_manager             = $user_manager;

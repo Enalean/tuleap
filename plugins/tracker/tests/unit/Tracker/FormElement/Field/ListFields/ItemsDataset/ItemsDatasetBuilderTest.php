@@ -34,7 +34,7 @@ class ItemsDatasetBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_list_value->shouldReceive('getDataset')->andReturn([
             'data-user-id' => 102,
             'data-avatar-url' => 'some_url',
-            'data-color-name' => 'peggy-pink'
+            'data-color-name' => 'peggy-pink',
         ]);
 
         $data_attributes = ItemsDatasetBuilder::buildDataAttributesForValue($field_list_value);

@@ -116,8 +116,8 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
             'links' => [
                 ['id' => '55', 'type' => '_is_child'],
                 ['id' => '66', 'type' => 'custom'],
-                ['id' => '77', 'type' => '']
-            ]
+                ['id' => '77', 'type' => ''],
+            ],
         ];
 
         $this->assertEquals(
@@ -128,7 +128,7 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
                     '55' => '_is_child',
                     '66' => 'custom',
                     '77' => '',
-                ]
+                ],
             ],
             $this->field->getFieldDataFromRESTValue($new_values, $this->artifact)
         );
@@ -138,7 +138,7 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->field->shouldReceive('getChangesetValues')->andReturn(
             [
-                new Tracker_ArtifactLinkInfo(55, '', '', '', '', '')
+                new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
             ]
         );
 
@@ -161,7 +161,7 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'new_values'   => '',
                 'removed_values' => [55 => ['55'], 66 => ['66']],
-                'types'        => []
+                'types'        => [],
             ],
             $this->field->getFieldData('', $this->artifact),
         );

@@ -29,7 +29,7 @@ class AgileDashboard_XMLFullStructureExporter
 
     public function __construct(
         EventManager $event_manager,
-        AgileDashboardRouterBuilder $builder
+        AgileDashboardRouterBuilder $builder,
     ) {
         $this->event_manager  = $event_manager;
         $this->router_builder = $builder;
@@ -75,7 +75,7 @@ class AgileDashboard_XMLFullStructureExporter
             AGILEDASHBOARD_EXPORT_XML,
             [
                 'project'  => $project,
-                'into_xml' => $into_xml
+                'into_xml' => $into_xml,
             ]
         );
     }

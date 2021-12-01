@@ -289,7 +289,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
             'chart'  => [
                 'title'    => $this->getTitle(),
                 'chart_id' => $this->getId(),
-            ]
+            ],
 
         ];
 
@@ -306,7 +306,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
                     [
                         'dashboard-type'      => UserDashboardController::DASHBOARD_TYPE,
                         'widget-name'         => 'my_plugin_graphontrackersv5_chart',
-                        $csrf->getTokenName() => $csrf->getToken()
+                        $csrf->getTokenName() => $csrf->getToken(),
                     ],
                     $add_to_dashboard_params
                 )
@@ -323,7 +323,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
                             'widget-name'         => 'project_plugin_graphontrackersv5_chart',
                             'dashboard-type'      => ProjectDashboardController::DASHBOARD_TYPE,
                             $csrf->getTokenName() => $csrf->getToken(),
-                            'group_id'            => $project->getID()
+                            'group_id'            => $project->getID(),
 
                         ],
                         $add_to_dashboard_params
@@ -481,7 +481,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
             $siblings[] = [
                 'id'   => $sibling['id'],
                 'name' => $sibling['title'],
-                'rank' => $sibling['rank']
+                'rank' => $sibling['rank'],
             ];
         }
 

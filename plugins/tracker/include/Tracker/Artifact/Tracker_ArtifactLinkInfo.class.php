@@ -137,7 +137,7 @@ class Tracker_ArtifactLinkInfo
             [
                 'key'      => $this->getKeyword(),
                 'val'      => $this->getArtifactId(),
-                'group_id' => $this->getGroupId()
+                'group_id' => $this->getGroupId(),
             ]
         );
     }
@@ -199,7 +199,7 @@ class Tracker_ArtifactLinkInfo
         $hide_artifact = false;
         $params        = [
             'type'        => $type,
-            'hide_artifact' => &$hide_artifact
+            'hide_artifact' => &$hide_artifact,
         ];
         EventManager::instance()->processEvent(
             Tracker_Artifact_ChangesetValue_ArtifactLinkDiff::HIDE_ARTIFACT,

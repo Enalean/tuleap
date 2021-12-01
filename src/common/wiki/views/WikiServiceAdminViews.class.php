@@ -377,7 +377,7 @@ class WikiServiceAdminViews extends WikiViews
             $eM->processEvent('isWikiPageReferenced', [
                             'referenced' => &$referenced,
                             'wiki_page'  => $pagename,
-                            'group_id' => $this->gid
+                            'group_id' => $this->gid,
                             ]);
 
             print '<td align="center">';
@@ -385,7 +385,7 @@ class WikiServiceAdminViews extends WikiViews
             if ($referenced) {
                 $label = '';
                 $eM->processEvent('getPermsLabelForWiki', [
-                                  'label'  => &$label
+                                  'label'  => &$label,
                                 ]);
                 print $purifier->purify($label);
             } else {

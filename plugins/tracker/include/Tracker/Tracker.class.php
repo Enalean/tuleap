@@ -214,7 +214,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $log_priority_changes,
         $notifications_level,
         TrackerColor $color,
-        $enable_emailgateway
+        $enable_emailgateway,
     ) {
         $this->id                           = $id;
         $this->group_id                     = $group_id;
@@ -272,7 +272,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     {
         return TRACKER_BASE_URL . '/?' . http_build_query([
             'tracker' => $this->getId(),
-            'func'    => 'admin'
+            'func'    => 'admin',
         ]);
     }
 
@@ -1158,14 +1158,14 @@ class Tracker implements Tracker_Dispatchable_Interface
         $title,
         $breadcrumbs,
         array $toolbar,
-        array $params = []
+        array $params = [],
     ) {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $hp = Codendi_HTMLPurifier::instance();
 
             $breadcrumbs = array_merge(
                 [
-                    $this->getCrumb()
+                    $this->getCrumb(),
                 ],
                 $breadcrumbs
             );
@@ -1175,7 +1175,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $params['new_dropdown_current_context_section'] = new NewDropdownLinkSectionPresenter(
                     sprintf(dgettext("tuleap-tracker", "%s tracker"), $this->getItemName()),
                     [
-                        $link_presenter_builder->build($this)
+                        $link_presenter_builder->build($this),
                     ],
                 );
             }
@@ -1281,7 +1281,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         Tracker_IDisplayTrackerLayout $layout,
         string $current_item,
         $title,
-        array $params = []
+        array $params = [],
     ) {
         $this->buildAndDisplayAdministrationHeader($layout, $title, [], $params);
         $this->IncludeTrackerEmailCopyPasteJavascriptForFlamingParrot();
@@ -1299,7 +1299,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         string $current_item,
         $title,
         $breadcrumbs,
-        array $params = []
+        array $params = [],
     ) {
         $this->buildAndDisplayAdministrationHeader($layout, $title, $breadcrumbs, $params);
 
@@ -1340,7 +1340,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         Tracker_IDisplayTrackerLayout $layout,
         string $item,
         string $header_title,
-        array $params = []
+        array $params = [],
     ) {
         $this->displayAdminHeaderBurningParrot($layout, $item, $header_title, [], $params);
     }
@@ -1507,7 +1507,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $breadcrumbs = [
             [
                 'title' => dgettext('tuleap-tracker', 'Mass Change'),
-                'url'   => '#' //TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=display-masschange-form',
+                'url'   => '#', //TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=display-masschange-form',
             ],
         ];
         $this->displayHeader($layout, $this->name, $breadcrumbs, [], ["body_class" => ["widgetable"]]);
@@ -1567,7 +1567,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $cannot_configure_instantiate_for_new_projects = false;
         $params                                        = [
             'cannot_configure_instantiate_for_new_projects' => &$cannot_configure_instantiate_for_new_projects,
-            'tracker'                                       => $this
+            'tracker'                                       => $this,
         ];
         EventManager::instance()->processEvent(TRACKER_EVENT_GENERAL_SETTINGS, $params);
 
@@ -1995,7 +1995,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             TRACKER_USAGE,
             [
                 'tracker'   => $this,
-                'result'    => &$result
+                'result'    => &$result,
             ]
         );
 
@@ -2042,7 +2042,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function exportToXMLInProjectExportContext(
         SimpleXMLElement $xmlElem,
         UserXMLExporter $user_xml_exporter,
-        array &$xmlMapping = []
+        array &$xmlMapping = [],
     ) {
         return $this->exportTrackerToXML($xmlElem, $user_xml_exporter, $xmlMapping, true);
     }
@@ -2061,7 +2061,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         SimpleXMLElement $xmlElem,
         UserXMLExporter $user_xml_exporter,
         array &$xmlMapping,
-        $project_export_context
+        $project_export_context,
     ) {
         if ($project_export_context) {
             $xml_tracker = XMLTracker::fromTracker($this);
@@ -3231,7 +3231,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     private function getArtifactXMLExporter(
         Tracker_XML_ChildrenCollector $children_collector,
         Tracker_XML_Exporter_FilePathXMLExporter $file_path_xml_exporter,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         $builder               = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
         $user_xml_exporter     = $this->getUserXMLExporter();

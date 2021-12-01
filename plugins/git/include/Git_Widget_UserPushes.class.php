@@ -233,7 +233,7 @@ class Git_Widget_UserPushes extends Widget
     public function getJavascriptDependencies(): array
     {
         return [
-            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates']
+            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates'],
         ];
     }
 }

@@ -32,7 +32,7 @@ class SearchFieldsPresenterBuilder
         array $type_values,
         $filter_value,
         $start_date_value,
-        $end_date_value
+        $end_date_value,
     ) {
         $type_options   = $this->getListOfTypeValuePresenter($type_values);
         $filter_options = $this->getListOfFilterValuePresenter($filter_value);
@@ -51,7 +51,7 @@ class SearchFieldsPresenterBuilder
         $group_by_date_with_selected,
         $start_date_value,
         $end_date_value,
-        $relative_y_axis_value
+        $relative_y_axis_value,
     ) {
         $start_date_value = $this->getDate($start_date_value, 'Y-m-d', 'P1M');
         $end_date_value   = $this->getDate($end_date_value, 'Y-m-d');
@@ -80,7 +80,7 @@ class SearchFieldsPresenterBuilder
     public function buildSearchFieldsForProjects(
         $services_with_selected,
         $start_date_value,
-        $end_date_value
+        $end_date_value,
     ) {
         $start_date_value = $this->getDate($start_date_value, 'Y-m-d', 'P1W');
         $end_date_value   = $this->getDate($end_date_value, 'Y-m-d');
@@ -101,7 +101,7 @@ class SearchFieldsPresenterBuilder
         $user_name_value,
         $group_by_value,
         $start_date_value,
-        $end_date_value
+        $end_date_value,
     ) {
         $group_by_options = $this->getListOfGroupByValuePresenter($group_by_value);
 
@@ -118,10 +118,10 @@ class SearchFieldsPresenterBuilder
         $start_date_value,
         $end_date_value,
         $group_by_date_with_selected,
-        $relative_y_axis_value
+        $relative_y_axis_value,
     ) {
         $params = [
-            'services' => []
+            'services' => [],
         ];
 
         foreach ($service_values as $service) {
@@ -145,10 +145,10 @@ class SearchFieldsPresenterBuilder
     private function buildUrlParamsForProjects(
         array $service_values,
         $start_date_value,
-        $end_date_value
+        $end_date_value,
     ) {
         $params = [
-            'services' => []
+            'services' => [],
         ];
 
         foreach ($service_values as $service) {
@@ -180,7 +180,7 @@ class SearchFieldsPresenterBuilder
             'day'   => dgettext('tuleap-statistics', 'Day'),
             'week'  => dgettext('tuleap-statistics', 'Week'),
             'month' => dgettext('tuleap-statistics', 'Month'),
-            'year'  => dgettext('tuleap-statistics', 'Year')
+            'year'  => dgettext('tuleap-statistics', 'Year'),
         ];
 
         $group_by_options = [];
@@ -244,7 +244,7 @@ class SearchFieldsPresenterBuilder
         return [
             'value'       => $value,
             'is_selected' => in_array($value, $selected_values),
-            'label'       => $label
+            'label'       => $label,
         ];
     }
 

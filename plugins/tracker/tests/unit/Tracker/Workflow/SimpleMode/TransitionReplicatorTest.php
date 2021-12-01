@@ -144,7 +144,7 @@ class TransitionReplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $hidden_fieldsets = Mockery::mock(HiddenFieldsets::class);
         $hidden_fieldsets->shouldReceive('getFieldsets')->andReturn([
             $fieldset_01,
-            $fieldset_02
+            $fieldset_02,
         ]);
 
         $this->post_actions_retriever

@@ -91,7 +91,7 @@ class LabeledItemCollector
         UserManager $user_manager,
         UserHelper $user_helper,
         Git_GitRepositoryUrlManager $repository_url_manager,
-        TemplateRenderer $template_renderer
+        TemplateRenderer $template_renderer,
     ) {
         $this->label_dao                      = $label_dao;
         $this->pullrequest_permission_checker = $pullrequest_permission_checker;

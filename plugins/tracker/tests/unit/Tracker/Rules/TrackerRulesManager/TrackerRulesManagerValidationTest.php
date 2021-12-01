@@ -110,7 +110,7 @@ class TrackerRulesManagerValidationTest extends \Tuleap\Test\PHPUnit\TestCase
             10 => '',
             11 => '',
             12 => '',
-            13 => ''
+            13 => '',
         ];
 
         $this->tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
@@ -125,7 +125,7 @@ class TrackerRulesManagerValidationTest extends \Tuleap\Test\PHPUnit\TestCase
             10 => '',
             11 => '',
             12 => '',
-            13 => ''
+            13 => '',
         ];
 
         $this->tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);

@@ -67,7 +67,7 @@ class Hooks extends Pane
         GitRepository $repository,
         Codendi_Request $request,
         WebhookFactory $webhook_factory,
-        WebhookDao $webhook_dao
+        WebhookDao $webhook_dao,
     ) {
         parent::__construct($repository, $request);
         $this->webhook_factory = $webhook_factory;

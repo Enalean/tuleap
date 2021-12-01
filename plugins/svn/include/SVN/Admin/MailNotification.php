@@ -48,7 +48,7 @@ class MailNotification
         $path,
         array $notified_mails,
         array $notified_users,
-        array $notified_ugroups
+        array $notified_ugroups,
     ) {
         $this->id               = $id;
         $this->repository       = $repository;

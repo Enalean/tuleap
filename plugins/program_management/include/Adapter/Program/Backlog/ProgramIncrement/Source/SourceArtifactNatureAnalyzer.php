@@ -37,7 +37,7 @@ final class SourceArtifactNatureAnalyzer implements AnalyzeNatureOfSourceArtifac
     public function __construct(
         private RetrieveTimeboxFromMirroredTimebox $timebox_retriever,
         private \Tracker_ArtifactFactory $artifact_factory,
-        private RetrieveUser $retrieve_user
+        private RetrieveUser $retrieve_user,
     ) {
     }
 

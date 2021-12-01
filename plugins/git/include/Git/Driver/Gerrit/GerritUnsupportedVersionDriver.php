@@ -34,7 +34,7 @@ final class GerritUnsupportedVersionDriver implements Git_Driver_Gerrit
     public function createProject(
         Git_RemoteServer_GerritServer $server,
         GitRepository $repository,
-        $parent_project_name
+        $parent_project_name,
     ) {
         throw new UnsupportedGerritVersionException();
     }
@@ -42,7 +42,7 @@ final class GerritUnsupportedVersionDriver implements Git_Driver_Gerrit
     public function createProjectWithPermissionsOnly(
         Git_RemoteServer_GerritServer $server,
         Project $project,
-        $admin_group_name
+        $admin_group_name,
     ) {
         throw new UnsupportedGerritVersionException();
     }
@@ -112,7 +112,7 @@ final class GerritUnsupportedVersionDriver implements Git_Driver_Gerrit
     public function removeUserFromGroup(
         Git_RemoteServer_GerritServer $server,
         Git_Driver_Gerrit_User $user,
-        $group_name
+        $group_name,
     ) {
         throw new UnsupportedGerritVersionException();
     }
@@ -145,7 +145,7 @@ final class GerritUnsupportedVersionDriver implements Git_Driver_Gerrit
     public function removeSSHKeyFromAccount(
         Git_RemoteServer_GerritServer $server,
         Git_Driver_Gerrit_User $user,
-        $ssh_key
+        $ssh_key,
     ) {
         throw new UnsupportedGerritVersionException();
     }

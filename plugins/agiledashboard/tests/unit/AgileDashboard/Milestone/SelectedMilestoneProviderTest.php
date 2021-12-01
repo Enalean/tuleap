@@ -60,7 +60,7 @@ class AgileDashboard_Milestone_SelectedMilestoneProviderTest extends \Tuleap\Tes
     public function testItReturnsTheIdOfTheMilestone(): void
     {
         $additional_criteria = [
-            self::FIELD_NAME => new Tracker_Report_AdditionalCriterion(self::FIELD_NAME, 123)
+            self::FIELD_NAME => new Tracker_Report_AdditionalCriterion(self::FIELD_NAME, 123),
         ];
 
         $provider = new AgileDashboard_Milestone_SelectedMilestoneProvider(

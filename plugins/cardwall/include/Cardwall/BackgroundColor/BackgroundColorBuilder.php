@@ -42,7 +42,7 @@ class BackgroundColorBuilder
     public function build(
         Cardwall_Semantic_CardFields $card_fields_semantic,
         Artifact $artifact,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         $background_color_name = $this->getBackgroundColor($card_fields_semantic, $artifact, $current_user);
         return new BackgroundColor($background_color_name);
@@ -51,7 +51,7 @@ class BackgroundColorBuilder
     private function getBackgroundColor(
         Cardwall_Semantic_CardFields $card_fields_semantic,
         Artifact $artifact,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         try {
             $background_color_field = $card_fields_semantic->getBackgroundColorField();

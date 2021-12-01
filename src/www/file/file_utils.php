@@ -78,7 +78,7 @@ function frs_show_status_popup($name = 'status_id', $checked_val = "xzxz")
     $arr_id          = [$package_factory->STATUS_ACTIVE, $package_factory->STATUS_HIDDEN];
     $arr_status      = [
         $Language->getText('file_admin_editpackages', 'status_active'),
-        $Language->getText('file_admin_editpackages', 'status_hidden')
+        $Language->getText('file_admin_editpackages', 'status_hidden'),
     ];
 
     return html_build_select_box_from_arrays($arr_id, $arr_status, $name, $checked_val, false);
@@ -529,7 +529,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                 $params = [
                     'release_id'        => $release->getReleaseId(),
                     'additional_info'   => &$additional_info,
-                    'notes_in_markdown' => &$notes_in_markdown
+                    'notes_in_markdown' => &$notes_in_markdown,
                 ];
 
                 EventManager::instance()->processEvent(
@@ -775,7 +775,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                         <TD>
                             <TEXTAREA ID="release_news_details" NAME="release_news_details" ROWS="7" COLS="50">' . $hp->purify($GLOBALS['Language']->getOverridableText('file_admin_editreleases', 'file_news_details', [
                 $relname,
-                $url_news
+                $url_news,
                 ])) . ' </TEXTAREA>
                         </TD>
                     </TR>
@@ -1105,7 +1105,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             'status_id' => $release['status_id'],
             'package_id' => $release['package_id'],
             'notes' => $release['release_notes'],
-            'changes' => $release['change_log']
+            'changes' => $release['change_log'],
         ];
         if ($is_update) {
             $array['release_id'] = $release['release_id'];
@@ -1161,7 +1161,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 $count = $release_factory->emailNotification($rel);
                 if ($count === false) {
                     $error[] =  $GLOBALS['Language']->getText('global', 'mail_failed', [
-                        ForgeConfig::get('sys_email_admin')
+                        ForgeConfig::get('sys_email_admin'),
                         ]);
                 } else {
                     if ($count > 0) {
@@ -1316,7 +1316,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                             'name' => $file,
                             'processor' => $ftp_file_processor[$index],
                             'type' => $ftp_file_type[$index],
-                            'reference_md5' => $ftp_reference_md5[$index]
+                            'reference_md5' => $ftp_reference_md5[$index],
                         ];
                         $index++;
                     }
@@ -1411,7 +1411,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             $params     = [
                 'release_id'      => $release_id,
                 'release_request' => $request->get('release'),
-                'error'           => &$error_edit
+                'error'           => &$error_edit,
             ];
 
             EventManager::instance()->processEvent(

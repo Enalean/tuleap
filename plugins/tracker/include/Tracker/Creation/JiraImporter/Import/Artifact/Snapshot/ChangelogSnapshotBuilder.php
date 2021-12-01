@@ -54,7 +54,7 @@ class ChangelogSnapshotBuilder
     public function __construct(
         CreationStateListValueFormatter $creation_state_list_value_formatter,
         LoggerInterface $logger,
-        JiraUserRetriever $jira_user_retriever
+        JiraUserRetriever $jira_user_retriever,
     ) {
         $this->creation_state_list_value_formatter = $creation_state_list_value_formatter;
         $this->logger                              = $logger;
@@ -68,7 +68,7 @@ class ChangelogSnapshotBuilder
         Snapshot $current_snapshot,
         ChangelogEntryValueRepresentation $changelog_entry,
         AttachmentCollection $attachment_collection,
-        FieldMappingCollection $jira_field_mapping_collection
+        FieldMappingCollection $jira_field_mapping_collection,
     ): Snapshot {
         $this->logger->debug("Start build snapshot from changelog...");
         $fields_snapshot = [];
@@ -218,7 +218,7 @@ class ChangelogSnapshotBuilder
         Snapshot $current_snapshot,
         string $field_id,
         string $changed_field_to_string,
-        FieldMapping $field_mapping
+        FieldMapping $field_mapping,
     ): FieldSnapshot {
         $rendered_value = null;
         $field_snapshot = $current_snapshot->getFieldInSnapshot($field_id);

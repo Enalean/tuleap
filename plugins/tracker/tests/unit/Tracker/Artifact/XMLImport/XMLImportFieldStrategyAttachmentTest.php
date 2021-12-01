@@ -158,7 +158,7 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
                     'description'  => '',
                     'size'         => 1024,
                     'tmp_name'     => $this->extraction_path . '/Readme.mkd',
-                    'error'        => 0
+                    'error'        => 0,
                 ],
                 [
                     'is_migrated'  => true,
@@ -168,8 +168,8 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
                     'description'  => '',
                     'size'         => 2048,
                     'tmp_name'     => $this->extraction_path . '/Lenna.png',
-                    'error'        => 0
-                ]
+                    'error'        => 0,
+                ],
             ],
             $this->strategy->getFieldData($this->field, $field_change, $this->submitted_by, $this->artifact)
         );
@@ -266,8 +266,8 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
                     'description'  => '',
                     'size'         => 2048,
                     'tmp_name'     => $this->extraction_path . '/Lenna.png',
-                    'error'        => 0
-                ]
+                    'error'        => 0,
+                ],
             ],
             $this->strategy->getFieldData($this->field, $field_change, $this->submitted_by, $this->artifact)
         );

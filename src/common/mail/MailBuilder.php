@@ -36,7 +36,7 @@ class MailBuilder
 
     public function __construct(
         TemplateRendererFactory $template_factory,
-        MailFilter $mail_filter
+        MailFilter $mail_filter,
     ) {
         $this->renderer = $template_factory->getRenderer(
             ForgeConfig::get('codendi_dir') . '/src/templates/mail/truncated'

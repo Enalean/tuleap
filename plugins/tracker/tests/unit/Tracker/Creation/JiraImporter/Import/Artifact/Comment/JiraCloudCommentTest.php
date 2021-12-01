@@ -36,8 +36,8 @@ class JiraCloudCommentTest extends \Tuleap\Test\PHPUnit\TestCase
                 "updated" => "2020-04-21T11:36:46.601+0200",
                 "updateAuthor" => [
                     'displayName' => 'user01',
-                    'accountId'   => 'e8ds123qsd'
-                ]
+                    'accountId'   => 'e8ds123qsd',
+                ],
             ]
         );
 
@@ -55,8 +55,8 @@ class JiraCloudCommentTest extends \Tuleap\Test\PHPUnit\TestCase
                 "created" => "2020-04-21T11:36:46.601+0200",
                 "updated" => "2020-04-21T11:36:46.601+0200",
                 "updateAuthor" => [
-                    "displayName" => 'user01'
-                ]
+                    "displayName" => 'user01',
+                ],
             ]
         );
 
@@ -68,8 +68,8 @@ class JiraCloudCommentTest extends \Tuleap\Test\PHPUnit\TestCase
                 "renderedBody" => "<p>Comment 01</p>",
                 "created" => "2020-04-21T11:36:46.601+0200",
                 "updateAuthor" => [
-                    "displayName" => 'user01'
-                ]
+                    "displayName" => 'user01',
+                ],
             ]
         );
 
@@ -80,7 +80,7 @@ class JiraCloudCommentTest extends \Tuleap\Test\PHPUnit\TestCase
                 "body" => "Comment 01",
                 "renderedBody" => "<p>Comment 01</p>",
                 "created" => "2020-04-21T11:36:46.601+0200",
-                "updated" => "2020-04-21T11:36:46.601+0200"
+                "updated" => "2020-04-21T11:36:46.601+0200",
             ]
         );
     }

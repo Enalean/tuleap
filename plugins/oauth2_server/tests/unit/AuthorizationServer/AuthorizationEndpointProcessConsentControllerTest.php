@@ -175,7 +175,7 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
             'Redirect URI is not a string'    => [['redirect_uri' => false]],
             'No App identifier'               => [['redirect_uri' => 'https://example.com']],
             'No scopes'                       => [['redirect_uri' => 'https://example.com', 'app_identifier' => 'tlp-client-id-13']],
-            'Scopes are not array of strings' => [['redirect_uri' => 'https://example.com', 'app_identifier' => 'tlp-client-id-13', 'scope' => [false]]]
+            'Scopes are not array of strings' => [['redirect_uri' => 'https://example.com', 'app_identifier' => 'tlp-client-id-13', 'scope' => [false]]],
         ];
     }
 

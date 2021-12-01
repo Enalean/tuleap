@@ -123,7 +123,7 @@ class DefaultFineGrainedPermissionFactoryTest extends \Tuleap\Test\PHPUnit\TestC
             'edit-branch-rewind' => [1 => [102]],
             'edit-tag-write' => [2 => [101]],
             'edit-tag-rewind' => [2 => [102]],
-            'group_id' => 101
+            'group_id' => 101,
         ];
 
         $request = $this->buildRequest($params);
@@ -141,7 +141,7 @@ class DefaultFineGrainedPermissionFactoryTest extends \Tuleap\Test\PHPUnit\TestC
             'edit-branch-write' => [1 => [101, 102]],
             'edit-branch-rewind' => [1 => [103]],
             'edit-tag-rewind' => [2 => [102]],
-            'group_id' => 101
+            'group_id' => 101,
         ];
 
         $request = $this->buildRequest($params);

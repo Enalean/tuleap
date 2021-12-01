@@ -33,7 +33,7 @@ final class FeatureElementsRetriever
     public function __construct(
         private BuildProgram $build_program,
         private SearchPlannableFeatures $search_plannable_features,
-        private FeatureRepresentationBuilder $feature_representation_builder
+        private FeatureRepresentationBuilder $feature_representation_builder,
     ) {
     }
 

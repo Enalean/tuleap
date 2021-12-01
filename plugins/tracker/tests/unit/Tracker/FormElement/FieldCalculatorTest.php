@@ -59,12 +59,12 @@ final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     'effort',
                     '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class)
+                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
                 ]
             )->andReturn(
                 [
                     'children'   => $children,
-                    'manual_sum' => null
+                    'manual_sum' => null,
                 ]
             );
 
@@ -89,12 +89,12 @@ final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     'effort',
                     '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class)
+                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
                 ]
             )->andReturn(
                 [
                     'children'   => $children,
-                    'manual_sum' => null
+                    'manual_sum' => null,
                 ]
             );
 
@@ -110,12 +110,12 @@ final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     'effort',
                     '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class)
+                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
                 ]
             )->andReturn(
                 [
                     'children'   => $other_children,
-                    'manual_sum' => null
+                    'manual_sum' => null,
                 ]
             );
 
@@ -139,12 +139,12 @@ final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     'effort',
                     '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class)
+                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
                 ]
             )->andReturn(
                 [
                     'children'   => $children,
-                    'manual_sum' => null
+                    'manual_sum' => null,
                 ]
             );
 
@@ -160,12 +160,12 @@ final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     'effort',
                     '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class)
+                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
                 ]
             )->andReturn(
                 [
                     'children'   => $other_children,
-                    'manual_sum' => null
+                    'manual_sum' => null,
                 ]
             );
 
@@ -195,12 +195,12 @@ final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     'effort',
                     '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class)
+                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
                 ]
             )->andReturn(
                 [
                     'children'   => $children,
-                    'manual_sum' => null
+                    'manual_sum' => null,
                 ]
             );
 
@@ -217,12 +217,12 @@ final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     'effort',
                     '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class)
+                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
                 ]
             )->andReturn(
                 [
                     'children'   => $other_children,
-                    'manual_sum' => null
+                    'manual_sum' => null,
                 ]
             );
 
@@ -235,12 +235,12 @@ final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     'effort',
                     '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class)
+                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
                 ]
             )->andReturn(
                 [
                     'children'   => $other_children,
-                    'manual_sum' => null
+                    'manual_sum' => null,
                 ]
             );
 
@@ -263,12 +263,12 @@ final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     'effort',
                     '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class)
+                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
                 ]
             )->andReturn(
                 [
                     'children'   => $children,
-                    'manual_sum' => null
+                    'manual_sum' => null,
                 ]
             );
 
@@ -285,12 +285,12 @@ final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     'effort',
                     '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class)
+                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
                 ]
             )->andReturn(
                 [
                     'children'   => $other_children,
-                    'manual_sum' => null
+                    'manual_sum' => null,
                 ]
             );
         $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', 109);
@@ -312,12 +312,12 @@ final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     'effort',
                     '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class)
+                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
                 ]
             )->andReturn(
                 [
                     'children'   => $children,
-                    'manual_sum' => null
+                    'manual_sum' => null,
                 ]
             );
 
@@ -333,12 +333,12 @@ final class FieldCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     'effort',
                     '109',
-                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class)
+                    \Mockery::type(ArtifactsAlreadyProcessedDuringComputationCollection::class),
                 ]
             )->andReturn(
                 [
                     'children'   => $other_children,
-                    'manual_sum' => null
+                    'manual_sum' => null,
                 ]
             );
 

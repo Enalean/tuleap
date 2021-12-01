@@ -41,7 +41,7 @@ class ColorPresenterFactory
         'deep_blue',
         'plum_crazy',
         'peggy_pink',
-        'flamingo_pink'
+        'flamingo_pink',
     ];
 
     public function getColorsPresenters()

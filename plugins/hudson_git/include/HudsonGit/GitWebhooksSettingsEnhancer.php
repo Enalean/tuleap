@@ -61,7 +61,7 @@ class GitWebhooksSettingsEnhancer
         HookDao $dao,
         LogFactory $log_factory,
         CSRFSynchronizerToken $csrf,
-        JenkinsServerFactory $jenkins_server_factory
+        JenkinsServerFactory $jenkins_server_factory,
     ) {
         $this->dao                    = $dao;
         $this->csrf                   = $csrf;
@@ -120,7 +120,7 @@ class GitWebhooksSettingsEnhancer
                         $url,
                         $triggered_jobs,
                         $this->csrf
-                    )
+                    ),
                 ]
             );
         }

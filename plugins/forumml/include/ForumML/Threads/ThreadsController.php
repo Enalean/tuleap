@@ -65,7 +65,7 @@ class ThreadsController implements DispatchableWithBurningParrot, DispatchableWi
         IncludeAssets $include_assets,
         ThreadsPresenterBuilder $presenter_builder,
         CurrentListBreadcrumbCollectionBuilder $breadcrumb_collection_builder,
-        ListInfoFromVariablesProvider $list_info_from_variable_provider
+        ListInfoFromVariablesProvider $list_info_from_variable_provider,
     ) {
         $this->renderer                         = $renderer;
         $this->include_assets                   = $include_assets;

@@ -73,7 +73,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTes
     public function testItCreatesFieldChangeNodeWithOneValueInChangesetNode(): void
     {
         $this->changeset_value->shouldReceive('getValue')->andReturns([
-            '101'
+            '101',
         ]);
 
         $this->exporter->export(
@@ -94,7 +94,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTes
     {
         $this->changeset_value->shouldReceive('getValue')->andReturns([
             '101',
-            '102'
+            '102',
         ]);
 
         $this->exporter->export(

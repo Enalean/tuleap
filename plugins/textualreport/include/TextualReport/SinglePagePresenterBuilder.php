@@ -53,7 +53,7 @@ class SinglePagePresenterBuilder
     public function exportAsSinglePage(
         array $ordered_artifact_rows,
         PFUser $current_user,
-        $server_url
+        $server_url,
     ) {
         $nb_matching_artifacts = count($ordered_artifact_rows);
         $is_hard_limit_reached = $nb_matching_artifacts > self::HARD_LIMIT;
@@ -71,7 +71,7 @@ class SinglePagePresenterBuilder
             'is_hard_limit_reached' => $is_hard_limit_reached,
             'hard_limit'            => self::HARD_LIMIT,
             'nb_matching_artifacts' => $nb_matching_artifacts,
-            'stylesheets'           => $stylesheets
+            'stylesheets'           => $stylesheets,
         ];
     }
 

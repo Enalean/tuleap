@@ -33,7 +33,7 @@ class DashboardWidgetReorder
 
     public function __construct(
         DashboardWidgetDao $dao,
-        DashboardWidgetRemoverInList $remover_in_list
+        DashboardWidgetRemoverInList $remover_in_list,
     ) {
         $this->dao             = $dao;
         $this->remover_in_list = $remover_in_list;
@@ -46,7 +46,7 @@ class DashboardWidgetReorder
         DashboardWidgetColumn $new_column,
         DashboardWidgetColumn $old_column,
         DashboardWidget $widget_to_update,
-        $new_widget_rank
+        $new_widget_rank,
     ) {
         if ($old_column->getId() !== $new_column->getId()) {
             $this->dao->updateColumnIdByWidgetId($widget_to_update->getId(), $new_column->getId());
@@ -58,7 +58,7 @@ class DashboardWidgetReorder
 
     private function updateWidgetRankToLeaveColumn(
         DashboardWidget $widget_to_update,
-        DashboardWidgetColumn $column
+        DashboardWidgetColumn $column,
     ) {
         $widgets = $this->remover_in_list->removeWidgetInWidgetsListColumn($widget_to_update, $column);
         $this->updateWidgetsRank($widgets);
@@ -70,7 +70,7 @@ class DashboardWidgetReorder
     private function updateRankToEnterInColumn(
         DashboardWidget $widget_to_update,
         $new_widget_rank,
-        DashboardWidgetColumn $column
+        DashboardWidgetColumn $column,
     ) {
         $widgets = $this->remover_in_list->removeWidgetInWidgetsListColumn($widget_to_update, $column);
         array_splice($widgets, $new_widget_rank, 0, [$widget_to_update]);

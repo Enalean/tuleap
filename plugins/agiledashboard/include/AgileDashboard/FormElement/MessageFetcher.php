@@ -46,7 +46,7 @@ class MessageFetcher
     public function __construct(
         PlanningFactory $planning_factory,
         AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory,
-        SemanticDoneFactory $semantic_done_factory
+        SemanticDoneFactory $semantic_done_factory,
     ) {
         $this->planning_factory       = $planning_factory;
         $this->initial_effort_factory = $initial_effort_factory;

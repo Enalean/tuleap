@@ -55,7 +55,7 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         PluginFactory $plugin_factory,
         SiteCache $site_cache,
         ForgeUpgradeConfig $forgeupgrade_config,
-        ContentInterpretor $commonmark_content_interpretor
+        ContentInterpretor $commonmark_content_interpretor,
     ) {
         $this->plugin_factory                 = $plugin_factory;
         $this->site_cache                     = $site_cache;

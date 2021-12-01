@@ -76,7 +76,7 @@ class Controller
         UnlinkedAccountManager $unlinked_account_manager,
         ConnectorPresenterBuilder $connector_presenter_builder,
         EventDispatcherInterface $event_dispatcher,
-        array &$session_storage
+        array &$session_storage,
     ) {
         $this->user_manager                = $user_manager;
         $this->provider_manager            = $provider_manager;
@@ -116,7 +116,7 @@ class Controller
         $GLOBALS['HTML']->header(
             [
                 'title'      => dgettext('tuleap-openidconnectclient', 'Link an account'),
-                'body_class' => ['openid-connect-link']
+                'body_class' => ['openid-connect-link'],
             ]
         );
         $renderer->renderToPage('linker', $presenter);
@@ -129,7 +129,7 @@ class Controller
             'name'     => 'form_realname',
             'nickname' => 'form_loginname',
             'email'    => 'form_email',
-            'zoneinfo' => 'timezone'
+            'zoneinfo' => 'timezone',
         ];
 
         $query_parameters = [];

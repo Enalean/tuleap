@@ -58,7 +58,7 @@ class SSHAuthenticate
         \GitRepositoryFactory $git_repository_factory,
         SSHAuthenticateResponseBuilder $response_builder,
         UserOperationFactory $user_operation_factory,
-        ?\gitlfsPlugin $plugin = null
+        ?\gitlfsPlugin $plugin = null,
     ) {
         $this->project_manager        = $project_manager;
         $this->user_manager           = $user_manager;

@@ -56,7 +56,7 @@ class Planning_VirtualTopMilestonePaneFactory // phpcs:ignore PSR1.Classes.Class
     public function __construct(
         Codendi_Request $request,
         ExplicitBacklogDao $explicit_backlog_dao,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->request              = $request;
         $this->explicit_backlog_dao = $explicit_backlog_dao;

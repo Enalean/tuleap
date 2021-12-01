@@ -248,7 +248,7 @@ class TroveCatListController implements DispatchableWithRequest
             'fullpath_ids' => (isset($trove_cat_list['hierarchy_id'])) ? $trove_cat_list['hierarchy_id'] . " :: "  . $trove_cat_id : $trove_cat_id,
             'root_parent'  => (int) $ids[0],
             'nb_max_values' => $nb_max_values,
-            'is_project_flag' => $is_project_flag
+            'is_project_flag' => $is_project_flag,
         ];
 
         return $trove_categories;

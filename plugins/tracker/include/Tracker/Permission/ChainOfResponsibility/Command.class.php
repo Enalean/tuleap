@@ -42,7 +42,7 @@ abstract class Tracker_Permission_Command
         self::PERMISSION_ASSIGNEE,
         self::PERMISSION_SUBMITTER,
         self::PERMISSION_SUBMITTER_ONLY,
-        self::PERMISSION_ASSIGNEE_AND_SUBMITTER
+        self::PERMISSION_ASSIGNEE_AND_SUBMITTER,
     ];
 
     /** @var Tracker_Permission_Command */
@@ -73,7 +73,7 @@ abstract class Tracker_Permission_Command
     protected function revokeAllButAdmin(
         Tracker_Permission_PermissionRequest $request,
         Tracker_Permission_PermissionSetter $permission_setter,
-        $ugroup_id
+        $ugroup_id,
     ) {
         if ($this->requestContainsNonAdminPermissions($request, $ugroup_id)) {
             $this->warnAlreadyHaveFullAccess($permission_setter, $ugroup_id);

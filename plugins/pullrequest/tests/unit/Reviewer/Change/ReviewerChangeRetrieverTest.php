@@ -85,19 +85,19 @@ final class ReviewerChangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     'change_date'      => 1575044496,
                     'change_user_id'   => $user_1_id,
                     'reviewer_user_id' => $user_2_id,
-                    'is_removal'       => 0
+                    'is_removal'       => 0,
                 ],
                 [
                     'change_date'      => 1575044496,
                     'change_user_id'   => $user_1_id,
                     'reviewer_user_id' => $user_3_id,
-                    'is_removal'       => 1
+                    'is_removal'       => 1,
                 ],
                 [
                     'change_date'      => 1575044496,
                     'change_user_id'   => $user_1_id,
                     'reviewer_user_id' => $unknown_user_id,
-                    'is_removal'       => 1
+                    'is_removal'       => 1,
                 ],
             ],
             168 => [
@@ -105,9 +105,9 @@ final class ReviewerChangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     'change_date'      => 1575051696,
                     'change_user_id'   => $unknown_user_id,
                     'reviewer_user_id' => $user_2_id,
-                    'is_removal'       => 0
-                ]
-            ]
+                    'is_removal'       => 0,
+                ],
+            ],
         ]);
 
         $changes = $this->reviewer_change_retriever->getChangesForPullRequest($pull_request);
@@ -133,8 +133,8 @@ final class ReviewerChangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'change_date'      => 1575293481,
                 'change_user_id'   => $user_1_id,
                 'reviewer_user_id' => $user_2_id,
-                'is_removal'       => 0
-            ]
+                'is_removal'       => 0,
+            ],
         ]);
 
         $this->user_manager->shouldReceive('getUserById')->with($user_1_id)->andReturn($this->buildUserWithID($user_1_id));
@@ -164,8 +164,8 @@ final class ReviewerChangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'change_date'      => 1575293581,
                 'change_user_id'   => 102,
                 'reviewer_user_id' => 102,
-                'is_removal'       => 0
-            ]
+                'is_removal'       => 0,
+            ],
         ]);
 
         $this->pull_request_factory->shouldReceive('getPullRequestById')->andThrow(PullRequestNotFoundException::class);
@@ -185,8 +185,8 @@ final class ReviewerChangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'change_date'      => 1575293481,
                 'change_user_id'   => 102,
                 'reviewer_user_id' => 102,
-                'is_removal'       => 0
-            ]
+                'is_removal'       => 0,
+            ],
         ]);
 
         $this->pull_request_factory->shouldReceive('getPullRequestById')->andReturn(\Mockery::mock(PullRequest::class));

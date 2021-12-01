@@ -39,7 +39,7 @@ class LockDestructor
      */
     public function deleteLock(
         Lock $lock,
-        PFUser $user
+        PFUser $user,
     ): void {
         if (! $this->userIsOwner($user, $lock)) {
             throw new LockDestructionNotAuthorizedException();
@@ -49,7 +49,7 @@ class LockDestructor
     }
 
     public function forceDeleteLock(
-        Lock $lock
+        Lock $lock,
     ): void {
         $this->lock_dao->deleteLock($lock->getId());
     }

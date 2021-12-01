@@ -658,7 +658,7 @@ class XMLTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
                                 new XMLBindStaticChangesetValue(
                                     'status',
                                     [
-                                        new XMLBindValueReferenceById('1')
+                                        new XMLBindValueReferenceById('1'),
                                     ]
                                 )
                             )
@@ -733,7 +733,7 @@ class XMLTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
                                     'links',
                                     [
                                         new ArtifactLinkChange(123),
-                                        new ArtifactLinkChange(444, '_is_child')
+                                        new ArtifactLinkChange(444, '_is_child'),
                                     ]
                                 )
                             )

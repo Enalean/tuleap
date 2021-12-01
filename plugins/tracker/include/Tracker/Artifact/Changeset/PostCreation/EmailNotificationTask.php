@@ -38,7 +38,7 @@ final class EmailNotificationTask implements PostCreationTask
     public const DEFAULT_MAIL_SENDER           = 'forge__artifacts';
     public const DEFAULT_SENDER_EXPOSED_FIELDS = [
         'username' => 'user_name',
-        'realname' => 'realname'
+        'realname' => 'realname',
     ];
 
     /**
@@ -82,7 +82,7 @@ final class EmailNotificationTask implements PostCreationTask
         MailGatewayConfig $mail_gateway_config,
         MailSender $mail_sender,
         ConfigNotificationAssignedTo $config_notification_assigned_to,
-        ConfigNotificationEmailCustomSender $config_notification_custom_sender
+        ConfigNotificationEmailCustomSender $config_notification_custom_sender,
     ) {
         $this->logger                            = $logger;
         $this->user_helper                       = $user_helper;
@@ -212,7 +212,7 @@ final class EmailNotificationTask implements PostCreationTask
     {
         return [
             'name'  => 'Reply-to',
-            'value' => ForgeConfig::get('sys_noreply')
+            'value' => ForgeConfig::get('sys_noreply'),
         ];
     }
 
@@ -304,12 +304,12 @@ final class EmailNotificationTask implements PostCreationTask
         if ($this->mail_gateway_config->isTokenBasedEmailgatewayEnabled()) {
             return [
                 "name" => "Reply-to",
-                "value" => $artifact->getTokenBasedEmailAddress()
+                "value" => $artifact->getTokenBasedEmailAddress(),
             ];
         } elseif ($artifactbymail->canUpdateArtifactInInsecureMode($artifact->getTracker())) {
             return [
                 "name" => "Reply-to",
-                "value" => $artifact->getInsecureEmailAddress()
+                "value" => $artifact->getInsecureEmailAddress(),
             ];
         }
     }

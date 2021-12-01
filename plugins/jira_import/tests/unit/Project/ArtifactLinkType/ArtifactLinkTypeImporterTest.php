@@ -35,7 +35,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             public function getUrl(string $url): ?array
             {
                 return [
-                    'issueLinkTypes' => 'YOU MUST PAY!'
+                    'issueLinkTypes' => 'YOU MUST PAY!',
                 ];
             }
         };

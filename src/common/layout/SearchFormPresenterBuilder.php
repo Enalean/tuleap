@@ -53,7 +53,7 @@ class SearchFormPresenterBuilder
         if ($group_id) {
             $hidden[] = [
                 'name'  => 'group_id',
-                'value' => $group_id
+                'value' => $group_id,
             ];
 
             if ($this->request->exist('forum_id')) {
@@ -63,7 +63,7 @@ class SearchFormPresenterBuilder
                 ];
                 $hidden[]         = [
                     'name'  => 'forum_id',
-                    'value' => $this->request->get('forum_id')
+                    'value' => $this->request->get('forum_id'),
                 ];
             }
             if ($this->request->exist('atid')) {
@@ -73,7 +73,7 @@ class SearchFormPresenterBuilder
                 ];
                 $hidden[]         = [
                     'name'  => 'atid',
-                    'value' => $this->request->get('atid')
+                    'value' => $this->request->get('atid'),
                 ];
             }
             if (strpos($_SERVER['REQUEST_URI'], '/wiki/') === 0) {

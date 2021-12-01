@@ -235,7 +235,7 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
                     if ($value !== null) {
                         $data_to_insert[$row['field_type']][] = [
                             'criteria_id' => $report_criteria_id,
-                            'value' => $value
+                            'value' => $value,
                         ];
                     }
                 }

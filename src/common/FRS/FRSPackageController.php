@@ -64,7 +64,7 @@ class FRSPackageController
         User_ForgeUserGroupFactory $ugroup_factory,
         PermissionsManager $permission_manager,
         LicenseAgreementFactory $license_agreement_factory,
-        \Codendi_HTMLPurifier $purifier
+        \Codendi_HTMLPurifier $purifier,
     ) {
         $this->release_factory           = $release_factory;
         $this->package_factory           = $package_factory;
@@ -197,7 +197,7 @@ class FRSPackageController
             $options[] = [
                 'id'       => $project_ugroup->getId(),
                 'name'     => $project_ugroup->getName(),
-                'selected' => $this->isUgroupSelected($project_ugroup, $package_ugroups)
+                'selected' => $this->isUgroupSelected($project_ugroup, $package_ugroups),
             ];
         }
 

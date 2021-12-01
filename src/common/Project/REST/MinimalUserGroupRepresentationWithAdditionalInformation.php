@@ -39,7 +39,7 @@ final class MinimalUserGroupRepresentationWithAdditionalInformation extends Mini
     public function __construct(
         int $project_id,
         ProjectUGroup $ugroup,
-        array $additional_information
+        array $additional_information,
     ) {
         parent::__construct($project_id, $ugroup);
         $this->additional_information = $additional_information;

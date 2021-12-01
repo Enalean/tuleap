@@ -78,7 +78,7 @@ class TemplateFromProjectForCreation
     public static function fromRESTRepresentation(
         ProjectPostRepresentation $representation,
         PFUser $user_requesting_creation,
-        ProjectManager $project_manager
+        ProjectManager $project_manager,
     ): self {
         return self::fromData($project_manager, $user_requesting_creation, $representation->template_id);
     }

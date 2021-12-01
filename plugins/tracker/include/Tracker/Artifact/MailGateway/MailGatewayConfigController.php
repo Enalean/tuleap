@@ -51,7 +51,7 @@ class MailGatewayConfigController
         MailGatewayConfig $config,
         Config_LocalIncFinder $localincfinder,
         EventManager $event_manager,
-        AdminPageRenderer $admin_page_rendered
+        AdminPageRenderer $admin_page_rendered,
     ) {
         $this->config              = $config;
         $this->localincfinder      = $localincfinder;

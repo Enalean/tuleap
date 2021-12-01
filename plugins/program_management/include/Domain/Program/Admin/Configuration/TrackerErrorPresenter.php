@@ -129,7 +129,7 @@ final class TrackerErrorPresenter
         array $title_has_incorrect_type_error,
         array $missing_artifact_link_fields_errors,
         array $team_no_milestone_planning,
-        array $team_no_sprint_planning
+        array $team_no_sprint_planning,
     ) {
         $has_semantic_errors   = count($semantic_errors) > 0;
         $this->semantic_errors = $semantic_errors;
@@ -187,7 +187,7 @@ final class TrackerErrorPresenter
         ConfigurationErrorsGatherer $errors_gatherer,
         TrackerReference $tracker,
         UserReference $user_identifier,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
     ): ?self {
         $errors_gatherer->gatherConfigurationErrors($tracker, $user_identifier, $errors_collector);
 

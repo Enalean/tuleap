@@ -195,7 +195,7 @@ class ProjectTrackersResource extends AuthenticatedResource
         $representation,
         $limit,
         $offset,
-        $filter_on_tracker_administration_permission
+        $filter_on_tracker_administration_permission,
     ) {
         $all_trackers = TrackerFactory::instance()->getTrackersByGroupIdUserCanView(
             $project->getId(),

@@ -449,7 +449,7 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
         $criteria->report->id = 1;
         $rest_criteria_value  = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => [[1234]],
-            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS,
         ];
 
         $this->list_field->setCriteriaValueFromREST($criteria, $rest_criteria_value);
@@ -464,7 +464,7 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
         $criteria->report->id = 1;
         $rest_criteria_value  = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => 'I am a string',
-            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS,
         ];
 
         $this->list_field->setCriteriaValueFromREST($criteria, $rest_criteria_value);
@@ -480,7 +480,7 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
 
         $rest_criteria_value = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => '101',
-            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS,
         ];
 
         $set = $this->list_field->setCriteriaValueFromREST($criteria, $rest_criteria_value);
@@ -502,7 +502,7 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
 
         $rest_criteria_value = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => ['101', 103],
-            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS,
         ];
 
         $set = $this->list_field->setCriteriaValueFromREST($criteria, $rest_criteria_value);

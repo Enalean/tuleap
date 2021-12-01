@@ -287,13 +287,13 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
                              [
                                    'link' => '/tracker/admin/?group_id=' . (int) $this->getGroupID() . '&atid=' . (int) $this->getID() . '&func=permissions&perm_type=tracker',
                                    'name' => $GLOBALS['Language']->getText('tracker_include_type', 'manage_tracker_permissions'),
-                                   'desc' => $GLOBALS['Language']->getText('tracker_include_type', 'define_manage_tracker_permissions')
+                                   'desc' => $GLOBALS['Language']->getText('tracker_include_type', 'define_manage_tracker_permissions'),
                                    ],
                              [
                                    'link' => '/tracker/admin/?group_id=' . (int) $this->getGroupID() . '&atid=' . (int) $this->getID() . '&func=permissions&perm_type=fields',
                                    'name' => $GLOBALS['Language']->getText('tracker_include_type', 'manage_fields_tracker_permissions'),
-                                   'desc' => $GLOBALS['Language']->getText('tracker_include_type', 'define_manage_fields_tracker_permissions')
-                                   ]
+                                   'desc' => $GLOBALS['Language']->getText('tracker_include_type', 'define_manage_fields_tracker_permissions'),
+                                   ],
                              ];
         $this->_displayAdminMenu($permissions);
     }
@@ -415,12 +415,12 @@ EOS;
                         $ugroups_permissions[$key_ugroup] = [
                                                                   'values'              => $value_ugroup['ugroup'],
                                                                   'related_parts'       => [],
-                                                                  'tracker_permissions' => $value_ugroup['tracker_permissions']
+                                                                  'tracker_permissions' => $value_ugroup['tracker_permissions'],
                                                                   ];
                     }
                     $ugroups_permissions[$key_ugroup]['related_parts'][$key_field] = [
                                                                                     'values'       => $value_field['field'],
-                                                                                    'permissions' => $value_ugroup['permissions']
+                                                                                    'permissions' => $value_ugroup['permissions'],
                                                                                     ];
                 }
             }
@@ -603,7 +603,7 @@ EOS;
             'project_admin_permissions',
             'admins_create_modify_ug',
             [
-                "/project/admin/ugroup.php?group_id=" . (int) $this->getGroupID()
+                "/project/admin/ugroup.php?group_id=" . (int) $this->getGroupID(),
             ]
         );
         $html .= "</p>";
@@ -685,7 +685,7 @@ EOS;
             'project_admin_permissions',
             'admins_create_modify_ug',
             [
-                "/project/admin/ugroup.php?group_id=" . (int) $this->getGroupID()
+                "/project/admin/ugroup.php?group_id=" . (int) $this->getGroupID(),
             ]
         );
         $html .= "</p>";
@@ -1124,7 +1124,7 @@ EOS;
         $special = false,
         $use_it = false,
         $show_use = false,
-        $fieldset_id = false
+        $fieldset_id = false,
     ) {
         global $art_field_fact,$Language;
         $hp    = Codendi_HTMLPurifier::instance();

@@ -36,7 +36,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
 
     public function __construct(
         TrackerXmlFieldsMapping $xml_fields_mapping,
-        User\XML\Import\IFindUserFromXMLReference $user_finder
+        User\XML\Import\IFindUserFromXMLReference $user_finder,
     ) {
         $this->xml_fields_mapping = $xml_fields_mapping;
         $this->user_finder        = $user_finder;
@@ -52,7 +52,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
-        Artifact $artifact
+        Artifact $artifact,
     ) {
         $values = [];
         $bind   = (string) $field_change['bind'];

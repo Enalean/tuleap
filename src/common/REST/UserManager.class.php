@@ -109,7 +109,7 @@ class UserManager
         SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
         OAuth2ScopeExtractorRESTEndpoint $oauth2_scope_extractor_endpoint,
         EventDispatcherInterface $event_dispatcher,
-        RestReadOnlyAdminUserBuilder $read_only_admin_user_builder
+        RestReadOnlyAdminUserBuilder $read_only_admin_user_builder,
     ) {
         $this->user_manager                         = $user_manager;
         $this->login_manager                        = $login_manager;

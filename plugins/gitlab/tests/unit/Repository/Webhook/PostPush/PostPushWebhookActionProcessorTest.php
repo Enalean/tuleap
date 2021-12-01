@@ -125,7 +125,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                     1608110510,
                     "john-snow@example.com",
                     "John Snow"
-                )
+                ),
             ]
         );
 
@@ -218,7 +218,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                     1608110510,
                     "john-snow@example.com",
                     "John Snow"
-                )
+                ),
             ]
         );
 
@@ -294,7 +294,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                     1608110510,
                     "john-snow@example.com",
                     "John Snow"
-                )
+                ),
             ]
         );
 
@@ -349,7 +349,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                     1608110510,
                     "john-snow@example.com",
                     "John Snow"
-                )
+                ),
             ]
         );
 

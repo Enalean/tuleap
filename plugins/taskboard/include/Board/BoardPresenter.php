@@ -69,7 +69,7 @@ class BoardPresenter
         array $columns,
         array $tracker_structures,
         bool $has_content,
-        bool $backlog_items_have_children
+        bool $backlog_items_have_children,
     ) {
         $project = $milestone->getProject();
 
@@ -80,7 +80,7 @@ class BoardPresenter
                 [
                     'group_id'    => $project->getID(),
                     'planning_id' => $milestone->getPlanningId(),
-                    'action'      => 'edit'
+                    'action'      => 'edit',
                 ]
             );
 

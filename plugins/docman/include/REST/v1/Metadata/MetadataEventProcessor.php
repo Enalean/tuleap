@@ -42,7 +42,7 @@ class MetadataEventProcessor
         PFUser $current_user,
         ?string $old_value,
         string $new_value,
-        string $field
+        string $field,
     ): void {
         $params = [
             'group_id'  => $item->getGroupId(),
@@ -50,7 +50,7 @@ class MetadataEventProcessor
             'user'      => $current_user,
             'old_value' => $old_value,
             'new_value' => $new_value,
-            'field'     => $field
+            'field'     => $field,
         ];
 
         $this->event_manager->processEvent(

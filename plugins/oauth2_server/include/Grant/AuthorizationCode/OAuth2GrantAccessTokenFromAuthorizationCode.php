@@ -83,7 +83,7 @@ class OAuth2GrantAccessTokenFromAuthorizationCode
         SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
         OAuth2AuthorizationCodeVerifier $authorization_code_verifier,
         PKCECodeVerifier $pkce_code_verifier,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->response_factory                          = $response_factory;
         $this->stream_factory                            = $stream_factory;

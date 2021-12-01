@@ -42,7 +42,7 @@ class BurndownRemainingEffortAdderForLegacy
 
     public function __construct(
         ChartConfigurationFieldRetriever $field_retriever,
-        UserWithReadAllPermissionBuilder $user_with_read_all_permission_builder
+        UserWithReadAllPermissionBuilder $user_with_read_all_permission_builder,
     ) {
         $this->field_retriever                       = $field_retriever;
         $this->user_with_read_all_permission_builder = $user_with_read_all_permission_builder;
@@ -51,7 +51,7 @@ class BurndownRemainingEffortAdderForLegacy
     public function addRemainingEffortDataForLegacy(
         Tracker_Chart_Data_Burndown $burndown_data,
         Artifact $artifact,
-        PFUser $user
+        PFUser $user,
     ) {
         $field = $this->field_retriever->getBurndownRemainingEffortField($artifact, $user);
 

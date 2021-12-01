@@ -162,7 +162,7 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->dao->shouldReceive('searchUser')->with("$user_id")->andReturns(\TestHelper::argListToDar($user_rows));
                 $all_users[] =  [
                     'user_id'   => $user_id,
-                    'user_name' => $user_rows[0]['user_name']
+                    'user_name' => $user_rows[0]['user_name'],
                 ];
             }
             $this->dao->shouldReceive('getAllUsers')->andReturns(\TestHelper::argListToDar($all_users));

@@ -156,7 +156,7 @@ final class FieldNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->condition->addField($this->field_bis);
         $fields_data = [
             123 => $this->not_empty_data,
-            234 => $this->not_empty_data
+            234 => $this->not_empty_data,
         ];
         $is_valid    = $this->condition->validate($fields_data, $this->artifact, '', $this->current_user);
         $this->assertTrue($is_valid);
@@ -168,7 +168,7 @@ final class FieldNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->condition->addField($this->field_bis);
         $fields_data = [
             123 => $this->not_empty_data,
-            234 => $this->empty_data
+            234 => $this->empty_data,
         ];
         $is_valid    = $this->condition->validate($fields_data, $this->artifact, '', $this->current_user);
         $this->assertFalse($is_valid);

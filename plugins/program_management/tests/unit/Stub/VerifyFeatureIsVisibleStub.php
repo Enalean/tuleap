@@ -36,7 +36,7 @@ final class VerifyFeatureIsVisibleStub implements VerifyFeatureIsVisible
 
     public function isVisible(
         int $feature_id,
-        UserIdentifier $user_identifier
+        UserIdentifier $user_identifier,
     ): bool {
         return $this->is_visible;
     }

@@ -67,7 +67,7 @@ final class OAuth2App
         string $app_name,
         string $redirect_endpoint,
         bool $use_pkce,
-        \Project $project
+        \Project $project,
     ): self {
         return self::fromAppData($app_id, $app_name, $redirect_endpoint, $use_pkce, $project);
     }
@@ -79,7 +79,7 @@ final class OAuth2App
         string $app_id,
         string $app_name,
         string $redirect_endpoint,
-        bool $use_pkce
+        bool $use_pkce,
     ): self {
         return self::fromAppData($app_id, $app_name, $redirect_endpoint, $use_pkce, null);
     }
@@ -92,7 +92,7 @@ final class OAuth2App
         string $app_name,
         string $redirect_endpoint,
         bool $use_pkce,
-        ?\Project $project
+        ?\Project $project,
     ): self {
         if (! self::isAppDataValid($app_id, $app_name, $redirect_endpoint)) {
             throw new InvalidAppDataException();

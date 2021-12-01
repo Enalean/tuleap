@@ -72,7 +72,7 @@ final class TimetrackingRepresentation
         string $date,
         string $step,
         MinimalArtifactRepresentation $artifact,
-        MinimalProjectRepresentation $project
+        MinimalProjectRepresentation $project,
     ) {
         $this->id       = $id;
         $this->minutes  = $minutes;

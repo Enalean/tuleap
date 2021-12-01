@@ -51,7 +51,7 @@ class TrackerStats
         int $nb_total_artifacts,
         int $nb_open_artifacts,
         ?int $last_artifact_creation_date,
-        ?int $last_artifact_update_date
+        ?int $last_artifact_update_date,
     ) {
         $this->nb_total_artifacts          = $nb_total_artifacts;
         $this->nb_open_artifacts           = $nb_open_artifacts;

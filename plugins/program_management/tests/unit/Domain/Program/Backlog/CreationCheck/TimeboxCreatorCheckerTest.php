@@ -102,7 +102,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         VerifyFieldPermissions $retrieve_field_permissions,
         VerifySemanticsAreConfigured $check_semantic,
         VerifyRequiredFieldsLimitedToSynchronizedFields $check_required_field,
-        VerifySynchronizedFieldsAreNotUsedInWorkflow $check_workflow
+        VerifySynchronizedFieldsAreNotUsedInWorkflow $check_workflow,
     ): TimeboxCreatorChecker {
         $field_collection_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
             $this->fields_adapter,

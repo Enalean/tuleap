@@ -167,7 +167,7 @@ class PreCommitCommitToTagTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->handler->shouldReceive('doesProjectUsesImmutableTags')->andReturns(true);
         $this->handler->shouldReceive('getImmutableTagsPathForProject')->andReturns('/tags/');
         $this->handler->shouldReceive('getAllowedTagsFromWhiteList')->andReturns([
-            '/tags/moduleA'
+            '/tags/moduleA',
         ]);
 
         $this->assertCommitIsAllowed('A   moduleA/trunk/toto');

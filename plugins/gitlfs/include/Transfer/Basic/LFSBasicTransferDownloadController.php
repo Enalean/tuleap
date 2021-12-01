@@ -54,7 +54,7 @@ class LFSBasicTransferDownloadController implements DispatchableWithRequestNoAut
         LFSActionUserAccessHTTPRequestChecker $user_access_request_checker,
         FilesystemReader $filesystem,
         LFSObjectPathAllocator $path_allocator,
-        Prometheus $prometheus
+        Prometheus $prometheus,
     ) {
         $this->user_access_request_checker = $user_access_request_checker;
         $this->filesystem                  = $filesystem;

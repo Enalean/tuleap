@@ -55,7 +55,7 @@ class IndexPresenter
         Project $project,
         CollectionOfLabelPresenter $collection,
         LabelPresenter $default_label,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
     ) {
         $this->labels        = $collection->getPresenters();
         $this->title         = $title;

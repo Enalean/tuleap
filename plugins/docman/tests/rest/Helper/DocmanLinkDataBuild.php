@@ -308,7 +308,7 @@ class DocmanLinkDataBuild
         int $approval_status,
         int $user_id,
         int $item_type,
-        int $version
+        int $version,
     ): void {
         $item_id = $this->common_builder->createItem(
             $user_id,

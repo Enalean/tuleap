@@ -35,6 +35,6 @@ interface RetrieveMirroredProgramIncrementTracker
     public function retrieveRootPlanningMilestoneTracker(
         ProjectReference $project,
         UserIdentifier $user_identifier,
-        ?ConfigurationErrorsCollector $errors_collector
+        ?ConfigurationErrorsCollector $errors_collector,
     ): ?TrackerReference;
 }

@@ -72,8 +72,8 @@ class ProjectHistoryResultsPresenter
                 'user'  => [
                     'id'           => $user->getId(),
                     'display_name' => UserHelper::instance()->getDisplayNameFromUser($user),
-                    'is_none'      => $user->isNone()
-                ]
+                    'is_none'      => $user->isNone(),
+                ],
             ];
         }
 

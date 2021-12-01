@@ -41,7 +41,7 @@ class Account_ConfirmationPresenter
         $redirect_content,
         $displayed_image,
         $image_url,
-        $email_presenter
+        $email_presenter,
     ) {
         $this->title            = $title;
         $this->content          = $content;

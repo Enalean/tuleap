@@ -71,7 +71,7 @@ class MessageInfoToMessagePresenterConvertorTest extends TestCase
             ->shouldReceive(
                 [
                     'getPreference' => 'relative_first-absolute_tooltip',
-                    'getLocale'     => 'en_US'
+                    'getLocale'     => 'en_US',
                 ]
             )
             ->getMock();
@@ -131,7 +131,7 @@ class MessageInfoToMessagePresenterConvertorTest extends TestCase
             'John Doe <jdoe@example.com>' => new Sender(
                 'jdoe@example.com',
                 'John Doe',
-            )
+            ),
         ];
 
         $project = Mockery::mock(Project::class);
@@ -168,7 +168,7 @@ class MessageInfoToMessagePresenterConvertorTest extends TestCase
             'John Doe <jdoe@example.com>' => new Sender(
                 'jdoe@example.com',
                 'John Doe',
-            )
+            ),
         ];
 
         $project = Mockery::mock(Project::class);

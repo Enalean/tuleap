@@ -96,7 +96,7 @@ final class PlanningFactoryTestGetPlanningTest extends \Tuleap\Test\PHPUnit\Test
                 'group_id'            => 102,
                 'planning_tracker_id' => 103,
                 'backlog_title'       => 'Release Backlog',
-                'plan_title'          => 'Sprint Plan'
+                'plan_title'          => 'Sprint Plan',
             ]
         );
         $this->planning_dao->shouldReceive('searchBacklogTrackersByPlanningId')
@@ -146,7 +146,7 @@ final class PlanningFactoryTestGetPlanningTest extends \Tuleap\Test\PHPUnit\Test
                     'group_id'            => 123,
                     'planning_tracker_id' => 108,
                     'backlog_title'       => 'Release Backlog',
-                    'plan_title'          => 'Sprint Plan'
+                    'plan_title'          => 'Sprint Plan',
                 ],
                 [
                     'id'                  => 2,
@@ -154,8 +154,8 @@ final class PlanningFactoryTestGetPlanningTest extends \Tuleap\Test\PHPUnit\Test
                     'group_id'            => 123,
                     'planning_tracker_id' => 107,
                     'backlog_title'       => 'Product Backlog',
-                    'plan_title'          => 'Release Plan'
-                ]
+                    'plan_title'          => 'Release Plan',
+                ],
             ]
         );
 
@@ -178,7 +178,7 @@ final class PlanningFactoryTestGetPlanningTest extends \Tuleap\Test\PHPUnit\Test
             'group_id'            => $group_id,
             'planning_tracker_id' => 103,
             'backlog_title'       => 'Release Backlog',
-            'plan_title'          => 'Sprint Plan'
+            'plan_title'          => 'Sprint Plan',
         ];
 
         $this->planning_dao->shouldReceive('searchById')->with($planning_id)->andReturns($planning_rows);

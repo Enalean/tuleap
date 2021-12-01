@@ -40,7 +40,7 @@ class ArtifactMoveButtonPresenterBuilder
 
     public function __construct(
         ArtifactDeletionLimitRetriever $deletion_limit_retriever,
-        \EventManager $event_manager
+        \EventManager $event_manager,
     ) {
         $this->deletion_limit_retriever = $deletion_limit_retriever;
         $this->event_manager            = $event_manager;
@@ -106,7 +106,7 @@ class ArtifactMoveButtonPresenterBuilder
 
     private function collectErrorRelatedToSemantics(
         Tracker $tracker,
-        MoveArtifactActionAllowedByPluginRetriever $event
+        MoveArtifactActionAllowedByPluginRetriever $event,
     ) {
         if (
             $tracker->hasSemanticsTitle() ||

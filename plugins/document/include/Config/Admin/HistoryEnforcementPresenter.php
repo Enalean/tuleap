@@ -48,7 +48,7 @@ class HistoryEnforcementPresenter
         \CSRFSynchronizerToken $csrf_token,
         HistoryEnforcementSettings $settings,
         DocmanSettingsTabsPresenterCollection $tabs_collection,
-        string $current_url
+        string $current_url,
     ) {
         $this->csrf_token            = $csrf_token;
         $this->is_changelog_proposed = $settings->isChangelogProposedAfterDragAndDrop();

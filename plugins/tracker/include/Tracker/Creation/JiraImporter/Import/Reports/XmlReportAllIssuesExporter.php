@@ -41,7 +41,7 @@ class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
 
     public function __construct(
         XmlReportDefaultCriteriaExporter $default_criteria_exporter,
-        XmlReportTableExporter $report_table_exporter
+        XmlReportTableExporter $report_table_exporter,
     ) {
         $this->default_criteria_exporter = $default_criteria_exporter;
         $this->report_table_exporter     = $report_table_exporter;
@@ -56,7 +56,7 @@ class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
         ?FieldMapping $priority_field,
         ?FieldMapping $link_field,
         ?FieldMapping $created_field,
-        ?FieldMapping $updated_field
+        ?FieldMapping $updated_field,
     ): void {
         $report_node = (new XMLReport('All issues'))
             ->withDescription('All the issues in this tracker')
@@ -68,7 +68,7 @@ class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
                 $summary_field,
                 $description_field,
                 $status_field,
-                $priority_field
+                $priority_field,
             ]
         );
 
@@ -76,7 +76,7 @@ class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
             $summary_field,
             $status_field,
             $link_field,
-            $priority_field
+            $priority_field,
         ]);
 
         $this->default_criteria_exporter->exportDefaultCriteria(

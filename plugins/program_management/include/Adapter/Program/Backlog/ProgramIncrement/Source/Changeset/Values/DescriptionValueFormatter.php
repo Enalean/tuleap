@@ -33,7 +33,7 @@ final class DescriptionValueFormatter
     {
         return [
             'content' => $description->value,
-            'format'  => $description->format
+            'format'  => $description->format,
         ];
     }
 }

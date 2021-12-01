@@ -47,7 +47,7 @@ class JiraFieldAPIAllowedValueRepresentation
     private function __construct(
         int $id,
         string $name,
-        int $xml_id
+        int $xml_id,
     ) {
         $this->id     = $id;
         $this->name   = $name;

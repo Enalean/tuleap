@@ -45,7 +45,7 @@ final class UserStory
         public ?string $title,
         public bool $is_open,
         public UserStoryTrackerIdentifier $tracker_identifier,
-        public BackgroundColor $background_color
+        public BackgroundColor $background_color,
     ) {
     }
 
@@ -57,7 +57,7 @@ final class UserStory
         RetrieveBackgroundColor $retrieve_background_color,
         RetrieveTrackerFromUserStory $retrieve_tracker_id,
         UserStoryIdentifier $user_story_identifier,
-        UserIdentifier $user_identifier
+        UserIdentifier $user_identifier,
     ): self {
         return new self(
             $user_story_identifier,

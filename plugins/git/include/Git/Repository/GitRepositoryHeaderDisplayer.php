@@ -58,7 +58,7 @@ class GitRepositoryHeaderDisplayer
         RepositoryHeaderPresenterBuilder $header_presenter_builder,
         IncludeAssets $core_assets,
         IncludeAssets $include_assets,
-        \EventManager $event_manager
+        \EventManager $event_manager,
     ) {
         $this->header_renderer          = $header_renderer;
         $this->header_presenter_builder = $header_presenter_builder;
@@ -71,7 +71,7 @@ class GitRepositoryHeaderDisplayer
         HTTPRequest $request,
         BaseLayout $layout,
         PFUser $current_user,
-        GitRepository $repository
+        GitRepository $repository,
     ) {
         $this->includeAssetsForBurningParrot($request, $layout);
         $this->displayForBurningParrot($request, $current_user, $repository);
@@ -98,7 +98,7 @@ class GitRepositoryHeaderDisplayer
     private function displayForBurningParrot(
         HTTPRequest $request,
         PFUser $current_user,
-        GitRepository $repository
+        GitRepository $repository,
     ) {
         $this->header_renderer->renderRepositoryHeader($request, $current_user, $repository->getProject(), $repository);
 

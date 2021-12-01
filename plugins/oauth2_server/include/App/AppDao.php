@@ -98,7 +98,7 @@ class AppDao extends DataAccessObject
                 'name'              => $app->getName(),
                 'redirect_endpoint' => $app->getRedirectEndpoint(),
                 'verifier'          => $app->getHashedSecret(),
-                'use_pkce'          => $app->isUsingPKCE()
+                'use_pkce'          => $app->isUsingPKCE(),
             ]
         );
         return (int) $this->getDB()->lastInsertId();
@@ -120,7 +120,7 @@ class AppDao extends DataAccessObject
             [
                 'name' => $updated_app->getName(),
                 'redirect_endpoint' => $updated_app->getRedirectEndpoint(),
-                'use_pkce' => $updated_app->isUsingPKCE()
+                'use_pkce' => $updated_app->isUsingPKCE(),
             ],
             ['id' => $updated_app->getId()]
         );

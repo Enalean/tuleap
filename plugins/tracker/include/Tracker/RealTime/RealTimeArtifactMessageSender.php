@@ -39,7 +39,7 @@ class RealTimeArtifactMessageSender
 
     public function __construct(
         NodeJSClient $node_js_client,
-        Tracker_Permission_PermissionsSerializer $permissions_serializer
+        Tracker_Permission_PermissionsSerializer $permissions_serializer,
     ) {
         $this->node_js_client         = $node_js_client;
         $this->permissions_serializer = $permissions_serializer;
@@ -50,7 +50,7 @@ class RealTimeArtifactMessageSender
         Artifact $artifact,
         array $data,
         $event_name,
-        $room_id
+        $room_id,
     ) {
         $rights  = new ArtifactRightsPresenter($artifact, $this->permissions_serializer);
         $message = new MessageDataPresenter(

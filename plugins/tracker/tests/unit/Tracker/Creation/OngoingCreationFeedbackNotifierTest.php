@@ -148,8 +148,8 @@ class OngoingCreationFeedbackNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn([
                 [
-                    'tracker_shortname' => 'bug'
-                ]
+                    'tracker_shortname' => 'bug',
+                ],
             ]);
 
         $this->response
@@ -172,10 +172,10 @@ class OngoingCreationFeedbackNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn([
                 [
-                    'tracker_shortname' => 'bug'
+                    'tracker_shortname' => 'bug',
                 ],
                 [
-                    'tracker_shortname' => 'story'
+                    'tracker_shortname' => 'story',
                 ],
             ]);
 

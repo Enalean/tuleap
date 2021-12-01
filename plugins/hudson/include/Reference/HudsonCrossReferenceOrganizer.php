@@ -52,7 +52,7 @@ class HudsonCrossReferenceOrganizer
 
     private function moveHudsonCrossReferenceToUnlabelledSection(
         CrossReferenceByNatureOrganizer $organizer_by_nature,
-        CrossReferencePresenter $cross_reference_presenter
+        CrossReferencePresenter $cross_reference_presenter,
     ): void {
         $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
 

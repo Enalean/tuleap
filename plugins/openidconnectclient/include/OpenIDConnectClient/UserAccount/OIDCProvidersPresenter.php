@@ -66,7 +66,7 @@ final class OIDCProvidersPresenter
         \CSRFSynchronizerToken $csrf_token,
         array $user_mappings_usage,
         bool $unique_authentication_endpoint,
-        bool $can_unlink_providers
+        bool $can_unlink_providers,
     ) {
         $this->tabs       = $tabs;
         $this->csrf_token = $csrf_token;
@@ -79,7 +79,7 @@ final class OIDCProvidersPresenter
                 'provider_icon'                           => $user_mapping_usage->getProviderIcon(),
                 'last_usage'                              => $last_usage->format(
                     $GLOBALS['Language']->getText('system', 'datefmt')
-                )
+                ),
             ];
         }
         $this->no_mappings                    = count($this->user_mappings) === 0;

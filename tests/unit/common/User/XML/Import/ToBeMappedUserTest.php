@@ -35,7 +35,7 @@ final class ToBeMappedUserTest extends \Tuleap\Test\PHPUnit\TestCase
             'to.be.mapped',
             'To Be Mapped',
             [
-                new \PFUser(['language_id' => 'en'])
+                new \PFUser(['language_id' => 'en']),
             ],
             104,
             'cs1234'

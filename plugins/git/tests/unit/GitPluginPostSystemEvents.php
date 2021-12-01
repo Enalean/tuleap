@@ -50,7 +50,7 @@ class GitPluginPostSystemEvents extends \Tuleap\Test\PHPUnit\TestCase
 
         $params = [
             'executed_events_ids' => [125],
-            'queue_name' => 'git'
+            'queue_name' => 'git',
         ];
 
         $this->plugin->post_system_events_actions($params);
@@ -66,7 +66,7 @@ class GitPluginPostSystemEvents extends \Tuleap\Test\PHPUnit\TestCase
 
         $params = [
             'executed_events_ids' => [54156],
-            'queue_name'          => 'owner'
+            'queue_name'          => 'owner',
         ];
 
         $this->plugin->post_system_events_actions($params);

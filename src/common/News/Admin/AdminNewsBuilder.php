@@ -48,7 +48,7 @@ class AdminNewsBuilder
         CSRFSynchronizerToken $csrf_token,
         NewsRetriever $news_manager,
         ProjectManager $project_manager,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->one_week        = 7 * 24 * 3600;
         $this->csrf_token      = $csrf_token;

@@ -58,7 +58,7 @@ class ProjectMembersAdditionalModalCollectionPresenter implements Dispatchable
     public function __construct(
         Project $project,
         CSRFSynchronizerToken $csrf_token,
-        $user_locale
+        $user_locale,
     ) {
         $this->project     = $project;
         $this->csrf_token  = $csrf_token;

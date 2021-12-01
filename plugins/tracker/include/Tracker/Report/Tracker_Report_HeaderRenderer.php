@@ -43,7 +43,7 @@ class Tracker_Report_HeaderRenderer
     public function __construct(
         Tracker_ReportFactory $report_factory,
         Codendi_HTMLPurifier $purifier,
-        TemplateRenderer $renderer
+        TemplateRenderer $renderer,
     ) {
         $this->report_factory = $report_factory;
         $this->purifier       = $purifier;
@@ -55,7 +55,7 @@ class Tracker_Report_HeaderRenderer
         Codendi_Request $request,
         PFUser $current_user,
         Tracker_Report $report,
-        $report_can_be_modified
+        $report_can_be_modified,
     ) {
         $link_artifact_id = (int) $request->get('link-artifact-id');
         if ($report_can_be_modified) {
@@ -86,7 +86,7 @@ class Tracker_Report_HeaderRenderer
         PFUser $current_user,
         Tracker_Report $report,
         array $reports,
-        $report_can_be_modified
+        $report_can_be_modified,
     ) {
         $options_params = [
             'tracker'       => $report->tracker_id,
@@ -135,7 +135,7 @@ class Tracker_Report_HeaderRenderer
                     dgettext('tuleap-tracker', 'Save as...'),
                     false,
                     '?' . http_build_query(array_merge($options_params, ['func' => Tracker_Report::ACTION_SAVEAS])) . '#tracker_report_updater_saveas-modal'
-                )
+                ),
             ];
         } elseif (! $current_user->isAnonymous()) {
             $default_save = new Templating_Presenter_ButtonDropdownsOptionWithModal(

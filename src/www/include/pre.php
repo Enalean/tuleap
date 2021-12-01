@@ -134,7 +134,7 @@ if (! IS_SCRIPT) {
     $event_manager->processEvent(
         Event::CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST,
         [
-            'whitelist_scripts' => &$whitelist_scripts
+            'whitelist_scripts' => &$whitelist_scripts,
         ]
     );
     $csp_whitelist_script_scr  = implode(' ', $whitelist_scripts);

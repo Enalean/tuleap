@@ -114,12 +114,12 @@ class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonF
         return [
             [
                 'name'     => self::CONDITION_AT_LEAST_ONE,
-                'operator' => 'or'
+                'operator' => 'or',
             ],
             [
                 'name'     => self::CONDITION_ALL_OFF,
-                'operator' => 'and'
-            ]
+                'operator' => 'and',
+            ],
         ];
     }
 

@@ -57,7 +57,7 @@ class BoardPresenterBuilder
         ColumnPresenterCollectionRetriever $columns_retriever,
         AgileDashboard_BacklogItemDao $backlog_item_dao,
         TrackerPresenterCollectionBuilder $trackers_builder,
-        Tracker_ArtifactFactory $artifact_factory
+        Tracker_ArtifactFactory $artifact_factory,
     ) {
         $this->pane_factory      = $pane_factory;
         $this->columns_retriever = $columns_retriever;

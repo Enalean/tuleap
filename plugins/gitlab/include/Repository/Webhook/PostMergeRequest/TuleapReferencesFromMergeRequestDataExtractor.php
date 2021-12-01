@@ -33,7 +33,7 @@ class TuleapReferencesFromMergeRequestDataExtractor
 
     public function __construct(
         WebhookTuleapReferencesParser $reference_parser,
-        BranchNameTuleapReferenceParser $branch_name_tuleap_reference_parser
+        BranchNameTuleapReferenceParser $branch_name_tuleap_reference_parser,
     ) {
         $this->reference_parser                    = $reference_parser;
         $this->branch_name_tuleap_reference_parser = $branch_name_tuleap_reference_parser;

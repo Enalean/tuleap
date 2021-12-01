@@ -50,7 +50,7 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn([
                 ['repository_id' => 1, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1],
                 ['repository_id' => 2, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1],
-                ['repository_id' => 3, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1]
+                ['repository_id' => 3, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1],
             ]);
 
         $this->factory = \Mockery::spy(\GitRepositoryFactory::class);

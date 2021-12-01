@@ -45,7 +45,7 @@ class Tracker_XML_Exporter_ChildrenXMLExporter
         Tracker_XML_Exporter_ArtifactXMLExporter $artifact_xml_updater,
         Tracker_XML_Updater_TemporaryFileXMLUpdater $file_xml_updater,
         Tracker_ArtifactFactory $artifact_factory,
-        Tracker_XML_ChildrenCollector $children_collector
+        Tracker_XML_ChildrenCollector $children_collector,
     ) {
         $this->file_xml_updater     = $file_xml_updater;
         $this->artifact_xml_updater = $artifact_xml_updater;

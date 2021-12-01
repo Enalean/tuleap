@@ -28,7 +28,7 @@ class LabelsManagementURLBuilder
     {
         return '/project/admin/labels.php?' . http_build_query(
             [
-                'group_id' => $project->getID()
+                'group_id' => $project->getID(),
             ]
         );
     }

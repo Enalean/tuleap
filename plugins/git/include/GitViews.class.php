@@ -102,7 +102,7 @@ class GitViews extends PluginViews
         RegexpFineGrainedRetriever $regexp_retriever,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         HeaderRenderer $header_renderer,
-        ProjectManager $project_manager
+        ProjectManager $project_manager,
     ) {
         parent::__construct($controller);
         $this->groupId                                 = (int) $this->request->get('group_id');
@@ -394,7 +394,7 @@ class GitViews extends PluginViews
     private function buildListOfMirroredRepositoriesPresenters(
         array $repositories,
         array $mirrors,
-        array $mirror_ids_per_repository
+        array $mirror_ids_per_repository,
     ) {
         $mirrored_repositories_presenters = [];
 

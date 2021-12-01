@@ -78,7 +78,7 @@ final class OIDCProvidersController implements DispatchableWithRequest, Dispatch
         UserMappingManager $user_mapping_manager,
         bool $unique_provider,
         CanRemoveUserMappingChecker $can_unlink_provider_from_account_checker,
-        IncludeAssets $oidc_assets
+        IncludeAssets $oidc_assets,
     ) {
         $this->dispatcher                               = $dispatcher;
         $this->renderer                                 = $renderer_factory->getRenderer(__DIR__ . '/templates');

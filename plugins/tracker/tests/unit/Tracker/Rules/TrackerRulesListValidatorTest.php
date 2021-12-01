@@ -194,7 +194,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $value_field_list  = [
             123 => 456,
-            789 => 101
+            789 => 101,
         ];
         $tracker_rule_list = new \Tracker_Rule_List();
         $tracker_rule_list->setSourceValue(456)
@@ -213,7 +213,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $value_field_list  = [
             123 => 456,
-            789 => 101
+            789 => 101,
         ];
         $tracker_rule_list = new \Tracker_Rule_List();
 
@@ -233,7 +233,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $value_field_list = [
             123 => 456,
-            789 => 101
+            789 => 101,
         ];
 
         $tracker_rule_list = new \Tracker_Rule_List();
@@ -253,7 +253,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $value_field_list  = [
             123 => 456,
-            789 => 101
+            789 => 101,
         ];
         $tracker_rule_list = new \Tracker_Rule_List();
         $tracker_rule_list->setSourceValue(456)
@@ -273,7 +273,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $value_field_list  = [
             123 => 456,
-            789 => ''
+            789 => '',
         ];
         $tracker_rule_list = new \Tracker_Rule_List();
 
@@ -294,7 +294,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $value_field_list  = [
             123 => 456,
-            789 => 100
+            789 => 100,
         ];
         $tracker_rule_list = new \Tracker_Rule_List();
 
@@ -315,7 +315,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $value_field_list = [
             123 => 456,
-            789 => 100
+            789 => 100,
         ];
 
         $tracker_rule_list = new \Tracker_Rule_List();
@@ -337,7 +337,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             '101' => 'A2',
             '102' => 'B3',
             '103' => 'C1',
-            '104' => 'D1'
+            '104' => 'D1',
         ];
         $this->assertTrue($this->tracker_rules_list_validator->validateListRules($this->tracker, $value_field_list, $this->list_rules));
     }
@@ -350,7 +350,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             '101' => 'A2',
             '102' => 'B3',
             '103' => 'C2', //C2 cannot access to B3 !
-            '104' => 'D1'
+            '104' => 'D1',
         ];
 
         $this->assertFalse($this->tracker_rules_list_validator->validateListRules($this->tracker, $value_field_list, $this->list_rules));
@@ -363,7 +363,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             '101' => ['A1', 'A2'],
             '102' => 'B3',
             '103' => 'C1',
-            '104' => 'D1'
+            '104' => 'D1',
         ];
         $this->assertTrue($this->tracker_rules_list_validator->validateListRules($this->tracker, $value_field_list, $this->list_rules));
     }
@@ -375,7 +375,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             '101' => ['A1', 'A2'],
             '102' => 'B2',
             '103' => 'C2',
-            '104' => 'D1'
+            '104' => 'D1',
         ];
         $this->assertTrue($this->tracker_rules_list_validator->validateListRules($this->tracker, $value_field_list, $this->list_rules));
     }
@@ -388,7 +388,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             '101' => 'A1',
             '102' => ['B1', 'B3'],
             '103' => 'C1',
-            '104' => 'D1'
+            '104' => 'D1',
         ];
 
         $this->assertTrue($this->tracker_rules_list_validator->validateListRules($this->tracker, $value_field_list, $this->list_rules));
@@ -401,7 +401,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             '101' => 'A1',
             '102' => ['B1', 'B2'], //A1 cannot access to B2 !
             '103' => 'C1',
-            '104' => 'D1'
+            '104' => 'D1',
         ];
         $this->assertFalse($this->tracker_rules_list_validator->validateListRules($this->tracker, $value_field_list, $this->list_rules));
     }

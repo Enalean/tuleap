@@ -38,7 +38,7 @@ class Creator
 
     public function __construct(
         LostPasswordDAO $dao,
-        SplitTokenVerificationStringHasher $hasher
+        SplitTokenVerificationStringHasher $hasher,
     ) {
         $this->dao    = $dao;
         $this->hasher = $hasher;

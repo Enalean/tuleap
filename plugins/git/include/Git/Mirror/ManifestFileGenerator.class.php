@@ -80,7 +80,7 @@ class Git_Mirror_ManifestFileGenerator
 
     public function ensureManifestContainsLatestInfoOfRepositories(
         Git_Mirror_Mirror $mirror,
-        array $expected_repositories
+        array $expected_repositories,
     ) {
         $filename = $this->getManifestFilenameForMirror($mirror);
 
@@ -111,7 +111,7 @@ class Git_Mirror_ManifestFileGenerator
 
     private function setCurrentTimeForGitoliteAdminRepository(
         Git_Mirror_Mirror $mirror,
-        array &$list_of_repositories
+        array &$list_of_repositories,
     ) {
         $repository = new GitRepositoryGitoliteAdmin();
 
@@ -121,7 +121,7 @@ class Git_Mirror_ManifestFileGenerator
     private function setCurrentTimeForRepository(
         Git_Mirror_Mirror $mirror,
         array &$list_of_repositories,
-        GitRepository $repository
+        GitRepository $repository,
     ) {
         $key = $this->getRepositoryKey($repository);
         if (isset($list_of_repositories[$key])) {
@@ -135,7 +135,7 @@ class Git_Mirror_ManifestFileGenerator
     private function addRepository(
         Git_Mirror_Mirror $mirror,
         array &$list_of_repositories,
-        GitRepository $repository
+        GitRepository $repository,
     ) {
         $key = $this->getRepositoryKey($repository);
         $this->logger->debug("adding {$key} to manifest of mirror {$mirror->url} (id: {$mirror->id})");
@@ -146,7 +146,7 @@ class Git_Mirror_ManifestFileGenerator
     private function removeRepository(
         Git_Mirror_Mirror $mirror,
         array &$list_of_repositories,
-        $repository_key
+        $repository_key,
     ) {
         $this->logger->debug("removing {$repository_key} from manifest of mirror {$mirror->url} (id: {$mirror->id})");
         unset($list_of_repositories[$repository_key]);
@@ -162,7 +162,7 @@ class Git_Mirror_ManifestFileGenerator
             "owner"       => null,
             "description" => '',
             "reference"   => null,
-            'modified'    => $_SERVER['REQUEST_TIME']
+            'modified'    => $_SERVER['REQUEST_TIME'],
         ];
     }
 
@@ -172,7 +172,7 @@ class Git_Mirror_ManifestFileGenerator
             "owner"       => null,
             "description" => $repository->getDescription(),
             "reference"   => null,
-            'modified'    => $_SERVER['REQUEST_TIME']
+            'modified'    => $_SERVER['REQUEST_TIME'],
         ];
     }
 

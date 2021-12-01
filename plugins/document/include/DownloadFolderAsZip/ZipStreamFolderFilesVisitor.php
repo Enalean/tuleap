@@ -54,7 +54,7 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
     public function __construct(
         ZipStream $zip,
         ZipStreamerLoggingHelper $error_logging_helper,
-        ErrorsListingBuilder $errors_listing_builder
+        ErrorsListingBuilder $errors_listing_builder,
     ) {
         $this->zip                    = $zip;
         $this->error_logging_helper   = $error_logging_helper;

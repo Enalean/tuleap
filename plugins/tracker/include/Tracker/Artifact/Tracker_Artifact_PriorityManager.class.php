@@ -48,7 +48,7 @@ class Tracker_Artifact_PriorityManager
         Tracker_Artifact_PriorityDao $priority_dao,
         Tracker_Artifact_PriorityHistoryDao $priority_history_dao,
         UserManager $user_manager,
-        Tracker_ArtifactFactory $tracker_artifact_factory
+        Tracker_ArtifactFactory $tracker_artifact_factory,
     ) {
         $this->priority_dao             = $priority_dao;
         $this->priority_history_dao     = $priority_history_dao;

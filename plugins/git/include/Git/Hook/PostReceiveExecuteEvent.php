@@ -72,7 +72,7 @@ class PostReceiveExecuteEvent implements Dispatchable
         string $oldrev,
         string $newrev,
         string $refname,
-        bool $is_technical_reference
+        bool $is_technical_reference,
     ) {
         $this->repository             = $repository;
         $this->user                   = $user;

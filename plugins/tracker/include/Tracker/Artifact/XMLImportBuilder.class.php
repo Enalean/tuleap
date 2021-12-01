@@ -36,7 +36,7 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
 {
     public function build(
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
     ): Tracker_Artifact_XMLImport {
         $artifact_factory        = Tracker_ArtifactFactory::instance();
         $formelement_factory     = Tracker_FormElementFactory::instance();

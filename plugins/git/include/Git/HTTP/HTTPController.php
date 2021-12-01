@@ -71,7 +71,7 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
         \Psr\Log\LoggerInterface $logger,
         \ProjectManager $project_manager,
         \GitRepositoryFactory $repository_factory,
-        HTTPAccessControl $http_access_control
+        HTTPAccessControl $http_access_control,
     ) {
         $this->project_manager     = $project_manager;
         $this->repository_factory  = $repository_factory;

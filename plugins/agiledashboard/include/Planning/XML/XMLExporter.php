@@ -44,7 +44,7 @@ class XMLExporter
     private $planning_permissions_manager;
 
     public function __construct(
-        PlanningPermissionsManager $planning_permissions_manager
+        PlanningPermissionsManager $planning_permissions_manager,
     ) {
         $this->planning_permissions_manager = $planning_permissions_manager;
     }

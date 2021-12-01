@@ -57,7 +57,7 @@ class ForgeAccess_ForgePropertiesManager
         ProjectManager $project_manager,
         PermissionsManager $permission_manager,
         EventManager $event_manager,
-        FRSPermissionCreator $frs_permission_creator
+        FRSPermissionCreator $frs_permission_creator,
     ) {
         $this->config_dao             = $config_dao;
         $this->project_manager        = $project_manager;

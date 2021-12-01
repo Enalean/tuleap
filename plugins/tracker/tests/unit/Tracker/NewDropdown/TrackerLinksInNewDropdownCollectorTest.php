@@ -38,14 +38,14 @@ class TrackerLinksInNewDropdownCollectorTest extends \Tuleap\Test\PHPUnit\TestCa
             ->shouldReceive([
                 'getId' => 102,
                 'getItemName' => 'bug',
-                'getSubmitUrl' => '/path/to/submit/bugs'
+                'getSubmitUrl' => '/path/to/submit/bugs',
             ])
             ->getMock();
         $story_tracker = Mockery::mock(\Tracker::class)
             ->shouldReceive([
                 'getId' => 103,
                 'getItemName' => 'story',
-                'getSubmitUrl' => '/path/to/submit/story'
+                'getSubmitUrl' => '/path/to/submit/story',
             ])
             ->getMock();
 
@@ -69,14 +69,14 @@ class TrackerLinksInNewDropdownCollectorTest extends \Tuleap\Test\PHPUnit\TestCa
             ->shouldReceive([
                 'getId' => 102,
                 'getItemName' => 'bug',
-                'getSubmitUrl' => '/path/to/submit/bugs'
+                'getSubmitUrl' => '/path/to/submit/bugs',
             ])
             ->getMock();
         $story_tracker = Mockery::mock(\Tracker::class)
             ->shouldReceive([
                 'getId' => 103,
                 'getItemName' => 'story',
-                'getSubmitUrl' => '/path/to/submit/story'
+                'getSubmitUrl' => '/path/to/submit/story',
             ])
             ->getMock();
 

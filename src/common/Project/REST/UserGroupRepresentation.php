@@ -82,7 +82,7 @@ class UserGroupRepresentation
     private function __construct(
         Project $project,
         ProjectUGroup $ugroup,
-        array $additional_information
+        array $additional_information,
     ) {
         $this->id         = self::getRESTIdForProject((int) $project->getGroupId(), $ugroup->getId());
         $this->uri        = self::ROUTE . '/' . $this->id;
@@ -125,14 +125,14 @@ class UserGroupRepresentation
         if (preg_match(self::SIMPLE_REST_ID_PATTERN, $identifier)) {
             return [
                 'project_id'    => null,
-                'user_group_id' => $identifier
+                'user_group_id' => $identifier,
             ];
         }
 
         if (preg_match(self::COMPLEX_REST_ID_PATTERN, $identifier, $complex_id)) {
             return [
                 'project_id'    => $complex_id[1],
-                'user_group_id' => $complex_id[2]
+                'user_group_id' => $complex_id[2],
             ];
         }
 

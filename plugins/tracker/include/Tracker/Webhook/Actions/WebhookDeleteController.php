@@ -103,7 +103,7 @@ class WebhookDeleteController implements DispatchableWithRequest
     {
         return '/plugins/tracker/?' . http_build_query([
             "func"    => "admin-webhooks",
-            "tracker" => $tracker->getId()
+            "tracker" => $tracker->getId(),
         ]);
     }
 }

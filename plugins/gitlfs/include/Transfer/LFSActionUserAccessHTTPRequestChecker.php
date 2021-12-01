@@ -48,7 +48,7 @@ class LFSActionUserAccessHTTPRequestChecker
     public function __construct(
         \gitlfsPlugin $plugin,
         SplitTokenIdentifierTranslator $authorization_token_unserializer,
-        ActionAuthorizationVerifier $authorization_verifier
+        ActionAuthorizationVerifier $authorization_verifier,
     ) {
         $this->plugin                           = $plugin;
         $this->authorization_token_unserializer = $authorization_token_unserializer;
@@ -63,7 +63,7 @@ class LFSActionUserAccessHTTPRequestChecker
     public function userCanAccess(
         \HTTPRequest $request,
         ActionAuthorizationType $action_type,
-        $oid
+        $oid,
     ) {
         $authorization_header = $request->getFromServer('HTTP_AUTHORIZATION');
         if ($authorization_header === false) {

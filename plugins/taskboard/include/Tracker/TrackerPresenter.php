@@ -40,7 +40,7 @@ final class TrackerPresenter
         bool $can_update_mapped_field,
         ?TitleFieldPresenter $title_field,
         ?AddInPlacePresenter $add_in_place,
-        ?AssignedToFieldPresenter $assigned_to_field
+        ?AssignedToFieldPresenter $assigned_to_field,
     ) {
         $this->id                      = $tracker->getTrackerId();
         $this->can_update_mapped_field = $can_update_mapped_field;

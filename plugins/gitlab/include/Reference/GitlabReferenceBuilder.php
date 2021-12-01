@@ -36,7 +36,7 @@ class GitlabReferenceBuilder
 
     public function __construct(
         ReferenceDao $reference_dao,
-        GitlabRepositoryIntegrationFactory $repository_integration_factory
+        GitlabRepositoryIntegrationFactory $repository_integration_factory,
     ) {
         $this->reference_dao                  = $reference_dao;
         $this->repository_integration_factory = $repository_integration_factory;

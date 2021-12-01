@@ -100,7 +100,7 @@ function IniConfig($file)
          'FORTUNE_DIR',
          'DISABLE_GETIMAGESIZE','DBADMIN_USER','DBADMIN_PASSWD',
          'SESSION_SAVE_PATH', 'TOOLBAR_PAGELINK_PULLDOWN', 'TOOLBAR_TEMPLATE_PULLDOWN',
-         'EXTERNAL_LINK_TARGET', 'ENABLE_MARKUP_TEMPLATE'
+         'EXTERNAL_LINK_TARGET', 'ENABLE_MARKUP_TEMPLATE',
          ];
 
     // List of all valid config options to be define()d which take booleans.
@@ -117,7 +117,7 @@ function IniConfig($file)
          'ALLOW_USER_LOGIN', 'ALLOW_LDAP_LOGIN', 'ALLOW_IMAP_LOGIN',
          'WARN_NONPUBLIC_INTERWIKIMAP', 'USE_PATH_INFO',
          'DISABLE_HTTP_REDIRECT',
-         'BLOG_EMPTY_DEFAULT_PREFIX', 'ENABLE_DISCUSSION_LINK'
+         'BLOG_EMPTY_DEFAULT_PREFIX', 'ENABLE_DISCUSSION_LINK',
          ];
 
     $rs    = @parse_ini_file($file);
@@ -184,7 +184,7 @@ function IniConfig($file)
                                   'ALLOW_IMAP_LOGIN', 'ALLOW_USER_LOGIN',
                                   'REQUIRE_SIGNIN_BEFORE_EDIT',
                                   'WIKIDB_NOCACHE_MARKUP',
-                                  'COMPRESS_OUTPUT'
+                                  'COMPRESS_OUTPUT',
                                   ])
         ) {
         } elseif (! $val) {

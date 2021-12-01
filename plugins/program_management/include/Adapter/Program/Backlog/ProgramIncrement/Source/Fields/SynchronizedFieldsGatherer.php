@@ -48,7 +48,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
         private \Tracker_Semantic_DescriptionFactory $description_factory,
         private \Tracker_Semantic_StatusFactory $status_factory,
         private SemanticTimeframeBuilder $timeframe_builder,
-        private RetrieveFullArtifactLinkField $artifact_link_retriever
+        private RetrieveFullArtifactLinkField $artifact_link_retriever,
     ) {
     }
 

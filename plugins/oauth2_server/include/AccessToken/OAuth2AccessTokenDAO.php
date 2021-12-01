@@ -33,7 +33,7 @@ class OAuth2AccessTokenDAO extends DataAccessObject
             [
                 'authorization_code_id' => $authorization_code_id,
                 'verifier'              => $hashed_verification_string,
-                'expiration_date'       => $expiration_date_timestamp
+                'expiration_date'       => $expiration_date_timestamp,
             ]
         );
     }

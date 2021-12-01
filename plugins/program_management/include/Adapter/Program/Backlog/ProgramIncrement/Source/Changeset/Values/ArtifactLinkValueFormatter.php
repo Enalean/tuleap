@@ -34,12 +34,12 @@ final class ArtifactLinkValueFormatter
         if (! $value) {
             return [
                 'new_values' => '',
-                'types'      => []
+                'types'      => [],
             ];
         }
         return [
             'new_values' => (string) $value->linked_artifact->getId(),
-            'types'      => [(string) $value->linked_artifact->getId() => (string) $value->type]
+            'types'      => [(string) $value->linked_artifact->getId() => (string) $value->type],
         ];
     }
 }

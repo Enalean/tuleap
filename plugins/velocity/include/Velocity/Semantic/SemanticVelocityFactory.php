@@ -34,7 +34,7 @@ class SemanticVelocityFactory
     public function getInstanceFromXML(
         SimpleXMLElement $xml,
         Tracker $tracker,
-        array $mapping
+        array $mapping,
     ) {
         $semantic_done = SemanticDone::load($tracker);
 

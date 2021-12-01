@@ -31,7 +31,7 @@ class InitialEffortSemanticUpdater
     public function updateBacklogItemInitialEffortSemantic(
         PFUser $current_user,
         AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item,
-        AgileDashBoard_Semantic_InitialEffort $semantic_initial_effort
+        AgileDashBoard_Semantic_InitialEffort $semantic_initial_effort,
     ): AgileDashboard_Milestone_Backlog_BacklogItem {
         $artifact = $backlog_item->getArtifact();
 

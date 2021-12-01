@@ -54,7 +54,7 @@ class PullRequestCloser
         Dao $pull_request_dao,
         PullRequestMerger $pull_request_merger,
         TimelineEventCreator $timeline_event_creator,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
     ) {
         $this->pull_request_dao       = $pull_request_dao;
         $this->pull_request_merger    = $pull_request_merger;
@@ -90,7 +90,7 @@ class PullRequestCloser
     public function doMerge(
         GitRepository $repository_dest,
         PullRequest $pull_request,
-        PFUser $user_requesting_merge
+        PFUser $user_requesting_merge,
     ): void {
         $this->closePullRequestViaAMergeAction(
             $pull_request,
@@ -103,7 +103,7 @@ class PullRequestCloser
 
     public function closeManuallyMergedPullRequest(
         PullRequest $pull_request,
-        PFUser $merger
+        PFUser $merger,
     ): void {
         $this->closePullRequestViaAMergeAction($pull_request, $merger, static function () {
         });
@@ -117,7 +117,7 @@ class PullRequestCloser
     private function closePullRequestViaAMergeAction(
         PullRequest $pull_request,
         PFUser $user,
-        callable $actions_to_execute_before_marking_as_merged
+        callable $actions_to_execute_before_marking_as_merged,
     ): void {
         $status = $pull_request->getStatus();
 

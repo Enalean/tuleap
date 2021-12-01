@@ -75,7 +75,7 @@ class TooltipStatsPresenter
         int $tracker_id,
         bool $has_semantic_status,
         TrackerStats $tooltip_stats,
-        \PFUser $current_user
+        \PFUser $current_user,
     ) {
         $this->tracker_id               = $tracker_id;
         $this->has_semantic_status      = $has_semantic_status;

@@ -289,7 +289,7 @@ class WikiDB_backend
         $include_empty = false,
         $sortby = false,
         $limit = false,
-        $exclude = false
+        $exclude = false,
     ) {
         //FIXME: implement simple (but slow) link finder.
         die("FIXME get_links");

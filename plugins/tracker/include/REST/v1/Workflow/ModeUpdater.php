@@ -68,7 +68,7 @@ class ModeUpdater
         FrozenFieldsDao $frozen_fields_dao,
         HiddenFieldsetsDao $hidden_fieldsets_dao,
         StateFactory $state_factory,
-        TransitionExtractor $transition_extractor
+        TransitionExtractor $transition_extractor,
     ) {
         $this->workflow_dao          = $workflow_dao;
         $this->transition_replicator = $transition_replicator;

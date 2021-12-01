@@ -907,7 +907,7 @@ class ArtifactType
         $allow_copy,
         $submit_instructions,
         $browse_instructions,
-        $instantiate_for_new_projects
+        $instantiate_for_new_projects,
     ) {
         global $Language;
 

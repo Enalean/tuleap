@@ -59,7 +59,7 @@ class HistoryEnforcementAdminController implements DispatchableWithRequest
         AdminPageRenderer $admin_page_renderer,
         HistoryEnforcementSettingsBuilder $settings_builder,
         CSRFSynchronizerToken $token,
-        DocmanSettingsTabsPresenterCollectionBuilder $tabs_presenter_collection_builder
+        DocmanSettingsTabsPresenterCollectionBuilder $tabs_presenter_collection_builder,
     ) {
         $this->admin_page_renderer               = $admin_page_renderer;
         $this->settings_builder                  = $settings_builder;

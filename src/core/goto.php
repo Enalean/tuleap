@@ -91,7 +91,7 @@ if ($ref === null) {
             Event::SET_ARTIFACT_REFERENCE_GROUP_ID,
             [
                 'artifact_id' => $value,
-                'reference'   => &$ref
+                'reference'   => &$ref,
             ]
         );
     } else {

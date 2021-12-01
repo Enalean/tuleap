@@ -49,17 +49,17 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping[] = [
             'values' => [
                 200 => 400,
-                300 => 600
+                300 => 600,
             ],
             'from' => $from_field_id,
-            'to' => $to_field_id
+            'to' => $to_field_id,
         ];
         $field_mapping[] = [
             'values' => [
-                201 => Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID
+                201 => Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID,
             ],
             'from' => $from_other_field_id,
-            'to' => $to_other_field_id
+            'to' => $to_other_field_id,
         ];
 
         $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
@@ -97,12 +97,12 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping[] = [
             'values' => [],
             'from' => $from_field_id,
-            'to' => $to_field_id
+            'to' => $to_field_id,
         ];
         $field_mapping[] = [
             'values' => [],
             'from' => $from_other_field_id,
-            'to' => $to_other_field_id
+            'to' => $to_other_field_id,
         ];
 
         $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
@@ -136,7 +136,7 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping[] = [
             'values' => [],
             'from' => $from_field_id,
-            'to' => $to_field_id
+            'to' => $to_field_id,
         ];
 
         $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
@@ -164,7 +164,7 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
                 109 => 901,
             ],
             'from' => $from_field_id,
-            'to' => $to_field_id
+            'to' => $to_field_id,
         ];
 
         $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
@@ -190,7 +190,7 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping[] = [
             'values' => [],
             'from' => $from_field_id,
-            'to' => $to_field_id
+            'to' => $to_field_id,
         ];
 
         $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
@@ -216,7 +216,7 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping[] = [
             'values' => [],
             'from' => $from_field_id,
-            'to' => $to_field_id
+            'to' => $to_field_id,
         ];
 
         $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
@@ -242,7 +242,7 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping[] = [
             'values' => [],
             'from' => $from_field_id,
-            'to' => $to_field_id
+            'to' => $to_field_id,
         ];
 
         $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
@@ -263,7 +263,7 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
             'report_id' => $report_id,
             'field_id' => $field_id,
             'rank' => $rank,
-            'is_advanced' => $is_advanced
+            'is_advanced' => $is_advanced,
         ]);
     }
 

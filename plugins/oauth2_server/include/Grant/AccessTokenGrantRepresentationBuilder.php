@@ -47,7 +47,7 @@ class AccessTokenGrantRepresentationBuilder
     public function __construct(
         OAuth2AccessTokenCreator $access_token_creator,
         OAuth2RefreshTokenCreator $refresh_token_creator,
-        OpenIDConnectIDTokenCreator $id_token_creator
+        OpenIDConnectIDTokenCreator $id_token_creator,
     ) {
         $this->access_token_creator  = $access_token_creator;
         $this->refresh_token_creator = $refresh_token_creator;
@@ -57,7 +57,7 @@ class AccessTokenGrantRepresentationBuilder
     public function buildRepresentationFromAuthorizationCode(
         \DateTimeImmutable $current_time,
         OAuth2App $app,
-        OAuth2AuthorizationCode $authorization_code
+        OAuth2AuthorizationCode $authorization_code,
     ): OAuth2AccessTokenSuccessfulRequestRepresentation {
         $access_token  = $this->access_token_creator->issueAccessToken(
             $current_time,
@@ -77,7 +77,7 @@ class AccessTokenGrantRepresentationBuilder
 
     public function buildRepresentationFromRefreshToken(
         \DateTimeImmutable $current_time,
-        OAuth2RefreshToken $refresh_token
+        OAuth2RefreshToken $refresh_token,
     ): OAuth2AccessTokenSuccessfulRequestRepresentation {
         $access_token                 = $this->access_token_creator->issueAccessToken(
             $current_time,

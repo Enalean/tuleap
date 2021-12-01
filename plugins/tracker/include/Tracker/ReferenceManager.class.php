@@ -38,7 +38,7 @@ class Tracker_ReferenceManager
 
     public function __construct(
         ReferenceManager $reference_manager,
-        Tracker_ArtifactFactory $artifact_factory
+        Tracker_ArtifactFactory $artifact_factory,
     ) {
         $this->reference_manager = $reference_manager;
         $this->artifact_factory  = $artifact_factory;

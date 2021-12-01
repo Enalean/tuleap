@@ -54,7 +54,7 @@ final class TimeframeValueRetriever implements RetrieveTimeframeValueUserCanSee
 
     private function loadTimePeriod(
         TimeboxIdentifier $timebox_identifier,
-        UserIdentifier $user_identifier
+        UserIdentifier $user_identifier,
     ): ?TimePeriodWithoutWeekEnd {
         $artifact = $this->artifact_retriever->getNonNullArtifact($timebox_identifier);
         $user     = $this->retrieve_user->getUserWithId($user_identifier);

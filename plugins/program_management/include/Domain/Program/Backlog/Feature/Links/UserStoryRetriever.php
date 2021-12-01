@@ -52,7 +52,7 @@ final class UserStoryRetriever
         private VerifyIsOpen $retrieve_is_open,
         private RetrieveTrackerFromUserStory $retrieve_tracker_id,
         private VerifyIsVisibleArtifact $verify_is_visible_artifact,
-        private RetrieveTrackerOfArtifact $retrieve_tracker_of_artifact
+        private RetrieveTrackerOfArtifact $retrieve_tracker_of_artifact,
     ) {
     }
 

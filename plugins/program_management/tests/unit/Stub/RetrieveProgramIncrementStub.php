@@ -38,7 +38,7 @@ final class RetrieveProgramIncrementStub implements RetrieveProgramIncrement
      */
     public static function withSuccessiveProgramIncrements(
         ProgramIncrement $first_pi,
-        ProgramIncrement ...$other_pis
+        ProgramIncrement ...$other_pis,
     ): self {
         return new self(false, [$first_pi, ...$other_pis]);
     }
@@ -50,7 +50,7 @@ final class RetrieveProgramIncrementStub implements RetrieveProgramIncrement
 
     public function retrieveProgramIncrementById(
         UserIdentifier $user_identifier,
-        ProgramIncrementIdentifier $increment_identifier
+        ProgramIncrementIdentifier $increment_identifier,
     ): ?ProgramIncrement {
         if ($this->should_return_null) {
             return null;

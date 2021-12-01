@@ -149,7 +149,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $lists[] = [
                     'url'              => $this->getSearchUrl((int) $row['group_list_id'], (string) $params['words']),
                     'title'            => $row['list_name'],
-                    'extra-parameters' => false
+                    'extra-parameters' => false,
                 ];
             }
 

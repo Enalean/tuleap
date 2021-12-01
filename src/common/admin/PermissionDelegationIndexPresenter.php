@@ -63,7 +63,7 @@ class Admin_PermissionDelegationIndexPresenter
         ?Admin_PermissionDelegationDeleteGroupModalPresenter $delete_group = null,
         ?Admin_PermissionDelegationGroupModalPresenter $edit_group = null,
         ?Admin_PermissionDelegationPermissionsModalPresenter $add_perm_presenter = null,
-        ?Admin_PermissionDelegationGroupPresenter $current_group_presenter = null
+        ?Admin_PermissionDelegationGroupPresenter $current_group_presenter = null,
     ) {
         $this->csrf_token         = $csrf_token;
         $this->groups             = $groups;

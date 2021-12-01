@@ -51,8 +51,8 @@ final class PullRequestsReviewersTest extends RestBase
             $this->request_factory->createRequest('PUT', 'pull_requests/1/reviewers')->withBody($this->stream_factory->createStream(json_encode(
                 [
                     'users' => [
-                        ['username' => REST_TestDataBuilder::TEST_USER_1_NAME]
-                    ]
+                        ['username' => REST_TestDataBuilder::TEST_USER_1_NAME],
+                    ],
                 ],
                 JSON_THROW_ON_ERROR
             ))),

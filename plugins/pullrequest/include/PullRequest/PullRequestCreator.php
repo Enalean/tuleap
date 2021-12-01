@@ -60,7 +60,7 @@ class PullRequestCreator
         Dao $pull_request_dao,
         PullRequestMerger $pull_request_merger,
         EventManager $event_manager,
-        GitPullRequestReferenceCreator $git_pull_request_reference_creator
+        GitPullRequestReferenceCreator $git_pull_request_reference_creator,
     ) {
         $this->pull_request_factory               = $pull_request_factory;
         $this->pull_request_dao                   = $pull_request_dao;
@@ -74,7 +74,7 @@ class PullRequestCreator
         $branch_src,
         GitRepository $repository_dest,
         $branch_dest,
-        \PFUser $creator
+        \PFUser $creator,
     ) {
         if (! $repository_src || ! $repository_dest) {
             return false;

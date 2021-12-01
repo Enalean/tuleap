@@ -69,7 +69,7 @@ class MembershipManagerProjectAdminOwnerOfEverythingTest extends \Tuleap\Test\PH
                 Mockery::mock('Git_RemoteServer_GerritServerFactory'),
                 Mockery::mock(\Psr\Log\LoggerInterface::class),
                 $this->ugroup_manager,
-                $this->project_manager
+                $this->project_manager,
             ]
         )
             ->makePartial()

@@ -56,7 +56,7 @@ class ConfigureAtXMLImport implements Dispatchable
         \Widget $widget,
         \SimpleXMLElement $widget_xml,
         MappingsRegistry $mappings_registry,
-        \Project $project
+        \Project $project,
     ) {
         $this->widget            = $widget;
         $this->widget_xml        = $widget_xml;

@@ -53,7 +53,7 @@ class ForumRetriever
     private function isNonProjectMemberTryingToAccessToPrivateForum(
         bool $is_public,
         \PFUser $user,
-        Project $project
+        Project $project,
     ): bool {
         if ($is_public) {
             return false;

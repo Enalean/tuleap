@@ -61,7 +61,7 @@ class ReleaseNoteManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $dao_links = [
             "actual_link" => "",
-            "tuleap_version" => "11-17"
+            "tuleap_version" => "11-17",
         ];
 
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn($dao_links);
@@ -76,7 +76,7 @@ class ReleaseNoteManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $dao_links = [
             "actual_link" => "https://whatever.com",
-            "tuleap_version" => "11-17"
+            "tuleap_version" => "11-17",
         ];
 
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn($dao_links);
@@ -89,7 +89,7 @@ class ReleaseNoteManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $dao_links = [
             "actual_link" => null,
-            "tuleap_version" => "11-17"
+            "tuleap_version" => "11-17",
         ];
 
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn($dao_links);
@@ -102,7 +102,7 @@ class ReleaseNoteManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $dao_old_links = [
             "actual_link" => "https://whatever.com",
-            "tuleap_version" => "11-16"
+            "tuleap_version" => "11-16",
         ];
 
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn($dao_old_links)->once();

@@ -54,7 +54,7 @@ class MailingListHomepageController implements DispatchableWithBurningParrot, Di
         \TemplateRenderer $renderer,
         MailingListDao $dao,
         MailingListPresenterCollectionBuilder $presenter_collection_builder,
-        \BaseLanguage $base_language
+        \BaseLanguage $base_language,
     ) {
         $this->renderer                     = $renderer;
         $this->dao                          = $dao;

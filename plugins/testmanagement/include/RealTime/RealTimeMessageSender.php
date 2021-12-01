@@ -55,7 +55,7 @@ class RealTimeMessageSender
     public function __construct(
         NodeJSClient $node_js_client,
         Tracker_Permission_PermissionsSerializer $permissions_serializer,
-        RealTimeArtifactMessageSender $artifact_message_sender
+        RealTimeArtifactMessageSender $artifact_message_sender,
     ) {
         $this->node_js_client          = $node_js_client;
         $this->permissions_serializer  = $permissions_serializer;
@@ -65,7 +65,7 @@ class RealTimeMessageSender
     public function sendExecutionCreated(
         PFUser $user,
         Artifact $campaign,
-        Artifact $artifact
+        Artifact $artifact,
     ): void {
         if ($this->doesNotHaveHTTPClientUUID()) {
             return;
@@ -82,7 +82,7 @@ class RealTimeMessageSender
     public function sendExecutionDeleted(
         PFUser $user,
         Artifact $campaign,
-        Artifact $artifact
+        Artifact $artifact,
     ): void {
         if ($this->doesNotHaveHTTPClientUUID()) {
             return;
@@ -102,7 +102,7 @@ class RealTimeMessageSender
         Artifact $artifact,
         ?string $status,
         ?string $previous_status,
-        ?UserRepresentation $previous_user
+        ?UserRepresentation $previous_user,
     ): void {
         $user_representation = UserRepresentation::build($user);
         $data                = [
@@ -110,7 +110,7 @@ class RealTimeMessageSender
             'status'          => $status,
             'previous_status' => $previous_status,
             'user'            => $user_representation,
-            'previous_user'   => $previous_user
+            'previous_user'   => $previous_user,
         ];
         $this->sendExecution($user, $campaign, $artifact, self::EVENT_NAME_EXECUTION_UPDATED, $data);
     }
@@ -119,7 +119,7 @@ class RealTimeMessageSender
         PFUser $user,
         Artifact $campaign,
         Artifact $execution_artifact,
-        Artifact $linked_artifact
+        Artifact $linked_artifact,
     ): void {
         if ($this->doesNotHaveHTTPClientUUID()) {
             return;
@@ -127,7 +127,7 @@ class RealTimeMessageSender
 
         $data = [
             'artifact_id'         => $execution_artifact->getId(),
-            'added_artifact_link' => $this->buildArtifactLinkRepresentation($linked_artifact)
+            'added_artifact_link' => $this->buildArtifactLinkRepresentation($linked_artifact),
         ];
 
         $this->artifact_message_sender->sendMessage(
@@ -141,7 +141,7 @@ class RealTimeMessageSender
 
     public function sendCampaignUpdated(
         PFUser $user,
-        Artifact $artifact
+        Artifact $artifact,
     ): void {
         if ($this->doesNotHaveHTTPClientUUID()) {
             return;
@@ -166,7 +166,7 @@ class RealTimeMessageSender
         Artifact $artifact,
         PFUser $user,
         string $uuid,
-        string $remove_from
+        string $remove_from,
     ): void {
         if ($this->doesNotHaveHTTPClientUUID()) {
             return;
@@ -178,8 +178,8 @@ class RealTimeMessageSender
                 'execution_id' => $artifact->getId(),
                 'uuid'         => $uuid,
                 'remove_from'  => $remove_from,
-                'user'         => $user_representation
-            ]
+                'user'         => $user_representation,
+            ],
         ];
         $rights              = new ArtifactRightsPresenter($artifact, $this->permissions_serializer);
         $message             = new MessageDataPresenter(
@@ -209,7 +209,7 @@ class RealTimeMessageSender
         Artifact $campaign,
         Artifact $artifact,
         string $event_name,
-        array $data
+        array $data,
     ): void {
         $this->artifact_message_sender->sendMessage(
             $user,

@@ -35,7 +35,7 @@ final class AzureADTenantSetup
         self::TENANT_COMMON_IDENTIFIER,
         self::TENANT_ORGANIZATIONS_IDENTIFIER,
         self::TENANT_CONSUMERS_IDENTIFIER,
-        self::TENANT_SPECIFIC_IDENTIFIER
+        self::TENANT_SPECIFIC_IDENTIFIER,
     ];
 
     /**

@@ -54,7 +54,7 @@ class PostPushWebhookActionBranchHandler
         BranchInfoDao $branch_info_dao,
         CrossReferenceDao $cross_reference_dao,
         CrossReferenceManager $cross_reference_manager,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->branch_name_tuleap_reference_parser = $branch_name_tuleap_reference_parser;
         $this->reference_manager                   = $reference_manager;
@@ -68,7 +68,7 @@ class PostPushWebhookActionBranchHandler
     public function parseBranchReference(
         GitlabRepositoryIntegration $gitlab_repository_integration,
         PostPushWebhookData $webhook_data,
-        DateTimeImmutable $webhook_reception_date
+        DateTimeImmutable $webhook_reception_date,
     ): void {
         try {
             $branch_name = WebhookDataBranchNameExtractor::extractBranchName($webhook_data->getReference());
@@ -139,7 +139,7 @@ class PostPushWebhookActionBranchHandler
         GitlabRepositoryIntegration $gitlab_repository_integration,
         WebhookTuleapReference $tuleap_reference,
         string $branch_name,
-        \Reference $external_reference
+        \Reference $external_reference,
     ): CrossReference {
         return new CrossReference(
             $gitlab_repository_integration->getName() . '/' . $branch_name,
@@ -159,7 +159,7 @@ class PostPushWebhookActionBranchHandler
         GitlabRepositoryIntegration $gitlab_repository_integration,
         string $commit_sha1,
         string $branch_name,
-        DateTimeImmutable $webhook_reception_date
+        DateTimeImmutable $webhook_reception_date,
     ): void {
         $this->logger->info(
             "|  |_ Tuleap artifact #" . $tuleap_reference->getId() . " already references branch $branch_name. Updating the SHA1 and last push date."
@@ -179,7 +179,7 @@ class PostPushWebhookActionBranchHandler
         GitlabRepositoryIntegration $gitlab_repository_integration,
         string $commit_sha1,
         string $branch_name,
-        DateTimeImmutable $webhook_reception_date
+        DateTimeImmutable $webhook_reception_date,
     ): void {
         $this->branch_info_dao->saveGitlabBranchInfo(
             $gitlab_repository_integration->getId(),
@@ -193,7 +193,7 @@ class PostPushWebhookActionBranchHandler
 
     private function deleteBranchInformationInIntegration(
         GitlabRepositoryIntegration $gitlab_repository_integration,
-        string $branch_name
+        string $branch_name,
     ): void {
         $this->logger->info(
             "Branch $branch_name has been deleted, all references will be removed from database for the integration #" . $gitlab_repository_integration->getId()

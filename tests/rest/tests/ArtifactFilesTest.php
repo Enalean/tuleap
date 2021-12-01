@@ -277,7 +277,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $params = json_encode([
             'tracker' => [
                 'id'  => $this->user_stories_tracker_id,
-                'uri' => 'trackers/' . $this->user_stories_tracker_id
+                'uri' => 'trackers/' . $this->user_stories_tracker_id,
             ],
             'values' => [
                 [
@@ -321,7 +321,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         return $parameters = [
             'artifact_id' => $posted_artifact['id'],
             'field_id'    => $field_id_file,
-            'file_id'     => $file_representation['id']
+            'file_id'     => $file_representation['id'],
         ];
     }
 

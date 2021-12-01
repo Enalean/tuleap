@@ -83,7 +83,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
                 'additional_criteria' => $report->getAdditionalCriteria(),
                 'result'              => &$result,
                 'artifact_id'         => $artifact_id,
-                'field'               => $this
+                'field'               => $this,
             ]
         );
 
@@ -130,7 +130,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
@@ -165,7 +165,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text'
+        $format = 'text',
     ) {
         $output = '';
         switch ($format) {
@@ -182,7 +182,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
@@ -312,7 +312,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         $submitted_value,
         PFUser $user,
         ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
-        ?bool $is_submission = null
+        ?bool $is_submission = null,
     ): bool {
         $is_valid = true;
 

@@ -283,7 +283,7 @@ class DocmanFilesResource extends AuthenticatedResource
 
     public function postVersion(
         int $id,
-        DocmanFileVersionPOSTRepresentation $representation
+        DocmanFileVersionPOSTRepresentation $representation,
     ): CreatedItemFilePropertiesRepresentation {
         $this->checkAccess();
         $this->setVersionHeaders();
@@ -326,7 +326,7 @@ class DocmanFilesResource extends AuthenticatedResource
      */
     public function putMetadata(
         int $id,
-        PUTMetadataRepresentation $representation
+        PUTMetadataRepresentation $representation,
     ): void {
         $this->checkAccess();
         $this->setMetadataHeaders();
@@ -478,7 +478,7 @@ class DocmanFilesResource extends AuthenticatedResource
         DocmanItemsRequest $item_request,
         int $status,
         int $obsolesence_date,
-        string $title
+        string $title,
     ): CreatedItemFilePropertiesRepresentation {
         $project      = $item_request->getProject();
         $item         = $item_request->getItem();
@@ -493,7 +493,7 @@ class DocmanFilesResource extends AuthenticatedResource
                     'approval_table_action' => $representation->approval_table_action,
                     'document_type'         => Docman_File::class,
                     'title'                 => $title,
-                    'project'               => $project
+                    'project'               => $project,
                 ]
             );
         } catch (ApprovalTableException $exception) {

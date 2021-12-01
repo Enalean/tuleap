@@ -229,7 +229,7 @@ class Docman_Actions extends Actions
                         'group_id'  => $item->getGroupId(),
                         'item'      => &$item,
                         'new_value' => $author->getName(),
-                        'user'      => &$user
+                        'user'      => &$user,
                     ];
                     $this->event_manager->processEvent('plugin_docman_event_set_version_author', $eArray);
                 }
@@ -487,7 +487,7 @@ class Docman_Actions extends Actions
                                     'item'     => $new_item,
                                     'user'     => $user,
                                     'version'  => $new_version,
-                                    'docmanControler' => $this->_controler
+                                    'docmanControler' => $this->_controler,
                                 ]
                             );
 
@@ -500,7 +500,7 @@ class Docman_Actions extends Actions
                                 [
                                     'item'      => $new_item,
                                     'group_id'  => $new_item->getGroupId(),
-                                    'wiki_page' => $new_item->getPagename()
+                                    'wiki_page' => $new_item->getPagename(),
                                 ]
                             );
 
@@ -510,7 +510,7 @@ class Docman_Actions extends Actions
                             $this->event_manager->processEvent(
                                 PLUGIN_DOCMAN_EVENT_NEW_EMPTY,
                                 [
-                                    'item' => $new_item
+                                    'item' => $new_item,
                                 ]
                             );
 
@@ -520,7 +520,7 @@ class Docman_Actions extends Actions
                             $this->event_manager->processEvent(
                                 PLUGIN_DOCMAN_EVENT_NEW_LINK,
                                 [
-                                    'item' => $new_item
+                                    'item' => $new_item,
                                 ]
                             );
 
@@ -530,7 +530,7 @@ class Docman_Actions extends Actions
                             $this->event_manager->processEvent(
                                 PLUGIN_DOCMAN_EVENT_NEW_FOLDER,
                                 [
-                                    'item' => $new_item
+                                    'item' => $new_item,
                                 ]
                             );
 

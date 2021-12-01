@@ -31,7 +31,7 @@ class UpdateRequestValidator
         \Planning $original_planning,
         \Codendi_Request $request,
         array $unavailable_planning_tracker_ids,
-        ?ModificationBan $milestone_tracker_modification_ban
+        ?ModificationBan $milestone_tracker_modification_ban,
     ): ?\PlanningParameters {
         $planning_from_request = $request->get('planning');
         if (! $planning_from_request) {
@@ -79,7 +79,7 @@ class UpdateRequestValidator
         array $unavailable_planning_tracker_ids,
         \Planning $original_planning,
         \PlanningParameters $updated_planning,
-        ?ModificationBan $milestone_tracker_modification_ban
+        ?ModificationBan $milestone_tracker_modification_ban,
     ): bool {
         if ($milestone_tracker_modification_ban !== null) {
             $updated_planning->planning_tracker_id = (string) $original_planning->getPlanningTrackerId();
@@ -110,7 +110,7 @@ class UpdateRequestValidator
      */
     private function planningTrackerDidNotChange(
         \Planning $original_planning,
-        \PlanningParameters $updated_planning
+        \PlanningParameters $updated_planning,
     ): bool {
         return (int) $original_planning->getPlanningTrackerId() === (int) $updated_planning->planning_tracker_id;
     }
@@ -121,7 +121,7 @@ class UpdateRequestValidator
      */
     private function planningTrackerIsNotUsedInAnotherPlanningInProject(
         array $unavailable_planning_tracker_ids,
-        \PlanningParameters $planning_parameters
+        \PlanningParameters $planning_parameters,
     ): bool {
         return ! in_array((int) $planning_parameters->planning_tracker_id, $unavailable_planning_tracker_ids, true);
     }

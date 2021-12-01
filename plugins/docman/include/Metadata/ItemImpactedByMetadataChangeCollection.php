@@ -59,7 +59,7 @@ class ItemImpactedByMetadataChangeCollection
     public static function buildFromRest(
         PUTMetadataFolderRepresentation $representation,
         array $metadata_to_update,
-        string $recursion_option
+        string $recursion_option,
     ): self {
         $items = [];
 

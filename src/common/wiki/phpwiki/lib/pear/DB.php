@@ -385,7 +385,7 @@ class DB
                 DB_ERROR_EXTENSION_NOT_FOUND => 'extension not found',
                 DB_ERROR_NOSUCHDB           => 'no such database',
                 DB_ERROR_ACCESS_VIOLATION   => 'insufficient permissions',
-                DB_ERROR_TRUNCATED          => 'truncated'
+                DB_ERROR_TRUNCATED          => 'truncated',
             ];
         }
 
@@ -445,7 +445,7 @@ class DB_Error extends PEAR_Error
         $code = DB_ERROR,
         $mode = PEAR_ERROR_RETURN,
         $level = E_USER_NOTICE,
-        $debuginfo = null
+        $debuginfo = null,
     ) {
         if (is_int($code)) {
             parent::__construct('DB Error: ' . DB::errorMessage($code), $code, $mode, $level, $debuginfo);

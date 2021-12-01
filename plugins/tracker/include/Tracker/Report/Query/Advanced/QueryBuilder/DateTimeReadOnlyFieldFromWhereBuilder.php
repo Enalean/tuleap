@@ -50,7 +50,7 @@ class DateTimeReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuilder, Va
 
     public function __construct(
         FromWhereComparisonFieldReadOnlyBuilder $from_where_comparison_builder,
-        DateTimeReadOnlyConditionBuilder $condition_builder
+        DateTimeReadOnlyConditionBuilder $condition_builder,
     ) {
         $this->from_where_builder = $from_where_comparison_builder;
         $this->condition_builder  = $condition_builder;
@@ -91,7 +91,7 @@ class DateTimeReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuilder, Va
     {
         $values = [
             'min_value' => $value_wrapper->getMinValue()->accept($this, $parameters),
-            'max_value' => $value_wrapper->getMaxValue()->accept($this, $parameters)
+            'max_value' => $value_wrapper->getMaxValue()->accept($this, $parameters),
         ];
 
         return $values;
@@ -103,14 +103,14 @@ class DateTimeReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuilder, Va
 
     public function visitCurrentUserValueWrapper(
         CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new MySelfIsNotSupportedException();
     }
 
     public function visitStatusOpenValueWrapper(
         StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new StatusOpenIsNotSupportedException();
     }

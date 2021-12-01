@@ -39,7 +39,7 @@ class NotificationUpdateChecker
 
     public function __construct(
         MailNotificationManager $mail_notification_manager,
-        EmailsToBeNotifiedRetriever $emails_to_be_notified_retriever
+        EmailsToBeNotifiedRetriever $emails_to_be_notified_retriever,
     ) {
         $this->mail_notification_manager       = $mail_notification_manager;
         $this->emails_to_be_notified_retriever = $emails_to_be_notified_retriever;

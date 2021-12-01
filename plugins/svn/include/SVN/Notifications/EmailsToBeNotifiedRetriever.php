@@ -33,7 +33,7 @@ class EmailsToBeNotifiedRetriever
     private $notification_manager;
 
     public function __construct(
-        MailNotificationManager $notification_manager
+        MailNotificationManager $notification_manager,
     ) {
         $this->notification_manager = $notification_manager;
     }

@@ -48,7 +48,7 @@ final class AuthorizationComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAreRequestedScopesAlreadyGranted(
         bool $expected_result,
         array $saved_scopes,
-        array $requested_scopes
+        array $requested_scopes,
     ): void {
         $user = UserTestBuilder::anAnonymousUser()->build();
         $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', true, new \Project(['group_id' => 102]));

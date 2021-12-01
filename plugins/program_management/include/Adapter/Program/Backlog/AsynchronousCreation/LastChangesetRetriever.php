@@ -30,7 +30,7 @@ final class LastChangesetRetriever implements RetrieveLastChangeset
 {
     public function __construct(
         private RetrieveFullArtifact $artifact_retriever,
-        private \Tracker_Artifact_ChangesetFactory $changeset_factory
+        private \Tracker_Artifact_ChangesetFactory $changeset_factory,
     ) {
     }
 

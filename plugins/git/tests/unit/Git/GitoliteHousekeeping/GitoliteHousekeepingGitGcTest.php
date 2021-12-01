@@ -38,7 +38,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGcTest extends \Tuleap\Tes
             [
                 $this->dao,
                 $this->logger,
-                '/path/to/gitolite_admin_working_copy'
+                '/path/to/gitolite_admin_working_copy',
             ]
         )
             ->makePartial()

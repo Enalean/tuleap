@@ -54,7 +54,7 @@ class JWTGenerator
         $current_user = $this->user_manager->getCurrentUser();
         $data         = [
             'user_id'     => (int) $current_user->getId(),
-            'user_rights' => $this->ugroup_literalizer->getUserGroupsForUserWithArobase($current_user)
+            'user_rights' => $this->ugroup_literalizer->getUserGroupsForUserWithArobase($current_user),
         ];
 
         $token = $this->jwt_configuration->builder()

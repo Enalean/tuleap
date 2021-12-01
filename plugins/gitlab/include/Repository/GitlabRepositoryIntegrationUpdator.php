@@ -52,7 +52,7 @@ class GitlabRepositoryIntegrationUpdator
         GitlabRepositoryIntegrationDao $gitlab_repository_dao,
         GitPermissionsManager $git_permissions_manager,
         GitlabRepositoryIntegrationFactory $gitlab_repository_factory,
-        DBTransactionExecutor $db_transaction_executor
+        DBTransactionExecutor $db_transaction_executor,
     ) {
         $this->gitlab_repository_dao     = $gitlab_repository_dao;
         $this->git_permissions_manager   = $git_permissions_manager;
@@ -67,7 +67,7 @@ class GitlabRepositoryIntegrationUpdator
     public function updateTuleapArtifactClosureOfAGitlabIntegration(
         int $gitlab_repository_integration_id,
         bool $allow_artifact_closure,
-        PFUser $user
+        PFUser $user,
     ): void {
         $this->db_transaction_executor->execute(
             function () use ($gitlab_repository_integration_id, $allow_artifact_closure, $user) {

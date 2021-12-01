@@ -36,7 +36,7 @@ class DocmanFilesUploadLimitsAdminSaveController implements DispatchableWithRequ
     private $docman_settings_saver;
 
     public function __construct(
-        DocumentFilesUploadLimitsSaver $saver
+        DocumentFilesUploadLimitsSaver $saver,
     ) {
         $this->docman_settings_saver = $saver;
     }

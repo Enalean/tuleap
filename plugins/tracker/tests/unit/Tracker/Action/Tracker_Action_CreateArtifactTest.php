@@ -234,7 +234,7 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
                 [
                     'link-artifact-id' => (string) $target_artifact_id,
                     'link-type'        => \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
-                    'immediate'        => 'true'
+                    'immediate'        => 'true',
                 ],
                 $this->createMock(\ProjectManager::class)
             ),

@@ -88,7 +88,7 @@ final class ServicePOSTData
         bool $is_used,
         bool $is_system_service,
         bool $is_in_iframe,
-        bool $is_in_new_tab
+        bool $is_in_new_tab,
     ) {
         $this->id                = $id;
         $this->short_name        = $short_name;

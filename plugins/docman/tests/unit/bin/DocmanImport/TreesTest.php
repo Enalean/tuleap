@@ -78,10 +78,10 @@ class TreesTest extends \Tuleap\Test\PHPUnit\TestCase
                      0 => [
                               'children' => [
                                                 1 => [
-                                                         'children' => [3 => null]
+                                                         'children' => [3 => null],
                                                      ],
                                                 2 => [
-                                                         'children' => [4 => null, 5 => null]
+                                                         'children' => [4 => null, 5 => null],
                                                      ],
                                                 ],
                                             ],

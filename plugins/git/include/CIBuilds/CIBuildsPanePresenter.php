@@ -54,13 +54,13 @@ final class CIBuildsPanePresenter
         int $repository_id,
         int $project_id,
         array $set_build_status_options,
-        ?string $ci_token
+        ?string $ci_token,
     ) {
         $this->ci_token                 = $ci_token;
         $this->repository_id            = $repository_id;
         $this->form_action_url          = GIT_BASE_URL . '/?' . http_build_query([
             'group_id' => $project_id,
-            'pane' => CIBuilds::ID
+            'pane' => CIBuilds::ID,
         ]);
         $this->csrf_token               = new CSRFSynchronizerToken($this->form_action_url);
         $this->set_build_status_options = $set_build_status_options;

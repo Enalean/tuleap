@@ -67,7 +67,7 @@ final class PlanningAdapter implements BuildPlanning, RetrieveMirroredProgramInc
     public function retrieveRootPlanningMilestoneTracker(
         ProjectReference $project,
         UserIdentifier $user_identifier,
-        ?ConfigurationErrorsCollector $errors_collector
+        ?ConfigurationErrorsCollector $errors_collector,
     ): ?TrackerReference {
         try {
             $root_planning = $this->getRootPlanning($user_identifier, $project->getId());
@@ -82,7 +82,7 @@ final class PlanningAdapter implements BuildPlanning, RetrieveMirroredProgramInc
     public function retrieveSecondPlanningMilestoneTracker(
         ProjectReference $project,
         UserIdentifier $user,
-        ?ConfigurationErrorsCollector $errors_collector
+        ?ConfigurationErrorsCollector $errors_collector,
     ): ?TrackerReference {
         $pfuser        = $this->retrieve_user->getUserWithId($user);
         $root_planning = $this->planning_factory->getRootPlanning(

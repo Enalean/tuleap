@@ -53,7 +53,7 @@ class ProjectVisibilityPresenterBuilder
         ProjectVisibilityUserConfigurationPermissions $project_visibility_configuration,
         ServicesUsingTruncatedMailRetriever $service_truncated_mails_retriever,
         RestrictedUsersProjectCounter $restricted_users_project_counter,
-        ProjectVisibilityOptionsForPresenterGenerator $project_visibility_options_generator
+        ProjectVisibilityOptionsForPresenterGenerator $project_visibility_options_generator,
     ) {
         $this->project_visibility_configuration     = $project_visibility_configuration;
         $this->service_truncated_mails_retriever    = $service_truncated_mails_retriever;

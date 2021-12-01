@@ -80,7 +80,7 @@ final class BacklogTrackerRemovalCheckerTest extends \Tuleap\Test\PHPUnit\TestCa
             ->with([2, 3])
             ->once()
             ->andReturn([
-                ['name' => 'tracker01']
+                ['name' => 'tracker01'],
             ]);
 
         $planning = new Planning('1', 'Root Planning', '123', '', '', [1, 2, 3]);

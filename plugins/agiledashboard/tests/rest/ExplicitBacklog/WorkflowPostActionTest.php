@@ -43,7 +43,7 @@ class WorkflowPostActionTest extends TestBase
         $transition_id = $this->getTransitionId();
 
         $body = json_encode([
-            "post_actions" => []
+            "post_actions" => [],
         ]);
 
         $response = $this->getResponseByName(
@@ -75,9 +75,9 @@ class WorkflowPostActionTest extends TestBase
             "post_actions" => [
                 [
                     "id" => null,
-                    "type" => "add_to_top_backlog"
-                ]
-            ]
+                    "type" => "add_to_top_backlog",
+                ],
+            ],
         ]);
 
         $response = $this->getResponseByName(

@@ -47,7 +47,7 @@ class Tracker_Workflow_Trigger_RulesProcessor // phpcs:ignore PSR1.Classes.Class
     public function __construct(
         Tracker_Workflow_WorkflowUser $workflow_user,
         SiblingsRetriever $siblings_retriever,
-        WorkflowBackendLogger $logger
+        WorkflowBackendLogger $logger,
     ) {
         $this->workflow_user      = $workflow_user;
         $this->logger             = $logger;

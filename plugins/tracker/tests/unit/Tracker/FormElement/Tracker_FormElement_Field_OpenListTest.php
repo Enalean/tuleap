@@ -95,7 +95,7 @@ final class Tracker_FormElement_Field_OpenListTest extends \Tuleap\Test\PHPUnit\
                 [
                     '1000' => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class),
                     '1001' => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class),
-                    '1002' => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
+                    '1002' => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class),
                 ]
             );
 

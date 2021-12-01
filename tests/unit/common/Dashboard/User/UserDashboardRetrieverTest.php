@@ -48,7 +48,7 @@ class UserDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao->shouldReceive('searchAllUserDashboards')->with($this->user_with_a_dashboard)->andReturns(\TestHelper::arrayToDar([
             'id'      => 1,
             'user_id' => 1,
-            'name'    => 'dashboard_one'
+            'name'    => 'dashboard_one',
         ]));
         $dao->shouldReceive('searchAllUserDashboards')->with($this->user_without_dashboard)->andReturns(\TestHelper::emptyDar());
 
@@ -60,7 +60,7 @@ class UserDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $result = $this->user_retriever->getAllUserDashboards($this->user_with_a_dashboard);
 
         $expected_result = [
-            new UserDashboard(1, 1, 'dashboard_one')
+            new UserDashboard(1, 1, 'dashboard_one'),
         ];
 
         $this->assertEquals($expected_result, $result);

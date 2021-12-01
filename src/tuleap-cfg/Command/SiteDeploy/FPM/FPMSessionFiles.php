@@ -45,7 +45,7 @@ final class FPMSessionFiles implements FPMSessionInterface
     public function forceDeployFreshTuleapConf(
         LoggerInterface $logger,
         string $tuleap_php_configuration_folder,
-        string $php_configuration_folder
+        string $php_configuration_folder,
     ): void {
         $src_file = $tuleap_php_configuration_folder . '/' . self::TULEAP_CONF_FILE;
         $dst_file = $php_configuration_folder . '/php-fpm.d/' . self::DEPLOYED_FILE_NAME;

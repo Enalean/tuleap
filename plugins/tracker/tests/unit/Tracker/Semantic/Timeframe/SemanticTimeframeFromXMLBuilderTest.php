@@ -36,7 +36,7 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private const TRACKER_MAPPING = [
         "T11" => 111,
         "T12" => 112,
-        "T13" => 113
+        "T13" => 113,
     ];
 
     protected function setUp(): void
@@ -76,7 +76,7 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $all_semantics_xml,
             [
                 'F201' => $this->getMockedField(\Tracker_FormElement_Field_Date::class),
-                'F202' => $this->getMockedField(\Tracker_FormElement_Field_Integer::class)
+                'F202' => $this->getMockedField(\Tracker_FormElement_Field_Integer::class),
             ],
             $this->getMockedTracker(),
             self::TRACKER_MAPPING
@@ -108,7 +108,7 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $all_semantics_xml,
             [
                 'F201' => $this->getMockedField(\Tracker_FormElement_Field_Date::class),
-                'F202' => $this->getMockedField(\Tracker_FormElement_Field_Date::class)
+                'F202' => $this->getMockedField(\Tracker_FormElement_Field_Date::class),
             ],
             $this->getMockedTracker(),
             self::TRACKER_MAPPING
@@ -411,23 +411,23 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'xml' => $xml_with_end_date,
                 'mapping' => [
-                    'F202' => $this->getMockedField(\Tracker_FormElement_Field_Date::class)
-                ]
+                    'F202' => $this->getMockedField(\Tracker_FormElement_Field_Date::class),
+                ],
             ], [
                 'xml' => $xml_with_end_date,
                 'mapping' => [
-                    'F201' => $this->getMockedField(\Tracker_FormElement_Field_Date::class)
-                ]
+                    'F201' => $this->getMockedField(\Tracker_FormElement_Field_Date::class),
+                ],
             ], [
                 'xml' => $xml_with_duration,
                 'mapping' => [
-                    'F202' => $this->getMockedField(\Tracker_FormElement_Field_Integer::class)
-                ]
+                    'F202' => $this->getMockedField(\Tracker_FormElement_Field_Integer::class),
+                ],
             ], [
                 'xml' => $xml_with_duration,
                 'mapping' => [
-                    'F201' => $this->getMockedField(\Tracker_FormElement_Field_Date::class)
-                ]
+                    'F201' => $this->getMockedField(\Tracker_FormElement_Field_Date::class),
+                ],
             ],
         ];
     }

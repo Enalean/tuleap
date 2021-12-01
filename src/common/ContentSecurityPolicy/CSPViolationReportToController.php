@@ -44,7 +44,7 @@ final class CSPViolationReportToController extends DispatchablePSR15Compatible i
         EmitterInterface $emitter,
         ResponseFactoryInterface $response_factory,
         LoggerInterface $logger,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->response_factory = $response_factory;

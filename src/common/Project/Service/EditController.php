@@ -65,7 +65,7 @@ class EditController implements DispatchableWithRequest
         ServiceUpdator $service_updator,
         ServicePOSTDataBuilder $builder,
         ServiceManager $service_manager,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
     ) {
         $this->service_updator       = $service_updator;
         $this->administrator_checker = $administrator_checker;

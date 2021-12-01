@@ -90,7 +90,7 @@ class textualreportPlugin extends Plugin // @codingStandardsIgnoreLine
                 http_build_query(
                     [
                         'report'   => $event->getReport()->getId(),
-                        'renderer' => $event->getRendererTable()->getId()
+                        'renderer' => $event->getRendererTable()->getId(),
                     ]
                 )
             );
@@ -109,7 +109,7 @@ class textualreportPlugin extends Plugin // @codingStandardsIgnoreLine
                 http_build_query(
                     [
                         'report'   => $event->getReport()->getId(),
-                        'renderer' => $event->getRendererTable()->getId()
+                        'renderer' => $event->getRendererTable()->getId(),
                     ]
                 )
             );

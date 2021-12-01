@@ -74,7 +74,7 @@ final class BarChartDataBuilder
         foreach ($engine->legend as $legend_key => $legend_label) {
             $grouped_source_values[] = [
                 'label' => $legend_label,
-                'value' => $source_values[$legend_key] ?? ''
+                'value' => $source_values[$legend_key] ?? '',
             ];
         }
         return $grouped_source_values;
@@ -95,7 +95,7 @@ final class BarChartDataBuilder
         GraphOnTrackersV5_Engine_Bar $engine,
         string $source_key,
         array $grouped_source_values,
-        array $values
+        array $values,
     ): array {
         $values[$this->getXaxisKeyFromLabel($engine, $source_key)] = [
             'label' => $engine->xaxis[$source_key],

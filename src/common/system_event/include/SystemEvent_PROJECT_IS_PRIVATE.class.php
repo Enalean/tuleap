@@ -41,7 +41,7 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
 
     public function injectDependencies(
         UserRemover $user_remover,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->user_remover   = $user_remover;
         $this->ugroup_manager = $ugroup_manager;

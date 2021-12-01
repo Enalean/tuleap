@@ -83,7 +83,7 @@ final class GitActionsForkTests extends \Tuleap\Test\PHPUnit\TestCase
     {
         $repositories    = [
             Mockery::mock(GitRepository::class),
-            Mockery::mock(GitRepository::class)
+            Mockery::mock(GitRepository::class),
         ];
         $to_project      = \Mockery::spy(\Project::class);
         $namespace       = 'namespace';

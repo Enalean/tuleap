@@ -54,7 +54,7 @@ class PermissionPerGroupPaneBuilder
         MediawikiManager $mediawiki_manager,
         UGroupManager $ugroup_manager,
         PermissionPerGroupUGroupFormatter $formatter,
-        MediawikiUserGroupsMapper $mediawiki_user_groups_mapper
+        MediawikiUserGroupsMapper $mediawiki_user_groups_mapper,
     ) {
         $this->mediawiki_manager = $mediawiki_manager;
         $this->ugroup_manager    = $ugroup_manager;
@@ -87,7 +87,7 @@ class PermissionPerGroupPaneBuilder
     private function addReadersToCollection(
         Project $project,
         PermissionPerGroupCollection $collection,
-        ?ProjectUGroup $ugroup = null
+        ?ProjectUGroup $ugroup = null,
     ) {
         if ($ugroup) {
             $readers = $this->mediawiki_manager->getReadAccessControlForProjectContainingGroup($project, $ugroup);
@@ -106,7 +106,7 @@ class PermissionPerGroupPaneBuilder
     private function addWritersToCollection(
         Project $project,
         PermissionPerGroupCollection $collection,
-        ?ProjectUGroup $ugroup = null
+        ?ProjectUGroup $ugroup = null,
     ) {
         if ($ugroup) {
             $writers = $this->mediawiki_manager->getWriteAccessControlForProjectContainingUGroup($project, $ugroup);
@@ -122,7 +122,7 @@ class PermissionPerGroupPaneBuilder
     private function addMediawikiSpecificPermissionsToCollection(
         Project $project,
         PermissionPerGroupCollection $collection,
-        ?ProjectUGroup $selected_ugroup = null
+        ?ProjectUGroup $selected_ugroup = null,
     ) {
         $current_mapping = $this->mapper->getCurrentUserGroupMapping($project);
 
@@ -148,7 +148,7 @@ class PermissionPerGroupPaneBuilder
         Project $project,
         array $permissions,
         $group_name,
-        PermissionPerGroupCollection $collection
+        PermissionPerGroupCollection $collection,
     ) {
         $formatted_group = $this->formatter->getFormattedUGroups($project, $permissions);
 
@@ -166,7 +166,7 @@ class PermissionPerGroupPaneBuilder
         PermissionPerGroupCollection $collection,
         $current_mapping,
         $mw_group_name,
-        ?ProjectUGroup $selected_ugroup = null
+        ?ProjectUGroup $selected_ugroup = null,
     ) {
         if (! $selected_ugroup) {
             return;
@@ -208,7 +208,7 @@ class PermissionPerGroupPaneBuilder
         PermissionPerGroupCollection $collection,
         $current_mapping,
         $mw_group_name,
-        ?ProjectUGroup $selected_ugroup = null
+        ?ProjectUGroup $selected_ugroup = null,
     ) {
         if ($selected_ugroup) {
             return;
@@ -226,7 +226,7 @@ class PermissionPerGroupPaneBuilder
     {
         return MEDIAWIKI_BASE_URL . "/forge_admin.php?" . http_build_query(
             [
-                "group_id" => $project->getID()
+                "group_id" => $project->getID(),
             ]
         );
     }

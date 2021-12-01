@@ -293,8 +293,8 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
                         'type'        => 'date',
                         'value'       => '',          // no default value
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
         $date_field->shouldReceive('getProperties')->andReturn($properties);
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
@@ -325,8 +325,8 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
                         'type'        => 'date',
                         'value'       => '0',          // no default value
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
         $date_field->shouldReceive('getProperties')->andReturn($properties);
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
@@ -356,8 +356,8 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
                         'type'        => 'date',
                         'value'       => '1234567890',
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
         $date_field->shouldReceive('getProperties')->andReturn($properties);
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
@@ -389,8 +389,8 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
                         'type'        => 'date',
                         'value'       => '1234567890',  // specific date
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
         $date_field->shouldReceive('getProperties')->andReturn($properties);
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
@@ -410,8 +410,8 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $properties = [
             'display_time' => [
                 'type'  => 'checkbox',
-                'value' => 1
-            ]
+                'value' => 1,
+            ],
         ];
 
         $date_field->shouldReceive('getProperties')->andReturn($properties);
@@ -434,8 +434,8 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $properties = [
             'display_time' => [
                 'type'  => 'checkbox',
-                'value' => 0
-            ]
+                'value' => 0,
+            ],
         ];
 
         $date_field->shouldReceive('getProperties')->andReturn($properties);
@@ -730,7 +730,7 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $criteria->report->id = 1;
         $values               = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => $date,
-            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_EQUALS
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_EQUALS,
         ];
 
         $field = $this->getDateField();
@@ -751,7 +751,7 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $criteria->report->id = 1;
         $values               = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => $date,
-            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_GREATER_THAN
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_GREATER_THAN,
         ];
 
         $field = $this->getDateField();
@@ -772,7 +772,7 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $criteria->report->id = 1;
         $values               = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => [$date],
-            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_LESS_THAN
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_LESS_THAN,
         ];
 
         $field = $this->getDateField();
@@ -795,7 +795,7 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $criteria->report->id = 1;
         $values               = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => [$from_date, $to_date],
-            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_BETWEEN
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_BETWEEN,
         ];
 
         $field = $this->getDateField();
@@ -815,7 +815,7 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
         $criteria = Mockery::mock(Tracker_Report_Criteria::class);
         $values   = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => $date,
-            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_BETWEEN
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_BETWEEN,
         ];
 
         $field = $this->getDateField();

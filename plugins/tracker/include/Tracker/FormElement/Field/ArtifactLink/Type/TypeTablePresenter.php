@@ -47,7 +47,7 @@ class TypeTablePresenter
         TypePresenter $type,
         array $artifact_links,
         $is_reverse_artifact_links,
-        Tracker_FormElement_Field_ArtifactLink $field
+        Tracker_FormElement_Field_ArtifactLink $field,
     ) {
         $this->table_id   = self::TABLE_ID_PREFIX . $type->shortname;
         $this->type       = $type->shortname;

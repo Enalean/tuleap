@@ -198,7 +198,7 @@ class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->top_backlog_breadcrumb,
             $product_breadcrumb,
             $release_breadcrumb,
-            $sprint_breadcrumb
+            $sprint_breadcrumb,
         ];
 
         $this->assertEquals($expected, $breadcrumbs->getBreadcrumbs());

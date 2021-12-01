@@ -53,7 +53,7 @@ class OAuth2RefreshTokenRevoker
         SplitTokenIdentifierTranslator $refresh_token_identifier_unserializer,
         OAuth2AuthorizationCodeRevoker $authorization_code_revoker,
         OAuth2RefreshTokenDAO $refresh_token_DAO,
-        SplitTokenVerificationStringHasher $hasher
+        SplitTokenVerificationStringHasher $hasher,
     ) {
         $this->refresh_token_identifier_unserializer = $refresh_token_identifier_unserializer;
         $this->authorization_code_revoker            = $authorization_code_revoker;

@@ -192,7 +192,7 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     'path'      => $file_path,
                     'date'      => $this->current_date->getTimestamp(),
                     'label'     => '',
-                    'changelog' => ''
+                    'changelog' => '',
                 ]
             )->once()
             ->andReturnFalse();
@@ -238,7 +238,7 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     'path'      => $file_path,
                     'date'      => $this->current_date->getTimestamp(),
                     'label'     => '',
-                    'changelog' => ''
+                    'changelog' => '',
                 ]
             )->once()
             ->andReturn(Mockery::mock(Docman_Version::class));
@@ -271,7 +271,7 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     'path'      => $file_path,
                     'date'      => $this->current_date->getTimestamp(),
                     'label'     => '',
-                    'changelog' => ''
+                    'changelog' => '',
                 ]
             )->once()
             ->andReturn(Mockery::mock(Docman_Version::class));
@@ -327,7 +327,7 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     'path'      => $file_path,
                     'date'      => 1234567890,
                     'label'     => '',
-                    'changelog' => ''
+                    'changelog' => '',
                 ]
             )->once()
             ->andReturn(Mockery::mock(Docman_Version::class));
@@ -379,7 +379,7 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     'path'      => $file_path,
                     'date'      => $this->current_date->getTimestamp(),
                     'label'     => 'The label',
-                    'changelog' => 'The changelog'
+                    'changelog' => 'The changelog',
                 ]
             )->once()
             ->andReturn(Mockery::mock(Docman_Version::class));

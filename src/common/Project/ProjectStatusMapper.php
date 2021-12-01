@@ -29,7 +29,7 @@ class ProjectStatusMapper
         Project::STATUS_PENDING_LABEL,
         Project::STATUS_ACTIVE_LABEL,
         Project::STATUS_SUSPENDED_LABEL,
-        Project::STATUS_SYSTEM_LABEL
+        Project::STATUS_SYSTEM_LABEL,
     ];
 
     public const LABEL_TO_FLAG_MAP = [
@@ -37,7 +37,7 @@ class ProjectStatusMapper
         Project::STATUS_PENDING_LABEL    => Project::STATUS_PENDING,
         Project::STATUS_ACTIVE_LABEL     => Project::STATUS_ACTIVE,
         Project::STATUS_SUSPENDED_LABEL  => Project::STATUS_SUSPENDED,
-        Project::STATUS_SYSTEM_LABEL     => Project::STATUS_SYSTEM
+        Project::STATUS_SYSTEM_LABEL     => Project::STATUS_SYSTEM,
     ];
 
     public static function isValidProjectStatusLabel($status_label)

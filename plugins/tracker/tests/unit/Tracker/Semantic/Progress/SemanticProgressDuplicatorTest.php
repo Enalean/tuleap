@@ -57,7 +57,7 @@ class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->duplicator->duplicate(1, 2, [
             ['from' => 101, 'to' => 1001],
-            ['from' => 102, 'to' => 1002]
+            ['from' => 102, 'to' => 1002],
         ]);
     }
 
@@ -69,7 +69,7 @@ class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotDuplicateWhenConfigIsMessedUp(
         ?int $total_effort_field_id,
         ?int $remaining_effort_field_id,
-        ?string $link_type
+        ?string $link_type,
     ): void {
         $this->dao
             ->shouldReceive('searchByTrackerId')
@@ -78,7 +78,7 @@ class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn([
                 'total_effort_field_id' => $total_effort_field_id,
                 'remaining_effort_field_id' => $remaining_effort_field_id,
-                'artifact_link_type' => $link_type
+                'artifact_link_type' => $link_type,
             ]);
 
         $this->dao
@@ -87,7 +87,7 @@ class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->duplicator->duplicate(1, 2, [
             ['from' => 101, 'to' => 1001],
-            ['from' => 102, 'to' => 1002]
+            ['from' => 102, 'to' => 1002],
         ]);
     }
 
@@ -100,7 +100,7 @@ class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn([
                 'total_effort_field_id' => 101,
                 'remaining_effort_field_id' => 102,
-                'artifact_link_type' => null
+                'artifact_link_type' => null,
             ]);
 
         $this->dao
@@ -113,7 +113,7 @@ class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             2,
             [
                 ['from' => 101, 'to' => 1001],
-                ['from' => 102, 'to' => 1002]
+                ['from' => 102, 'to' => 1002],
             ]
         );
     }
@@ -127,7 +127,7 @@ class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn([
                 'total_effort_field_id' => null,
                 'remaining_effort_field_id' => null,
-                'artifact_link_type' => "_is_child"
+                'artifact_link_type' => "_is_child",
             ]);
 
         $this->dao

@@ -85,7 +85,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
         ArtifactLinksUsageDao $dao,
         ArtifactLinksUsageUpdater $updater,
         TypePresenterFactory $types_presenter_factory,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->dao                     = $dao;
         $this->updater                 = $updater;
@@ -235,7 +235,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
                 'forward_label' => $type->forward_label,
                 'reverse_label' => $type->reverse_label,
                 'is_used'       => ! $this->isTypeDisabledInProject($project, $type),
-                'can_be_unused' => $this->artifactLinkTypeCanBeUnused($project, $type)
+                'can_be_unused' => $this->artifactLinkTypeCanBeUnused($project, $type),
             ];
 
             $formatted_types[] = $formatted_type;

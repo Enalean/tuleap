@@ -51,7 +51,7 @@ final class GitProjectResource extends AuthenticatedResource
     private const INDIVIDUAL             = 'individual';
     private const SCOPES_REPRESENTATIONS = [
         self::PROJECT    => GitRepository::REPO_SCOPE_PROJECT,
-        self::INDIVIDUAL => GitRepository::REPO_SCOPE_INDIVIDUAL
+        self::INDIVIDUAL => GitRepository::REPO_SCOPE_INDIVIDUAL,
     ];
 
     /**
@@ -167,7 +167,7 @@ final class GitProjectResource extends AuthenticatedResource
         int $offset = 0,
         string $fields = GitRepositoryRepresentation::FIELDS_BASIC,
         string $query = '',
-        string $order_by = 'push_date'
+        string $order_by = 'push_date',
     ) {
         $this->checkAccess();
 

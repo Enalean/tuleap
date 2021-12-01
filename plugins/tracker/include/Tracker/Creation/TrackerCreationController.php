@@ -73,7 +73,7 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
         \UserManager $user_manager,
         \ProjectManager $project_manager,
         TrackerCreationPresenterBuilder $presenter_builder,
-        TrackerCreationPermissionChecker $permission_checker
+        TrackerCreationPermissionChecker $permission_checker,
     ) {
         $this->breadcrumbs_builder = $breadcrumbs_builder;
         $this->renderer_factory    = $renderer_factory;
@@ -110,7 +110,7 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
             [
                 'title'  => dgettext('tuleap-tracker', 'New tracker'),
                 'group'  => $project->getID(),
-                'toptab' => trackerPlugin::SERVICE_SHORTNAME
+                'toptab' => trackerPlugin::SERVICE_SHORTNAME,
             ]
         );
 

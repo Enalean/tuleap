@@ -45,7 +45,7 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends \Tulea
         parent::setUp();
         $this->user                  = new PFUser([
             'language_id' => 'en',
-            'ldap_id' => 'testUser'
+            'ldap_id' => 'testUser',
         ]);
         $this->gerrit_driver         = \Mockery::spy(\Git_Driver_Gerrit::class);
         $this->gerrit_driver_factory = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->gerrit_driver)->getMock();

@@ -94,7 +94,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $query = json_encode(
             [
                 'title'               => 'My new embedded',
-                'embedded_properties' => ['content' => 'my new content']
+                'embedded_properties' => ['content' => 'my new content'],
             ]
         );
 
@@ -367,9 +367,9 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
                 'version_title'       => 'My new versionnn',
                 'description'         => 'whatever',
                 "embedded_properties" => [
-                    "content" => "my new content"
+                    "content" => "my new content",
                 ],
-                "should_lock_file"    => false
+                "should_lock_file"    => false,
             ]
         );
         $new_version_response = $this->getResponse(
@@ -394,9 +394,9 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
                 'version_title'       => 'My new versionnn',
                 'description'         => 'whatever',
                 "embedded_properties" => [
-                    "content" => "my new content"
+                    "content" => "my new content",
                 ],
-                "should_lock_file"    => false
+                "should_lock_file"    => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -424,10 +424,10 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
                 'version_title'         => 'My new versionnn',
                 'description'           => 'whatever',
                 "embedded_properties"   => [
-                    "content" => "my new content"
+                    "content" => "my new content",
                 ],
                 "should_lock_file"      => false,
-                'approval_table_action' => 'copy'
+                'approval_table_action' => 'copy',
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -456,10 +456,10 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
                 'version_title'         => 'My new versionnn',
                 'description'           => 'whatever',
                 "embedded_properties"   => [
-                    "content" => "my new content"
+                    "content" => "my new content",
                 ],
                 "should_lock_file"      => false,
-                'approval_table_action' => 'reset'
+                'approval_table_action' => 'reset',
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -490,10 +490,10 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
                 'version_title'         => 'My new versionnn',
                 'description'           => 'whatever',
                 "embedded_properties"   => [
-                    "content" => "my new content"
+                    "content" => "my new content",
                 ],
                 "should_lock_file"      => false,
-                'approval_table_action' => 'empty'
+                'approval_table_action' => 'empty',
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -516,7 +516,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
      * @depends testGetDocumentItemsForAdminUser
      */
     public function testPostVersionItThrowsExceptionWhenUserSetApprovalTableOnItemWithoutApprovalTable(
-        array $items
+        array $items,
     ): void {
         $file_to_update    = $this->findItemByTitle($items, 'POST E V No AT');
         $file_to_update_id = $file_to_update['id'];
@@ -526,10 +526,10 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
                 'version_title'         => 'My new versionnn',
                 'description'           => 'whatever',
                 "embedded_properties"   => [
-                    "content" => "my new content"
+                    "content" => "my new content",
                 ],
                 "should_lock_file"      => false,
-                'approval_table_action' => 'reset'
+                'approval_table_action' => 'reset',
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -559,9 +559,9 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
                 'version_title'       => 'My new versionnn',
                 'description'         => 'whatever',
                 "embedded_properties" => [
-                    "content" => "my new content"
+                    "content" => "my new content",
                 ],
-                "should_lock_file"    => false
+                "should_lock_file"    => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -596,9 +596,9 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
                 'version_title'       => 'My new versionnn',
                 'description'         => 'whatever',
                 "embedded_properties" => [
-                    "content" => "my new content"
+                    "content" => "my new content",
                 ],
-                "should_lock_file"    => false
+                "should_lock_file"    => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -635,9 +635,9 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
                 'version_title'       => 'My new versionnn',
                 'description'         => 'whatever',
                 "embedded_properties" => [
-                    "content" => "my new content"
+                    "content" => "my new content",
                 ],
-                "should_lock_file"    => false
+                "should_lock_file"    => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -672,7 +672,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             'title'             => $new_title,
             'description'       => 'Danger ! Danger !',
             'owner_id'          => $this->test_user_1_id,
-            'status'            => 'none'
+            'status'            => 'none',
         ];
 
         $updated_metadata_file_response_with_rest_read_only_user = $this->getResponse(

@@ -122,7 +122,7 @@ class GitRepositoryRepresentation
         ?GerritServerRepresentation $server_representation,
         string $last_update_date,
         array $additional_information,
-        ?GitRepositoryPermissionRepresentation $permissions
+        ?GitRepositoryPermissionRepresentation $permissions,
     ) {
         $this->id                     = JsonCast::toInt($repository->getId());
         $this->uri                    = self::ROUTE . '/' . $this->id;
@@ -145,7 +145,7 @@ class GitRepositoryRepresentation
         ?GerritServerRepresentation $server_representation,
         string $last_update_date,
         array $additional_information,
-        ?GitRepositoryPermissionRepresentation $permissions
+        ?GitRepositoryPermissionRepresentation $permissions,
     ): self {
         $git_exec = \Git_Exec::buildFromRepository($repository);
 

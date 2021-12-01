@@ -76,7 +76,7 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder
         Tracker_FormElementFactory $formelement_factory,
         Tracker_ArtifactByEmailStatus $tracker_artifactbyemail,
         \Psr\Log\LoggerInterface $logger,
-        MailGatewayFilter $mail_filter
+        MailGatewayFilter $mail_filter,
     ) {
         $this->logger                   = $logger;
         $this->incoming_message_factory = $incoming_message_factory;

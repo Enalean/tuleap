@@ -85,7 +85,7 @@ final class PKCECodeVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         return [
             'Too short'         => ['a'],
             'Too long'          => [str_repeat('a', 256)],
-            'Not expected char' => [str_repeat('$', 43)]
+            'Not expected char' => [str_repeat('$', 43)],
         ];
     }
 

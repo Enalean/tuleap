@@ -301,7 +301,7 @@ EventManager::instance()->processEvent(
     UserDetailsPresenter::ADDITIONAL_DETAILS,
     [
         'user'               => $user,
-        'additional_details' => &$additional_details
+        'additional_details' => &$additional_details,
     ]
 );
 
@@ -311,7 +311,7 @@ $additional_password_messages = [];
 EventManager::instance()->processEvent(
     'before_admin_change_pw',
     [
-        'additional_password_messages' => &$additional_password_messages
+        'additional_password_messages' => &$additional_password_messages,
     ]
 );
 

@@ -93,7 +93,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
     {
         $file_creation_body_content = json_encode([
             'title' => 'File document to cut',
-            'file_properties' => ['file_name' => 'file0', 'file_size' => 0]
+            'file_properties' => ['file_name' => 'file0', 'file_size' => 0],
         ]);
 
         $response_file_creation_with_rest_read_only_user = $this->getResponseByName(
@@ -434,9 +434,9 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
                 'description'     => 'whatever',
                 "file_properties" => [
                     "file_name" => "string",
-                    "file_size" => $file_size
+                    "file_size" => $file_size,
                 ],
-                "should_lock_file"      => false
+                "should_lock_file"      => false,
             ]
         );
 
@@ -476,9 +476,9 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
                 'description'     => 'whatever',
                 "file_properties" => [
                     "file_name" => "string",
-                    "file_size" => $file_size
+                    "file_size" => $file_size,
                 ],
-                "should_lock_file"      => false
+                "should_lock_file"      => false,
             ]
         );
         $new_version_response         = $this->getResponseByName(
@@ -551,10 +551,10 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
                 'description'           => 'whatever',
                 "file_properties"       => [
                     "file_name" => "string",
-                    "file_size" => $file_size
+                    "file_size" => $file_size,
                 ],
                 "should_lock_file"      => false,
-                'approval_table_action' => 'copy'
+                'approval_table_action' => 'copy',
             ]
         );
         $new_version_response         = $this->getResponseByName(
@@ -629,10 +629,10 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
                 'description'           => 'whatever',
                 "file_properties"       => [
                     "file_name" => "string",
-                    "file_size" => $file_size
+                    "file_size" => $file_size,
                 ],
                 "should_lock_file"      => false,
-                'approval_table_action' => 'reset'
+                'approval_table_action' => 'reset',
             ]
         );
         $new_version_response         = $this->getResponseByName(
@@ -707,10 +707,10 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
                 'description'           => 'whatever',
                 "file_properties"       => [
                     "file_name" => "string",
-                    "file_size" => $file_size
+                    "file_size" => $file_size,
                 ],
                 "should_lock_file"      => false,
-                'approval_table_action' => 'empty'
+                'approval_table_action' => 'empty',
             ]
         );
         $new_version_response         = $this->getResponseByName(
@@ -758,7 +758,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
      * @depends testGetDocumentItemsForAdminUser
      */
     public function testPostVersionItThrowsExceptionWhenUserSetApprovalTableOnItemWithoutApprovalTable(
-        array $items
+        array $items,
     ): void {
         $file_to_update    = $this->findItemByTitle($items, 'POST F V No AT');
         $file_to_update_id = $file_to_update['id'];
@@ -770,10 +770,10 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
                 'description'           => 'whatever',
                 "file_properties"       => [
                     "file_name" => "string",
-                    "file_size" => $file_size
+                    "file_size" => $file_size,
                 ],
                 "should_lock_file"      => false,
-                'approval_table_action' => 'reset'
+                'approval_table_action' => 'reset',
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -819,9 +819,9 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
                 'description'      => 'whatever',
                 "file_properties"  => [
                     "file_name" => "string",
-                    "file_size" => $file_size
+                    "file_size" => $file_size,
                 ],
-                "should_lock_file" => false
+                "should_lock_file" => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -893,9 +893,9 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
                 'description'      => 'whatever',
                 "file_properties"  => [
                     "file_name" => "string",
-                    "file_size" => $file_size
+                    "file_size" => $file_size,
                 ],
-                "should_lock_file" => false
+                "should_lock_file" => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -966,9 +966,9 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
                 'description'      => 'whatever',
                 "file_properties"  => [
                     "file_name" => "string",
-                    "file_size" => $file_size
+                    "file_size" => $file_size,
                 ],
-                "should_lock_file" => false
+                "should_lock_file" => false,
             ]
         );
         $new_version_response = $this->getResponseByName(
@@ -1018,7 +1018,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             'title'             => 'PUT F New Title',
             'description'       => '',
             'owner_id'          => $this->test_user_1_id,
-            'status'            => 'none'
+            'status'            => 'none',
         ];
 
         $updated_metadata_file_response_with_rest_read_only_user = $this->getResponse(
@@ -1073,7 +1073,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             'description'       => 'Danger ! Danger !',
             'owner_id'          => 101,
             'status'            => 'approved',
-            'obsolescence_date' => '0'
+            'obsolescence_date' => '0',
         ];
 
         $updated_metadata_file_response = $this->getResponseByName(
@@ -1106,7 +1106,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             'description'       => 'Danger ! Danger !',
             'owner_id'          => 101,
             'status'            => 'none',
-            'obsolescence_date' => '2038-02-02'
+            'obsolescence_date' => '2038-02-02',
         ];
 
         $updated_metadata_file_response = $this->getResponseByName(

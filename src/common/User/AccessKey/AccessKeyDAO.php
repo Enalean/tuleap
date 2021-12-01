@@ -36,7 +36,7 @@ class AccessKeyDAO extends DataAccessObject
                 'verifier'        => $hashed_verification_string,
                 'creation_date'   => $current_time,
                 'description'     => $description,
-                'expiration_date' => $expiration_date_timestamp
+                'expiration_date' => $expiration_date_timestamp,
             ]
         );
     }

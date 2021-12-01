@@ -40,7 +40,7 @@ final class ArtifactCreatorAdapter implements CreateArtifact
         private TrackerArtifactCreator $artifact_creator,
         private RetrieveFullTracker $tracker_retriever,
         private RetrieveUser $retrieve_user,
-        private ChangesetValuesFormatter $formatter
+        private ChangesetValuesFormatter $formatter,
     ) {
     }
 

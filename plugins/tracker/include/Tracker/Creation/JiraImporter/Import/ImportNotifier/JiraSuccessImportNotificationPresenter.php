@@ -88,7 +88,7 @@ class JiraSuccessImportNotificationPresenter
         string $link,
         Tracker $tracker,
         string $subject,
-        JiraUserOnTuleapCache $jira_user_on_tuleap_cache
+        JiraUserOnTuleapCache $jira_user_on_tuleap_cache,
     ) {
         $this->link                 = $link;
         $this->tracker_name         = $tracker->getName();

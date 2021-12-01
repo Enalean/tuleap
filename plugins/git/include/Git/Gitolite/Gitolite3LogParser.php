@@ -92,7 +92,7 @@ class Gitolite3LogParser
         GitRepositoryFactory $repository_factory,
         UserManager $user_manager,
         GitoliteFileLogsDao $file_logs_dao,
-        UserDao $user_dao
+        UserDao $user_dao,
     ) {
         $this->logger             = $logger;
         $this->user_validator     = $user_validator;

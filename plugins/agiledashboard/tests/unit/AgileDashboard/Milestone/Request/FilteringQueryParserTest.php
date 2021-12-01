@@ -92,7 +92,7 @@ final class FilteringQueryParserTest extends \Tuleap\Test\PHPUnit\TestCase
             'Malformed status key'                => ['{\"stAtus\":\"cloed\"}'],
             'Unknown period value'                => ['{\"period\":\"FutUre\"}'],
             'Unknown status value'                => ['{\"status\":\"cloSed\"}'],
-            'Both status and period are provided' => ['{\"status\":\"closed\", \"period\":\"future\"}']
+            'Both status and period are provided' => ['{\"status\":\"closed\", \"period\":\"future\"}'],
         ];
     }
 }

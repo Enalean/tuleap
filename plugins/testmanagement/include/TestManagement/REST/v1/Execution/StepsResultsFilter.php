@@ -32,7 +32,7 @@ class StepsResultsFilter
      */
     public function filterStepResultsNotInDefinition(
         StepDefinitionChangesetValue $definition_changeset_value,
-        StepExecutionChangesetValue $execution_changeset_value
+        StepExecutionChangesetValue $execution_changeset_value,
     ) {
         $definition_value    = $definition_changeset_value->getValue();
         $step_definition_ids = array_map(

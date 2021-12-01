@@ -58,7 +58,7 @@ class WikiPlugin_AllPages extends WikiPlugin
                    'include_empty' => false,
                    //'pages'         => false, // DONT, this would be ListPages then.
                    'info'          => '',
-                   'debug'         => false
+                   'debug'         => false,
             ]
         );
     }

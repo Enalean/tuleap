@@ -71,7 +71,7 @@ class MetricsCollector
         NbUsersByStatusBuilder $nb_user_builder,
         \EventManager $event_manager,
         VersionPresenter $version_presenter,
-        ?\Redis $redis
+        ?\Redis $redis,
     ) {
         $this->prometheus        = $prometheus;
         $this->dao               = $dao;

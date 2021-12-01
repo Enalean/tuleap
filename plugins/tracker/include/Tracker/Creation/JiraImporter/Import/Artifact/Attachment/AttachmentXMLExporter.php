@@ -40,7 +40,7 @@ class AttachmentXMLExporter
 
     public function __construct(
         AttachmentDownloader $attachment_downloader,
-        XML_SimpleXMLCDATAFactory $cdata_factory
+        XML_SimpleXMLCDATAFactory $cdata_factory,
     ) {
         $this->cdata_factory         = $cdata_factory;
         $this->attachment_downloader = $attachment_downloader;
@@ -48,7 +48,7 @@ class AttachmentXMLExporter
 
     public function exportCollectionOfAttachmentInXML(
         AttachmentCollection $attachment_collection,
-        SimpleXMLElement $artifact_node
+        SimpleXMLElement $artifact_node,
     ): void {
         foreach ($attachment_collection->getAttachments() as $attachment) {
             $downloaded_file_name = $this->attachment_downloader->downloadAttachment($attachment);

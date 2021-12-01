@@ -47,7 +47,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
         Tracker_FormElementFactory $element_factory,
         Transition_PostAction_Field_DateDao $date_dao,
         Transition_PostAction_Field_IntDao $int_dao,
-        Transition_PostAction_Field_FloatDao $float_dao
+        Transition_PostAction_Field_FloatDao $float_dao,
     ) {
         $this->element_factory = $element_factory;
         $this->daos            = [

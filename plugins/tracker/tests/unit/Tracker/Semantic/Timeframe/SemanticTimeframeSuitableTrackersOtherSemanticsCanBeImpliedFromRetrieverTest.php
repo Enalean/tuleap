@@ -73,7 +73,7 @@ class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetrieverTe
                     $bugs_tracker,
                     $activities_tracker,
                     $sprints_tracker,
-                    $requests_tracker
+                    $requests_tracker,
                 ]
             );
 

@@ -100,7 +100,7 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItMatchesValueByDuckTyping(
         \Tracker_FormElement_Field_List_BindValue $source_value,
         array $values,
-        ?int $expected_bind_value_id
+        ?int $expected_bind_value_id,
     ): void {
         $this->source_field_bind->shouldReceive('getValue')->with(101)->andReturn($source_value);
         $this->target_field_bind->shouldReceive('getAllValues')->andReturn($values);
@@ -133,7 +133,7 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
                     new \Tracker_FormElement_Field_List_Bind_StaticValue(200, '1', 'Irrelevant', 0, 0),
                     new \Tracker_FormElement_Field_List_Bind_StaticValue(201, '2', 'Irrelevant', 1, 0),
                 ],
-                201
+                201,
             ],
             'It matches value label with different cases'                   => [
                 new \Tracker_FormElement_Field_List_Bind_StaticValue(101, 'a', 'Irrelevant', 0, 0),
@@ -141,7 +141,7 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
                     new \Tracker_FormElement_Field_List_Bind_StaticValue(200, 'A', 'Irrelevant', 0, 0),
                     new \Tracker_FormElement_Field_List_Bind_StaticValue(201, 'b', 'Irrelevant', 1, 0),
                 ],
-                200
+                200,
             ],
             'It matches value even if it is hidden'                         => [
                 new \Tracker_FormElement_Field_List_Bind_StaticValue(101, '2', 'Irrelevant', 0, 0),
@@ -149,7 +149,7 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
                     new \Tracker_FormElement_Field_List_Bind_StaticValue(200, '1', 'Irrelevant', 0, 0),
                     new \Tracker_FormElement_Field_List_Bind_StaticValue(201, '2', 'Irrelevant', 1, 1),
                 ],
-                201
+                201,
             ],
             'It matches first value if multiple values have the same label' => [
                 new \Tracker_FormElement_Field_List_Bind_StaticValue(101, '1', 'Irrelevant', 0, 0),
@@ -157,7 +157,7 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
                     new \Tracker_FormElement_Field_List_Bind_StaticValue(200, '1', 'Irrelevant', 0, 0),
                     new \Tracker_FormElement_Field_List_Bind_StaticValue(201, '1', 'Irrelevant', 1, 0),
                 ],
-                200
+                200,
             ],
             'It returns null if no matching value'                          => [
                 new \Tracker_FormElement_Field_List_Bind_StaticValue(101, '3', 'Irrelevant', 0, 0),
@@ -166,7 +166,7 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
                     new \Tracker_FormElement_Field_List_Bind_StaticValue(201, '2', 'Irrelevant', 1, 0),
                     new \Tracker_FormElement_Field_List_Bind_StaticValue(201, '0', 'Irrelevant', 1, 0),
                 ],
-                null
+                null,
             ],
         ];
     }
@@ -177,7 +177,7 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItMatchesBindValueByDuckTyping(
         \Tracker_FormElement_Field_List_BindValue $source_value,
         array $values,
-        ?int $expected_bind_value_id
+        ?int $expected_bind_value_id,
     ): void {
         $this->target_field_bind->shouldReceive('getAllValues')->andReturn($values);
 

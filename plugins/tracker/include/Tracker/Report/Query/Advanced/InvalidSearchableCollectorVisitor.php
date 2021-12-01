@@ -56,7 +56,7 @@ class InvalidSearchableCollectorVisitor implements Visitor
 
     public function visitField(
         Field $searchable_field,
-        InvalidSearchableCollectorParameters $parameters
+        InvalidSearchableCollectorParameters $parameters,
     ) {
         $field = $this->form_element_factory->getUsedFormElementFieldByNameForUser(
             $this->tracker->getId(),
@@ -83,7 +83,7 @@ class InvalidSearchableCollectorVisitor implements Visitor
 
     public function visitMetadata(
         Metadata $metadata,
-        InvalidSearchableCollectorParameters $parameters
+        InvalidSearchableCollectorParameters $parameters,
     ) {
         if ($metadata->getName() !== self::SUPPORTED_NAME) {
             $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addNonexistentSearchable(

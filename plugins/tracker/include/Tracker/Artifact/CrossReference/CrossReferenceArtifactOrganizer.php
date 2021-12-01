@@ -67,7 +67,7 @@ class CrossReferenceArtifactOrganizer
 
     private function addTitleBadgeOnCrossReference(
         CrossReferencePresenter $cross_reference_presenter,
-        Artifact $artifact
+        Artifact $artifact,
     ): CrossReferencePresenter {
         return $cross_reference_presenter
             ->withTitle(

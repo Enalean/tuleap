@@ -249,7 +249,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockSemanticInitialEffort(
         Artifact $linked_artifact,
-        Tracker_FormElement_Field $initial_effort_field
+        Tracker_FormElement_Field $initial_effort_field,
     ) {
         $initial_effort_field->shouldReceive('getComputedValue')
             ->with($this->user, $linked_artifact)
@@ -265,7 +265,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockSemanticInitialEffortWithListValueNotInteger(
         Artifact $linked_artifact,
-        Tracker_FormElement_Field $initial_effort_field
+        Tracker_FormElement_Field $initial_effort_field,
     ) {
         $initial_effort_field->shouldReceive('getComputedValue')
             ->with($this->user, $linked_artifact)
@@ -299,7 +299,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $semantic_done->shouldReceive('getSemanticStatus')->andReturn($semantic_status);
         $semantic_done->shouldReceive('getDoneValuesIds')->andReturn([
             430,
-            431
+            431,
         ]);
 
         $this->semantic_done_factory->shouldReceive('getInstanceByTracker')
@@ -318,7 +318,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(200)
             ->once()
             ->andReturn([
-                ['id' => 201]
+                ['id' => 201],
             ]);
 
         $linked_artifact = Mockery::mock(Artifact::class);

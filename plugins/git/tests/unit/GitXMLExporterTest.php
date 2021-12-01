@@ -90,7 +90,7 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permission_manager = \Mockery::spy(\GitPermissionsManager::class);
         $this->permission_manager->shouldReceive('getCurrentGitAdminUgroups')->andReturns([
             4,
-            5
+            5,
         ]);
 
         $ugroup_manager = \Mockery::spy(\UGroupManager::class);
@@ -201,7 +201,7 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permission_manager->shouldReceive('getRepositoryGlobalPermissions')->andReturns([
             Git::PERM_READ  => [3, 5],
             Git::PERM_WRITE => [3],
-            Git::PERM_WPLUS => [5]
+            Git::PERM_WPLUS => [5],
         ]);
 
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, '');
@@ -221,7 +221,7 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->permission_manager->shouldReceive('getRepositoryGlobalPermissions')->andReturns([
             Git::PERM_READ  => [3, 5],
-            Git::PERM_WPLUS => [5]
+            Git::PERM_WPLUS => [5],
         ]);
 
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, '');
@@ -241,7 +241,7 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->permission_manager->shouldReceive('getRepositoryGlobalPermissions')->andReturns([
             Git::PERM_READ  => [3, 5],
-            Git::PERM_WRITE => [3]
+            Git::PERM_WRITE => [3],
         ]);
 
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, '');
@@ -266,7 +266,7 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'commits_number' => 1,
             'refname'        => "refs/heads/master",
             'operation_type' => "create",
-            'refname_type'   => "branch"
+            'refname_type'   => "branch",
         ]);
 
         $this->user_manager->shouldReceive('getUserById')->andReturns(

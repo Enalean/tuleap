@@ -78,7 +78,7 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
         $this->dao->shouldReceive('searchGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns(\TestHelper::arrayToDar([
             'repository_id'   => 12,
             'permission_type' => Git::PERM_READ,
-            'ugroup_id'       => 115
+            'ugroup_id'       => 115,
         ]));
 
         $repository = \Mockery::spy(\GitRepository::class);
@@ -97,7 +97,7 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
                         Git::PERM_WPLUS         => [],
                         Git::SPECIAL_PERM_ADMIN => [],
                     ]
-                )
+                ),
             ],
             $git_with_permission
         );
@@ -108,11 +108,11 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
         $this->dao->shouldReceive('searchGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns(\TestHelper::arrayToDar([
             'repository_id'   => 12,
             'permission_type' => Git::PERM_READ,
-            'ugroup_id'       => 115
+            'ugroup_id'       => 115,
         ], [
             'repository_id'   => 12,
             'permission_type' => Git::PERM_WRITE,
-            'ugroup_id'       => 115
+            'ugroup_id'       => 115,
         ]));
 
         $repository = \Mockery::spy(\GitRepository::class);
@@ -131,7 +131,7 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
                         Git::PERM_WPLUS         => [],
                         Git::SPECIAL_PERM_ADMIN => [],
                     ]
-                )
+                ),
             ],
             $git_with_permission
         );
@@ -142,11 +142,11 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
         $this->dao->shouldReceive('searchGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns(\TestHelper::arrayToDar([
             'repository_id'   => 12,
             'permission_type' => Git::PERM_READ,
-            'ugroup_id'       => 115
+            'ugroup_id'       => 115,
         ], [
             'repository_id'   => 12,
             'permission_type' => Git::PERM_READ,
-            'ugroup_id'       => 120
+            'ugroup_id'       => 120,
         ]));
 
         $repository = \Mockery::spy(\GitRepository::class);
@@ -163,9 +163,9 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
                         Git::PERM_READ          => [115, 120],
                         Git::PERM_WRITE         => [],
                         Git::PERM_WPLUS         => [],
-                        Git::SPECIAL_PERM_ADMIN => []
+                        Git::SPECIAL_PERM_ADMIN => [],
                     ]
-                )
+                ),
             ],
             $git_with_permission
         );
@@ -175,7 +175,7 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
                 Git::PERM_READ          => [115, 120],
                 Git::PERM_WRITE         => [],
                 Git::PERM_WPLUS         => [],
-                Git::SPECIAL_PERM_ADMIN => []
+                Git::SPECIAL_PERM_ADMIN => [],
             ],
             $git_with_permission[12]->getPermissions()
         );

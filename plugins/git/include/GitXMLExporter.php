@@ -99,7 +99,7 @@ class GitXmlExporter
         Git_LogDao $git_log_dao,
         UserManager $user_manager,
         UserXMLExporter $user_exporter,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->project            = $project;
         $this->permission_manager = $permission_manager;
@@ -165,7 +165,7 @@ class GitXmlExporter
     private function exportGitRepositories(
         SimpleXMLElement $xml_content,
         $temporary_dump_path_on_filesystem,
-        ArchiveInterface $archive
+        ArchiveInterface $archive,
     ) {
         $this->logger->info('Export git repositories');
         $repositories = $this->repository_factory->getAllRepositories($this->project);
@@ -215,7 +215,7 @@ class GitXmlExporter
         GitRepository $repository,
         $temporary_dump_path_on_filesystem,
         ArchiveInterface $archive,
-        string $bundle_name
+        string $bundle_name,
     ) {
         $this->logger->info('Create git bundle for repository ' . $repository->getName());
 

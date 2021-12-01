@@ -53,7 +53,7 @@ class JiraRunner
         private JiraErrorImportNotifier $error_notifier,
         private UserManager $user_manager,
         private JiraUserOnTuleapCache $jira_user_on_tuleap_cache,
-        private ClientWrapperBuilder $jira_client_builder
+        private ClientWrapperBuilder $jira_client_builder,
     ) {
     }
 

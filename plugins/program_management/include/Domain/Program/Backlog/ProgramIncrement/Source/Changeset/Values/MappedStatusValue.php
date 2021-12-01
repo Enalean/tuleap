@@ -51,7 +51,7 @@ final class MappedStatusValue
     public static function fromStatusValueAndListField(
         MapStatusByValue $status_mapper,
         StatusValue $source_value,
-        StatusFieldReference $target_field
+        StatusFieldReference $target_field,
     ): self {
         $identifiers = $status_mapper->mapStatusValueByDuckTyping($source_value, $target_field);
         return new self(...$identifiers);

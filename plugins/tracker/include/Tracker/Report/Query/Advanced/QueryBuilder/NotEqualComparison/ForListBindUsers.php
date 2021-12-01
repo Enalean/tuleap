@@ -49,7 +49,7 @@ class ForListBindUsers implements FieldFromWhereBuilder, ListBindUsersFromWhereB
     public function __construct(
         CollectionOfListValuesExtractor $values_extractor,
         FromWhereEmptyNotEqualComparisonFieldBuilder $empty_comparison_builder,
-        FromWhereNotEqualComparisonListFieldBuilder $comparison_builder
+        FromWhereNotEqualComparisonListFieldBuilder $comparison_builder,
     ) {
         $this->values_extractor         = $values_extractor;
         $this->empty_comparison_builder = $empty_comparison_builder;

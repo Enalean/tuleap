@@ -39,7 +39,7 @@ class BurningParrotCompatiblePageDetector
 
     public function __construct(
         CurrentPage $current_page,
-        User_ForgeUserGroupPermissionsManager $forge_user_group_permissions_manager
+        User_ForgeUserGroupPermissionsManager $forge_user_group_permissions_manager,
     ) {
         $this->current_page                         = $current_page;
         $this->forge_user_group_permissions_manager = $forge_user_group_permissions_manager;

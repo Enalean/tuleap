@@ -39,7 +39,7 @@ final class UserPreferencesHeader
                 'main_classes' => array_merge(
                     [ 'tlp-framed', 'user-preferences-frame' ],
                     $additional_classes
-                )
+                ),
             ]
         );
     }

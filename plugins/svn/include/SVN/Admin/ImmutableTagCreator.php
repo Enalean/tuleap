@@ -53,7 +53,7 @@ class ImmutableTagCreator
         ImmutableTagDao $dao,
         ProjectHistoryFormatter $project_history_formatter,
         ProjectHistoryDao $project_history_dao,
-        ImmutableTagFactory $immutable_tag_factory
+        ImmutableTagFactory $immutable_tag_factory,
     ) {
         $this->dao                       = $dao;
         $this->project_history_formatter = $project_history_formatter;

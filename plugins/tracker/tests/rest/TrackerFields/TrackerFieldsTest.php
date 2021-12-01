@@ -44,7 +44,7 @@ class TrackerFieldsTest extends TrackerBase
     {
         $field_id = $this->getStaticSelectboxFieldId();
         $body     = json_encode([
-            "new_values" => ['new_value_01', 'new_value_02']
+            "new_values" => ['new_value_01', 'new_value_02'],
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream($body)));
@@ -62,7 +62,7 @@ class TrackerFieldsTest extends TrackerBase
     {
         $field_id = $this->getStaticRadiobuttonFieldId();
         $body     = json_encode([
-            "new_values" => ['new_value_01', 'new_value_02']
+            "new_values" => ['new_value_01', 'new_value_02'],
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream($body)));
@@ -80,7 +80,7 @@ class TrackerFieldsTest extends TrackerBase
     {
         $field_id = $this->getStaticMultiSelectboxFieldId();
         $body     = json_encode([
-            "new_values" => ['new_value_01', 'new_value_02']
+            "new_values" => ['new_value_01', 'new_value_02'],
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream($body)));
@@ -92,7 +92,7 @@ class TrackerFieldsTest extends TrackerBase
     {
         $field_id = $this->getUserSelectboxFieldId();
         $body     = json_encode([
-            "new_values" => ['new_value_01', 'new_value_02']
+            "new_values" => ['new_value_01', 'new_value_02'],
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', "tracker_fields/$field_id")->withBody($this->stream_factory->createStream($body)));
@@ -125,7 +125,7 @@ class TrackerFieldsTest extends TrackerBase
         $query = [
             'name'       => 'file_creation_' . bin2hex(random_bytes(8)),
             'file_size'  => $file_size,
-            'file_type'  => 'text/plain'
+            'file_type'  => 'text/plain',
         ];
 
         $response1 = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
@@ -175,9 +175,9 @@ class TrackerFieldsTest extends TrackerBase
             'values'  => [
                 [
                     'field_id' => $field_id,
-                    'value'    => [$file_id]
-                ]
-            ]
+                    'value'    => [$file_id],
+                ],
+            ],
         ];
 
         $response = $this->getResponse(
@@ -208,7 +208,7 @@ class TrackerFieldsTest extends TrackerBase
         $query = [
             'name'       => 'file_not_conflict_after_cancel_' . bin2hex(random_bytes(8)),
             'file_size'  => 123,
-            'file_type'  => 'text/plain'
+            'file_type'  => 'text/plain',
         ];
 
         $response_creation_file = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
@@ -235,7 +235,7 @@ class TrackerFieldsTest extends TrackerBase
         $query = [
             'name'       => $name,
             'file_size'  => 0,
-            'file_type'  => 'text/plain'
+            'file_type'  => 'text/plain',
         ];
 
         $response_creation_file = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));

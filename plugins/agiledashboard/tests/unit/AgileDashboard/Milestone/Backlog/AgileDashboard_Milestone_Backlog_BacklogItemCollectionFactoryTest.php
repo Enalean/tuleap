@@ -218,8 +218,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
             [
                 [
                     'artifact_id' => 9,
-                    'rank'        => 1
-                ]
+                    'rank'        => 1,
+                ],
             ]
         );
 
@@ -264,7 +264,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
 
         $this->artifact_factory->shouldReceive('getParents')->once()->andReturn([]);
         $this->artifact_factory->shouldReceive('getChildrenCount')->once()->andReturn([
-            9 => 0
+            9 => 0,
         ]);
         $this->dao->shouldReceive('getArtifactsSemantics')->once()->andReturn([]);
 
@@ -339,7 +339,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $this->artifact_factory->shouldReceive('getParents')->once()->andReturn([]);
         $this->dao->shouldReceive('getArtifactsSemantics')->once()->andReturn(
             [
-                ['id' => 9, 'title' => "title", "title_format" => "text", "status" => "open"]
+                ['id' => 9, 'title' => "title", "title_format" => "text", "status" => "open"],
             ]
         );
         $this->collection_factory->shouldReceive('userCanReadBacklogTitleField')->once()->andReturnTrue();
@@ -408,7 +408,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $this->artifact_factory->shouldReceive('getParents')->once()->andReturn([]);
         $this->dao->shouldReceive('getArtifactsSemantics')->once()->andReturn(
             [
-                ['id' => 9, 'title' => "title", "title_format" => "text", "status" => "open"]
+                ['id' => 9, 'title' => "title", "title_format" => "text", "status" => "open"],
             ]
         );
         $this->collection_factory->shouldReceive('userCanReadBacklogTitleField')->once()->andReturnFalse();
@@ -454,7 +454,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
             ->andReturn(
                 [
                     ['artifact_id' => 9],
-                    ['artifact_id' => 10]
+                    ['artifact_id' => 10],
                 ]
             );
         $this->artifacts_in_explicit_backlog_dao->shouldReceive('foundRows')->once()->andReturn(2);

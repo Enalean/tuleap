@@ -45,7 +45,7 @@ final class MirroredProgramIncrementTrackerIdentifierCollection
         RetrieveMirroredProgramIncrementTracker $tracker_retriever,
         RetrieveProjectReference $project_retriever,
         TeamIdentifierCollection $teams,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): self {
         $trackers = [];
         foreach ($teams->getTeams() as $team) {

@@ -41,7 +41,7 @@ class FileInfoForTusUploadedFileReadyToBeAttachedProvider
 
     public function __construct(
         FileBeingUploadedInformationProvider $information_provider,
-        FileOngoingUploadDao $ongoing_upload_dao
+        FileOngoingUploadDao $ongoing_upload_dao,
     ) {
         $this->information_provider = $information_provider;
         $this->ongoing_upload_dao   = $ongoing_upload_dao;
@@ -50,7 +50,7 @@ class FileInfoForTusUploadedFileReadyToBeAttachedProvider
     public function getFileInfo(
         int $id,
         PFUser $current_user,
-        Tracker_FormElement_Field_File $field
+        Tracker_FormElement_Field_File $field,
     ): ?Tracker_FileInfo {
         $file_information = $this->information_provider->getFileInformationByIdForUser(
             $id,

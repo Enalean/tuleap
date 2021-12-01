@@ -57,7 +57,7 @@ class ExplorerController
         RepositoryManager $repository_manager,
         SvnPermissionManager $permissions_manager,
         RepositoryBuilder $repository_builder,
-        RepositoryCreator $repository_creator
+        RepositoryCreator $repository_creator,
     ) {
         $this->repository_manager  = $repository_manager;
         $this->permissions_manager = $permissions_manager;

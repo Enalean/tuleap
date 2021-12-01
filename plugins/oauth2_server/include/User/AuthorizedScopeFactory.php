@@ -45,7 +45,7 @@ class AuthorizedScopeFactory
     public function __construct(
         AuthorizationDao $authorization_dao,
         AuthorizationScopeDao $scope_dao,
-        AuthenticationScopeBuilder $scope_builder
+        AuthenticationScopeBuilder $scope_builder,
     ) {
         $this->authorization_dao = $authorization_dao;
         $this->scope_dao         = $scope_dao;

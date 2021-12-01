@@ -34,7 +34,7 @@ class MailOutlinePresenter
         $title,
         $thanks,
         $signature,
-        $color_logo
+        $color_logo,
     ) {
         $this->logo_url   = $logo_url;
         $this->title      = $title;

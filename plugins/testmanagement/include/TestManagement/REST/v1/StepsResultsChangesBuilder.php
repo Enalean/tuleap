@@ -49,7 +49,7 @@ class StepsResultsChangesBuilder
     public function __construct(
         Tracker_FormElementFactory $form_element_factory,
         ExecutionDao $execution_dao,
-        TestStatusAccordingToStepsStatusChangesBuilder $test_status_changes_builder
+        TestStatusAccordingToStepsStatusChangesBuilder $test_status_changes_builder,
     ) {
         $this->form_element_factory        = $form_element_factory;
         $this->execution_dao               = $execution_dao;
@@ -66,7 +66,7 @@ class StepsResultsChangesBuilder
         array $submitted_steps_results,
         Artifact $execution_artifact,
         Artifact $definition_artifact,
-        PFUser $user
+        PFUser $user,
     ) {
         $execution_field = $this->getExecutionField($execution_artifact, $user);
         if (! $execution_field) {
@@ -120,7 +120,7 @@ class StepsResultsChangesBuilder
         $value_representation           = new ArtifactValuesRepresentation();
         $value_representation->field_id = (int) $execution_field->getId();
         $value_representation->value    = [
-            StepExecution::UPDATE_VALUE_KEY => $steps_changes
+            StepExecution::UPDATE_VALUE_KEY => $steps_changes,
         ];
 
         $changes = [$value_representation];
@@ -157,7 +157,7 @@ class StepsResultsChangesBuilder
      */
     private function getExistingStepsResultsIndexedById(
         Artifact $execution_artifact,
-        StepExecution $execution_field
+        StepExecution $execution_field,
     ) {
         $changeset_value = $execution_artifact->getValue($execution_field);
         if (! $changeset_value) {
@@ -218,7 +218,7 @@ class StepsResultsChangesBuilder
         PFUser $user,
         array &$changes,
         array $steps_defined_in_test,
-        array $steps_changes
+        array $steps_changes,
     ): void {
         $status_field = $this->getStatusField($execution_artifact, $user);
         if (! $status_field) {

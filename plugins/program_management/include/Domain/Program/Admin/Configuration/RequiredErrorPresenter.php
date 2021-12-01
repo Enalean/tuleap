@@ -39,7 +39,7 @@ final class RequiredErrorPresenter
         int $field_id,
         public string $field_label,
         TrackerReference $tracker,
-        ProjectReference $project_reference
+        ProjectReference $project_reference,
     ) {
         $this->field_admin_url    = '/plugins/tracker/?' .
             http_build_query(

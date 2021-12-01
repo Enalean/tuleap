@@ -57,7 +57,7 @@ final class ProgramIdentifier
         BuildProgram $build_program,
         int $id,
         UserIdentifier $user,
-        ?PermissionBypass $bypass
+        ?PermissionBypass $bypass,
     ): self {
         $build_program->ensureProgramIsAProject($id, $user, $bypass);
 
@@ -72,7 +72,7 @@ final class ProgramIdentifier
         RetrieveProgramOfProgramIncrement $program_retriever,
         BuildProgram $program_builder,
         ProgramIncrementIdentifier $program_increment,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): self {
         $program_id = $program_retriever->getProgramOfProgramIncrement($program_increment);
         $program_builder->ensureProgramIsAProject($program_id, $user, null);
@@ -88,7 +88,7 @@ final class ProgramIdentifier
         RetrieveProgramOfIteration $program_retriever,
         BuildProgram $program_builder,
         IterationIdentifier $iteration,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): self {
         $program_id = $program_retriever->getProgramOfIteration($iteration);
         $program_builder->ensureProgramIsAProject($program_id, $user, null);

@@ -50,7 +50,7 @@ class NewDropdownProjectLinksCollector implements Dispatchable
     public function __construct(
         PFUser $current_user,
         Project $project,
-        ?NewDropdownLinkSectionPresenter $current_context_section
+        ?NewDropdownLinkSectionPresenter $current_context_section,
     ) {
         $this->current_user            = $current_user;
         $this->project                 = $project;

@@ -41,7 +41,7 @@ class PostMoveArticfactRESTAction
         Tracker $source_tracker,
         Tracker $target_tracker,
         Artifact $artifact,
-        \PFUser $user
+        \PFUser $user,
     ) {
         $tracker_source_name      = $source_tracker->getItemName();
         $tracker_destination_name = $target_tracker->getItemName();

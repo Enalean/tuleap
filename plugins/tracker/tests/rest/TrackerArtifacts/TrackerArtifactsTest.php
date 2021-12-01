@@ -39,8 +39,8 @@ class TrackerArtifactsTest extends TrackerBase
         $query = [
             'submitted_by' => [
                 'operator' => 'contains',
-                'value' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]
-            ]
+                'value' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
+            ],
         ];
 
         $response = $this->getResponseByName(
@@ -64,9 +64,9 @@ class TrackerArtifactsTest extends TrackerBase
                 'operator' => 'contains',
                 'value' => [
                     $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
-                    10000000
-                ]
-            ]
+                    10000000,
+                ],
+            ],
         ];
 
         $response = $this->getResponseByName(
@@ -88,8 +88,8 @@ class TrackerArtifactsTest extends TrackerBase
         $query = [
             'submitted_by' => [
                 'operator' => 'contains',
-                'value' => 10000000
-            ]
+                'value' => 10000000,
+            ],
         ];
 
         $response = $this->getResponseByName(
@@ -109,9 +109,9 @@ class TrackerArtifactsTest extends TrackerBase
                 'operator' => 'contains',
                 'value' => [
                     $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
-                    $this->user_ids[DataBuilder::USER_TESTER_NAME]
-                ]
-            ]
+                    $this->user_ids[DataBuilder::USER_TESTER_NAME],
+                ],
+            ],
         ];
 
         $response = $this->getResponseByName(
@@ -128,7 +128,7 @@ class TrackerArtifactsTest extends TrackerBase
                 $artifact['submitted_by_user']['username'],
                 [
                     REST_TestDataBuilder::TEST_USER_1_NAME,
-                    DataBuilder::USER_TESTER_NAME
+                    DataBuilder::USER_TESTER_NAME,
                 ]
             );
         }

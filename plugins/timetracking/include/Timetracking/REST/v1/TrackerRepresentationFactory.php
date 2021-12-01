@@ -50,7 +50,7 @@ class TrackerRepresentationFactory
     public function __construct(
         TimeDao $time_dao,
         PermissionsRetriever $permissions_retriever,
-        UserHelper $user_helper
+        UserHelper $user_helper,
     ) {
         $this->time_dao              = $time_dao;
         $this->permissions_retriever = $permissions_retriever;

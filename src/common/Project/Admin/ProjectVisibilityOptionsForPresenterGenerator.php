@@ -31,7 +31,7 @@ final class ProjectVisibilityOptionsForPresenterGenerator
      */
     public function generateVisibilityOptions(
         bool $does_platform_allow_restricted_users,
-        string $current_project_visibility
+        string $current_project_visibility,
     ): array {
         if ($does_platform_allow_restricted_users) {
             return [
@@ -54,7 +54,7 @@ final class ProjectVisibilityOptionsForPresenterGenerator
                     'value'    => Project::ACCESS_PUBLIC_UNRESTRICTED,
                     'label'    => _('Public incl. restricted'),
                     'selected' => ($current_project_visibility === Project::ACCESS_PUBLIC_UNRESTRICTED) ? 'selected = "selected"' : '',
-                ]
+                ],
             ];
         }
         return [
@@ -67,7 +67,7 @@ final class ProjectVisibilityOptionsForPresenterGenerator
                 'value'    => Project::ACCESS_PUBLIC,
                 'label'    => _('Public'),
                 'selected' => ($current_project_visibility === Project::ACCESS_PUBLIC) ? 'selected = "selected"' : '',
-            ]
+            ],
         ];
     }
 }

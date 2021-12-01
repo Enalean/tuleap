@@ -38,7 +38,7 @@ class BareRepositoryCreator
 
     public function __construct(
         RepositoryCreator $repository_creator,
-        SettingsRetriever $settings_retriever
+        SettingsRetriever $settings_retriever,
     ) {
         $this->repository_creator = $repository_creator;
         $this->settings_retriever = $settings_retriever;

@@ -99,7 +99,7 @@ class Tracker_ReportDao extends DataAccessObject
         $tracker_id,
         $is_query_displayed,
         $is_in_expert_mode,
-        $expert_query
+        $expert_query,
     ) {
         $name                = $this->da->quoteSmart($name);
         $description         = $this->da->quoteSmart($description);
@@ -129,7 +129,7 @@ class Tracker_ReportDao extends DataAccessObject
         $is_query_displayed,
         $is_in_expert_mode,
         $expert_query,
-        $updated_by_id
+        $updated_by_id,
     ) {
         $id                  = $this->da->escapeInt($id);
         $name                = $this->da->quoteSmart($name);

@@ -54,7 +54,7 @@ class MembershipManagerBindedUGroupsTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->remote_server_factory,
                 Mockery::mock(\Psr\Log\LoggerInterface::class),
                 Mockery::mock('UGroupManager'),
-                $this->project_manager
+                $this->project_manager,
             ]
         )
             ->makePartial()
@@ -124,7 +124,7 @@ class MembershipManagerBindedUGroupsTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user        = new PFUser([
             'language_id' => 'en',
-            'ldap_id' => 'blabla'
+            'ldap_id' => 'blabla',
         ]);
         $gerrit_user = \Mockery::spy(\Git_Driver_Gerrit_User::class);
         $this->gerrit_user_manager->shouldReceive('getGerritUser')->with($user)->andReturns($gerrit_user);

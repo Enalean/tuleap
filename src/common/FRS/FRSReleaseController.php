@@ -48,7 +48,7 @@ class FRSReleaseController
     public function __construct(
         FRSReleaseFactory $release_factory,
         User_ForgeUserGroupFactory $ugroup_factory,
-        \Codendi_HTMLPurifier $purifier
+        \Codendi_HTMLPurifier $purifier,
     ) {
         $this->release_factory = $release_factory;
         $this->ugroup_factory  = $ugroup_factory;
@@ -144,7 +144,7 @@ class FRSReleaseController
             $options[] = [
                 'id'       => $project_ugroup->getId(),
                 'name'     => $project_ugroup->getName(),
-                'selected' => $this->isUgroupSelected($project_ugroup, $release_ugroups)
+                'selected' => $this->isUgroupSelected($project_ugroup, $release_ugroups),
             ];
         }
 

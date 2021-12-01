@@ -32,7 +32,7 @@ interface VerifyFieldPermissions
      */
     public function canUserSubmit(
         UserIdentifier $user_identifier,
-        TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|DurationFieldReference|EndDateFieldReference|ArtifactLinkFieldReference $field
+        TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|DurationFieldReference|EndDateFieldReference|ArtifactLinkFieldReference $field,
     ): bool;
 
     /**
@@ -40,6 +40,6 @@ interface VerifyFieldPermissions
      */
     public function canUserUpdate(
         UserIdentifier $user_identifier,
-        TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|DurationFieldReference|EndDateFieldReference|ArtifactLinkFieldReference $field
+        TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|DurationFieldReference|EndDateFieldReference|ArtifactLinkFieldReference $field,
     ): bool;
 }

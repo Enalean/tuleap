@@ -41,7 +41,7 @@ class ProjectsFieldDescriptionUpdater
 
     public function __construct(
         Project_CustomDescription_CustomDescriptionDao $custom_description_dao,
-        \Tuleap\Config\ConfigDao $config_dao
+        \Tuleap\Config\ConfigDao $config_dao,
     ) {
         $this->custom_description_dao = $custom_description_dao;
         $this->config_dao             = $config_dao;

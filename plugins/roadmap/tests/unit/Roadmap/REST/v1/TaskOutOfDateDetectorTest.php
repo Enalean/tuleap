@@ -239,7 +239,7 @@ class TaskOutOfDateDetectorTest extends TestCase
                 $this->buildChangeset(5, "2021-04-13 19:30", false, self::ON_GOING_VALUE_ID),
                 $this->buildChangeset(6, "2021-04-13 20:30", true, self::DONE_VALUE_ID),
                 // Closed again
-                $this->buildChangeset(6, "2021-04-13 20:31", false, self::DONE_VALUE_ID)
+                $this->buildChangeset(6, "2021-04-13 20:31", false, self::DONE_VALUE_ID),
             ]
         );
 
@@ -331,7 +331,7 @@ class TaskOutOfDateDetectorTest extends TestCase
             [
                 $this->buildChangeset(1, "2018-04-13 15:30", true, self::TODO_VALUE_ID),
                 $this->buildChangeset(2, "2018-04-13 16:30", true, self::ON_GOING_VALUE_ID),
-                $this->buildChangeset(3, "2018-04-13 17:30", true, self::ON_GOING_VALUE_ID)
+                $this->buildChangeset(3, "2018-04-13 17:30", true, self::ON_GOING_VALUE_ID),
             ]
         );
 
@@ -376,7 +376,7 @@ class TaskOutOfDateDetectorTest extends TestCase
             [
                 $this->buildChangeset(1, "2018-04-13 15:30", true, self::TODO_VALUE_ID),
                 $this->buildChangeset(2, "2018-04-13 16:30", true, self::ON_GOING_VALUE_ID),
-                $this->buildChangeset(3, "2018-04-13 17:30", true, self::ON_GOING_VALUE_ID)
+                $this->buildChangeset(3, "2018-04-13 17:30", true, self::ON_GOING_VALUE_ID),
             ]
         );
 
@@ -398,7 +398,7 @@ class TaskOutOfDateDetectorTest extends TestCase
      */
     public function testItReturnsTrueForArtifactsThatAreClosedWhoseEndDateIsLaterThanOneYearAgo(
         $end_string_date,
-        $expected_out_of_date
+        $expected_out_of_date,
     ): void {
         $this->status_field
             ->shouldReceive('userCanRead')
@@ -421,7 +421,7 @@ class TaskOutOfDateDetectorTest extends TestCase
             [
                 $this->buildChangeset(1, "2021-04-13 15:30", true, self::TODO_VALUE_ID),
                 $this->buildChangeset(2, "2021-04-13 16:30", true, self::ON_GOING_VALUE_ID),
-                $this->buildChangeset(3, "2021-04-13 17:30", true, self::DONE_VALUE_ID) // Closed in this changeset
+                $this->buildChangeset(3, "2021-04-13 17:30", true, self::DONE_VALUE_ID), // Closed in this changeset
             ]
         );
 
@@ -440,7 +440,7 @@ class TaskOutOfDateDetectorTest extends TestCase
         int $changeset_id,
         string $date_string,
         bool $has_changed,
-        int $status_field_value_id
+        int $status_field_value_id,
     ): Tracker_Artifact_Changeset {
         $submitted_on = new \DateTimeImmutable($date_string);
         $changeset    = new Tracker_Artifact_Changeset(
@@ -465,7 +465,7 @@ class TaskOutOfDateDetectorTest extends TestCase
                         '',
                         '',
                         false
-                    )
+                    ),
                 ]
             )
         );
@@ -475,7 +475,7 @@ class TaskOutOfDateDetectorTest extends TestCase
 
     private function getTimePeriodWithoutWeekend(
         string $start_date_string,
-        ?string $end_date_string
+        ?string $end_date_string,
     ): TimePeriodWithoutWeekEnd {
         $end = $end_date_string !== null ? (new \DateTimeImmutable($end_date_string))->getTimestamp() : null;
 

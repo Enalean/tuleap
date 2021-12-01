@@ -47,7 +47,7 @@ class SvnAdmin
     public function __construct(
         System_Command $system_command,
         LoggerInterface $logger,
-        BackendSVN $backend_svn
+        BackendSVN $backend_svn,
     ) {
         $this->system_command = $system_command;
         $this->logger         = $logger;

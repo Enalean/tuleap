@@ -46,7 +46,7 @@ class IndexController
     public function __construct(
         ProjectUGroupPresenterBuilder $presenter_builder,
         IncludeAssets $include_assets,
-        HeaderNavigationDisplayer $navigation_displayer
+        HeaderNavigationDisplayer $navigation_displayer,
     ) {
         $this->include_assets       = $include_assets;
         $this->navigation_displayer = $navigation_displayer;

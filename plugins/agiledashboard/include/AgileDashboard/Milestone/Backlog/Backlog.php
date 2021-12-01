@@ -71,7 +71,7 @@ class AgileDashboard_Milestone_Backlog_Backlog
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         MonoMilestoneItemsFinder $mono_milestone_items_finder,
         $limit = null,
-        $offset = null
+        $offset = null,
     ) {
         $this->milestone                    = $milestone;
         $this->backlogitem_trackers         = $item_names;

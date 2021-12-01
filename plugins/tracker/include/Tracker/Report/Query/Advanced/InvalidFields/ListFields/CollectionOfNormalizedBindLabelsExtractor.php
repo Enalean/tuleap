@@ -43,7 +43,7 @@ class CollectionOfNormalizedBindLabelsExtractor implements BindVisitor
 
     public function __construct(
         ListFieldBindValueNormalizer $value_normalizer,
-        UgroupLabelConverter $label_converter
+        UgroupLabelConverter $label_converter,
     ) {
         $this->value_normalizer = $value_normalizer;
         $this->label_converter  = $label_converter;

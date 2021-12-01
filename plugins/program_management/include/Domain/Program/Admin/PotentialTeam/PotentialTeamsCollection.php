@@ -46,7 +46,7 @@ final class PotentialTeamsCollection
         AllProgramSearcher $all_program_searcher,
         SearchProjectsUserIsAdmin $retrieve_project_user_is_admin,
         ProgramForAdministrationIdentifier $program,
-        UserIdentifier $user_identifier
+        UserIdentifier $user_identifier,
     ): self {
         $aggregated_teams_id    = $teams_of_program_searcher->searchTeamIdsOfProgram($program->id);
         $existing_programs_id   = $all_program_searcher->getAllPrograms();

@@ -44,7 +44,7 @@ class Git_GitRepositoryUrlManager
             [
                 'action'   => 'repo_management',
                 'group_id' => $repository->getProjectId(),
-                'repo_id'  => $repository->getId()
+                'repo_id'  => $repository->getId(),
             ]
         );
     }
@@ -54,7 +54,7 @@ class Git_GitRepositoryUrlManager
         return GIT_BASE_URL . "/?" . http_build_query(
             [
                 "group_id" => $repository->getProject()->getID(),
-                "action"   => "fork_repositories"
+                "action"   => "fork_repositories",
             ]
         );
     }
@@ -63,7 +63,7 @@ class Git_GitRepositoryUrlManager
     {
         return $this->getRepositoryBaseUrl($repository) . '?' . http_build_query([
             'a' => 'commit',
-            'h' => $commit_reference
+            'h' => $commit_reference,
         ]);
     }
 

@@ -54,7 +54,7 @@ class WidgetAddToDashboardDropdownRepresentation
         $my_dashboard_url,
         $project_dashboard_url,
         array $user_dashboards_representation,
-        array $project_dashboards_representation
+        array $project_dashboards_representation,
     ) {
         $this->is_admin = $user->isAdmin($project->getID());
 

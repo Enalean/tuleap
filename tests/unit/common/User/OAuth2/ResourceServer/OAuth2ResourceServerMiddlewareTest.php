@@ -130,7 +130,7 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
     {
         return [
             [''],
-            ['NotABearer Foo']
+            ['NotABearer Foo'],
         ];
     }
 

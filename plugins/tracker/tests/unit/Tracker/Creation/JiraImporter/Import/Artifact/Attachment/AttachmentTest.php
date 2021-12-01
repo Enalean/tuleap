@@ -34,7 +34,7 @@ class AttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
             "mimeType" => "image/png",
             "created" => "2020-03-25T14:10:10.823+0100",
             "content" => "URL/file01.png",
-            "size"    => "30"
+            "size"    => "30",
         ];
 
         $attachment = Attachment::buildFromIssueAPIResponse($response);

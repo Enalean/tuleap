@@ -40,7 +40,7 @@ class AccentColorBuilder
 
     public function __construct(
         Tracker_FormElementFactory $form_element_factory,
-        BindDecoratorRetriever $decorator_retriever
+        BindDecoratorRetriever $decorator_retriever,
     ) {
         $this->decorator_retriever  = $decorator_retriever;
         $this->form_element_factory = $form_element_factory;
@@ -48,7 +48,7 @@ class AccentColorBuilder
 
     public function build(
         Artifact $artifact,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         $no_color = new AccentColor('', true);
 

@@ -51,7 +51,7 @@ class UpdatedTypeLinkCollection implements ICollectChangeOfLinksBetweenTwoChange
     public function __construct(
         TypePresenter $source_type,
         TypePresenter $target_type,
-        CollectionOfLinksFormatter $formatter
+        CollectionOfLinksFormatter $formatter,
     ) {
         $this->source_type = $source_type;
         $this->target_type = $target_type;

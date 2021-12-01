@@ -65,7 +65,7 @@ class LinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([
                 ['artifact_id' => 83],
                 ['artifact_id' => 93],
-                ['artifact_id' => 103]
+                ['artifact_id' => 103],
             ]);
 
         $art_83  = $this->createMock(Artifact::class);

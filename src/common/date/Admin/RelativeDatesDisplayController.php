@@ -48,7 +48,7 @@ class RelativeDatesDisplayController implements DispatchableWithRequest, Dispatc
 
     public function __construct(
         AdminPageRenderer $admin_page_renderer,
-        \CSRFSynchronizerToken $csrf_token
+        \CSRFSynchronizerToken $csrf_token,
     ) {
         $this->admin_page_renderer = $admin_page_renderer;
         $this->csrf_token          = $csrf_token;

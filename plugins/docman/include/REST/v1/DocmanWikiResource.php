@@ -193,7 +193,7 @@ class DocmanWikiResource extends AuthenticatedResource
 
     public function postVersion(
         int $id,
-        DocmanWikiVersionPOSTRepresentation $representation
+        DocmanWikiVersionPOSTRepresentation $representation,
     ) {
         $this->checkAccess();
         $this->setVersionHeaders();
@@ -244,7 +244,7 @@ class DocmanWikiResource extends AuthenticatedResource
      */
     public function putMetadata(
         int $id,
-        PUTMetadataRepresentation $representation
+        PUTMetadataRepresentation $representation,
     ): void {
         $this->checkAccess();
         $this->setMetadataHeaders();
@@ -476,7 +476,7 @@ class DocmanWikiResource extends AuthenticatedResource
         int $status,
         int $obsolesence_date,
         string $title,
-        ?string $description
+        ?string $description,
     ): void {
         $project      = $item_request->getProject();
         $item         = $item_request->getItem();
@@ -489,7 +489,7 @@ class DocmanWikiResource extends AuthenticatedResource
                 'user'          => $current_user,
                 'document_type' => \Docman_Wiki::class,
                 'title'         => $title,
-                'project'       => $project
+                'project'       => $project,
             ]
         );
         assert($item instanceof Docman_Wiki);

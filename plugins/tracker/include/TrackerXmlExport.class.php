@@ -68,7 +68,7 @@ class TrackerXmlExport
         EventManager $event_manager,
         TypePresenterFactory $nature_presenter_factory,
         ArtifactLinksUsageDao $artifact_links_usage_dao,
-        ExternalFieldsExtractor $external_field_extractor
+        ExternalFieldsExtractor $external_field_extractor,
     ) {
         $this->tracker_factory          = $tracker_factory;
         $this->trigger_rules_manager    = $trigger_rules_manager;
@@ -85,7 +85,7 @@ class TrackerXmlExport
         Project $project,
         SimpleXMLElement $xml_content,
         PFUser $user,
-        ArchiveInterface $archive
+        ArchiveInterface $archive,
     ) {
         $exported_trackers = [];
         $xml_field_mapping = [];
@@ -137,7 +137,7 @@ class TrackerXmlExport
     public function exportToXml(
         Project $project,
         SimpleXMLElement $xml_content,
-        PFUser $user
+        PFUser $user,
     ) {
         $exported_trackers = [];
         $xml_field_mapping = [];
@@ -205,7 +205,7 @@ class TrackerXmlExport
         SimpleXMLElement $xml_content,
         $tracker_id,
         PFUser $user,
-        Tuleap\Project\XML\Export\ArchiveInterface $archive
+        Tuleap\Project\XML\Export\ArchiveInterface $archive,
     ) {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
 
@@ -221,7 +221,7 @@ class TrackerXmlExport
         $tracker_id,
         PFUser $user,
         Tuleap\Project\XML\Export\ArchiveInterface $archive,
-        array $artifacts
+        array $artifacts,
     ) {
         $tracker     = $this->tracker_factory->getTrackerById($tracker_id);
         $xml_content = new SimpleXMLElement(

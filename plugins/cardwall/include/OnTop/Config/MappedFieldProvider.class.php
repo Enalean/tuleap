@@ -39,7 +39,7 @@ class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProvide
 
     public function __construct(
         Cardwall_OnTop_Config $config,
-        Cardwall_FieldProviders_SemanticStatusFieldRetriever $semantic_status_provider
+        Cardwall_FieldProviders_SemanticStatusFieldRetriever $semantic_status_provider,
     ) {
         $this->semantic_status_provider = $semantic_status_provider;
         $this->config                   = $config;

@@ -36,7 +36,7 @@ class Mail_RecipientListBuilder
         PFUser::STATUS_RESTRICTED,
         PFUser::STATUS_PENDING,
         PFUser::STATUS_VALIDATED,
-        PFUser::STATUS_VALIDATED_RESTRICTED
+        PFUser::STATUS_VALIDATED_RESTRICTED,
     ];
 
     public function __construct(UserManager $user_manager)
@@ -115,7 +115,7 @@ class Mail_RecipientListBuilder
     {
         $recipients[] = [
             'email'     => $address,
-            'real_name' => ''
+            'real_name' => '',
         ];
     }
 
@@ -123,7 +123,7 @@ class Mail_RecipientListBuilder
     {
         $recipients[] = [
             'email'     => $user->getEmail(),
-            'real_name' => $user->getRealName()
+            'real_name' => $user->getRealName(),
         ];
     }
 }

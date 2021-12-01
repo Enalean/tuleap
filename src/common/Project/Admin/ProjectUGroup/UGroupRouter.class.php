@@ -77,7 +77,7 @@ class UGroupRouter
         DelegationController $delegation_controller,
         IndexController $index_controller,
         DetailsController $details_controller,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->ugroup_manager        = $ugroup_manager;
         $this->request               = $request;
@@ -150,7 +150,7 @@ class UGroupRouter
         return '/project/admin/editugroup.php?' . http_build_query(
             [
                 'group_id'  => $ugroup->getProjectId(),
-                'ugroup_id' => $ugroup->getId()
+                'ugroup_id' => $ugroup->getId(),
             ]
         );
     }

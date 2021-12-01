@@ -80,7 +80,7 @@ final class RoadmapProjectWidget extends \Widget
         DBTransactionExecutor $transaction_executor,
         TemplateRenderer $renderer,
         RoadmapWidgetPresenterBuilder $presenter_builder,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
     ) {
         parent::__construct(self::ID);
         $this->setOwner(
@@ -199,7 +199,7 @@ final class RoadmapProjectWidget extends \Widget
         $id,
         $owner_id,
         $owner_type,
-        MappingRegistry $mapping_registry
+        MappingRegistry $mapping_registry,
     ): int {
         if (! $mapping_registry->hasCustomMapping(TrackerFactory::TRACKER_MAPPING_KEY)) {
             return $this->dao->cloneContent(
@@ -371,7 +371,7 @@ final class RoadmapProjectWidget extends \Widget
             ],
             [
                 'file' => $this->getAssets()->getFileURL('configure-roadmap-widget-script.js'),
-            ]
+            ],
         ];
     }
 

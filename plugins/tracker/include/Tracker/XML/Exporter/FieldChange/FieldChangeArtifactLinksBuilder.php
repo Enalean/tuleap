@@ -45,7 +45,7 @@ class FieldChangeArtifactLinksBuilder
     public function build(
         SimpleXMLElement $changeset_xml,
         string $field_name,
-        array $values
+        array $values,
     ): void {
         $field_change_node = $changeset_xml->addChild('field_change');
         $field_change_node->addAttribute('type', Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS);

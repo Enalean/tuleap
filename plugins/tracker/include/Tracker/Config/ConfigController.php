@@ -60,7 +60,7 @@ class ConfigController implements DispatchableWithRequestNoAuthz, DispatchableWi
         MailGatewayConfigController $mailgateway_controller,
         TypeConfigController $type_config_controller,
         TrackerReportConfigController $report_config_controller,
-        ArtifactsDeletionConfigController $deletion_controller
+        ArtifactsDeletionConfigController $deletion_controller,
     ) {
         $this->csrf                     = $csrf;
         $this->mailgateway_controller   = $mailgateway_controller;

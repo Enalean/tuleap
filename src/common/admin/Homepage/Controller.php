@@ -62,7 +62,7 @@ class Admin_Homepage_Controller
         Codendi_Request $request,
         Response $response,
         AdminPageRenderer $admin_page_renderer,
-        ConfigDao $config_dao
+        ConfigDao $config_dao,
     ) {
         $this->csrf                = $csrf;
         $this->dao                 = $dao;

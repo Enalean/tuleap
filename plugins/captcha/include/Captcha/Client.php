@@ -50,7 +50,7 @@ class Client
         string $secret_key,
         ClientInterface $http_client,
         RequestFactoryInterface $request_factory,
-        StreamFactoryInterface $stream_factory
+        StreamFactoryInterface $stream_factory,
     ) {
         $this->secret_key      = $secret_key;
         $this->http_client     = $http_client;
@@ -67,7 +67,7 @@ class Client
                     http_build_query([
                         'secret'   => $this->secret_key,
                         'response' => $challenge,
-                        'remoteip' => $user_ip
+                        'remoteip' => $user_ip,
                     ])
                 )
             );

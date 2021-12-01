@@ -112,7 +112,7 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItGetsLinkedArtifactsOfTheRootLevelArtifact()
     {
         $this->artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([
-            Mockery::mock(Artifact::class)
+            Mockery::mock(Artifact::class),
         ]);
 
         $all_artifacts = $this->milestone->getLinkedArtifacts(Mockery::mock(PFUser::class));

@@ -39,7 +39,7 @@ class XmlUgroupRetriever
 
     public function __construct(
         LoggerInterface $logger,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->logger         = $logger;
         $this->ugroup_manager = $ugroup_manager;

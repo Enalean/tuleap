@@ -39,7 +39,7 @@ class StepsResultsRepresentationBuilder
 
     public function __construct(
         Tracker_FormElementFactory $tracker_form_element_factory,
-        StepsResultsFilter $steps_results_filter
+        StepsResultsFilter $steps_results_filter,
     ) {
         $this->tracker_form_element_factory = $tracker_form_element_factory;
         $this->steps_results_filter         = $steps_results_filter;
@@ -52,7 +52,7 @@ class StepsResultsRepresentationBuilder
     public function build(
         PFUser $user,
         Artifact $execution,
-        Artifact $definition
+        Artifact $definition,
     ) {
         return array_reduce(
             $this->getStepsResults($user, $execution, $definition),

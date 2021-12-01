@@ -51,7 +51,7 @@ final class ProgramIncrementIdentifier implements TimeboxIdentifier
         VerifyIsProgramIncrement $program_increment_verifier,
         VerifyIsVisibleArtifact $visibility_verifier,
         int $artifact_id,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): self {
         if (
             ! $program_increment_verifier->isProgramIncrement($artifact_id)
@@ -65,7 +65,7 @@ final class ProgramIncrementIdentifier implements TimeboxIdentifier
 
     public static function fromArtifactEvent(
         VerifyIsProgramIncrementTracker $program_increment_verifier,
-        ArtifactUpdatedEvent|ArtifactCreatedEvent $event
+        ArtifactUpdatedEvent|ArtifactCreatedEvent $event,
     ): ?self {
         if (! $program_increment_verifier->isProgramIncrementTracker($event->getTracker()->getId())) {
             return null;

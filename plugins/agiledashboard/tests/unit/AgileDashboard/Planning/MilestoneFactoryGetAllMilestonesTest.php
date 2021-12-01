@@ -104,7 +104,7 @@ final class MilestoneFactoryGetAllMilestonesTest extends \Tuleap\Test\PHPUnit\Te
         $artifact2->shouldReceive('getLastChangeset')->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
         $artifacts = [
             $artifact1,
-            $artifact2
+            $artifact2,
         ];
 
         $this->artifact_factory->shouldReceive('getArtifactsByTrackerIdUserCanView')->andReturn($artifacts);
@@ -190,7 +190,7 @@ final class MilestoneFactoryGetAllMilestonesTest extends \Tuleap\Test\PHPUnit\Te
             Mockery::spy(ScrumForMonoMilestoneChecker::class),
             Mockery::mock(SemanticTimeframeBuilder::class),
             new NullLogger(),
-            Mockery::mock(MilestoneBurndownFieldChecker::class)
+            Mockery::mock(MilestoneBurndownFieldChecker::class),
             ]
         )
             ->makePartial()

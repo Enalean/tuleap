@@ -64,7 +64,7 @@ class DailyJobCommand extends Command
         AccessKeyRevoker $access_key_revoker,
         DBConnection $db_connection,
         ExecutionDelayedLauncher $execution_delayed_launcher,
-        UserSuspensionManager $user_suspension_manager
+        UserSuspensionManager $user_suspension_manager,
     ) {
         parent::__construct(self::NAME);
         $this->event_manager              = $event_manager;

@@ -50,7 +50,7 @@ final class ProgramForAdministrationIdentifier
         VerifyIsTeam $team_verifier,
         VerifyProjectPermission $administrator_verifier,
         UserReference $user,
-        ProjectIdentifier $project_identifier
+        ProjectIdentifier $project_identifier,
     ): self {
         $project_id = $project_identifier->getId();
         if ($team_verifier->isATeam($project_id)) {

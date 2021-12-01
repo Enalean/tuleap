@@ -97,7 +97,7 @@ final class EditAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'No body'              => [null],
             'Missing app id'       => [['not_app_id' => '12']],
             'Missing app name'     => [['app_id' => '72']],
-            'Missing redirect URI' => [['app_id' => '72', 'name' => 'Jenkins']]
+            'Missing redirect URI' => [['app_id' => '72', 'name' => 'Jenkins']],
         ];
     }
 
@@ -135,10 +135,10 @@ final class EditAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             'Missing PKCE is assumed to be false' => [
-                ['app_id' => '72', 'name' => 'Jenkins', 'redirect_uri' => 'https://example.com/redirect']
+                ['app_id' => '72', 'name' => 'Jenkins', 'redirect_uri' => 'https://example.com/redirect'],
             ],
             'Present PKCE is true'                => [
-                ['app_id' => '72', 'name' => 'Jenkins', 'redirect_uri' => 'https://example.com/redirect', 'use_pkce' => '1']
+                ['app_id' => '72', 'name' => 'Jenkins', 'redirect_uri' => 'https://example.com/redirect', 'use_pkce' => '1'],
             ],
         ];
     }

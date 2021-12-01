@@ -42,7 +42,7 @@ class CommentXMLExporter
 
     public function __construct(
         XML_SimpleXMLCDATAFactory $simplexml_cdata_factory,
-        CommentXMLValueEnhancer $comment_xml_value_enhancer
+        CommentXMLValueEnhancer $comment_xml_value_enhancer,
     ) {
         $this->simplexml_cdata_factory    = $simplexml_cdata_factory;
         $this->comment_xml_value_enhancer = $comment_xml_value_enhancer;
@@ -50,7 +50,7 @@ class CommentXMLExporter
 
     public function exportComment(
         Snapshot $snapshot,
-        SimpleXMLElement $changeset_node
+        SimpleXMLElement $changeset_node,
     ): void {
         $comments_node = $changeset_node->addChild('comments');
 

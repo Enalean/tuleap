@@ -42,7 +42,7 @@ final class MirroredTimeboxChangesetValuesBuilder
         int $end_date_field_id,
         int $end_date_value,
         int $artifact_link_field_id,
-        ArtifactLinkValue $artifact_link_value
+        ArtifactLinkValue $artifact_link_value,
     ): MirroredTimeboxChangesetValues {
         $status_mapper = MapStatusByValueStub::withSuccessiveBindValueIds($mapped_status_bind_value_id);
         $source_values = SourceTimeboxChangesetValuesBuilder::buildWithValues(
@@ -75,7 +75,7 @@ final class MirroredTimeboxChangesetValuesBuilder
 
     public static function buildWithDuration(
         int $duration_field_id,
-        int $duration_value
+        int $duration_value,
     ): MirroredTimeboxChangesetValues {
         $status_mapper = MapStatusByValueStub::withSuccessiveBindValueIds(8401);
         $source_values = SourceTimeboxChangesetValuesBuilder::buildWithDuration(

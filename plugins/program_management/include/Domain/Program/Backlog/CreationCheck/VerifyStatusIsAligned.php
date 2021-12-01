@@ -31,6 +31,6 @@ interface VerifyStatusIsAligned
     public function isStatusWellConfigured(
         TrackerReference $tracker,
         SourceTrackerCollection $source_tracker_collection,
-        ConfigurationErrorsCollector $configuration_errors
+        ConfigurationErrorsCollector $configuration_errors,
     ): bool;
 }

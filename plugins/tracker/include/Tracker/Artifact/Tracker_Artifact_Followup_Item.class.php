@@ -54,7 +54,7 @@ abstract class Tracker_Artifact_Followup_Item
         $format = 'html',
         $user = null,
         $ignore_perms = false,
-        $for_mail = false
+        $for_mail = false,
     );
 
     public function diffToPreviousArtifactView(PFUser $user, Tracker_Artifact_Followup_Item $previous_item)

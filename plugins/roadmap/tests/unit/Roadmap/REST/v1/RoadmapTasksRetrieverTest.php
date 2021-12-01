@@ -777,7 +777,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getTitleField' => $title_field,
                 'getId'         => self::TRACKER_ID,
                 'getColor'      => TrackerColor::fromName('acid-green'),
-                'getProject'    => $project
+                'getProject'    => $project,
             ]
         );
         $this->tracker_factory
@@ -1160,7 +1160,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getTitleField' => $title_field,
                 'getId'         => self::TRACKER_ID,
                 'getColor'      => TrackerColor::fromName('acid-green'),
-                'getProject'    => $project
+                'getProject'    => $project,
             ]
         );
         $this->tracker_factory
@@ -1176,7 +1176,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getTitleField' => $another_title_field,
                 'getId'         => self::ANOTHER_TRACKER_ID,
                 'getColor'      => TrackerColor::fromName('red-wine'),
-                'getProject'    => $project
+                'getProject'    => $project,
             ]
         );
         $this->tracker_factory

@@ -51,7 +51,7 @@ class Cardwall_SingleCardBuilder
         Tracker_ArtifactFactory $artifact_factory,
         PlanningFactory $planning_factory,
         BackgroundColorBuilder $background_color_builder,
-        AccentColorBuilder $accent_color_builder
+        AccentColorBuilder $accent_color_builder,
     ) {
         $this->config_factory           = $config_factory;
         $this->card_fields              = $card_fields;
@@ -117,7 +117,7 @@ class Cardwall_SingleCardBuilder
         Cardwall_CardFields $card_fields,
         Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
         BackgroundColor $background_color,
-        AccentColor $accent_color
+        AccentColor $accent_color,
     ) {
         return $presenter_factory->getCardInCellPresenter(
             $this->getCardPresenter(
@@ -140,7 +140,7 @@ class Cardwall_SingleCardBuilder
         Cardwall_CardFields $card_fields,
         Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
         BackgroundColor $background_color,
-        AccentColor $accent_color
+        AccentColor $accent_color,
     ) {
         $parent_artifact = $artifact->getParent($user);
 
@@ -210,7 +210,7 @@ class Cardwall_SingleCardBuilder
         Cardwall_OnTop_Config $config,
         Artifact $artifact,
         Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
-        Cardwall_OnTop_Config_ColumnCollection $columns
+        Cardwall_OnTop_Config_ColumnCollection $columns,
     ) {
         $field         = $field_provider->getField($artifact->getTracker());
         $status_fields = [];

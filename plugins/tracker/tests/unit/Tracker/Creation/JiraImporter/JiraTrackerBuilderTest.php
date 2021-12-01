@@ -38,8 +38,8 @@ final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     "issueTypes" => [
                         ["id" => "epic", "name" => "Epics", "subtask" => false],
                         ["id" => "issue", "name" => "Issues", "subtask" => false],
-                    ]
-                ]
+                    ],
+                ],
             ];
         };
 
@@ -65,8 +65,8 @@ final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     "issueTypes" => [
                         ["id" => "epic", "ezezezez" => "Epics"],
                         ["id" => "issue", "name" => "Issues"],
-                    ]
-                ]
+                    ],
+                ],
             ];
         };
 
@@ -89,7 +89,7 @@ final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     "untranslatedName" => "Activities-from-Jira",
                     "subtask" => false,
                     "avatarId" => 10300,
-                ]
+                ],
             ];
         };
 
@@ -105,7 +105,7 @@ final class JiraTrackerBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $wrapper = new class extends JiraCloudClientStub {
             public array $urls = [
-                ClientWrapper::JIRA_CORE_BASE_URL . '/issuetype/10015' => null
+                ClientWrapper::JIRA_CORE_BASE_URL . '/issuetype/10015' => null,
             ];
         };
 

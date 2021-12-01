@@ -43,7 +43,7 @@ class AssetsIncluder
     public function __construct(
         BaseLayout $layout,
         IncludeAssets $include_assets,
-        CssAssetCollection $css_asset_collection
+        CssAssetCollection $css_asset_collection,
     ) {
         $this->layout               = $layout;
         $this->include_assets       = $include_assets;

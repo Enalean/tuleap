@@ -122,7 +122,7 @@ class ContainersXMLCollectionBuilder
         string $name,
         string $label,
         int $rank,
-        int $id
+        int $id,
     ): SimpleXMLElement {
         $column = (new XMLColumn(Tracker_FormElement::XML_ID_PREFIX . 'col' . $id, $name))
             ->withRank($rank)
@@ -136,7 +136,7 @@ class ContainersXMLCollectionBuilder
         string $name,
         string $label,
         int $rank,
-        int $id
+        int $id,
     ): SimpleXMLElement {
         $xml_fieldset = (new XMLFieldset(Tracker_FormElement::XML_ID_PREFIX . $id, $name))
             ->withRank($rank)

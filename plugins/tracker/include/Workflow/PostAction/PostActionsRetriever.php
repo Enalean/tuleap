@@ -48,7 +48,7 @@ class PostActionsRetriever
         \Transition_PostAction_CIBuildFactory $cibuild_factory,
         \Transition_PostAction_FieldFactory $field_factory,
         FrozenFieldsRetriever $frozen_fields_retriever,
-        HiddenFieldsetsRetriever $hidden_fieldsets_retriever
+        HiddenFieldsetsRetriever $hidden_fieldsets_retriever,
     ) {
         $this->cibuild_factory            = $cibuild_factory;
         $this->field_factory              = $field_factory;

@@ -425,7 +425,7 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
     private function buildChangeset(
         bool $has_comment = true,
         int $submitted_by = 101,
-        int $last_modified_by = 101
+        int $last_modified_by = 101,
     ): \Tracker_Artifact_Changeset {
         $tracker = \Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getGroupId')->andReturn(110);

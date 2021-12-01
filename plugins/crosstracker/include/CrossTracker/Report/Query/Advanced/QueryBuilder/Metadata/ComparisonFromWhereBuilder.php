@@ -69,7 +69,7 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
         AlwaysThereField\Date\FromWhereBuilder $last_update_date_builder,
         AlwaysThereField\Users\FromWhereBuilder $submitted_by_builder,
         AlwaysThereField\Users\FromWhereBuilder $last_update_by_builder,
-        Semantic\AssignedTo\FromWhereBuilder $assigned_to_builder
+        Semantic\AssignedTo\FromWhereBuilder $assigned_to_builder,
     ) {
         $this->title_builder            = $title_builder;
         $this->description_builder      = $description_builder;

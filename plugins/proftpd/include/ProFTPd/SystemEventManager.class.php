@@ -45,7 +45,7 @@ class SystemEventManager
         Backend $backend,
         Admin\PermissionsManager $permissions_manager,
         ProjectManager $project_manager,
-        $proftpd_base_directory
+        $proftpd_base_directory,
     ) {
         $this->system_event_manager   = $system_event_manager;
         $this->backend                = $backend;
@@ -91,7 +91,7 @@ class SystemEventManager
                 $dependencies = [
                     $this->backend,
                     new Admin\ACLUpdater($this->backend),
-                    $this->proftpd_base_directory
+                    $this->proftpd_base_directory,
                 ];
                 break;
             case \Tuleap\ProFTPd\SystemEvent\PROFTPD_UPDATE_ACL::NAME:
@@ -99,7 +99,7 @@ class SystemEventManager
                     new Admin\ACLUpdater($this->backend),
                     $this->permissions_manager,
                     $this->project_manager,
-                    $this->proftpd_base_directory
+                    $this->proftpd_base_directory,
                 ];
                 break;
             default:

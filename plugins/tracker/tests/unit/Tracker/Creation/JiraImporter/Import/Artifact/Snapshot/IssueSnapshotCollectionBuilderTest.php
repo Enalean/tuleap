@@ -178,7 +178,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->comment_values_builder->shouldReceive('buildCommentCollectionForIssue')->andReturn(
             [
-                $this->buildCommentSnapshot()
+                $this->buildCommentSnapshot(),
             ]
         );
 
@@ -196,7 +196,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 1585141750,
                 1585141810,
                 1585141870,
-                1585141930
+                1585141930,
             ],
             array_keys($collection)
         );
@@ -247,7 +247,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(
             [
                 1585141750,
-                1585141810
+                1585141810,
             ],
             array_keys($collection)
         );
@@ -286,7 +286,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->comment_values_builder->shouldReceive('buildCommentCollectionForIssue')->andReturn(
             [
-                $this->buildCommentSnapshotWithSameTimestampOfInitialChangelog()
+                $this->buildCommentSnapshotWithSameTimestampOfInitialChangelog(),
             ]
         );
 
@@ -303,7 +303,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 1585141750,
                 1585141810,
-                1585141870
+                1585141870,
             ],
             array_keys($collection)
         );
@@ -327,7 +327,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ),
                     'aaaaaaaa',
                     'aaaaaaaa'
-                )
+                ),
             ],
             null
         );
@@ -360,7 +360,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ),
                     '11',
                     null
-                )
+                ),
             ],
             null
         );
@@ -393,7 +393,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ),
                     '9',
                     null
-                )
+                ),
             ],
             null
         );
@@ -415,7 +415,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ),
                     '9',
                     null
-                )
+                ),
             ],
             null
         );
@@ -437,7 +437,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ),
                     '11',
                     null
-                )
+                ),
             ],
             null
         );
@@ -458,7 +458,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         return new JiraCloudComment(
             new ActiveJiraCloudUser([
                 'displayName' => 'userO1',
-                'accountId' => 'e12ds5123sw'
+                'accountId' => 'e12ds5123sw',
             ]),
             new DateTimeImmutable("2020-03-25T14:12:10.823+0100"),
             "Comment 01"
@@ -470,7 +470,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         return new JiraCloudComment(
             new ActiveJiraCloudUser([
                 'displayName' => 'userO1',
-                'accountId' => 'e12ds5123sw'
+                'accountId' => 'e12ds5123sw',
             ]),
             new DateTimeImmutable("2020-03-25T14:09:10.823+0100"),
             "Comment 01"
@@ -490,14 +490,14 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             "from" => null,
                             "fromString" => null,
                             "to" => null,
-                            "toString" => "9"
-                        ]
+                            "toString" => "9",
+                        ],
                     ],
                     'author' => [
                         'accountId' => 'e8a7dbae5',
                         'displayName' => 'John Doe',
-                        'emailAddress' => 'john.doe@example.com'
-                    ]
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
                 ]
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
@@ -510,16 +510,16 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             "from" => null,
                             "fromString" => "9",
                             "to" => null,
-                            "toString" => "11"
-                        ]
+                            "toString" => "11",
+                        ],
                     ],
                     'author' => [
                         'accountId' => 'e8a7dbae5',
                         'displayName' => 'John Doe',
-                        'emailAddress' => 'john.doe@example.com'
-                    ]
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
                 ]
-            )
+            ),
         ];
     }
 }

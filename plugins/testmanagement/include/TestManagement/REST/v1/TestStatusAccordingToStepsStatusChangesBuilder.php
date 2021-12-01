@@ -37,7 +37,7 @@ class TestStatusAccordingToStepsStatusChangesBuilder
         Tracker_FormElement_Field_List $status_field,
         array &$changes,
         array $steps_defined_in_test,
-        array $steps_changes
+        array $steps_changes,
     ): void {
         if (empty($steps_defined_in_test)) {
             return;
@@ -104,13 +104,13 @@ class TestStatusAccordingToStepsStatusChangesBuilder
      */
     private function countStatus(
         array $steps_defined_in_test,
-        array $steps_changes
+        array $steps_changes,
     ): array {
         $nb = [
             'passed'  => 0,
             'failed'  => 0,
             'blocked' => 0,
-            'notrun'  => 0
+            'notrun'  => 0,
         ];
         foreach ($steps_defined_in_test as $step) {
             $status = 'notrun';

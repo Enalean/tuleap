@@ -39,7 +39,7 @@ class FilteredDiagramRepresentationBuilder
 
     public function __construct(
         KanbanCumulativeFlowDiagramDao $kanban_cumulative_flow_diagram_dao,
-        OrderedColumnRepresentationsBuilder $column_builder
+        OrderedColumnRepresentationsBuilder $column_builder,
     ) {
         $this->kanban_cumulative_flow_diagram_dao = $kanban_cumulative_flow_diagram_dao;
         $this->column_builder                     = $column_builder;
@@ -56,7 +56,7 @@ class FilteredDiagramRepresentationBuilder
         DateTime $start_date,
         DateTime $end_date,
         $interval_between_point,
-        Tracker_Report $report
+        Tracker_Report $report,
     ) {
         $dates = $this->column_builder->getDates($start_date, $end_date, $interval_between_point);
 
@@ -74,7 +74,7 @@ class FilteredDiagramRepresentationBuilder
         AgileDashboard_Kanban $kanban,
         PFUser $user,
         array $dates,
-        Tracker_Report $report
+        Tracker_Report $report,
     ) {
         $matching_ids = $report->getMatchingIds();
         if (! $matching_ids['id']) {

@@ -48,7 +48,7 @@ class CommitDetailsCrossReferenceInformationBuilder
         ProjectManager $project_manager,
         \Git_ReferenceManager $git_reference_manager,
         CommitProvider $commit_provider,
-        CommitDetailsRetriever $commit_details_retriever
+        CommitDetailsRetriever $commit_details_retriever,
     ) {
         $this->project_manager          = $project_manager;
         $this->git_reference_manager    = $git_reference_manager;
@@ -58,7 +58,7 @@ class CommitDetailsCrossReferenceInformationBuilder
 
     public function getCommitDetailsCrossReferenceInformation(
         \PFUser $user,
-        CrossReferencePresenter $cross_reference_presenter
+        CrossReferencePresenter $cross_reference_presenter,
     ): ?CommitDetailsCrossReferenceInformation {
         $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
 

@@ -47,7 +47,7 @@ class DirectArtifactLinkCleaner
     public function __construct(
         Planning_MilestoneFactory $milestone_factory,
         ExplicitBacklogDao $explicit_backlog_dao,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao
+        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
     ) {
         $this->milestone_factory                 = $milestone_factory;
         $this->explicit_backlog_dao              = $explicit_backlog_dao;
@@ -56,7 +56,7 @@ class DirectArtifactLinkCleaner
 
     public function cleanDirectlyMadeArtifactLinks(
         Artifact $milestone_artifact,
-        PFUser $user
+        PFUser $user,
     ): void {
         $project_id = (int) $milestone_artifact->getTracker()->getGroupId();
 

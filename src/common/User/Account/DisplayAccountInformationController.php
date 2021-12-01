@@ -55,7 +55,7 @@ final class DisplayAccountInformationController implements DispatchableWithReque
     public function __construct(
         EventDispatcherInterface $dispatcher,
         TemplateRendererFactory $renderer_factory,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
     ) {
         $this->dispatcher = $dispatcher;
         $this->csrf_token = $csrf_token;

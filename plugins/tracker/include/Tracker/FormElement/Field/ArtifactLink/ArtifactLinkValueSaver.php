@@ -69,7 +69,7 @@ class ArtifactLinkValueSaver
         Tracker_ReferenceManager $reference_manager,
         EventManager $event_manager,
         ArtifactLinksUsageDao $artifact_links_usage_dao,
-        Tracker_Workflow_Trigger_RulesManager $rules_manager
+        Tracker_Workflow_Trigger_RulesManager $rules_manager,
     ) {
         $this->artifact_factory         = $artifact_factory;
         $this->dao                      = $dao;
@@ -93,7 +93,7 @@ class ArtifactLinkValueSaver
         PFUser $user,
         Artifact $artifact,
         $changeset_value_id,
-        array $submitted_value
+        array $submitted_value,
     ) {
         $artifact_ids_to_link = $this->getArtifactIdsToLink($field->getTracker(), $artifact, $submitted_value);
         foreach ($artifact_ids_to_link as $artifact_to_be_linked_by_tracker) {
@@ -122,7 +122,7 @@ class ArtifactLinkValueSaver
         Tracker_ArtifactLinkInfo $artifactlinkinfo,
         Tracker $from_tracker,
         Tracker $to_tracker,
-        array $submitted_value
+        array $submitted_value,
     ) {
         $existing_type     = $artifactlinkinfo->getType();
         $type_by_hierarchy = $this->getTypeDefinedByHierarchy(
@@ -167,7 +167,7 @@ class ArtifactLinkValueSaver
         Tracker_ArtifactLinkInfo $artifactlinkinfo,
         Tracker $from_tracker,
         Tracker $to_tracker,
-        ?string $existing_type
+        ?string $existing_type,
     ): ?string {
         $is_child  = $this->isTrackerChildrenOfTheOtherTracker($to_tracker, $from_tracker);
         $is_parent = $this->isTrackerChildrenOfTheOtherTracker($from_tracker, $to_tracker);
@@ -236,14 +236,14 @@ class ArtifactLinkValueSaver
         Artifact $from_artifact,
         Artifact $to_artifact,
         $existing_type,
-        array $submitted_value
+        array $submitted_value,
     ) {
         $type_by_plugin = null;
         $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_LINK_TYPE_REQUESTED, [
             'project_id'      => $artifactlinkinfo->getGroupId(),
             'to_artifact'     => $to_artifact,
             'submitted_value' => $submitted_value,
-            'type'            => &$type_by_plugin
+            'type'            => &$type_by_plugin,
         ]);
 
         if (! empty($type_by_plugin) && $existing_type !== $type_by_plugin) {
@@ -261,7 +261,7 @@ class ArtifactLinkValueSaver
         Tracker_ArtifactLinkInfo $artifactlinkinfo,
         Tracker $from_tracker,
         $existing_type,
-        $type_by_plugin
+        $type_by_plugin,
     ) {
         if ($from_tracker->isProjectAllowedToUseType()) {
             $GLOBALS['Response']->addFeedback(
@@ -337,7 +337,7 @@ class ArtifactLinkValueSaver
     private function getArtifactIdsToLink(
         Tracker $from_tracker,
         Artifact $artifact,
-        array $submitted_value
+        array $submitted_value,
     ) {
         $all_artifact_to_be_linked = [];
         foreach ($submitted_value['list_of_artifactlinkinfo'] as $artifactlinkinfo) {
@@ -349,7 +349,7 @@ class ArtifactLinkValueSaver
                 if (! isset($all_artifact_to_be_linked[$tracker->getId()])) {
                     $all_artifact_to_be_linked[$tracker->getId()] = [
                         'tracker' => $tracker,
-                        'types' => []
+                        'types' => [],
                     ];
                 }
 

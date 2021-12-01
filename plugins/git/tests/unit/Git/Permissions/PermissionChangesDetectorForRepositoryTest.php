@@ -149,7 +149,7 @@ class PermissionChangesDetectorForRepositoryTest extends \Tuleap\Test\PHPUnit\Te
         $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturns(false);
         $this->git_permission_manager->shouldReceive('getRepositoryGlobalPermissions')->with($this->repository)->andReturns([
             Git::PERM_READ => ['3'],
-            Git::PERM_WRITE => ['4']
+            Git::PERM_WRITE => ['4'],
         ]);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(
@@ -168,7 +168,7 @@ class PermissionChangesDetectorForRepositoryTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturns(true);
         $this->git_permission_manager->shouldReceive('getRepositoryGlobalPermissions')->with($this->repository)->andReturns([
-            Git::PERM_READ => ['3']
+            Git::PERM_READ => ['3'],
         ]);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(
@@ -188,7 +188,7 @@ class PermissionChangesDetectorForRepositoryTest extends \Tuleap\Test\PHPUnit\Te
         $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturns(false);
         $this->git_permission_manager->shouldReceive('getRepositoryGlobalPermissions')->with($this->repository)->andReturns([
             Git::PERM_READ => ['3'],
-            Git::PERM_WRITE => ['4']
+            Git::PERM_WRITE => ['4'],
         ]);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(

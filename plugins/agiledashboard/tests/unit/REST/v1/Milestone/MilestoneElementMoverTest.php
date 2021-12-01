@@ -128,7 +128,7 @@ class MilestoneElementMoverTest extends \Tuleap\Test\PHPUnit\TestCase
                     $milestone->getArtifact(),
                     $valid_to_add,
                     [],
-                    Tracker_FormElement_Field_ArtifactLink::NO_TYPE
+                    Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
                 ]
             )->once();
         $this->resources_patcher->shouldReceive('commit')->once();

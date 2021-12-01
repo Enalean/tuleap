@@ -49,7 +49,7 @@ final class FileUploadCleaner
         \Psr\Log\LoggerInterface $logger,
         FileOngoingUploadDao $dao,
         Tracker_FormElementFactory $form_element_factory,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->logger               = $logger;
         $this->dao                  = $dao;

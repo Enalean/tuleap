@@ -41,7 +41,7 @@ class RepositoryDisplayPresenter
     public function __construct(
         Repository $repository,
         $viewvc_html,
-        $username
+        $username,
     ) {
         $this->repository            = $repository;
         $this->help_command          = "svn checkout --username " . escapeshellarg($username) . " " . $this->repository->getSvnUrl();

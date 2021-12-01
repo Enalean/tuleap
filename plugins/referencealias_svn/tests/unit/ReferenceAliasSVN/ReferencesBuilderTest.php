@@ -77,7 +77,7 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'project_id' => 101,
                 'source' => 'cmmt123',
                 'repository_id' => 1,
-                'revision_id' => 14
+                'revision_id' => 14,
             ]);
 
         $project = Project::buildForTest();
@@ -139,7 +139,7 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'project_id' => 101,
                 'source' => 'cmmt123',
                 'repository_id' => 1,
-                'revision_id' => 14
+                'revision_id' => 14,
             ]);
 
         $this->project_manager->shouldReceive('getValidProject')

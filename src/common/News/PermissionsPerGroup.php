@@ -52,7 +52,7 @@ class PermissionsPerGroup implements DispatchableWithRequest
                 [
                     'error' => _(
                         "You don't have permissions to see user groups."
-                    )
+                    ),
                 ]
             );
         }

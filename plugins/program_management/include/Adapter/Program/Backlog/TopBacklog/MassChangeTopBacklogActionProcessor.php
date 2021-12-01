@@ -43,7 +43,7 @@ final class MassChangeTopBacklogActionProcessor
     }
 
     public function processMassChangeAction(
-        MassChangeTopBacklogSourceInformation $source_information
+        MassChangeTopBacklogSourceInformation $source_information,
     ): void {
         switch ($source_information->action) {
             case 'add':

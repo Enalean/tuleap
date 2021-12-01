@@ -44,7 +44,7 @@ class ProjectAccessChecker implements CheckProjectAccess
 
     public function __construct(
         RestrictedUserCanAccessVerifier $verifier,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->verifier      = $verifier;
         $this->event_manager = $event_manager;

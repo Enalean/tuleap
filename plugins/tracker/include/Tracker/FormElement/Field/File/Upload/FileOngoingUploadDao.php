@@ -29,7 +29,7 @@ class FileOngoingUploadDao extends DataAccessObject
     public function searchFileOngoingUploadByFieldIdNameAndExpirationDate(
         int $field_id,
         string $name,
-        int $current_time
+        int $current_time,
     ): array {
         $sql = 'SELECT *
                 FROM plugin_tracker_file_upload AS upload
@@ -48,7 +48,7 @@ class FileOngoingUploadDao extends DataAccessObject
         string $filename,
         int $filesize,
         string $filetype,
-        int $user_id
+        int $user_id,
     ): int {
         $this->getDB()->tryFlatTransaction(function (EasyDB $db) use (
             $expiration_date,
@@ -66,7 +66,7 @@ class FileOngoingUploadDao extends DataAccessObject
                     'description'  => '',
                     'filename'     => $filename,
                     'filesize'     => $filesize,
-                    'filetype'     => $filetype
+                    'filetype'     => $filetype,
                 ]
             );
             $db->insert(
@@ -97,7 +97,7 @@ class FileOngoingUploadDao extends DataAccessObject
     public function searchFileOngoingUploadByIDUserIDAndExpirationDate(
         int $id,
         int $user_id,
-        int $current_time
+        int $current_time,
     ): ?array {
         return $this->getDB()->row(
             'SELECT *

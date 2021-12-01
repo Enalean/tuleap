@@ -51,7 +51,7 @@ class CurrentListBreadcrumbCollectionBuilder
         array $row,
         Project $project,
         HTTPRequest $request,
-        string $list_name
+        string $list_name,
     ): BreadCrumbCollection {
         $list_presenter  = $this->list_presenter_builder->buildFromRow($row, $project, $request);
         $list_breadcrumb = new BreadCrumb(

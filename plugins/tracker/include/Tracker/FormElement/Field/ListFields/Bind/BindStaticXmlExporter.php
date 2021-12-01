@@ -48,7 +48,7 @@ class BindStaticXmlExporter
         array $values,
         ?array $decorators,
         ?array $default_values,
-        array &$xml_mapping
+        array &$xml_mapping,
     ): void {
         $child = $root->addChild('items');
 
@@ -93,7 +93,7 @@ class BindStaticXmlExporter
         string $label,
         bool $is_hidden,
         string $description,
-        array &$xml_mapping
+        array &$xml_mapping,
     ): void {
         $grandchild = $child->addChild('item');
         $grandchild->addAttribute('ID', $ID);

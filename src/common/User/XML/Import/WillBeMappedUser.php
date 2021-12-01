@@ -34,7 +34,7 @@ class WillBeMappedUser implements ReadyToBeImportedUser
 
     public function __construct(
         $username,
-        PFUser $mapped_user
+        PFUser $mapped_user,
     ) {
         $this->username    = $username;
         $this->mapped_user = $mapped_user;

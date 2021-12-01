@@ -103,7 +103,7 @@ class Tracker_NotificationsManager
         NotificationLevelExtractor $notification_level_extractor,
         TrackerDao $tracker_dao,
         ProjectHistoryDao $project_history_dao,
-        NotificationsForceUsageUpdater $force_usage_updater
+        NotificationsForceUsageUpdater $force_usage_updater,
     ) {
         $this->tracker                        = $tracker;
         $this->user_to_notify_dao             = $user_to_notify_dao;
@@ -292,7 +292,7 @@ class Tracker_NotificationsManager
                 'is_default'                  => $notifications_level === Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
                 'is_disabled'                 => $notifications_level === Tracker::NOTIFICATIONS_LEVEL_DISABLED,
                 'is_status_change'            => $notifications_level === Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
-                'has_status_semantic_defined' => $this->tracker->hasSemanticsStatus()
+                'has_status_semantic_defined' => $this->tracker->hasSemanticsStatus(),
             ]
         );
     }

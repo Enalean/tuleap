@@ -41,7 +41,7 @@ final class ConcealedBotApiTokenPatchRepresentation
 
     public function __construct(
         int $gitlab_integration_id,
-        ConcealedString $gitlab_bot_api_token
+        ConcealedString $gitlab_bot_api_token,
     ) {
         $this->gitlab_integration_id = $gitlab_integration_id;
         $this->gitlab_bot_api_token  = $gitlab_bot_api_token;

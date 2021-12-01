@@ -143,12 +143,12 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase 
         ?string $planning_name,
         ?int $planning_tracker_id,
         ?int $backlog_tracker_id,
-        ?int $planning_id
+        ?int $planning_id,
     ): Codendi_Request {
         $planning = [
             'name'                                  => 'My Planning',
             'planning_tracker_id'                   => '1',
-            PlanningParameters::BACKLOG_TRACKER_IDS => ['2']
+            PlanningParameters::BACKLOG_TRACKER_IDS => ['2'],
         ];
 
         $planning['planning_tracker_id']                     = $planning_tracker_id;
@@ -159,7 +159,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase 
             [
                 'group_id'    => 12,
                 'planning_id' => $planning_id,
-                'planning'    => $planning
+                'planning'    => $planning,
             ]
         );
     }
@@ -208,7 +208,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase 
         $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->with($group_id)->andReturns(
             [
                 $this->releases_tracker_id,
-                $this->sprints_tracker_id
+                $this->sprints_tracker_id,
             ]
         );
         $tracker = $this->createMock(Tracker::class);

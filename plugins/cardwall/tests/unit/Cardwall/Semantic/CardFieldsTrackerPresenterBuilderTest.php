@@ -79,7 +79,7 @@ final class CardFieldsTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $export_formatted_field_values = new BackgroundColorSelectorPresenter(
             [
-                ['id' => 100, 'name' => 'selectbox', 'is_selected' => false]
+                ['id' => 100, 'name' => 'selectbox', 'is_selected' => false],
             ],
             false,
             ""
@@ -156,7 +156,7 @@ final class CardFieldsTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $export_formatted_field_values = new BackgroundColorSelectorPresenter(
             [
-                ['id' => 101, 'name' => 'selectbox', 'is_selected' => false]
+                ['id' => 101, 'name' => 'selectbox', 'is_selected' => false],
             ],
             false,
             ""

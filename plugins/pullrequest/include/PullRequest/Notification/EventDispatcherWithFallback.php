@@ -43,7 +43,7 @@ final class EventDispatcherWithFallback implements EventDispatcherInterface
     public function __construct(
         LoggerInterface $logger,
         EventDispatcherInterface $primary_dispatcher,
-        EventDispatcherInterface $secondary_dispatcher
+        EventDispatcherInterface $secondary_dispatcher,
     ) {
         $this->logger               = $logger;
         $this->primary_dispatcher   = $primary_dispatcher;

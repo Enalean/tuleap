@@ -880,7 +880,7 @@ class RouteCollector
         return [
             'core' => true,
             'handler' => 'getLegacyController',
-            'params' => [$path]
+            'params' => [$path],
         ];
     }
 

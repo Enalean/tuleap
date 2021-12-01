@@ -57,7 +57,7 @@ class Search_SearchPeople
     private function getSearchPeopleResultPresenter(
         PaginatedUserCollection $user_collection,
         $words,
-        $maybe_more_results
+        $maybe_more_results,
     ) {
         return new Search_SearchResultsPresenter(
             new Search_SearchResultsIntroPresenter($user_collection->getUsers(), $words),

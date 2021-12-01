@@ -40,7 +40,7 @@ class DocmanWikisReferencingSameWikiPageRetriever
 
     public function __construct(
         \Docman_ItemFactory $item_factory,
-        \Docman_PermissionsManager $permissions_manager
+        \Docman_PermissionsManager $permissions_manager,
     ) {
         $this->item_factory        = $item_factory;
         $this->permissions_manager = $permissions_manager;
@@ -48,7 +48,7 @@ class DocmanWikisReferencingSameWikiPageRetriever
 
     public function retrieveWikiDocuments(
         WikiPage $wiki_page,
-        PFUser $user
+        PFUser $user,
     ): array {
         $wikis_referencing_wiki_page = [];
 

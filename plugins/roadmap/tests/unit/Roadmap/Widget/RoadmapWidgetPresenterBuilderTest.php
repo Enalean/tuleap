@@ -111,7 +111,7 @@ class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItWillNotLoadIterationsIfTrackerDoesNotExists(
         ?int $lvl1_iteration_tracker_id,
-        ?int $lvl2_iteration_tracker_id
+        ?int $lvl2_iteration_tracker_id,
     ): void {
         $nature_presenter_factory = $this->createMock(TypePresenterFactory::class);
         $nature_presenter_factory->method('getOnlyVisibleTypes')->willReturn([]);
@@ -138,7 +138,7 @@ class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItWillNotLoadIterationsIfTrackerIsNotActive(
         ?int $lvl1_iteration_tracker_id,
-        ?int $lvl2_iteration_tracker_id
+        ?int $lvl2_iteration_tracker_id,
     ): void {
         $nature_presenter_factory = $this->createMock(TypePresenterFactory::class);
         $nature_presenter_factory->method('getOnlyVisibleTypes')->willReturn([]);
@@ -168,7 +168,7 @@ class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItWillNotLoadIterationsIfTrackerIsNotReadable(
         ?int $lvl1_iteration_tracker_id,
-        ?int $lvl2_iteration_tracker_id
+        ?int $lvl2_iteration_tracker_id,
     ): void {
         $nature_presenter_factory = $this->createMock(TypePresenterFactory::class);
         $nature_presenter_factory->method('getOnlyVisibleTypes')->willReturn([]);

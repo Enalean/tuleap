@@ -45,10 +45,10 @@ class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
                             '20170321' => [
                                 'write' => 1,
                                 'read'  => 1,
-                            ]
-                        ]
-                    ]
-                ]
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
     }
@@ -66,16 +66,16 @@ class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
                             '20170321' => [
                                 'write' => 3,
                                 'read'  => 3,
-                            ]
+                            ],
                         ],
                         'alice'    => [
                             '20170321' => [
                                 'write' => 0,
                                 'read'  => 1,
-                            ]
-                        ]
-                    ]
-                ]
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
     }
@@ -93,23 +93,23 @@ class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
                             '20170321' => [
                                 'write' => 3,
                                 'read'  => 3,
-                            ]
+                            ],
                         ],
                         'alice'    => [
                             '20170321' => [
                                 'write' => 0,
                                 'read'  => 1,
-                            ]
-                        ]
+                            ],
+                        ],
                     ],
                     'pouet'   => [
                         'vaceletm' => [
                             '20170321' => [
                                 'write' => 1,
                                 'read'  => 0,
-                            ]
-                        ]
-                    ]
+                            ],
+                        ],
+                    ],
                 ],
                 'zataz'    => [
                     'zorglub' => [
@@ -117,10 +117,10 @@ class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
                             '20170321' => [
                                 'write' => 0,
                                 'read'  => 1,
-                            ]
-                        ]
-                    ]
-                ]
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
     }
@@ -138,16 +138,16 @@ class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
                             '20170321' => [
                                 'write' => 0,
                                 'read'  => 1,
-                            ]
+                            ],
                         ],
                         'alice'    => [
                             '20161111' => [
                                 'write' => 1,
                                 'read'  => 0,
-                            ]
-                        ]
-                    ]
-                ]
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
     }
@@ -179,10 +179,10 @@ class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
                             '20170321' => [
                                 'write' => 0,
                                 'read'  => 1,
-                            ]
-                        ]
-                    ]
-                ]
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
     }

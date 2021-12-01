@@ -42,7 +42,7 @@ final class DocmanServiceRepresentation
 
     private function __construct(
         ?DocmanServicePermissionsForGroupsRepresentation $permissions_for_groups,
-        ?ItemRepresentation $root_item
+        ?ItemRepresentation $root_item,
     ) {
         $this->permissions_for_groups = $permissions_for_groups;
         $this->root_item              = $root_item;
@@ -60,7 +60,7 @@ final class DocmanServiceRepresentation
 
     public static function buildWithRootItemAndPermissions(
         DocmanServicePermissionsForGroupsRepresentation $permissions_for_groups,
-        ItemRepresentation $root_item
+        ItemRepresentation $root_item,
     ): self {
         return new self($permissions_for_groups, $root_item);
     }

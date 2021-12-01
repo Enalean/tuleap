@@ -63,7 +63,7 @@ final class UGroupListPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getId'                       => 15,
                 'getTranslatedName'           => '',
                 'getTranslatedDescription'    => '',
-                'countStaticOrDynamicMembers' => 0
+                'countStaticOrDynamicMembers' => 0,
             ]
         );
         $this->ugroup_manager->shouldReceive('getUGroup')->andReturn($mock_ugroup);
@@ -75,7 +75,7 @@ final class UGroupListPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'isLegacyDefaultTemplate' => false,
                 'usesWiki'                => false,
                 'usesForum'               => false,
-                'usesNews'                => false
+                'usesNews'                => false,
             ]
         );
 

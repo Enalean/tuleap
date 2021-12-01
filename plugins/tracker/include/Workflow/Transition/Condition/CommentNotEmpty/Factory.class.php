@@ -69,7 +69,7 @@ class Workflow_Transition_Condition_CommentNotEmpty_Factory //phpcs:ignore
         $new_transition_id,
         $field_mapping,
         $ugroup_mapping,
-        $duplicate_type
+        $duplicate_type,
     ) {
         $this->dao->duplicate($from_transition->getId(), $new_transition_id);
     }

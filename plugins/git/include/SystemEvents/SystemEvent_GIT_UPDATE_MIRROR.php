@@ -26,7 +26,7 @@ class SystemEvent_GIT_UPDATE_MIRROR extends SystemEvent
     private $gitolite_driver;
 
     public function injectDependencies(
-        Git_GitoliteDriver $gitolite_driver
+        Git_GitoliteDriver $gitolite_driver,
     ) {
         $this->gitolite_driver = $gitolite_driver;
     }

@@ -44,7 +44,7 @@ class TrackerPermissionPerGroupRepresentation
     public function __construct(
         $tracker_name,
         $admin_quick_link,
-        array $permissions
+        array $permissions,
     ) {
         $this->tracker_name     = $tracker_name;
         $this->permissions      = $permissions;

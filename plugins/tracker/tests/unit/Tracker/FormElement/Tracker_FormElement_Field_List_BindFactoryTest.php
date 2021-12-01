@@ -87,7 +87,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
                         'F6-V1' => $v2,
                         'F6-V2' => $v3,
                     ],
-                ]
+                ],
             ]
         );
         $bind->getInstanceFromXML($xml, $field, $mapping, Mockery::mock(IFindUserFromXMLReference::class));
@@ -122,7 +122,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
                     'default_values' => null,
                     'decorators'     => null,
                     'value_function' => 'ugroup1,ugroup2',
-                ]
+                ],
             ]
         );
         $bind->getInstanceFromXML($xml, $field, $mapping, Mockery::mock(IFindUserFromXMLReference::class));
@@ -144,7 +144,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
                     'field'          => $field,
                     'default_values' => [],
                     'decorators'     => null,
-                ]
+                ],
             ]
         );
         $this->assertEquals([], $mapping);

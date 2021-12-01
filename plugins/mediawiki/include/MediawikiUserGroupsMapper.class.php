@@ -38,7 +38,7 @@ class MediawikiUserGroupsMapper
         self::MEDIAWIKI_GROUPS_USER,
         self::MEDIAWIKI_GROUPS_BOT,
         self::MEDIAWIKI_GROUPS_SYSOP,
-        self::MEDIAWIKI_GROUPS_BUREAUCRAT
+        self::MEDIAWIKI_GROUPS_BUREAUCRAT,
     ];
 
     public static $MEDIAWIKI_MODIFIABLE_GROUP_NAMES = [
@@ -51,13 +51,13 @@ class MediawikiUserGroupsMapper
         self::MEDIAWIKI_GROUPS_ANONYMOUS  => [ProjectUGroup::ANONYMOUS],
         self::MEDIAWIKI_GROUPS_USER       => [ProjectUGroup::REGISTERED],
         self::MEDIAWIKI_GROUPS_SYSOP      => [ProjectUGroup::PROJECT_ADMIN],
-        self::MEDIAWIKI_GROUPS_BUREAUCRAT => [ProjectUGroup::PROJECT_ADMIN]
+        self::MEDIAWIKI_GROUPS_BUREAUCRAT => [ProjectUGroup::PROJECT_ADMIN],
     ];
 
     public static $DEFAULT_MAPPING_PRIVATE_PROJECT =  [
         self::MEDIAWIKI_GROUPS_USER       => [ProjectUGroup::REGISTERED],
         self::MEDIAWIKI_GROUPS_SYSOP      => [ProjectUGroup::PROJECT_ADMIN],
-        self::MEDIAWIKI_GROUPS_BUREAUCRAT => [ProjectUGroup::PROJECT_ADMIN]
+        self::MEDIAWIKI_GROUPS_BUREAUCRAT => [ProjectUGroup::PROJECT_ADMIN],
     ];
 
     /** @var MediawikiDao */

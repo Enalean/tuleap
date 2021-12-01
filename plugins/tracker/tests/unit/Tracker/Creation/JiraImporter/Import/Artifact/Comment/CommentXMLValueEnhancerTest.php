@@ -41,7 +41,7 @@ class CommentXMLValueEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
         $comment = new JiraCloudComment(
             new ActiveJiraCloudUser([
                 'displayName' => 'userO1',
-                'accountId' => 'e12ds5123sw'
+                'accountId' => 'e12ds5123sw',
             ]),
             new DateTimeImmutable(),
             "<p>Comment 01</p>"
@@ -63,7 +63,7 @@ class CommentXMLValueEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'displayName'  => 'userO1',
                 'accountId'    => 'e12ds5123sw',
-                'emailAddress' => 'user01@example.com'
+                'emailAddress' => 'user01@example.com',
             ]
         );
 

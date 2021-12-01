@@ -165,7 +165,7 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->tracker)
             ->once()
             ->andReturn([
-                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)
+                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class),
             ]);
 
         $this->natures_factory->shouldReceive('getTypeEnabledInProjectFromShortname')
@@ -250,7 +250,7 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->tracker)
             ->once()
             ->andReturn([
-                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)
+                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class),
             ]);
 
         $this->natures_factory->shouldReceive('getTypeEnabledInProjectFromShortname')
@@ -295,7 +295,7 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->tracker)
             ->once()
             ->andReturn([
-                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)
+                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class),
             ]);
 
         $method = $this->method_builder->buildMethodBasedOnChildCount(
@@ -315,7 +315,7 @@ class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->tracker)
             ->once()
             ->andReturn([
-                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)
+                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class),
             ]);
 
         $this->natures_factory->shouldReceive('getTypeEnabledInProjectFromShortname')

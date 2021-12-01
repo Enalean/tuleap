@@ -45,11 +45,11 @@ class ParameterRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $parameters_data = TestHelper::arrayToDar(
             [
                 'name'  => ParameterRetriever::MAXIMUM_CREDENTIALS,
-                'value' => 877
+                'value' => 877,
             ],
             [
                 'name' => ParameterRetriever::LIFETIME,
-                'value' => 947
+                'value' => 947,
             ]
         );
         $dao             = \Mockery::spy(\Tuleap\SvnCore\Cache\ParameterDao::class);

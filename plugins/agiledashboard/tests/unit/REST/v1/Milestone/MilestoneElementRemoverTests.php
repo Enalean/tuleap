@@ -103,7 +103,7 @@ final class MilestoneElementRemoverTests extends \Tuleap\Test\PHPUnit\TestCase
             $this->project,
             UserTestBuilder::aUser()->build(),
             [
-                $this->backlog_remove_representation
+                $this->backlog_remove_representation,
             ]
         );
     }
@@ -130,7 +130,7 @@ final class MilestoneElementRemoverTests extends \Tuleap\Test\PHPUnit\TestCase
             $this->project,
             UserTestBuilder::aUser()->build(),
             [
-                $this->backlog_remove_representation
+                $this->backlog_remove_representation,
             ]
         );
     }
@@ -156,7 +156,7 @@ final class MilestoneElementRemoverTests extends \Tuleap\Test\PHPUnit\TestCase
             $this->project,
             UserTestBuilder::aUser()->build(),
             [
-                $this->backlog_remove_representation
+                $this->backlog_remove_representation,
             ]
         );
     }
@@ -179,7 +179,7 @@ final class MilestoneElementRemoverTests extends \Tuleap\Test\PHPUnit\TestCase
             $this->project,
             UserTestBuilder::aUser()->build(),
             [
-                $this->backlog_remove_representation
+                $this->backlog_remove_representation,
             ]
         );
     }

@@ -70,9 +70,9 @@ final class LinkedArtifactsTest extends TrackerBase
                         }
 
                         return $representations;
-                    })(...$linked_artifacts)
-                ]
-            ]
+                    })(...$linked_artifacts),
+                ],
+            ],
         ];
 
         $response_with_read_only_user = $this->getResponse(

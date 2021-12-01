@@ -34,7 +34,7 @@ class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor
     {
         $params = [
             'executed_events_ids'  => $executed_events_ids,
-            'queue_name'           => $queue_name
+            'queue_name'           => $queue_name,
         ];
 
         EventManager::instance()->processEvent(

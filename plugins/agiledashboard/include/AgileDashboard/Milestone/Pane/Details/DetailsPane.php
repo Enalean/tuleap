@@ -39,7 +39,7 @@ class DetailsPane extends AgileDashboard_Pane
 
     public function __construct(
         DetailsPaneInfo $info,
-        DetailsPresenter $presenter
+        DetailsPresenter $presenter,
     ) {
         $this->info      = $info;
         $this->presenter = $presenter;

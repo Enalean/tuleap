@@ -253,7 +253,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml_input         = simplexml_load_string($xml_field_mapping);
 
         $data = [
-            $this->summary_field_id => 'OK'
+            $this->summary_field_id => 'OK',
         ];
 
         $this->artifact_creator
@@ -271,7 +271,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $data = [
-            $this->summary_field_id => 'Again'
+            $this->summary_field_id => 'Again',
         ];
 
         $this->new_changeset_creator
@@ -292,7 +292,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $data = [
-            $this->summary_field_id => 'Value'
+            $this->summary_field_id => 'Value',
         ];
 
         $this->new_changeset_creator
@@ -359,7 +359,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml_input         = simplexml_load_string($xml_field_mapping);
 
         $data = [
-            $this->summary_field_id => 'OK'
+            $this->summary_field_id => 'OK',
         ];
 
         $this->artifact_creator
@@ -377,7 +377,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $data = [
-            $this->summary_field_id => 'Again'
+            $this->summary_field_id => 'Again',
         ];
 
         $this->new_changeset_creator
@@ -398,7 +398,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $data = [
-            $this->summary_field_id => 'Value'
+            $this->summary_field_id => 'Value',
         ];
 
         $this->new_changeset_creator
@@ -456,7 +456,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml_input         = simplexml_load_string($xml_field_mapping);
 
         $data = [
-            $this->summary_field_id => 'OK'
+            $this->summary_field_id => 'OK',
         ];
 
         $this->artifact_creator
@@ -474,7 +474,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $data = [
-            $this->summary_field_id => 'Again'
+            $this->summary_field_id => 'Again',
         ];
 
         $this->new_changeset_creator
@@ -495,7 +495,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $data = [
-            $this->summary_field_id => 'Value'
+            $this->summary_field_id => 'Value',
         ];
 
         $this->new_changeset_creator
@@ -569,7 +569,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml_input         = simplexml_load_string($xml_field_mapping);
 
         $data = [
-            $this->summary_field_id => 'OK'
+            $this->summary_field_id => 'OK',
         ];
 
         $this->artifact_creator
@@ -587,7 +587,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $data = [
-            $this->summary_field_id => 'Again'
+            $this->summary_field_id => 'Again',
         ];
 
         $this->new_changeset_creator
@@ -608,7 +608,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $data = [
-            $this->summary_field_id => 'Value'
+            $this->summary_field_id => 'Value',
         ];
 
         $this->new_changeset_creator
@@ -673,7 +673,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset_3 = $this->mockAChangeset($this->john_doe->getId(), strtotime("102030"), "un com", $this->john_doe->getId(), strtotime("102030"), $this->tracker_id, "stuff", 'Value', 2);
 
         $data = [
-            $this->summary_field_id => 'OK'
+            $this->summary_field_id => 'OK',
         ];
 
         $this->new_changeset_creator
@@ -694,7 +694,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($changeset_1);
 
         $data = [
-            $this->summary_field_id => 'Again'
+            $this->summary_field_id => 'Again',
         ];
 
         $this->new_changeset_creator
@@ -715,7 +715,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $data = [
-            $this->summary_field_id => 'Value'
+            $this->summary_field_id => 'Value',
         ];
 
         $this->new_changeset_creator

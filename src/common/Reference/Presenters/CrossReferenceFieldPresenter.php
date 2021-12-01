@@ -56,7 +56,7 @@ class CrossReferenceFieldPresenter
         bool $condensed,
         bool $with_links,
         bool $display_params,
-        array $cross_refs_by_nature_presenter_collection
+        array $cross_refs_by_nature_presenter_collection,
     ) {
         $this->condensed            = $condensed;
         $this->classes              = "nature ";

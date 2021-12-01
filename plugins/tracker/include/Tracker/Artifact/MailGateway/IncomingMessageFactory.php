@@ -35,7 +35,7 @@ class Tracker_Artifact_MailGateway_IncomingMessageFactory
     public function __construct(
         MailGatewayConfig $tracker_config,
         Tracker_Artifact_IncomingMessageTokenBuilder $incoming_message_token_builder,
-        Tracker_Artifact_IncomingMessageInsecureBuilder $incoming_message_insecure_builder
+        Tracker_Artifact_IncomingMessageInsecureBuilder $incoming_message_insecure_builder,
     ) {
         $this->tracker_config                    = $tracker_config;
         $this->incoming_message_token_builder    = $incoming_message_token_builder;

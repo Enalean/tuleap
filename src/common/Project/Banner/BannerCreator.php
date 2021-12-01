@@ -34,7 +34,7 @@ class BannerCreator
 
     public function addBanner(
         UserCanEditBannerPermission $update_permission,
-        string $message
+        string $message,
     ): void {
         $this->banner_dao->addBanner(
             $update_permission->getProject()->getID(),

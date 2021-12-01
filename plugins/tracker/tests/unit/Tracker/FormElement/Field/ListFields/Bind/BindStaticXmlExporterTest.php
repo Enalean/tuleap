@@ -94,7 +94,7 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportBindWithTLPNoneValue(): void
     {
         $values     = [
-            new Tracker_FormElement_Field_List_Bind_StaticValue(\Tracker_FormElement_Field_List::NONE_VALUE, "None", "description", 1, false)
+            new Tracker_FormElement_Field_List_Bind_StaticValue(\Tracker_FormElement_Field_List::NONE_VALUE, "None", "description", 1, false),
         ];
         $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, null, null, null, 'inca-silver')];
 
@@ -117,7 +117,7 @@ final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportBindWithLegacyNoneValue(): void
     {
         $values     = [
-            new Tracker_FormElement_Field_List_Bind_StaticValue(\Tracker_FormElement_Field_List::NONE_VALUE, "None", "description", 1, false)
+            new Tracker_FormElement_Field_List_Bind_StaticValue(\Tracker_FormElement_Field_List::NONE_VALUE, "None", "description", 1, false),
         ];
         $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, "123", "456", "789", null)];
 

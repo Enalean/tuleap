@@ -47,7 +47,7 @@ class FormattedChangesetValueForListFieldRetriever
         string $field_name,
         string $value,
         Artifact $artifact,
-        PFUser $user
+        PFUser $user,
     ): ?ArtifactValuesRepresentation {
         $field = $this->form_element_factory->getUsedFieldByNameForUser($artifact->getTrackerId(), $field_name, $user);
         if (! $field) {

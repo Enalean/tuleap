@@ -47,7 +47,7 @@ class RequirementRetriever
     public function __construct(
         Tracker_ArtifactFactory $tracker_artifact_factory,
         ArtifactDao $artifact_dao,
-        Config $config
+        Config $config,
     ) {
         $this->tracker_artifact_factory = $tracker_artifact_factory;
         $this->artifact_dao             = $artifact_dao;

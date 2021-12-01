@@ -52,7 +52,7 @@ class GitCommitRepresentation
         GitCommitVerificationRepresentation $verification,
         ?MinimalUserRepresentation $author,
         ?GitCommitStatusRepresentation $commit_status,
-        string $repository_path
+        string $repository_path,
     ) {
         $this->id             = $id;
         $this->title          = $title;
@@ -66,7 +66,7 @@ class GitCommitRepresentation
         $this->html_url       = $repository_path . '?' . http_build_query(
             [
                     'a' => 'commit',
-                    'h' => $id
+                    'h' => $id,
                 ]
         );
         $this->author_email   = $author_email;

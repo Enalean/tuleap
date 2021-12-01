@@ -97,7 +97,7 @@ final class UserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns([
             101 => 101,
-            102 => 102
+            102 => 102,
         ]);
 
         $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns(['101' => '101']);
@@ -114,7 +114,7 @@ final class UserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns([
             101 => 101,
-            102 => 102
+            102 => 102,
         ]);
 
         $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns(['101' => '101']);
@@ -132,12 +132,12 @@ final class UserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns([
             101 => 101,
-            102 => 102
+            102 => 102,
         ]);
 
         $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns([
             '101' => '101',
-            '102' => '102'
+            '102' => '102',
         ]);
 
         $this->project->shouldReceive('isPublic')->andReturns(false);
@@ -153,7 +153,7 @@ final class UserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns([
             101 => 101,
-            102 => 102
+            102 => 102,
         ]);
 
         $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns([
@@ -172,12 +172,12 @@ final class UserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns([
             101 => 101,
-            102 => 102
+            102 => 102,
         ]);
 
         $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns([
             '101' => '101',
-            '102' => '102'
+            '102' => '102',
         ]);
 
         $this->project->shouldReceive('isPublic')->andReturns(false);

@@ -49,7 +49,7 @@ class PermissionsImporter
         LoggerInterface $logger,
         \PermissionsManager $permission_manager,
         UGroupRetrieverWithLegacy $ugroup_retriever_with_legacy,
-        Project $project
+        Project $project,
     ) {
         $this->logger                       = $logger;
         $this->permission_manager           = $permission_manager;

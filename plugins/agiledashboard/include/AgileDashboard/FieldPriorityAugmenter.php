@@ -29,7 +29,7 @@ class AgileDashboard_FieldPriorityAugmenter
 
     public function __construct(
         AgileDashboard_SequenceIdManager $sequence_id_manager,
-        Planning_MilestoneFactory $milestone_factory
+        Planning_MilestoneFactory $milestone_factory,
     ) {
         $this->sequence_id_manager = $sequence_id_manager;
         $this->milestone_factory   = $milestone_factory;

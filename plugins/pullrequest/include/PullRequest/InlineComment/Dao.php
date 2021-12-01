@@ -74,7 +74,7 @@ class Dao extends DataAccessObject
                 'post_date'       => $post_date,
                 'unidiff_offset'  => $unidiff_offset,
                 'content'         => $content,
-                'position'        => $position
+                'position'        => $position,
             ]
         );
 

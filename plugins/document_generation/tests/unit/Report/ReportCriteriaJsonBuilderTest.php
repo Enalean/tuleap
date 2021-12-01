@@ -210,7 +210,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             ->willReturn([
                 "op" => "=",
                 'from_date' => '1627768800',
-                'to_date' => '1630101600'
+                'to_date' => '1630101600',
             ]);
 
         return $criterion_date;

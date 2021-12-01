@@ -50,7 +50,7 @@ class Docman_View_New_FolderSelection extends Docman_View_Docman
             'docman_icons' => $this->_getDocmanIcons($params),
             'current'      => $params['item']->getId(),
             'hierarchy'    => $params['hierarchy'],
-            'input_name'   => 'id'
+            'input_name'   => 'id',
         ]);
         $html       .= '<div class="docman_help">' . dgettext('tuleap-docman', 'How to use folder selector:<ul><li><em>[other folders: ]</em> link displays the whole folder tree.</li><li><em>Position</em> select box allows to select the position within the selected folder.</li></ul>') . '</div>';
 

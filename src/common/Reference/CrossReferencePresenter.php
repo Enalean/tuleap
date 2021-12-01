@@ -84,7 +84,7 @@ final class CrossReferencePresenter
         string $value,
         ?TitleBadgePresenter $title_badge,
         array $additional_badges,
-        ?CreationMetadataPresenter $creation_metadata
+        ?CreationMetadataPresenter $creation_metadata,
     ) {
         $this->id                = $id;
         $this->type              = $type;

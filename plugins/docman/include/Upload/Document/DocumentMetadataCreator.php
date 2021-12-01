@@ -41,7 +41,7 @@ class DocumentMetadataCreator
 
     public function __construct(
         MetadataValueCreator $value_creator,
-        Docman_MetadataDao $metadata_dao
+        Docman_MetadataDao $metadata_dao,
     ) {
         $this->value_creator = $value_creator;
         $this->metadata_dao  = $metadata_dao;

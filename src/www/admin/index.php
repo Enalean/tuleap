@@ -125,7 +125,7 @@ EventManager::instance()->processEvent(
     Event::GET_SITEADMIN_HOMEPAGE_USER_STATISTICS,
     [
         'nb_users_by_status'    => $nb_users_by_status,
-        'additional_statistics' => &$additional_statistics
+        'additional_statistics' => &$additional_statistics,
     ]
 );
 
@@ -202,7 +202,7 @@ $session_browser_stats->setContent(
                     ['key' => 'supported', 'label' => _('supported browsers'), 'count' => $statistics->number_sessions_using_supported_browsers],
                 ],
                 JSON_THROW_ON_ERROR
-            )
+            ),
         ]
     )
 );

@@ -45,7 +45,7 @@ class NewsPermissionsManager
 
     public function __construct(
         PermissionsManager $permissions_manager,
-        AdminNewsDao $dao
+        AdminNewsDao $dao,
     ) {
         $this->permissions_manager = $permissions_manager;
         $this->dao                 = $dao;

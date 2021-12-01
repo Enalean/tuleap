@@ -97,16 +97,16 @@ class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->columns = [
             "101" => [
                 'field' => $this->form_elements_1,
-                'field_id' => "101"
+                'field_id' => "101",
             ],
             "102" => [
                 'field' => $this->form_elements_2,
-                'field_id' => "102"
+                'field_id' => "102",
             ],
             "103" => [
                 'field' => $this->form_elements_3,
-                'field_id' => "103"
-            ]
+                'field_id' => "103",
+            ],
         ];
 
         $this->tracker_report_renderer_table->shouldReceive('sortHasUsedField')->andReturn(true);
@@ -122,8 +122,8 @@ class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
                     'field_id' => 101,
                     'is_desc' => true,
                     'rank' => 0,
-                    'field' => $this->form_elements_1
-                ]
+                    'field' => $this->form_elements_1,
+                ],
             ]
         );
 
@@ -147,7 +147,7 @@ class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $field_info = [
             'field_id'       => 10,
-            'artlink_nature' => '_is_child'
+            'artlink_nature' => '_is_child',
         ];
 
         $mapping = $this->mapFieldWithNature(10, '_is_child', null);
@@ -163,7 +163,7 @@ class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $field_info = [
             'field_id'              => 11,
-            'artlink_nature_format' => '#%id'
+            'artlink_nature_format' => '#%id',
         ];
 
         $mapping = $this->mapFieldWithNature(11, null, '#%id');
@@ -180,7 +180,7 @@ class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_info = [
             'field_id'              => 12,
             'artlink_nature' => '_is_child',
-            'artlink_nature_format' => '#%id'
+            'artlink_nature_format' => '#%id',
         ];
 
         $mapping = $this->mapFieldWithNature(12, '_is_child', '#%id');
@@ -196,7 +196,7 @@ class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItNeverAddNatureInTrackerReportsWithoutNature()
     {
         $field_info = [
-            'field_id' => 13
+            'field_id' => 13,
         ];
 
         $mapping = $this->mapFieldWithNature(13, null, null);
@@ -220,7 +220,7 @@ class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
             'field'                 => $field,
             'field_id'              => $id,
             'width'                 => '15',
-            'rank'                  => '1'
+            'rank'                  => '1',
         ];
 
         if ($nature) {
@@ -233,7 +233,7 @@ class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
 
         return [
             "field" => [$field_mapping],
-            "xml"   => $xml_mapping
+            "xml"   => $xml_mapping,
         ];
     }
 }

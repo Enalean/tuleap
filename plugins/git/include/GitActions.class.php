@@ -196,7 +196,7 @@ class GitActions extends PluginActions
         RegexpFineGrainedRetriever $regexp_retriever,
         UsersToNotifyDao $users_to_notify_dao,
         UgroupsToNotifyDao $ugroups_to_notify_dao,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager      = $system_event_manager;
@@ -310,7 +310,7 @@ class GitActions extends PluginActions
             'repository_list'        => $repos,
             'templates_list'         => $templates,
             'parent_templates_list'  => $parent_templates,
-            'has_gerrit_servers_set_up' => $this->gerrit_server_factory->hasRemotesSetUp()
+            'has_gerrit_servers_set_up' => $this->gerrit_server_factory->hasRemotesSetUp(),
         ]);
     }
 
@@ -547,7 +547,7 @@ class GitActions extends PluginActions
             'repository'         => $repository,
             'gerrit_servers'     => $this->gerrit_server_factory->getServers(),
             'driver_factory'     => $this->driver_factory,
-            'gerrit_usermanager' => $this->gerrit_usermanager
+            'gerrit_usermanager' => $this->gerrit_usermanager,
         ]);
         return true;
     }
@@ -560,7 +560,7 @@ class GitActions extends PluginActions
             'gerrit_servers'             => $this->gerrit_server_factory->getServers(),
             'driver_factory'             => $this->driver_factory,
             'gerrit_templates'           => $this->template_factory->getTemplatesAvailableForRepository($repository),
-            'gerrit_can_migrate_checker' => $this->gerrit_can_migrate_checker
+            'gerrit_can_migrate_checker' => $this->gerrit_can_migrate_checker,
         ]);
         return true;
     }
@@ -840,7 +840,7 @@ class GitActions extends PluginActions
                 [
                     'action'   => 'admin-default-settings',
                     'group_id' => $project_id,
-                    'pane'     => $pane
+                    'pane'     => $pane,
                 ]
             )
         );
@@ -931,7 +931,7 @@ class GitActions extends PluginActions
         array $added_branches_permissions,
         array $added_tags_permissions,
         array $updated_permissions,
-        bool $enable_regexp
+        bool $enable_regexp,
     ) {
         $controller = $this->getController();
         if (empty($repoId)) {
@@ -1313,7 +1313,7 @@ class GitActions extends PluginActions
     private function areThereAnyChanges(
         GitRepository $repository,
         array $mirror_ids,
-        array $current_mirror_ids_per_repository
+        array $current_mirror_ids_per_repository,
     ) {
         $current_mirrors = [];
         if (isset($current_mirror_ids_per_repository[$repository->getId()])) {

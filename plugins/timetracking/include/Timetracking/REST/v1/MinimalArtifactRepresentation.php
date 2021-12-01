@@ -69,7 +69,7 @@ class MinimalArtifactRepresentation
         string $html_url,
         string $title,
         string $badge_color,
-        string $submission_date
+        string $submission_date,
     ) {
         $this->id              = $id;
         $this->uri             = self::ROUTE . '/' . $this->id;

@@ -48,7 +48,7 @@ class AdminHeaderPresenter
 
     public function __construct(
         $title,
-        $active_tab
+        $active_tab,
     ) {
         $this->title = $title;
 

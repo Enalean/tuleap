@@ -49,7 +49,7 @@ abstract class HudsonJobWidget extends HudsonWidget
                     'widget_name' => $this->id,
                     'owner_id'    => $this->owner_id,
                     'owner_type'  => $this->owner_type,
-                    'job_id'      => $job_id
+                    'job_id'      => $job_id,
                 ]
             );
         }

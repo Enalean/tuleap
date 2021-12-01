@@ -149,43 +149,43 @@ class BurndownRemainingEffortAdderForRESTTest extends \Tuleap\Test\PHPUnit\TestC
                     "artifact_id" => $this->artifact->getId(),
                     "field_id"    => $field_id,
                     "timestamp"   => strtotime('+1 day', $old_start_date),
-                    "value"        => 10
+                    "value"        => 10,
                 ],
                 [
                     "artifact_id" => $this->artifact->getId(),
                     "field_id"    => $field_id,
                     "timestamp"   => strtotime('+2 day', $old_start_date),
-                    "value"       => 10
+                    "value"       => 10,
 
                 ],
                 [
                     "artifact_id" => $this->artifact->getId(),
                     "field_id"    => $field_id,
                     "timestamp"   => strtotime('+3 day', $old_start_date),
-                    "value"       => 10
+                    "value"       => 10,
 
                 ],
                 [
                     "artifact_id" => $this->artifact->getId(),
                     "field_id"    => $field_id,
                     "timestamp"   => strtotime('+4 day', $old_start_date),
-                    "value"       => 10
+                    "value"       => 10,
 
                 ],
                 [
                     "artifact_id" => $this->artifact->getId(),
                     "field_id"    => $field_id,
                     "timestamp"   => strtotime('+5 day', $old_start_date),
-                    "value"       => 10
+                    "value"       => 10,
 
                 ],
                 [
                     "artifact_id" => $this->artifact->getId(),
                     "field_id"    => $field_id,
                     "timestamp"   => strtotime('+6 day', $old_start_date),
-                    "value"       => 10
+                    "value"       => 10,
 
-                ]
+                ],
             ]
         );
         $remaining_effort_field->shouldReceive('getCachedValue');
@@ -215,22 +215,22 @@ class BurndownRemainingEffortAdderForRESTTest extends \Tuleap\Test\PHPUnit\TestC
                     "artifact_id" => $this->artifact->getId(),
                     "field_id"    => $field_id,
                     "timestamp"   => strtotime('+1 day', $recent_start_date),
-                    "value"       => 10
+                    "value"       => 10,
                 ],
                 [
                     "artifact_id" => $this->artifact->getId(),
                     "field_id"    => $field_id,
                     "timestamp"   => strtotime('+2 day', $recent_start_date),
-                    "value"       => 10
+                    "value"       => 10,
 
                 ],
                 [
                     "artifact_id" => $this->artifact->getId(),
                     "field_id"    => $field_id,
                     "timestamp"   => strtotime('+3 day', $recent_start_date),
-                    "value"       => 10
+                    "value"       => 10,
 
-                ]
+                ],
             ]
         );
 

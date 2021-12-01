@@ -49,7 +49,7 @@ class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $row_collection_factory,
         BurnupFieldRetriever $field_retriever,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->backlog_factory        = $backlog_factory;
         $this->row_collection_factory = $row_collection_factory;

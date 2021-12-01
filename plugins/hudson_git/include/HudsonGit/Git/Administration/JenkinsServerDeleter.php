@@ -45,7 +45,7 @@ class JenkinsServerDeleter
     public function __construct(
         JenkinsServerDao $jenkins_server_dao,
         ProjectJobDao $project_job_dao,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->jenkins_server_dao   = $jenkins_server_dao;
         $this->project_job_dao      = $project_job_dao;

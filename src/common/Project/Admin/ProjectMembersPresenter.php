@@ -48,7 +48,7 @@ class ProjectMembersPresenter
     public function __construct(
         Project $project,
         UserListSearchFieldsPresenter $search_fields,
-        UserListResultsPresenter $results
+        UserListResultsPresenter $results,
     ) {
         $this->id            = $project->getID();
         $this->group_id      = $project->getID();

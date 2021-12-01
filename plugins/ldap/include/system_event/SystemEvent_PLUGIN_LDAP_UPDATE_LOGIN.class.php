@@ -46,7 +46,7 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN extends SystemEvent
         UserManager $user_manager,
         BackendSVN $backend_svn,
         ProjectManager $project_manager,
-        LDAP_ProjectManager $ldap_project_manager
+        LDAP_ProjectManager $ldap_project_manager,
     ) {
         $this->user_manager         = $user_manager;
         $this->backend_svn          = $backend_svn;

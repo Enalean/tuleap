@@ -87,7 +87,7 @@ final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'email'            => 'zurg@example.com',
             'profile_page_url' => '/users/zurg/',
             'username_display' => 'getDisplayName',
-            'avatar_url'       => ''
+            'avatar_url'       => '',
         ];
 
         $this->assertEquals([$expected_user], $user_collection->getFormattedUsers());
@@ -109,7 +109,7 @@ final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'email'            => 'zurg@example.com',
             'profile_page_url' => '/users/zurg/',
             'username_display' => 'getDisplayName',
-            'avatar_url'       => ''
+            'avatar_url'       => '',
         ];
 
         $this->assertEquals([$expected_user], $user_collection->getFormattedUsers());
@@ -129,7 +129,7 @@ final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEmpty($user_collection->getFormattedUsers());
         $this->assertEquals(
             [
-                ['warning' => 'zurg@example.com has multiple corresponding users.']
+                ['warning' => 'zurg@example.com has multiple corresponding users.'],
             ],
             $user_collection->getWarningsMultipleUsers(),
         );
@@ -147,7 +147,7 @@ final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEmpty($user_collection->getWarningsMultipleUsers());
         $this->assertEquals(
             [
-                ['warning' => "User 'zurg' does not exist"]
+                ['warning' => "User 'zurg' does not exist"],
             ],
             $user_collection->getWarningsInvalidUsers()
         );

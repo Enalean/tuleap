@@ -53,14 +53,14 @@ final class Tracker_Artifact_XMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
             'user_id' => 101,
             'language_id' => 'en',
             'user_name' => 'user_01',
-            'ldap_id' => 'ldap_O1'
+            'ldap_id' => 'ldap_O1',
         ]);
 
         $user_02 = new PFUser([
             'user_id' => 102,
             'language_id' => 'en',
             'user_name' => 'user_02',
-            'ldap_id' => 'ldap_O2'
+            'ldap_id' => 'ldap_O2',
         ]);
 
         $this->user_manager->shouldReceive('getUserById')->with(101)->andReturns($user_01);
@@ -192,7 +192,7 @@ final class Tracker_Artifact_XMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
         $rng_validator        = new XML_RNGValidator();
         $artifact_factory     = \Mockery::spy(\Tracker_ArtifactFactory::class)->shouldReceive('getArtifactsByTrackerId')->with(101)->andReturns([
             $artifact_01,
-            $artifact_02
+            $artifact_02,
         ])->getMock();
         $can_bypass_threshold = true;
 

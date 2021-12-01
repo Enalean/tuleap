@@ -61,7 +61,7 @@ class ArtifactRepresentationBuilder
         Tracker_FormElementFactory $formelement_factory,
         Tracker_ArtifactFactory $artifact_factory,
         TypeDao $nature_dao,
-        ChangesetRepresentationBuilder $changeset_representation_builder
+        ChangesetRepresentationBuilder $changeset_representation_builder,
     ) {
         $this->formelement_factory              = $formelement_factory;
         $this->artifact_factory                 = $artifact_factory;
@@ -217,7 +217,7 @@ class ArtifactRepresentationBuilder
         string $fields,
         int $offset,
         int $limit,
-        bool $reverse_order
+        bool $reverse_order,
     ): ChangesetRepresentationCollection {
         $all_changesets = $artifact->getChangesets();
 
@@ -241,7 +241,7 @@ class ArtifactRepresentationBuilder
         $nature,
         $direction,
         $offset,
-        $limit
+        $limit,
     ) {
         if ($direction === TypePresenter::REVERSE_LABEL) {
             $linked_artifacts_ids = $this->nature_dao->getReverseLinkedArtifactIds(

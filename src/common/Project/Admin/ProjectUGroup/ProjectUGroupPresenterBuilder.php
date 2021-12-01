@@ -44,7 +44,7 @@ class ProjectUGroupPresenterBuilder
     public function __construct(
         BindingPresenterBuilder $binding_builder,
         MembersPresenterBuilder $members_builder,
-        PermissionsDelegationPresenterBuilder $permissions_delegation_builder
+        PermissionsDelegationPresenterBuilder $permissions_delegation_builder,
     ) {
         $this->binding_builder = $binding_builder;
         $this->members_builder = $members_builder;

@@ -50,7 +50,7 @@ final class RetrieveMirroredProgramIncrementTrackerStub implements RetrieveMirro
     public function retrieveRootPlanningMilestoneTracker(
         ProjectReference $project,
         UserIdentifier $user_identifier,
-        ?ConfigurationErrorsCollector $errors_collector
+        ?ConfigurationErrorsCollector $errors_collector,
     ): ?TrackerReference {
         if ($this->has_no_planning) {
             $errors_collector?->addTeamMilestonePlanningNotFoundOrNotAccessible($project);

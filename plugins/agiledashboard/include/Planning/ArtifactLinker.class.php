@@ -55,7 +55,7 @@ class Planning_ArtifactLinker
     public function linkBacklogWithPlanningItems(
         Codendi_Request $request,
         Artifact $artifact,
-        ?array $requested_planning
+        ?array $requested_planning,
     ): ?Artifact {
         $user               = $request->getCurrentUser();
         $milestone_artifact = $this->getMilestoneArtifact($user, $request, $artifact, $requested_planning);
@@ -70,7 +70,7 @@ class Planning_ArtifactLinker
         PFUser $user,
         Codendi_Request $request,
         Artifact $artifact,
-        ?array $requested_planning
+        ?array $requested_planning,
     ): ?Artifact {
         if ($request->exist('link-artifact-id')) {
             return $this->getMilestoneThatHasJustBeenLinkedToTheArtifact($artifact, $user, $request);
@@ -90,7 +90,7 @@ class Planning_ArtifactLinker
     private function linkWithMilestoneArtifact(
         PFUser $user,
         Artifact $artifact,
-        ?Artifact $source_artifact = null
+        ?Artifact $source_artifact = null,
     ): ?Artifact {
         $last_ancestor = $source_artifact;
         if ($source_artifact) {
@@ -109,7 +109,7 @@ class Planning_ArtifactLinker
     private function getMilestoneThatHasJustBeenLinkedToTheArtifact(
         Artifact $artifact,
         PFUser $user,
-        Codendi_Request $request
+        Codendi_Request $request,
     ): ?Artifact {
         $ancestors = $artifact->getAllAncestors($user);
         if (count($ancestors) !== 0) {
@@ -127,7 +127,7 @@ class Planning_ArtifactLinker
     private function linkArtifactToTheMilestoneThatIsPartOfRedirectionParameter(
         array $requested_planning,
         Artifact $artifact,
-        PFUser $user
+        PFUser $user,
     ): ?Artifact {
         $source_artifact = $this->artifact_factory->getArtifactById(
             (int) $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID]

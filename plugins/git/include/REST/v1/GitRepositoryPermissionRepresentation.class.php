@@ -63,7 +63,7 @@ class GitRepositoryPermissionRepresentation extends GitRepositoryPermissionRepre
     private static function getUGroupsReaders(
         GitRepositoryPermissionsManager $repository_permissions_manager,
         UGroupManager $ugroup_manager,
-        GitRepository $repository
+        GitRepository $repository,
     ): array {
         $read_ugroups_rows = $repository_permissions_manager->getUGroupsReaders($repository);
 
@@ -76,7 +76,7 @@ class GitRepositoryPermissionRepresentation extends GitRepositoryPermissionRepre
     private static function getUGroupsWriters(
         GitRepositoryPermissionsManager $repository_permissions_manager,
         UGroupManager $ugroup_manager,
-        GitRepository $repository
+        GitRepository $repository,
     ): array {
         $write_ugroups_rows = $repository_permissions_manager->getUGroupsWriters($repository);
 
@@ -89,7 +89,7 @@ class GitRepositoryPermissionRepresentation extends GitRepositoryPermissionRepre
     private static function getUGroupsRewinders(
         GitRepositoryPermissionsManager $repository_permissions_manager,
         UGroupManager $ugroup_manager,
-        GitRepository $repository
+        GitRepository $repository,
     ): array {
         $rewind_ugroups_rows = $repository_permissions_manager->getUGroupsRewinders($repository);
 

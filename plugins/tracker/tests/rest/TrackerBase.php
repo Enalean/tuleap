@@ -207,7 +207,7 @@ class TrackerBase extends RestBase
         int $tracker_id,
         string $workflow_field_shortname,
         string $from_label,
-        string $to_label
+        string $to_label,
     ): array {
         $tracker = $this->tracker_representations[$tracker_id];
 

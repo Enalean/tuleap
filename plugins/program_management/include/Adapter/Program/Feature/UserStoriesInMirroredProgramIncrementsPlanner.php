@@ -50,7 +50,7 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
         private ContentStore $content_dao,
         private LoggerInterface $logger,
         private RetrieveUser $retrieve_user,
-        private RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement $linked_to_parent_dao
+        private RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement $linked_to_parent_dao,
     ) {
     }
 
@@ -91,7 +91,7 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
         ProgramIncrementIdentifier $program_increment,
         MirroredProgramIncrementIdentifier $mirrored_program_increment,
         FeaturePlanChange $feature_plan_change,
-        \PFUser $user
+        \PFUser $user,
     ): void {
         $this->logger->info(sprintf("Found mirrored PI %d", $mirrored_program_increment->getId()));
         $mirror_artifact = $this->artifact_retriever->getNonNullArtifact($mirrored_program_increment);

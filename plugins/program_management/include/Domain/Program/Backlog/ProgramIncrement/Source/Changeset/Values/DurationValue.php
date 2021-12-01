@@ -37,7 +37,7 @@ final class DurationValue
 
     public static function fromDurationReference(
         RetrieveDurationValue $duration_retriever,
-        DurationFieldReference $duration
+        DurationFieldReference $duration,
     ): self {
         return new self($duration_retriever->getDurationValue($duration));
     }

@@ -53,7 +53,7 @@ class TOTPEnroller
         TOTPEnrollmentDAO $dao,
         EncryptionKey $encryption_key,
         TOTPValidator $totp_validator,
-        TOTPMode $totp_mode
+        TOTPMode $totp_mode,
     ) {
         $this->dao            = $dao;
         $this->encryption_key = $encryption_key;

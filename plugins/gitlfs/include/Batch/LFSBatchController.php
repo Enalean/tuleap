@@ -59,7 +59,7 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
         \GitRepositoryFactory $repository_factory,
         LFSAPIHTTPAccessControl $api_access_control,
         BatchSuccessfulResponseBuilder $batch_successful_response_builder,
-        UserRetriever $user_retriever
+        UserRetriever $user_retriever,
     ) {
         $this->plugin                            = $plugin;
         $this->repository_factory                = $repository_factory;

@@ -58,7 +58,7 @@ class WidgetAddToDashboardDropdownPresenter
         $my_dashboard_url,
         $project_dashboard_url,
         array $user_dashboards_presenter,
-        array $project_dashboards_presenter
+        array $project_dashboards_presenter,
     ) {
         $this->is_admin                       = $user->isAdmin($project->getID());
         $this->my_dashboard_url               = $my_dashboard_url;

@@ -66,7 +66,7 @@ final class SwaggerJsonController extends DispatchablePSR15Compatible implements
         Codendi_HTMLPurifier $html_purifier,
         JSONResponseBuilder $json_response_builder,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         $this->restler_factory       = $restler_factory;
         $this->version               = $version;

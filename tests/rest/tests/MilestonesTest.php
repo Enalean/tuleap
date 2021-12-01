@@ -98,10 +98,10 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
                                 'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
-                                'icon' => ''
-                            ]
-                        ]
-                    ]
+                                'icon' => '',
+                            ],
+                        ],
+                    ],
                 ],
             ],
             $milestone['resources']['milestones']
@@ -125,9 +125,9 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
                                 'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
-                                'icon' => ''
-                            ]
-                        ]
+                                'icon' => '',
+                            ],
+                        ],
                     ],
                     'parent_trackers' => [
                         [
@@ -138,9 +138,9 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
                                 'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
-                                'icon' => ''
-                            ]
-                        ]
+                                'icon' => '',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -163,10 +163,10 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
                                 'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
-                                'icon' => ''
-                            ]
-                        ]
-                    ]
+                                'icon' => '',
+                            ],
+                        ],
+                    ],
                 ],
             ],
             $milestone['resources']['content']

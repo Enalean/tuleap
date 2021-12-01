@@ -63,7 +63,7 @@ class MetadataUsageChecker
         Tracker_Semantic_TitleDao $title_dao,
         Tracker_Semantic_DescriptionDao $description_dao,
         Tracker_Semantic_StatusDao $status_dao,
-        Tracker_Semantic_ContributorDao $assigned_to_dao
+        Tracker_Semantic_ContributorDao $assigned_to_dao,
     ) {
         $this->form_element_factory = $form_element_factory;
         $this->title_dao            = $title_dao;
@@ -86,7 +86,7 @@ class MetadataUsageChecker
      */
     public function checkMetadataIsUsedByAllTrackers(
         Metadata $metadata,
-        InvalidComparisonCollectorParameters $collector_parameters
+        InvalidComparisonCollectorParameters $collector_parameters,
     ) {
         if (isset($this->cache_already_checked[$metadata->getName()])) {
             return;

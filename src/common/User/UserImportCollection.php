@@ -64,7 +64,7 @@ class UserImportCollection
     public function addWarningMultipleUsers($warning)
     {
         $this->warnings_multiple_users[] = [
-            "warning" => sprintf(_('%s has multiple corresponding users.'), $warning)
+            "warning" => sprintf(_('%s has multiple corresponding users.'), $warning),
         ];
     }
 
@@ -99,7 +99,7 @@ class UserImportCollection
     public function addWarningsInvalidUsers($warning_invalid_user)
     {
         $this->warnings_invalid_users[] = [
-            "warning" => sprintf(_("User '%s' does not exist"), $warning_invalid_user)
+            "warning" => sprintf(_("User '%s' does not exist"), $warning_invalid_user),
         ];
     }
 

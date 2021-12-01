@@ -42,7 +42,7 @@ class PackagePermissionPerGroupReleaseRepresentation
     public function __construct(
         $release_url,
         $release_name,
-        array $release_permissions
+        array $release_permissions,
     ) {
         $this->release_url         = $release_url;
         $this->release_name        = $release_name;

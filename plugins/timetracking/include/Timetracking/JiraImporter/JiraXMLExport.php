@@ -62,7 +62,7 @@ class JiraXMLExport
         WorklogRetriever $worklog_retriever,
         XML_SimpleXMLCDATAFactory $cdata_factory,
         JiraUserRetriever $jira_user_retriever,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->worklog_retriever   = $worklog_retriever;
         $this->cdata_factory       = $cdata_factory;
@@ -73,7 +73,7 @@ class JiraXMLExport
     public function exportJiraTimetracking(
         SimpleXMLElement $xml_tracker,
         PlatformConfiguration $platform_configuration,
-        IssueAPIRepresentationCollection $issue_representation_collection
+        IssueAPIRepresentationCollection $issue_representation_collection,
     ): void {
         $this->logger->debug("Export timetracking");
 
@@ -109,7 +109,7 @@ class JiraXMLExport
     private function exportTimes(
         SimpleXMLElement $xml_timetracking,
         PlatformConfiguration $platform_configuration,
-        IssueAPIRepresentationCollection $issue_representation_collection
+        IssueAPIRepresentationCollection $issue_representation_collection,
     ): void {
         if (! $platform_configuration->isConfigurationAllowed(JiraTimetrackingConfigurationRetriever::CONFIGURATION_KEY)) {
             $this->logger->debug("Jira platform does not have timetracking configured to be imported. Skipping.");
@@ -162,7 +162,7 @@ class JiraXMLExport
     private function getTimeStepTextContent(
         string $worklog_comment,
         JiraCloudUser $comment_author,
-        PFUser $user_time
+        PFUser $user_time,
     ): string {
         $step_content = '';
         if ((int) $user_time->getId() === TrackerImporterUser::ID) {

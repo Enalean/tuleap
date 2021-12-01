@@ -136,7 +136,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return '<div class="alert">'
             . dgettext(
@@ -149,7 +149,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
 
     public function fetchArtifactValueReadOnly(
         Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null
+        ?Tracker_Artifact_ChangesetValue $value = null,
     ) {
         $renderer = TemplateRendererFactory::build()->getRenderer(TESTMANAGEMENT_BASE_DIR . '/templates');
 
@@ -160,7 +160,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
             'step-exec-readonly',
             [
                 'steps'                   => $this->getStepResultPresentersFromChangesetValue($value),
-                'purified_no_value_label' => $purifier->purify($no_value_label, CODENDI_PURIFIER_FULL)
+                'purified_no_value_label' => $purifier->purify($no_value_label, CODENDI_PURIFIER_FULL),
             ]
         );
     }
@@ -171,7 +171,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        array $submitted_values = []
+        array $submitted_values = [],
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) .
             $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
@@ -218,7 +218,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     public function hasChanges(
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $old_value,
-        $new_value
+        $new_value,
     ) {
         $old_values = [];
         /** @var StepResult[] $old_steps */
@@ -236,7 +236,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
         return $this->getValueDao()->create($changeset_value_id, $value[self::UPDATE_VALUE_KEY]);
     }

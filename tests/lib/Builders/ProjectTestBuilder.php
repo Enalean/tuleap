@@ -34,7 +34,7 @@ final class ProjectTestBuilder
         'unix_group_name' => 'TestProject',
         'group_name'      => 'The Test Project',
         'icon_codepoint'  => '"\ud83d\ude2c"',
-        'access'          => ''
+        'access'          => '',
     ];
 
     public function __construct()

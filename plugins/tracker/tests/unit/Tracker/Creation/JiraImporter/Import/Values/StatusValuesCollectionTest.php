@@ -61,7 +61,7 @@ class StatusValuesCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
                                     'key' => 'new' ,
                                     'colorName' => 'blue-gray',
                                     'name' => 'To Do',
-                                ]
+                                ],
                             ],
                             [
                                 'self' => 'URL/rest/api/3/status/3',
@@ -75,8 +75,8 @@ class StatusValuesCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
                                     'id' => 4,
                                     'key' => 'indeterminate',
                                     'colorName' => 'yellow',
-                                    'name' => 'In Progress'
-                                ]
+                                    'name' => 'In Progress',
+                                ],
                             ],
                             [
                                 'self' => 'URL/rest/api/3/status/10001',
@@ -91,11 +91,11 @@ class StatusValuesCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
                                     'key' => 'done',
                                     'colorName' => 'green',
                                     'name' => 'Done',
-                                ]
-                            ]
-                        ]
+                                ],
+                            ],
+                        ],
 
-                    ]
+                    ],
                 ];
             }
         };

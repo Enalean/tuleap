@@ -211,7 +211,7 @@ class AgileDashboardRouter
         UpdateIsAllowedChecker $root_planning_update_checker,
         PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
         UpdateRequestValidator $update_request_validator,
-        NewDropdownCurrentContextSectionForKanbanProvider $current_context_section_for_kanban_provider
+        NewDropdownCurrentContextSectionForKanbanProvider $current_context_section_for_kanban_provider,
     ) {
         $this->plugin                             = $plugin;
         $this->milestone_factory                  = $milestone_factory;
@@ -334,7 +334,7 @@ class AgileDashboardRouter
                         'importProject',
                         [
                             $request->get('artifact_id_mapping'),
-                            $request->get('logger')
+                            $request->get('logger'),
                         ]
                     );
                 }
@@ -385,7 +385,7 @@ class AgileDashboardRouter
                             'error' => dgettext(
                                 'tuleap-agiledashboard',
                                 "You don't have permissions to see user groups."
-                            )
+                            ),
                         ]
                     );
                 }
@@ -395,7 +395,7 @@ class AgileDashboardRouter
             case 'index':
             default:
                 $header_options = [
-                    'body_class' => ['agiledashboard_homepage']
+                    'body_class' => ['agiledashboard_homepage'],
                 ];
                 $this->renderAction($planning_controller, 'index', $request, [], $header_options);
         }
@@ -424,7 +424,7 @@ class AgileDashboardRouter
             'edit'                => dgettext('tuleap-agiledashboard', 'Edit'),
             'show'                => dgettext('tuleap-agiledashboard', 'View Planning'),
             'showTop'             => dgettext('tuleap-agiledashboard', 'View Planning'),
-            'showKanban'          => dgettext('tuleap-agiledashboard', 'Kanban')
+            'showKanban'          => dgettext('tuleap-agiledashboard', 'Kanban'),
         ];
 
         $title = $header_title[$action_name];
@@ -464,7 +464,7 @@ class AgileDashboardRouter
         BaseController $controller,
         Codendi_Request $request,
         $title,
-        array $header_options = []
+        array $header_options = [],
     ) {
         $service = $this->getService($request);
         if (! $service) {
@@ -566,7 +566,7 @@ class AgileDashboardRouter
         $action_name,
         Codendi_Request $request,
         array $args = [],
-        array $header_options = []
+        array $header_options = [],
     ) {
         $content        = $this->executeAction($controller, $action_name, $args);
         $header_options = array_merge_recursive($header_options, $controller->getHeaderOptions($request->getCurrentUser()));
@@ -587,7 +587,7 @@ class AgileDashboardRouter
     protected function executeAction(
         MVC2_Controller $controller,
         $action_name,
-        array $args = []
+        array $args = [],
     ) {
         return call_user_func_array([$controller, $action_name], $args);
     }

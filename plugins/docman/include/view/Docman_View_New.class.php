@@ -55,7 +55,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
                'hide_permissions'           => ! $params['display_permissions'],
                 'hide_news'                  => ! $params['display_news'],
                 'update_permissions_on_init' => false,
-                'default_position'           => $params['force_ordering']
+                'default_position'           => $params['force_ordering'],
             ];
         }
         return array_merge(

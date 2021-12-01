@@ -49,7 +49,7 @@ class PluginDisablerVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ['pluginsa'],
             ['pluginsa,pluginsb'],
             [','],
-            [',,,']
+            [',,,'],
         ];
     }
 

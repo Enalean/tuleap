@@ -58,7 +58,7 @@ class SetDefaultLicenseAgreementController implements DispatchableWithRequest
         ProjectRetriever $project_retriever,
         LicenseAgreementControllersHelper $helper,
         LicenseAgreementFactory $factory,
-        \CSRFSynchronizerToken $csrf_token
+        \CSRFSynchronizerToken $csrf_token,
     ) {
         $this->project_retriever = $project_retriever;
         $this->helper            = $helper;

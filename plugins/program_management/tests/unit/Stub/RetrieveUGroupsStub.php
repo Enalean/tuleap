@@ -50,7 +50,7 @@ final class RetrieveUGroupsStub implements RetrieveUGroups
     {
         return [
             UserGroupProxy::fromProjectUGroup(new \ProjectUGroup(['ugroup_id' => 3])),
-            UserGroupProxy::fromProjectUGroup(new \ProjectUGroup(['ugroup_id' => 105]))
+            UserGroupProxy::fromProjectUGroup(new \ProjectUGroup(['ugroup_id' => 105])),
         ];
     }
 

@@ -32,13 +32,13 @@ use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifie
 final class SubmissionDateRetriever implements RetrieveChangesetSubmissionDate
 {
     public function __construct(
-        private RetrieveFullArtifact $artifact_retriever
+        private RetrieveFullArtifact $artifact_retriever,
     ) {
     }
 
     public function getSubmissionDate(
         ArtifactIdentifier $artifact,
-        ChangesetIdentifier $changeset_identifier
+        ChangesetIdentifier $changeset_identifier,
     ): SubmissionDate {
         $full_artifact = $this->artifact_retriever->getNonNullArtifact($artifact);
         $changeset     = $full_artifact->getChangeset($changeset_identifier->getId());

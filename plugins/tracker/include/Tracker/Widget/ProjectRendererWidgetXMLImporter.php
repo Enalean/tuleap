@@ -77,7 +77,7 @@ class ProjectRendererWidgetXMLImporter
     {
         return [self::RENDERER_PREFERENCE_NAME => [
             self::RENDERER_TITLE_REQUEST_KEY => null,
-            self::RENDERER_ID_REQUEST_KEY    => null
+            self::RENDERER_ID_REQUEST_KEY    => null,
         ]];
     }
 

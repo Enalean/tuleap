@@ -68,7 +68,7 @@ class FileInfoXMLExporter
 
     private function appendFileToArtifactNode(
         SimpleXMLElement $artifact_xml,
-        Tracker_FileInfo $file_info
+        Tracker_FileInfo $file_info,
     ) {
         $cdata_factory = new XML_SimpleXMLCDATAFactory();
 

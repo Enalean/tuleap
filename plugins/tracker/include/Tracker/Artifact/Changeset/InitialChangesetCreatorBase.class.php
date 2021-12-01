@@ -52,7 +52,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         EventManager $event_manager,
         Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
         \Psr\Log\LoggerInterface $logger,
-        ArtifactChangesetSaver $artifact_changeset_saver
+        ArtifactChangesetSaver $artifact_changeset_saver,
     ) {
         parent::__construct(
             $fields_validator,
@@ -83,7 +83,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         int $submitted_on,
         CreatedFileURLMapping $url_mapping,
         TrackerImportConfig $import_config,
-        ChangesetValidationContext $changeset_validation_context
+        ChangesetValidationContext $changeset_validation_context,
     ): ?int {
         $are_fields_valid = $this->doesRequestAppearToBeValid(
             $artifact,
@@ -144,7 +144,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         array $fields_data,
         PFUser $submitter,
         int $changeset_id,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ): void;
 
     private function storeFieldsValues(
@@ -152,7 +152,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         array $fields_data,
         PFUser $submitter,
         int $changeset_id,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ): void {
         foreach ($this->fields_retriever->getFields($artifact) as $field) {
             $this->saveNewChangesetForField($field, $artifact, $fields_data, $submitter, $changeset_id, $url_mapping);
@@ -163,7 +163,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
-        ChangesetValidationContext $changeset_validation_context
+        ChangesetValidationContext $changeset_validation_context,
     ): bool {
         if ($submitter->isAnonymous() && ! trim($submitter->getEmail())) {
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'You are not logged in.'));
@@ -176,7 +176,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
     private function askWorkflowToUpdateTheRequestAndCheckGlobalRules(
         Artifact $artifact,
         array &$fields_data,
-        PFUser $submitter
+        PFUser $submitter,
     ): bool {
         try {
             $workflow = $artifact->getWorkflow();

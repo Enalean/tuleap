@@ -47,7 +47,7 @@ class UserManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1
             'getDao'            => \Mockery::spy(UserDao::class),
             'getCookieManager'  => $cm,
             'getSessionManager' => $session_manager,
-            '_getEventManager'  => \Mockery::spy(EventManager::class)
+            '_getEventManager'  => \Mockery::spy(EventManager::class),
         ]);
         $um->shouldReceive('getUserInstanceFromRow')->with(['user_name' => 'user_123', 'user_id' => 123])->andReturn($user123);
 

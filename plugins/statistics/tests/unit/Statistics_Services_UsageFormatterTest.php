@@ -50,16 +50,16 @@ final class Statistics_Services_UsageFormatterTest extends \Tuleap\Test\PHPUnit\
         $this->first_input_datas = [
             [
                 'group_id' => 1,
-                'result'   => 'res1'
+                'result'   => 'res1',
             ],
             [
                 'group_id' => 87,
-                'result'   => 'res2'
+                'result'   => 'res2',
             ],
             [
                 'group_id' => 104,
-                'result'   => 'res3'
-            ]
+                'result'   => 'res3',
+            ],
         ];
     }
 
@@ -67,14 +67,14 @@ final class Statistics_Services_UsageFormatterTest extends \Tuleap\Test\PHPUnit\
     {
         $expected = [
             1 => [
-                "title" => 'res1'
+                "title" => 'res1',
             ],
             87 => [
-                "title" => 'res2'
+                "title" => 'res2',
             ],
             104 => [
-                "title" => 'res3'
-            ]
+                "title" => 'res3',
+            ],
         ];
 
         $datas = $this->usage_formatter->buildDatas($this->first_input_datas, "title");
@@ -86,23 +86,23 @@ final class Statistics_Services_UsageFormatterTest extends \Tuleap\Test\PHPUnit\
         $input_datas = [
             [
                 'group_id' => 87,
-                'result'   => 'descr2'
-            ]
+                'result'   => 'descr2',
+            ],
         ];
 
         $expected = [
             1 => [
                 "title" => 'res1',
-                "descr" => 0
+                "descr" => 0,
             ],
             87 => [
                 "title" => 'res2',
-                "descr" => 'descr2'
+                "descr" => 'descr2',
             ],
             104 => [
                 "title" => 'res3',
-                "descr" => 0
-            ]
+                "descr" => 0,
+            ],
         ];
 
         $this->usage_formatter->buildDatas($this->first_input_datas, "title");

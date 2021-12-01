@@ -91,7 +91,7 @@ class UserDetailsPresenter
         array $status,
         int $nb_project_user_is_member_of_that_dont_accept_restricted,
         array $unix_status,
-        bool $user_has_rest_read_only_administration_delegation
+        bool $user_has_rest_read_only_administration_delegation,
     ) {
         $this->id    = $user->getId();
         $this->name  = $user->getRealName();
@@ -166,7 +166,7 @@ class UserDetailsPresenter
             PFUser::STATUS_DELETED              => $GLOBALS['Language']->getText('admin_userlist', 'deleted'),
             PFUser::STATUS_SUSPENDED            => $GLOBALS['Language']->getText('admin_userlist', 'suspended'),
             PFUser::STATUS_PENDING              => $GLOBALS['Language']->getText('admin_userlist', 'pending'),
-            PFUser::STATUS_VALIDATED            => $GLOBALS['Language']->getText('admin_userlist', 'validated')
+            PFUser::STATUS_VALIDATED            => $GLOBALS['Language']->getText('admin_userlist', 'validated'),
         ];
 
         return $labels[$current_status_id];

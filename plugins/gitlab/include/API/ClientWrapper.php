@@ -44,7 +44,7 @@ class ClientWrapper
     public function __construct(
         RequestFactoryInterface $factory,
         StreamFactoryInterface $stream_factory,
-        GitlabHTTPClientFactory $gitlab_client_factory
+        GitlabHTTPClientFactory $gitlab_client_factory,
     ) {
         $this->factory               = $factory;
         $this->stream_factory        = $stream_factory;

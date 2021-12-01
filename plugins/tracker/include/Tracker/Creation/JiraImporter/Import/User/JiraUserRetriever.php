@@ -60,7 +60,7 @@ class JiraUserRetriever
         UserManager $user_manager,
         JiraUserOnTuleapCache $user_cache,
         JiraUserInfoQuerier $jira_user_querier,
-        PFUser $default_user
+        PFUser $default_user,
     ) {
         $this->logger            = $logger;
         $this->user_manager      = $user_manager;

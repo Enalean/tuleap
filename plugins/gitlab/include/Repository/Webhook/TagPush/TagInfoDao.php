@@ -30,7 +30,7 @@ class TagInfoDao extends DataAccessObject
         int $integration_id,
         string $commit_sha1,
         string $tag_name,
-        string $tag_message
+        string $tag_message,
     ): void {
         $sql = '
             INSERT INTO plugin_gitlab_repository_integration_tag_info
@@ -72,7 +72,7 @@ class TagInfoDao extends DataAccessObject
     public function deleteTagsInIntegration(
         string $integration_path,
         int $integration_id,
-        int $integration_project_id
+        int $integration_project_id,
     ): void {
         $this->getDB()->delete(
             'plugin_gitlab_repository_integration_tag_info',

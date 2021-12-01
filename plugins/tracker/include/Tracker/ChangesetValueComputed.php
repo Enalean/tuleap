@@ -39,7 +39,7 @@ class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Float
         $field,
         $has_changed,
         $numeric,
-        $is_manual_value
+        $is_manual_value,
     ) {
         parent::__construct($id, $changeset, $field, $has_changed, $numeric);
 

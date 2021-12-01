@@ -33,7 +33,7 @@ class DataExportRouter
     private $data_export_builder;
 
     public function __construct(
-        DataExportPresenterBuilder $data_export_builder
+        DataExportPresenterBuilder $data_export_builder,
     ) {
         $this->data_export_builder = $data_export_builder;
     }

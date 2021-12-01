@@ -39,7 +39,7 @@ class ProjectOwnerPresenterBuilder
         ProjectOwnerDAO $dao,
         UserManager $user_manager,
         \UserHelper $user_helper,
-        \BaseLanguage $language
+        \BaseLanguage $language,
     ) {
         $this->dao          = $dao;
         $this->user_manager = $user_manager;

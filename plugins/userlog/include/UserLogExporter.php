@@ -46,7 +46,7 @@ class UserLogExporter
             'http_request_method' => $GLOBALS['Language']->getText('plugin_userlog', 'label_method'),
             'http_request_uri'    => $GLOBALS['Language']->getText('plugin_userlog', 'label_uri'),
             'http_remote_addr'    => $GLOBALS['Language']->getText('plugin_userlog', 'label_adress'),
-            'http_referrer'       => $GLOBALS['Language']->getText('plugin_userlog', 'label_referrer')
+            'http_referrer'       => $GLOBALS['Language']->getText('plugin_userlog', 'label_referrer'),
         ];
 
         echo build_csv_header($this->getColumnList(), $documents_title) . $eol;
@@ -65,7 +65,7 @@ class UserLogExporter
             'http_request_method',
             'http_request_uri',
             'http_remote_addr',
-            'http_referrer'
+            'http_referrer',
         ];
     }
 }

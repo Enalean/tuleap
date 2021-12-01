@@ -47,7 +47,7 @@ final class ConfigurationErrorsGatherer
         ProgramIncrementCreatorChecker $program_increment_creator_checker,
         IterationCreatorChecker $iteration_creator_checker,
         SearchTeamsOfProgram $teams_searcher,
-        RetrieveProjectReference $project_builder
+        RetrieveProjectReference $project_builder,
     ) {
         $this->build_program                     = $build_program;
         $this->program_increment_creator_checker = $program_increment_creator_checker;
@@ -59,7 +59,7 @@ final class ConfigurationErrorsGatherer
     public function gatherConfigurationErrors(
         TrackerReference $tracker,
         UserReference $user_identifier,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
     ): void {
         try {
             $program = ProgramIdentifier::fromId(

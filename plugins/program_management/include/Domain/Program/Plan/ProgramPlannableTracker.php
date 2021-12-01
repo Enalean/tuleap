@@ -47,7 +47,7 @@ final class ProgramPlannableTracker
     public static function build(
         RetrieveTracker $tracker_retriever,
         int $tracker_id,
-        ProgramForAdministrationIdentifier $program
+        ProgramForAdministrationIdentifier $program,
     ): self {
         TrackerIsValidChecker::checkTrackerIsValid(
             $tracker_retriever,

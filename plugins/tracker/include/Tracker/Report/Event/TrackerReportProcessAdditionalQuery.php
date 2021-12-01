@@ -62,7 +62,7 @@ class TrackerReportProcessAdditionalQuery implements Dispatchable
         Tracker_Report $tracker_report,
         Tracker $tracker,
         PFUser $user,
-        array $additional_criteria
+        array $additional_criteria,
     ) {
         $this->tracker_report      = $tracker_report;
         $this->tracker             = $tracker;

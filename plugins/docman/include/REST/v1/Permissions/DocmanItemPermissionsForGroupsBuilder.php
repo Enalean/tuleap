@@ -54,7 +54,7 @@ class DocmanItemPermissionsForGroupsBuilder
         Docman_PermissionsManager $docman_permissions_manager,
         ProjectManager $project_manager,
         IPermissionsManagerNG $permissions_manager,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->docman_permissions_manager = $docman_permissions_manager;
         $this->project_manager            = $project_manager;

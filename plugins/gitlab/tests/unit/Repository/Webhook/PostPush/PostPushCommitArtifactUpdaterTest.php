@@ -88,7 +88,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
             [
                 "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
 
@@ -100,7 +100,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
                 "user_id"   => 102,
                 "email"     => "mail@example.com",
                 "user_name" => "asticotc",
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
         $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn($committer);
@@ -120,7 +120,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
             [
                 "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
 
@@ -132,7 +132,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
                 "user_id"   => 102,
                 "email"     => "mail@example.com",
                 "user_name" => "asticotc",
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
         $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn($committer);
@@ -149,7 +149,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
             [
                 "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
 
@@ -161,7 +161,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
                 "user_id"   => 102,
                 "email"     => "mail@example.com",
                 "user_name" => "asticotc",
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
         $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn($committer);
@@ -179,7 +179,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
             [
                 "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
 
@@ -218,7 +218,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
             [
                 "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
 
@@ -254,7 +254,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
                 "user_id"   => 102,
                 "email"     => "mail@example.com",
                 "user_name" => "asticotc",
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
         $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn($committer);
@@ -299,7 +299,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
             [
                 "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
 
@@ -334,7 +334,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
                 "user_id"   => 102,
                 "email"     => "mail@example.com",
                 "user_name" => "asticotc",
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
         $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn($committer);
@@ -372,7 +372,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
             [
                 "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
 
@@ -398,7 +398,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
                 "user_id"   => 102,
                 "email"     => "mail@example.com",
                 "user_name" => "asticotc",
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
         $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn($committer);
@@ -441,7 +441,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
             [
                 "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
 
@@ -491,7 +491,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
             [
                 "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
 
@@ -526,7 +526,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
                 "user_id"   => 102,
                 "email"     => "mail@example.com",
                 "user_name" => "asticotc",
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
         $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn($committer);
@@ -572,7 +572,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
             [
                 "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
 
@@ -607,7 +607,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
                 "user_id"   => 102,
                 "email"     => "mail@example.com",
                 "user_name" => "asticotc",
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
         $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn($committer);

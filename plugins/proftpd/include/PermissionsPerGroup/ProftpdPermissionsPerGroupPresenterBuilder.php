@@ -49,7 +49,7 @@ class ProftpdPermissionsPerGroupPresenterBuilder
     public function __construct(
         PermissionsManager $permission_manager,
         UGroupManager $ugroup_manager,
-        PermissionPerGroupUGroupFormatter $ugroup_formatter
+        PermissionPerGroupUGroupFormatter $ugroup_formatter,
     ) {
         $this->permission_manager = $permission_manager;
         $this->ugroup_manager     = $ugroup_manager;
@@ -74,7 +74,7 @@ class ProftpdPermissionsPerGroupPresenterBuilder
         return array_values(
             array_filter([
                 $this->extractReadersPermissions($project, $selected_ugroup_id),
-                $this->extractWritersPermissions($project, $selected_ugroup_id)
+                $this->extractWritersPermissions($project, $selected_ugroup_id),
             ])
         );
     }
@@ -84,7 +84,7 @@ class ProftpdPermissionsPerGroupPresenterBuilder
         $readers_ugroups_ids = $this->removeNobodyUgroupFromUgroups([
             ProjectUGroup::PROJECT_ADMIN,
             $this->permission_manager->getSelectUGroupFor($project, PermissionsManager::PERM_READ),
-            $this->permission_manager->getSelectUGroupFor($project, PermissionsManager::PERM_WRITE)
+            $this->permission_manager->getSelectUGroupFor($project, PermissionsManager::PERM_WRITE),
         ]);
 
         if (
@@ -99,7 +99,7 @@ class ProftpdPermissionsPerGroupPresenterBuilder
         return [
             "name"             => dgettext('tuleap-proftpd', 'Readers'),
             "admin_quick_link" => $this->getAdminQuickLink($project),
-            "groups"           => $granted_groups
+            "groups"           => $granted_groups,
         ];
     }
 
@@ -107,7 +107,7 @@ class ProftpdPermissionsPerGroupPresenterBuilder
     {
         $writers_ugroup_id = $this->removeNobodyUgroupFromUgroups([
             ProjectUGroup::PROJECT_ADMIN,
-            $this->permission_manager->getSelectUGroupFor($project, PermissionsManager::PERM_WRITE)
+            $this->permission_manager->getSelectUGroupFor($project, PermissionsManager::PERM_WRITE),
         ]);
 
         if (
@@ -122,7 +122,7 @@ class ProftpdPermissionsPerGroupPresenterBuilder
         return [
             "name"             => dgettext('tuleap-proftpd', 'Writers'),
             "admin_quick_link" => $this->getAdminQuickLink($project),
-            "groups"           => $granted_groups
+            "groups"           => $granted_groups,
         ];
     }
 
@@ -132,7 +132,7 @@ class ProftpdPermissionsPerGroupPresenterBuilder
             [
                 "group_id"   => $project->getID(),
                 "controller" => "admin",
-                "action"     => "index"
+                "action"     => "index",
             ]
         );
     }

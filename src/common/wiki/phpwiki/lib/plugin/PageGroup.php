@@ -125,7 +125,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
                              'previous' => _("Previous"),
                              'contents' => _("Contents"),
                              'first'    => _("First"),
-                             'last'     => _("Last")
+                             'last'     => _("Last"),
                              ];
 
         global $WikiTheme;

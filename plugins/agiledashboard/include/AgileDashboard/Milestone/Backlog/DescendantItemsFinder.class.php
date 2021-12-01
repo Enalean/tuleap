@@ -48,7 +48,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
         Tracker_ArtifactDao $artifact_dao,
         Tracker_ArtifactFactory $artifact_factory,
         Planning_Milestone $milestone,
-        array $descendant_tracker_ids
+        array $descendant_tracker_ids,
     ) {
         $this->item_dao         = $item_dao;
         $this->artifact_dao     = $artifact_dao;
@@ -127,7 +127,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
     public function getTopMilestoneOpenUnplannedBacklogItemsWithLimitAndOffset(
         PFUser $user,
         $limit,
-        $offset
+        $offset,
     ) {
         $result = $this->item_dao->getOpenUnplannedTopBacklogArtifactsWithLimitAndOffset(
             $this->descendant_tracker_ids,
@@ -141,7 +141,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
     public function getTopMilestoneOpenClosedUnplannedBacklogItemsWithLimitAndOffset(
         PFUser $user,
         ?int $limit,
-        ?int $offset
+        ?int $offset,
     ): AgileDashboard_Milestone_Backlog_DescendantItemsCollection {
         $result = $this->item_dao->getOpenClosedUnplannedTopBacklogArtifactsWithLimitAndOffset(
             $this->descendant_tracker_ids,
@@ -221,7 +221,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
         PFUser $user,
         array $sub_milestone_ids,
         ?int $limit,
-        ?int $offset
+        ?int $offset,
     ): AgileDashboard_Milestone_Backlog_DescendantItemsCollection {
         $result = $this->artifact_dao->getLinkedArtifactsOfTrackersNotLinkedToOthersWithLimitAndOffset(
             $this->milestone_id,
@@ -239,7 +239,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
         PFUser $user,
         array $sub_milestone_ids,
         ?int $limit,
-        ?int $offset
+        ?int $offset,
     ): AgileDashboard_Milestone_Backlog_DescendantItemsCollection {
         $result = $this->artifact_dao->getLinkedOpenClosedArtifactsOfTrackersNotLinkedToOthersWithLimitAndOffset(
             $this->milestone_id,

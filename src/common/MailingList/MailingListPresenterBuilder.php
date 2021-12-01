@@ -101,12 +101,12 @@ class MailingListPresenterBuilder
         string $list_server,
         string $list_name,
         bool $is_public,
-        string $default_browse_url
+        string $default_browse_url,
     ): array {
         if ($default_browse_url) {
             return [[
                 'url'   => $default_browse_url,
-                'label' => _('Archives')
+                'label' => _('Archives'),
             ]];
         }
 
@@ -114,18 +114,18 @@ class MailingListPresenterBuilder
         if ($is_public) {
             return [[
                 'url'   => $this->getPublicUrl($list_server, $list_name, $default_browse_url),
-                'label' => _('Archives')
+                'label' => _('Archives'),
             ]];
         }
 
         return [
             [
                 'url'   => $this->getPublicUrl($list_server, $list_name, $default_browse_url),
-                'label' => _('Public archives')
+                'label' => _('Public archives'),
             ],
             [
                 'url'   => $list_server . '/mailman/private/' . \urlencode($list_name),
-                'label' => _('Private archives')
+                'label' => _('Private archives'),
             ],
         ];
     }

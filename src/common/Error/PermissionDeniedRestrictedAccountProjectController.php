@@ -43,7 +43,7 @@ class PermissionDeniedRestrictedAccountProjectController
     public function __construct(
         ThemeManager $theme_manager,
         ErrorDependenciesInjector $dependencies_injector,
-        PlaceHolderBuilder $place_holder_builder
+        PlaceHolderBuilder $place_holder_builder,
     ) {
         $this->theme_manager         = $theme_manager;
         $this->dependencies_injector = $dependencies_injector;

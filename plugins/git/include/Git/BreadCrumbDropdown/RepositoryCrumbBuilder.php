@@ -44,7 +44,7 @@ class RepositoryCrumbBuilder
     public function __construct(
         \Git_GitRepositoryUrlManager $url_manager,
         \GitPermissionsManager $permissions_manager,
-        $plugin_path
+        $plugin_path,
     ) {
         $this->url_manager         = $url_manager;
         $this->permissions_manager = $permissions_manager;
@@ -84,7 +84,7 @@ class RepositoryCrumbBuilder
                             $GLOBALS['Language']->getText('global', 'Settings'),
                             $this->getRepositoryAdminUrl($repository),
                             'fa-cog'
-                        )
+                        ),
                     ]
                 )
             )
@@ -97,7 +97,7 @@ class RepositoryCrumbBuilder
         return $this->plugin_path . '/?' . http_build_query([
             'action' => 'repo_management',
                 'group_id' => $repository->getProjectId(),
-                'repo_id' => $repository->getId()
+                'repo_id' => $repository->getId(),
             ]);
     }
 }

@@ -39,7 +39,7 @@ class TrackerMappingPresenterBuilder
     public function __construct(
         TrackerCollectionRetriever $trackers_retriever,
         MappedFieldRetriever $mapped_field_retriever,
-        MappedValuesRetriever $mapped_values_retriever
+        MappedValuesRetriever $mapped_values_retriever,
     ) {
         $this->trackers_retriever      = $trackers_retriever;
         $this->mapped_field_retriever  = $mapped_field_retriever;
@@ -69,7 +69,7 @@ class TrackerMappingPresenterBuilder
 
     private function buildMappingForATracker(
         TaskboardTracker $taskboard_tracker,
-        Cardwall_Column $column
+        Cardwall_Column $column,
     ): TrackerMappingPresenter {
         $value_mapping_presenters = [];
         $field                    = $this->mapped_field_retriever->getField($taskboard_tracker);

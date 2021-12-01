@@ -158,7 +158,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
         $level,
         &$hstart,
         &$hend,
-        $basepage = false
+        $basepage = false,
     ) {
         $hstart   = 0;
         $hend     = 0;
@@ -242,7 +242,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
         $backlink = 0,
         $counter = 0,
         $levels = false,
-        $basepage = ''
+        $basepage = '',
     ) {
         if (! $levels) {
             $levels = [1, 2];

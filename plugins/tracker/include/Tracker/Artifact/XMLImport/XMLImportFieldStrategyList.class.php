@@ -42,7 +42,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
     public function __construct(
         BindStaticValueDao $static_value_dao,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        TrackerXmlFieldsMapping $xml_fields_mapping
+        TrackerXmlFieldsMapping $xml_fields_mapping,
     ) {
         $this->static_value_dao   = $static_value_dao;
         $this->user_finder        = $user_finder;
@@ -53,7 +53,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
-        Artifact $artifact
+        Artifact $artifact,
     ): array {
         $bind = (string) $field_change['bind'];
         $data = [];

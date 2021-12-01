@@ -80,7 +80,7 @@ class KanbanItemRepresentation
         array $card_fields,
         array $timeinfo,
         $in_column,
-        string $background_color_name
+        string $background_color_name,
     ) {
         $this->id                    = $id;
         $this->item_name             = $item_name;
@@ -100,7 +100,7 @@ class KanbanItemRepresentation
         $timeinfo,
         $in_column,
         array $card_fields,
-        BackgroundColor $background_color
+        BackgroundColor $background_color,
     ): self {
         return new self(
             JsonCast::toInt($artifact->getId()),

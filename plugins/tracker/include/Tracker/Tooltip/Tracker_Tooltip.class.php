@@ -156,7 +156,7 @@ class Tracker_Tooltip extends Tracker_Semantic
                 $html .= $GLOBALS['HTML']->getimage(
                     'ic/cross.png',
                     [
-                        'alt' => dgettext('tuleap-tracker', 'Remove the field from the tooltip')
+                        'alt' => dgettext('tuleap-tracker', 'Remove the field from the tooltip'),
                     ]
                 );
                 $html .= '</button>';

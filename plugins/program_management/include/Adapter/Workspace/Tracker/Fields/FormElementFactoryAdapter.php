@@ -29,12 +29,12 @@ final class FormElementFactoryAdapter implements RetrieveFullArtifactLinkField
 {
     public function __construct(
         private RetrieveFullTracker $tracker_retriever,
-        private \Tracker_FormElementFactory $form_element_factory
+        private \Tracker_FormElementFactory $form_element_factory,
     ) {
     }
 
     public function getArtifactLinkField(
-        TrackerIdentifier $tracker_identifier
+        TrackerIdentifier $tracker_identifier,
     ): \Tracker_FormElement_Field_ArtifactLink|null {
         $tracker              = $this->tracker_retriever->getNonNullTracker($tracker_identifier);
         $artifact_link_fields = $this->form_element_factory->getUsedArtifactLinkFields($tracker);

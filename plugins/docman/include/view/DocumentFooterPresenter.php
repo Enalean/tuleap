@@ -42,7 +42,7 @@ class DocumentFooterPresenter
 
     public function __construct(
         \Project $project,
-        ExternalLinksManager $collector
+        ExternalLinksManager $collector,
     ) {
         $this->should_display_external_link = $collector->hasExternalLinks();
         $this->project_shortname            = $project->getUnixNameLowerCase();

@@ -40,7 +40,7 @@ class TrackerReportBuilder
     public function __construct(
         Tracker_ReportFactory $tracker_report_factory,
         AgileDashboard_Kanban $kanban,
-        TrackerReportDao $tracker_report_dao
+        TrackerReportDao $tracker_report_dao,
     ) {
         $this->tracker_report_factory = $tracker_report_factory;
         $this->kanban                 = $kanban;
@@ -56,7 +56,7 @@ class TrackerReportBuilder
             $report_id             = (int) $report->getId();
             $filter_tracker_report = [
                 'id'   => $report_id,
-                'name' => $report->getName()
+                'name' => $report->getName(),
             ];
 
             if (in_array($report_id, $selectable_report_ids)) {

@@ -65,7 +65,7 @@ class Flow
         TokenRequestSender $token_request_sender,
         IDTokenVerifier $id_token_verifier,
         UserInfoRequestCreator $user_info_request_creator,
-        UserInfoRequestSender $user_info_request_sender
+        UserInfoRequestSender $user_info_request_sender,
     ) {
         $this->state_manager             = $state_manager;
         $this->provider_manager          = $provider_manager;

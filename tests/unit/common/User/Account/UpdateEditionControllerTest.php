@@ -105,8 +105,8 @@ class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'User preferences successfully updated'
-                ]
+                    'message' => 'User preferences successfully updated',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -146,8 +146,8 @@ class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::ERROR,
-                    'message' => 'Submitted text format is not valid'
-                ]
+                    'message' => 'Submitted text format is not valid',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -187,8 +187,8 @@ class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::ERROR,
-                    'message' => 'Submitted CSV separator is not valid'
-                ]
+                    'message' => 'Submitted CSV separator is not valid',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -228,8 +228,8 @@ class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::ERROR,
-                    'message' => 'Submitted CSV date format is not valid'
-                ]
+                    'message' => 'Submitted CSV date format is not valid',
+                ],
             ],
             $layout_inspector->getFeedback()
         );

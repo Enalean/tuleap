@@ -37,7 +37,7 @@ class TimetrackingReportTest extends TimetrackingBase
             "id"               => 1,
             "uri"              => 'timetracking_reports/1',
             "trackers"         => [],
-            "invalid_trackers" => []
+            "invalid_trackers" => [],
         ];
 
         $response = $this->getResponseByName(
@@ -103,7 +103,7 @@ class TimetrackingReportTest extends TimetrackingBase
             json_encode([
                             "trackers_id" => [$this->tracker_timetracking],
                             "start_date"  => "2010-03-01T00:00:00+01",
-                            "end_date"    => "2019-03-21T00:00:00+01"
+                            "end_date"    => "2019-03-21T00:00:00+01",
                         ])
         );
         $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
@@ -127,7 +127,7 @@ class TimetrackingReportTest extends TimetrackingBase
         $query = urlencode(
             json_encode([
                             "start_date"  => "2010-03-01T00:00:00+01",
-                            "end_date"    => "2019-03-21T00:00:00+01"
+                            "end_date"    => "2019-03-21T00:00:00+01",
                         ])
         );
         $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);

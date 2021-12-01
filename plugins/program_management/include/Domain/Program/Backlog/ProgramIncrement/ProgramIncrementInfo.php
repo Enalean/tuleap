@@ -28,7 +28,7 @@ final class ProgramIncrementInfo
         public int $id,
         public string $title,
         public string $start_date,
-        public string $end_date
+        public string $end_date,
     ) {
     }
 

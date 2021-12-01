@@ -64,7 +64,7 @@ final class ProjectPrivacyPresenter
     private function __construct(
         Project $project,
         string $explanation_text,
-        string $privacy_title
+        string $privacy_title,
     ) {
         $this->project_is_public  = $project->isPublic();
         $this->project_is_private = ! $this->project_is_public;

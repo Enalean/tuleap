@@ -30,7 +30,7 @@ final class PermissionDeniedPrivateProjectMailSender extends PermissionDeniedMai
         PFUser $user,
         string $href_approval,
         string $message_to_admin,
-        string $link
+        string $link,
     ): string {
         return $GLOBALS['Language']->getText(
             'include_exit',
@@ -42,7 +42,7 @@ final class PermissionDeniedPrivateProjectMailSender extends PermissionDeniedMai
                 $project->getPublicName(),
                 $href_approval,
                 $message_to_admin,
-                $user->getEmail()
+                $user->getEmail(),
             ]
         );
     }

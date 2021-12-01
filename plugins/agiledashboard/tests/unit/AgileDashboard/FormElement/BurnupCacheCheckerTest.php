@@ -106,7 +106,7 @@ class BurnupCacheCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->cache_generator->shouldReceive('isCacheBurnupAlreadyAsked')->with($this->artifact)->andReturnTrue();
         $this->burnup_cache_dao->shouldReceive('getNumberOfCachedDays')->andReturn([
-            'cached_days' => 1
+            'cached_days' => 1,
         ]);
         $this->cache_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')
             ->with($this->time_period, 1)
@@ -123,7 +123,7 @@ class BurnupCacheCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->cache_generator->shouldReceive('isCacheBurnupAlreadyAsked')->with($this->artifact)->andReturnFalse();
         $this->burnup_cache_dao->shouldReceive('getNumberOfCachedDays')->andReturn([
-            'cached_days' => 1
+            'cached_days' => 1,
         ]);
         $this->cache_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')
             ->with($this->time_period, 1)
@@ -142,7 +142,7 @@ class BurnupCacheCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->cache_generator->shouldReceive('isCacheBurnupAlreadyAsked')->with($this->artifact)->andReturnFalse();
         $this->burnup_cache_dao->shouldReceive('getNumberOfCachedDays')->andReturn([
-            'cached_days' => 1
+            'cached_days' => 1,
         ]);
         $this->cache_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')
             ->with($this->time_period, 1)

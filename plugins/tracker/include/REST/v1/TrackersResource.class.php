@@ -352,7 +352,7 @@ class TrackersResource extends AuthenticatedResource
         $offset = self::DEFAULT_OFFSET,
         $query = self::DEFAULT_CRITERIA,
         $expert_query = self::DEFAULT_EXPERT_QUERY,
-        $order = self::ORDER_ASC
+        $order = self::ORDER_ASC,
     ) {
         $this->checkAccess();
 

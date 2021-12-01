@@ -37,7 +37,7 @@ class BigObjectAuthorizationManager
 
     public function __construct(
         BigObjectAuthorizationDao $big_object_authorization_dao,
-        ProjectManager $project_manager
+        ProjectManager $project_manager,
     ) {
         $this->big_object_authorization_dao = $big_object_authorization_dao;
         $this->project_manager              = $project_manager;

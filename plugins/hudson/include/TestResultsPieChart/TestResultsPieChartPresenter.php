@@ -49,7 +49,7 @@ class TestResultsPieChartPresenter
         $successful_tests,
         $skipped_tests,
         $failed_tests,
-        $total_passed_tests
+        $total_passed_tests,
     ) {
         $this->has_data_to_display = $total_passed_tests > 0;
 
@@ -67,7 +67,7 @@ class TestResultsPieChartPresenter
                 "label" => sprintf(
                     dgettext("tuleap-hudson", "Passed (%s)"),
                     $successful_tests
-                )
+                ),
             ];
         }
 
@@ -79,7 +79,7 @@ class TestResultsPieChartPresenter
                 "label" => sprintf(
                     dgettext("tuleap-hudson", "Skipped (%s)"),
                     $skipped_tests
-                )
+                ),
             ];
         }
 
@@ -91,7 +91,7 @@ class TestResultsPieChartPresenter
                 "label" => sprintf(
                     dgettext("tuleap-hudson", "Failed (%s)"),
                     $failed_tests
-                )
+                ),
             ];
         }
 
@@ -100,7 +100,7 @@ class TestResultsPieChartPresenter
         $this->latest_results_url = HUDSON_BASE_URL . '?' . http_build_query([
             "action"   => "view_last_test_result",
             "group_id" => $group_id,
-            "job_id"   => $job_id
+            "job_id"   => $job_id,
         ]);
 
         $this->pie_chart_id = 'test-results-pie-' . $widget_id;

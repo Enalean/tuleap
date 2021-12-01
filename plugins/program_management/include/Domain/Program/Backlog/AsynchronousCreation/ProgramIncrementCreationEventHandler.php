@@ -37,7 +37,7 @@ final class ProgramIncrementCreationEventHandler
         private VerifyIsVisibleArtifact $visibility_verifier,
         private VerifyIsChangeset $changeset_verifier,
         private RetrieveProgramIncrementTracker $tracker_retriever,
-        private BuildProgramIncrementCreationProcessor $processor_retriever
+        private BuildProgramIncrementCreationProcessor $processor_retriever,
     ) {
     }
 

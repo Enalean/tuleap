@@ -70,7 +70,7 @@ final class AccountAppsController extends DispatchablePSR15Compatible implements
         \TemplateRendererFactory $renderer_factory,
         \UserManager $user_manager,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->response_factory  = $response_factory;

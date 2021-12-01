@@ -36,7 +36,7 @@ class UserDashboardRouter
 
     public function __construct(
         UserDashboardController $user_dashboard_controller,
-        WidgetDashboardController $widget_dashboard_controller
+        WidgetDashboardController $widget_dashboard_controller,
     ) {
         $this->user_dashboard_controller   = $user_dashboard_controller;
         $this->widget_dashboard_controller = $widget_dashboard_controller;

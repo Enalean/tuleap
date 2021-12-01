@@ -58,7 +58,7 @@ class LinkModalContentPresenter
         $locale,
         CSRFSynchronizerToken $csrf_token,
         $ldap_display_name,
-        string $ldap_server_common_name
+        string $ldap_server_common_name,
     ) {
         $this->ldap_group_name              = $ldap_group_name;
         $this->project_id                   = $project->getID();

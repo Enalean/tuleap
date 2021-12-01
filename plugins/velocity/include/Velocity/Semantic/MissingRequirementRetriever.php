@@ -53,7 +53,7 @@ class MissingRequirementRetriever
         SemanticDoneFactory $semantic_done_factory,
         \AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory,
         SemanticVelocityFactory $velocity_factory,
-        BacklogRequiredTrackerCollectionFormatter $formatter
+        BacklogRequiredTrackerCollectionFormatter $formatter,
     ) {
         $this->hierarchy_factory      = $hierarchy_factory;
         $this->semantic_done_factory  = $semantic_done_factory;

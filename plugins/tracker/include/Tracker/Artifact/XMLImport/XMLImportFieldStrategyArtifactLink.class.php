@@ -48,7 +48,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         private Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
         private \Psr\Log\LoggerInterface $logger,
         private Tracker_ArtifactFactory $artifact_factory,
-        private TypeDao $type_dao
+        private TypeDao $type_dao,
     ) {
     }
 
@@ -56,7 +56,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
-        Artifact $artifact
+        Artifact $artifact,
     ) {
         $new_values     = $this->extractArtifactLinkFromXml($field_change, $artifact);
         $last_changeset = $artifact->getLastChangeset();
@@ -71,7 +71,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         return [
             'new_values'     => $add_values,
             'removed_values' => $removed_values,
-            'types'          => $new_values['types']
+            'types'          => $new_values['types'],
         ];
     }
 
@@ -114,7 +114,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
     private function getTypeFromMappedArtifact(
         Artifact $artifact,
         SimpleXMLElement $xml_element,
-        $mapped_artifact_id
+        $mapped_artifact_id,
     ) {
         $type         = (string) $xml_element['nature'];
         $xml_artifact = $this->artifact_factory->getArtifactById($mapped_artifact_id);
@@ -141,7 +141,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
 
     private function removeValuesIfDontExistInLastChangeset(
         array $artifact_links,
-        array $changesets
+        array $changesets,
     ) {
         $removed_artifacts = [];
         foreach ($changesets as $changeset) {

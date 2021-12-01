@@ -40,7 +40,7 @@ final class DescriptionValue
      */
     public static function fromDescriptionReference(
         RetrieveDescriptionValue $description_retriever,
-        DescriptionFieldReference $description
+        DescriptionFieldReference $description,
     ): self {
         $text_value = $description_retriever->getDescriptionValue($description);
         return new self($text_value->getValue(), $text_value->getFormat());

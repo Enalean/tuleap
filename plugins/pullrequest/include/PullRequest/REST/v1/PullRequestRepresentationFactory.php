@@ -50,7 +50,7 @@ class PullRequestRepresentationFactory
     public function __construct(
         AccessControlVerifier $access_control_verifier,
         CommitStatusRetriever $commit_status_retriever,
-        GitoliteAccessURLGenerator $gitolite_access_URL_generator
+        GitoliteAccessURLGenerator $gitolite_access_URL_generator,
     ) {
         $this->access_control_verifier       = $access_control_verifier;
         $this->commit_status_retriever       = $commit_status_retriever;
@@ -62,7 +62,7 @@ class PullRequestRepresentationFactory
         \GitRepository $repository_src,
         \GitRepository $repository_dest,
         GitExec $executor_repository_destination,
-        \PFUser $user
+        \PFUser $user,
     ) {
         $pull_request = $pull_request_with_git_reference->getPullRequest();
 

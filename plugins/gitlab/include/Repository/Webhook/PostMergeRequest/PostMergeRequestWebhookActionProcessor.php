@@ -66,7 +66,7 @@ class PostMergeRequestWebhookActionProcessor
         PreviouslySavedReferencesRetriever $previously_saved_references_retriever,
         CrossReferenceFromMergeRequestCreator $cross_reference_creator,
         PostMergeRequestWebhookAuthorDataRetriever $author_data_retriever,
-        GitlabMergeRequestReferenceRetriever $gitlab_merge_request_reference_retriever
+        GitlabMergeRequestReferenceRetriever $gitlab_merge_request_reference_retriever,
     ) {
         $this->merge_request_reference_dao              = $merge_request_reference_dao;
         $this->logger                                   = $logger;
@@ -108,7 +108,7 @@ class PostMergeRequestWebhookActionProcessor
 
     private function saveMergeRequestData(
         GitlabRepositoryIntegration $gitlab_repository_integration,
-        PostMergeRequestWebhookData $webhook_data
+        PostMergeRequestWebhookData $webhook_data,
     ): void {
         $merge_request_id = $webhook_data->getMergeRequestId();
 
@@ -127,7 +127,7 @@ class PostMergeRequestWebhookActionProcessor
 
     private function saveMergeRequestAuthorData(
         GitlabRepositoryIntegration $gitlab_repository_integration,
-        PostMergeRequestWebhookData $webhook_data
+        PostMergeRequestWebhookData $webhook_data,
     ): void {
         try {
             $this->logger->info("Try to get author data of merge request #{$webhook_data->getMergeRequestId()}");
@@ -155,7 +155,7 @@ class PostMergeRequestWebhookActionProcessor
 
     private function getAlreadySaveMergeRequest(
         GitlabRepositoryIntegration $gitlab_repository_integration,
-        PostMergeRequestWebhookData $webhook_data
+        PostMergeRequestWebhookData $webhook_data,
     ): ?GitlabMergeRequest {
         return $this->gitlab_merge_request_reference_retriever->getGitlabMergeRequestInRepositoryWithId(
             $gitlab_repository_integration,
@@ -168,7 +168,7 @@ class PostMergeRequestWebhookActionProcessor
      */
     private function shouldWeSaveAuthorData(
         array $cross_references,
-        ?GitlabMergeRequest $already_saved_merge_request
+        ?GitlabMergeRequest $already_saved_merge_request,
     ): bool {
         if ($already_saved_merge_request) {
             return ! $already_saved_merge_request->isAuthorAlreadyFetched();
@@ -179,7 +179,7 @@ class PostMergeRequestWebhookActionProcessor
 
     private function shouldWeSaveMergeRequestData(
         array $cross_references,
-        ?GitlabMergeRequest $already_saved_merge_request
+        ?GitlabMergeRequest $already_saved_merge_request,
     ): bool {
         if (! empty($cross_references)) {
             return true;

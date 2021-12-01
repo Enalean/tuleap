@@ -34,7 +34,7 @@ class MergeRequestTuleapReferenceDao extends DataAccessObject
         string $description,
         string $source_branch,
         string $state,
-        int $created_at
+        int $created_at,
     ): void {
         $this->getDB()->insertOnDuplicateKeyUpdate(
             'plugin_gitlab_repository_integration_merge_request_info',
@@ -45,14 +45,14 @@ class MergeRequestTuleapReferenceDao extends DataAccessObject
                 'description'      => $description,
                 'source_branch'    => $source_branch,
                 'state'            => $state,
-                'created_at'       => $created_at
+                'created_at'       => $created_at,
             ],
             [
                 'title',
                 'description',
                 'source_branch',
                 'state',
-                'created_at'
+                'created_at',
             ]
         );
     }
@@ -67,7 +67,7 @@ class MergeRequestTuleapReferenceDao extends DataAccessObject
             ],
             [
                 'integration_id'   => $integration_id,
-                'merge_request_id' => $merge_request_id
+                'merge_request_id' => $merge_request_id,
             ]
         );
     }
@@ -90,7 +90,7 @@ class MergeRequestTuleapReferenceDao extends DataAccessObject
     public function deleteAllMergeRequestInIntegration(
         string $integration_path,
         int $integration_id,
-        int $integration_project_id
+        int $integration_project_id,
     ): void {
         $this->getDB()->delete(
             'plugin_gitlab_repository_integration_merge_request_info',

@@ -74,7 +74,7 @@ final class Mail_RecipientListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $list = $this->builder->getValidRecipientsFromAddresses([$this->external_address]);
 
         $expected = [
-            ['email' => $this->external_address, 'real_name' => '']
+            ['email' => $this->external_address, 'real_name' => ''],
         ];
 
         $this->assertEquals($expected, $list);
@@ -88,7 +88,7 @@ final class Mail_RecipientListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected = [
             ['email' => $this->external_address,  'real_name' => ''],
-            ['email' => $this->external_address2, 'real_name' => '']
+            ['email' => $this->external_address2, 'real_name' => ''],
         ];
 
         $this->assertEquals($expected, $list);
@@ -152,7 +152,7 @@ final class Mail_RecipientListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->active_user,
                 $this->deleted_user,
                 $this->bob_suspended_user,
-                $this->bob_active_user
+                $this->bob_active_user,
             ]
         );
 

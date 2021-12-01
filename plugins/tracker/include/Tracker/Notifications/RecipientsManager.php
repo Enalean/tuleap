@@ -55,7 +55,7 @@ class RecipientsManager
         UserManager $user_manager,
         UnsubscribersNotificationDAO $unsubscribers_notification_dao,
         UserNotificationSettingsRetriever $notification_settings_retriever,
-        UserNotificationOnlyStatusChangeDAO $user_status_change_only_dao
+        UserNotificationOnlyStatusChangeDAO $user_status_change_only_dao,
     ) {
         $this->form_element_factory            = $form_element_factory;
         $this->user_manager                    = $user_manager;
@@ -197,7 +197,7 @@ class RecipientsManager
 
     private function removeRecipientsWhenTrackerIsInOnlyStatusUpdateMode(
         Tracker_Artifact_Changeset $changeset,
-        array &$recipients
+        array &$recipients,
     ) {
         if (! $this->isTrackerInStatusUpdateOnlyNotificationsMode($changeset)) {
             return;

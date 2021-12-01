@@ -49,7 +49,7 @@ class UserStatusBuilder
             $all_status[] = [
                 'key'        => $key,
                 'status'     => $status,
-                'is_current' => $user->getStatus() === $key
+                'is_current' => $user->getStatus() === $key,
             ];
         }
 

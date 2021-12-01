@@ -48,7 +48,7 @@ final class Supervisord
         self::UNIT_POSTFIX,
         self::UNIT_RSYSLOG,
         self::UNIT_SSHD,
-        self::UNIT_BACKEND_WORKERS
+        self::UNIT_BACKEND_WORKERS,
     ];
 
     /**

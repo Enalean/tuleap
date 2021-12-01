@@ -297,7 +297,7 @@ class ProjectResource
 
         return [
             'definitions' => $this->getDefinitionRepresentationsFromArtifactsList($artifacts),
-            'total'       => $artifacts_count
+            'total'       => $artifacts_count,
         ];
     }
 
@@ -322,7 +322,7 @@ class ProjectResource
 
         return [
             'definitions' => $this->getDefinitionRepresentationsFromArtifactsList($artifacts),
-            'total'       => $artifacts_count
+            'total'       => $artifacts_count,
         ];
     }
 

@@ -43,7 +43,7 @@ class SetIntValueRepository
 
     public function __construct(
         Transition_PostAction_Field_IntDao $set_int_value_dao,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->set_int_value_dao    = $set_int_value_dao;
         $this->transaction_executor = $transaction_executor;

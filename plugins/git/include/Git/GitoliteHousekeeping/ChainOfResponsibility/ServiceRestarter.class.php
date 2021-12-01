@@ -32,7 +32,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarter extends Gi
 
     public function __construct(
         Git_GitoliteHousekeeping_GitoliteHousekeepingResponse $response,
-        BackendService $backend_service
+        BackendService $backend_service,
     ) {
         parent::__construct();
         $this->response        = $response;

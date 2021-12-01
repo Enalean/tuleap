@@ -31,6 +31,6 @@ interface VerifySemanticsAreConfigured
     public function areTrackerSemanticsWellConfigured(
         TrackerReference $tracker,
         SourceTrackerCollection $source_tracker_collection,
-        ConfigurationErrorsCollector $configuration_errors
+        ConfigurationErrorsCollector $configuration_errors,
     ): bool;
 }

@@ -47,7 +47,7 @@ class LegacyReferenceAdministrationBrowsingRenderer
     public function __construct(
         Codendi_HTMLPurifier $purifier,
         \EventManager $event_manager,
-        \ReferenceManager $reference_manager
+        \ReferenceManager $reference_manager,
     ) {
         $this->purifier          = $purifier;
         $this->event_manager     = $event_manager;
@@ -155,7 +155,7 @@ class LegacyReferenceAdministrationBrowsingRenderer
             \Event::GET_REFERENCE_ADMIN_CAPABILITIES,
             [
                 'reference'      => $ref,
-                'can_be_deleted' => &$can_be_deleted
+                'can_be_deleted' => &$can_be_deleted,
             ]
         );
 
@@ -249,7 +249,7 @@ class LegacyReferenceAdministrationBrowsingRenderer
         $renderer->renderToPage(
             'external-system-references',
             [
-                'external_system_references' => $presenters
+                'external_system_references' => $presenters,
             ]
         );
     }

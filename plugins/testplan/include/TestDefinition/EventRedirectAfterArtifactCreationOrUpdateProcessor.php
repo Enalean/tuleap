@@ -47,7 +47,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessor
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
         ArtifactLinkUpdater $artifact_link_updater,
-        RedirectParameterInjector $injector
+        RedirectParameterInjector $injector,
     ) {
         $this->artifact_factory      = $artifact_factory;
         $this->artifact_link_updater = $artifact_link_updater;
@@ -57,7 +57,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessor
     public function process(
         Codendi_Request $request,
         Tracker_Artifact_Redirect $redirect,
-        Artifact $artifact
+        Artifact $artifact,
     ): void {
         $ttm_backlog_item_id = $request->get(RedirectParameterInjector::TTM_BACKLOG_ITEM_ID_KEY);
         $ttm_milestone_id    = $request->get(RedirectParameterInjector::TTM_MILESTONE_ID_KEY);

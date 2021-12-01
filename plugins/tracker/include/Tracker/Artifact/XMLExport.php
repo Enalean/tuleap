@@ -53,7 +53,7 @@ class Tracker_Artifact_XMLExport
         Tracker_ArtifactFactory $artifact_factory,
         $can_bypass_threshold,
         UserXMLExporter $user_xml_exporter,
-        ExternalFieldsExtractor $external_fields_extractor
+        ExternalFieldsExtractor $external_fields_extractor,
     ) {
         $this->rng_validator             = $rng_validator;
         $this->artifact_factory          = $artifact_factory;
@@ -66,7 +66,7 @@ class Tracker_Artifact_XMLExport
         Tracker $tracker,
         SimpleXMLElement $xml_content,
         PFUser $user,
-        Tuleap\Project\XML\Export\ArchiveInterface $archive
+        Tuleap\Project\XML\Export\ArchiveInterface $archive,
     ) {
         $all_artifacts = $this->artifact_factory->getArtifactsByTrackerId($tracker->getId());
         $this->checkThreshold(count($all_artifacts));
@@ -96,7 +96,7 @@ class Tracker_Artifact_XMLExport
         SimpleXMLElement $xml_content,
         PFUser $user,
         Tuleap\Project\XML\Export\ArchiveInterface $archive,
-        $is_in_archive_context
+        $is_in_archive_context,
     ) {
         $artifacts_node = $xml_content->addChild('artifacts');
 
@@ -124,7 +124,7 @@ class Tracker_Artifact_XMLExport
         array $artifacts,
         SimpleXMLElement $xml_content,
         PFUser $user,
-        Tuleap\Project\XML\Export\ArchiveInterface $archive
+        Tuleap\Project\XML\Export\ArchiveInterface $archive,
     ) {
         $is_in_archive_context = true;
 

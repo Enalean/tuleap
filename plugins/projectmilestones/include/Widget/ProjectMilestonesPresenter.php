@@ -85,7 +85,7 @@ class ProjectMilestonesPresenter
         string $label_start_date,
         string $label_timeframe,
         bool $user_can_view_sub_milestones_planning,
-        string $burnup_mode
+        string $burnup_mode,
     ) {
         $this->project_id                            = $project->getID();
         $this->project_name                          = $project->getPublicName();

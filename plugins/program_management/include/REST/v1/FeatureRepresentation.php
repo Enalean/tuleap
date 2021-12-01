@@ -55,7 +55,7 @@ final class FeatureRepresentation extends ElementRepresentation
         MinimalTrackerRepresentation $minimal_tracker_representation,
         BackgroundColor $background_color,
         bool $has_user_story_planned,
-        bool $has_user_story_linked
+        bool $has_user_story_linked,
     ) {
         parent::__construct($artifact_id, $artifact_url, $artifact_xref, $artifact_title);
         $this->tracker                = $minimal_tracker_representation;

@@ -44,7 +44,7 @@ class ProfileController implements DispatchableWithRequest, DispatchableWithBurn
 
     public function __construct(
         ProfilePresenterBuilder $presenter_builder,
-        ProfileAsJSONForTooltipController $json_controller
+        ProfileAsJSONForTooltipController $json_controller,
     ) {
         $this->presenter_builder = $presenter_builder;
         $this->json_controller   = $json_controller;

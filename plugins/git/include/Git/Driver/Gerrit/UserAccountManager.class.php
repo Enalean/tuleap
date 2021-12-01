@@ -36,7 +36,7 @@ class Git_Driver_Gerrit_UserAccountManager
 
     public function __construct(
         Git_Driver_Gerrit_GerritDriverFactory $gerrit_driver_factory,
-        Git_RemoteServer_GerritServerFactory $remote_gerrit_factory
+        Git_RemoteServer_GerritServerFactory $remote_gerrit_factory,
     ) {
         $this->gerrit_driver_factory = $gerrit_driver_factory;
         $this->remote_gerrit_factory = $remote_gerrit_factory;

@@ -32,62 +32,62 @@ class Git_Driver_Gerrit_ProjectCreator
         [
             'reference'  => 'refs/tags',
             'permission' => 'pushTag',
-            'group'      => 'group Administrators'
+            'group'      => 'group Administrators',
         ],
         [
             'reference'  => 'refs/tags',
             'permission' => 'create',
-            'group'      => 'group Administrators'
+            'group'      => 'group Administrators',
         ],
         [
             'reference'  => 'refs/tags',
             'permission' => 'forgeCommitter',
-            'group'      => 'group Administrators'
+            'group'      => 'group Administrators',
         ],
         [
             'reference'  => 'refs/heads',
             'permission' => 'create',
-            'group'      => 'group Administrators'
+            'group'      => 'group Administrators',
         ],
         [
             'reference'  => 'refs/heads',
             'permission' => 'forgeCommitter',
-            'group'      => 'group Administrators'
+            'group'      => 'group Administrators',
         ],
         // To be able to push merge commit on master, we need pushMerge on refs/for/*
         // http://code.google.com/p/gerrit/issues/detail?id=1072
         [
             'reference'  => 'refs/for',
             'permission' => 'pushMerge',
-            'group'      => 'group Administrators'
+            'group'      => 'group Administrators',
         ],
         // Reset explicitely some access rigths for Administrators
         // To deal with the case they were removed
         [
             'reference'  => 'refs/for/refs',
             'permission' => 'push',
-            'group'      => 'group Administrators'
+            'group'      => 'group Administrators',
         ],
         [
             'reference'  => 'refs/for/refs',
             'permission' => 'pushMerge',
-            'group'      => 'group Administrators'
+            'group'      => 'group Administrators',
         ],
         [
             'reference'  => 'refs/heads',
             'permission' => 'push',
-            'group'      => 'group Administrators'
+            'group'      => 'group Administrators',
         ],
         [
             'reference'  => 'refs/tags',
             'permission' => 'pushSignedTag',
-            'group'      => 'group Administrators'
+            'group'      => 'group Administrators',
         ],
         [
             'reference'  => 'refs/tags',
             'permission' => 'pushAnnotatedTag',
-            'group'      => 'group Administrators'
-        ]
+            'group'      => 'group Administrators',
+        ],
     ];
 
     /** @var Git_Driver_Gerrit_GerritDriverFactory */
@@ -126,7 +126,7 @@ class Git_Driver_Gerrit_ProjectCreator
         Git_Driver_Gerrit_UmbrellaProjectManager $umbrella_manager,
         Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
         Git_Driver_Gerrit_Template_TemplateProcessor $template_processor,
-        Git_Exec $git_exec
+        Git_Exec $git_exec,
     ) {
         $this->dir                = $dir;
         $this->driver_factory     = $driver_factory;

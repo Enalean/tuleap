@@ -46,7 +46,7 @@ class ChangeAvatarController implements DispatchableWithRequest
     public function __construct(
         CSRFSynchronizerToken $csrf,
         UserAvatarSaver $user_avatar_saver,
-        \UserManager $user_manager
+        \UserManager $user_manager,
     ) {
         $this->csrf              = $csrf;
         $this->user_avatar_saver = $user_avatar_saver;

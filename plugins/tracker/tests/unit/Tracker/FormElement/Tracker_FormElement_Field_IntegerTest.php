@@ -205,7 +205,7 @@ class Tracker_FormElement_Field_IntegerTest extends \Tuleap\Test\PHPUnit\TestCas
         $field = $this->getIntegerField();
         $value = [
             "field_id" => 873,
-            "value"    => 42
+            "value"    => 42,
         ];
 
         $this->assertEquals(42, $field->getFieldDataFromRESTValueByField($value));

@@ -54,7 +54,7 @@ class SOAP_WSDLRenderer
                 'ssl' => [
                     'verify_peer'       => false,
                     'verify_peer_name'  => false,
-                ]
+                ],
             ];
         }
         return [];

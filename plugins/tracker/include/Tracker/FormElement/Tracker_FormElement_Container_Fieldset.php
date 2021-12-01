@@ -63,7 +63,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         $method,
         Artifact $artifact,
         array $submitted_values,
-        array $additional_classes
+        array $additional_classes,
     ) {
         $html    = '';
         $content = $this->getContainerContent($method, [$artifact, $submitted_values, $additional_classes]);

@@ -104,7 +104,7 @@ final class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\
                 'title'       => 'My Title',
                 'description' => 'My description',
                 'state'       => 'closed',
-                'created_at'  => '2021-01-12 13:49:35 UTC'
+                'created_at'  => '2021-01-12 13:49:35 UTC',
             ],
         ];
         $this->builder->build("Merge Request Hook", 123, "https://example.com", $webhook_content);

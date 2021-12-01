@@ -75,7 +75,7 @@ class SimilarFieldsMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(
                 [
                     $first_field_row,
-                    $second_field_row
+                    $second_field_row,
                 ]
             );
 
@@ -100,7 +100,7 @@ class SimilarFieldsMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(
                 [
                     $first_field_row,
-                    $second_field_row
+                    $second_field_row,
                 ]
             );
 

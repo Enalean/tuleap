@@ -45,7 +45,7 @@ class Presenter
         $link_to_register_page,
         $is_registering_possible,
         ConnectorPresenter $provider_login_presenter,
-        AuthenticationMeanName $authentication_mean_name
+        AuthenticationMeanName $authentication_mean_name,
     ) {
         $this->return_to                = $return_to;
         $this->provider_name            = $provider_name;

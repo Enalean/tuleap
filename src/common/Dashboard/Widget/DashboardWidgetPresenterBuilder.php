@@ -38,7 +38,7 @@ class DashboardWidgetPresenterBuilder
 
     public function __construct(
         WidgetFactory $widget_factory,
-        DisabledProjectWidgetsChecker $disabled_project_widgets_checker
+        DisabledProjectWidgetsChecker $disabled_project_widgets_checker,
     ) {
         $this->widget_factory                   = $widget_factory;
         $this->disabled_project_widgets_checker = $disabled_project_widgets_checker;
@@ -54,7 +54,7 @@ class DashboardWidgetPresenterBuilder
         Dashboard $dashboard,
         OwnerInfo $owner_info,
         array $widgets_lines,
-        $can_update_dashboards
+        $can_update_dashboards,
     ) {
         $lines_presenter = [];
 
@@ -77,7 +77,7 @@ class DashboardWidgetPresenterBuilder
         Dashboard $dashboard,
         OwnerInfo $owner_info,
         DashboardWidgetLine $line,
-        $can_update_dashboards
+        $can_update_dashboards,
     ) {
         $columns_presenter = [];
         foreach ($line->getWidgetColumns() as $column) {
@@ -94,7 +94,7 @@ class DashboardWidgetPresenterBuilder
         Dashboard $dashboard,
         OwnerInfo $owner_info,
         DashboardWidgetColumn $column,
-        $can_update_dashboards
+        $can_update_dashboards,
     ) {
         $widgets_presenter = [];
         foreach ($column->getWidgets() as $dashboard_widget) {

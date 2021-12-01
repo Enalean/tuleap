@@ -74,7 +74,7 @@ class AfterItemCreationVisitor implements ItemVisitor
         \Docman_FileStorage $docman_file_storage,
         \Docman_VersionFactory $docman_version_factory,
         \Docman_MetadataValueFactory $metadata_value_factory,
-        PermissionItemUpdater $permission_item_updater
+        PermissionItemUpdater $permission_item_updater,
     ) {
         $this->permission_manager          = $permission_manager;
         $this->event_manager               = $event_manager;
@@ -145,7 +145,7 @@ class AfterItemCreationVisitor implements ItemVisitor
             'filename'  => basename($created_file_path),
             'filesize'  => filesize($created_file_path),
             'filetype'  => 'text/html',
-            'path'      => $created_file_path
+            'path'      => $created_file_path,
         ];
 
         $this->docman_version_factory->create($new_embedded_version_row);
@@ -178,7 +178,7 @@ class AfterItemCreationVisitor implements ItemVisitor
 
     private function instantiatePermissions(
         Docman_Item $item,
-        ?DocmanItemPermissionsForGroupsSet $permissions_for_groups
+        ?DocmanItemPermissionsForGroupsSet $permissions_for_groups,
     ): void {
         if ($permissions_for_groups === null) {
             $this->permission_manager->clonePermissions(

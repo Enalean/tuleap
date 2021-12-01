@@ -55,7 +55,7 @@ final class User_SSHKeyDumperTest extends \Tuleap\Test\PHPUnit\TestCase
             'user_name'       => $this->toto_name,
             'authorized_keys' => $this->key,
             'unix_status'     => 'A',
-            'language_id'     => 'en_US'
+            'language_id'     => 'en_US',
         ]);
         $this->sshkey_dumper = \Mockery::mock(\User_SSHKeyDumper::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->sshkey_dumper->__construct($this->backend);

@@ -224,7 +224,7 @@ class ViewVCProxy
         svn_header($project, [
             'title' => $GLOBALS['Language']->getText('svn_utils', 'browse_tree'),
             'path' => urlencode($path),
-            'body_class' => ['viewvc-epel']
+            'body_class' => ['viewvc-epel'],
         ]);
         echo util_make_reference_links(
             $body,

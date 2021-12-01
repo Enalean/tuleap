@@ -32,7 +32,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGc extends Git_Git
 
     public function __construct(
         Git_GitoliteHousekeeping_GitoliteHousekeepingResponse $response,
-        Git_GitoliteHousekeeping_GitoliteHousekeepingDao $housekeeping_dao
+        Git_GitoliteHousekeeping_GitoliteHousekeepingDao $housekeeping_dao,
     ) {
         parent::__construct();
         $this->housekeeping_dao = $housekeeping_dao;

@@ -75,7 +75,7 @@ class GitlabRepositoryIntegration
         string $gitlab_repository_url,
         DateTimeImmutable $last_push_date,
         Project $project,
-        bool $allow_artifact_closure
+        bool $allow_artifact_closure,
     ) {
         $this->id                     = $id;
         $this->gitlab_repository_id   = $gitlab_repository_id;

@@ -62,7 +62,7 @@ final class GitRepositoryManagerCreateTest extends \Tuleap\Test\PHPUnit\TestCase
                 Mockery::mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
                 Mockery::mock('ProjectHistoryDao'),
                 Mockery::mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
-                Mockery::mock(EventManager::class)
+                Mockery::mock(EventManager::class),
             ]
         )
             ->makePartial()

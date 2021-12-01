@@ -35,7 +35,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter 
 
     public function __construct(
         Tracker_XML_ChildrenCollector $children_collector,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         $this->children_collector = $children_collector;
         $this->current_user       = $current_user;
@@ -50,7 +50,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter 
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $changeset_value
+        Tracker_Artifact_ChangesetValue $changeset_value,
     ) {
         $field_xml = $this->createFieldChangeNodeInChangesetNode(
             $changeset_value,
@@ -68,7 +68,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter 
                 [
                     'field_xml'         => $field_xml,
                     'children_trackers' => $children_trackers,
-                    'artifact'          => $artifact
+                    'artifact'          => $artifact,
                 ]
             );
         }
@@ -77,7 +77,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter 
     private function appendValueToFieldChangeNode(
         Tracker_ArtifactLinkInfo $artifact_link_info,
         $index,
-        $userdata
+        $userdata,
     ) {
         $field_xml = $userdata['field_xml'];
         $artifact  = $userdata['artifact'];

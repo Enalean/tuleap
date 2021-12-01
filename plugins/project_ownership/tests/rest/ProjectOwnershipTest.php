@@ -46,7 +46,7 @@ class ProjectOwnershipTest extends \RestBase
                 'description' => 'Test Project Certification Owner',
                 'label'       => 'Test Project Certification Owner',
                 'is_public'   => true,
-                'template_id' => $this->project_private_id
+                'template_id' => $this->project_private_id,
             ])))
         );
         $this->assertSame(201, $creation_response->getStatusCode());
@@ -64,7 +64,7 @@ class ProjectOwnershipTest extends \RestBase
                 'user_references' => [
                     ['username' => \REST_TestDataBuilder::ADMIN_USER_NAME],
                     ['username' => \REST_TestDataBuilder::TEST_USER_1_NAME],
-                ]
+                ],
             ])))
         );
         $this->assertSame(200, $response_update_admins->getStatusCode());

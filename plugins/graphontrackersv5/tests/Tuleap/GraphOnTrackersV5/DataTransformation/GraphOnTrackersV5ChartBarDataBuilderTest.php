@@ -76,7 +76,7 @@ final class GraphOnTrackersV5ChartBarDataBuilderTest extends TestCase
         $this->builder->expects($this->once())->method('getQueryResult')->will($this->returnValue([
             ['nb' => 10, 'source_field' => 130, 'red' => null, 'green' => null, 'blue' => null, 'tlp_color_name' => null],
             ['nb' => 5, 'source_field' => 131, 'red' => null, 'green' => null, 'blue' => null, 'tlp_color_name' => null],
-            ['nb' => 3, 'source_field' => 130, 'red' => null, 'green' => null, 'blue' => null, 'tlp_color_name' => null]
+            ['nb' => 3, 'source_field' => 130, 'red' => null, 'green' => null, 'blue' => null, 'tlp_color_name' => null],
         ]));
 
         $this->builder->buildProperties($engine);
@@ -105,7 +105,7 @@ final class GraphOnTrackersV5ChartBarDataBuilderTest extends TestCase
         $this->builder->expects($this->once())->method('getQueryResult')->will($this->returnValue([
             ['nb' => 10, 'source_field' => 130, 'group_field' => null, 'red' => null, 'green' => null, 'blue' => null, 'tlp_color_name' => null],
             ['nb' => 5, 'source_field' => 131, 'group_field' => 431, 'red' => null, 'green' => null, 'blue' => null, 'tlp_color_name' => null],
-            ['nb' => 3, 'source_field' => 130, 'group_field' => 432, 'red' => null, 'green' => null, 'blue' => null, 'tlp_color_name' => null]
+            ['nb' => 3, 'source_field' => 130, 'group_field' => 432, 'red' => null, 'green' => null, 'blue' => null, 'tlp_color_name' => null],
         ]));
 
         $this->builder->buildProperties($engine);

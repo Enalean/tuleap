@@ -59,7 +59,7 @@ class Tracker_Artifact_MailGateway_RecipientFactory
         Tracker_ArtifactFactory $artifact_factory,
         UserManager $user_manager,
         $salt,
-        $host
+        $host,
     ) {
         $this->artifact_factory = $artifact_factory;
         $this->user_manager     = $user_manager;
@@ -110,7 +110,7 @@ class Tracker_Artifact_MailGateway_RecipientFactory
     /** @return Tracker_Artifact_MailGateway_Recipient */
     public function getFromUserAndChangeset(
         PFUser $user,
-        Tracker_Artifact_Changeset $changeset
+        Tracker_Artifact_Changeset $changeset,
     ) {
         $artifact = $changeset->getArtifact();
         return new Tracker_Artifact_MailGateway_Recipient(
@@ -123,7 +123,7 @@ class Tracker_Artifact_MailGateway_RecipientFactory
     private function getEmail(
         PFUser $user,
         Artifact $artifact,
-        Tracker_Artifact_Changeset $changeset
+        Tracker_Artifact_Changeset $changeset,
     ) {
         return $artifact->getId() . "-" .
             $this->getHash($user, $artifact) . "-" .
@@ -155,7 +155,7 @@ class Tracker_Artifact_MailGateway_RecipientFactory
     private function checkHash(
         PFUser $user,
         Artifact $artifact,
-        $submitted_hash
+        $submitted_hash,
     ) {
         if ($this->getHash($user, $artifact) != $submitted_hash) {
             throw new Tracker_Artifact_MailGateway_RecipientInvalidHashException();
@@ -164,7 +164,7 @@ class Tracker_Artifact_MailGateway_RecipientFactory
 
     private function getHash(
         PFUser $user,
-        Artifact $artifact
+        Artifact $artifact,
     ) {
         return md5($user->getId() . "-" . $artifact->getId() . "-" . $this->salt);
     }

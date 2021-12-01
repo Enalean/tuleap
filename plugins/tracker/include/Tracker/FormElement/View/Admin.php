@@ -197,7 +197,7 @@ class Tracker_FormElement_View_Admin
             $items,
             [
                 'id'   => 'formElement_rank',
-                'name' => 'formElement_data[rank]'
+                'name' => 'formElement_data[rank]',
             ]
         );
         $html .= '</p>';

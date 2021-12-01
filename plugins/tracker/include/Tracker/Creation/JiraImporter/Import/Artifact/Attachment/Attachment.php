@@ -55,7 +55,7 @@ class Attachment
         string $filename,
         string $mime_type,
         string $content_url,
-        int $size
+        int $size,
     ) {
         $this->id          = $id;
         $this->filename    = $filename;

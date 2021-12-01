@@ -55,7 +55,7 @@ class PHPWikiPermissionPerGroupPaneBuilder
         Wiki_PermissionsManager $wiki_permissions_manager,
         PermissionPerGroupUGroupFormatter $formatter,
         UGroupManager $ugroup_manager,
-        TemplateRendererFactory $template_renderer_factory
+        TemplateRendererFactory $template_renderer_factory,
     ) {
         $this->formatter                 = $formatter;
         $this->ugroup_manager            = $ugroup_manager;
@@ -96,7 +96,7 @@ class PHPWikiPermissionPerGroupPaneBuilder
     private function extractServicePermissions(
         Project $project,
         PermissionPerGroupCollection $permissions,
-        $selected_ugroup_id = null
+        $selected_ugroup_id = null,
     ) {
         $this->addAdministrationPermission($project, $permissions, $selected_ugroup_id);
         $this->addGlobalAccessPermission($project, $permissions, $selected_ugroup_id);
@@ -105,7 +105,7 @@ class PHPWikiPermissionPerGroupPaneBuilder
     private function addAdministrationPermission(
         Project $project,
         PermissionPerGroupCollection $permissions,
-        $selected_ugroup_id = null
+        $selected_ugroup_id = null,
     ) {
         $ugroups = $this->getAdministrationUgroups($selected_ugroup_id);
 
@@ -119,7 +119,7 @@ class PHPWikiPermissionPerGroupPaneBuilder
             [
                 'name'    => _('Administrator'),
                 'groups'  => $formatted_group,
-                'url'     => ''
+                'url'     => '',
             ]
         );
     }
@@ -138,7 +138,7 @@ class PHPWikiPermissionPerGroupPaneBuilder
     private function addGlobalAccessPermission(
         Project $project,
         PermissionPerGroupCollection $permissions,
-        $selected_ugroup_id = null
+        $selected_ugroup_id = null,
     ) {
         $ugroups = $this->getGlobalAccessUgroups($project, $selected_ugroup_id);
 
@@ -152,7 +152,7 @@ class PHPWikiPermissionPerGroupPaneBuilder
             [
                 'name'    => _('Global access'),
                 'groups'  => $formatted_group,
-                'url'     => $this->getGlobalAdminLink($project)
+                'url'     => $this->getGlobalAdminLink($project),
             ]
         );
     }
@@ -182,7 +182,7 @@ class PHPWikiPermissionPerGroupPaneBuilder
         return '/wiki/admin/index.php?' . http_build_query(
             [
                 "group_id" => $project->getID(),
-                "view"     => "wikiPerms"
+                "view"     => "wikiPerms",
             ]
         );
     }

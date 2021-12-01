@@ -34,11 +34,11 @@ final class Tracker_Workflow_Trigger_RulesBuilderDataTest extends \Tuleap\Test\P
                 "conditions" => [
                     [
                         "name" => Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE,
-                        "operator" => "or"
+                        "operator" => "or",
                     ],
                     [
                         "name" => Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
-                        "operator" => "and"
+                        "operator" => "and",
                     ],
                 ],
                 "triggers" => [],

@@ -49,7 +49,7 @@ class CardPatcher
 
     public function __construct(
         Tracker_FormElementFactory $form_element_factory,
-        Tracker_REST_Artifact_ArtifactUpdater $updater
+        Tracker_REST_Artifact_ArtifactUpdater $updater,
     ) {
         $this->form_element_factory = $form_element_factory;
 
@@ -99,7 +99,7 @@ class CardPatcher
      */
     private function getRemainingEffortField(
         Artifact $artifact,
-        PFUser $user
+        PFUser $user,
     ): Tracker_FormElement_Field_Numeric {
         $remaining_effort_field = $this->form_element_factory->getNumericFieldByNameForUser(
             $artifact->getTracker(),
@@ -124,7 +124,7 @@ class CardPatcher
      */
     private function getUpdateValues(
         CardPatchRepresentation $payload,
-        Tracker_FormElement_Field_Numeric $remaining_effort_field
+        Tracker_FormElement_Field_Numeric $remaining_effort_field,
     ): array {
         $representation           = new ArtifactValuesRepresentation();
         $representation->field_id = (int) $remaining_effort_field->getId();

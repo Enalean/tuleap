@@ -100,7 +100,7 @@ final class ProjectResourceTest extends \RestBase
                 "plannable_tracker_ids" => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['features']],
                 "permissions" => ['can_prioritize_features' => ["${project_id}_4"]],
                 "custom_label" => "Custom Program Increments",
-                "custom_sub_label" => "program increment"
+                "custom_sub_label" => "program increment",
             ]
         );
 
@@ -124,7 +124,7 @@ final class ProjectResourceTest extends \RestBase
                 "program_increment_tracker_id" => $this->tracker_ids[$project_id]['pi'],
                 "plannable_tracker_ids" => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['features']],
                 "permissions" => ['can_prioritize_features' => ["${project_id}_4"]],
-                "iteration" => ["iteration_tracker_id" => $this->tracker_ids[$project_id]['iteration']]
+                "iteration" => ["iteration_tracker_id" => $this->tracker_ids[$project_id]['iteration']],
             ]
         );
 
@@ -148,7 +148,7 @@ final class ProjectResourceTest extends \RestBase
                 "program_increment_tracker_id" => $this->tracker_ids[$project_id]['pi'],
                 "plannable_tracker_ids" => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['features']],
                 "permissions" => ['can_prioritize_features' => ["${project_id}_4"]],
-                "iteration" => ["iteration_tracker_id" => $this->tracker_ids[$project_id]['iteration'], "iteration_label" => "My Iterations", "iteration_sub_label" => "iteration"]
+                "iteration" => ["iteration_tracker_id" => $this->tracker_ids[$project_id]['iteration'], "iteration_label" => "My Iterations", "iteration_sub_label" => "iteration"],
             ]
         );
 
@@ -196,7 +196,7 @@ final class ProjectResourceTest extends \RestBase
             "status" => "On Going",
             "start_date" => "2021-06-14T00:00:00+02:00",
             "end_date" => "2021-07-01T00:00:00+02:00",
-            "user_can_update" => true
+            "user_can_update" => true,
         ];
 
         self::assertEquals(200, $response->getStatusCode());
@@ -567,7 +567,7 @@ final class ProjectResourceTest extends \RestBase
         string $field_name,
         string $field_value,
         int $project_id,
-        string $tracker_name
+        string $tracker_name,
     ): array {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'trackers/' . urlencode((string) $this->tracker_ids[$project_id][$tracker_name]) .
@@ -583,7 +583,7 @@ final class ProjectResourceTest extends \RestBase
 
         return [
             'id'               => $artifacts[0]['id'],
-            'artifact_link_id' => $this->getArtifactLinkFieldId($artifacts[0]['values'])
+            'artifact_link_id' => $this->getArtifactLinkFieldId($artifacts[0]['values']),
         ];
     }
 
@@ -619,7 +619,7 @@ final class ProjectResourceTest extends \RestBase
         array $to_add,
         array $to_remove,
         bool $remove_program_increment_link = false,
-        ?array $order = null
+        ?array $order = null,
     ): void {
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'projects/' . urlencode((string) $program_id) . '/program_backlog')->withBody($this->stream_factory->createStream(json_encode(
@@ -655,21 +655,21 @@ final class ProjectResourceTest extends \RestBase
         array $to_add,
         array $to_remove,
         bool $remove_program_increment_link,
-        ?array $order
+        ?array $order,
     ): array {
         if ($order) {
             return [
                 'add'    => self::formatTopBacklogElementChange($to_add),
                 'remove' => self::formatTopBacklogElementChange($to_remove),
                 "remove_from_program_increment_to_add_to_the_backlog" => $remove_program_increment_link,
-                'order'  => $order
+                'order'  => $order,
             ];
         }
 
         return [
             'add'    => self::formatTopBacklogElementChange($to_add),
             'remove' => self::formatTopBacklogElementChange($to_remove),
-            "remove_from_program_increment_to_add_to_the_backlog" => $remove_program_increment_link
+            "remove_from_program_increment_to_add_to_the_backlog" => $remove_program_increment_link,
         ];
     }
 
@@ -677,7 +677,7 @@ final class ProjectResourceTest extends \RestBase
     {
         $values = [
             "values"  => [["field_id" => $artifact_field_id, 'links' => $links]],
-            "comment" => ["body" => "", "format" => "text"]
+            "comment" => ["body" => "", "format" => "text"],
         ];
 
         $response = $this->getResponse(

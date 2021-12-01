@@ -56,7 +56,7 @@ class ExecutionStatusUpdater
         Tracker_REST_Artifact_ArtifactUpdater $artifact_updater,
         ArtifactFactory $testmanagement_artifact_factory,
         RealTimeMessageSender $realtime_message_sender,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->artifact_updater                = $artifact_updater;
         $this->testmanagement_artifact_factory = $testmanagement_artifact_factory;
@@ -73,7 +73,7 @@ class ExecutionStatusUpdater
     public function update(
         Artifact $execution_artifact,
         array $changes,
-        PFUser $user
+        PFUser $user,
     ): void {
         try {
             $previous_status = $this->getCurrentStatus($execution_artifact);

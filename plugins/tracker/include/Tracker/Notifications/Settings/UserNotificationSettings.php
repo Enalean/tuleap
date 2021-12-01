@@ -51,7 +51,7 @@ class UserNotificationSettings
         $is_only_on_status_update,
         bool $is_involved,
         $tracker_notification_level,
-        GlobalNotification ...$global_notifications
+        GlobalNotification ...$global_notifications,
     ) {
         if ($has_unsubscribed || $tracker_notification_level === Tracker::NOTIFICATIONS_LEVEL_DISABLED) {
             $this->is_in_no_notification_at_all_mode = true;

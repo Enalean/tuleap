@@ -57,7 +57,7 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testFromProjectAdminAppDataReturnsANewOauth2AppToBeSavedInDatabase(
         string $redirect_uri,
-        bool $use_pkce
+        bool $use_pkce,
     ): void {
         $app_name = 'Jenkins';
         $project  = ProjectTestBuilder::aProject()->build();
@@ -79,7 +79,7 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testFromSiteAdminAppDataReturnsANewOauth2AppToBeSavedInDatabase(
         string $redirect_uri,
-        bool $use_pkce
+        bool $use_pkce,
     ): void {
         $app_name = 'Jenkins';
         $new_app  = NewOAuth2App::fromSiteAdministrationAppData(
@@ -98,7 +98,7 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             'Valid data'                       => ['https://example.com/redirect', false],
-            'Valid with query in redirect URI' => ['https://example.com/redirect?key=value', true]
+            'Valid with query in redirect URI' => ['https://example.com/redirect?key=value', true],
         ];
     }
 

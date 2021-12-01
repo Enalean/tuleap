@@ -38,7 +38,7 @@ final class DateValueRetriever
      */
     public function getDateFieldTimestamp(
         \Tracker_Artifact_Changeset $changeset,
-        StartDateFieldReference|EndDateFieldReference $date_field
+        StartDateFieldReference|EndDateFieldReference $date_field,
     ): int {
         $date_field_id = $date_field->getId();
         $full_field    = $this->form_element_factory->getFieldById($date_field_id);

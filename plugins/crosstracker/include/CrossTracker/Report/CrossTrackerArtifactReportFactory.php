@@ -59,7 +59,7 @@ class CrossTrackerArtifactReportFactory
         QueryBuilderVisitor $query_builder,
         ParserCacheProxy $parser,
         CrossTrackerExpertQueryReportDao $expert_query_dao,
-        InvalidComparisonCollectorVisitor $collector
+        InvalidComparisonCollectorVisitor $collector,
     ) {
         $this->artifact_report_dao    = $artifact_report_dao;
         $this->artifact_factory       = $artifact_factory;
@@ -83,7 +83,7 @@ class CrossTrackerArtifactReportFactory
         CrossTrackerReport $report,
         PFUser $current_user,
         $limit,
-        $offset
+        $offset,
     ) {
         if ($report->getExpertQuery() === "") {
             return $this->getArtifactsFromGivenTrackers(
@@ -134,7 +134,7 @@ class CrossTrackerArtifactReportFactory
         CrossTrackerReport $report,
         PFUser $current_user,
         $limit,
-        $offset
+        $offset,
     ) {
         $trackers     = $report->getTrackers();
         $expert_query = $report->getExpertQuery();

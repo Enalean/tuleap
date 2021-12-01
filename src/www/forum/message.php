@@ -55,7 +55,7 @@ if ($request->valid($vMsg)) {
 
     $params = [
         'title' => $message->getSubject(),
-        'pv'    => isset($pv) ? $pv : false
+        'pv'    => isset($pv) ? $pv : false,
     ];
     forum_header($params);
 

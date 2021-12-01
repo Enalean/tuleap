@@ -152,7 +152,7 @@ final class CardwallConfigXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mapping = [
             "T101" => 444,
             "T102" => 555,
-            "T103" => 666
+            "T103" => 666,
         ];
 
         $this->field_mapping = [
@@ -160,7 +160,7 @@ final class CardwallConfigXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             "V1" => $value_01,
             "V2" => $value_02,
             "V3" => $value_03,
-            "V4" => $value_04
+            "V4" => $value_04,
         ];
 
         $this->cardwall_ontop_dao      = \Mockery::spy(\Cardwall_OnTop_Dao::class);
@@ -276,7 +276,7 @@ final class CardwallConfigXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 'xml_content'         => $this->default_xml_input,
                 'mapping'             => $this->mapping,
                 'logger'              => $this->logger,
-                'artifact_id_mapping' => $this->artifact_id_mapping
+                'artifact_id_mapping' => $this->artifact_id_mapping,
             ]
         );
 

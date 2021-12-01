@@ -88,8 +88,8 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE_BaseTest extends TestCase  // phpcs:
             [
                 'getParametersAsArray' => [
                     $repository_id,
-                    $remote_server_id
-                ]
+                    $remote_server_id,
+                ],
             ]
         );
 
@@ -122,8 +122,8 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE_BaseTest extends TestCase  // phpcs:
             [
                 'getParametersAsArray' => [
                     $repository_id,
-                    $remote_server_id
-                ]
+                    $remote_server_id,
+                ],
             ]
         );
 
@@ -154,8 +154,8 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE_BaseTest extends TestCase  // phpcs:
             [
                 'getParametersAsArray' => [
                     $repository_id,
-                    $remote_server_id
-                ]
+                    $remote_server_id,
+                ],
             ]
         );
 

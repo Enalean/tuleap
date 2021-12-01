@@ -33,7 +33,7 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
         string $hashed_verification_string,
         int $expiration_date_timestamp,
         ?string $pkce_code_challenge,
-        ?string $oidc_nonce
+        ?string $oidc_nonce,
     ): int {
         return (int) $this->getDB()->insertReturnId(
             'plugin_oauth2_authorization_code',
@@ -44,7 +44,7 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
                 'expiration_date'       => $expiration_date_timestamp,
                 'pkce_code_challenge'   => $pkce_code_challenge,
                 'oidc_nonce'            => $oidc_nonce,
-                'has_already_been_used' => false
+                'has_already_been_used' => false,
             ]
         );
     }

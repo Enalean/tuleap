@@ -60,7 +60,7 @@ class SemanticDoneDao extends DataAccessObject
         $this->getDB()->delete(
             'plugin_tracker_semantic_done',
             [
-                'tracker_id' => $tracker_id
+                'tracker_id' => $tracker_id,
             ]
         );
     }

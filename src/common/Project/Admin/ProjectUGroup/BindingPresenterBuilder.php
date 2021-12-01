@@ -52,7 +52,7 @@ class BindingPresenterBuilder
         UGroupBinding $ugroup_binding,
         ProjectManager $project_manager,
         UserManager $user_manager,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->ugroup_binding  = $ugroup_binding;
         $this->project_manager = $project_manager;
@@ -92,7 +92,7 @@ class BindingPresenterBuilder
         return [
             'ugroups'        => $ugroups,
             'has_ugroups'    => count($ugroups) > 0,
-            'nb_not_visible' => $nb_not_visible
+            'nb_not_visible' => $nb_not_visible,
         ];
     }
 
@@ -167,7 +167,7 @@ class BindingPresenterBuilder
             $projects[] = [
                 'id'                   => $project->getID(),
                 'name'                 => $project->getPublicName(),
-                'json_encoded_ugroups' => json_encode($ugroup_list)
+                'json_encoded_ugroups' => json_encode($ugroup_list),
             ];
         }
 

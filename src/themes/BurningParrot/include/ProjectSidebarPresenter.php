@@ -87,7 +87,7 @@ class ProjectSidebarPresenter
         VersionPresenter $version,
         ?BannerDisplay $banner,
         array $project_flags,
-        ?LinkedProjectsCollectionPresenter $linked_projects_presenter
+        ?LinkedProjectsCollectionPresenter $linked_projects_presenter,
     ) {
         $this->sidebar                = $sidebar;
         $this->is_sidebar_collapsable = $current_user->isLoggedIn();

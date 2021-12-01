@@ -76,7 +76,7 @@ class MigrationHandler
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         ProjectHistoryDao $history_dao,
         Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
-        \ProjectManager $project_manager
+        \ProjectManager $project_manager,
     ) {
         $this->git_system_event_manager = $git_system_event_manager;
         $this->gerrit_server_factory    = $gerrit_server_factory;
@@ -152,7 +152,7 @@ class MigrationHandler
     private function disconnectFromGerritWithOption(
         GitRepository $repository,
         Git_Driver_Gerrit $driver,
-        $disconnect_option
+        $disconnect_option,
     ) {
         $this->disconnectFromGerrit($repository);
 
@@ -199,7 +199,7 @@ class MigrationHandler
     private function checkDisconnectOptionUsable(
         Git_Driver_Gerrit $driver,
         Git_RemoteServer_GerritServer $server,
-        $disconnect_option
+        $disconnect_option,
     ) {
         if (
             ! $driver->isDeletePluginEnabled($server) &&

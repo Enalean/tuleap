@@ -67,7 +67,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
         \UserManager $user_manager,
         \BackendSVN $backend_svn,
         \BackendSystem $backend_system,
-        RepositoryCopier $repository_copier
+        RepositoryCopier $repository_copier,
     ) {
         $this->access_file_history_creator = $access_file_history_creator;
         $this->repository_manager          = $repository_manager;

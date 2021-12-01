@@ -861,7 +861,7 @@ class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                                                   ->withArgs(
                                                       [
                                                           $post_representation->obsolescence_date,
-                                                          $current_time
+                                                          $current_time,
                                                       ]
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
@@ -922,7 +922,7 @@ class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                                                   ->withArgs(
                                                       [
                                                           $post_representation->obsolescence_date,
-                                                          $current_time
+                                                          $current_time,
                                                       ]
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
@@ -996,7 +996,7 @@ class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                                                   ->withArgs(
                                                       [
                                                           $post_representation->obsolescence_date,
-                                                          $current_time
+                                                          $current_time,
                                                       ]
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
@@ -1073,7 +1073,7 @@ class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                                                   ->withArgs(
                                                       [
                                                           $post_representation->obsolescence_date,
-                                                          $current_time
+                                                          $current_time,
                                                       ]
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
@@ -1147,7 +1147,7 @@ class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                                                   ->withArgs(
                                                       [
                                                           $post_representation->obsolescence_date,
-                                                          $current_time
+                                                          $current_time,
                                                       ]
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);

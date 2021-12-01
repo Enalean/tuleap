@@ -29,7 +29,7 @@ class ExpertQueryValidator
 
     public function __construct(
         ParserCacheProxy $parser,
-        SizeValidatorVisitor $size_validator
+        SizeValidatorVisitor $size_validator,
     ) {
         $this->parser         = $parser;
         $this->size_validator = $size_validator;
@@ -42,7 +42,7 @@ class ExpertQueryValidator
      */
     public function validateExpertQuery(
         $expert_query,
-        IBuildInvalidSearchablesCollection $invalid_searchables_collection_builder
+        IBuildInvalidSearchablesCollection $invalid_searchables_collection_builder,
     ) {
         $parsed_expert_query = $this->parser->parse($expert_query);
         $this->size_validator->checkSizeOfTree($parsed_expert_query);

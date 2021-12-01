@@ -124,7 +124,7 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
             [
                 'package_id' => $this->package_id,
                 'group_id'   => 101,
-                'name'       => 'Package 1'
+                'name'       => 'Package 1',
             ]
         );
     }
@@ -145,7 +145,7 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
                 'Package 1',
                 [$this->project_admin_representation],
                 []
-            )
+            ),
         ];
 
         $representation = $this->representation_builder->build($this->project, null);
@@ -173,14 +173,14 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
             [
                 'release_id' => $release1_id,
                 'package_id' => $this->package_id,
-                'name'       => 'Release 1'
+                'name'       => 'Release 1',
             ]
         );
         $release2 = new FRSRelease(
             [
                 'release_id' => $release2_id,
                 'package_id' => $this->package_id,
-                'name'       => 'Release 2'
+                'name'       => 'Release 2',
             ]
         );
 
@@ -212,7 +212,7 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
                 'Package 1',
                 [$this->project_admin_representation],
                 [$release_representation_1, $release_representation_2]
-            )
+            ),
         ];
 
         $representation = $this->representation_builder->build($this->project, null);
@@ -238,14 +238,14 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
             [
                 'release_id' => $release1_id,
                 'package_id' => $this->package_id,
-                'name'       => 'Release 1'
+                'name'       => 'Release 1',
             ]
         );
         $release2 = new FRSRelease(
             [
                 'release_id' => $release2_id,
                 'package_id' => $this->package_id,
-                'name'       => 'Release 2'
+                'name'       => 'Release 2',
             ]
         );
 
@@ -273,7 +273,7 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
                 'Package 1',
                 [$this->project_admin_representation],
                 [$release_representation_1]
-            )
+            ),
         ];
 
         $representation = $this->representation_builder->build($this->project, ProjectUGroup::PROJECT_ADMIN);
@@ -298,7 +298,7 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
             [
                 'release_id' => $release_id,
                 'package_id' => $this->package_id,
-                'name'       => 'Release 1'
+                'name'       => 'Release 1',
             ]
         );
 
@@ -321,7 +321,7 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
                 'Package 1',
                 [$this->project_member_representation],
                 [$release_representation_1]
-            )
+            ),
         ];
 
         $representation = $this->representation_builder->build($this->project, ProjectUGroup::PROJECT_ADMIN);
@@ -364,7 +364,7 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
             [
                 'release_id' => $release_id,
                 'package_id' => $this->package_id,
-                'name'       => 'Release 1'
+                'name'       => 'Release 1',
             ]
         );
 

@@ -48,7 +48,7 @@ class Docman_MetadataListOfValuesElementTest extends TestCase // @codingStandard
         $row = [
             'value_id' => 120,
             'name'     => 'Bang',
-            'status'   => 'status Value'
+            'status'   => 'status Value',
         ];
 
         $this->metadata_list_values->initFromRow($row);

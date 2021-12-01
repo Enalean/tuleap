@@ -376,7 +376,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
                     'description'  => 'TULEAP-666 TULEAP-45',
                     'source_branch' => 'some_feature',
                     'author_name'  => null,
-                    'author_email' => null
+                    'author_email' => null,
                 ]
             );
 

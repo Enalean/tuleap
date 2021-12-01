@@ -33,7 +33,7 @@ final class PendingIterationUpdateRepresentation
     private function __construct(
         public int $iteration_id,
         public int $user_id,
-        public int $changeset_id
+        public int $changeset_id,
     ) {
     }
 

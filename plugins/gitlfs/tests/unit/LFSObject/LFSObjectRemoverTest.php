@@ -74,7 +74,7 @@ class LFSObjectRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao->shouldReceive('searchUnusedObjects')->andReturns([
-            ['id' => 123, 'object_oid' => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'object_size' => 741]
+            ['id' => 123, 'object_oid' => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'object_size' => 741],
         ]);
         $this->path_allocator->shouldReceive('getPathForAvailableObject')->andReturns('object/path');
 

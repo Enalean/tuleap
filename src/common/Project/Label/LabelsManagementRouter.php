@@ -45,7 +45,7 @@ class LabelsManagementRouter
         IndexController $index_controller,
         DeleteController $delete_controller,
         EditController $edit_controller,
-        AddController $add_controller
+        AddController $add_controller,
     ) {
         $this->index_controller  = $index_controller;
         $this->delete_controller = $delete_controller;

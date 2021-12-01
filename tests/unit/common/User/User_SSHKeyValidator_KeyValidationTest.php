@@ -70,7 +70,7 @@ class User_SSHKeyValidator_KeyValidation extends \PHPUnit\Framework\TestCase // 
             [$this->key1, $this->key2],
             $this->validator->validateAllKeys([
                 $this->key1,
-                $this->key2
+                $this->key2,
             ])
         );
     }
@@ -87,7 +87,7 @@ class User_SSHKeyValidator_KeyValidation extends \PHPUnit\Framework\TestCase // 
     public function testItRaisesAWarningWhenTheKeyIsNotValidOutsideAnAuthorizedKeysFile(): void
     {
         $keys = [
-            'tuleap.example.com,192.0.2.1 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDNpemQvp5G/ldgg5diu/OZdNVV3mHqsHmTBcJKiFnfwxNxzZDdTb7hXQKEd6akU6qbmlGPr8AYMBEfII/C47o/B93y2trghS1dVYKyEq7Md/uZx+NFnGysNiMeWr1jPWHWEiNfKgbZPW6OMY200fNGXROmxvp4BQLID7bPLXVLctvCRO4uD2KlK66uWaql7QuGWxzY2C09d15Q/84oVwcIVook/luP1ieHg6syS9FutO+j0//Hfg2Cze/JrrxIZT2XUUAVeyM9uSwW2bBprmDI8rq3UXUotcJws9Pc4PgK7U5P4w1qBQFRonJSjYbK2+1EXLPvV5S60E2mwu6Ta513'
+            'tuleap.example.com,192.0.2.1 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDNpemQvp5G/ldgg5diu/OZdNVV3mHqsHmTBcJKiFnfwxNxzZDdTb7hXQKEd6akU6qbmlGPr8AYMBEfII/C47o/B93y2trghS1dVYKyEq7Md/uZx+NFnGysNiMeWr1jPWHWEiNfKgbZPW6OMY200fNGXROmxvp4BQLID7bPLXVLctvCRO4uD2KlK66uWaql7QuGWxzY2C09d15Q/84oVwcIVook/luP1ieHg6syS9FutO+j0//Hfg2Cze/JrrxIZT2XUUAVeyM9uSwW2bBprmDI8rq3UXUotcJws9Pc4PgK7U5P4w1qBQFRonJSjYbK2+1EXLPvV5S60E2mwu6Ta513',
         ];
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('warning');
@@ -100,7 +100,7 @@ class User_SSHKeyValidator_KeyValidation extends \PHPUnit\Framework\TestCase // 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('warning');
 
         $keys = [
-            'ssh-rsa BBBBB3NzaC1yc2EAAAABIwAAAQEAo2Z2ru57hk2p9wMkM66IxYV1HFKEJvWjWi7Otug/G14LWwO1VU5wNBJgJEfaAoL7ccRpWYpRKLAZdAPYq8nOVFsTU0X4z4mtIo8L1mlw+qXZ3KW77/QJ7sNbCZe6vpNcKg0+DX0e4n0h6R+lXIwi/ISM6wXPQU3uUKVRbcykC9YwEnQokFXXHRqeBzPjyRFval4SRMHAdcs2pjZtu5Et0pObR+Lrs532NE1tvDUrPbU1Oy+9w7bbcvbfjKeYX7FgdXmlYDYLcAfZG4wCHBBYbp5HNXTxhwv4wHq7Z20tEN4qqBnehCGPOpBIgbfBTdN9NftloRYrVPNAxKXhPd/VRQ=='
+            'ssh-rsa BBBBB3NzaC1yc2EAAAABIwAAAQEAo2Z2ru57hk2p9wMkM66IxYV1HFKEJvWjWi7Otug/G14LWwO1VU5wNBJgJEfaAoL7ccRpWYpRKLAZdAPYq8nOVFsTU0X4z4mtIo8L1mlw+qXZ3KW77/QJ7sNbCZe6vpNcKg0+DX0e4n0h6R+lXIwi/ISM6wXPQU3uUKVRbcykC9YwEnQokFXXHRqeBzPjyRFval4SRMHAdcs2pjZtu5Et0pObR+Lrs532NE1tvDUrPbU1Oy+9w7bbcvbfjKeYX7FgdXmlYDYLcAfZG4wCHBBYbp5HNXTxhwv4wHq7Z20tEN4qqBnehCGPOpBIgbfBTdN9NftloRYrVPNAxKXhPd/VRQ==',
         ];
 
         $this->assertCount(0, $this->validator->validateAllKeys($keys));
@@ -111,7 +111,7 @@ class User_SSHKeyValidator_KeyValidation extends \PHPUnit\Framework\TestCase // 
         $keys = [
             $this->key1,
             "bla",
-            $this->key2
+            $this->key2,
         ];
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('warning');
@@ -123,7 +123,7 @@ class User_SSHKeyValidator_KeyValidation extends \PHPUnit\Framework\TestCase // 
     {
         $keys = [
             $this->key1,
-            $this->key1
+            $this->key1,
         ];
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('warning');

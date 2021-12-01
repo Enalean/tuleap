@@ -56,7 +56,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
         Cardwall_OnTop_ColumnMappingFieldValueDao $value_dao,
         TrackerFactory $tracker_factory,
         Tracker_FormElementFactory $form_element_factory,
-        array $existing_mappings
+        array $existing_mappings,
     ) {
         parent::__construct($tracker);
         $this->dao                  = $dao;

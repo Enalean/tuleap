@@ -151,7 +151,7 @@ class ConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNothingIfOptionNotProvidedInRequest()
     {
         $request = new Codendi_Request([
-            'group_id' => '101'
+            'group_id' => '101',
         ]);
 
         $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('removeExplicitBacklogOfProject');

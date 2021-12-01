@@ -52,7 +52,7 @@ class PermissionsOnArtifactUGroupRetrieverTest extends \Tuleap\Test\PHPUnit\Test
         $retriever = new PermissionsOnArtifactUGroupRetriever();
 
         $value = [
-            'u_groups' => ['102']
+            'u_groups' => ['102'],
         ];
 
         $field = new Tracker_FormElement_Field_PermissionsOnArtifact(null, null, null, null, null, null, null, null, true, null, null, null);
@@ -86,7 +86,7 @@ class PermissionsOnArtifactUGroupRetrieverTest extends \Tuleap\Test\PHPUnit\Test
         $retriever = new PermissionsOnArtifactUGroupRetriever();
 
         $value = [
-            'u_groups' => ['102']
+            'u_groups' => ['102'],
         ];
 
         $field = new Tracker_FormElement_Field_PermissionsOnArtifact(null, null, null, null, null, null, null, null, false, null, null, null);

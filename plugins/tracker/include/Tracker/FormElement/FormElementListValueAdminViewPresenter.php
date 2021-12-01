@@ -93,7 +93,7 @@ class FormElementListValueAdminViewPresenter
         string $image_hidden_title,
         string $image_hidden_alt,
         string $image_hidden_prefix,
-        bool $is_custom_value
+        bool $is_custom_value,
     ) {
         $this->id                   = $value->getId();
         $this->label                = self::getListValueLabel($value);

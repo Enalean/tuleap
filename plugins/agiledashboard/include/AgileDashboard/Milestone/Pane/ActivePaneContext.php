@@ -45,7 +45,7 @@ class ActivePaneContext
     public function __construct(
         Codendi_Request $request,
         PFUser $user,
-        Planning_MilestoneFactory $milestone_factory
+        Planning_MilestoneFactory $milestone_factory,
     ) {
         $this->request           = $request;
         $this->user              = $user;

@@ -39,7 +39,7 @@ class PermissionsXMLExporter
      */
     private $read_only_field_ids = [
         AlwaysThereFieldsExporter::JIRA_ARTIFACT_ID_FIELD_ID,
-        AlwaysThereFieldsExporter::JIRA_LINK_FIELD_ID
+        AlwaysThereFieldsExporter::JIRA_LINK_FIELD_ID,
     ];
 
     public function exportFieldsPermissions(SimpleXMLElement $node_tracker, FieldMappingCollection $field_mapping_collection): void

@@ -40,7 +40,7 @@ class Git_AdminGitoliteConfigPresenter extends Git_AdminPresenter
         $title,
         CSRFSynchronizerToken $csrf_token,
         $authorized_projects,
-        $show_big_objects_config
+        $show_big_objects_config,
     ) {
         parent::__construct($title, $csrf_token);
 

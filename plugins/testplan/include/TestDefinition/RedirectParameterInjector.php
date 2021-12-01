@@ -50,7 +50,7 @@ class RedirectParameterInjector
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
         Response $response,
-        TemplateRenderer $template_renderer
+        TemplateRenderer $template_renderer,
     ) {
         $this->artifact_factory  = $artifact_factory;
         $this->response          = $response;
@@ -59,7 +59,7 @@ class RedirectParameterInjector
 
     public function injectAndInformUserAboutBacklogItemBeingCovered(
         Codendi_Request $request,
-        Tracker_Artifact_Redirect $redirect
+        Tracker_Artifact_Redirect $redirect,
     ): void {
         $ttm_backlog_item_id = $request->get(self::TTM_BACKLOG_ITEM_ID_KEY);
         $ttm_milestone_id    = $request->get(self::TTM_MILESTONE_ID_KEY);

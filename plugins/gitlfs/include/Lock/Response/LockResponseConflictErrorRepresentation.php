@@ -36,7 +36,7 @@ class LockResponseConflictErrorRepresentation implements LockResponse
     {
         return [
             "lock"    => $this->lock_representation,
-            "message" => "already created lock"
+            "message" => "already created lock",
         ];
     }
 }

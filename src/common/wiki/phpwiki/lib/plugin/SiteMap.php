@@ -78,7 +78,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
                      'direction'      => 'back',
                      'firstreversed'  => false,
                      'excludeunknown' => true,
-                     'includepages'   => '' // to be used only from the IncludeSiteMap plugin
+                     'includepages'   => '', // to be used only from the IncludeSiteMap plugin
                      ];
     }
     // info arg allows multiple columns
@@ -92,7 +92,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
         $startpage,
         $pagearr,
         $level = '*',
-        $reclimit = '***'
+        $reclimit = '***',
     ) {
         static $VisitedPages = [];
 
@@ -128,7 +128,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
         $startpage,
         $pagearr,
         $level = '*',
-        $reclimit = '***'
+        $reclimit = '***',
     ) {
         static $VisitedPages = [];
 

@@ -219,8 +219,8 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
                 ->shouldReceive([
                     'getProject' => Mockery::mock(\Project::class)
                         ->shouldReceive(['getUnixNameMixedCase' => 'my-project'])
-                        ->getMock()
-                ])->getMock()
+                        ->getMock(),
+                ])->getMock(),
         ]);
 
         $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
@@ -266,9 +266,9 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
                         [
                             'getProject' => Mockery::mock(\Project::class)
                                 ->shouldReceive(['getUnixNameMixedCase' => 'my-project'])
-                                ->getMock()
+                                ->getMock(),
                         ]
-                    )->getMock()
+                    )->getMock(),
             ]
         );
 
@@ -305,8 +305,8 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
                 ->shouldReceive([
                     'getProject' => Mockery::mock(\Project::class)
                         ->shouldReceive(['getUnixNameMixedCase' => 'my-project'])
-                        ->getMock()
-                ])->getMock()
+                        ->getMock(),
+                ])->getMock(),
         ]);
 
         $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
@@ -349,8 +349,8 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
                 ->shouldReceive([
                     'getProject' => Mockery::mock(\Project::class)
                         ->shouldReceive(['getUnixNameMixedCase' => 'my-project'])
-                        ->getMock()
-                ])->getMock()
+                        ->getMock(),
+                ])->getMock(),
         ]);
 
         $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);

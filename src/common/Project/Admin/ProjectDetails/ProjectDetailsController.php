@@ -125,7 +125,7 @@ class ProjectDetailsController
         TroveCatLinkDao $trove_cat_link_dao,
         CSRFSynchronizerToken $csrf_token,
         TemplateFactory $template_factory,
-        private ProjectIconRetriever $project_icon_retriever
+        private ProjectIconRetriever $project_icon_retriever,
     ) {
         $this->description_fields_factory           = $description_fields_factory;
         $this->current_project                      = $current_project;
@@ -355,7 +355,7 @@ class ProjectDetailsController
 
         // Raise an event
         $this->event_manager->processEvent('project_admin_edition', [
-            'group_id' => $group_id
+            'group_id' => $group_id,
         ]);
 
         $GLOBALS['Response']->addFeedback(Feedback::INFO, _('Update successful'));
@@ -389,7 +389,7 @@ class ProjectDetailsController
                 'field_description_required' => $description_field["desc_required"],
                 'is_field_line_typed'        => $description_field["desc_type"] === 'line',
                 'is_field_text_typed'        => $description_field["desc_type"] === 'text',
-                'purified_field_description' => $purified_field_description
+                'purified_field_description' => $purified_field_description,
             ];
         }
 
@@ -533,7 +533,7 @@ class ProjectDetailsController
         foreach ($project->getProjectsCreatedFrom() as $subproject) {
             $projects[] = [
                 'unix_group_name' => $subproject['unix_group_name'],
-                'group_name'      => $subproject['group_name']
+                'group_name'      => $subproject['group_name'],
             ];
         }
         return $projects;

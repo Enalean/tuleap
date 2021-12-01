@@ -71,7 +71,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         Tracker_IDisplayTrackerLayout $layout,
         TypeIsChildLinkRetriever $retriever,
         VisitRecorder $visit_recorder,
-        HiddenFieldsetsDetector $hidden_fieldsets_detector
+        HiddenFieldsetsDetector $hidden_fieldsets_detector,
     ) {
         parent::__construct($artifact, $event_manager, $visit_recorder);
         $this->layout                    = $layout;
@@ -143,7 +143,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         );
         $breadcrumbs = [
             ['title' => $this->artifact->getXRef(),
-                  'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId()]
+                  'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId()],
         ];
         $params      = [
             'body_class' => ['widgetable', 'has-sidebar-with-pinned-header', 'tracker-artifact-view-body'],
@@ -151,7 +151,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
                 \Tuleap\ServerHostname::HTTPSUrl() . $this->artifact->getUri(),
                 $this->artifact->getTitle(),
                 $this->artifact->getDescription()
-            )
+            ),
         ];
 
         $GLOBALS['HTML']->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
@@ -177,7 +177,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         if ($status->canUpdateArtifactInInsecureMode($this->tracker)) {
             $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/artifact');
             $renderer->renderToPage("reply-by-mail-modal-info", [
-                'email' => $this->artifact->getInsecureEmailAddress()
+                'email' => $this->artifact->getInsecureEmailAddress(),
             ]);
         }
     }
@@ -204,7 +204,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
                 'artifact'   => $this->artifact,
                 'collection' => $view_collection,
                 'request'    => $request,
-                'user'       => $user
+                'user'       => $user,
             ]
         );
 

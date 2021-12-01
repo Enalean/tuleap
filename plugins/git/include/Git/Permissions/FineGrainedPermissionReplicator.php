@@ -67,7 +67,7 @@ class FineGrainedPermissionReplicator
         FineGrainedPermissionFactory $factory,
         RegexpFineGrainedEnabler $regexp_updater,
         RegexpFineGrainedRetriever $regexp_retriever,
-        PatternValidator $validator
+        PatternValidator $validator,
     ) {
         $this->fine_grained_dao = $fine_grained_dao;
         $this->default_factory  = $default_factory;
@@ -79,7 +79,7 @@ class FineGrainedPermissionReplicator
     }
 
     public function replicateDefaultPermissions(
-        GitRepository $repository
+        GitRepository $repository,
     ) {
         $project = $repository->getProject();
         $this->replicateDefaultPermissionsFromProject($project, $repository);
@@ -87,7 +87,7 @@ class FineGrainedPermissionReplicator
 
     public function replicateDefaultPermissionsFromProject(
         Project $project,
-        GitRepository $repository
+        GitRepository $repository,
     ) {
         $warnings           = [];
         $branch_permissions = $this->default_factory->getBranchesFineGrainedPermissionsForProject($project);
@@ -135,7 +135,7 @@ class FineGrainedPermissionReplicator
 
     public function replicateRepositoryPermissions(
         GitRepository $source_repository,
-        GitRepository $repository
+        GitRepository $repository,
     ) {
         $warnings           = [];
         $branch_permissions = $this->factory->getBranchesFineGrainedPermissionsForRepository($source_repository);

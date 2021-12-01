@@ -47,7 +47,7 @@ class AzureADProviderManager
         string $icon,
         string $color,
         string $tenant_id,
-        string $tenant_setup_identifier
+        string $tenant_setup_identifier,
     ): AzureADProvider {
         $is_unique_authentication_endpoint = false;
         $is_data_valid                     = $this->isAzureProviderDataValid(
@@ -119,7 +119,7 @@ class AzureADProviderManager
         string $client_secret,
         string $icon,
         string $color,
-        string $tenant_id
+        string $tenant_id,
     ): bool {
         $string_validator = new Valid_String();
 

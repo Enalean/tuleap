@@ -56,7 +56,7 @@ class ArchiveAndDeleteArtifactTask
         ArtifactDependenciesDeletor $dependencies_deletor,
         EventManager $event_manager,
         DBConnection $db_connection,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->artifact_with_tracker_structure_exporter = $artifact_with_tracker_structure_exporter;
         $this->dependencies_deletor                     = $dependencies_deletor;

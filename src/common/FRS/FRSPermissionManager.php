@@ -40,7 +40,7 @@ class FRSPermissionManager
     public function __construct(
         FRSPermissionDao $permission_dao,
         FRSPermissionFactory $permission_factory,
-        ProjectAccessChecker $access_checker
+        ProjectAccessChecker $access_checker,
     ) {
         $this->permission_dao     = $permission_dao;
         $this->permission_factory = $permission_factory;

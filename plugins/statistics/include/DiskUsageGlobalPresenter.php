@@ -32,7 +32,7 @@ class DiskUsageGlobalPresenter
     public function __construct(
         AdminHeaderPresenter $header,
         array $data_global,
-        $date
+        $date,
     ) {
         $this->header = $header;
 

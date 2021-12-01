@@ -76,7 +76,7 @@ final class OAuth2ResourceServerMiddleware implements MiddlewareInterface
         SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
         EventDispatcherInterface $event_dispatcher,
         AuthenticationScope $required_scope,
-        \User_LoginManager $login_manager
+        \User_LoginManager $login_manager,
     ) {
         $this->response_factory                     = $response_factory;
         $this->bearer_token_header_parser           = $bearer_token_header_parser;

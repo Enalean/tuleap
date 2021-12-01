@@ -33,7 +33,7 @@ class SystemEvent_GIT_DUMP_ALL_SSH_KEYS extends SystemEvent
 
     public function injectDependencies(
         MassDumper $mass_dumper,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
     ) {
         $this->mass_dumper = $mass_dumper;
         $this->logger      = $logger;

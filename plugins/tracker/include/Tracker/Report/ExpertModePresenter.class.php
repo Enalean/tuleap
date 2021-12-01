@@ -52,7 +52,7 @@ class ExpertModePresenter
         $expert_query,
         array $allowed_fields,
         $is_normal_mode_button_displayed,
-        $is_query_modifiable
+        $is_query_modifiable,
     ) {
         $this->id                              = $id;
         $this->class_toggler                   = $class_toggler;

@@ -396,7 +396,7 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     ->shouldReceive('isHidden')
                     ->andReturnFalse()
                     ->getMock(),
-                45 => $not_open_value
+                45 => $not_open_value,
             ]);
 
         $this->semantic_status_factory->shouldReceive('getByTracker')

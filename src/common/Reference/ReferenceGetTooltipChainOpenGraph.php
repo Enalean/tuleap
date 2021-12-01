@@ -35,7 +35,7 @@ class ReferenceGetTooltipChainOpenGraph extends ReferenceGetTooltipChain
 
     public function __construct(
         \Codendi_HTMLPurifier $html_purifier,
-        Embed $embed
+        Embed $embed,
     ) {
         $this->html_purifier = $html_purifier;
         $this->embed         = $embed;
@@ -46,7 +46,7 @@ class ReferenceGetTooltipChainOpenGraph extends ReferenceGetTooltipChain
         \Project $project,
         \PFUser $user,
         string $keyword,
-        string $value
+        string $value,
     ): void {
         if ($reference->getNature() === ReferenceManager::REFERENCE_NATURE_OTHER) {
             $reference_open_graph = new ReferenceOpenGraph(

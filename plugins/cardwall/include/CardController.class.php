@@ -27,7 +27,7 @@ class Cardwall_CardController extends MVC2_PluginController
 
     public function __construct(
         Codendi_Request $request,
-        Cardwall_SingleCard $single_card
+        Cardwall_SingleCard $single_card,
     ) {
         parent::__construct('cardwall', $request);
         $this->single_card = $single_card;

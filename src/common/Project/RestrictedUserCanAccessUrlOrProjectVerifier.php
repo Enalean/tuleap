@@ -81,7 +81,7 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
             '/new/',        // list of the newest releases made on the Codendi site ('/news' must be allowed...)
             '/project/register.php',    // Register a new project
             '/export',      // Codendi XML feeds
-            '/info.php'     // PHP info
+            '/info.php',     // PHP info
         ];
         // Default values are very restrictive, but they can be overriden in the site-content file
         // Default support project is project 1.

@@ -41,7 +41,7 @@ class AdministrationLayoutHelper implements LayoutHelper
         ProjectRetriever $project_retriever,
         ProjectAdministratorChecker $administrator_checker,
         HeaderNavigationDisplayer $header_displayer,
-        FooterDisplayer $footer_displayer
+        FooterDisplayer $footer_displayer,
     ) {
         $this->project_retriever     = $project_retriever;
         $this->administrator_checker = $administrator_checker;
@@ -69,7 +69,7 @@ class AdministrationLayoutHelper implements LayoutHelper
         string $project_id,
         string $page_title,
         string $current_pane_shortname,
-        \Closure $callback
+        \Closure $callback,
     ): void {
         $project      = $this->project_retriever->getProjectFromId($project_id);
         $current_user = $request->getCurrentUser();

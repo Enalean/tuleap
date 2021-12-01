@@ -34,7 +34,7 @@ class ToBeMappedUser extends ActionToBeTakenForUser
         $realname,
         array $matching_users,
         $original_user_id,
-        $original_ldap_id
+        $original_ldap_id,
     ) {
         if (empty($matching_users)) {
             throw new RuntimeException('Matching users should not be empty');
@@ -67,7 +67,7 @@ class ToBeMappedUser extends ActionToBeTakenForUser
                 $this->username,
                 implode(', ', $matching),
                 implode(', ', $actions)
-            )
+            ),
         ];
     }
 

@@ -113,7 +113,7 @@ final class XMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $exported_tracker  = Mockery::mock(Tracker::class)->shouldReceive('getId')->andReturn(789)->getMock();
         $exported_trackers = [
-            'T789' => $exported_tracker
+            'T789' => $exported_tracker,
         ];
 
         $xml = new SimpleXMLElement(
@@ -167,7 +167,7 @@ final class XMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
                     '2020-02-06',
                     600,
                     'Step 01'
-                )
+                ),
             ]);
 
         $another_user = Mockery::mock(PFUser::class);
@@ -208,7 +208,7 @@ final class XMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $exported_tracker  = Mockery::mock(Tracker::class)->shouldReceive('getId')->andReturn(789)->getMock();
         $exported_trackers = [
-            'T789' => $exported_tracker
+            'T789' => $exported_tracker,
         ];
 
         $xml = new SimpleXMLElement(

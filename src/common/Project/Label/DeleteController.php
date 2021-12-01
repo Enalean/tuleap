@@ -55,7 +55,7 @@ class DeleteController
         LabelDao $dao,
         ProjectHistoryDao $history_dao,
         CollectionOfLabelableDao $labelable_daos,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->url_builder    = $url_builder;
         $this->dao            = $dao;

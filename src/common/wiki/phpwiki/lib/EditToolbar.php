@@ -185,7 +185,7 @@ function undo_save() {
                                  "open" => "\\n----\\n",
                                  "close" => "",
                                  "sample" => "",
-                                 "tip" => _("Horizontal line")]
+                                 "tip" => _("Horizontal line")],
                            ];
             $btn       = new SubmitImageButton(
                 _("Save"),

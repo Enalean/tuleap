@@ -84,7 +84,7 @@ if (is_array($sparkline_urls)) {
                             'keyword'  => $key,
                             'group_id' => $group_id,
                             'val'      => $val,
-                            'sparkline' => &$res_sparkline
+                            'sparkline' => &$res_sparkline,
                             ]
                         );
                         if ($res_sparkline) {

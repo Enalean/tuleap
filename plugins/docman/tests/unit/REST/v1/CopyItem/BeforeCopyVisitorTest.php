@@ -47,7 +47,7 @@ final class BeforeCopyVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         Docman_Link::class,
         Docman_File::class,
         Docman_EmbeddedFile::class,
-        Docman_Empty::class
+        Docman_Empty::class,
     ];
 
     /**

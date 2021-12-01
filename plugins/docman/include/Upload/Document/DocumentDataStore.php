@@ -59,7 +59,7 @@ final class DocumentDataStore implements TusDataStore
         FileBeingUploadedWriter $document_being_uploaded_writer,
         FileBeingUploadedLocker $document_being_uploaded_locker,
         DocumentUploadFinisher $document_upload_finisher,
-        DocumentUploadCanceler $document_upload_canceler
+        DocumentUploadCanceler $document_upload_canceler,
     ) {
         $this->document_being_uploaded_information_provider = $document_being_uploaded_information_provider;
         $this->document_being_uploaded_writer               = $document_being_uploaded_writer;

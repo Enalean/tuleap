@@ -38,7 +38,7 @@ final class StatusIsAlignedVerifier implements VerifyStatusIsAligned
     public function __construct(
         Tracker_Semantic_StatusDao $semantic_status_dao,
         Tracker_Semantic_StatusFactory $semantic_status_factory,
-        \TrackerFactory $tracker_factory
+        \TrackerFactory $tracker_factory,
     ) {
         $this->semantic_status_dao     = $semantic_status_dao;
         $this->semantic_status_factory = $semantic_status_factory;
@@ -48,7 +48,7 @@ final class StatusIsAlignedVerifier implements VerifyStatusIsAligned
     public function isStatusWellConfigured(
         TrackerReference $tracker,
         SourceTrackerCollection $source_tracker_collection,
-        ConfigurationErrorsCollector $configuration_errors
+        ConfigurationErrorsCollector $configuration_errors,
     ): bool {
         $full_tracker = $this->tracker_factory->getTrackerById($tracker->getId());
         if (! $full_tracker) {

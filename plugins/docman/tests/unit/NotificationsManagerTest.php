@@ -90,8 +90,8 @@ class Docman_NotificationsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'title'   => 'Move',
                 'content' => 'Changed',
-                'to'      => [$user]
-            ]
+                'to'      => [$user],
+            ],
         ];
 
         $this->notification_manager->sendNotifications('', '');

@@ -30,7 +30,7 @@ class LockDao extends DataAccessObject
         int $lock_owner,
         ?string $reference,
         int $repository_id,
-        int $creation_date
+        int $creation_date,
     ): int {
         return (int) $this->getDB()->insertReturnId(
             'plugin_gitlfs_lock',
@@ -39,7 +39,7 @@ class LockDao extends DataAccessObject
                 'lock_owner'    => $lock_owner,
                 'ref'           => $reference,
                 'repository_id' => $repository_id,
-                'creation_date' => $creation_date
+                'creation_date' => $creation_date,
             ]
         );
     }
@@ -49,7 +49,7 @@ class LockDao extends DataAccessObject
         ?string $path,
         ?string $ref,
         ?int $owner,
-        int $repository
+        int $repository,
     ): array {
         $condition = $this->buildSearchCondition($id, $path, $ref, $owner, $repository);
 
@@ -92,7 +92,7 @@ class LockDao extends DataAccessObject
         ?string $path,
         ?string $ref,
         ?int $owner,
-        int $repository
+        int $repository,
     ): EasyStatement {
         $condition = EasyStatement::open();
 

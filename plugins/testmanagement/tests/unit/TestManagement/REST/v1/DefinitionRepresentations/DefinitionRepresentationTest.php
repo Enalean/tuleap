@@ -91,7 +91,7 @@ class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 $tracker_id,
                 $name,
-                $user
+                $user,
             ]
         )->once()->andReturn($value);
     }

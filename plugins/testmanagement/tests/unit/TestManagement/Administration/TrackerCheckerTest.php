@@ -109,7 +109,7 @@ class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->campaign_tracker,
             $this->definition_tracker,
             $this->execution_tracker,
-            $this->issue_tracker
+            $this->issue_tracker,
         ]);
 
         $this->tracker_factory->shouldReceive('getTrackerById')->with(1)->andReturn($this->campaign_tracker);

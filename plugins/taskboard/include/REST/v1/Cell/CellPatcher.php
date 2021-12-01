@@ -54,7 +54,7 @@ class CellPatcher
         Tracker_ArtifactFactory $artifact_factory,
         SwimlaneChildrenRetriever $children_retriever,
         ArtifactsRankOrderer $rank_orderer,
-        CardMappedFieldUpdater $mapped_field_updater
+        CardMappedFieldUpdater $mapped_field_updater,
     ) {
         $this->user_manager         = $user_manager;
         $this->artifact_factory     = $artifact_factory;
@@ -143,7 +143,7 @@ class CellPatcher
     private function validateOrder(
         OrderRepresentation $order,
         PFUser $current_user,
-        Artifact $swimlane_artifact
+        Artifact $swimlane_artifact,
     ): void {
         $children_artifact_ids          = $this->children_retriever->getSwimlaneArtifactIds(
             $swimlane_artifact,

@@ -47,7 +47,7 @@ class InviteBuddyAdminUpdateController implements DispatchableWithRequest
     public function __construct(
         \CSRFSynchronizerToken $csrf_token,
         InviteBuddyConfiguration $configuration,
-        ConfigDao $config_dao
+        ConfigDao $config_dao,
     ) {
         $this->csrf_token    = $csrf_token;
         $this->configuration = $configuration;

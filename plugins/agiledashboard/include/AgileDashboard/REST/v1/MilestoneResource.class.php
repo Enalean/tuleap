@@ -531,7 +531,7 @@ class MilestoneResource extends AuthenticatedResource
         $query = '',
         $limit = 10,
         $offset = 0,
-        $order = 'asc'
+        $order = 'asc',
     ): array {
         $this->checkAccess();
         $this->sendAllowHeaderForSubmilestones();
@@ -1101,7 +1101,7 @@ class MilestoneResource extends AuthenticatedResource
             [
                 'version'   => 'v1',
                 'milestone' => $milestone,
-                'cardwall'  => &$cardwall
+                'cardwall'  => &$cardwall,
             ]
         );
 
@@ -1153,7 +1153,7 @@ class MilestoneResource extends AuthenticatedResource
                 'version'   => 'v1',
                 'user'      => $user,
                 'milestone' => $milestone,
-                'burndown'  => &$burndown
+                'burndown'  => &$burndown,
             ]
         );
         return $burndown;

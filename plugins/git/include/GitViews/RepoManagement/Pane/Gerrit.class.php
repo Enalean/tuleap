@@ -72,7 +72,7 @@ class Gerrit extends Pane
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
         array $gerrit_servers,
         array $gerrit_config_templates,
-        \ProjectManager $project_manager
+        \ProjectManager $project_manager,
     ) {
         parent::__construct($repository, $request);
         $this->gerrit_servers             = $gerrit_servers;

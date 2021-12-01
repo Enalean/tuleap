@@ -50,7 +50,7 @@ class MessageInfoToMessagePresenterConvertor
     public function __construct(
         UserHelper $user_helper,
         TlpRelativeDatePresenterBuilder $date_presenter_builder,
-        ThreadsDao $dao
+        ThreadsDao $dao,
     ) {
         $this->user_helper            = $user_helper;
         $this->date_presenter_builder = $date_presenter_builder;
@@ -67,7 +67,7 @@ class MessageInfoToMessagePresenterConvertor
         PFUser $current_user,
         Project $project,
         int $list_id,
-        int $thread_id
+        int $thread_id,
     ): MessagePresenter {
         $has_avatar = false;
         $avatar_url = '';

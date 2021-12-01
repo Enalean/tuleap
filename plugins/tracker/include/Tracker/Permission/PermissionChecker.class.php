@@ -35,7 +35,7 @@ class Tracker_Permission_PermissionChecker
 
     public function __construct(
         UserManager $user_manager,
-        ProjectAccessChecker $project_access_checker
+        ProjectAccessChecker $project_access_checker,
     ) {
         $this->user_manager           = $user_manager;
         $this->project_access_checker = $project_access_checker;

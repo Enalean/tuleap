@@ -39,7 +39,7 @@ class FileReference extends \Reference
         $nature,
         $myis_active,
         $mygroup_id,
-        $reference_value
+        $reference_value,
     ) {
         parent::__construct(
             $myid,

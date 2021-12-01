@@ -46,7 +46,7 @@ final class MirroredIterationIdentifier implements MirroredTimeboxIdentifier
         SearchMirroredTimeboxes $iteration_searcher,
         VerifyIsVisibleArtifact $artifact_visibility_verifier,
         IterationIdentifier $iteration,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): array {
         $mirrored_iterations_ids      = $iteration_searcher->searchMirroredTimeboxes($iteration);
         $valid_mirrored_iterations_id = [];

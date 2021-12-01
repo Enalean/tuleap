@@ -35,7 +35,7 @@ final class ReferenceAdministrationWarningsCollectorEventHandler
 
     private function addWarningMessageForReference(
         string $keyword,
-        ReferenceAdministrationWarningsCollectorEvent $event
+        ReferenceAdministrationWarningsCollectorEvent $event,
     ): void {
         $does_keyword_gitlab_commit_exists = array_search(
             $keyword,

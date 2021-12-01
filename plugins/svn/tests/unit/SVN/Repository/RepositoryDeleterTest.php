@@ -127,8 +127,8 @@ class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
                         'repo01' => [],
                         'repo02' => [],
                         'repo03' => [],
-                    ]
-                ]
+                    ],
+                ],
             ],
             vfsStream::setup()
         );

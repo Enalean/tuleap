@@ -39,7 +39,7 @@ class ChartConfigurationValueChecker
 
     public function __construct(
         ChartConfigurationFieldRetriever $configuration_field_retriever,
-        ChartConfigurationValueRetriever $configuration_value_retriever
+        ChartConfigurationValueRetriever $configuration_value_retriever,
     ) {
         $this->configuration_field_retriever = $configuration_field_retriever;
         $this->configuration_value_retriever = $configuration_value_retriever;
@@ -65,7 +65,7 @@ class ChartConfigurationValueChecker
 
     private function hasFieldChanged(
         Tracker_Artifact_Changeset $new_changeset,
-        Tracker_FormElement_Field $field
+        Tracker_FormElement_Field $field,
     ) {
         return $new_changeset->getValue($field) && $new_changeset->getValue($field)->hasChanged();
     }
@@ -86,7 +86,7 @@ class ChartConfigurationValueChecker
     public function hasConfigurationChange(
         Artifact $artifact,
         PFUser $user,
-        Tracker_Artifact_Changeset $new_changeset
+        Tracker_Artifact_Changeset $new_changeset,
     ): bool {
         if (! $this->areBurndownFieldsCorrectlySet($artifact, $user)) {
             return false;

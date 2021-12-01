@@ -32,7 +32,7 @@ class EqualComparisonChecker extends ComparisonChecker
 
     public function visitCurrentDateTimeValueWrapper(
         CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         $metadata = $parameters->getMetadata();
         if (in_array($metadata->getName(), AllowedMetadata::DATES)) {

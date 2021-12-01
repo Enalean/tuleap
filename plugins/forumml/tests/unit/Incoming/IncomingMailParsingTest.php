@@ -63,7 +63,7 @@ My <b>test<br>
             $attachments[] = [
                 'name' => $attachment->getFilename(),
                 'content-type' => $attachment->getContentType(),
-                'content-id' => $attachment->getContentID()
+                'content-id' => $attachment->getContentID(),
             ];
         }
 
@@ -79,13 +79,13 @@ My <b>test<br>
                 "$fixture_path_base/attachment_only.mbox",
                 'text/plain',
                 "\n",
-                [['name' => 'lock.png', 'content-type' => 'image/png', 'content-id' => '']]
+                [['name' => 'lock.png', 'content-type' => 'image/png', 'content-id' => '']],
             ],
             [
                 "$fixture_path_base/text_plus_attachment.mbox",
                 'text/plain',
                 "Some text\n",
-                [['name' => 'lock.png', 'content-type' => 'image/png', 'content-id' => '']]
+                [['name' => 'lock.png', 'content-type' => 'image/png', 'content-id' => '']],
             ],
             ["$fixture_path_base/pure_html_text_plus_html.mbox", 'text/html', self::HTML_ONLY_BODY, []],
             ["$fixture_path_base/pure_html_in_html_only.mbox", 'text/html', self::HTML_ONLY_BODY, []],
@@ -93,13 +93,13 @@ My <b>test<br>
                 "$fixture_path_base/html_with_inline_content_in_text_plus_html.mbox",
                 'text/html',
                 self::HTML_BODY_WITH_INLINE_ATTACHMENT,
-                [['name' => 'lock.png', 'content-type' => 'image/png', 'content-id' => '<part1.02040105.07020502@example.com>']]
+                [['name' => 'lock.png', 'content-type' => 'image/png', 'content-id' => '<part1.02040105.07020502@example.com>']],
             ],
             [
                 "$fixture_path_base/html_with_inline_content_in_html_only.mbox",
                 'text/html',
                 self::HTML_BODY_WITH_INLINE_ATTACHMENT,
-                [['name' => 'noname1', 'content-type' => 'image/png', 'content-id' => '<part1.02040105.07020502@example.com>']]
+                [['name' => 'noname1', 'content-type' => 'image/png', 'content-id' => '<part1.02040105.07020502@example.com>']],
             ],
             [
                 "$fixture_path_base/html_with_inline_content_and_attch_in_text_plus_html.mbox",
@@ -107,16 +107,16 @@ My <b>test<br>
                 self::HTML_BODY_WITH_INLINE_ATTACHMENT,
                 [
                     ['name' => 'noname1', 'content-type' => 'image/png', 'content-id' => '<part1.02040105.07020502@example.com>'],
-                    ['name' => 'new_trk_severity_migr.png', 'content-type' => 'image/png', 'content-id' => '']
-                ]
+                    ['name' => 'new_trk_severity_migr.png', 'content-type' => 'image/png', 'content-id' => ''],
+                ],
             ],
             [
                 "$fixture_path_base/html_with_inline_content_and_attch_in_html_only.mbox",
                 'text/html', self::HTML_BODY_WITH_INLINE_ATTACHMENT,
                 [
                     ['name' => 'noname1', 'content-type' => 'image/png', 'content-id' => '<part1.02040105.07020502@example.com>'],
-                    ['name' => 'new_trk_severity_migr.png', 'content-type' => 'image/png', 'content-id' => '']
-                ]
+                    ['name' => 'new_trk_severity_migr.png', 'content-type' => 'image/png', 'content-id' => ''],
+                ],
             ],
             [
                 "$fixture_path_base/forwarded_email.mbox",
@@ -126,9 +126,9 @@ My <b>test<br>
                     [
                         'name'         => '[gpig-events] [gpig]r18476 - in contrib_st_enhancement_115_webdav_docman_write_access_ plugins_webdav_include: _ FS.eml',
                         'content-type' => 'message/rfc822',
-                        'content-id'   => ''
-                    ]
-                ]
+                        'content-id'   => '',
+                    ],
+                ],
             ],
         ];
     }

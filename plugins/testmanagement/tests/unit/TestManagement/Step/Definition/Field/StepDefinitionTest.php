@@ -72,11 +72,11 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
                             '',
                             'text',
                             1
-                        )
+                        ),
                     ]
                 ),
                 [
-                'no_steps' => true
+                'no_steps' => true,
                 ]
             )
         );
@@ -100,25 +100,25 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
                             '',
                             'text',
                             1
-                        )
+                        ),
                     ]
                 ),
                 [
                 'description' => [
-                    'step updated'
+                    'step updated',
                 ],
                 'description_format' => [
-                    'html'
+                    'html',
                 ],
                 'expected_results' => [
-                    ''
+                    '',
                 ],
                 'expected_results_format' => [
-                    'text'
+                    'text',
                 ],
                 'id' => [
-                    1
-                ]
+                    1,
+                ],
                 ]
             )
         );
@@ -142,25 +142,25 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
                             '',
                             'text',
                             1
-                        )
+                        ),
                     ]
                 ),
                 [
                     'description'             => [
-                        'step'
+                        'step',
                     ],
                     'description_format'      => [
-                        'html'
+                        'html',
                     ],
                     'expected_results'        => [
-                        ''
+                        '',
                     ],
                     'expected_results_format' => [
-                        'text'
+                        'text',
                     ],
                     'id'                      => [
-                        1
-                    ]
+                        1,
+                    ],
                 ]
             )
         );
@@ -174,7 +174,7 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
                     "description"             => "some description",
                     "description_format"      => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
                     "expected_results"        => "some results",
-                    "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
+                    "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
                 ],
             ],
         ];
@@ -187,7 +187,7 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
             "expected_results"        => ["some results"],
             "expected_results_format" => [
                 Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
-            ]
+            ],
         ];
 
 
@@ -205,7 +205,7 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
                     "expected_results" => "some results",
                     "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
                     "rank" => 1,
-                ]
+                ],
             ],
         ];
 
@@ -215,7 +215,7 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
             'description' => ['some description'],
             'description_format' => ['commonmark'],
             'expected_results' => ['some results'],
-            'expected_results_format' => ['commonmark']
+            'expected_results_format' => ['commonmark'],
         ];
 
         self::assertEquals($expected_format, $this->field->getFieldDataFromRESTValue($steps, $artifact));

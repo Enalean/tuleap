@@ -49,13 +49,13 @@ interface Cardwall_OnTop_IConfig
     public function isInColumn(
         Artifact $artifact,
         Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
-        Cardwall_Column $column
+        Cardwall_Column $column,
     );
 
     public function getCardwallMappings(array $fields, Cardwall_OnTop_Config_ColumnCollection $cardwall_columns);
 
     public function fillMappingsWithOnTopMappings(
         Cardwall_MappingCollection $mappings,
-        Cardwall_OnTop_Config_ColumnCollection $columns
+        Cardwall_OnTop_Config_ColumnCollection $columns,
     );
 }

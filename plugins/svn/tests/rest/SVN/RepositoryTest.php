@@ -63,7 +63,7 @@ class RepositoryTest extends TestBase
             $repository['settings']['commit_rules'],
             [
                 "is_reference_mandatory"           => false,
-                "is_commit_message_change_allowed" => false
+                "is_commit_message_change_allowed" => false,
             ]
         );
 
@@ -93,8 +93,8 @@ class RepositoryTest extends TestBase
                     'user_groups' => [],
                     'users'       => [],
                     'emails'      => ["project-svn@list.example.com"],
-                    'path'        => "/trunk"
-                ]
+                    'path'        => "/trunk",
+                ],
             ]
         );
     }
@@ -185,7 +185,7 @@ class RepositoryTest extends TestBase
             $repository['settings']['commit_rules'],
             [
                 "is_reference_mandatory"           => false,
-                "is_commit_message_change_allowed" => false
+                "is_commit_message_change_allowed" => false,
             ]
         );
         $this->assertEquals(
@@ -210,17 +210,17 @@ class RepositoryTest extends TestBase
                 "settings"   => [
                     "commit_rules"        => [
                         "is_reference_mandatory"           => true,
-                        "is_commit_message_change_allowed" => true
+                        "is_commit_message_change_allowed" => true,
                     ],
                     "immutable_tags"      => [
                         "paths"     => [
                             "/tags1",
-                            "/tags2"
+                            "/tags2",
                         ],
                         "whitelist" => [
                             "/white1",
-                            "/white2"
-                        ]
+                            "/white2",
+                        ],
                     ],
                     "access_file"         => "[/] * = rw\r\n@members = rw",
                     "email_notifications" => [
@@ -229,21 +229,21 @@ class RepositoryTest extends TestBase
                             'users'       => [102, 103],
                             'emails'      => [
                                 "project-announce@list.example.com",
-                                "project-devel@lists.example.com"
+                                "project-devel@lists.example.com",
                             ],
                             'path'        => "/tags",
                         ],
                         [
                             'user_groups' => [
                                 $this->user_group_1_id,
-                                $this->user_group_2_id
+                                $this->user_group_2_id,
                             ],
                             'users'       => [],
                             'emails'      => ["project-svn@list.example.com"],
-                            'path'        => "/trunk"
-                        ]
-                    ]
-                ]
+                            'path'        => "/trunk",
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -256,7 +256,7 @@ class RepositoryTest extends TestBase
             $repository['settings']['commit_rules'],
             [
                 "is_reference_mandatory"           => true,
-                "is_commit_message_change_allowed" => true
+                "is_commit_message_change_allowed" => true,
             ]
         );
         $this->assertEquals(
@@ -284,8 +284,8 @@ class RepositoryTest extends TestBase
                     'user_groups' => [$this->user_group_101, $this->user_group_102],
                     'users'       => [],
                     'emails'      => ["project-svn@list.example.com"],
-                    'path'        => "/trunk"
-                ]
+                    'path'        => "/trunk",
+                ],
             ]
         );
     }
@@ -310,8 +310,8 @@ class RepositoryTest extends TestBase
                 'project_id' => $this->svn_project_id,
                 'name'       => 'my_repository_04',
                 'settings'   => [
-                    'layout' => ['/trunk', '/branches']
-                ]
+                    'layout' => ['/trunk', '/branches'],
+                ],
             ]
         );
 
@@ -326,28 +326,28 @@ class RepositoryTest extends TestBase
                 'settings' => [
                     'commit_rules'        => [
                         'is_reference_mandatory'           => true,
-                        'is_commit_message_change_allowed' => false
+                        'is_commit_message_change_allowed' => false,
                     ],
                     "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
                     "immutable_tags"      => [
                         "paths"     => [],
-                        "whitelist" => []
+                        "whitelist" => [],
                     ],
                     "email_notifications" => [
                         [
                             'path'        => "/tags",
                             'emails'      => [
                                 "project-announce@list.example.com",
-                                "project-devel@lists.example.com"
+                                "project-devel@lists.example.com",
                             ],
                             "users"       => [102],
                             "user_groups" => [
                                 $this->user_group_1_id,
-                                $this->user_group_2_id
-                            ]
-                        ]
-                    ]
-                ]
+                                $this->user_group_2_id,
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -366,28 +366,28 @@ class RepositoryTest extends TestBase
                 'settings' => [
                     'commit_rules'        => [
                         'is_reference_mandatory'           => true,
-                        'is_commit_message_change_allowed' => false
+                        'is_commit_message_change_allowed' => false,
                     ],
                     "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
                     "immutable_tags"      => [
                         "paths"     => [],
-                        "whitelist" => []
+                        "whitelist" => [],
                     ],
                     "email_notifications" => [
                         [
                             'path'        => "/tags",
                             'emails'      => [
                                 "project-announce@list.example.com",
-                                "project-devel@lists.example.com"
+                                "project-devel@lists.example.com",
                             ],
                             "users"       => [102],
                             "user_groups" => [
                                 $this->user_group_1_id,
-                                $this->user_group_2_id
-                            ]
-                        ]
-                    ]
-                ]
+                                $this->user_group_2_id,
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -401,7 +401,7 @@ class RepositoryTest extends TestBase
             $repository['settings']['commit_rules'],
             [
                 "is_reference_mandatory"           => true,
-                "is_commit_message_change_allowed" => false
+                "is_commit_message_change_allowed" => false,
             ]
         );
         $this->assertEquals(
@@ -423,11 +423,11 @@ class RepositoryTest extends TestBase
                     'path'        => "/tags",
                     'emails'      => [
                         "project-announce@list.example.com",
-                        "project-devel@lists.example.com"
+                        "project-devel@lists.example.com",
                     ],
                     "user_groups" => [$this->user_group_101, $this->user_group_102],
-                    "users"       => [$this->user_102]
-                ]
+                    "users"       => [$this->user_102],
+                ],
             ]
         );
     }
@@ -439,15 +439,15 @@ class RepositoryTest extends TestBase
                 'settings' => [
                     'commit_rules' => [
                         'is_reference_mandatory' => true,
-                        'is_commit_message_change_allowed' => false
+                        'is_commit_message_change_allowed' => false,
                     ],
                     "access_file" => "[/]\r\n* = rw\r\n@members = rw",
                     "immutable_tags" => [
                         "paths" => [],
-                        "whitelist" => array_fill(0, 65535, '/a')
+                        "whitelist" => array_fill(0, 65535, '/a'),
                     ],
-                    "email_notifications" => []
-                ]
+                    "email_notifications" => [],
+                ],
             ],
             JSON_THROW_ON_ERROR
         );

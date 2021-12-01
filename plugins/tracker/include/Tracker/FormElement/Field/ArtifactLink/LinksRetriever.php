@@ -36,7 +36,7 @@ class LinksRetriever
 
     public function __construct(
         ArtifactLinkFieldValueDao $artifact_link_dao,
-        \Tracker_ArtifactFactory $artifact_factory
+        \Tracker_ArtifactFactory $artifact_factory,
     ) {
         $this->artifact_link_dao = $artifact_link_dao;
         $this->artifact_factory  = $artifact_factory;

@@ -135,7 +135,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                             "id"     => "10000",
                             "self"   => "https://jira.example.com/rest/agile/1.0/issue/10000",
                             "key"    => "SP-1",
-                        ]
+                        ],
                     ],
                 ];
             }
@@ -169,7 +169,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                                 "id"     => "10000",
                                 "self"   => "https://jira.example.com/rest/agile/1.0/issue/10000",
                                 "key"    => "SP-1",
-                            ]
+                            ],
                         ],
                     ];
                 } elseif ($this->called === 1) {
@@ -185,7 +185,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                                 "id"     => "10001",
                                 "self"   => "https://jira.example.com/rest/agile/1.0/issue/10001",
                                 "key"    => "SP-2",
-                            ]
+                            ],
                         ],
                     ];
                 } else {
@@ -222,7 +222,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                             "id"     => "10000ABC",
                             "self"   => "https://jira.example.com/rest/agile/1.0/issue/10000",
                             "key"    => "SP-1",
-                        ]
+                        ],
                     ],
                 ];
             }

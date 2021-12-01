@@ -92,7 +92,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $is_used,
         $is_advanced,
         $is_legacy = false,
-        $transitions = null
+        $transitions = null,
     ) {
         $this->workflow_id           = $workflow_id;
         $this->field_id              = $field_id;
@@ -353,7 +353,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public function after(
         array $fields_data,
         Tracker_Artifact_Changeset $new_changeset,
-        ?Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null,
     ) {
         $artifact_id = $new_changeset->getArtifact()->getId();
 
@@ -393,7 +393,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     private function getCurrentTransition(
         array $fields_data,
-        ?Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null,
     ): ?Transition {
         return $this->getTransitionRetriever()->retrieveTransition(
             $this,

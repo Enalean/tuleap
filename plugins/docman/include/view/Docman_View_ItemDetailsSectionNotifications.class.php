@@ -44,7 +44,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $url,
         $notificationsManager,
         $token,
-        CollectionOfUgroupMonitoredItemsBuilder $ugroups_to_be_notified_builder
+        CollectionOfUgroupMonitoredItemsBuilder $ugroups_to_be_notified_builder,
     ) {
         parent::__construct(
             $item,

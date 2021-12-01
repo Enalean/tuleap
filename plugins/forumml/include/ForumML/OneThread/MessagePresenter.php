@@ -72,7 +72,7 @@ final class MessagePresenter
         bool $has_avatar,
         string $avatar_url,
         array $attachments,
-        TlpRelativeDatePresenter $date
+        TlpRelativeDatePresenter $date,
     ) {
         $this->id          = $id;
         $this->body_html   = $body_html;

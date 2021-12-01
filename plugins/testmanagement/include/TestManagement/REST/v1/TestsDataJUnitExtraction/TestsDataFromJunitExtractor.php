@@ -45,7 +45,7 @@ class TestsDataFromJunitExtractor
      * @throws AutomatedTestsNotXmlException
      */
     public function getTestsResultsFromJunit(
-        AutomatedTestsResultPATCHRepresentation $automated_tests_results_representation
+        AutomatedTestsResultPATCHRepresentation $automated_tests_results_representation,
     ): array {
         $build_url        = $automated_tests_results_representation->build_url;
         $all_test_results = [];
@@ -66,7 +66,7 @@ class TestsDataFromJunitExtractor
     private function extractTestExecutionData(
         SimpleXMLElement $junit_xml,
         array &$all_test_results,
-        string $build_url
+        string $build_url,
     ): void {
         foreach ($junit_xml->testsuite as $test_suite) {
             $this->registerTestSuiteResults($test_suite, $all_test_results, $build_url);
@@ -79,7 +79,7 @@ class TestsDataFromJunitExtractor
     private function registerTestSuiteResults(
         SimpleXMLElement $test_suite,
         array &$all_test_results,
-        string $build_url
+        string $build_url,
     ): void {
         $test_suite_name = (string) $test_suite['name'];
         $status          = (int) $test_suite['failures'] > 0 ? self::STATUS_FAILURE : self::STATUS_SUCCESS;
@@ -118,7 +118,7 @@ class TestsDataFromJunitExtractor
     private function extractTestCaseFromTestSuite(
         SimpleXMLElement $test_suite,
         array &$all_test_results,
-        string $build_url
+        string $build_url,
     ): void {
         foreach ($test_suite->testcase as $testcase) {
             $testcase_name = (string) $testcase['name'];
@@ -147,7 +147,7 @@ class TestsDataFromJunitExtractor
 
     private function changeResultStatusIfNeeded(
         ExtractedTestResultFromJunit $result,
-        string $status
+        string $status,
     ): void {
         if ($result->getStatus() === self::STATUS_FAILURE) {
             return;
@@ -164,7 +164,7 @@ class TestsDataFromJunitExtractor
 
     private function collectFailuresForTestSuite(
         SimpleXMLElement $test_suite,
-        ExtractedTestResultFromJunit $result
+        ExtractedTestResultFromJunit $result,
     ): void {
         foreach ($test_suite->testcase as $testcase) {
             $this->addFailuresForTest($testcase, $result);

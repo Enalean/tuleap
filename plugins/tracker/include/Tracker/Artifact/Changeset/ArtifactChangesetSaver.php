@@ -56,7 +56,7 @@ class ArtifactChangesetSaver
         Tracker_Artifact_ChangesetDao $changeset_dao,
         DBTransactionExecutor $transaction_executor,
         Tracker_ArtifactDao $tracker_artifact_dao,
-        ChangesetFromXmlDao $changeset_from_xml_dao
+        ChangesetFromXmlDao $changeset_from_xml_dao,
     ) {
         $this->changeset_dao          = $changeset_dao;
         $this->transaction_executor   = $transaction_executor;
@@ -81,7 +81,7 @@ class ArtifactChangesetSaver
         Artifact $artifact,
         PFUser $submitter,
         int $submitted_on,
-        TrackerImportConfig $import_config
+        TrackerImportConfig $import_config,
     ): int {
         return $this->transaction_executor->execute(
             function () use ($artifact, $submitter, $submitted_on, $import_config) {

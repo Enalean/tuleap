@@ -30,14 +30,14 @@ class WidgetKanbanConfigUpdater
     private $config_dao;
 
     public function __construct(
-        WidgetKanbanConfigDAO $config_dao
+        WidgetKanbanConfigDAO $config_dao,
     ) {
         $this->config_dao = $config_dao;
     }
 
     public function updateConfiguration(
         $widget_id,
-        $tracker_report_id
+        $tracker_report_id,
     ) {
         if (! $tracker_report_id) {
             return $this->config_dao->deleteConfigForWidgetId($widget_id);

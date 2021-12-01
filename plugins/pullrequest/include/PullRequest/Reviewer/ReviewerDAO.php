@@ -45,7 +45,7 @@ class ReviewerDAO extends DataAccessObject
         int $pull_request_id,
         int $user_doing_the_change_id,
         int $change_timestamp,
-        int ...$user_ids
+        int ...$user_ids,
     ): ?int {
         return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use (
             $pull_request_id,
@@ -71,7 +71,7 @@ class ReviewerDAO extends DataAccessObject
                 [
                     'pull_request_id' => $pull_request_id,
                     'user_id'         => $user_doing_the_change_id,
-                    'change_date'     => $change_timestamp
+                    'change_date'     => $change_timestamp,
                 ]
             );
 
@@ -80,14 +80,14 @@ class ReviewerDAO extends DataAccessObject
                 $change_user_rows[] = [
                     'change_id'  => $change_id,
                     'user_id'    => $reviewer_id,
-                    'is_removal' => false
+                    'is_removal' => false,
                 ];
             }
             foreach ($removed_reviewer_ids as $reviewer_id) {
                 $change_user_rows[] = [
                     'change_id'  => $change_id,
                     'user_id'    => $reviewer_id,
-                    'is_removal' => true
+                    'is_removal' => true,
                 ];
             }
             $db->insertMany(

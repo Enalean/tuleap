@@ -67,7 +67,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         \DocmanPluginInfo $docman_plugin_info,
         FileDownloadLimitsBuilder $file_download_limits_builder,
         HistoryEnforcementSettingsBuilder $history_enforcement_settings_builder,
-        ProjectFlagsBuilder $project_flags_builder
+        ProjectFlagsBuilder $project_flags_builder,
     ) {
         $this->project_extractor                    = $project_extractor;
         $this->docman_plugin_info                   = $docman_plugin_info;

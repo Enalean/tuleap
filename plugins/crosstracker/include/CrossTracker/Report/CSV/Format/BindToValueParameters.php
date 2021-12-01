@@ -31,7 +31,7 @@ class BindToValueParameters extends BindParameters
 
     public function __construct(
         \Tracker_FormElement_Field_List $field,
-        \Tracker_Artifact_ChangesetValue $changeset_value
+        \Tracker_Artifact_ChangesetValue $changeset_value,
     ) {
         parent::__construct($field);
         $this->changeset_value = $changeset_value;

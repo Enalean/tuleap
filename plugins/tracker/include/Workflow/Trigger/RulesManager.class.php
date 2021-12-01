@@ -52,7 +52,7 @@ class Tracker_Workflow_Trigger_RulesManager
         Tracker_Workflow_Trigger_RulesProcessor $rules_processor,
         WorkflowBackendLogger $logger,
         Tracker_Workflow_Trigger_RulesBuilderFactory $trigger_builder,
-        WorkflowRulesManagerLoopSafeGuard $loop_safe_guard
+        WorkflowRulesManagerLoopSafeGuard $loop_safe_guard,
     ) {
         $this->dao                 = $dao;
         $this->formelement_factory = $formelement_factory;
@@ -318,7 +318,7 @@ class Tracker_Workflow_Trigger_RulesManager
 
     private function buildRuleTargetFromTemplateTriggerRule(
         Tracker_Workflow_Trigger_FieldValue $template_trigger_rule_target,
-        array $field_mapping
+        array $field_mapping,
     ) {
         foreach ($field_mapping as $mapping) {
             if ($mapping['from'] === $template_trigger_rule_target->getField()->getId()) {

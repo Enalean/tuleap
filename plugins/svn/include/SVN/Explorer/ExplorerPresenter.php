@@ -58,7 +58,7 @@ class ExplorerPresenter
         Project $project,
         CSRFSynchronizerToken $csrf,
         array $repository_list,
-        bool $is_admin
+        bool $is_admin,
     ) {
         $this->group_id         = (int) $project->getID();
         $this->csrf_token       = $csrf;

@@ -30,7 +30,7 @@ class DescriptionFieldAdminPresenterBuilder
      * @return FieldPresenter[]
      */
     public function build(
-        array $description_fields_infos
+        array $description_fields_infos,
     ): array {
         $field_presenters = [];
 

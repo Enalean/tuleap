@@ -45,7 +45,7 @@ class ProviderManager
     public function __construct(
         ProviderDao $dao,
         GenericProviderManager $generic_provider_manager,
-        AzureADProviderManager $azure_provider_manager
+        AzureADProviderManager $azure_provider_manager,
     ) {
         $this->dao                      = $dao;
         $this->generic_provider_manager = $generic_provider_manager;

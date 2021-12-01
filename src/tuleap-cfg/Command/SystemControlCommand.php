@@ -145,7 +145,7 @@ class SystemControlCommand extends Command
         }
 
         return [
-            new SystemControlSystemd($this->process_factory, $quiet, $action, ...$targets)
+            new SystemControlSystemd($this->process_factory, $quiet, $action, ...$targets),
         ];
     }
 

@@ -52,7 +52,7 @@ class WikiPlugin_GoTo extends WikiPlugin
 
         $action = $request->getURLtoSelf();
         $form   = HTML::form(['action' => $action,
-                                 'method' => 'post'
+                                 'method' => 'post',
                           ]);
 
         $form->pushContent(HiddenInputs($request->getArgs()));

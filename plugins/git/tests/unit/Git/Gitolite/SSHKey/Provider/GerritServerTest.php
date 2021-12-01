@@ -47,12 +47,12 @@ class GerritServerTest extends \Tuleap\Test\PHPUnit\TestCase
         $gerrit_server_access_result = [
             [
                 'id'      => 1,
-                'ssh_key' => $server1_key->getKey()
+                'ssh_key' => $server1_key->getKey(),
             ],
             [
                 'id'      => 3,
-                'ssh_key' => $server3_key->getKey()
-            ]
+                'ssh_key' => $server3_key->getKey(),
+            ],
         ];
         $gerrit_server_dao           = \Mockery::mock(Git_RemoteServer_Dao::class);
         $gerrit_server_dao->shouldReceive('searchAllServersWithSSHKey')->andReturns($gerrit_server_access_result);

@@ -43,7 +43,7 @@ final class ProgramIncrementCreatorChecker
         private VerifyIsProgramIncrementTracker $verify_is_program_increment,
         private RetrieveMirroredProgramIncrementTracker $milestone_retriever,
         private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
-        private LogMessage $logger
+        private LogMessage $logger,
     ) {
     }
 
@@ -52,7 +52,7 @@ final class ProgramIncrementCreatorChecker
         ProgramIdentifier $program,
         TeamProjectsCollection $team_projects_collection,
         ConfigurationErrorsCollector $errors_collector,
-        UserReference $user_reference
+        UserReference $user_reference,
     ): bool {
         if (! $this->verify_is_program_increment->isProgramIncrementTracker($tracker->getId())) {
             return true;

@@ -125,7 +125,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 [],
                 [],
                 $collection,
-                null
+                null,
             ]
         );
 
@@ -161,7 +161,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 [],
                 [],
                 $collection,
-                null
+                null,
             ]
         );
 
@@ -197,7 +197,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 [],
                 [],
                 $collection,
-                null
+                null,
             ]
         );
 
@@ -233,7 +233,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 [],
                 [],
                 $collection,
-                null
+                null,
             ]
         );
 
@@ -269,7 +269,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 [],
                 [],
                 $collection,
-                null
+                null,
             ]
         );
 
@@ -303,11 +303,11 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 4,
                 $jira_field->isRequired(),
                 [
-                    'display_time' => '0'
+                    'display_time' => '0',
                 ],
                 [],
                 $collection,
-                null
+                null,
             ]
         );
 
@@ -341,11 +341,11 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 4,
                 $jira_field->isRequired(),
                 [
-                    'display_time' => '1'
+                    'display_time' => '1',
                 ],
                 [],
                 $collection,
-                null
+                null,
             ]
         );
 
@@ -386,7 +386,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 [],
                 $bound_values,
                 $collection,
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
             ]
         );
 
@@ -427,7 +427,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 [],
                 $bound_values,
                 $collection,
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
             ]
         );
 
@@ -468,7 +468,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 [],
                 $bound_values,
                 $collection,
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
             ]
         );
 
@@ -509,7 +509,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 [],
                 $bound_values,
                 $collection,
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
             ]
         );
 
@@ -550,7 +550,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 [],
                 $bound_values,
                 $collection,
-                \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE,
             ]
         );
 

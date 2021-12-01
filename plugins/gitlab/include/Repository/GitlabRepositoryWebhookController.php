@@ -83,7 +83,7 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
         LoggerInterface $logger,
         ResponseFactoryInterface $response_factory,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
 

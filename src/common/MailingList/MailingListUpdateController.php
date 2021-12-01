@@ -48,7 +48,7 @@ class MailingListUpdateController implements DispatchableWithRequest
     public function __construct(
         ProjectRetriever $project_retriever,
         ProjectAdministratorChecker $administrator_checker,
-        MailingListDao $dao
+        MailingListDao $dao,
     ) {
         $this->project_retriever     = $project_retriever;
         $this->administrator_checker = $administrator_checker;

@@ -45,7 +45,7 @@ class ListOfDefinitionsForCampaignRetriever
     public function __construct(
         ArtifactDao $artifact_dao,
         Tracker_ArtifactFactory $artifact_factory,
-        DefinitionForExecutionRetriever $definition_retriever
+        DefinitionForExecutionRetriever $definition_retriever,
     ) {
         $this->artifact_dao         = $artifact_dao;
         $this->artifact_factory     = $artifact_factory;

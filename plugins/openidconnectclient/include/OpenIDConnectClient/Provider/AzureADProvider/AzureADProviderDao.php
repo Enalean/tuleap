@@ -34,7 +34,7 @@ class AzureADProviderDao extends DataAccessObject
         string $icon,
         string $color,
         string $tenant_id,
-        string $acceptable_tenant_auth_identifier
+        string $acceptable_tenant_auth_identifier,
     ): int {
         return $this->getDB()->tryFlatTransaction(
             static function (EasyDB $db) use (
@@ -77,7 +77,7 @@ class AzureADProviderDao extends DataAccessObject
         string $icon,
         string $color,
         string $tenant_id,
-        string $acceptable_tenant_auth_identifier
+        string $acceptable_tenant_auth_identifier,
     ): void {
         $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use (

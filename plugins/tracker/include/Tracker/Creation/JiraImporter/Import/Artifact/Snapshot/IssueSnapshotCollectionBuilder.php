@@ -76,7 +76,7 @@ class IssueSnapshotCollectionBuilder
         ChangelogSnapshotBuilder $changelog_snapshot_builder,
         CommentValuesBuilder $comment_values_builder,
         LoggerInterface $logger,
-        JiraUserRetriever $jira_user_retriever
+        JiraUserRetriever $jira_user_retriever,
     ) {
         $this->initial_snapshot_builder   = $initial_snapshot_builder;
         $this->changelog_entries_builder  = $changelog_entries_builder;
@@ -96,7 +96,7 @@ class IssueSnapshotCollectionBuilder
         AttachmentCollection $attachment_collection,
         FieldMappingCollection $jira_field_mapping_collection,
         LinkedIssuesCollection $linked_issues_collection,
-        string $jira_base_url
+        string $jira_base_url,
     ): array {
         $this->logger->debug("Start build collection of snapshot ...");
 

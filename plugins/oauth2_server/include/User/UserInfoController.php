@@ -44,7 +44,7 @@ final class UserInfoController extends DispatchablePSR15Compatible implements Di
     public function __construct(
         JSONResponseBuilder $json_response_builder,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->json_response_builder = $json_response_builder;

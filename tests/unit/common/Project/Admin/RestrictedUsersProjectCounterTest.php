@@ -57,7 +57,7 @@ final class RestrictedUsersProjectCounterTest extends \Tuleap\Test\PHPUnit\TestC
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         $user_dao->shouldReceive('listAllUsers')->andReturn([
             'users'   => false,
-            'numrows' => 123
+            'numrows' => 123,
         ]);
 
         $this->assertEquals(123, $counter->getNumberOfRestrictedUsersInProject($project));

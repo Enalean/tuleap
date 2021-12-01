@@ -58,7 +58,7 @@ class ArtifactDeletor
         ProjectHistoryDao $project_history_dao,
         PendingArtifactRemovalDao $pending_artifact_removal_dao,
         AsynchronousArtifactsDeletionActionsRunner $asynchronous_actions_runner,
-        EventDispatcherInterface $event_manager
+        EventDispatcherInterface $event_manager,
     ) {
         $this->dao                          = $dao;
         $this->project_history_dao          = $project_history_dao;

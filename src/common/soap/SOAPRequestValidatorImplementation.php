@@ -57,7 +57,7 @@ class SOAPRequestValidatorImplementation implements SOAPRequestValidator
     public function __construct(
         ProjectManager $project_manager,
         UserManager $user_manager,
-        ProjectAccessChecker $project_access_checker
+        ProjectAccessChecker $project_access_checker,
     ) {
         $this->project_manager        = $project_manager;
         $this->user_manager           = $user_manager;

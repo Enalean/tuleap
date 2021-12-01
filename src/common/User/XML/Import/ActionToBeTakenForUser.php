@@ -42,7 +42,7 @@ abstract class ActionToBeTakenForUser implements User
         $realname,
         $email,
         $original_user_id,
-        $original_ldap_id
+        $original_ldap_id,
     ) {
         $this->username         = $username;
         $this->realname         = $realname;

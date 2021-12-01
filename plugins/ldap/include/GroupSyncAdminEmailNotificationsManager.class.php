@@ -54,7 +54,7 @@ class GroupSyncAdminEmailNotificationsManager implements GroupSyncNotificationsM
     public function __construct(
         \LDAP_UserManager $ldap_user_manager,
         \Codendi_Mail $mail,
-        \UserManager $user_manager
+        \UserManager $user_manager,
     ) {
         $this->ldap_user_manager = $ldap_user_manager;
         $this->mail              = $mail;

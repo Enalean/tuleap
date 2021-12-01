@@ -40,7 +40,7 @@ final class FieldValuesGatherer implements GatherFieldValues
     public function __construct(
         private \Tracker_Artifact_Changeset $changeset,
         private \Tracker_FormElementFactory $form_element_factory,
-        private DateValueRetriever $date_value_retriever
+        private DateValueRetriever $date_value_retriever,
     ) {
     }
 
@@ -127,7 +127,7 @@ final class FieldValuesGatherer implements GatherFieldValues
 
         return array_map(
             static fn(
-                \Tracker_FormElement_Field_List_BindValue $bind_value
+                \Tracker_FormElement_Field_List_BindValue $bind_value,
             ): BindValueLabel => BindValueLabelProxy::fromListBindValue($bind_value),
             $status_value->getListValues()
         );

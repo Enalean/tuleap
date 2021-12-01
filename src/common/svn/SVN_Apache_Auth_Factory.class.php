@@ -36,7 +36,7 @@ class SVN_Apache_Auth_Factory
 
     public function __construct(
         EventManager $event_manager,
-        Parameters $cache_parameters
+        Parameters $cache_parameters,
     ) {
         $this->event_manager    = $event_manager;
         $this->cache_parameters = $cache_parameters;

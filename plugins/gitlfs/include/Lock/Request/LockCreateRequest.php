@@ -37,7 +37,7 @@ class LockCreateRequest implements GitLfsHTTPOperation
 
     public function __construct(
         string $path,
-        ?RequestReference $reference
+        ?RequestReference $reference,
     ) {
         $this->path      = $path;
         $this->reference = $reference;

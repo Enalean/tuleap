@@ -35,7 +35,7 @@ class GitlabBranch
     public function __construct(
         string $commit_sha1,
         string $branch_name,
-        ?DateTimeImmutable $last_push_date
+        ?DateTimeImmutable $last_push_date,
     ) {
         $this->commit_sha1    = $commit_sha1;
         $this->branch_name    = $branch_name;

@@ -48,7 +48,7 @@ class TimeCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive([
-            'getId'      => 200
+            'getId'      => 200,
         ]);
     }
 

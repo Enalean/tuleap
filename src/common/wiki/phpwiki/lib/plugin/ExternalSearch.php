@@ -79,7 +79,7 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
                      'useimage' => false,
                      'width'    => false,
                      'height'   => false,
-                     'debug'    => false
+                     'debug'    => false,
                      ];
     }
 

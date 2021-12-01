@@ -66,7 +66,7 @@ class ImmutableTagPresenter extends BaseAdminPresenter
         Repository $repository,
         ImmutableTag $immutable_tags,
         array $existing_tree,
-        $title
+        $title,
     ) {
         parent::__construct();
 

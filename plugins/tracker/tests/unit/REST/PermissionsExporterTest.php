@@ -122,7 +122,7 @@ class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $initial_permissions = [
             Tracker_FormElement::REST_PERMISSION_READ,
             Tracker_FormElement::REST_PERMISSION_UPDATE,
-            Tracker_FormElement::REST_PERMISSION_SUBMIT
+            Tracker_FormElement::REST_PERMISSION_SUBMIT,
         ];
         $form_element        = \Mockery::mock(\Tracker_FormElement_Field::class);
         $form_element

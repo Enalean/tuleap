@@ -55,8 +55,8 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
 
         $query = new ArrayObject([
             "my_field" => new ArrayObject([
-                Tracker_Report_REST::VALUE_PROPERTY_NAME => "true"
-            ])
+                Tracker_Report_REST::VALUE_PROPERTY_NAME => "true",
+            ]),
         ]);
 
         $this->report->setRESTCriteria(json_encode($query));
@@ -68,8 +68,8 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
 
         $query = new ArrayObject([
             "my_field" => new ArrayObject([
-                Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::DEFAULT_OPERATOR
-            ])
+                Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::DEFAULT_OPERATOR,
+            ]),
         ]);
 
         $this->report->setRESTCriteria(json_encode($query));
@@ -82,8 +82,8 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
         $query = new ArrayObject([
             "my_field" => new ArrayObject([
                 Tracker_Report_REST::VALUE_PROPERTY_NAME    => "true",
-                Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::DEFAULT_OPERATOR . 'xxx'
-            ])
+                Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::DEFAULT_OPERATOR . 'xxx',
+            ]),
         ]);
 
         $this->report->setRESTCriteria(json_encode($query));
@@ -94,9 +94,9 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
         $query = new ArrayObject([
             "my_field" => new ArrayObject([
                 Tracker_Report_REST::VALUE_PROPERTY_NAME    => "true",
-                Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::DEFAULT_OPERATOR
+                Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::DEFAULT_OPERATOR,
             ]),
-            "my_other_field" => "bla"
+            "my_other_field" => "bla",
         ]);
 
         $this->formelement_factory->shouldReceive('getFormElementById')->twice();

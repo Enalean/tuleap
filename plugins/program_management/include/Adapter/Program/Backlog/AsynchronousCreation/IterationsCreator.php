@@ -62,7 +62,7 @@ final class IterationsCreator implements CreateIterations
         private VerifyIsVisibleArtifact $visibility_verifier,
         private RetrieveTrackerOfArtifact $tracker_retriever,
         private AddArtifactLinkChangeset $link_adder,
-        private RetrieveProjectReference $project_retriever
+        private RetrieveProjectReference $project_retriever,
     ) {
     }
 
@@ -76,7 +76,7 @@ final class IterationsCreator implements CreateIterations
     public function createIterations(
         SourceTimeboxChangesetValues $values,
         TeamIdentifierCollection $teams,
-        IterationCreation $creation
+        IterationCreation $creation,
     ): void {
         $artifact_link_value = ArtifactLinkValue::fromArtifactAndType(
             $values->getSourceTimebox(),
@@ -102,7 +102,7 @@ final class IterationsCreator implements CreateIterations
         TeamIdentifier $team,
         SourceTimeboxChangesetValues $values,
         ArtifactLinkValue $artifact_link_value,
-        IterationCreation $creation
+        IterationCreation $creation,
     ): void {
         $mirrored_iteration_tracker = MirroredIterationTrackerIdentifier::fromTeam(
             $this->milestone_retriever,

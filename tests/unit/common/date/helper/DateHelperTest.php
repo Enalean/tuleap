@@ -223,7 +223,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive(
                 [
                     'getLocale'     => 'en_US',
-                    'getPreference' => 'relative_first-absolute_shown'
+                    'getPreference' => 'relative_first-absolute_shown',
                 ]
             )
             ->getMock();
@@ -253,7 +253,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive(
                 [
                     'getLocale'     => 'en_US',
-                    'getPreference' => 'relative_first-absolute_tooltip'
+                    'getPreference' => 'relative_first-absolute_tooltip',
                 ]
             )
             ->getMock();
@@ -283,7 +283,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive(
                 [
                     'getLocale'     => 'en_US',
-                    'getPreference' => 'absolute_first-relative_shown'
+                    'getPreference' => 'absolute_first-relative_shown',
                 ]
             )
             ->getMock();
@@ -313,7 +313,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive(
                 [
                     'getLocale'     => 'en_US',
-                    'getPreference' => 'absolute_first-relative_tooltip'
+                    'getPreference' => 'absolute_first-relative_tooltip',
                 ]
             )
             ->getMock();
@@ -343,7 +343,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive(
                 [
                     'getLocale'     => 'en_US',
-                    'getPreference' => false
+                    'getPreference' => false,
                 ]
             )
             ->getMock();

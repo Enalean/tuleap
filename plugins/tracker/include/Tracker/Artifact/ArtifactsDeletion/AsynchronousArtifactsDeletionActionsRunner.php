@@ -63,7 +63,7 @@ class AsynchronousArtifactsDeletionActionsRunner
         \UserManager $user_manager,
         QueueFactory $queue_factory,
         WorkerAvailability $worker_availability,
-        ArchiveAndDeleteArtifactTaskBuilder $task_builder
+        ArchiveAndDeleteArtifactTaskBuilder $task_builder,
     ) {
         $this->pending_artifact_removal_dao = $pending_artifact_removal_dao;
         $this->logger                       = $logger;

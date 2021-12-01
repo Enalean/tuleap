@@ -18,7 +18,7 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
         $params['hierarchy']->accept($this, [
             'parent_id'      => $params['item']->getId(),
             'force_ordering' => $params['force_ordering'],
-            'exclude'         => $params['exclude']
+            'exclude'         => $params['exclude'],
         ]);
 
         echo '</select>';

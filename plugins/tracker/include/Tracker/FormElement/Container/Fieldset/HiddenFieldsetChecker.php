@@ -42,7 +42,7 @@ class HiddenFieldsetChecker
 
     public function __construct(
         HiddenFieldsetsDetector $hidden_fieldsets_detector,
-        FieldsExtractor $fields_extractor
+        FieldsExtractor $fields_extractor,
     ) {
         $this->hidden_fieldsets_detector = $hidden_fieldsets_detector;
         $this->fields_extractor          = $fields_extractor;
@@ -50,7 +50,7 @@ class HiddenFieldsetChecker
 
     public function mustFieldsetBeHidden(
         Tracker_FormElement_Container_Fieldset $fieldset,
-        Artifact $artifact
+        Artifact $artifact,
     ): bool {
         if ($this->hidden_fieldsets_detector->isFieldsetHidden($artifact, $fieldset)) {
             $fields = $this->fields_extractor->extractFieldsInsideContainer($fieldset);

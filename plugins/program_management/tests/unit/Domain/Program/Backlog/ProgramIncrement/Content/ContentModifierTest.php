@@ -181,7 +181,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getFeatureElementToOrderRepresentation(
         int $id,
         int $compared_to_id,
-        string $direction = "before"
+        string $direction = "before",
     ): FeaturesToReorder {
         $feature_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation([$id], $direction, $compared_to_id);
 
@@ -243,7 +243,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             public function reorder(
                 FeaturesToReorder $order,
                 string $context_id,
-                ProgramIdentifier $program
+                ProgramIdentifier $program,
             ): void {
                 if ($this->is_called) {
                     assertTrue($context_id === "12");

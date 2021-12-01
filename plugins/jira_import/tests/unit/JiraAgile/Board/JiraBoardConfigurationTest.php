@@ -35,13 +35,13 @@ final class JiraBoardConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
                 "columns" => [
                     [
                         "name"     => "To Do",
-                        "statuses" => []
+                        "statuses" => [],
                     ],
                     [
                         "name"     => "Done",
-                        "statuses" => []
-                    ]
-                ]
+                        "statuses" => [],
+                    ],
+                ],
             ],
             "estimation"   => [
                 "type"  => "none",
@@ -61,7 +61,7 @@ final class JiraBoardConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $response = [
             "columnConfig" => [
                 "columns" => [
-                ]
+                ],
             ],
             "estimation"   => [
                 "type"  => "field",

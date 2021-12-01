@@ -37,7 +37,7 @@ class TypeCoveredByOverrider
 
     public function __construct(
         Config $config,
-        ArtifactLinksUsageDao $dao
+        ArtifactLinksUsageDao $dao,
     ) {
         $this->config = $config;
         $this->dao    = $dao;
@@ -46,7 +46,7 @@ class TypeCoveredByOverrider
     public function getOverridingType(
         Project $project,
         Artifact $to_artifact,
-        array $new_linked_artifact_ids
+        array $new_linked_artifact_ids,
     ): ?string {
         if ($this->dao->isTypeDisabledInProject((int) $project->getID(), TypeCoveredByPresenter::TYPE_COVERED_BY)) {
             return null;

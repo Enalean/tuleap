@@ -46,7 +46,7 @@ final class PendingIterationCreation
         VerifyIsChangeset $changeset_verifier,
         int $iteration_id,
         int $changeset_id,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): ?self {
         $iteration = IterationIdentifier::fromId($iteration_verifier, $visibility_verifier, $iteration_id, $user);
         if (! $iteration) {

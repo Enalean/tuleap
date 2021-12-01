@@ -42,10 +42,10 @@ class UserPreferencesDao extends \Tuleap\DB\DataAccessObject
             [
                 'user_id'          => $user_id,
                 'preference_name'  => $preference_name,
-                'preference_value' => $preference_value
+                'preference_value' => $preference_value,
             ],
             [
-                'preference_value'
+                'preference_value',
             ]
         );
     }
@@ -56,7 +56,7 @@ class UserPreferencesDao extends \Tuleap\DB\DataAccessObject
             'user_preferences',
             [
                 'user_id'         => $user_id,
-                'preference_name' => $preference_name
+                'preference_name' => $preference_name,
             ]
         );
     }
@@ -67,7 +67,7 @@ class UserPreferencesDao extends \Tuleap\DB\DataAccessObject
             'user_preferences',
             [
                 'preference_name' => $preference_name,
-                'preference_value' => $preference_value
+                'preference_value' => $preference_value,
             ]
         );
     }

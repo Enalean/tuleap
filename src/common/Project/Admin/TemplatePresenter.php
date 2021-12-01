@@ -48,7 +48,7 @@ class TemplatePresenter
         $this->additional_buttons = [];
         EventManager::instance()->processEvent(self::EVENT_ADDITIONAL_ADMIN_BUTTONS, [
             'template' => $template,
-            'buttons'  => &$this->additional_buttons
+            'buttons'  => &$this->additional_buttons,
         ]);
     }
 }

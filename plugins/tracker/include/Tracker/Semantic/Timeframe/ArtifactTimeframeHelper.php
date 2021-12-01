@@ -39,7 +39,7 @@ class ArtifactTimeframeHelper
 
     public function __construct(
         SemanticTimeframeBuilder $semantic_builder,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->semantic_builder = $semantic_builder;
         $this->logger           = $logger;

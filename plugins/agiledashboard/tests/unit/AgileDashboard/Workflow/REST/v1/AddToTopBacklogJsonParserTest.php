@@ -59,7 +59,7 @@ class AddToTopBacklogJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $json_post_action = [
             'id' => 4,
-            'type' => 'add_to_top_backlog'
+            'type' => 'add_to_top_backlog',
         ];
 
         $this->assertTrue($this->parser->accept($json_post_action));
@@ -69,7 +69,7 @@ class AddToTopBacklogJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $json_post_action = [
             'id' => 4,
-            'type' => 'whatever'
+            'type' => 'whatever',
         ];
 
         $this->assertFalse($this->parser->accept($json_post_action));
@@ -79,7 +79,7 @@ class AddToTopBacklogJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $json_post_action = [
             'id' => 4,
-            'type' => 'whatever'
+            'type' => 'whatever',
         ];
 
         $this->assertFalse($this->parser->accept($json_post_action));
@@ -92,7 +92,7 @@ class AddToTopBacklogJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $json_post_action = [
             'id' => 4,
-            'type' => 'add_to_top_backlog'
+            'type' => 'add_to_top_backlog',
         ];
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
@@ -111,7 +111,7 @@ class AddToTopBacklogJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $json_post_action = [
             'id' => 4,
-            'type' => 'add_to_top_backlog'
+            'type' => 'add_to_top_backlog',
         ];
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')

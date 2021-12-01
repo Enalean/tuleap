@@ -52,7 +52,7 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra
         $content .= html_build_list_table_top([dgettext('tuleap-docman', 'Title'),
                                                     dgettext('tuleap-docman', 'Location'),
                                                     dgettext('tuleap-docman', 'Who'),
-                                                    dgettext('tuleap-docman', 'When')
+                                                    dgettext('tuleap-docman', 'When'),
                                             ]);
 
         // Get list of all locked documents in the project.

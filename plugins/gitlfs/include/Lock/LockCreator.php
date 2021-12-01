@@ -41,7 +41,7 @@ class LockCreator
         PFUser $user,
         ?string $reference,
         GitRepository $repository,
-        DateTimeImmutable $creation_time
+        DateTimeImmutable $creation_time,
     ): Lock {
         $lock_id = $this->lock_dao->create(
             $path,

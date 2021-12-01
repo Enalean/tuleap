@@ -81,7 +81,7 @@ class AdditionalArtifactActionBuilder
         PlannedArtifactDao $planned_artifact_dao,
         JavascriptAsset $include_assets,
         PlanningTrackerBacklogChecker $planning_tracker_backlog_checker,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
     ) {
         $this->explicit_backlog_dao              = $explicit_backlog_dao;
         $this->planning_factory                  = $planning_factory;
@@ -155,16 +155,16 @@ class AdditionalArtifactActionBuilder
             [
                 [
                     'name'  => 'project-id',
-                    'value' => $project_id
+                    'value' => $project_id,
                 ],
                 [
                     'name'  => 'artifact-id',
-                    'value' => $artifact_id
+                    'value' => $artifact_id,
                 ],
                 [
                     'name'  => 'action',
-                    'value' => $action
-                ]
+                    'value' => $action,
+                ],
             ]
         );
 

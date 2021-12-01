@@ -44,7 +44,7 @@ final class ProgramIncrement
         public bool $user_can_plan,
         public ?string $status,
         public ?int $start_date,
-        public ?int $end_date
+        public ?int $end_date,
     ) {
     }
 

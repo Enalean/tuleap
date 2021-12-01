@@ -40,7 +40,7 @@ class ScrumPlanningFilter
 
     public function __construct(
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
-        PlanningFactory $planning_factory
+        PlanningFactory $planning_factory,
     ) {
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
         $this->planning_factory             = $planning_factory;
@@ -54,7 +54,7 @@ class ScrumPlanningFilter
             $trackers_filtered[] = [
                 'name'     => $tracker_presenter->getName(),
                 'id'       => $tracker_presenter->getId(),
-                'selected' => $tracker_presenter->selectedIfBacklogTracker()
+                'selected' => $tracker_presenter->selectedIfBacklogTracker(),
             ];
         }
 
@@ -80,7 +80,7 @@ class ScrumPlanningFilter
     public function getPlanningTrackersFiltered(
         Planning $planning,
         PFUser $user,
-        $project_id
+        $project_id,
     ) {
         if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($project_id) === true) {
             $trackers_filtered = $this->getPlanningTrackerFilteredForMonoMilestone($user, $project_id);
@@ -127,7 +127,7 @@ class ScrumPlanningFilter
                     'name'     => $tracker->getName(),
                     'id'       => $tracker->getId(),
                     'selected' => false,
-                    'disabled' => false
+                    'disabled' => false,
                 ];
             }
         }
@@ -150,7 +150,7 @@ class ScrumPlanningFilter
                 'name'     => $tracker->getName(),
                 'id'       => $tracker->getId(),
                 'selected' => true,
-                'disabled' => false
+                'disabled' => false,
             ];
         }
 
@@ -165,7 +165,7 @@ class ScrumPlanningFilter
      */
     private function getPlanningTrackerFilteredForMultiMilestone(
         array $trackers,
-        Planning $planning
+        Planning $planning,
     ) {
         $trackers_filtered = [];
 
@@ -173,7 +173,7 @@ class ScrumPlanningFilter
             $trackers_filtered[] = [
                 'name'     => $tracker_presenter->getName(),
                 'id'       => $tracker_presenter->getId(),
-                'selected' => $tracker_presenter->selectedIfPlanningTracker()
+                'selected' => $tracker_presenter->selectedIfPlanningTracker(),
             ];
         }
 

@@ -62,7 +62,7 @@ class InvitationEmailNotifier
         Codendi_Mail $mail,
         \PFUser $current_user,
         PFUser $recipient_user,
-        ?string $custom_message
+        ?string $custom_message,
     ): void {
         $mail->setTo($recipient_user->getEmail());
         $mail->setSubject(sprintf(_('Invitation to log on to %s'), ForgeConfig::get('sys_name')));
@@ -81,7 +81,7 @@ class InvitationEmailNotifier
         Codendi_Mail $mail,
         \PFUser $current_user,
         string $external_email,
-        ?string $custom_message
+        ?string $custom_message,
     ): void {
         $mail->setTo($external_email);
         $mail->setSubject(sprintf(_('Invitation to register to %s'), ForgeConfig::get('sys_name')));

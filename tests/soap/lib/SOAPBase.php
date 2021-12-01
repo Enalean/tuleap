@@ -55,8 +55,8 @@ class SOAPBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
                 // set some SSL/TLS specific options
                 'verify_peer'       => false,
                 'verify_peer_name'  => false,
-                'allow_self_signed' => true
-            ]
+                'allow_self_signed' => true,
+            ],
         ]);
 
         // Connecting to the soap's tracker client

@@ -26,7 +26,7 @@ class AgileDashboard_ConfigurationDao extends DataAccessObject
         $scrum_is_activated,
         $kanban_is_activated,
         $scrum_title,
-        $kanban_title
+        $kanban_title,
     ) {
         $project_id          = $this->da->escapeInt($project_id);
         $scrum_is_activated  = $this->da->escapeInt($scrum_is_activated);

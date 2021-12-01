@@ -48,7 +48,7 @@ class KanbanXMLExporter
 
     public function __construct(
         AgileDashboard_ConfigurationDao $configuration_dao,
-        AgileDashboard_KanbanFactory $kanban_factory
+        AgileDashboard_KanbanFactory $kanban_factory,
     ) {
         $this->configuration_dao = $configuration_dao;
         $this->kanban_factory    = $kanban_factory;

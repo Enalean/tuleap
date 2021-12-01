@@ -115,27 +115,27 @@ final class AccessKeyVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             [ // Different IP and last seen outside of the last access resolution
                 true,
                 (new DateTimeImmutable('- ' . 2 * self::LAST_ACCESS_RESOLUTION . ' seconds'))->getTimestamp(),
-                '192.0.2.7'
+                '192.0.2.7',
             ],
             [ // Different IP and last seen inside of the last access resolution
                 true,
                 (new DateTimeImmutable(self::LAST_ACCESS_RESOLUTION / 2 . ' seconds'))->getTimestamp(),
-                '192.0.2.7'
+                '192.0.2.7',
             ],
             [ // Same IP and last seen outside of the last access resolution
                 true,
                 (new DateTimeImmutable('- ' . 2 * self::LAST_ACCESS_RESOLUTION . ' seconds'))->getTimestamp(),
-                self::IP_ADDRESS_REQUESTING_VERIFICATION
+                self::IP_ADDRESS_REQUESTING_VERIFICATION,
             ],
             [ // Same IP and last seen inside of the last access resolution
                 false,
                 (new DateTimeImmutable(self::LAST_ACCESS_RESOLUTION / 2 . ' seconds'))->getTimestamp(),
-                self::IP_ADDRESS_REQUESTING_VERIFICATION
+                self::IP_ADDRESS_REQUESTING_VERIFICATION,
             ],
             [ // Access token never used before
                 true,
                 null,
-                null
+                null,
             ],
         ];
     }
@@ -193,7 +193,7 @@ final class AccessKeyVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 'verifier' => 'valid',
                 'last_usage' => 1538408328,
                 'last_ip' => self::IP_ADDRESS_REQUESTING_VERIFICATION,
-                'expiration_date' => (new DateTimeImmutable("yesterday"))->getTimestamp()
+                'expiration_date' => (new DateTimeImmutable("yesterday"))->getTimestamp(),
             ]
         );
 

@@ -38,7 +38,7 @@ class SCMStatisticsPresenter
     public function __construct(
         $selected_project,
         $start_date,
-        $end_date
+        $end_date,
     ) {
         $this->scm_statistics_start_date       = $start_date;
         $this->scm_statistics_end_date         = $end_date;

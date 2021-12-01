@@ -48,7 +48,7 @@ class AppsPresenterBuilder
     public function __construct(
         EventDispatcherInterface $dispatcher,
         AppFactory $app_factory,
-        AuthorizedScopeFactory $authorized_scope_factory
+        AuthorizedScopeFactory $authorized_scope_factory,
     ) {
         $this->dispatcher               = $dispatcher;
         $this->app_factory              = $app_factory;

@@ -41,7 +41,7 @@ class PostFileImporter implements PostImporter
 
     public function __construct(
         VersionImporter $version_importer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->version_importer = $version_importer;
         $this->logger           = $logger;

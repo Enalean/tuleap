@@ -72,7 +72,7 @@ class ItemMetadataRepresentation
         ?string $post_processed_value,
         ?array $list_value,
         bool $is_empty_allowed,
-        string $short_name
+        string $short_name,
     ) {
         $this->name                      = $name;
         $this->type                      = $type;

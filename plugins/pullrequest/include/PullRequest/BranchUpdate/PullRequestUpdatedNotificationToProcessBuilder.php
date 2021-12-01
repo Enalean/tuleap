@@ -87,7 +87,7 @@ final class PullRequestUpdatedNotificationToProcessBuilder implements Notificati
         UserHelper $user_helper,
         HTMLURLBuilder $html_url_builder,
         Git_GitRepositoryUrlManager $url_manager,
-        PullRequestUpdateCommitDiff $commit_diff
+        PullRequestUpdateCommitDiff $commit_diff,
     ) {
         $this->user_manager                = $user_manager;
         $this->pull_request_factory        = $pull_request_factory;
@@ -156,7 +156,7 @@ final class PullRequestUpdatedNotificationToProcessBuilder implements Notificati
                 $git_resource_accessor_provider->GetProject(),
                 $url_builder,
                 $new_commits
-            )
+            ),
         ]);
     }
 }

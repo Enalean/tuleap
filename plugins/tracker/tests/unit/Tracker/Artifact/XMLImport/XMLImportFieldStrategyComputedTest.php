@@ -75,7 +75,7 @@ final class XMLImportFieldStrategyComputedTest extends \Tuleap\Test\PHPUnit\Test
         $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Artifact::class));
         $expected_result = [
             Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '',
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1'
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
         ];
 
         $this->assertSame($expected_result, $change_computed);

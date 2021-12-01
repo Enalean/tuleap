@@ -41,7 +41,7 @@ class MoveSemanticInitialEffortChecker extends MoveSemanticChecker
 
     public function __construct(
         AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory,
-        Tracker_FormElementFactory $form_element_factory
+        Tracker_FormElementFactory $form_element_factory,
     ) {
         $this->initial_effort_factory = $initial_effort_factory;
         $this->form_element_factory   = $form_element_factory;

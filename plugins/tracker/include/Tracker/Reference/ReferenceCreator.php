@@ -47,7 +47,7 @@ class ReferenceCreator
     public function __construct(
         ServiceManager $service_manager,
         TrackerV3 $tracker_v3,
-        ReferenceDao $reference_dao
+        ReferenceDao $reference_dao,
     ) {
         $this->service_manager = $service_manager;
         $this->tracker_v3      = $tracker_v3;

@@ -67,7 +67,7 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = \Mockery::mock(\Tracker::class, [
             'getItemName' => 'stories',
             'getGroupId' => 104,
-            'getId' => 113
+            'getId' => 113,
         ]);
 
         $last_artifact_changeset = \Mockery::mock(
@@ -78,14 +78,14 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
                 '143' => $this->buildArtifactLinkInfo(143, "covered_by", $tracker, true),
                 '144' => $this->buildArtifactLinkInfo(144, "_is_child", $tracker, true),
                 '145' => $this->buildArtifactLinkInfo(145, "_is_child", $tracker, true),
-                '146' => $this->buildArtifactLinkInfo(146, "_is_child", $tracker, true)
+                '146' => $this->buildArtifactLinkInfo(146, "_is_child", $tracker, true),
             ]]
         );
 
         $artifact = \Mockery::mock(
             Artifact::class,
             [
-                'getAnArtifactLinkField' => $this->links_field
+                'getAnArtifactLinkField' => $this->links_field,
             ]
         );
         $this->links_field->shouldReceive('getLastChangesetValue')
@@ -106,7 +106,7 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact = \Mockery::mock(
             Artifact::class,
             [
-                'getAnArtifactLinkField' => null
+                'getAnArtifactLinkField' => null,
             ]
         );
 
@@ -126,7 +126,7 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $artifact = \Mockery::mock(Artifact::class, [
             'isOpen' => $is_artifact_open,
-            'getAnArtifactLinkField' => $this->links_field
+            'getAnArtifactLinkField' => $this->links_field,
         ]);
 
         $this->links_field->shouldReceive('getLastChangesetValue')
@@ -155,7 +155,7 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact = \Mockery::mock(Artifact::class, [
             'isOpen' => $is_artifact_open,
-            'getAnArtifactLinkField' => $this->links_field
+            'getAnArtifactLinkField' => $this->links_field,
         ]);
 
         $this->links_field->shouldReceive('getLastChangesetValue')
@@ -179,7 +179,7 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getId'            => $artifact_id,
                 'getTracker'       => $tracker,
                 'getLastChangeset' => \Mockery::mock(\Tracker_Artifact_Changeset::class, ['getId' => 12451]),
-                'isOpen'           => $is_artifact_open
+                'isOpen'           => $is_artifact_open,
             ]
         );
 

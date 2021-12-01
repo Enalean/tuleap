@@ -39,7 +39,7 @@ class Workflow_Transition_ConditionFactory
     public function __construct(
         Workflow_Transition_Condition_Permissions_Factory $permissions_factory,
         Workflow_Transition_Condition_FieldNotEmpty_Factory $fieldnotempty_factory,
-        Workflow_Transition_Condition_CommentNotEmpty_Factory $commentnotempty_factory
+        Workflow_Transition_Condition_CommentNotEmpty_Factory $commentnotempty_factory,
     ) {
         $this->permissions_factory     = $permissions_factory;
         $this->fieldnotempty_factory   = $fieldnotempty_factory;
@@ -114,7 +114,7 @@ class Workflow_Transition_ConditionFactory
 
     private function formatCommentNotEmptyCondition(
         ?Workflow_Transition_Condition_CommentNotEmpty $condition,
-        Transition $transition
+        Transition $transition,
     ): Workflow_Transition_Condition_CommentNotEmpty {
         if ($condition === null) {
             return new Workflow_Transition_Condition_CommentNotEmpty(

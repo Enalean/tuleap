@@ -65,7 +65,7 @@ final class ProgramIncrementUpdateDispatcher implements DispatchProgramIncrement
     private function processUpdateSynchronously(
         \Exception $exception,
         ProgramIncrementUpdate $update,
-        IterationCreation ...$creations
+        IterationCreation ...$creations,
     ): void {
         $this->logger->error(
             sprintf(

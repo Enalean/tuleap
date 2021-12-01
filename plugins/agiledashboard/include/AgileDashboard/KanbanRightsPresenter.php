@@ -33,7 +33,7 @@ class KanbanRightsPresenter implements MessageRightsPresenter
 
     public function __construct(
         Tracker $tracker,
-        Tracker_Permission_PermissionsSerializer $permission_serializer
+        Tracker_Permission_PermissionsSerializer $permission_serializer,
     ) {
         $this->submitter_id       = null;
         $this->submitter_can_view = false;

@@ -185,7 +185,7 @@ class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testSaveIsRejectedWhenSizeOfSavedFileDoesNotMatchTheExpectation(
         $input_size,
         $object_size,
-        $excepted_exception
+        $excepted_exception,
     ): void {
         $object_saver = new LFSBasicTransferObjectSaver(
             $this->filesystem,

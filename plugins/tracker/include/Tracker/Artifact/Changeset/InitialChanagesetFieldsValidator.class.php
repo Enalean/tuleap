@@ -29,7 +29,7 @@ class Tracker_Artifact_Changeset_InitialChangesetFieldsValidator extends Tracker
     protected function canValidateField(
         Artifact $artifact,
         Tracker_FormElement_Field $field,
-        PFUser $user
+        PFUser $user,
     ): bool {
         //we do not validate if the field is required and we can't submit the field
         return ! ($field->isRequired() && ! $field->userCanSubmit($user));
@@ -39,7 +39,7 @@ class Tracker_Artifact_Changeset_InitialChangesetFieldsValidator extends Tracker
         Artifact $artifact,
         Tracker_FormElement_Field $field,
         \PFUser $user,
-        $submitted_value
+        $submitted_value,
     ) {
         $last_changeset_value = null;
         $is_submission        = true;

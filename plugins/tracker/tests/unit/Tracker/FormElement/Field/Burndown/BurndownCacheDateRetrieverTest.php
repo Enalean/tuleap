@@ -95,7 +95,7 @@ class BurndownCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             mktime(23, 59, 59, 10, 11, 2016),
             mktime(23, 59, 59, 10, 12, 2016),
             mktime(23, 59, 59, 10, 13, 2016),
-            mktime(23, 59, 59, 10, 14, 2016)
+            mktime(23, 59, 59, 10, 14, 2016),
         ];
 
         $this->assertCount(10, $period);

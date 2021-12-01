@@ -78,7 +78,7 @@ class Tracker
         $post     = json_encode([
             'tracker' => [
                 'id'  => $this->tracker['id'],
-                'uri' => 'whatever'
+                'uri' => 'whatever',
             ],
             'values' => $values,
         ]);
@@ -104,7 +104,7 @@ class Tracker
         return [
             'field_id'       => $field_def['field_id'],
             'bind_value_ids' => [
-                $this->getListValueIdByLabel($field_def, $field_value_label)
+                $this->getListValueIdByLabel($field_def, $field_value_label),
             ],
         ];
     }
@@ -115,7 +115,7 @@ class Tracker
             'field_id' => $this->getArtifactLinkFieldId(),
             'links' => array_map(function ($id) {
                 return ['id' => $id];
-            }, $ids)
+            }, $ids),
         ];
     }
 

@@ -120,7 +120,7 @@ class PackageResource extends AuthenticatedResource
             'name'            => $label,
             'status_id'       => \FRSPackage::STATUS_ACTIVE,
             'rank'            => 'beginning',
-            'approve_license' => 1
+            'approve_license' => 1,
         ];
         $new_package_id = $this->package_factory->create($package_array);
         if (! $new_package_id) {

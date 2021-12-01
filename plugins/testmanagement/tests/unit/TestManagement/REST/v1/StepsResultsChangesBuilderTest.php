@@ -84,7 +84,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $map = [
             [$this->execution_tracker_id, 'steps_results', $this->user, $this->execution_field],
-            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field]
+            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field],
         ];
 
         $this->form_element_factory->method('getUsedFieldByNameForUser')->will($this->returnValueMap($map));
@@ -94,7 +94,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->definition_artifact->method('getLastChangeset')->willReturn($this->definition_changeset);
 
         $value_map = [
-            [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value]
+            [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value],
         ];
         $this->definition_artifact->method('getValue')->willReturnMap($value_map);
 
@@ -114,8 +114,8 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $value_representation->value    = [
             'steps_results' => [
                 1 => 'passed',
-                2 => 'blocked'
-            ]
+                2 => 'blocked',
+            ],
         ];
 
         $expected = [$value_representation];
@@ -127,7 +127,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $map = [
             [$this->execution_tracker_id, 'steps_results', $this->user, $this->execution_field],
             [$this->execution_tracker_id, 'status', $this->user, $this->execution_status_field],
-            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field]
+            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field],
         ];
 
         $this->form_element_factory->method('getUsedFieldByNameForUser')->will($this->returnValueMap($map));
@@ -137,7 +137,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->definition_artifact->method('getLastChangeset')->willReturn($this->definition_changeset);
 
         $value_map = [
-            [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value]
+            [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value],
         ];
         $this->definition_artifact->method('getValue')->will($this->returnValueMap($value_map));
 
@@ -161,7 +161,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $map = [
             [$this->execution_tracker_id, 'steps_results', $this->user, $this->execution_field],
-            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field]
+            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field],
         ];
 
         $this->form_element_factory->method('getUsedFieldByNameForUser')->will($this->returnValueMap($map));
@@ -171,7 +171,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->definition_artifact->method('getLastChangeset')->willReturn($this->definition_changeset);
 
         $value_map = [
-            [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value]
+            [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value],
         ];
         $this->definition_artifact->method('getValue')->will($this->returnValueMap($value_map));
 
@@ -192,8 +192,8 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $value_representation->value    = [
             'steps_results' => [
                 1 => 'passed',
-                2 => 'blocked'
-            ]
+                2 => 'blocked',
+            ],
         ];
 
         $expected = [$value_representation];
@@ -204,7 +204,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $map = [
             [$this->execution_tracker_id, 'steps_results', $this->user, $this->execution_field],
-            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field]
+            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field],
         ];
 
         $this->form_element_factory->method('getUsedFieldByNameForUser')->will($this->returnValueMap($map));
@@ -214,7 +214,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->definition_artifact->method('getLastChangeset')->willReturn($this->definition_changeset);
 
         $value_map = [
-            [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value]
+            [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value],
         ];
         $this->definition_artifact->method('getValue')->will($this->returnValueMap($value_map));
 
@@ -233,8 +233,8 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $value_representation->value    = [
             'steps_results' => [
                 1 => 'passed',
-                2 => 'blocked'
-            ]
+                2 => 'blocked',
+            ],
         ];
 
         $expected = [$value_representation];
@@ -245,7 +245,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $map = [
             [$this->execution_tracker_id, 'steps_results', $this->user, null],
-            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field]
+            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field],
         ];
 
         $this->form_element_factory->method('getUsedFieldByNameForUser')->will($this->returnValueMap($map));
@@ -260,7 +260,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $map = [
             [$this->execution_tracker_id, 'steps_results', $this->user, $this->execution_field],
-            [$this->definition_tracker_id, 'steps', $this->user, null]
+            [$this->definition_tracker_id, 'steps', $this->user, null],
         ];
 
         $this->form_element_factory->method('getUsedFieldByNameForUser')->will($this->returnValueMap($map));
@@ -275,7 +275,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $map = [
             [$this->execution_tracker_id, 'steps_results', $this->user, $this->execution_field],
-            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field]
+            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field],
         ];
 
         $this->form_element_factory->method('getUsedFieldByNameForUser')->will($this->returnValueMap($map));
@@ -284,12 +284,12 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('searchDefinitionsChangesetIdsForExecution')
             ->willReturn(
                 [
-                    ['definition_changeset_id' => 1001]
+                    ['definition_changeset_id' => 1001],
                 ]
             );
         $this->definition_artifact->expects($this->once())->method('getChangeset')->with($this->equalTo(1001))->willReturn($this->definition_changeset);
         $value_map = [
-            [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value]
+            [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value],
         ];
         $this->definition_artifact->method('getValue')->will($this->returnValueMap($value_map));
         $step1 = $this->getStep(1);
@@ -308,7 +308,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $map = [
             [$this->execution_tracker_id, 'steps_results', $this->user, $this->execution_field],
-            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field]
+            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field],
         ];
 
         $this->form_element_factory->method('getUsedFieldByNameForUser')->will($this->returnValueMap($map));
@@ -316,7 +316,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->execution_dao->method('searchDefinitionsChangesetIdsForExecution')->willReturn([]);
         $this->definition_artifact->expects($this->once())->method('getLastChangeset')->willReturn($this->definition_changeset);
         $value_map = [
-            [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value]
+            [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value],
         ];
         $this->definition_artifact->method('getValue')->will($this->returnValueMap($value_map));
         $step1 = $this->getStep(1);
@@ -335,7 +335,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $map = [
             [$this->execution_tracker_id, 'steps_results', $this->user, $this->execution_field],
-            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field]
+            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field],
         ];
 
         $this->form_element_factory->method('getUsedFieldByNameForUser')->will($this->returnValueMap($map));
@@ -354,7 +354,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $map = [
             [$this->execution_tracker_id, 'steps_results', $this->user, $this->execution_field],
-            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field]
+            [$this->definition_tracker_id, 'steps', $this->user, $this->definition_field],
         ];
 
         $this->form_element_factory->method('getUsedFieldByNameForUser')->will($this->returnValueMap($map));
@@ -364,7 +364,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->definition_artifact->method('getLastChangeset')->willReturn($this->definition_changeset);
 
         $value_map = [
-            [$this->definition_field, $this->definition_changeset, null]
+            [$this->definition_field, $this->definition_changeset, null],
         ];
         $this->definition_artifact->method('getValue')->will($this->returnValueMap($value_map));
 

@@ -48,7 +48,7 @@ class AccessFileReader
     {
         $blocks = [
             'default' => '',
-            'content' => ''
+            'content' => '',
         ];
 
         $in_default_block = false;

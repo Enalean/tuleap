@@ -41,7 +41,7 @@ class FieldXmlExporter
 
     public function __construct(
         XML_SimpleXMLCDATAFactory $cdata_section_factory,
-        FieldNameFormatter $field_name_formatter
+        FieldNameFormatter $field_name_formatter,
     ) {
         $this->cdata_section_factory = $cdata_section_factory;
         $this->field_name_formatter  = $field_name_formatter;
@@ -62,7 +62,7 @@ class FieldXmlExporter
         array $properties,
         array $bound_values,
         FieldMappingCollection $jira_field_mapping_collection,
-        ?string $bind_type
+        ?string $bind_type,
     ): void {
         $field = $container_parent_node->formElements->addChild(\Tracker_FormElement::XML_TAG);
         $field->addAttribute('type', $type);

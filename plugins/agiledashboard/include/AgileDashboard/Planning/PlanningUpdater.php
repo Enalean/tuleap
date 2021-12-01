@@ -57,7 +57,7 @@ class PlanningUpdater
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         PlanningDao $planning_dao,
         PlanningPermissionsManager $permissions_manager,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->planning_factory                  = $planning_factory;
         $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;

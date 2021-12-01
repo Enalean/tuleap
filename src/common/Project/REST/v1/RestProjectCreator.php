@@ -62,7 +62,7 @@ class RestProjectCreator
     public function __construct(
         \ProjectCreator $project_creator,
         \ProjectXMLImporter $project_XML_importer,
-        TemplateFactory $template_factory
+        TemplateFactory $template_factory,
     ) {
         $this->project_creator      = $project_creator;
         $this->project_XML_importer = $project_XML_importer;
@@ -79,7 +79,7 @@ class RestProjectCreator
      */
     public function create(
         ProjectPostRepresentation $post_representation,
-        ProjectCreationData $creation_data
+        ProjectCreationData $creation_data,
     ): Project {
         try {
             return $this->createProjectWithSelectedTemplate($post_representation, $creation_data);
@@ -108,7 +108,7 @@ class RestProjectCreator
      */
     private function createProjectWithSelectedTemplate(
         ProjectPostRepresentation $post_representation,
-        ProjectCreationData $creation_data
+        ProjectCreationData $creation_data,
     ): Project {
         if ($post_representation->template_id !== null) {
             return $this->project_creator->processProjectCreation(

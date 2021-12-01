@@ -51,7 +51,7 @@ class Tracker_Action_UpdateArtifact
         EventManager $event_manager,
         TypeIsChildLinkRetriever $artifact_retriever,
         VisitRecorder $visit_recorder,
-        HiddenFieldsetsDetector $hidden_fieldsets_detector
+        HiddenFieldsetsDetector $hidden_fieldsets_detector,
     ) {
         $this->artifact                  = $artifact;
         $this->form_element_factory      = $form_element_factory;
@@ -181,7 +181,7 @@ class Tracker_Action_UpdateArtifact
             $remaining_effort = $this->addAutocomputeLabelIfFieldIsAutcocomputed($artifact, $remaining_effort_field, $remaining_effort);
 
             $card_info[$artifact->getId()] = [
-                Tracker::REMAINING_EFFORT_FIELD_NAME => $remaining_effort
+                Tracker::REMAINING_EFFORT_FIELD_NAME => $remaining_effort,
             ];
         }
         return $card_info;
@@ -190,7 +190,7 @@ class Tracker_Action_UpdateArtifact
     private function addAutocomputeLabelIfFieldIsAutcocomputed(
         Artifact $artifact,
         Tracker_FormElement_Field $remaining_effort_field,
-        $remaining_effort
+        $remaining_effort,
     ) {
         if (
             $artifact->getTracker()->hasFormElementWithNameAndType($remaining_effort_field->getName(), ['computed'])

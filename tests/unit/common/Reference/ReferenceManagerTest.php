@@ -62,7 +62,7 @@ final class ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 '_getCrossReferenceDao',
                 'loadReservedKeywords',
                 'getGroupIdFromArtifactIdForCallbackFunction',
-                'getGroupIdFromArtifactId'
+                'getGroupIdFromArtifactId',
             ]) . ']',
             []
         )->shouldAllowMockingProtectedMethods();
@@ -238,7 +238,7 @@ final class ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'service_short_name' => '',
                 'nature' => 'other',
                 'is_active' => true,
-                'group_id' => 102
+                'group_id' => 102,
             ],
             false
         );

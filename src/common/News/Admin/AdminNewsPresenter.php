@@ -62,7 +62,7 @@ class AdminNewsPresenter
         $submitted_by,
         $submitted_by_url,
         $submitted_on,
-        $current_tab
+        $current_tab,
     ) {
         $this->csrf_token          = $csrf_token;
         $this->id                  = $id;

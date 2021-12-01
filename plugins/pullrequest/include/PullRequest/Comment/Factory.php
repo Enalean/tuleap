@@ -44,7 +44,7 @@ class Factory
     public function __construct(
         Dao $dao,
         ReferenceManager $reference_manager,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
     ) {
         $this->dao               = $dao;
         $this->reference_manager = $reference_manager;

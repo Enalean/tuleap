@@ -38,7 +38,7 @@ class LFSTransferVerifyController implements DispatchableWithRequestNoAuthz
 
     public function __construct(
         LFSActionUserAccessHTTPRequestChecker $user_access_request_checker,
-        LFSTransferVerifier $transfer_verifier
+        LFSTransferVerifier $transfer_verifier,
     ) {
         $this->user_access_request_checker = $user_access_request_checker;
         $this->transfer_verifier           = $transfer_verifier;

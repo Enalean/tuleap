@@ -59,7 +59,7 @@ final class ArtifactFieldValueTextRepresentation implements ArtifactTextFieldVal
         string $type,
         string $label,
         string $value,
-        string $format
+        string $format,
     ) {
         $this->field_id = JsonCast::toInt($id);
         $this->type     = $type;

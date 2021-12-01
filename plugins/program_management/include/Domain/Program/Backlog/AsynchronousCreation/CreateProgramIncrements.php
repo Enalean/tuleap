@@ -37,6 +37,6 @@ interface CreateProgramIncrements
     public function createProgramIncrements(
         SourceTimeboxChangesetValues $values,
         MirroredProgramIncrementTrackerIdentifierCollection $mirrored_trackers,
-        UserIdentifier $user_identifier
+        UserIdentifier $user_identifier,
     ): void;
 }

@@ -48,7 +48,7 @@ class TrackerCreatorXmlErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Te
         $errors          = [
             $error_invalid,
             $same_line_error,
-            $error_required
+            $error_required,
         ];
 
         $expected[1][2]   = [$error_invalid, $same_line_error];
@@ -75,13 +75,13 @@ class TrackerCreatorXmlErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Te
         $expected_lines[] = [
             'line_id'      => 1,
             'line_content' => '<project unix-name="taskboard" full-name="taskboard" access="public">',
-            'has_error'    => false
+            'has_error'    => false,
         ];
 
         $expected_lines[] = [
             'line_id'      => 2,
             'line_content' => '<services>',
-            'has_error'    => false
+            'has_error'    => false,
         ];
 
         $expected_lines[] = [
@@ -89,7 +89,7 @@ class TrackerCreatorXmlErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Te
             'line_content'     => '<service enabled="1"/>',
             'has_error'        => true,
             'error_message'    => 'missing shortname attributes',
-            'add_extra_spaces' => '              '
+            'add_extra_spaces' => '              ',
         ];
 
         $expected_lines[] = [
@@ -97,25 +97,25 @@ class TrackerCreatorXmlErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Te
             'line_content'     => '<service shortname="taskboard"/>',
             'has_error'        => true,
             'error_message'    => 'missing enable attributes',
-            'add_extra_spaces' => '              '
+            'add_extra_spaces' => '              ',
         ];
 
         $expected_lines[] = [
             'line_id'      => 5,
             'line_content' => '<service shortname="mail" enabled="0"/>',
-            'has_error'    => false
+            'has_error'    => false,
         ];
 
         $expected_lines[] = [
             'line_id'      => 6,
             'line_content' => '</services>',
-            'has_error'    => false
+            'has_error'    => false,
         ];
 
         $expected_lines[] = [
             'line_id'      => 7,
             'line_content' => '</project>',
-            'has_error'    => false
+            'has_error'    => false,
         ];
 
         $expected_text = new TrackerCreatorXmlErrorPresenter($expected_lines);

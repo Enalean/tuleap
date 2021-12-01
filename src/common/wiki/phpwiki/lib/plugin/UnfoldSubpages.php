@@ -78,7 +78,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
                                     //  per page to include
                    'sections' => false, // maximum number of sections per page to include
                    'section' => false,     // this named section per page only
-                   'sectionhead' => false // when including a named
+                   'sectionhead' => false, // when including a named
                                //  section show the heading
             ]
         );

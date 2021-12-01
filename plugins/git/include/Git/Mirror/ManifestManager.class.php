@@ -33,7 +33,7 @@ class Git_Mirror_ManifestManager
 
     public function __construct(
         Git_Mirror_MirrorDataMapper $data_mapper,
-        Git_Mirror_ManifestFileGenerator $generator
+        Git_Mirror_ManifestFileGenerator $generator,
     ) {
         $this->data_mapper = $data_mapper;
         $this->generator   = $generator;

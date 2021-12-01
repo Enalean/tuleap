@@ -41,7 +41,7 @@ class SemanticsXMLExporter
     public function exportSemantics(
         SimpleXMLElement $tracker_node,
         FieldMappingCollection $field_mapping_collection,
-        StatusValuesCollection $status_values_collection
+        StatusValuesCollection $status_values_collection,
     ): void {
         $semantics_node = $tracker_node->addChild('semantics');
         $this->exportTitleSemantic($semantics_node, $field_mapping_collection);
@@ -89,7 +89,7 @@ class SemanticsXMLExporter
     private function exportStatusSemantic(
         SimpleXMLElement $semantics_node,
         FieldMappingCollection $field_mapping_collection,
-        StatusValuesCollection $status_values_collection
+        StatusValuesCollection $status_values_collection,
     ): void {
         $status_field = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_STATUS_NAME);
         if ($status_field === null) {
@@ -115,7 +115,7 @@ class SemanticsXMLExporter
     private function exportDoneSemantic(
         SimpleXMLElement $semantics_node,
         FieldMappingCollection $field_mapping_collection,
-        StatusValuesCollection $status_values_collection
+        StatusValuesCollection $status_values_collection,
     ): void {
         $status_field = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_STATUS_NAME);
         if ($status_field === null) {

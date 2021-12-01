@@ -56,7 +56,7 @@ class LFSJSONHTTPDispatchableTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             ['application/vnd.git-lfs+json'],
-            ['application/vnd.git-lfs+json; charset=utf-8']
+            ['application/vnd.git-lfs+json; charset=utf-8'],
         ];
     }
 

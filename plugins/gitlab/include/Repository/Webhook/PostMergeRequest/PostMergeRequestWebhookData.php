@@ -76,7 +76,7 @@ class PostMergeRequestWebhookData implements WebhookData
         string $state,
         DateTimeImmutable $created_at,
         int $author_id,
-        string $source_branch
+        string $source_branch,
     ) {
         $this->event_name        = $event_name;
         $this->gitlab_project_id = $gitlab_project_id;

@@ -45,7 +45,7 @@ class ChartConfigurationValueRetriever
     public function __construct(
         ChartConfigurationFieldRetriever $configuration_field_retriever,
         IComputeTimeframes $timeframe_calculator,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->configuration_field_retriever = $configuration_field_retriever;
         $this->timeframe_calculator          = $timeframe_calculator;

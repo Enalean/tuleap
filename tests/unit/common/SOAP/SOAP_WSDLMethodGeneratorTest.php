@@ -80,7 +80,7 @@ final class SOAP_WSDLMethodGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'shortName'      => 'xsd:string',
                 'realName'       => 'xsd:string',
                 'privacy'        => 'xsd:string',
-                'templateId'     => 'xsd:int'
+                'templateId'     => 'xsd:int',
             ],
             $params
         );
@@ -117,7 +117,7 @@ final class SOAP_WSDLMethodGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
             public function wsdlDoc2soapTypes($params)
             {
                 $params['doc2soap_types'] = array_merge($params['doc2soap_types'], [
-                    'arrayofplugintypes' => 'tns:ArrayOfStats'
+                    'arrayofplugintypes' => 'tns:ArrayOfStats',
                 ]);
             }
         };

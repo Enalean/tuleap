@@ -77,7 +77,7 @@ class Dao extends DataAccessObject
         int $campaign_tracker_id,
         int $test_definition_tracker_id,
         int $test_execution_tracker_id,
-        ?int $issue_tracker_id
+        ?int $issue_tracker_id,
     ): bool {
         $project_id                 = $this->da->escapeInt($project_id);
         $campaign_tracker_id        = $this->da->escapeInt($campaign_tracker_id);

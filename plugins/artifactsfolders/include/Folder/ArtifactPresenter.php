@@ -76,7 +76,7 @@ class ArtifactPresenter
 
                 return [
                     'url'   => $folder->getUri(),
-                    'title' => $title
+                    'title' => $title,
                 ];
             },
             $folder_hierarchy
@@ -89,7 +89,7 @@ class ArtifactPresenter
 
         return [
             'url'          => $user_helper->getUserUrl($user),
-            'display_name' => $this->getDisplayName($user)
+            'display_name' => $this->getDisplayName($user),
         ];
     }
 

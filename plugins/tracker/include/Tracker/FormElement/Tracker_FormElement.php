@@ -219,7 +219,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             'notifications' => $this->notifications,
             'rank'          => $this->rank,
             'permissions'   => $this->getPermissionsByUgroupId(),
-            'specific_properties' => $this->getFlattenPropertiesValues()
+            'specific_properties' => $this->getFlattenPropertiesValues(),
         ];
     }
 
@@ -468,7 +468,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
                 self::VIEW_ADMIN_UPDATE_VISITOR,
                 [
                     'all_used_elements' => $allUsedElements,
-                    'visitor'           => &$visitor
+                    'visitor'           => &$visitor,
                 ]
             );
         }
@@ -728,7 +728,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     abstract public function fetchArtifact(
         Artifact $artifact,
         array $submitted_values,
-        array $additional_classes
+        array $additional_classes,
     );
 
     abstract public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values);
@@ -788,7 +788,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text'
+        $format = 'text',
     ) {
         return '';
     }
@@ -922,7 +922,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         SimpleXMLElement $parent_node,
         array &$xmlMapping,
         bool $project_export_context,
-        UserXMLExporter $user_xml_exporter
+        UserXMLExporter $user_xml_exporter,
     ): SimpleXMLElement {
         $root = $this->getXMLInternalRepresentation()->fromFormElement($this)->export($parent_node);
 
@@ -989,7 +989,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $xml,
         &$xmlMapping,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        TrackerXmlImportFeedbackCollector $feedback_collector
+        TrackerXmlImportFeedbackCollector $feedback_collector,
     ) {
         // add properties to specific fields
         if (isset($xml->properties)) {
@@ -1206,7 +1206,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             $user->getUgroups(
                 $this->getTracker()->getGroupId(),
                 [
-                    'tracker' => $this->getTrackerId()
+                    'tracker' => $this->getTrackerId(),
                 ]
             )
         );
@@ -1458,7 +1458,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     {
         return [
             'bind_type' => null,
-            'bind_list' => []
+            'bind_list' => [],
         ];
     }
 

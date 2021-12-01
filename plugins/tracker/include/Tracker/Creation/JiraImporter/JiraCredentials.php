@@ -46,7 +46,7 @@ class JiraCredentials
     public function __construct(
         string $jira_url,
         string $jira_username,
-        ConcealedString $jira_token
+        ConcealedString $jira_token,
     ) {
         $this->jira_token    = $jira_token;
         $this->jira_username = $jira_username;

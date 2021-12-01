@@ -34,7 +34,7 @@ class Tracker_XML_Exporter_ArtifactXMLExporter
 
     public function __construct(
         Tracker_XML_Exporter_ChangesetXMLExporter $changeset_exporter,
-        FileInfoXMLExporter $file_info_xml_exporter
+        FileInfoXMLExporter $file_info_xml_exporter,
     ) {
         $this->changeset_exporter     = $changeset_exporter;
         $this->file_info_xml_exporter = $file_info_xml_exporter;
@@ -45,7 +45,7 @@ class Tracker_XML_Exporter_ArtifactXMLExporter
      */
     public function exportSnapshotWithoutComments(
         SimpleXMLElement $artifacts_xml,
-        Tracker_Artifact_Changeset $changeset
+        Tracker_Artifact_Changeset $changeset,
     ) {
         $artifact_xml = $artifacts_xml->addChild('artifact');
         $artifact_xml->addAttribute('id', $changeset->getArtifact()->getId());
@@ -62,7 +62,7 @@ class Tracker_XML_Exporter_ArtifactXMLExporter
      */
     public function exportFullHistory(
         SimpleXMLElement $artifacts_xml,
-        Artifact $artifact
+        Artifact $artifact,
     ) {
         $artifact_xml = $artifacts_xml->addChild('artifact');
         $artifact_xml->addAttribute('id', $artifact->getId());

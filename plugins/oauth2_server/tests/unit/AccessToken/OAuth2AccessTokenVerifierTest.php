@@ -89,7 +89,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'user_id'         => $expected_user->getId(),
                 'verifier'        => 'expected_hashed_verification_string',
-                'expiration_date' => (new DateTimeImmutable('tomorrow'))->getTimestamp()
+                'expiration_date' => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
             ]
         );
         $this->hasher->method('verifyHash')->willReturn(true);
@@ -138,7 +138,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'user_id'         => 102,
                 'verifier'        => 'expected_hashed_verification_string',
-                'expiration_date' => (new DateTimeImmutable('yesterday'))->getTimestamp()
+                'expiration_date' => (new DateTimeImmutable('yesterday'))->getTimestamp(),
             ]
         );
         $this->hasher->method('verifyHash')->willReturn(true);
@@ -159,7 +159,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'user_id'         => 404,
                 'verifier'        => 'expected_hashed_verification_string',
-                'expiration_date' => (new DateTimeImmutable('tomorrow'))->getTimestamp()
+                'expiration_date' => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
             ]
         );
         $this->hasher->method('verifyHash')->willReturn(true);
@@ -186,7 +186,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'user_id'         => $expected_user->getId(),
                 'verifier'        => 'expected_hashed_verification_string',
-                'expiration_date' => (new DateTimeImmutable('tomorrow'))->getTimestamp()
+                'expiration_date' => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
             ]
         );
         $this->hasher->method('verifyHash')->willReturn(true);

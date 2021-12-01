@@ -56,7 +56,7 @@ class DigitalLED74
             LEDC_TEAL  => ['teal','teal:0.7','teal:0.5'],
             LEDC_STEELBLUE => ['steelblue','steelblue:0.65','steelblue:0.5'],
             LEDC_NAVY  => ['navy:1.3','navy:0.95','navy:0.8'],//14
-            LEDC_INVERTGRAY => ['darkgray','lightgray:1.5','white']//15
+            LEDC_INVERTGRAY => ['darkgray','lightgray:1.5','white'],//15
             ];
 
         /* Each line of the character is encoded as a 4 bit value
@@ -194,7 +194,7 @@ class DigitalLED74
             'Ь' => [8,8,8,14,9,9,14],
             'Э' => [6,9,1,7,1,9,6],
             'Ю' => [2,2,2,3,2,2,2],// need to add O
-            'Я' => [7,9,9,7,3,5,9]
+            'Я' => [7,9,9,7,3,5,9],
             ];
 
     private $iSuperSampling = 3;

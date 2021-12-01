@@ -63,7 +63,7 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter
         Cardwall_Board $board,
         $redirect_parameter,
         $field,
-        $form
+        $form,
     ) {
         parent::__construct($board, $redirect_parameter);
         $hp                        = Codendi_HTMLPurifier::instance();

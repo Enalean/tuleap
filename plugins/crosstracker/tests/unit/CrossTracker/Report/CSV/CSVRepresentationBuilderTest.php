@@ -99,7 +99,7 @@ class CSVRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getTitle'          => 'Uncinated unrecantable',
                 'getDescription'    => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
                     incididunt ut labore et dolore magna aliqua.',
-                'getStatus'         => 'On going'
+                'getStatus'         => 'On going',
             ]
         );
         $this->user_manager->shouldReceive('getUserById')->andReturn(Mockery::mock(\PFUser::class));
@@ -141,7 +141,7 @@ class CSVRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 $formatted_submitted_by,
                 $formatted_submitted_on,
                 $formatted_last_update_by,
-                $formatted_last_update_date
+                $formatted_last_update_date,
             ],
             $this->user
         );

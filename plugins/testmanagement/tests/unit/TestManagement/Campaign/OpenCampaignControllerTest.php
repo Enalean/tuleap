@@ -77,7 +77,7 @@ class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $layout    = Mockery::mock(BaseLayout::class);
         $variables = [
-            'campaign_id' => '3'
+            'campaign_id' => '3',
         ];
 
         $project          = new \Project(['group_id' => 101]);
@@ -123,7 +123,7 @@ class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $layout    = Mockery::mock(BaseLayout::class);
         $variables = [
-            'campaign_id' => '3'
+            'campaign_id' => '3',
         ];
 
         $this->campaign_retriever->shouldReceive('getById')
@@ -154,7 +154,7 @@ class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $layout    = Mockery::mock(BaseLayout::class);
         $variables = [
-            'campaign_id' => '3'
+            'campaign_id' => '3',
         ];
 
         $project          = new \Project(['group_id' => 101]);

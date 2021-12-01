@@ -43,7 +43,7 @@ class PatternValidator
     public function __construct(
         FineGrainedPatternValidator $validator,
         FineGrainedRegexpValidator $regexp_validator,
-        RegexpFineGrainedRetriever $regexp_retriever
+        RegexpFineGrainedRetriever $regexp_retriever,
     ) {
         $this->validator        = $validator;
         $this->regexp_validator = $regexp_validator;

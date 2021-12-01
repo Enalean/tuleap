@@ -51,7 +51,7 @@ class NotifiedPeopleRetriever
         UsersToNotifyDao $user_dao,
         UgroupsToNotifyDao $ugroup_dao,
         Docman_ItemFactory $item_factory,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->user_dao       = $user_dao;
         $this->ugroup_dao     = $ugroup_dao;
@@ -78,7 +78,7 @@ class NotifiedPeopleRetriever
         Project $project,
         $item_id,
         array &$users,
-        $type = null
+        $type = null,
     ) {
         if ($item_id === 0) {
             return;
@@ -110,7 +110,7 @@ class NotifiedPeopleRetriever
         array &$users,
         array $ugroups,
         $item_id,
-        $type
+        $type,
     ) {
         foreach ($ugroups as $ugroup) {
             $ugroup_data = $this->ugroup_manager->getUGroup($project, $ugroup['ugroup_id']);
@@ -122,7 +122,7 @@ class NotifiedPeopleRetriever
                 $users[$user->getId()] = [
                     'item_id' => (string) $item_id,
                     'user_id' => $user->getId(),
-                    'type'    => $type
+                    'type'    => $type,
                 ];
             }
         }

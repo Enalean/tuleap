@@ -45,7 +45,7 @@ class DocmanFilesUploadLimitsAdminController implements DispatchableWithRequest,
 
     public function __construct(
         AdminPageRenderer $admin_page_renderer,
-        DocmanSettingsTabsPresenterCollectionBuilder $tabs_presenter_collection_builder
+        DocmanSettingsTabsPresenterCollectionBuilder $tabs_presenter_collection_builder,
     ) {
         $this->admin_page_renderer               = $admin_page_renderer;
         $this->tabs_presenter_collection_builder = $tabs_presenter_collection_builder;

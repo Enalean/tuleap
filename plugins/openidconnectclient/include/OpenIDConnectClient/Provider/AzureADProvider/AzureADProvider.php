@@ -82,7 +82,7 @@ final class AzureADProvider implements Provider
         string $icon,
         string $color,
         string $tenant_id,
-        AcceptableTenantForAuthenticationConfiguration $acceptable_tenant_for_authentication_configuration
+        AcceptableTenantForAuthenticationConfiguration $acceptable_tenant_for_authentication_configuration,
     ) {
         $this->id                                                 = $id;
         $this->name                                               = $name;

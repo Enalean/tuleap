@@ -103,7 +103,7 @@ class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_A
         Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter $artlink_exporter,
         ChangesetValueComputedXMLExporter $computed_exporter,
         Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter $unknown_exporter,
-        ExternalExporterCollector $collector
+        ExternalExporterCollector $collector,
     ) {
         $this->file_exporter      = $file_exporter;
         $this->date_exporter      = $date_exporter;
@@ -124,7 +124,7 @@ class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_A
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $changeset_value
+        Tracker_Artifact_ChangesetValue $changeset_value,
     ) {
         $exporter = $changeset_value->accept($this);
         \assert($exporter instanceof Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter);

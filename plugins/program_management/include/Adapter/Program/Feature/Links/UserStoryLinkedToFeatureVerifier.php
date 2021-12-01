@@ -41,13 +41,13 @@ final class UserStoryLinkedToFeatureVerifier implements VerifyLinkedUserStoryIsN
         private Tracker_ArtifactFactory $artifact_factory,
         private RetrieveUser $retrieve_user,
         private SearchChildrenOfFeature $search_children_of_feature,
-        private VerifyIsLinkedToAnotherMilestone $verify_is_linked_to_program_increment
+        private VerifyIsLinkedToAnotherMilestone $verify_is_linked_to_program_increment,
     ) {
     }
 
     public function isLinkedToAtLeastOnePlannedUserStory(
         UserIdentifier $user_identifier,
-        FeatureIdentifier $feature
+        FeatureIdentifier $feature,
     ): bool {
         $planned_user_stories = $this->search_planned_user_story->getPlannedUserStory($feature->id);
         foreach ($planned_user_stories as $user_story) {

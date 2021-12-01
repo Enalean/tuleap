@@ -61,16 +61,16 @@ final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Missing backlog tracker ids'          => [[\PlanningParameters::NAME => 'Release Planning']],
             'Backlog tracker ids are not integers' => [[
                 \PlanningParameters::NAME                => 'Release Planning',
-                \PlanningParameters::BACKLOG_TRACKER_IDS => ['bad', 'bad']
+                \PlanningParameters::BACKLOG_TRACKER_IDS => ['bad', 'bad'],
             ]],
             'Missing planning tracker id'          => [[
                 \PlanningParameters::NAME                => 'Release Planning',
-                \PlanningParameters::BACKLOG_TRACKER_IDS => [10, 26]
+                \PlanningParameters::BACKLOG_TRACKER_IDS => [10, 26],
             ]],
             'Planning tracker id is not integer'   => [[
                 \PlanningParameters::NAME                => 'Release Planning',
                 \PlanningParameters::BACKLOG_TRACKER_IDS => [10, 26],
-                \PlanningParameters::PLANNING_TRACKER_ID => 'bad'
+                \PlanningParameters::PLANNING_TRACKER_ID => 'bad',
             ]],
         ];
     }
@@ -107,7 +107,7 @@ final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 \PlanningParameters::NAME                => 'Release Planning',
                 \PlanningParameters::BACKLOG_TRACKER_IDS => [10, 26],
-                \PlanningParameters::PLANNING_TRACKER_ID => 97
+                \PlanningParameters::PLANNING_TRACKER_ID => 97,
             ]
         );
         $original_planning                = new \Planning(1, 'Irrelevant', 101, 'Irrelevant', 'Irrelevant', [], 54);
@@ -131,7 +131,7 @@ final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 \PlanningParameters::BACKLOG_TITLE       => 'Product Backlog',
                 \PlanningParameters::PLANNING_TITLE      => 'Release Plan',
                 \PlanningParameters::BACKLOG_TRACKER_IDS => [10, 26],
-                \PlanningParameters::PLANNING_TRACKER_ID => 97
+                \PlanningParameters::PLANNING_TRACKER_ID => 97,
             ]
         );
         $original_planning                = new \Planning(1, 'Irrelevant', 101, 'Irrelevant', 'Irrelevant', [], 54);
@@ -158,7 +158,7 @@ final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 \PlanningParameters::NAME                => 'Release Planning',
                 \PlanningParameters::BACKLOG_TRACKER_IDS => [10, 26],
-                \PlanningParameters::PLANNING_TRACKER_ID => 97
+                \PlanningParameters::PLANNING_TRACKER_ID => 97,
             ]
         );
         $original_planning                = new \Planning(1, 'Irrelevant', 101, 'Irrelevant', 'Irrelevant', [], 97);

@@ -51,7 +51,7 @@ class RepositorySettingsCrumbBuilder
             [
                 'action'   => 'repo_management',
                 'group_id' => $repository->getProjectId(),
-                'repo_id'  => $repository->getId()
+                'repo_id'  => $repository->getId(),
             ]
         );
     }

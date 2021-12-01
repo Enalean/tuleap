@@ -55,7 +55,7 @@ final class ProcessSystemEventsCommand extends Command
     public function __construct(
         SystemEventProcessor_Factory $system_event_processor_factory,
         DBConnection $db_connection,
-        LockFactory $lock_factory
+        LockFactory $lock_factory,
     ) {
         parent::__construct(self::NAME);
 

@@ -179,7 +179,7 @@ final class OAuth2ClientAuthenticationMiddlewareTest extends \Tuleap\Test\PHPUni
 
             public function __construct(
                 ResponseFactoryInterface $response_factory,
-                ?OAuth2App $expected_app_attribute
+                ?OAuth2App $expected_app_attribute,
             ) {
                 $this->response_factory       = $response_factory;
                 $this->expected_app_attribute = $expected_app_attribute;

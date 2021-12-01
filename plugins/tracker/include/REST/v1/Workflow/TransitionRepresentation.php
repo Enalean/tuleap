@@ -71,7 +71,7 @@ class TransitionRepresentation
         $to_id,
         array $authorized_user_group_ids,
         array $not_empty_field_ids,
-        $is_comment_required
+        $is_comment_required,
     ) {
         $this->id                        = $id;
         $this->from_id                   = $from_id;

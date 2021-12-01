@@ -90,7 +90,7 @@ class AdminController
         UGroupManager $ugroup_manager,
         HookConfigUpdator $hook_config_updator,
         HookConfigRetriever $hook_config_retriever,
-        RepositoryDeleter $repository_deleter
+        RepositoryDeleter $repository_deleter,
     ) {
         $this->repository_manager        = $repository_manager;
         $this->mail_header_manager       = $mail_header_manager;
@@ -163,7 +163,7 @@ class AdminController
             [
                 'group_id' => $request->getProject()->getid(),
                 'repo_id' => $request->get('repo_id'),
-                'action' => 'display-mail-notification'
+                'action' => 'display-mail-notification',
             ]
         ));
     }
@@ -378,7 +378,7 @@ class AdminController
         $repository  = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
         $hook_config = [
             HookConfig::MANDATORY_REFERENCE => (bool) $request->get("pre_commit_must_contain_reference"),
-            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => (bool) $request->get("allow_commit_message_changes")
+            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => (bool) $request->get("allow_commit_message_changes"),
         ];
         $this->hook_config_updator->updateHookConfig($repository, $hook_config);
 
@@ -487,7 +487,7 @@ class AdminController
             [
                 'group_id' => $project->getID(),
                 'repo_id' => $repository->getId(),
-                'action' => 'delete-repository'
+                'action' => 'delete-repository',
             ]
         ));
     }
@@ -505,7 +505,7 @@ class AdminController
             [
                 'group_id' => $request->getProject()->getid(),
                 'repo_id' => $request->get('repo_id'),
-                'action' => 'display-mail-notification'
+                'action' => 'display-mail-notification',
             ]
         ));
     }

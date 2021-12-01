@@ -35,7 +35,7 @@ final class TrackerReferenceProxy implements TrackerReference
         private int $id,
         private string $tracker_name,
         private int $project_id,
-        private string $project_name
+        private string $project_name,
     ) {
     }
 

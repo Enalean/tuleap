@@ -32,7 +32,7 @@ class PermissionsExporter
 {
     public const READ_ONLY_PRESERVED_PERMISSIONS = [
         Tracker_FormElement::REST_PERMISSION_READ,
-        Tracker_FormElement::REST_PERMISSION_SUBMIT
+        Tracker_FormElement::REST_PERMISSION_SUBMIT,
     ];
 
     /**
@@ -47,7 +47,7 @@ class PermissionsExporter
 
     public function exportUserPermissionsForFieldWithoutWorkflowComputedPermissions(
         PFUser $user,
-        Tracker_FormElement $field
+        Tracker_FormElement $field,
     ): array {
         return $field->exportCurrentUserPermissionsToREST($user);
     }
@@ -55,7 +55,7 @@ class PermissionsExporter
     public function exportUserPermissionsForFieldWithWorkflowComputedPermissions(
         PFUser $user,
         Tracker_FormElement $field,
-        Artifact $artifact
+        Artifact $artifact,
     ): array {
         $permissions = $this->exportUserPermissionsForFieldWithoutWorkflowComputedPermissions($user, $field);
 

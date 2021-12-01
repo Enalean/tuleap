@@ -167,7 +167,7 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->with($epic_tracker)
             ->andReturn([
-                $epic_artifact_link_field
+                $epic_artifact_link_field,
             ]);
 
         $changeset_value_epic = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
@@ -178,7 +178,7 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $changeset_value_epic->shouldReceive('getArtifactIds')->once()->andReturn([
             3,
-            4
+            4,
         ]);
 
         $user_story_tracker = Mockery::mock(Tracker::class);
@@ -247,7 +247,7 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset_value_user_story_01->shouldReceive('getArtifactIds')->once()->andReturn([]);
         $changeset_value_user_story_02->shouldReceive('getArtifactIds')->once()->andReturn([
             5,
-            6
+            6,
         ]);
 
         $task_tracker = Mockery::mock(Tracker::class);
@@ -342,7 +342,7 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->with($epic_tracker)
             ->andReturn([
-                $epic_artifact_link_field
+                $epic_artifact_link_field,
             ]);
 
         $changeset_value_epic = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
@@ -353,7 +353,7 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $changeset_value_epic->shouldReceive('getArtifactIds')->once()->andReturn([
             3,
-            4
+            4,
         ]);
 
         $user_story_tracker = Mockery::mock(Tracker::class);
@@ -422,7 +422,7 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset_value_user_story_01->shouldReceive('getArtifactIds')->once()->andReturn([]);
         $changeset_value_user_story_02->shouldReceive('getArtifactIds')->once()->andReturn([
             5,
-            6
+            6,
         ]);
 
         $task_tracker = Mockery::mock(Tracker::class);
@@ -625,7 +625,7 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact_link_field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
         $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')->andReturn([
-            $artifact_link_field
+            $artifact_link_field,
         ]);
 
         $changeset_value_user_story_01 = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);

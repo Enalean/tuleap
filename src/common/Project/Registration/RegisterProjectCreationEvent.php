@@ -61,7 +61,7 @@ class RegisterProjectCreationEvent implements Dispatchable
         MappingRegistry $mapping_registry,
         \PFUser $project_administrator,
         array $legacy_service_usage,
-        bool $should_project_inherit_from_template
+        bool $should_project_inherit_from_template,
     ) {
         $this->just_created_project                 = $just_created_project;
         $this->template_project                     = $template_project;

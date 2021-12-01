@@ -276,7 +276,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
        //The field is ReadOnly
         return false;
@@ -334,7 +334,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     public function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value, $submitted_values);
     }
@@ -429,7 +429,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text'
+        $format = 'text',
     ) {
         $output = '';
 
@@ -555,7 +555,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         $submitted_value,
         PFUser $user,
         ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
-        ?bool $is_submission = null
+        ?bool $is_submission = null,
     ): bool {
         return true;
     }

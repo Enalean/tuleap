@@ -63,7 +63,7 @@ final class PullRequestUpdatedEvent implements EventSubjectToNotification
         string $old_src_reference,
         string $new_src_reference,
         string $old_dst_reference,
-        string $new_dst_reference
+        string $new_dst_reference,
     ) {
         $this->pull_request_id   = $pull_request_id;
         $this->user_id           = $user_id;
@@ -79,7 +79,7 @@ final class PullRequestUpdatedEvent implements EventSubjectToNotification
         string $old_src_reference,
         string $new_src_reference,
         string $old_dst_reference,
-        string $new_dst_reference
+        string $new_dst_reference,
     ): self {
         return new self(
             $pull_request->getId(),

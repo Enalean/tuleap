@@ -38,7 +38,7 @@ final class IterationTrackerIdentifier implements TrackerIdentifier
 
     public static function fromTrackerIdentifier(
         VerifyIsIterationTracker $verify_is_iteration_tracker,
-        TrackerIdentifier $tracker
+        TrackerIdentifier $tracker,
     ): ?self {
         if (! $verify_is_iteration_tracker->isIterationTracker($tracker->getId())) {
             return null;
@@ -48,7 +48,7 @@ final class IterationTrackerIdentifier implements TrackerIdentifier
 
     public static function fromIteration(
         RetrieveIterationTracker $tracker_retriever,
-        IterationIdentifier $iteration
+        IterationIdentifier $iteration,
     ): self {
         return new self($tracker_retriever->getIterationTrackerIdFromIteration($iteration));
     }

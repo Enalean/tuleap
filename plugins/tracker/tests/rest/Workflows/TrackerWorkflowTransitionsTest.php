@@ -43,7 +43,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
 
         $all_transitions = [
             "transitions" => [],
-            "missing_transitions" => []
+            "missing_transitions" => [],
         ];
 
         foreach ($tracker["workflow"]["transitions"] as $transition) {
@@ -61,7 +61,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
                 if ($from_id !== $to_id && $is_not_used_transition) {
                     $all_transitions["missing_transitions"][] = [
                         "from_id" => $from_id,
-                        "to_id" => $to_id
+                        "to_id" => $to_id,
                     ];
                 }
             }
@@ -80,7 +80,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
             [
                 "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
                 "from_id"    => $available_transition['from_id'] ?: 0,
-                "to_id"      => $available_transition['to_id']
+                "to_id"      => $available_transition['to_id'],
             ]
         );
 
@@ -100,7 +100,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $params = json_encode([
             "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
             "from_id" => $available_transition['from_id'] ?: 0,
-            "to_id" => $available_transition['to_id']
+            "to_id" => $available_transition['to_id'],
         ]);
 
         $response = $this->getResponseByName(
@@ -125,7 +125,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $params = json_encode([
             "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
             "from_id" => $available_transition['from_id'] ? $available_transition['from_id'] : 0,
-            "to_id" => $available_transition['to_id']
+            "to_id" => $available_transition['to_id'],
         ]);
 
         $response = $this->getResponseByName(
@@ -141,7 +141,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $params = json_encode([
             "tracker_id" => 0,
             "from_id" => 0,
-            "to_id" => 0
+            "to_id" => 0,
         ]);
 
         $response = $this->getResponseByName(
@@ -157,7 +157,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $params = json_encode([
             "tracker_id" => $this->tracker_workflows_tracker_id,
             "from_id" => 0,
-            "to_id" => 0
+            "to_id" => 0,
         ]);
 
         $response = $this->getResponseByName(
@@ -177,7 +177,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $params = json_encode([
             "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
             "from_id" => $used_transition['from_id'] ? $used_transition['from_id'] : 0,
-            "to_id" => $used_transition['to_id']
+            "to_id" => $used_transition['to_id'],
         ]);
 
         $response = $this->getResponseByName(
@@ -197,7 +197,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $params = json_encode([
             "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
             "from_id" => $available_transition['from_id'] ? $available_transition['from_id'] : 0,
-            "to_id" => 1
+            "to_id" => 1,
         ]);
 
         $response = $this->getResponseByName(
@@ -217,7 +217,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $params = json_encode([
             "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
             "from_id" => $available_transition['to_id'],
-            "to_id" => $available_transition['to_id']
+            "to_id" => $available_transition['to_id'],
         ]);
 
         $response = $this->getResponseByName(
@@ -294,7 +294,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $params = json_encode([
             "authorized_user_group_ids" => [],
             "not_empty_field_ids" => [],
-            "is_comment_required" => true
+            "is_comment_required" => true,
         ]);
 
         $response = $this->getResponseByName(
@@ -327,7 +327,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
             [
                 "authorized_user_group_ids" => [$a_user_group_id],
                 "not_empty_field_ids"       => [],
-                "is_comment_required"       => true
+                "is_comment_required"       => true,
             ]
         );
 
@@ -348,7 +348,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $params = json_encode([
             "authorized_user_group_ids" => [$a_user_group_id],
             "not_empty_field_ids" => [],
-            "is_comment_required" => true
+            "is_comment_required" => true,
         ]);
 
         $response = $this->getResponseByName(
@@ -453,9 +453,9 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
                     [
                         "id"      => null,
                         "type"    => "run_job",
-                        "job_url" => "http://example.test"
-                    ]
-                ]
+                        "job_url" => "http://example.test",
+                    ],
+                ],
             ]
         );
 
@@ -476,9 +476,9 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
                 [
                     "id" => null,
                     "type" => "run_job",
-                    "job_url" => "http://example.test"
-                ]
-            ]
+                    "job_url" => "http://example.test",
+                ],
+            ],
         ]);
 
         $response = $this->getResponseByName(
@@ -506,9 +506,9 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
                 [
                     "id" => null,
                     "type" => "frozen_fields",
-                    "field_ids" => [$used_field_id]
-                ]
-            ]
+                    "field_ids" => [$used_field_id],
+                ],
+            ],
         ]);
 
         $response = $this->getResponseByName(
@@ -534,9 +534,9 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
                 [
                     "id" => null,
                     "type" => "hidden_fieldsets",
-                    "fieldset_ids" => [$used_field_id]
-                ]
-            ]
+                    "fieldset_ids" => [$used_field_id],
+                ],
+            ],
         ]);
 
         $response = $this->getResponseByName(
@@ -563,9 +563,9 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
                     "type" => "set_field_value",
                     "field_type" => "float",
                     "field_id" => $used_field_id,
-                    "value" => 1.2
-                ]
-            ]
+                    "value" => 1.2,
+                ],
+            ],
         ]);
 
         $response = $this->getResponseByName(

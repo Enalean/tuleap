@@ -143,7 +143,7 @@ class AdminController
     private function getUGroupsForPermission(HTTPRequest $request, $permission)
     {
         return [
-            (int) $request->getInArray('permissions', $permission)
+            (int) $request->getInArray('permissions', $permission),
         ];
     }
 }

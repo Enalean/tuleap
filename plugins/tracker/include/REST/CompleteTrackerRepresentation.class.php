@@ -117,7 +117,7 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
         array $structure,
         array $semantics,
         ?WorkflowRepresentation $workflow = null,
-        ?PermissionsRepresentation $permissions = null
+        ?PermissionsRepresentation $permissions = null,
     ) {
         $this->id       = JsonCast::toInt($tracker->getId());
         $this->uri      = self::ROUTE . '/' . $this->id;
@@ -135,8 +135,8 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
         $this->resources              = [
             [
                 'type' => 'reports',
-                'uri'  => $this->uri . '/' . ReportRepresentation::ROUTE
-            ]
+                'uri'  => $this->uri . '/' . ReportRepresentation::ROUTE,
+            ],
         ];
         $this->color_name             = $tracker->getColor()->getName();
         $this->permissions_for_groups = $permissions;

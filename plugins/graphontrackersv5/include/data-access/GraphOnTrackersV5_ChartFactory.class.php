@@ -99,7 +99,7 @@ class GraphOnTrackersV5_ChartFactory
     public function forceChartsRankInSession(
         GraphOnTrackersV5_Renderer $renderer,
         GraphOnTrackersV5_Chart $edited_chart,
-        $wanted_position
+        $wanted_position,
     ) {
         $session = new Tracker_Report_Session($renderer->report->id);
         $session->changeSessionNamespace("renderers.{$renderer->id}");

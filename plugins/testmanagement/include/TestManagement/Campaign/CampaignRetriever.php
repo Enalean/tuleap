@@ -44,7 +44,7 @@ class CampaignRetriever
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
         CampaignDao $campaign_dao,
-        KeyFactory $key_factory
+        KeyFactory $key_factory,
     ) {
         $this->campaign_dao     = $campaign_dao;
         $this->artifact_factory = $artifact_factory;

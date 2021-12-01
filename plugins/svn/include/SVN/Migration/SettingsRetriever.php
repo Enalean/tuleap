@@ -49,7 +49,7 @@ class SettingsRetriever
     public function __construct(
         SVN_Immutable_Tags_DAO $immutable_tags_dao,
         SvnNotificationDao $notification_dao,
-        SVN_AccessFile_DAO $history_dao
+        SVN_AccessFile_DAO $history_dao,
     ) {
         $this->tags_dao         = $immutable_tags_dao;
         $this->notification_dao = $notification_dao;
@@ -80,7 +80,7 @@ class SettingsRetriever
     {
         return [
             HookConfig::MANDATORY_REFERENCE       => $project->isSVNMandatoryRef(),
-            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => $project->canChangeSVNLog()
+            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => $project->canChangeSVNLog(),
         ];
     }
 

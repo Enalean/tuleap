@@ -43,7 +43,7 @@ final class PlannableFeatureIdentifier implements ArtifactIdentifier
     public static function build(
         VerifyIsPlannable $verify_is_plannable,
         RetrieveTrackerOfArtifact $retrieve_tracker,
-        FeatureIdentifier $feature_identifier
+        FeatureIdentifier $feature_identifier,
     ): self {
         $tracker                      = $retrieve_tracker->getTrackerOfArtifact($feature_identifier);
         $feature_tracker_is_plannable = $verify_is_plannable->isPlannable($tracker->getId());

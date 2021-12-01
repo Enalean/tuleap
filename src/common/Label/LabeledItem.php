@@ -48,7 +48,7 @@ class LabeledItem
         Glyph $normal_icon,
         Glyph $small_icon,
         $title,
-        $html_url
+        $html_url,
     ) {
         $this->normal_icon = $normal_icon;
         $this->small_icon  = $small_icon;

@@ -38,7 +38,7 @@ class FolderHierarchicalRepresentationCollectionBuilder
 
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
-        Dao $folder_dao
+        Dao $folder_dao,
     ) {
         $this->artifact_factory = $artifact_factory;
         $this->folder_dao       = $folder_dao;
@@ -48,7 +48,7 @@ class FolderHierarchicalRepresentationCollectionBuilder
     public function buildFolderHierarchicalRepresentationCollection(
         Artifact $artifact,
         Project $project,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         $all_folders = $this->getAllFoldersAsFolderHierarchicalRepresentationCollection(
             $artifact,
@@ -62,7 +62,7 @@ class FolderHierarchicalRepresentationCollectionBuilder
     /** @return FolderHierarchicalRepresentationCollection */
     private function convertAllFoldersToForestOfTopFolders(
         PFUser $current_user,
-        FolderHierarchicalRepresentationCollection $all_folders
+        FolderHierarchicalRepresentationCollection $all_folders,
     ) {
         $top_level_folders = new FolderHierarchicalRepresentationCollection();
         foreach ($all_folders->toArray() as $folder_representation) {
@@ -82,7 +82,7 @@ class FolderHierarchicalRepresentationCollectionBuilder
     private function getAllFoldersAsFolderHierarchicalRepresentationCollection(
         Artifact $artifact,
         Project $project,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         $all_folders = new FolderHierarchicalRepresentationCollection();
         foreach ($this->folder_dao->searchFoldersInProject($project->getId()) as $row) {
@@ -100,7 +100,7 @@ class FolderHierarchicalRepresentationCollectionBuilder
     private function getParent(
         FolderHierarchicalRepresentationCollection $all_folders,
         $parent_id,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         $parent_representation = $all_folders->getById($parent_id);
         if (! $parent_representation) {

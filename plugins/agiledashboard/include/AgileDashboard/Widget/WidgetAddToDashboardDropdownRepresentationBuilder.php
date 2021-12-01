@@ -43,7 +43,7 @@ class WidgetAddToDashboardDropdownRepresentationBuilder
 
     public function __construct(
         UserDashboardRetriever $user_dashboard_retriever,
-        ProjectDashboardRetriever $project_dashboard_retriever
+        ProjectDashboardRetriever $project_dashboard_retriever,
     ) {
         $this->user_dashboard_retriever    = $user_dashboard_retriever;
         $this->project_dashboard_retriever = $project_dashboard_retriever;
@@ -90,7 +90,7 @@ class WidgetAddToDashboardDropdownRepresentationBuilder
         CSRFSynchronizerToken $csrf,
         AgileDashboard_Kanban $kanban,
         $widget_id,
-        $type
+        $type,
     ) {
         return '/widgets/?' . http_build_query(
             [
@@ -98,10 +98,10 @@ class WidgetAddToDashboardDropdownRepresentationBuilder
                 'action'              => 'add-widget',
                 'kanban'              => [
                     'title' => $kanban->getName(),
-                    'id'    => $kanban->getId()
+                    'id'    => $kanban->getId(),
                 ],
                 'widget-name'         => $widget_id,
-                $csrf->getTokenName() => $csrf->getToken()
+                $csrf->getTokenName() => $csrf->getToken(),
             ]
         );
     }

@@ -80,7 +80,7 @@ class IterationsRetriever
         TrackerFactory $tracker_factory,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
         Tracker_ArtifactFactory $artifact_factory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->dao                        = $dao;
         $this->project_manager            = $project_manager;
@@ -101,7 +101,7 @@ class IterationsRetriever
         int $id,
         int $level,
         int $limit,
-        int $offset
+        int $offset,
     ): PaginatedCollectionOfIterationRepresentation {
         $widget_row = $this->dao->searchById($id);
         if (! $widget_row) {

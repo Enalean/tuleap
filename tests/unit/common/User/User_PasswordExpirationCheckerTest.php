@@ -41,7 +41,7 @@ final class User_PasswordExpirationCheckerTest extends \Tuleap\Test\PHPUnit\Test
             new PFUser([
                 'password'        => 'password',
                 'status'          => PFUser::STATUS_ACTIVE,
-                'last_pwd_update' => strtotime('15 days ago')
+                'last_pwd_update' => strtotime('15 days ago'),
             ])
         );
     }

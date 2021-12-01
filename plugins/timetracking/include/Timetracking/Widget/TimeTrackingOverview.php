@@ -126,7 +126,7 @@ class TimeTrackingOverview extends Widget
     public function getJavascriptDependencies(): array
     {
         return [
-            ['file' => $this->getAssets()->getFileURL('timetracking-overview.js')]
+            ['file' => $this->getAssets()->getFileURL('timetracking-overview.js')],
         ];
     }
 

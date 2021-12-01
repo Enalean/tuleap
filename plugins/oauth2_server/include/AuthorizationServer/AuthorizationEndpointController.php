@@ -127,7 +127,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         OAuth2OfflineAccessScope $offline_access_scope,
         LoggerInterface $logger,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->form_renderer                     = $form_renderer;

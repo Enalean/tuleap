@@ -83,7 +83,7 @@ class WikiPlugin_Template extends WikiPlugin
                      'vars'    => false,
                      'rev'     => false, // the revision (defaults to most recent)
                      'section' => false, // just include a named section
-                     'sectionhead' => false // when including a named section show the heading
+                     'sectionhead' => false, // when including a named section show the heading
                      ];
     }
 

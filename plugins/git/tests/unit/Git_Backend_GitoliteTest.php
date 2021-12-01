@@ -123,7 +123,7 @@ class Git_Backend_GitoliteTest extends \Tuleap\Test\PHPUnit\TestCase
                 $driver,
                 \Mockery::spy(GitoliteAccessURLGenerator::class),
                 new DefaultBranchUpdateTestExecutor(),
-                \Mockery::spy(\Psr\Log\LoggerInterface::class)
+                \Mockery::spy(\Psr\Log\LoggerInterface::class),
             ]
         )
             ->makePartial()
@@ -164,7 +164,7 @@ class Git_Backend_GitoliteTest extends \Tuleap\Test\PHPUnit\TestCase
                 $driver,
                 \Mockery::spy(GitoliteAccessURLGenerator::class),
                 new DefaultBranchUpdateTestExecutor(),
-                \Mockery::spy(\Psr\Log\LoggerInterface::class)
+                \Mockery::spy(\Psr\Log\LoggerInterface::class),
             ]
         )
             ->makePartial()
@@ -199,7 +199,7 @@ class Git_Backend_GitoliteTest extends \Tuleap\Test\PHPUnit\TestCase
                 $driver,
                 \Mockery::spy(GitoliteAccessURLGenerator::class),
                 new DefaultBranchUpdateTestExecutor(),
-                \Mockery::spy(\Psr\Log\LoggerInterface::class)
+                \Mockery::spy(\Psr\Log\LoggerInterface::class),
             ]
         )
             ->makePartial()

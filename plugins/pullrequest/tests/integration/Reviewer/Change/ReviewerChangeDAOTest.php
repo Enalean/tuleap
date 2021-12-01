@@ -89,7 +89,7 @@ final class ReviewerChangeDAOTest extends \Tuleap\Test\PHPUnit\TestCase
                 'change_user_id'   => self::$pr_reviewer_1_id,
                 'reviewer_user_id' => self::$pr_reviewer_2_id,
                 'is_removal'       => 0,
-            ]
+            ],
         ];
 
         $this->assertEquals($expected_result, $raw_change_information);

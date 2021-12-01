@@ -9,7 +9,7 @@ class WikiDB_backend_dumb_TextSearchIter extends WikiDB_backend_iterator
         &$pages,
         $search,
         $fulltext = false,
-        $options = []
+        $options = [],
     ) {
         $this->_backend   = &$backend;
         $this->_pages     = $pages;

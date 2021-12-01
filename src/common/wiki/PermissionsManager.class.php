@@ -75,7 +75,7 @@ class Wiki_PermissionsManager
     public function __construct(
         PermissionsManager $permission_manager,
         ProjectManager $project_manager,
-        UGroupLiteralizer $literalizer
+        UGroupLiteralizer $literalizer,
     ) {
         $this->permission_manager = $permission_manager;
         $this->project_manager    = $project_manager;

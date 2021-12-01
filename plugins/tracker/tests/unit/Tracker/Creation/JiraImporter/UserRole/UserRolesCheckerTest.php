@@ -37,11 +37,11 @@ final class UserRolesCheckerTest extends TestCase
             {
                 return [
                     [
-                        "name" => "Member"
+                        "name" => "Member",
                     ],
                     [
-                        "name" => "Administrators"
-                    ]
+                        "name" => "Administrators",
+                    ],
                 ];
             }
         };
@@ -64,11 +64,11 @@ final class UserRolesCheckerTest extends TestCase
             {
                 return [
                     [
-                        "name" => "Member"
+                        "name" => "Member",
                     ],
                     [
-                        "name" => "Administrator"
-                    ]
+                        "name" => "Administrator",
+                    ],
                 ];
             }
         };
@@ -94,8 +94,8 @@ final class UserRolesCheckerTest extends TestCase
             {
                 return [
                     [
-                        "name" => "Member"
-                    ]
+                        "name" => "Member",
+                    ],
                 ];
             }
         };
@@ -119,8 +119,8 @@ final class UserRolesCheckerTest extends TestCase
             {
                 return [
                     [
-                        "whatever" => "Member"
-                    ]
+                        "whatever" => "Member",
+                    ],
                 ];
             }
         };
@@ -170,7 +170,7 @@ final class UserRolesCheckerTest extends TestCase
                             "deprecatedKey"  => true,
                         ],
                     ],
-                ]
+                ],
             ];
         };
 
@@ -199,7 +199,7 @@ final class UserRolesCheckerTest extends TestCase
                             "havePermission" => true,
                         ],
                     ],
-                ]
+                ],
             ];
         };
 
@@ -228,7 +228,7 @@ final class UserRolesCheckerTest extends TestCase
                             "havePermission" => true,
                         ],
                     ],
-                ]
+                ],
             ];
         };
 

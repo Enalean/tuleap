@@ -53,7 +53,7 @@ class PlatformBannerTest extends ProjectBase
         $post_resource = json_encode([
             'message' => 'a banner message',
             'importance'  => 'critical',
-            'expiration_date' => '2100-06-30T10:44:34+02:00'
+            'expiration_date' => '2100-06-30T10:44:34+02:00',
         ]);
 
         $response = $this->getResponseByName(

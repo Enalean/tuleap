@@ -44,7 +44,7 @@ class PermissionPerGroupGitSectionBuilder
     public function __construct(
         PermissionPerGroupUGroupRetriever $permisson_retriever,
         CollectionOfUgroupsFormatter $formatter,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->permisson_retriever = $permisson_retriever;
         $this->formatter           = $formatter;

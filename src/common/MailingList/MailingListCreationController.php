@@ -58,7 +58,7 @@ class MailingListCreationController implements DispatchableWithBurningParrot, Di
         ProjectAdministratorChecker $administrator_checker,
         \TemplateRenderer $renderer,
         MailingListDomainBuilder $list_domain_builder,
-        MailingListCreationPresenterBuilder $presenter_builder
+        MailingListCreationPresenterBuilder $presenter_builder,
     ) {
         $this->renderer              = $renderer;
         $this->project_retriever     = $project_retriever;

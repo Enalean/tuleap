@@ -37,7 +37,7 @@ class Collector
 
     public function __construct(
         FullHistoryDao $cvs_log_dao,
-        Retriever $retriever
+        Retriever $retriever,
     ) {
         $this->dao       = $cvs_log_dao;
         $this->retriever = $retriever;

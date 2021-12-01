@@ -36,7 +36,7 @@ final class MirroredProgramIncrementTrackerIdentifierCollectionBuilder
      */
     public static function buildWithIds(
         int $tracker_id,
-        int ...$other_tracker_ids
+        int ...$other_tracker_ids,
     ): MirroredProgramIncrementTrackerIdentifierCollection {
         $all_tracker_ids = [$tracker_id, ...$other_tracker_ids];
         $trackers        = [];

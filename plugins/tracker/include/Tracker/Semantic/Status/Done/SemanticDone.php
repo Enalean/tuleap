@@ -70,7 +70,7 @@ class SemanticDone extends Tracker_Semantic
         Tracker_Semantic_Status $semantic_status,
         SemanticDoneDao $dao,
         SemanticDoneValueChecker $value_checker,
-        array $done_values
+        array $done_values,
     ) {
         parent::__construct($tracker);
 
@@ -187,7 +187,7 @@ class SemanticDone extends Tracker_Semantic
     {
         return TRACKER_BASE_URL . '/?' . http_build_query([
                 'tracker' => $this->tracker->getId(),
-                'func'    => 'admin-semantic'
+                'func'    => 'admin-semantic',
         ]);
     }
 
@@ -200,7 +200,7 @@ class SemanticDone extends Tracker_Semantic
 
         foreach ($this->done_values as $done_value) {
             $formatted_done_values[] = [
-                'label' => $done_value->getLabel()
+                'label' => $done_value->getLabel(),
             ];
         }
 
@@ -219,7 +219,7 @@ class SemanticDone extends Tracker_Semantic
             $formated_closed_values[] = [
                 'id'       => $value->getId(),
                 'label'    => $value->getLabel(),
-                'selected' => in_array($value_id, $done_values_ids)
+                'selected' => in_array($value_id, $done_values_ids),
             ];
         }
 
@@ -309,7 +309,7 @@ class SemanticDone extends Tracker_Semantic
     private function updateValuesForTracker(
         Tracker_FormElement_Field_List $semantic_status_field,
         int $tracker_id,
-        array $selected_values
+        array $selected_values,
     ): void {
         $selected_values            = array_map('intval', $selected_values);
         $closed_values              = $this->getClosedValues($semantic_status_field);

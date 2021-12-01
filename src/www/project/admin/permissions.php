@@ -434,9 +434,9 @@ function permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fie
                                                                        'shortname'  => $field->getName(),
                                                                        'name'       => $field->getLabel(),
                                                                        'id'         => $field->getID(),
-                                                                       'link'       => '/tracker/admin/index.php?group_id=' . $group_id . '&atid=' . $atid . '&func=display_field_update&field_id=' . $field->getID()
+                                                                       'link'       => '/tracker/admin/index.php?group_id=' . $group_id . '&atid=' . $atid . '&func=display_field_update&field_id=' . $field->getID(),
                                                                        ],
-                                                      'ugroups' => $ugroups
+                                                      'ugroups' => $ugroups,
         ];
 
         //{{{ We store tracker permissions
@@ -504,9 +504,9 @@ function permission_get_ugroups_permissions($group_id, $object_id, $permission_t
                     $return[$row[0]] = [
                         'ugroup'      => [
                             'id'   => $row[0],
-                            'name' => NameTranslator::getUserGroupDisplayKey((string) $row[1])
+                            'name' => NameTranslator::getUserGroupDisplayKey((string) $row[1]),
                         ],
-                        'permissions' => []
+                        'permissions' => [],
                     ];
                     //We add link for non-default ugroups
                     if ($row[0] > 100) {
@@ -538,9 +538,9 @@ function permission_get_ugroups_permissions($group_id, $object_id, $permission_t
                     $return[$row[0]] = [
                         'ugroup'      => [
                             'id'   => $row[0],
-                            'name' => NameTranslator::getUserGroupDisplayKey((string) $row[1])
+                            'name' => NameTranslator::getUserGroupDisplayKey((string) $row[1]),
                         ],
-                        'permissions' => []
+                        'permissions' => [],
                     ];
                 }
                 //if we have user-defined permissions,
@@ -571,9 +571,9 @@ function permission_get_ugroups_permissions($group_id, $object_id, $permission_t
                 $return[$row[0]] = [
                     'ugroup'      => [
                         'id'   => $row[0],
-                        'name' => NameTranslator::getUserGroupDisplayKey((string) $row[1])
+                        'name' => NameTranslator::getUserGroupDisplayKey((string) $row[1]),
                     ],
-                    'permissions' => []
+                    'permissions' => [],
                 ];
                 //We add link for non-default ugroups
                 if ($row[0] > 100) {
@@ -616,7 +616,7 @@ function permission_fetch_selection_form($permission_type, $object_id, $group_id
         'project_admin_permissions',
         'admins_create_modify_ug',
         [
-                "/project/admin/ugroup.php?group_id=" . urlencode($group_id)
+                "/project/admin/ugroup.php?group_id=" . urlencode($group_id),
             ]
     );
 
@@ -649,7 +649,7 @@ function permission_fetch_selection_field_without_project_admins_and_nobody(
     $object_id,
     $group_id,
     $htmlname = 'ugroups',
-    $disabled = false
+    $disabled = false,
 ) {
     return permission_fetch_selection_field($permission_type, $object_id, $group_id, $htmlname, $disabled, false, false);
 }
@@ -661,7 +661,7 @@ function permission_fetch_selection_field(
     $htmlname = 'ugroups',
     $disabled = false,
     $show_admins = true,
-    $show_nobody = true
+    $show_nobody = true,
 ) {
     $html = '';
 
@@ -710,7 +710,7 @@ function permission_fetch_selection_field(
         $name    = NameTranslator::getUserGroupDisplayKey($row[1]);
         $array[] = [
             'value' => $row[0],
-            'text' => $name
+            'text' => $name,
         ];
     }
 

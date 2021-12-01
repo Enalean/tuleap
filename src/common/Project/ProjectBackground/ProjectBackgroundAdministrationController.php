@@ -56,7 +56,7 @@ final class ProjectBackgroundAdministrationController implements DispatchableWit
         LayoutHelper $layout_helper,
         \TemplateRenderer $renderer,
         IncludeAssets $assets,
-        ProjectBackgroundRetriever $background_retriever
+        ProjectBackgroundRetriever $background_retriever,
     ) {
         $this->layout_helper        = $layout_helper;
         $this->renderer             = $renderer;

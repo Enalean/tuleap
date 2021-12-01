@@ -46,7 +46,7 @@ class VirtualTopMilestoneCrumbBuilder
         $url_top_parameters = [
             'action'   => 'show-top',
             'pane'     => 'topplanning-v2',
-            'group_id' => (int) $project->getGroupId()
+            'group_id' => (int) $project->getGroupId(),
         ];
 
         return new BreadCrumb(

@@ -55,7 +55,7 @@ class GitPresenters_AdminGerritTemplatesPresenter extends GitPresenters_AdminPre
         $project_id,
         $are_mirrors_defined,
         array $external_pane_presenters,
-        $has_gerrit_servers_set_up
+        $has_gerrit_servers_set_up,
     ) {
         parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
 

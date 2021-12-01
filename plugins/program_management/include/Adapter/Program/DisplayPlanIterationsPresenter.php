@@ -36,7 +36,7 @@ final class DisplayPlanIterationsPresenter
         public string $program_increment,
         public string $iterations_labels,
         public bool $is_user_admin,
-        public int $iteration_tracker_id
+        public int $iteration_tracker_id,
     ) {
     }
 

@@ -55,7 +55,7 @@ final class DocmanFileDownloadController extends DispatchablePSR15Compatible imp
         Docman_ItemFactory $item_factory,
         DocmanFileDownloadResponseGenerator $file_download_response_generator,
         LoggerInterface $logger,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct(
             $emitter,

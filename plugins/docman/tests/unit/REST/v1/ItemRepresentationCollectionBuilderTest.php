@@ -117,14 +117,14 @@ class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             'title'       => 'folder 1',
             'user_id'     => 101,
             'update_date' => 1542099693,
-            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
         ];
         $dar_item_2 = [
             'item_id'     => 2,
             'title'       => 'item A',
             'user_id'     => 101,
             'update_date' => 1542099693,
-            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
 
         ];
         $dar_item_3 = [
@@ -132,14 +132,14 @@ class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             'title'       => 'item B',
             'user_id'     => 101,
             'update_date' => 1542099693,
-            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FILE
+            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FILE,
         ];
 
         $this->dao->shouldReceive('searchByParentIdWithPagination')->andReturn(
             [
                 $dar_item_1,
                 $dar_item_2,
-                $dar_item_3
+                $dar_item_3,
             ]
         );
         $this->dao->shouldReceive("foundRows")->andReturn(3);
@@ -182,7 +182,7 @@ class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestC
                     [],
                     true,
                     "name"
-                )
+                ),
             ],
             false,
             false,
@@ -234,7 +234,7 @@ class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestC
                     [],
                     true,
                     'name'
-                )
+                ),
             ],
             false,
             false,
@@ -275,7 +275,7 @@ class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             'user_id'     => 101,
             'update_date' => 1542099693,
             'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
-            'parent_id'   => 0
+            'parent_id'   => 0,
         ];
         $dar_folder_2 = [
             'item_id'     => 3,
@@ -283,7 +283,7 @@ class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             'user_id'     => 101,
             'update_date' => 1542099693,
             'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
-            'parent_id'   => 1
+            'parent_id'   => 1,
         ];
         $dar_item     = [
             'item_id'     => 4,
@@ -291,7 +291,7 @@ class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             'user_id'     => 101,
             'update_date' => 1542099693,
             'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
-            'parent_id'   => 2
+            'parent_id'   => 2,
         ];
 
         $docman_folder1 = new \Docman_Folder($dar_folder_1);
@@ -331,7 +331,7 @@ class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestC
                     [],
                     true,
                     "name"
-                )
+                ),
             ],
             false,
             false,
@@ -362,7 +362,7 @@ class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestC
                     [],
                     true,
                     'name'
-                )
+                ),
             ],
             false,
             false,
@@ -400,7 +400,7 @@ class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             'user_id'     => 101,
             'update_date' => 1542099693,
             'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
-            'parent_id'   => 0
+            'parent_id'   => 0,
         ];
         $item     = new \Docman_File($dar_item);
 

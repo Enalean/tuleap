@@ -50,7 +50,7 @@ class UserTokenCreator
         \GitRepository $repository,
         \DateTimeImmutable $expiration,
         \PFUser $user,
-        UserOperation $user_operation
+        UserOperation $user_operation,
     ) {
         $verification_string        = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $hashed_verification_string = $this->hasher->computeHash($verification_string);

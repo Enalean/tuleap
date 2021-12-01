@@ -80,7 +80,7 @@ class ConfigListCommand extends Command
         return [
             $key,
             $key_metadata->description,
-            $key_metadata->can_be_modified ? 'Yes' : 'No'
+            $key_metadata->can_be_modified ? 'Yes' : 'No',
         ];
     }
 }

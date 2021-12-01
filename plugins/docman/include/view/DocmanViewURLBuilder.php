@@ -56,7 +56,7 @@ final class DocmanViewURLBuilder
         array $params,
         array $url_parameters,
         bool $injs = false,
-        bool $popup = false
+        bool $popup = false,
     ): string {
         $item_specific_action_url = $item->accept(new ItemActionURLVisitor(), $url_parameters);
         if ($item_specific_action_url !== null) {

@@ -70,7 +70,7 @@ class ImmutableTagFactory
 
     public function getFromRESTRepresentation(
         Repository $repository,
-        ImmutableTagRepresentation $immutable_tag_representation
+        ImmutableTagRepresentation $immutable_tag_representation,
     ): ImmutableTag {
         $row = [];
 

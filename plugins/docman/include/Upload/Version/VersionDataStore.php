@@ -59,7 +59,7 @@ final class VersionDataStore implements TusDataStore
         FileBeingUploadedWriter $version_being_uploaded_writer,
         VersionUploadFinisher $version_upload_finisher,
         VersionUploadCanceler $version_upload_canceler,
-        FileBeingUploadedLocker $version_being_uploaded_locker
+        FileBeingUploadedLocker $version_being_uploaded_locker,
     ) {
         $this->version_being_uploaded_information_provider = $version_being_uploaded_information_provider;
         $this->version_being_uploaded_writer               = $version_being_uploaded_writer;

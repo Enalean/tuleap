@@ -27,7 +27,7 @@ class HookConfigSanitizerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $hook_config = [
             'an_incorrect_key'              => 'value',
-            HookConfig::MANDATORY_REFERENCE => true
+            HookConfig::MANDATORY_REFERENCE => true,
         ];
 
         $hook_config_sanitizer = new HookConfigSanitizer();
@@ -41,14 +41,14 @@ class HookConfigSanitizerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $hook_config = [
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
-            HookConfig::MANDATORY_REFERENCE       => false
+            HookConfig::MANDATORY_REFERENCE       => false,
         ];
 
         $hook_config_sanitizer = new HookConfigSanitizer();
         $this->assertEquals(
             [
                 HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
-                HookConfig::MANDATORY_REFERENCE       => false
+                HookConfig::MANDATORY_REFERENCE       => false,
             ],
             $hook_config_sanitizer->sanitizeHookConfigArray($hook_config)
         );

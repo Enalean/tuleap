@@ -66,12 +66,12 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $body->add    = [
             $this->buildLabelRepresentation(1),
             $this->buildLabelRepresentation(2),
-            $this->buildLabelRepresentation(3)
+            $this->buildLabelRepresentation(3),
         ];
         $body->remove = [
             $this->buildLabelRepresentation(4),
             $this->buildLabelRepresentation(5),
-            $this->buildLabelRepresentation(6)
+            $this->buildLabelRepresentation(6),
         ];
 
         $this->item_label_dao->shouldReceive('addLabelsInTransaction')->with(101, [1, 2, 3])->once();
@@ -84,7 +84,7 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $body      = new LabelsPATCHRepresentation();
         $body->add = [
-            $this->buildLabelRepresentation(1)
+            $this->buildLabelRepresentation(1),
         ];
 
         $this->project_label_dao->shouldReceive('startTransaction')->once();
@@ -99,7 +99,7 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $body->add = [
             $this->buildLabelRepresentation(1),
             $this->buildLabelRepresentation(2),
-            $this->buildLabelRepresentation(3)
+            $this->buildLabelRepresentation(3),
         ];
 
         $this->item_label_dao->shouldReceive('addLabelsInTransaction')->with(101, [1, 2, 3])->once();
@@ -114,7 +114,7 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $body->remove = [
             $this->buildLabelRepresentation(4),
             $this->buildLabelRepresentation(5),
-            $this->buildLabelRepresentation(6)
+            $this->buildLabelRepresentation(6),
         ];
 
         $this->item_label_dao->shouldReceive('addLabelsInTransaction')->with(101, [])->once();
@@ -129,7 +129,7 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $body->add    = [
             $this->buildLabelRepresentation(1),
             $this->buildLabelRepresentation(2),
-            $this->buildLabelRepresentation(3)
+            $this->buildLabelRepresentation(3),
         ];
         $body->remove = [
             $this->buildLabelRepresentation(1),
@@ -168,7 +168,7 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $body->add = [
             $this->buildLabelRepresentation(1),
             $this->buildLabelRepresentation(2),
-            $this->buildLabelToCreateRepresentation('Emergency Fix')
+            $this->buildLabelToCreateRepresentation('Emergency Fix'),
         ];
 
         $this->item_label_dao->shouldReceive('addLabelsInTransaction')->with(101, [1, 2, 10])->once();
@@ -180,7 +180,7 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $body      = new LabelsPATCHRepresentation();
         $body->add = [
-            $this->buildLabelToCreateRepresentation('  Emergency Fix  ')
+            $this->buildLabelToCreateRepresentation('  Emergency Fix  '),
         ];
 
         $this->project_label_dao->shouldReceive('createIfNeededInTransaction')->with(66, 'Emergency Fix', \Mockery::any())->once();
@@ -193,7 +193,7 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $body      = new LabelsPATCHRepresentation();
         $body->add = [
             $this->buildLabelRepresentation(1),
-            $this->buildLabelToCreateRepresentation(' ')
+            $this->buildLabelToCreateRepresentation(' '),
         ];
 
         $this->expectException(\Tuleap\Label\REST\UnableToAddEmptyLabelException::class);

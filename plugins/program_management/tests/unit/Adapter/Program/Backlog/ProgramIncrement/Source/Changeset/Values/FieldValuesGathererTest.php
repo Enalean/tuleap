@@ -83,7 +83,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
             'when description value is not found' => ['getDescriptionValue', 'description'],
             'when start date value is not found'  => ['getStartDateValue', 'start_date'],
             'when end date value is not found'    => ['getEndDateValue', 'end_period'],
-            'when status value is not found'      => ['getStatusValues', 'status']
+            'when status value is not found'      => ['getStatusValues', 'status'],
         ];
     }
 
@@ -92,7 +92,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItThrowsWhenFieldMatchingReferenceIsNotFound(
         string $method_under_test,
-        string $property_to_call
+        string $property_to_call,
     ): void {
         $this->form_element_factory->method('getFieldById')->willReturn(null);
 
@@ -105,7 +105,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItThrowsWhenChangesetValuesAreNotFound(
         string $method_under_test,
-        string $property_to_call
+        string $property_to_call,
     ): void {
         $field = $this->createStub(\Tracker_FormElement_Field::class);
         $field->method('getId')->willReturn(404);

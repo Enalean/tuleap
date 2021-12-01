@@ -57,7 +57,7 @@ class GitPermissionsManager
         Git_PermissionsDao $git_permission_dao,
         Git_SystemEventManager $git_system_event_manager,
         FineGrainedDao $fine_grained_dao,
-        FineGrainedRetriever $fine_grained_retriever
+        FineGrainedRetriever $fine_grained_retriever,
     ) {
         $this->permissions_manager      = PermissionsManager::instance();
         $this->git_permission_dao       = $git_permission_dao;
@@ -173,7 +173,7 @@ class GitPermissionsManager
     public function getRepositoryGlobalPermissions(GitRepository $repository)
     {
         $permissions =  [
-            Git::PERM_READ => $this->getGlobalPermission($repository, Git::PERM_READ)
+            Git::PERM_READ => $this->getGlobalPermission($repository, Git::PERM_READ),
         ];
 
         if (
@@ -193,7 +193,7 @@ class GitPermissionsManager
     public function getProjectGlobalPermissions(Project $project)
     {
         $permissions =  [
-            Git::DEFAULT_PERM_READ => $this->getDefaultPermission($project, Git::DEFAULT_PERM_READ)
+            Git::DEFAULT_PERM_READ => $this->getDefaultPermission($project, Git::DEFAULT_PERM_READ),
         ];
 
         if (! $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions($project)) {

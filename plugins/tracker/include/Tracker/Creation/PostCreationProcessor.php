@@ -44,7 +44,7 @@ class PostCreationProcessor
     public function __construct(
         \ReferenceManager $reference_manager,
         TrackerInNewDropdownDao $in_new_dropdown_dao,
-        TrackerPrivateCommentUGroupEnabledDao $private_comment_dao
+        TrackerPrivateCommentUGroupEnabledDao $private_comment_dao,
     ) {
         $this->reference_manager   = $reference_manager;
         $this->in_new_dropdown_dao = $in_new_dropdown_dao;

@@ -458,7 +458,7 @@ function news_fetch_ugroups($project)
         ProjectUGroup::NONE,
         ProjectUGroup::ANONYMOUS,
         ProjectUGroup::REGISTERED,
-        ProjectUGroup::TRACKER_ADMIN
+        ProjectUGroup::TRACKER_ADMIN,
     ];
 
     $ugroups = $ugroup_manager->getUGroups($project, $excluded_ugroups);

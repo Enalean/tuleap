@@ -435,7 +435,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     private function getAdminEditRowModifiable(
         Tracker_FormElement_Field_List_Value $value,
         ?ColorpickerMountPointPresenter $decorator,
-        bool $is_custom_value
+        bool $is_custom_value,
     ): string {
         return $this->getTemplateRenderer()->renderToString(
             'admin-edit-row-modifiable',
@@ -776,7 +776,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         SimpleXMLElement $root,
         &$xmlMapping,
         $project_export_context,
-        UserXMLExporter $user_xml_exporter
+        UserXMLExporter $user_xml_exporter,
     ) {
         $root->addAttribute('is_rank_alpha', $this->is_rank_alpha ? "1" : "0");
         if (! $this->getAllValues()) {

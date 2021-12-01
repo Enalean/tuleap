@@ -45,7 +45,7 @@ final class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdaterTest extend
             $this->field_change_xml,
             [
                 '2001',
-                '2002'
+                '2002',
             ]
         );
 

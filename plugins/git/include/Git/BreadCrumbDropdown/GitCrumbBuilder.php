@@ -100,7 +100,7 @@ class GitCrumbBuilder
         $fork_repositories_url = $this->plugin_path . '/?' . http_build_query(
             [
                 'group_id' => $project->getID(),
-                'action'   => 'fork_repositories'
+                'action'   => 'fork_repositories',
             ]
         );
         $links->add(

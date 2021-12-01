@@ -43,7 +43,7 @@ final class MirroredIterationTrackerIdentifier implements TrackerIdentifier
         RetrieveMirroredIterationTracker $tracker_retriever,
         RetrieveProjectReference $project_retriever,
         TeamIdentifier $team,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): ?self {
         $team_project               = $project_retriever->buildFromId($team->getId());
         $mirrored_iteration_tracker = $tracker_retriever->retrieveSecondPlanningMilestoneTracker(

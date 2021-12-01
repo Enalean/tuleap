@@ -53,7 +53,7 @@ class SiteContentCustomisationController implements DispatchableWithRequest
     public function __construct(
         AdminPageRenderer $admin_page_renderer,
         TemplateRendererFactory $template_renderer_factory,
-        BaseLanguageFactory $base_language_factory
+        BaseLanguageFactory $base_language_factory,
     ) {
         $this->base_language_factory = $base_language_factory;
         $this->admin_page_renderer   = $admin_page_renderer;
@@ -80,7 +80,7 @@ class SiteContentCustomisationController implements DispatchableWithRequest
                 'title' => $title,
                 'customisations' => array_values($customisations),
                 'has_customisations' => ! empty($customisations['en_US']) || ! empty($customisations['fr_FR']),
-                'json_encoded_customisations' => json_encode($customisations)
+                'json_encoded_customisations' => json_encode($customisations),
             ]
         );
         $this->admin_page_renderer->footer();
@@ -93,7 +93,7 @@ class SiteContentCustomisationController implements DispatchableWithRequest
     {
         $customisations = [
             'en_US' => $this->getCustomisationsDoneForLocale('en_US'),
-            'fr_FR' => $this->getCustomisationsDoneForLocale('fr_FR')
+            'fr_FR' => $this->getCustomisationsDoneForLocale('fr_FR'),
         ];
 
         return $customisations;
@@ -110,7 +110,7 @@ class SiteContentCustomisationController implements DispatchableWithRequest
 
         return [
             'locale' => $locale,
-            'customisations' => $customisations
+            'customisations' => $customisations,
         ];
     }
 
@@ -146,7 +146,7 @@ class SiteContentCustomisationController implements DispatchableWithRequest
         string $original_path,
         string $sitecontent_path,
         BaseLanguage $language,
-        array &$customisations
+        array &$customisations,
     ): void {
         $iterator = new RecursiveDirectoryIterator(
             $sitecontent_path,
@@ -182,7 +182,7 @@ class SiteContentCustomisationController implements DispatchableWithRequest
                     'primary' => $primary_key,
                     'secondary' => $secondary_key,
                     'customisation' => $customisation,
-                    'original' => $original
+                    'original' => $original,
 
                 ];
             }
@@ -194,7 +194,7 @@ class SiteContentCustomisationController implements DispatchableWithRequest
 
         $customisations[] = [
             'path' => $customised_filename,
-            'lines' => $lines
+            'lines' => $lines,
         ];
     }
 }

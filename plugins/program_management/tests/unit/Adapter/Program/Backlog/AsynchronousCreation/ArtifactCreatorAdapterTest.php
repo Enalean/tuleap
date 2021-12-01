@@ -126,16 +126,16 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     self::ARTIFACT_LINK_ID => [
                         'new_values' => (string) self::SOURCE_PROGRAM_INCREMENT_ID,
-                        'types'      => [self::SOURCE_PROGRAM_INCREMENT_ID => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME]
+                        'types'      => [self::SOURCE_PROGRAM_INCREMENT_ID => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME],
                     ],
                     self::TITLE_ID         => self::TITLE_VALUE,
                     self::DESCRIPTION_ID   => [
                         'content' => self::DESCRIPTION_VALUE,
-                        'format'  => self::DESCRIPTION_FORMAT
+                        'format'  => self::DESCRIPTION_FORMAT,
                     ],
                     self::STATUS_ID        => [self::MAPPED_STATUS_BIND_VALUE_ID],
                     self::START_DATE_ID    => '2020-11-02',
-                    self::END_DATE_ID      => '2020-11-06'
+                    self::END_DATE_ID      => '2020-11-06',
                 ],
                 self::isInstanceOf(\PFUser::class),
                 self::SUBMISSION_TIMESTAMP,

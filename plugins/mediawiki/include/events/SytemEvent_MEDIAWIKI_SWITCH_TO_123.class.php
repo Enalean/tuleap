@@ -40,7 +40,7 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent
         Mediawiki_Migration_MediawikiMigrator $mediawiki_migrator,
         ProjectManager $project_manager,
         MediawikiVersionManager $version_manager,
-        MediawikiSiteAdminResourceRestrictor $resource_restrictor
+        MediawikiSiteAdminResourceRestrictor $resource_restrictor,
     ) {
         $this->project_manager     = $project_manager;
         $this->mediawiki_migrator  = $mediawiki_migrator;

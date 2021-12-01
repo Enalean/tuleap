@@ -61,7 +61,7 @@ class DefaultFineGrainedPermissionReplicator
         TemplateFineGrainedPermissionSaver $saver,
         RegexpFineGrainedEnabler $regexp_enabler,
         RegexpFineGrainedRetriever $regexp_retriever,
-        PatternValidator $pattern_validator
+        PatternValidator $pattern_validator,
     ) {
         $this->fine_grained_dao  = $fine_grained_dao;
         $this->factory           = $factory;
@@ -74,7 +74,7 @@ class DefaultFineGrainedPermissionReplicator
     public function replicate(
         Project $template_project,
         $new_project_id,
-        array $ugroups_mapping
+        array $ugroups_mapping,
     ) {
         $this->replicateDefaultRegexpUsage($template_project, $new_project_id);
 

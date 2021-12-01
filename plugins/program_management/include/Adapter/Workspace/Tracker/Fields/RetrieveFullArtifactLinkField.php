@@ -27,6 +27,6 @@ use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 interface RetrieveFullArtifactLinkField
 {
     public function getArtifactLinkField(
-        TrackerIdentifier $tracker_identifier
+        TrackerIdentifier $tracker_identifier,
     ): \Tracker_FormElement_Field_ArtifactLink|null;
 }

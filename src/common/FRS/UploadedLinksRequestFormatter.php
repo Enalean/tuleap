@@ -56,7 +56,7 @@ class UploadedLinksRequestFormatter
 
                 $uploaded_links[] = [
                     "link" => $link,
-                    "name" => $release_links_name[$key]
+                    "name" => $release_links_name[$key],
                 ];
             }
         }

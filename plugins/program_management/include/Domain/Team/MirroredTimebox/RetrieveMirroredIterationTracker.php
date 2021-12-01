@@ -35,6 +35,6 @@ interface RetrieveMirroredIterationTracker
     public function retrieveSecondPlanningMilestoneTracker(
         ProjectReference $project,
         UserIdentifier $user,
-        ?ConfigurationErrorsCollector $errors_collector
+        ?ConfigurationErrorsCollector $errors_collector,
     ): ?TrackerReference;
 }

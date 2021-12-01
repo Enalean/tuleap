@@ -36,7 +36,7 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
         Tracker $tracker,
         CSRFSynchronizerToken $token,
         TemplateRenderer $renderer,
-        Tracker_Workflow_Trigger_RulesManager $rule_manager
+        Tracker_Workflow_Trigger_RulesManager $rule_manager,
     ) {
         parent::__construct($tracker);
 

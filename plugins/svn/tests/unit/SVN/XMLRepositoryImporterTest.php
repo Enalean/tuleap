@@ -158,7 +158,7 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->user_manager,
                 $this->notifications_emails_builder,
                 $this->repository_copier,
-                $this->xml_user_checker
+                $this->xml_user_checker,
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 

@@ -58,7 +58,7 @@ class ProjectAuthorization
             $event_manager->processEvent(Event::CAN_USER_ACCESS_UGROUP_INFO, [
                 'can_access' => &$can_access,
                 'user'       => $user,
-                'project'    => $project
+                'project'    => $project,
             ]);
 
             if (! $can_access) {

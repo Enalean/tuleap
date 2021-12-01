@@ -42,7 +42,7 @@ class Router
     public function __construct(
         PreferencesController $preferences_controller,
         AddWidgetController $add_widget_controller,
-        WidgetFactory $widget_factory
+        WidgetFactory $widget_factory,
     ) {
         $this->preferences_controller = $preferences_controller;
         $this->add_widget_controller  = $add_widget_controller;

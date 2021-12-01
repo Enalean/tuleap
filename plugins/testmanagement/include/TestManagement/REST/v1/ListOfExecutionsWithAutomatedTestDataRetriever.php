@@ -62,7 +62,7 @@ class ListOfExecutionsWithAutomatedTestDataRetriever
         ArtifactDao $artifact_dao,
         DefinitionForExecutionRetriever $definition_retriever,
         ExecutionWithAutomatedTestDataProvider $execution_with_automated_data_provider,
-        Tracker_ArtifactFactory $artifact_factory
+        Tracker_ArtifactFactory $artifact_factory,
     ) {
         $this->config                                 = $config;
         $this->artifact_dao                           = $artifact_dao;
@@ -91,7 +91,7 @@ class ListOfExecutionsWithAutomatedTestDataRetriever
     private function getExecutionWithAutomatedTest(
         Artifact $campaign_artifact,
         PFUser $user,
-        int $execution_tracker_id
+        int $execution_tracker_id,
     ): array {
         $list_of_executions_with_automated_test = [];
 

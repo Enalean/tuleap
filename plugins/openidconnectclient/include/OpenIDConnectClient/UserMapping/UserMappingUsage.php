@@ -41,7 +41,7 @@ class UserMappingUsage
         $provider_icon,
         $is_unique_authentication_endpoint,
         $user_id,
-        int $last_used
+        int $last_used,
     ) {
         $this->user_mapping_id                   = $user_mapping_id;
         $this->provider_id                       = $provider_id;

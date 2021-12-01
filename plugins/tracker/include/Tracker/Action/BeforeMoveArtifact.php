@@ -45,7 +45,7 @@ class BeforeMoveArtifact
 
     public function __construct(
         EventManager $event_manager,
-        MoveSemanticChecker ...$semantic_checkers
+        MoveSemanticChecker ...$semantic_checkers,
     ) {
         $this->event_manager     = $event_manager;
         $this->semantic_checkers = $semantic_checkers;
@@ -58,7 +58,7 @@ class BeforeMoveArtifact
     public function artifactCanBeMoved(
         Tracker $source_tracker,
         Tracker $target_tracker,
-        FeedbackFieldCollectorInterface $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector,
     ) {
         $event = new MoveArtifactGetExternalSemanticCheckers();
         $this->event_manager->processEvent($event);

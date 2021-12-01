@@ -55,7 +55,7 @@ class ContinuousIntegrationCollector
         TemplateRenderer $renderer,
         RepositoryManager $repository_manager,
         Dao $dao,
-        Factory $factory
+        Factory $factory,
     ) {
         $this->renderer           = $renderer;
         $this->repository_manager = $repository_manager;
@@ -84,7 +84,7 @@ class ContinuousIntegrationCollector
                 'title'     => dgettext('tuleap-hudson_svn', 'Subversion multi repositories trigger'),
                 'used'      => $job_ids,
                 'add_form'  => $html_form,
-                'edit_form' => $html_form
+                'edit_form' => $html_form,
             ];
         }
     }
@@ -131,7 +131,7 @@ class ContinuousIntegrationCollector
             $repositories_presenter[] = [
                 'id'          => $repository->getId(),
                 'name'        => $repository->getName(),
-                'is_selected' => $this->isRepositorySelected($repository, $job)
+                'is_selected' => $this->isRepositorySelected($repository, $job),
             ];
         }
 

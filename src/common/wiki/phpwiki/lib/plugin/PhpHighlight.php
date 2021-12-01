@@ -86,7 +86,7 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
                      'comment' => ini_get("highlight.comment"), //'#FF9900',
                      'keyword' => ini_get("highlight.keyword"), //'#006600',
                      'default' => ini_get("highlight.default"), //'#0000CC',
-                     'html'    => ini_get("highlight.html")     //'#000000'
+                     'html'    => ini_get("highlight.html"),     //'#000000'
                      ];
     }
 

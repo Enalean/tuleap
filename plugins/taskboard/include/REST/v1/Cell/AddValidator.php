@@ -34,7 +34,7 @@ class AddValidator
     public function validateArtifacts(
         Artifact $swimlane_artifact,
         Artifact $artifact_to_add,
-        PFUser $current_user
+        PFUser $current_user,
     ): void {
         if (
             ! $this->isSoloItem($swimlane_artifact, $artifact_to_add) &&
@@ -59,7 +59,7 @@ class AddValidator
     private function isSwimlaneParentOfArtifactToAdd(
         Artifact $swimlane_artifact,
         Artifact $artifact_to_add,
-        PFUser $current_user
+        PFUser $current_user,
     ): bool {
         $parent_of_artifact_to_add = $artifact_to_add->getParent($current_user);
         return $parent_of_artifact_to_add !== null

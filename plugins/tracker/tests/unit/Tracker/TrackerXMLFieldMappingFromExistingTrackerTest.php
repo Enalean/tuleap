@@ -136,7 +136,7 @@ class TrackerXMLFieldMappingFromExistingTrackerTest extends \Tuleap\Test\PHPUnit
                 $this->bind_value_3,
                 $this->bind_value_4,
                 $this->bind_value_5,
-                $this->bind_value_6
+                $this->bind_value_6,
             ]
         );
 
@@ -203,7 +203,7 @@ class TrackerXMLFieldMappingFromExistingTrackerTest extends \Tuleap\Test\PHPUnit
                 $this->bind_value_3,
                 $this->bind_value_4,
                 $this->bind_value_5,
-                $this->bind_value_6
+                $this->bind_value_6,
             ]
         );
 
@@ -248,7 +248,7 @@ class TrackerXMLFieldMappingFromExistingTrackerTest extends \Tuleap\Test\PHPUnit
                 $this->bind_value_3,
                 $this->bind_value_4,
                 $this->bind_value_5,
-                $this->bind_value_6
+                $this->bind_value_6,
             ]
         );
 

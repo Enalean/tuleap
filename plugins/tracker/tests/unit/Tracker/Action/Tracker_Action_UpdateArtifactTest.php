@@ -213,7 +213,7 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
         $this->computed_field->shouldReceive('isArtifactValueAutocomputed')->andReturns(true);
 
         $expected = [
-            $this->artifact_id => ['remaining_effort' => '42 (autocomputed)']
+            $this->artifact_id => ['remaining_effort' => '42 (autocomputed)'],
         ];
         $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
 
@@ -230,7 +230,7 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
         $user_story_id = $this->user_story->getId();
         $expected      = [
             $this->artifact_id => ['remaining_effort' => 42],
-            $user_story_id     => ['remaining_effort' => 23]
+            $user_story_id     => ['remaining_effort' => 23],
         ];
         $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
 

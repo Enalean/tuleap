@@ -78,7 +78,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
         IncludeAssets $agiledashboard_assets,
         IncludeAssets $taskboard_assets,
         VisitRecorder $visit_recorder,
-        HeaderOptionsProvider $header_options_provider
+        HeaderOptionsProvider $header_options_provider,
     ) {
         $this->milestone_extractor     = $milestone_extractor;
         $this->renderer                = $renderer;

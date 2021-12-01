@@ -52,7 +52,7 @@ class ListInfoFromVariablesProvider
         \ForumMLPlugin $plugin,
         \ProjectManager $project_manager,
         ThreadsDao $dao,
-        System_Command $command
+        System_Command $command,
     ) {
         $this->plugin          = $plugin;
         $this->dao             = $dao;

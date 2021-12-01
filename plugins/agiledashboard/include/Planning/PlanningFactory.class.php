@@ -31,7 +31,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
     public function __construct(
         PlanningDao $dao,
         TrackerFactory $tracker_factory,
-        PlanningPermissionsManager $planning_permissions_manager
+        PlanningPermissionsManager $planning_permissions_manager,
     ) {
         $this->dao                          = $dao;
         $this->tracker_factory              = $tracker_factory;

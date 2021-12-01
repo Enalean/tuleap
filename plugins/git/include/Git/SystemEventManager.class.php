@@ -332,7 +332,7 @@ class Git_SystemEventManager
             SystemEvent_GIT_UPDATE_MIRROR::NAME,
             SystemEvent_GIT_DELETE_MIRROR::NAME,
             SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME,
-            ProjectIsSuspended::NAME
+            ProjectIsSuspended::NAME,
         ];
     }
 

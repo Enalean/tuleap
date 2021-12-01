@@ -441,7 +441,7 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_json_data = json_encode(
             [
                 'description' => "Migration of $gerrit_project_name from Tuleap",
-                'parent'      => $project_name
+                'parent'      => $project_name,
             ]
         );
         $request            = $this->http_client->getLastRequest();
@@ -471,8 +471,8 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
                 'description'      => "Migration of $project_name from Tuleap",
                 'permissions_only' => true,
                 'owners'           => [
-                    'firefox/project_admins'
-                ]
+                    'firefox/project_admins',
+                ],
             ]
         );
         $request            = $this->http_client->getLastRequest();
@@ -512,7 +512,7 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_json_data = json_encode(
             [
-                'state' => 'READ_ONLY'
+                'state' => 'READ_ONLY',
             ]
         );
         $request            = $this->http_client->getLastRequest();
@@ -535,7 +535,7 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_json_data = json_encode(
             [
-                'parent' => 'prj'
+                'parent' => 'prj',
             ]
         );
         $request            = $this->http_client->getLastRequest();
@@ -558,7 +558,7 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_json_data = json_encode(
             [
-                'parent' => Git_Driver_Gerrit::DEFAULT_PARENT_PROJECT
+                'parent' => Git_Driver_Gerrit::DEFAULT_PARENT_PROJECT,
             ]
         );
         $request            = $this->http_client->getLastRequest();
@@ -706,7 +706,7 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_json_data = json_encode(
             [
-                'members' => ['gerrit-adm', 'testUser']
+                'members' => ['gerrit-adm', 'testUser'],
             ]
         );
         $this->assertCount(2, $this->http_client->getRequests());

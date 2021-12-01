@@ -39,7 +39,7 @@ final class MirroredTimeboxFirstChangesetBuilder
         int $mapped_status_bind_value_id,
         SynchronizedFieldsStubPreparation $fields,
         SourceTimeboxChangesetValues $source_values,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): MirroredTimeboxFirstChangeset {
         $artifact_link_value = ArtifactLinkValue::fromArtifactAndType(
             $source_values->getSourceTimebox(),

@@ -49,7 +49,7 @@ class RepositoryFineGrainedRepresentationBuilder
         CollectionOfUGroupRepresentationBuilder $collection_of_ugroups_builder,
         CollectionOfUGroupsRepresentationFormatter $formatter,
         FineGrainedPermissionFactory $fine_grained_factory,
-        AdminUrlBuilder $url_builder
+        AdminUrlBuilder $url_builder,
     ) {
         $this->permissions_manager           = $permissions_manager;
         $this->fine_grained_factory          = $fine_grained_factory;
@@ -61,7 +61,7 @@ class RepositoryFineGrainedRepresentationBuilder
     public function build(
         GitRepository $repository,
         Project $project,
-        $selected_ugroup_id
+        $selected_ugroup_id,
     ) {
         $permissions = $this->permissions_manager->getRepositoryGlobalPermissions($repository);
 

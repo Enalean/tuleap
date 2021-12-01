@@ -72,7 +72,7 @@ class RepositoryManager
         Destructor $destructor,
         EventManager $event_manager,
         BackendSVN $backend,
-        AccessFileHistoryFactory $access_file_history_factory
+        AccessFileHistoryFactory $access_file_history_factory,
     ) {
         $this->dao                         = $dao;
         $this->project_manager             = $project_manager;

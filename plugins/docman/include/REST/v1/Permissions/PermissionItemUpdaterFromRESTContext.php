@@ -44,7 +44,7 @@ final class PermissionItemUpdaterFromRESTContext
     public function __construct(
         PermissionItemUpdater $permission_item_updater,
         Docman_PermissionsManager $permissions_manager,
-        DocmanItemPermissionsForGroupsSetFactory $permissions_for_groups_set_factory
+        DocmanItemPermissionsForGroupsSetFactory $permissions_for_groups_set_factory,
     ) {
         $this->permission_item_updater            = $permission_item_updater;
         $this->permissions_manager                = $permissions_manager;
@@ -57,7 +57,7 @@ final class PermissionItemUpdaterFromRESTContext
     public function updateItemPermissions(
         Docman_Item $item,
         PFUser $user,
-        DocmanItemPermissionsForGroupsSetRepresentation $representation
+        DocmanItemPermissionsForGroupsSetRepresentation $representation,
     ): void {
         if (! $this->permissions_manager->userCanManage($user, $item->getId())) {
             throw new RestException(403);
@@ -76,7 +76,7 @@ final class PermissionItemUpdaterFromRESTContext
     public function updateFolderPermissions(
         \Docman_Folder $folder,
         PFUser $user,
-        DocmanFolderPermissionsForGroupsPUTRepresentation $representation
+        DocmanFolderPermissionsForGroupsPUTRepresentation $representation,
     ): void {
         if (! $this->permissions_manager->userCanManage($user, $folder->getId())) {
             throw new RestException(403);

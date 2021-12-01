@@ -42,7 +42,7 @@ final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCas
         $middleware = new class implements MiddlewareInterface {
             public function process(
                 ServerRequestInterface $request,
-                RequestHandlerInterface $handler
+                RequestHandlerInterface $handler,
             ): ResponseInterface {
                 $response = $handler->handle($request);
                 return $response->withHeader('middleware', 'OK');
@@ -61,7 +61,7 @@ final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCas
             public function __construct(
                 EmitterInterface $emitter,
                 BaseLayout $expected_base_layout,
-                MiddlewareInterface ...$middleware_stack
+                MiddlewareInterface ...$middleware_stack,
             ) {
                 parent::__construct($emitter, ...$middleware_stack);
                 $this->expected_base_layout = $expected_base_layout;

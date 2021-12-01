@@ -68,7 +68,7 @@ class GroupAutocompleteController implements DispatchableWithRequest
 
                     $group_list[] = [
                         'id' => $common_name,
-                        'text' => $display_name
+                        'text' => $display_name,
                     ];
                     $lri->next();
                 }
@@ -81,8 +81,8 @@ class GroupAutocompleteController implements DispatchableWithRequest
         $output = [
             'results'    => $group_list,
             'pagination' => [
-                'more' => $more_results
-            ]
+                'more' => $more_results,
+            ],
         ];
 
         $layout->sendJSON($output);

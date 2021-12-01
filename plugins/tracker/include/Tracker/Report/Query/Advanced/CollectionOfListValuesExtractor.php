@@ -84,7 +84,7 @@ class CollectionOfListValuesExtractor implements ValueWrapperVisitor
 
     public function visitCurrentUserValueWrapper(
         CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         $value = $value_wrapper->getValue();
         if (! $value) {
@@ -95,7 +95,7 @@ class CollectionOfListValuesExtractor implements ValueWrapperVisitor
 
     public function visitStatusOpenValueWrapper(
         StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new StatusOpenIsNotSupportedException();
     }

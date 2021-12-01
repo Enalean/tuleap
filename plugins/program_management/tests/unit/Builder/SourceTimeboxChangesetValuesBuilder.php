@@ -78,7 +78,7 @@ final class SourceTimeboxChangesetValuesBuilder
         int $start_date,
         int $end_date,
         int $source_timebox_id,
-        int $submission_date
+        int $submission_date,
     ): SourceTimeboxChangesetValues {
         return SourceTimeboxChangesetValues::fromMirroringOrder(
             GatherSynchronizedFieldsStub::withDefaults(),
@@ -111,7 +111,7 @@ final class SourceTimeboxChangesetValuesBuilder
         int $start_date,
         int $duration,
         int $source_timebox_id,
-        int $submission_date
+        int $submission_date,
     ): SourceTimeboxChangesetValues {
         return SourceTimeboxChangesetValues::fromMirroringOrder(
             GatherSynchronizedFieldsStub::withFieldsPreparations(

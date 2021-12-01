@@ -119,8 +119,8 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'Nothing changed'
-                ]
+                    'message' => 'Nothing changed',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -157,12 +157,12 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::ERROR,
-                    'message' => 'The submitted language is not supported.'
+                    'message' => 'The submitted language is not supported.',
                 ],
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'Nothing changed'
-                ]
+                    'message' => 'Nothing changed',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -199,8 +199,8 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'Nothing changed'
-                ]
+                    'message' => 'Nothing changed',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -234,8 +234,8 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'Nothing changed'
-                ]
+                    'message' => 'Nothing changed',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -275,12 +275,12 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::ERROR,
-                    'message' => 'The chosen color is not allowed.'
+                    'message' => 'The chosen color is not allowed.',
                 ],
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'Nothing changed'
-                ]
+                    'message' => 'Nothing changed',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -320,8 +320,8 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'Nothing changed'
-                ]
+                    'message' => 'Nothing changed',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -358,8 +358,8 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'Nothing changed'
-                ]
+                    'message' => 'Nothing changed',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -396,8 +396,8 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'Nothing changed'
-                ]
+                    'message' => 'Nothing changed',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -434,8 +434,8 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'User preferences successfully updated'
-                ]
+                    'message' => 'User preferences successfully updated',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -472,8 +472,8 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'Nothing changed'
-                ]
+                    'message' => 'Nothing changed',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -510,12 +510,12 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::ERROR,
-                    'message' => 'Submitted username display is not valid.'
+                    'message' => 'Submitted username display is not valid.',
                 ],
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'Nothing changed'
-                ]
+                    'message' => 'Nothing changed',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -552,12 +552,12 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::ERROR,
-                    'message' => 'Submitted relative dates display is not valid.'
+                    'message' => 'Submitted relative dates display is not valid.',
                 ],
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'Nothing changed'
-                ]
+                    'message' => 'Nothing changed',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -594,8 +594,8 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'Nothing changed'
-                ]
+                    'message' => 'Nothing changed',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -632,8 +632,8 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'Nothing changed'
-                ]
+                    'message' => 'Nothing changed',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -670,8 +670,8 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'Nothing changed'
-                ]
+                    'message' => 'Nothing changed',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -708,8 +708,8 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'User preferences successfully updated'
-                ]
+                    'message' => 'User preferences successfully updated',
+                ],
             ],
             $layout_inspector->getFeedback()
         );
@@ -778,8 +778,8 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 [
                     'level'   => \Feedback::INFO,
-                    'message' => 'User preferences successfully updated'
-                ]
+                    'message' => 'User preferences successfully updated',
+                ],
             ],
             $layout_inspector->getFeedback()
         );

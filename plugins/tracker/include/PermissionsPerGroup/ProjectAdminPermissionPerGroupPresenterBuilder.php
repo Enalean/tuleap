@@ -35,14 +35,14 @@ class ProjectAdminPermissionPerGroupPresenterBuilder
     private $ugroup_manager;
 
     public function __construct(
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->ugroup_manager = $ugroup_manager;
     }
 
     public function buildPresenter(
         Project $project,
-        $ugroup_id = null
+        $ugroup_id = null,
     ) {
         $ugroup = ($ugroup_id)
             ? $this->ugroup_manager->getById($ugroup_id)

@@ -39,7 +39,7 @@ class ProjectPresentersBuilder
      * @return ProjectPresenter[]
      */
     public function build(
-        PFUser $current_user
+        PFUser $current_user,
     ): array {
         $this->current_user    = $current_user;
         $this->project_manager = ProjectManager::instance();

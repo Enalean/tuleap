@@ -67,7 +67,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         \Docman_VersionFactory $docman_version_factory,
         \Docman_LinkVersionFactory $docman_link_version_factory,
         \Docman_ItemFactory $item_factory,
-        \EventManager $event_manager
+        \EventManager $event_manager,
     ) {
         $this->item_representation_builder = $item_representation_builder;
         $this->docman_version_factory      = $docman_version_factory;
@@ -128,7 +128,7 @@ class ItemRepresentationVisitor implements ItemVisitor
                     'group_id' => $item->getGroupId(),
                     'item'     => $item,
                     'version'  => $version,
-                    'user'     => $params['current_user']
+                    'user'     => $params['current_user'],
                 ]
             );
         }
@@ -177,7 +177,7 @@ class ItemRepresentationVisitor implements ItemVisitor
                     'group_id' => $item->getGroupId(),
                     'item'     => $item,
                     'version'  => $version,
-                    'user'     => $params['current_user']
+                    'user'     => $params['current_user'],
                 ]
             );
         }

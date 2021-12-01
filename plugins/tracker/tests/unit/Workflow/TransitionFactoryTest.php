@@ -128,7 +128,7 @@ final class TransitionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
         $values = [
             2066  => 3066,
             2067  => 3067,
-            2068  => 3068
+            2068  => 3068,
         ];
 
         $tf->shouldReceive('addTransition')->with(1, 3066, 3067)->once()->andReturn(101);

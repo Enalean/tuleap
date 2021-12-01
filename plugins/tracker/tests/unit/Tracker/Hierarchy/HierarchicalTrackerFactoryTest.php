@@ -80,7 +80,7 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             2 => $possible_child_1,
             3 => $possible_child_2,
             4 => $ancestor_1,
-            5 => $ancestor_2
+            5 => $ancestor_2,
         ];
 
         $tracker_factory = \Mockery::spy(\TrackerFactory::class);
@@ -126,14 +126,14 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             '3' => $this->getTrackerWithIdNameAndProject(3, 'Stories', $project),
             '4' => $this->getTrackerWithIdNameAndProject(4, 'Tasks', $project),
             '5' => $this->getTrackerWithIdNameAndProject(5, 'Bugs', $project),
-            '6' => $this->getTrackerWithIdNameAndProject(6, 'Documents', $project)
+            '6' => $this->getTrackerWithIdNameAndProject(6, 'Documents', $project),
         ];
 
         $hierarchy_dar = [
             ['child_id' => 2, 'parent_id' => 1],
             ['child_id' => 3, 'parent_id' => 2],
             ['child_id' => 4, 'parent_id' => 3],
-            ['child_id' => 5, 'parent_id' => 2]
+            ['child_id' => 5, 'parent_id' => 2],
         ];
 
         $expected_hierarchy = $this->getHierarchyAsTreeNode(
@@ -150,15 +150,15 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                                     'name'     => 'Stories',
                                     'id'       => 3,
                                     'children' => [
-                                        ['name' => 'Tasks', 'id' => 4, 'children' => []]
-                                    ]
+                                        ['name' => 'Tasks', 'id' => 4, 'children' => []],
+                                    ],
                                 ],
-                                ['name' => 'Bugs', 'id' => 5, 'children' => []]
-                            ]
-                        ]
-                    ]
+                                ['name' => 'Bugs', 'id' => 5, 'children' => []],
+                            ],
+                        ],
+                    ],
                 ],
-                ['name' => 'Documents', 'id' => 6, 'children' => []]
+                ['name' => 'Documents', 'id' => 6, 'children' => []],
             ]
         );
 
@@ -177,7 +177,7 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ['child_id' => 2, 'parent_id' => 1],
             ['child_id' => 3, 'parent_id' => 2],
             ['child_id' => 4, 'parent_id' => 3],
-            ['child_id' => 5, 'parent_id' => 2]
+            ['child_id' => 5, 'parent_id' => 2],
         ];
         $project_trackers = [
             '1' => $this->getTrackerWithIdNameAndProject(1, 'Releases', $project),
@@ -185,7 +185,7 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             '3' => $this->getTrackerWithIdNameAndProject(3, 'Stories', $project),
             '4' => $this->getTrackerWithIdNameAndProject(4, 'Tasks', $project),
             '5' => $this->getTrackerWithIdNameAndProject(5, 'Bugs', $project),
-            '6' => $this->getTrackerWithIdNameAndProject(6, 'Documents', $project)
+            '6' => $this->getTrackerWithIdNameAndProject(6, 'Documents', $project),
         ];
         $project_id       = 100;
         $dao              = $this->aMockDaoWith($project_id, $hierarchy_dar);
@@ -198,7 +198,7 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             4      => [],
             5      => [],
             6      => [],
-            'root' => [1, 6]
+            'root' => [1, 6],
         ];
         $this->assertEquals($expected, $factory->getChildrenMapFromDar($hierarchy_dar, $project_trackers));
     }
@@ -216,7 +216,7 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             '120' => $story_tracker,
             '121' => $this->getTrackerWithIdNameAndProject(121, 'Tasks', $project),
             '122' => $this->getTrackerWithIdNameAndProject(122, 'Bugs', $project),
-            '119' => $this->getTrackerWithIdNameAndProject(119, 'Epics', $project)
+            '119' => $this->getTrackerWithIdNameAndProject(119, 'Epics', $project),
         ];
         $tracker          = $project_trackers['120'];
 
@@ -224,7 +224,7 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ['parent_id' => 120, 'child_id' => 118],
             ['parent_id' => 120, 'child_id' => 117],
             ['parent_id' => 119, 'child_id' => 120],
-            ['parent_id' => 120, 'child_id' => 122]
+            ['parent_id' => 120, 'child_id' => 122],
         ];
 
         $expected_hierarchy = $this->getHierarchyAsTreeNode(
@@ -239,12 +239,12 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                             'children' => [
                                 ['name' => 'Releases', 'id' => 118, 'children' => []],
                                 ['name' => 'Projects', 'id' => 117, 'children' => []],
-                                ['name' => 'Bugs', 'id' => 122, 'children' => []]
-                            ]
-                        ]
-                    ]
+                                ['name' => 'Bugs', 'id' => 122, 'children' => []],
+                            ],
+                        ],
+                    ],
                 ],
-                ['name' => 'Tasks', 'id' => 121, 'children' => []]
+                ['name' => 'Tasks', 'id' => 121, 'children' => []],
             ]
         );
 
@@ -262,7 +262,7 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $story_tracker    = $this->getTrackerWithIdNameAndProject(119, 'Stories', $project);
         $project_trackers = [
-            '119' => $story_tracker
+            '119' => $story_tracker,
         ];
 
         $hierarchy_dar = [
@@ -293,7 +293,7 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_tracker_id       = 2;
 
         $hierarchy_dar = [
-            ['child_id' => $current_tracker_id, 'parent_id' => $expected_root_tracker_id]
+            ['child_id' => $current_tracker_id, 'parent_id' => $expected_root_tracker_id],
         ];
 
         $actual_root_tracker_id = $this->getRootTrackerId($hierarchy_dar, $current_tracker_id);
@@ -307,7 +307,7 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $hierarchy_dar = [
             ['child_id' => 2, 'parent_id' => 4],
-            ['child_id' => $current_tracker_id, 'parent_id' => $expected_root_tracker_id]
+            ['child_id' => $current_tracker_id, 'parent_id' => $expected_root_tracker_id],
         ];
 
         $actual_root_tracker_id = $this->getRootTrackerId($hierarchy_dar, $current_tracker_id);
@@ -323,7 +323,7 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ['child_id' => 2, 'parent_id' => $expected_root_tracker_id],
             ['child_id' => 3, 'parent_id' => 2],
             ['child_id' => 4, 'parent_id' => 2],
-            ['child_id' => $current_tracker_id, 'parent_id' => 3]
+            ['child_id' => $current_tracker_id, 'parent_id' => 3],
         ];
 
         $actual_root_tracker_id = $this->getRootTrackerId($hierarchy_dar, $current_tracker_id);

@@ -114,7 +114,7 @@ class CardRepresentation
         ?RemainingEffortRepresentation $remaining_effort,
         bool $is_collapsed,
         int $planning_id,
-        int $milestone_artifact_id
+        int $milestone_artifact_id,
     ) {
         $this->id                = JsonCast::toInt($artifact->getId());
         $this->tracker_id        = JsonCast::toInt($artifact->getTrackerId());
@@ -156,7 +156,7 @@ class CardRepresentation
         $initial_effort,
         ?RemainingEffortRepresentation $remaining_effort,
         bool $is_collapsed,
-        \Planning_ArtifactMilestone $milestone
+        \Planning_ArtifactMilestone $milestone,
     ): self {
         return new self(
             $artifact,

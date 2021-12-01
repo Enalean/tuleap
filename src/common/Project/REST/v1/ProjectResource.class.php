@@ -432,7 +432,7 @@ class ProjectResource extends AuthenticatedResource
         PaginatedProjects $paginated_projects,
         $limit,
         $offset,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         $project_representations = [];
         foreach ($paginated_projects->getProjects() as $project) {
@@ -616,7 +616,7 @@ class ProjectResource extends AuthenticatedResource
             [
                 'version'   => 'v1',
                 'project'   => $project,
-                'resources' => &$resources
+                'resources' => &$resources,
             ]
         );
 
@@ -629,7 +629,7 @@ class ProjectResource extends AuthenticatedResource
             [
                 'project'      => $project,
                 'current_user' => $current_user,
-                'informations' => &$informations
+                'informations' => &$informations,
             ]
         );
 
@@ -736,7 +736,7 @@ class ProjectResource extends AuthenticatedResource
         Header::sendPaginationHeaders($limit, $offset, $collection->getTotalSize(), self::MAX_LIMIT);
 
         return [
-            'labels' => $labels_representation
+            'labels' => $labels_representation,
         ];
     }
 
@@ -1163,7 +1163,7 @@ class ProjectResource extends AuthenticatedResource
         $this->userCanAccessPhpWikiService($current_user, $id);
 
         $wiki_pages = [
-            'pages' => []
+            'pages' => [],
         ];
 
         $wiki_pages_factory = new PaginatedWikiPagesFactory(new WikiDao());

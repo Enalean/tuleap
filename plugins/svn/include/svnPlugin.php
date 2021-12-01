@@ -284,7 +284,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             SystemEvent_SVN_CREATE_REPOSITORY::NAME,
             SystemEvent_SVN_DELETE_REPOSITORY::NAME,
             SystemEvent_SVN_RESTORE_REPOSITORY::NAME,
-            SystemEvent_SVN_IMPORT_CORE_REPOSITORY::NAME
+            SystemEvent_SVN_IMPORT_CORE_REPOSITORY::NAME,
         ];
     }
 
@@ -387,7 +387,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                     $this->getUserManager(),
                     $this->getBackendSVN(),
                     $this->getBackendSystem(),
-                    $this->getCopier()
+                    $this->getCopier(),
                 ];
                 break;
             case 'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_DELETE_REPOSITORY::NAME:
@@ -397,7 +397,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                     ProjectManager::instance(),
                     $this->getApacheConfGenerator(),
                     $this->getRepositoryDeleter(),
-                    new SvnAdmin(new System_Command(), self::getLogger(), Backend::instance(Backend::SVN))
+                    new SvnAdmin(new System_Command(), self::getLogger(), Backend::instance(Backend::SVN)),
                 ];
                 break;
             case SystemEvent_SVN_IMPORT_CORE_REPOSITORY::class:
@@ -852,7 +852,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
              $params['logs'][] = [
                 'sql'   => $query,
                 'field' => dgettext('tuleap-svn', 'Repository name'),
-                'title' => dgettext('tuleap-svn', 'SVN')
+                'title' => dgettext('tuleap-svn', 'SVN'),
              ];
         }
     }

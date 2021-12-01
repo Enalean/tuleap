@@ -40,7 +40,7 @@ class SelectedDateDisplayPreferenceValidatorTest extends \Tuleap\Test\PHPUnit\Te
      */
     public function testItValidatesTheSelectedUserPreference(
         string $new_relative_dates_display,
-        bool $is_valid
+        bool $is_valid,
     ): void {
         $this->assertEquals(
             $is_valid,
@@ -53,24 +53,24 @@ class SelectedDateDisplayPreferenceValidatorTest extends \Tuleap\Test\PHPUnit\Te
         return [
             'PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP is valid' => [
                 \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP,
-                true
+                true,
             ],
             'PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP is valid' => [
                 \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP,
-                true
+                true,
             ],
             'PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN is valid' => [
                 \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
-                true
+                true,
             ],
             'PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN is valid' => [
                 \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
-                true
+                true,
             ],
             'yolo is not valid' => [
                 'yolo',
-                false
-            ]
+                false,
+            ],
         ];
     }
 }

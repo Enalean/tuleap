@@ -34,7 +34,7 @@ final class TrackerOfArtifactRetriever implements RetrieveTrackerOfArtifact
 {
     public function __construct(
         private RetrieveFullArtifact $artifact_retriever,
-        private RetrieveTracker $tracker_retriever
+        private RetrieveTracker $tracker_retriever,
     ) {
     }
 

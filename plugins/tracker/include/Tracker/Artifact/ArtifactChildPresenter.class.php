@@ -57,7 +57,7 @@ class Tracker_ArtifactChildPresenter
         Artifact $artifact,
         Artifact $parent,
         Tracker_Semantic_Status $semantic,
-        TypeIsChildLinkRetriever $retriever
+        TypeIsChildLinkRetriever $retriever,
     ) {
         $base_url = \Tuleap\ServerHostname::HTTPSUrl();
 

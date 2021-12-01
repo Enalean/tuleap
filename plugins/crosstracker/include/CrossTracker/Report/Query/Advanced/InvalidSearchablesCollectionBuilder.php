@@ -44,7 +44,7 @@ class InvalidSearchablesCollectionBuilder implements IBuildInvalidSearchablesCol
     public function __construct(
         InvalidComparisonCollectorVisitor $invalid_comparison_collector,
         array $trackers,
-        PFUser $user
+        PFUser $user,
     ) {
         $this->invalid_comparison_collector = $invalid_comparison_collector;
         $this->trackers                     = $trackers;

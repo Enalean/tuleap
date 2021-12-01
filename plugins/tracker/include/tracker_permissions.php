@@ -502,9 +502,9 @@ function plugin_tracker_permission_get_field_tracker_ugroups_permissions($group_
                                                                        'name'       => $field->getLabel() . ($field->isRequired() ? ' *' : ''),
                                                                        'id'         => $field->getID(),
                                                                        'field'      => $field,
-                                                                       'link'       => '/tracker/admin/index.php?group_id=' . $group_id . '&atid=' . $atid . '&func=display_field_update&field_id=' . $field->getID()
+                                                                       'link'       => '/tracker/admin/index.php?group_id=' . $group_id . '&atid=' . $atid . '&func=display_field_update&field_id=' . $field->getID(),
                                                                        ],
-                                                      'ugroups' => $ugroups
+                                                      'ugroups' => $ugroups,
         ];
 
         //{{{ We store tracker permissions
@@ -559,7 +559,7 @@ function plugin_tracker_permission_fetch_selection_field($permission_type, $obje
         $name    = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row[1]);
         $array[] = [
             'value' => $row[0],
-            'text' => $name
+            'text' => $name,
         ];
     }
 

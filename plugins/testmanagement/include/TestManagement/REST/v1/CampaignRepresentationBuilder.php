@@ -67,7 +67,7 @@ class CampaignRepresentationBuilder
         ArtifactFactory $testmanagement_artifact_factory,
         CampaignRetriever $campaign_retriever,
         Config $test_management_config,
-        TestExecutionTestStatusDAO $test_execution_test_status_dao
+        TestExecutionTestStatusDAO $test_execution_test_status_dao,
     ) {
         $this->tracker_factory                 = $tracker_factory;
         $this->tracker_form_element_factory    = $tracker_form_element_factory;
@@ -102,7 +102,7 @@ class CampaignRepresentationBuilder
         ISearchOnStatus $status_criterion,
         ISearchOnMilestone $milestone_criterion,
         int $limit,
-        int $offset
+        int $offset,
     ) {
         $campaign_representations = [];
         $milestone_id             = (int) $milestone_criterion->getMilestoneId();

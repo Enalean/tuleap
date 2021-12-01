@@ -71,10 +71,10 @@ class Util
     public static function MakeSlug($str) // @codingStandardsIgnoreLine
     {
         $from = [
-            '/'
+            '/',
         ];
         $to   = [
-            '-'
+            '-',
         ];
         return str_replace($from, $to, $str);
     }

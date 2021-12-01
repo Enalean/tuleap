@@ -54,7 +54,7 @@ class SettingsRepresentation implements SettingsRepresentationInterface
         CommitRulesRepresentation $commit_rules,
         ImmutableTagRepresentation $immutable_tags,
         string $access_file,
-        array $email_notifications
+        array $email_notifications,
     ) {
         $this->commit_rules        = $commit_rules;
         $this->immutable_tags      = $immutable_tags;
@@ -66,7 +66,7 @@ class SettingsRepresentation implements SettingsRepresentationInterface
         CommitRulesRepresentation $commit_hook_representation,
         ImmutableTagRepresentation $immutable_tag_representation,
         AccessFileHistory $access_file_history,
-        array $email_representation
+        array $email_representation,
     ): self {
         return new self(
             $commit_hook_representation,

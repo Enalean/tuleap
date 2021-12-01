@@ -47,7 +47,7 @@ class VersionBeingUploadedInformationProvider implements TusFileInformationProvi
     public function __construct(
         DocumentOnGoingVersionToUploadDAO $dao,
         \Docman_ItemFactory $item_factory,
-        UploadPathAllocator $path_allocator
+        UploadPathAllocator $path_allocator,
     ) {
         $this->dao            = $dao;
         $this->item_factory   = $item_factory;

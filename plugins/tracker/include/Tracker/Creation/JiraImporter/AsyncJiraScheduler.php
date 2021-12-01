@@ -53,7 +53,7 @@ class AsyncJiraScheduler
         LoggerInterface $logger,
         KeyFactory $key_factory,
         PendingJiraImportDao $dao,
-        JiraRunner $jira_runner
+        JiraRunner $jira_runner,
     ) {
         $this->key_factory = $key_factory;
         $this->dao         = $dao;
@@ -76,7 +76,7 @@ class AsyncJiraScheduler
         string $tracker_name,
         string $tracker_shortname,
         string $tracker_color,
-        string $tracker_description
+        string $tracker_description,
     ): void {
         if (! $this->jira_runner->canBeProcessedAsynchronously()) {
             $this->logger->error('Unable to schedule the import of Jira: misconfiguration of the platform to queue the event.');

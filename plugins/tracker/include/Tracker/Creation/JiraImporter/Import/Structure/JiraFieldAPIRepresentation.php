@@ -60,7 +60,7 @@ class JiraFieldAPIRepresentation
         string $label,
         bool $required,
         ?string $schema,
-        array $bound_values
+        array $bound_values,
     ) {
         $this->id           = $id;
         $this->label        = $label;

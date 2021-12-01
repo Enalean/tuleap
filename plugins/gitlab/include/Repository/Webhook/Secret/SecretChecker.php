@@ -45,7 +45,7 @@ class SecretChecker
      */
     public function checkSecret(
         GitlabRepositoryIntegration $gitlab_repository_integration,
-        ServerRequestInterface $http_request
+        ServerRequestInterface $http_request,
     ): void {
         $webhook_secret_header = $http_request->getHeaderLine(self::GITLAB_TOKEN_HEADER);
         if ($webhook_secret_header === '') {

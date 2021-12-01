@@ -66,7 +66,7 @@ class ListLicenseAgreementsController implements DispatchableWithRequest
         LicenseAgreementControllersHelper $helper,
         TemplateRendererFactory $renderer_factory,
         LicenseAgreementFactory $factory,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
     ) {
         $this->helper            = $helper;
         $this->renderer_factory  = $renderer_factory;

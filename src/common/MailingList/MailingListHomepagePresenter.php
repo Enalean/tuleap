@@ -55,7 +55,7 @@ final class MailingListHomepagePresenter
         array $lists,
         bool $is_project_admin,
         string $creation_url,
-        string $purified_overridable_intro
+        string $purified_overridable_intro,
     ) {
         $this->lists                      = $lists;
         $this->has_lists                  = ! empty($lists);

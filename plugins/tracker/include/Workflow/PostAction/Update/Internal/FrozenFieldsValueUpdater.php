@@ -37,7 +37,7 @@ class FrozenFieldsValueUpdater implements PostActionUpdater
 
     public function __construct(
         FrozenFieldsValueRepository $frozen_fields_repository,
-        FrozenFieldsValueValidator $frozen_fields_validator
+        FrozenFieldsValueValidator $frozen_fields_validator,
     ) {
         $this->frozen_fields_repository = $frozen_fields_repository;
         $this->frozen_fields_validator  = $frozen_fields_validator;

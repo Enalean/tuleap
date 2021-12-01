@@ -30,7 +30,7 @@ class BacklogRequiredTrackerCollectionFormatter
             [
                 "tracker"  => $tracker->getId(),
                 "func"     => "admin-semantic",
-                "semantic" => "done"
+                "semantic" => "done",
             ]
         );
 
@@ -46,7 +46,7 @@ class BacklogRequiredTrackerCollectionFormatter
             [
                 "tracker"  => $tracker->getId(),
                 "func"     => "admin-semantic",
-                "semantic" => "initial_effort"
+                "semantic" => "initial_effort",
             ]
         );
 

@@ -82,7 +82,7 @@ class MovedArtifactValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation->value    = "title";
 
         $expected = [
-            $representation
+            $representation,
         ];
 
         $this->assertEquals($expected, $values);

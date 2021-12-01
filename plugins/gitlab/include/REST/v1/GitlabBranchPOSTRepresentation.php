@@ -44,7 +44,7 @@ class GitlabBranchPOSTRepresentation
     public static function build(
         int $gitlab_integration_id,
         int $artifact_id,
-        string $reference
+        string $reference,
     ): self {
         $representation = new self();
 

@@ -46,7 +46,7 @@ class ArtifactsDeletionManager
     public function __construct(
         ArtifactsDeletionDAO $dao,
         ArtifactDeletor $artifact_deletor,
-        ArtifactDeletionLimitRetriever $deletion_limit_retriever
+        ArtifactDeletionLimitRetriever $deletion_limit_retriever,
     ) {
         $this->dao                      = $dao;
         $this->artifact_deletor         = $artifact_deletor;
@@ -61,7 +61,7 @@ class ArtifactsDeletionManager
      */
     public function deleteArtifact(
         Artifact $artifact,
-        PFUser $user
+        PFUser $user,
     ) {
         $remaining_deletions = $this->deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user) - 1;
 
@@ -79,7 +79,7 @@ class ArtifactsDeletionManager
      */
     public function deleteArtifactBeforeMoveOperation(
         Artifact $artifact,
-        PFUser $user
+        PFUser $user,
     ) {
         $remaining_deletions = $this->deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user) - 1;
 

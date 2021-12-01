@@ -115,7 +115,7 @@ class AccessKeyTest extends RestBase
         $body_content = json_encode(
             [
                 'description' => self::DESCRIPTION_ACCESS_KEY,
-                'scopes'      => []
+                'scopes'      => [],
             ],
             JSON_THROW_ON_ERROR
         );
@@ -135,7 +135,7 @@ class AccessKeyTest extends RestBase
         $body_content = json_encode(
             [
                 'description' => self::DESCRIPTION_ACCESS_KEY,
-                'scopes'      => ['invalid_scope_identifier']
+                'scopes'      => ['invalid_scope_identifier'],
             ],
             JSON_THROW_ON_ERROR
         );
@@ -163,7 +163,7 @@ class AccessKeyTest extends RestBase
         if ($expiration_date !== null) {
             $body_content = json_encode([
                 'description'     => self::DESCRIPTION_ACCESS_KEY,
-                'expiration_date' => $expiration_date
+                'expiration_date' => $expiration_date,
             ]);
         }
 

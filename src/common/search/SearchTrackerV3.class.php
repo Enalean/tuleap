@@ -148,8 +148,8 @@ class Search_SearchTrackerV3
                 'title'                => $tracker_v3->getName(),
                 'extra-parameters'     => [
                     'key'   => 'data-atid',
-                    'value' => $tracker_v3->getID()
-                ]
+                    'value' => $tracker_v3->getID(),
+                ],
             ];
         }
 

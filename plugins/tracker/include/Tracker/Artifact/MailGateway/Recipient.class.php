@@ -38,7 +38,7 @@ class Tracker_Artifact_MailGateway_Recipient
     public function __construct(
         PFUser $user,
         Artifact $artifact,
-        $email
+        $email,
     ) {
         $this->user     = $user;
         $this->artifact = $artifact;

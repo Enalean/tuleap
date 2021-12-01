@@ -104,7 +104,7 @@ final class PullRequestNotificationSupport
                                 $html_url_builder
                             )
                         );
-                    }
+                    },
                 ],
                 PullRequestAbandonedEvent::class => [
                     static function (): EventSubjectToNotificationListener {
@@ -143,7 +143,7 @@ final class PullRequestNotificationSupport
                                 $html_url_builder
                             )
                         );
-                    }
+                    },
                 ],
                 PullRequestMergedEvent::class => [
                     static function (): EventSubjectToNotificationListener {
@@ -182,7 +182,7 @@ final class PullRequestNotificationSupport
                                 $html_url_builder
                             )
                         );
-                    }
+                    },
                 ],
                 PullRequestUpdatedEvent::class => [
                     static function (): EventSubjectToNotificationListener {
@@ -230,7 +230,7 @@ final class PullRequestNotificationSupport
                                 new PullRequestUpdateCommitDiff()
                             )
                         );
-                    }
+                    },
                 ],
                 PullRequestNewCommentEvent::class => [
                     static function (): EventSubjectToNotificationListener {
@@ -275,7 +275,7 @@ final class PullRequestNotificationSupport
                                 $html_url_builder
                             )
                         );
-                    }
+                    },
                 ],
                 PullRequestNewInlineCommentEvent::class => [
                     static function (): EventSubjectToNotificationListener {
@@ -320,15 +320,15 @@ final class PullRequestNotificationSupport
                                 $html_url_builder
                             )
                         );
-                    }
-                ]
+                    },
+                ],
             ])
         );
     }
 
     private static function buildPullRequestNotificationSendMail(
         GitRepositoryFactory $git_repository_factory,
-        HTMLURLBuilder $html_url_builder
+        HTMLURLBuilder $html_url_builder,
     ): PullRequestNotificationSendMail {
         $event_manager = \EventManager::instance();
         return new PullRequestNotificationSendMail(

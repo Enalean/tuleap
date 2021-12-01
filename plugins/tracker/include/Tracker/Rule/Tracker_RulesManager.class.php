@@ -78,7 +78,7 @@ class Tracker_RulesManager
         FrozenFieldsDao $frozen_fields_dao,
         TrackerRulesListValidator $tracker_rules_list_validator,
         TrackerRulesDateValidator $tracker_rules_date_validator,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
     ) {
         $this->tracker                      = $tracker;
         $this->form_element_factory         = $form_element_factory;

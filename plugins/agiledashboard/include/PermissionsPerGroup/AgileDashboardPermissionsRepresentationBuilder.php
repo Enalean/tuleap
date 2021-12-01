@@ -45,7 +45,7 @@ class AgileDashboardPermissionsRepresentationBuilder
     public function __construct(
         UGroupManager $ugroup_manager,
         PlanningFactory $planning_factory,
-        PlanningPermissionsRepresentationBuilder $planning_builder
+        PlanningPermissionsRepresentationBuilder $planning_builder,
     ) {
         $this->ugroup_manager   = $ugroup_manager;
         $this->planning_factory = $planning_factory;
@@ -55,7 +55,7 @@ class AgileDashboardPermissionsRepresentationBuilder
     public function build(
         Project $project,
         PFUser $user,
-        $ugroup_id = null
+        $ugroup_id = null,
     ) {
         $ugroup = $this->ugroup_manager->getUGroup($project, $ugroup_id);
 
@@ -71,7 +71,7 @@ class AgileDashboardPermissionsRepresentationBuilder
     private function getPlanningPermissionsRepresentation(
         Project $project,
         PFUser $user,
-        ?ProjectUGroup $user_group = null
+        ?ProjectUGroup $user_group = null,
     ) {
         $plannings      = $this->planning_factory->getPlannings($user, $project->getID());
         $planning_names = [];

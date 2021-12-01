@@ -38,7 +38,7 @@ class WidgetKanbanPresenter
     public function __construct(
         $is_empty,
         $error_message,
-        ?KanbanPresenter $kanban_presenter = null
+        ?KanbanPresenter $kanban_presenter = null,
     ) {
         $this->kanban_presenter = $kanban_presenter;
         $this->is_empty         = $is_empty;

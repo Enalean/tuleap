@@ -73,7 +73,7 @@ class DocmanLinkVersionCreator
         \Docman_LinkVersionFactory $docman_link_version_factory,
         DBTransactionExecutor $transaction_executor,
         PostUpdateEventAdder $post_update_event_adder,
-        LinkVersionDataUpdator $link_version_data_updator
+        LinkVersionDataUpdator $link_version_data_updator,
     ) {
         $this->version_factory             = $version_factory;
         $this->updator                     = $updator;
@@ -93,7 +93,7 @@ class DocmanLinkVersionCreator
         int $status_id,
         int $obsolescence_date_timestamp,
         string $title,
-        ?string $description
+        ?string $description,
     ): void {
         $this->transaction_executor->execute(
             function () use ($item, $current_user, $representation, $status_id, $obsolescence_date_timestamp, $current_time, $title, $description) {
@@ -110,7 +110,7 @@ class DocmanLinkVersionCreator
                     'title'             => $title,
                     'description'       => $description,
                     'status'            => $status_id,
-                    'obsolescence_date' => $obsolescence_date_timestamp
+                    'obsolescence_date' => $obsolescence_date_timestamp,
                 ];
 
                 $this->item_factory->updateLinkWithMetadata($item, $new_link_version_row);
@@ -140,7 +140,7 @@ class DocmanLinkVersionCreator
         \Docman_Empty $item,
         \PFUser $current_user,
         LinkPropertiesPOSTPATCHRepresentation $representation,
-        \DateTimeImmutable $current_time
+        \DateTimeImmutable $current_time,
     ): void {
         $this->transaction_executor->execute(
             function () use ($item, $current_user, $representation, $current_time) {
@@ -152,7 +152,7 @@ class DocmanLinkVersionCreator
                     'label'     => '',
                     'changelog' => 'Initial version',
                     'date'      => $current_time->getTimestamp(),
-                    'link_url'  => $representation->link_url
+                    'link_url'  => $representation->link_url,
                 ];
 
                 $new_link_item = $this->link_version_data_updator->updateLinkFromEmptyVersionData($item, $new_link_version_row);

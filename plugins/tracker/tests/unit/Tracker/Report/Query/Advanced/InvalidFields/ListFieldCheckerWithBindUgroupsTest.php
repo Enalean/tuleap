@@ -83,7 +83,7 @@ class ListFieldCheckerWithBindUgroupsTest extends \Tuleap\Test\PHPUnit\TestCase
             new ProjectUGroup(
                 [
                     'ugroup_id' => 183,
-                    'name'      => 'Mountaineers'
+                    'name'      => 'Mountaineers',
                 ]
             ),
             false
@@ -91,7 +91,7 @@ class ListFieldCheckerWithBindUgroupsTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $list_values = [
             2   => $project_members_value,
-            185 => $custom_ugroup_value
+            185 => $custom_ugroup_value,
         ];
         $this->bind->shouldReceive('getAllValues')->andReturns($list_values);
 

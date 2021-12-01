@@ -48,7 +48,7 @@ class RepositoriesPermissionRepresentationBuilder
         RepositoryFineGrainedRepresentationBuilder $fined_grained_representation_builder,
         RepositorySimpleRepresentationBuilder $repository_simple_representation_builder,
         GitRepositoryFactory $repository_factory,
-        FineGrainedRetriever $fine_grained_retriever
+        FineGrainedRetriever $fine_grained_retriever,
     ) {
         $this->fined_grained_representation_builder     = $fined_grained_representation_builder;
         $this->repository_simple_representation_builder = $repository_simple_representation_builder;

@@ -38,7 +38,7 @@ final class BackgroundColorSelectorPresenter
     public function __construct(
         array $form_elements,
         bool $has_background_field_defined,
-        string $field_admin_link
+        string $field_admin_link,
     ) {
         $this->has_at_least_one_field_selectable_for_color = count($form_elements) > 0;
         $this->form_elements                               = $form_elements;

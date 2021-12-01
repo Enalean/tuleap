@@ -61,7 +61,7 @@ class ExecutionDao extends DataAccessObject
     public function removeExecution(int $execution_id): void
     {
         $this->getDB()->delete('plugin_testmanagement_execution', [
-            'execution_artifact_id' => $execution_id
+            'execution_artifact_id' => $execution_id,
         ]);
     }
 
@@ -79,7 +79,7 @@ class ExecutionDao extends DataAccessObject
         int $execution_artifact_id,
         int $execution_tracker_id,
         int $definition_changeset_id,
-        int $definition_tracker_id
+        int $definition_tracker_id,
     ): void {
         $sql = 'REPLACE INTO plugin_testmanagement_execution
             SELECT exec.id, def_changeset.id

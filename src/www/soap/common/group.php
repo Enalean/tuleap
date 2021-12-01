@@ -37,7 +37,7 @@ if (defined('NUSOAP')) {
         'group_id' => ['name' => 'group_id', 'type' => 'xsd:int'],
         'group_name' => ['name' => 'group_name', 'type' => 'xsd:string'],
         'unix_group_name' => ['name' => 'unix_group_name', 'type' => 'xsd:string'],
-        'description' => ['name' => 'description', 'type' => 'xsd:string']
+        'description' => ['name' => 'description', 'type' => 'xsd:string'],
         ]
     );
 
@@ -49,7 +49,7 @@ if (defined('NUSOAP')) {
         'SOAP-ENC:Array',
         [],
         [
-        ['ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'tns:Group[]']
+        ['ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'tns:Group[]'],
         ],
         'tns:Group'
     );
@@ -62,7 +62,7 @@ if (defined('NUSOAP')) {
         '',
         [
         'user_id'   => ['name' => 'user_id',   'type' => 'xsd:int'],
-        'user_name' => ['name' => 'user_name', 'type' => 'xsd:string']
+        'user_name' => ['name' => 'user_name', 'type' => 'xsd:string'],
         ]
     );
 
@@ -74,7 +74,7 @@ if (defined('NUSOAP')) {
         'SOAP-ENC:Array',
         [],
         [
-        ['ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'tns:UGroupMember[]']
+        ['ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'tns:UGroupMember[]'],
         ],
         'tns:UGroupMember'
     );
@@ -106,7 +106,7 @@ if (defined('NUSOAP')) {
 // Function definition
     $server->register(
         'getMyProjects',               // method name
-        ['sessionKey' => 'xsd:string'               // input parameters
+        ['sessionKey' => 'xsd:string',               // input parameters
         ],
         ['return'   => 'tns:ArrayOfGroup'],           // output parameters
         $uri,                   // namespace
@@ -131,7 +131,7 @@ if (defined('NUSOAP')) {
     $server->register(
         'getGroupById',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int'
+        'group_id' => 'xsd:int',
         ],
         ['return' => 'tns:Group'],
         $uri,
@@ -145,7 +145,7 @@ if (defined('NUSOAP')) {
     $server->register(
         'getGroupUgroups',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int'
+        'group_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfUgroup'],
         $uri,
@@ -169,7 +169,7 @@ if (defined('NUSOAP')) {
     $server->register(
         'getProjectGroupsAndUsers',
         ['sessionKey' => 'xsd:string',
-          'group_id'   => 'xsd:int'
+          'group_id'   => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfUgroup'],
         $uri,
@@ -212,7 +212,7 @@ if (defined('NUSOAP')) {
         'group_id' => $group->getGroupId(),
         'group_name' => $group->getPublicName(),
         'unix_group_name' => $group->getUnixName(),
-        'description' => $group->getDescription()
+        'description' => $group->getDescription(),
         ];
         return $soap_group;
     }

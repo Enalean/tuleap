@@ -42,7 +42,7 @@ class VisitRetriever
     public function __construct(
         RecentlyVisitedDao $dao,
         \Tracker_ArtifactFactory $artifact_factory,
-        GlyphFinder $glyph_finder
+        GlyphFinder $glyph_finder,
     ) {
         $this->dao              = $dao;
         $this->artifact_factory = $artifact_factory;

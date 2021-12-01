@@ -73,7 +73,7 @@ class StatusPatcher
         PullRequestPermissionChecker $pull_request_permission_checker,
         PullRequestCloser $pull_request_closer,
         URLVerification $url_verification,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->git_repository_factory          = $git_repository_factory;
         $this->access_control_verifier         = $access_control_verifier;
@@ -89,7 +89,7 @@ class StatusPatcher
     public function patchStatus(
         PFUser $user,
         PullRequest $pull_request,
-        string $status
+        string $status,
     ) {
         $git_repository_source      = $this->getRepository($pull_request->getRepositoryId());
         $git_repository_destination = $this->getRepository($pull_request->getRepoDestId());
@@ -152,7 +152,7 @@ class StatusPatcher
         GitRepository $repository_source,
         GitRepository $repository_dest,
         $source_reference,
-        $destination_reference
+        $destination_reference,
     ) {
         ProjectAuthorization::userCanAccessProject($user, $repository_source->getProject(), $this->url_verification);
         ProjectAuthorization::userCanAccessProject($user, $repository_dest->getProject(), $this->url_verification);

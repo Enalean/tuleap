@@ -97,7 +97,7 @@ class UserSuspensionManager
         UserManager $user_manager,
         BaseLanguageFactory $lang_factory,
         LoggerInterface $logger,
-        LocaleSwitcher $locale_switcher
+        LocaleSwitcher $locale_switcher,
     ) {
         $this->mail_presenter_factory = $mail_presenter_factory;
         $this->renderer               = $renderer;

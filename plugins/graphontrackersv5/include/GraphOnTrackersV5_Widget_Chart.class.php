@@ -136,7 +136,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         $id,
         $owner_id,
         $owner_type,
-        MappingRegistry $mapping_registry
+        MappingRegistry $mapping_registry,
     ) {
         $dao = new WidgetChartDao();
 
@@ -254,7 +254,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
     public function getJavascriptDependencies(): array
     {
         return [
-            ['file' => $this->getAssets()->getFileURL('graphontrackersv5.js')]
+            ['file' => $this->getAssets()->getFileURL('graphontrackersv5.js')],
         ];
     }
 

@@ -73,7 +73,7 @@ class BurnupFieldPresenter
         $can_burnup_be_regenerated,
         $css_url,
         $user_locale,
-        $warning
+        $warning,
     ) {
         $this->burnup_data               = json_encode($burnup_representation);
         $this->project_id                = $artifact->getTracker()->getProject()->getId();

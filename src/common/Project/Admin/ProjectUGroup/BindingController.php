@@ -62,7 +62,7 @@ class BindingController
         UGroupManager $ugroup_manager,
         UGroupBinding $ugroup_binding,
         Codendi_Request $request,
-        EditBindingUGroupEventLauncher $edit_event_launcher
+        EditBindingUGroupEventLauncher $edit_event_launcher,
     ) {
         $this->history_dao         = $history_dao;
         $this->ugroup_binding      = $ugroup_binding;

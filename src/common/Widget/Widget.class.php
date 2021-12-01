@@ -108,8 +108,8 @@ use Tuleap\Project\MappingRegistry;
                     'owner'  => $owner_type . $owner_id,
                     'action' => 'rss',
                     'name'   => [
-                        $this->id => $this->getInstanceId()
-                    ]
+                        $this->id => $this->getInstanceId(),
+                    ],
                 ]
             );
         } else {
@@ -152,7 +152,7 @@ use Tuleap\Project\MappingRegistry;
         $id,
         $owner_id,
         $owner_type,
-        MappingRegistry $mapping_registry
+        MappingRegistry $mapping_registry,
     ) {
         return $this->getInstanceId();
     }
@@ -201,8 +201,8 @@ use Tuleap\Project\MappingRegistry;
                     'dashboard_id' => $dashboard_id,
                     'action'       => 'ajax',
                     'name'         => [
-                        $this->id => $this->getInstanceId()
-                    ]
+                        $this->id => $this->getInstanceId(),
+                    ],
                 ],
                 $additional_parameters
             )

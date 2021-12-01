@@ -157,7 +157,7 @@ class ProjectQuotaHtml
                 'purified_delete_confirm' => $purifier->purify(
                     sprintf(dgettext('tuleap-statistics', 'Wow, wait a minute. You are about to delete the quota for <b>%1$s</b> project. Please confirm your action.'), $project_name),
                     CODENDI_PURIFIER_LIGHT
-                )
+                ),
             ];
         }
 
@@ -172,7 +172,7 @@ class ProjectQuotaHtml
 
         return [
             'pagination' => $pagination,
-            'quotas'     => $quotas
+            'quotas'     => $quotas,
         ];
     }
 

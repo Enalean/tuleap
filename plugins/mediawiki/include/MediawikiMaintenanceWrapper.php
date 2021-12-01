@@ -58,7 +58,7 @@ class MediawikiMaintenanceWrapper
         Project $project,
         ArchiveInterface $archive,
         $temporary_dump_path_on_filesystem,
-        $project_name_dir
+        $project_name_dir,
     ) {
         $folder_picture = "files";
         $archive->addEmptyDir($folder_picture);
@@ -84,7 +84,7 @@ class MediawikiMaintenanceWrapper
         Project $project,
         $temporary_dump_path_on_filesystem,
         $project_name_dir,
-        $folder_picture
+        $folder_picture,
     ) {
         $picture_system_path = escapeshellarg($temporary_dump_path_on_filesystem . "/" . $folder_picture);
         $export_folder       = escapeshellarg($project_name_dir . "/images");

@@ -50,7 +50,7 @@ final class AccountAppPresenter
         int $id,
         string $name,
         ?string $project_name,
-        OAuth2ScopeDefinitionPresenter ...$scope_definition_presenters
+        OAuth2ScopeDefinitionPresenter ...$scope_definition_presenters,
     ) {
         $this->id           = $id;
         $this->name         = $name;

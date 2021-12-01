@@ -46,7 +46,7 @@ class Collector
     public function __construct(
         Statistics_DiskUsageManager $disk_usage_manager,
         Git_LogDao $git_log_dao,
-        Retriever $retriever
+        Retriever $retriever,
     ) {
         $this->disk_usage_manager = $disk_usage_manager;
         $this->git_log_dao        = $git_log_dao;

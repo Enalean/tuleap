@@ -44,7 +44,7 @@ final class DetectedBrowserTest extends \Tuleap\Test\PHPUnit\TestCase
         bool $expected_is_ie,
         bool $expected_edge_legacy,
         bool $expected_browser_is_outdated,
-        bool $expected_browser_is_completely_broken
+        bool $expected_browser_is_completely_broken,
     ): void {
         $detected_browser = self::buildDetectedBrowserFromSpecificUserAgentString($user_agent);
         self::assertEquals($expected_browser_name, $detected_browser->getName());

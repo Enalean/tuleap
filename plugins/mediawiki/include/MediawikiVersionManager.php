@@ -27,7 +27,7 @@ class MediawikiVersionManager
 
     public static $AVAILABLE_VERSIONS = [
         self::MEDIAWIKI_120_VERSION,
-        self::MEDIAWIKI_123_VERSION
+        self::MEDIAWIKI_123_VERSION,
     ];
 
     /** @var MediawikiVersionDao */

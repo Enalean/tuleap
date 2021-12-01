@@ -105,7 +105,7 @@ final class DocumentUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
                 'filesize'          => 123,
                 'filetype'          => 'Filetype',
                 'status'            => 'approved',
-                'obsolescence_date' => '2020-03-06'
+                'obsolescence_date' => '2020-03-06',
             ]
         );
         $this->on_going_upload_dao->shouldReceive('deleteByItemID')->once();

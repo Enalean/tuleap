@@ -55,7 +55,7 @@ final class DestinationCloneItem
         int $parent_folder_id,
         int $destination_project_id,
         ProjectManager $project_manager,
-        Docman_LinkVersionFactory $link_version_factory
+        Docman_LinkVersionFactory $link_version_factory,
     ) {
         $this->parent_folder_id       = $parent_folder_id;
         $this->destination_project_id = $destination_project_id;
@@ -66,7 +66,7 @@ final class DestinationCloneItem
     public static function fromNewParentFolder(
         Docman_Folder $folder,
         ProjectManager $project_manager,
-        Docman_LinkVersionFactory $link_version_factory
+        Docman_LinkVersionFactory $link_version_factory,
     ): self {
         return new self((int) $folder->getId(), (int) $folder->getGroupId(), $project_manager, $link_version_factory);
     }
@@ -75,7 +75,7 @@ final class DestinationCloneItem
         Docman_ItemFactory $item_factory,
         Project $destination_project,
         ProjectManager $project_manager,
-        Docman_LinkVersionFactory $link_version_factory
+        Docman_LinkVersionFactory $link_version_factory,
     ): self {
         $project_id = $destination_project->getID();
         if ($item_factory->getRoot($project_id) !== null) {

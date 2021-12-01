@@ -60,7 +60,7 @@ class DetailsPresenter
         $trackers,
         $solve_inconsistencies_url,
         PFUser $user,
-        DetailsChartPresenter $chart_presenter
+        DetailsChartPresenter $chart_presenter,
     ) {
         $this->items_collection          = $items;
         $this->inconsistent_collection   = $inconsistent_collection;

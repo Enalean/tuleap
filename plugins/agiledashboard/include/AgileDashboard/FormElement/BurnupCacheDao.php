@@ -28,7 +28,7 @@ class BurnupCacheDao extends DataAccessObject
         $artifact_id,
         $timestamp,
         $total_effort,
-        $team_effort
+        $team_effort,
     ) {
         $artifact_id  = $this->da->escapeInt($artifact_id);
         $timestamp    = $this->da->escapeInt($timestamp);

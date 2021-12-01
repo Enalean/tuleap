@@ -70,7 +70,7 @@ class PendingJiraImportBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project->shouldReceive(
             [
                 'isError'  => true,
-                'isActive' => true
+                'isActive' => true,
             ]
         );
         $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
@@ -91,7 +91,7 @@ class PendingJiraImportBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project->shouldReceive(
             [
                 'isError'  => false,
-                'isActive' => false
+                'isActive' => false,
             ]
         );
         $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
@@ -112,7 +112,7 @@ class PendingJiraImportBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project->shouldReceive(
             [
                 'isError'  => false,
-                'isActive' => true
+                'isActive' => true,
             ]
         );
         $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
@@ -133,7 +133,7 @@ class PendingJiraImportBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project->shouldReceive(
             [
                 'isError'  => false,
-                'isActive' => true
+                'isActive' => true,
             ]
         );
         $this->project_manager->shouldReceive('getProject')->andReturn($this->project);

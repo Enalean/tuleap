@@ -381,7 +381,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                 'border' => 0,
                 'id'     => $id . '_toggle',
                 'style'  => 'cursor:hand; cursor:pointer',
-                'title'  => $GLOBALS['Language']->getText('tracker_include_artifact', 'toggle')
+                'title'  => $GLOBALS['Language']->getText('tracker_include_artifact', 'toggle'),
             ]
         );
         $html .= ' ' . $title . '</legend><div id="' . $id . '_alternate" style="display:none;"></div>';
@@ -1128,7 +1128,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                 'pubDate'     => gmdate('D, d M Y h:i:s', db_result($orig_date, 0, 'date')) . ' GMT',
                 'dc:creator'  => $hp->purify($uh->getDisplayNameFromUserId(db_result($orig_subm, 0, 'mod_by'))),
                 'link'        => '<![CDATA[' . $server_url . '/tracker/?func=detail&aid=' . $this->getId() . '&atid=' . $this->ArtifactType->getID() . '&group_id=' . $group->getGroupId() . '#comment_' . $comment_id . ']]>',
-                'guid'        => '<![CDATA[' . $server_url . '/tracker/?func=detail&aid=' . $this->getId() . '&atid=' . $this->ArtifactType->getID() . '&group_id=' . $group->getGroupId() . '#comment_' . $comment_id . ']]>'
+                'guid'        => '<![CDATA[' . $server_url . '/tracker/?func=detail&aid=' . $this->getId() . '&atid=' . $this->ArtifactType->getID() . '&group_id=' . $group->getGroupId() . '#comment_' . $comment_id . ']]>',
             ]);
         }
         $rss->display();

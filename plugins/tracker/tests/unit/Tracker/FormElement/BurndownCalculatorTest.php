@@ -54,7 +54,7 @@ final class BurndownCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected = [
             'children'   => false,
-            'manual_sum' => null
+            'manual_sum' => null,
         ];
 
         $result = $this->burndown_calculator->fetchChildrenAndManualValuesOfArtifacts(
@@ -79,7 +79,7 @@ final class BurndownCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected = [
             'children'   => false,
-            'manual_sum' => 12
+            'manual_sum' => 12,
         ];
 
         $result = $this->burndown_calculator->fetchChildrenAndManualValuesOfArtifacts(
@@ -107,7 +107,7 @@ final class BurndownCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected = [
             'children'   => $dar,
-            'manual_sum' => false
+            'manual_sum' => false,
         ];
 
         $result = $this->burndown_calculator->fetchChildrenAndManualValuesOfArtifacts(

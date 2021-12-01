@@ -36,7 +36,7 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent
     public function injectDependencies(
         GitRepositoryFactory $repository_factory,
         Git_SystemEventManager $system_event_manager,
-        DefaultBranchUpdateExecutor $default_branch_update_executor
+        DefaultBranchUpdateExecutor $default_branch_update_executor,
     ) {
         $this->repository_factory             = $repository_factory;
         $this->system_event_manager           = $system_event_manager;

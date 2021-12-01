@@ -30,7 +30,7 @@ class ColorHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         '#00FF00' => [0, 255, 0],
         '#0000FF' => [0, 0, 255],
         '#38CDAF' => [56, 205, 175],
-        '#E025DC' => [224, 37, 220]
+        '#E025DC' => [224, 37, 220],
     ];
 
     public function testRGBToHexa(): void

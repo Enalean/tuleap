@@ -67,7 +67,7 @@ class SSHAuthenticateResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         [
                             'getString' => new ConcealedString('bar'),
                         ]
-                    )
+                    ),
                 ]
             )
         );
@@ -84,7 +84,7 @@ class SSHAuthenticateResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'href'       => 'https://lfs-server/foo/bar/info/lfs',
                 'expires_in' => 600,
                 'header'     => [
-                    'Authorization' => 'RemoteAuth 100.626172'
+                    'Authorization' => 'RemoteAuth 100.626172',
                 ],
             ],
             $this->response_builder->jsonSerialize()

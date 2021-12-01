@@ -73,7 +73,7 @@ final class ProjectCreatedPayloadTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             [true],
-            [false]
+            [false],
         ];
     }
 }

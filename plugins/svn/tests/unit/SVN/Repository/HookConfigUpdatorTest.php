@@ -93,7 +93,7 @@ class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $hook_config = [
             'mandatory_reference'       => true,
-            'commit_message_can_change' => false
+            'commit_message_can_change' => false,
 
         ];
 
@@ -111,7 +111,7 @@ class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $hook_config = [
             'mandatory_reference'       => true,
-            'commit_message_can_change' => false
+            'commit_message_can_change' => false,
 
         ];
 
@@ -129,7 +129,7 @@ class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $hook_config = [
             'mandatory_reference'       => true,
-            'commit_message_can_change' => false
+            'commit_message_can_change' => false,
 
         ];
 
@@ -147,7 +147,7 @@ class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $hook_config = [
             'mandatory_reference'       => true,
-            'commit_message_can_change' => false
+            'commit_message_can_change' => false,
 
         ];
 

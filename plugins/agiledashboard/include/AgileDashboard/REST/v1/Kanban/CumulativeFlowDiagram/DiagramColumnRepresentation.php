@@ -37,7 +37,7 @@ class DiagramColumnRepresentation
     public function __construct(
         string $id,
         string $label,
-        array $values
+        array $values,
     ) {
         $this->id     = $id;
         $this->label  = $label;

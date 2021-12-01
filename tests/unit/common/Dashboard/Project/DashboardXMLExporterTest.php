@@ -135,7 +135,7 @@ class DashboardXMLExporterTest extends TestCase
                                         new DashboardWidget(11, 'projectdescription', 0, 4, 0, false),
                                         new DashboardWidget(12, 'unknownwidget', 0, 4, 0, false),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         new DashboardWidgetLine(
@@ -148,7 +148,7 @@ class DashboardXMLExporterTest extends TestCase
                                     [
                                         new DashboardWidget(13, 'unknownwidget', 0, 5, 0, false),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                     ];

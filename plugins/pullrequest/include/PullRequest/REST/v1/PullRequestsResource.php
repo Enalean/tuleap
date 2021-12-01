@@ -494,7 +494,7 @@ class PullRequestsResource extends AuthenticatedResource
         Header::sendPaginationHeaders($limit, $offset, $collection->getTotalSize(), self::MAX_LIMIT);
 
         return [
-            'labels' => $labels_representation
+            'labels' => $labels_representation,
         ];
     }
 
@@ -993,7 +993,7 @@ class PullRequestsResource extends AuthenticatedResource
         PFUser $user,
         PullRequest $pull_request,
         $project_id,
-        $body
+        $body,
     ) {
         $this->checkUserCanMerge($pull_request, $user);
 

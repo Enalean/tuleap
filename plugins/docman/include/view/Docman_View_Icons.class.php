@@ -125,7 +125,7 @@ class Docman_View_Icons extends Docman_View_Browse
             $params,
             [
                 'action' => $item->accept($params['get_action_on_icon'], ['view' => $this]),
-                'id'     => $item->getId()
+                'id'     => $item->getId(),
             ]
         );
         $title_url = DocmanViewURLBuilder::buildActionUrl(

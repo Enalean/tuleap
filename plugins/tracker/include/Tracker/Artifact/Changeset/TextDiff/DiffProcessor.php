@@ -40,7 +40,7 @@ class DiffProcessor
     public function processDiff(
         \Tracker_Artifact_ChangesetValue_Text $next_changeset_value,
         \Tracker_Artifact_ChangesetValue_Text $previous_changeset_value,
-        string $format
+        string $format,
     ): string {
         switch ($format) {
             case 'text':

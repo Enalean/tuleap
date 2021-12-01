@@ -54,7 +54,7 @@ class ChartMessageFetcher
         Tracker_HierarchyFactory $hierarchy_factory,
         ChartConfigurationFieldRetriever $configuration_field_retriever,
         EventManager $event_manager,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->hierarchy_factory             = $hierarchy_factory;
         $this->configuration_field_retriever = $configuration_field_retriever;

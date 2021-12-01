@@ -31,7 +31,7 @@ final class ProgramFlagsBuilder implements BuildProgramFlags
 {
     public function __construct(
         private \Tuleap\Project\Flags\ProjectFlagsBuilder $project_flags_builder,
-        private RetrieveFullProject $retrieve_full_project
+        private RetrieveFullProject $retrieve_full_project,
     ) {
     }
 

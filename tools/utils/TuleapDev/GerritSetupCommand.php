@@ -84,7 +84,7 @@ class GerritSetupCommand extends Command
         OutputInterface $output,
         MessageFactory $message_factory,
         string $gerrit_server,
-        ClientInterface $client
+        ClientInterface $client,
     ): void {
         $request  = $message_factory->createRequest(
             'POST',
@@ -121,7 +121,7 @@ class GerritSetupCommand extends Command
         OutputInterface $output,
         MessageFactory $message_factory,
         string $gerrit_server,
-        ClientInterface $plugin_client
+        ClientInterface $plugin_client,
     ): void {
         $request  = $message_factory->createRequest(
             'POST',
@@ -143,7 +143,7 @@ class GerritSetupCommand extends Command
         OutputInterface $output,
         MessageFactory $message_factory,
         string $gerrit_server,
-        ClientInterface $plugin_client
+        ClientInterface $plugin_client,
     ): void {
         $request = $message_factory->createRequest(
             'PUT',
@@ -167,7 +167,7 @@ class GerritSetupCommand extends Command
         OutputInterface $output,
         MessageFactory $message_factory,
         string $gerrit_server,
-        ClientInterface $plugin_client
+        ClientInterface $plugin_client,
     ): void {
         $admin_group_uuid = $this->getAdministratorGroupUUID($message_factory, $gerrit_server, $plugin_client);
         $permission       = [
@@ -177,38 +177,38 @@ class GerritSetupCommand extends Command
                         'read' => [
                             'rules' => [
                                 $admin_group_uuid => [
-                                    'action' => 'ALLOW'
-                                ]
-                            ]
+                                    'action' => 'ALLOW',
+                                ],
+                            ],
                         ],
                         'push' => [
                             'rules' => [
                                 $admin_group_uuid => [
-                                    'action' => 'ALLOW'
-                                ]
-                            ]
+                                    'action' => 'ALLOW',
+                                ],
+                            ],
                         ],
-                    ]
+                    ],
                 ],
                 'refs/*' => [
                     'permissions' => [
                         'forgeAuthor' => [
                             'rules' => [
                                 $admin_group_uuid => [
-                                    'action' => 'ALLOW'
-                                ]
-                            ]
+                                    'action' => 'ALLOW',
+                                ],
+                            ],
                         ],
                         'forgeCommitter' => [
                             'rules' => [
                                 $admin_group_uuid => [
-                                    'action' => 'ALLOW'
-                                ]
-                            ]
+                                    'action' => 'ALLOW',
+                                ],
+                            ],
                         ],
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
 
         $request = $message_factory->createRequest(
@@ -250,7 +250,7 @@ class GerritSetupCommand extends Command
         OutputInterface $output,
         MessageFactory $message_factory,
         string $gerrit_server,
-        ClientInterface $plugin_client
+        ClientInterface $plugin_client,
     ): void {
         $request = $message_factory->createRequest(
             'POST',

@@ -130,7 +130,7 @@ class ServiceDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDecl
         $is_used,
         $scope,
         $rank,
-        $is_in_new_tab
+        $is_in_new_tab,
     ) {
         $project_id    = $this->da->escapeInt($project_id);
         $label         = $this->da->quoteSmart($label);
@@ -184,7 +184,7 @@ class ServiceDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDecl
         $link,
         $rank,
         $is_in_iframe,
-        $is_in_new_tab
+        $is_in_new_tab,
     ) {
         $service_id    = $this->da->escapeInt($service_id);
         $label         = $this->da->quoteSmart($label);

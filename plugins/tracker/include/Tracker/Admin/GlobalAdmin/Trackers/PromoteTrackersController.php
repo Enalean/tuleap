@@ -71,7 +71,7 @@ class PromoteTrackersController implements DispatchableWithRequest, Dispatchable
         TrackerFactory $tracker_factory,
         TrackerInNewDropdownDao $in_new_dropdown_dao,
         CSRFSynchronizerTokenProvider $token_provider,
-        ProjectHistoryDao $history_dao
+        ProjectHistoryDao $history_dao,
     ) {
         $this->project_manager     = $project_manager;
         $this->tracker_factory     = $tracker_factory;

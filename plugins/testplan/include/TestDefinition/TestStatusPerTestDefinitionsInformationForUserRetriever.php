@@ -52,7 +52,7 @@ class TestStatusPerTestDefinitionsInformationForUserRetriever
     public function getInformationNeededToRetrieveTestStatusPerTestDefinition(
         \PFUser $user,
         \Tuleap\Tracker\Artifact\Artifact $milestone,
-        array $test_definitions
+        array $test_definitions,
     ): ?TestPlanMilestoneInformationNeededToRetrieveTestStatusPerTestDefinition {
         if (empty($test_definitions)) {
             return null;

@@ -30,7 +30,7 @@ class BranchInfoDao extends DataAccessObject
         int $integration_id,
         string $commit_sha1,
         string $branch_name,
-        int $last_push_date
+        int $last_push_date,
     ): void {
         $sql = '
             INSERT INTO plugin_gitlab_repository_integration_branch_info
@@ -56,7 +56,7 @@ class BranchInfoDao extends DataAccessObject
         int $integration_id,
         string $commit_sha1,
         string $branch_name,
-        int $last_push_date
+        int $last_push_date,
     ): void {
         $sql = '
             UPDATE plugin_gitlab_repository_integration_branch_info
@@ -93,7 +93,7 @@ class BranchInfoDao extends DataAccessObject
     public function deleteBranchesInIntegration(
         string $integration_path,
         int $integration_id,
-        int $integration_project_id
+        int $integration_project_id,
     ): void {
         $this->getDB()->delete(
             'plugin_gitlab_repository_integration_branch_info',

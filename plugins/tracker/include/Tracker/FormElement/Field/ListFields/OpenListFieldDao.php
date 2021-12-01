@@ -72,7 +72,7 @@ class OpenListFieldDao extends SpecificPropertiesDao
         $bindtable_select,
         $bindtable_select_nb,
         $bindtable_from,
-        $bindtable_join_on_id
+        $bindtable_join_on_id,
     ) {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $field_id     = $this->da->escapeInt($field_id);

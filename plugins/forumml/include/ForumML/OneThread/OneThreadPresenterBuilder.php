@@ -43,7 +43,7 @@ class OneThreadPresenterBuilder
     public function __construct(
         ThreadsDao $dao,
         MessageInfoToMessagePresenterConvertor $convertor,
-        \UserManager $user_manager
+        \UserManager $user_manager,
     ) {
         $this->dao          = $dao;
         $this->convertor    = $convertor;
@@ -58,7 +58,7 @@ class OneThreadPresenterBuilder
         \PFUser $current_user,
         int $list_id,
         string $list_name,
-        int $thread_id
+        int $thread_id,
     ): OneThreadPresenter {
         $thread = $this->buildFlattenedThread($project, $list_id, $thread_id);
 
@@ -160,7 +160,7 @@ class OneThreadPresenterBuilder
         Project $project,
         array &$thread,
         array $parent_ids,
-        int $list_id
+        int $list_id,
     ): void {
         if (empty($parent_ids)) {
             return;
@@ -184,7 +184,7 @@ class OneThreadPresenterBuilder
         Project $project,
         array &$thread,
         array $result,
-        int $list_id
+        int $list_id,
     ): array {
         $ids         = [];
         $index       = 0;
@@ -203,7 +203,7 @@ class OneThreadPresenterBuilder
                             'group_id' => $project->getID(),
                             'list'     => $list_id,
                             'id'       => $row['id_attachment'],
-                            'topic'    => $row['id_message']
+                            'topic'    => $row['id_message'],
                         ]
                     );
                 $thread[$index]->addAttachment(

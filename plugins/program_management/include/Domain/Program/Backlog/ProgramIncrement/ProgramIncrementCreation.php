@@ -47,13 +47,13 @@ final class ProgramIncrementCreation implements TimeboxMirroringOrder
         private ProgramIncrementIdentifier $program_increment,
         private ProgramIncrementTrackerIdentifier $tracker,
         private ChangesetIdentifier $changeset,
-        private UserIdentifier $user
+        private UserIdentifier $user,
     ) {
     }
 
     public static function fromArtifactCreatedEvent(
         VerifyIsProgramIncrementTracker $program_increment_verifier,
-        ArtifactCreatedEvent $event
+        ArtifactCreatedEvent $event,
     ): ?self {
         $program_increment = ProgramIncrementIdentifier::fromArtifactEvent($program_increment_verifier, $event);
         if (! $program_increment) {
@@ -71,7 +71,7 @@ final class ProgramIncrementCreation implements TimeboxMirroringOrder
         VerifyIsVisibleArtifact $visibility_verifier,
         VerifyIsChangeset $changeset_verifier,
         RetrieveProgramIncrementTracker $tracker_retriever,
-        ProgramIncrementCreationEvent $event
+        ProgramIncrementCreationEvent $event,
     ): ?self {
         $user                 = $event->getUser();
         $program_increment_id = $event->getArtifactId();

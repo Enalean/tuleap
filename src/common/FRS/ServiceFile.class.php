@@ -64,7 +64,7 @@ class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $user = UserManager::instance()->getCurrentUser();
         $ret  = [
             'title' => $GLOBALS['Language']->getText('include_project_home', 'latest_file_releases'),
-            'content' => ''
+            'content' => '',
         ];
 
         $packages = $this->getPackagesForUser($user->getId());
@@ -197,7 +197,7 @@ class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                                 '/file/admin/?' . http_build_query(
                                     [
                                         'group_id' => $project->getID(),
-                                        'action'   => 'edit-permissions'
+                                        'action'   => 'edit-permissions',
                                     ]
                                 ),
                             )]

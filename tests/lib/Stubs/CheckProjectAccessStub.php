@@ -38,7 +38,7 @@ final class CheckProjectAccessStub implements CheckProjectAccess
         bool $is_suspended,
         bool $is_deleted,
         bool $is_user_restricted,
-        bool $is_private
+        bool $is_private,
     ) {
         $this->is_not_found       = $is_not_found;
         $this->is_suspended       = $is_suspended;

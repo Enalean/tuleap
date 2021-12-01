@@ -54,7 +54,7 @@ class XMLImporter
         Project $project,
         LoggerInterface $logger,
         NodeImporter $node_importer,
-        XML_RNGValidator $rng_validator
+        XML_RNGValidator $rng_validator,
     ) {
         $this->item_factory  = $item_factory;
         $this->logger        = $logger;

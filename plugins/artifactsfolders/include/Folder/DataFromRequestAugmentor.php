@@ -38,7 +38,7 @@ class DataFromRequestAugmentor
 
     public function __construct(
         Codendi_Request $request,
-        HierarchyOfFolderBuilder $hierarchy_builder
+        HierarchyOfFolderBuilder $hierarchy_builder,
     ) {
         $this->request           = $request;
         $this->hierarchy_builder = $hierarchy_builder;

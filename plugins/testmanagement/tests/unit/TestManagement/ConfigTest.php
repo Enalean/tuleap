@@ -69,7 +69,7 @@ final class ConfigTest extends \Tuleap\Test\PHPUnit\TestCase
             'campaign_tracker_id' => 10,
             'test_definition_tracker_id' => 11,
             'test_execution_tracker_id' => 12,
-            'issue_tracker_id' => 13
+            'issue_tracker_id' => 13,
         ];
         $dar        = \TestHelper::arrayToDar($properties);
         $this->dao->shouldReceive('searchByProjectId')->withArgs([101])->andReturn($dar);
@@ -90,7 +90,7 @@ final class ConfigTest extends \Tuleap\Test\PHPUnit\TestCase
             'campaign_tracker_id' => 10,
             'test_definition_tracker_id' => 11,
             'test_execution_tracker_id' => 12,
-            'issue_tracker_id' => 13
+            'issue_tracker_id' => 13,
         ];
         $dar        = \TestHelper::arrayToDar($properties);
         $this->dao->shouldReceive('searchByProjectId')->withArgs([101])->andReturn($dar);
@@ -110,7 +110,7 @@ final class ConfigTest extends \Tuleap\Test\PHPUnit\TestCase
             'campaign_tracker_id' => 10,
             'test_definition_tracker_id' => 11,
             'test_execution_tracker_id' => 12,
-            'issue_tracker_id' => 13
+            'issue_tracker_id' => 13,
         ];
         $dar        = \TestHelper::arrayToDar($properties);
         $this->dao->shouldReceive('searchByProjectId')->withArgs([101])->andReturn($dar);

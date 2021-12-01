@@ -60,7 +60,7 @@ final class embedPlugin extends Plugin
     }
 
     public function getAdditionalJavascriptFilesForArtifactDisplay(
-        GetAdditionalJavascriptFilesForArtifactDisplay $event
+        GetAdditionalJavascriptFilesForArtifactDisplay $event,
     ): void {
         $include_assets = new IncludeAssets(__DIR__ . '/../../../src/www/assets/embed', '/assets/embed');
         $event->add($include_assets->getFileURL('embed.js'));

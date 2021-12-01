@@ -233,7 +233,7 @@ class ThreadsDao extends DataAccessObject
                 'cached_html' => $cached_html,
             ],
             [
-                'id_message' => $message_id
+                'id_message' => $message_id,
             ]
         );
     }

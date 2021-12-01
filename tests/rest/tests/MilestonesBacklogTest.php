@@ -241,7 +241,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     public function testPOSTBacklogForbiddenForRESTReadOnlyUserNotInvolvedInProject(): void
     {
         $post = [
-            'artifact' => ['id' => $this->story_artifact_ids[6]]
+            'artifact' => ['id' => $this->story_artifact_ids[6]],
         ];
 
         $response_post = $this->getResponse(
@@ -262,7 +262,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     public function testPOSTBacklogAppendsId(): void
     {
         $post          = [
-            'artifact' => ['id' => $this->story_artifact_ids[6]]
+            'artifact' => ['id' => $this->story_artifact_ids[6]],
         ];
         $response_post = $this->getResponse(
             $this->request_factory->createRequest(
@@ -288,7 +288,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     public function testPOSTBacklogWithoutPermissions(): void
     {
         $post          = [
-            'artifact' => ['id' => $this->story_artifact_ids[6]]
+            'artifact' => ['id' => $this->story_artifact_ids[6]],
         ];
         $response_post = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_2_NAME,

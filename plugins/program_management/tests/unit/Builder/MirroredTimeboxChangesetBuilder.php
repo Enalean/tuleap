@@ -37,7 +37,7 @@ final class MirroredTimeboxChangesetBuilder
         int $mapped_status_bind_value_id,
         SynchronizedFieldsStubPreparation $fields,
         SourceTimeboxChangesetValues $source_values,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): MirroredTimeboxChangeset {
         return MirroredTimeboxChangeset::fromMirroredTimebox(
             RetrieveTrackerOfArtifactStub::withIds(1),

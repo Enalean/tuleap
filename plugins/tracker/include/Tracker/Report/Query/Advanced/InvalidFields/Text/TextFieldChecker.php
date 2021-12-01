@@ -69,14 +69,14 @@ class TextFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 
     public function visitCurrentUserValueWrapper(
         CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new MySelfIsNotSupportedException();
     }
 
     public function visitStatusOpenValueWrapper(
         StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new StatusOpenIsNotSupportedException();
     }

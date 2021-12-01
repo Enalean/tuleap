@@ -40,7 +40,7 @@ final class WorkflowVerifier implements VerifySynchronizedFieldsAreNotUsedInWork
         \Workflow_Dao $workflow_dao,
         \Tracker_Rule_Date_Dao $tracker_rule_date_dao,
         \Tracker_Rule_List_Dao $tracker_rule_list_dao,
-        \TrackerFactory $tracker_factory
+        \TrackerFactory $tracker_factory,
     ) {
         $this->workflow_dao          = $workflow_dao;
         $this->tracker_rule_date_dao = $tracker_rule_date_dao;
@@ -51,7 +51,7 @@ final class WorkflowVerifier implements VerifySynchronizedFieldsAreNotUsedInWork
     public function areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
         TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
     ): bool {
         $workflow_used = $this->areTransitionRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
             $trackers,
@@ -82,7 +82,7 @@ final class WorkflowVerifier implements VerifySynchronizedFieldsAreNotUsedInWork
     private function areTransitionRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
         TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
     ): bool {
         $workflow_transition_rules = $this->workflow_dao->searchWorkflowsByFieldIDsAndTrackerIDs(
             $trackers->getTrackerIds(),
@@ -112,7 +112,7 @@ final class WorkflowVerifier implements VerifySynchronizedFieldsAreNotUsedInWork
     private function areDateRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
         TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
     ): bool {
         $tracker_ids_with_date_rules = $this->tracker_rule_date_dao->searchTrackersWithRulesByFieldIDsAndTrackerIDs(
             $trackers->getTrackerIds(),
@@ -142,7 +142,7 @@ final class WorkflowVerifier implements VerifySynchronizedFieldsAreNotUsedInWork
     private function areListRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
         TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
     ): bool {
         $tracker_ids_with_list_rules = $this->tracker_rule_list_dao->searchTrackersWithRulesByFieldIDsAndTrackerIDs(
             $trackers->getTrackerIds(),

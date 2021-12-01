@@ -37,7 +37,7 @@ abstract class Planning_Presenter_MilestoneSummaryPresenterAbstract
     public function __construct(
         Planning_Milestone $milestone,
         $plugin_path,
-        ?AlternativeBoardLinkPresenter $alternative_board_link
+        ?AlternativeBoardLinkPresenter $alternative_board_link,
     ) {
         $this->milestone              = $milestone;
         $this->plugin_path            = $plugin_path;
@@ -73,7 +73,7 @@ abstract class Planning_Presenter_MilestoneSummaryPresenterAbstract
             'pane'        => DetailsPaneInfo::IDENTIFIER,
             'action'      => 'show',
             'group_id'    => $milestone->getGroupId(),
-            'aid'         => $milestone->getArtifactId()
+            'aid'         => $milestone->getArtifactId(),
         ];
 
         return [

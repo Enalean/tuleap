@@ -43,7 +43,7 @@ class TrackerReportConfigController
 
     public function __construct(
         TrackerReportConfig $config,
-        AdminPageRenderer $admin_page_rendered
+        AdminPageRenderer $admin_page_rendered,
     ) {
         $this->config              = $config;
         $this->admin_page_rendered = $admin_page_rendered;

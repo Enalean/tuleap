@@ -129,7 +129,7 @@ class Tracker_Artifact_Changeset_Comment
         $body,
         $bodyFormat,
         $parent_id,
-        ?array $ugroups_private_comment
+        ?array $ugroups_private_comment,
     ) {
         $this->id                              = $id;
         $this->changeset                       = $changeset;

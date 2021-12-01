@@ -42,7 +42,7 @@ class PullRequestPanePresenter
     public function __construct(
         CSRFSynchronizerTokenPresenter $csrf_token,
         Project $project,
-        MergeSetting $merge_setting
+        MergeSetting $merge_setting,
     ) {
         $this->csrf_token              = $csrf_token;
         $this->project_id              = $project->getID();

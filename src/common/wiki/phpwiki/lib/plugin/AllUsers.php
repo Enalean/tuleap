@@ -58,7 +58,7 @@ class WikiPlugin_AllUsers extends WikiPlugin
             PageList::supportedArgs(),
             ['noheader'      => false,
                    'include_empty' => true,
-                   'debug'         => false
+                   'debug'         => false,
             ]
         );
     }

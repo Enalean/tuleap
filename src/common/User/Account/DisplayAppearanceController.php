@@ -60,7 +60,7 @@ final class DisplayAppearanceController implements DispatchableWithRequest, Disp
         EventDispatcherInterface $dispatcher,
         TemplateRendererFactory $renderer_factory,
         CSRFSynchronizerToken $csrf_token,
-        AppearancePresenterBuilder $appareance_presenter_builder
+        AppearancePresenterBuilder $appareance_presenter_builder,
     ) {
         $this->dispatcher                   = $dispatcher;
         $this->renderer                     = $renderer_factory->getRenderer(__DIR__ . '/templates');

@@ -54,7 +54,7 @@ class ServicePresenter
 
     public function __construct(
         Service $service,
-        ?ServiceJSONPresenter $json_presenter
+        ?ServiceJSONPresenter $json_presenter,
     ) {
         $this->id             = $service->getId();
         $this->label          = $service->getInternationalizedName();

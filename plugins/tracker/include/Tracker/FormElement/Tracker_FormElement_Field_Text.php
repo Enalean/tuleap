@@ -260,7 +260,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         $content = '';
 
@@ -337,7 +337,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text'
+        $format = 'text',
     ) {
         if (empty($value) || $value->getText() == '') {
             return '-';
@@ -376,7 +376,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
@@ -543,7 +543,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     {
         return [
             'content' => $value['value'],
-            'format'  => $value['format']
+            'format'  => $value['format'],
         ];
     }
 
@@ -584,7 +584,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
                 [
                     Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
                     Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
-                    Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
+                    Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
                 ]
             );
     }
@@ -594,7 +594,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
         $content     = $this->getRightContent($value);
         $body_format = $this->getRightBodyFormat($artifact, $value);

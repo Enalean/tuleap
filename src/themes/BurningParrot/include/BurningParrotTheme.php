@@ -261,7 +261,7 @@ class BurningParrotTheme extends BaseLayout
         $extra_content = '';
 
         $this->event_manager->processEvent('site_help', [
-            'extra_content' => &$extra_content
+            'extra_content' => &$extra_content,
         ]);
 
         include($GLOBALS['Language']->getContent('help/site'));
@@ -272,7 +272,7 @@ class BurningParrotTheme extends BaseLayout
     private function getArrayOfClassnamesForBodyTag(
         $params,
         $sidebar,
-        ?Project $project
+        ?Project $project,
     ): array {
         $body_classes = [];
 
@@ -318,7 +318,7 @@ class BurningParrotTheme extends BaseLayout
         EventManager::instance()->processEvent(
             Event::BURNING_PARROT_GET_JAVASCRIPT_FILES,
             [
-                'javascript_files' => &$javascript_files
+                'javascript_files' => &$javascript_files,
             ]
         );
 

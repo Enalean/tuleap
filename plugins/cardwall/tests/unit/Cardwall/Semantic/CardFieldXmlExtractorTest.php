@@ -39,7 +39,7 @@ class CardFieldXmlExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $mapping   = [
             'F13' => 102,
-            'F14' => 103
+            'F14' => 103,
         ];
         $extractor = new CardFieldXmlExtractor();
         $fields    = $extractor->extractFieldFromXml($xml, $mapping);
@@ -66,7 +66,7 @@ class CardFieldXmlExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $mapping                = [
             'F13' => $status,
-            'F14' => $severity
+            'F14' => $severity,
         ];
         $extractor              = new CardFieldXmlExtractor();
         $background_color_field = $extractor->extractBackgroundColorFromXml($xml, $mapping);

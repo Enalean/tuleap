@@ -68,7 +68,7 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         AdminPageRenderer $admin_page_renderer,
         BigObjectAuthorizationManager $big_object_authorization_manager,
         IncludeAssets $include_assets,
-        VersionDetector $version_detector
+        VersionDetector $version_detector,
     ) {
         $this->csrf                             = $csrf;
         $this->project_manager                  = $project_manager;

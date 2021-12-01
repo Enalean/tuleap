@@ -176,6 +176,9 @@
     </rule>
     <!-- Forbid named arguments -->
     <rule ref="SlevomatCodingStandard.Functions.DisallowNamedArguments"/>
+    <!-- Force trailing comma in multilines arrays and function/method declaration -->
+    <rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma"/>
+    <rule ref="SlevomatCodingStandard.Functions.RequireTrailingCommaInDeclaration"/>
 
     <!-- Ensure code is compatible with the targeted version of PHP -->
     <rule ref="PHPCompatibility"/>

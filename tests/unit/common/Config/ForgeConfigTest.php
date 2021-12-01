@@ -64,7 +64,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'name'  => \ProjectManager::CONFIG_PROJECT_APPROVAL,
                     'value' => '1',
-                ]
+                ],
             ]
         );
         ForgeConfig::setDatabaseConfigDao($dao);

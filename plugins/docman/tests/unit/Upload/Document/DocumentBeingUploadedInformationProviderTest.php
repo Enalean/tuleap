@@ -45,7 +45,7 @@ class DocumentBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\
 
         $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([
             'filesize' => 123456,
-            'filename' => 'readme.md'
+            'filename' => 'readme.md',
         ]);
         $item_factory->shouldReceive('getItemFromDb')->andReturns(null);
 
@@ -71,7 +71,7 @@ class DocumentBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\
 
         $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([
             'filesize' => 123456,
-            'filename' => 'readme.md'
+            'filename' => 'readme.md',
         ]);
         $item_factory->shouldReceive('getItemFromDb')->andReturns(\Mockery::mock(\Docman_Item::class));
 

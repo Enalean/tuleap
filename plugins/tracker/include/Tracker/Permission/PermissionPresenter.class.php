@@ -43,7 +43,7 @@ class Tracker_Permission_PermissionPresenter
     {
         return '?' . http_build_query([
             'tracker' => $this->tracker->getId(),
-            'func'    => 'admin-perms-tracker'
+            'func'    => 'admin-perms-tracker',
         ]);
     }
 
@@ -73,7 +73,7 @@ class Tracker_Permission_PermissionPresenter
             'project_admin_permissions',
             'admins_create_modify_ug',
             [
-                '/project/admin/ugroup.php?group_id=' . (int) $this->tracker->getGroupID()
+                '/project/admin/ugroup.php?group_id=' . (int) $this->tracker->getGroupID(),
             ]
         );
     }

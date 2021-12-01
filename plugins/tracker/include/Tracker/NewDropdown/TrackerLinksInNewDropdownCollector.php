@@ -39,7 +39,7 @@ class TrackerLinksInNewDropdownCollector
 
     public function __construct(
         TrackerInNewDropdownRetriever $retriever,
-        TrackerNewDropdownLinkPresenterBuilder $link_presenter_builder
+        TrackerNewDropdownLinkPresenterBuilder $link_presenter_builder,
     ) {
         $this->retriever              = $retriever;
         $this->link_presenter_builder = $link_presenter_builder;

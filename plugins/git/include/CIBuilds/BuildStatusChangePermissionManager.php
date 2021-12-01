@@ -29,7 +29,7 @@ class BuildStatusChangePermissionManager
     private $dao;
 
     public function __construct(
-        BuildStatusChangePermissionDAO $dao
+        BuildStatusChangePermissionDAO $dao,
     ) {
         $this->dao = $dao;
     }

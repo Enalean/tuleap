@@ -109,7 +109,7 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $read_ugroups[] = [
                 'label'    => $ugroup->getName(),
                 'value'    => $ugroup->getId(),
-                'selected' => in_array($ugroup->getId(), $selected_ugroups)
+                'selected' => in_array($ugroup->getId(), $selected_ugroups),
             ];
         }
 
@@ -127,7 +127,7 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $write_ugroups[] = [
                 'label'    => $ugroup->getName(),
                 'value'    => $ugroup->getId(),
-                'selected' => in_array($ugroup->getId(), $selected_ugroups)
+                'selected' => in_array($ugroup->getId(), $selected_ugroups),
             ];
         }
 

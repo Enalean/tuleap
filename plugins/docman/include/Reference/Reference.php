@@ -31,7 +31,7 @@ class Docman_Reference extends Reference
         $scope,
         $service_short_name,
         $nature,
-        $project_id
+        $project_id,
     ) {
         $base_id = 0;
         $is_used = 1;

@@ -68,7 +68,7 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\PHPUni
         $is_rank_alpha = 0;
         $values        = [
             431 => $first_value,
-            432 => $second_value
+            432 => $second_value,
         ];
 
         $default_values = [];
@@ -165,7 +165,7 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\PHPUni
                 'intermodulation',
                 Mockery::any(),
                 Mockery::any(),
-                Mockery::any()
+                Mockery::any(),
             ]
         )->once()->andReturn(321);
 

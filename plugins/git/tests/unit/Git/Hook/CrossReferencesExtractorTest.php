@@ -84,7 +84,7 @@ class CrossReferencesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user              = new PFUser([
             'language_id' => 'en',
-            'user_id' => 350
+            'user_id' => 350,
         ]);
         $this->reference_manager = \Mockery::spy(\ReferenceManager::class);
 

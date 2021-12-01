@@ -193,7 +193,7 @@ class LDAP_UserWrite
             "objectclass"    => [
                 "posixAccount",
                 "inetOrgPerson",
-            ]
+            ],
         ];
         if ($user->getPassword() != '') {
             $info['userPassword'] = $this->getEncryptedPassword($user->getPassword());

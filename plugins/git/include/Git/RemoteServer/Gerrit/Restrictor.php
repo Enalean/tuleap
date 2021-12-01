@@ -51,7 +51,7 @@ class Restrictor
     public function __construct(
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         GerritServerResourceRestrictor $gerrit_ressource_restrictor,
-        ProjectManager $project_manager
+        ProjectManager $project_manager,
     ) {
         $this->gerrit_server_factory       = $gerrit_server_factory;
         $this->gerrit_ressource_restrictor = $gerrit_ressource_restrictor;

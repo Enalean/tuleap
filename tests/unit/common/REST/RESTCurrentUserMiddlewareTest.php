@@ -92,12 +92,12 @@ final class RESTCurrentUserMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
             [new User_StatusInvalidException()],
             [
                 new class extends AccessKeyException {
-                }
+                },
             ],
             [new Rest_Exception_InvalidTokenException()],
             [
                 new class extends SplitTokenException {
-                }
+                },
             ],
         ];
     }

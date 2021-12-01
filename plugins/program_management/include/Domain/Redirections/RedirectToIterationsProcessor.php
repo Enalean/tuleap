@@ -31,7 +31,7 @@ final class RedirectToIterationsProcessor
     public static function process(
         IterationRedirectionParameters $iteration_redirection_parameters,
         RedirectUserAfterArtifactCreationOrUpdateEvent $redirect,
-        ProjectReference $project_reference
+        ProjectReference $project_reference,
     ): void {
         if (! $iteration_redirection_parameters->isRedirectionNeeded()) {
             return;

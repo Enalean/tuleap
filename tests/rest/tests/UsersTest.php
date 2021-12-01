@@ -217,7 +217,7 @@ final class UsersTest extends RestBase // phpcs:ignore
             [
             'values' => [
                     'status' => "R",
-            ]
+            ],
             ]
         );
 
@@ -243,7 +243,7 @@ final class UsersTest extends RestBase // phpcs:ignore
             [
             'values' => [
                     'status' => "A",
-            ]
+            ],
             ]
         );
         $response = $this->getResponseByName(
@@ -262,7 +262,7 @@ final class UsersTest extends RestBase // phpcs:ignore
             [
                 'values' => [
                     'status' => "R",
-                ]
+                ],
             ]
         );
         $this->tuleap_config->setForgeToRegular();
@@ -287,7 +287,7 @@ final class UsersTest extends RestBase // phpcs:ignore
             [
                 'values' => [
                     'status' => "R",
-                ]
+                ],
             ]
         );
 
@@ -313,7 +313,7 @@ final class UsersTest extends RestBase // phpcs:ignore
             [
                 'values' => [
                     'status' => "R",
-                ]
+                ],
             ]
         );
         $response = $this->getResponse(
@@ -694,7 +694,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $search = urlencode(
             json_encode(
                 [
-                    'username' => REST_TestDataBuilder::TEST_USER_1_NAME
+                    'username' => REST_TestDataBuilder::TEST_USER_1_NAME,
                 ]
             )
         );
@@ -713,7 +713,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $search = urlencode(
             json_encode(
                 [
-                    'loginname' => REST_TestDataBuilder::TEST_USER_1_NAME
+                    'loginname' => REST_TestDataBuilder::TEST_USER_1_NAME,
                 ],
                 JSON_THROW_ON_ERROR
             )
@@ -732,7 +732,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $search = urlencode(
             json_encode(
                 [
-                    'username' => 'muppet'
+                    'username' => 'muppet',
                 ]
             )
         );
@@ -776,7 +776,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $preference = json_encode(
             [
                 'key'   => 'my_preference',
-                'value' => 'my_preference_value_1'
+                'value' => 'my_preference_value_1',
             ]
         );
 
@@ -795,7 +795,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $preference = json_encode(
             [
                 'key' => 'my_preference_multiple_times',
-                'value' => 'my_preference_value_1'
+                'value' => 'my_preference_value_1',
             ],
             JSON_THROW_ON_ERROR
         );
@@ -823,7 +823,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $preference = json_encode(
             [
                 'key'   => 'my_preference',
-                'value' => 'my_preference_value'
+                'value' => 'my_preference_value',
             ]
         );
 
@@ -840,7 +840,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $preference = json_encode(
             [
                 'key'   => 'my_preference',
-                'value' => 'my_preference_value'
+                'value' => 'my_preference_value',
             ]
         );
 
@@ -860,7 +860,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $preference = json_encode(
             [
                 'key'   => 'my_preference',
-                'value' => 'my_preference_value'
+                'value' => 'my_preference_value',
             ]
         );
 
@@ -932,7 +932,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $preference = json_encode(
             [
                 'key'   => 'preference_to_be_deleted',
-                'value' => 'awesome_value'
+                'value' => 'awesome_value',
             ]
         );
 
@@ -973,7 +973,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $preference = json_encode(
             [
                 'key'   => 'preference_to_be_deleted',
-                'value' => 'awesome_value'
+                'value' => 'awesome_value',
             ]
         );
 
@@ -1007,7 +1007,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $preference = json_encode(
             [
                 'key' => 'preference_to_be_deleted',
-                'value' => 'awesome_value'
+                'value' => 'awesome_value',
             ]
         );
 
@@ -1090,7 +1090,7 @@ final class UsersTest extends RestBase // phpcs:ignore
                     'xref' => 'bugs #845',
                     'link' => '/plugins/tracker/?aid=845',
                     'title' => '',
-                 ]
+                 ],
              ]
         );
 

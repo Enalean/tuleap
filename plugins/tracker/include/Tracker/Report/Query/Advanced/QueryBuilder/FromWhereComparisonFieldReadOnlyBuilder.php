@@ -28,7 +28,7 @@ class FromWhereComparisonFieldReadOnlyBuilder
      * @return IProvideFromAndWhereSQLFragments
      */
     public function getFromWhere(
-        $condition
+        $condition,
     ) {
         $from  = "";
         $where = "$condition";

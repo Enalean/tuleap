@@ -47,7 +47,7 @@ class TimeframeWithDuration implements IComputeTimeframes
 
     public function __construct(
         \Tracker_FormElement_Field_Date $start_date_field,
-        \Tracker_FormElement_Field_Numeric $duration_field
+        \Tracker_FormElement_Field_Numeric $duration_field,
     ) {
         $this->start_date_field = $start_date_field;
         $this->duration_field   = $duration_field;

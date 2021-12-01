@@ -42,7 +42,7 @@ class RoadmapWidgetPresenterBuilder
         ?int $lvl1_iteration_tracker_id,
         ?int $lvl2_iteration_tracker_id,
         string $default_timescale,
-        \PFUser $user
+        \PFUser $user,
     ): RoadmapWidgetPresenter {
         $visible_natures = array_filter(
             $this->nature_presenter_factory->getOnlyVisibleTypes(),

@@ -93,7 +93,7 @@ class LSFAPIHTTPAuthorization
     private function findUserMatchingTokenAndOperation(
         GitRepository $repository,
         SplitToken $authorization_token,
-        UserOperation $user_operation
+        UserOperation $user_operation,
     ): ?PFUser {
         try {
             return $this->token_verifier->getUser(

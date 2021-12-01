@@ -58,7 +58,7 @@ class AuthorizationCodeResponseFactory
         OAuth2AuthorizationCodeCreator $authorization_code_creator,
         RedirectURIBuilder $client_uri_redirect_builder,
         \URLRedirect $login_redirect,
-        UriFactoryInterface $uri_factory
+        UriFactoryInterface $uri_factory,
     ) {
         $this->response_factory            = $response_factory;
         $this->authorization_code_creator  = $authorization_code_creator;
@@ -79,7 +79,7 @@ class AuthorizationCodeResponseFactory
         string $redirect_uri,
         ?string $state,
         ?string $pkce_code_challenge,
-        ?string $oidc_nonce
+        ?string $oidc_nonce,
     ): ResponseInterface {
         $authorization_code = $this->authorization_code_creator->createAuthorizationCodeIdentifier(
             new \DateTimeImmutable(),

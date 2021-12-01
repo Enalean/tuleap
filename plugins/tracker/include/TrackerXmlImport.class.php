@@ -169,7 +169,7 @@ class TrackerXmlImport
         TrackerXMLFieldMappingFromExistingTracker $tracker_XML_field_mapping_from_existing_tracker,
         ExternalFieldsExtractor $external_fields_extractor,
         TrackerXmlImportFeedbackCollector $feedback_collector,
-        TrackerCreationDataChecker $creation_data_checker
+        TrackerCreationDataChecker $creation_data_checker,
     ) {
         $this->tracker_factory                = $tracker_factory;
         $this->event_manager                  = $event_manager;
@@ -200,7 +200,7 @@ class TrackerXmlImport
      */
     public static function build(
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        ?\Psr\Log\LoggerInterface $logger = null
+        ?\Psr\Log\LoggerInterface $logger = null,
     ) {
         $builder         = new Tracker_Artifact_XMLImportBuilder();
         $tracker_factory = TrackerFactory::instance();
@@ -268,7 +268,7 @@ class TrackerXmlImport
         SimpleXMLElement $xml_input,
         MappingsRegistry $registery,
         string $extraction_path,
-        PFUser $user
+        PFUser $user,
     ) {
         if (! $xml_input->trackers) {
             return;
@@ -372,7 +372,7 @@ class TrackerXmlImport
                 'logger'          => $this->logger,
                 'created_refs'    => [
                     'tracker'  => $created_trackers_mapping,
-                    'artifact' => $artifacts_id_mapping->getMapping()
+                    'artifact' => $artifacts_id_mapping->getMapping(),
                 ],
                 'service_name'    => 'tracker',
                 'xml_content'     => $xml_input->trackers->references,
@@ -500,7 +500,7 @@ class TrackerXmlImport
         TrackerXmlFieldsMapping_FromAnotherPlatform $xml_mapping,
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping,
         ImportConfig $configuration,
-        TrackerXmlImportConfig $tracker_import_config
+        TrackerXmlImportConfig $tracker_import_config,
     ) {
         $created_artifacts = [];
         foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
@@ -532,7 +532,7 @@ class TrackerXmlImport
         array $created_artifacts,
         ImportConfig $configuration,
         ImportedChangesetMapping $changeset_id_mapping,
-        TrackerXmlImportConfig $tracker_import_config
+        TrackerXmlImportConfig $tracker_import_config,
     ): void {
         foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
             if (isset($xml_tracker->artifacts)) {
@@ -575,7 +575,7 @@ class TrackerXmlImport
         Project $project,
         SimpleXMLElement $xml_tracker,
         ImportConfig $configuration,
-        array $created_trackers_mapping
+        array $created_trackers_mapping,
     ): Tracker {
         $tracker_existing = $this->getTrackerToReUse($project, $xml_tracker, $configuration);
         if ($tracker_existing !== null) {
@@ -609,7 +609,7 @@ class TrackerXmlImport
     private function getTrackerToReUse(
         Project $project,
         SimpleXMLElement $xml_tracker,
-        ImportConfig $configuration
+        ImportConfig $configuration,
     ) {
         foreach ($configuration->getExtraConfiguration() as $extra_configuration) {
             if ($extra_configuration->getServiceName() !== trackerPlugin::SERVICE_SHORTNAME) {
@@ -707,7 +707,7 @@ class TrackerXmlImport
         string $name,
         string $description,
         string $item_name,
-        ?string $color
+        ?string $color,
     ): Tracker {
         $tracker_xml = $this->loadXmlFile($filepath);
         if (! $tracker_xml) {
@@ -735,7 +735,7 @@ class TrackerXmlImport
         string $description,
         string $itemname,
         ?string $color,
-        array $created_trackers_mapping
+        array $created_trackers_mapping,
     ): Tracker {
         $tracker         = null;
         $partial_element = new SimpleXMLElement((string) $xml_element->asXML());
@@ -799,7 +799,7 @@ class TrackerXmlImport
                 'xml_element' => $xml_element,
                 'tracker_id'  => $tracker_id,
                 'project'     => $project,
-                'logger'      => $this->logger
+                'logger'      => $this->logger,
             ]
         );
     }
@@ -814,7 +814,7 @@ class TrackerXmlImport
         string $description,
         string $itemname,
         ?string $color,
-        array $created_trackers_mapping
+        array $created_trackers_mapping,
     ): Tracker {
         $row     = $this->setTrackerGeneralInformation($xml, $project, $name, $description, $itemname, $color);
         $tracker = $this->tracker_factory->getInstanceFromRow($row);
@@ -966,7 +966,7 @@ class TrackerXmlImport
         string $name,
         string $description,
         string $itemname,
-        ?string $color
+        ?string $color,
     ): array {
         $xml_tracker_color_name = $color ?? (string) $xml->color;
         if ($xml_tracker_color_name === '') {
@@ -986,7 +986,7 @@ class TrackerXmlImport
             'browse_instructions' => (string) $xml->browse_instructions,
             'status'              => '',
             'deletion_date'       => '',
-            'color'               => $tracker_color->getName()
+            'color'               => $tracker_color->getName(),
         ];
         $row['allow_copy']                   = isset($att['allow_copy']) ?
             (int) $att['allow_copy'] : 0;
@@ -1019,7 +1019,7 @@ class TrackerXmlImport
      */
     protected function setFormElementFields(
         SimpleXMLElement $xml,
-        Tracker $tracker
+        Tracker $tracker,
     ): void {
         $elements = $this->getFormElementsFromXml($xml);
 
@@ -1166,7 +1166,7 @@ class TrackerXmlImport
         SimpleXMLElement $xml,
         Project $project,
         Tracker $tracker,
-        array $xml_mapping
+        array $xml_mapping,
     ): void {
         if (! isset($xml->permissions->permission)) {
             return;
@@ -1176,12 +1176,12 @@ class TrackerXmlImport
             Tracker::PERMISSION_FULL,
             Tracker::PERMISSION_SUBMITTER,
             Tracker::PERMISSION_ASSIGNEE,
-            Tracker::PERMISSION_SUBMITTER_ONLY
+            Tracker::PERMISSION_SUBMITTER_ONLY,
         ];
         $allowed_field_perms   = [
             'PLUGIN_TRACKER_FIELD_READ',
             'PLUGIN_TRACKER_FIELD_UPDATE',
-            'PLUGIN_TRACKER_FIELD_SUBMIT'
+            'PLUGIN_TRACKER_FIELD_SUBMIT',
         ];
 
         foreach ($xml->permissions->permission as $permission) {

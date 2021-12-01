@@ -44,7 +44,7 @@ class NotificationsForProjectMemberCleaner
     public function __construct(
         Docman_ItemFactory $item_factory,
         Docman_NotificationsManager $notifications_manager,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->item_factory          = $item_factory;
         $this->notifications_manager = $notifications_manager;

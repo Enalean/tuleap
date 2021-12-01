@@ -242,7 +242,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         Tracker_SemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         $hp   = Codendi_HTMLPurifier::instance();
         $html = '';

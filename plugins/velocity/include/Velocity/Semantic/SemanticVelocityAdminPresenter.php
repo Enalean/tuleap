@@ -101,7 +101,7 @@ class SemanticVelocityAdminPresenter
         $selected_velocity_field_id,
         BacklogRequiredTrackerCollection $backlog_required_tracker_collection,
         ChildrenRequiredTrackerCollection $children_required_tracker_collection,
-        $has_at_least_one_tracker_correctly_configured
+        $has_at_least_one_tracker_correctly_configured,
     ) {
         $this->possible_velocity_field   = $this->buildPossibleVelocityField(
             $possible_velocity_field,
@@ -115,7 +115,7 @@ class SemanticVelocityAdminPresenter
         $this->back_url                  = TRACKER_BASE_URL . "/?" . http_build_query(
             [
                 "tracker" => $tracker->getId(),
-                "func"    => "admin-semantic"
+                "func"    => "admin-semantic",
             ]
         );
         $this->url_done_semantic         = TRACKER_BASE_URL . '/?' . http_build_query(
@@ -147,7 +147,7 @@ class SemanticVelocityAdminPresenter
             $built_field[] = [
                 "id"          => $field->getId(),
                 "name"        => $field->getLabel(),
-                "is_selected" => (int) $field->getId() === (int) $selected_velocity_field_id
+                "is_selected" => (int) $field->getId() === (int) $selected_velocity_field_id,
             ];
         }
 

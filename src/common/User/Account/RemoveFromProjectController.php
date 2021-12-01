@@ -72,7 +72,7 @@ final class RemoveFromProjectController extends DispatchablePSR15Compatible
         UserRemover $user_remover,
         ProjectAdministratorsIncludingDelegationDAO $project_administrators_including_delegation_dao,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->response_factory                                = $response_factory;

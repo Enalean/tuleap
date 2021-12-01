@@ -83,7 +83,7 @@ if ($json_format) {
     foreach ($list as $entry) {
         $json_entries[] = [
             'id'   => $entry,
-            'text' => $entry
+            'text' => $entry,
         ];
     }
 
@@ -91,8 +91,8 @@ if ($json_format) {
     $output       = [
         'results' => $json_entries,
         'pagination' => [
-            'more' => $more_results
-        ]
+            'more' => $more_results,
+        ],
     ];
 
     $GLOBALS['Response']->sendJSON($output);

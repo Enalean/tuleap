@@ -49,7 +49,7 @@ class GitlabBranchCreator
         GitlabRepositoryIntegrationFactory $integration_factory,
         CredentialsRetriever $credentials_retriever,
         ClientWrapper $gitlab_api_client,
-        BranchNameCreatorFromArtifact $branch_name_creator_from_artifact
+        BranchNameCreatorFromArtifact $branch_name_creator_from_artifact,
     ) {
         $this->artifact_factory                  = $artifact_factory;
         $this->availability_checker              = $availability_checker;
@@ -64,7 +64,7 @@ class GitlabBranchCreator
      */
     public function createBranchInGitlab(
         PFUser $current_user,
-        GitlabBranchPOSTRepresentation $gitlab_branch
+        GitlabBranchPOSTRepresentation $gitlab_branch,
     ): void {
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView(
             $current_user,

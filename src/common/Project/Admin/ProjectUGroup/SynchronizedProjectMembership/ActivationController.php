@@ -49,7 +49,7 @@ class ActivationController implements DispatchableWithRequest
         ProjectRetriever $project_retriever,
         ProjectAdministratorChecker $administrator_checker,
         SynchronizedProjectMembershipDao $dao,
-        \CSRFSynchronizerToken $csrf
+        \CSRFSynchronizerToken $csrf,
     ) {
         $this->project_retriever     = $project_retriever;
         $this->administrator_checker = $administrator_checker;

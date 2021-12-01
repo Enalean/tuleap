@@ -63,7 +63,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         GerritServerResourceRestrictor $gerrit_ressource_restrictor,
         Restrictor $gerrit_restrictor,
         AdminGerritBuilder $admin_gerrit_builder,
-        IncludeAssets $include_assets
+        IncludeAssets $include_assets,
     ) {
         $this->gerrit_server_factory       = $gerrit_server_factory;
         $this->csrf                        = $csrf;

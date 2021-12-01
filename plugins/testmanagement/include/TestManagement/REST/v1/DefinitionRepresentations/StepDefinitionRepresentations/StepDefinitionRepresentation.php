@@ -71,7 +71,7 @@ final class StepDefinitionRepresentation implements \JsonSerializable
         string $expected_results,
         string $expected_results_format,
         ?string $commonmark_expected_results,
-        int $rank
+        int $rank,
     ) {
         $this->id                          = $id;
         $this->description                 = $description;

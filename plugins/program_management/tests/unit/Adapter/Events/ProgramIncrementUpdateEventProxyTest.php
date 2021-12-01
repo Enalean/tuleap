@@ -67,8 +67,8 @@ final class ProgramIncrementUpdateEventProxyTest extends TestCase
                 'iterations'           => [
                     ['id' => self::FIRST_ITERATION_ID, 'changeset_id' => self::FIRST_ITERATION_CHANGESET_ID],
                     ['id' => self::SECOND_ITERATION_ID, 'changeset_id' => self::SECOND_ITERATION_CHANGESET_ID],
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 
@@ -107,7 +107,7 @@ final class ProgramIncrementUpdateEventProxyTest extends TestCase
     {
         $worker_event = new WorkerEvent($this->logger, [
             'event_name' => 'unrelated.topic',
-            'payload'    => []
+            'payload'    => [],
         ]);
         self::assertNull(
             ProgramIncrementUpdateEventProxy::fromWorkerEvent(
@@ -126,7 +126,7 @@ final class ProgramIncrementUpdateEventProxyTest extends TestCase
     {
         $worker_event = new WorkerEvent($this->logger, [
             'event_name' => ProgramIncrementUpdateEventProxy::TOPIC,
-            'payload'    => []
+            'payload'    => [],
         ]);
         self::assertNull(
             ProgramIncrementUpdateEventProxy::fromWorkerEvent(

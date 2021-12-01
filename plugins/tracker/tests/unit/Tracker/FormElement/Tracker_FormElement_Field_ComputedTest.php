@@ -82,7 +82,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
     {
         $field = $this->getComputedField();
         $value = [
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true,
         ];
 
         $this->assertEquals($value, $field->getFieldDataFromRESTValue($value));
@@ -93,7 +93,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $field = $this->getComputedField();
         $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
         $value = [
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false,
         ];
         $field->getFieldDataFromRESTValue($value);
     }
@@ -104,7 +104,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
         $value = [
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false,
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => null
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => null,
         ];
         $field->getFieldDataFromRESTValue($value);
     }
@@ -114,7 +114,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $field = $this->getComputedField();
         $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
         $value = [
-            'value' => 1
+            'value' => 1,
         ];
         $field->getFieldDataFromRESTValue($value);
     }
@@ -142,7 +142,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
             $field->validateValue(
                 [
                     Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL,
-                    Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED
+                    Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED,
                 ]
             )
         );
@@ -167,7 +167,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
             $field->validateValue(
                 [
                     Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => 1,
-                    Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true
+                    Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true,
                 ]
             )
         );
@@ -175,7 +175,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
             $field->validateValue(
                 [
                     Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => 1,
-                    Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false
+                    Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false,
                 ]
             )
         );
@@ -183,7 +183,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
             $field->validateValue(
                 [
                     Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => '',
-                    Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false
+                    Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false,
                 ]
             )
         );
@@ -191,7 +191,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
             $field->validateValue(
                 [
                     Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => '',
-                    Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true
+                    Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true,
                 ]
             )
         );
@@ -206,7 +206,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $field->shouldReceive('userCanUpdate')->andReturn(true);
         $submitted_value = [
             'manual_value'    => '',
-            'is_autocomputed' => true
+            'is_autocomputed' => true,
         ];
 
         $this->assertTrue(
@@ -223,7 +223,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $field->shouldReceive('userCanUpdate')->andReturn(true);
         $submitted_value = [
             'manual_value'    => '',
-            'is_autocomputed' => true
+            'is_autocomputed' => true,
         ];
 
         $this->assertTrue(
@@ -240,7 +240,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $field->shouldReceive('userCanUpdate')->andReturn(true);
         $field->shouldReceive('validate')->andReturn(true);
         $submitted_value = [
-            'manual_value' => '11'
+            'manual_value' => '11',
         ];
 
         $this->assertTrue(
@@ -256,7 +256,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $field->shouldReceive('isRequired')->andReturn(true);
         $field->shouldReceive('userCanUpdate')->andReturn(true);
         $submitted_value = [
-            'manual_value' => ''
+            'manual_value' => '',
         ];
 
         $this->assertFalse(
@@ -272,7 +272,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $field->shouldReceive('isRequired')->andReturn(false);
         $field->shouldReceive('userCanUpdate')->andReturn(true);
         $submitted_value = [
-            'manual_value' => ''
+            'manual_value' => '',
         ];
 
         $this->assertFalse(
@@ -538,7 +538,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
 
         $submitted_value = [
             'manual_value'    => '',
-            'is_autocomputed' => true
+            'is_autocomputed' => true,
         ];
 
         $this->assertTrue($field->hasChanges($artifact, $old_value, $submitted_value));
@@ -554,7 +554,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $old_value->shouldReceive('isManualValue')->andReturn(false);
         $submitted_value = [
             'manual_value'    => '123',
-            'is_autocomputed' => false
+            'is_autocomputed' => false,
         ];
 
         $this->assertTrue($field->hasChanges($artifact, $old_value, $submitted_value));
@@ -571,7 +571,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
 
         $submitted_value = [
             'manual_value'    => '',
-            'is_autocomputed' => true
+            'is_autocomputed' => true,
         ];
 
         $this->assertTrue($field->hasChanges($artifact, $old_value, $submitted_value));
@@ -587,7 +587,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $old_value->shouldReceive('isManualValue')->andReturn(false);
         $submitted_value = [
             'is_autocomputed' => '',
-            'manual_value'    => 5
+            'manual_value'    => 5,
         ];
 
         $this->assertTrue($field->hasChanges($artifact, $old_value, $submitted_value));
@@ -603,7 +603,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $old_value->shouldReceive('isManualValue')->andReturn(false);
         $submitted_value = [
             'is_autocomputed' => '',
-            'manual_value'    => 7
+            'manual_value'    => 7,
         ];
 
         $this->assertFalse($field->hasChanges($artifact, $old_value, $submitted_value));
@@ -620,7 +620,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
 
         $submitted_value = [
             'is_autocomputed' => '1',
-            'manual_value'    => ''
+            'manual_value'    => '',
         ];
 
         $this->assertFalse($field->hasChanges($artifact, $old_value, $submitted_value));
@@ -637,7 +637,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
 
         $submitted_value = [
             'is_autocomputed' => '1',
-            'manual_value'    => '999999'
+            'manual_value'    => '999999',
         ];
 
         $this->assertFalse($field->hasChanges($artifact, $old_value, $submitted_value));
@@ -653,7 +653,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $old_value->shouldReceive('isManualValue')->andReturn(false);
         $submitted_value = [
             'is_autocomputed' => '',
-            'manual_value'    => '7'
+            'manual_value'    => '7',
         ];
 
         $this->assertFalse($field->hasChanges($artifact, $old_value, $submitted_value));
@@ -669,7 +669,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $old_value->shouldReceive('isManualValue')->andReturn(false);
         $submitted_value = [
             'is_autocomputed' => '',
-            'manual_value'    => '0'
+            'manual_value'    => '0',
         ];
 
         $this->assertTrue($field->hasChanges($artifact, $old_value, $submitted_value));
@@ -687,7 +687,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
 
         $value = [
             'manual_value'    => 20,
-            'is_autocomputed' => 0
+            'is_autocomputed' => 0,
         ];
 
         $field->saveNewChangeset(
@@ -713,7 +713,7 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         $value     = json_encode(
             $value = [
                 'manual_value'    => 20,
-                'is_autocomputed' => 0
+                'is_autocomputed' => 0,
             ]
         );
 

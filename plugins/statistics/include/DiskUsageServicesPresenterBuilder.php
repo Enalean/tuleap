@@ -58,7 +58,7 @@ class DiskUsageServicesPresenterBuilder
         Statistics_DiskUsageManager $usage_manager,
         Statistics_DiskUsageOutput $usage_output,
         Statistics_DiskUsageGraph $usage_graph,
-        SearchFieldsPresenterBuilder $search_fields_builder
+        SearchFieldsPresenterBuilder $search_fields_builder,
     ) {
         $this->usage_graph           = $usage_graph;
         $this->usage_manager         = $usage_manager;
@@ -75,7 +75,7 @@ class DiskUsageServicesPresenterBuilder
         array $selected_group_by_date,
         $start_date,
         $end_date,
-        $relative_y_axis
+        $relative_y_axis,
     ) {
         if ($project_id) {
             $project = $this->project_manager->getProject($project_id);
@@ -162,7 +162,7 @@ class DiskUsageServicesPresenterBuilder
                 'color_rgba' => $color_rgba,
                 'start_size' => $this->usage_output->sizeReadable($evolution_by_service[$value['key']]['start_size']),
                 'end_size'   => $this->usage_output->sizeReadable($evolution_by_service[$value['key']]['end_size']),
-                'evolution'  => $this->usage_output->sizeReadable($evolution_by_service[$value['key']]['evolution'])
+                'evolution'  => $this->usage_output->sizeReadable($evolution_by_service[$value['key']]['evolution']),
             ]);
 
             $services[$key] = $value;
@@ -176,7 +176,7 @@ class DiskUsageServicesPresenterBuilder
             $services,
             $total_start_size,
             $total_end_size,
-            $total_evolution
+            $total_evolution,
         ];
     }
 
@@ -186,7 +186,7 @@ class DiskUsageServicesPresenterBuilder
             self::GROUP_BY_DAY_KEY   => dgettext('tuleap-statistics', 'Day'),
             self::GROUP_BY_WEEK_KEY  => dgettext('tuleap-statistics', 'Week'),
             self::GROUP_BY_MONTH_KEY => dgettext('tuleap-statistics', 'Month'),
-            self::GROUP_BY_YEAR_KEY  => dgettext('tuleap-statistics', 'Year')
+            self::GROUP_BY_YEAR_KEY  => dgettext('tuleap-statistics', 'Year'),
         ];
     }
 
@@ -205,7 +205,7 @@ class DiskUsageServicesPresenterBuilder
             $group_by_date_with_selected[] = [
                 'key'         => $key,
                 'value'       => $value,
-                'is_selected' => $selected
+                'is_selected' => $selected,
             ];
         }
 

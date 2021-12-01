@@ -42,7 +42,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
     public function __construct(
         \Tracker $tracker,
         SemanticTimeframe $semantic_timeframe_implied_from_tracker,
-        LinksRetriever $links_retriever
+        LinksRetriever $links_retriever,
     ) {
         $this->tracker                                 = $tracker;
         $this->semantic_timeframe_implied_from_tracker = $semantic_timeframe_implied_from_tracker;

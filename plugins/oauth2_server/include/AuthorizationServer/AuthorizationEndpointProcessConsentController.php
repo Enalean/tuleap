@@ -80,7 +80,7 @@ final class AuthorizationEndpointProcessConsentController extends DispatchablePS
         AuthorizationCodeResponseFactory $response_creator,
         \CSRFSynchronizerToken $csrf_token,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->user_manager          = $user_manager;

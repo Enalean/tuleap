@@ -386,7 +386,7 @@ class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
             "UGROUP_PROJECT_ADMIN"      => 4,
             "UGROUP_FILE_MANAGER_ADMIN" => 11,
             "UGROUP_WIKI_ADMIN"         => 14,
-            "UGROUP_TRACKER_ADMIN"      => 15
+            "UGROUP_TRACKER_ADMIN"      => 15,
         ];
     }
 
@@ -408,7 +408,7 @@ class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_field->shouldReceive('userCanSubmit')->andReturns(true);
         $this->formelement_factory->shouldReceive('getUsedFields')->andReturns(
             [
-                $tracker_field
+                $tracker_field,
             ]
         );
 
@@ -427,7 +427,7 @@ class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_field->shouldReceive('userCanSubmit')->andReturn(true);
         $this->formelement_factory->shouldReceive('getUsedFields')->andReturn(
             [
-                $tracker_field
+                $tracker_field,
             ]
         );
 
@@ -446,7 +446,7 @@ class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_field->shouldReceive('userCanSubmit')->andReturn(true);
         $this->formelement_factory->shouldReceive('getUsedFields')->andReturn(
             [
-                $tracker_field
+                $tracker_field,
             ]
         );
 
@@ -466,7 +466,7 @@ class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker->shouldReceive('userCanView')->andReturn(true);
         $this->formelement_factory->shouldReceive('getUsedFields')->andReturn(
             [
-                $tracker_field
+                $tracker_field,
             ]
         );
 
@@ -485,7 +485,7 @@ class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker->shouldReceive('userCanView')->andReturn(true);
         $this->formelement_factory->shouldReceive('getUsedFields')->andReturn(
             [
-                $tracker_field
+                $tracker_field,
             ]
         );
 
@@ -506,7 +506,7 @@ class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->formelement_factory->shouldReceive('getUsedFields')->andReturn(
             [
                 $tracker_field,
-                $tracker_field2
+                $tracker_field2,
             ]
         );
 
@@ -535,7 +535,7 @@ class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->formelement_factory->shouldReceive('getUsedFields')->andReturn(
             [
                 $tracker_field,
-                $tracker_field2
+                $tracker_field2,
             ]
         );
 

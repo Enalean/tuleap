@@ -57,7 +57,7 @@ final class UserInfoControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testReturnsAJSONObjectWithAskedClaims(
         GrantedAuthorization $authorization,
-        string $expected_json
+        string $expected_json,
     ): void {
         $request = (new NullServerRequest())->withAttribute(
             OAuth2ResourceServerMiddleware::class,
@@ -84,20 +84,20 @@ final class UserInfoControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         return [
             'With subject claim only' => [
                 new GrantedAuthorization($user, [OAuth2TestScope::fromItself()]),
-                '{"sub":"110"}'
+                '{"sub":"110"}',
             ],
             'With email scope'        => [
                 new GrantedAuthorization($user, [OpenIDConnectEmailScope::fromItself()]),
-                '{"sub":"110","email":"user@example.com","email_verified":true}'
+                '{"sub":"110","email":"user@example.com","email_verified":true}',
             ],
             'With profile scope'      => [
                 new GrantedAuthorization($user, [OpenIDConnectProfileScope::fromItself()]),
-                '{"sub":"110","name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"/path/to/avatar.png","zoneinfo":"America\/Montreal","locale":"en-US"}'
+                '{"sub":"110","name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"/path/to/avatar.png","zoneinfo":"America\/Montreal","locale":"en-US"}',
             ],
             'With all scopes'         => [
                 new GrantedAuthorization($user, [OpenIDConnectEmailScope::fromItself(), OpenIDConnectProfileScope::fromItself()]),
-                '{"sub":"110","email":"user@example.com","email_verified":true,"name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"/path/to/avatar.png","zoneinfo":"America\/Montreal","locale":"en-US"}'
-            ]
+                '{"sub":"110","email":"user@example.com","email_verified":true,"name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"/path/to/avatar.png","zoneinfo":"America\/Montreal","locale":"en-US"}',
+            ],
         ];
     }
 }

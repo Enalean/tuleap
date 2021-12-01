@@ -42,7 +42,7 @@ class GitlabTag
     public function __construct(
         string $commit_sha1,
         string $tag_name,
-        string $tag_message
+        string $tag_message,
     ) {
         $this->commit_sha1 = $commit_sha1;
         $this->tag_name    = $tag_name;

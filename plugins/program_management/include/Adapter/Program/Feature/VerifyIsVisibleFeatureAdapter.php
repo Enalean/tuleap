@@ -44,7 +44,7 @@ final class VerifyIsVisibleFeatureAdapter implements VerifyFeatureIsVisibleByPro
         int $feature_id,
         UserIdentifier $user_identifier,
         ProgramIdentifier $program,
-        ?PermissionBypass $bypass
+        ?PermissionBypass $bypass,
     ): bool {
         if ($bypass) {
             $artifact = $this->artifact_factory->getArtifactById($feature_id);

@@ -66,7 +66,7 @@ class JenkinsClient
         RequestFactoryInterface $request_factory,
         JenkinsCSRFCrumbRetriever $csrf_crumb_retriever,
         JenkinsTuleapPluginHookPayload $jenkins_tuleap_plugin_payload,
-        StreamFactoryInterface $stream_factory
+        StreamFactoryInterface $stream_factory,
     ) {
         $this->http_client                   = $http_client;
         $this->request_factory               = $request_factory;
@@ -155,7 +155,7 @@ class JenkinsClient
     private function sendRequestToJenkinsServer(
         RequestInterface $request,
         string $webhook_url,
-        string $webhook_type
+        string $webhook_type,
     ): ResponseInterface {
         try {
             $response = $this->http_client->sendRequest($request);

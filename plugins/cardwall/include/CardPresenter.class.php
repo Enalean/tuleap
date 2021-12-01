@@ -71,7 +71,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
         $swimline_id,
         array $allowed_children,
         BackgroundColor $background_color,
-        ?Artifact $parent = null
+        ?Artifact $parent = null,
     ) {
         $this->artifact                    = $artifact;
         $this->parent                      = $parent;

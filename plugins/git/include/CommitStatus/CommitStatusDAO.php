@@ -33,7 +33,7 @@ class CommitStatusDAO extends DataAccessObject
                 'repository_id'    => $repository_id,
                 'commit_reference' => $commit_reference,
                 'status'           => $status,
-                'date'             => $date
+                'date'             => $date,
             ]
         );
     }

@@ -473,7 +473,7 @@ class DB_common extends PEAR
         $options = null,
         $userinfo = null,
         $error_class = null,
-        $skipmsg = false
+        $skipmsg = false,
     ) {
         // The error is yet a DB error object
         if (is_object($code)) {
@@ -1258,7 +1258,7 @@ class DB_common extends PEAR
     public function getRow(
         $query,
         $params = [],
-        $fetchmode = DB_FETCHMODE_DEFAULT
+        $fetchmode = DB_FETCHMODE_DEFAULT,
     ) {
         // compat check, the params and fetchmode parameters used to
         // have the opposite order
@@ -1453,7 +1453,7 @@ class DB_common extends PEAR
         $force_array = false,
         $params = [],
         $fetchmode = DB_FETCHMODE_DEFAULT,
-        $group = false
+        $group = false,
     ) {
         settype($params, 'array');
         if (sizeof($params) > 0) {
@@ -1562,7 +1562,7 @@ class DB_common extends PEAR
     public function getAll(
         $query,
         $params = [],
-        $fetchmode = DB_FETCHMODE_DEFAULT
+        $fetchmode = DB_FETCHMODE_DEFAULT,
     ) {
         // compat check, the params and fetchmode parameters used to
         // have the opposite order

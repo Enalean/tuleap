@@ -41,7 +41,7 @@ class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
             'Throws when App name is empty'               => ['75', '', 'https://example.com/redirect'],
             'Throws when Redirect URI is empty'           => ['75', 'Jenkins', ''],
             'Throws when Redirect URI is not HTTPS'       => ['75', 'Jenkins', 'http://insecure.example.com'],
-            'Throws when Redirect URI contains an anchor' => ['75', 'Jenkins', 'https://example.com/redirect#fragment']
+            'Throws when Redirect URI contains an anchor' => ['75', 'Jenkins', 'https://example.com/redirect#fragment'],
         ];
     }
 
@@ -50,7 +50,7 @@ class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testFromProjectAdministrationDataReturnsAnUpdatedOAuth2AppToBeSavedInDatabase(
         string $redirect_uri,
-        bool $use_pkce
+        bool $use_pkce,
     ): void {
         $app_id      = '75';
         $app_name    = 'Jenkins';
@@ -68,7 +68,7 @@ class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testFromSiteAdministrationDataReturnsAnUpdatedOAuth2AppToBeSavedInDatabase(
         string $redirect_uri,
-        bool $use_pkce
+        bool $use_pkce,
     ): void {
         $app_id      = '75';
         $app_name    = 'Jenkins';
@@ -84,7 +84,7 @@ class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             'Valid data'                       => ['https://example.com/redirect', false],
-            'Valid with query in redirect URI' => ['https://example.com/redirect?key=value', true]
+            'Valid with query in redirect URI' => ['https://example.com/redirect?key=value', true],
         ];
     }
 }

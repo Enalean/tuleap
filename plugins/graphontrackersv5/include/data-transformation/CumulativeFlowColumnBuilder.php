@@ -46,7 +46,7 @@ class CumulativeFlowColumnBuilder
         int $start_date,
         int $nb_steps,
         array $time_filler,
-        int $scale
+        int $scale,
     ): array {
         $chart_headers_with_color = $this->dao->getChartColors($field_id);
         $none_color               = $this->dao->getColorOfNone($field_id);
@@ -57,7 +57,7 @@ class CumulativeFlowColumnBuilder
             'id'     => \Tracker_FormElement_Field_List::NONE_VALUE,
             'label'  => $GLOBALS['Language']->getText('global', 'none'),
             'color'  => $this->getColumnColor($none_color),
-            'values' => $this->generateEmptyValues($start_date, $nb_steps, $time_filler, $scale)
+            'values' => $this->generateEmptyValues($start_date, $nb_steps, $time_filler, $scale),
         ];
 
         foreach ($chart_headers_with_color as $data) {
@@ -65,7 +65,7 @@ class CumulativeFlowColumnBuilder
                 'id'     => (int) $data['id'],
                 'label'  => $data['label'],
                 'color'  => $this->getColumnColor($data),
-                'values' => $this->generateEmptyValues($start_date, $nb_steps, $time_filler, $scale)
+                'values' => $this->generateEmptyValues($start_date, $nb_steps, $time_filler, $scale),
             ];
 
             $result_array[(int) $data['id']] = $column;
@@ -94,7 +94,7 @@ class CumulativeFlowColumnBuilder
         int $start_date,
         int $nb_steps,
         array $time_filler,
-        int $scale
+        int $scale,
     ): array {
         $values = [];
         for ($i = 0; $i <= $nb_steps; $i++) {
@@ -104,7 +104,7 @@ class CumulativeFlowColumnBuilder
             $timestamp          = $start_date + ($i * $time_filler[$scale]);
             $values[$timestamp] = [
                 'date'  => $timestamp,
-                'count' => 0
+                'count' => 0,
             ];
         }
 

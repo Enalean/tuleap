@@ -79,7 +79,7 @@ class FlamingParrot_BodyPresenter
         $body_class,
         bool $is_a_broken_browser,
         InviteBuddiesPresenter $invite_buddies_presenter,
-        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner
+        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
     ) {
         $this->user_locale               = $user->getLocale();
         $this->user_id                   = $user->getId();

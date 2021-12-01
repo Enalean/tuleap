@@ -41,7 +41,7 @@ class PermissionChangesDetector
 
     public function __construct(
         GitPermissionsManager $git_permissions_manager,
-        FineGrainedRetriever $fine_grained_retriever
+        FineGrainedRetriever $fine_grained_retriever,
     ) {
         $this->git_permissions_manager = $git_permissions_manager;
         $this->fine_grained_retriever  = $fine_grained_retriever;
@@ -55,7 +55,7 @@ class PermissionChangesDetector
         $enable_fine_grained_permissions,
         array $added_branches_permissions,
         array $added_tags_permissions,
-        array $updated_permissions
+        array $updated_permissions,
     ) {
         return $this->areThereChangesInFineGrainedPermissionsEnablingForProject($project, $enable_fine_grained_permissions) ||
             $this->areThereChangesInGlobalPermissionsForProject($project, $read_ugroup_ids, $write_ugroup_ids, $rewind_ugroup_ids) ||
@@ -70,7 +70,7 @@ class PermissionChangesDetector
         $enable_fine_grained_permissions,
         array $added_branches_permissions,
         array $added_tags_permissions,
-        array $updated_permissions
+        array $updated_permissions,
     ) {
         return $this->areThereChangesInFineGrainedPermissionsEnablingForRepository($repository, $enable_fine_grained_permissions) ||
             $this->areThereChangesInGlobalPermissionsForRepository($repository, $repoAccess) ||
@@ -81,14 +81,14 @@ class PermissionChangesDetector
 
     private function areThereChangesInGlobalPermissionsForRepository(
         GitRepository $repository,
-        array $repoAccess
+        array $repoAccess,
     ) {
         return $repoAccess != $this->git_permissions_manager->getRepositoryGlobalPermissions($repository);
     }
 
     private function areThereChangesInFineGrainedPermissionsEnablingForRepository(
         GitRepository $repository,
-        $enable_fine_grained_permissions
+        $enable_fine_grained_permissions,
     ) {
         return (bool) $enable_fine_grained_permissions !=
             $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository);
@@ -96,7 +96,7 @@ class PermissionChangesDetector
 
     private function areThereChangesInFineGrainedPermissionsEnablingForProject(
         Project $project,
-        $enable_fine_grained_permissions
+        $enable_fine_grained_permissions,
     ) {
         return (bool) $enable_fine_grained_permissions !=
             $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions($project);
@@ -106,7 +106,7 @@ class PermissionChangesDetector
         Project $project,
         array $read_ugroup_ids,
         array $write_ugroup_ids,
-        array $rewind_ugroup_ids
+        array $rewind_ugroup_ids,
     ) {
         $all_permissions = $this->buildDefaultPermissions(
             $project,
@@ -122,7 +122,7 @@ class PermissionChangesDetector
         Project $project,
         array $read_ugroup_ids,
         array $write_ugroup_ids,
-        array $rewind_ugroup_ids
+        array $rewind_ugroup_ids,
     ) {
         $all_permissions = [
             Git::DEFAULT_PERM_READ  => $read_ugroup_ids,

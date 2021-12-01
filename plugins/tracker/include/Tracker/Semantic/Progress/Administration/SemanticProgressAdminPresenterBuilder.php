@@ -44,7 +44,7 @@ class SemanticProgressAdminPresenterBuilder
         bool $is_semantic_defined,
         string $updater_url,
         \CSRFSynchronizerToken $csrf_token,
-        IComputeProgression $method
+        IComputeProgression $method,
     ): SemanticProgressAdminPresenter {
         $numeric_fields         = $this->form_element_factory->getUsedFormElementsByType($tracker, ['int', 'float', 'computed']);
         $initial_effort_options = $this->buildSelectBoxEntries(
@@ -87,7 +87,7 @@ class SemanticProgressAdminPresenterBuilder
                 return [
                     'id' => $field->getId(),
                     'label' => $field->getLabel(),
-                    'is_selected' => $field->getId() === $selected_field_id
+                    'is_selected' => $field->getId() === $selected_field_id,
                 ];
             },
             $form_elements
@@ -100,12 +100,12 @@ class SemanticProgressAdminPresenterBuilder
             [
                 'name' => MethodBasedOnEffort::getMethodName(),
                 'label' => MethodBasedOnEffort::getMethodLabel(),
-                'is_selected' => $method::getMethodName() === MethodBasedOnEffort::getMethodName()
+                'is_selected' => $method::getMethodName() === MethodBasedOnEffort::getMethodName(),
             ], [
                 'name' => MethodBasedOnLinksCount::getMethodName(),
                 'label' => MethodBasedOnLinksCount::getMethodLabel(),
-                'is_selected' => $method::getMethodName() === MethodBasedOnLinksCount::getMethodName()
-            ]
+                'is_selected' => $method::getMethodName() === MethodBasedOnLinksCount::getMethodName(),
+            ],
         ];
     }
 

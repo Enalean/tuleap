@@ -73,8 +73,8 @@ final class IterationUpdateEventProxyTest extends TestCase
                 'payload'    => [
                     'user_id'      => self::USER_ID,
                     'iteration_id' => self::ITERATION_ID,
-                    'changeset_id' => self::CHANGESET_ID
-                ]
+                    'changeset_id' => self::CHANGESET_ID,
+                ],
             ]
         );
     }
@@ -89,8 +89,8 @@ final class IterationUpdateEventProxyTest extends TestCase
                 'payload'    => [
                     'user_id'      => self::USER_ID,
                     'iteration_id' => self::ITERATION_ID,
-                    'changeset_id' => self::CHANGESET_ID
-                ]
+                    'changeset_id' => self::CHANGESET_ID,
+                ],
             ]
         );
 
@@ -110,8 +110,8 @@ final class IterationUpdateEventProxyTest extends TestCase
                 'payload'    => [
                     'user_id'           => self::USER_ID,
                     'program_increment' => 1,
-                    'changeset_id'      => self::CHANGESET_ID
-                ]
+                    'changeset_id'      => self::CHANGESET_ID,
+                ],
             ]
         );
 
@@ -130,8 +130,8 @@ final class IterationUpdateEventProxyTest extends TestCase
                 'event_name' => IterationUpdateEvent::TOPIC,
                 'payload'    => [
                     'iteration_id' => self::ITERATION_ID,
-                    'changeset_id' => self::CHANGESET_ID
-                ]
+                    'changeset_id' => self::CHANGESET_ID,
+                ],
             ]
         );
 
@@ -151,8 +151,8 @@ final class IterationUpdateEventProxyTest extends TestCase
                 'payload'    => [
                     'user_id'      => self::USER_ID,
                     'iteration_id' => self::ITERATION_ID,
-                    'wololo'       => 'No Changeset'
-                ]
+                    'wololo'       => 'No Changeset',
+                ],
             ]
         );
 

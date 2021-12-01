@@ -60,7 +60,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
         array $previous,
         array $next,
         Tracker $tracker,
-        TypePresenterFactory $type_factory
+        TypePresenterFactory $type_factory,
     ) {
         $this->previous = $previous;
         $this->next     = $next;
@@ -87,7 +87,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
     private function fillAddedByType(
         Tracker_ArtifactLinkInfo $artifactlinkinfo,
         TypePresenterFactory $type_factory,
-        CollectionOfLinksFormatter $formatter
+        CollectionOfLinksFormatter $formatter,
     ) {
         if ($artifactlinkinfo->getType() !== "" && $artifactlinkinfo->shouldLinkBeHidden($artifactlinkinfo->getType())) {
             return;
@@ -104,7 +104,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
 
     private function getTypeFormChangesets(
         Tracker_ArtifactLinkInfo $previous_link,
-        Tracker_ArtifactLinkInfo $next_link
+        Tracker_ArtifactLinkInfo $next_link,
     ) {
         $type = $next_link->getType();
         if ($previous_link->getType()) {
@@ -119,7 +119,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
         Tracker_ArtifactLinkInfo $next_link,
         Tracker $tracker,
         TypePresenterFactory $type_factory,
-        CollectionOfLinksFormatter $formatter
+        CollectionOfLinksFormatter $formatter,
     ) {
         if (! $tracker->isProjectAllowedToUseType()) {
             return;

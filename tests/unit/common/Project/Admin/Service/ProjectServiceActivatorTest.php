@@ -102,7 +102,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'document', 'is_used' => 0];
         $this->service_dao->shouldReceive('getServiceInfoQueryForNewProject')->andReturn(
             [
-                $template_service
+                $template_service,
             ]
         );
 
@@ -115,7 +115,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     'name'    => 'test-name',
                     'id'      => 201,
                     'is_used' => 1,
-                ]
+                ],
             ]
         )->once();
 
@@ -143,7 +143,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->service_dao->shouldReceive('getServiceInfoQueryForNewProject')->andReturn(
             [
                 $template_service,
-                $other_template_service
+                $other_template_service,
             ]
         );
 
@@ -156,7 +156,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     'name'    => 'test-name',
                     'id'      => 201,
                     'is_used' => 1,
-                ]
+                ],
             ]
         )->once();
         $this->service_creator->shouldReceive('createService')->withArgs(
@@ -168,7 +168,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     'name'    => 'test-name',
                     'id'      => 201,
                     'is_used' => 1,
-                ]
+                ],
             ]
         )->once();
 
@@ -194,7 +194,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'admin', 'is_used' => 0];
         $this->service_dao->shouldReceive('getServiceInfoQueryForNewProject')->andReturn(
             [
-                $template_service
+                $template_service,
             ]
         );
 
@@ -207,7 +207,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     'name'    => 'test-name',
                     'id'      => 201,
                     'is_used' => 1,
-                ]
+                ],
             ]
         )->once();
 
@@ -249,7 +249,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'tracker', 'is_used' => 0];
         $this->service_dao->shouldReceive('getServiceInfoQueryForNewProject')->andReturn(
             [
-                $template_service
+                $template_service,
             ]
         );
 
@@ -265,7 +265,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 1,
                 $service->getScope(),
                 $service->getRank(),
-                $service->isOpenedInNewTab()
+                $service->isOpenedInNewTab(),
             ]
         )->once();
 
@@ -294,7 +294,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'tracker', 'is_used' => 1];
         $this->service_dao->shouldReceive('getServiceInfoQueryForNewProject')->andReturn(
             [
-                $template_service
+                $template_service,
             ]
         );
 
@@ -307,7 +307,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     'name'    => 'test-name',
                     'id'      => 201,
                     'is_used' => false,
-                ]
+                ],
             ]
         )->once();
 
@@ -349,7 +349,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'svn', 'is_used' => 0];
         $this->service_dao->shouldReceive('getServiceInfoQueryForNewProject')->andReturn(
             [
-                $template_service
+                $template_service,
             ]
         );
 
@@ -365,7 +365,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 1,
                 $service->getScope(),
                 $service->getRank(),
-                $service->isOpenedInNewTab()
+                $service->isOpenedInNewTab(),
             ]
         )->once();
 
@@ -394,7 +394,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'svn', 'is_used' => 1];
         $this->service_dao->shouldReceive('getServiceInfoQueryForNewProject')->andReturn(
             [
-                $template_service
+                $template_service,
             ]
         );
 
@@ -407,7 +407,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     'name'    => 'test-name',
                     'id'      => 201,
                     'is_used' => false,
-                ]
+                ],
             ]
         )->once();
 
@@ -449,7 +449,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'document', 'is_used' => 0];
         $this->service_dao->shouldReceive('getServiceInfoQueryForNewProject')->andReturn(
             [
-                $template_service
+                $template_service,
             ]
         );
 
@@ -465,7 +465,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 1,
                 $service->getScope(),
                 $service->getRank(),
-                $service->isOpenedInNewTab()
+                $service->isOpenedInNewTab(),
             ]
         )->once();
 
@@ -519,7 +519,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 1,
                 $service->getScope(),
                 $service->getRank(),
-                $service->isOpenedInNewTab()
+                $service->isOpenedInNewTab(),
             ]
         )->once();
 
@@ -564,7 +564,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'plugin_git', 'is_used' => 0];
         $this->service_dao->shouldReceive('getServiceInfoQueryForNewProject')->andReturn(
             [
-                $template_service
+                $template_service,
             ]
         );
 
@@ -580,7 +580,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 1,
                 $service->getScope(),
                 $service->getRank(),
-                $service->isOpenedInNewTab()
+                $service->isOpenedInNewTab(),
             ]
         )->once();
 

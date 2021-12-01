@@ -89,7 +89,7 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
         LogFactory $log_factory,
         HeaderRenderer $header_renderer,
         TemplateRenderer $renderer,
-        IncludeAssets $include_assets
+        IncludeAssets $include_assets,
     ) {
         $this->project_manager         = $project_manager;
         $this->git_permissions_manager = $git_permissions_manager;
@@ -130,7 +130,7 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
                 (int) $project->getID(),
                 count($this->mirror_data_mapper->fetchAllForProject($project)) > 0,
                 [
-                    AdministrationPaneBuilder::buildActivePane($project)
+                    AdministrationPaneBuilder::buildActivePane($project),
                 ],
                 $this->buildServerPresenters($project),
                 new CSRFSynchronizerToken(

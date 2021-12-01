@@ -63,7 +63,7 @@ class AdminPresenter
     {
         return [
             'name'    => 'permissions[' . PermissionsManager::PERM_READ . ']',
-            'options' => $this->getSelectorOptions($this->readers_ugroup_id)
+            'options' => $this->getSelectorOptions($this->readers_ugroup_id),
         ];
     }
 
@@ -71,7 +71,7 @@ class AdminPresenter
     {
         return [
             'name'    => 'permissions[' . PermissionsManager::PERM_WRITE . ']',
-            'options' => $this->getSelectorOptions($this->writers_ugroup_id)
+            'options' => $this->getSelectorOptions($this->writers_ugroup_id),
         ];
     }
 
@@ -82,7 +82,7 @@ class AdminPresenter
             $options[] = [
                 'value'    => $group->getId(),
                 'label'    => $group->getTranslatedName(),
-                'selected' => $selected == $group->getId()
+                'selected' => $selected == $group->getId(),
             ];
         }
         return $options;

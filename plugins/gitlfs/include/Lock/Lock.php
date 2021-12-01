@@ -49,7 +49,7 @@ class Lock
         int $id,
         string $path,
         PFUser $owner,
-        int $creation_timestamp
+        int $creation_timestamp,
     ) {
         $this->id            = $id;
         $this->path          = $path;

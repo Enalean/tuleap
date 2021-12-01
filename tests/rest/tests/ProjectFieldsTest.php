@@ -36,10 +36,10 @@ class ProjectFieldsTest extends RestBase
                     "rank"        => 2,
                     "is_required" => false,
                     "description" => "Field for test rest",
-                    "type"        => "text"
-                ]
+                    "type"        => "text",
+                ],
             ],
-            "total_size"                    => 1
+            "total_size"                    => 1,
         ];
 
         $response = $this->getResponse(

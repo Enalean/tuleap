@@ -69,7 +69,7 @@ class HttpClientFactory
         return self::createClientWithConfig(
             [
                 'timeout' => self::TIMEOUT,
-                'proxy'   => \ForgeConfig::get('sys_proxy')
+                'proxy'   => \ForgeConfig::get('sys_proxy'),
             ],
             ...$plugins
         );

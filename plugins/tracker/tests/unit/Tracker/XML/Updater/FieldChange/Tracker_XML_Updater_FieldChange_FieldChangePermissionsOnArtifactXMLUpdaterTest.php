@@ -47,8 +47,8 @@ final class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLU
                 'use_artifact_permissions' => 1,
                 'u_groups' => [
                     '1001',
-                    '1002'
-                ]
+                    '1002',
+                ],
             ]
         );
 
@@ -62,7 +62,7 @@ final class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLU
             $this->field_change_xml,
             [
                 'use_artifact_permissions' => 0,
-                'u_groups' => []
+                'u_groups' => [],
             ]
         );
 
@@ -75,7 +75,7 @@ final class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLU
         $this->updater->update(
             $this->field_change_xml,
             [
-                'use_artifact_permissions' => 0
+                'use_artifact_permissions' => 0,
             ]
         );
 

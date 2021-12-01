@@ -94,7 +94,7 @@ final class PullRequestsCommentsTest extends RestBase
     {
         $response = $this->getResponse($this->request_factory->createRequest('POST', 'pull_requests/1/comments')->withBody($this->stream_factory->createStream(json_encode(
             [
-                'content' => 'Shot down in flames'
+                'content' => 'Shot down in flames',
             ]
         ))));
 
@@ -109,7 +109,7 @@ final class PullRequestsCommentsTest extends RestBase
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'pull_requests/1/comments')->withBody($this->stream_factory->createStream(json_encode(
                 [
-                    'content' => 'Shot down in flames'
+                    'content' => 'Shot down in flames',
                 ]
             ))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME

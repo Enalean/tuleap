@@ -213,9 +213,9 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
                         ->shouldReceive(
                             [
                                 'getIdentifier' => 'details',
-                                'getUri'        => '/path/to/the/pane'
+                                'getUri'        => '/path/to/the/pane',
                             ]
-                        )->getMock()
+                        )->getMock(),
                 ]
             );
 
@@ -293,9 +293,9 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
                     ->shouldReceive(
                         [
                             'getIdentifier' => 'taskboard',
-                            'getUri' => '/path/to/the/pane'
+                            'getUri' => '/path/to/the/pane',
                         ]
-                    )->getMock()
+                    )->getMock(),
             ]);
 
         $redirect       = new Tracker_Artifact_Redirect();
@@ -309,7 +309,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
                 'planning_id' => self::PLANNING_ID,
                 'action'      => 'show',
                 'aid'         => self::MILESTONE_ID,
-                'pane'        => 'details'
+                'pane'        => 'details',
             ],
             $redirect->query_parameters
         );
@@ -362,7 +362,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
                 'planning_id' => self::PLANNING_ID,
                 'action'      => 'show',
                 'aid'         => self::MILESTONE_ID,
-                'pane'        => 'details'
+                'pane'        => 'details',
             ],
             $redirect->query_parameters
         );
@@ -412,7 +412,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
                 'planning_id' => self::PLANNING_ID,
                 'action'      => 'show',
                 'aid'         => self::MILESTONE_ID,
-                'pane'        => 'details'
+                'pane'        => 'details',
             ],
             $redirect->query_parameters
         );
@@ -455,7 +455,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
             [
                 'group_id' => self::PROJECT_ID,
                 'action'   => 'show-top',
-                'pane'     => 'details'
+                'pane'     => 'details',
             ],
             $redirect->query_parameters
         );

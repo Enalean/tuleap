@@ -46,7 +46,7 @@ class LFSObjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('searchByRepositoryIDAndOIDs')->andReturns([
             ['object_oid' => 'oid2'],
-            ['object_oid' => 'oid4']
+            ['object_oid' => 'oid4'],
         ]);
 
         $object_retriever = new LFSObjectRetriever($this->dao);

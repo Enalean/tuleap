@@ -35,7 +35,7 @@ class RemainingEffortValueRetriever
 
     public function getRemainingEffortValue(
         PFUser $current_user,
-        Artifact $artifact
+        Artifact $artifact,
     ) {
         $remaining_effort_field = $this->form_element_factory->getNumericFieldByNameForUser(
             $artifact->getTracker(),

@@ -50,7 +50,7 @@ class StartTestManagementController
         ArtifactLinksUsageUpdater $artifact_link_usage_updater,
         \CSRFSynchronizerToken $csrf_token,
         DBTransactionExecutorWithConnection $transaction_executor,
-        FirstConfigCreator $config_creator
+        FirstConfigCreator $config_creator,
     ) {
         $this->artifact_link_usage_updater = $artifact_link_usage_updater;
         $this->csrf_token                  = $csrf_token;
@@ -126,7 +126,7 @@ class StartTestManagementController
 
     private function allowProjectToUseType(
         Project $template,
-        Project $project
+        Project $project,
     ): void {
         if (! $this->artifact_link_usage_updater->isProjectAllowedToUseArtifactLinkTypes($template)) {
             $this->artifact_link_usage_updater->forceUsageOfArtifactLinkTypes($project);
@@ -139,7 +139,7 @@ class StartTestManagementController
             '/',
             [
                 TESTMANAGEMENT_BASE_DIR,
-                'templates'
+                'templates',
             ]
         );
 

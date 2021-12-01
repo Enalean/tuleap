@@ -74,7 +74,7 @@ class AccessKeyMetadata
         ?\DateTimeImmutable $last_used_date,
         ?string $last_used_ip,
         ?\DateTimeImmutable $expiration_date,
-        array $scopes
+        array $scopes,
     ) {
         $this->id              = $id;
         $this->creation_date   = $creation_date;

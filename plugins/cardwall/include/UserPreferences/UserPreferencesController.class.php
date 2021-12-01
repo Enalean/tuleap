@@ -40,7 +40,7 @@ class Cardwall_UserPreferences_UserPreferencesController extends MVC2_PluginCont
             'planning_id' => $this->request->get('planning_id'),
             'action'      => 'show',
             'aid'         => $this->request->get('aid'),
-            'pane'        => 'cardwall'
+            'pane'        => 'cardwall',
         ]);
     }
 

@@ -45,7 +45,7 @@ final class DocmanServiceRepresentationBuilder
     public function __construct(
         ItemRepresentationBuilder $item_representation_builder,
         Docman_PermissionsManager $docman_permissions_manager,
-        DocmanServicePermissionsForGroupsBuilder $service_permissions_for_groups_builder
+        DocmanServicePermissionsForGroupsBuilder $service_permissions_for_groups_builder,
     ) {
         $this->item_representation_builder            = $item_representation_builder;
         $this->docman_permissions_manager             = $docman_permissions_manager;

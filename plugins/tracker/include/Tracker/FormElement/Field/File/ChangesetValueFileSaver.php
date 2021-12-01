@@ -41,7 +41,7 @@ class ChangesetValueFileSaver
 
     public function __construct(
         FileFieldValueDao $dao,
-        AttachmentCreator $attachment_creator
+        AttachmentCreator $attachment_creator,
     ) {
         $this->dao                = $dao;
         $this->attachment_creator = $attachment_creator;
@@ -53,7 +53,7 @@ class ChangesetValueFileSaver
         int $changeset_value_id,
         array $value,
         ?Tracker_Artifact_ChangesetValue_File $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ): bool {
         $save_ok = true;
 
@@ -90,7 +90,7 @@ class ChangesetValueFileSaver
     private function saveFilesFromPreviousChangeset(
         int $changeset_value_id,
         array $value,
-        Tracker_Artifact_ChangesetValue_File $previous_changesetvalue
+        Tracker_Artifact_ChangesetValue_File $previous_changesetvalue,
     ): bool {
         $previous_fileinfo_ids = [];
         foreach ($previous_changesetvalue as $previous_attachment) {

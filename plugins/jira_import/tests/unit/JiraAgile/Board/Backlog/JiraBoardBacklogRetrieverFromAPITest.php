@@ -135,7 +135,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                             "id"     => "10000",
                             "self"   => "https://jira.example.com/rest/agile/1.0/issue/10000",
                             "key"    => "SP-1",
-                        ]
+                        ],
                     ],
                 ];
             }
@@ -148,7 +148,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
         self::assertEquals(1, $client->called);
         self::assertEquals(
             [
-                new BacklogIssueRepresentation(10000, "SP-1")
+                new BacklogIssueRepresentation(10000, "SP-1"),
             ],
             $backlog_issues
         );
@@ -174,7 +174,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                                 "id"     => "10000",
                                 "self"   => "https://jira.example.com/rest/agile/1.0/issue/10000",
                                 "key"    => "SP-1",
-                            ]
+                            ],
                         ],
                     ];
                 }
@@ -191,7 +191,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                                 "id"     => "10001",
                                 "self"   => "https://jira.example.com/rest/agile/1.0/issue/10001",
                                 "key"    => "SP-2",
-                            ]
+                            ],
                         ],
                     ];
                 }
@@ -208,7 +208,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
         self::assertEquals(
             [
                 new BacklogIssueRepresentation(10000, "SP-1"),
-                new BacklogIssueRepresentation(10001, "SP-2")
+                new BacklogIssueRepresentation(10001, "SP-2"),
             ],
             $backlog_issues
         );

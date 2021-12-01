@@ -508,7 +508,7 @@ class ArtifactImport
         $is_tmp,
         &$artifacts_data,
         &$number_inserts,
-        &$number_updates
+        &$number_updates,
     ) {
         global $Language;
         $hp = Codendi_HTMLPurifier::instance();

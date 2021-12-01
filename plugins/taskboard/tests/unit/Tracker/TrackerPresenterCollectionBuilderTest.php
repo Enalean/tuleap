@@ -134,7 +134,7 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
                         $first_taskboard_tracker,
                         $second_taskboard_tracker,
                         $third_taskboard_tracker,
-                        $fourth_taskboard_tracker
+                        $fourth_taskboard_tracker,
                     ]
                 )
             );
@@ -207,7 +207,7 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
     private function mockMappedField(
         PFUser $user,
         TaskboardTracker $taskboard_tracker,
-        bool $can_user_update
+        bool $can_user_update,
     ): void {
         $sb_field = M::mock(Tracker_FormElement_Field_Selectbox::class);
         $sb_field->shouldReceive('userCanUpdate')
@@ -234,7 +234,7 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
         TaskboardTracker $taskboard_tracker,
         bool $is_semantic_set,
         bool $can_user_update,
-        $classname = \Tracker_FormElement_Field_Text::class
+        $classname = \Tracker_FormElement_Field_Text::class,
     ): void {
         \Tracker_Semantic_Title::setInstance($this->semantic_title, $taskboard_tracker->getTracker());
 
@@ -253,7 +253,7 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
         TaskboardTracker $taskboard_tracker,
         bool $is_semantic_set,
         bool $can_user_update,
-        $classname = \Tracker_FormElement_Field_Selectbox::class
+        $classname = \Tracker_FormElement_Field_Selectbox::class,
     ): void {
         \Tracker_Semantic_Contributor::setInstance($this->semantic_contributor, $taskboard_tracker->getTracker());
 

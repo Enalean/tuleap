@@ -48,7 +48,7 @@ class DocumentFooterPresenterBuilder
         array $params,
         int $project_id,
         array $item,
-        PFUser $user
+        PFUser $user,
     ): DocumentFooterPresenter {
         $is_folder_in_migrated_view = $this->isFolderInMigratedView($params, $item);
         $folder_id                  = $this->getFolderId($is_folder_in_migrated_view, $item);

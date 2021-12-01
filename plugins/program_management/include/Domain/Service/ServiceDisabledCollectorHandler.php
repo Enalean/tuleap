@@ -31,7 +31,7 @@ final class ServiceDisabledCollectorHandler
 {
     public function __construct(
         private VerifyIsTeam $verify_is_team,
-        private VerifyScrumBlocksServiceActivation $scrum_verifier
+        private VerifyScrumBlocksServiceActivation $scrum_verifier,
     ) {
     }
 

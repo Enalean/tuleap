@@ -128,7 +128,7 @@ class ListFieldChangeInitialValueRetrieverTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->assertSame(
             [
-                ['id' => '105']
+                ['id' => '105'],
             ],
             $list_value
         );
@@ -166,7 +166,7 @@ class ListFieldChangeInitialValueRetrieverTest extends \Tuleap\Test\PHPUnit\Test
         $this->assertSame(
             [
                 ['id' => '105'],
-                ['id' => '106']
+                ['id' => '106'],
             ],
             $list_value
         );

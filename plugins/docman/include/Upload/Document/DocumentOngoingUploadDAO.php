@@ -28,7 +28,7 @@ class DocumentOngoingUploadDAO extends DataAccessObject
     public function searchDocumentOngoingUploadByParentIDTitleAndExpirationDate(
         $parent_id,
         $title,
-        $current_time
+        $current_time,
     ) {
         $sql = 'SELECT *
                 FROM plugin_docman_new_document_upload
@@ -79,7 +79,7 @@ class DocumentOngoingUploadDAO extends DataAccessObject
         $filename,
         $filesize,
         ?int $status,
-        ?int $obsolescence_date
+        ?int $obsolescence_date,
     ) {
         $item_id = (int) $this->getDB()->insertReturnId('plugin_docman_item_id', []);
         $this->getDB()->insert(
@@ -94,7 +94,7 @@ class DocumentOngoingUploadDAO extends DataAccessObject
                 'filename'          => $filename,
                 'filesize'          => $filesize,
                 'status'            => $status,
-                'obsolescence_date' => $obsolescence_date
+                'obsolescence_date' => $obsolescence_date,
             ]
         );
         return $item_id;

@@ -55,7 +55,7 @@ final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\Tes
 
         $expected[$this->artifact_link_field->getId()] = [
             'new_values'     => '100,101',
-            'removed_values' => []
+            'removed_values' => [],
         ];
         self::assertEquals($expected, $formatted_value);
     }
@@ -69,7 +69,7 @@ final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\Tes
 
         $expected[$this->artifact_link_field->getId()] = [
             'new_values'     => '',
-            'removed_values' => [200 => true, 201 => true]
+            'removed_values' => [200 => true, 201 => true],
         ];
         self::assertEquals($expected, $formatted_value);
     }
@@ -83,7 +83,7 @@ final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\Tes
 
         $expected[$this->artifact_link_field->getId()] = [
             'new_values'     => '100',
-            'removed_values' => []
+            'removed_values' => [],
         ];
         self::assertEquals($expected, $formatted_value);
     }
@@ -97,7 +97,7 @@ final class ArtifactLinkUpdaterDataFormaterTest extends \Tuleap\Test\PHPUnit\Tes
 
         $expected[$this->artifact_link_field->getId()]               = [
             'new_values'     => '100',
-            'removed_values' => []
+            'removed_values' => [],
         ];
         $expected[$this->artifact_link_field->getId()]['types'][100] = "used_type";
 

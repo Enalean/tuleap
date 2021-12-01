@@ -40,7 +40,7 @@ final class FeatureAddition
     private function __construct(
         FeatureIdentifier $feature,
         UserCanPrioritize $user,
-        ProgramIncrementIdentifier $program_increment
+        ProgramIncrementIdentifier $program_increment,
     ) {
         $this->feature           = $feature;
         $this->user              = $user;
@@ -54,7 +54,7 @@ final class FeatureAddition
         VerifyCanBePlannedInProgramIncrement $can_be_planned_verifier,
         FeatureIdentifier $feature,
         ProgramIncrementIdentifier $program_increment,
-        UserCanPrioritize $user
+        UserCanPrioritize $user,
     ): self {
         $can_be_planned = $can_be_planned_verifier->canBePlannedInProgramIncrement(
             $feature->id,

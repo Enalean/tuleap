@@ -47,7 +47,7 @@ class PermissionPerGroupDocmanServicePaneBuilder
     public function __construct(
         PermissionPerGroupUGroupRetriever $permission_retriever,
         PermissionPerGroupUGroupFormatter $formatter,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->formatter            = $formatter;
         $this->permission_retriever = $permission_retriever;
@@ -67,7 +67,7 @@ class PermissionPerGroupDocmanServicePaneBuilder
             $docman_admin = [
                 "name"   => dgettext('tuleap-docman', 'Document manager administrators'),
                 "groups" => $formatted_permissions->getPermissions(),
-                "url"    => $this->getGlobalAdminLink($event)
+                "url"    => $this->getGlobalAdminLink($event),
             ];
         }
 
@@ -76,7 +76,7 @@ class PermissionPerGroupDocmanServicePaneBuilder
 
     private function addGroupsToPermission(
         PermissionPerGroupPaneCollector $event,
-        DocmanGlobalAdminPermissionCollection $permissions
+        DocmanGlobalAdminPermissionCollection $permissions,
     ) {
         if ($event->getSelectedUGroupId()) {
             $all_permissions = $this->extractUGroupsFromSelection($event);
@@ -136,7 +136,7 @@ class PermissionPerGroupDocmanServicePaneBuilder
         return DOCMAN_BASE_URL . "/?" . http_build_query(
             [
                 "group_id" => $event->getProject()->getID(),
-                "action"   => "admin_permissions"
+                "action"   => "admin_permissions",
             ]
         );
     }

@@ -29,7 +29,7 @@ class MailProjectOneStepRegisterPresenter extends MailOutlinePresenter
     public function __construct(
         Project $project,
         $color_logo,
-        string $logo_url
+        string $logo_url,
     ) {
         parent::__construct(
             $logo_url,

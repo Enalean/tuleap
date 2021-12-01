@@ -43,7 +43,7 @@ class HelpDropdownPresenterBuilder
     public function __construct(
         ReleaseNoteManager $release_note_manager,
         EventDispatcherInterface $event_dispatcher,
-        URISanitizer $uri_sanitizer
+        URISanitizer $uri_sanitizer,
     ) {
         $this->event_dispatcher     = $event_dispatcher;
         $this->uri_sanitizer        = $uri_sanitizer;
@@ -72,7 +72,7 @@ class HelpDropdownPresenterBuilder
                 $documentation,
                 "fa-book",
                 $this->uri_sanitizer
-            )
+            ),
         ];
 
         $release_note = $this->getReleaseNoteLink($tuleap_version);

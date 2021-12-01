@@ -36,7 +36,7 @@ class BackgroundColorFieldRetriever
 
     public function __construct(
         Tracker_FormElementFactory $form_element_factory,
-        BackgroundColorDao $background_color_dao
+        BackgroundColorDao $background_color_dao,
     ) {
         $this->form_element_factory = $form_element_factory;
         $this->background_color_dao = $background_color_dao;

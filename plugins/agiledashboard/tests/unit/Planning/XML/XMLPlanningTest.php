@@ -39,7 +39,7 @@ final class XMLPlanningTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 10000,
                 'T412',
-                10506
+                10506,
             ]
         ))
             ->export($plannings_xml);
@@ -69,7 +69,7 @@ final class XMLPlanningTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 10000,
                 'T412',
-                10506
+                10506,
             ]
         ))
             ->withPriorityChangePermission("ugroup1", "ugroup2")

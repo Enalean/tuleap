@@ -481,7 +481,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
             new InValueWrapper(
                 [
                     new SimpleValueWrapper('value1'),
-                    new SimpleValueWrapper('value2')
+                    new SimpleValueWrapper('value2'),
                 ]
             )
         );
@@ -504,7 +504,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
             new InValueWrapper(
                 [
                     new SimpleValueWrapper('value3'),
-                    new SimpleValueWrapper('value4')
+                    new SimpleValueWrapper('value4'),
                 ]
             )
         );

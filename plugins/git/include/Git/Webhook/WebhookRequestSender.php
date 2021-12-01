@@ -43,7 +43,7 @@ class WebhookRequestSender
     public function __construct(
         Emitter $webhook_emitter,
         WebhookFactory $webhook_factory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->webhook_emitter = $webhook_emitter;
         $this->webhook_factory = $webhook_factory;

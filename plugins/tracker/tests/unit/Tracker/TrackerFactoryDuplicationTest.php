@@ -94,11 +94,11 @@ class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $t_new1_field_mapping = [
             ['from' => '11', 'to' => '111'],
-            ['from' => '22', 'to' => '222']
+            ['from' => '22', 'to' => '222'],
         ];
         $t_new2_field_mapping = [
             ['from' => '33', 'to' => '333'],
-            ['from' => '44', 'to' => '444']
+            ['from' => '44', 'to' => '444'],
         ];
         $full_field_mapping   = array_merge($t_new1_field_mapping, $t_new2_field_mapping);
         $to_project_id        = 999;
@@ -119,7 +119,7 @@ class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'tracker'        => $t_new1,
                     'field_mapping'  => $t_new1_field_mapping,
-                    'report_mapping' => []
+                    'report_mapping' => [],
                 ]
             );
         $this->tracker_factory
@@ -138,7 +138,7 @@ class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'tracker'        => $t_new2,
                     'field_mapping'  => $t_new2_field_mapping,
-                    'report_mapping' => []
+                    'report_mapping' => [],
                 ]
             );
 

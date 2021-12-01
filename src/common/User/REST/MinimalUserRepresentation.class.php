@@ -81,7 +81,7 @@ class MinimalUserRepresentation
         ?string $ldap_id,
         string $avatar_url,
         bool $is_anonymous,
-        bool $has_avatar
+        bool $has_avatar,
     ) {
         $this->id           = $id;
         $this->uri          = $uri;

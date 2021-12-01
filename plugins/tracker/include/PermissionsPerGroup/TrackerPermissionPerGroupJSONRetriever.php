@@ -35,14 +35,14 @@ class TrackerPermissionPerGroupJSONRetriever
     private $permission_builder;
 
     public function __construct(
-        TrackerPermissionPerGroupRepresentationBuilder $permission_builder
+        TrackerPermissionPerGroupRepresentationBuilder $permission_builder,
     ) {
         $this->permission_builder = $permission_builder;
     }
 
     public function retrieve(
         Project $project,
-        $selected_ugroup_id = null
+        $selected_ugroup_id = null,
     ) {
         if (! $project->usesService(trackerPlugin::SERVICE_SHORTNAME)) {
             $GLOBALS['Response']->send400JSONErrors(
@@ -50,7 +50,7 @@ class TrackerPermissionPerGroupJSONRetriever
                     'error' => dgettext(
                         'tuleap-tracker',
                         "Tracker service is disabled."
-                    )
+                    ),
                 ]
             );
         }

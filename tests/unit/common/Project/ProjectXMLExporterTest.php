@@ -66,7 +66,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->options    = [
-            'tracker_id' => 10
+            'tracker_id' => 10,
         ];
         $this->export_dir = "__fixtures";
 
@@ -86,7 +86,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'getNormalizedName' => 'ugroup_01',
                 'getMembers' => [$user_01, $user_02, $user_04],
-                'getTranslatedDescription' => 'descr01'
+                'getTranslatedDescription' => 'descr01',
             ]
         );
 
@@ -95,7 +95,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'getNormalizedName' => 'ugroup_02',
                 'getMembers' => [$user_03],
-                'getTranslatedDescription' => 'descr02'
+                'getTranslatedDescription' => 'descr02',
             ]
         );
 
@@ -104,7 +104,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'getNormalizedName' => 'ugroup_03',
                 'getMembers' => [],
-                'getTranslatedDescription' => 'descr03'
+                'getTranslatedDescription' => 'descr03',
             ]
         );
 
@@ -230,12 +230,12 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $data_01 = [
             'is_used'    => true,
-            'short_name' => 's01'
+            'short_name' => 's01',
         ];
 
         $data_02 = [
             'is_used'    => false,
-            'short_name' => 's02'
+            'short_name' => 's02',
         ];
 
         $service_01 = new Service($this->project, $data_01);

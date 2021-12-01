@@ -53,7 +53,7 @@ class EmailDoesNotMatchUser extends ActionToBeTakenForUser
                 $this->email,
                 $this->email_found_in_xml,
                 self::$ACTION . ':' . $this->username
-            )
+            ),
         ];
     }
 

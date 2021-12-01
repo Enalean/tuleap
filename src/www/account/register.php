@@ -214,7 +214,7 @@ function display_account_form(bool $is_password_needed, $register_error, array $
         Event::USER_REGISTER_ADDITIONAL_FIELD,
         [
             'request' => $request,
-            'field'   => &$extra_plugin_field
+            'field'   => &$extra_plugin_field,
         ]
     );
 
@@ -277,7 +277,7 @@ if ($request->isPost() && $request->exist('Register')) {
         Event::BEFORE_USER_REGISTRATION,
         [
             'request'               => $request,
-            'is_registration_valid' => &$is_registration_valid
+            'is_registration_valid' => &$is_registration_valid,
         ]
     );
     $page                        = $request->get('page');
@@ -295,7 +295,7 @@ if ($request->isPost() && $request->exist('Register')) {
             Event::AFTER_USER_REGISTRATION,
             [
                 'request' => $request,
-                'user_id' => $new_userid
+                'user_id' => $new_userid,
             ]
         );
 

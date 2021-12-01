@@ -120,7 +120,7 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact_factory
             ->shouldReceive('getClosedArtifactsByTrackerIdUserCanView')
             ->andReturn([
-                $this->artifact_closed_passed
+                $this->artifact_closed_passed,
             ]);
 
         $formelement_factory = Mockery::mock(Tracker_FormElementFactory::class);

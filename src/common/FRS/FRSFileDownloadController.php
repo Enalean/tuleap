@@ -57,7 +57,7 @@ final class FRSFileDownloadController extends DispatchablePSR15Compatible implem
         FRSFileFactory $file_factory,
         BinaryFileResponseBuilder $response_builder,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->url_verification = $url_verification;

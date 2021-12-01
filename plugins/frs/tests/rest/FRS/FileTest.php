@@ -113,7 +113,7 @@ class FileTest extends RestBase
         $query = [
             'release_id' => 1,
             'name'       => 'file_creation_' . bin2hex(random_bytes(8)),
-            'file_size'  => $file_size
+            'file_size'  => $file_size,
         ];
 
         $response = $this->getResponse(
@@ -131,7 +131,7 @@ class FileTest extends RestBase
         $query = [
             'release_id' => 1,
             'name'       => 'file_creation_' . bin2hex(random_bytes(8)),
-            'file_size'  => $file_size
+            'file_size'  => $file_size,
         ];
 
         $response0 = $this->getResponse($this->request_factory->createRequest('GET', 'frs_release/1/files'));
@@ -172,7 +172,7 @@ class FileTest extends RestBase
         $query = [
             'release_id' => 1,
             'name'       => 'file_not_conflict_after_cancel_' . bin2hex(random_bytes(8)),
-            'file_size'  => 123
+            'file_size'  => 123,
         ];
 
         $response_creation_file = $this->getResponse($this->request_factory->createRequest('POST', 'frs_files')->withBody($this->stream_factory->createStream(json_encode($query))));
@@ -194,7 +194,7 @@ class FileTest extends RestBase
         $query = [
             'release_id' => 1,
             'name'       => $name,
-            'file_size'  => 0
+            'file_size'  => 0,
         ];
 
         $response_creation_file = $this->getResponse($this->request_factory->createRequest('POST', 'frs_files')->withBody($this->stream_factory->createStream(json_encode($query))));

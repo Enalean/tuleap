@@ -38,7 +38,7 @@ class TrackerCreationSettingsBuilder
 
     public function __construct(
         TrackerInNewDropdownDao $in_new_dropdown_dao,
-        TrackerPrivateCommentUGroupEnabledDao $private_comment_dao
+        TrackerPrivateCommentUGroupEnabledDao $private_comment_dao,
     ) {
         $this->in_new_dropdown_dao = $in_new_dropdown_dao;
         $this->private_comment_dao = $private_comment_dao;

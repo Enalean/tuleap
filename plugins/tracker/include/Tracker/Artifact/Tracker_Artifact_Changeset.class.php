@@ -362,7 +362,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
                 'alt'   => 'permalink',
                 'class' => 'tracker_artifact_followup_permalink',
                 'style' => 'vertical-align:middle',
-                'title' => 'Link to this followup - #' . (int) $this->id
+                'title' => 'Link to this followup - #' . (int) $this->id,
             ]
         );
     }
@@ -521,7 +521,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         $user,
         $comment_format,
         $timestamp,
-        array $ugroups_for_private_comment
+        array $ugroups_for_private_comment,
     ): bool {
         $comment = $this->getComment();
         if ($this->userCanEdit($user) && $comment !== null) {
@@ -702,7 +702,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         $format = 'html',
         $user = null,
         $ignore_perms = false,
-        $for_mail = false
+        $for_mail = false,
     ) {
         $result             = '';
         $factory            = $this->getFormElementFactory();
@@ -787,7 +787,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
      */
     private function getPreviousChangesetValue(
         Tracker_Artifact_Followup_Item $previous_item,
-        Tracker_FormElement_Field $field
+        Tracker_FormElement_Field $field,
     ) {
         if ($previous_item->canHoldValue()) {
             return $previous_item->getValue($field);

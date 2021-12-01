@@ -44,7 +44,7 @@ class HierarchyOfFolderBuilder
     public function __construct(
         Dao $folder_dao,
         TypeIsChildLinkRetriever $retriever,
-        Tracker_ArtifactFactory $artifact_factory
+        Tracker_ArtifactFactory $artifact_factory,
     ) {
         $this->retriever        = $retriever;
         $this->folder_dao       = $folder_dao;

@@ -60,7 +60,7 @@ class DocumentToUploadCreator
         DBTransactionExecutor $transaction_executor,
         DocumentMetadataCreator $creator,
         PermissionsManager $permissions_manager,
-        PermissionItemUpdater $permission_item_updater
+        PermissionItemUpdater $permission_item_updater,
     ) {
         $this->dao                     = $dao;
         $this->transaction_executor    = $transaction_executor;
@@ -80,7 +80,7 @@ class DocumentToUploadCreator
         int $status,
         int $obsolescence_date,
         ?array $formatted_metadata,
-        ?DocmanItemPermissionsForGroupsSet $permissions_for_groups
+        ?DocmanItemPermissionsForGroupsSet $permissions_for_groups,
     ) {
         if ((int) $filesize > (int) \ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
             throw new UploadMaxSizeExceededException(

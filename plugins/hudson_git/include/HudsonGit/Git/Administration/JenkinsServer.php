@@ -79,7 +79,7 @@ class JenkinsServer implements \JsonSerializable
     {
         return [
             'id'  => $this->getId(),
-            'url' => $this->getServerURL()
+            'url' => $this->getServerURL(),
         ];
     }
 }

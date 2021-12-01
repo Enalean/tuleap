@@ -66,7 +66,7 @@ class DumperFactory
         Git_Exec $git_exec,
         $admin_path,
         UserManager $user_manager,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->management_detector          = $management_detector;
         $this->authorized_keys_file_creator = $authorized_keys_file_creator;

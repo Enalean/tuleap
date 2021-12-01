@@ -55,7 +55,7 @@ final class IterationRepresentation
         string $html_url,
         string $title,
         \DateTimeImmutable $start,
-        \DateTimeImmutable $end
+        \DateTimeImmutable $end,
     ) {
         $this->id       = $id;
         $this->html_url = $html_url;

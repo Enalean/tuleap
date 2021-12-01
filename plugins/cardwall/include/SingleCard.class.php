@@ -55,7 +55,7 @@ class Cardwall_SingleCard
         Cardwall_CardFields $card_fields,
         Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
         $column_id,
-        ?Cardwall_OnTop_Config_TrackerMapping $mapping
+        ?Cardwall_OnTop_Config_TrackerMapping $mapping,
     ) {
         $this->card_in_cell_presenter = $card_in_cell_presenter;
         $this->artifact               = $card_in_cell_presenter->getArtifact();

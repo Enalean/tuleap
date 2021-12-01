@@ -98,7 +98,7 @@ final class GitJenkinsServersResource extends AuthenticatedResource
     protected function optionsGitJenkinsServers(
         int $id,
         int $limit = self::DEFAULT_LIMIT,
-        int $offset = self::DEFAULT_OFFSET
+        int $offset = self::DEFAULT_OFFSET,
     ): void {
         Header::allowOptionsGet();
     }
@@ -119,7 +119,7 @@ final class GitJenkinsServersResource extends AuthenticatedResource
     protected function getGitJenkinsServers(
         int $id,
         int $limit = self::DEFAULT_LIMIT,
-        int $offset = self::DEFAULT_OFFSET
+        int $offset = self::DEFAULT_OFFSET,
     ): JenkinsServerRepresentationCollection {
         $user    = $this->user_manager->getCurrentUser();
         $project = $this->project_manager->getProject($id);

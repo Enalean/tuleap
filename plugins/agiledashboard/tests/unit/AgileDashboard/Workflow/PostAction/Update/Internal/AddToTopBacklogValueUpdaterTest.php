@@ -72,7 +72,7 @@ class AddToTopBacklogValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn([
                 new AddToTopBacklogValue(),
-                new AddToTopBacklogValue()
+                new AddToTopBacklogValue(),
             ]);
 
         $this->value_repository->shouldReceive('deleteAllByTransition')->once();

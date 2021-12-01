@@ -42,7 +42,7 @@ final class ProgramIncrementTrackerConfiguration
         private bool $can_create_program_increment,
         private bool $has_plan_permissions,
         private ProgramIncrementLabels $program_increment_labels,
-        private IterationLabels $iteration_labels
+        private IterationLabels $iteration_labels,
     ) {
     }
 
@@ -58,7 +58,7 @@ final class ProgramIncrementTrackerConfiguration
         UserIdentifier $user_identifier,
         VerifyUserCanSubmit $user_can_submit_in_tracker_verifier,
         RetrieveIterationLabels $label_retriever,
-        RetrieveVisibleIterationTracker $retrieve_visible_iteration_tracker
+        RetrieveVisibleIterationTracker $retrieve_visible_iteration_tracker,
     ): self {
         $program_increment_tracker = $retrieve_tracker->retrieveVisibleProgramIncrementTracker(
             $program,

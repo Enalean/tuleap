@@ -68,7 +68,7 @@ final class PullRequestNotificationSendMail implements PullRequestNotificationSt
         PullRequestPermissionChecker $pull_request_permission_checker,
         GitRepositoryFactory $repository_factory,
         HTMLURLBuilder $url_builder,
-        LocaleSwitcher $locale_switcher
+        LocaleSwitcher $locale_switcher,
     ) {
         $this->mail_builder                    = $mail_builder;
         $this->mail_enhancer                   = $mail_enhancer;

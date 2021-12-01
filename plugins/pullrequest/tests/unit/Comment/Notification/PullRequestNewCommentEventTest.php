@@ -36,7 +36,7 @@ final class PullRequestNewCommentEventTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testEventCanBeBuiltFromWorkerEventPayload(): void
     {
         $payload = [
-            'comment_id' => 952
+            'comment_id' => 952,
         ];
 
         $event = PullRequestNewCommentEvent::fromWorkerEventPayload($payload);

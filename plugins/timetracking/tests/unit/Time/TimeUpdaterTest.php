@@ -56,7 +56,7 @@ class TimeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive([
             'getTracker' => $this->tracker,
-            'getId'      => 200
+            'getId'      => 200,
         ]);
     }
 

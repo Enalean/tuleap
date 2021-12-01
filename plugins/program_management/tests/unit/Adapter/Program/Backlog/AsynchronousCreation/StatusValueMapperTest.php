@@ -123,7 +123,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::FIRST_BIND_VALUE_ID,
                 $this->buildUserGroupValue(self::FIRST_BIND_VALUE_ID, 905, 'palaeoclimatic', false),
                 $this->buildUserGroupValue(self::SECOND_BIND_VALUE_ID, 303, 'palaeoclimatic', false),
-            ]
+            ],
         ];
     }
 
@@ -133,7 +133,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItMapsValuesByDuckTyping(
         string $source_label,
         int $expected_bind_value_id,
-        \Tracker_FormElement_Field_List_BindValue ...$values
+        \Tracker_FormElement_Field_List_BindValue ...$values,
     ): void {
         $status_value = $this->buildStatusValueWithLabels($source_label);
         $status_field = $this->buildStatusFieldWithBindValues(...$values);
@@ -184,7 +184,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildStatusFieldWithLabels(
         string $first_label,
         string $second_label,
-        string $third_label
+        string $third_label,
     ): \Tracker_FormElement_Field_List {
         $first_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(
             self::FIRST_BIND_VALUE_ID,
@@ -222,7 +222,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     private function buildStatusFieldWithBindValues(
-        \Tracker_FormElement_Field_List_BindValue ...$bind_values
+        \Tracker_FormElement_Field_List_BindValue ...$bind_values,
     ): \Tracker_FormElement_Field_List {
         $static_bind = $this->createStub(\Tracker_FormElement_Field_List_Bind::class);
         $static_bind->method('getAllValues')->willReturn($bind_values);
@@ -240,7 +240,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         int $bind_value_id,
         int $user_group_id,
         string $user_group_name,
-        bool $is_hidden
+        bool $is_hidden,
     ): \Tracker_FormElement_Field_List_Bind_UgroupsValue {
         return new \Tracker_FormElement_Field_List_Bind_UgroupsValue(
             $bind_value_id,

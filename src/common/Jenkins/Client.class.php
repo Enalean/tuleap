@@ -58,7 +58,7 @@ class Jenkins_Client
         ClientInterface $http_client,
         RequestFactoryInterface $request_factory,
         StreamFactoryInterface $stream_factory,
-        JenkinsCSRFCrumbRetriever $csrf_crumb_retriever
+        JenkinsCSRFCrumbRetriever $csrf_crumb_retriever,
     ) {
         $this->http_client          = $http_client;
         $this->request_factory      = $request_factory;
@@ -162,7 +162,7 @@ class Jenkins_Client
         foreach ($build_parameters as $name => $value) {
             $parameters['parameter'][] = [
                 'name'  => $name,
-                'value' => $value
+                'value' => $value,
             ];
         }
 

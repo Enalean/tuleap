@@ -104,11 +104,11 @@ final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
                     new Uri($redirect_uri),
                     [
                         new OAuth2ScopeDefinitionPresenter($foobar_definition),
-                        new OAuth2ScopeDefinitionPresenter($typevalue_definition)
+                        new OAuth2ScopeDefinitionPresenter($typevalue_definition),
                     ],
                     [
                         new OAuth2ScopeIdentifierPresenter(OAuth2ScopeIdentifier::fromIdentifierKey('foo:bar')),
-                        new OAuth2ScopeIdentifierPresenter(OAuth2ScopeIdentifier::fromIdentifierKey('type:value'))
+                        new OAuth2ScopeIdentifierPresenter(OAuth2ScopeIdentifier::fromIdentifierKey('type:value')),
                     ]
                 )
             );

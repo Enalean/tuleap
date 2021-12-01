@@ -96,7 +96,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text'
+        $format = 'text',
     ) {
         $output = '';
         switch ($format) {

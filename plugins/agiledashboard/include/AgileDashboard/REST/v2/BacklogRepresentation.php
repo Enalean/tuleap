@@ -58,13 +58,13 @@ class BacklogRepresentation
         array $backlog_items,
         array $accepted_trackers,
         array $parent_trackers,
-        bool $has_user_priority_change_permission
+        bool $has_user_priority_change_permission,
     ): self {
         return new self(
             $backlog_items,
             [
                 'trackers'        => self::getTrackersRepresentation($accepted_trackers),
-                'parent_trackers' => self::getTrackersRepresentation($parent_trackers)
+                'parent_trackers' => self::getTrackersRepresentation($parent_trackers),
             ],
             $has_user_priority_change_permission
         );

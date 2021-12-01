@@ -45,7 +45,7 @@ class ForListBindUGroups implements ListBindUgroupsFromWhereBuilder
     public function __construct(
         CollectionOfListValuesExtractor $values_extractor,
         FromWhereNotEqualComparisonListFieldBindUgroupsBuilder $from_where_builder,
-        UgroupLabelConverter $label_converter
+        UgroupLabelConverter $label_converter,
     ) {
         $this->from_where_builder = $from_where_builder;
         $this->values_extractor   = $values_extractor;

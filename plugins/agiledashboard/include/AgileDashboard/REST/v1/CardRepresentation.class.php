@@ -75,7 +75,7 @@ class AgileDashboard_CardRepresentation
         ?string $accent_color,
         ?int $column_id,
         array $allowed_column_ids,
-        array $values
+        array $values,
     ) {
         $this->id                 = $id;
         $this->label              = $label;

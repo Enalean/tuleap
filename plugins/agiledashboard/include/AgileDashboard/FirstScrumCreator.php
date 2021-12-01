@@ -41,14 +41,14 @@ class AgileDashboard_FirstScrumCreator
 
     /** @var string[] */
     private $reserved_names = [
-        'epic', 'rel', 'sprint', 'task', 'story'
+        'epic', 'rel', 'sprint', 'task', 'story',
     ];
 
     public function __construct(
         Project $project,
         PlanningFactory $planning_factory,
         TrackerFactory $tracker_factory,
-        ProjectXMLImporter $xml_importer
+        ProjectXMLImporter $xml_importer,
     ) {
         $this->project          = $project;
         $this->xml_importer     = $xml_importer;

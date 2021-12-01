@@ -60,7 +60,7 @@ final class UserWellKnownChangePasswordController extends DispatchablePSR15Compa
         ResponseFactoryInterface $response_factory,
         StreamFactoryInterface $stream_factory,
         EmitterInterface $emitter,
-        MiddlewareInterface ...$middleware_stack
+        MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->user_manager     = $user_manager;

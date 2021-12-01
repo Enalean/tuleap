@@ -49,7 +49,7 @@ class PotentialReviewerRetriever
     public function __construct(
         UserManager $user_manager,
         UserDao $dao,
-        PullRequestPermissionChecker $pull_request_permission_checker
+        PullRequestPermissionChecker $pull_request_permission_checker,
     ) {
         $this->user_manager                    = $user_manager;
         $this->dao                             = $dao;
@@ -63,7 +63,7 @@ class PotentialReviewerRetriever
     public function getPotentialReviewers(
         PullRequest $pull_request,
         UsernameToSearch $username_to_search,
-        int $max_number_reviewers
+        int $max_number_reviewers,
     ): array {
         $potential_reviewers = [];
 

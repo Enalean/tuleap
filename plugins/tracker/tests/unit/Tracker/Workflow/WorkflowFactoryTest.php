@@ -85,7 +85,7 @@ final class WorkflowFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'F1'     => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(110)->getMock(),
             'F32'    => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(111)->getMock(),
             'F32-V0' => $static_value_01,
-            'F32-V1' => $static_value_02
+            'F32-V1' => $static_value_02,
         ];
 
         $condition_factory = Mockery::mock(Workflow_Transition_ConditionFactory::class);
@@ -184,7 +184,7 @@ final class WorkflowFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'F1'     => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(110)->getMock(),
             'F32'    => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(111)->getMock(),
             'F32-V0' => $static_value_01,
-            'F32-V1' => $static_value_02
+            'F32-V1' => $static_value_02,
         ];
 
         $date_post_action = Mockery::mock(Transition_PostAction_Field_Date::class);

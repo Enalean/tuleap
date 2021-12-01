@@ -74,7 +74,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
         PlanningFactory $planning_factory,
         RedirectParameterInjector $injector,
         Planning_MilestoneFactory $milestone_factory,
-        Planning_MilestonePaneFactory $pane_factory
+        Planning_MilestonePaneFactory $pane_factory,
     ) {
         $this->pane_redirection_extractor         = $pane_redirection_extractor;
         $this->home_service_redirection_extractor = $home_service_redirection_extractor;
@@ -88,12 +88,12 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
     public function process(
         Codendi_Request $request,
         Tracker_Artifact_Redirect $redirect,
-        Artifact $artifact
+        Artifact $artifact,
     ): void {
         if ($this->home_service_redirection_extractor->mustRedirectToAgiledashboardHomepage($request)) {
             $redirect->base_url         = '/plugins/agiledashboard/';
             $redirect->query_parameters = [
-                'group_id' => (string) $artifact->getTracker()->getGroupId()
+                'group_id' => (string) $artifact->getTracker()->getGroupId(),
             ];
 
             return;
@@ -137,7 +137,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
         Project $project,
         array $requested_planning,
         Planning $planning,
-        Tracker_Artifact_Redirect $redirect
+        Tracker_Artifact_Redirect $redirect,
     ): void {
         $redirect_to_artifact_id = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
         $pane_identifier         = $requested_planning[AgileDashboard_PaneRedirectionExtractor::PANE];
@@ -168,7 +168,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
         Project $project,
         Planning $planning,
         string $redirect_to_artifact_id,
-        string $pane_identifier
+        string $pane_identifier,
     ): ?PaneInfo {
         $pane_info_to_be_redirected_to = null;
         try {
@@ -200,7 +200,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
         Tracker_Artifact_Redirect $redirect,
         Planning $planning,
         string $redirect_to_artifact_id,
-        string $pane_identifier
+        string $pane_identifier,
     ): void {
         $redirect->base_url         = '/plugins/agiledashboard/';
         $redirect->query_parameters = [
@@ -218,7 +218,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
     private function addRedirectionToTopPlanning(
         Artifact $artifact,
         array $requested_planning,
-        Tracker_Artifact_Redirect $redirect
+        Tracker_Artifact_Redirect $redirect,
     ): void {
         $redirect->base_url         = '/plugins/agiledashboard/';
         $redirect->query_parameters = [
@@ -232,7 +232,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
         ?Planning $planning,
         ?Artifact $last_milestone_artifact,
         Tracker_Artifact_Redirect $redirect,
-        Codendi_Request $request
+        Codendi_Request $request,
     ): void {
         $child_milestone_id = null;
         // Pass the right parameters so parent can be created in the right milestone

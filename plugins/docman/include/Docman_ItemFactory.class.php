@@ -130,7 +130,7 @@ class Docman_ItemFactory
                             'label'     => $row['link_version_label'],
                             'changelog' => $row['link_version_changelog'],
                             'date'      => $row['link_version_date'],
-                            'link_url'      => $row['link_version_link_url']
+                            'link_url'      => $row['link_version_link_url'],
                             ]
                         )
                     );
@@ -161,7 +161,7 @@ class Docman_ItemFactory
                     'filename'  => $row['version_filename'],
                     'filesize'  => $row['version_filesize'],
                     'filetype'  => $row['version_filetype'],
-                    'path'      => $row['version_path']
+                    'path'      => $row['version_path'],
                 ];
                 $item->setCurrentVersion(new Docman_Version($version));
             }
@@ -289,7 +289,7 @@ class Docman_ItemFactory
             [
                 'phpwiki_page_name' => $pagename,
                 'project_id'        => $project_id,
-                'phpwiki_page'      => $wiki_page
+                'phpwiki_page'      => $wiki_page,
             ]
         );
 
@@ -854,7 +854,7 @@ class Docman_ItemFactory
                 'item_type'         => PLUGIN_DOCMAN_ITEM_TYPE_LINK,
                 'link_url'          => $version_data['link_url'],
                 'status'            => $version_data['status'],
-                'obsolescence_date' => $version_data['obsolescence_date']
+                'obsolescence_date' => $version_data['obsolescence_date'],
             ]
         );
 
@@ -895,7 +895,7 @@ class Docman_ItemFactory
         DateTimeImmutable $create_date,
         DateTimeImmutable $update_date,
         $wiki_page = null,
-        $link_url = null
+        $link_url = null,
     ) {
         $row = [
             'title'             => $title,
@@ -909,7 +909,7 @@ class Docman_ItemFactory
             'obsolescence_date' => $obsolescence_date,
             'item_type'         => $item_type_id,
             'wiki_page'         => $wiki_page,
-            'link_url'          => $link_url
+            'link_url'          => $link_url,
 
         ];
         $id = $this->create($row, null);
@@ -1211,7 +1211,7 @@ class Docman_ItemFactory
         $dataRoot,
         Docman_Item $source_item,
         DestinationCloneItem $destination,
-        $ordering = null
+        $ordering = null,
     ) {
         $itemMapping = [];
 

@@ -130,7 +130,7 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
             ['A', 'D', false, "Field A can be the source of field D"],
             ['B', 'D', false,  "Field B can be the source of field D"],
             ['C', 'D', false,  "Field C can be the source of field D"],
-            ['D', 'D', true, "Field D cannot be the source of field D"]
+            ['D', 'D', true, "Field D cannot be the source of field D"],
         ];
     }
 
@@ -180,7 +180,7 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
             ['C', true],
             ['D', false],
             ['E', true],
-            ['F', false]
+            ['F', false],
         ];
     }
 
@@ -200,7 +200,7 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
             ['C', false],
             ['D', true],
             ['E', false],
-            ['F', false]
+            ['F', false],
         ];
     }
 

@@ -53,7 +53,7 @@ class Transition_PostActionFactory
         Transition_PostAction_Field_Date::XML_TAG_NAME  => Transition_PostAction_Field_Date::SHORT_NAME,
         Transition_PostAction_CIBuild::XML_TAG_NAME     => Transition_PostAction_CIBuild::SHORT_NAME,
         FrozenFields::XML_TAG_NAME                      => FrozenFields::SHORT_NAME,
-        HiddenFieldsets::XML_TAG_NAME                   => HiddenFieldsets::SHORT_NAME
+        HiddenFieldsets::XML_TAG_NAME                   => HiddenFieldsets::SHORT_NAME,
     ];
 
     /** @var Transition_PostAction_FieldFactory */
@@ -185,7 +185,7 @@ class Transition_PostActionFactory
             Transition_PostAction_Field_Date::SHORT_NAME  => $field_factory,
             Transition_PostAction_CIBuild::SHORT_NAME     => $this->getCIBuildFactory(),
             FrozenFields::SHORT_NAME                      => $this->getFrozenFieldsFactory(),
-            HiddenFieldsets::SHORT_NAME                   => $this->getHiddenFieldsetsFactory()
+            HiddenFieldsets::SHORT_NAME                   => $this->getHiddenFieldsetsFactory(),
         ];
 
         if (isset($factories[$post_action_short_name])) {

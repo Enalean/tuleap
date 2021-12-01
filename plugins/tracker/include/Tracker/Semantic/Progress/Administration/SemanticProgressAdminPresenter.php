@@ -93,7 +93,7 @@ final class SemanticProgressAdminPresenter
         array $total_effort_options,
         array $remaining_effort_options,
         array $available_computation_methods,
-        bool $has_a_link_field
+        bool $has_a_link_field,
     ) {
         $this->semantic_usages_description   = $semantic_usages_description;
         $this->is_semantic_defined           = $is_semantic_defined;
@@ -109,13 +109,13 @@ final class SemanticProgressAdminPresenter
         $this->tracker_semantic_admin_url    = TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $tracker->getId(),
-                'func' => 'admin-semantic'
+                'func' => 'admin-semantic',
             ]
         );
         $this->tracker_fields_admin_url      = TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $tracker->getId(),
-                'func' => 'admin-formElements'
+                'func' => 'admin-formElements',
             ]
         );
     }

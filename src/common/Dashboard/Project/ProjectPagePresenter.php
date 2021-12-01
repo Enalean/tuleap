@@ -42,7 +42,7 @@ class ProjectPagePresenter extends PagePresenter
         ProjectPresenter $project_presenter,
         array $dashboards,
         $can_update_dashboards,
-        DisplayCreatedProjectModalPresenter $display_project_created_modal_presenter
+        DisplayCreatedProjectModalPresenter $display_project_created_modal_presenter,
     ) {
         parent::__construct($csrf, $url);
 

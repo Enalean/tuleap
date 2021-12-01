@@ -52,7 +52,7 @@ class TrackerXMLExporterChangesetValueStepDefinitionXMLExporter extends Tracker_
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $changeset_value
+        Tracker_Artifact_ChangesetValue $changeset_value,
     ): void {
         $values = $changeset_value->getValue();
         $field  = $changeset_value->getField();

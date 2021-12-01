@@ -54,7 +54,7 @@ class UserNotificationSettingsPresenter
     public function __construct(
         \CSRFSynchronizerToken $csrf_token,
         UserNotificationSettings $user_notification_settings,
-        $are_global_notifications_suspended
+        $are_global_notifications_suspended,
     ) {
         $this->csrf_token                             = $csrf_token;
         $this->is_in_no_notification_at_all_mode      = $user_notification_settings->isInNoNotificationAtAllMode();

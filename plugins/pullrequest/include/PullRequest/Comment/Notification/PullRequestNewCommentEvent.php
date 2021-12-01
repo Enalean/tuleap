@@ -62,7 +62,7 @@ final class PullRequestNewCommentEvent implements EventSubjectToNotification
     public function toWorkerEventPayload(): array
     {
         return [
-            'comment_id' => $this->comment_id
+            'comment_id' => $this->comment_id,
         ];
     }
 }

@@ -39,7 +39,7 @@ class UserListPresenter
         $title,
         UserListSearchFieldsPresenter $search_fields,
         UserListResultsPresenter $results,
-        $pending_users_count
+        $pending_users_count,
     ) {
         $this->group_id            = $group_id;
         $this->title               = $title;
@@ -55,7 +55,7 @@ class UserListPresenter
                 'pending_users_text',
                 [
                     '/admin/approve_pending_users.php?page=pending',
-                    $pending_users_count
+                    $pending_users_count,
                 ]
             ),
             CODENDI_PURIFIER_LIGHT

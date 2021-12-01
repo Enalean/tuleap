@@ -138,7 +138,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         bool $is_in_expert_mode,
         string $expert_query,
         $updated_by,
-        $updated_at
+        $updated_at,
     ) {
         $this->id                  = $id;
         $this->name                = $name;
@@ -415,7 +415,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     private function addCommentCriterionFromWhere(
         array $additional_criteria,
         array &$additional_from,
-        array &$additional_where
+        array &$additional_where,
     ) {
         $comment_criterion = $this->getAdditionalCommentCriterion($additional_criteria);
         if (! $comment_criterion || (string) $comment_criterion->getValue() === '') {
@@ -703,7 +703,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 'data-column-id'          => $column_id,
                 'data-field-id'           => $id,
                 'data-field-is-used'      => intval(isset($used[$column_id])),
-                'data-field-artlink-type' => ''
+                'data-field-artlink-type' => '',
             ]
         );
         $options[] = $option;
@@ -730,7 +730,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                     'data-column-id'          => $column_id,
                     'data-field-id'           => $id,
                     'data-field-is-used'      => intval(isset($used[$column_id])),
-                    'data-field-artlink-type' => $type->shortname
+                    'data-field-artlink-type' => $type->shortname,
                 ]
             );
             $options[] = $option;
@@ -775,7 +775,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         return TemplateRendererFactory::build()->getRenderer(
             [
                 TRACKER_TEMPLATE_DIR . '/report',
-                ForgeConfig::get('codendi_dir') . '/src/templates/common'
+                ForgeConfig::get('codendi_dir') . '/src/templates/common',
             ]
         );
     }
@@ -869,7 +869,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 if ($active || ! $link_artifact_id || $r instanceof \Tracker_Report_Renderer_ArtifactLinkable) {
                     $parameters = [
                         'report'   => $this->id,
-                        'renderer' => $r->id
+                        'renderer' => $r->id,
                     ];
                     if ($request->existAndNonEmpty('pv')) {
                         $parameters['pv'] = (int) $request->get('pv');
@@ -1254,7 +1254,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             );
 
             $GLOBALS['Response']->redirect('?' . http_build_query([
-                'tracker'   => $tracker->getId()
+                'tracker'   => $tracker->getId(),
             ]));
         }
 
@@ -1331,7 +1331,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             case self::ACTION_CLEANSESSION:
                 $this->report_session->clean();
                 $GLOBALS['Response']->redirect('?' . http_build_query([
-                        'tracker'   => $this->tracker_id
+                        'tracker'   => $this->tracker_id,
                 ]));
                 break;
             case 'renderer':
@@ -1351,7 +1351,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                     $this->report_session->setHasChanged();
                 }
                 $GLOBALS['Response']->redirect('?' . http_build_query([
-                                                            'report'   => $this->id
+                                                            'report'   => $this->id,
                                                             ]));
                 break;
             case 'delete-renderer':
@@ -1359,7 +1359,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                     $this->report_session->removeRenderer((int) $request->get('renderer'));
                     $this->report_session->setHasChanged();
                     $GLOBALS['Response']->redirect('?' . http_build_query([
-                                                            'report'   => $this->id
+                                                            'report'   => $this->id,
                                                             ]));
                 }
                 break;
@@ -1372,7 +1372,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                         if ($request->get('move-renderer-direction')) {
                             $this->moveRenderer((int) $request->get('renderer'), $request->get('move-renderer-direction'));
                             $GLOBALS['Response']->redirect('?' . http_build_query([
-                                                                    'report'   => $this->id
+                                                                    'report'   => $this->id,
                                                                     ]));
                         }
                     }
@@ -1386,7 +1386,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                     $new_renderer_id = $this->addRendererInSession($new_name, $new_description, $new_type);
                     $GLOBALS['Response']->redirect('?' . http_build_query([
                                                             'report'   => $this->id,
-                                                            'renderer' => $new_renderer_id ? $new_renderer_id : ''
+                                                            'renderer' => $new_renderer_id ? $new_renderer_id : '',
                                                             ]));
                 }
                 break;
@@ -1400,7 +1400,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
                 $GLOBALS['Response']->addFeedback('info', '<a href="?report=' . $this->id . '">' . $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '</a> has been saved.', CODENDI_PURIFIER_DISABLED);
                 $GLOBALS['Response']->redirect('?' . http_build_query([
-                    'report'   => $this->id
+                    'report'   => $this->id,
                 ]));
                 break;
             case self::ACTION_SAVEAS:
@@ -1429,13 +1429,13 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 }
 
                 $GLOBALS['Response']->redirect('?' . http_build_query([
-                    'report'   => $redirect_to_report_id
+                    'report'   => $redirect_to_report_id,
                 ]));
                 break;
             case self::ACTION_DELETE:
                 $this->delete();
                 $GLOBALS['Response']->redirect('?' . http_build_query([
-                    'tracker'   => $this->tracker_id
+                    'tracker'   => $this->tracker_id,
                 ]));
                 break;
             case self::ACTION_SCOPE:
@@ -1458,7 +1458,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                         }
                     }
                     $GLOBALS['Response']->redirect('?' . http_build_query([
-                        'report' => $this->id
+                        'report' => $this->id,
                     ]));
                 }
                 break;
@@ -1473,7 +1473,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                     }
                     $this->setDefaultReport();
                     $GLOBALS['Response']->redirect('?' . http_build_query([
-                        'report'   => $this->id
+                        'report'   => $this->id,
                     ]));
                 }
                 break;
@@ -1774,8 +1774,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         } else {
             $additional_criteria_values = [
                 self::COMMENT_CRITERION_NAME => [
-                    'value' => $this->getCommentCriterionValueFromDatabase()
-                ]
+                    'value' => $this->getCommentCriterionValueFromDatabase(),
+                ],
             ];
 
             EventManager::instance()->processEvent(
@@ -1985,7 +1985,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
     private function getMatchingIdsInDb(
         $from,
-        $where
+        $where,
     ) {
         $matching_ids = $this->getNoMatchingIds();
 

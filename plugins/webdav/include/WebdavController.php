@@ -48,7 +48,7 @@ final class WebdavController implements DispatchableWithRequestNoAuthz
         'MOVE',
         'PROPFIND',
         'PROPATCH',
-        'UNLOCK'
+        'UNLOCK',
     ];
 
     /**

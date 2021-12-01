@@ -160,7 +160,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $type,
         $format,
         $report = null,
-        $from_aid = null
+        $from_aid = null,
     ) {
         $value_formatter = new ValueFormatter(
             Tracker_FormElementFactory::instance(),
@@ -301,7 +301,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     private function getDataLikeWebUI(
         array $submitted_ids,
         array $submitted_values,
-        ?Artifact $artifact = null
+        ?Artifact $artifact = null,
     ) {
         $existing_links = $this->getArtifactLinkIdsOfLastChangeset($artifact);
         $new_values     = array_diff($submitted_ids, $existing_links);
@@ -462,7 +462,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     private function renderParentSelector(
         string $prefill_parent,
         string $name,
-        \Tuleap\Tracker\Artifact\PossibleParentSelector $possible_parents_selector
+        \Tuleap\Tracker\Artifact\PossibleParentSelector $possible_parents_selector,
     ): string {
         $renderer = PossibleParentSelectorRenderer::buildWithDefaultTemplateRenderer();
         return $renderer->render($name, $prefill_parent, $possible_parents_selector);
@@ -470,7 +470,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
     private function getPossibleParentSelector(
         PFUser $user,
-        bool $can_create
+        bool $can_create,
     ): \Tuleap\Tracker\Artifact\PossibleParentSelector {
         $retriever = new PossibleParentsRetriever($this->getArtifactFactory(), EventManager::instance());
 
@@ -507,7 +507,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $read_only,
         array $additional_classes,
         $from_aid = null,
-        $reverse_artifact_links = false
+        $reverse_artifact_links = false,
     ) {
         $current_user = $this->getCurrentUser();
         $html         = '';
@@ -531,7 +531,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 'current_user'           => $current_user,
                 'read_only'              => $read_only,
                 'reverse_artifact_links' => $reverse_artifact_links,
-                'additional_classes'     => $additional_classes
+                'additional_classes'     => $additional_classes,
             ]
         );
 
@@ -617,7 +617,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                         'read_only'              => $read_only,
                         'from_aid'               => $from_aid,
                         'prefill_removed_values' => $prefill_removed_values,
-                        'prefill_edited_types'   => $prefill_edited_types
+                        'prefill_edited_types'   => $prefill_edited_types,
                     ]
                 );
 
@@ -650,7 +650,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $prefill_removed_values,
         $prefill_edited_types,
         $reverse_artifact_links,
-        $from_aid
+        $from_aid,
     ) {
         $renderer = $artifact_links_per_tracker->getRenderer();
         if (! $renderer) {
@@ -948,7 +948,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         $links_tab         = $this->fetchLinks($artifact, $this->getArtifactLinksToRenderFromChangesetValue($value), $submitted_values);
         $reverse_links_tab = $this->fetchReverseLinks($artifact);
@@ -959,7 +959,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     private function fetchLinks(
         Artifact $artifact,
         ArtifactLinksToRender $artifact_links_to_render,
-        array $submitted_values
+        array $submitted_values,
     ) {
         if (isset($submitted_values[$this->getId()])) {
             $submitted_value = $submitted_values[$this->getId()];
@@ -1068,7 +1068,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     public function fetchArtifactValueReadOnly(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        ?ArtifactLinksToRender $artifact_links_to_render = null
+        ?ArtifactLinksToRender $artifact_links_to_render = null,
     ) {
         if ($artifact_links_to_render === null) {
             $artifact_links_to_render = $this->getArtifactLinksToRenderFromChangesetValue($value);
@@ -1087,7 +1087,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return $this->fetchArtifactValue($artifact, $value, $submitted_values) .
             "<div class='tracker_hidden_edition_field' data-field-id=" . $this->getId() . '></div>';
@@ -1242,7 +1242,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text'
+        $format = 'text',
     ) {
         if (empty($value) || ! $value->getValue()) {
             return '-';
@@ -1579,7 +1579,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
         array $fields_data,
-        ?Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null,
     ): void {
         $queue = $this->getPostNewChangesetQueue();
         $queue->execute($artifact, $submitter, $new_changeset, $fields_data, $previous_changeset);
@@ -1595,7 +1595,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             self::GET_POST_SAVE_NEW_CHANGESET_QUEUE,
             [
                 'field' => $this,
-                'queue' => $queue
+                'queue' => $queue,
             ]
         );
 
@@ -1633,7 +1633,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         PFUser $submitter,
         bool $is_submission,
         bool $bypass_permissions,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
         $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
 
@@ -1675,7 +1675,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $changeset_value_id,
         $submitted_value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
         $saver = $this->getArtifactLinkValueSaver();
 

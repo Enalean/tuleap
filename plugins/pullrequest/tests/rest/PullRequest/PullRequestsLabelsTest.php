@@ -80,8 +80,8 @@ final class PullRequestsLabelsTest extends RestBase
             $this->request_factory->createRequest('PATCH', 'pull_requests/1/labels')->withBody($this->stream_factory->createStream(json_encode(
                 [
                     'add' => [
-                        ['label' => 'Emergency Fix']
-                    ]
+                        ['label' => 'Emergency Fix'],
+                    ],
                 ]
             )))
         );
@@ -101,8 +101,8 @@ final class PullRequestsLabelsTest extends RestBase
             $this->request_factory->createRequest('PATCH', 'pull_requests/1/labels')->withBody($this->stream_factory->createStream(json_encode(
                 [
                     'add' => [
-                        ['label' => 'Emergency Fix']
-                    ]
+                        ['label' => 'Emergency Fix'],
+                    ],
                 ]
             ))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
@@ -137,7 +137,7 @@ final class PullRequestsLabelsTest extends RestBase
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', 'pull_requests/1/labels')->withBody($this->stream_factory->createStream(json_encode(
             [
-                'remove' => $label_ids
+                'remove' => $label_ids,
             ]
         ))));
         $this->assertEquals($response->getStatusCode(), 200);
@@ -169,8 +169,8 @@ final class PullRequestsLabelsTest extends RestBase
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', 'pull_requests/1/labels')->withBody($this->stream_factory->createStream(json_encode(
             [
                 'add' => [
-                    ['id' => $expected_label['id']]
-                ]
+                    ['id' => $expected_label['id']],
+                ],
             ]
         ))));
         $this->assertEquals($response->getStatusCode(), 200);

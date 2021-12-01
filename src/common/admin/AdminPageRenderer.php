@@ -43,7 +43,7 @@ class AdminPageRenderer
                     'siteadmin-sidebar',
                     $this->renderSideBar(),
                     VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence())
-                )
+                ),
             ]
         );
     }

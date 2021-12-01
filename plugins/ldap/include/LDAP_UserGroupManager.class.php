@@ -49,7 +49,7 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
         LDAP_UserGroupDao $dao,
         ProjectManager $project_manager,
         \Psr\Log\LoggerInterface $logger,
-        \Tuleap\LDAP\GroupSyncNotificationsManager $notifications_manager
+        \Tuleap\LDAP\GroupSyncNotificationsManager $notifications_manager,
     ) {
         parent::__construct($ldap, $ldap_user_manager, $project_manager, $notifications_manager);
 

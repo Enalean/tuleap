@@ -76,7 +76,7 @@ class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->params = [
             'template'              => $this->template,
-            'project_creation_data' => $this->data
+            'project_creation_data' => $this->data,
         ];
 
         $this->svn_core_service   = \Mockery::mock(Service::class, ['getId' => 101]);

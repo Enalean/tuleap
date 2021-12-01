@@ -38,7 +38,7 @@ final class IterationUpdateBuilder
         int $user_id,
         int $iteration_id,
         int $tracker_id,
-        int $changeset_id
+        int $changeset_id,
     ): IterationUpdate {
         $event            = ArtifactUpdatedEventStub::withIds($iteration_id, $tracker_id, $user_id, $changeset_id);
         $iteration_update = IterationUpdate::fromArtifactUpdateEvent(

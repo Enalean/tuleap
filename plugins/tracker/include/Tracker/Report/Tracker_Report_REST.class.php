@@ -49,7 +49,7 @@ class Tracker_Report_REST extends Tracker_Report
         Tracker $tracker,
         PermissionsManager $permissions_manager,
         Tracker_ReportDao $dao,
-        Tracker_FormElementFactory $formelement_factory
+        Tracker_FormElementFactory $formelement_factory,
     ) {
         $id = $name = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $tracker_id = $is_query_displayed = $updated_by = $updated_at = 0;
         parent::__construct(
@@ -126,7 +126,7 @@ class Tracker_Report_REST extends Tracker_Report
             if ($this->isCriterionBasic($criterion)) {
                 $criterion = $criteria[$field] = [
                     self::OPERATOR_PROPERTY_NAME => self::DEFAULT_OPERATOR,
-                    self::VALUE_PROPERTY_NAME    => $criterion
+                    self::VALUE_PROPERTY_NAME    => $criterion,
                 ];
             }
 

@@ -41,7 +41,7 @@ class AgileDashboard_KanbanActionsChecker
     public function __construct(
         TrackerFactory $tracker_factory,
         AgileDashboard_PermissionsManager $permissions_manager,
-        Tracker_FormElementFactory $form_element_factory
+        Tracker_FormElementFactory $form_element_factory,
     ) {
         $this->form_element_factory = $form_element_factory;
         $this->permissions_manager  = $permissions_manager;

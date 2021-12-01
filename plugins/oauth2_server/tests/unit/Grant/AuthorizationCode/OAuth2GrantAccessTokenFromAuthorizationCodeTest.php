@@ -103,7 +103,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
         $body_params = [
             'grant_type'   => 'authorization_code',
             'code'         => 'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161',
-            'redirect_uri' => $app->getRedirectEndpoint()
+            'redirect_uri' => $app->getRedirectEndpoint(),
         ];
 
         $response = $this->grant_access_token_from_auth_code->grantAccessToken($this->buildOAuth2App(), $body_params);
@@ -154,7 +154,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
 
         $body_params = [
             'grant_type' => 'authorization_code',
-            'code'       => 'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161'
+            'code'       => 'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161',
         ];
 
         $this->representation_builder->expects(self::never())->method('buildRepresentationFromAuthorizationCode');
@@ -175,7 +175,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
         $body_params = [
             'grant_type'   => 'authorization_code',
             'code'         => 'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161',
-            'redirect_uri' => 'https://evil.example.com'
+            'redirect_uri' => 'https://evil.example.com',
         ];
 
         $this->representation_builder->expects(self::never())->method('buildRepresentationFromAuthorizationCode');
@@ -201,7 +201,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
         $body_params = [
             'grant_type'   => 'authorization_code',
             'code'         => 'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161',
-            'redirect_uri' => $app->getRedirectEndpoint()
+            'redirect_uri' => $app->getRedirectEndpoint(),
         ];
 
         $this->representation_builder->expects(self::never())->method('buildRepresentationFromAuthorizationCode');

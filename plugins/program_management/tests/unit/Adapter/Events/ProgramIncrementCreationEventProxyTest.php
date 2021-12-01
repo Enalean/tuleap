@@ -53,7 +53,7 @@ final class ProgramIncrementCreationEventProxyTest extends \Tuleap\Test\PHPUnit\
                 'artifact_id'  => self::ARTIFACT_ID,
                 'user_id'      => self::USER_ID,
                 'changeset_id' => self::CHANGESET_ID,
-            ]
+            ],
         ]);
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithId(186));
 
@@ -71,7 +71,7 @@ final class ProgramIncrementCreationEventProxyTest extends \Tuleap\Test\PHPUnit\
     {
         $worker_event = new WorkerEvent($this->logger, [
             'event_name' => 'unrelated.topic',
-            'payload'    => []
+            'payload'    => [],
         ]);
         self::assertNull(
             ProgramIncrementCreationEventProxy::fromWorkerEvent($this->logger, $this->user_manager, $worker_event)
@@ -82,7 +82,7 @@ final class ProgramIncrementCreationEventProxyTest extends \Tuleap\Test\PHPUnit\
     {
         $worker_event = new WorkerEvent($this->logger, [
             'event_name' => ProgramIncrementCreationEvent::TOPIC,
-            'payload'    => []
+            'payload'    => [],
         ]);
         self::assertNull(
             ProgramIncrementCreationEventProxy::fromWorkerEvent($this->logger, $this->user_manager, $worker_event)
@@ -102,7 +102,7 @@ final class ProgramIncrementCreationEventProxyTest extends \Tuleap\Test\PHPUnit\
                 'artifact_id'  => self::ARTIFACT_ID,
                 'user_id'      => 404,
                 'changeset_id' => self::CHANGESET_ID,
-            ]
+            ],
         ]);
         $this->user_manager->method('getUserById')->willReturn(null);
 

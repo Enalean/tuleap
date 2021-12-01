@@ -33,7 +33,7 @@ function executeCommandAndExitIfStderrNotEmpty($command)
     $descriptorspec = [
         0 => STDIN,
         1 => STDOUT,
-        2 => ['pipe', 'wb']
+        2 => ['pipe', 'wb'],
     ];
 
     $process = proc_open($command, $descriptorspec, $pipes);

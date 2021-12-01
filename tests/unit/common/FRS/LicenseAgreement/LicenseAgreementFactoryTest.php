@@ -233,7 +233,7 @@ class LicenseAgreementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('getProjectLicenseAgreements')->with($template_project)->andReturn(
             [
-                ['id' => 5, 'title' => 'some title', 'content' => 'and content']
+                ['id' => 5, 'title' => 'some title', 'content' => 'and content'],
             ]
         );
         $this->dao->shouldReceive('getDefaultLicenseIdForProject')->with($template_project)->andReturn(5)->once();
@@ -272,7 +272,7 @@ class LicenseAgreementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('getProjectLicenseAgreements')->with($template_project)->andReturn(
             [
-                ['id' => 5, 'title' => 'some title', 'content' => 'and content']
+                ['id' => 5, 'title' => 'some title', 'content' => 'and content'],
             ]
         );
         $this->dao->shouldReceive('getDefaultLicenseIdForProject')->with($template_project)->andReturn(NoLicenseToApprove::ID)->once();
@@ -310,7 +310,7 @@ class LicenseAgreementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('getProjectLicenseAgreements')->with($template_project)->andReturn(
             [
-                ['id' => 5, 'title' => 'some title', 'content' => 'and content']
+                ['id' => 5, 'title' => 'some title', 'content' => 'and content'],
             ]
         );
         $this->dao->shouldReceive('getDefaultLicenseIdForProject')->with($template_project)->andReturn(5)->once();

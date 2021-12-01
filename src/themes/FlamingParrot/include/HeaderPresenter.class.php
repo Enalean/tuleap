@@ -43,7 +43,7 @@ class FlamingParrot_HeaderPresenter
         $img_root,
         OpenGraphPresenter $open_graph,
         $variant,
-        $variant_color_code
+        $variant_color_code,
     ) {
         $this->title              = $title;
         $this->img_root           = $img_root;

@@ -38,7 +38,7 @@ class ArtifactsDeletionConfig
     private $cache_artifacts_limit;
 
     public function __construct(
-        ArtifactsDeletionConfigDAO $dao
+        ArtifactsDeletionConfigDAO $dao,
     ) {
         $this->dao = $dao;
     }

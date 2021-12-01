@@ -128,21 +128,21 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
             'tracker_id'               => 1,
             'submitted_by'             => 102,
             'submitted_on'             => 12345678,
-            'use_artifact_permissions' => true
+            'use_artifact_permissions' => true,
         ];
         $row_sprint_2      = [
             'id'                       => 2,
             'tracker_id'               => 1,
             'submitted_by'             => 102,
             'submitted_on'             => 12345678,
-            'use_artifact_permissions' => true
+            'use_artifact_permissions' => true,
         ];
         $row_hackfest_2012 = [
             'id'                       => 3,
             'tracker_id'               => 1,
             'submitted_by'             => 102,
             'submitted_on'             => 12345678,
-            'use_artifact_permissions' => true
+            'use_artifact_permissions' => true,
         ];
 
         $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($row_sprint_1)->andReturn($sprint_1);

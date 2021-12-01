@@ -53,7 +53,7 @@ class TimeframeNotConfiguredTest extends TestCase
         $root = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $this->timeframe->exportToXml($root, [
             'F101' => 1001,
-            'F102' => 1002
+            'F102' => 1002,
         ]);
         $this->assertCount(0, $root->children());
     }

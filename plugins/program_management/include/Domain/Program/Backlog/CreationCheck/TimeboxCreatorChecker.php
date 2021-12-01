@@ -42,7 +42,7 @@ final class TimeboxCreatorChecker
         private VerifySynchronizedFieldsAreNotUsedInWorkflow $workflow_verifier,
         private RetrieveTrackerFromField $retrieve_tracker_from_field,
         private RetrieveProjectFromTracker $retrieve_project_from_tracker,
-        private VerifyUserCanSubmit $user_can_submit_in_tracker_verifier
+        private VerifyUserCanSubmit $user_can_submit_in_tracker_verifier,
     ) {
     }
 
@@ -51,7 +51,7 @@ final class TimeboxCreatorChecker
         SourceTrackerCollection $program_and_milestone_trackers,
         TrackerCollection $team_trackers,
         UserIdentifier $user_identifier,
-        ConfigurationErrorsCollector $configuration_errors
+        ConfigurationErrorsCollector $configuration_errors,
     ): bool {
         $can_be_created = true;
         if (! $this->semantics_verifier->areTrackerSemanticsWellConfigured($tracker, $program_and_milestone_trackers, $configuration_errors)) {

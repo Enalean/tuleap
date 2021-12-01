@@ -44,7 +44,7 @@ class ValueForFileExtractor implements ValueWrapperVisitor
 
     public function visitCurrentDateTimeValueWrapper(
         CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new NowIsNotSupportedException();
     }
@@ -61,21 +61,21 @@ class ValueForFileExtractor implements ValueWrapperVisitor
 
     public function visitInValueWrapper(
         InValueWrapper $collection_of_value_wrappers,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new RuntimeException('Should not end there');
     }
 
     public function visitCurrentUserValueWrapper(
         CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new MySelfIsNotSupportedException();
     }
 
     public function visitStatusOpenValueWrapper(
         StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new StatusOpenIsNotSupportedException();
     }

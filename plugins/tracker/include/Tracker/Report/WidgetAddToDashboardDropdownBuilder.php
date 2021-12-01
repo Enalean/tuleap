@@ -44,7 +44,7 @@ class WidgetAddToDashboardDropdownBuilder
 
     public function __construct(
         UserDashboardRetriever $user_dashboard_retriever,
-        ProjectDashboardRetriever $project_dashboard_retriever
+        ProjectDashboardRetriever $project_dashboard_retriever,
     ) {
         $this->user_dashboard_retriever    = $user_dashboard_retriever;
         $this->project_dashboard_retriever = $project_dashboard_retriever;
@@ -80,7 +80,7 @@ class WidgetAddToDashboardDropdownBuilder
         \Tracker_Report_Renderer $renderer,
         CSRFSynchronizerToken $csrf,
         $widget_id,
-        $type
+        $type,
     ) {
         return '/widgets/?' . http_build_query(
             [
@@ -88,10 +88,10 @@ class WidgetAddToDashboardDropdownBuilder
                 'action'              => 'add-widget',
                 'renderer'            => [
                     'title'       => $renderer->name . ' for ' . $renderer->report->name,
-                    'renderer_id' => $renderer->id
+                    'renderer_id' => $renderer->id,
                 ],
                 'widget-name'         => $widget_id,
-                $csrf->getTokenName() => $csrf->getToken()
+                $csrf->getTokenName() => $csrf->getToken(),
             ]
         );
     }

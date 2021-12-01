@@ -58,7 +58,7 @@ if ($request->valid($vFilemodule_id)) {
                     'file_showfiles',
                     'file_p_for',
                     $pm->getProject($group_id)->getPublicName()
-                )
+                ),
             ]
         );
         echo $fmmf->getMonitoringHTML($current_user, $group_id, $filemodule_id, $um, $userHelper);

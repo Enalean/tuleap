@@ -130,7 +130,7 @@ class Search_SearchController
                 'words'                => $query->getWords(),
                 'project_presenters'   => &$project_search_types,
                 'site_presenters'      => &$site_search_types,
-                'redirect_to_services' => &$redirect_to_services
+                'redirect_to_services' => &$redirect_to_services,
             ]
         );
 

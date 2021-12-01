@@ -1738,7 +1738,7 @@ function explodePageList(
     $include_empty = false,
     $sortby = 'pagename',
     $limit = false,
-    $exclude = false
+    $exclude = false,
 ) {
     include_once("lib/PageList.php");
     return PageList::explodePageList($input, $include_empty, $sortby, $limit, $exclude);

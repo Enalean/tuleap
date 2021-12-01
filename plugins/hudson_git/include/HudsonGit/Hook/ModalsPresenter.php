@@ -46,7 +46,7 @@ class ModalsPresenter
         GitRepository $repository,
         $jenkins_server_url,
         bool $is_commit_reference_needed,
-        CSRFSynchronizerToken $csrf
+        CSRFSynchronizerToken $csrf,
     ) {
         $this->jenkins_server_url = $jenkins_server_url;
         $this->csrf_token         = $csrf->getToken();

@@ -29,7 +29,7 @@ class VersionNumberExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItExtractsTheTuleapVersionForTheReleaseNote(
         string $tuleap_version,
-        string $expected_tuleap_release_note_version
+        string $expected_tuleap_release_note_version,
     ): void {
         $extractor = new VersionNumberExtractor();
 

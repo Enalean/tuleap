@@ -137,7 +137,7 @@ class TokenTest extends \Tuleap\Test\PHPUnit\TestCase
                      '?action=show',
                      '?id=1&action=show',
                      '?action=details',
-                     '?action=details&section=history'
+                     '?action=details&section=history',
                  ] as $referer
         ) {
             $t = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();

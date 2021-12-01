@@ -52,7 +52,7 @@ final class BytesAmountHandledLFSObjectInstrumentationFilter implements FilterIn
         Prometheus $prometheus,
         string $instrumentation_key_name,
         string $instrumentation_key_help,
-        string $transfer_type
+        string $transfer_type,
     ) {
         $this->prometheus               = $prometheus;
         $this->instrumentation_key_name = $instrumentation_key_name;

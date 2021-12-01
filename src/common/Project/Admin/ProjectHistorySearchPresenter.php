@@ -45,7 +45,7 @@ class ProjectHistorySearchPresenter
         $selected_value,
         $selected_from,
         $selected_to,
-        $selected_by
+        $selected_by,
     ) {
         $this->buildDatesBox($selected_from, $selected_to);
         $this->buildEventsBox($possible_events, $selected_event, $selected_subevents);
@@ -95,8 +95,8 @@ class ProjectHistorySearchPresenter
             [
                 'key'        => 'any',
                 'label'      => $GLOBALS["Language"]->getText('global', 'any'),
-                'is_current' => 'any' === $selected_event
-            ]
+                'is_current' => 'any' === $selected_event,
+            ],
         ];
         $this->grouped_events = [];
         foreach ($possible_events as $group => $events) {
@@ -106,7 +106,7 @@ class ProjectHistorySearchPresenter
             $this->events[] = [
                 'key'        => $group,
                 'label'      => $GLOBALS['Language']->getOverridableText('project_admin_utils', $group),
-                'is_current' => $selected_event === $group
+                'is_current' => $selected_event === $group,
             ];
 
             $translated_events = [];
@@ -114,13 +114,13 @@ class ProjectHistorySearchPresenter
                 $translated_events[] = [
                     'key'        => $event,
                     'label'      => $GLOBALS['Language']->getOverridableText('project_admin_utils', $event),
-                    'is_current' => isset($selected_subevents[$event])
+                    'is_current' => isset($selected_subevents[$event]),
                 ];
             }
 
             $this->grouped_events[] = [
                 'group'  => $group,
-                'events' => $translated_events
+                'events' => $translated_events,
             ];
         }
     }

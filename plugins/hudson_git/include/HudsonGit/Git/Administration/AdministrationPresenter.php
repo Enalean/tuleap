@@ -39,7 +39,7 @@ class AdministrationPresenter extends GitPresenters_AdminPresenter
         bool $are_mirrors_defined,
         array $external_pane_presenters,
         array $jenkins_server_presenters,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
     ) {
         parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
 

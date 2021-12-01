@@ -49,7 +49,7 @@ class RepositoryFineGrainedRepresentation
         array $readers,
         $name,
         $url,
-        array $fine_grained_permission
+        array $fine_grained_permission,
     ) {
         $this->has_fined_grained_permissions = true;
         $this->name                          = $name;

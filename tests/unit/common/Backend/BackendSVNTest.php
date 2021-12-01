@@ -59,7 +59,7 @@ class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->shouldReceive('getMembersUserNames')->andReturn(
             [
                 ['user_name' => 'user1'],
-                ['user_name' => 'user2']
+                ['user_name' => 'user2'],
             ]
         );
 
@@ -86,7 +86,7 @@ class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup->shouldReceive(
             [
                 'getMembers' => [$user1, $user2],
-                'getName'    => 'Perms'
+                'getName'    => 'Perms',
             ]
         );
 
@@ -123,7 +123,7 @@ class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup->shouldReceive(
             [
                 'getMembers' => [$user1, $user2],
-                'getName'    => 'Perms'
+                'getName'    => 'Perms',
             ]
         );
 

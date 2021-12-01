@@ -48,7 +48,7 @@ class ColumnsGetter
         UserManager $user_manager,
         \Planning_MilestoneFactory $milestone_factory,
         MilestoneIsAllowedChecker $milestone_checker,
-        Cardwall_OnTop_ColumnDao $column_dao
+        Cardwall_OnTop_ColumnDao $column_dao,
     ) {
         $this->user_manager      = $user_manager;
         $this->milestone_factory = $milestone_factory;

@@ -41,7 +41,7 @@ class EditBindingUGroupEventLauncher
             'project_admin_ugroup_bind_modified',
             [
                 'group_id'  => $ugroup->getProjectId(),
-                'ugroup_id' => $ugroup->getId()
+                'ugroup_id' => $ugroup->getId(),
             ]
         );
     }

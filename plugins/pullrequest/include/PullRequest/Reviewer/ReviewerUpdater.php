@@ -49,7 +49,7 @@ final class ReviewerUpdater
     public function __construct(
         ReviewerDAO $dao,
         PullRequestPermissionChecker $pull_request_permission_checker,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
     ) {
         $this->dao                             = $dao;
         $this->pull_request_permission_checker = $pull_request_permission_checker;
@@ -64,7 +64,7 @@ final class ReviewerUpdater
         PullRequest $pull_request,
         PFUser $user_changing_the_reviewers,
         DateTimeImmutable $date_of_the_change,
-        PFUser ...$new_reviewers
+        PFUser ...$new_reviewers,
     ): void {
         if ($pull_request->getStatus() !== PullRequest::STATUS_REVIEW) {
             throw new ReviewersCannotBeUpdatedOnClosedPullRequestException($pull_request);

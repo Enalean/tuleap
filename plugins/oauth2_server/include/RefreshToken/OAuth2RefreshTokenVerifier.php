@@ -58,7 +58,7 @@ class OAuth2RefreshTokenVerifier
         OAuth2RefreshTokenDAO $refresh_token_dao,
         OAuth2ScopeRetriever $refresh_token_scope_retriever,
         OAuth2AuthorizationCodeRevoker $authorization_code_revoker,
-        DBTransactionExecutor $db_transaction_executor
+        DBTransactionExecutor $db_transaction_executor,
     ) {
         $this->hasher                        = $hasher;
         $this->refresh_token_dao             = $refresh_token_dao;

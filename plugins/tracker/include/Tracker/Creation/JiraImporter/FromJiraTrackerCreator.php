@@ -66,7 +66,7 @@ class FromJiraTrackerCreator
         private LoggerInterface $logger,
         private JiraUserOnTuleapCache $jira_user_on_tuleap_cache,
         private PlatformConfigurationRetriever $platform_configuration_retriever,
-        private UserRolesCheckerInterface $user_roles_checker
+        private UserRolesCheckerInterface $user_roles_checker,
     ) {
     }
 
@@ -114,7 +114,7 @@ class FromJiraTrackerCreator
         JiraClient $jira_client,
         string $jira_project_id,
         string $jira_issue_type_id,
-        \PFUser $user
+        \PFUser $user,
     ): Tracker {
         $this->logger->info("Begin import from jira.");
         $this->logger->info("Selected jira project: $jira_project_id");

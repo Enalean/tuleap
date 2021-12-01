@@ -57,7 +57,7 @@ class ItemApprovalTableRepresentation
     public function __construct(
         \Docman_ApprovalTable $approval_table,
         MinimalUserRepresentation $table_owner,
-        ApprovalTableStateMapper $status_mapper
+        ApprovalTableStateMapper $status_mapper,
     ) {
         $this->id                    = JsonCast::toInt($approval_table->getId());
         $this->table_owner           = $table_owner;

@@ -45,7 +45,7 @@ class NotificationsForProjectMemberCleaner
     public function __construct(
         GitRepositoryFactory $repository_factory,
         Git_PostReceiveMailManager $mail_to_notify_manager,
-        UsersToNotifyDao $users_to_notify_dao
+        UsersToNotifyDao $users_to_notify_dao,
     ) {
         $this->repository_factory      = $repository_factory;
         $this->mails_to_notify_manager = $mail_to_notify_manager;

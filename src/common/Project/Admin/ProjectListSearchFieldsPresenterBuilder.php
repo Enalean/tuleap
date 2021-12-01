@@ -28,7 +28,7 @@ class ProjectListSearchFieldsPresenterBuilder
 
     public function build(
         $name,
-        array $status_values
+        array $status_values,
     ) {
         $status_options = $this->getListOfStatusValuePresenter($status_values);
 
@@ -54,7 +54,7 @@ class ProjectListSearchFieldsPresenterBuilder
         return [
             'value'       => $status,
             'is_selected' => $selected,
-            'label'       => $label
+            'label'       => $label,
         ];
     }
 }

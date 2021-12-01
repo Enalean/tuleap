@@ -42,7 +42,7 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter
 
     public function __construct(
         Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor $visitor,
-        $is_in_archive_context
+        $is_in_archive_context,
     ) {
         $this->visitor               = $visitor;
         $this->is_in_archive_context = $is_in_archive_context;
@@ -57,7 +57,7 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
-        array $changeset_values
+        array $changeset_values,
     ) {
         $this->exportValues($artifact_xml, $changeset_xml, $artifact, $changeset_values, self::EXPORT_SNAPSHOT);
     }
@@ -66,7 +66,7 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
-        array $changeset_values
+        array $changeset_values,
     ) {
         $this->exportValues($artifact_xml, $changeset_xml, $artifact, $changeset_values, self::EXPORT_CHANGES);
     }
@@ -76,13 +76,13 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter
         SimpleXMLElement $changeset_xml,
         Artifact $artifact,
         array $changeset_values,
-        $export_mode
+        $export_mode,
     ) {
         $params = [
             self::ARTIFACT_KEY      => $artifact,
             self::ARTIFACT_XML_KEY  => $artifact_xml,
             self::CHANGESET_XML_KEY => $changeset_xml,
-            self::EXPORT_MODE_KEY   => $export_mode
+            self::EXPORT_MODE_KEY   => $export_mode,
         ];
 
         foreach ($changeset_values as $changeset_value) {
@@ -95,7 +95,7 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter
 
     private function exportValue(
         Tracker_Artifact_ChangesetValue $changeset_value,
-        array $params
+        array $params,
     ) {
         if ($this->isFieldChangeExportable($changeset_value, $params[self::EXPORT_MODE_KEY])) {
             $this->visitor->export(
@@ -109,7 +109,7 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter
 
     private function isFieldChangeExportable(
         Tracker_Artifact_ChangesetValue $changeset_value,
-        $export_mode
+        $export_mode,
     ) {
         if ($export_mode === self::EXPORT_SNAPSHOT) {
             return true;

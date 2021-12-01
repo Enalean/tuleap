@@ -159,8 +159,8 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
             'order' => [
                 'ids'         => [$second_id],
                 'direction'   => 'before',
-                'compared_to' => $first_id
-            ]
+                'compared_to' => $first_id,
+            ],
         ]);
 
         // invert order of the two tasks
@@ -193,8 +193,8 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
                         'order' => [
                             'ids'         => [$second_id],
                             'direction'   => 'before',
-                            'compared_to' => $first_id
-                        ]
+                            'compared_to' => $first_id,
+                        ],
                     ])
                 ))
         );
@@ -218,8 +218,8 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
                         'order' => [
                             'ids'         => [$first_id],
                             'direction'   => 'after',
-                            'compared_to' => $second_id
-                        ]
+                            'compared_to' => $second_id,
+                        ],
                     ])
                 ))
         );
@@ -252,8 +252,8 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
                         'order' => [
                             'ids'         => [$second_id, $second_id],
                             'direction'   => 'before',
-                            'compared_to' => $first_id
-                        ]
+                            'compared_to' => $first_id,
+                        ],
                     ])
                 ))
         );
@@ -280,8 +280,8 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
                         'order' => [
                             'ids'         => [9999],
                             'direction'   => 'before',
-                            'compared_to' => $first_id
-                        ]
+                            'compared_to' => $first_id,
+                        ],
                     ])
                 ))
         );
@@ -313,13 +313,13 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
                         'order' => [
                             'ids'         => [$third_id],
                             'direction'   => 'after',
-                            'compared_to' => $first_id
+                            'compared_to' => $first_id,
                         ],
                         'add' => [
                             [
                                 'id' => $third_id,
-                            ]
-                        ]
+                            ],
+                        ],
                     ])
                 ))
         );
@@ -355,14 +355,14 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
                             'order' => [
                                 'ids'         => [$task_in_another_story_id],
                                 'direction'   => 'after',
-                                'compared_to' => $first_id
+                                'compared_to' => $first_id,
                             ],
                             'add' => [
                                 [
                                     'id'          => $task_in_another_story_id,
                                     'remove_from' => $another_story_id,
-                                ]
-                            ]
+                                ],
+                            ],
                         ])
                     )
                 )

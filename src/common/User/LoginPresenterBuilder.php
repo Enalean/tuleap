@@ -32,7 +32,7 @@ class User_LoginPresenterBuilder
             Event::LOGIN_ADDITIONAL_CONNECTOR,
             [
                 'return_to'            => $return_to,
-                'additional_connector' => &$additional_connectors
+                'additional_connector' => &$additional_connectors,
             ]
         );
 

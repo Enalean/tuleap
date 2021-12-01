@@ -48,7 +48,7 @@ class DocmanItemPermissionsForGroupsSetFactory
     public function __construct(
         UGroupManager $ugroup_manager,
         UserGroupRetriever $ugroup_retriever,
-        ProjectManager $project_manager
+        ProjectManager $project_manager,
     ) {
         $this->ugroup_manager   = $ugroup_manager;
         $this->ugroup_retriever = $ugroup_retriever;
@@ -60,7 +60,7 @@ class DocmanItemPermissionsForGroupsSetFactory
      */
     public function fromRepresentation(
         Docman_Item $item,
-        DocmanItemPermissionsForGroupsSetRepresentation $representation
+        DocmanItemPermissionsForGroupsSetRepresentation $representation,
     ): DocmanItemPermissionsForGroupsSet {
         $permissions = array_replace(
             $this->getNonePermissionsForAllUGroupID($item),
@@ -91,7 +91,7 @@ class DocmanItemPermissionsForGroupsSetFactory
     private function getPermissionsPerUGroupID(
         Docman_Item $item,
         array $user_group_representations,
-        int $permission_type
+        int $permission_type,
     ): array {
         $permissions_per_ugroup_id = [];
         $user_groups               = $this->getUserGroups($item, $user_group_representations);
@@ -120,7 +120,7 @@ class DocmanItemPermissionsForGroupsSetFactory
      */
     private function getUserGroup(
         Docman_Item $item,
-        MinimalUserGroupRepresentationForUpdate $user_group_representation
+        MinimalUserGroupRepresentationForUpdate $user_group_representation,
     ): ProjectUGroup {
         $identifier      = $user_group_representation->id;
         $item_project_id = $item->getGroupId();

@@ -52,7 +52,7 @@ class JiraTuleapUsersMapping
                 'jira_display_name'       => $jira_user->getDisplayName(),
                 'tuleap_user_real_name'   => $tuleap_user->getRealName(),
                 'tuleap_user_profile_url' => $this->getBaseUrl() . $tuleap_user->getPublicProfileUrl(),
-                'tuleap_user_username'    => $tuleap_user->getUserName()
+                'tuleap_user_username'    => $tuleap_user->getUserName(),
             ];
 
             return;

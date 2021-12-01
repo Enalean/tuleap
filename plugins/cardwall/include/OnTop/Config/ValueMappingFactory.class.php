@@ -35,7 +35,7 @@ class Cardwall_OnTop_Config_ValueMappingFactory
 
     public function __construct(
         Tracker_FormElementFactory $element_factory,
-        Cardwall_OnTop_ColumnMappingFieldValueDao $dao
+        Cardwall_OnTop_ColumnMappingFieldValueDao $dao,
     ) {
         $this->element_factory = $element_factory;
         $this->dao             = $dao;

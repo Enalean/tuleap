@@ -54,7 +54,7 @@ class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 \trackerPlugin::SERVICE_SHORTNAME       => true,
                 \GitPlugin::SERVICE_SHORTNAME           => true,
-                \AgileDashboardPlugin::PLUGIN_SHORTNAME => true
+                \AgileDashboardPlugin::PLUGIN_SHORTNAME => true,
             ]
         );
 
@@ -67,7 +67,7 @@ class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event->shouldReceive('getAvailableServices')->andReturn(
             [
                 \trackerPlugin::SERVICE_SHORTNAME => true,
-                \GitPlugin::SERVICE_SHORTNAME     => true
+                \GitPlugin::SERVICE_SHORTNAME     => true,
             ]
         );
 

@@ -50,7 +50,7 @@ class ThreadsPresenterBuilder
         ThreadsDao $dao,
         TlpRelativeDatePresenterBuilder $relative_date_builder,
         \UserManager $user_manager,
-        \UserHelper $user_helper
+        \UserHelper $user_helper,
     ) {
         $this->dao                   = $dao;
         $this->user_manager          = $user_manager;
@@ -64,7 +64,7 @@ class ThreadsPresenterBuilder
         int $list_id,
         string $list_name,
         int $offset,
-        string $search
+        string $search,
     ): ThreadsPresenter {
         $limit = 10;
 
@@ -130,7 +130,7 @@ class ThreadsPresenterBuilder
         int $id_message,
         string $subject,
         string $date,
-        string $sender
+        string $sender,
     ): ThreadInfoPresenter {
         $url = '/plugins/forumml/message.php?' .
             http_build_query(

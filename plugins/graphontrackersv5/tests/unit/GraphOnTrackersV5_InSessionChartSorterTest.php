@@ -53,7 +53,7 @@ class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPUnit\Te
         $this->charts   = [
             $this->pie,
             $this->bar,
-            $this->burndown
+            $this->burndown,
         ];
 
         $this->pie->shouldReceive('getId')->andReturn('pie');

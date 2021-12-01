@@ -50,7 +50,7 @@ class ReleasePresenter
         ReleaseRepresentation $release_representation,
         string $language,
         LicenseAgreementInterface $agreement,
-        ContentInterpretor $interpreter
+        ContentInterpretor $interpreter,
     ) {
         $this->release_representation = json_encode($release_representation);
         $this->release_note_html      = $interpreter->getInterpretedContentWithReferences($release_representation->release_note, $release_representation->project->id);
@@ -59,7 +59,7 @@ class ReleasePresenter
         $platform_license_info = [
             "exchange_policy_url" => ForgeConfig::get('sys_exchange_policy_url'),
             "organisation_name"   => ForgeConfig::get('sys_org_name'),
-            "contact_email"       => ForgeConfig::get('sys_email_contact')
+            "contact_email"       => ForgeConfig::get('sys_email_contact'),
         ];
 
         $this->platform_license_info = json_encode($platform_license_info);

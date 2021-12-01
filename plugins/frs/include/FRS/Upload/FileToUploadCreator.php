@@ -55,7 +55,7 @@ final class FileToUploadCreator
         FRSFileFactory $file_factory,
         FileOngoingUploadDao $dao,
         DBTransactionExecutor $transaction_executor,
-        int $max_size_upload
+        int $max_size_upload,
     ) {
         $this->file_factory         = $file_factory;
         $this->dao                  = $dao;
@@ -68,7 +68,7 @@ final class FileToUploadCreator
         PFUser $user,
         DateTimeImmutable $current_time,
         string $name,
-        int $file_size
+        int $file_size,
     ): FileToUpload {
         if ($file_size > $this->max_size_upload) {
             throw new UploadMaxSizeExceededException($file_size, $this->max_size_upload);
@@ -107,7 +107,7 @@ final class FileToUploadCreator
         string $name,
         DateTimeImmutable $current_time,
         PFUser $user,
-        int $file_size
+        int $file_size,
     ): ?int {
         $rows = $this->dao->searchFileOngoingUploadByReleaseIDNameAndExpirationDate(
             $release->getReleaseID(),
@@ -136,7 +136,7 @@ final class FileToUploadCreator
 
     private function checkFileCanBeCreated(
         FRSRelease $release,
-        string $name
+        string $name,
     ): void {
         $rule = new Rule_FRSFileName();
         if (! $rule->isValid($name)) {

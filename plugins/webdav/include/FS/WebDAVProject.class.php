@@ -45,7 +45,7 @@ class WebDAVProject extends \Sabre\DAV\FS\Directory
         PFUser $user,
         Project $project,
         int $maxFileSize,
-        WebDAVUtils $utils
+        WebDAVUtils $utils,
     ) {
         $this->user        = $user;
         $this->project     = $project;

@@ -167,7 +167,7 @@ class MailingListDao extends DataAccessObject
         bool $is_public,
         string $password,
         int $user_id,
-        string $description
+        string $description,
     ) {
         $project_id  = $this->da->escapeInt($project_id);
         $name        = $this->da->quoteSmart($name);

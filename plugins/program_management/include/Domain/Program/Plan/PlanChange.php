@@ -39,7 +39,7 @@ final class PlanChange
         public int $project_id,
         public array $tracker_ids_that_can_be_planned,
         public array $can_possibly_prioritize_ugroups,
-        public ?PlanIterationChange $iteration
+        public ?PlanIterationChange $iteration,
     ) {
     }
 
@@ -56,7 +56,7 @@ final class PlanChange
         int $project_id,
         array $tracker_ids_that_can_be_planned,
         array $can_possibly_prioritize_ugroups,
-        ?PlanIterationChange $iteration_representation
+        ?PlanIterationChange $iteration_representation,
     ): self {
         if (in_array($program_increment_change->tracker_id, $tracker_ids_that_can_be_planned, true)) {
             throw new ProgramIncrementCannotPlanIntoItselfException();

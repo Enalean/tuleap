@@ -1346,7 +1346,7 @@ class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     "Sprint W42",
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
-                )
+                ),
             ],
             $collection->getRepresentations()
         );

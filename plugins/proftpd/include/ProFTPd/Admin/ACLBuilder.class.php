@@ -40,7 +40,7 @@ abstract class ACLBuilder
             [
                 $this->getACLUserWriter($http_user),
                 $this->getACLGroupWriters($writers),
-                $this->getACLGroupReaders($readers)
+                $this->getACLGroupReaders($readers),
             ]
         );
     }

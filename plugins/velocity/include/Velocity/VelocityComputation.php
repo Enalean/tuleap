@@ -51,7 +51,7 @@ class VelocityComputation
         array &$already_computed_velocity,
         Tracker_Semantic_Status $semantic_status,
         SemanticDone $semantic_done,
-        SemanticVelocity $semantic_velocity
+        SemanticVelocity $semantic_velocity,
     ) {
         if (! $this->computation_checker->shouldComputeCapacity($semantic_status, $semantic_done, $semantic_velocity, $before_event)) {
             return;
@@ -93,7 +93,7 @@ class VelocityComputation
     private function displayUpdateMessageForUserWhoCanReadField(
         PFUser $user,
         $computed_velocity,
-        ?Tracker_FormElement_Field $field = null
+        ?Tracker_FormElement_Field $field = null,
     ) {
         if ($field && $field->userCanRead($user)) {
             $GLOBALS['Response']->addFeedback(

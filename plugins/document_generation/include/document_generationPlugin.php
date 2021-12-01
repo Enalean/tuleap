@@ -104,10 +104,10 @@ class document_generationPlugin extends Plugin
                             "report_url" => \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/tracker/?report=' . urlencode((string) $report_id),
                             "report_criteria" => $report_criteria_json,
                             "base_url" => \Tuleap\ServerHostname::HTTPSUrl(),
-                            "artifact_links_types" => (new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()))->getAllUsableTypesInProject($tracker->getProject())
+                            "artifact_links_types" => (new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()))->getAllUsableTypesInProject($tracker->getProject()),
                         ],
                         JSON_THROW_ON_ERROR
-                    )
+                    ),
                 ]
             )
         );

@@ -112,7 +112,7 @@ class ListOfDefinitionsForCampaignRetrieverTest extends \Tuleap\Test\PHPUnit\Tes
             ->andReturn([
                 ['id' => 1],
                 ['id' => 2],
-                ['id' => 3]
+                ['id' => 3],
             ]);
 
         $this->artifact_factory->shouldReceive("getInstanceFromRow")->with(['id' => 1])->andReturn($this->execution1);

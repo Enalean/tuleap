@@ -30,7 +30,7 @@ class ArtifactsDeletionDAO extends DataAccessObject
 {
     public function searchNumberOfArtifactsDeletionsForUserInTimePeriod(
         $user_id,
-        $timestamp
+        $timestamp,
     ) {
         $sql = "SELECT COALESCE(sum(nb_artifacts_deleted), 0)
                 FROM plugin_tracker_deleted_artifacts
@@ -43,7 +43,7 @@ class ArtifactsDeletionDAO extends DataAccessObject
 
     public function recordDeletionForUser(
         $user_id,
-        $timestamp
+        $timestamp,
     ) {
         $sql = "INSERT INTO plugin_tracker_deleted_artifacts(timestamp, user_id, nb_artifacts_deleted)
                 VALUES(?, ?, 1)

@@ -45,7 +45,7 @@ class Mirroring extends Pane
                 [
                     'action'   => 'admin-default-settings',
                     'group_id' => $project->getID(),
-                    'pane'     => self::NAME
+                    'pane'     => self::NAME,
                 ]
             ),
             $is_active,

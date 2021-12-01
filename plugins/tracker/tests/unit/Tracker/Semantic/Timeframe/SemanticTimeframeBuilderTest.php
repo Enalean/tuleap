@@ -89,7 +89,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'start_date_field_id' => 101,
                 'duration_field_id' => null,
                 'end_date_field_id' => 104,
-                'implied_from_tracker_id' => null
+                'implied_from_tracker_id' => null,
             ]);
 
         $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
@@ -121,7 +121,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'start_date_field_id' => 101,
                 'duration_field_id' => 104,
                 'end_date_field_id' => null,
-                'implied_from_tracker_id' => null
+                'implied_from_tracker_id' => null,
             ]);
 
         $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
@@ -153,7 +153,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'start_date_field_id' => 101,
                 'duration_field_id' => null,
                 'end_date_field_id' => null,
-                'implied_from_tracker_id' => null
+                'implied_from_tracker_id' => null,
             ]);
 
         $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
@@ -176,7 +176,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'start_date_field_id' => null,
                 'duration_field_id' => null,
                 'end_date_field_id' => null,
-                'implied_from_tracker_id' => 123
+                'implied_from_tracker_id' => 123,
             ]);
 
         $this->tracker_factory->shouldReceive('getTrackerById')
@@ -202,7 +202,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'start_date_field_id' => null,
                     'duration_field_id' => null,
                     'end_date_field_id' => null,
-                    'implied_from_tracker_id' => $implied_from_tracker_id
+                    'implied_from_tracker_id' => $implied_from_tracker_id,
                 ]
             );
 
@@ -223,7 +223,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'start_date_field_id' => 101,
                 'duration_field_id' => 104,
                 'end_date_field_id' => null,
-                'implied_from_tracker_id' => null
+                'implied_from_tracker_id' => null,
             ]);
 
         $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
@@ -279,7 +279,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'start_date_field_id' => null,
                 'duration_field_id' => null,
                 'end_date_field_id' => null,
-                'implied_from_tracker_id' => $release_tracker_id
+                'implied_from_tracker_id' => $release_tracker_id,
             ]);
 
         $this->dao->shouldReceive('searchByTrackerId')
@@ -326,7 +326,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'start_date_field_id' => null,
                 'duration_field_id' => null,
                 'end_date_field_id' => null,
-                'implied_from_tracker_id' => $release_tracker_id
+                'implied_from_tracker_id' => $release_tracker_id,
             ]);
 
         $this->dao->shouldReceive('searchByTrackerId')
@@ -336,7 +336,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'start_date_field_id' => null,
                 'duration_field_id' => null,
                 'end_date_field_id' => null,
-                'implied_from_tracker_id' => $epic_tracker_id
+                'implied_from_tracker_id' => $epic_tracker_id,
             ]);
 
         $this->dao->shouldReceive('searchByTrackerId')
@@ -346,7 +346,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'start_date_field_id' => 101,
                 'duration_field_id' => 102,
                 'end_date_field_id' => null,
-                'implied_from_tracker_id' => null
+                'implied_from_tracker_id' => null,
             ]);
 
         $this->tracker_factory->shouldReceive('getTrackerById')
@@ -401,7 +401,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'start_date_field_id' => null,
                     'duration_field_id' => null,
                     'end_date_field_id' => null,
-                    'implied_from_tracker_id' => $implied_from_tracker_id
+                    'implied_from_tracker_id' => $implied_from_tracker_id,
                 ]
             );
 

@@ -40,7 +40,7 @@ class FieldValueMatcher
     public function getMatchingValueByDuckTyping(
         Tracker_FormElement_Field_List $source_field,
         Tracker_FormElement_Field_List $target_field,
-        $source_value_id
+        $source_value_id,
     ) {
         if (! $source_value_id || $source_value_id === Tracker_FormElement_Field_List::NONE_VALUE) {
             return Tracker_FormElement_Field_List::NONE_VALUE;
@@ -60,7 +60,7 @@ class FieldValueMatcher
 
     public function getMatchingBindValueByDuckTyping(
         \Tracker_FormElement_Field_List_BindValue $source_value,
-        \Tracker_FormElement_Field_List $target_field
+        \Tracker_FormElement_Field_List $target_field,
     ): ?\Tracker_FormElement_Field_List_BindValue {
         $source_value_label = strtolower($source_value->getLabel());
         foreach ($target_field->getBind()->getAllValues() as $target_value) {

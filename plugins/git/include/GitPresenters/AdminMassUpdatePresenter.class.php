@@ -46,7 +46,7 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
         $project_id,
         array $external_pane_presenters,
         array $repositories,
-        GitPresenters_AdminMassUdpdateMirroringPresenter $mirroring_presenter
+        GitPresenters_AdminMassUdpdateMirroringPresenter $mirroring_presenter,
     ) {
         $are_mirrors_defined = true;
         parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);

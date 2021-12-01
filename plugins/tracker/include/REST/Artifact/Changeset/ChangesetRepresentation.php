@@ -87,7 +87,7 @@ final class ChangesetRepresentation
         CommentRepresentation $last_comment,
         array $values,
         ?MinimalUserRepresentation $last_modified_by,
-        int $last_modified_date
+        int $last_modified_date,
     ) {
         $this->id                   = JsonCast::toInt($changeset_id);
         $this->submitted_by         = JsonCast::toInt($submitter_user_id);

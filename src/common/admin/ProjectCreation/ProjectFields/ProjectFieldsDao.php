@@ -30,7 +30,7 @@ class ProjectFieldsDao extends DataAccessObject
         string $desc_description,
         int $desc_rank,
         string $desc_type,
-        bool $desc_required
+        bool $desc_required,
     ): void {
         $this->getDB()->insert(
             "group_desc",
@@ -39,7 +39,7 @@ class ProjectFieldsDao extends DataAccessObject
                 "desc_description" => $desc_description,
                 "desc_rank"        => $desc_rank,
                 "desc_type"        => $desc_type,
-                "desc_required"    => $desc_required
+                "desc_required"    => $desc_required,
             ]
         );
     }
@@ -50,7 +50,7 @@ class ProjectFieldsDao extends DataAccessObject
         string $desc_description,
         int $desc_rank,
         string $desc_type,
-        bool $desc_required
+        bool $desc_required,
     ): void {
         $this->getDB()->update(
             "group_desc",
@@ -59,7 +59,7 @@ class ProjectFieldsDao extends DataAccessObject
                 "desc_description" => $desc_description,
                 "desc_rank"        => $desc_rank,
                 "desc_type"        => $desc_type,
-                "desc_required"    => $desc_required
+                "desc_required"    => $desc_required,
             ],
             ["group_desc_id" => $group_desc_id]
         );

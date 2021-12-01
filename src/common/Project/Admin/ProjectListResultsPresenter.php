@@ -44,7 +44,7 @@ class ProjectListResultsPresenter
         $group_name_search,
         $project_status,
         $limit,
-        $offset
+        $offset,
     ) {
         $this->nb_matching_projects = $nb_matching_projects;
         $this->matching_projects    = $matching_projects;
@@ -52,7 +52,7 @@ class ProjectListResultsPresenter
         $base_url       = '/admin/grouplist.php';
         $default_params = [
             'group_name_search' => $group_name_search,
-            'status'            => $project_status
+            'status'            => $project_status,
         ];
 
         $this->pagination = new PaginationPresenter(

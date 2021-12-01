@@ -72,7 +72,7 @@ class WikiPlugin_IncludeSiteMap extends WikiPlugin_SiteMap
                    'direction'      => 'back',
                    'firstreversed'  => false,
                    'excludeunknown' => true,
-                   'includepages'   => 'words=50'
+                   'includepages'   => 'words=50',
                    ];
     }
 

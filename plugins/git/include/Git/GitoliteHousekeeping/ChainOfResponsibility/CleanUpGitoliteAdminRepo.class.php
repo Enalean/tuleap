@@ -41,7 +41,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo ex
     public function __construct(
         Git_GitoliteHousekeeping_GitoliteHousekeepingResponse $response,
         $gitolite_var_path,
-        $remote_admin_repository
+        $remote_admin_repository,
     ) {
         parent::__construct();
         $this->response                = $response;

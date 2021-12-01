@@ -45,7 +45,7 @@ final class MirroredProgramIncrementIdentifier implements MirroredTimeboxIdentif
         VerifyIsVisibleArtifact $visibility_verifier,
         ProgramIncrementIdentifier $program_increment,
         TeamIdentifier $team,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): ?self {
         $program_increment_id = $retriever->getMirrorId($program_increment, $team);
         if (! $program_increment_id) {
@@ -64,7 +64,7 @@ final class MirroredProgramIncrementIdentifier implements MirroredTimeboxIdentif
         SearchMirroredTimeboxes $timebox_searcher,
         VerifyIsVisibleArtifact $visibility_verifier,
         ProgramIncrementIdentifier $program_increment,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): array {
         $ids               = $timebox_searcher->searchMirroredTimeboxes($program_increment);
         $valid_identifiers = [];
@@ -84,7 +84,7 @@ final class MirroredProgramIncrementIdentifier implements MirroredTimeboxIdentif
         SearchMirroredTimeboxes $timebox_searcher,
         VerifyIsVisibleArtifact $visibility_verifier,
         ProgramIncrementIdentifier $program_increment,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): array {
         $ids = $timebox_searcher->searchMirroredTimeboxes($program_increment);
         self::checkEverythingIsVisible($visibility_verifier, $program_increment, $user, ...$ids);
@@ -98,7 +98,7 @@ final class MirroredProgramIncrementIdentifier implements MirroredTimeboxIdentif
         VerifyIsVisibleArtifact $visibility_verifier,
         ProgramIncrementIdentifier $program_increment,
         UserIdentifier $user,
-        int ...$ids
+        int ...$ids,
     ): void {
         foreach ($ids as $id) {
             if (! $visibility_verifier->isVisible($id, $user)) {

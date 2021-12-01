@@ -35,6 +35,6 @@ interface ICheckMetadataForAComparison
         Metadata $metadata,
         Comparison $comparison,
         InvalidComparisonCollectorParameters $collector_parameters,
-        ComparisonChecker $checker
+        ComparisonChecker $checker,
     );
 }

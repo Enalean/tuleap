@@ -73,19 +73,19 @@ class GitRepositoryListPresenter
         array $repositories_owners,
         array $external_plugins,
         array $project_flags,
-        array $external_services_name_used
+        array $external_services_name_used,
     ) {
         $this->repositories_administration_url = GIT_BASE_URL . "/?" . http_build_query(
             [
                 "group_id" => $project->getID(),
-                "action"   => "admin"
+                "action"   => "admin",
             ]
         );
 
         $this->repositories_fork_url = GIT_BASE_URL . "/?" . http_build_query(
             [
                 "group_id" => $project->getID(),
-                "action"   => "fork_repositories"
+                "action"   => "fork_repositories",
             ]
         );
 

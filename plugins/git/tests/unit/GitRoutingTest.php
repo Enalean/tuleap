@@ -95,7 +95,7 @@ class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
             ['GET', '/plugins/git/gpig/repo'],
             ['GET', '/plugins/git/gpig/device/generic/goldfish'],
             ['GET', '/plugins/git/gpig/device/generic/goldfish'],
-            ['GET', '/plugins/git/mozilla/tuleap/tuleap?p=tuleap%2Ftuleap.git&a=commitdiff&h=91018a6045ad5c5d49ec7bc0e2e2c607e5aac41d']
+            ['GET', '/plugins/git/mozilla/tuleap/tuleap?p=tuleap%2Ftuleap.git&a=commitdiff&h=91018a6045ad5c5d49ec7bc0e2e2c607e5aac41d'],
         ];
     }
 
@@ -111,7 +111,7 @@ class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             ['GET', '/plugins/git/gpig/'],
-            ['GET', '/plugins/git/gpig']
+            ['GET', '/plugins/git/gpig'],
         ];
     }
 

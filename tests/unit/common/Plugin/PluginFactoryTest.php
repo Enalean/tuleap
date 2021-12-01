@@ -245,7 +245,7 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testInstantiatePluginReturnsInstanceWithRegularPHPExtension(
         string $plugin_name,
         string $expected_class,
-        bool $expected_is_custom
+        bool $expected_is_custom,
     ): void {
         $plugin = $this->factory->instantiatePlugin(1, $plugin_name);
         $this->assertInstanceOf($expected_class, $plugin);

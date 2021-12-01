@@ -271,7 +271,7 @@ class DocmanLinksResource extends AuthenticatedResource
 
     public function postVersion(
         int $id,
-        DocmanLinkVersionPOSTRepresentation $representation
+        DocmanLinkVersionPOSTRepresentation $representation,
     ) {
         $this->checkAccess();
         $this->setVersionHeaders();
@@ -309,7 +309,7 @@ class DocmanLinksResource extends AuthenticatedResource
      */
     public function putMetadata(
         int $id,
-        PUTMetadataRepresentation $representation
+        PUTMetadataRepresentation $representation,
     ): void {
         $this->checkAccess();
         $this->setMetadataHeaders();
@@ -487,7 +487,7 @@ class DocmanLinksResource extends AuthenticatedResource
         int $status,
         int $obsolesence_date,
         string $title,
-        ?string $description
+        ?string $description,
     ) {
         $project      = $item_request->getProject();
         $item         = $item_request->getItem();
@@ -501,7 +501,7 @@ class DocmanLinksResource extends AuthenticatedResource
                     'approval_table_action' => $representation->approval_table_action,
                     'document_type'         => \Docman_Link::class,
                     'title'                 => $title,
-                    'project'               => $project
+                    'project'               => $project,
                 ]
             );
             assert($item instanceof Docman_Link);

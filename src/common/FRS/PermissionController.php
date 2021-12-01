@@ -48,7 +48,7 @@ class PermissionController extends BaseFrsPresenter
         FRSPermissionFactory $permission_factory,
         FRSPermissionCreator $permission_creator,
         FRSPermissionManager $permission_manager,
-        User_ForgeUserGroupFactory $ugroup_factory
+        User_ForgeUserGroupFactory $ugroup_factory,
     ) {
         $this->permission_factory = $permission_factory;
         $this->ugroup_factory     = $ugroup_factory;
@@ -98,7 +98,7 @@ class PermissionController extends BaseFrsPresenter
             $options[] = [
                 'id'       => $project_ugroup->getId(),
                 'name'     => $project_ugroup->getName(),
-                'selected' => $this->isUgroupSelected($frs_ugroups, $project_ugroup)
+                'selected' => $this->isUgroupSelected($frs_ugroups, $project_ugroup),
             ];
         }
 

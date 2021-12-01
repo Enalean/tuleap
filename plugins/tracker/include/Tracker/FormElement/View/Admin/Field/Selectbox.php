@@ -47,7 +47,7 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
                         'tracker'            => $this->formElement->tracker_id,
                         'func'               => 'admin-formElement-update',
                         'formElement'        => $this->formElement->id,
-                        'change-type'        => $type
+                        'change-type'        => $type,
                     ]) . '" onclick="return confirm(\'' . dgettext('tuleap-tracker', 'Are you sure you want to change the type of this field?') . '\');">'
                        . $labels[$type] . '</a> ';
             }

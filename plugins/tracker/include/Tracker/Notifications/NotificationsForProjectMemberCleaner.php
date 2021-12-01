@@ -45,7 +45,7 @@ class NotificationsForProjectMemberCleaner
     public function __construct(
         TrackerFactory $tracker_factory,
         Tracker_NotificationsManager $email_to_notify_manager,
-        UsersToNotifyDao $users_to_notify_dao
+        UsersToNotifyDao $users_to_notify_dao,
     ) {
         $this->tracker_factory          = $tracker_factory;
         $this->emails_to_notify_manager = $email_to_notify_manager;

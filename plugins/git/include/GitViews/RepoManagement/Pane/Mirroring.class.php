@@ -44,7 +44,7 @@ class Mirroring extends Pane
         GitRepository $repository,
         Codendi_Request $request,
         array $mirrors,
-        array $repository_mirrors
+        array $repository_mirrors,
     ) {
         parent::__construct($repository, $request);
         $this->mirrors            = $mirrors;

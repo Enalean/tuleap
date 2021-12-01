@@ -54,7 +54,7 @@ final class TrackerFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_factory->method('getTrackersByGroupId')->willReturn(
             [
                 TrackerTestBuilder::aTracker()->withId(20)->withName('Sprint')->withProject($project)->build(),
-                TrackerTestBuilder::aTracker()->withId(30)->withName('Feature')->withProject($project)->build()
+                TrackerTestBuilder::aTracker()->withId(30)->withName('Feature')->withProject($project)->build(),
             ]
         );
 

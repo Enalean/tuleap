@@ -53,7 +53,7 @@ class GitLog
                 $this->getGitReadLogFilter($params['group_id'], $params['who'], $params['span'])
             ),
             'field' => dgettext('tuleap-git', 'Repository'),
-            'title' => dgettext('tuleap-git', 'Git access')
+            'title' => dgettext('tuleap-git', 'Git access'),
         ];
     }
 

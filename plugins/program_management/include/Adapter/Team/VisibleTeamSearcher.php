@@ -38,7 +38,7 @@ final class VisibleTeamSearcher implements SearchVisibleTeamsOfProgram
         private SearchTeamsOfProgram $teams_searcher,
         private RetrieveUser $user_retriever,
         private RetrieveFullProject $project_retriever,
-        private CheckProjectAccess $access_checker
+        private CheckProjectAccess $access_checker,
     ) {
     }
 

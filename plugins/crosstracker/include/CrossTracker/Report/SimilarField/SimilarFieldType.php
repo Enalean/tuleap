@@ -29,7 +29,7 @@ class SimilarFieldType
 
     public function __construct(
         $field_type,
-        $bind_name = null
+        $bind_name = null,
     ) {
         $this->field_type = $field_type;
         $this->bind_name  = $bind_name;

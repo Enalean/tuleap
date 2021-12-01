@@ -36,7 +36,7 @@ final class ProjectRegistrationBaseChecker implements ProjectRegistrationChecker
 
     public function __construct(
         Rule_ProjectName $rule_project_name,
-        Rule_ProjectFullName $rule_project_full_name
+        Rule_ProjectFullName $rule_project_full_name,
     ) {
         $this->rule_project_name      = $rule_project_name;
         $this->rule_project_full_name = $rule_project_full_name;
@@ -44,7 +44,7 @@ final class ProjectRegistrationBaseChecker implements ProjectRegistrationChecker
 
     public function collectAllErrorsForProjectRegistration(
         PFUser $user,
-        ProjectCreationData $project_creation_data
+        ProjectCreationData $project_creation_data,
     ): ProjectRegistrationErrorsCollection {
         $errors_collection = new ProjectRegistrationErrorsCollection();
 
@@ -74,7 +74,7 @@ final class ProjectRegistrationBaseChecker implements ProjectRegistrationChecker
 
     private function verifyCompatibilityProjectVisibilityWithCurrentInstanceMode(
         ProjectCreationData $project_creation_data,
-        ProjectRegistrationErrorsCollection $errors_collection
+        ProjectRegistrationErrorsCollection $errors_collection,
     ): void {
         $are_restricted_enabled      = \ForgeConfig::areRestrictedUsersAllowed();
         $selected_project_visibility = $project_creation_data->getAccess();

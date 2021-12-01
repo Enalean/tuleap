@@ -45,7 +45,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent
         Dumper $sshkey_dumper,
         Git_UserAccountManager $git_user_account_manager,
         Git_SystemEventManager $system_event_manager,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
     ) {
         $this->user_manager             = $user_manager;
         $this->sshkey_dumper            = $sshkey_dumper;

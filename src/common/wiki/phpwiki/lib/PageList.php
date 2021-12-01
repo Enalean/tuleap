@@ -338,7 +338,7 @@ class _PageList_Column_checkbox extends _PageList_Column
                                      //'width' => '100%',
                                      'name'  => $default_heading,
                                      'value' => $default_heading,
-                                     'onclick' => "flipAll(this.form)"
+                                     'onclick' => "flipAll(this.form)",
                                      ]);
         parent::__construct($field, $heading, 'center');
     }
@@ -610,7 +610,7 @@ class PageList
                       'acl']
                   ),
                   'most' => ['pagename','mtime','author','hits'],
-                  'some' => ['pagename','mtime','author']
+                  'some' => ['pagename','mtime','author'],
                   ];
         if ($columns) {
             if (! is_array($columns)) {
@@ -965,7 +965,7 @@ class PageList
         $include_empty = false,
         $sortby = false,
         $limit = false,
-        $exclude = false
+        $exclude = false,
     ) {
         if (empty($input)) {
             return [];
@@ -1001,7 +1001,7 @@ class PageList
         $include_empty = false,
         $sortby = false,
         $limit = false,
-        $exclude = false
+        $exclude = false,
     ) {
         $dbi            = $GLOBALS['request']->getDbh();
         $allPagehandles = $dbi->getAllPages($include_empty, $sortby, $limit, $exclude);
@@ -1035,7 +1035,7 @@ class PageList
         $include_empty = false,
         $sortby = false,
         $limit = false,
-        $exclude = false
+        $exclude = false,
     ) {
         $dbi            = $GLOBALS['request']->getDbh();
         $allPagehandles = $dbi->getAllPages($include_empty, $sortby, $limit, $exclude);
@@ -1068,7 +1068,7 @@ class PageList
         $include_empty = false,
         $sortby = false,
         $limit = false,
-        $exclude = false
+        $exclude = false,
     ) {
         $dbi            = $GLOBALS['request']->getDbh();
         $allPagehandles = $dbi->getAllPages($include_empty, $sortby, $limit, $exclude);

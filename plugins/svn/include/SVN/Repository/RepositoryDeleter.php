@@ -55,7 +55,7 @@ class RepositoryDeleter
         \ProjectHistoryDao $history_dao,
         Dao $dao,
         SystemEventManager $system_event_manager,
-        RepositoryManager $repository_manager
+        RepositoryManager $repository_manager,
     ) {
         $this->system_command       = $system_command;
         $this->history_dao          = $history_dao;

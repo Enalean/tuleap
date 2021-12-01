@@ -46,7 +46,7 @@ class Git_MirrorResourceRestrictor
         Git_RestrictedMirrorDao $restricted_mirror_dao,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         Git_SystemEventManager $git_system_event_manager,
-        ProjectHistoryDao $history_dao
+        ProjectHistoryDao $history_dao,
     ) {
         $this->restricted_mirror_dao    = $restricted_mirror_dao;
         $this->mirror_data_mapper       = $mirror_data_mapper;

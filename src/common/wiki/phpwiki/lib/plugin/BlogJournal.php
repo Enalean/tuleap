@@ -43,7 +43,7 @@ class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
                      'user'     => '',
                      'order'    => 'reverse',        // latest first
                      'month'    => false,
-                     'noheader' => 0
+                     'noheader' => 0,
                      ];
     }
 

@@ -43,7 +43,7 @@ class ProjectListResultsProjectPresenter
         $status_class,
         $type_label,
         $visibility_label,
-        $nb_members
+        $nb_members,
     ) {
         $this->id               = $id;
         $this->name             = $name;

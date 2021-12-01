@@ -118,7 +118,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     $mapping,
                     "h1. Coin\r\n\r\nLorem *ipsum* _doloret_ plop.",
                     "<h1><a name=\"Coin\"></a>Coin</h1>\n\n<p>Lorem <b>ipsum</b> <em>doloret</em> plop.</p>"
-                )
+                ),
             ],
             null
         );
@@ -171,7 +171,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                         'id' => (string) $jira_value_id,
                     ],
                     null
-                )
+                ),
             ],
             null
         );
@@ -214,7 +214,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                         'id' => (string) $jira_value_id,
                     ],
                     null
-                )
+                ),
             ],
             null
         );
@@ -259,7 +259,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                         'id' => (string) $jira_value_id,
                     ],
                     null
-                )
+                ),
             ],
             null
         );
@@ -320,11 +320,11 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                             'self' => 'URL/rest/api/2/customFieldOption/10010',
                             'value' => 'multi2',
                             'id' => (string) $jira_value_id_2,
-                        ]
+                        ],
 
                     ],
                     null
-                )
+                ),
             ],
             null
         );
@@ -379,11 +379,11 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                                 'id' => 3,
                                 'key' => 'done',
                                 'colorName' => 'green',
-                                'name' => 'Done'
-                            ]
+                                'name' => 'Done',
+                            ],
                     ],
                     null
-                )
+                ),
             ],
             null
         );
@@ -418,10 +418,10 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 new FieldSnapshot(
                     $mapping,
                     [
-                        'id' => '105'
+                        'id' => '105',
                     ],
                     null
-                )
+                ),
             ],
             null
         );
@@ -463,10 +463,10 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     [
 
                         ['id' => '105'],
-                        ['id' => '106']
+                        ['id' => '106'],
                     ],
                     null
-                )
+                ),
             ],
             null
         );
@@ -534,7 +534,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                         [],
                     ),
                     null
-                )
+                ),
             ],
             null
         );
@@ -585,7 +585,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                         ],
                     ),
                     null
-                )
+                ),
             ],
             null
         );

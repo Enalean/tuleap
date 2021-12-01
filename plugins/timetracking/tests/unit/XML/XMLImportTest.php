@@ -116,7 +116,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $tracker_mapping          = Mockery::mock(Tracker::class);
         $created_trackers_objects = [
-            '789' => $tracker_mapping
+            '789' => $tracker_mapping,
         ];
 
         $artifact_id_mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
@@ -202,7 +202,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $tracker_mapping          = Mockery::mock(Tracker::class);
         $created_trackers_objects = [
-            '789' => $tracker_mapping
+            '789' => $tracker_mapping,
         ];
 
         $artifact_id_mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
@@ -287,7 +287,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $tracker_mapping          = Mockery::mock(Tracker::class);
         $created_trackers_objects = [
-            '789' => $tracker_mapping
+            '789' => $tracker_mapping,
         ];
 
         $artifact_id_mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
@@ -359,7 +359,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $tracker_mapping          = Mockery::mock(Tracker::class);
         $created_trackers_objects = [
-            '789' => $tracker_mapping
+            '789' => $tracker_mapping,
         ];
 
         $artifact_id_mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
@@ -426,7 +426,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $tracker_mapping          = Mockery::mock(Tracker::class);
         $created_trackers_objects = [
-            '789' => $tracker_mapping
+            '789' => $tracker_mapping,
         ];
 
         $artifact_id_mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
@@ -506,7 +506,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $tracker_mapping          = Mockery::mock(Tracker::class);
         $created_trackers_objects = [
-            '789' => $tracker_mapping
+            '789' => $tracker_mapping,
         ];
 
         $artifact_id_mapping = new Tracker_XML_Importer_ArtifactImportedMapping();

@@ -52,7 +52,7 @@ class IndexController extends TestManagementController
         EventManager $event_manager,
         TrackerFactory $tracker_factory,
         VisitRecorder $visit_recorder,
-        ProjectFlagsBuilder $project_flags_builder
+        ProjectFlagsBuilder $project_flags_builder,
     ) {
         parent::__construct($request, $config, $event_manager);
 
@@ -107,8 +107,8 @@ class IndexController extends TestManagementController
         $empty_config     = [
             "permissions" => [
                 "create" => false,
-                "link"   => false
-            ]
+                "link"   => false,
+            ],
         ];
 
         if (! $issue_tracker_id) {
@@ -137,9 +137,9 @@ class IndexController extends TestManagementController
         return [
             "permissions" => [
                 "create" => $issue_tracker->userCanSubmitArtifact($current_user),
-                "link"   => $link_field && $link_field->userCanUpdate($current_user)
+                "link"   => $link_field && $link_field->userCanUpdate($current_user),
             ],
-            "xref_color" => $issue_tracker->getColor()->getName()
+            "xref_color" => $issue_tracker->getColor()->getName(),
         ];
     }
 

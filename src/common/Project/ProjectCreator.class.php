@@ -171,7 +171,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         ProjectRegistrationChecker $registration_checker,
         ProjectCategoriesUpdater $project_categories_updater,
         private EmailCopier $email_copier,
-        $force_activation = false
+        $force_activation = false,
     ) {
         $this->send_notifications                         = $send_notifications;
         $this->force_activation                           = $force_activation;
@@ -218,7 +218,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     private static function buildSelf(
         bool $force_activation,
         bool $send_notifications,
-        ProjectRegistrationChecker $registration_checker
+        ProjectRegistrationChecker $registration_checker,
     ): self {
         $ugroup_dao        = new UGroupDao();
         $ugroup_user_dao   = new UGroupUserDao();
@@ -385,13 +385,13 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         $legacy = [
             Service::SVN       => true,
-            Service::TRACKERV3 => true
+            Service::TRACKERV3 => true,
         ];
 
         $this->event_manager->processEvent(self::PROJECT_CREATION_REMOVE_LEGACY_SERVICES, [
             'template'              => $template_group,
             'project_creation_data' => &$data,
-            'use_legacy_services'   => &$legacy
+            'use_legacy_services'   => &$legacy,
         ]);
 
         $this->project_service_activator->activateServicesFromTemplate($group, $template_group, $data, $legacy);

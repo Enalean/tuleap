@@ -487,7 +487,7 @@ class _RecentChanges_SideBarFormatter extends _RecentChanges_HtmlFormatter
         $img     = HTML::img(['src' => $WikiTheme->getImageURL('logo'),
                                'border' => 0,
                                'align' => 'right',
-                               'style' => 'height:2.5ex'
+                               'style' => 'height:2.5ex',
                                ]);
         $linkurl = WikiLink(HOME_PAGE, false, $img);
         $linkurl->setAttr('target', '_content');
@@ -757,7 +757,7 @@ class _RecentChanges_RssFormatter extends _RecentChanges_Formatter
                       'wiki:importance' => $this->importance($rev),
                       'wiki:status'     => $this->status($rev),
                       'wiki:diff'       => $this->diffURL($rev),
-                      'wiki:history'    => $this->historyURL($rev)
+                      'wiki:history'    => $this->historyURL($rev),
                       ];
     }
 }
@@ -821,7 +821,7 @@ class _RecentChanges_Rss2Formatter extends _RecentChanges_RssFormatter
                                  //<pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
                                  //<lastBuildDate>Tue, 10 Jun 2003 09:41:01 GMT</lastBuildDate>
                                  //<docs>http://blogs.law.harvard.edu/tech/rss</docs>
-                                 'copyright' => COPYRIGHTPAGE_URL
+                                 'copyright' => COPYRIGHTPAGE_URL,
             ]
         );
     }
@@ -909,7 +909,7 @@ class WikiPlugin_RecentChanges extends WikiPlugin
                      'daylist'      => false,
                      'difflinks'    => true,
                      'historylinks' => false,
-                     'caption'      => ''
+                     'caption'      => '',
                      ];
     }
 

@@ -170,7 +170,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
      */
     public function testItRetrievesTheTuleapReferenceAndTheCloseKeywordResolvesWhenGiven(
         string $message,
-        bool $reference_must_be_found
+        bool $reference_must_be_found,
     ): void {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences($message);
         $references            = $references_collection->getTuleapReferences();
@@ -238,7 +238,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
      */
     public function testItRetrievesTheTuleapReferenceAndTheCloseKeywordClosesWhenGiven(
         string $message,
-        bool $reference_must_be_found
+        bool $reference_must_be_found,
     ): void {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences($message);
         $references            = $references_collection->getTuleapReferences();
@@ -306,7 +306,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
      */
     public function testItRetrievesTheTuleapReferenceAndTheCloseKeywordFixesWhenGiven(
         string $message,
-        bool $reference_must_be_found
+        bool $reference_must_be_found,
     ): void {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences($message);
         $references            = $references_collection->getTuleapReferences();
@@ -374,7 +374,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
      */
     public function testItRetrievesTheTuleapReferenceAndTheCloseKeywordImplementsWhenGiven(
         string $message,
-        bool $reference_must_be_found
+        bool $reference_must_be_found,
     ): void {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences($message);
         $references            = $references_collection->getTuleapReferences();
@@ -415,7 +415,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
      *           ["\""]
      */
     public function testItRetrievesEachTuleapReferenceAndTheCloseKeywordImplementsIfTheCloseKeywordIsGiven(
-        string $accepted_boundary
+        string $accepted_boundary,
     ): void {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences(
             "vroom implement TULEAP-15 and implementsTULEAP-987 (not found) Implements tuleap-36 implements" . $accepted_boundary . "tuleAp-88] (implements [tuleap-68 vroom"

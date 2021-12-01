@@ -32,7 +32,7 @@ class WorkflowWithoutTransition extends Workflow // phpcs:ignore PSR1.Classes.Cl
         Tracker_RulesManager $global_rules_manager,
         Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
         WorkflowBackendLogger $logger,
-        $tracker_id
+        $tracker_id,
     ) {
         $workflow_id = 0;
         $field_id    = 0;

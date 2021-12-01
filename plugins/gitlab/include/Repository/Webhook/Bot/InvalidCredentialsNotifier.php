@@ -49,7 +49,7 @@ class InvalidCredentialsNotifier
     public function __construct(
         MailBuilder $mail_builder,
         IntegrationApiTokenDao $dao,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->mail_builder = $mail_builder;
         $this->dao          = $dao;
@@ -58,7 +58,7 @@ class InvalidCredentialsNotifier
 
     public function notifyGitAdministratorsThatCredentialsAreInvalid(
         GitlabRepositoryIntegration $repository_integration,
-        Credentials $credentials
+        Credentials $credentials,
     ): void {
         if ($credentials->getBotApiToken()->isEmailAlreadySendForInvalidToken()) {
             return;

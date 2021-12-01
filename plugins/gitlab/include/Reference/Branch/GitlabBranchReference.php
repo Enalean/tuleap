@@ -32,7 +32,7 @@ class GitlabBranchReference extends \Reference
     public function __construct(
         GitlabRepositoryIntegration $repository_integration,
         Project $project,
-        string $branch_name
+        string $branch_name,
     ) {
         parent::__construct(
             0,

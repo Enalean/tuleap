@@ -51,7 +51,7 @@ class Tracker_Semantic_TitleFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping        = [
             'F9'  => $f1,
             'F13' => $f2,
-            'F16' => $f3
+            'F16' => $f3,
         ];
         $semantic_title = Tracker_Semantic_TitleFactory::instance()->getInstanceFromXML($xml, $all_semantics_xml, $mapping, $tracker, []);
 

@@ -66,7 +66,7 @@ final class JiraAgileImporter
         JiraSprintRetriever $sprint_retriever,
         JiraSprintIssuesRetriever $sprint_issues_retriever,
         JiraBoardBacklogRetriever $backlog_retriever,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
     ) {
         $this->sprint_retriever        = $sprint_retriever;
         $this->sprint_issues_retriever = $sprint_issues_retriever;
@@ -85,7 +85,7 @@ final class JiraAgileImporter
         IDGenerator $id_generator,
         \PFUser $import_user,
         array $jira_issue_types,
-        string $jira_epic_issue_type
+        string $jira_epic_issue_type,
     ): void {
         $logger->info('Project has Agile configuration to import');
 
@@ -135,7 +135,7 @@ final class JiraAgileImporter
     private function exportBacklog(
         LoggerInterface $logger,
         \SimpleXMLElement $xml_agiledashboard,
-        JiraBoard $board
+        JiraBoard $board,
     ): void {
         $logger->debug("Export backlog");
 
@@ -163,7 +163,7 @@ final class JiraAgileImporter
         \SimpleXMLElement $xml_agiledashboard,
         XMLTracker $scrum_tracker,
         array $jira_issue_types,
-        string $jira_epic_issue_type
+        string $jira_epic_issue_type,
     ): void {
         $logger->debug("Export agiledashboard planning configuration");
 
@@ -192,7 +192,7 @@ final class JiraAgileImporter
         LoggerInterface $logger,
         \SimpleXMLElement $project,
         XMLTracker $scrum_tracker,
-        JiraBoardConfiguration $board_configuration
+        JiraBoardConfiguration $board_configuration,
     ): void {
         $logger->debug("Export cardwall planning configuration");
 

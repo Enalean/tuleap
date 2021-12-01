@@ -65,11 +65,11 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
                 "my_field"       => new ArrayObject(
                     [
                         Tracker_Report_REST::VALUE_PROPERTY_NAME    => "true",
-                        Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::DEFAULT_OPERATOR
+                        Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::DEFAULT_OPERATOR,
                     ]
                 ),
                 "my_other_field" => "bla",
-                "137"            => "my_value"
+                "137"            => "my_value",
             ]
         );
 

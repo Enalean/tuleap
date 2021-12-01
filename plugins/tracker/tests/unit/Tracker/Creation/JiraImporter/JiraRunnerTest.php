@@ -316,7 +316,7 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'getId'                 => 123,
                 'getUser'               => $user,
-                'getEncryptedJiraToken' => '0000000000101010'
+                'getEncryptedJiraToken' => '0000000000101010',
             ]
         );
 
@@ -371,7 +371,7 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'getId'                 => 123,
                 'getUser'               => $user,
-                'getEncryptedJiraToken' => $encrypted_token
+                'getEncryptedJiraToken' => $encrypted_token,
             ]
         );
 

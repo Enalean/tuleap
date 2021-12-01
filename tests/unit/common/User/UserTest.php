@@ -146,7 +146,7 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
                     'file_flags' => '2',
                     'wiki_flags' => '2',
                     'svn_flags' => '2',
-                    'news_flags' => '2'
+                    'news_flags' => '2',
                   ]];
         $siteadmin->shouldReceive('getUserGroupData')->andReturns($ug_siteadmin);
 
@@ -174,8 +174,8 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
                 'file_flags'    => '2',
                 'wiki_flags'    => '2',
                 'svn_flags'     => '2',
-                'news_flags'    => '2'
-            ]
+                'news_flags'    => '2',
+            ],
         ];
         $projectadmin->shouldReceive('getUserGroupData')->andReturns($ug_project_admin);
         $permission_manager = \Mockery::spy(\User_ForgeUserGroupPermissionsManager::class);
@@ -210,8 +210,8 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
                 'file_flags'    => '2',
                 'wiki_flags'    => '2',
                 'svn_flags'     => '2',
-                'news_flags'    => '2'
-            ]
+                'news_flags'    => '2',
+            ],
         ];
         $projectmember->shouldReceive('getUserGroupData')->andReturns($ug_project_member);
         $permission_manager = \Mockery::spy(\User_ForgeUserGroupPermissionsManager::class);
@@ -403,7 +403,7 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao->shouldReceive('search')->with($user_id, 'pref_name')->andReturns(\TestHelper::arrayToDar([
             'user_id'          => $user_id,
             'preference_name'  => 'pref_name',
-            'preference_value' => 'default_value'
+            'preference_value' => 'default_value',
         ]));
 
         $user->togglePreference('pref_name', 'default_value', 'alternate_value');
@@ -419,7 +419,7 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao->shouldReceive('search')->with($user_id, 'pref_name')->andReturns(\TestHelper::arrayToDar([
             'user_id'          => $user_id,
             'preference_name'  => 'pref_name',
-            'preference_value' => 'alt_value'
+            'preference_value' => 'alt_value',
         ]));
 
         $user->togglePreference('pref_name', 'default_value', 'alt_value');

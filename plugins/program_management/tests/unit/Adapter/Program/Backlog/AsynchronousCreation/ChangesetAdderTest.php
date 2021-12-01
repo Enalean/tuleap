@@ -143,16 +143,16 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     self::ARTIFACT_LINK_ID => [
                         'new_values' => '',
-                        'types'      => []
+                        'types'      => [],
                     ],
                     self::TITLE_ID         => self::TITLE_VALUE,
                     self::DESCRIPTION_ID   => [
                         'content' => self::DESCRIPTION_VALUE,
-                        'format'  => self::DESCRIPTION_FORMAT
+                        'format'  => self::DESCRIPTION_FORMAT,
                     ],
                     self::STATUS_ID        => [self::MAPPED_STATUS_BIND_VALUE_ID],
                     self::START_DATE_ID    => '2011-02-21',
-                    self::END_PERIOD_ID    => '2022-05-21'
+                    self::END_PERIOD_ID    => '2022-05-21',
                 ],
                 '',
                 $this->pfuser,
@@ -171,7 +171,7 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             'with field validation error' => [new FieldValidationException([])],
-            'with DB error'               => [new \Tracker_ChangesetNotCreatedException()]
+            'with DB error'               => [new \Tracker_ChangesetNotCreatedException()],
         ];
     }
 
@@ -206,8 +206,8 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
                     self::ARTIFACT_LINK_ID => [
                         'new_values' => (string) self::MIRRORED_ITERATION_ID,
                         'types'      => [
-                            (string) self::MIRRORED_ITERATION_ID => \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
-                        ]
+                            (string) self::MIRRORED_ITERATION_ID => \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+                        ],
                     ],
                 ],
                 '',

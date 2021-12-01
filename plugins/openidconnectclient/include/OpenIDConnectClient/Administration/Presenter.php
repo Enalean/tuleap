@@ -63,7 +63,7 @@ class Presenter
         array $icons_presenters,
         array $colors_presenters,
         array $azure_ad_tenant_setups,
-        $csrf_token
+        $csrf_token,
     ) {
         $this->providers_presenters                                       = $providers_presenters;
         $this->is_a_provider_configured_as_unique_authentication_endpoint = $is_a_provider_configured_as_unique_authentication_endpoint;

@@ -70,7 +70,7 @@ final class DefinitionTextOrHTMLRepresentation extends MinimalDefinitionRepresen
         PFUser $user,
         string $description_format,
         ?Tracker_Artifact_Changeset $changeset = null,
-        ?Artifact $requirement = null
+        ?Artifact $requirement = null,
     ) {
         parent::__construct($artifact, $form_element_factory, $user, $changeset);
 

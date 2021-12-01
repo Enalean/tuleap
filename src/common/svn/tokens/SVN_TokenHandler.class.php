@@ -37,7 +37,7 @@ class SVN_TokenHandler
     public function __construct(
         SVN_TokenDao $token_dao,
         RandomNumberGenerator $random_number_generator,
-        PasswordHandler $password_handler
+        PasswordHandler $password_handler,
     ) {
         $this->token_dao               = $token_dao;
         $this->random_number_generator = $random_number_generator;

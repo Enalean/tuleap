@@ -86,7 +86,7 @@ class HomePageNews
         PFUser $author,
         \DateTimeImmutable $date,
         string $summary,
-        string $details
+        string $details,
     ) {
         $this->summary           = $summary;
         $this->purified_time_ago = DateHelper::relativeDateInlineContext((int) $date->getTimestamp(), $author);

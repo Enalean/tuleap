@@ -38,7 +38,7 @@ final class MiddlewareDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $passthrough_middleware        = new class implements MiddlewareInterface {
             public function process(
                 ServerRequestInterface $request,
-                RequestHandlerInterface $handler
+                RequestHandlerInterface $handler,
             ): ResponseInterface {
                 return $handler->handle($request);
             }
@@ -69,7 +69,7 @@ final class MiddlewareDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $passthrough_middleware = new class implements MiddlewareInterface {
             public function process(
                 ServerRequestInterface $request,
-                RequestHandlerInterface $handler
+                RequestHandlerInterface $handler,
             ): ResponseInterface {
                 return $handler->handle($request);
             }

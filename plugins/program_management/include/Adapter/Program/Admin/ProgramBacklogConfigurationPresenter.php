@@ -41,7 +41,7 @@ final class ProgramBacklogConfigurationPresenter
         ?string $program_increment_label,
         ?string $program_increment_sublabel,
         bool $is_configured,
-        ?string $iteration_label
+        ?string $iteration_label,
     ) {
         $this->can_create_program           = $can_create_program;
         $this->program_increment_tracker_id = $program_increment_tracker_id;

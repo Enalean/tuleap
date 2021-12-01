@@ -47,7 +47,7 @@ class HomepagePaneSectionPresenter
         $running_count,
         $done_count,
         $warning_count,
-        $error_count
+        $error_count,
     ) {
         $this->title         = $title;
         $this->name          = $name;

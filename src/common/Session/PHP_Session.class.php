@@ -30,7 +30,7 @@ class PHP_Session
         session_set_cookie_params([
             'httponly' => true,
             'secure'   => true,
-            'samesite' => 'Lax'
+            'samesite' => 'Lax',
         ]);
         session_start();
     }

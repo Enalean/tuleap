@@ -392,7 +392,7 @@ class LDAP
             $this->ldapParams['cn'],
             $this->ldapParams['uid'],
             $this->ldapParams['eduid'],
-            'dn'
+            'dn',
         ];
     }
 

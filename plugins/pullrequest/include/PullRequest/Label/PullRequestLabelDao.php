@@ -120,7 +120,7 @@ class PullRequestLabelDao extends DataAccessObject implements LabelableDao
         $project_id,
         array $label_ids,
         $limit,
-        $offset
+        $offset,
     ) {
         $project_id = $this->da->escapeInt($project_id);
 

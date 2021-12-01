@@ -39,7 +39,7 @@ class BurndownFieldPresenter
         PFUser $current_user,
         $css_url,
         $warning,
-        ?BurndownRepresentation $burndown_representation = null
+        ?BurndownRepresentation $burndown_representation = null,
     ) {
         $this->data_burndown = json_encode($burndown_representation);
         $this->locale        = $current_user->getLocale();

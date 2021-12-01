@@ -59,7 +59,7 @@ class DiskUsageRetriever
         Statistics_DiskUsageManager $disk_usage_manager,
         DiskUsageDao $disk_usage_dao,
         \Statistics_DiskUsageDao $dao,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->repository_manager = $repository_manager;
         $this->disk_usage_manager = $disk_usage_manager;

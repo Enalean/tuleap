@@ -35,7 +35,7 @@ final class ServiceDisabledCollectorProxy implements ServiceDisabledCollectorEve
     private function __construct(
         private ServiceDisabledCollector $event,
         private ProjectIdentifier $project_identifier,
-        private UserIdentifier $user_identifier
+        private UserIdentifier $user_identifier,
     ) {
     }
 

@@ -48,7 +48,7 @@ class Factory
         CommentDao $comments_dao,
         InlineCommentDao $inline_comments_dao,
         TimeLineDao $timeline_dao,
-        ReviewerChangeRetriever $reviewer_change_retriever
+        ReviewerChangeRetriever $reviewer_change_retriever,
     ) {
         $this->comments_dao              = $comments_dao;
         $this->inline_comments_dao       = $inline_comments_dao;

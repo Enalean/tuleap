@@ -386,7 +386,7 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->getJiraSprintRetrieverWithSprints(
                 [
                     JiraSprint::buildActive(1, 'Sprint 1')
-                        ->withStartDate(new \DateTimeImmutable('2018-01-25T04:04:09.514Z'))
+                        ->withStartDate(new \DateTimeImmutable('2018-01-25T04:04:09.514Z')),
                 ]
             ),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
@@ -408,7 +408,7 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->getJiraSprintRetrieverWithSprints(
                 [
                     JiraSprint::buildActive(1, 'Sprint 1')
-                        ->withEndDate(new \DateTimeImmutable('2018-01-25T04:04:09.514Z'))
+                        ->withEndDate(new \DateTimeImmutable('2018-01-25T04:04:09.514Z')),
                 ]
             ),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
@@ -430,7 +430,7 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->getJiraSprintRetrieverWithSprints(
                 [
                     JiraSprint::buildActive(1, 'Sprint 1')
-                        ->withCompleteDate(new \DateTimeImmutable('2018-01-25T04:04:09.514Z'))
+                        ->withCompleteDate(new \DateTimeImmutable('2018-01-25T04:04:09.514Z')),
                 ]
             ),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),

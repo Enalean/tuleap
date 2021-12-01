@@ -51,7 +51,7 @@ class ProjectUserGroupTest extends \RestBase
                 'description' => 'proj_certif Owner Remove Project Admin',
                 'label'       => 'proj_certif Owner Remove Project Admin',
                 'is_public'   => true,
-                'template_id' => $this->project_private_id
+                'template_id' => $this->project_private_id,
             ])))
         );
         $this->assertSame(201, $creation_response->getStatusCode());
@@ -67,7 +67,7 @@ class ProjectUserGroupTest extends \RestBase
         return $this->getResponseByName(
             $sender,
             $this->request_factory->createRequest('PUT', 'user_groups/' . $project_id . '_' . \REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users')->withBody($this->stream_factory->createStream(json_encode([
-                'user_references' => $user_references
+                'user_references' => $user_references,
             ])))
         );
     }

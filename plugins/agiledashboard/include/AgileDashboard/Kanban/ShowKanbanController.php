@@ -77,7 +77,7 @@ class ShowKanbanController extends BaseController
         AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
         BreadCrumbBuilder $kanban_crumb_builder,
         RecentlyVisitedKanbanDao $recently_visited_dao,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
     ) {
         parent::__construct('agiledashboard', $request);
 

@@ -42,7 +42,7 @@ class AppearancePresenterBuilder
 
     public function __construct(
         LanguagePresenterBuilder $language_presenter_builder,
-        ThemeColorPresenterBuilder $color_presenter_builder
+        ThemeColorPresenterBuilder $color_presenter_builder,
     ) {
         $this->language_presenter_builder = $language_presenter_builder;
         $this->color_presenter_builder    = $color_presenter_builder;
@@ -51,7 +51,7 @@ class AppearancePresenterBuilder
     public function getAppareancePresenterForUser(
         CSRFSynchronizerToken $csrf_token,
         AccountTabPresenterCollection $tabs,
-        \PFUser $user
+        \PFUser $user,
     ): AppearancePresenter {
         $is_condensed = $user->getPreference(PFUser::PREFERENCE_DISPLAY_DENSITY) === PFUser::DISPLAY_DENSITY_CONDENSED;
 

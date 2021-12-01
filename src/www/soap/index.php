@@ -87,7 +87,7 @@ Historically the sole end point, therefore it groups multiple different function
     <li>Tracker v3 (for historical deployments): get/updateTracker, get/updateArtifact, ...</li>
     <li>Documentation: get/updateDocman, ...</li>
 </ul>
-EOT
+EOT,
             ],
             [
                 'title'       => 'Subversion',
@@ -105,7 +105,7 @@ EOT
                 'version'     => file_get_contents(__DIR__ . '/project/VERSION'),
                 'description' => 'Create and administrate projects.',
             ],
-        ]
+        ],
     ]);
     site_footer([]);
 }

@@ -53,7 +53,7 @@ class AuthorizationFormRenderer
         ResponseFactoryInterface $response_factory,
         StreamFactoryInterface $stream_factory,
         TemplateRendererFactory $renderer_factory,
-        AuthorizationFormPresenterBuilder $presenter_builder
+        AuthorizationFormPresenterBuilder $presenter_builder,
     ) {
         $this->response_factory  = $response_factory;
         $this->stream_factory    = $stream_factory;
@@ -63,7 +63,7 @@ class AuthorizationFormRenderer
 
     public function renderForm(
         AuthorizationFormData $data,
-        BaseLayout $layout
+        BaseLayout $layout,
     ): ResponseInterface {
         $presenter = $this->presenter_builder->build($data);
         $layout->addCssAsset(
@@ -77,7 +77,7 @@ class AuthorizationFormRenderer
         $layout->header(
             [
                 'title'        => dgettext('tuleap-oauth2_server', 'Authorize application'),
-                'main_classes' => ['tlp-framed']
+                'main_classes' => ['tlp-framed'],
             ]
         );
         $this->renderer->renderToPage('authorization-form', $presenter);

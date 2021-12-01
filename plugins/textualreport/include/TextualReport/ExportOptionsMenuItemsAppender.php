@@ -37,7 +37,7 @@ class ExportOptionsMenuItemsAppender
 
     public function __construct(
         TemplateRenderer $renderer,
-        DocumentCanBeDownloadedChecker $document_can_be_downloaded_checker
+        DocumentCanBeDownloadedChecker $document_can_be_downloaded_checker,
     ) {
         $this->renderer                           = $renderer;
         $this->document_can_be_downloaded_checker = $document_can_be_downloaded_checker;

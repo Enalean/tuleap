@@ -102,7 +102,7 @@ class ProjectDetailsPresenter
         \CSRFSynchronizerToken $csrf_token,
         array $plugin_suspended_and_not_blocked_warnings,
         bool $is_unix_name_editable,
-        string $not_editable_reason
+        string $not_editable_reason,
     ) {
         $this->id                    = $project->getID();
         $this->public_name           = $project->getPublicName();
@@ -140,7 +140,7 @@ class ProjectDetailsPresenter
             $template                 = ProjectManager::instance()->getProject($project->getTemplate());
             $this->built_from_project = [
                 'href' => '/admin/groupedit.php?group_id=' . $template->getID(),
-                'name' => $template->getPublicname()
+                'name' => $template->getPublicname(),
             ];
         }
 
@@ -180,7 +180,7 @@ class ProjectDetailsPresenter
             $types[] = [
                 'key'        => $id,
                 'type'       => $type,
-                'is_current' => $id == $project->getType()
+                'is_current' => $id == $project->getType(),
             ];
         }
 
@@ -196,7 +196,7 @@ class ProjectDetailsPresenter
             $all_status[] = [
                 'key'        => $key,
                 'status'     => $status,
-                'is_current' => $project->getStatus() === $key
+                'is_current' => $project->getStatus() === $key,
             ];
         }
 

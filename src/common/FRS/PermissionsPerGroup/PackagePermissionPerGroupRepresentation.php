@@ -49,7 +49,7 @@ class PackagePermissionPerGroupRepresentation
         $package_url,
         $package_name,
         array $permissions,
-        array $releases
+        array $releases,
     ) {
         $this->package_url  = $package_url;
         $this->package_name = $package_name;

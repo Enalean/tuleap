@@ -40,8 +40,8 @@ class FeedbackSerializer
             [
                 'level'  => $feedback->getLevel(),
                 'msg'    => $feedback->getMessage(),
-                'purify' => CODENDI_PURIFIER_CONVERT_HTML
-            ]
+                'purify' => CODENDI_PURIFIER_CONVERT_HTML,
+            ],
         ];
         $this->dao->create($user->getSessionId(), $logs);
     }

@@ -56,7 +56,7 @@ class WikiPlugin_AppendText extends WikiPlugin
                      's'        => '',  // Text to append.
                      'before'   => '',  // Add before (ignores after if defined)
                      'after'    => '',  // Add after line beginning with this
-                     'redirect' => false // Redirect to modified page
+                     'redirect' => false, // Redirect to modified page
                      ];
     }
 

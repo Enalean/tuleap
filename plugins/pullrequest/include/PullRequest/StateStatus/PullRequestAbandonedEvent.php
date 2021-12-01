@@ -75,7 +75,7 @@ final class PullRequestAbandonedEvent implements EventSubjectToNotification
     {
         return [
             'user_id' => $this->user_id,
-            'pr_id'   => $this->pull_request_id
+            'pr_id'   => $this->pull_request_id,
         ];
     }
 }

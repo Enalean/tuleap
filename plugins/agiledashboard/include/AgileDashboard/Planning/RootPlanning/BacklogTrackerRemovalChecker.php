@@ -42,7 +42,7 @@ class BacklogTrackerRemovalChecker
      */
     public function checkRemovedBacklogTrackersCanBeRemoved(
         Planning $planning,
-        PlanningParameters $planning_parameters
+        PlanningParameters $planning_parameters,
     ): void {
         $removed_backlog_tracker_ids = $this->getRemovedTrackerIds($planning, $planning_parameters);
 

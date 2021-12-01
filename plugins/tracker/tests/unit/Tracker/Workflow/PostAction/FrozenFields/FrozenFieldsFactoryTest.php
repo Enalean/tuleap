@@ -94,7 +94,7 @@ XML;
 
         $mapping = [
             'F1' => $int_field,
-            'F2' => $float_field
+            'F2' => $float_field,
         ];
 
         $transition = Mockery::mock(\Transition::class);

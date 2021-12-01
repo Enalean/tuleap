@@ -58,7 +58,7 @@ class CrossReferenceByNatureInCoreOrganizer
         CrossReferenceCvsOrganizer $cvs_organizer,
         CrossReferenceFRSOrganizer $frs_organizer,
         CrossReferenceForumOrganizer $forum_organizer,
-        CrossReferenceNewsOrganizer $news_organizer
+        CrossReferenceNewsOrganizer $news_organizer,
     ) {
         $this->wiki_organizer  = $wiki_organizer;
         $this->cvs_organizer   = $cvs_organizer;

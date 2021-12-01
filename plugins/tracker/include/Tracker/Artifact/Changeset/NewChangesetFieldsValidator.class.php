@@ -32,7 +32,7 @@ class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Art
     public function __construct(
         Tracker_FormElementFactory $form_element_factory,
         ArtifactLinkValidator $artifact_link_validator,
-        WorkflowUpdateChecker $workflow_update_checker
+        WorkflowUpdateChecker $workflow_update_checker,
     ) {
         parent::__construct($form_element_factory, $artifact_link_validator);
         $this->workflow_update_checker = $workflow_update_checker;
@@ -41,7 +41,7 @@ class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Art
     protected function canValidateField(
         Artifact $artifact,
         Tracker_FormElement_Field $field,
-        PFUser $user
+        PFUser $user,
     ): bool {
         $last_changeset = $artifact->getLastChangeset();
 
@@ -53,7 +53,7 @@ class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Art
         Artifact $artifact,
         Tracker_FormElement_Field $field,
         \PFUser $user,
-        $submitted_value
+        $submitted_value,
     ) {
         $is_submission        = false;
         $last_changeset_value = $this->getLastChangesetValue($artifact, $field);
@@ -77,7 +77,7 @@ class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Art
 
     private function getLastChangesetValue(
         Artifact $artifact,
-        Tracker_FormElement_Field $field
+        Tracker_FormElement_Field $field,
     ) {
         $last_changeset = $artifact->getLastChangeset();
         if (! $last_changeset) {

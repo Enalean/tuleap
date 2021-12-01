@@ -56,7 +56,7 @@ class SemanticVelocity extends Tracker_Semantic
     public function __construct(
         Tracker $tracker,
         SemanticDone $semantic_done,
-        ?Tracker_FormElement_Field $velocity_field = null
+        ?Tracker_FormElement_Field $velocity_field = null,
     ) {
         parent::__construct($tracker);
 
@@ -110,7 +110,7 @@ class SemanticVelocity extends Tracker_Semantic
         Tracker_SemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         $semantic_manager->displaySemanticHeader($this, $tracker_manager);
 
@@ -138,7 +138,7 @@ class SemanticVelocity extends Tracker_Semantic
         Tracker_SemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         if ($request->exist('submit')) {
             $csrf = $this->getCSRFSynchronizerToken();
@@ -265,7 +265,7 @@ class SemanticVelocity extends Tracker_Semantic
             TRACKER_BASE_URL . "?" . http_build_query(
                 [
                     "semantic" => "velocity",
-                    "func"     => "admin-semantic"
+                    "func"     => "admin-semantic",
                 ]
             )
         );
@@ -299,7 +299,7 @@ class SemanticVelocity extends Tracker_Semantic
                 [
                     "semantic" => "velocity",
                     "func"     => "admin-semantic",
-                    "tracker"  => $tracker_id
+                    "tracker"  => $tracker_id,
                 ]
             )
         );

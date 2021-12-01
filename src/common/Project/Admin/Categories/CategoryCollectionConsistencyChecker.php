@@ -122,7 +122,7 @@ class CategoryCollectionConsistencyChecker
     private function checkThatCategoryIdIsDifferentThanValueId(
         array $tree,
         TroveCat $submitted_category,
-        TroveCat $selected_category
+        TroveCat $selected_category,
     ): void {
         if ((int) $submitted_category->getId() === (int) $selected_category->getId()) {
             throw new InvalidValueForRootCategoryException(

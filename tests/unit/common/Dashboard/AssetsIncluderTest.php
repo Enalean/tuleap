@@ -148,14 +148,14 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
             'first_widget'                => [
                 ['file' => 'dependency_one'],
                 ['snippet' => 'dependency_two'],
-                ['file' => 'dependency_three', 'unique-name' => 'angular']
+                ['file' => 'dependency_three', 'unique-name' => 'angular'],
             ],
             'second_widget'               => [
                 ['file' => 'dependency_one'],
                 ['file' => 'dependency_three', 'unique-name' => 'angular'],
-                ['file' => 'dependency_four']
+                ['file' => 'dependency_four'],
             ],
-            'widget_without_dependencies' => []
+            'widget_without_dependencies' => [],
         ];
 
         $first_collection  = Mockery::mock(CssAssetCollection::class)
@@ -174,7 +174,7 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
         $stylesheet_dependencies = [
             'first_widget'                => $first_collection,
             'second_widget'               => $second_collection,
-            'widget_without_dependencies' => $empty_collection
+            'widget_without_dependencies' => $empty_collection,
         ];
 
         $widget_presenters = [];

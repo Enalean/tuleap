@@ -106,7 +106,7 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->shouldReceive(
             [
                 'getProject'     => $this->project,
-                'getCurrentUser' => $current_user
+                'getCurrentUser' => $current_user,
             ]
         );
         $this->request->shouldReceive('getValidated')->withArgs(
@@ -132,7 +132,7 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getCampaignTrackerId'       => self::ORIGINAL_CAMPAIGN_TRACKER_ID,
                 'getTestDefinitionTrackerId' => self::ORIGINAL_DEFINITION_TRACKER_ID,
                 'getTestExecutionTrackerId'  => self::ORIGINAL_EXECUTION_TRACKER_ID,
-                'getIssueTrackerId'          => self::ORIGINAL_ISSUE_TRACKER_ID
+                'getIssueTrackerId'          => self::ORIGINAL_ISSUE_TRACKER_ID,
             ]
         );
 
@@ -145,7 +145,7 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::NEW_CAMPAIGN_TRACKER_ID,
                 self::NEW_DEFINITION_TRACKER_ID,
                 self::NEW_EXECUTION_TRACKER_ID,
-                self::NEW_ISSUE_TRACKER_ID
+                self::NEW_ISSUE_TRACKER_ID,
             ]
         );
 
@@ -173,7 +173,7 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getCampaignTrackerId'       => self::ORIGINAL_CAMPAIGN_TRACKER_ID,
                 'getTestDefinitionTrackerId' => self::ORIGINAL_DEFINITION_TRACKER_ID,
                 'getTestExecutionTrackerId'  => self::ORIGINAL_EXECUTION_TRACKER_ID,
-                'getIssueTrackerId'          => self::ORIGINAL_ISSUE_TRACKER_ID
+                'getIssueTrackerId'          => self::ORIGINAL_ISSUE_TRACKER_ID,
             ]
         );
 
@@ -186,7 +186,7 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::NEW_CAMPAIGN_TRACKER_ID,
                 self::ORIGINAL_DEFINITION_TRACKER_ID,
                 self::NEW_EXECUTION_TRACKER_ID,
-                self::NEW_ISSUE_TRACKER_ID
+                self::NEW_ISSUE_TRACKER_ID,
             ]
         );
 
@@ -388,7 +388,7 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getCampaignTrackerId'       => self::ORIGINAL_CAMPAIGN_TRACKER_ID,
                 'getTestDefinitionTrackerId' => self::ORIGINAL_DEFINITION_TRACKER_ID,
                 'getTestExecutionTrackerId'  => self::ORIGINAL_EXECUTION_TRACKER_ID,
-                'getIssueTrackerId'          => self::ORIGINAL_ISSUE_TRACKER_ID
+                'getIssueTrackerId'          => self::ORIGINAL_ISSUE_TRACKER_ID,
             ]
         );
 
@@ -401,7 +401,7 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::ORIGINAL_CAMPAIGN_TRACKER_ID,
                 self::NEW_DEFINITION_TRACKER_ID,
                 self::NEW_EXECUTION_TRACKER_ID,
-                self::NEW_ISSUE_TRACKER_ID
+                self::NEW_ISSUE_TRACKER_ID,
             ]
         );
 

@@ -73,7 +73,7 @@ class NotificationListPresenter
                     $user->getName(),
                     $user->getRealName(),
                     $user->getAvatarUrl()
-                )
+                ),
             ];
         }
 
@@ -90,7 +90,7 @@ class NotificationListPresenter
             $groups_to_notify[] = [
                 'can_be_deleted' => ($monitored_item == $item),
                 'item_title'     => $monitored_item->getTitle(),
-                'ugroup'         => $monitoring_ugroup
+                'ugroup'         => $monitoring_ugroup,
             ];
         }
 

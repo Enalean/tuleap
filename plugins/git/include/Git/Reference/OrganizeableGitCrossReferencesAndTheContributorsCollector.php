@@ -39,14 +39,14 @@ class OrganizeableGitCrossReferencesAndTheContributorsCollector
 
     public function __construct(
         CommitDetailsCrossReferenceInformationBuilder $information_builder,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->information_builder = $information_builder;
         $this->user_manager        = $user_manager;
     }
 
     public function collectOrganizeableGitCrossReferencesAndTheContributorsCollection(
-        CrossReferenceByNatureOrganizer $by_nature_organizer
+        CrossReferenceByNatureOrganizer $by_nature_organizer,
     ): OrganizeableGitCrossReferencesAndTheContributors {
         $contributor_emails = [];
 

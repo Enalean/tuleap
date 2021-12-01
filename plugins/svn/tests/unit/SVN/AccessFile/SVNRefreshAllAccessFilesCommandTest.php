@@ -113,7 +113,7 @@ class SVNRefreshAllAccessFilesCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $repository_A->shouldReceive('getFullName')->andReturn('Project A/Repository A');
         $repository_A->shouldReceive('getName')->andReturn('Repository A');
         $project_A_repositories = [
-            $repository_A
+            $repository_A,
         ];
 
         $project_B = Mockery::mock(\Project::class);

@@ -59,7 +59,7 @@ class GeneralSettingsController
         RegexpFineGrainedRetriever $regexp_retriever,
         RegexpFineGrainedEnabler $regexp_enabler,
         AdminPageRenderer $renderer,
-        RegexpFineGrainedDisabler $regexp_disabler
+        RegexpFineGrainedDisabler $regexp_disabler,
     ) {
         $this->csrf             = $csrf;
         $this->regexp_retriever = $regexp_retriever;

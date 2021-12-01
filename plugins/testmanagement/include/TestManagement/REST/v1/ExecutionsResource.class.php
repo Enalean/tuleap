@@ -299,7 +299,7 @@ class ExecutionsResource
         $definition_id,
         $status,
         int $time = 0,
-        $results = ''
+        $results = '',
     ) {
         $tracker = $this->tracker_factory->getTrackerById($tracker_reference->id);
         if ($tracker === null) {
@@ -569,7 +569,7 @@ class ExecutionsResource
         int $definition_id,
         string $status,
         int $time,
-        string $results
+        string $results,
     ) {
         $status_field         = $this->getFieldByName(ExecutionRepresentation::FIELD_STATUS, $tracker_id, $user);
         $time_field           = $this->getFieldByName(ExecutionRepresentation::FIELD_TIME, $tracker_id, $user);
@@ -596,7 +596,7 @@ class ExecutionsResource
                 $values[] = $this->createArtifactValuesRepresentation(
                     intval($status_field->getId()),
                     [
-                        (int) $status_field_bind->getId()
+                        (int) $status_field_bind->getId(),
                     ],
                     'bind_value_ids'
                 );
@@ -623,7 +623,7 @@ class ExecutionsResource
             $values[] = $this->createArtifactValuesRepresentation(
                 intval($artifact_links_field->getId()),
                 [
-                    ['id' => $definition_id]
+                    ['id' => $definition_id],
                 ],
                 'links'
             );
@@ -638,7 +638,7 @@ class ExecutionsResource
     private function createArtifactValuesRepresentation(
         int $field_id,
         $value,
-        string $key
+        string $key,
     ): ArtifactValuesRepresentation {
         $artifact_values_representation           = new ArtifactValuesRepresentation();
         $artifact_values_representation->field_id = $field_id;

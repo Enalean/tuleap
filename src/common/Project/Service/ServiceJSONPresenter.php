@@ -53,7 +53,7 @@ final class ServiceJSONPresenter
         int $rank,
         bool $is_project_scope,
         bool $is_link_customizable,
-        string $is_disabled_reason
+        string $is_disabled_reason,
     ) {
         $this->id                   = $id;
         $this->short_name           = $short_name;

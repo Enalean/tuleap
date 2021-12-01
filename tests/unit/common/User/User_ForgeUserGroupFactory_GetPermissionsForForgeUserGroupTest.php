@@ -69,7 +69,7 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends \PH
 
         $permission_ids =  [
             ['permission_id' => $expected_id],
-            ['permission_id' => $expected_id]
+            ['permission_id' => $expected_id],
         ];
 
         $this->dao->shouldReceive('getPermissionsForForgeUGroup')->with(101)->andReturns($permission_ids);
@@ -100,7 +100,7 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends \PH
             ['permission_id' => $expected_id6],
             ['permission_id' => $expected_id7],
             ['permission_id' => $expected_id8],
-            ['permission_id' => $expected_id9]
+            ['permission_id' => $expected_id9],
         ];
 
         $this->dao->shouldReceive('getPermissionsForForgeUGroup')->with(101)->andReturns($permission_ids);

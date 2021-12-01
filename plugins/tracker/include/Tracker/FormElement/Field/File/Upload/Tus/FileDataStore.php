@@ -59,7 +59,7 @@ final class FileDataStore implements TusDataStore
         FileBeingUploadedWriter $file_being_uploaded_writer,
         FileBeingUploadedLocker $file_being_uploaded_locker,
         FileUploadFinisher $file_upload_finisher,
-        FileUploadCanceler $file_upload_canceler
+        FileUploadCanceler $file_upload_canceler,
     ) {
         $this->file_being_uploaded_information_provider = $file_being_uploaded_information_provider;
         $this->file_being_uploaded_writer               = $file_being_uploaded_writer;

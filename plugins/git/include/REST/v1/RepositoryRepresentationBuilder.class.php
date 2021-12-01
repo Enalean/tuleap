@@ -65,7 +65,7 @@ class RepositoryRepresentationBuilder
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         Git_LogDao $log_dao,
         \EventManager $event_manager,
-        Git_GitRepositoryUrlManager $url_manager
+        Git_GitRepositoryUrlManager $url_manager,
     ) {
         $this->permissions_manger    = $permissions_manger;
         $this->gerrit_server_factory = $gerrit_server_factory;

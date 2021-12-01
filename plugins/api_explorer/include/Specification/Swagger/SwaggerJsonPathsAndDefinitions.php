@@ -204,7 +204,7 @@ final class SwaggerJsonPathsAndDefinitions
                            'type'     => $name,
                            'from'     => 'body',
                            'required' => $required,
-                           'children' => $children
+                           'children' => $children,
                         ]
                     ),
                     $description
@@ -256,8 +256,8 @@ final class SwaggerJsonPathsAndDefinitions
         $r      = [
             $code => (object) [
                 'description' => 'Success',
-                'schema'      => new stdClass()
-            ]
+                'schema'      => new stdClass(),
+            ],
         ];
         $return = Util::nestedValue($route, ['metadata', 'return']);
         if (! empty($return)) {
@@ -322,7 +322,7 @@ final class SwaggerJsonPathsAndDefinitions
             if ($info->children) {
                 $contentType   = Util::getShortName($info->contentType);
                 $object->items = (object) [
-                    '$ref' => "#/definitions/$contentType"
+                    '$ref' => "#/definitions/$contentType",
                 ];
             } elseif ($info->contentType && $info->contentType == 'associative') {
                 unset($info->contentType);
@@ -332,8 +332,8 @@ final class SwaggerJsonPathsAndDefinitions
                         'type'        => 'string',
                         'default'     => '',
                         'required'    => false,
-                        'description' => ''
-                    ]
+                        'description' => '',
+                    ],
                 ]);
             } elseif ($info->contentType && $info->contentType != 'indexed') {
                 if (is_string($info->contentType) && $t = Util::nestedValue(self::DATA_TYPE_ALIAS, strtolower($info->contentType))) {
@@ -350,12 +350,12 @@ final class SwaggerJsonPathsAndDefinitions
                 } else {
                     $contentType   = Util::getShortName($info->contentType);
                     $object->items = (object) [
-                        '$ref' => "#/definitions/$contentType"
+                        '$ref' => "#/definitions/$contentType",
                     ];
                 }
             } else {
                 $object->items = (object) [
-                    'type' => 'string'
+                    'type' => 'string',
                 ];
             }
         } elseif ($info->children) {

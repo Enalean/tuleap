@@ -41,7 +41,7 @@ final class TitleValue
      */
     public static function fromTitleReference(
         RetrieveTitleValue $title_retriever,
-        TitleFieldReference $title
+        TitleFieldReference $title,
     ): self {
         return new self($title_retriever->getTitleValue($title));
     }

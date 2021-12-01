@@ -33,7 +33,7 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
         $search   = urlencode(
             json_encode(
                 [
-                    'username' => DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+                    'username' => DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
                 ]
             )
         );
@@ -88,7 +88,7 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
     public function loadFolderContent(
         int $folder_id,
         string $folder_name,
-        string $user_name = REST_TestDataBuilder::ADMIN_USER_NAME
+        string $user_name = REST_TestDataBuilder::ADMIN_USER_NAME,
     ): array {
         $response = $this->getResponseByName(
             $user_name,

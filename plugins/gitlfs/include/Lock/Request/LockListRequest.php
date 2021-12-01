@@ -43,7 +43,7 @@ class LockListRequest implements GitLfsHTTPOperation
     public function __construct(
         ?int $id,
         ?string $path,
-        ?RequestReference $reference
+        ?RequestReference $reference,
     ) {
         $this->id        = $id;
         $this->path      = $path;

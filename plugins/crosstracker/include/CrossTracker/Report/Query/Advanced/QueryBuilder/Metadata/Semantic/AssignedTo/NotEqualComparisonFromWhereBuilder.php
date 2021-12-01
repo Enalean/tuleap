@@ -115,7 +115,7 @@ class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
         $from,
         array $from_parameters,
         array $trackers,
-        $value
+        $value,
     ) {
         $tracker_ids           = array_map(
             function (Tracker $tracker) {

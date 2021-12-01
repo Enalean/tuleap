@@ -152,7 +152,7 @@ class BackendSVN extends Backend
         }
 
         $params = [
-            'project_id' => $project_id
+            'project_id' => $project_id,
         ];
 
         EventManager::instance()->processEvent(
@@ -281,7 +281,7 @@ class BackendSVN extends Backend
             'svn_intro_in_plugin' => false,
             'svn_intro_info'      => &$intro_information,
             'group_id'            => $project_id,
-            'user_id'             => $user->getId()
+            'user_id'             => $user->getId(),
         ]);
         $user_name = $user->getUserName();
         if ($intro_information !== false) {

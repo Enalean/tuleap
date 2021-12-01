@@ -92,7 +92,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/wikis')->withBody($this->stream_factory->createStream(json_encode([
                 'title' => 'Link document to cut',
-                'wiki_properties' => ['page_name' => 'AAAAA']
+                'wiki_properties' => ['page_name' => 'AAAAA'],
             ])))
         );
         $this->assertEquals(201, $response_wiki_creation->getStatusCode());
@@ -299,7 +299,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
                 'should_lock_file'      => false,
                 'wiki_properties'       => ['page_name' => 'my new page name'],
                 'title'                 => $item_title,
-                'approval_table_action' => 'copy'
+                'approval_table_action' => 'copy',
             ]
         );
 
@@ -320,7 +320,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
                 'title'           => 'My new wiki',
                 'parent_id'       => $root_id,
                 'type'            => 'wiki',
-                'wiki_properties' => ['page_name' => 'my new page name']
+                'wiki_properties' => ['page_name' => 'my new page name'],
             ]
         );
 
@@ -354,7 +354,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $put_resource = json_encode(
             [
                 'should_lock_file' => false,
-                'wiki_properties'  => ['page_name' => 'my updated page name']
+                'wiki_properties'  => ['page_name' => 'my updated page name'],
             ]
         );
 
@@ -406,7 +406,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
             'title'             => 'PUT W New title',
             'description'       => 'Danger ! Danger !',
             'owner_id'          => $this->test_user_1_id,
-            'status'            => 'none'
+            'status'            => 'none',
         ];
 
         $updated_metadata_file_response_with_reast_read_only_user = $this->getResponse(

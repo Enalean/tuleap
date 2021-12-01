@@ -89,7 +89,7 @@ class SemanticVelocityPresenter
         BacklogRequiredTrackerCollection $backlog_required_tracker_collection,
         ChildrenRequiredTrackerCollection $children_required_tracker_collection,
         $has_at_least_one_tracker_correctly_configured,
-        ?Tracker_FormElement_Field $velocity_field = null
+        ?Tracker_FormElement_Field $velocity_field = null,
     ) {
         $this->semantic_done_is_defined = $semantic_done_is_defined;
         $this->velocity_field           = $velocity_field;

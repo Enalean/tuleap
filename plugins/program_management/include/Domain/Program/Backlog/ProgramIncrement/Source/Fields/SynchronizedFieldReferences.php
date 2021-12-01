@@ -39,7 +39,7 @@ final class SynchronizedFieldReferences
         public StatusFieldReference $status,
         public StartDateFieldReference $start_date,
         public DurationFieldReference|EndDateFieldReference $end_period,
-        public ArtifactLinkFieldReference $artifact_link
+        public ArtifactLinkFieldReference $artifact_link,
     ) {
     }
 
@@ -52,7 +52,7 @@ final class SynchronizedFieldReferences
     public static function fromTrackerIdentifier(
         GatherSynchronizedFields $gatherer,
         TrackerIdentifier $tracker_identifier,
-        ?ConfigurationErrorsCollector $errors_collector
+        ?ConfigurationErrorsCollector $errors_collector,
     ): self {
         $title         = $gatherer->getTitleField($tracker_identifier, $errors_collector);
         $description   = $gatherer->getDescriptionField($tracker_identifier);

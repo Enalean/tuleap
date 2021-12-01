@@ -74,7 +74,7 @@ class Docman_Log
         $params['logs'][] = [
             'sql'   => $this->dao->getSqlStatementForLogsDaily($params['group_id'], $params['logs_cond']),
             'field' => dgettext('tuleap-docman', 'Documents'),
-            'title' => dgettext('tuleap-docman', 'Document Access')
+            'title' => dgettext('tuleap-docman', 'Document Access'),
         ];
     }
 

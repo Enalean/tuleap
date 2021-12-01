@@ -47,7 +47,7 @@ class InComparisonFromWhereBuilder implements FromWhereBuilder
     public function __construct(
         ListValueExtractor $extractor,
         UserManager $user_manager,
-        $alias_field
+        $alias_field,
     ) {
         $this->extractor    = $extractor;
         $this->user_manager = $user_manager;

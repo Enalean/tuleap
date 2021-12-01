@@ -66,7 +66,7 @@ class MailingListDoCreateController implements DispatchableWithRequest
         ProjectAdministratorChecker $administrator_checker,
         MailingListDao $dao,
         EventManager $event_manager,
-        MailingListDomainBuilder $list_domain_builder
+        MailingListDomainBuilder $list_domain_builder,
     ) {
         $this->project_retriever     = $project_retriever;
         $this->administrator_checker = $administrator_checker;
@@ -128,7 +128,7 @@ class MailingListDoCreateController implements DispatchableWithRequest
         HTTPRequest $request,
         BaseLayout $layout,
         PFUser $current_user,
-        Project $project
+        Project $project,
     ): ?string {
         $list_name = $request->getValidated('list_name', 'string', '');
         if (! $list_name || strlen($list_name) < ForgeConfig::get('sys_lists_name_min_length')) {
@@ -185,7 +185,7 @@ class MailingListDoCreateController implements DispatchableWithRequest
         HTTPRequest $request,
         string $new_list_name,
         string $list_password,
-        PFUser $current_user
+        PFUser $current_user,
     ): void {
         $message = sprintf(
             _(

@@ -31,6 +31,6 @@ interface IDetectIfArtifactIsOutOfDate
         Artifact $artifact,
         DateTimeImmutable $now,
         \PFUser $user,
-        TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection
+        TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection,
     ): bool;
 }

@@ -65,7 +65,7 @@ class Account_RegisterPresenter
         foreach ($password_strategy->validators as $key => $v) {
             $this->password_strategy_validators[] = [
                 'key'         => $key,
-                'description' => $v->description()
+                'description' => $v->description(),
             ];
         }
     }

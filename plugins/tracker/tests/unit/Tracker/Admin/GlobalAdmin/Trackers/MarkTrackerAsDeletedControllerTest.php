@@ -183,8 +183,8 @@ class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'getProject'                                 => $this->project,
                     'getInformationsFromOtherServicesAboutUsage' => [
                         'can_be_deleted' => false,
-                        'message'        => 'Boo'
-                    ]
+                        'message'        => 'Boo',
+                    ],
                 ]
             )->getMock();
 
@@ -223,7 +223,7 @@ class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'getProject'                                 => $this->project,
                     'getInformationsFromOtherServicesAboutUsage' => [
                         'can_be_deleted' => true,
-                    ]
+                    ],
                 ]
             )->getMock();
 
@@ -267,7 +267,7 @@ class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'getProject'                                 => $this->project,
                     'getInformationsFromOtherServicesAboutUsage' => [
                         'can_be_deleted' => true,
-                    ]
+                    ],
                 ]
             )->getMock();
 
@@ -322,7 +322,7 @@ class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'getProject'                                 => $this->project,
                     'getInformationsFromOtherServicesAboutUsage' => [
                         'can_be_deleted' => true,
-                    ]
+                    ],
                 ]
             )->getMock();
 

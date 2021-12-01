@@ -41,7 +41,7 @@ class JenkinsTuleapPluginHookPayloadTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'tuleapProjectId' => '35',
                 'repositoryName'  => 'Aufrecht_Melcher_Großaspach',
-                'branchName'      => 'chaise'
+                'branchName'      => 'chaise',
             ];
 
         $this->assertEquals($expected_payload, $payload->getPayload());

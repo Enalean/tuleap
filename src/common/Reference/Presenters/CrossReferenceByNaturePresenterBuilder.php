@@ -36,7 +36,7 @@ class CrossReferenceByNaturePresenterBuilder
 
     public function __construct(
         CrossReferenceLinkListPresenterBuilder $link_list_builder,
-        CrossReferenceLinkPresenterCollectionBuilder $link_presenter_array_builder
+        CrossReferenceLinkPresenterCollectionBuilder $link_presenter_array_builder,
     ) {
         $this->link_list_builder                 = $link_list_builder;
         $this->link_presenter_collection_builder = $link_presenter_array_builder;
@@ -44,7 +44,7 @@ class CrossReferenceByNaturePresenterBuilder
 
     public function build(
         CrossReferenceCollection $cross_reference_collection,
-        bool $display_params
+        bool $display_params,
     ): ?CrossReferenceByNaturePresenter {
         if (
             $cross_reference_collection->getCrossReferencesBoth() === [] &&

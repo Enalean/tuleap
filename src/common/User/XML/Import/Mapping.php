@@ -39,7 +39,7 @@ class Mapping implements IFindUserFromXMLReference
     public function __construct(
         UserManager $user_manager,
         ReadyToBeImportedUsersCollection $collection,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->user_manager = $user_manager;
         $this->collection   = $collection;

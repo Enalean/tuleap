@@ -38,7 +38,7 @@ class MappedValuesRetriever
 
     public function __construct(
         FreestyleMappingFactory $freestyle_mapping_factory,
-        Cardwall_FieldProviders_SemanticStatusFieldRetriever $status_retriever
+        Cardwall_FieldProviders_SemanticStatusFieldRetriever $status_retriever,
     ) {
         $this->freestyle_mapping_factory = $freestyle_mapping_factory;
         $this->status_retriever          = $status_retriever;
@@ -54,7 +54,7 @@ class MappedValuesRetriever
 
     public function getValuesMappedToColumn(
         TaskboardTracker $taskboard_tracker,
-        Cardwall_Column $column
+        Cardwall_Column $column,
     ): MappedValuesInterface {
         if ($this->freestyle_mapping_factory->doesFreestyleMappingExist($taskboard_tracker)) {
             return $this->freestyle_mapping_factory->getValuesMappedToColumn($taskboard_tracker, $column);

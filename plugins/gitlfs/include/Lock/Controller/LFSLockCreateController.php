@@ -83,7 +83,7 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
         LockCreator $lock_creator,
         LockRetriever $lock_retriever,
         UserRetriever $user_retriever,
-        Prometheus $prometheus
+        Prometheus $prometheus,
     ) {
         $this->plugin                = $plugin;
         $this->repository_factory    = $repository_factory;

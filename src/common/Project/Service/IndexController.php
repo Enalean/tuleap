@@ -59,7 +59,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
         LayoutHelper $layout_helper,
         ServicesPresenterBuilder $presenter_builder,
         \TemplateRenderer $renderer,
-        IncludeAssets $include_assets
+        IncludeAssets $include_assets,
     ) {
         $this->layout_helper     = $layout_helper;
         $this->presenter_builder = $presenter_builder;

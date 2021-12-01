@@ -46,7 +46,7 @@ class ServicePOSTDataBuilder
     public function __construct(
         \EventManager $event_manager,
         ServiceManager $service_manager,
-        ServiceLinkDataBuilder $link_data_builder
+        ServiceLinkDataBuilder $link_data_builder,
     ) {
         $this->event_manager     = $event_manager;
         $this->service_manager   = $service_manager;
@@ -153,7 +153,7 @@ class ServicePOSTDataBuilder
         $is_used,
         bool $is_in_iframe,
         bool $is_in_new_tab,
-        bool $is_system_service
+        bool $is_system_service,
     ): ServicePOSTData {
         $scope = $is_system_service ? Service::SCOPE_SYSTEM : Service::SCOPE_PROJECT;
 

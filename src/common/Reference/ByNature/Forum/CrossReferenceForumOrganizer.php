@@ -49,7 +49,7 @@ class CrossReferenceForumOrganizer
     public function __construct(
         ProjectManager $project_manager,
         MessageRetriever $message_retriever,
-        ForumRetriever $forum_retriever
+        ForumRetriever $forum_retriever,
     ) {
         $this->project_manager   = $project_manager;
         $this->message_retriever = $message_retriever;
@@ -58,7 +58,7 @@ class CrossReferenceForumOrganizer
 
     public function organizeMessageReference(
         CrossReferencePresenter $cross_reference_presenter,
-        CrossReferenceByNatureOrganizer $by_nature_organizer
+        CrossReferenceByNatureOrganizer $by_nature_organizer,
     ): void {
         try {
             $message = $this->message_retriever->getMessage((int) $cross_reference_presenter->target_value);
@@ -76,7 +76,7 @@ class CrossReferenceForumOrganizer
 
     public function organizeForumReference(
         CrossReferencePresenter $cross_reference_presenter,
-        CrossReferenceByNatureOrganizer $by_nature_organizer
+        CrossReferenceByNatureOrganizer $by_nature_organizer,
     ): void {
         $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
 

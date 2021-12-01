@@ -127,7 +127,7 @@ class Widget_ProjectLatestNews extends Widget //phpcs:ignore PSR1.Classes.ClassD
     public function getJavascriptDependencies(): array
     {
         return [
-            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates']
+            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates'],
         ];
     }
 }

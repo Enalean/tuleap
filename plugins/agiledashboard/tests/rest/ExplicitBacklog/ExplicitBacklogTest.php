@@ -37,7 +37,7 @@ class ExplicitBacklogTest extends TestBase
         $patch_body         = json_encode([
             'add' => [
                 ['id' => $artifact_id_to_add],
-            ]
+            ],
         ]);
 
         $response_patch = $this->getResponseByName(
@@ -97,7 +97,7 @@ class ExplicitBacklogTest extends TestBase
         $patch_body          = json_encode([
             'add' => [
                 ['id' => $artifact_id_to_add],
-            ]
+            ],
         ]);
 
         $response_patch = $this->getResponse(
@@ -115,9 +115,9 @@ class ExplicitBacklogTest extends TestBase
             'add' => [
                 [
                     'id'          => $artifact_id_to_add,
-                    'remove_from' => $release_artifact_id
+                    'remove_from' => $release_artifact_id,
                 ],
-            ]
+            ],
         ]);
 
         $response_patch = $this->getResponse(
@@ -133,9 +133,9 @@ class ExplicitBacklogTest extends TestBase
         $patch_body         = json_encode([
             'remove' => [
                 [
-                    'id' => $artifact_id_to_add
+                    'id' => $artifact_id_to_add,
                 ],
-            ]
+            ],
         ]);
 
         $response_patch = $this->getResponse(

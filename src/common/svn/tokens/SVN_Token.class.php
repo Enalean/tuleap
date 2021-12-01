@@ -47,7 +47,7 @@ class SVN_Token
         $generated_date,
         $last_usage,
         $last_ip,
-        $comment
+        $comment,
     ) {
         $this->id             = $id;
         $this->user           = $user;

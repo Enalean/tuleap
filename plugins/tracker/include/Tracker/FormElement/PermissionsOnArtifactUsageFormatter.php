@@ -51,7 +51,7 @@ class PermissionsOnArtifactUsageFormatter
      */
     public function alwaysUseRestrictedPermissionsForRequiredField(
         array $value,
-        Tracker_FormElement_Field_PermissionsOnArtifact $field
+        Tracker_FormElement_Field_PermissionsOnArtifact $field,
     ) {
         if ($field->isRequired() === true) {
             $value[Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT] = 1;

@@ -47,7 +47,7 @@ class GitPullRequestReferenceRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             [[]],
-            [[GitPullRequestReference::PR_NAMESPACE . '1/head', GitPullRequestReference::PR_NAMESPACE . '2/head']]
+            [[GitPullRequestReference::PR_NAMESPACE . '1/head', GitPullRequestReference::PR_NAMESPACE . '2/head']],
         ];
     }
 }

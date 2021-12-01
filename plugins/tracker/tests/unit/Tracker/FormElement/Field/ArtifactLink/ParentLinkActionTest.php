@@ -89,8 +89,8 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $fields_data = [
             587 => [
-                'parent' => ['1011', '1012']
-            ]
+                'parent' => ['1011', '1012'],
+            ],
         ];
 
         $this->artifact->shouldReceive('getAnArtifactLinkField')
@@ -131,8 +131,8 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $fields_data = [
             587 => [
-                'parent' => ['1011', '1012']
-            ]
+                'parent' => ['1011', '1012'],
+            ],
         ];
 
         $this->artifact->shouldReceive('getAnArtifactLinkField')
@@ -173,8 +173,8 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $fields_data = [
             587 => [
-                'parent' => '1011'
-            ]
+                'parent' => '1011',
+            ],
         ];
 
         $this->artifact->shouldReceive('getAnArtifactLinkField')
@@ -197,8 +197,8 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $fields_data = [
             587 => [
-                'whatever' => '1011'
-            ]
+                'whatever' => '1011',
+            ],
         ];
 
         $this->artifact->shouldReceive('getAnArtifactLinkField')
@@ -216,7 +216,7 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $fields_data = [
-            'parent' => ['1011']
+            'parent' => ['1011'],
         ];
 
         $this->assertFalse(
@@ -232,8 +232,8 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $fields_data = [
             587 => [
-                'parent' => ['1011']
-            ]
+                'parent' => ['1011'],
+            ],
         ];
 
         $this->artifact->shouldReceive('getAnArtifactLinkField')

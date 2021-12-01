@@ -27,7 +27,7 @@ class FieldDataBuilder
         return [
             'new_values'     => $this->formatNewValuesLikeWebUI($new_values),
             'removed_values' => $this->formatRemovedValuesLikeWebUI($removed_values),
-            'types'          => $this->formatTypesLikeWebUI($submitted_values)
+            'types'          => $this->formatTypesLikeWebUI($submitted_values),
         ];
     }
 
@@ -99,7 +99,7 @@ class FieldDataBuilder
         if ($id) {
             return [
                 "id"   => $id,
-                "type" => $type
+                "type" => $type,
             ];
         }
 

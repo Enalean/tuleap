@@ -463,7 +463,7 @@ class ArtifactFieldHtml extends ArtifactField
         $show_unchanged = false,
         $text_unchanged = 0,
         $htmlEmail = true,
-        $project_id = 0
+        $project_id = 0,
     ) {
         global $Language;
         $hp = Codendi_HTMLPurifier::instance();

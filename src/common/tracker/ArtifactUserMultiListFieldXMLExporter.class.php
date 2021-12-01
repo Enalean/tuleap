@@ -33,7 +33,7 @@ class ArtifactUserMultiListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExpo
 
     public function __construct(
         ArtifactXMLNodeHelper $node_helper,
-        ArtifactMultiListCurrentValueExporter $current_value_exporter
+        ArtifactMultiListCurrentValueExporter $current_value_exporter,
     ) {
         parent::__construct($node_helper);
         $this->current_value_exporter = $current_value_exporter;

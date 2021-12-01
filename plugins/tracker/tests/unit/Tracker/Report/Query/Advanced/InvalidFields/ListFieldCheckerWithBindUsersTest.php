@@ -60,7 +60,7 @@ class ListFieldCheckerWithBindUsersTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->current_user = new PFUser([
             'language_id' => 'en',
-            'user_name' => 'admin'
+            'user_name' => 'admin',
         ]);
         $this->user_manager = \Mockery::spy(\UserManager::class);
 
@@ -88,7 +88,7 @@ class ListFieldCheckerWithBindUsersTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $list_values = [
             101 => $value_101,
-            103 => $value_103
+            103 => $value_103,
         ];
 
         $this->bind->shouldReceive('getAllValues')->andReturns($list_values);

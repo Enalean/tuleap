@@ -234,13 +234,13 @@ final class TrackersTest extends TrackerBase
                         "users_uri"  => "user_groups/1/users",
                         "short_name" => "all_users",
                         "key"        => "ugroup_anonymous_users_name_key",
-                    ]
+                    ],
                 ],
                 "can_access_submitted_by_user"  => [],
                 "can_access_assigned_to_group"  => [],
                 "can_access_submitted_by_group" => [],
                 "can_admin"                     => [
-                    $developers_ugroup
+                    $developers_ugroup,
                 ],
             ],
             $tracker['permissions_for_groups']
@@ -257,7 +257,7 @@ final class TrackersTest extends TrackerBase
                         "users_uri"  => "user_groups/1/users",
                         "short_name" => "all_users",
                         "key"        => "ugroup_anonymous_users_name_key",
-                    ]
+                    ],
                 ],
                 'can_submit' => [
                     [
@@ -267,7 +267,7 @@ final class TrackersTest extends TrackerBase
                         "users_uri"  => "user_groups/2/users",
                         "short_name" => "registered_users",
                         "key"        => "ugroup_registered_users_name_key",
-                    ]
+                    ],
                 ],
                 'can_update' => [
                     $project_members,
@@ -417,7 +417,7 @@ final class TrackersTest extends TrackerBase
     {
         $query     = json_encode(
             [
-                "Name" => "lease"
+                "Name" => "lease",
             ]
         );
         $request   = $this->request_factory->createRequest('GET', $this->getReleaseTrackerUri() . '/artifacts?query=' . urlencode($query));
@@ -435,7 +435,7 @@ final class TrackersTest extends TrackerBase
     {
         $query = json_encode(
             [
-            "Name" => "wwwxxxyyyzzz"
+            "Name" => "wwwxxxyyyzzz",
             ]
         );
 
@@ -453,8 +453,8 @@ final class TrackersTest extends TrackerBase
             [
             "Name" => [
                 "operator" => "contains",
-                "value" => "lease"
-                ]
+                "value" => "lease",
+                ],
             ]
         );
         $request   = $this->request_factory->createRequest('GET', $this->getReleaseTrackerUri() . '/artifacts?values=all&query=' . urlencode($query));

@@ -87,7 +87,7 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         $root = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $this->timeframe->exportToXml($root, [
             'F101' => 1001,
-            'F102' => 1002
+            'F102' => 1002,
         ]);
 
         self::assertCount(1, $root->children());
@@ -237,7 +237,7 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
             ->method('retrieveReverseLinksFromTracker')
             ->with($artifact, $user, $this->implied_from_tracker)
             ->will(self::returnValue([
-                $linking_artifact
+                $linking_artifact,
             ]));
 
         $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifact(
@@ -317,7 +317,7 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
             ->method('retrieveReverseLinksFromTracker')
             ->with($artifact, $user, $this->implied_from_tracker)
             ->will(self::returnValue([
-                $linking_artifact
+                $linking_artifact,
             ]));
 
         $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
@@ -394,7 +394,7 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
             ->method('retrieveReverseLinksFromTracker')
             ->with($artifact, $user, $this->implied_from_tracker)
             ->will(self::returnValue([
-                $linking_artifact
+                $linking_artifact,
             ]));
 
         $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(

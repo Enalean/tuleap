@@ -46,7 +46,7 @@ class ActionAuthorizationRequest
         \GitRepository $git_repository,
         LFSObject $object,
         ActionAuthorizationType $action_type,
-        \DateTimeImmutable $expiration
+        \DateTimeImmutable $expiration,
     ) {
         $this->git_repository = $git_repository;
         $this->object         = $object;

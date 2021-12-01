@@ -216,7 +216,7 @@ class Tracker_FormElement_Container_FieldsetTest extends TestCase //phpcs:ignore
         $container_fieldset->shouldReceive('getAllFormElements')->andReturn([
             $field_01,
             $field_02,
-            $field_03
+            $field_03,
         ]);
 
         $data    = '<?xml version="1.0" encoding="UTF-8"?>

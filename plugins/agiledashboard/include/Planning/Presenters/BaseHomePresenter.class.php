@@ -36,7 +36,7 @@ class Planning_Presenter_BaseHomePresenter
         $group_id,
         $is_user_admin,
         $is_mono_milestone_enabled,
-        bool $is_planning_management_delegated
+        bool $is_planning_management_delegated,
     ) {
         $this->group_id                = $group_id;
         $this->is_user_admin           = $is_user_admin;
@@ -102,7 +102,7 @@ class Planning_Presenter_BaseHomePresenter
             'group_id'                                => $this->group_id,
             'action'                                  => 'updateConfiguration',
             'home-ease-onboarding'                    => 1,
-            CSRFSynchronizerToken::DEFAULT_TOKEN_NAME => $token->getToken()
+            CSRFSynchronizerToken::DEFAULT_TOKEN_NAME => $token->getToken(),
         ];
 
         return $parameters;

@@ -32,7 +32,7 @@ final class PotentialPlannableTrackersConfigurationPresentersBuilder
     private RetrievePlannableTrackers $plannable_trackers_retriever;
 
     public function __construct(
-        RetrievePlannableTrackers $plannable_trackers_retriever
+        RetrievePlannableTrackers $plannable_trackers_retriever,
     ) {
         $this->plannable_trackers_retriever = $plannable_trackers_retriever;
     }

@@ -52,13 +52,13 @@ class XmlUgroupRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_01 = new ProjectUGroup([
             'ugroup_id' => 101,
             'name'      => 'Contributors',
-            'group_id'  => 101
+            'group_id'  => 101,
         ]);
 
         $this->ugroup_02 = new ProjectUGroup([
             'ugroup_id' => 3,
             'name'      => 'project_members',
-            'group_id'  => 101
+            'group_id'  => 101,
         ]);
 
         $ugroup_manager->shouldReceive('getUGroupByName')->with($this->project, 'Contributors')->andReturns($this->ugroup_01);

@@ -48,7 +48,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
                     'type'  => 'date',
                     'value' => '',
                 ],
-            ]
+            ],
         ],
         'display_time' => [
             'value' => 0,
@@ -163,7 +163,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         $xml,
         &$xmlMapping,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        TrackerXmlImportFeedbackCollector $feedback_collector
+        TrackerXmlImportFeedbackCollector $feedback_collector,
     ) {
         parent::continueGetInstanceFromXML($xml, $xmlMapping, $user_finder, $feedback_collector);
 
@@ -519,18 +519,18 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
                 "criterias" => [
                     ">" => [
                         "html_value" => dgettext('tuleap-tracker', 'After'),
-                        "selected"   => $gt_selected
+                        "selected"   => $gt_selected,
 
                     ],
                     "=" => [
                         "html_value" => dgettext('tuleap-tracker', 'As of'),
-                        "selected"   => $eq_selected
+                        "selected"   => $eq_selected,
                     ],
                     "<" => [
                         "html_value" => dgettext('tuleap-tracker', 'Before'),
-                        "selected"   => $lt_selected
+                        "selected"   => $lt_selected,
                     ],
-                ]
+                ],
             ];
 
             $value = $criteria_value ? $this->formatDateForReport($criteria_value['to_date']) : '';
@@ -676,7 +676,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         $errors = $this->has_errors ? ['has_error'] : [];
 
@@ -699,7 +699,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text'
+        $format = 'text',
     ) {
         if (empty($value) || ! $value->getTimestamp()) {
             return '-';
@@ -744,7 +744,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
@@ -820,7 +820,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
         return $this->getValueDao()->create($changeset_value_id, strtotime($value));
     }

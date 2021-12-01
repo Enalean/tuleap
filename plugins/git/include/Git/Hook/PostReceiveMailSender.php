@@ -59,7 +59,7 @@ class PostReceiveMailSender
     public function __construct(
         Git_GitRepositoryUrlManager $repository_url_manager,
         MailBuilder $mail_builder,
-        PostReceiveMailsRetriever $mails_retriever
+        PostReceiveMailsRetriever $mails_retriever,
     ) {
         $this->repository_url_manager = $repository_url_manager;
         $this->mail_builder           = $mail_builder;
@@ -142,7 +142,7 @@ class PostReceiveMailSender
     private function warnSiteAdministratorOfAMisuseOfAGitRepo(
         GitRepository $repository,
         $oldrev,
-        $refname
+        $refname,
     ) {
         /*
          * We do not want to warn the site administrator when it is the first push in the repo.

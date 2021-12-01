@@ -51,7 +51,7 @@ class AccessKeyVerifier
         AccessKeyDAO $dao,
         SplitTokenVerificationStringHasher $hasher,
         \UserManager $user_manager,
-        AccessKeyScopeRetriever $access_key_scope_retriever
+        AccessKeyScopeRetriever $access_key_scope_retriever,
     ) {
         $this->dao                        = $dao;
         $this->hasher                     = $hasher;

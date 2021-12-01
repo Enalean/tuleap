@@ -73,7 +73,7 @@ final class AdminOAuth2AppsPresenter
         string $delete_client_url,
         string $generate_new_secret_url,
         string $edit_client_url,
-        ?LastCreatedOAuth2AppPresenter $last_created_app
+        ?LastCreatedOAuth2AppPresenter $last_created_app,
     ) {
         $this->apps                    = $apps;
         $this->csrf_token              = $csrf_token;
@@ -91,7 +91,7 @@ final class AdminOAuth2AppsPresenter
         \Project $project,
         array $apps,
         \CSRFSynchronizerToken $csrf_token,
-        ?LastCreatedOAuth2AppPresenter $last_created_app
+        ?LastCreatedOAuth2AppPresenter $last_created_app,
     ): self {
         return new self(
             $apps,
@@ -110,7 +110,7 @@ final class AdminOAuth2AppsPresenter
     public static function forSiteAdministration(
         array $apps,
         \CSRFSynchronizerToken $csrf_token,
-        ?LastCreatedOAuth2AppPresenter $last_created_app
+        ?LastCreatedOAuth2AppPresenter $last_created_app,
     ): self {
         return new self(
             $apps,

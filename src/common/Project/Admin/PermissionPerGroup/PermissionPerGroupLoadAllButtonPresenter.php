@@ -46,7 +46,7 @@ class PermissionPerGroupLoadAllButtonPresenter
 
     public function __construct(
         Project $project,
-        ?ProjectUGroup $ugroup = null
+        ?ProjectUGroup $ugroup = null,
     ) {
         $this->project_id = $project->getID();
         $this->ugroup_id  = ($ugroup)

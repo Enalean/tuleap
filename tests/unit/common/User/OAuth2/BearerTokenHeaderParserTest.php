@@ -88,7 +88,7 @@ final class BearerTokenHeaderParserTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             ['Basic aaaaaaaaa'],
-            ['']
+            [''],
         ];
     }
 }

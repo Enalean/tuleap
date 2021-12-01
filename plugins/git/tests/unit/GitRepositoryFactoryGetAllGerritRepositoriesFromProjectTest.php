@@ -37,7 +37,7 @@ class GitRepositoryFactoryGetAllGerritRepositoriesFromProjectTest extends \Tulea
             \GitRepositoryFactory::class,
             [
                 $this->dao,
-                $this->project_manager
+                $this->project_manager,
             ]
         )
             ->makePartial()
@@ -84,9 +84,9 @@ class GitRepositoryFactoryGetAllGerritRepositoriesFromProjectTest extends \Tulea
                     Git::PERM_READ          => [],
                     Git::PERM_WRITE         => [ProjectUGroup::PROJECT_ADMIN, 404],
                     Git::PERM_WPLUS         => [],
-                    Git::SPECIAL_PERM_ADMIN => []
+                    Git::SPECIAL_PERM_ADMIN => [],
                 ]
-            )
+            ),
         ]);
 
         $repositories_with_permissions = $this->factory->getAllGerritRepositoriesFromProject($this->project, $this->user);
@@ -99,9 +99,9 @@ class GitRepositoryFactoryGetAllGerritRepositoriesFromProjectTest extends \Tulea
                         Git::PERM_READ          => [],
                         Git::PERM_WRITE         => [ProjectUGroup::PROJECT_ADMIN, 404],
                         Git::PERM_WPLUS         => [],
-                        Git::SPECIAL_PERM_ADMIN => [ProjectUGroup::PROJECT_ADMIN]
+                        Git::SPECIAL_PERM_ADMIN => [ProjectUGroup::PROJECT_ADMIN],
                     ]
-                )
+                ),
             ],
             $repositories_with_permissions
         );

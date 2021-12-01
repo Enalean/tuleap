@@ -83,7 +83,7 @@ $evParams       = ['searchToken'     => $userName,
                   'json_format'     => $json_format,
                   'userList'        => &$userList,
                   'has_more'        => &$has_more,
-                  'pluginAnswered'  => &$pluginAnswered
+                  'pluginAnswered'  => &$pluginAnswered,
 ];
 
 $em = EventManager::instance();
@@ -155,7 +155,7 @@ if ($json_format) {
                     $json_entries[] = [
                         'type' => 'group',
                         'id'   => RequestFromAutocompleter::UGROUP_PREFIX . $id,
-                        'text' => $text
+                        'text' => $text,
                     ];
                 }
             }
@@ -179,15 +179,15 @@ if ($json_format) {
             'text'           => $display_name,
             'avatar_url'     => $user_info['avatar_url'],
             'has_avatar'     => (bool) $user_info['has_avatar'],
-            'tuleap_user_id' => $user_id
+            'tuleap_user_id' => $user_id,
         ];
     }
 
     $output = [
         'results' => array_values($json_entries),
         'pagination' => [
-            'more' => $has_more
-        ]
+            'more' => $has_more,
+        ],
     ];
 
     $GLOBALS['Response']->sendJSON($output);

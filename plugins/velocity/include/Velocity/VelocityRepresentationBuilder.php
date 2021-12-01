@@ -56,7 +56,7 @@ class VelocityRepresentationBuilder
         SemanticVelocityFactory $semantic_velocity_factory,
         SemanticDoneFactory $semantic_done_factory,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
-        Planning_MilestoneFactory $milestone_factory
+        Planning_MilestoneFactory $milestone_factory,
     ) {
         $this->milestone_factory          = $milestone_factory;
         $this->semantic_velocity_factory  = $semantic_velocity_factory;
@@ -91,7 +91,7 @@ class VelocityRepresentationBuilder
         SemanticVelocity $velocity,
         SemanticDone $done_semantic,
         SemanticTimeframe $timeframe_semantic,
-        PFUser $user
+        PFUser $user,
     ): void {
         $artifact = $sub_milestone->getArtifact();
 

@@ -57,7 +57,7 @@ final class ReviewerChange implements TimelineEvent
         DateTimeImmutable $date_of_the_change,
         PFUser $user_doing_the_change,
         array $added_reviewers,
-        array $removed_reviewers
+        array $removed_reviewers,
     ) {
         $this->date_of_the_change    = $date_of_the_change;
         $this->user_doing_the_change = $user_doing_the_change;

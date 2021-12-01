@@ -37,7 +37,7 @@ $purifier = Codendi_HTMLPurifier::instance();
 
 $event = new GetSystemEventQueuesEvent(
     [
-        SystemEventQueue::NAME => new SystemEventQueue()
+        SystemEventQueue::NAME => new SystemEventQueue(),
     ]
 );
 EventManager::instance()->processEvent(
@@ -108,7 +108,7 @@ foreach ($matching_events as $event) {
 $default_params = [
     'filter_status' => $filter_status,
     'filter_type'   => $filter_type,
-    'queue'         => $selected_queue_name
+    'queue'         => $selected_queue_name,
 ];
 $pagination     = new Tuleap\Layout\PaginationPresenter(
     $limit,

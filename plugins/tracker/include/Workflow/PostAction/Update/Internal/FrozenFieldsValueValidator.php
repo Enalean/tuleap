@@ -42,7 +42,7 @@ class FrozenFieldsValueValidator
 
     public function __construct(
         Tracker_FormElementFactory $form_element_factory,
-        Tracker_RuleFactory $tracker_rule_factory
+        Tracker_RuleFactory $tracker_rule_factory,
     ) {
         $this->form_element_factory = $form_element_factory;
         $this->tracker_rule_factory = $tracker_rule_factory;

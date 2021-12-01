@@ -103,7 +103,7 @@ class TemplatePermissionsUpdater
         RegexpFineGrainedEnabler $regexp_enabler,
         RegexpFineGrainedRetriever $regexp_retriever,
         RegexpPermissionFilter $permission_filter,
-        RegexpFineGrainedDisabler $regexp_disabler
+        RegexpFineGrainedDisabler $regexp_disabler,
     ) {
         $this->permissions_manager          = $permissions_manager;
         $this->history_dao                  = $history_dao;
@@ -183,7 +183,7 @@ class TemplatePermissionsUpdater
         array $write_ugroup_ids,
         array $rewind_ugroup_ids,
         $enable_fine_grained_permissions,
-        $enable_regexp
+        $enable_regexp,
     ) {
         $current_permissions = $this->default_fine_grained_factory->getBranchesFineGrainedPermissionsForProject($project)
             + $this->default_fine_grained_factory->getTagsFineGrainedPermissionsForProject($project);

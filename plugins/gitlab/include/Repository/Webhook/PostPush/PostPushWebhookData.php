@@ -57,7 +57,7 @@ class PostPushWebhookData implements WebhookData
         string $gitlab_web_url,
         ?string $checkout_sha,
         string $reference,
-        array $commits
+        array $commits,
     ) {
         $this->event_name        = $event_name;
         $this->gitlab_project_id = $gitlab_project_id;

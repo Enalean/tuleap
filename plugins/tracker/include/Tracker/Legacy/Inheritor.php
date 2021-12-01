@@ -44,7 +44,7 @@ class Inheritor
 
     public function __construct(
         ArtifactTypeFactory $artifact_type_factory,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
     ) {
         $this->artifact_type_factory = $artifact_type_factory;
         $this->tracker_factory       = $tracker_factory;
@@ -53,7 +53,7 @@ class Inheritor
     public function inheritFromLegacy(
         PFUser $user,
         Project $template,
-        Project $project
+        Project $project,
     ) {
         $tv3_to_duplicate = $this->artifact_type_factory->getTrackerTemplatesForNewProjects();
 

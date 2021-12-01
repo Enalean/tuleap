@@ -35,7 +35,7 @@ final class FeatureRemovalProcessor implements RemoveFeature
         private SearchProgramIncrementLinkedToFeature $program_increments_dao,
         private \Tracker_ArtifactFactory $artifact_factory,
         private ArtifactLinkUpdater $artifact_link_updater,
-        private RetrieveUser $retrieve_user
+        private RetrieveUser $retrieve_user,
     ) {
     }
 

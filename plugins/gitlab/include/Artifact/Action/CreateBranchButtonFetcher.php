@@ -47,7 +47,7 @@ class CreateBranchButtonFetcher
         GitlabIntegrationAvailabilityChecker $availability_checker,
         GitlabRepositoryRepresentationFactory $representation_factory,
         BranchNameCreatorFromArtifact $branch_name_creator_from_artifact,
-        JavascriptAsset $javascript_asset
+        JavascriptAsset $javascript_asset,
     ) {
         $this->availability_checker              = $availability_checker;
         $this->javascript_asset                  = $javascript_asset;
@@ -91,15 +91,15 @@ class CreateBranchButtonFetcher
             [
                 [
                     'name'  => "integrations",
-                    'value' => json_encode($representations, JSON_THROW_ON_ERROR)
+                    'value' => json_encode($representations, JSON_THROW_ON_ERROR),
                 ],
                 [
                     'name'  => "artifact-id",
-                    'value' => $artifact->getId()
+                    'value' => $artifact->getId(),
                 ],
                 [
                     'name'  => 'branch-name',
-                    'value' => $this->branch_name_creator_from_artifact->getBaseBranchName($artifact)
+                    'value' => $this->branch_name_creator_from_artifact->getBaseBranchName($artifact),
                 ],
             ],
         );

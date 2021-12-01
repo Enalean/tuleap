@@ -41,7 +41,7 @@ class MyKanban extends Kanban
         WidgetKanbanConfigRetriever $widget_kanban_config_retriever,
         WidgetKanbanConfigUpdater $widget_kanban_config_updater,
         \Tracker_ReportFactory $tracker_report_factory,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
     ) {
         parent::__construct(
             self::NAME,

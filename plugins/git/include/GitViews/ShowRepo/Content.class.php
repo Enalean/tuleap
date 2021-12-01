@@ -48,7 +48,7 @@ class GitViews_ShowRepo_Content
         GitViews_GitPhpViewer $gitphp_viewer,
         HTTPRequest $request,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        GitPhpAccessLogger $access_logger
+        GitPhpAccessLogger $access_logger,
     ) {
         $this->repository         = $repository;
         $this->gitphp_viewer      = $gitphp_viewer;

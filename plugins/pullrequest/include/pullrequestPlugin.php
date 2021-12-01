@@ -318,7 +318,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         PFUser $user,
         GitRepository $dest_repository,
         $dest_branch_name,
-        $new_rev
+        $new_rev,
     ) {
         $pull_request_factory   = $this->getPullRequestFactory();
         $git_repository_factory = $this->getRepositoryFactory();

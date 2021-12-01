@@ -40,7 +40,7 @@ final class ProgramIncrementLabels
 
     public static function fromProgramIncrementTracker(
         RetrieveProgramIncrementLabels $label_retriever,
-        ?TrackerReference $tracker
+        ?TrackerReference $tracker,
     ): self {
         if (! $tracker) {
             return new self(null, null);

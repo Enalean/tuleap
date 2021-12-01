@@ -44,7 +44,7 @@ class Cardwall_OnTop_Config_Command_DeleteColumns extends Cardwall_OnTop_Config_
         Tracker $tracker,
         Cardwall_OnTop_ColumnDao $dao,
         Cardwall_OnTop_ColumnMappingFieldDao $field_dao,
-        Cardwall_OnTop_ColumnMappingFieldValueDao $value_dao
+        Cardwall_OnTop_ColumnMappingFieldValueDao $value_dao,
     ) {
         parent::__construct($tracker);
         $this->dao       = $dao;

@@ -32,7 +32,7 @@ class ParametrizedAndFromWhere implements IProvideParametrizedFromAndWhereSQLFra
 
     public function __construct(
         IProvideParametrizedFromAndWhereSQLFragments $left,
-        IProvideParametrizedFromAndWhereSQLFragments $right
+        IProvideParametrizedFromAndWhereSQLFragments $right,
     ) {
         $this->left  = $left;
         $this->right = $right;

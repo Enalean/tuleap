@@ -53,7 +53,7 @@ class AccountInformationCollection implements Dispatchable
             new AccountInformationPresenter(
                 _('Member since'),
                 \DateHelper::formatForLanguage($user->getLanguage(), (int) $user->getAddDate(), true),
-            )
+            ),
         ];
     }
 

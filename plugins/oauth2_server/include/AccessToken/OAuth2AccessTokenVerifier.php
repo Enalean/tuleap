@@ -57,7 +57,7 @@ class OAuth2AccessTokenVerifier
         OAuth2AccessTokenDAO $access_token_dao,
         OAuth2ScopeRetriever $scope_retriever,
         \UserManager $user_manager,
-        SplitTokenVerificationStringHasher $hasher
+        SplitTokenVerificationStringHasher $hasher,
     ) {
         $this->access_token_dao = $access_token_dao;
         $this->scope_retriever  = $scope_retriever;
@@ -76,7 +76,7 @@ class OAuth2AccessTokenVerifier
      */
     public function getGrantedAuthorization(
         SplitToken $access_token,
-        AuthenticationScope $required_scope
+        AuthenticationScope $required_scope,
     ): GrantedAuthorization {
         $row = $this->access_token_dao->searchAccessToken($access_token->getID());
         if ($row === null) {

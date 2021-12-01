@@ -35,7 +35,7 @@ class NewDropdownPresenterBuilder
 
     public function __construct(
         EventDispatcherInterface $event_dispatcher,
-        ProjectRegistrationChecker $project_registration_permissions_checker
+        ProjectRegistrationChecker $project_registration_permissions_checker,
     ) {
         $this->event_dispatcher                         = $event_dispatcher;
         $this->project_registration_permissions_checker = $project_registration_permissions_checker;

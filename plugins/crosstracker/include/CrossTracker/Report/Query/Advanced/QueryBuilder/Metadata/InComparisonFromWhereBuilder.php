@@ -40,7 +40,7 @@ class InComparisonFromWhereBuilder implements FromWhereBuilder
     public function __construct(
         AlwaysThereField\Users\FromWhereBuilder $submitted_by_builder,
         AlwaysThereField\Users\FromWhereBuilder $last_update_by_builder,
-        Semantic\AssignedTo\FromWhereBuilder $assigned_to_builder
+        Semantic\AssignedTo\FromWhereBuilder $assigned_to_builder,
     ) {
         $this->submitted_by_builder   = $submitted_by_builder;
         $this->last_update_by_builder = $last_update_by_builder;

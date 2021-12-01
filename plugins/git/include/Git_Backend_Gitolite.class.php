@@ -61,7 +61,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         Git_GitoliteDriver $driver,
         GitoliteAccessURLGenerator $gitolite_access_URL_generator,
         private \Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutor $default_branch_update_executor,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
     ) {
         $this->driver                        = $driver;
         $this->gitolite_access_URL_generator = $gitolite_access_URL_generator;

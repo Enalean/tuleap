@@ -65,6 +65,6 @@ $GLOBALS['Response']->sendJSON(
     [
         'users'                  => $user_collection->getFormattedUsers(),
         'warning_multiple_users' => $user_collection->getWarningsMultipleUsers(),
-        'warning_invalid_users'  => $user_collection->getWarningsInvalidUsers()
+        'warning_invalid_users'  => $user_collection->getWarningsInvalidUsers(),
     ]
 );

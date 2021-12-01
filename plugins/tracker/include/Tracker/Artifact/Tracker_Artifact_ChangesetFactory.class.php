@@ -50,7 +50,7 @@ class Tracker_Artifact_ChangesetFactory
         Tracker_Artifact_Changeset_CommentDao $changeset_comment_dao,
         Tracker_Artifact_ChangesetJsonFormatter $json_formatter,
         Tracker_FormElementFactory $tracker_form_element_factory,
-        TrackerPrivateCommentUGroupPermissionRetriever $private_comment_permission_retriever
+        TrackerPrivateCommentUGroupPermissionRetriever $private_comment_permission_retriever,
     ) {
         $this->dao                                  = $dao;
         $this->changeset_value_dao                  = $changeset_value_dao;
@@ -123,7 +123,7 @@ class Tracker_Artifact_ChangesetFactory
     public function getPreviousChangesetWithFieldValue(
         Artifact $artifact,
         Tracker_FormElement_Field $field,
-        $changeset_id
+        $changeset_id,
     ) {
         $row = $this->dao->searchPreviousChangesetAndValueForArtifactField(
             $artifact->getId(),
@@ -200,7 +200,7 @@ class Tracker_Artifact_ChangesetFactory
         PFUser $user,
         array $cache,
         Tracker_Artifact_Changeset $changeset,
-        ?Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null,
     ) {
         foreach ($cache[$changeset->getId()] as $changeset_value_row) {
             $field = $this->tracker_form_element_factory->getFieldById($changeset_value_row['field_id']);

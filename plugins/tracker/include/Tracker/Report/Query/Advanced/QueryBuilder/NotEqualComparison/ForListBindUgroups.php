@@ -56,7 +56,7 @@ class ForListBindUgroups implements FieldFromWhereBuilder, ListBindUgroupsFromWh
         CollectionOfListValuesExtractor $values_extractor,
         FromWhereEmptyNotEqualComparisonFieldBuilder $empty_comparison_builder,
         FromWhereNotEqualComparisonListFieldBindUgroupsBuilder $comparison_builder,
-        UgroupLabelConverter $label_converter
+        UgroupLabelConverter $label_converter,
     ) {
         $this->empty_comparison_builder = $empty_comparison_builder;
         $this->comparison_builder       = $comparison_builder;

@@ -38,7 +38,7 @@ class MailRegisterByUserPresenter extends MailRegisterPresenter
         $login,
         $redirect_url,
         $redirect_button,
-        $color_button
+        $color_button,
     ) {
         parent::__construct($logo_url, $title, $section_one, $section_two, $section_after_login, $thanks, $signature, $help, $color_logo, $login);
         $this->redirect_url    = $redirect_url;

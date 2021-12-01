@@ -54,7 +54,7 @@ class ReferenceAdministrationBrowseController implements DispatchableWithRequest
         ProjectManager $project_manager,
         LegacyReferenceAdministrationBrowsingRenderer $legacy_renderer,
         HeaderNavigationDisplayer $header_navigation_displayer,
-        ProjectAccessChecker $project_access_checker
+        ProjectAccessChecker $project_access_checker,
     ) {
         $this->project_manager             = $project_manager;
         $this->legacy_renderer             = $legacy_renderer;

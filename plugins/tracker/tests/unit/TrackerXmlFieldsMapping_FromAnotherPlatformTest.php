@@ -70,7 +70,7 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Tes
             "F21840" => $list_field,
             "V198"   => $ugroup_value_01,
             "V200"   => $ugroup_value_02,
-            "V201"   => $ugroup_value_03
+            "V201"   => $ugroup_value_03,
         ];
 
         $this->xml_ugroup_fields_mapping = new TrackerXmlFieldsMapping_FromAnotherPlatform($xml_ugroup_mapping);
@@ -84,7 +84,7 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Tes
         $open_xml_mapping = [
             "F21840" => $open_list_field,
             "V24058" => $static_value_01,
-            "V24059" => $static_value_02
+            "V24059" => $static_value_02,
         ];
 
         $this->xml_open_fields_mapping = new TrackerXmlFieldsMapping_FromAnotherPlatform($open_xml_mapping);

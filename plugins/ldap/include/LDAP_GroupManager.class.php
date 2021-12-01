@@ -83,7 +83,7 @@ abstract class LDAP_GroupManager
         LDAP $ldap,
         LDAP_UserManager $ldap_user_manager,
         ProjectManager $project_manager,
-        GroupSyncNotificationsManager $notifications_manager
+        GroupSyncNotificationsManager $notifications_manager,
     ) {
         $this->ldap                  = $ldap;
         $this->ldap_user_manager     = $ldap_user_manager;
@@ -394,7 +394,7 @@ abstract class LDAP_GroupManager
             $this->ldap->getLDAPParam('eduid'),
             $this->ldap->getLDAPParam('cn'),
             $this->ldap->getLDAPParam('uid'),
-            $this->ldap->getLDAPParam('mail')
+            $this->ldap->getLDAPParam('mail'),
         ];
         $ldap_user_result_iterator = $this->ldap->searchDn($member_dn, $attributes);
         if ($ldap_user_result_iterator && $ldap_user_result_iterator->count() === 1) {

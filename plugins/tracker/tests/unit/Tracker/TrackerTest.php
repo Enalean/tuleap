@@ -58,7 +58,7 @@ class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals(
             '/plugins/tracker/?tracker=110&func=new-artifact&whatever=foo',
             $this->tracker->getSubmitUrlWithParameters([
-                'whatever' => 'foo'
+                'whatever' => 'foo',
             ])
         );
     }

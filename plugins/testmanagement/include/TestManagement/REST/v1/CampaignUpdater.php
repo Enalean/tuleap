@@ -47,7 +47,7 @@ class CampaignUpdater
     public function __construct(
         Tracker_REST_Artifact_ArtifactUpdater $artifact_updater,
         CampaignSaver $campaign_saver,
-        CampaignArtifactUpdateFieldValuesBuilder $field_values_builder
+        CampaignArtifactUpdateFieldValuesBuilder $field_values_builder,
     ) {
         $this->artifact_updater     = $artifact_updater;
         $this->campaign_saver       = $campaign_saver;
@@ -71,7 +71,7 @@ class CampaignUpdater
     public function updateCampaign(
         PFUser $user,
         Campaign $campaign,
-        ?string $change_status
+        ?string $change_status,
     ): void {
         $this->campaign_saver->save($campaign);
 

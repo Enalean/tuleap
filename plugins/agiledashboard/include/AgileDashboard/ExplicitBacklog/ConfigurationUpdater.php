@@ -89,7 +89,7 @@ class ConfigurationUpdater
         UnplannedArtifactsAdder $unplanned_artifacts_adder,
         AddToTopBacklogPostActionDao $add_to_top_backlog_post_action_dao,
         DBTransactionExecutor $db_transaction_executor,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
     ) {
         $this->explicit_backlog_dao               = $explicit_backlog_dao;
         $this->milestone_report_criterion_dao     = $milestone_report_criterion_dao;

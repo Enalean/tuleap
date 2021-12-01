@@ -43,7 +43,7 @@ class Tracker_Artifact_MailGateway_IncomingMessage
         $body,
         PFUser $user,
         Tracker $tracker,
-        ?Artifact $artifact = null
+        ?Artifact $artifact = null,
     ) {
         $this->subject  = $subject;
         $this->body     = $body;

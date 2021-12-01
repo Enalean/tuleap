@@ -52,7 +52,7 @@ class TrackerGeneralSettingsChecker
         string $previous_public_name,
         string $validated_public_name,
         string $validated_tracker_color,
-        string $validated_short_name
+        string $validated_short_name,
     ): void {
         if (strlen($previous_shortname) < Tracker::MAX_TRACKER_SHORTNAME_LENGTH && strlen($validated_short_name) > Tracker::MAX_TRACKER_SHORTNAME_LENGTH) {
             throw TrackerIsInvalidException::buildInvalidLength();

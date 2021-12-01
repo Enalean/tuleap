@@ -93,7 +93,7 @@ final class ProgramManagementConfigXMLImporterTest extends TestCase
     private function processImport(
         bool $is_there_a_config_to_import,
         bool $will_xml_parsing_fail,
-        bool $will_xml_extraction_fail
+        bool $will_xml_extraction_fail,
     ): void {
         if ($is_there_a_config_to_import) {
             $xml_config_parser    = ParseXMLConfigStub::buildWithConfigFile();

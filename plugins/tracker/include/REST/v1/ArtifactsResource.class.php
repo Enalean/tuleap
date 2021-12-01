@@ -521,7 +521,7 @@ class ArtifactsResource extends AuthenticatedResource
         $direction,
         $nature = self::EMPTY_TYPE,
         $limit = 10,
-        $offset = self::DEFAULT_OFFSET
+        $offset = self::DEFAULT_OFFSET,
     ) {
         $this->checkAccess();
 
@@ -557,7 +557,7 @@ class ArtifactsResource extends AuthenticatedResource
         }
 
         return [
-            self::VALUES_FORMAT_COLLECTION => $artifact_representations
+            self::VALUES_FORMAT_COLLECTION => $artifact_representations,
         ];
     }
 
@@ -622,7 +622,7 @@ class ArtifactsResource extends AuthenticatedResource
         $fields = Changeset::FIELDS_ALL,
         $limit = 10,
         $offset = self::DEFAULT_OFFSET,
-        $order = self::ORDER_ASC
+        $order = self::ORDER_ASC,
     ) {
         $this->checkAccess();
         $user     = $this->user_manager->getCurrentUser();
@@ -807,7 +807,7 @@ class ArtifactsResource extends AuthenticatedResource
         TrackerReference $tracker,
         array $values = [],
         array $values_by_field = [],
-        ?ArtifactReference $from_artifact = null
+        ?ArtifactReference $from_artifact = null,
     ) {
         $this->options();
 
@@ -1236,7 +1236,7 @@ class ArtifactsResource extends AuthenticatedResource
     private function checkThatThereIsOnlyOneSourceOfValuesToCreateArtifact(
         array $values,
         array $values_by_field,
-        $from_artifact
+        $from_artifact,
     ) {
         $nb_sources_to_create_artifact = 0;
         if (! empty($values)) {

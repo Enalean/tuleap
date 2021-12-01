@@ -48,7 +48,7 @@ class GitlabTagRetriever
     public function getTagFromGitlabAPI(
         Credentials $credentials,
         GitlabRepositoryIntegration $gitlab_repository_integration,
-        string $tag_name
+        string $tag_name,
     ): GitlabTag {
         $gitlab_integration_id = $gitlab_repository_integration->getGitlabRepositoryId();
 

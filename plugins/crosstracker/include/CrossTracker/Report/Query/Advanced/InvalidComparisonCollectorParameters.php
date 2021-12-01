@@ -46,7 +46,7 @@ class InvalidComparisonCollectorParameters implements VisitorParameters
     public function __construct(
         InvalidSearchablesCollection $invalid_searchables_collection,
         array $trackers,
-        PFUser $user
+        PFUser $user,
     ) {
         $this->invalid_searchables_collection = $invalid_searchables_collection;
         $this->trackers                       = $trackers;

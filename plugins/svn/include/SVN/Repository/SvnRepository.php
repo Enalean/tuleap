@@ -84,7 +84,7 @@ final class SvnRepository implements Repository
             [
                 'group_id' => $this->project->getID(),
                 'action'   => 'settings',
-                'repo_id'  => $this->id
+                'repo_id'  => $this->id,
             ]
         );
     }
@@ -152,7 +152,7 @@ final class SvnRepository implements Repository
         return SVN_BASE_URL . '/?' . http_build_query(
             [
                 'roottype' => 'svn',
-                'root' => $this->getFullName()
+                'root' => $this->getFullName(),
             ]
         );
     }

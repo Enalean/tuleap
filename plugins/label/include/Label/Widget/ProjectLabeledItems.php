@@ -253,8 +253,8 @@ class ProjectLabeledItems extends Widget
                 'file' => $labeled_items_include_assets->getFileURL('widget-project-labeled-items.js'),
 
             ], [
-                'file' => $labeled_items_include_assets->getFileURL('configure-widget.js')
-            ]
+                'file' => $labeled_items_include_assets->getFileURL('configure-widget.js'),
+            ],
         ];
     }
 
@@ -285,7 +285,7 @@ class ProjectLabeledItems extends Widget
         $id,
         $owner_id,
         $owner_type,
-        MappingRegistry $mapping_registry
+        MappingRegistry $mapping_registry,
     ) {
         $this->storeContentId();
         $this->duplicateContent($template_project, $new_project, $id);

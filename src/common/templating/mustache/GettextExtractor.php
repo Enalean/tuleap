@@ -43,13 +43,13 @@ class GettextExtractor
         GettextHelper::GETTEXT,
         GettextHelper::NGETTEXT,
         GettextHelper::DGETTEXT,
-        GettextHelper::DNGETTEXT
+        GettextHelper::DNGETTEXT,
     ];
 
     public function __construct(
         Mustache_Parser $parser,
         Mustache_Tokenizer $tokenizer,
-        GettextCollector $collector
+        GettextCollector $collector,
     ) {
         $this->parser    = $parser;
         $this->tokenizer = $tokenizer;

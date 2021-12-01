@@ -39,7 +39,7 @@ final class FileExtensionFilterIteratorTest extends \Tuleap\Test\PHPUnit\TestCas
             'dir2',
             'file2.txt',
             'file0',
-            'file0.php'
+            'file0.php',
         ];
 
         $this->assertEqualsCanonicalizing($expected_files, $filtered_files);
@@ -55,7 +55,7 @@ final class FileExtensionFilterIteratorTest extends \Tuleap\Test\PHPUnit\TestCas
             'file1.html.php',
             'file1.php',
             'dir2',
-            'file0.php'
+            'file0.php',
         ];
         $this->assertEqualsCanonicalizing($expected_php_files, $filtered_php_files);
 
@@ -68,7 +68,7 @@ final class FileExtensionFilterIteratorTest extends \Tuleap\Test\PHPUnit\TestCas
             'file1.html.php',
             'file1.php',
             'dir2',
-            'file0.php'
+            'file0.php',
         ];
         $this->assertEqualsCanonicalizing($expected_php_js_files, $filtered_php_js_files);
     }
@@ -81,7 +81,7 @@ final class FileExtensionFilterIteratorTest extends \Tuleap\Test\PHPUnit\TestCas
             'dir1',
             'dir11',
             'dir2',
-            'file0'
+            'file0',
         ];
         $this->assertEqualsCanonicalizing($expected_files, $filtered_no_extension_files);
     }

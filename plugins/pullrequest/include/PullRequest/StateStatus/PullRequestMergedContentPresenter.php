@@ -58,7 +58,7 @@ final class PullRequestMergedContentPresenter
         int $pull_request_id,
         string $pull_request_title,
         string $pull_request_url,
-        string $branch_destination
+        string $branch_destination,
     ) {
         $this->change_user_display_name = $change_user_display_name;
         $this->change_user_profile_url  = $change_user_profile_url;

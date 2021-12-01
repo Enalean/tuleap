@@ -38,7 +38,7 @@ class PendingJiraImportDao extends DataAccessObject
         string $tracker_name,
         string $tracker_shortname,
         string $tracker_color,
-        string $tracker_description
+        string $tracker_description,
     ): int {
         return (int) $this->getDB()->insertReturnId(
             'plugin_tracker_pending_jira_import',
@@ -126,7 +126,7 @@ class PendingJiraImportDao extends DataAccessObject
     public function deleteById(int $id): void
     {
         $this->getDB()->delete('plugin_tracker_pending_jira_import', [
-            'id' => $id
+            'id' => $id,
         ]);
     }
 }

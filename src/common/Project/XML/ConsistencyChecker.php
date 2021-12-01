@@ -43,7 +43,7 @@ class ConsistencyChecker
     public function __construct(
         XMLFileContentRetriever $xml_file_content_retriever,
         \EventManager $event_manager,
-        ServiceEnableForXmlImportRetriever $event
+        ServiceEnableForXmlImportRetriever $event,
     ) {
         $this->xml_file_content_retriever = $xml_file_content_retriever;
         $this->event_manager              = $event_manager;

@@ -35,7 +35,7 @@ class RestorePresenter
     public function __construct(
         \CSRFSynchronizerToken $csrf_token,
         array $repositories,
-        $project_id
+        $project_id,
     ) {
         $this->title             = dgettext('tuleap-svn', 'Deleted svn repositories');
         $this->repositories      = $repositories;

@@ -97,7 +97,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             'tuleap-long-running-request.conf',
             'tuleap_common.part',
             'tuleap_errors.part',
-            'tuleap_sessions.part'
+            'tuleap_sessions.part',
         ];
         foreach ($all_files as $file) {
             touch($this->php_configuration_folder . '/php-fpm.d/' . $file);
@@ -127,7 +127,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             'tuleap-long-running-request.conf',
             'tuleap_common.part',
             'tuleap_errors.part',
-            'tuleap_sessions.part'
+            'tuleap_sessions.part',
         ];
         foreach ($all_files as $file) {
             touch($this->php_configuration_folder . '/php-fpm.d/' . $file);
@@ -180,7 +180,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             'tuleap.conf',
             'tuleap-long-running-request.conf',
             'tuleap_errors.part',
-            'tuleap_sessions.part'
+            'tuleap_sessions.part',
         ];
         foreach ($all_files as $file) {
             touch($this->php_configuration_folder . '/php-fpm.d/' . $file);

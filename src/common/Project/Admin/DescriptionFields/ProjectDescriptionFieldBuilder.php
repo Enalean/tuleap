@@ -54,7 +54,7 @@ class ProjectDescriptionFieldBuilder
                 'label'       => DescriptionFieldLabelBuilder::getFieldTranslatedName($custom_field['desc_name']),
                 'is_empty'    => $field_value == '',
                 'value'       => $field_value ? $field_value : $GLOBALS['Language']->getText('global', 'none'),
-                'is_required' => $custom_field['desc_required']
+                'is_required' => $custom_field['desc_required'],
             ];
         }
 

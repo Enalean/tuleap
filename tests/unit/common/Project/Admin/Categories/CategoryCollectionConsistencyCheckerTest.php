@@ -62,7 +62,7 @@ class CategoryCollectionConsistencyCheckerTest extends TestCase
                 ->addChildren(
                     $this->buildTrove('41')
                         ->addChildren($this->buildTrove('411'))
-                )
+                ),
         ]);
     }
 

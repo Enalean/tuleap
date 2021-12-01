@@ -73,7 +73,7 @@ class TrackerPresenter
         string $admin_url,
         string $deletion_url,
         bool $can_be_deleted,
-        string $cannot_delete_message
+        string $cannot_delete_message,
     ) {
         $this->id                    = $id;
         $this->item_name             = $item_name;

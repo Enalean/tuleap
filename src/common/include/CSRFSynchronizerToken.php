@@ -174,7 +174,7 @@ class CSRFSynchronizerToken
         $this->token                                     = $random_number_generator->getNumber();
         $this->storage[self::STORAGE_PREFIX][$this->url] = [
             'token'   => $this->token,
-            'created' => time()
+            'created' => time(),
         ];
         $this->recycleTokens();
     }

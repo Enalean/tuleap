@@ -43,7 +43,7 @@ final class TestConnectionManager implements ConnectionManagerInterface
         string $ssl_mode,
         string $ssl_ca_file,
         string $user,
-        string $password
+        string $password,
     ): DBWrapperInterface {
         return $this->db;
     }

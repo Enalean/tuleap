@@ -37,7 +37,7 @@ class FrequenciesSearchFieldsPresenter
         array $type_values,
         array $filter_values,
         $start_date_value,
-        $end_date_value
+        $end_date_value,
     ) {
         $this->type_values      = $type_values;
         $this->start_date_value = $start_date_value;

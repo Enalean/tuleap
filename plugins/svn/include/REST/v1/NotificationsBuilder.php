@@ -51,7 +51,7 @@ class NotificationsBuilder
         UsersToNotifyDao $user_dao,
         UserManager $user_manager,
         UgroupsToNotifyDao $ugroup_dao,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->user_dao       = $user_dao;
         $this->user_manager   = $user_manager;

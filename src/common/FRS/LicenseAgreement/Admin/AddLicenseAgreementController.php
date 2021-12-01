@@ -65,7 +65,7 @@ class AddLicenseAgreementController implements DispatchableWithRequest
         LicenseAgreementControllersHelper $helper,
         \TemplateRenderer $content_renderer,
         \CSRFSynchronizerToken $csrf_token,
-        IncludeAssets $assets
+        IncludeAssets $assets,
     ) {
         $this->project_retriever = $project_retriever;
         $this->helper            = $helper;

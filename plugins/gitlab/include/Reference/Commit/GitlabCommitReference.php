@@ -32,7 +32,7 @@ class GitlabCommitReference extends \Reference
     public function __construct(
         GitlabRepositoryIntegration $repository_integration,
         Project $project,
-        string $sha1
+        string $sha1,
     ) {
         parent::__construct(
             0,

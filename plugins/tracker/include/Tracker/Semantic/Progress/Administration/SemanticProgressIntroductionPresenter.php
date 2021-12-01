@@ -41,7 +41,7 @@ class SemanticProgressIntroductionPresenter
     public function __construct(
         string $semantic_usages_description,
         bool $is_semantic_defined,
-        string $current_configuration_description
+        string $current_configuration_description,
     ) {
         $this->semantic_usages_description       = $semantic_usages_description;
         $this->is_semantic_defined               = $is_semantic_defined;

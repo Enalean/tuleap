@@ -136,7 +136,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
         $payload_content = [
             'tuleapProjectId' => '1',
             'repositoryName'  => 'AMG',
-            'branchName'      => 'A35'
+            'branchName'      => 'A35',
         ];
 
         $payload->shouldReceive('getPayload')->andReturn($payload_content);
@@ -175,7 +175,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
         $payload_content = [
             'tuleapProjectId' => '1',
             'repositoryName'  => 'AMG',
-            'branchName'      => 'A35'
+            'branchName'      => 'A35',
         ];
 
         $payload->shouldReceive('getPayload')->andReturn($payload_content);

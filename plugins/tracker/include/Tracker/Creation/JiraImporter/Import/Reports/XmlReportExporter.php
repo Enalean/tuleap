@@ -38,7 +38,7 @@ class XmlReportExporter
         XmlReportOpenIssuesExporter $xml_report_open_issues_exporter,
         XmlReportDoneIssuesExporter $xml_report_done_issues_exporter,
         XmlReportCreatedRecentlyExporter $xml_report_created_recently_exporter,
-        XmlReportUpdatedRecentlyExporter $xml_report_updated_recently_exporter
+        XmlReportUpdatedRecentlyExporter $xml_report_updated_recently_exporter,
     ): void {
         $reports_node = $trackers_node->addChild('reports');
 

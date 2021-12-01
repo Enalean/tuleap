@@ -39,7 +39,7 @@ final class SynchronizedFieldReferencesBuilder
     }
 
     public static function buildWithPreparations(
-        SynchronizedFieldsStubPreparation ...$preparations
+        SynchronizedFieldsStubPreparation ...$preparations,
     ): SynchronizedFieldReferences {
         return SynchronizedFieldReferences::fromTrackerIdentifier(
             GatherSynchronizedFieldsStub::withFieldsPreparations(...$preparations),

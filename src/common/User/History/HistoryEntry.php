@@ -75,7 +75,7 @@ class HistoryEntry
         ?Glyph $normal_icon,
         string $icon_name,
         \Project $project,
-        array $quick_links
+        array $quick_links,
     ) {
         $this->visit_time  = (int) $visit_time;
         $this->xref        = $xref;

@@ -496,7 +496,7 @@ class ReadFileData
             'escape'        => chr(92),
             'readlength'    => 1024,
             'ignore_first'  => false,
-            'first_as_key'  => false
+            'first_as_key'  => false,
             ];
 
         $aOptions = array_merge(

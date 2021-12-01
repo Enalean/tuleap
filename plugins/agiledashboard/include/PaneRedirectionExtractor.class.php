@@ -63,7 +63,7 @@ class AgileDashboard_PaneRedirectionExtractor
                 self::PANE        => $pane_identifier,
                 self::PLANNING_ID => $planning_id,
                 self::ARTIFACT_ID => $planning_artifact_id,
-                self::ACTION      => 'show'
+                self::ACTION      => 'show',
             ];
         }
     }

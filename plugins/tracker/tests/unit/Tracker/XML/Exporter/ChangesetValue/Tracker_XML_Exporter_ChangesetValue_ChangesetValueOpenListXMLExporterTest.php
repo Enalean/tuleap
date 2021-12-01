@@ -49,7 +49,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporte
         $user              = new PFUser([
             'user_id' => 112,
             'language_id' => 'en',
-            'ldap_id' => 'ldap_01'
+            'ldap_id' => 'ldap_01',
         ]);
         $user_manager      = \Mockery::spy(\UserManager::class)->shouldReceive('getUserById')->with(112)->andReturns($user)->getMock();
         $user_xml_exporter = new UserXMLExporter($user_manager, \Mockery::spy(\UserXMLExportedCollection::class));
@@ -76,7 +76,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporte
         $this->setUpUserTests();
         $this->changeset_value->shouldReceive('getValue')->andReturns([
             'o14',
-            'b112'
+            'b112',
         ]);
 
         $this->exporter->export(

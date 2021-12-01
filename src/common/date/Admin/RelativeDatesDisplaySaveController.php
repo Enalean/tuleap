@@ -56,7 +56,7 @@ class RelativeDatesDisplaySaveController implements DispatchableWithRequest
         \CSRFSynchronizerToken $csrf_token,
         SelectedDateDisplayPreferenceValidator $date_display_preference_validator,
         \Tuleap\Config\ConfigDao $config_dao,
-        \UserPreferencesDao $preferences_dao
+        \UserPreferencesDao $preferences_dao,
     ) {
         $this->csrf_token                        = $csrf_token;
         $this->date_display_preference_validator = $date_display_preference_validator;

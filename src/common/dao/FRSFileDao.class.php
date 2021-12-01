@@ -169,7 +169,7 @@ class FRSFileDao extends DataAccessObject
         $file_size = null,
         $reference_md5 = null,
         $post_date = null,
-        $status = 'A'
+        $status = 'A',
     ) {
         $arg    = [];
         $values = [];
@@ -267,7 +267,7 @@ class FRSFileDao extends DataAccessObject
         $processor_id = null,
         $release_time = null,
         $file_size = null,
-        $status = null
+        $status = null,
     ) {
         $argArray = [];
 

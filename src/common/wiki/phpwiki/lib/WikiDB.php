@@ -275,7 +275,7 @@ class WikiDB
         $include_empty = false,
         $sortby = false,
         $limit = false,
-        $exclude = false
+        $exclude = false,
     ) {
         $result = $this->_backend->get_all_pages($include_empty, $sortby, $limit, $exclude);
         return new WikiDB_PageIterator(
@@ -284,7 +284,7 @@ class WikiDB
             [
                 'include_empty' => $include_empty,
                 'exclude' => $exclude,
-                'limit' => $limit
+                'limit' => $limit,
             ]
         );
     }
@@ -331,7 +331,7 @@ class WikiDB
             $result,
             [
                 'exclude' => $exclude,
-                'limit' => $limit
+                'limit' => $limit,
             ]
         );
     }
@@ -361,7 +361,7 @@ class WikiDB
             [
                 'exclude' => $exclude,
                 'limit' => $limit,
-                'stoplisted' => $result->stoplisted
+                'stoplisted' => $result->stoplisted,
             ]
         );
     }
@@ -1264,7 +1264,7 @@ class WikiDB_Page
         $include_empty = false,
         $sortby = false,
         $limit = false,
-        $exclude = false
+        $exclude = false,
     ) {
         $backend = &$this->_wikidb->_backend;
         $result  =  $backend->get_links($this->_pagename, $reversed, $include_empty, $sortby, $limit, $exclude);
@@ -1275,7 +1275,7 @@ class WikiDB_Page
                 'include_empty' => $include_empty,
                 'sortby' => $sortby,
                 'limit' => $limit,
-                'exclude' => $exclude
+                'exclude' => $exclude,
             ]
         );
     }

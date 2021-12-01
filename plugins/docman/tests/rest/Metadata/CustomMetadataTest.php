@@ -101,17 +101,17 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                 'metadata' => [
                     [
                         'short_name' => $text_metadata['short_name'],
-                        'value' => 'aaaaa'
+                        'value' => 'aaaaa',
                     ],
                     [
                         'short_name' => $list_metadata['short_name'],
-                        'value' => $value['id']
+                        'value' => $value['id'],
                     ],
                     [
                         'short_name' => $other_list_metadata['short_name'],
-                        'list_value' => []
-                    ]
-                ]
+                        'list_value' => [],
+                    ],
+                ],
             ]
         );
 
@@ -135,17 +135,17 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                 'metadata' => [
                     [
                         'short_name' => $text_metadata['short_name'],
-                        'value'      => 'updated value'
+                        'value'      => 'updated value',
                     ],
                     [
                         'short_name' => $list_metadata['short_name'],
-                        'value'      => $updated_value['id']
+                        'value'      => $updated_value['id'],
                     ],
                     [
                         'short_name' => $other_list_metadata['short_name'],
-                        'list_value' => []
-                    ]
-                ]
+                        'list_value' => [],
+                    ],
+                ],
             ]
         );
 
@@ -218,17 +218,17 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                 'metadata'        => [
                     [
                         'short_name' => $text_metadata['short_name'],
-                        'value'      => 'bbbbb'
+                        'value'      => 'bbbbb',
                     ],
                     [
                         'short_name' => $list_metadata['short_name'],
-                        'value'      => null
+                        'value'      => null,
                     ],
                     [
                         'short_name' => $other_list_metadata['short_name'],
-                        'list_value' => [(int) $other_value['id']]
-                    ]
-                ]
+                        'list_value' => [(int) $other_value['id']],
+                    ],
+                ],
             ]
         );
 
@@ -311,17 +311,17 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                 'metadata' => [
                     [
                         'short_name' => $text_metadata['short_name'],
-                        'value'      => 'updated value'
+                        'value'      => 'updated value',
                     ],
                     [
                         'short_name' => $list_metadata['short_name'],
-                        'value'      => null
+                        'value'      => null,
                     ],
                     [
                         'short_name' => $other_list_metadata['short_name'],
-                        'list_value' => [(int) $other_updated_value['id']]
-                    ]
-                ]
+                        'list_value' => [(int) $other_updated_value['id']],
+                    ],
+                ],
             ]
         );
 
@@ -383,7 +383,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $query = json_encode(
             [
-                'title'    => 'new folder'
+                'title'    => 'new folder',
             ]
         );
 
@@ -404,7 +404,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $query = json_encode(
             [
-                'title'    => 'an empty document'
+                'title'    => 'an empty document',
             ]
         );
 
@@ -428,25 +428,25 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                 'owner_id' => 101,
                 'status'   => [
                     'value' => 'none',
-                    'recursion' => 'none'
+                    'recursion' => 'none',
                 ],
                 'metadata' => [
                     [
                         'short_name' => $text_metadata['short_name'],
                         'value'      => 'updated value',
-                        'recursion' => 'all_items'
+                        'recursion' => 'all_items',
                     ],
                     [
                         'short_name' => $list_metadata['short_name'],
                         'value'      => "",
-                        'recursion' => 'none'
+                        'recursion' => 'none',
                     ],
                     [
                         'short_name' => $other_list_metadata['short_name'],
                         'list_value' => [],
-                        'recursion' => 'none'
-                    ]
-                ]
+                        'recursion' => 'none',
+                    ],
+                ],
             ]
         );
 

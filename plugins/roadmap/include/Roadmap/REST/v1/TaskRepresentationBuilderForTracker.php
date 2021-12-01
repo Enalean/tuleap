@@ -58,7 +58,7 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
         IComputeTimeframes $timeframe_calculator,
         IRetrieveDependencies $dependencies_retriever,
         SemanticProgressBuilder $progress_builder,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->tracker                = $tracker;
         $this->timeframe_calculator   = $timeframe_calculator;

@@ -55,7 +55,7 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
             [
                 'destination' => $destination,
                 'message'     => $mailMessage,
-                'subject'     => $mailSubject
+                'subject'     => $mailSubject,
             ]
         );
         $GLOBALS['Response']->addFeedback(
@@ -108,7 +108,7 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
             $GLOBALS['Response']->sendJSON(
                 [
                     'success' => false,
-                    'message' => _('No valid email to send the preview.')
+                    'message' => _('No valid email to send the preview.'),
                 ]
             );
             exit;
@@ -119,14 +119,14 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
             $GLOBALS['Response']->sendJSON(
                 [
                     'success' => true,
-                    'message' => _('Preview sent')
+                    'message' => _('Preview sent'),
                 ]
             );
         } else {
             $GLOBALS['Response']->sendJSON(
                 [
                     'success' => false,
-                    'message' => _('Preview could not be sent')
+                    'message' => _('Preview could not be sent'),
                 ]
             );
         }

@@ -70,7 +70,7 @@ class WorkerSupervisorCommand extends Command
     public function __construct(
         ProcessFactory $process_factory,
         LockFactory $lock_factory,
-        WorkerAvailability $worker_availability
+        WorkerAvailability $worker_availability,
     ) {
         parent::__construct(self::NAME);
         $this->process_factory     = $process_factory;

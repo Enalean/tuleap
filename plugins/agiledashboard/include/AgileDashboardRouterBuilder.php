@@ -77,7 +77,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
         VisitRecorder $visit_recorder,
         AllBreadCrumbsForMilestoneBuilder $all_bread_crumbs_for_milestone_builder,
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        ProvideCurrentUser $current_user_provider
+        ProvideCurrentUser $current_user_provider,
     ) {
         $this->plugin_factory                         = $plugin_factory;
         $this->pane_factory                           = $pane_factory;
@@ -234,7 +234,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private function getTopMilestonePaneFactory(
         Codendi_Request $request,
-        EventManager $event_manager
+        EventManager $event_manager,
     ): Planning_VirtualTopMilestonePaneFactory {
         return new Planning_VirtualTopMilestonePaneFactory($request, new ExplicitBacklogDao(), $event_manager);
     }

@@ -38,7 +38,7 @@ class UsersToBeImportedCollectionBuilder
 
     public function __construct(
         UserManager $user_manager,
-        XML_RNGValidator $xml_validator
+        XML_RNGValidator $xml_validator,
     ) {
         $this->user_manager  = $user_manager;
         $this->xml_validator = $xml_validator;

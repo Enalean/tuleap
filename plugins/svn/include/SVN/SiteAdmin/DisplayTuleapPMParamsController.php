@@ -47,7 +47,7 @@ final class DisplayTuleapPMParamsController implements DispatchableWithRequest, 
 
     public function __construct(
         ParameterRetriever $parameters_retriever,
-        AdminPageRenderer $renderer
+        AdminPageRenderer $renderer,
     ) {
         $this->parameters_retriever = $parameters_retriever;
         $this->renderer             = $renderer;

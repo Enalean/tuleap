@@ -71,7 +71,7 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         $kanban_title,
         $is_user_admin,
         $is_mono_milestone_enabled,
-        bool $is_planning_management_delegated
+        bool $is_planning_management_delegated,
     ) {
         parent::__construct($group_id, $is_user_admin, $is_mono_milestone_enabled, $is_planning_management_delegated);
         $this->milestone_presenters            = $milestone_access_presenters;

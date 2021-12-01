@@ -38,7 +38,7 @@ class SemanticTimeframeFromXMLBuilder implements IBuildSemanticFromXML
     public function __construct(
         ArtifactLinkFieldValueDao $artifact_link_field_value_dao,
         TrackerFactory $tracker_factory,
-        SemanticTimeframeBuilder $semantic_timeframe_builder
+        SemanticTimeframeBuilder $semantic_timeframe_builder,
     ) {
         $this->artifact_link_field_value_dao = $artifact_link_field_value_dao;
         $this->tracker_factory               = $tracker_factory;
@@ -50,7 +50,7 @@ class SemanticTimeframeFromXMLBuilder implements IBuildSemanticFromXML
         SimpleXMLElement $all_semantics_xml,
         array $xml_mapping,
         Tracker $tracker,
-        array $tracker_mapping
+        array $tracker_mapping,
     ): ?SemanticTimeframe {
         if (! isset($current_semantic_xml->start_date_field)) {
             return $this->getSemanticTimeframeInheritedFromAnotherTrackerInstance($current_semantic_xml, $tracker, $tracker_mapping);

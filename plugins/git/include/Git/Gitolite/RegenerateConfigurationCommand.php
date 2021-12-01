@@ -114,7 +114,7 @@ class RegenerateConfigurationCommand extends Command
             $output->writeln([
                 '<comment>No active project ID has been specified to re-generate Gitolite configuration</comment>',
                 '',
-                '<comment>' . OutputFormatter::escape($this->getSynopsis()) . '</comment>'
+                '<comment>' . OutputFormatter::escape($this->getSynopsis()) . '</comment>',
             ]);
             return 0;
         }

@@ -35,7 +35,7 @@ class ExecutionWithAutomatedTestData
 
     public function __construct(
         Artifact $execution,
-        string $automated_test
+        string $automated_test,
     ) {
         $this->execution      = $execution;
         $this->automated_test = $automated_test;

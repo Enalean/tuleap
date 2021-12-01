@@ -223,7 +223,7 @@ class Docman_LockFactory
         $p = [
             'group_id' => $item->getGroupId(),
             'item'     => $item,
-            'user'     => $user
+            'user'     => $user,
         ];
         $this->docman_log->log('plugin_docman_event_lock_add', $p);
     }
@@ -241,7 +241,7 @@ class Docman_LockFactory
         $p = [
             'group_id' => $item->getGroupId(),
             'item'     => $item,
-            'user'     => $user
+            'user'     => $user,
         ];
         $this->docman_log->log('plugin_docman_event_lock_del', $p);
     }

@@ -96,7 +96,7 @@ final class BinaryFileResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         int $total_content_size,
         string $range_header,
         string $expected_content_range_header,
-        string $expected_content_length_header
+        string $expected_content_length_header,
     ): void {
         $builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
 

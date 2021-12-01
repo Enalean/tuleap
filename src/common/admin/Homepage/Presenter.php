@@ -62,7 +62,7 @@ class Admin_Homepage_Presenter
         $title,
         $display_statistics_on_home_page,
         $display_news_on_home_page,
-        array $headlines
+        array $headlines,
     ) {
         $this->title                           = $title;
         $this->headlines                       = $headlines;

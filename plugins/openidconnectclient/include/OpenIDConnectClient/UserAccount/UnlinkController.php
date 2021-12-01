@@ -52,7 +52,7 @@ final class UnlinkController implements DispatchableWithRequest
     public function __construct(
         CSRFSynchronizerToken $csrf_token,
         ProviderManager $provider_manager,
-        UserMappingManager $user_mapping_manager
+        UserMappingManager $user_mapping_manager,
     ) {
         $this->csrf_token           = $csrf_token;
         $this->provider_manager     = $provider_manager;

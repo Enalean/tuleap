@@ -35,7 +35,7 @@ class Docman_PermissionsManager
     public const ITEM_PERMISSION_TYPES       = [
         self::ITEM_PERMISSION_TYPE_READ,
         self::ITEM_PERMISSION_TYPE_WRITE,
-        self::ITEM_PERMISSION_TYPE_MANAGE
+        self::ITEM_PERMISSION_TYPE_MANAGE,
     ];
 
     /**

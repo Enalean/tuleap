@@ -39,7 +39,7 @@ class FieldCalculator
         $timestamp,
         $stop_on_manual_value,
         $target_field_name,
-        int $computed_field_id
+        int $computed_field_id,
     ) {
         $sum          = null;
         $already_seen = new ArtifactsAlreadyProcessedDuringComputationCollection();

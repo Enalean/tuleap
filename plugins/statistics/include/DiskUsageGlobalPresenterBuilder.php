@@ -36,7 +36,7 @@ class DiskUsageGlobalPresenterBuilder
 
     public function __construct(
         Statistics_DiskUsageManager $usage_manager,
-        Statistics_DiskUsageOutput $usage_output
+        Statistics_DiskUsageOutput $usage_output,
     ) {
         $this->usage_manager = $usage_manager;
         $this->usage_output  = $usage_output;
@@ -69,31 +69,31 @@ class DiskUsageGlobalPresenterBuilder
         if (isset($result['service'][Statistics_DiskUsageManager::USR_HOME])) {
             $data_global[] = [
                 'title' => dgettext('tuleap-statistics', 'Users'),
-                'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::USR_HOME])
+                'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::USR_HOME]),
             ];
         }
         if (isset($result['service'][Statistics_DiskUsageManager::MYSQL])) {
             $data_global[] = [
                 'title' => 'MySQL',
-                'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::MYSQL])
+                'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::MYSQL]),
             ];
         }
         if (isset($result['service'][Statistics_DiskUsageManager::CODENDI_LOGS])) {
             $data_global[] = [
                 'title' => dgettext('tuleap-statistics', 'Codendi Logs'),
-                'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::CODENDI_LOGS])
+                'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::CODENDI_LOGS]),
             ];
         }
         if (isset($result['service'][Statistics_DiskUsageManager::BACKUP])) {
             $data_global[] = [
                 'title' => dgettext('tuleap-statistics', 'Backup'),
-                'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::BACKUP])
+                'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::BACKUP]),
             ];
         }
         if (isset($result['service'][Statistics_DiskUsageManager::BACKUP_OLD])) {
             $data_global[] = [
                 'title' => dgettext('tuleap-statistics', 'Backup old'),
-                'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::BACKUP_OLD])
+                'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::BACKUP_OLD]),
             ];
         }
 
@@ -101,7 +101,7 @@ class DiskUsageGlobalPresenterBuilder
             foreach ($result['path'] as $path => $size) {
                 $data_global[] = [
                     'title' => $path,
-                    'size'  => $this->usage_output->sizeReadable($size)
+                    'size'  => $this->usage_output->sizeReadable($size),
                 ];
             }
         }

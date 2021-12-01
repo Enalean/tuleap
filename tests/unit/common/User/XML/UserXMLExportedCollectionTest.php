@@ -49,7 +49,7 @@ final class UserXMLExportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
                 'realname'    => 'Kool Shen',
                 'email'       => 'kshen@hotmail.fr',
                 'ldap_id'     => 'cb9867',
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
 
@@ -59,7 +59,7 @@ final class UserXMLExportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
                 'user_name'   => 'jstar',
                 'realname'    => 'Joeystarr <script>',
                 'email'       => 'jstar@caramail.com',
-                'language_id' => 'en'
+                'language_id' => 'en',
             ]
         );
 

@@ -32,7 +32,7 @@ class TransitionRetriever
     public function retrieveTransition(
         Workflow $workflow,
         array $fields_data,
-        ?Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null,
     ): ?Transition {
         $workflow_field    = $workflow->getField();
         $workflow_field_id = (int) $workflow->getFieldId();
@@ -60,7 +60,7 @@ class TransitionRetriever
 
     private function getFrom(
         Tracker_FormElement_Field $workflow_field,
-        ?Tracker_Artifact_Changeset $previous_changeset
+        ?Tracker_Artifact_Changeset $previous_changeset,
     ): ?int {
         if (! $previous_changeset) {
             return null;
@@ -87,7 +87,7 @@ class TransitionRetriever
     private function getTransitionFromWorkflowFieldDefaultValueAtArtifactCreation(
         Tracker_FormElement_Field $workflow_field,
         Workflow $workflow,
-        ?int $from
+        ?int $from,
     ): ?Transition {
         $default_value = $workflow_field->getDefaultValue();
         if ($default_value === null) {

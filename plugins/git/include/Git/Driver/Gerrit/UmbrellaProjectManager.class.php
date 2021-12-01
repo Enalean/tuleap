@@ -45,7 +45,7 @@ class Git_Driver_Gerrit_UmbrellaProjectManager
         UGroupManager $ugroup_manager,
         ProjectManager $project_manager,
         Git_Driver_Gerrit_MembershipManager $membership_manager,
-        Git_Driver_Gerrit_GerritDriverFactory $driver_factory
+        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
     ) {
         $this->ugroup_manager     = $ugroup_manager;
         $this->project_manager    = $project_manager;

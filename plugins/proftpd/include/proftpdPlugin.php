@@ -150,7 +150,7 @@ class proftpdPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration
             $params['logs'][] = [
                 'sql'   => $dao->getLogQuery($params['group_id'], $params['logs_cond']),
                 'field' => dgettext('tuleap-proftpd', 'Filepath'),
-                'title' => dgettext('tuleap-proftpd', 'FTP access')
+                'title' => dgettext('tuleap-proftpd', 'FTP access'),
             ];
         }
     }
@@ -251,7 +251,7 @@ class proftpdPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration
                     [
                         'group_id'   => $project->getID(),
                         'controller' => "admin",
-                        'action'     => 'index'
+                        'action'     => 'index',
                     ]
                 )
             )

@@ -149,7 +149,7 @@ class IndexPresenter
         object $milestone_representation,
         array $project_flags,
         bool $has_current_project_parents,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
     ) {
         $this->lang = $this->getLanguageAbbreviation($current_user);
 
@@ -177,7 +177,7 @@ class IndexPresenter
                 'definition_tracker_id' => $this->test_definition_tracker_id,
                 'execution_tracker_id'  => $this->test_execution_tracker_id,
                 'campaign_tracker_id'   => $this->campaign_tracker_id,
-                'issue_tracker_id'      => $this->issue_tracker_id
+                'issue_tracker_id'      => $this->issue_tracker_id,
             ]
         );
 

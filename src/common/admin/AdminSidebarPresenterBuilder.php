@@ -98,7 +98,7 @@ class AdminSidebarPresenterBuilder
     {
         return $this->user_manager->countUsersByStatus([
             PFUser::STATUS_VALIDATED,
-            PFUser::STATUS_VALIDATED_RESTRICTED
+            PFUser::STATUS_VALIDATED_RESTRICTED,
         ]);
     }
 

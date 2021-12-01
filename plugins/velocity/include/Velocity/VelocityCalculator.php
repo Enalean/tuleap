@@ -50,7 +50,7 @@ class VelocityCalculator
         Tracker_ArtifactFactory $artifact_factory,
         AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory,
         SemanticDoneFactory $semantic_done_factory,
-        VelocityDao $dao
+        VelocityDao $dao,
     ) {
         $this->artifact_factory       = $artifact_factory;
         $this->initial_effort_factory = $initial_effort_factory;

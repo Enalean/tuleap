@@ -49,7 +49,7 @@ final class ProgramIncrementRetriever implements RetrieveProgramIncrement
 
     public function retrieveProgramIncrementById(
         UserIdentifier $user_identifier,
-        ProgramIncrementIdentifier $increment_identifier
+        ProgramIncrementIdentifier $increment_identifier,
     ): ?ProgramIncrement {
         return ProgramIncrement::build(
             $this->retrieve_status,

@@ -68,7 +68,7 @@ class AdminController extends TestManagementController
         FieldUsageDetector $field_usage_detector,
         TrackerChecker $tracker_checker,
         Valid_UInt $int_validator,
-        AdminTrackersRetriever $tracker_retriever
+        AdminTrackersRetriever $tracker_retriever,
     ) {
         parent::__construct($request, $config, $event_manager);
         $this->csrf_token           = $csrf_token;
@@ -185,7 +185,7 @@ class AdminController extends TestManagementController
     private function checkIssueTrackerIdForProject(
         ?string $submitted_id,
         ?string $original_id,
-        string $tracker_type
+        string $tracker_type,
     ) {
         if ($submitted_id === '') {
             return null;

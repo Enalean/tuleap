@@ -40,7 +40,7 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
         int $obsolescence_date_timestamp,
         string $title,
         string $description,
-        ?string $approval_table_action
+        ?string $approval_table_action,
     ): int {
         $version_id = $this->getDB()->insertReturnId(
             'plugin_docman_new_version_upload',
@@ -57,7 +57,7 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
                 'status'                => $status_id,
                 'obsolescence_date'     => $obsolescence_date_timestamp,
                 'title'                 => $title,
-                'description'           => $description
+                'description'           => $description,
             ]
         );
         return (int) $version_id;

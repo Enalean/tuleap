@@ -239,7 +239,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockCanUserUpdateField(
         Cardwall_Column $done_column,
         int $field_id,
-        bool $can_update_mapped_field
+        bool $can_update_mapped_field,
     ): void {
         $milestone_tracker = M::mock(Tracker::class)
             ->shouldReceive(['getId' => 76])

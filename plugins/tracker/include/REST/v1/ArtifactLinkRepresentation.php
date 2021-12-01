@@ -96,7 +96,7 @@ class ArtifactLinkRepresentation
             "direction"    => $direction,
             "label"        => $label,
             "uri"          => "artifacts/" . $artifact->getId() . "/linked_artifacts?nature=" . urlencode($type->shortname) .
-                              "&direction=" . urlencode($direction)
+                              "&direction=" . urlencode($direction),
         ];
     }
 }

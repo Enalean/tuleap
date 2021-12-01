@@ -68,7 +68,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
                 $i      = array_pop($l['items']);
                 $params = [
                     'item' => $i['item'],
-                    'path' => &$path
+                    'path' => &$path,
                 ];
                 if (count($i['events']) > 1) {
                     // A folder A has a subitem B
@@ -178,7 +178,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
                 if ($user && $dpm->userCanRead($user, $params['item']->getId()) && $dpm->userCanAccess($user, $params['item']->getParentId()) && $dpm->userCanAccess($user, $row['item_id'])) {
                     $this->_listeners[$user->getId()] = [
                         'user'  => $user,
-                        'items' => []
+                        'items' => [],
                     ];
                 }
             }
@@ -186,12 +186,12 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
                 if (! isset($this->_listeners[$row['user_id']]['items'][$params['item']->getId()])) {
                     $this->_listeners[$row['user_id']]['items'][$params['item']->getId()] = [
                         'item'   => &$params['item'],
-                        'events' => []
+                        'events' => [],
                     ];
                 }
                 $event = [
                     'type' => $message_type,
-                    'user' => &$params['user']
+                    'user' => &$params['user'],
                 ];
                 if (isset($params['parent'])) {
                     $event['parent'] = $params['parent'];

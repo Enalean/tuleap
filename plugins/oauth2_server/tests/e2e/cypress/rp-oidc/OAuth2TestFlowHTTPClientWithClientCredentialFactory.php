@@ -57,7 +57,7 @@ final class OAuth2TestFlowHTTPClientWithClientCredentialFactory
             [
                 new AuthenticationPlugin(
                     new BasicAuth($client_id, $client_secret)
-                )
+                ),
             ]
         );
     }

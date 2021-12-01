@@ -69,7 +69,7 @@ class EditLicenseAgreementController implements DispatchableWithRequest
         \TemplateRendererFactory $renderer_factory,
         LicenseAgreementFactory $factory,
         \CSRFSynchronizerToken $csrf_token,
-        IncludeAssets $assets
+        IncludeAssets $assets,
     ) {
         $this->project_retriever = $project_retriever;
         $this->helper            = $helper;

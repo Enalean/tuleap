@@ -41,7 +41,7 @@ class ListFieldChangeInitialValueRetriever
 
     public function __construct(
         CreationStateListValueFormatter $creation_state_list_value_formatter,
-        JiraUserRetriever $jira_user_retriever
+        JiraUserRetriever $jira_user_retriever,
     ) {
         $this->creation_state_list_value_formatter = $creation_state_list_value_formatter;
         $this->jira_user_retriever                 = $jira_user_retriever;
@@ -53,7 +53,7 @@ class ListFieldChangeInitialValueRetriever
      */
     public function retrieveBoundValue(
         string $changed_field_from,
-        FieldMapping $field_mapping
+        FieldMapping $field_mapping,
     ) {
         if ($field_mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Static::TYPE) {
             return $this->creation_state_list_value_formatter->formatListValue(

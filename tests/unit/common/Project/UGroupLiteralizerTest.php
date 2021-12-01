@@ -59,7 +59,7 @@ class UGroupLiteralizerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->user->shouldReceive('getStatus')->andReturns('A');
         $userProjects = [
-                ['group_id' => 101, 'unix_group_name' => 'gpig1']
+                ['group_id' => 101, 'unix_group_name' => 'gpig1'],
         ];
         $this->user->shouldReceive('getProjects')->andReturns($userProjects);
         $this->user->shouldReceive('isMember')->andReturns(false);
@@ -72,7 +72,7 @@ class UGroupLiteralizerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->user->shouldReceive('getStatus')->andReturns('A');
         $userProjects = [
-                ['group_id' => 102, 'unix_group_name' => 'gpig2']
+                ['group_id' => 102, 'unix_group_name' => 'gpig2'],
         ];
         $this->user->shouldReceive('getProjects')->andReturns($userProjects);
         $this->user->shouldReceive('isMember')->andReturns(true);
@@ -157,10 +157,10 @@ class UGroupLiteralizerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->user->shouldReceive('getStatus')->andReturns('A');
         $user_projects = [
-            ['group_id' => 102, 'unix_group_name' => 'gpig2']
+            ['group_id' => 102, 'unix_group_name' => 'gpig2'],
         ];
         $user_groups   = [
-            ['ugroup_id' => 105]
+            ['ugroup_id' => 105],
         ];
         $this->user->shouldReceive('getProjects')->andReturns($user_projects);
         $this->user->shouldReceive('isMember')->andReturns(true);
@@ -178,10 +178,10 @@ class UGroupLiteralizerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->user->shouldReceive('getStatus')->andReturns('A');
         $user_projects = [
-            ['group_id' => 102, 'unix_group_name' => 'gpig2']
+            ['group_id' => 102, 'unix_group_name' => 'gpig2'],
         ];
         $user_groups   = [
-            ['ugroup_id' => 105]
+            ['ugroup_id' => 105],
         ];
         $this->user->shouldReceive('getProjects')->andReturns($user_projects);
         $this->user->shouldReceive('isMember')->andReturns(true);

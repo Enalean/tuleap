@@ -39,7 +39,7 @@ class ArtifactsActionsTest extends TrackerBase
                 "move" => [
                     "tracker_id" => $this->move_tracker_id,
                     "dry_run"    => true,
-                ]
+                ],
             ]
         );
 
@@ -58,7 +58,7 @@ class ArtifactsActionsTest extends TrackerBase
                 "move" => [
                     "tracker_id" => $this->move_tracker_id,
                     "dry_run"    => true,
-                ]
+                ],
             ]
         );
 
@@ -131,7 +131,7 @@ class ArtifactsActionsTest extends TrackerBase
             [
                 "move" => [
                     "tracker_id" => $this->move_tracker_id,
-                ]
+                ],
             ]
         );
 
@@ -152,8 +152,8 @@ class ArtifactsActionsTest extends TrackerBase
         $body        = json_encode(
             [
                 "move" => [
-                    "tracker_id" => $this->move_tracker_id
-                ]
+                    "tracker_id" => $this->move_tracker_id,
+                ],
             ]
         );
 

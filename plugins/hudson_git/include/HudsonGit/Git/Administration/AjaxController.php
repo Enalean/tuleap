@@ -50,7 +50,7 @@ class AjaxController implements DispatchableWithRequest
     public function __construct(
         ClientInterface $http_client,
         RequestFactoryInterface $request_factory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->http_client     = $http_client;
         $this->request_factory = $request_factory;
@@ -63,7 +63,7 @@ class AjaxController implements DispatchableWithRequest
         if ($jenkins_url_to_test === false) {
             $tuleap_response = [
                 'type'    => "error",
-                'message' => dgettext("tuleap-hudson_git", "No Jenkins server URL provided.")
+                'message' => dgettext("tuleap-hudson_git", "No Jenkins server URL provided."),
             ];
             $layout->sendJSON($tuleap_response);
             return;
@@ -83,14 +83,14 @@ class AjaxController implements DispatchableWithRequest
             $this->logger->debug("Response body: " . $response->getBody());
             $tuleap_response = [
                 'type' => "success",
-                'message' => dgettext("tuleap-hudson_git", "Jenkins server is reachable.")
+                'message' => dgettext("tuleap-hudson_git", "Jenkins server is reachable."),
             ];
         } catch (ClientExceptionInterface $exception) {
             $this->logger->debug("Jenkins server is not reachable.");
             $this->logger->debug("Error message: " . $exception->getMessage());
             $tuleap_response = [
                 'type' => "error",
-                'message' => dgettext("tuleap-hudson_git", "Jenkins server is not reachable.")
+                'message' => dgettext("tuleap-hudson_git", "Jenkins server is not reachable."),
             ];
         }
 

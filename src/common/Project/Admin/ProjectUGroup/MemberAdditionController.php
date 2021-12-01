@@ -69,7 +69,7 @@ class MemberAdditionController implements DispatchableWithRequest
         UGroupManager $ugroup_manager,
         UserManager $user_manager,
         MemberAdder $member_adder,
-        CSRFSynchronizerToken $csrf_synchronizer
+        CSRFSynchronizerToken $csrf_synchronizer,
     ) {
         $this->project_retriever     = $project_retriever;
         $this->administrator_checker = $administrator_checker;

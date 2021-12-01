@@ -60,7 +60,7 @@ class ExecutionCreator
         ProjectManager $project_manager,
         TrackerFactory $tracker_factory,
         Tracker_REST_Artifact_ArtifactCreator $artifact_creator,
-        ExecutionDao $execution_dao
+        ExecutionDao $execution_dao,
     ) {
         $this->formelement_factory = $formelement_factory;
         $this->config              = $config;
@@ -117,7 +117,7 @@ class ExecutionCreator
     private function getFieldValuesForExecutionArtifactCreation(
         TrackerReference $tracker_reference,
         PFUser $user,
-        int $definition_id
+        int $definition_id,
     ): array {
         $status_field = $this->getStatusField($tracker_reference, $user);
         $link_field   = $this->getArtifactLinksField($tracker_reference, $user);
@@ -136,7 +136,7 @@ class ExecutionCreator
     /** @return \Tracker_FormElement_Field_List */
     private function getStatusField(
         TrackerReference $tracker_reference,
-        PFUser $user
+        PFUser $user,
     ) {
         $field = $this->getField(
             $tracker_reference,
@@ -150,7 +150,7 @@ class ExecutionCreator
     /** @return \Tracker_FormElement_Field_ArtifactLink */
     private function getArtifactLinksField(
         TrackerReference $tracker_reference,
-        PFUser $user
+        PFUser $user,
     ) {
         $field = $this->getField(
             $tracker_reference,
@@ -164,7 +164,7 @@ class ExecutionCreator
     private function getField(
         TrackerReference $tracker_reference,
         PFUser $user,
-        string $field_name
+        string $field_name,
     ): \Tracker_FormElement_Field {
         $field = $this->formelement_factory->getUsedFieldByNameForUser(
             $tracker_reference->id,

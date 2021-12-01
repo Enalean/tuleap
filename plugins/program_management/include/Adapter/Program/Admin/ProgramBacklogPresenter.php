@@ -55,7 +55,7 @@ final class ProgramBacklogPresenter
         array $project_flags,
         bool $user_has_accessibility_mode,
         ProgramBacklogConfigurationPresenter $backlog_configuration,
-        bool $is_program_admin
+        bool $is_program_admin,
     ) {
         $this->project_name                 = $project->getPublicName();
         $this->project_short_name           = $project->getUnixNameLowerCase();

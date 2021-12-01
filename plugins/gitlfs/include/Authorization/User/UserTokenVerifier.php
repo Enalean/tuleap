@@ -45,7 +45,7 @@ class UserTokenVerifier
     public function __construct(
         UserAuthorizationDAO $dao,
         SplitTokenVerificationStringHasher $hasher,
-        UserManager $user_manager
+        UserManager $user_manager,
     ) {
         $this->dao          = $dao;
         $this->hasher       = $hasher;
@@ -59,7 +59,7 @@ class UserTokenVerifier
         \DateTimeImmutable $current_time,
         SplitToken $authorization_token,
         GitRepository $git_repository,
-        UserOperation $user_operation
+        UserOperation $user_operation,
     ) {
         $row = $this->dao->searchAuthorizationByIDAndExpiration($authorization_token->getID(), $git_repository->getId(), $current_time->getTimestamp());
         if ($row === null) {

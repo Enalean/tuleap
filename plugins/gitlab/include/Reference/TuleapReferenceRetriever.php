@@ -34,7 +34,7 @@ class TuleapReferenceRetriever
 
     public function __construct(
         \EventManager $event_manager,
-        \ReferenceManager $reference_manager
+        \ReferenceManager $reference_manager,
     ) {
         $this->event_manager     = $event_manager;
         $this->reference_manager = $reference_manager;
@@ -72,7 +72,7 @@ class TuleapReferenceRetriever
             \Event::GET_ARTIFACT_REFERENCE_GROUP_ID,
             [
                 'artifact_id' => $artifact_id,
-                'group_id' => &$artifact_project_id
+                'group_id' => &$artifact_project_id,
             ]
         );
 

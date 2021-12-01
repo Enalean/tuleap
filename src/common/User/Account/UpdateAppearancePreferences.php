@@ -65,7 +65,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         UserManager $user_manager,
         BaseLanguage $language,
         ThemeVariant $variant,
-        SelectedDateDisplayPreferenceValidator $date_display_preference_validator
+        SelectedDateDisplayPreferenceValidator $date_display_preference_validator,
     ) {
         $this->csrf_token                        = $csrf_token;
         $this->user_manager                      = $user_manager;
@@ -136,7 +136,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
             UserHelper::PREFERENCES_NAME_AND_LOGIN,
             UserHelper::PREFERENCES_LOGIN_AND_NAME,
             UserHelper::PREFERENCES_LOGIN,
-            UserHelper::PREFERENCES_REAL_NAME
+            UserHelper::PREFERENCES_REAL_NAME,
         ];
         if (! in_array($new_username_display, $allowed, true)) {
             $layout->addFeedback(Feedback::ERROR, _('Submitted username display is not valid.'));

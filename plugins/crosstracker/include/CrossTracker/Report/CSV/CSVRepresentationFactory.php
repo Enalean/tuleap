@@ -38,7 +38,7 @@ class CSVRepresentationFactory
     public function buildRepresentations(
         ArtifactMatchingReportCollection $collection,
         \PFUser $current_user,
-        SimilarFieldCollection $similar_fields
+        SimilarFieldCollection $similar_fields,
     ) {
         $representations = [$this->csv_builder->buildHeaderLine($current_user, $similar_fields)];
 

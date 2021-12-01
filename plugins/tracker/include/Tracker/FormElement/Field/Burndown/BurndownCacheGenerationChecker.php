@@ -75,7 +75,7 @@ class BurndownCacheGenerationChecker
         ChartConfigurationValueChecker $value_checker,
         ComputedFieldDao $computed_dao,
         ChartCachedDaysComparator $cached_days_comparator,
-        BurndownRemainingEffortAdderForREST $remaining_effort_adder
+        BurndownRemainingEffortAdderForREST $remaining_effort_adder,
     ) {
         $this->logger                 = $logger;
         $this->cache_generator        = $cache_generator;
@@ -99,7 +99,7 @@ class BurndownCacheGenerationChecker
         Artifact $artifact,
         PFUser $user,
         TimePeriodWithoutWeekEnd $time_period,
-        $capacity
+        $capacity,
     ) {
         $start = $this->getTimePeriodStartDateAtMidnight($time_period);
 
@@ -129,7 +129,7 @@ class BurndownCacheGenerationChecker
     private function isCacheCompleteForBurndown(
         TimePeriodWithoutWeekEnd $time_period,
         Artifact $artifact,
-        PFUser $user
+        PFUser $user,
     ) {
         if (
             $this->value_checker->doesUserCanReadRemainingEffort($artifact, $user) === true

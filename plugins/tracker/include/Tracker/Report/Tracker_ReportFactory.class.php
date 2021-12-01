@@ -171,7 +171,7 @@ class Tracker_ReportFactory
         $to_tracker_id,
         $field_mapping,
         $current_user_id,
-        MappingRegistry $mapping_registry
+        MappingRegistry $mapping_registry,
     ) {
         $report = null;
         //duplicate report info
@@ -266,7 +266,7 @@ class Tracker_ReportFactory
         $xml,
         &$xmlMapping,
         array &$renderers_xml_mapping,
-        $group_id
+        $group_id,
     ) {
         $att                        = $xml->attributes();
         $row                        = ['name' => (string) $xml->name,

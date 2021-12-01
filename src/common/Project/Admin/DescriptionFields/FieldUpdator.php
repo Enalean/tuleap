@@ -46,7 +46,7 @@ class FieldUpdator
     public function __construct(
         DescriptionFieldsFactory $fields_factory,
         ProjectDetailsDAO $dao,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->fields_factory = $fields_factory;
         $this->dao            = $dao;

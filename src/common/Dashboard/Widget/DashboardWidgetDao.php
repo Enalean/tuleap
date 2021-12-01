@@ -30,7 +30,7 @@ class DashboardWidgetDao extends DataAccessObject
 {
     private $legacy_types_to_new_types = [
         ProjectDashboardController::LEGACY_DASHBOARD_TYPE => 'project',
-        UserDashboardController::LEGACY_DASHBOARD_TYPE    => 'user'
+        UserDashboardController::LEGACY_DASHBOARD_TYPE    => 'user',
     ];
 
     /**
@@ -40,7 +40,7 @@ class DashboardWidgetDao extends DataAccessObject
 
     public function __construct(
         WidgetFactory $widget_factory,
-        ?LegacyDataAccessInterface $da = null
+        ?LegacyDataAccessInterface $da = null,
     ) {
         parent::__construct($da);
         $this->enableExceptionsOnError();

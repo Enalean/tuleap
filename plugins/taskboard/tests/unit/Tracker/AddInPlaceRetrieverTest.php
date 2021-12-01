@@ -69,7 +69,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->shouldReceive('getChildren')->andReturn(
             [
                 M::mock(Tracker::class),
-                M::mock(Tracker::class)
+                M::mock(Tracker::class),
             ]
         );
 
@@ -368,7 +368,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         \Tracker $tracker,
         bool $is_title_field_required,
         bool $is_desc_field_required,
-        bool $is_mapped_field_required
+        bool $is_mapped_field_required,
     ): void {
         $title_field = M::mock(\Tracker_FormElement_Field_String::class);
         $title_field->shouldReceive('isRequired')->andReturn($is_title_field_required);

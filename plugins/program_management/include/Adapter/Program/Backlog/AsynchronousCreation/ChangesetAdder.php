@@ -42,7 +42,7 @@ final class ChangesetAdder implements AddChangeset, AddArtifactLinkChangeset
         private RetrieveFullArtifact $artifact_retriever,
         private RetrieveUser $user_retriever,
         private ChangesetValuesFormatter $formatter,
-        private \Tracker_Artifact_Changeset_NewChangesetCreator $new_changeset_creator
+        private \Tracker_Artifact_Changeset_NewChangesetCreator $new_changeset_creator,
     ) {
     }
 

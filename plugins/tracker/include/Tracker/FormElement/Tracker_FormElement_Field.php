@@ -180,7 +180,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function setCriteriaValueFromXML(
         Tracker_Report_Criteria $criteria,
         SimpleXMLElement $xml_criteria_value,
-        array $xml_field_mapping
+        array $xml_field_mapping,
     ) {
         if ((string) $xml_criteria_value['type'] !== 'text') {
             return;
@@ -405,7 +405,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function fetchArtifact(
         Artifact $artifact,
         array $submitted_values,
-        array $additional_classes
+        array $additional_classes,
     ) {
         $is_field_read_only = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
         if (! $is_field_read_only && $this->userCanUpdate()) {
@@ -652,7 +652,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     abstract protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     );
 
     /**
@@ -673,7 +673,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function fetchArtifactValueForWebDisplay(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         $is_field_read_only = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
         if (! $is_field_read_only && $this->userCanUpdate()) {
@@ -686,7 +686,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     protected function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
@@ -699,7 +699,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     protected function getHiddenArtifactValueForEdition(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return '<div class="tracker_hidden_edition_field" data-field-id="' .
             $this->getId() . '">' .
@@ -1182,7 +1182,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         PFUser $submitter,
         bool $is_submission,
         bool $bypass_permissions,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
         $updated        = false;
         $save_new_value = false;
@@ -1259,7 +1259,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     );
 
     /**
@@ -1514,7 +1514,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
         array $fields_data,
-        ?Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null,
     ) {
     }
 

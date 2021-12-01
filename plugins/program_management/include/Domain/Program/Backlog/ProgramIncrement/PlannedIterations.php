@@ -48,7 +48,7 @@ final class PlannedIterations
         private ProgramIncrementInfo $program_increment_info,
         private bool $is_user_admin,
         private IterationLabels $iteration_labels,
-        private TrackerReference $iteration_tracker_reference
+        private TrackerReference $iteration_tracker_reference,
     ) {
     }
 
@@ -67,7 +67,7 @@ final class PlannedIterations
         ProgramIdentifier $program_identifier,
         UserIdentifier $user_identifier,
         ProgramIncrementIdentifier $increment_identifier,
-        IterationLabels $iterations_labels
+        IterationLabels $iterations_labels,
     ): self {
         $program_flags     = $build_program_flags->build($program_identifier);
         $program_privacy   = $build_program_privacy->build($program_identifier);

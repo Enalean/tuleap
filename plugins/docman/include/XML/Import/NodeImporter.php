@@ -67,7 +67,7 @@ class NodeImporter
         PostFolderImporter $folder_importer,
         PostDoNothingImporter $do_nothing_importer,
         LoggerInterface $logger,
-        ImportPropertiesExtractor $properties_extractor
+        ImportPropertiesExtractor $properties_extractor,
     ) {
         $this->logger               = $logger;
         $this->item_importer        = $item_importer;

@@ -46,7 +46,7 @@ class NotEqualComparisonChecker implements ICheckMetadataForAComparison, ValueWr
 
     public function visitCurrentDateTimeValueWrapper(
         CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new CommentToNowComparisonException();
     }
@@ -62,20 +62,20 @@ class NotEqualComparisonChecker implements ICheckMetadataForAComparison, ValueWr
 
     public function visitInValueWrapper(
         InValueWrapper $collection_of_value_wrappers,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
     }
 
     public function visitCurrentUserValueWrapper(
         CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new CommentToMySelfComparisonException();
     }
 
     public function visitStatusOpenValueWrapper(
         StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters
+        ValueWrapperParameters $parameters,
     ) {
         throw new CommentToStatusOpenComparisonException();
     }

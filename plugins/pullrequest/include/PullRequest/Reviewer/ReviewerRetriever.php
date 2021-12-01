@@ -46,7 +46,7 @@ class ReviewerRetriever
     public function __construct(
         UserManager $user_manager,
         ReviewerDAO $reviewer_dao,
-        PullRequestPermissionChecker $pull_request_permission_checker
+        PullRequestPermissionChecker $pull_request_permission_checker,
     ) {
         $this->user_manager                    = $user_manager;
         $this->reviewer_dao                    = $reviewer_dao;

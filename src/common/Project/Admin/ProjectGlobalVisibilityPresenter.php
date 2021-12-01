@@ -56,7 +56,7 @@ class ProjectGlobalVisibilityPresenter
         ProjectVisibilityPresenter $project_visibility_presenter,
         ProjectTruncatedEmailsPresenter $project_truncated_presenter,
         ProjectAccessPresenter $project_access_presenter,
-        $can_configure_visibility
+        $can_configure_visibility,
     ) {
         $this->project_visibility_presenter = $project_visibility_presenter;
         $this->project_truncated_presenter  = $project_truncated_presenter;

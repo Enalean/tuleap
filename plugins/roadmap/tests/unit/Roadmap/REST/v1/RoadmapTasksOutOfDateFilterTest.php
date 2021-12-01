@@ -42,7 +42,7 @@ final class RoadmapTasksOutOfDateFilterTest extends \Tuleap\Test\PHPUnit\TestCas
                     Artifact $artifact,
                     DateTimeImmutable $now,
                     \PFUser $user,
-                    TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection
+                    TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection,
                 ): bool {
                     return $artifact->getId() === 2;
                 }

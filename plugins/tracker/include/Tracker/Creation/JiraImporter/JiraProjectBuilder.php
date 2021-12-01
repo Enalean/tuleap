@@ -87,7 +87,7 @@ class JiraProjectBuilder
             $project_collection->addProject(
                 [
                     'id' => (string) $project_entry['key'],
-                    'label' => (string) $project_entry['name']
+                    'label' => (string) $project_entry['name'],
                 ]
             );
         }

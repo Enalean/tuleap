@@ -36,7 +36,7 @@ abstract class SVN_Hook
 
     public function __construct(
         SVN_Hooks $svn_hooks,
-        SVN_CommitMessageValidator $message_validator
+        SVN_CommitMessageValidator $message_validator,
     ) {
         $this->svn_hooks         = $svn_hooks;
         $this->message_validator = $message_validator;

@@ -38,7 +38,7 @@ class SystemEvent_GIT_PROJECTS_UPDATE extends SystemEvent
         \Psr\Log\LoggerInterface $logger,
         Git_SystemEventManager $system_event_manager,
         ProjectManager $project_manager,
-        Git_GitoliteDriver $gitolite_driver
+        Git_GitoliteDriver $gitolite_driver,
     ) {
         $this->logger               = new WrapperLogger($logger, self::NAME);
         $this->system_event_manager = $system_event_manager;

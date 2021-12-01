@@ -132,7 +132,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends \Tuleap\T
                 $use_ssl,
                 $gerrit_version,
                 $http_password,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -526,7 +526,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends \Tuleap\T
             [
                 "To $this->gerrit_git_url",
                 "=\tHEAD:refs/meta/config\t[up to date]",
-                "Done"
+                "Done",
             ],
             $output
         );

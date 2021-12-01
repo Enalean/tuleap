@@ -41,7 +41,7 @@ class Step
         string $description_format,
         ?string $expected_results,
         string $expected_results_format,
-        int $rank
+        int $rank,
     ) {
         $this->id                      = $id;
         $this->description             = $description;
@@ -108,7 +108,7 @@ class Step
                 $this->description_format,
                 $this->expected_results,
                 $this->expected_results_format,
-                $this->rank
+                $this->rank,
             ],
             JSON_THROW_ON_ERROR
         );

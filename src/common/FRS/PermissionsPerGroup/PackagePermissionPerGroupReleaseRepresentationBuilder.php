@@ -51,7 +51,7 @@ class PackagePermissionPerGroupReleaseRepresentationBuilder
     public function __construct(
         FRSReleaseFactory $release_factory,
         PermissionPerGroupUGroupRetriever $permission_ugroup_retriever,
-        PermissionPerGroupUGroupRepresentationBuilder $ugroup_representation_builder
+        PermissionPerGroupUGroupRepresentationBuilder $ugroup_representation_builder,
     ) {
         $this->release_factory               = $release_factory;
         $this->permission_ugroup_retriever   = $permission_ugroup_retriever;
@@ -62,7 +62,7 @@ class PackagePermissionPerGroupReleaseRepresentationBuilder
         Project $project,
         FRSPackage $package,
         array $package_permission_ids,
-        $selected_ugroup_id
+        $selected_ugroup_id,
     ) {
         $releases_permissions        = [];
         $all_release_permissions_ids = [];
@@ -96,7 +96,7 @@ class PackagePermissionPerGroupReleaseRepresentationBuilder
 
     private function getPackagePermissionWhenReleaseDontHavePermission(
         array $formatted_package_permissions,
-        array $formatted_release_permissions
+        array $formatted_release_permissions,
     ) {
         if (count($formatted_release_permissions) === 0) {
             return $formatted_package_permissions;
@@ -108,7 +108,7 @@ class PackagePermissionPerGroupReleaseRepresentationBuilder
     private function getReleasePermissionsRepresentation(
         Project $project,
         FRSRelease $release,
-        array $release_permission
+        array $release_permission,
     ) {
         return new PackagePermissionPerGroupReleaseRepresentation(
             '/file/admin/release.php?' . http_build_query(
@@ -116,7 +116,7 @@ class PackagePermissionPerGroupReleaseRepresentationBuilder
                     "func"       => "edit",
                     "group_id"   => $project->getID(),
                     "package_id" => $release->getPackageID(),
-                    "id"         => $release->getReleaseID()
+                    "id"         => $release->getReleaseID(),
                 ]
             ),
             $release->getName(),
@@ -129,7 +129,7 @@ class PackagePermissionPerGroupReleaseRepresentationBuilder
 
     private function getUGroupsReleasePermissionsRepresentations(
         Project $project,
-        array $release_permission
+        array $release_permission,
     ) {
         $formatted_release_permissions = [];
         foreach ($release_permission as $permission) {

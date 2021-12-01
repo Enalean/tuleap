@@ -32,7 +32,7 @@ class FromWhereComparisonFieldBuilder
         $changeset_value_alias,
         $changeset_value_field_alias,
         $tracker_changeset_value_table,
-        $condition
+        $condition,
     ) {
         $from = " LEFT JOIN (
             tracker_changeset_value AS $changeset_value_alias

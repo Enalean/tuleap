@@ -42,7 +42,7 @@ class UsersStatisticsPresenter
         $lastweek_users,
         $lastmonth_users,
         $last3months_users,
-        array $additional_statistics
+        array $additional_statistics,
     ) {
         $this->json_encoded_statistics = json_encode($statistics_users_graph);
         $this->lastday_users           = number_format($lastday_users);

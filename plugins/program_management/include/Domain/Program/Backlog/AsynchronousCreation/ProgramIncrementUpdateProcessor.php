@@ -45,7 +45,7 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
         private VerifyIsVisibleArtifact $visibility_verifier,
         private RetrieveTrackerOfArtifact $tracker_retriever,
         private MapStatusByValue $status_mapper,
-        private AddChangeset $changeset_adder
+        private AddChangeset $changeset_adder,
     ) {
     }
 

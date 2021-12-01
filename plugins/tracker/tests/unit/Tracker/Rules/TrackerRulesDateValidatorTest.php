@@ -145,7 +145,7 @@ class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $value_field_list = [
             10 => '',
-            11 => ''
+            11 => '',
         ];
 
         $this->assertFalse($this->tracker_rules_date_validator->validateDateRules($value_field_list, [$tracker_rule_date, $tracker_rule_date2]));

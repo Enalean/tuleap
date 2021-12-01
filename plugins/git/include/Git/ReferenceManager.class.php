@@ -50,7 +50,7 @@ class Git_ReferenceManager
     public function __construct(
         GitRepositoryFactory $repository_factory,
         ReferenceManager $reference_manager,
-        ReferenceDao $reference_dao
+        ReferenceDao $reference_dao,
     ) {
         $this->repository_factory = $repository_factory;
         $this->reference_manager  = $reference_manager;

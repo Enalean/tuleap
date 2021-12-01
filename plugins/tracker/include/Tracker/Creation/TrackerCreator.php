@@ -64,7 +64,7 @@ class TrackerCreator
         TrackerFactory $tracker_factory,
         TrackerCreatorXmlErrorDisplayer $xml_error_displayer,
         TrackerCreationDataChecker $creation_data_checker,
-        SemanticTimeframeDuplicator $semantic_timeframe_duplicator
+        SemanticTimeframeDuplicator $semantic_timeframe_duplicator,
     ) {
         $this->tracker_xml_import            = $tracker_xml_import;
         $this->tracker_factory               = $tracker_factory;
@@ -105,7 +105,7 @@ class TrackerCreator
         string $name,
         string $description,
         string $itemname,
-        ?string $color
+        ?string $color,
     ): Tracker {
         try {
             return $this->tracker_xml_import->createFromXMLFileWithInfo(
@@ -136,7 +136,7 @@ class TrackerCreator
         string $itemname,
         ?string $color,
         string $atid_template,
-        \PFUser $user
+        \PFUser $user,
     ): Tracker {
         $this->creation_data_checker->checkAtTrackerDuplication($itemname, $atid_template, $user);
         $duplicate = $this->tracker_factory->create(

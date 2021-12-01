@@ -69,7 +69,7 @@ class Tracker_Rule_Date_Dao extends \Tuleap\DB\DataAccessObject
                     'tracker_rule',
                     [
                         'tracker_id' => $tracker_id,
-                        'rule_type'  => Tracker_Rule::RULETYPE_DATE
+                        'rule_type'  => Tracker_Rule::RULETYPE_DATE,
                     ]
                 );
 
@@ -79,7 +79,7 @@ class Tracker_Rule_Date_Dao extends \Tuleap\DB\DataAccessObject
                         'tracker_rule_id' => $rule_id,
                         'source_field_id' => $source_field_id,
                         'target_field_id' => $target_field_id,
-                        'comparator'      => $comparator
+                        'comparator'      => $comparator,
                     ]
                 );
 

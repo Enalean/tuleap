@@ -48,7 +48,7 @@ class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer
         $id,
         $owner_id,
         $owner_type,
-        MappingRegistry $mapping_registry
+        MappingRegistry $mapping_registry,
     ): int {
         $dao = new WidgetRendererDao();
 

@@ -90,7 +90,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             $this->planned_start_date,
             $this->actual_start_date,
             $this->planned_end_date,
-            $this->actual_end_date
+            $this->actual_end_date,
         ]);
 
         $this->rule_42 = \Mockery::spy(\Tracker_Rule_Date::class);
@@ -289,8 +289,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '22',
-                    self::PARAMETER_COMPARATOR   => '>'
-                ]
+                    self::PARAMETER_COMPARATOR   => '>',
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -306,7 +306,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '22',
-                ]
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -322,8 +322,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_TARGET_FIELD => '22',
-                    self::PARAMETER_COMPARATOR   => '>'
-                ]
+                    self::PARAMETER_COMPARATOR   => '>',
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -339,8 +339,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '%invalid_id%',
                     self::PARAMETER_TARGET_FIELD => '22',
-                    self::PARAMETER_COMPARATOR   => '>'
-                ]
+                    self::PARAMETER_COMPARATOR   => '>',
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -356,8 +356,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '-1',
                     self::PARAMETER_TARGET_FIELD => '22',
-                    self::PARAMETER_COMPARATOR   => '>'
-                ]
+                    self::PARAMETER_COMPARATOR   => '>',
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -373,8 +373,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '0',
                     self::PARAMETER_TARGET_FIELD => '22',
-                    self::PARAMETER_COMPARATOR   => '>'
-                ]
+                    self::PARAMETER_COMPARATOR   => '>',
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -389,8 +389,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             [
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
-                    self::PARAMETER_COMPARATOR   => '>'
-                ]
+                    self::PARAMETER_COMPARATOR   => '>',
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -406,8 +406,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '%invalid_id%',
-                    self::PARAMETER_COMPARATOR   => '>'
-                ]
+                    self::PARAMETER_COMPARATOR   => '>',
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -423,8 +423,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '-1',
-                    self::PARAMETER_COMPARATOR   => '>'
-                ]
+                    self::PARAMETER_COMPARATOR   => '>',
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -440,8 +440,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '0',
-                    self::PARAMETER_COMPARATOR   => '>'
-                ]
+                    self::PARAMETER_COMPARATOR   => '>',
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -457,8 +457,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '22',
-                    self::PARAMETER_COMPARATOR   => '%invalid_comparator%'
-                ]
+                    self::PARAMETER_COMPARATOR   => '%invalid_comparator%',
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -474,8 +474,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '44',
-                    self::PARAMETER_COMPARATOR   => '>'
-                ]
+                    self::PARAMETER_COMPARATOR   => '>',
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -491,8 +491,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '22',
-                    self::PARAMETER_COMPARATOR   => '>'
-                ]
+                    self::PARAMETER_COMPARATOR   => '>',
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -507,8 +507,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '666',
                     self::PARAMETER_TARGET_FIELD => '22',
-                    self::PARAMETER_COMPARATOR   => '>'
-                ]
+                    self::PARAMETER_COMPARATOR   => '>',
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -524,8 +524,8 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                 self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '666',
-                    self::PARAMETER_COMPARATOR   => '>'
-                ]
+                    self::PARAMETER_COMPARATOR   => '>',
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -542,9 +542,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => '44',
                         self::PARAMETER_TARGET_FIELD => '22',
-                        self::PARAMETER_COMPARATOR => '>'
-                    ]
-                ]
+                        self::PARAMETER_COMPARATOR => '>',
+                    ],
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -564,14 +564,14 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => '44',
                         self::PARAMETER_TARGET_FIELD => '22',
-                        self::PARAMETER_COMPARATOR => '>'
+                        self::PARAMETER_COMPARATOR => '>',
                     ],
                     "$this->rule_66_id" => [
                         self::PARAMETER_SOURCE_FIELD => '22',
                         self::PARAMETER_TARGET_FIELD => '44',
-                        self::PARAMETER_COMPARATOR   => '<'
+                        self::PARAMETER_COMPARATOR   => '<',
                     ],
-                ]
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -591,9 +591,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => '666',
                         self::PARAMETER_TARGET_FIELD => '22',
-                        self::PARAMETER_COMPARATOR => '>'
-                    ]
-                ]
+                        self::PARAMETER_COMPARATOR => '>',
+                    ],
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -611,9 +611,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => '44',
                         self::PARAMETER_TARGET_FIELD => '666',
-                        self::PARAMETER_COMPARATOR => '>'
-                    ]
-                ]
+                        self::PARAMETER_COMPARATOR => '>',
+                    ],
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -631,9 +631,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => '44',
                         self::PARAMETER_TARGET_FIELD => '22',
-                        self::PARAMETER_COMPARATOR   => '%invalid_comparator%'
-                    ]
-                ]
+                        self::PARAMETER_COMPARATOR   => '%invalid_comparator%',
+                    ],
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -650,9 +650,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                 self::PARAMETER_UPDATE_RULES => [
                     "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => '44',
-                        self::PARAMETER_COMPARATOR   => '<'
-                    ]
-                ]
+                        self::PARAMETER_COMPARATOR   => '<',
+                    ],
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -669,9 +669,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                 self::PARAMETER_UPDATE_RULES => [
                     "$this->rule_42_id" => [
                         self::PARAMETER_TARGET_FIELD => '22',
-                        self::PARAMETER_COMPARATOR => '>'
-                    ]
-                ]
+                        self::PARAMETER_COMPARATOR => '>',
+                    ],
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -689,9 +689,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     "%invalid_rule_id%" => [
                         self::PARAMETER_SOURCE_FIELD => '44',
                         self::PARAMETER_TARGET_FIELD => '22',
-                        self::PARAMETER_COMPARATOR => '>'
-                    ]
-                ]
+                        self::PARAMETER_COMPARATOR => '>',
+                    ],
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -708,9 +708,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => $this->rule_42->getSourceField()->getId(),
                         self::PARAMETER_TARGET_FIELD => $this->rule_42->getTargetField()->getId(),
-                        self::PARAMETER_COMPARATOR => $this->rule_42->getComparator()
-                    ]
-                ]
+                        self::PARAMETER_COMPARATOR => $this->rule_42->getComparator(),
+                    ],
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -727,9 +727,9 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => '22',
                         self::PARAMETER_TARGET_FIELD => '22',
-                        self::PARAMETER_COMPARATOR => '>'
-                    ]
-                ]
+                        self::PARAMETER_COMPARATOR => '>',
+                    ],
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -747,14 +747,14 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
                     "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => '44',
                         self::PARAMETER_TARGET_FIELD => '22',
-                        self::PARAMETER_COMPARATOR   => '>'
+                        self::PARAMETER_COMPARATOR   => '>',
                     ],
                     "$this->rule_66_id" => [
                         self::PARAMETER_SOURCE_FIELD => '22',
                         self::PARAMETER_TARGET_FIELD => '44',
-                        self::PARAMETER_COMPARATOR   => '<'
+                        self::PARAMETER_COMPARATOR   => '<',
                     ],
-                ]
+                ],
             ],
             Mockery::mock(ProjectManager::class)
         );

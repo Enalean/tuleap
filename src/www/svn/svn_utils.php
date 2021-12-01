@@ -42,7 +42,7 @@ function svn_header(Project $project, $params)
     $additional_params = [];
     if (isset($params['body_class'])) {
         $additional_params = [
-            'body_class' => $params['body_class']
+            'body_class' => $params['body_class'],
         ];
     }
 
@@ -70,8 +70,8 @@ function svn_header(Project $project, $params)
         [
             [
                 'title' => $GLOBALS['Language']->getText('project_admin_editservice', 'service_svn_lbl_key'),
-                'url' => '/svn/?group_id=' . $group_id
-            ]
+                'url' => '/svn/?group_id=' . $group_id,
+            ],
         ],
         $toolbar,
         $additional_params

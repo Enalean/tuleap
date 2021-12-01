@@ -44,7 +44,7 @@ class SemanticProgressDao extends DataAccessObject
         int $tracker_id,
         ?int $total_effort,
         ?int $remaining_effort,
-        ?string $link_type
+        ?string $link_type,
     ): bool {
         $sql    = '
             REPLACE INTO tracker_semantic_progress(

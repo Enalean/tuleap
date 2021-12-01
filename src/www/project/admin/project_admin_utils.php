@@ -298,7 +298,7 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
         'event_project'    => $GLOBALS["Language"]->getText("project_admin_utils", "event_project"),
         'event_user'       => $GLOBALS["Language"]->getText("project_admin_utils", "event_user"),
         'event_ug'         => $GLOBALS["Language"]->getText("project_admin_utils", "event_ug"),
-        'event_others'     => $GLOBALS["Language"]->getText("project_admin_utils", "event_others")
+        'event_others'     => $GLOBALS["Language"]->getText("project_admin_utils", "event_others"),
     ];
 
     $select = new HTML_Element_Selectbox('', 'events_box', '');

@@ -58,7 +58,7 @@ class ProjectVisibilityPresenter
         $platform_allows_restricted,
         $project_visibility,
         int $number_of_restricted_users_in_project,
-        ProjectVisibilityOptionsForPresenterGenerator $project_visibility_options_generator
+        ProjectVisibilityOptionsForPresenterGenerator $project_visibility_options_generator,
     ) {
         $this->platform_allows_restricted       = (bool) $platform_allows_restricted;
         $this->restricted_warning_message       = $language->getText(

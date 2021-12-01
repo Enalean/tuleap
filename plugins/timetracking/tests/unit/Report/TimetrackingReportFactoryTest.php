@@ -73,7 +73,7 @@ class TimetrackingReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->timetracking_report_dao->shouldReceive("searchReportTrackersById")->andReturn(
             [
                 ['tracker_id' => 1],
-                ['tracker_id' => 2]
+                ['tracker_id' => 2],
             ]
         );
 

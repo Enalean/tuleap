@@ -82,7 +82,7 @@ final class FieldData
      * @psalm-return array<int|string, int|string>
      */
     private function getUserStoriesThatAreLinkedToMilestoneAndNoLongerInArtifactLinkList(
-        array $user_stories_linked_to_milestones
+        array $user_stories_linked_to_milestones,
     ): array {
         $user_stories_to_remove = [];
         foreach ($user_stories_linked_to_milestones as $value) {

@@ -48,7 +48,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
     public function __construct(
         LayoutHelper $layout_helper,
         \TemplateRenderer $template_renderer,
-        ProjectOwnerPresenterBuilder $project_owner_presenter_builder
+        ProjectOwnerPresenterBuilder $project_owner_presenter_builder,
     ) {
         $this->layout_helper                   = $layout_helper;
         $this->template_renderer               = $template_renderer;

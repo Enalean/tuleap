@@ -50,7 +50,7 @@ final class ProjectRegistrationSubmittedFieldsCollectionConsistencyCheckerTest e
     {
         $this->fields_factory->method('getAllDescriptionFields')->willReturn(
             [
-                ['group_desc_id' => 1, 'desc_required' => true, 'desc_name' => "field_name"]
+                ['group_desc_id' => 1, 'desc_required' => true, 'desc_name' => "field_name"],
             ]
         );
 
@@ -70,12 +70,12 @@ final class ProjectRegistrationSubmittedFieldsCollectionConsistencyCheckerTest e
     {
         $this->fields_factory->method('getAllDescriptionFields')->willReturn(
             [
-                ['group_desc_id' => 1, 'desc_required' => false, 'desc_name' => "field_name"]
+                ['group_desc_id' => 1, 'desc_required' => false, 'desc_name' => "field_name"],
             ]
         );
 
         $field_collection = ProjectRegistrationSubmittedFieldsCollection::buildFromArray([
-            2 => 'test'
+            2 => 'test',
         ]);
 
         $errors_collection = new ProjectRegistrationErrorsCollection();
@@ -90,12 +90,12 @@ final class ProjectRegistrationSubmittedFieldsCollectionConsistencyCheckerTest e
     {
         $this->fields_factory->method('getAllDescriptionFields')->willReturn(
             [
-                ['group_desc_id' => 1, 'desc_required' => true, 'desc_name' => "field_name"]
+                ['group_desc_id' => 1, 'desc_required' => true, 'desc_name' => "field_name"],
             ]
         );
 
         $field_collection = ProjectRegistrationSubmittedFieldsCollection::buildFromArray([
-            2 => 'test'
+            2 => 'test',
         ]);
 
         $errors_collection = new ProjectRegistrationErrorsCollection();
@@ -115,12 +115,12 @@ final class ProjectRegistrationSubmittedFieldsCollectionConsistencyCheckerTest e
         $this->fields_factory->method('getAllDescriptionFields')->willReturn(
             [
                 ['group_desc_id' => 1, 'desc_required' => true, 'desc_name' => "field_name"],
-                ['group_desc_id' => 2, 'desc_required' => false, 'desc_name' => "other_field_name"]
+                ['group_desc_id' => 2, 'desc_required' => false, 'desc_name' => "other_field_name"],
             ]
         );
 
         $field_collection = ProjectRegistrationSubmittedFieldsCollection::buildFromArray([
-            1 => 'test'
+            1 => 'test',
         ]);
 
         $errors_collection = new ProjectRegistrationErrorsCollection();

@@ -104,7 +104,7 @@ final class CampaignsTest extends BaseTest
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(
                 [
-                    'label' => 'Tuleap 9.18'
+                    'label' => 'Tuleap 9.18',
                 ]
             ))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
@@ -120,7 +120,7 @@ final class CampaignsTest extends BaseTest
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(
                 [
-                    'label' => 'Tuleap 9.18'
+                    'label' => 'Tuleap 9.18',
                 ]
             )))
         );
@@ -141,7 +141,7 @@ final class CampaignsTest extends BaseTest
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(
                 [
-                    'job_configuration' => ['url' => 'https://example.com', 'token' => 'so secret']
+                    'job_configuration' => ['url' => 'https://example.com', 'token' => 'so secret'],
                 ]
             )))
         );
@@ -169,7 +169,7 @@ final class CampaignsTest extends BaseTest
             $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(
                 [
                     'job_configuration' => ['url' => 'https://example.com', 'token' => 'so secret'],
-                    'automated_tests_results' => $automated_tests_results
+                    'automated_tests_results' => $automated_tests_results,
                 ]
             )))
         );
@@ -192,7 +192,7 @@ final class CampaignsTest extends BaseTest
             $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(
                 [
                     'job_configuration' => ['url' => 'https://example.com', 'token' => 'so secret'],
-                    'automated_tests_results' => $automated_tests_results
+                    'automated_tests_results' => $automated_tests_results,
                 ]
             )))
         );
@@ -207,7 +207,7 @@ final class CampaignsTest extends BaseTest
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(
                 [
-                    'job_configuration' => ['url' => 'avadakedavra', 'token' => 'so secret']
+                    'job_configuration' => ['url' => 'avadakedavra', 'token' => 'so secret'],
                 ]
             )))
         );
@@ -283,7 +283,7 @@ final class CampaignsTest extends BaseTest
             $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(
                 [
                     'label'             => $campaign['label'],
-                    'job_configuration' => $campaign['job_configuration']
+                    'job_configuration' => $campaign['job_configuration'],
                 ]
             )))
         );

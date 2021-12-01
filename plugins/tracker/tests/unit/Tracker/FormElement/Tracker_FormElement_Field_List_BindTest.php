@@ -137,7 +137,7 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
         $user_list = [
             103 => new Tracker_FormElement_Field_List_Bind_UsersValue(103),
             111 => new Tracker_FormElement_Field_List_Bind_UsersValue(111),
-            117 => new Tracker_FormElement_Field_List_Bind_UsersValue(117)
+            117 => new Tracker_FormElement_Field_List_Bind_UsersValue(117),
         ];
 
         $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Users::class, [$field, [], [], $decorator])
@@ -170,7 +170,7 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
         $user_list = [
             103 => new Tracker_FormElement_Field_List_Bind_UsersValue(103),
             111 => new Tracker_FormElement_Field_List_Bind_UsersValue(111),
-            117 => new Tracker_FormElement_Field_List_Bind_UsersValue(117)
+            117 => new Tracker_FormElement_Field_List_Bind_UsersValue(117),
         ];
 
         $bind->shouldReceive("getAllValues")->andReturn($user_list);

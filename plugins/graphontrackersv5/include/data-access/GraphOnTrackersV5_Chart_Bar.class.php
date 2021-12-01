@@ -104,7 +104,7 @@ class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
             [
                 new HTML_Element_Selectbox_TrackerFields_SelectboxesV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Source Data'), 'chart[field_base]', $this->getField_base(), false),
 
-                new HTML_Element_Selectbox_TrackerFields_SelectboxesV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Group by'), 'chart[field_group]', $this->getField_group(), true)
+                new HTML_Element_Selectbox_TrackerFields_SelectboxesV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Group by'), 'chart[field_group]', $this->getField_group(), true),
             ]
         );
     }

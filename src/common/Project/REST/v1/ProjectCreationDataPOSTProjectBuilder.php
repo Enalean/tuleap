@@ -54,7 +54,7 @@ class ProjectCreationDataPOSTProjectBuilder
         XMLFileContentRetriever $xml_file_content_retriever,
         ServiceManager $service_manager,
         ProjectCreationDataServiceFromXmlInheritor $from_xml_inheritor,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->project_manager            = $project_manager;
         $this->template_factory           = $template_factory;
@@ -72,7 +72,7 @@ class ProjectCreationDataPOSTProjectBuilder
      */
     public function buildProjectCreationDataFromPOSTRepresentation(
         ProjectPostRepresentation $post_representation,
-        PFUser $user
+        PFUser $user,
     ): ?ProjectCreationData {
         if ($post_representation->template_id !== null) {
             $data = [
@@ -80,8 +80,8 @@ class ProjectCreationDataPOSTProjectBuilder
                     'form_short_description' => $post_representation->description,
                     'is_test'                => false,
                     'is_public'              => $post_representation->is_public,
-                    'trove'                  => CategoryCollection::buildFromRESTProjectCreation($post_representation)
-                ]
+                    'trove'                  => CategoryCollection::buildFromRESTProjectCreation($post_representation),
+                ],
             ];
 
             if ($post_representation->allow_restricted !== null) {
@@ -128,7 +128,7 @@ class ProjectCreationDataPOSTProjectBuilder
             $creation_data->setAccessFromProjectData(
                 [
                     'is_public'        => $post_representation->is_public,
-                    'allow_restricted' => $post_representation->allow_restricted
+                    'allow_restricted' => $post_representation->allow_restricted,
                 ]
             );
             $creation_data->setTroveData(

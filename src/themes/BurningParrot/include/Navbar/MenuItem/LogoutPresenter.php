@@ -32,7 +32,7 @@ class LogoutPresenter
 
     public function __construct(
         $label,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
     ) {
         $this->label      = $label;
         $this->csrf_token = $csrf_token;

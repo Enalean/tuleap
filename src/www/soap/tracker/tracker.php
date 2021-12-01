@@ -72,7 +72,7 @@ if (defined('NUSOAP')) {
         'total_count' => ['name' => 'total_count', 'type' => 'xsd:int'],
         'total_file_size' => ['name' => 'total_file_size', 'type' => 'xsd:float'],
         'field_sets' => ['name' => 'field_sets', 'type' => 'tns:ArrayOfArtifactFieldSet'],
-        'field_dependencies' => ['name' => 'field_dependencies', 'type' => 'tns:ArrayOfArtifactRule']
+        'field_dependencies' => ['name' => 'field_dependencies', 'type' => 'tns:ArrayOfArtifactRule'],
         ]
     );
 
@@ -143,7 +143,7 @@ if (defined('NUSOAP')) {
         'user_can_submit' => ['name' => 'user_can_submit', 'type' => 'xsd:boolean'],
         'user_can_update' => ['name' => 'user_can_update', 'type' => 'xsd:boolean'],
         'user_can_read'   => ['name' => 'user_can_read', 'type' => 'xsd:boolean'],
-        'is_standard_field'   => ['name' => 'is_standard_field', 'type' => 'xsd:boolean']
+        'is_standard_field'   => ['name' => 'is_standard_field', 'type' => 'xsd:boolean'],
         ]
     );
 
@@ -155,7 +155,7 @@ if (defined('NUSOAP')) {
         'SOAP-ENC:Array',
         [],
         [
-        ['ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ArtifactField[]']
+        ['ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ArtifactField[]'],
         ],
         'tns:ArtifactField'
     );
@@ -169,7 +169,7 @@ if (defined('NUSOAP')) {
         [
         'field_id' => ['name' => 'field_id', 'type' => 'xsd:int'],
         'artifact_id' => ['name' => 'artifact_id', 'type' => 'xsd:int'],
-        'field_value' => ['name' => 'field_value', 'type' => 'xsd:string']
+        'field_value' => ['name' => 'field_value', 'type' => 'xsd:string'],
         ]
     );
 
@@ -181,7 +181,7 @@ if (defined('NUSOAP')) {
         'SOAP-ENC:Array',
         [],
         [
-        ['ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ArtifactFieldValue[]']
+        ['ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ArtifactFieldValue[]'],
         ],
         'tns:ArtifactFieldValue'
     );
@@ -194,7 +194,7 @@ if (defined('NUSOAP')) {
         '',
         [
         'field_name' => ['name' => 'field_name', 'type' => 'xsd:string'],
-        'field_value' => ['name' => 'field_value', 'type' => 'xsd:string']
+        'field_value' => ['name' => 'field_value', 'type' => 'xsd:string'],
         ]
     );
 
@@ -206,7 +206,7 @@ if (defined('NUSOAP')) {
         'SOAP-ENC:Array',
         [],
         [
-        ['ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ArtifactFieldNameValue[]']
+        ['ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ArtifactFieldNameValue[]'],
         ],
         'tns:ArtifactFieldNameValue'
     );
@@ -224,7 +224,7 @@ if (defined('NUSOAP')) {
         'value' => ['name' => 'value', 'type' => 'xsd:string'],
         'description' => ['name' => 'description', 'type' => 'xsd:string'],
         'order_id' => ['name' => 'order_id', 'type' => 'xsd:int'],
-        'status' => ['name' => 'status', 'type' => 'xsd:string']
+        'status' => ['name' => 'status', 'type' => 'xsd:string'],
         ]
     );
 
@@ -236,7 +236,7 @@ if (defined('NUSOAP')) {
         'SOAP-ENC:Array',
         [],
         [
-        ['ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ArtifactFieldValueList[]']
+        ['ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ArtifactFieldValueList[]'],
         ],
         'tns:ArtifactFieldValueList'
     );
@@ -253,7 +253,7 @@ if (defined('NUSOAP')) {
         'source_field_id' => ['name' => 'source_field_id', 'type' => 'xsd:int'],
         'source_value_id' => ['name' => 'source_value_id', 'type' => 'xsd:int'],
         'target_field_id' => ['name' => 'target_field_id', 'type' => 'xsd:int'],
-        'target_value_id' => ['name' => 'target_value_id', 'type' => 'xsd:int']
+        'target_value_id' => ['name' => 'target_value_id', 'type' => 'xsd:int'],
         ]
     );
 
@@ -285,7 +285,7 @@ if (defined('NUSOAP')) {
         'summary' => ['name' => 'summary', 'type' => 'xsd:string'],
         'details' => ['name' => 'details', 'type' => 'xsd:string'],
         'severity' => ['name' => 'severity', 'type' => 'xsd:int'],
-        'extra_fields' => ['name' => 'extra_fields', 'type' => 'tns:ArrayOfArtifactFieldValue']
+        'extra_fields' => ['name' => 'extra_fields', 'type' => 'tns:ArrayOfArtifactFieldValue'],
         ]
     );
 
@@ -309,7 +309,7 @@ if (defined('NUSOAP')) {
         [
         'field_name' => ['name' => 'field_name', 'type' => 'xsd:string'],
         'field_value' => ['name' => 'field_value', 'type' => 'xsd:string'],
-        'operator' => ['name' => 'operator', 'type' => 'xsd:string']
+        'operator' => ['name' => 'operator', 'type' => 'xsd:string'],
         ]
     );
 
@@ -332,7 +332,7 @@ if (defined('NUSOAP')) {
         '',
         [
         'field_name' => ['name' => 'field_name', 'type' => 'xsd:string'],
-        'sort_direction' => ['name' => 'sort_direction', 'type' => 'xsd:string']
+        'sort_direction' => ['name' => 'sort_direction', 'type' => 'xsd:string'],
         ]
     );
 
@@ -356,7 +356,7 @@ if (defined('NUSOAP')) {
         '',
         [
         'total_artifacts_number' => ['name' => 'total_artifacts_number', 'type' => 'xsd:int'],
-        'artifacts' => ['name' => 'artifacts', 'type' => 'tns:ArrayOfArtifact']
+        'artifacts' => ['name' => 'artifacts', 'type' => 'tns:ArrayOfArtifact'],
         ]
     );
 
@@ -370,7 +370,7 @@ if (defined('NUSOAP')) {
         'artifact_canned_id' => ['name' => 'artifact_canned_id', 'type' => 'xsd:int'],
         'group_artifact_id'  => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
         'title'          => ['name' => 'title', 'type' => 'xsd:string'],
-        'body'              => ['name' => 'body', 'type' => 'xsd:string']
+        'body'              => ['name' => 'body', 'type' => 'xsd:string'],
         ]
     );
 
@@ -402,7 +402,7 @@ if (defined('NUSOAP')) {
         'comment_type_id'     => ['name' => 'comment_type_id', 'type' => 'xsd:int'],
         'comment_type'     => ['name' => 'comment_type', 'type' => 'xsd:string'],
         'field_name'     => ['name' => 'field_name', 'type' => 'xsd:string'],
-        'user_can_edit'  => ['name' => 'user_can_edit', 'type' => 'xsd:int']
+        'user_can_edit'  => ['name' => 'user_can_edit', 'type' => 'xsd:int'],
         ]
     );
 
@@ -429,7 +429,7 @@ if (defined('NUSOAP')) {
         'name'              => ['name' => 'name', 'type' => 'xsd:string'],
         'description'       => ['name' => 'description', 'type' => 'xsd:string'],
         'scope'             => ['name' => 'scope', 'type' => 'xsd:string'],
-        'fields'            => ['name' => 'fields', 'type' => 'tns:ArrayOfArtifactReportField']
+        'fields'            => ['name' => 'fields', 'type' => 'tns:ArrayOfArtifactReportField'],
         ]
     );
 
@@ -455,7 +455,7 @@ if (defined('NUSOAP')) {
         'group_artifact_id' => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
         'name'              => ['name' => 'name', 'type' => 'xsd:string'],
         'description'       => ['name' => 'description', 'type' => 'xsd:string'],
-        'scope'             => ['name' => 'scope', 'type' => 'xsd:string']
+        'scope'             => ['name' => 'scope', 'type' => 'xsd:string'],
         ]
     );
 
@@ -485,7 +485,7 @@ if (defined('NUSOAP')) {
         'filesize' => ['name' => 'filesize', 'type' => 'xsd:int'],
         'filetype' => ['name' => 'filetype', 'type' => 'xsd:string'],
         'adddate' => ['name' => 'adddate', 'type' => 'xsd:int'],
-        'submitted_by' => ['name' => 'submitted_by', 'type' => 'xsd:string']
+        'submitted_by' => ['name' => 'submitted_by', 'type' => 'xsd:string'],
         ]
     );
 
@@ -513,7 +513,7 @@ if (defined('NUSOAP')) {
         'show_on_result'      => ['name' => 'show_on_result', 'type' => 'xsd:int'],
         'place_query'           => ['name' => 'place_query', 'type' => 'xsd:int'],
         'place_result'           => ['name' => 'place_result', 'type' => 'xsd:int'],
-        'col_width'          => ['name' => 'col_width', 'type' => 'xsd:int']
+        'col_width'          => ['name' => 'col_width', 'type' => 'xsd:int'],
         ]
     );
 
@@ -541,7 +541,7 @@ if (defined('NUSOAP')) {
         'added_by' => ['name' => 'added_by', 'type' => 'xsd:int'],
         'added_by_name' => ['name' => 'added_by_name', 'type' => 'xsd:string'],
         'comment' => ['name' => 'comment', 'type' => 'xsd:string'],
-        'date' => ['name' => 'date', 'type' => 'xsd:int']
+        'date' => ['name' => 'date', 'type' => 'xsd:int'],
         ]
     );
 
@@ -570,7 +570,7 @@ if (defined('NUSOAP')) {
         'tracker_id' => ['name' => 'tracker_id', 'type' => 'xsd:int'],
         'tracker_name' => ['name' => 'tracker_name', 'type' => 'xsd:string'],
         'group_id' => ['name' => 'group_id', 'type' => 'xsd:int'],
-        'group_name' => ['name' => 'group_name', 'type' => 'xsd:string']
+        'group_name' => ['name' => 'group_name', 'type' => 'xsd:string'],
         ]
     );
 
@@ -598,7 +598,7 @@ if (defined('NUSOAP')) {
         'old_value' => ['name' => 'old_value', 'type' => 'xsd:string'],
         'new_value' => ['name' => 'new_value', 'type' => 'xsd:string'],
         'modification_by' => ['name' => 'modification_by', 'type' => 'xsd:string'],
-        'date' => ['name' => 'date', 'type' => 'xsd:int']
+        'date' => ['name' => 'date', 'type' => 'xsd:int'],
         ]
     );
 
@@ -633,7 +633,7 @@ if (defined('NUSOAP')) {
         [
         'artifact_id' => ['name' => 'artifact_id', 'type' => 'xsd:int'],
         'severity' => ['name' => 'severity', 'type' => 'xsd:int'],
-        'fields' => ['name' => 'fields', 'type' => 'tns:ArrayOfArtifactFieldFromReport']
+        'fields' => ['name' => 'fields', 'type' => 'tns:ArrayOfArtifactFieldFromReport'],
         ]
     );
 
@@ -656,7 +656,7 @@ if (defined('NUSOAP')) {
         '',
         [
         'field_name' => ['name' => 'field_name', 'type' => 'xsd:string'],
-        'field_value' => ['name' => 'field_value', 'type' => 'xsd:string']
+        'field_value' => ['name' => 'field_value', 'type' => 'xsd:string'],
         ]
     );
 
@@ -679,7 +679,7 @@ if (defined('NUSOAP')) {
         '',
         [
         'total_artifacts_number' => ['name' => 'total_artifacts_number', 'type' => 'xsd:int'],
-        'artifacts' => ['name' => 'artifacts', 'type' => 'tns:ArrayOfArtifactFromReport']
+        'artifacts' => ['name' => 'artifacts', 'type' => 'tns:ArrayOfArtifactFromReport'],
         ]
     );
 
@@ -690,7 +690,7 @@ if (defined('NUSOAP')) {
     $server->register(
         'getTrackerList', // method name
         ['sessionKey' => 'xsd:string', // input parameters
-          'group_id' => 'xsd:int'
+          'group_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfTrackerDesc'], // output parameters
         $uri, // namespace
@@ -705,7 +705,7 @@ if (defined('NUSOAP')) {
         'getArtifactType', // method name
         ['sessionKey' => 'xsd:string', // input parameters
           'group_id' => 'xsd:int',
-          'group_artifact_id' => 'xsd:int'
+          'group_artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArtifactType'], // output parameters
         $uri, // namespace
@@ -719,7 +719,7 @@ if (defined('NUSOAP')) {
     $server->register(
         'getArtifactTypes', // method name
         ['sessionKey' => 'xsd:string', // input parameters
-          'group_id' => 'xsd:int'
+          'group_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactType'], // output parameters
         $uri, // namespace
@@ -737,7 +737,7 @@ if (defined('NUSOAP')) {
           'group_artifact_id' => 'xsd:int',
           'criteria' => 'tns:ArrayOfCriteria',
           'offset' => 'xsd:int',
-          'max_rows' => 'xsd:int'
+          'max_rows' => 'xsd:int',
         ],
         ['return' => 'tns:ArtifactQueryResult'],
         $uri,
@@ -760,7 +760,7 @@ if (defined('NUSOAP')) {
           'criteria' => 'tns:ArrayOfCriteria',
           'offset' => 'xsd:int',
           'max_rows' => 'xsd:int',
-          'sort_criteria' => 'tns:ArrayOfSortCriteria'
+          'sort_criteria' => 'tns:ArrayOfSortCriteria',
         ],
         ['return' => 'tns:ArtifactFromReportResult'],
         $uri,
@@ -784,7 +784,7 @@ if (defined('NUSOAP')) {
         'summary' => 'xsd:string',
         'details' => 'xsd:string',
         'severity' => 'xsd:int',
-        'extra_fields' => 'tns:ArrayOfArtifactFieldValue'
+        'extra_fields' => 'tns:ArrayOfArtifactFieldValue',
         ],
         ['return' => 'xsd:int'],
         $uri,
@@ -807,7 +807,7 @@ if (defined('NUSOAP')) {
         'summary' => 'xsd:string',
         'details' => 'xsd:string',
         'severity' => 'xsd:int',
-        'extra_fields' => 'tns:ArrayOfArtifactFieldNameValue'
+        'extra_fields' => 'tns:ArrayOfArtifactFieldNameValue',
         ],
         ['return' => 'xsd:int'],
         $uri,
@@ -831,7 +831,7 @@ if (defined('NUSOAP')) {
         'summary' => 'xsd:string',
         'details' => 'xsd:string',
         'severity' => 'xsd:int',
-        'extra_fields' => 'tns:ArrayOfArtifactFieldValue'
+        'extra_fields' => 'tns:ArrayOfArtifactFieldValue',
         ],
         ['return' => 'xsd:int'],
         $uri,
@@ -855,7 +855,7 @@ if (defined('NUSOAP')) {
         'summary' => 'xsd:string',
         'details' => 'xsd:string',
         'severity' => 'xsd:int',
-        'extra_fields' => 'tns:ArrayOfArtifactFieldNameValue'
+        'extra_fields' => 'tns:ArrayOfArtifactFieldNameValue',
         ],
         ['return' => 'xsd:int'],
         $uri,
@@ -873,7 +873,7 @@ if (defined('NUSOAP')) {
         ['sessionKey' => 'xsd:string',
         'group_id' => 'xsd:int',
         'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int'
+        'artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactFollowup'],
         $uri,
@@ -889,7 +889,7 @@ if (defined('NUSOAP')) {
         'getArtifactCannedResponses',
         ['sessionKey' => 'xsd:string',
         'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int'
+        'group_artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactCanned'],
         $uri,
@@ -904,7 +904,7 @@ if (defined('NUSOAP')) {
         'getArtifactReports',
         ['sessionKey' => 'xsd:string',
         'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int'
+        'group_artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactReport'],
         $uri,
@@ -920,7 +920,7 @@ if (defined('NUSOAP')) {
         ['sessionKey' => 'xsd:string',
           'group_id' => 'xsd:int',
           'group_artifact_id' => 'xsd:int',
-          'artifact_id' => 'xsd:int'
+          'artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactFile'],
         $uri,
@@ -938,7 +938,7 @@ if (defined('NUSOAP')) {
           'group_id' => 'xsd:int',
           'group_artifact_id' => 'xsd:int',
           'artifact_id' => 'xsd:int',
-          'file_id' => 'xsd:int'
+          'file_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArtifactFile'],
         $uri,
@@ -956,7 +956,7 @@ if (defined('NUSOAP')) {
         ['sessionKey' => 'xsd:string',
           'group_id' => 'xsd:int',
           'group_artifact_id' => 'xsd:int',
-          'artifact_id' => 'xsd:int'
+          'artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:Artifact'],
         $uri,
@@ -973,7 +973,7 @@ if (defined('NUSOAP')) {
         ['sessionKey' => 'xsd:string',
           'group_id' => 'xsd:int',
           'group_artifact_id' => 'xsd:int',
-          'artifact_id' => 'xsd:int'
+          'artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactDependency'],
         $uri,
@@ -990,7 +990,7 @@ if (defined('NUSOAP')) {
         ['sessionKey' => 'xsd:string',
           'group_id' => 'xsd:int',
           'group_artifact_id' => 'xsd:int',
-          'artifact_id' => 'xsd:int'
+          'artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactDependency'],
         $uri,
@@ -1011,7 +1011,7 @@ if (defined('NUSOAP')) {
         'encoded_data' => 'xsd:string',
         'description' => 'xsd:string',
         'filename' => 'xsd:string',
-        'filetype' => 'xsd:string'
+        'filetype' => 'xsd:string',
         ],
         ['return' => 'xsd:int'],
         $uri,
@@ -1032,7 +1032,7 @@ if (defined('NUSOAP')) {
         'group_id' => 'xsd:int',
         'group_artifact_id' => 'xsd:int',
         'artifact_id' => 'xsd:int',
-        'file_id' => 'xsd:int'
+        'file_id' => 'xsd:int',
         ],
         ['return' => 'xsd:int'],
         $uri,
@@ -1051,7 +1051,7 @@ if (defined('NUSOAP')) {
         'group_id' => 'xsd:int',
         'group_artifact_id' => 'xsd:int',
         'artifact_id' => 'xsd:int',
-        'is_dependent_on_artifact_ids' => 'xsd:string'
+        'is_dependent_on_artifact_ids' => 'xsd:string',
         ],
         ['return' => 'xsd:boolean'],
         $uri,
@@ -1071,7 +1071,7 @@ if (defined('NUSOAP')) {
         'group_id' => 'xsd:int',
         'group_artifact_id' => 'xsd:int',
         'artifact_id' => 'xsd:int',
-        'dependent_on_artifact_id' => 'xsd:int'
+        'dependent_on_artifact_id' => 'xsd:int',
         ],
         ['return' => 'xsd:int'],
         $uri,
@@ -1092,7 +1092,7 @@ if (defined('NUSOAP')) {
         'artifact_id' => 'xsd:int',
         'body' => 'xsd:string',
         'comment_type_id' => 'xsd:int',
-        'format' => 'xsd:int'
+        'format' => 'xsd:int',
         ],
         ['return' => 'xsd:boolean'],
         $uri,
@@ -1131,7 +1131,7 @@ if (defined('NUSOAP')) {
         'group_id' => 'xsd:int',
         'group_artifact_id' => 'xsd:int',
         'artifact_id' => 'xsd:int',
-        'artifact_history_id' => 'xsd:int'
+        'artifact_history_id' => 'xsd:int',
         ],
         ['return' => 'xsd:boolean'],
         $uri,
@@ -1147,7 +1147,7 @@ if (defined('NUSOAP')) {
         'existArtifactSummary',
         ['sessionKey' => 'xsd:string',
         'group_artifact_id' => 'xsd:int',
-        'summary' => 'xsd:string'
+        'summary' => 'xsd:string',
         ],
         ['return' => 'xsd:int'],
         $uri,
@@ -1163,7 +1163,7 @@ if (defined('NUSOAP')) {
         ['sessionKey' => 'xsd:string',
         'group_id' => 'xsd:int',
         'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int'
+        'artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactCC'],
         $uri,
@@ -1180,7 +1180,7 @@ if (defined('NUSOAP')) {
         'group_artifact_id' => 'xsd:int',
         'artifact_id' => 'xsd:int',
         'cc_list' => 'xsd:string',
-        'cc_comment' => 'xsd:string'
+        'cc_comment' => 'xsd:string',
         ],
         ['return' => 'xsd:boolean'],
         $uri,
@@ -1196,7 +1196,7 @@ if (defined('NUSOAP')) {
         'group_id' => 'xsd:int',
         'group_artifact_id' => 'xsd:int',
         'artifact_id' => 'xsd:int',
-        'artifact_cc_id' => 'xsd:int'
+        'artifact_cc_id' => 'xsd:int',
         ],
         ['return' => 'xsd:boolean'],
         $uri,
@@ -1211,7 +1211,7 @@ if (defined('NUSOAP')) {
         ['sessionKey' => 'xsd:string',
         'group_id' => 'xsd:int',
         'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int'
+        'artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactHistory'],
         $uri,
@@ -1312,7 +1312,7 @@ if (defined('NUSOAP')) {
                     'open_count' => ($at_arr[$i]->userHasFullAccess() ? $at_arr[$i]->getOpenCount() : -1),
                     'total_count' => ($at_arr[$i]->userHasFullAccess() ? $at_arr[$i]->getTotalCount() : -1),
                     'total_file_size' => db_result($result, 0, 0),
-                    'reports_desc' => $reports_desc
+                    'reports_desc' => $reports_desc,
                     ];
                 }
             }
@@ -1333,7 +1333,7 @@ if (defined('NUSOAP')) {
                     'group_artifact_id'  => $artifactreportdesc->getArtifactTypeID(),
                     'name'               => $artifactreportdesc->getName(),
                     'description'        => $artifactreportdesc->getDescription(),
-                    'scope'              => $artifactreportdesc->getScope()
+                    'scope'              => $artifactreportdesc->getScope(),
                     ];
                 }
             }
@@ -1482,7 +1482,7 @@ if (defined('NUSOAP')) {
                                 'value' => SimpleSanitizer::unsanitize(db_result($result, $j, 1)),
                                 'description' => SimpleSanitizer::unsanitize(($cols > 2) ? db_result($result, $j, 4) : ''),
                                 'order_id' => ($cols > 2) ? db_result($result, $j, 5) : 0,
-                                'status' => $field_status
+                                'status' => $field_status,
                                 ];
                             }
                         }
@@ -1495,7 +1495,7 @@ if (defined('NUSOAP')) {
                             'value' => 'None',
                             'description' => '',
                             'order_id' => 10,
-                            'status' => 'P'
+                            'status' => 'P',
                             ];
                         }
                         if ($field->isMultiSelectBox()) {
@@ -1524,7 +1524,7 @@ if (defined('NUSOAP')) {
                         'user_can_submit' => $field->userCanSubmit($group_id, $group_artifact_id, $user_id),
                         'user_can_read' => $field->userCanRead($group_id, $group_artifact_id, $user_id),
                         'user_can_update' => $field->userCanUpdate($group_id, $group_artifact_id, $user_id),
-                        'is_standard_field' => $field->isStandardField()
+                        'is_standard_field' => $field->isStandardField(),
                         ];
                     }
                 }
@@ -1536,7 +1536,7 @@ if (defined('NUSOAP')) {
                 'description' => SimpleSanitizer::unsanitize($result_fieldset->getDescription()),
                 'description_text' => SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()),
                 'rank' => $result_fieldset->getRank(),
-                'fields' => $fields
+                'fields' => $fields,
                 ];
             }
 
@@ -1559,7 +1559,7 @@ if (defined('NUSOAP')) {
             'total_count' => ($at->userHasFullAccess() ? $count : -1),
             'total_file_size' => db_result($result, 0, 0),
             'field_sets' => $field_sets,
-            'field_dependencies' => $field_dependencies
+            'field_dependencies' => $field_dependencies,
             ];
         }
         return $return;
@@ -1809,7 +1809,7 @@ if (defined('NUSOAP')) {
                         $extrafieldvalues[] =  [
                         'field_id'    => $field_id,
                         'artifact_id' => $artifact->getID(),
-                        'field_value' => html_entity_decode($value)  //util_unconvert_htmlspecialchars ?
+                        'field_value' => html_entity_decode($value),  //util_unconvert_htmlspecialchars ?
                         ];
                     }
                 }
@@ -2452,7 +2452,7 @@ if (defined('NUSOAP')) {
             'comment_type_id'     => db_result($followups_res, $i, 'comment_type_id'),
             'comment_type'        => util_unconvert_htmlspecialchars(db_result($followups_res, $i, 'comment_type')),
             'field_name'          => db_result($followups_res, $i, 'field_name'),
-            'user_can_edit'       => $artifact->userCanEditFollowupComment($id) ? 1 : 0
+            'user_can_edit'       => $artifact->userCanEditFollowupComment($id) ? 1 : 0,
             ];
         }
         return $return;
@@ -2500,7 +2500,7 @@ if (defined('NUSOAP')) {
             'artifact_canned_id' => db_result($cannedresponses_res, $i, 'artifact_canned_id'),
             'group_artifact_id' => $group_artifact_id,
             'title' => util_unconvert_htmlspecialchars(db_result($cannedresponses_res, $i, 'title')),
-            'body' => util_unconvert_htmlspecialchars(db_result($cannedresponses_res, $i, 'body'))
+            'body' => util_unconvert_htmlspecialchars(db_result($cannedresponses_res, $i, 'body')),
             ];
         }
         return $return;
@@ -2568,7 +2568,7 @@ if (defined('NUSOAP')) {
                             'show_on_result' => $field->getShowOnResult(),
                             'place_query'      => $field->getPlaceQuery(),
                             'place_result'      => $field->getPlaceResult(),
-                            'col_width'     => $field->getColWidth()
+                            'col_width'     => $field->getColWidth(),
                             ];
                         }
                     }
@@ -2578,7 +2578,7 @@ if (defined('NUSOAP')) {
                     'name'                     => $artifactreport->getName(),
                     'description'           => $artifactreport->getDescription(),
                     'scope'           => $artifactreport->getScope(),
-                    'fields'          => $fields
+                    'fields'          => $fields,
                     ];
                 }
             }
@@ -2716,7 +2716,7 @@ if (defined('NUSOAP')) {
             'filesize' => db_result($attachedfiles_arr, $i, 'filesize'),
             'filetype' => db_result($attachedfiles_arr, $i, 'filetype'),
             'adddate' => db_result($attachedfiles_arr, $i, 'adddate'),
-            'submitted_by' => db_result($attachedfiles_arr, $i, 'user_name')
+            'submitted_by' => db_result($attachedfiles_arr, $i, 'user_name'),
             ];
         }
         return $return;
@@ -2822,7 +2822,7 @@ if (defined('NUSOAP')) {
                 'tracker_id' => db_result($dependencies, $i, 'group_artifact_id'),
                 'tracker_name' => SimpleSanitizer::unsanitize(db_result($dependencies, $i, 'name')),
                 'group_id' => db_result($dependencies, $i, 'group_id'),
-                'group_name' => db_result($dependencies, $i, 'group_name')
+                'group_name' => db_result($dependencies, $i, 'group_name'),
                 ];
             }
         }
@@ -2903,7 +2903,7 @@ if (defined('NUSOAP')) {
                 'tracker_id' => db_result($inverse_dependencies, $i, 'group_artifact_id'),
                 'tracker_name' => SimpleSanitizer::unsanitize(db_result($inverse_dependencies, $i, 'name')),
                 'group_id' => db_result($inverse_dependencies, $i, 'group_id'),
-                'group_name' => db_result($inverse_dependencies, $i, 'group_name')
+                'group_name' => db_result($inverse_dependencies, $i, 'group_name'),
                 ];
             }
         }
@@ -3473,7 +3473,7 @@ if (defined('NUSOAP')) {
             'added_by' => db_result($artifact_cc_list, $i, 'added_by'),
             'added_by_name' => db_result($artifact_cc_list, $i, 'user_name'),
             'comment' => SimpleSanitizer::unsanitize(db_result($artifact_cc_list, $i, 'comment')),
-            'date' => db_result($artifact_cc_list, $i, 'date')
+            'date' => db_result($artifact_cc_list, $i, 'date'),
             ];
         }
         return $return;
@@ -3655,7 +3655,7 @@ if (defined('NUSOAP')) {
                     'old_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'old_value')),
                     'new_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'new_value')),
                     'modification_by' => db_result($history, $i, 'user_name'),
-                    'date' => db_result($history, $i, 'date')
+                    'date' => db_result($history, $i, 'date'),
                     ];
                 }
             } else {
@@ -3671,7 +3671,7 @@ if (defined('NUSOAP')) {
                 'old_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'old_value')),
                 'new_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'new_value')),
                 'modification_by' => db_result($history, $i, 'user_name'),
-                'date' => db_result($history, $i, 'date')
+                'date' => db_result($history, $i, 'date'),
                 ];
             }
         }

@@ -48,7 +48,7 @@ $usage_options .= 'h';  // should we display the usage
 $usage_options .= 'x';  // should we display the XML content
 
 $long_options = [
-    'dir', 'all'
+    'dir', 'all',
 ];
 
 /**

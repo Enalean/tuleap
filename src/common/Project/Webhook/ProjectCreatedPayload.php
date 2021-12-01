@@ -58,7 +58,7 @@ class ProjectCreatedPayload implements Payload
             'path'                => $project->getUnixName(),
             'path_with_namespace' => $project->getUnixName(),
             'project_id'          => (int) $project->getID(),
-            'project_visibility'  => $project->getAccess()
+            'project_visibility'  => $project->getAccess(),
         ];
     }
 

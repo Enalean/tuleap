@@ -31,7 +31,7 @@ class PermissionsOnArtifactUGroupRetriever
      */
     public function initializeUGroupsIfNoUGroupsAreChoosenWithRequiredCondition(
         array $value,
-        Tracker_FormElement_Field_PermissionsOnArtifact $field
+        Tracker_FormElement_Field_PermissionsOnArtifact $field,
     ) {
         if ($field->isRequired() === true && ! isset($value['u_groups'])) {
             $value['u_groups'] = [];
@@ -44,7 +44,7 @@ class PermissionsOnArtifactUGroupRetriever
      * @return array
      */
     public function initializeUGroupsIfNoUGroupsAreChoosen(
-        $value
+        $value,
     ) {
         if (is_array($value) === false) {
             $value = ['u_groups' => []];

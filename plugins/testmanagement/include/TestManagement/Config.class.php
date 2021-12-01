@@ -49,7 +49,7 @@ class Config
         int $campaign_tracker_id,
         int $test_definition_tracker_id,
         int $test_execution_tracker_id,
-        ?int $issue_tracker_id
+        ?int $issue_tracker_id,
     ): bool {
         unset($this->properties[$project->getID()]);
 

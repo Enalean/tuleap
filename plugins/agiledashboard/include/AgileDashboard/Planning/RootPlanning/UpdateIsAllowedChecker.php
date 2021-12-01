@@ -42,7 +42,7 @@ class UpdateIsAllowedChecker
     public function __construct(
         \PlanningFactory $planning_factory,
         BacklogTrackerRemovalChecker $backlog_tracker_removal_checker,
-        \TrackerFactory $tracker_factory
+        \TrackerFactory $tracker_factory,
     ) {
         $this->planning_factory                = $planning_factory;
         $this->backlog_tracker_removal_checker = $backlog_tracker_removal_checker;
@@ -56,7 +56,7 @@ class UpdateIsAllowedChecker
     public function checkUpdateIsAllowed(
         \Planning $planning,
         \PlanningParameters $updated_planning,
-        \PFUser $user
+        \PFUser $user,
     ): void {
         $root_planning = $this->planning_factory->getRootPlanning(
             $user,

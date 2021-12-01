@@ -49,7 +49,7 @@ class NavigationPermissionsDropdownPresenterBuilder
                 _('Permissions for deprecated services'),
                 '/project/admin/userperms.php?' . http_build_query(
                     [
-                        'group_id' => $project->getID()
+                        'group_id' => $project->getID(),
                     ]
                 )
             );
@@ -87,7 +87,7 @@ class NavigationPermissionsDropdownPresenterBuilder
                 _('Wiki'),
                 '/wiki/admin/index.php?' . http_build_query([
                     'group_id' => $project->getID(),
-                    'view' => 'wikiPerms'
+                    'view' => 'wikiPerms',
                 ])
             );
         }
@@ -96,7 +96,7 @@ class NavigationPermissionsDropdownPresenterBuilder
                 _('FRS'),
                 '/file/admin/?' . http_build_query([
                     'group_id' => $project->getID(),
-                    'action' => 'edit-permissions'
+                    'action' => 'edit-permissions',
                 ])
             );
         }

@@ -67,7 +67,7 @@ class WikiPlugin_Transclude extends WikiPlugin
     public function getDefaultArguments()
     {
         return [ 'src'     => false, // the src url to include
-                      'height'  => 450 // height of the iframe
+                      'height'  => 450, // height of the iframe
                     ];
     }
 

@@ -48,7 +48,7 @@ class FilesHeaderPresenterBuilder
     public function __construct(
         GitPHPProjectRetriever $gitphp_project_retriever,
         CommitForCurrentTreeRetriever $commit_retriever,
-        Git_GitRepositoryUrlManager $url_manager
+        Git_GitRepositoryUrlManager $url_manager,
     ) {
         $this->gitphp_project_retriever = $gitphp_project_retriever;
         $this->commit_retriever         = $commit_retriever;

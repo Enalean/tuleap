@@ -45,7 +45,7 @@ class PostUpdateEventAdder
     public function __construct(
         ProjectManager $project_manager,
         DocmanItemsEventAdder $items_event_adder,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->project_manager   = $project_manager;
         $this->items_event_adder = $items_event_adder;
@@ -57,7 +57,7 @@ class PostUpdateEventAdder
         $params = [
             'item'     => $item,
             'user'     => $user,
-            'group_id' => $item->getGroupId()
+            'group_id' => $item->getGroupId(),
         ];
         if ($version) {
             $params['version'] = $version;

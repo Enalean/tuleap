@@ -36,7 +36,7 @@ class PaneCollector
 
     public function __construct(
         PermissionPerGroupFRSServicePresenterBuilder $service_presenter_builder,
-        PermissionPerGroupFRSPackagesPresenterBuilder $packages_pane_builder
+        PermissionPerGroupFRSPackagesPresenterBuilder $packages_pane_builder,
     ) {
         $this->service_presenter_builder = $service_presenter_builder;
         $this->packages_pane_builder     = $packages_pane_builder;

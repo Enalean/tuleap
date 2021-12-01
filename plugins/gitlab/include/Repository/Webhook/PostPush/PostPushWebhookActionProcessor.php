@@ -81,7 +81,7 @@ class PostPushWebhookActionProcessor
         LoggerInterface $logger,
         PostPushCommitBotCommenter $commenter,
         PostPushWebhookCloseArtifactHandler $close_artifact_handler,
-        PostPushWebhookActionBranchHandler $action_branch_handler
+        PostPushWebhookActionBranchHandler $action_branch_handler,
     ) {
         $this->commit_tuleap_references_parser = $commit_tuleap_references_parser;
         $this->commit_tuleap_reference_dao     = $commit_tuleap_reference_dao;
@@ -96,7 +96,7 @@ class PostPushWebhookActionProcessor
     public function process(
         GitlabRepositoryIntegration $gitlab_repository_integration,
         PostPushWebhookData $webhook_data,
-        DateTimeImmutable $webhook_reception_date
+        DateTimeImmutable $webhook_reception_date,
     ): void {
         foreach ($webhook_data->getCommits() as $commit_webhook_data) {
             $this->parseCommitReferences($gitlab_repository_integration, $commit_webhook_data);
@@ -111,7 +111,7 @@ class PostPushWebhookActionProcessor
 
     private function parseCommitReferences(
         GitlabRepositoryIntegration $gitlab_repository_integration,
-        PostPushCommitWebhookData $commit_webhook_data
+        PostPushCommitWebhookData $commit_webhook_data,
     ): void {
         $references_collection = $this->commit_tuleap_references_parser->extractCollectionOfTuleapReferences(
             $commit_webhook_data->getMessage()
@@ -163,7 +163,7 @@ class PostPushWebhookActionProcessor
         GitlabRepositoryIntegration $gitlab_repository_integration,
         WebhookTuleapReference $tuleap_reference,
         PostPushCommitWebhookData $commit_webhook_data,
-        \Reference $external_reference
+        \Reference $external_reference,
     ): void {
         $cross_reference = new CrossReference(
             $gitlab_repository_integration->getName() . '/' . $commit_webhook_data->getSha1(),

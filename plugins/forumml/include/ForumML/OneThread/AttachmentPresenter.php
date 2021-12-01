@@ -48,7 +48,7 @@ final class AttachmentPresenter
         int $id_attachment,
         string $file_name,
         string $file_path,
-        string $url
+        string $url,
     ) {
         $this->id_attachment = $id_attachment;
         $this->file_name     = $file_name;

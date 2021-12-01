@@ -51,7 +51,7 @@ class RESTReferenceCreator
         ClientInterface $http_client,
         RequestFactoryInterface $request_factory,
         StreamFactoryInterface $stream_factory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->http_client     = $http_client;
         $this->request_factory = $request_factory;
@@ -89,7 +89,7 @@ class RESTReferenceCreator
                             'id'               => $target_id,
                             'comment'          => $message,
                             'is_private'       => $are_follow_up_private,
-                            'is_markdown'      => true
+                            'is_markdown'      => true,
                         ]
                     )
                 )

@@ -204,5 +204,5 @@ $symbol_arr = [
 '(:'    => [ 'input' => '(:', 'tag' => 'mo', 'output' => '&#' . hexdec('2329') . ';', 'left_bracket' => true],
 ':)'    => [ 'input' => ':)', 'tag' => 'mo', 'output' => '&#' . hexdec('232A') . ';', 'right_bracket' => true],
 '{:'    => [ 'input' => '{:', 'tag' => 'mo', 'output' => '{:', 'left_bracket' => true, 'invisible' => true],
-':}'    => [ 'input' => ':}', 'tag' => 'mo', 'output' => ':}', 'right_bracket' => true ,'invisible' => true]
+':}'    => [ 'input' => ':}', 'tag' => 'mo', 'output' => ':}', 'right_bracket' => true ,'invisible' => true],
 ];

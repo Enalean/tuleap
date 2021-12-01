@@ -53,7 +53,7 @@ class ProjectMilestonesResource
     public function __construct(
         FilteringQueryParser $query_parser,
         \Planning_MilestoneFactory $milestone_factory,
-        MilestoneRepresentationBuilder $representation_builder
+        MilestoneRepresentationBuilder $representation_builder,
     ) {
         $this->query_parser           = $query_parser;
         $this->milestone_factory      = $milestone_factory;
@@ -72,7 +72,7 @@ class ProjectMilestonesResource
         string $query,
         int $limit,
         int $offset,
-        string $order
+        string $order,
     ): array {
         try {
             $filtering_query = $this->query_parser->parse($query);

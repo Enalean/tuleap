@@ -33,7 +33,7 @@ class DashboardWidgetColumn
     public function __construct(
         $id,
         $line_id,
-        array $widgets
+        array $widgets,
     ) {
         $this->id      = $id;
         $this->line_id = $line_id;

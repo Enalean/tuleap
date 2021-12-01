@@ -39,7 +39,7 @@ final class SubtasksRetriever
         \UserManager $user_manager,
         ICacheTaskRepresentationBuilderForTracker $representation_builder_cache,
         IDetectIfArtifactIsOutOfDate $out_of_date_detector,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->artifact_factory             = $artifact_factory;
         $this->user_manager                 = $user_manager;

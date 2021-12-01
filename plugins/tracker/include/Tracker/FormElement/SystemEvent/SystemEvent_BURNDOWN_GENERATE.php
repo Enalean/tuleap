@@ -89,7 +89,7 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
         FieldCalculator $field_calculator,
         ComputedFieldDaoCache $cache_dao,
         LoggerInterface $logger,
-        BurndownCacheDateRetriever $date_retriever
+        BurndownCacheDateRetriever $date_retriever,
     ) {
         $this->artifact_factory           = $artifact_factory;
         $this->semantic_timeframe_builder = $semantic_timeframe_builder;

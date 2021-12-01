@@ -65,7 +65,7 @@ class CrossReferenceGitEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive(
                 [
                     'getPreference' => 'relative_first-absolute_tooltip',
-                    'getLocale'     => 'en_US'
+                    'getLocale'     => 'en_US',
                 ]
             )
             ->getMock();

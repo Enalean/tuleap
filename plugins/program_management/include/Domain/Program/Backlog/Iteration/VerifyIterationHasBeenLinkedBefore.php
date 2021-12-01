@@ -28,6 +28,6 @@ interface VerifyIterationHasBeenLinkedBefore
 {
     public function hasIterationBeenLinkedBefore(
         ProgramIncrementIdentifier $program_increment,
-        IterationIdentifier $iteration
+        IterationIdentifier $iteration,
     ): bool;
 }

@@ -56,7 +56,7 @@ class Git_SystemCheck
         Git_GitoliteDriver $gitolite,
         Git_SystemEventManager $system_event_manager,
         PluginConfigChecker $config_checker,
-        Plugin $git_plugin
+        Plugin $git_plugin,
     ) {
         $this->gitgc                = $gitgc;
         $this->gitolite             = $gitolite;

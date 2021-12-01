@@ -58,7 +58,7 @@ class AccessControlPresenter extends BaseAdminPresenter
         $auth_file,
         array $versions,
         $current_version_number,
-        $last_version_number
+        $last_version_number,
     ) {
         parent::__construct();
 

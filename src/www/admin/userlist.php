@@ -60,7 +60,7 @@ function get_sort_values($previous_sort_header, $current_sort_header, $sort_orde
         'user_name_icon' => '',
         'realname_icon'  => '',
         'status_icon'    => '',
-        'order'          => 'DESC'
+        'order'          => 'DESC',
     ];
     $sort_order_hash[$current_sort_header . "_icon"] = "fa fa-caret-down";
 

@@ -52,7 +52,7 @@ class ProfileAsJSONForTooltipController
         JSONResponseBuilder $json_response_builder,
         EmitterInterface $emitter,
         ResponseFactoryInterface $response_factory,
-        TemplateRendererFactory $template_renderer_factory
+        TemplateRendererFactory $template_renderer_factory,
     ) {
         $this->json_response_builder     = $json_response_builder;
         $this->emitter                   = $emitter;

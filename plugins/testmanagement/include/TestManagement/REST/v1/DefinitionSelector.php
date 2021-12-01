@@ -65,7 +65,7 @@ class DefinitionSelector
         ProjectAuthorization $project_authorization,
         Tracker_ArtifactFactory $tracker_artifact_factory,
         MilestoneItemsArtifactFactory $milestone_items_artifact_factory,
-        Tracker_ReportFactory $tracker_report_factory
+        Tracker_ReportFactory $tracker_report_factory,
     ) {
         $this->config                           = $config;
         $this->artifact_factory                 = $artifact_factory;

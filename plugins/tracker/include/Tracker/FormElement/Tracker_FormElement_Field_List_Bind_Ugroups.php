@@ -533,7 +533,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         SimpleXMLElement $root,
         &$xmlMapping,
         $project_export_context,
-        UserXMLExporter $user_xml_exporter
+        UserXMLExporter $user_xml_exporter,
     ) {
         $items = $root->addChild('items');
         foreach ($this->values as $value) {

@@ -106,7 +106,7 @@ class DocmanItemCreator
         HardcodedMetadataObsolescenceDateRetriever $date_retriever,
         CustomMetadataRepresentationRetriever $custom_checker,
         \Docman_MetadataValueDao $metadata_value_dao,
-        DocmanItemPermissionsForGroupsSetFactory $permissions_for_groups_set_factory
+        DocmanItemPermissionsForGroupsSetFactory $permissions_for_groups_set_factory,
     ) {
         $this->item_factory                       = $item_factory;
         $this->document_ongoing_upload_retriever  = $document_ongoing_upload_retriever;
@@ -128,7 +128,7 @@ class DocmanItemCreator
         Docman_Item $parent_item,
         $document_type,
         $title,
-        \DateTimeImmutable $current_time
+        \DateTimeImmutable $current_time,
     ) {
         if ($document_type === ItemRepresentation::TYPE_FILE) {
             return;
@@ -163,7 +163,7 @@ class DocmanItemCreator
         ?DocmanItemPermissionsForGroupsSet $permissions_for_groups,
         $wiki_page,
         $link_url,
-        $content
+        $content,
     ) {
         $status_id = $this->status_mapper->getItemStatusWithParentInheritance($parent_item, $status);
 
@@ -198,7 +198,7 @@ class DocmanItemCreator
             'user'                   => $user,
             'creation_time'          => $current_time,
             'formatted_metadata'     => $metadata_to_create->getMetadataListValues(),
-            'permissions_for_groups' => $permissions_for_groups
+            'permissions_for_groups' => $permissions_for_groups,
         ];
 
         if ($metadata_to_create->isInheritedFromParent()) {
@@ -227,7 +227,7 @@ class DocmanItemCreator
         \DateTimeImmutable $current_time,
         FilePropertiesPOSTPATCHRepresentation $file_properties,
         MetadataToCreate $metadata_to_create,
-        ?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_representation
+        ?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_representation,
     ): CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($title, $parent_item->getId())) {
             throw new RestException(400, "A file with same title already exists in the given folder.");
@@ -287,7 +287,7 @@ class DocmanItemCreator
         PFUser $user,
         DocmanFolderPOSTRepresentation $representation,
         \DateTimeImmutable $current_time,
-        Project $project
+        Project $project,
     ): CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingFolder($representation->title, $parent_item->getId())) {
             throw new RestException(400, "A folder with same title already exists in the given folder.");
@@ -327,7 +327,7 @@ class DocmanItemCreator
         PFUser $user,
         DocmanEmptyPOSTRepresentation $representation,
         \DateTimeImmutable $current_time,
-        Project $project
+        Project $project,
     ): CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $parent_item->getId())) {
             throw new RestException(400, "A document with same title already exists in the given folder.");
@@ -374,7 +374,7 @@ class DocmanItemCreator
         PFUser $user,
         DocmanWikiPOSTRepresentation $representation,
         \DateTimeImmutable $current_time,
-        Project $project
+        Project $project,
     ): CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $parent_item->getId())) {
             throw new RestException(400, "A document with same title already exists in the given folder.");
@@ -428,7 +428,7 @@ class DocmanItemCreator
         PFUser $user,
         DocmanEmbeddedPOSTRepresentation $representation,
         \DateTimeImmutable $current_time,
-        Project $project
+        Project $project,
     ): CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $parent_item->getId())) {
             throw new RestException(400, "A document with same title already exists in the given folder.");
@@ -475,7 +475,7 @@ class DocmanItemCreator
         PFUser $user,
         DocmanLinkPOSTRepresentation $representation,
         \DateTimeImmutable $current_time,
-        Project $project
+        Project $project,
     ): CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $parent_item->getId())) {
             throw new RestException(400, "A document with same title already exists in the given folder.");
@@ -519,7 +519,7 @@ class DocmanItemCreator
      */
     private function getPermissionsForGroupsSet(
         Docman_Item $parent_item,
-        ?DocmanItemPermissionsForGroupsSetRepresentation $representation
+        ?DocmanItemPermissionsForGroupsSetRepresentation $representation,
     ): ?DocmanItemPermissionsForGroupsSet {
         if ($representation === null) {
             return null;

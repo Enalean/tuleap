@@ -47,7 +47,7 @@ final class UserCanPrioritize implements UserIdentifier
         VerifyPrioritizeFeaturesPermission $permission,
         UserIdentifier $user_identifier,
         ProgramIdentifier $program,
-        ?PermissionBypass $bypass
+        ?PermissionBypass $bypass,
     ): self {
         if (! $permission->canUserPrioritizeFeatures($program, $user_identifier, $bypass)) {
             throw new NotAllowedToPrioritizeException($user_identifier->getId(), $program->getId());

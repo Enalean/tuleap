@@ -49,7 +49,7 @@ final class PasswordPolicyDisplayController implements DispatchableWithRequest
     public function __construct(
         AdminPageRenderer $admin_page_renderer,
         TemplateRendererFactory $template_renderer_factory,
-        PasswordConfigurationRetriever $password_configuration_retriever
+        PasswordConfigurationRetriever $password_configuration_retriever,
     ) {
         $this->admin_page_renderer              = $admin_page_renderer;
         $this->template_renderer                = $template_renderer_factory->getRenderer(

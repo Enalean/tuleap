@@ -45,7 +45,7 @@ final class CommitDetailsCrossReferenceInformation
     public function __construct(
         CommitDetails $commit_details,
         CrossReferencePresenter $cross_reference_presenter,
-        string $section_label
+        string $section_label,
     ) {
         $this->commit_details            = $commit_details;
         $this->cross_reference_presenter = $cross_reference_presenter;

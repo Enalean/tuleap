@@ -43,7 +43,7 @@ class ConditionsUpdater
 
     public function __construct(
         TransitionFactory $transition_factory,
-        Workflow_Transition_ConditionFactory $condition_factory
+        Workflow_Transition_ConditionFactory $condition_factory,
     ) {
         $this->transition_factory = $transition_factory;
         $this->condition_factory  = $condition_factory;
@@ -56,7 +56,7 @@ class ConditionsUpdater
         \Transition $transition,
         array $authorized_user_group_ids,
         array $not_empty_field_ids,
-        $is_comment_required
+        $is_comment_required,
     ) {
         try {
             $this->condition_factory->addCondition(

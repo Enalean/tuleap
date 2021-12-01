@@ -41,7 +41,7 @@ class RedirectURIBuilder
     public function buildErrorURI(
         string $base_redirect_uri,
         ?string $state_value,
-        string $error_code
+        string $error_code,
     ): UriInterface {
         $uri = $this->uri_factory->createUri($base_redirect_uri);
         parse_str($uri->getQuery(), $query);
@@ -57,7 +57,7 @@ class RedirectURIBuilder
     public function buildSuccessURI(
         string $base_redirect_uri,
         ?string $state_value,
-        ConcealedString $authorization_code
+        ConcealedString $authorization_code,
     ): UriInterface {
         $uri = $this->uri_factory->createUri($base_redirect_uri);
         parse_str($uri->getQuery(), $query);

@@ -72,7 +72,7 @@ class ArtifactsXMLExporter
         DataChangesetXMLExporter $data_changeset_xml_exporter,
         AttachmentCollectionBuilder $attachment_collection_builder,
         AttachmentXMLExporter $attachment_xml_exporter,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->jira_client                   = $jira_client;
         $this->user_manager                  = $user_manager;
@@ -92,7 +92,7 @@ class ArtifactsXMLExporter
         LinkedIssuesCollection $linked_issues_collection,
         string $jira_base_url,
         string $jira_project_id,
-        string $jira_issue_type_name
+        string $jira_issue_type_name,
     ): void {
         $user = $this->user_manager->getUserById(TrackerImporterUser::ID);
         if ($user === null) {
@@ -121,12 +121,12 @@ class ArtifactsXMLExporter
 
     private function getUrl(
         string $jira_project_id,
-        string $jira_issue_type_id
+        string $jira_issue_type_id,
     ): string {
         $params = [
             'jql'    => 'project=' . $jira_project_id . ' AND issuetype=' . $jira_issue_type_id,
             'fields' => '*all',
-            'expand' => 'renderedFields'
+            'expand' => 'renderedFields',
         ];
 
         return ClientWrapper::JIRA_CORE_BASE_URL . '/search?' . http_build_query($params);
@@ -141,7 +141,7 @@ class ArtifactsXMLExporter
         string $jira_base_url,
         FieldMappingCollection $jira_field_mapping_collection,
         IssueAPIRepresentationCollection $issue_representation_collection,
-        LinkedIssuesCollection $linked_issues_collection
+        LinkedIssuesCollection $linked_issues_collection,
     ): void {
         $issue_api_representation = IssueAPIRepresentation::buildFromAPIResponse($issue);
         $issue_representation_collection->addIssueRepresentationInCollection($issue_api_representation);

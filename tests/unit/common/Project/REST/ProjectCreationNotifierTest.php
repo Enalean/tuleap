@@ -75,7 +75,7 @@ class ProjectCreationNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
                     'New project registered: new_project',
                     false,
                     false,
-                    $this->project
+                    $this->project,
                 ]
             )->andReturn($mail);
 
@@ -96,7 +96,7 @@ class ProjectCreationNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
                     'New project registered: new_project',
                     false,
                     false,
-                    $this->project
+                    $this->project,
                 ]
             )->andReturn($mail);
 

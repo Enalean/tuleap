@@ -65,7 +65,7 @@ class HeaderOptionsProvider
         TrackerNewDropdownLinkPresenterBuilder $presenter_builder,
         HeaderOptionsForPlanningProvider $header_options_for_planning_provider,
         ParentTrackerRetriever $parent_tracker_retriever,
-        CurrentContextSectionToHeaderOptionsInserter $header_options_inserter
+        CurrentContextSectionToHeaderOptionsInserter $header_options_inserter,
     ) {
         $this->backlog_factory                      = $backlog_factory;
         $this->pane_info_identifier                 = $pane_info_identifier;
@@ -81,7 +81,7 @@ class HeaderOptionsProvider
 
         $header_options = [
             Layout::INCLUDE_FAT_COMBINED => ! $is_pane_a_planning_v2,
-            'body_class'                 => ['agiledashboard-body']
+            'body_class'                 => ['agiledashboard-body'],
         ];
 
         $this->createCurrentContextSectionWithBacklogTrackers($milestone, $user, $header_options, $identifier);
@@ -97,7 +97,7 @@ class HeaderOptionsProvider
         Planning_Milestone $milestone,
         PFUser $user,
         array &$header_options,
-        string $pane_identifier
+        string $pane_identifier,
     ): void {
         if ($milestone instanceof Planning_VirtualTopMilestone) {
             $this->createCurrentContextSectionForTopBacklog($milestone, $user, $header_options, $pane_identifier);
@@ -119,7 +119,7 @@ class HeaderOptionsProvider
         PFUser $user,
         string $section_label,
         array &$header_options,
-        string $pane_identifier
+        string $pane_identifier,
     ): void {
         $parent_trackers = $this->parent_tracker_retriever->getCreatableParentTrackers($milestone, $user, $trackers);
         foreach (array_merge($trackers, $parent_trackers) as $tracker) {
@@ -128,7 +128,7 @@ class HeaderOptionsProvider
                     $section_label,
                     $this->presenter_builder->buildWithAdditionalUrlParameters($tracker, [
                         'planning[' . $pane_identifier . '][' . $milestone->getPlanningId() . ']' => (string) $milestone->getArtifactId(),
-                        \Planning_ArtifactLinker::LINK_TO_MILESTONE_PARAMETER => '1'
+                        \Planning_ArtifactLinker::LINK_TO_MILESTONE_PARAMETER => '1',
                     ]),
                     $header_options
                 );
@@ -140,7 +140,7 @@ class HeaderOptionsProvider
         Planning_VirtualTopMilestone $milestone,
         PFUser $user,
         array &$header_options,
-        string $pane_identifier
+        string $pane_identifier,
     ): void {
         $this->createCurrentContextSectionFromTrackers(
             $milestone,

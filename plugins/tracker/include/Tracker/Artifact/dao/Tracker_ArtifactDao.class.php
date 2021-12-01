@@ -452,7 +452,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         $tracker_id,
         $submitted_by,
         $submitted_on,
-        $use_artifact_permissions
+        $use_artifact_permissions,
     ) {
         $artifact_id              = $this->da->escapeInt($artifact_id);
         $tracker_id               = $this->da->escapeInt($tracker_id);
@@ -869,7 +869,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         $artifact_id,
         array $tracker_ids,
         array $excluded_linked_ids,
-        array $additional_artifacts
+        array $additional_artifacts,
     ) {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $tracker_ids = $this->da->escapeIntImplode($tracker_ids);
@@ -1046,7 +1046,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         array $excluded_linked_ids,
         array $additional_artifacts,
         $limit,
-        $offset
+        $offset,
     ) {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $tracker_ids = $this->da->escapeIntImplode($tracker_ids);
@@ -1118,7 +1118,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         array $excluded_linked_ids,
         array $additional_artifacts,
         $limit,
-        $offset
+        $offset,
     ) {
         $filter = 'AND (
                         SS.field_id IS NULL
@@ -1146,7 +1146,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         array $excluded_linked_ids,
         array $additional_artifacts,
         ?int $limit,
-        ?int $offset
+        ?int $offset,
     ) {
         return $this->getLinkedArtifactsToTrackerWithWhereConditionAndLimitAndOffset(
             $artifact_id,
@@ -1169,7 +1169,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         array $additional_artifacts,
         ?int $limit,
         ?int $offset,
-        string $filter
+        string $filter,
     ) {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $tracker_ids = $this->da->escapeIntImplode($tracker_ids);

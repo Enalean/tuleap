@@ -45,7 +45,7 @@ class StatusUpdater
     public function openCampaign(
         Campaign $campaign,
         PFUser $user,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
     ): void {
         $this->updateCampaignStatus(
             $campaign,
@@ -58,7 +58,7 @@ class StatusUpdater
     public function closeCampaign(
         Campaign $campaign,
         PFUser $user,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
     ): void {
         $this->updateCampaignStatus(
             $campaign,
@@ -75,7 +75,7 @@ class StatusUpdater
         Campaign $campaign,
         PFUser $user,
         CSRFSynchronizerToken $csrf_token,
-        string $change_status
+        string $change_status,
     ): void {
         $csrf_token->check();
 
@@ -94,7 +94,7 @@ class StatusUpdater
         }
 
         $fields_data = [
-            $status_field->getId() => $status_field->getFieldData($value->getLabel())
+            $status_field->getId() => $status_field->getFieldData($value->getLabel()),
         ];
 
         $artifact->createNewChangeset(

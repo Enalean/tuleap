@@ -38,7 +38,7 @@ class ActionAuthorizationDAO extends DataAccessObject
                 'expiration_date' => $expiration_date,
                 'action_type'     => $action_type,
                 'object_oid'      => $oid,
-                'object_size'     => $size
+                'object_size'     => $size,
             ]
         );
     }

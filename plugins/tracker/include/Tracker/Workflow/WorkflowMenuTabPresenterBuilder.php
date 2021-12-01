@@ -43,23 +43,23 @@ class WorkflowMenuTabPresenterBuilder
             self::TAB_RULES => [
                 'url'       => $this->buildLegacyUrl(Workflow::FUNC_ADMIN_RULES, $tracker),
                 'title'     => dgettext('tuleap-tracker', 'Global Rules'),
-                'is_active' => false
+                'is_active' => false,
             ],
             self::TAB_TRANSITIONS => [
                 'url'       => $this->buildFrontRouterUrl(Workflow::TRANSITION_PATH, $tracker),
                 'title'     => dgettext('tuleap-tracker', 'Transitions Rules'),
-                'is_active' => false
+                'is_active' => false,
             ],
             self::TAB_CROSS_TRACKER_TRIGGERS => [
                 'url'       => $this->buildLegacyUrl(Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS, $tracker),
                 'title'     => dgettext('tuleap-tracker', 'Triggers'),
-                'is_active' => false
+                'is_active' => false,
             ],
             self::TAB_WEBHOOKS => [
                 'url'       => $this->buildLegacyUrl(AdminWebhooks::FUNC_ADMIN_WEBHOOKS, $tracker),
                 'title'     => dgettext('tuleap-tracker', 'Webhooks'),
-                'is_active' => false
-            ]
+                'is_active' => false,
+            ],
         ];
     }
 
@@ -67,7 +67,7 @@ class WorkflowMenuTabPresenterBuilder
     {
         return TRACKER_BASE_URL . '/?' . http_build_query([
             'tracker' => (int) $tracker->getId(),
-            'func'    => $action
+            'func'    => $action,
         ]);
     }
 

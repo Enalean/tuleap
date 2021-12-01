@@ -34,7 +34,7 @@ class FRSLog
         $em                   = EventManager::instance();
         $packageEventToListen = ['frs_create_package',
                                       'frs_update_package',
-                                      'frs_delete_package'
+                                      'frs_delete_package',
         ];
         foreach ($packageEventToListen as $event) {
             $em->addListener($event, $this, 'addLogPackage', true);
@@ -42,7 +42,7 @@ class FRSLog
 
         $releaseEventToListen = ['frs_create_release',
                                       'frs_update_release',
-                                      'frs_delete_release'
+                                      'frs_delete_release',
         ];
         foreach ($releaseEventToListen as $event) {
             $em->addListener($event, $this, 'addLogRelease', true);
@@ -51,7 +51,7 @@ class FRSLog
         $fileEventToListen = ['frs_create_file',
                                    'frs_update_file',
                                    'frs_delete_file',
-                                   'frs_restore_file'
+                                   'frs_restore_file',
         ];
         foreach ($fileEventToListen as $event) {
             $em->addListener($event, $this, 'addLogFile', true);

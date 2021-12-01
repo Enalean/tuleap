@@ -126,7 +126,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         ProjectDashboardXMLImporter $dashboard_importer,
         SynchronizedProjectMembershipDao $synchronized_project_membership_dao,
         XMLFileContentRetriever $XML_file_content_retriever,
-        DescriptionFieldsFactory $description_fields_factory
+        DescriptionFieldsFactory $description_fields_factory,
     ) {
         $this->event_manager                       = $event_manager;
         $this->project_manager                     = $project_manager;
@@ -224,7 +224,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         ImportConfig $configuration,
         ArchiveInterface $archive,
         SystemEventRunnerInterface $event_runner,
-        ProjectCreationData $project_creation_data
+        ProjectCreationData $project_creation_data,
     ): Project {
         $this->logger->info('Start creating new project from archive ' . $archive->getExtractionPath());
 
@@ -246,7 +246,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         ArchiveInterface $archive,
         Tuleap\Project\SystemEventRunnerInterface $event_runner,
         $is_template,
-        $project_name_override = null
+        $project_name_override = null,
     ) {
         $this->logger->info('Start importing new project from archive ' . $archive->getExtractionPath());
 
@@ -283,7 +283,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             $long_description_tagname = 'long-description';
             $project_creation_data->setDataFields(
                 ProjectRegistrationSubmittedFieldsCollection::buildFromArray([
-                    101 => (string) $xml->$long_description_tagname
+                    101 => (string) $xml->$long_description_tagname,
                 ])
             );
         }
@@ -295,7 +295,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
 
     private function createProject(
         Tuleap\Project\SystemEventRunnerInterface $event_runner,
-        ProjectCreationData $project_creation_data
+        ProjectCreationData $project_creation_data,
     ) {
         $event_runner->checkPermissions();
 
@@ -425,7 +425,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
                 'project'     => $project,
                 'xml_content' => $xml_element,
                 'user_finder' => $this->user_finder,
-                'errors'      => &$errors
+                'errors'      => &$errors,
             ]
         );
         return $errors;

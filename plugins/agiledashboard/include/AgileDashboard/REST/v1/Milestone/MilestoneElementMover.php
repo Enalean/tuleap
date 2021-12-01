@@ -73,7 +73,7 @@ class MilestoneElementMover
         DBTransactionExecutor $db_transaction_executor,
         Tracker_ArtifactFactory $tracker_artifact_factory,
         MilestoneParentLinker $milestone_parent_linker,
-        ArtifactsInExplicitBacklogDao $explicit_backlog_dao
+        ArtifactsInExplicitBacklogDao $explicit_backlog_dao,
     ) {
         $this->resources_patcher        = $resources_patcher;
         $this->milestone_validator      = $milestone_validator;
@@ -129,7 +129,7 @@ class MilestoneElementMover
     public function moveElementToMilestoneContent(
         Planning_Milestone $milestone,
         PFUser $user,
-        array $add
+        array $add,
     ): void {
         $this->db_transaction_executor->execute(
             function () use ($milestone, $user, $add) {

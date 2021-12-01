@@ -36,7 +36,7 @@ class IntegrationApiTokenDao extends DataAccessObject
             ],
             [
                 'token',
-                'is_email_already_send_for_invalid_token'
+                'is_email_already_send_for_invalid_token',
             ]
         );
     }

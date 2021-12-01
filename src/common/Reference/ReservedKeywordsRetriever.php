@@ -62,7 +62,7 @@ class ReservedKeywordsRetriever
             "revision",
             "patch",
             "proj",
-            "dossier"
+            "dossier",
         ];
     }
 

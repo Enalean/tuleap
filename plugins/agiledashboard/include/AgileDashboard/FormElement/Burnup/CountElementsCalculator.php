@@ -57,7 +57,7 @@ class CountElementsCalculator
         Tracker_Artifact_ChangesetFactory $changeset_factory,
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_FormElementFactory $form_element_factory,
-        BurnupDao $burnup_dao
+        BurnupDao $burnup_dao,
     ) {
         $this->changeset_factory    = $changeset_factory;
         $this->burnup_dao           = $burnup_dao;
@@ -88,7 +88,7 @@ class CountElementsCalculator
         Artifact $artifact,
         Tracker_Artifact_Changeset $changeset,
         int $timestamp,
-        ElementsCount $initial_accumulator
+        ElementsCount $initial_accumulator,
     ): ElementsCount {
         $used_artifact_link_fields = $this->form_element_factory->getUsedArtifactLinkFields($artifact->getTracker());
         if (count($used_artifact_link_fields) === 0) {
@@ -125,7 +125,7 @@ class CountElementsCalculator
     private function countElements(
         ElementsCount $accumulator,
         Artifact $artifact,
-        int $timestamp
+        int $timestamp,
     ): ElementsCount {
         if ($accumulator->isArtifactAlreadyParsed($artifact)) {
             return $accumulator;

@@ -56,7 +56,7 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         $use_ssl,
         $gerrit_version,
         $http_password,
-        $replication_password
+        $replication_password,
     ) {
         $this->id                   = $id;
         $this->host                 = $host;

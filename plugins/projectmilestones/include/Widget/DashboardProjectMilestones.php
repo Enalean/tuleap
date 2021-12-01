@@ -77,7 +77,7 @@ class DashboardProjectMilestones extends Widget
         ProjectRetriever $project_retriever,
         PlanningFactory $planning_factory,
         HTTPRequest $http,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
     ) {
         $this->project_milestones_widget_retriever = $project_milestones_widget_retriever;
         $this->project_milestones_dao              = $project_milestones_dao;
@@ -188,7 +188,7 @@ class DashboardProjectMilestones extends Widget
         $id,
         $owner_id,
         $owner_type,
-        MappingRegistry $mapping_registry
+        MappingRegistry $mapping_registry,
     ) {
         $widget_project_id = $this->project_milestones_dao->searchProjectIdById((int) $id);
 

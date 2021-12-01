@@ -36,7 +36,7 @@ final class PullRequestNewInlineCommentEventTest extends \Tuleap\Test\PHPUnit\Te
     public function testEventCanBeBuiltFromWorkerEventPayload(): void
     {
         $payload = [
-            'inline_comment_id' => 754
+            'inline_comment_id' => 754,
         ];
 
         $event = PullRequestNewInlineCommentEvent::fromWorkerEventPayload($payload);

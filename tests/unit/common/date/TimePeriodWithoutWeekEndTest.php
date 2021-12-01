@@ -119,7 +119,7 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date,
         $duration,
         $current_time,
-        $expected_number_of_days_since_start
+        $expected_number_of_days_since_start,
     ): void {
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
@@ -135,38 +135,38 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
                 mktime(0, 0, 0, 1, 31, 2014),
                 15,
                 mktime(0, 0, 0, 1, 31, 2014),
-                0
+                0,
             ],
             'It counts the next day as one day' => [
                 mktime(0, 0, 0, 2, 3, 2014),
                 15,
                 mktime(0, 0, 0, 2, 4, 2014),
-                1
+                1,
             ],
             'It counts a week as five days' => [
                 mktime(0, 0, 0, 2, 3, 2014),
                 15,
                 mktime(0, 0, 0, 2, 10, 2014),
-                5
+                5,
             ],
             'It counts a weekend as nothing' => [
                 mktime(0, 0, 0, 2, 7, 2014),
                 15,
                 mktime(0, 0, 0, 2, 10, 2014),
-                1
+                1,
             ],
             'It excludes all weekends' => [
                 mktime(0, 0, 0, 1, 31, 2014),
                 15,
                 mktime(0, 0, 0, 2, 27, 2014),
-                19
+                19,
             ],
             'It ignores future start date' => [
                 mktime(0, 0, 0, 1, 31, 2014),
                 15,
                 mktime(0, 0, 0, 2, 27, 2013),
-                0
-            ]
+                0,
+            ],
         ];
     }
 
@@ -177,7 +177,7 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date,
         $duration,
         $current_time,
-        $should_today_be_within_time_period
+        $should_today_be_within_time_period,
     ): void {
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
@@ -193,38 +193,38 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
                 mktime(0, 0, 0, 2, 6, 2014),
                 10,
                 mktime(0, 0, 0, 2, 6, 2014),
-                true
+                true,
             ],
             'It accepts today if zero duration' => [
                 mktime(0, 0, 0, 2, 6, 2014),
                 0,
                 mktime(0, 0, 0, 2, 6, 2014),
-                true
+                true,
             ],
             'It refuses tomorrow' => [
                 mktime(0, 0, 0, 2, 7, 2014),
                 10,
                 mktime(0, 0, 0, 2, 6, 2014),
-                false
+                false,
             ],
             'It works in standard case' => [
                 mktime(0, 0, 0, 2, 7, 2014),
                 10,
                 mktime(0, 0, 0, 2, 13, 2014),
-                true
+                true,
             ],
             'It accepts last day of period' => [
                 mktime(0, 0, 0, 2, 5, 2014),
                 10,
                 mktime(0, 0, 0, 2, 19, 2014),
-                true
+                true,
             ],
             'It refuses the day after the last day of period' => [
                 mktime(0, 0, 0, 2, 5, 2014),
                 9,
                 mktime(0, 0, 0, 2, 19, 2014),
-                false
-            ]
+                false,
+            ],
         ];
     }
 
@@ -235,7 +235,7 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date,
         $duration,
         $current_time,
-        $expected_number_of_days_until_end
+        $expected_number_of_days_until_end,
     ): void {
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
@@ -251,74 +251,74 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
                 mktime(0, 0, 0, 2, 3, 2014),
                 10,
                 mktime(0, 0, 0, 2, 3, 2014),
-                10
+                10,
             ],
             'It lets duration minus one the day after' => [
                 mktime(0, 0, 0, 2, 3, 2014),
                 10,
                 mktime(0, 0, 0, 2, 4, 2014),
-                9
+                9,
             ],
             'It lets five days during the weekend at the middle of the two sprints' => [
                 mktime(0, 0, 0, 2, 3, 2014),
                 10,
                 mktime(0, 0, 0, 2, 8, 2014),
-                5
+                5,
             ],
             'It lets five days at the beginning of second week' => [
                 mktime(0, 0, 0, 2, 3, 2014),
                 10,
                 mktime(0, 0, 0, 2, 10, 2014),
-                5
+                5,
             ],
             'It lets one day on the last day of sprint' => [
                 mktime(0, 0, 0, 2, 3, 2014),
                 10,
                 mktime(0, 0, 0, 2, 14, 2014),
-                1
+                1,
             ],
             'It is zero during the weekend just before the end date' => [
                 mktime(0, 0, 0, 2, 3, 2014),
                 10,
                 mktime(0, 0, 0, 2, 15, 2014),
-                0
+                0,
             ],
             'It zero when the time has come' => [
                 mktime(0, 0, 0, 2, 3, 2014),
                 10,
                 mktime(0, 0, 0, 2, 17, 2014),
-                0
+                0,
             ],
             'It is -4 the friday after the end of the sprint' => [
                 mktime(0, 0, 0, 2, 3, 2014),
                 10,
                 mktime(0, 0, 0, 2, 21, 2014),
-                -4
+                -4,
             ],
             'It is -5 the weekend after the end of the sprint' => [
                 mktime(0, 0, 0, 2, 3, 2014),
                 10,
                 mktime(0, 0, 0, 2, 22, 2014),
-                -5
+                -5,
             ],
             'It adds the missing day when start date is in the future' => [
                 mktime(0, 0, 0, 2, 4, 2014),
                 10,
                 mktime(0, 0, 0, 2, 3, 2014),
-                11
+                11,
             ],
             'It adds missing day without weekend when start date is in the future' => [
                 mktime(0, 0, 0, 2, 4, 2014),
                 10,
                 mktime(0, 0, 0, 1, 31, 2014),
-                12
+                12,
             ],
             'It continues when the end date is over' => [
                 mktime(0, 0, 0, 1, 14, 2014),
                 14,
                 mktime(0, 0, 0, 2, 18, 2014),
-                -11
-            ]
+                -11,
+            ],
         ];
     }
 
@@ -381,7 +381,7 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
         string $end_date,
         string $expected_end_date,
         int $expected_duration,
-        ?string $expected_error_message
+        ?string $expected_error_message,
     ): void {
         $logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
         if ($expected_error_message === null) {
@@ -416,35 +416,35 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
                 '2019-08-05',
                 '2019-08-05',
                 0,
-                null
+                null,
             ],
             'Monday to Tuesday' => [
                 '2019-08-05',
                 '2019-08-06',
                 '2019-08-06',
                 1,
-                null
+                null,
             ],
             'Monday to Friday'  => [
                 '2019-08-05',
                 '2019-08-09',
                 '2019-08-09',
                 4,
-                null
+                null,
             ],
             'Monday to Friday of next week'  => [
                 '2019-08-05',
                 '2019-08-16',
                 '2019-08-16',
                 9,
-                null
+                null,
             ],
             'End date "in the past" provides negative duration' => [
                 '2019-08-05',
                 '2019-08-01',
                 '2019-08-01',
                 -2,
-                'Inconsistent TimePeriod: end date 2019-08-01 is lesser than start date 2019-08-05.'
+                'Inconsistent TimePeriod: end date 2019-08-01 is lesser than start date 2019-08-05.',
             ],
         ];
     }

@@ -56,7 +56,7 @@ final class LargestObjectSizeGitRepositoryTest extends \Tuleap\Test\PHPUnit\Test
     {
         return [
             [0, false],
-            [PHP_INT_MAX, true]
+            [PHP_INT_MAX, true],
         ];
     }
 }

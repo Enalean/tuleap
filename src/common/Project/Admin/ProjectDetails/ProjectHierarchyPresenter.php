@@ -46,7 +46,7 @@ class ProjectHierarchyPresenter
     public function __construct(
         array $parent_project_info,
         $purified_project_children,
-        $is_hierarchy_shown
+        $is_hierarchy_shown,
     ) {
         $this->parent_project_info       = $parent_project_info;
         $this->purified_project_children = $purified_project_children;

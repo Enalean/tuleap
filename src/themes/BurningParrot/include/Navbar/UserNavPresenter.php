@@ -81,7 +81,7 @@ class UserNavPresenter
         $display_new_user_menu_item,
         URLRedirect $url_redirect,
         array $dashboards,
-        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner
+        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
     ) {
         $this->current_user               = $current_user;
         $this->display_new_user_menu_item = $display_new_user_menu_item;
@@ -164,7 +164,7 @@ class UserNavPresenter
                 'fa fa-cog',
                 'only-icon',
                 []
-            )
+            ),
         ];
     }
 

@@ -113,7 +113,7 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
         $this->post_action_rows = [
             'id'       => $this->post_action_id,
             'field_id' => $this->field_id,
-            'value'    => $this->post_action_value
+            'value'    => $this->post_action_value,
         ];
 
         $this->mapping = ['F1' => 62334];
@@ -181,7 +181,7 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
         $post_action_rows = [
             'id'         => $this->post_action_id,
             'field_id'   => $this->field_id,
-            'value_type' => $this->post_action_value
+            'value_type' => $this->post_action_value,
         ];
 
         $this->int_dao->shouldReceive('searchByTransitionId')->with($this->transition_id)->andReturns(
@@ -223,7 +223,7 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
                 [
                     'id'       => 1,
                     'field_id' => 2065,
-                    'value'    => 0
+                    'value'    => 0,
                 ]
             )
         );
@@ -232,12 +232,12 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
                 [
                     'id'       => 1,
                     'field_id' => 2066,
-                    'value'    => 666
+                    'value'    => 666,
                 ],
                 [
                     'id'       => 2,
                     'field_id' => 2067,
-                    'value'    => 42
+                    'value'    => 42,
                 ]
             )
         );

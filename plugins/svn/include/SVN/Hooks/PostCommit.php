@@ -76,7 +76,7 @@ class PostCommit
         CommitInfoEnhancer $commit_info_enhancer,
         LastAccessUpdater $last_access_updater,
         UserManager $user_manager,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->reference_manager    = $reference_manager;
         $this->repository_manager   = $repository_manager;
@@ -110,7 +110,7 @@ class PostCommit
 
         $params = [
             'repository' => $repository,
-            'commit_info' => $commit_info_enhanced
+            'commit_info' => $commit_info_enhanced,
         ];
 
         $this->event_manager->processEvent(self::PROCESS_POST_COMMIT, $params);
@@ -133,7 +133,7 @@ class PostCommit
         Repository $repository,
         PFUser $committer,
         $new_revision,
-        $old_revision
+        $old_revision,
     ) {
         $goto_link = $repository->getSvnDomain() . $this->getGotoLink('rev', $new_revision, $repository);
 
@@ -185,7 +185,7 @@ class PostCommit
         Repository $repository,
         $new_revision,
         $old_revision,
-        $system_path
+        $system_path,
     ) {
         $commit_info = $this->commit_info_enhancer->getCommitInfo();
 

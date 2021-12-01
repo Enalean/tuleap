@@ -61,7 +61,7 @@ class Git_Gitolite_ProjectSerializer
         Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer,
         Git_GitRepositoryUrlManager $url_manager,
         BigObjectAuthorizationManager $big_object_authorization_manager,
-        VersionDetector $version_detector
+        VersionDetector $version_detector,
     ) {
         $this->logger                           = $logger;
         $this->repository_factory               = $repository_factory;

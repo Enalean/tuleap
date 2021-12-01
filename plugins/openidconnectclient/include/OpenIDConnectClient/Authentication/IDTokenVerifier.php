@@ -69,7 +69,7 @@ class IDTokenVerifier
         IssuerClaimValidator $issuer_claim_validator,
         JWKSKeyFetcher $jwks_key_fetcher,
         Sha256 $signer,
-        Validator $jwt_validator
+        Validator $jwt_validator,
     ) {
         $this->parser                 = $parser;
         $this->issuer_claim_validator = $issuer_claim_validator;

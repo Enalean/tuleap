@@ -84,7 +84,7 @@ class Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEl
         Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater $list_updater,
         Tracker_XML_Updater_FieldChange_FieldChangeOpenListXMLUpdater $open_list_updater,
         FieldChangeComputedXMLUpdater $computed_updater,
-        Tracker_XML_Updater_FieldChange_FieldChangeUnknownXMLUpdater $unknown_updater
+        Tracker_XML_Updater_FieldChange_FieldChangeUnknownXMLUpdater $unknown_updater,
     ) {
         $this->date_updater      = $date_updater;
         $this->float_updater     = $float_updater;
@@ -101,7 +101,7 @@ class Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEl
     public function update(
         SimpleXMLElement $field_change_xml,
         Tracker_FormElement_Field $field,
-        $submitted_value
+        $submitted_value,
     ) {
         $updater = $field->accept($this);
         \assert($updater instanceof Tracker_XML_Updater_FieldChange_FieldChangeXMLUpdater);

@@ -49,7 +49,7 @@ class AdminKanbanPresenter
         $kanban_title,
         $has_kanban,
         bool $is_scrum_accessible,
-        bool $can_burnup_be_configured
+        bool $can_burnup_be_configured,
     ) {
         $this->group_id                 = $group_id;
         $this->kanban_activated         = $kanban_activated;

@@ -93,7 +93,7 @@ class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tuleap\Test
                 $xml_fields_mapping,
                 $artifact_id_mapping,
                 $tracker_artifact_factory,
-                $nature_dao
+                $nature_dao,
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
     }

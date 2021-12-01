@@ -28,7 +28,7 @@ class Planning_PlanningAdminPresenter
 
     public function __construct(
         Planning $planning,
-        bool $is_planning_removal_dangerous
+        bool $is_planning_removal_dangerous,
     ) {
         $this->planning                      = $planning;
         $this->is_planning_removal_dangerous = $is_planning_removal_dangerous;

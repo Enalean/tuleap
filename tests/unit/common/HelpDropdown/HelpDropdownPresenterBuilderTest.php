@@ -109,7 +109,7 @@ class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     "/doc/en/",
                     "fa-book",
                     $this->uri_sanitizer
-                )
+                ),
             ],
             null,
             HelpLinkPresenter::build(
@@ -151,7 +151,7 @@ class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     "/doc/en/",
                     "fa-book",
                     $this->uri_sanitizer
-                )
+                ),
             ],
             null,
             HelpLinkPresenter::build(

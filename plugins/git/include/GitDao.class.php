@@ -112,7 +112,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
                         'repository_is_initialized'        => $isInitialized,
                         'repository_access'                => $access,
                         'repository_events_mailing_prefix' => $mailPrefix,
-                        'repository_backup_path'           => $backup_path
+                        'repository_backup_path'           => $backup_path,
                     ],
                     ['repository_id' => $id]
                 );
@@ -143,7 +143,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
                     'repository_access'           => $access,
                     'repository_backend_type'     => $backendType,
                     'repository_scope'            => $scope,
-                    'repository_namespace'        => $namespace
+                    'repository_namespace'        => $namespace,
                 ]
             );
         } catch (PDOException $ex) {
@@ -171,11 +171,11 @@ class GitDao extends \Tuleap\DB\DataAccessObject
                 'plugin_git',
                 [
                     'repository_deletion_date' => $deletionDate,
-                    'repository_backup_path'   => $backup_path
+                    'repository_backup_path'   => $backup_path,
                 ],
                 [
                     'repository_id' => $id,
-                    'project_id'    => $projectId
+                    'project_id'    => $projectId,
                 ]
             );
         } catch (PDOException $ex) {
@@ -378,7 +378,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
                     'commits_number' => $commitsNumber,
                     'refname'        => $refname,
                     'operation_type' => $operation_type,
-                    'refname_type'   => $refname_type
+                    'refname_type'   => $refname_type,
                 ]
             );
         } catch (PDOException $ex) {

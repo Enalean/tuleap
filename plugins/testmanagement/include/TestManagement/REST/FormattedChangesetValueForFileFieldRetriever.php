@@ -49,7 +49,7 @@ class FormattedChangesetValueForFileFieldRetriever
         array $uploaded_file_ids,
         array $deleted_file_ids,
         Artifact $artifact,
-        PFUser $user
+        PFUser $user,
     ): ArtifactValuesRepresentation {
         $field_upload_data = $this->file_upload_data_provider->getFileUploadData(
             $artifact->getTracker(),

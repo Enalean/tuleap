@@ -120,7 +120,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     }
 
     public function additionalPlanningConfigurationWarningsRetriever(
-        AdditionalPlanningConfigurationWarningsRetriever $event
+        AdditionalPlanningConfigurationWarningsRetriever $event,
     ) {
         $velocity = SemanticVelocity::load($event->getTracker());
 
@@ -129,7 +129,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
                 [
                     "tracker"  => $event->getTracker()->getId(),
                     "func"     => "admin-semantic",
-                    "semantic" => "velocity"
+                    "semantic" => "velocity",
                 ]
             );
             $semantic_name = dgettext('tuleap-velocity', 'Velocity semantic');

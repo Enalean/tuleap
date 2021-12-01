@@ -40,7 +40,7 @@ class ApprovalTableRetriever
 
     public function __construct(
         \Docman_ApprovalTableFactoriesFactory $approval_table_factory,
-        \Docman_VersionFactory $version_factory
+        \Docman_VersionFactory $version_factory,
     ) {
         $this->approval_table_factory = $approval_table_factory;
         $this->version_factory        = $version_factory;

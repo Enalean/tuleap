@@ -52,7 +52,7 @@ class UserNotificationSettingsRetriever
         Tracker_GlobalNotificationDao $tracker_global_notification_dao,
         UnsubscribersNotificationDAO $unsubscribers_notification_dao,
         UserNotificationOnlyStatusChangeDAO $only_status_change_dao,
-        InvolvedNotificationDao $involved_notification_dao
+        InvolvedNotificationDao $involved_notification_dao,
     ) {
         $this->tracker_global_notification_dao = $tracker_global_notification_dao;
         $this->unsubscribers_notification_dao  = $unsubscribers_notification_dao;

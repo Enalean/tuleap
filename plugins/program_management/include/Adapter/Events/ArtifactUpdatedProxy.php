@@ -44,7 +44,7 @@ final class ArtifactUpdatedProxy implements ArtifactUpdatedEvent
         private ArtifactIdentifier $artifact,
         private TrackerIdentifier $tracker,
         private UserIdentifier $user,
-        private ChangesetIdentifier $changeset
+        private ChangesetIdentifier $changeset,
     ) {
     }
 

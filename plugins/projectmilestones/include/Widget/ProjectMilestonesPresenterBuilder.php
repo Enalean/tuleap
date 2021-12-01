@@ -130,7 +130,7 @@ class ProjectMilestonesPresenterBuilder
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
         CountElementsModeChecker $count_elements_mode_checker,
-        ProjectAccessChecker $project_access_checker
+        ProjectAccessChecker $project_access_checker,
     ) {
         $this->request                                                           = $request;
         $this->agile_dashboard_milestone_backlog_backlog_factory                 = $agile_dashboard_milestone_backlog_backlog_factory;
@@ -277,7 +277,7 @@ class ProjectMilestonesPresenterBuilder
             $tracker_agile_dashboard = [
                 'id' => (int) $tracker_backlog->getId(),
                 'color_name' => $tracker_backlog->getColor()->getName(),
-                'label' => $tracker_backlog->getName()
+                'label' => $tracker_backlog->getName(),
             ];
 
             $trackers_agile_dashboard[] = $tracker_agile_dashboard;

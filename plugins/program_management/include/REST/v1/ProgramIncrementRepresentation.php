@@ -60,7 +60,7 @@ final class ProgramIncrementRepresentation extends ElementRepresentation
         bool $user_can_plan,
         ?string $status,
         ?int $start_date,
-        ?int $end_date
+        ?int $end_date,
     ) {
         parent::__construct($id, $uri, $xref, $title);
         $this->status          = $status;

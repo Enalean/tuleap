@@ -77,7 +77,7 @@ class Tracker_FormElement_Field_List_CriteriaTest extends \Tuleap\Test\PHPUnit\T
         $value_02 = Mockery::mock(\Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $mapping  = [
             'V1' => $value_01,
-            'V2' => $value_02
+            'V2' => $value_02,
         ];
 
         $this->field->setCriteriaValueFromXML(

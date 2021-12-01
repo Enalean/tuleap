@@ -39,7 +39,7 @@ class TrackerCreatorXmlErrorDisplayer
 
     public function __construct(
         \TrackerManager $tracker_manager,
-        TemplateRendererFactory $template_renderer_factory
+        TemplateRendererFactory $template_renderer_factory,
     ) {
         $this->tracker_manager           = $tracker_manager;
         $this->template_renderer_factory = $template_renderer_factory;
@@ -58,8 +58,8 @@ class TrackerCreatorXmlErrorDisplayer
         $breadcrumbs = [
             [
                 'title' => 'Create a new tracker',
-                'url'   => TRACKER_BASE_URL . '/?group_id=' . urlencode($project->group_id) . '&amp;func=create'
-            ]
+                'url'   => TRACKER_BASE_URL . '/?group_id=' . urlencode($project->group_id) . '&amp;func=create',
+            ],
         ];
         $toolbar     = [];
         $params      = [];

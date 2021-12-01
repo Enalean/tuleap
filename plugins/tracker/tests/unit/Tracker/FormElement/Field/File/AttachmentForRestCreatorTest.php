@@ -57,7 +57,7 @@ class AttachmentForRestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getDescription' => '',
                 'getName'        => 'readme.mkd',
                 'getSize'        => 123,
-                'getType'        => 'text/plain'
+                'getType'        => 'text/plain',
             ]
         );
 
@@ -86,7 +86,7 @@ class AttachmentForRestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $mover,
                 $temporary_file_manager,
                 $next_creator_in_chain,
-                $rule_file
+                $rule_file,
             ]
         );
         \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
@@ -126,7 +126,7 @@ class AttachmentForRestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getDescription' => '',
                 'getName'        => 'readme.mkd',
                 'getSize'        => 123,
-                'getType'        => 'text/plain'
+                'getType'        => 'text/plain',
             ]
         );
 
@@ -155,7 +155,7 @@ class AttachmentForRestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $mover,
                 $temporary_file_manager,
                 $next_creator_in_chain,
-                $rule_file
+                $rule_file,
             ]
         );
         \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
@@ -191,7 +191,7 @@ class AttachmentForRestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getDescription' => '',
                 'getName'        => 'readme.mkd',
                 'getSize'        => 123,
-                'getType'        => 'text/plain'
+                'getType'        => 'text/plain',
             ]
         );
 
@@ -220,7 +220,7 @@ class AttachmentForRestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $mover,
                 $temporary_file_manager,
                 $next_creator_in_chain,
-                $rule_file
+                $rule_file,
             ]
         );
         \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
@@ -268,7 +268,7 @@ class AttachmentForRestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $mover,
                 $temporary_file_manager,
                 $next_creator_in_chain,
-                $rule_file
+                $rule_file,
             ]
         );
         \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
@@ -311,7 +311,7 @@ class AttachmentForRestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $mover,
                 $temporary_file_manager,
                 $next_creator_in_chain,
-                $rule_file
+                $rule_file,
             ]
         );
         \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
@@ -354,7 +354,7 @@ class AttachmentForRestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $mover,
                 $temporary_file_manager,
                 $next_creator_in_chain,
-                $rule_file
+                $rule_file,
             ]
         );
         \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);

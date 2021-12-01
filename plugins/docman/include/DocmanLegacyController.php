@@ -51,7 +51,7 @@ final class DocmanLegacyController implements DispatchableWithRequest
         \DocmanPlugin $plugin,
         \EventManager $event_manager,
         ExternalLinkParametersExtractor $link_parameters_extractor,
-        \Docman_ItemDao $dao
+        \Docman_ItemDao $dao,
     ) {
         $this->plugin                    = $plugin;
         $this->event_manager             = $event_manager;

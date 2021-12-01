@@ -31,7 +31,7 @@ class CollectionOfUGroupRepresentationBuilder
     private $ugroup_representation_builder;
 
     public function __construct(
-        PermissionPerGroupUGroupRepresentationBuilder $ugroup_representation_builder
+        PermissionPerGroupUGroupRepresentationBuilder $ugroup_representation_builder,
     ) {
         $this->ugroup_representation_builder = $ugroup_representation_builder;
     }

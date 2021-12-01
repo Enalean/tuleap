@@ -50,7 +50,7 @@ final class TrackerCollection
         RetrieveMirroredProgramIncrementTracker $retriever,
         TeamProjectsCollection $teams,
         UserIdentifier $user_identifier,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
     ): self {
         $trackers = [];
         foreach ($teams->getTeamProjects() as $team) {
@@ -74,7 +74,7 @@ final class TrackerCollection
         RetrieveMirroredIterationTracker $retriever,
         TeamProjectsCollection $teams,
         UserIdentifier $user_identifier,
-        ConfigurationErrorsCollector $errors_collector
+        ConfigurationErrorsCollector $errors_collector,
     ): self {
         $trackers = [];
         foreach ($teams->getTeamProjects() as $team) {
@@ -116,7 +116,7 @@ final class TrackerCollection
     public function canUserSubmitAnArtifactInAllTrackers(
         UserIdentifier $user_identifier,
         ConfigurationErrorsCollector $configuration_errors,
-        VerifyUserCanSubmit $user_can_submit_in_tracker_verifier
+        VerifyUserCanSubmit $user_can_submit_in_tracker_verifier,
     ): bool {
         $can_submit = true;
         foreach ($this->mirrored_timebox_trackers as $milestone_tracker) {

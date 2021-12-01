@@ -52,7 +52,7 @@ class FilesHeaderPresenter
         $head_name,
         $is_tag,
         $committer_epoch,
-        array $url_parameters
+        array $url_parameters,
     ) {
         $this->repository_id             = $repository->getId();
         $this->repository_url            = $repository_url;

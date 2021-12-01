@@ -88,7 +88,7 @@ final class PlanningEditionPresenter
         array $available_planning_trackers,
         string $cardwall_admin,
         array $warning_list,
-        ?ModificationBanPresenter $milestone_tracker_modification_ban
+        ?ModificationBanPresenter $milestone_tracker_modification_ban,
     ) {
         $planning_id                              = $planning->getId();
         $project_id                               = $planning->getGroupId();

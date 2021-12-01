@@ -40,7 +40,7 @@ class OngoingCreationFeedbackNotifier
 
     public function __construct(
         Tracker_Migration_MigrationManager $tv3_migration_manager,
-        PendingJiraImportDao $pending_jira_import_dao
+        PendingJiraImportDao $pending_jira_import_dao,
     ) {
         $this->tv3_migration_manager   = $tv3_migration_manager;
         $this->pending_jira_import_dao = $pending_jira_import_dao;

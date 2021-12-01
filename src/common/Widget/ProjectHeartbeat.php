@@ -73,7 +73,7 @@ class ProjectHeartbeat extends Widget
 
         return [
             ['file' => $include_assets->getFileURL('widget-project-heartbeat.js')],
-            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates']
+            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates'],
         ];
     }
 

@@ -58,7 +58,7 @@ class WebhookCreator
         WebhookDao $dao,
         WebhookDeletor $webhook_deletor,
         ClientWrapper $gitlab_api_client,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->gitlab_api_client = $gitlab_api_client;
         $this->key_factory       = $key_factory;
@@ -74,7 +74,7 @@ class WebhookCreator
      */
     public function generateWebhookInGitlabProject(
         Credentials $credentials,
-        GitlabRepositoryIntegration $gitlab_repository_integration
+        GitlabRepositoryIntegration $gitlab_repository_integration,
     ): void {
         $this->webhook_deletor->deleteGitlabWebhookFromGitlabRepository($credentials, $gitlab_repository_integration);
         $this->createNewGitlabWebhook($credentials, $gitlab_repository_integration);
@@ -87,7 +87,7 @@ class WebhookCreator
      */
     private function createNewGitlabWebhook(
         Credentials $credentials,
-        GitlabRepositoryIntegration $gitlab_repository_integration
+        GitlabRepositoryIntegration $gitlab_repository_integration,
     ): void {
         $secret = new ConcealedString(\sodium_bin2hex(\random_bytes(32)));
 
@@ -108,7 +108,7 @@ class WebhookCreator
     private function askGitlabToCreateANewWebhook(
         Credentials $credentials,
         GitlabRepositoryIntegration $gitlab_repository_integration,
-        ConcealedString $secret
+        ConcealedString $secret,
     ): int {
         $base_url = ServerHostname::HTTPSUrl();
 
@@ -121,7 +121,7 @@ class WebhookCreator
             'push_events'             => true,
             'merge_requests_events'   => true,
             'tag_push_events'         => true,
-            'enable_ssl_verification' => true
+            'enable_ssl_verification' => true,
         ];
 
         $this->logger->info("Creating new hook for " . $gitlab_repository_integration->getGitlabRepositoryUrl());

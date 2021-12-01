@@ -39,7 +39,7 @@ class MyPresenter extends PagePresenter
         CSRFSynchronizerToken $csrf,
         $url,
         UserPresenter $user_presenter,
-        array $dashboards
+        array $dashboards,
     ) {
         parent::__construct($csrf, $url);
 

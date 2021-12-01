@@ -43,7 +43,7 @@ class CommitMessageValidator
 
     public function __construct(
         HookConfigRetriever $hook_config_retriever,
-        ReferenceManager $reference_manager
+        ReferenceManager $reference_manager,
     ) {
         $this->hook_config_retriever = $hook_config_retriever;
         $this->reference_manager     = $reference_manager;

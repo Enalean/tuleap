@@ -40,7 +40,7 @@ class LegacyTrackerMigrationDao extends DataAccessObject
         $this->getDB()->insert(
             'plugin_tracker_legacy_tracker_migrated',
             [
-                'legacy_tracker_id' => $legacy_tracker_ids
+                'legacy_tracker_id' => $legacy_tracker_ids,
             ]
         );
     }

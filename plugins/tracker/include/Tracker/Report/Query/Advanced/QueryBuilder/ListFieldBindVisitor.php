@@ -47,7 +47,7 @@ class ListFieldBindVisitor implements BindVisitor
     public function __construct(
         ListBindStaticFromWhereBuilder $static_builder,
         ListBindUsersFromWhereBuilder $users_builder,
-        ListBindUgroupsFromWhereBuilder $ugroups_builder
+        ListBindUgroupsFromWhereBuilder $ugroups_builder,
     ) {
         $this->static_builder  = $static_builder;
         $this->users_builder   = $users_builder;

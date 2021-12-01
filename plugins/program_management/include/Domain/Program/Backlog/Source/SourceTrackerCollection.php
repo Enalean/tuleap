@@ -53,7 +53,7 @@ final class SourceTrackerCollection
         RetrieveVisibleProgramIncrementTracker $retriever,
         ProgramIdentifier $program,
         TrackerCollection $team_trackers,
-        UserIdentifier $user_identifier
+        UserIdentifier $user_identifier,
     ): self {
         $trackers = [$retriever->retrieveVisibleProgramIncrementTracker($program, $user_identifier)];
         foreach ($team_trackers->getTrackers() as $team_tracker) {
@@ -69,7 +69,7 @@ final class SourceTrackerCollection
         RetrieveVisibleIterationTracker $retriever,
         ProgramIdentifier $program,
         TrackerCollection $team_trackers,
-        UserIdentifier $user_identifier
+        UserIdentifier $user_identifier,
     ): ?self {
         $iteration_tracker = $retriever->retrieveVisibleIterationTracker($program, $user_identifier);
 

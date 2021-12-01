@@ -127,7 +127,7 @@ final class PlanningDAOTest extends \Tuleap\Test\PHPUnit\TestCase
                 'backlog_title'       => 'Epic Backlog',
                 'plan_title'          => 'Sprint Plan',
                 'backlog_tracker_ids' => [90, 57],
-                'planning_tracker_id' => '32'
+                'planning_tracker_id' => '32',
             ]
         );
         $this->dao->updatePlanning($planning_id, $updated_planning);

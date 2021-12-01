@@ -44,7 +44,7 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         	<span class="node-blank">&nbsp;</span>',
         self::STATE_PIPE => '
         	<span class="node-indent node-pipe"><a class="node-tree">&nbsp;</a></span>
-        	<span class="node-indent node-minus-tree">&nbsp;</span>'
+        	<span class="node-indent node-minus-tree">&nbsp;</span>',
     ];
 
     protected $showNormalTpl = [
@@ -59,7 +59,7 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         	<span class="node-blank">&nbsp;</span>',
         self::STATE_PIPE => '
         	<span class="node-indent node-pipe">&nbsp;</span>
-        	<span class="node-blank">&nbsp;</span>'
+        	<span class="node-blank">&nbsp;</span>',
     ];
 
     public function __construct($collapsable = false)

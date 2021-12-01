@@ -39,7 +39,7 @@ class ArtifactLinksToRender
         \TrackerFactory $tracker_factory,
         \Tracker_ReportFactory $report_factory,
         TypePresenterFactory $type_presenter_factory,
-        Tracker_ArtifactLinkInfo ...$link_infos
+        Tracker_ArtifactLinkInfo ...$link_infos,
     ) {
         if (empty($link_infos)) {
             $this->has_artifact_to_display = false;
@@ -69,7 +69,7 @@ class ArtifactLinksToRender
         \PFUser $current_user,
         \Tracker_FormElement_Field_ArtifactLink $field,
         TypePresenterFactory $type_presenter_factory,
-        Tracker_ArtifactLinkInfo ...$link_infos
+        Tracker_ArtifactLinkInfo ...$link_infos,
     ) {
         $tracker = $field->getTracker();
         if ($tracker === null) {
@@ -84,7 +84,7 @@ class ArtifactLinksToRender
                 if (! isset($ids[$artifact_link_tracker_id])) {
                     $ids[$artifact_link->getTrackerId()] = [
                         'id'                => '',
-                        'last_changeset_id' => ''
+                        'last_changeset_id' => '',
                     ];
                     if ($project_allowed_to_use_type) {
                         $ids[$artifact_link_tracker_id]['type'] = [];
@@ -108,7 +108,7 @@ class ArtifactLinksToRender
     private function groupAndEnhanceMatchingIDsPerProject(
         \TrackerFactory $tracker_factory,
         \Tracker_ReportFactory $report_factory,
-        array $matching_ids_per_tracker
+        array $matching_ids_per_tracker,
     ) {
         $projects = [];
         foreach ($matching_ids_per_tracker as $tracker_id => $matching_ids) {
@@ -161,7 +161,7 @@ class ArtifactLinksToRender
         \Tracker_FormElement_Field_ArtifactLink $field,
         \PFUser $current_user,
         TypePresenterFactory $type_presenter_factory,
-        Tracker_ArtifactLinkInfo ...$link_infos
+        Tracker_ArtifactLinkInfo ...$link_infos,
     ) {
         $tracker = $field->getTracker();
         if ($tracker === null || ! $tracker->isProjectAllowedToUseType()) {

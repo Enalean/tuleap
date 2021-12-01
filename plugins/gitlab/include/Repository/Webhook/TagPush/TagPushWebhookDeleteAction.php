@@ -44,7 +44,7 @@ class TagPushWebhookDeleteAction
     public function __construct(
         TagInfoDao $tag_info_dao,
         CrossReferenceManager $cross_reference_manager,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->tag_info_dao            = $tag_info_dao;
         $this->cross_reference_manager = $cross_reference_manager;
@@ -53,7 +53,7 @@ class TagPushWebhookDeleteAction
 
     public function deleteTagReferences(
         GitlabRepositoryIntegration $gitlab_repository_integration,
-        TagPushWebhookData $tag_push_webhook_data
+        TagPushWebhookData $tag_push_webhook_data,
     ): void {
         $tag_name = $tag_push_webhook_data->getTagName();
 

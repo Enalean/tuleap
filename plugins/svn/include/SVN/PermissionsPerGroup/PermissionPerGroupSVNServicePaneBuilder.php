@@ -45,7 +45,7 @@ class PermissionPerGroupSVNServicePaneBuilder
     public function __construct(
         PermissionPerGroupUGroupRetriever $permission_retriever,
         PermissionPerGroupUGroupFormatter $formatter,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
     ) {
         $this->formatter            = $formatter;
         $this->permission_retriever = $permission_retriever;
@@ -70,7 +70,7 @@ class PermissionPerGroupSVNServicePaneBuilder
 
     private function addUGroupsToPermissions(
         PermissionPerGroupPaneCollector $event,
-        PermissionPerGroupSVNGlobalAdminPermissionCollection $permissions
+        PermissionPerGroupSVNGlobalAdminPermissionCollection $permissions,
     ) {
         $project = $event->getProject();
 

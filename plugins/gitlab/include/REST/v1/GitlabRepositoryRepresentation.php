@@ -91,7 +91,7 @@ class GitlabRepositoryRepresentation
         Project $project,
         bool $allow_artifact_closure,
         bool $is_webhook_configured,
-        string $create_branch_prefix
+        string $create_branch_prefix,
     ) {
         $this->id                     = JsonCast::toInt($id);
         $this->gitlab_repository_id   = JsonCast::toInt($gitlab_repository_id);

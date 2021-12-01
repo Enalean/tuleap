@@ -113,7 +113,7 @@ class ProjectTest extends SOAPBase
                 'project_members',
                 'project_admins',
                 SOAP_TestDataBuilder::STATIC_UGROUP_1_LABEL,
-                SOAP_TestDataBuilder::STATIC_UGROUP_2_LABEL
+                SOAP_TestDataBuilder::STATIC_UGROUP_2_LABEL,
             ],
             array_keys($ugroups_by_name)
         );

@@ -53,7 +53,7 @@ class ToBeActivatedUser extends ActionToBeTakenForUser
                 'Status of existing user %s is [%s]',
                 $this->username,
                 $this->status
-            )
+            ),
         ];
     }
 

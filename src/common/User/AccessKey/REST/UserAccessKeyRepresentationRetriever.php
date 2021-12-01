@@ -38,7 +38,7 @@ class UserAccessKeyRepresentationRetriever
 
     public function __construct(
         AccessKeyHeaderExtractor $access_key_header_extractor,
-        AccessKeyMetadataRetriever $access_key_metadata_retriever
+        AccessKeyMetadataRetriever $access_key_metadata_retriever,
     ) {
         $this->access_key_header_extractor   = $access_key_header_extractor;
         $this->access_key_metadata_retriever = $access_key_metadata_retriever;

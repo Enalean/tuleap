@@ -47,7 +47,7 @@ class RepositoryDisplayController
     public function __construct(
         RepositoryManager $repository_manager,
         ViewVCProxy $viewvc_proxy,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->repository_manager = $repository_manager;
         $this->proxy              = $viewvc_proxy;
@@ -65,7 +65,7 @@ class RepositoryDisplayController
                 'svn_intro_in_plugin' => &$has_plugin_intro,
                 'svn_intro_info'      => &$plugin_intro_info,
                 'group_id'            => $repository->getProject()->getID(),
-                'user_id'             => $request->getCurrentUser()->getId()
+                'user_id'             => $request->getCurrentUser()->getId(),
             ]);
             $username = $request->getCurrentUser()->getUserName();
             if ($plugin_intro_info) {

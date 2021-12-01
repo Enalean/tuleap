@@ -154,7 +154,7 @@ class FRSPackageDao extends DataAccessObject
         $name = null,
         $status_id = null,
         $rank = null,
-        $approve_license = null
+        $approve_license = null,
     ) {
         $arg    = [];
         $values = [];
@@ -229,7 +229,7 @@ class FRSPackageDao extends DataAccessObject
         $name = null,
         $status_id = null,
         $rank = null,
-        $approve_license = null
+        $approve_license = null,
     ) {
         $argArray = [];
 

@@ -320,7 +320,7 @@ class hudsonViews extends Views
                         'name'            => $row['name'],
                         'url'             => $row['job_url'],
                         'use_svn_trigger' => $row['use_svn_trigger'],
-                        'use_cvs_trigger' => $row['use_cvs_trigger']
+                        'use_cvs_trigger' => $row['use_cvs_trigger'],
                     ];
                 } catch (HudsonJobURLMalformedException $ex) {
                     // Managed when a new job is added
@@ -455,7 +455,7 @@ class hudsonViews extends Views
         $use_svn_trigger,
         $use_cvs_trigger,
         $token,
-        $svn_paths
+        $svn_paths,
     ) {
         $purifier = Codendi_HTMLPurifier::instance();
 

@@ -56,7 +56,7 @@ class ReferenceAdministrationViews extends Views
             [
                 'title' => _('Editing reference patterns'),
                 'group' => $GLOBALS['group_id'],
-                'help'  => 'project-admin.html#reference-pattern-configuration'
+                'help'  => 'project-admin.html#reference-pattern-configuration',
             ],
             NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME
         );
@@ -197,7 +197,7 @@ class ReferenceAdministrationViews extends Views
             Event::GET_REFERENCE_ADMIN_CAPABILITIES,
             [
                 'reference'     => $ref,
-                'can_be_edited' => &$can_be_edited
+                'can_be_edited' => &$can_be_edited,
             ]
         );
         $ro = ! $can_be_edited || ($ref->isSystemReference() && $ref->getGroupId() != 100);

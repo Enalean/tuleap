@@ -32,6 +32,6 @@ interface VerifyFeatureIsVisibleByProgram
         int $feature_id,
         UserIdentifier $user_identifier,
         ProgramIdentifier $program,
-        ?PermissionBypass $bypass
+        ?PermissionBypass $bypass,
     ): bool;
 }

@@ -93,7 +93,7 @@ final class RoadmapTasksRetriever
         IRetrieveDependencies $dependencies_retriever,
         RoadmapTasksOutOfDateFilter $tasks_filter,
         SemanticProgressBuilder $progress_builder,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->dao                        = $dao;
         $this->project_manager            = $project_manager;

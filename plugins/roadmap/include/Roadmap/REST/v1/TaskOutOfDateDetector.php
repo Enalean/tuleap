@@ -48,7 +48,7 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
     public function __construct(
         SemanticStatusRetriever $semantic_status_retriever,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->semantic_status_retriever  = $semantic_status_retriever;
         $this->semantic_timeframe_builder = $semantic_timeframe_builder;
@@ -59,7 +59,7 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
         Artifact $artifact,
         DateTimeImmutable $now,
         \PFUser $user,
-        TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection
+        TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection,
     ): bool {
         $semantic_status    = $this->semantic_status_retriever->retrieveSemantic($artifact->getTracker());
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
@@ -86,7 +86,7 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
         \Tracker_FormElement_Field_List $status_field,
         DateTimeImmutable $now,
         \PFUser $user,
-        TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection
+        TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection,
     ): bool {
         if (! $status_field->userCanRead($user)) {
             $trackers_with_unreadable_status_collection->add($artifact->getTracker());
@@ -141,7 +141,7 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
         SemanticTimeframe $semantic_timeframe,
         Artifact $artifact,
         \PFUser $user,
-        DateTimeImmutable $now
+        DateTimeImmutable $now,
     ): bool {
         $timeframe_calculator = $semantic_timeframe->getTimeframeCalculator();
         $time_period          = $timeframe_calculator->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->logger);

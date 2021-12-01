@@ -51,7 +51,7 @@ final class UserCanPlanInProgramIncrementVerifier
 
     public function userCanPlan(
         ProgramIncrementIdentifier $program_increment,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): bool {
         if (! $this->update_verifier->canUserUpdate($program_increment, $user)) {
             return false;
@@ -90,7 +90,7 @@ final class UserCanPlanInProgramIncrementVerifier
      */
     public function userCanPlanAndPrioritize(
         ProgramIncrementIdentifier $program_increment,
-        UserCanPrioritize $user
+        UserCanPrioritize $user,
     ): bool {
         return $this->userCanPlan($program_increment, $user);
     }

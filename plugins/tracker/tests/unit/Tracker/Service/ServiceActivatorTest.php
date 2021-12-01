@@ -55,7 +55,7 @@ class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->params = [
             'template'              => $this->template,
-            'project_creation_data' => $this->project_creation_data
+            'project_creation_data' => $this->project_creation_data,
         ];
 
         $this->tracker_core_service   = \Mockery::mock(Service::class, ['getId' => 101]);

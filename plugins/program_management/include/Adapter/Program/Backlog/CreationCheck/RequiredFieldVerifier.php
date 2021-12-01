@@ -43,7 +43,7 @@ final class RequiredFieldVerifier implements VerifyRequiredFieldsLimitedToSynchr
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,
         ConfigurationErrorsCollector $errors_collector,
         RetrieveTrackerFromField $retrieve_tracker_from_field,
-        RetrieveProjectFromTracker $retrieve_project_from_tracker
+        RetrieveProjectFromTracker $retrieve_project_from_tracker,
     ): bool {
         $are_fields_ok = true;
         foreach ($trackers->getTrackers() as $program_increment_tracker) {

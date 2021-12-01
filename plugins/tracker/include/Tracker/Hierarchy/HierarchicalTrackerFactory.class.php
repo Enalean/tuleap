@@ -34,7 +34,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
 
     public function __construct(
         TrackerFactory $tracker_factory,
-        HierarchyDAO $dao
+        HierarchyDAO $dao,
     ) {
         $this->tracker_factory = $tracker_factory;
         $this->dao             = $dao;

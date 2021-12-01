@@ -253,7 +253,7 @@ class Docman_Version implements Version
                     'group_id' => $item->getGroupId(),
                     'item'     => $item,
                     'version'  => $this->getNumber(),
-                    'user'     => $user
+                    'user'     => $user,
                 ]);
     }
 

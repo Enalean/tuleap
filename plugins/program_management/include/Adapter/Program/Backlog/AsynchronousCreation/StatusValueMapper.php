@@ -59,7 +59,7 @@ final class StatusValueMapper implements MapStatusByValue
 
     private function getMatchingValueByDuckTyping(
         BindValueLabel $source_label,
-        \Tracker_FormElement_Field_List $target_field
+        \Tracker_FormElement_Field_List $target_field,
     ): ?BindValueIdentifier {
         $lowercase_label = strtolower($source_label->getLabel());
         foreach ($target_field->getBind()->getAllValues() as $target_value) {

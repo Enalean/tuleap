@@ -44,7 +44,7 @@ class AccessRightsPresenterOptionsBuilder
 
     public function __construct(
         User_ForgeUserGroupFactory $user_group_factory,
-        PermissionsManager $permissions_manager
+        PermissionsManager $permissions_manager,
     ) {
         $this->user_group_factory  = $user_group_factory;
         $this->permissions_manager = $permissions_manager;
@@ -79,7 +79,7 @@ class AccessRightsPresenterOptionsBuilder
 
     public function getWriteOptionsForFineGrainedPermissions(
         FineGrainedPermission $permission,
-        Project $project
+        Project $project,
     ) {
         $selected_values = [];
         foreach ($permission->getWritersUgroup() as $writer) {
@@ -91,7 +91,7 @@ class AccessRightsPresenterOptionsBuilder
 
     public function getRewindOptionsForFineGrainedPermissions(
         FineGrainedPermission $permission,
-        Project $project
+        Project $project,
     ) {
         $selected_values = [];
         foreach ($permission->getRewindersUgroup() as $rewinder) {
@@ -103,7 +103,7 @@ class AccessRightsPresenterOptionsBuilder
 
     public function getWriteOptionsForDefaultFineGrainedPermissions(
         DefaultFineGrainedPermission $permission,
-        Project $project
+        Project $project,
     ) {
         $selected_values = [];
         foreach ($permission->getWritersUgroup() as $writer) {
@@ -115,7 +115,7 @@ class AccessRightsPresenterOptionsBuilder
 
     public function getRewindOptionsForDefaultFineGrainedPermissions(
         DefaultFineGrainedPermission $permission,
-        Project $project
+        Project $project,
     ) {
         $selected_values = [];
         foreach ($permission->getRewindersUgroup() as $rewinder) {
@@ -142,7 +142,7 @@ class AccessRightsPresenterOptionsBuilder
             $options[] = [
                 'value'    => $ugroup->getId(),
                 'label'    => $ugroup->getName(),
-                'selected' => $selected
+                'selected' => $selected,
             ];
         }
 

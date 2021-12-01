@@ -75,7 +75,7 @@ class DefaultFineGrainedPermissionFactory
         PermissionsNormalizer $normalizer,
         PermissionsManager $permissions_manager,
         PatternValidator $validator,
-        FineGrainedPermissionSorter $sorter
+        FineGrainedPermissionSorter $sorter,
     ) {
         $this->dao                 = $dao;
         $this->ugroup_manager      = $ugroup_manager;
@@ -135,7 +135,7 @@ class DefaultFineGrainedPermissionFactory
         Codendi_Request $request,
         array $all_permissions,
         array $all_writers,
-        array &$updated_permissions
+        array &$updated_permissions,
     ) {
         foreach ($all_writers as $permission_id => $writers) {
             $permission = $all_permissions[$permission_id];
@@ -161,7 +161,7 @@ class DefaultFineGrainedPermissionFactory
         Codendi_Request $request,
         array $remaining_permissions,
         array $all_writers,
-        array &$updated_permissions
+        array &$updated_permissions,
     ) {
         foreach ($remaining_permissions as $permission_id => $permission) {
             if (! $this->hasChangesInWriters($permission, [])) {
@@ -218,7 +218,7 @@ class DefaultFineGrainedPermissionFactory
         Codendi_Request $request,
         array $all_permissions,
         array $all_rewinders,
-        array &$updated_permissions
+        array &$updated_permissions,
     ) {
         foreach ($all_rewinders as $permission_id => $rewinders) {
             $permission = $all_permissions[$permission_id];
@@ -244,7 +244,7 @@ class DefaultFineGrainedPermissionFactory
         Codendi_Request $request,
         array $remaining_permissions,
         array $all_rewinders,
-        array &$updated_permissions
+        array &$updated_permissions,
     ) {
         foreach ($remaining_permissions as $permission_id => $permission) {
             if (! $this->hasChangesInRewinders($permission, [])) {
@@ -423,7 +423,7 @@ class DefaultFineGrainedPermissionFactory
     public function mapBranchPermissionsForProject(
         Project $template_project,
         $new_project_id,
-        array $ugroups_mapping
+        array $ugroups_mapping,
     ) {
         $permissions = $this->getBranchesFineGrainedPermissionsForProject($template_project);
 
@@ -437,7 +437,7 @@ class DefaultFineGrainedPermissionFactory
     public function mapTagPermissionsForProject(
         Project $template_project,
         $new_project_id,
-        array $ugroups_mapping
+        array $ugroups_mapping,
     ) {
         $permissions = $this->getTagsFineGrainedPermissionsForProject($template_project);
 
@@ -451,7 +451,7 @@ class DefaultFineGrainedPermissionFactory
     private function mapFineGrainedPermissions(
         $new_project_id,
         array $permissions,
-        array $ugroups_mapping
+        array $ugroups_mapping,
     ) {
         $new_permissions = [];
 
@@ -507,14 +507,14 @@ class DefaultFineGrainedPermissionFactory
     public function getDefaultBranchesFineGrainedPermissionsForProject(Project $project)
     {
         return [
-            $this->buildDefaultForProject($project)
+            $this->buildDefaultForProject($project),
         ];
     }
 
     public function getDefaultTagsFineGrainedPermissionsForProject(Project $project)
     {
         return [
-            $this->buildDefaultForProject($project)
+            $this->buildDefaultForProject($project),
         ];
     }
 

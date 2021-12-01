@@ -36,7 +36,7 @@ final class JiraCloudComment implements Comment
     public function __construct(
         private JiraCloudUser $update_author,
         private DateTimeImmutable $date,
-        private string $rendered_value
+        private string $rendered_value,
     ) {
     }
 

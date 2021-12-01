@@ -49,7 +49,7 @@ abstract class Tracker_Artifact_View_View
         return TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'aid'  => $this->artifact->getId(),
-                'view' => $this->getIdentifier()
+                'view' => $this->getIdentifier(),
             ]
         );
     }

@@ -50,7 +50,7 @@ class GenericProviderManager
         string $client_id,
         string $client_secret,
         string $icon,
-        string $color
+        string $color,
     ): GenericProvider {
         $is_unique_authentication_endpoint = false;
         $is_data_valid                     = $this->isGenericProviderDataValid(
@@ -144,7 +144,7 @@ class GenericProviderManager
         string $client_id,
         string $client_secret,
         string $icon,
-        string $color
+        string $color,
     ): bool {
         $string_validator   = new Valid_String();
         $http_uri_validator = new Valid_HTTPSURI();

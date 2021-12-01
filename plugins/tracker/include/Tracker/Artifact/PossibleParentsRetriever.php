@@ -29,7 +29,7 @@ class PossibleParentsRetriever
 {
     public function __construct(
         private Tracker_ArtifactFactory $artifact_factory,
-        private EventDispatcherInterface $event_dispatcher
+        private EventDispatcherInterface $event_dispatcher,
     ) {
     }
 
@@ -38,7 +38,7 @@ class PossibleParentsRetriever
         PFUser $user,
         int $limit,
         int $offset,
-        bool $can_create
+        bool $can_create,
     ): PossibleParentSelector {
         $possible_parents = $this->event_dispatcher->dispatch(new PossibleParentSelector($user, $tracker, $offset, $limit));
 

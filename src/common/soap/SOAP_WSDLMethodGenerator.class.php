@@ -64,7 +64,7 @@ class SOAP_WSDLMethodGenerator
         EventManager::instance()->processEvent(
             Event::WSDL_DOC2SOAP_TYPES,
             [
-                'doc2soap_types' => &$this->doc2soap_types
+                'doc2soap_types' => &$this->doc2soap_types,
             ]
         );
     }

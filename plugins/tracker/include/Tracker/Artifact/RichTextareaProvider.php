@@ -39,7 +39,7 @@ class RichTextareaProvider
 
     public function __construct(
         TemplateRendererFactory $template_renderer_factory,
-        UploadDataAttributesForRichTextEditorBuilder $upload_data_attributes_for_rich_text_editor_builder
+        UploadDataAttributesForRichTextEditorBuilder $upload_data_attributes_for_rich_text_editor_builder,
     ) {
         $this->template_renderer_factory                           = $template_renderer_factory;
         $this->upload_data_attributes_for_rich_text_editor_builder = $upload_data_attributes_for_rich_text_editor_builder;
@@ -64,13 +64,13 @@ class RichTextareaProvider
             ->getDataAttributes($tracker, $user, $artifact);
 
         $data_attributes      = [
-            ['name' => 'project-id', 'value' => $tracker->getGroupId()]
+            ['name' => 'project-id', 'value' => $tracker->getGroupId()],
         ];
         $is_dragndrop_allowed = ! empty($data_attributes_for_dragndrop);
         if ($is_dragndrop_allowed) {
             $data_attributes[] = [
                 'name'  => 'help-id',
-                'value' => $help_id
+                'value' => $help_id,
             ];
         }
 
@@ -85,7 +85,7 @@ class RichTextareaProvider
                 'is_required'          => $is_required,
                 'data_attributes'      => array_merge($data_attributes_for_dragndrop, $data_attributes),
                 'is_dragndrop_allowed' => $is_dragndrop_allowed,
-                'help_id'              => $help_id
+                'help_id'              => $help_id,
             ]
         );
     }

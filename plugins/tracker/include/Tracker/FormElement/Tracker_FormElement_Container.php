@@ -171,7 +171,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
         SimpleXMLElement $parent_node,
         array &$xmlMapping,
         bool $project_export_context,
-        UserXMLExporter $user_xml_exporter
+        UserXMLExporter $user_xml_exporter,
     ): SimpleXMLElement {
         $node = parent::exportToXML($parent_node, $xmlMapping, $project_export_context, $user_xml_exporter);
         foreach ($this->getAllFormElements() as $subfield) {
@@ -235,7 +235,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
     public function fetchArtifact(
         Artifact $artifact,
         array $submitted_values,
-        array $additional_classes
+        array $additional_classes,
     ) {
         return $this->fetchRecursiveArtifact('fetchArtifact', $artifact, $submitted_values, $additional_classes);
     }
@@ -343,7 +343,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
         $xml,
         &$xmlMapping,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        TrackerXmlImportFeedbackCollector $feedback_collector
+        TrackerXmlImportFeedbackCollector $feedback_collector,
     ) {
         parent::continueGetInstanceFromXML($xml, $xmlMapping, $user_finder, $feedback_collector);
         // add children
@@ -357,7 +357,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
         SimpleXMLElement $elements,
         &$xmlMapping,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        TrackerXmlImportFeedbackCollector $feedback_collector
+        TrackerXmlImportFeedbackCollector $feedback_collector,
     ): void {
         $tracker = $this->getTracker();
         if (! $tracker) {

@@ -48,7 +48,7 @@ class LesserThanComparisonFromWhereBuilder implements FromWhereBuilder
     public function __construct(
         DateValueExtractor $extractor,
         DateTimeValueRounder $date_time_value_rounder,
-        $alias_field
+        $alias_field,
     ) {
         $this->date_time_value_rounder = $date_time_value_rounder;
         $this->alias_field             = $alias_field;

@@ -53,7 +53,7 @@ EOF;
             ['not_compromised_password', false],
             ['compromised_password', true],
             ['almost_compromised_password', false],
-            ['', false]
+            ['', false],
         ];
     }
 

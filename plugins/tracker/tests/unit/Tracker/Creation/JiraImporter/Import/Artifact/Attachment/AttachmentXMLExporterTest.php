@@ -56,7 +56,7 @@ class AttachmentXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     "image/gif",
                     "URL2",
                     1234
-                )
+                ),
             ]
         );
 

@@ -73,7 +73,7 @@ class SystemEventProcessor_Root extends SystemEventProcessor
         BackendSystem $backend_system,
         SiteCache $site_cache,
         ApacheConfGenerator $generator,
-        \Tuleap\DB\DBConnection $db_connection
+        \Tuleap\DB\DBConnection $db_connection,
     ) {
         parent::__construct($process, $system_event_manager, $dao, $logger);
         $this->backend_aliases = $backend_aliases;

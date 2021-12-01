@@ -60,7 +60,7 @@ final class IterationsLinkedToProgramIncrementDAO extends DataAccessObject imple
 
     public function hasIterationBeenLinkedBefore(
         ProgramIncrementIdentifier $program_increment,
-        IterationIdentifier $iteration
+        IterationIdentifier $iteration,
     ): bool {
         // Return 1 if the given iteration has been linked by given program increment at least once
         // before the last changeset

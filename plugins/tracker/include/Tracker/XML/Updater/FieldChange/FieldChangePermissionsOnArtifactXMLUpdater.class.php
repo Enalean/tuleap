@@ -44,7 +44,7 @@ class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater
     private function appendUgroupToFieldChangeNode(
         $ugroup_id,
         $index,
-        SimpleXMLElement $field_xml
+        SimpleXMLElement $field_xml,
     ) {
         $node = $field_xml->addChild('ugroup');
         $node->addAttribute('ugroup_id', $ugroup_id);

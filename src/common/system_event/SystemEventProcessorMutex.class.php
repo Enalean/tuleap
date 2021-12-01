@@ -43,7 +43,7 @@ class SystemEventProcessorMutex
     public function __construct(
         IRunInAMutex $runnable,
         LockFactory $lock_factory,
-        DBConnection $db_connection
+        DBConnection $db_connection,
     ) {
         $this->process_owner = $runnable->getProcessOwner();
         $this->runnable      = $runnable;

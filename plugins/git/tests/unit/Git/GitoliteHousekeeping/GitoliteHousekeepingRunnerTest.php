@@ -58,7 +58,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends \Tuleap\Te
             'Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo',
             'Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGc',
             'Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarter',
-            'Git_GitoliteHousekeeping_ChainOfResponsibility_DoNothing'
+            'Git_GitoliteHousekeeping_ChainOfResponsibility_DoNothing',
         ];
 
         $chain = $this->runner->getChain();

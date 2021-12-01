@@ -217,7 +217,7 @@ final class FilesHeaderPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             'a' => 'blame',
             'hb' => 'v12-1',
             'h' => 'd3c5d469b37586aa924577054162c31b6bf03a9a',
-            'f' => 'app.js'
+            'f' => 'app.js',
         ]);
 
         $this->repository->allows()->isCreated()->andReturns(true);

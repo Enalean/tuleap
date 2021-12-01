@@ -32,7 +32,7 @@ class InvitationDao extends DataAccessObject
         string $to_email,
         ?int $to_user_id,
         ?string $custom_message,
-        string $status
+        string $status,
     ): void {
         $this->getDB()->insert(
             'invitations',
@@ -42,7 +42,7 @@ class InvitationDao extends DataAccessObject
                 'to_email'       => $to_email,
                 'to_user_id'     => $to_user_id,
                 'custom_message' => $custom_message,
-                'status'         => $status
+                'status'         => $status,
             ]
         );
     }

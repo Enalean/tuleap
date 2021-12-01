@@ -38,7 +38,7 @@ class GitlabCommitFactory
 
     public function getGitlabCommitInRepositoryWithSha1(
         GitlabRepositoryIntegration $repository_integration,
-        string $commit_sha1
+        string $commit_sha1,
     ): ?GitlabCommit {
         $row = $this->gitlab_commit_dao->searchCommitInRepositoryWithSha1(
             $repository_integration->getId(),

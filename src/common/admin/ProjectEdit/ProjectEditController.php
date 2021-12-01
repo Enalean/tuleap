@@ -72,7 +72,7 @@ class ProjectEditController
         EventManager $event_manager,
         SystemEventManager $system_event_manager,
         ProjectHistoryDao $project_history_dao,
-        ProjectRenameChecker $project_rename_checker
+        ProjectRenameChecker $project_rename_checker,
     ) {
         $this->details_presenter      = $details_presenter;
         $this->dao                    = $dao;
@@ -142,7 +142,7 @@ class ProjectEditController
             $this->project_history_dao->groupAddHistory('status', $old_status_label . " :: " . $new_status_label, $project->group_id);
 
             $event_params = [
-                'group_id' => $project->group_id
+                'group_id' => $project->group_id,
             ];
 
             if ($form_status === Project::STATUS_SUSPENDED) {
@@ -208,7 +208,7 @@ class ProjectEditController
             Event::PROJECT_RENAME,
             [
                 'group_id' => $project->getID(),
-                'new_name' => $new_name
+                'new_name' => $new_name,
             ]
         );
 

@@ -29,7 +29,7 @@ class Planning_PlanningOutOfHierarchyAdminPresenter extends Planning_PlanningAdm
     public function __construct(
         Planning $planning,
         ?Planning $root_planning,
-        bool $is_planning_removal_dangerous
+        bool $is_planning_removal_dangerous,
     ) {
         parent::__construct($planning, $is_planning_removal_dangerous);
 

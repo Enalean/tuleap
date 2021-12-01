@@ -39,7 +39,7 @@ final class DescriptionFieldAdminPresenterBuilderTest extends \Tuleap\Test\PHPUn
             'desc_description' => 'field_description',
             'desc_required' => 1,
             'desc_type' => 'line',
-            'desc_rank' => 1
+            'desc_rank' => 1,
         ];
 
         $expected_presenters =
@@ -65,7 +65,7 @@ final class DescriptionFieldAdminPresenterBuilderTest extends \Tuleap\Test\PHPUn
                     '',
                     1,
                     false
-                )
+                ),
             ];
 
         $presenter_builder = new DescriptionFieldAdminPresenterBuilder();

@@ -71,7 +71,7 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
         CSRFSynchronizerTokenProvider $token_provider,
         EventManager $event_manager,
         ReferenceManager $reference_manager,
-        FieldDao $field_dao
+        FieldDao $field_dao,
     ) {
         $this->tracker_factory     = $tracker_factory;
         $this->token_provider      = $token_provider;

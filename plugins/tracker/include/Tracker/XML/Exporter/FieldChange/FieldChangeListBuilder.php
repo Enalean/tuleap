@@ -50,7 +50,7 @@ class FieldChangeListBuilder
         SimpleXMLElement $changeset_xml,
         string $field_name,
         string $bind_type,
-        array $values
+        array $values,
     ): void {
         $field_change = $changeset_xml->addChild('field_change');
         $field_change->addAttribute('field_name', $field_name);

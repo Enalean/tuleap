@@ -31,7 +31,7 @@ class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever
     public function __construct(
         SemanticTimeframeDao $dao,
         \TrackerFactory $tracker_factory,
-        \Tracker_FormElementFactory $form_element_factory
+        \Tracker_FormElementFactory $form_element_factory,
     ) {
         $this->dao                  = $dao;
         $this->tracker_factory      = $tracker_factory;

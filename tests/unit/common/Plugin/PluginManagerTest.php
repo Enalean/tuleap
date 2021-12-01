@@ -150,7 +150,7 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $plugin_factory->shouldReceive('instantiatePlugin')->andReturn($plugin);
 
         $plugin_factory->shouldReceive('getAllPossiblePluginsDir')->andReturns([
-            __DIR__ . '/test'
+            __DIR__ . '/test',
         ]);
 
         $forgeupgrade_config = \Mockery::spy(\ForgeUpgradeConfig::class);

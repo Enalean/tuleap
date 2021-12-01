@@ -45,7 +45,7 @@ class VisitRetriever
     public function __construct(
         RecentlyVisitedKanbanDao $dao,
         AgileDashboard_KanbanFactory $kanban_factory,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
     ) {
         $this->dao             = $dao;
         $this->kanban_factory  = $kanban_factory;
@@ -82,7 +82,7 @@ class VisitRetriever
                         [
                             'group_id' => $tracker->getProject()->getID(),
                             'action'   => 'showKanban',
-                            'id'       => $kanban->getId()
+                            'id'       => $kanban->getId(),
                         ]
                     ),
                     $kanban->getName(),

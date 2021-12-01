@@ -54,7 +54,7 @@ class PermissionItemUpdater
         ],
         self::PERMISSION_DEFINITION_NONE => [
             'order' => 0,
-            'type'  => null
+            'type'  => null,
         ],
     ];
     /**
@@ -83,7 +83,7 @@ class PermissionItemUpdater
         Docman_ItemFactory $item_factory,
         Docman_PermissionsManager $docman_permissions_manager,
         PermissionsManager $global_permissions_manager,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->response_feedback_wrapper  = $response_feedback_wrapper;
         $this->item_factory               = $item_factory;
@@ -168,7 +168,7 @@ class PermissionItemUpdater
         $history          = [
             Docman_PermissionsManager::ITEM_PERMISSION_TYPE_READ => false,
             Docman_PermissionsManager::ITEM_PERMISSION_TYPE_WRITE => false,
-            Docman_PermissionsManager::ITEM_PERMISSION_TYPE_MANAGE => false
+            Docman_PermissionsManager::ITEM_PERMISSION_TYPE_MANAGE => false,
         ];
 
         foreach ($permissions as $ugroup_id => $wanted_permission) {
@@ -231,7 +231,7 @@ class PermissionItemUpdater
         int $ugroup_id,
         int $wanted_permission,
         array &$history,
-        bool $force
+        bool $force,
     ) {
         //Do nothing if we have already choose a permission for ugroup
         if (! isset($done_permissions[$ugroup_id])) {

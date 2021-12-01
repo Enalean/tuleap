@@ -80,7 +80,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = new \Codendi_Request([
             'start-date-field-id' => 'start',
-            'duration-field-id'   => '1234'
+            'duration-field-id'   => '1234',
         ]);
 
         $this->semantic_timeframe_dao->shouldReceive("save")->never();
@@ -97,7 +97,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = new \Codendi_Request([
             'start-date-field-id' => '',
-            'duration-field-id'   => '5678'
+            'duration-field-id'   => '5678',
         ]);
 
         $this->semantic_timeframe_dao->shouldReceive("save")->never();
@@ -114,7 +114,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = new \Codendi_Request([
             'start-date-field-id' => '1234',
-            'duration-field-id'   => ''
+            'duration-field-id'   => '',
         ]);
 
         $this->semantic_timeframe_dao->shouldReceive("save")->never();
@@ -131,7 +131,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = new \Codendi_Request([
             'start-date-field-id' => '1234',
-            'duration-field-id'   => '5678'
+            'duration-field-id'   => '5678',
         ]);
 
         $this->formelement_factory->shouldReceive("getUsedDateFieldById")->with($this->tracker, 1234)->andReturn(null);
@@ -151,7 +151,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field_id   = 5678;
         $request             = new \Codendi_Request([
             'start-date-field-id' => $start_date_field_id,
-            'duration-field-id'   => $duration_field_id
+            'duration-field-id'   => $duration_field_id,
         ]);
 
         $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
@@ -189,7 +189,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field_id   = 5678;
         $request             = new \Codendi_Request([
             'start-date-field-id' => $start_date_field_id,
-            'end-date-field-id'   => $end_date_field_id
+            'end-date-field-id'   => $end_date_field_id,
         ]);
 
         $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
@@ -230,7 +230,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->suitable_trackers_retriever->shouldReceive('getTrackersWeCanUseToImplyTheSemanticOfTheCurrentTrackerFrom')
             ->with($this->tracker)
             ->andReturn([
-                '150' => Mockery::mock(\Tracker::class)
+                '150' => Mockery::mock(\Tracker::class),
             ]);
 
         $this->semantic_timeframe_dao->shouldReceive("save")->with(
@@ -258,7 +258,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $request = new \Codendi_Request([
             'start-date-field-id' => $start_date_field_id,
             'duration-field-id'   => $duration_field_id,
-            'end-date-field-id'   => $end_date_field_id
+            'end-date-field-id'   => $end_date_field_id,
         ]);
 
         $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
@@ -297,8 +297,8 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn([
                 [
                     'tracker_id' => 104,
-                    'implied_from_tracker_id' => $sprint_tracker_id
-                ]
+                    'implied_from_tracker_id' => $sprint_tracker_id,
+                ],
             ])
             ->once();
 

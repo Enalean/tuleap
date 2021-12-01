@@ -40,7 +40,7 @@ class Docman_View_ParentsTree /* implements Visitor*/
         $html .= $this->fetchFolder($params['hierarchy']->accept($this, $params), [
             'is_last'    => true,
             'select'     => $params['current'],
-            'input_name' => isset($params['input_name']) ? $params['input_name'] : 'item[parent_id]'
+            'input_name' => isset($params['input_name']) ? $params['input_name'] : 'item[parent_id]',
         ]);
         $html .= '</ul>';
         $html .= '</div>';
@@ -103,7 +103,7 @@ class Docman_View_ParentsTree /* implements Visitor*/
                 'parent_id' => $item->getParentId(),
                 'title'     => $item->getTitle(),
                 'items'     => [],
-                'icon_src'  => $params['docman_icons']->getIconForItem($item, ['expanded' => true])
+                'icon_src'  => $params['docman_icons']->getIconForItem($item, ['expanded' => true]),
             ];
 
             $items = $item->getAllItems();

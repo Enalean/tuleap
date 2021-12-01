@@ -58,7 +58,7 @@ class WebhookDataExtractor
         PostPushWebhookDataBuilder $post_push_webhook_data_builder,
         PostMergeRequestWebhookDataBuilder $post_merge_request_webhook_data_builder,
         TagPushWebhookDataBuilder $tag_push_webhook_data_builder,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->post_push_webhook_data_builder          = $post_push_webhook_data_builder;
         $this->post_merge_request_webhook_data_builder = $post_merge_request_webhook_data_builder;

@@ -62,7 +62,7 @@ class TemplateFactory
         ConsistencyChecker $consistency_checker,
         TemplateDao $template_dao,
         ProjectManager $project_manager,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
     ) {
         $this->template_dao    = $template_dao;
         $this->templates       = [

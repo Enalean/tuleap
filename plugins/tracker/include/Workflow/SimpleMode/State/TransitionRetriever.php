@@ -40,7 +40,7 @@ class TransitionRetriever
 
     public function __construct(
         StateFactory $state_factory,
-        TransitionExtractor $transition_extractor
+        TransitionExtractor $transition_extractor,
     ) {
         $this->state_factory        = $state_factory;
         $this->transition_extractor = $transition_extractor;

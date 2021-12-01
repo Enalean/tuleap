@@ -66,7 +66,7 @@ class Git_GitoliteDriver
     public static $permissions_types = [
         Git::PERM_READ  => ' R  ',
         Git::PERM_WRITE => ' RW ',
-        Git::PERM_WPLUS => ' RW+'
+        Git::PERM_WPLUS => ' RW+',
     ];
 
     public const OLD_AUTHORIZED_KEYS_PATH = "/usr/com/gitolite/.ssh/authorized_keys";
@@ -93,7 +93,7 @@ class Git_GitoliteDriver
         ?ProjectManager $project_manager = null,
         ?Git_Mirror_MirrorDataMapper $mirror_data_mapper = null,
         BigObjectAuthorizationManager $big_object_authorization_manager,
-        VersionDetector $version_detector
+        VersionDetector $version_detector,
     ) {
         $this->git_dao = $git_dao;
         $this->logger  = $logger;

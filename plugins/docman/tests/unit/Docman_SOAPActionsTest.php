@@ -414,7 +414,7 @@ class Docman_SOAPActionsTest extends \Tuleap\Test\PHPUnit\TestCase
             'item_id'        => 128000,
             'chunk_offset'   => 10,
             'chunk_size'     => 64,
-            'upload_content' => 'abcdef'
+            'upload_content' => 'abcdef',
         ];
         $request = \Mockery::spy(\SOAPRequest::class);
         $request->shouldReceive('exist')->with('group_id')->andReturns(true);
@@ -466,7 +466,7 @@ class Docman_SOAPActionsTest extends \Tuleap\Test\PHPUnit\TestCase
             'item_id'        => 128000,
             'chunk_offset'   => 10,
             'chunk_size'     => 64,
-            'version_number' => 2
+            'version_number' => 2,
         ];
         $request = \Mockery::spy(\SOAPRequest::class);
         $request->shouldReceive('exist')->with('group_id')->andReturns(true);

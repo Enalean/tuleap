@@ -57,7 +57,7 @@ class LFSObjectDAO extends DataAccessObject
             'plugin_gitlfs_object',
             [
                 'object_oid'  => $oid_value,
-                'object_size' => $size
+                'object_size' => $size,
             ]
         );
     }
@@ -68,7 +68,7 @@ class LFSObjectDAO extends DataAccessObject
             'plugin_gitlfs_object_repository',
             [
                 'object_id'     => $object_id,
-                'repository_id' => $repository_id
+                'repository_id' => $repository_id,
             ]
         );
     }

@@ -44,7 +44,7 @@ class ImmutableTagController
         RepositoryManager $repository_manager,
         Svnlook $svnlook,
         ImmutableTagCreator $immutable_tag_creator,
-        ImmutableTagFactory $immutable_tag_factory
+        ImmutableTagFactory $immutable_tag_factory,
     ) {
         $this->repository_manager    = $repository_manager;
         $this->svnlook               = $svnlook;

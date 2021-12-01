@@ -47,7 +47,7 @@ class UserChangePasswordPresenter
         PFUser $user,
         CSRFSynchronizerToken $csrf_token,
         array $additional_password_messages,
-        array $passwords_validators
+        array $passwords_validators,
     ) {
         $this->csrf_token                   = $csrf_token;
         $this->additional_password_messages = $additional_password_messages;

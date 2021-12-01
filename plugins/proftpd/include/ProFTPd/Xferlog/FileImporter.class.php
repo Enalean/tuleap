@@ -64,7 +64,7 @@ class FileImporter
         UserManager $user_manager,
         ProjectManager $project_manager,
         UserDao $user_dao,
-        $base_dir
+        $base_dir,
     ) {
         $this->dao             = $dao;
         $this->parser          = $parser;

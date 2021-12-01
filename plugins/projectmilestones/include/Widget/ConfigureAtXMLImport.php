@@ -34,7 +34,7 @@ final class ConfigureAtXMLImport
         }
         $content_id = $event->getWidget()->create(new \Codendi_Request([
             ProjectMilestonesWidgetRetriever::PARAM_SELECTED_PROJECT => ProjectMilestonesWidgetRetriever::VALUE_SELECTED_PROJECT_SELF,
-            'project' => $event->getProject()
+            'project' => $event->getProject(),
         ]));
         $event->setContentId($content_id);
         $event->setWidgetIsConfigured();

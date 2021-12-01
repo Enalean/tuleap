@@ -74,7 +74,7 @@ class WidgetReorderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->line_one_columns = [
             new DashboardWidgetColumn(1, 0, $this->line_one_column_one_widgets),
             new DashboardWidgetColumn(2, 1, $this->line_one_column_two_widgets),
-            new DashboardWidgetColumn(3, 2, $this->line_one_column_three_widgets)
+            new DashboardWidgetColumn(3, 2, $this->line_one_column_three_widgets),
         ];
     }
 
@@ -102,12 +102,12 @@ class WidgetReorderTest extends \Tuleap\Test\PHPUnit\TestCase
             'colum_id'   => 1,
             'rank'       => 0,
             'name'       => 'image',
-            'content_id' => 12
+            'content_id' => 12,
         ]));
         $dao->shouldReceive('searchAllColumnsByLineIdOrderedByRank')->andReturns(\TestHelper::arrayToDar([
             'id'      => 1,
             'line_id' => 1,
-            'rank'    => 0
+            'rank'    => 0,
         ]));
 
         $dao->shouldReceive('updateColumnIdByWidgetId')->once();

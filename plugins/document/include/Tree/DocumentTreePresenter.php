@@ -130,7 +130,7 @@ class DocumentTreePresenter
         CSRFSynchronizerToken $csrf,
         FileDownloadLimits $file_download_limits,
         HistoryEnforcementSettings $history_settings,
-        array $project_flags
+        array $project_flags,
     ) {
         $this->project_id                         = $project->getID();
         $this->project_name                       = $project->getUnixNameLowerCase();

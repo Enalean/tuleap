@@ -91,7 +91,7 @@ class SvnRouter implements DispatchableWithRequest
         RestoreController $restore_controller,
         SVNJSONPermissionsRetriever $json_retriever,
         SvnPlugin $plugin,
-        ProjectManager $project_manager
+        ProjectManager $project_manager,
     ) {
         $this->repository_manager        = $repository_manager;
         $this->permissions_manager       = $permissions_manager;
@@ -205,7 +205,7 @@ class SvnRouter implements DispatchableWithRequest
                                 'error' => dgettext(
                                     'tuleap-svn',
                                     "You don't have permissions to see user groups."
-                                )
+                                ),
                             ]
                         );
                     }

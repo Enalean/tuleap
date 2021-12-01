@@ -40,7 +40,7 @@ final class PendingProgramIncrementUpdateRepresentation
         public int $program_increment_id,
         public int $user_id,
         public int $changeset_id,
-        PendingIterationCreationRepresentation ...$iterations
+        PendingIterationCreationRepresentation ...$iterations,
     ) {
         $this->iterations = $iterations;
     }

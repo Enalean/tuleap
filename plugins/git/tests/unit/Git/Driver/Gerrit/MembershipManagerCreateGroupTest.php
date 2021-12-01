@@ -103,7 +103,7 @@ class MembershipManagerCreateGroupTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->remote_server_factory,
                 $this->logger,
                 $this->ugroup_manager,
-                $this->project_manager
+                $this->project_manager,
             ]
         )
             ->makePartial()
@@ -142,11 +142,11 @@ class MembershipManagerCreateGroupTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $mary = new PFUser([
             'language_id' => 'en',
-            'user_id' => 12
+            'user_id' => 12,
         ]);
         $bob  = new PFUser([
             'language_id' => 'en',
-            'user_id' => 25
+            'user_id' => 25,
         ]);
         $this->ugroup->shouldReceive('getMembers')->andReturns([$mary, $bob]);
 

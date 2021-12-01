@@ -136,7 +136,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $capacity_slow_compute_value,
         $capacity_fast_compute_value,
         $remaining_effort_value,
-        $total_effort_value
+        $total_effort_value,
     ) {
         if ($artifact_id !== null) {
             $response = $this->getResponse($this->request_factory->createRequest('GET', "artifacts/$artifact_id"));
@@ -192,28 +192,28 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $expected_burndown_chart_with_date = [
             [
                 "date"             => $start_date->format(DATE_ATOM),
-                "remaining_effort" => 55
+                "remaining_effort" => 55,
             ],
             [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 43
+                "remaining_effort" => 43,
             ],
             [
                 "date"             => $start_date->modify('+3 day')->format(DATE_ATOM),
-                "remaining_effort" => 48
+                "remaining_effort" => 48,
             ],
             [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 37
+                "remaining_effort" => 37,
             ],
             [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 37
+                "remaining_effort" => 37,
             ],
             [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 37
-            ]
+                "remaining_effort" => 37,
+            ],
         ];
 
         $expected_burndown_chart = [
@@ -222,7 +222,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             48,
             37,
             37,
-            37
+            37,
         ];
 
         $this->assertEquals($burndown['values'][6]['value']['points'], $expected_burndown_chart);
@@ -250,28 +250,28 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $expected_burndown_chart = [
             [
                 "date"             => $start_date->format(DATE_ATOM),
-                "remaining_effort" => 32
+                "remaining_effort" => 32,
             ],
             [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 20
+                "remaining_effort" => 20,
             ],
             [
                 "date"             => $start_date->modify('+3 day')->format(DATE_ATOM),
-                "remaining_effort" => 25
+                "remaining_effort" => 25,
             ],
             [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 20
+                "remaining_effort" => 20,
             ],
             [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 20
+                "remaining_effort" => 20,
             ],
             [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 20
-            ]
+                "remaining_effort" => 20,
+            ],
         ];
 
         $this->assertEquals($burndown['values'][6]['value']['points_with_date'], $expected_burndown_chart);
@@ -298,28 +298,28 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $expected_burndown_chart = [
             [
                 "date"             => $start_date->format(DATE_ATOM),
-                "remaining_effort" => 25
+                "remaining_effort" => 25,
             ],
             [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 20
+                "remaining_effort" => 20,
             ],
             [
                 "date"             => $start_date->modify('+3 day')->format(DATE_ATOM),
-                "remaining_effort" => 40
+                "remaining_effort" => 40,
             ],
             [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 20
+                "remaining_effort" => 20,
             ],
             [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 20
+                "remaining_effort" => 20,
             ],
             [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 20
-            ]
+                "remaining_effort" => 20,
+            ],
         ];
 
         $this->assertEquals($burndown['values'][6]['value']['points_with_date'], $expected_burndown_chart);
@@ -649,7 +649,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
                         "links"    => [
                             ["id" => $this->level_three_artifact_ids[1], "type" => $nature_is_child],
                             ["id" => $this->level_three_artifact_ids[3], "type" => $nature_empty],
-                        ]
+                        ],
                     ],
                 ],
             ]
@@ -706,7 +706,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
                 'values' => [
                     [
                         'field_id' => $this->getFieldByFieldLabel($target_artifact_id, 'name'),
-                        'value'    => "Yolo"
+                        'value'    => "Yolo",
                     ],
                 ],
             ]
@@ -733,7 +733,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
                 'values' => [
                     [
                         'field_id' => $this->getFieldByFieldLabel($target_artifact_id, 'name'),
-                        'value'    => "Yolo"
+                        'value'    => "Yolo",
                     ],
                 ],
             ]

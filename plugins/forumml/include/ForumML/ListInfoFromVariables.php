@@ -59,7 +59,7 @@ final class ListInfoFromVariables
         string $list_name,
         array $list_row,
         Project $project,
-        ServiceMailingList $service
+        ServiceMailingList $service,
     ) {
         $this->list_id   = $list_id;
         $this->list_name = $list_name;

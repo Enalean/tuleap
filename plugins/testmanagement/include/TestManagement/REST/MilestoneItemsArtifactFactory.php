@@ -48,7 +48,7 @@ class MilestoneItemsArtifactFactory
         Config $config,
         ArtifactDao $dao,
         Tracker_ArtifactFactory $tracker_artifact_factory,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->config                   = $config;
         $this->dao                      = $dao;
@@ -84,7 +84,7 @@ class MilestoneItemsArtifactFactory
         array &$test_definitions,
         GetItemsFromMilestone $event,
         Project $project,
-        array $types
+        array $types,
     ): void {
         $artifacts_ids = $event->getItemsIds();
         if (empty($artifacts_ids)) {

@@ -102,7 +102,7 @@ class FeedbackFieldCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
             $artifact_id_field,
             $submitted_field,
             $text_field,
-            $numeric_field
+            $numeric_field,
         ]);
 
         $collector->initAllTrackerFieldAsNotMigrated($tracker);

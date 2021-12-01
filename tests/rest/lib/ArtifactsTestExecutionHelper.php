@@ -38,12 +38,12 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
             [
                 'tracker' => [
                     'id'  => $this->epic_tracker_id,
-                    'uri' => 'whatever'
+                    'uri' => 'whatever',
                 ],
                 'values'  => [
                     $this->getSubmitStringValue($this->epic_tracker_id, $summary_field_label, $summary_field_value),
                     $this->getSubmitTextValue($this->epic_tracker_id, "Required Text", "this is a description"),
-                    $this->getSubmitListValue($this->epic_tracker_id, 'Status', 103)
+                    $this->getSubmitListValue($this->epic_tracker_id, 'Status', 103),
                 ],
             ]
         );
@@ -73,7 +73,7 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
         return [
             'field_id'       => $field_def['field_id'],
             'bind_value_ids' => [
-                $field_value
+                $field_value,
             ],
         ];
     }
@@ -136,15 +136,15 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
                     "shortname" => $nature_is_child,
                     "direction" => 'forward',
                     "label"     => "Child",
-                    "uri"       => "artifacts/$artifact_id/linked_artifacts?nature=$nature_is_child&direction=forward"
+                    "uri"       => "artifacts/$artifact_id/linked_artifacts?nature=$nature_is_child&direction=forward",
                 ],
                 [
                     "shortname" => $nature_empty,
                     "direction" => 'forward',
                     "label"     => '',
-                    "uri"       => "artifacts/$artifact_id/linked_artifacts?nature=$nature_empty&direction=forward"
-                ]
-            ]
+                    "uri"       => "artifacts/$artifact_id/linked_artifacts?nature=$nature_empty&direction=forward",
+                ],
+            ],
         ];
 
         $this->assertEquals($expected_link, $links);

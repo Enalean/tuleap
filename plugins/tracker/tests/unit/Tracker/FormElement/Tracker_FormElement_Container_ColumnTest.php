@@ -75,7 +75,7 @@ class Tracker_FormElement_Container_ColumnTest extends TestCase //phpcs:ignore
             [
             $field_01,
             $field_02,
-                $field_03
+                $field_03,
             ]
         );
 

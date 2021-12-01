@@ -105,7 +105,7 @@ class RegexpPermissionFilterTest extends \Tuleap\Test\PHPUnit\TestCase
             "master\ndev",
             "\n",
             "\v",
-            "\f"
+            "\f",
         ];
 
         $built_pattern = [];

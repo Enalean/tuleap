@@ -49,7 +49,7 @@ class ReleaseNoteCustomLinkUpdater
         ReleaseLinkDao $release_note_dao,
         UserPreferencesDao $users_preferences_dao,
         VersionNumberExtractor $version_number_extractor,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
     ) {
         $this->release_note_dao         = $release_note_dao;
         $this->users_preferences_dao    = $users_preferences_dao;

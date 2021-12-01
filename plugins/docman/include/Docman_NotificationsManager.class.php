@@ -93,7 +93,7 @@ class Docman_NotificationsManager
         UGroupsRetriever $ugroups_retriever,
         NotifiedPeopleRetriever $notified_people_retriever,
         UsersUpdater $users_updater,
-        UgroupsUpdater $ugroups_updater
+        UgroupsUpdater $ugroups_updater,
     ) {
         $this->project       = $project;
         $this->_listeners    = [];

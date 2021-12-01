@@ -222,7 +222,7 @@ class MilestoneRepresentation
         ?string $last_modified_date,
         ?array $status_count,
         array $resources,
-        ?ProjectReferenceWithBackground $original_project_provider
+        ?ProjectReferenceWithBackground $original_project_provider,
     ) {
         $this->id                                  = $id;
         $this->uri                                 = $uri;
@@ -265,7 +265,7 @@ class MilestoneRepresentation
         PaneInfoCollector $pane_info_collector,
         ?\Tracker $sub_milestone_tracker,
         OriginalProjectCollector $original_project_collector,
-        ProjectBackgroundConfiguration $project_background_configuration
+        ProjectBackgroundConfiguration $project_background_configuration,
     ): self {
         $artifact_id = $milestone->getArtifactId();
         $uri         = self::ROUTE . '/' . $artifact_id;
@@ -318,24 +318,24 @@ class MilestoneRepresentation
         $resources['milestones'] = [
             'uri'    => $uri . '/' . self::ROUTE,
             'accept' => [
-                'trackers' => $submilestone_trackers
-            ]
+                'trackers' => $submilestone_trackers,
+            ],
         ];
         $resources['backlog']    = [
             'uri'    => $uri . '/' . BacklogItemRepresentation::BACKLOG_ROUTE,
             'accept' => [
                 'trackers'        => self::getTrackersRepresentation($backlog_trackers),
-                'parent_trackers' => self::getTrackersRepresentation($parent_trackers)
-            ]
+                'parent_trackers' => self::getTrackersRepresentation($parent_trackers),
+            ],
         ];
         $resources['content']    = [
             'uri'    => $uri . '/' . BacklogItemRepresentation::CONTENT_ROUTE,
             'accept' => [
-                'trackers' => self::getContentTrackersRepresentation($milestone)
-            ]
+                'trackers' => self::getContentTrackersRepresentation($milestone),
+            ],
         ];
         $resources['siblings']   = [
-            'uri' => $uri . '/siblings'
+            'uri' => $uri . '/siblings',
         ];
         $resources['cardwall']   = null;
         $resources['burndown']   = null;
@@ -382,7 +382,7 @@ class MilestoneRepresentation
 
         $representation_with_burndown->burndown_uri          = $representation_with_burndown->uri . '/' . BurndownRepresentation::ROUTE;
         $representation_with_burndown->resources['burndown'] = [
-            'uri' => $representation_with_burndown->burndown_uri
+            'uri' => $representation_with_burndown->burndown_uri,
         ];
 
         return $representation_with_burndown;
@@ -394,7 +394,7 @@ class MilestoneRepresentation
 
         $representation_with_cardwall->cardwall_uri          = $representation_with_cardwall->uri . '/' . AgileDashboard_MilestonesCardwallRepresentation::ROUTE;
         $representation_with_cardwall->resources['cardwall'] = [
-            'uri' => $representation_with_cardwall->cardwall_uri
+            'uri' => $representation_with_cardwall->cardwall_uri,
         ];
 
         return $representation_with_cardwall;

@@ -58,7 +58,7 @@ class BurnupCalculator
         Tracker_ArtifactFactory $artifact_factory,
         BurnupDao $burnup_dao,
         AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory,
-        SemanticDoneFactory $semantic_done_factory
+        SemanticDoneFactory $semantic_done_factory,
     ) {
         $this->changeset_factory      = $changeset_factory;
         $this->burnup_dao             = $burnup_dao;
@@ -92,7 +92,7 @@ class BurnupCalculator
 
     private function getPlanningLinkedArtifactAtTimestamp(
         $artifact_id,
-        $timestamp
+        $timestamp,
     ) {
         return $this->burnup_dao->searchLinkedArtifactsAtGivenTimestamp($artifact_id, $timestamp);
     }
@@ -102,7 +102,7 @@ class BurnupCalculator
      */
     private function getEffort(
         Artifact $artifact,
-        $timestamp
+        $timestamp,
     ) {
         $semantic_initial_effort = $this->initial_effort_factory->getByTracker($artifact->getTracker());
         $semantic_done           = $this->semantic_done_factory->getInstanceByTracker($artifact->getTracker());
@@ -132,7 +132,7 @@ class BurnupCalculator
      */
     private function artifactMustBeAddedInBurnupCalculation(
         Tracker_Artifact_Changeset $changeset,
-        SemanticDone $semantic_done
+        SemanticDone $semantic_done,
     ) {
         return $changeset->getArtifact()->isOpenAtGivenChangeset($changeset) || $semantic_done->isDone($changeset);
     }

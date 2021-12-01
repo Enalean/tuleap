@@ -42,7 +42,7 @@ class TrackerPrivateCommentUGroupPermissionRetriever
     public function __construct(
         TrackerPrivateCommentUGroupPermissionDao $ugroup_permission_dao,
         RetrieveTrackerPrivateCommentInformation $tracker_private_comment_information_retriever,
-        \UGroupManager $ugroup_manager
+        \UGroupManager $ugroup_manager,
     ) {
         $this->ugroup_permission_dao                         = $ugroup_permission_dao;
         $this->tracker_private_comment_information_retriever = $tracker_private_comment_information_retriever;

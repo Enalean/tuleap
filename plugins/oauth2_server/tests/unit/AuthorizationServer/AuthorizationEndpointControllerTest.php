@@ -235,7 +235,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
             'Client ID has wrong format'                       => [['client_id' => 'bad_client_id']],
             'Client ID matches no App'                         => [['client_id' => 'tlp-client-id-404']],
             'No redirect URI'                                  => [['client_id' => 'tlp-client-id-1']],
-            "Redirect URI does not match App's registered URI" => [['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/invalid-redirect-uri']]
+            "Redirect URI does not match App's registered URI" => [['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/invalid-redirect-uri']],
         ];
     }
 
@@ -254,7 +254,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
      */
     public function testHandleRedirectsWithErrorWhenQueryParametersAreInvalid(
         array $query_parameters,
-        string $expected_redirection_url
+        string $expected_redirection_url,
     ): void {
         $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->method('getCurrentUser')->willReturn($user);
@@ -276,39 +276,39 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         return [
             'No response type'                         => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value'],
-                'https://example.com/redirect?key=value&error=invalid_request'
+                'https://example.com/redirect?key=value&error=invalid_request',
             ],
             'Response type is not allowed'             => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'invalid_response_type'],
-                'https://example.com/redirect?key=value&error=invalid_request'
+                'https://example.com/redirect?key=value&error=invalid_request',
             ],
             'State parameter is passed unmodified'     => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'invalid_response_type', 'state' => 'xyz'],
-                'https://example.com/redirect?key=value&state=xyz&error=invalid_request'
+                'https://example.com/redirect?key=value&state=xyz&error=invalid_request',
             ],
             'Scope is not given'                       => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'state' => 'xyz'],
-                'https://example.com/redirect?key=value&state=xyz&error=invalid_scope'
+                'https://example.com/redirect?key=value&state=xyz&error=invalid_scope',
             ],
             'Scope is unknown'                         => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'state' => 'xyz', 'scope' => 'invalid_scope'],
-                'https://example.com/redirect?key=value&state=xyz&error=invalid_scope'
+                'https://example.com/redirect?key=value&state=xyz&error=invalid_scope',
             ],
             'Prompt parameter is not valid'            => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'state' => 'xyz', 'prompt' => 'login none'],
-                'https://example.com/redirect?key=value&state=xyz&error=invalid_request'
+                'https://example.com/redirect?key=value&state=xyz&error=invalid_request',
             ],
             'Use not supported request parameter'      => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'request' => 'notsupported'],
-                'https://example.com/redirect?key=value&error=request_not_supported'
+                'https://example.com/redirect?key=value&error=request_not_supported',
             ],
             'Use not supported request URI parameter'  => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'request_uri' => 'notsupported'],
-                'https://example.com/redirect?key=value&error=request_uri_not_supported'
+                'https://example.com/redirect?key=value&error=request_uri_not_supported',
             ],
             'Use not supported registration parameter' => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'registration' => 'notsupported'],
-                'https://example.com/redirect?key=value&error=registration_not_supported'
+                'https://example.com/redirect?key=value&error=registration_not_supported',
             ],
         ];
     }
@@ -325,7 +325,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
                 'response_type'  => 'code',
                 'state'          => 'xyz',
                 'code_challenge' => 'failure',
-                'scope'          => 'scopename:read'
+                'scope'          => 'scopename:read',
             ]
         );
         $this->app_factory->expects(self::once())->method('getAppMatchingClientId')
@@ -529,7 +529,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
                 'response_type' => 'code',
                 'state'         => 'xyz',
                 'scope'         => 'scopename:read',
-                'max_age'       => '3600'
+                'max_age'       => '3600',
             ]
         );
         $this->app_factory->expects(self::once())->method('getAppMatchingClientId')

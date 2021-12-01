@@ -145,7 +145,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
                 'title'                     => 'Roadmap',
                 'lvl1_iteration_tracker_id' => 120,
                 'lvl2_iteration_tracker_id' => 130,
-                'default_timescale'         => 'week'
+                'default_timescale'         => 'week',
             ]);
         $this->dao
             ->shouldReceive('searchSelectedTrackers')
@@ -180,7 +180,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
                 'title'                     => 'Roadmap',
                 'lvl1_iteration_tracker_id' => 121,
                 'lvl2_iteration_tracker_id' => 131,
-                'default_timescale'         => 'week'
+                'default_timescale'         => 'week',
             ]);
         $this->dao
             ->shouldReceive('searchSelectedTrackers')

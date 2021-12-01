@@ -50,7 +50,7 @@ class ChartConfigurationFieldRetriever
     public function __construct(
         Tracker_FormElementFactory $form_element_field_factory,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
     ) {
         $this->form_element_field_factory = $form_element_field_factory;
         $this->semantic_timeframe_builder = $semantic_timeframe_builder;

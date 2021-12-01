@@ -42,7 +42,7 @@ class ProjectSidebarBuilder
         EventManager $event_manager,
         ProjectManager $project_manager,
         Codendi_HTMLPurifier $purifier,
-        URISanitizer $uri_sanitizer
+        URISanitizer $uri_sanitizer,
     ) {
         $this->event_manager   = $event_manager;
         $this->project_manager = $project_manager;
@@ -107,7 +107,7 @@ class ProjectSidebarBuilder
         Project $project,
         PFUser $user,
         \Service $service,
-        array $allowed_services
+        array $allowed_services,
     ): bool {
         $short_name = $service->getShortName();
 

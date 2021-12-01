@@ -107,7 +107,7 @@ class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('searchFileOngoingUploadByFieldIdNameAndExpirationDate')->andReturn(
             [
-                ['id' => 12, 'submitted_by' => 102, 'filesize' => 123]
+                ['id' => 12, 'submitted_by' => 102, 'filesize' => 123],
             ]
         );
 
@@ -144,7 +144,7 @@ class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_time = new DateTimeImmutable();
         $this->dao->shouldReceive('searchFileOngoingUploadByFieldIdNameAndExpirationDate')->andReturn(
             [
-                ['submitted_by' => 103, 'filesize' => 123]
+                ['submitted_by' => 103, 'filesize' => 123],
             ]
         );
         $this->expectException(UploadCreationConflictException::class);

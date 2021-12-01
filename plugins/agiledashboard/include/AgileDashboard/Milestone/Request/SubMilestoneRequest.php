@@ -68,7 +68,7 @@ final class SubMilestoneRequest
         int $limit,
         int $offset,
         string $order,
-        ISearchOnStatus $status_query
+        ISearchOnStatus $status_query,
     ) {
         $this->user             = $user;
         $this->parent_milestone = $parent_milestone;

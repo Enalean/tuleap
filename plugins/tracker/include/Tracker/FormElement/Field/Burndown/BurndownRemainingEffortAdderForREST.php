@@ -41,7 +41,7 @@ class BurndownRemainingEffortAdderForREST
 
     public function __construct(
         ChartConfigurationFieldRetriever $field_retriever,
-        ComputedFieldDao $computed_cache_dao
+        ComputedFieldDao $computed_cache_dao,
     ) {
         $this->field_retriever    = $field_retriever;
         $this->computed_cache_dao = $computed_cache_dao;
@@ -50,7 +50,7 @@ class BurndownRemainingEffortAdderForREST
     public function addRemainingEffortDataForREST(
         Tracker_Chart_Data_Burndown $burndown_data,
         Artifact $artifact,
-        PFUser $user
+        PFUser $user,
     ) {
         $field = $this->field_retriever->getBurndownRemainingEffortField($artifact, $user);
 

@@ -58,8 +58,8 @@ class PostPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     "timestamp" => "2020-12-16T10:21:50+01:00",
                     "author" => [
                         "name" => "John Snow",
-                        "email" => "john-snow@example.com"
-                    ]
+                        "email" => "john-snow@example.com",
+                    ],
                 ],
                 [
                     "id" => "08596fb6360bcc951a06471c616f8bc77800d4f4",
@@ -68,10 +68,10 @@ class PostPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     "timestamp" => "2020-12-16T10:21:52+01:00",
                     "author" => [
                         "name" => "John Snow",
-                        "email" => "john-snow@example.com"
-                    ]
-                ]
-            ]
+                        "email" => "john-snow@example.com",
+                    ],
+                ],
+            ],
         ];
 
         $post_push_webhook_data = $this->builder->build(
@@ -97,7 +97,7 @@ class PostPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             "checkout_sha" => null,
             "before" => "08596fb6360bcc951a06471c616f8bc77800d4f4",
             "after" => "0000000000000000000000000000000000000000",
-            "commits" => []
+            "commits" => [],
         ];
 
         $post_push_webhook_data = $this->builder->build(

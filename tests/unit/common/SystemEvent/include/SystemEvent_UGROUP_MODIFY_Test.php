@@ -52,7 +52,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -93,7 +93,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -134,7 +134,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
                 $now,
                 $now,
                 $now,
-                ''
+                '',
             ]
         )
             ->makePartial()
@@ -151,7 +151,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
         $ugroupbinding->shouldReceive('removeAllUGroupsBinding')->andReturns(true);
         $projects = [
             1 => ['group_id' => 101],
-            2 => ['group_id' => 102]
+            2 => ['group_id' => 102],
         ];
         $ugroupbinding->shouldReceive('getUGroupsByBindingSource')->andReturns($projects);
         $evt->shouldReceive('getUgroupBinding')->andReturns($ugroupbinding);

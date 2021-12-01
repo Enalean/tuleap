@@ -30,7 +30,7 @@ class PermissionPerGroupPanePresenter
 
     public function __construct(
         array $permissions,
-        ?ProjectUGroup $selected_ugroup = null
+        ?ProjectUGroup $selected_ugroup = null,
     ) {
         $this->permissions     = $permissions;
         $this->has_permissions = count($permissions) > 0;

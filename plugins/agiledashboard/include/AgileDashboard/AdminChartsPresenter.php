@@ -44,7 +44,7 @@ class AdminChartsPresenter
     public function __construct(
         Project $project,
         \CSRFSynchronizerToken $token,
-        bool $is_burnup_count_mode_activated
+        bool $is_burnup_count_mode_activated,
     ) {
         $this->project_id                     = $project->getID();
         $this->csrf_token                     = $token;

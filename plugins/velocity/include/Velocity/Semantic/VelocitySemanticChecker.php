@@ -24,7 +24,7 @@ class VelocitySemanticChecker
 {
     public function hasAtLeastOneTrackerCorrectlyConfigured(
         BacklogRequiredTrackerCollection $required_tracker_collection,
-        ChildrenRequiredTrackerCollection $children_trackers_without_velocity_semantic
+        ChildrenRequiredTrackerCollection $children_trackers_without_velocity_semantic,
     ) {
         if (count($children_trackers_without_velocity_semantic->getChildrenTrackers()) > 0 && $children_trackers_without_velocity_semantic->hasAtLeastOneChildrenWithVelocitySemanticForBacklogTrackers()) {
             return true;

@@ -60,7 +60,7 @@ class PostAdminReleaseNoteLinkController implements DispatchableWithRequest
     public function __construct(
         ReleaseNoteCustomLinkUpdater $custom_link_updater,
         CSRFSynchronizerToken $csrf_token,
-        string $version_number
+        string $version_number,
     ) {
         $this->custom_link_updater = $custom_link_updater;
         $this->version_number      = $version_number;

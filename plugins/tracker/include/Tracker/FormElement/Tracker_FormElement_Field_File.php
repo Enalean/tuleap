@@ -174,7 +174,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         $html             = '';
         $submitter_needed = true;
@@ -219,7 +219,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $format = 'text'
+        $format = 'text',
     ) {
         if (empty($value) || ! $value->getFiles()) {
             return '-';
@@ -247,7 +247,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
-        array $submitted_values
+        array $submitted_values,
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
@@ -299,7 +299,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         $submitter_needed,
         array $submitted_values,
         $read_only = true,
-        $lytebox_id = null
+        $lytebox_id = null,
     ) {
         $html = '';
         if ($lytebox_id === null) {
@@ -849,7 +849,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
     ) {
         $mover              = new AttachmentToFinalPlaceMover();
         $rule_file          = new Rule_File();

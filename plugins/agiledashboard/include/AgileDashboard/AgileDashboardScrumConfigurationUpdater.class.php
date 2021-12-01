@@ -72,7 +72,7 @@ class AgileDashboardScrumConfigurationUpdater
         ScrumForMonoMilestoneDisabler $scrum_mono_milestone_disabler,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ConfigurationUpdater $configuration_updater,
-        \Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher
+        \Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher,
     ) {
         $this->request                       = $request;
         $this->project_id                    = (int) $this->request->get('group_id');

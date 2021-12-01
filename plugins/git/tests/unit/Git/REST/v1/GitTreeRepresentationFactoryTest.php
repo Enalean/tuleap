@@ -196,7 +196,7 @@ final class GitTreeRepresentationFactoryTest extends TestCase
         $expected_representation = [
             new GitTreeRepresentation($file1->GetMode(), "blob", "file1", "whatever_path/file1", $file_hash),
             new GitTreeRepresentation($directory1->GetMode(), "tree", "directory1", "whatever_path/directory1", $dir_hash),
-            new GitTreeRepresentation($file2->GetMode(), "blob", "file2", "whatever_path/file2", $file_hash)
+            new GitTreeRepresentation($file2->GetMode(), "blob", "file2", "whatever_path/file2", $file_hash),
         ];
 
         $representation = $this->git_tree_representation_factory->getGitTreeRepresentation($path, $ref, $git_repository);

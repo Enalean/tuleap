@@ -102,7 +102,7 @@ class Dao extends DataAccessObject
         $repo_dest_id,
         $branch_dest,
         $sha1_dest,
-        $merge_status
+        $merge_status,
     ) {
         $this->getDB()->insert(
             'plugin_pullrequest_review',
@@ -117,7 +117,7 @@ class Dao extends DataAccessObject
                 'repo_dest_id'  => $repo_dest_id,
                 'branch_dest'   => $branch_dest,
                 'sha1_dest'     => $sha1_dest,
-                'merge_status'  => $merge_status
+                'merge_status'  => $merge_status,
             ]
         );
 
@@ -144,7 +144,7 @@ class Dao extends DataAccessObject
         $repository_id,
         ISearchOnStatus $criterion,
         $limit,
-        $offset
+        $offset,
     ) {
         $where_status_statement = $this->getStatusStatements($criterion);
 

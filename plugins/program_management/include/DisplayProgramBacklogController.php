@@ -65,7 +65,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
         private VerifyPrioritizeFeaturesPermission $prioritize_features_permission,
         private VerifyUserCanSubmit $user_can_submit_in_tracker_verifier,
         private RetrieveIterationLabels $label_retriever,
-        private RetrieveVisibleIterationTracker $retrieve_visible_iteration_tracker
+        private RetrieveVisibleIterationTracker $retrieve_visible_iteration_tracker,
     ) {
     }
 
@@ -162,7 +162,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
      */
     private function buildConfigurationForExistingProgram(
         Project $project,
-        UserIdentifier $user
+        UserIdentifier $user,
     ): ProgramBacklogConfigurationPresenter {
         $program = ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), $user, null);
 

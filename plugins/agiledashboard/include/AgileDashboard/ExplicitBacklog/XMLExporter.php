@@ -40,7 +40,7 @@ class XMLExporter
 
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao
+        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
     ) {
         $this->explicit_backlog_dao              = $explicit_backlog_dao;
         $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;

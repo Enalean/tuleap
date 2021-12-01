@@ -103,20 +103,20 @@ class SOAPServerProjectServicesUsageTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $services_usages = [
             $service_usage1,
-            $service_usage2
+            $service_usage2,
         ];
 
         $expected = [
             0 =>  [
                 'id'         => 170,
                 'short_name' => 'git',
-                'is_used'    => 1
+                'is_used'    => 1,
             ],
             1 =>  [
                 'id'         => 171,
                 'short_name' => 'tracker',
-                'is_used'    => 0
-            ]
+                'is_used'    => 0,
+            ],
         ];
 
         $this->service_usage_factory->shouldReceive('getAllServicesUsage')->with($this->project)->andReturns($services_usages);

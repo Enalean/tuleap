@@ -46,20 +46,20 @@ class GraphOnTrackersV5BurndownDataTest extends \Tuleap\Test\PHPUnit\TestCase
         $remaining_efforts = [
             20170901 => [
                 5215 => null,
-                5217 => null
+                5217 => null,
             ],
             20170902 => [
                 5215 => '1.0000',
                 5217 => null,
                 5239 => null,
-                5241 => '13.0000'
+                5241 => '13.0000',
             ],
             20170904 => [
                 5215 => '2.0000',
                 5217 => '1.0000',
                 5239 => '0.5000',
-                5241 => '14.0000'
-            ]
+                5241 => '14.0000',
+            ],
         ];
         $start_date        = mktime(8, 0, 0, 9, 1, 2017);
         $duration          = 5;
@@ -76,7 +76,7 @@ class GraphOnTrackersV5BurndownDataTest extends \Tuleap\Test\PHPUnit\TestCase
             'Sun 03' => [14],
             'Mon 04' => [17.5],
             'Tue 05' => [17.5],
-            'Wed 06' => [17.5]
+            'Wed 06' => [17.5],
         ];
         $burndown_values = $burndown->getComputedData();
 
@@ -101,7 +101,7 @@ class GraphOnTrackersV5BurndownDataTest extends \Tuleap\Test\PHPUnit\TestCase
             'Sun 03' => null,
             'Mon 04' => null,
             'Tue 05' => null,
-            'Wed 06' => null
+            'Wed 06' => null,
         ];
         $burndown_values = $burndown->getComputedData();
 
@@ -138,20 +138,20 @@ class GraphOnTrackersV5BurndownDataTest extends \Tuleap\Test\PHPUnit\TestCase
         $remaining_efforts = [
             20170901 => [
                 5215 => null,
-                5217 => null
+                5217 => null,
             ],
             20170902 => [
                 5215 => '1.0000',
                 5217 => null,
                 5239 => null,
-                5241 => '13.0000'
+                5241 => '13.0000',
             ],
             20170904 => [
                 5215 => '2.0000',
                 5217 => '1.0000',
                 5239 => '0.5000',
-                5241 => '14.0000'
-            ]
+                5241 => '14.0000',
+            ],
         ];
         $start_date        = mktime(8, 0, 0, 9, 1, 2016);
         $duration          = 5;
@@ -168,7 +168,7 @@ class GraphOnTrackersV5BurndownDataTest extends \Tuleap\Test\PHPUnit\TestCase
             'Sat 03' => null,
             'Sun 04' => null,
             'Mon 05' => null,
-            'Tue 06' => null
+            'Tue 06' => null,
         ];
         $burndown_values = $burndown->getComputedData();
 
@@ -180,20 +180,20 @@ class GraphOnTrackersV5BurndownDataTest extends \Tuleap\Test\PHPUnit\TestCase
         $remaining_efforts = [
             20170901 => [
                 5215 => null,
-                5217 => null
+                5217 => null,
             ],
             20170902 => [
                 5215 => '1.0000',
                 5217 => null,
                 5239 => null,
-                5241 => '13.0000'
+                5241 => '13.0000',
             ],
             20170904 => [
                 5215 => '0',
                 5217 => '0',
                 5239 => '0',
-                5241 => '0'
-            ]
+                5241 => '0',
+            ],
         ];
         $start_date        = mktime(8, 0, 0, 9, 1, 2017);
         $duration          = 5;
@@ -210,7 +210,7 @@ class GraphOnTrackersV5BurndownDataTest extends \Tuleap\Test\PHPUnit\TestCase
             'Sun 03' => [14],
             'Mon 04' => [0],
             'Tue 05' => [0],
-            'Wed 06' => [0]
+            'Wed 06' => [0],
         ];
         $burndown_values = $burndown->getComputedData();
 
@@ -222,18 +222,18 @@ class GraphOnTrackersV5BurndownDataTest extends \Tuleap\Test\PHPUnit\TestCase
         $remaining_efforts = [
             20170901 => [
                 5215 => null,
-                5217 => null
+                5217 => null,
             ],
             20170902 => [
                 5215 => 500,
-                5241 => 40
+                5241 => 40,
             ],
             20170903 => [
                 5215 => 0,
                 5217 => 0,
                 5239 => 0,
-                5241 => 0
-            ]
+                5241 => 0,
+            ],
         ];
         $start_date        = mktime(8, 0, 0, 9, 1, 2017);
         $duration          = 20;
@@ -260,8 +260,8 @@ class GraphOnTrackersV5BurndownDataTest extends \Tuleap\Test\PHPUnit\TestCase
         $remaining_efforts = [
             $yesterday => [
                 5215 => 10,
-                5217 => 20
-            ]
+                5217 => 20,
+            ],
         ];
         $duration          = 5;
         $time_period       = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);

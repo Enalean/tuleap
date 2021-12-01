@@ -66,7 +66,7 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->andReturns(
             [
                 $admin_service,
-                $git_service
+                $git_service,
             ]
         );
 
@@ -158,7 +158,7 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCreatesAProjectWithRestrictedVisibilityFromWebPayload(
         bool $is_public,
         bool $allow_restricted,
-        string $expected_visibility
+        string $expected_visibility,
     ): void {
         ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
@@ -189,7 +189,7 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
             TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
             [
                 'project' => [
-                    'is_public' => '1'
+                    'is_public' => '1',
                 ],
             ]
         );

@@ -49,7 +49,7 @@ class ItemRepresentationCollectionBuilder
         \Docman_ItemFactory $item_factory,
         \Docman_PermissionsManager $permission_manager,
         ItemRepresentationVisitor $item_representation_visitor,
-        \Docman_ItemDao $item_dao
+        \Docman_ItemDao $item_dao,
     ) {
         $this->item_factory                = $item_factory;
         $this->permission_manager          = $permission_manager;

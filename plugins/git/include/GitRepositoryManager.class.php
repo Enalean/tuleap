@@ -101,7 +101,7 @@ class GitRepositoryManager
         FineGrainedPermissionReplicator $fine_grained_replicator,
         ProjectHistoryDao $history_dao,
         HistoryValueFormatter $history_value_formatter,
-        EventManager $event_manager
+        EventManager $event_manager,
     ) {
         $this->repository_factory       = $repository_factory;
         $this->git_system_event_manager = $git_system_event_manager;
@@ -247,7 +247,7 @@ class GitRepositoryManager
         $namespace,
         $scope,
         array $forkPermissions,
-        $multiple_fork
+        $multiple_fork,
     ) {
         $clone = clone $repository;
         $clone->setProject($to_project);
@@ -289,7 +289,7 @@ class GitRepositoryManager
 
     private function mirrorForkedRepository(
         GitRepository $forked_repository,
-        GitRepository $base_repository
+        GitRepository $base_repository,
     ) {
         $base_repository_mirrors = $this->mirror_data_mapper->fetchAllRepositoryMirrors($base_repository);
 

@@ -73,7 +73,7 @@ class XMLExportVisitor implements ItemVisitor
         ArchiveInterface $archive,
         Docman_VersionFactory $version_factory,
         UserXMLExporter $user_exporter,
-        PermissionsExporter $permissions_exporter
+        PermissionsExporter $permissions_exporter,
     ) {
         $this->logger               = $logger;
         $this->archive              = $archive;

@@ -33,7 +33,7 @@ class Tracker_XML_Updater_ChangesetXMLUpdater
 
     public function __construct(
         Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor $visitor,
-        Tracker_FormElementFactory $formelement_factory
+        Tracker_FormElementFactory $formelement_factory,
     ) {
         $this->visitor             = $visitor;
         $this->formelement_factory = $formelement_factory;
@@ -44,7 +44,7 @@ class Tracker_XML_Updater_ChangesetXMLUpdater
         SimpleXMLElement $artifact_xml,
         array $submitted_values,
         PFUser $user,
-        $submitted_on
+        $submitted_on,
     ) {
         $this->addSubmittedInformation($artifact_xml->changeset, $user, $submitted_on);
 

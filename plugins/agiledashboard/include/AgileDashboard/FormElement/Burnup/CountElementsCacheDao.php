@@ -30,7 +30,7 @@ class CountElementsCacheDao extends DataAccessObject
         int $artifact_id,
         int $timestamp,
         int $total_subelements,
-        int $closed_subelements
+        int $closed_subelements,
     ): void {
         $this->getDB()->run(
             "REPLACE INTO plugin_agiledashboard_tracker_field_burnup_cache_subelements

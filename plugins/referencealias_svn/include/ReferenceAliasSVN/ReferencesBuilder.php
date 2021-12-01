@@ -46,7 +46,7 @@ class ReferencesBuilder
     public function __construct(
         Dao $dao,
         ProjectManager $project_manager,
-        RepositoryManager $repository_manager
+        RepositoryManager $repository_manager,
     ) {
         $this->dao                = $dao;
         $this->project_manager    = $project_manager;
@@ -78,8 +78,8 @@ class ReferencesBuilder
                         (?P<val>[0-9]+)
                     )
                     (?![_A-Za-z0-9])   # ensure the pattern is not folloed by digits or letters
-                /x'
-            ]
+                /x',
+            ],
         ];
     }
 

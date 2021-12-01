@@ -52,8 +52,8 @@ class TuleapSOAPServer extends SoapServer
             'ssl' => [
                 'verify_peer' => false,
                 'verify_peer_name' => false,
-                'allow_self_signed' => true
-            ]
+                'allow_self_signed' => true,
+            ],
         ]);
         $wsdl_content = file_get_contents($wsdl_url, false, $context);
         if ($wsdl_content == "") {

@@ -48,7 +48,7 @@ class AdminAllowedProjectsGerritPresenter
     public function __construct(
         Git_RemoteServer_GerritServer $gerrit_server,
         array $allowed_projects,
-        $is_mirror_restricted
+        $is_mirror_restricted,
     ) {
         $this->gerrit                 = $gerrit_server;
         $this->allowed_projects       = $allowed_projects;

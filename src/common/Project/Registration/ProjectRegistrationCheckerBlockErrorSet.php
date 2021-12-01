@@ -40,7 +40,7 @@ final class ProjectRegistrationCheckerBlockErrorSet implements ProjectRegistrati
 
     public function collectAllErrorsForProjectRegistration(
         PFUser $user,
-        ProjectCreationData $project_creation_data
+        ProjectCreationData $project_creation_data,
     ): ProjectRegistrationErrorsCollection {
         foreach ($this->checkers as $checker) {
             $errors = $checker->collectAllErrorsForProjectRegistration($user, $project_creation_data);

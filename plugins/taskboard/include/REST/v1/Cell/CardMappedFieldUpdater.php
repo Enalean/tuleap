@@ -65,7 +65,7 @@ class CardMappedFieldUpdater
         AddValidator $add_validator,
         Tracker_REST_Artifact_ArtifactUpdater $artifact_updater,
         MappedFieldRetriever $mapped_field_retriever,
-        MappedValuesRetriever $mapped_values_retriever
+        MappedValuesRetriever $mapped_values_retriever,
     ) {
         $this->column_factory              = $column_factory;
         $this->milestone_tracker_retriever = $milestone_tracker_retriever;
@@ -96,7 +96,7 @@ class CardMappedFieldUpdater
         Artifact $swimlane_artifact,
         int $column_id,
         Artifact $artifact_to_add,
-        PFUser $current_user
+        PFUser $current_user,
     ) {
         $column            = $this->getColumn($column_id);
         $milestone_tracker = $this->getMilestoneTracker($column);
@@ -142,7 +142,7 @@ class CardMappedFieldUpdater
     private function buildUpdateValues(
         TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column,
-        PFUser $current_user
+        PFUser $current_user,
     ): array {
         $representation                 = new ArtifactValuesRepresentation();
         $mapped_field                   = $this->getMappedField($taskboard_tracker, $column, $current_user);
@@ -158,7 +158,7 @@ class CardMappedFieldUpdater
     private function getMappedField(
         TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column,
-        PFUser $current_user
+        PFUser $current_user,
     ): Tracker_FormElement_Field_Selectbox {
         $mapped_field = $this->mapped_field_retriever->getField($taskboard_tracker);
         if ($mapped_field === null) {

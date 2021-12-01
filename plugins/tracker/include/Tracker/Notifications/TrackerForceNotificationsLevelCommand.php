@@ -50,7 +50,7 @@ class TrackerForceNotificationsLevelCommand extends Command
         = [
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT_LABEL,
             Tracker::NOTIFICATIONS_LEVEL_DISABLED_LABEL,
-            Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE_LABEL
+            Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE_LABEL,
         ];
     /**
      * @var NotificationLevelExtractor
@@ -66,7 +66,7 @@ class TrackerForceNotificationsLevelCommand extends Command
         ProjectManager $project_manager,
         NotificationLevelExtractor $notification_level_extractor,
         TrackerFactory $tracker_factory,
-        \TrackerDao $tracker_dao
+        \TrackerDao $tracker_dao,
     ) {
         parent::__construct(self::NAME);
         $this->force_usage_updater          = $force_usage_updater;

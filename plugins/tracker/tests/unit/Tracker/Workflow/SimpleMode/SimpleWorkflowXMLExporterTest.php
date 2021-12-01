@@ -97,7 +97,7 @@ class SimpleWorkflowXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 'V114-0' => '200',
                 'V114-1' => '201',
                 'V114-2' => '410',
-            ]
+            ],
         ];
 
         $exporter->exportToXML($workflow, $xml, $mapping);

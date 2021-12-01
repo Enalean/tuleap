@@ -71,7 +71,7 @@ class Tracker_XML_Exporter_ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\
             ->shouldReceive('getChangesets')
             ->andReturn([
                 $previous_changeset,
-                $this->changeset
+                $this->changeset,
             ]);
     }
 

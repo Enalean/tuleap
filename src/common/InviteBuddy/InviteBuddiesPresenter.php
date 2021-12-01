@@ -49,7 +49,7 @@ class InviteBuddiesPresenter
     public function __construct(
         bool $can_buddies_be_invited,
         bool $is_limit_reached,
-        int $max_limit_by_day
+        int $max_limit_by_day,
     ) {
         $this->can_buddies_be_invited = $can_buddies_be_invited;
         $this->is_limit_reached       = $is_limit_reached;

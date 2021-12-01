@@ -61,7 +61,7 @@ class SwitchToPresenter
         bool $is_trove_cat_enabled,
         bool $is_search_available,
         bool $is_forcing_legacy_label,
-        SearchFormPresenter $search_form
+        SearchFormPresenter $search_form,
     ) {
         $this->projects                     = json_encode($projects, JSON_THROW_ON_ERROR);
         $this->are_restricted_users_allowed = $are_restricted_users_allowed;

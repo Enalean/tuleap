@@ -37,7 +37,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
         Tracker_IDisplayTrackerLayout $layout,
         TypeIsChildLinkRetriever $retriever,
         VisitRecorder $visit_recorder,
-        HiddenFieldsetsDetector $hidden_fieldsets_detector
+        HiddenFieldsetsDetector $hidden_fieldsets_detector,
     ) {
         parent::__construct($event_manager, $artifact, $layout, $retriever, $visit_recorder, $hidden_fieldsets_detector);
         $this->redirect->query_parameters = [
@@ -63,8 +63,8 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
         $breadcrumbs = [
             [
                 'title' => $title,
-                'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId() . '&func=copy-artifact'
-            ]
+                'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId() . '&func=copy-artifact',
+            ],
         ];
 
         ListFieldsIncluder::includeListFieldsAssets($this->tracker->getId());

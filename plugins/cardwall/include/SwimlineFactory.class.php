@@ -66,7 +66,7 @@ class Cardwall_SwimlineFactory
         return [
             'column_id' => $column->getId(),
             'column_stacked' => $column->isAutostacked(),
-            'cardincell_presenters' => $retained_presenters
+            'cardincell_presenters' => $retained_presenters,
         ];
     }
 

@@ -36,7 +36,7 @@ class PullRequestUpdateCommitDiff
         string $old_src_reference,
         string $new_src_reference,
         string $old_dst_reference,
-        string $new_dst_reference
+        string $new_dst_reference,
     ): array {
         $new_commit_references = $git_exec->revList($new_dst_reference, $new_src_reference);
 
