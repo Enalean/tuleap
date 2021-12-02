@@ -38,7 +38,6 @@ use Tuleap\Tracker\Admin\HeaderPresenter;
 use Tuleap\Tracker\Admin\TrackerGeneralSettingsChecker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
-use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
@@ -81,6 +80,8 @@ use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
+use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
+use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\Tooltip\TooltipStatsPresenter;
 use Tuleap\Tracker\Tooltip\TrackerStats;
 use Tuleap\Tracker\TrackerColor;
@@ -1959,31 +1960,25 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @param PFUser $user The user to test (current user if not defined)
      *
-     * @return bool true if user has persission to submit artifacts, false otherwise
+     * @deprecated see TrackerArtifactSubmissionPermission::userCanSubmitArtifact
      */
-    public function userCanSubmitArtifact($user = false)
+    public function userCanSubmitArtifact($user = false): bool
     {
         if (! $user instanceof PFUser) {
             $um   = UserManager::instance();
             $user = $um->getCurrentUser();
         }
 
-        if ($user->isAnonymous() || ! $this->userCanView($user)) {
-            return false;
-        }
+        return $this->getTrackerArtifactSubmissionPermission()
+                    ->canUserSubmitArtifact($user, $this);
+    }
 
-        $can_submit = false;
-        foreach ($this->getFormElementFactory()->getUsedFields($this) as $form_element) {
-            if ($form_element->userCanSubmit($user)) {
-                $can_submit = true;
-            }
-        }
-
-        if ($can_submit) {
-            return EventManager::instance()->dispatch(new CanSubmitNewArtifact($user, $this))->canSubmitNewArtifact();
-        }
-
-        return false;
+    /**
+     * protected for testing purpose
+     */
+    protected function getTrackerArtifactSubmissionPermission(): VerifySubmissionPermissions
+    {
+        return SubmissionPermissionVerifier::instance();
     }
 
     public function getInformationsFromOtherServicesAboutUsage()

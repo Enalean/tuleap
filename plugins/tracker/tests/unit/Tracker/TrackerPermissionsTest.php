@@ -31,7 +31,6 @@ use Tracker;
 use Tracker_CannedResponseFactory;
 use Tracker_CannedResponseManager;
 use Tracker_DateReminderManager;
-use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 use Tracker_Hierarchy;
 use Tracker_HierarchyFactory;
@@ -43,27 +42,24 @@ use TrackerFactory;
 use TrackerManager;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
+use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
 use User_ForgeUserGroupPermissionsManager;
 use UserManager;
 use Workflow;
 use WorkflowFactory;
 use WorkflowManager;
 
-class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     private $all_trackers_admin_user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project_private;
+
+    private Project $project;
+    private Project $project_private;
     /**
      * @var Mockery\Mock|Tracker
      */
@@ -167,16 +163,8 @@ class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function setUp(): void
     {
-        $this->project = Mockery::mock(Project::class);
-
-        $this->project->shouldReceive('getID')->andReturns(101);
-        $this->project->shouldReceive('isPublic')->andReturns(true);
-        $this->project->shouldReceive('isActive')->andReturns(true);
-
-        $this->project_private = Mockery::mock(Project::class);
-        $this->project_private->shouldReceive('getID')->andReturns(102);
-        $this->project_private->shouldReceive('isPublic')->andReturns(false);
-        $this->project_private->shouldReceive('isActive')->andReturns(true);
+        $this->project         = ProjectTestBuilder::aProject()->withAccess(\Project::ACCESS_PUBLIC)->withId(101)->build();
+        $this->project_private = ProjectTestBuilder::aProject()->withAccess(\Project::ACCESS_PRIVATE)->withId(102)->build();
 
         $this->tracker         = Mockery::mock(Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->tracker1        = Mockery::mock(Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -399,150 +387,28 @@ class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     // New artifact permissions
-    public function testPermsNewArtifactSiteAdmin()
+    public function testItDelegatesPermissionToVerifier(): void
     {
         $request_new_artifact = Mockery::mock(Codendi_Request::class);
         $request_new_artifact->shouldReceive('get')->withArgs(['func'])->andReturns('new-artifact');
 
-        $tracker_field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $tracker_field->shouldReceive('userCanSubmit')->andReturns(true);
-        $this->formelement_factory->shouldReceive('getUsedFields')->andReturns(
-            [
-                $tracker_field,
-            ]
-        );
-
-        // site admin can submit artifacts
-        $this->tracker->shouldReceive('userCanView')->andReturns(true);
+        $this->tracker->shouldReceive('getTrackerArtifactSubmissionPermission')->andReturns(VerifySubmissionPermissionStub::withSubmitPermission());
         $this->tracker->shouldReceive('displaySubmit')->once();
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->site_admin_user);
     }
 
-    public function testPermsNewArtifactProjectAdmin()
+    public function testItDoesNotDIsplaySubmitWhenUserHasNoPermissions(): void
     {
         $request_new_artifact = Mockery::mock(Codendi_Request::class);
         $request_new_artifact->shouldReceive('get')->withArgs(['func'])->andReturns('new-artifact');
 
-        $tracker_field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $tracker_field->shouldReceive('userCanSubmit')->andReturn(true);
-        $this->formelement_factory->shouldReceive('getUsedFields')->andReturn(
-            [
-                $tracker_field,
-            ]
-        );
-
-        // project admin can submit artifacts
-        $this->tracker->shouldReceive('userCanView')->andReturn(true);
-        $this->tracker->shouldReceive('displaySubmit')->once();
-        $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->project_admin_user);
-    }
-
-    public function testPermsNewArtifactTrackerAdmin()
-    {
-        $request_new_artifact = Mockery::mock(Codendi_Request::class);
-        $request_new_artifact->shouldReceive('get')->withArgs(['func'])->andReturns('new-artifact');
-
-        $tracker_field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $tracker_field->shouldReceive('userCanSubmit')->andReturn(true);
-        $this->formelement_factory->shouldReceive('getUsedFields')->andReturn(
-            [
-                $tracker_field,
-            ]
-        );
-
-        // tracker admin can submit artifacts
-        $this->tracker->shouldReceive('userCanView')->andReturn(true);
-        $this->tracker->shouldReceive('displaySubmit')->once();
-        $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->all_trackers_admin_user);
-    }
-
-    public function testPermsNewArtifactProjectMember()
-    {
-        $request_new_artifact = Mockery::mock(Codendi_Request::class);
-        $request_new_artifact->shouldReceive('get')->withArgs(['func'])->andReturns('new-artifact');
-
-        $tracker_field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $tracker_field->shouldReceive('userCanSubmit')->andReturn(true);
-        $this->tracker->shouldReceive('userCanView')->andReturn(true);
-        $this->formelement_factory->shouldReceive('getUsedFields')->andReturn(
-            [
-                $tracker_field,
-            ]
-        );
-
-        // project member can submit artifacts
-        $this->tracker->shouldReceive('displaySubmit')->once();
-        $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->project_member_user);
-    }
-
-    public function testPermsNewArtifactRegisteredUser()
-    {
-        $request_new_artifact = Mockery::mock(Codendi_Request::class);
-        $request_new_artifact->shouldReceive('get')->withArgs(['func'])->andReturns('new-artifact');
-
-        $tracker_field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $tracker_field->shouldReceive('userCanSubmit')->andReturn(true);
-        $this->tracker->shouldReceive('userCanView')->andReturn(true);
-        $this->formelement_factory->shouldReceive('getUsedFields')->andReturn(
-            [
-                $tracker_field,
-            ]
-        );
-
-        // registered user can submit artifacts
-        $this->tracker->shouldReceive('displaySubmit')->once();
-        $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->registered_user);
-    }
-
-    public function testUserCannotCreateArtifactIfTheyDoNotHaveSubmitPermissionsOnAtLeastOneField()
-    {
-        $request_new_artifact = Mockery::mock(Codendi_Request::class);
-        $request_new_artifact->shouldReceive('get')->withArgs(['func'])->andReturns('new-artifact');
-
-        $tracker_field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $tracker_field->shouldReceive('userCanSubmit')->andReturn(false);
-        $tracker_field2 = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $tracker_field2->shouldReceive('userCanSubmit')->andReturn(false);
-        $this->formelement_factory->shouldReceive('getUsedFields')->andReturn(
-            [
-                $tracker_field,
-                $tracker_field2,
-            ]
-        );
-
-        $this->tracker->shouldReceive('userCanView')->withArgs([$this->registered_user])->andReturn(true);
+        $this->tracker->shouldReceive('getTrackerArtifactSubmissionPermission')->andReturns(VerifySubmissionPermissionStub::withoutSubmitPermission());
+        $this->tracker->shouldReceive('displaySubmit')->never();
 
         $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
-        // registered user can submit artifacts
-        $this->tracker->shouldReceive('displaySubmit')->never();
-        $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->registered_user);
-    }
-
-    public function testUserCanCreateArtifactEvenIfTheyDoNotHaveSubmitPermissionsOnAllRequiredFields()
-    {
-        $request_new_artifact = Mockery::mock(Codendi_Request::class);
-        $request_new_artifact->shouldReceive('get')->withArgs(['func'])->andReturns('new-artifact');
-
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error']);
-
-        $tracker_field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $tracker_field->shouldReceive('userCanSubmit')->andReturn(false);
-        $tracker_field->shouldReceive('isRequired')->andReturn(true);
-        $tracker_field2 = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $tracker_field2->shouldReceive('userCanSubmit')->andReturn(true);
-        $this->formelement_factory->shouldReceive('getUsedFields')->andReturn(
-            [
-                $tracker_field,
-                $tracker_field2,
-            ]
-        );
-
-        // registered user can submit artifacts
-        $this->tracker->shouldReceive('userCanView')->andReturn(true);
-        $this->tracker->shouldReceive('displaySubmit')->once();
-        $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->registered_user);
+        $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->site_admin_user);
     }
 
     // Tracker admin permissions
