@@ -189,6 +189,11 @@ final class ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertCount(1, $matches);
         $this->assertEquals('ref', $matches[0]['key']);
         $this->assertEquals('12784', $matches[0]['value']);
+
+        $matches = $this->rm->_extractAllMatches('See ref #a.b-c_d/12784.');
+        $this->assertCount(1, $matches);
+        $this->assertEquals('ref', $matches[0]['key']);
+        $this->assertEquals('a.b-c_d/12784', $matches[0]['value']);
     }
 
     public function testUpdateProjectReferenceShortName(): void

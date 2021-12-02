@@ -647,19 +647,21 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
 
     /**
      * the regexp used to find a reference
-     * @return string $exp the string which may the regexp
      */
-    public function _getExpForRef() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    public function _getExpForRef(): string // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        $exp = "`
+        return "`
+            (?(DEFINE)
+                (?<final_value_sequence>\w|&amp;|&)                         # Any word, & or &amp;
+                (?<extended_value_sequence>(?&final_value_sequence)|-|_|\.) # <final_value_sequence>, -, _ or .
+            )
             (?P<key>\w+)
             \s          #blank separator
             \#          #dash (2 en 1)
             (?P<project_name>[\w\-]+:)? #optional project name (followed by a colon)
-            (?P<value>(?:&amp;|\w|/|&)+?) #any combination of &, &amp;, a word or a slash
+            (?P<value>(?:(?:(?&extended_value_sequence)+/)*)?(?&final_value_sequence)+?) # Sequence of multiple '<extended_value_sequence>/' ending with <final_value_sequence>
             (?P<after_reference>&(?:\#(?:\d+|[xX][[:xdigit:]]+)|quot);|(?=[^\w&/])|$) # Exclude HTML dec, hex and some (quot) named entities from the end of the reference
         `x";
-        return $exp;
     }
 
     /*
