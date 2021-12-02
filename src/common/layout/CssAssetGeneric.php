@@ -23,32 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout;
 
-class CssAsset implements CssAssetGeneric
+interface CssAssetGeneric
 {
-    /**
-     * @var IncludeAssets
-     * @psalm-readonly
-     */
-    protected $include_assets;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    protected $name;
-
-    public function __construct(IncludeAssets $include_assets, $name)
-    {
-        $this->include_assets = $include_assets;
-        $this->name           = $name;
-    }
-
-    public function getFileURL(ThemeVariation $variant): string
-    {
-        return $this->include_assets->getFileURL($this->name . $variant->getFileColorSuffix() . '.css');
-    }
-
-    public function getIdentifier(): string
-    {
-        return $this->include_assets->getPath($this->name);
-    }
+    public function getFileURL(ThemeVariation $variant): string;
+    public function getIdentifier(): string;
 }

@@ -93,9 +93,9 @@ abstract class BaseLayout extends Response
      */
     protected $css_assets;
     /**
-     * @var JavascriptAsset[]
+     * @var JavascriptAssetGeneric[]
      */
-    protected $javascript_assets = [];
+    protected array $javascript_assets = [];
 
     /**
      * @var string
@@ -122,12 +122,13 @@ abstract class BaseLayout extends Response
     }
 
     abstract public function header(array $params);
+    abstract protected function hasHeaderBeenWritten(): bool;
     abstract public function footer(array $params);
     abstract public function displayStaticWidget(Widget_Static $widget);
     abstract public function includeCalendarScripts();
     abstract protected function getUser();
 
-    public function addCssAsset(CssAsset $asset)
+    public function addCssAsset(CssAssetGeneric $asset): void
     {
         $this->css_assets = $this->css_assets->merge(new CssAssetCollection([$asset]));
     }
@@ -186,8 +187,11 @@ abstract class BaseLayout extends Response
         $this->javascript_in_footer[] = ['file' => $file];
     }
 
-    public function addJavascriptAsset(JavascriptAsset $asset): void
+    public function addJavascriptAsset(JavascriptAssetGeneric $asset): void
     {
+        if ($this->hasHeaderBeenWritten() && ($asset->getType() === 'module' || $asset->getAssociatedCSSAssets()->getDeduplicatedAssets() !== [])) {
+            throw new \RuntimeException('JavaScript module asset or with associated CSS assets must be added before the page header is written');
+        }
         $this->javascript_assets[] = $asset;
     }
 

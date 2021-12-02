@@ -25,8 +25,8 @@ namespace Tuleap\APIExplorer;
 use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
@@ -36,25 +36,17 @@ final class ExplorerController implements DispatchableWithRequestNoAuthz, Dispat
      * @var TemplateRenderer
      */
     private $renderer;
-    /**
-     * @var IncludeAssets
-     */
-    private $assets;
 
-    public function __construct(TemplateRenderer $renderer, IncludeAssets $assets)
+    public function __construct(TemplateRenderer $renderer, private IncludeViteAssets $assets)
     {
         $this->renderer = $renderer;
-        $this->assets   = $assets;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment(\api_explorerPlugin::SERVICE_NAME_INSTRUMENTATION);
 
-        $layout->includeFooterJavascriptFile($this->assets->getFileURL('api-explorer.js'));
-        $layout->addCssAsset(
-            new CssAssetWithoutVariantDeclinaisons($this->assets, 'style-api-explorer')
-        );
+        $layout->addJavascriptAsset(new JavascriptViteAsset($this->assets, 'scripts/index.tsx'));
 
         $layout->header(['title' => dgettext('tuleap-api_explorer', 'API Explorer'), 'main_classes' => ['tlp-framed']]);
         $this->renderer->renderToPage('explorer', []);

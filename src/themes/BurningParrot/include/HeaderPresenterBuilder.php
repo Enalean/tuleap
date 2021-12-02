@@ -23,7 +23,6 @@ namespace Tuleap\Theme\BurningParrot;
 use Event;
 use EventManager;
 use PFUser;
-use ThemeVariant;
 use ThemeVariantColor;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\HelpDropdown\HelpDropdownPresenter;
@@ -31,6 +30,7 @@ use Tuleap\InviteBuddy\InviteBuddiesPresenter;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithDensityVariants;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\Layout\SidebarPresenter;
@@ -73,7 +73,14 @@ class HeaderPresenterBuilder
     private $is_in_siteadmin;
     /** @var ProjectContextPresenter|null */
     private $project_context;
+    /**
+     * @var JavascriptAssetGeneric[]
+     */
+    private array $javascript_assets;
 
+    /**
+     * @param JavascriptAssetGeneric[] $javascript_assets
+     */
     public function build(
         NavbarPresenterBuilder $navbar_presenter_builder,
         PFUser $current_user,
@@ -96,6 +103,9 @@ class HeaderPresenterBuilder
         IDetectIfLogoIsCustomized $customized_logo_detector,
         ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
         DetectedBrowser $detected_browser,
+        ThemeVariantColor $theme_color,
+        ThemeVariation $theme_variation,
+        array $javascript_assets,
     ) {
         $this->navbar_presenter_builder = $navbar_presenter_builder;
         $this->current_user             = $current_user;
@@ -107,9 +117,7 @@ class HeaderPresenterBuilder
         $this->css_assets               = $css_assets;
         $this->is_in_siteadmin          = $is_in_siteadmin;
         $this->project_context          = $project_context;
-
-        $color           = $this->getMainColor();
-        $theme_variation = new ThemeVariation($color, $current_user);
+        $this->javascript_assets        = $javascript_assets;
 
         $is_legacy_logo_customized = $customized_logo_detector->isLegacyOrganizationLogoCustomized();
         $is_svg_logo_customized    = $customized_logo_detector->isSvgOrganizationLogoCustomized();
@@ -127,8 +135,8 @@ class HeaderPresenterBuilder
                 $is_svg_logo_customized,
                 $platform_banner,
             ),
-            $color,
-            $this->getStylesheets($theme_variation),
+            $theme_color,
+            $this->getStylesheets($theme_color, $theme_variation),
             $feedback_logs,
             $this->getBodyClassesAsString(),
             $this->getMainClassesAsString(),
@@ -163,7 +171,7 @@ class HeaderPresenterBuilder
         return $page_title;
     }
 
-    private function getStylesheets(ThemeVariation $theme_variation): array
+    private function getStylesheets(ThemeVariantColor $theme_color, ThemeVariation $theme_variation): array
     {
         $core_assets      = new \Tuleap\Layout\IncludeCoreAssets();
         $css_assets       = new CssAssetCollection(
@@ -174,6 +182,9 @@ class HeaderPresenterBuilder
             ]
         );
         $this->css_assets = $css_assets->merge($this->css_assets);
+        foreach ($this->javascript_assets as $javascript_asset) {
+            $this->css_assets = $this->css_assets->merge($javascript_asset->getAssociatedCSSAssets());
+        }
 
         $stylesheets = [];
         foreach ($this->css_assets->getDeduplicatedAssets() as $css_asset) {
@@ -183,19 +194,13 @@ class HeaderPresenterBuilder
         EventManager::instance()->processEvent(
             Event::BURNING_PARROT_GET_STYLESHEETS,
             [
-                'variant'         => $this->getMainColor(),
+                'variant'         => $theme_color,
                 'stylesheets'     => &$stylesheets,
                 'theme_variation' => $theme_variation,
             ]
         );
 
         return $stylesheets;
-    }
-
-    private function getMainColor()
-    {
-        $theme_variant = new ThemeVariant();
-        return ThemeVariantColor::buildFromVariant($theme_variant->getVariantForUser($this->current_user));
     }
 
     private function getMainClassesAsString()

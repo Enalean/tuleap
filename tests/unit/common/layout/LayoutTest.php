@@ -19,7 +19,6 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Layout\CssAsset;
 
 /**
  * For all tests we have to use partial mock because there are sessions related stuff in Response class.
@@ -67,6 +66,11 @@ class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
             {
             }
 
+            public function hasHeaderBeenWritten(): bool
+            {
+                return false;
+            }
+
             protected function getEventManager()
             {
                 return \Mockery::spy(EventManager::class);
@@ -77,9 +81,17 @@ class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $l->addStylesheet($css);
         $l->addCssAsset(
-            Mockery::mock(CssAsset::class)
-                ->shouldReceive(['getFileUrl' => 'css-assets.css', 'getPath' => '/path'])
-                ->getMock()
+            new class implements \Tuleap\Layout\CssAssetGeneric {
+                public function getFileURL(\Tuleap\Layout\ThemeVariation $variant): string
+                {
+                    return 'css-assets.css';
+                }
+
+                public function getIdentifier(): string
+                {
+                    return '/path';
+                }
+            }
         );
 
         ob_start();

@@ -33,6 +33,8 @@ final class TestLayout extends BaseLayout
      * @var LayoutInspector
      */
     private $inspector;
+    private bool $header_has_been_written = false;
+
 
     public function __construct(LayoutInspector $inspector)
     {
@@ -42,6 +44,12 @@ final class TestLayout extends BaseLayout
 
     public function header(array $params)
     {
+        $this->header_has_been_written = true;
+    }
+
+    protected function hasHeaderBeenWritten(): bool
+    {
+        return $this->header_has_been_written;
     }
 
     public function footer(array $params)

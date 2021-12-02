@@ -61,11 +61,16 @@ export function defineAppConfig(
     config: OverloadedAppUserConfig,
     typechecks: null | Pick<PluginCheckerConfig, "typescript" | "vls" | "vueTsc">
 ): UserConfigExport {
+    const overridable_build_default: BuildOptions = {
+        chunkSizeWarningLimit: 3000,
+    };
+
     return defineBaseConfig(
         {
             ...config,
             base: `/assets/${app_name}/`,
             build: {
+                ...overridable_build_default,
                 ...config.build,
                 manifest: true,
                 emptyOutDir: true,

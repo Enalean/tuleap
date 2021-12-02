@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,20 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout;
 
-final class JavascriptAsset
+final class JavascriptAsset extends JavascriptAssetGeneric
 {
-    /**
-     * @var string
-     */
-    private $script_name;
-
-    public function __construct(private IncludeAssetsGeneric $assets, string $script_name)
+    public function getType(): string
     {
-        $this->script_name = $script_name;
+        return 'text/javascript';
     }
 
-    public function getFileURL(): string
+    public function getAssociatedCSSAssets(): CssAssetCollection
     {
-        return $this->assets->getFileURL($this->script_name);
+        return CssAssetCollection::empty();
     }
 }
