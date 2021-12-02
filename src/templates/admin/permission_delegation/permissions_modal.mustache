@@ -23,7 +23,7 @@
             {{# permissions }}
                 <div class="tlp-form-element">
                     <label class="tlp-label tlp-checkbox" title="{{ getDescription }}">
-                        <input type="checkbox" name="permissions[]" value="{{ getId }}" />
+                        <input type="checkbox" name="permissions[]" value="{{ getId }}" data-test="permission-{{ getId }}"/>
                         {{ getName }}
                     </label>
                 </div>
@@ -44,6 +44,7 @@
                     class="tlp-button-primary tlp-modal-action"
                     id="siteadmin-permission-delegation-add-perm-modal-submit"
                     disabled
+                    data-test="modal-add-permission-submit"
             >
                 <i class="fa fa-plus tlp-button-icon"></i> {{ permissions_modal_submit }}
             </button>

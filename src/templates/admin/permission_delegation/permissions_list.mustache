@@ -12,6 +12,7 @@
                         id="siteadmin-permission-delegation-group-details-perms-actions-add"
                         class="tlp-button-primary"
                         data-group-id="{{ id }}"
+                        data-test="button-add-a-new-delegation"
                 >
                     <i class="fa fa-plus tlp-button-icon"></i> {{ permissions_action_add }}
                 </button>
@@ -53,7 +54,7 @@
                 </table>
             {{/ has_permissions }}
             {{^ has_permissions }}
-                <section class="empty-state-pane">
+                <section class="empty-state-pane" data-test="delegation-has-no-permissions-set">
                     <p class="empty-state-text empty-state-text-smaller">{{ no_permission }}</p>
                 </section>
             {{/ has_permissions }}
