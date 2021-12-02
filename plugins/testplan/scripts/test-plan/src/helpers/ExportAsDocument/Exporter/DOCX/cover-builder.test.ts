@@ -19,7 +19,7 @@
 
 import { buildCoverPage } from "./cover-builder";
 import { createVueGettextProviderPassthrough } from "../../../vue-gettext-provider-for-test";
-import * as image_loader from "./Image/image-loader";
+import * as image_loader from "@tuleap/plugin-docgen-docx";
 import type { IContext } from "docx";
 import { File, ImageRun } from "docx";
 import type { GlobalExportProperties } from "../../../../type";

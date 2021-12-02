@@ -65,7 +65,7 @@ import { getAnchorToArtifactContent } from "./sections-anchor";
 import type { GetText } from "../../../../../../../src/scripts/tuleap/gettext/gettext-init";
 import { sprintf } from "sprintf-js";
 import { triggerBlobDownload } from "../trigger-blob-download";
-import { loadImage } from "./Image/image-loader";
+import { loadImage } from "@tuleap/plugin-docgen-docx";
 import { transformLargeContentIntoParagraphs } from "./TextContent/transform-large-content-into-paragraphs";
 import { HTML_ORDERED_LIST_NUMBERING, HTML_UNORDERED_LIST_NUMBERING } from "./html-styles";
 import type { ReadonlyArrayWithAtLeastOneElement } from "./TextContent/transform-html-into-paragraphs";

@@ -37,7 +37,7 @@ import {
     WidthType,
 } from "docx";
 import dompurify from "dompurify";
-import { loadImage } from "../Image/image-loader";
+import { loadImage } from "@tuleap/plugin-docgen-docx";
 import { transformTextWithNewlines } from "./transform-text-with-newlines";
 import { extractInlineStyles } from "./extract-style-html-element";
 import { getListInstanceID } from "./list-instance-id-generator";

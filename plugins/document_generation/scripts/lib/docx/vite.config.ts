@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,27 +18,25 @@
  */
 
 import {
+    defineConfig,
     createPOGettextPlugin,
-    defineAppConfig,
-} from "../../tools/utils/scripts/vite-configurator";
+} from "../../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
 
-export default defineAppConfig(
-    "document_generation",
+export default defineConfig(
     {
         plugins: [createPOGettextPlugin()],
         build: {
+            lib: {
+                entry: path.resolve(__dirname, "src/index.ts"),
+                name: "DocGenDocx",
+            },
             rollupOptions: {
-                input: {
-                    "tracker-report-action": path.resolve(
-                        __dirname,
-                        "scripts/tracker-report-action/src/index.ts"
-                    ),
+                external: ["docx"],
+                output: {
+                    globals: { docx: "docx" },
                 },
             },
-        },
-        resolve: {
-            dedupe: ["docx"],
         },
     },
     { typescript: true }

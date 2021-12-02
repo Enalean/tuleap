@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/concurrency-limit-pool": "file:../../src/scripts/lib/concurrency-limit-pool",
+    "@tuleap/plugin-docgen-docx": "file:../document_generation/scripts/lib/docx",
     "docx": "^7.2.0",
     "vue": "^2.6.14",
     "vue-gettext": "^2.1.12",

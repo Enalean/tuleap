@@ -32,7 +32,7 @@ import {
     TextRun,
     WidthType,
 } from "docx";
-import { loadImage } from "./Image/image-loader";
+import { loadImage } from "@tuleap/plugin-docgen-docx";
 import { buildTableCellContent, buildTableCellLabel, TABLE_BORDERS } from "./Table/table-builder";
 import { buildMilestoneTitle } from "./cover-milestone-title-builder";
 

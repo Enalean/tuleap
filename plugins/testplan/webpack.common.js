@@ -37,6 +37,9 @@ module.exports = [
         output,
         resolve: {
             extensions: [".js", ".ts", ".vue"],
+            alias: {
+                docx: path.resolve(__dirname, "node_modules", "docx"),
+            },
         },
         externals: {
             tlp: "tlp",
