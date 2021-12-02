@@ -21,10 +21,10 @@
     <div class="dropdown tracker-colorpicker">
         <a
             class="dropdown-toggle"
-            href="javascript:;"
+            href="#"
             data-target="#"
             data-toggle="dropdown"
-            v-on:click="showRightPalette"
+            v-on:click.prevent="showRightPalette"
         >
             <old-color-picker-preview v-if="show_old_preview" v-bind:color="color" />
             <color-picker-preview v-else v-bind:color="color" />

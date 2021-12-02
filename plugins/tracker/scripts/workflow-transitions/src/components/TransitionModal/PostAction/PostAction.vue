@@ -69,7 +69,7 @@
                 </optgroup>
             </select>
             <a
-                href="javascript:;"
+                href="#"
                 class="tracker-workflow-transition-modal-action-remove"
                 v-on:click.prevent="deletePostAction()"
                 v-bind:title="delete_title"
