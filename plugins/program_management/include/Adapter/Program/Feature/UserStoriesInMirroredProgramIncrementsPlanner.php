@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\ContentStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeaturePlanChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchUnlinkedUserStoriesOfMirroredProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks;
@@ -50,7 +50,7 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
         private ContentStore $content_dao,
         private LoggerInterface $logger,
         private RetrieveUser $retrieve_user,
-        private RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement $linked_to_parent_dao,
+        private SearchUnlinkedUserStoriesOfMirroredProgramIncrement $linked_to_parent_dao,
     ) {
     }
 
@@ -110,7 +110,7 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
         $fields_data = new FieldData(
             $feature_plan_change->user_stories,
             $this->linked_to_parent_dao->getUserStoriesOfMirroredProgramIncrementThatAreNotLinkedToASprint(
-                $mirrored_program_increment->getId()
+                $mirrored_program_increment
             ),
             $field_artifact_link->getId()
         );

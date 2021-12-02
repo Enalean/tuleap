@@ -34,7 +34,7 @@ final class FieldData
      */
     private $user_stories_to_add;
     /**
-     * @var array{id: int}[]
+     * @var int[]
      */
     private $user_stories_to_remove;
     /**
@@ -44,7 +44,7 @@ final class FieldData
 
     /**
      * @param FeatureChange[] $user_stories_to_add
-     * @psalm-param array{id: int}[] $user_stories_to_remove
+     * @param int[] $user_stories_to_remove
      */
     public function __construct(array $user_stories_to_add, array $user_stories_to_remove, int $artifact_link_field)
     {
@@ -85,9 +85,9 @@ final class FieldData
         array $user_stories_linked_to_milestones,
     ): array {
         $user_stories_to_remove = [];
-        foreach ($user_stories_linked_to_milestones as $value) {
-            if (! in_array((int) $value['id'], array_column($this->user_stories_to_add, "id"), true)) {
-                $user_stories_to_remove[(int) $value['id']] = (int) $value['id'];
+        foreach ($user_stories_linked_to_milestones as $user_story_id) {
+            if (! in_array($user_story_id, array_column($this->user_stories_to_add, "id"), true)) {
+                $user_stories_to_remove[$user_story_id] = $user_story_id;
             }
         }
 
