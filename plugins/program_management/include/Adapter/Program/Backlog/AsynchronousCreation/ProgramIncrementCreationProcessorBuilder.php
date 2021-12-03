@@ -148,7 +148,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
             new FieldValuesGathererRetriever($artifact_retriever, $form_element_factory),
             new SubmissionDateRetriever($artifact_retriever),
             $program_dao,
-            new ProgramAdapter($project_manager_adapter, $project_access_checker, $program_dao, $user_retriever),
+            ProgramAdapter::instance(),
         );
     }
 }
