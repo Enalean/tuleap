@@ -39,6 +39,7 @@ codendi.RTE = Class.create({
                 toggle: false,
                 default_in_html: true,
                 autoresize_when_ready: true,
+                linkShowTargetTab: false,
             },
             options || {}
         );

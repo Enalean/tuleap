@@ -45,6 +45,7 @@ const CKEDITOR_DEFAULT_OPTIONS = {
     resize_enabled: true,
     language: DEFAULT_LOCALE,
     disableNativeSpellChecker: false,
+    linkShowTargetTab: false,
 };
 
 export class TextEditor implements TextEditorInterface {

@@ -92,6 +92,7 @@ export default {
                 { name: "Superscript", element: "sup" },
             ],
             disableNativeSpellChecker: false,
+            linkShowTargetTab: false,
         });
 
         this.editor.on("instanceReady", this.onInstanceReady);

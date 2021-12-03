@@ -25,7 +25,7 @@ import "../codendi/RichTextEditor.js";
 
 tuleap.textarea.RTE = Class.create(window.codendi.RTE, {
     initialize: function ($super, element, options) {
-        options = Object.extend({ toolbar: "tuleap" }, options || {});
+        options = Object.extend({ toolbar: "tuleap", linkShowTargetTab: false }, options || {});
         this.options = Object.extend({ htmlFormat: false, id: 0 }, options || {});
         $super(element, options);
         // This div contains comment format selection buttons

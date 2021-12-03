@@ -110,6 +110,7 @@ export default class BannerPresenter extends Vue {
                 ["Bold", "Italic"],
             ],
             disableNativeSpellChecker: false,
+            linkShowTargetTab: false,
         });
 
         this.editor.on("instanceReady", this.onInstanceReady);
