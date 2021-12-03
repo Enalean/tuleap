@@ -54,12 +54,18 @@ final class IterationRedirectionParametersProxy implements IterationRedirectionP
 
     public function isRedirectionNeeded(): bool
     {
-        return $this->needsRedirectionAfterCreate();
+        return $this->needsRedirectionAfterCreate() || $this->needsRedirectionAfterUpdate();
     }
 
     public function needsRedirectionAfterCreate(): bool
     {
         return $this->increment_id !== "" &&
             $this->redirect_value === IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION;
+    }
+
+    public function needsRedirectionAfterUpdate(): bool
+    {
+        return $this->increment_id !== "" &&
+        $this->redirect_value === IterationRedirectionParameters::REDIRECT_AFTER_UPDATE_ACTION;
     }
 }

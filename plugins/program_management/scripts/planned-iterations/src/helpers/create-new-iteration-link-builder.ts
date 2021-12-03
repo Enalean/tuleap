@@ -30,3 +30,16 @@ export function buildIterationCreationUrl(
 
     return `/plugins/tracker/?${url_params.toString()}`;
 }
+
+export function buildIterationEditionUrl(
+    iteration_id: number,
+    program_increment_id: number
+): string {
+    const url_params = new URLSearchParams({
+        aid: String(iteration_id),
+        "redirect-to-planned-iterations": "update",
+        "increment-id": String(program_increment_id),
+    });
+
+    return `/plugins/tracker/?${url_params.toString()}`;
+}

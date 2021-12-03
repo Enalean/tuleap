@@ -49,6 +49,7 @@ final class BuildRedirectFormActionHandlerTest extends TestCase
             $this->event
         );
         self::assertSame(0, $this->event->getCreateIterationCount());
+        self::assertSame(0, $this->event->getUpdateIterationCount());
         self::assertSame(0, $this->event->getCreateProgramIncrementCount());
         self::assertSame(0, $this->event->getUpdateProgramIncrementCount());
     }
@@ -62,6 +63,7 @@ final class BuildRedirectFormActionHandlerTest extends TestCase
             $this->event
         );
         self::assertSame(0, $this->event->getCreateIterationCount());
+        self::assertSame(0, $this->event->getUpdateIterationCount());
         self::assertSame(0, $this->event->getCreateProgramIncrementCount());
         self::assertSame(1, $this->event->getUpdateProgramIncrementCount());
     }
@@ -76,6 +78,22 @@ final class BuildRedirectFormActionHandlerTest extends TestCase
         );
 
         self::assertSame(1, $this->event->getCreateIterationCount());
+        self::assertSame(0, $this->event->getUpdateIterationCount());
+        self::assertSame(0, $this->event->getCreateProgramIncrementCount());
+        self::assertSame(0, $this->event->getUpdateProgramIncrementCount());
+    }
+
+    public function testItRedirectsAfterAnIterationEdition(): void
+    {
+        $this->iteration_redirection_parameters = IterationRedirectionParametersStub::withUpdate();
+        BuildRedirectFormActionHandler::injectParameters(
+            $this->program_redirection_parameters,
+            $this->iteration_redirection_parameters,
+            $this->event
+        );
+
+        self::assertSame(0, $this->event->getCreateIterationCount());
+        self::assertSame(1, $this->event->getUpdateIterationCount());
         self::assertSame(0, $this->event->getCreateProgramIncrementCount());
         self::assertSame(0, $this->event->getUpdateProgramIncrementCount());
     }
@@ -89,6 +107,7 @@ final class BuildRedirectFormActionHandlerTest extends TestCase
             $this->event
         );
         self::assertSame(0, $this->event->getCreateIterationCount());
+        self::assertSame(0, $this->event->getUpdateIterationCount());
         self::assertSame(1, $this->event->getCreateProgramIncrementCount());
         self::assertSame(0, $this->event->getUpdateProgramIncrementCount());
     }

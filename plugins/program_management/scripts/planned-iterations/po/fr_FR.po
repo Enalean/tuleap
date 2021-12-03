@@ -21,6 +21,9 @@ msgstr "Créer un(e) %s"
 msgid "Create the first iteration"
 msgstr "Créer la première itération"
 
+msgid "Edit"
+msgstr "Modifier"
+
 msgid "Iterations"
 msgstr "Itérations"
 

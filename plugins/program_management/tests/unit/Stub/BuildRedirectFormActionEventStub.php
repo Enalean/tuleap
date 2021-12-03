@@ -28,13 +28,17 @@ use Tuleap\ProgramManagement\Domain\Redirections\IterationRedirectionParameters;
 
 final class BuildRedirectFormActionEventStub implements BuildRedirectFormActionEvent
 {
-    private function __construct(private int $update_program_increment, private int $create_program_increment, private int $create_iteration)
-    {
+    private function __construct(
+        private int $update_program_increment,
+        private int $create_program_increment,
+        private int $create_iteration,
+        private int $update_iteration,
+    ) {
     }
 
     public static function withCount(): self
     {
-        return new self(0, 0, 0);
+        return new self(0, 0, 0, 0);
     }
 
     public function injectAndInformUserAboutUpdatingProgramItem(): void
@@ -52,6 +56,11 @@ final class BuildRedirectFormActionEventStub implements BuildRedirectFormActionE
         $this->create_program_increment++;
     }
 
+    public function injectAndInformUserAboutUpdatingIteration(IterationRedirectionParameters $iteration_redirection_parameters): void
+    {
+        $this->update_iteration++;
+    }
+
     public function getUpdateProgramIncrementCount(): int
     {
         return $this->update_program_increment;
@@ -65,5 +74,10 @@ final class BuildRedirectFormActionEventStub implements BuildRedirectFormActionE
     public function getCreateIterationCount(): int
     {
         return $this->create_iteration;
+    }
+
+    public function getUpdateIterationCount(): int
+    {
+        return $this->update_iteration;
     }
 }

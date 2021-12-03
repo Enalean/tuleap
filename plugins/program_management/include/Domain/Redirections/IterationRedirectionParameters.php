@@ -31,6 +31,7 @@ interface IterationRedirectionParameters
     public const FLAG                         = 'redirect-to-planned-iterations';
     public const PARAM_INCREMENT_ID           = 'increment-id';
     public const REDIRECT_AFTER_CREATE_ACTION = 'create';
+    public const REDIRECT_AFTER_UPDATE_ACTION = 'update';
 
     public function getValue(): string;
 
@@ -39,4 +40,6 @@ interface IterationRedirectionParameters
     public function isRedirectionNeeded(): bool;
 
     public function needsRedirectionAfterCreate(): bool;
+
+    public function needsRedirectionAfterUpdate(): bool;
 }
