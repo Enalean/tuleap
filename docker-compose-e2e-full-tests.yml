@@ -6,23 +6,11 @@ services:
     entrypoint: /usr/share/tuleap/tests/e2e/full/tuleap/setup.sh
     environment:
       - TULEAP_FQDN=tuleap
-      - DB_HOST=db
+      - DB_HOST=${DB_HOST}
       - DB_ADMIN_USER=root
       - DB_ADMIN_PASSWORD=welcome0
     volumes:
       - .:/usr/share/tuleap:ro
-    networks:
-      - tuleap
-    depends_on:
-      - mysql57
-
-  mysql57:
-    image: ${DOCKER_REGISTRY:-docker.io}/mysql:5.7
-    environment:
-      - MYSQL_ROOT_PASSWORD=welcome0
-    volumes:
-      - ./tests/etc/DBConfig/mysql-server.cnf:/etc/mysql/mysql.conf.d/mysql-server.cnf:ro,cached
-    tmpfs: /tmp
     networks:
       - tuleap
 

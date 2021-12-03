@@ -50,9 +50,9 @@ def runSOAPTests(String db, String php) {
     """
 }
 
-def runEndToEndTests(String flavor) {
+def runEndToEndTests(String flavor, String db) {
     dir ('sources') {
-        sh "tests/e2e/${flavor}/wrap.sh '$WORKSPACE/results/e2e/${flavor}/'"
+        sh "tests/e2e/${flavor}/wrap.sh '${db}' $WORKSPACE/results/e2e/${flavor}/'"
     }
 }
 

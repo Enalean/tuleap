@@ -7,8 +7,22 @@ set -euxo pipefail
 plugins_compose_file="$(find ./plugins/*/tests/e2e/ -name docker-compose.yml -printf '-f %p ')"
 DOCKERCOMPOSE="docker-compose -f docker-compose-e2e-full-tests.yml $plugins_compose_file -p e2e-tests"
 
+case "${1:-}" in
+    "mysql57")
+    export DB_HOST="mysql57"
+    ;;
+    "mysql80")
+    export DB_HOST="mysql80"
+    ;;
+    *)
+    echo "A database type must be provided as parameter. Allowed values are:"
+    echo "* mysql57"
+    echo "* mysql80"
+    exit 1
+esac
+
 test_results_folder='./test_results_e2e_full'
-if [ "$#" -eq "1" ]; then
+if [ "$#" -eq "2" ]; then
     test_results_folder="$1"
 fi
 
