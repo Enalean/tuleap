@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveOpenFeatureC
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchOpenFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisibleByProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 final class PossibleParentHandler
@@ -55,12 +56,16 @@ final class PossibleParentHandler
 
         $programs = [];
         foreach ($program_ids as $program_id) {
-            $programs[$program_id] = ProgramIdentifier::fromId(
-                $this->program_builder,
-                $program_id,
-                $possible_parent_selector->getUser(),
-                null
-            );
+            try {
+                $programs[$program_id] = ProgramIdentifier::fromId(
+                    $this->program_builder,
+                    $program_id,
+                    $possible_parent_selector->getUser(),
+                    null
+                );
+            } catch (ProgramAccessException) {
+                continue;
+            }
         }
 
         $features = [];
@@ -72,9 +77,11 @@ final class PossibleParentHandler
                 $programs[$feature['program_id']],
                 null,
             );
+
             if (! $feature_identifier) {
                 continue;
             }
+
             $features[] = new FeatureReference(
                 $feature_identifier,
                 $feature['title']
