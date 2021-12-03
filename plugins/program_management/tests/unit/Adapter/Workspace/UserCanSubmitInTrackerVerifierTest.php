@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
-use Tracker;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
@@ -31,6 +30,7 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
 
 final class UserCanSubmitInTrackerVerifierTest extends TestCase
 {
@@ -50,8 +50,9 @@ final class UserCanSubmitInTrackerVerifierTest extends TestCase
     {
         $this->user_manager    = $this->createStub(\UserManager::class);
         $this->tracker_factory = $this->createStub(\TrackerFactory::class);
+        $submission_verifier   = VerifySubmissionPermissionStub::withSubmitPermission();
 
-        $this->verifier = new UserCanSubmitInTrackerVerifier($this->user_manager, $this->tracker_factory);
+        $this->verifier = new UserCanSubmitInTrackerVerifier($this->user_manager, $this->tracker_factory, $submission_verifier);
 
         $this->user_identifier = UserIdentifierStub::buildGenericUser();
         $this->tracker         = TrackerReferenceStub::withDefaults();
@@ -75,11 +76,9 @@ final class UserCanSubmitInTrackerVerifierTest extends TestCase
 
     public function testItReturnsUserCanSubmitArtifact(): void
     {
-        $tracker = $this->createStub(Tracker::class);
+        $tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
         $this->tracker_factory->method("getTrackerById")->willReturn($tracker);
         $this->user_manager->method("getUserById")->willReturn(UserTestBuilder::aUser()->build());
-
-        $tracker->method("userCanSubmitArtifact")->willReturn(true);
 
         self::assertTrue($this->verifier->canUserSubmitArtifact($this->user_identifier, $this->tracker));
     }

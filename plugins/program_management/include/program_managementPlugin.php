@@ -215,6 +215,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
+use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
 use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
@@ -401,7 +402,7 @@ final class program_managementPlugin extends Plugin
                 $retrieve_user,
                 new UserIsProgramAdminVerifier($retrieve_user)
             ),
-            new UserCanSubmitInTrackerVerifier($user_manager, $tracker_factory),
+            new UserCanSubmitInTrackerVerifier($user_manager, $tracker_factory, SubmissionPermissionVerifier::instance()),
             $iterations_DAO,
             new VisibleIterationTrackerRetriever($iterations_DAO, $tracker_factory, $retrieve_user)
         );
@@ -474,7 +475,7 @@ final class program_managementPlugin extends Plugin
             ),
             $retrieve_tracker_from_field,
             $retrieve_project_from_tracker,
-            new UserCanSubmitInTrackerVerifier($user_manager, $tracker_factory)
+            new UserCanSubmitInTrackerVerifier($user_manager, $tracker_factory, SubmissionPermissionVerifier::instance())
         );
 
         $project_manager_adapter = new ProjectManagerAdapter($project_manager, $user_manager_adapter);
@@ -1309,7 +1310,7 @@ final class program_managementPlugin extends Plugin
             ),
             $retrieve_tracker_from_field,
             $retrieve_project_from_tracker,
-            new UserCanSubmitInTrackerVerifier($user_manager, $tracker_factory)
+            new UserCanSubmitInTrackerVerifier($user_manager, $tracker_factory, SubmissionPermissionVerifier::instance())
         );
 
         return new CanSubmitNewArtifactHandler(

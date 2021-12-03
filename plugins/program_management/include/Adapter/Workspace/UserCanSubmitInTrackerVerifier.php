@@ -26,10 +26,11 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 
 final class UserCanSubmitInTrackerVerifier implements VerifyUserCanSubmit
 {
-    public function __construct(private \UserManager $user_manager, private \TrackerFactory $tracker_factory)
+    public function __construct(private \UserManager $user_manager, private \TrackerFactory $tracker_factory, private VerifySubmissionPermissions $verify_submission_permissions)
     {
     }
 
@@ -42,6 +43,9 @@ final class UserCanSubmitInTrackerVerifier implements VerifyUserCanSubmit
             return false;
         }
 
-        return $full_tracker->userCanSubmitArtifact($full_user);
+        return $this->verify_submission_permissions->canUserSubmitArtifact(
+            $full_user,
+            $full_tracker
+        );
     }
 }
