@@ -222,13 +222,10 @@ function updateProgramIncrementAndIteration(program_project_name: string): void 
 
     cy.get("[data-test=program-increment-toggle]").click();
     cy.get("[data-test=program-increment-plan-iterations-link]").click();
-    // There is no "edit" link yet, so we go to Trackers directly
-    cy.get("[data-test=iteration-card-header]").then(($card) => {
-        const iteration_id = String($card[0].dataset.testIterationId);
-        cy.visit("https://tuleap/plugins/tracker/?&aid=" + iteration_id);
-        cy.get("[data-test=edit-field-iteration_name]").type("{end} updated");
-        cy.get("[data-test=artifact-submit]").click();
-    });
+    cy.get("[data-test=iteration-card-header]").click();
+    cy.get("[data-test=planned-iteration-info-edit-link]").click();
+    cy.get("[data-test=edit-field-iteration_name]").type("{end} updated");
+    cy.get("[data-test=artifact-submit]").click();
 }
 
 function checkThatMirrorsAreSynchronized(team_project_name: string): void {
