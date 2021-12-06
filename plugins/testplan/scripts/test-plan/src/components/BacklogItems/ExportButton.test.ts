@@ -19,10 +19,23 @@
 
 import ExportError from "./ExportError.vue";
 
-const downloadExportDocument = jest.fn();
+const downloadXlsxExportDocument = jest.fn();
 jest.mock("../../helpers/ExportAsSpreadsheet/download-export-document", () => {
     return {
-        downloadExportDocument,
+        downloadExportDocument: downloadXlsxExportDocument,
+    };
+});
+
+const downloadDocxExportDocument = jest.fn();
+jest.mock("../../helpers/ExportAsDocument/download-export-document", () => {
+    return {
+        downloadExportDocument: downloadDocxExportDocument,
+    };
+});
+
+jest.mock("../../helpers/ExportAsDocument/feature-flag-docx", () => {
+    return {
+        isFeatureFlagDocxEnabled: (): boolean => true,
     };
 });
 
@@ -37,7 +50,8 @@ import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 
 describe("ExportButton", () => {
     beforeEach(() => {
-        downloadExportDocument.mockReset();
+        downloadXlsxExportDocument.mockReset();
+        downloadDocxExportDocument.mockReset();
     });
 
     async function createWrapper(
@@ -80,7 +94,7 @@ describe("ExportButton", () => {
                 .element.classList.contains("fa-spin")
         ).toBe(false);
 
-        downloadExportDocument.mockImplementation((): void => {
+        downloadXlsxExportDocument.mockImplementation((): void => {
             expect(
                 export_button
                     .get("[data-test=download-export-button-icon]")
@@ -165,9 +179,9 @@ describe("ExportButton", () => {
         ).toBe(true);
     });
 
-    it("Export button icon does not stay in loading mode in case of failure", async () => {
+    it("Export button icon does not stay in loading mode in case of xlsx failure", async () => {
         const error = new Error("Something bad happened");
-        downloadExportDocument.mockRejectedValue(error);
+        downloadXlsxExportDocument.mockRejectedValue(error);
         const consoleErrorSpy = jest.spyOn(global.console, "error").mockImplementation();
 
         const wrapper = await createWrapper(
@@ -182,6 +196,45 @@ describe("ExportButton", () => {
         );
 
         const download_button = wrapper.get("[data-test=testplan-export-xlsx-button]");
+
+        await download_button.trigger("click");
+
+        try {
+            // Needs 4 ticks so the component can be rendered after the error in the async v-on handler
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.$nextTick();
+        } finally {
+            expect(consoleErrorSpy).toHaveBeenCalled();
+            consoleErrorSpy.mockRestore();
+        }
+
+        expect(
+            wrapper
+                .get("[data-test=download-export-button-icon]")
+                .element.classList.contains("fa-spin")
+        ).toBe(false);
+        expect(wrapper.findComponent(ExportError).exists()).toBe(true);
+    });
+
+    it("Export button icon does not stay in loading mode in case of docx failure", async () => {
+        const error = new Error("Something bad happened");
+        downloadDocxExportDocument.mockRejectedValue(error);
+        const consoleErrorSpy = jest.spyOn(global.console, "error").mockImplementation();
+
+        const wrapper = await createWrapper(
+            {
+                is_loading: false,
+                has_loading_error: false,
+            } as BacklogItemState,
+            {
+                is_loading: false,
+                has_loading_error: false,
+            } as CampaignState
+        );
+
+        const download_button = wrapper.get("[data-test=testplan-export-docx-button]");
 
         await download_button.trigger("click");
 
