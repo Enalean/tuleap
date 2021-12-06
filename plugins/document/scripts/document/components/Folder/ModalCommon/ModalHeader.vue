@@ -38,13 +38,18 @@
         </button>
     </div>
 </template>
-<script>
-export default {
-    name: "ModalHeader",
-    props: {
-        modalTitle: String,
-        ariaLabelledBy: String,
-        iconHeaderClass: String,
-    },
-};
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+
+@Component
+export default class ModalHeader extends Vue {
+    @Prop({ required: true })
+    readonly modalTitle!: string;
+
+    @Prop({ required: true })
+    readonly ariaLabelledBy!: string;
+
+    @Prop({ required: true })
+    readonly iconHeaderClass!: string;
+}
 </script>
