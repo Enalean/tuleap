@@ -17,64 +17,69 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import localVue from "../../../../helpers/local-vue.js";
+import { createDocumentLocalVue } from "../../../../helpers/local-vue-for-test";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomMetadataString from "./CustomMetadataString.vue";
+import type { Metadata } from "../../../../store/metadata/module";
 
 describe("CustomMetadataString", () => {
-    let factory;
-    beforeEach(() => {
-        factory = (props = {}) => {
-            return shallowMount(CustomMetadataString, {
-                localVue,
-                propsData: { ...props },
-            });
-        };
-    });
+    async function createWrapper(metadata: Metadata): Promise<Wrapper<CustomMetadataString>> {
+        return shallowMount(CustomMetadataString, {
+            localVue: await createDocumentLocalVue(),
+            propsData: { currentlyUpdatedItemMetadata: metadata },
+        });
+    }
 
-    it(`renders an input with a required value`, () => {
+    it(`renders an input with a required value`, async () => {
         const currentlyUpdatedItemMetadata = {
             value: "string value",
             is_required: true,
             name: "field",
             type: "string",
-        };
-        const wrapper = factory({ currentlyUpdatedItemMetadata });
-        const date_input = wrapper.get("[data-test=document-string-input]");
+        } as Metadata;
+        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        const string_input = wrapper.get("[data-test=document-string-input]");
 
-        expect(date_input.element.value).toEqual("string value");
-        expect(date_input.element.required).toBe(true);
+        if (!(string_input.element instanceof HTMLInputElement)) {
+            throw new Error("Could not find string element in component");
+        }
+        expect(string_input.element.value).toEqual("string value");
+        expect(string_input.element.required).toBe(true);
         expect(
             wrapper.find("[data-test=document-custom-metadata-is-required]").exists()
         ).toBeTruthy();
     });
 
-    it(`renders an input with an empty value`, () => {
+    it(`renders an input with an empty value`, async () => {
         const currentlyUpdatedItemMetadata = {
             value: "",
             is_required: false,
             name: "field",
             type: "string",
-        };
-        const wrapper = factory({ currentlyUpdatedItemMetadata });
-        const date_input = wrapper.get("[data-test=document-string-input]");
+        } as Metadata;
+        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        const string_input = wrapper.get("[data-test=document-string-input]");
 
-        expect(date_input.element.value).toEqual("");
-        expect(date_input.element.required).toBe(false);
+        if (!(string_input.element instanceof HTMLInputElement)) {
+            throw new Error("Could not find string element in component");
+        }
+        expect(string_input.element.value).toEqual("");
+        expect(string_input.element.required).toBe(false);
         expect(
             wrapper.find("[data-test=document-custom-metadata-is-required]").exists()
         ).toBeFalsy();
     });
 
-    it(`does not render the component when type does not match`, () => {
+    it(`does not render the component when type does not match`, async () => {
         const currentlyUpdatedItemMetadata = {
             value: "",
             is_required: false,
             name: "field",
             type: "text",
-        };
+        } as Metadata;
 
-        const wrapper = factory({ currentlyUpdatedItemMetadata });
+        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
         expect(wrapper.find("[data-test=document-custom-metadata-string]").exists()).toBeFalsy();
     });
 });

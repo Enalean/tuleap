@@ -17,28 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import localVue from "../../../../helpers/local-vue.js";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomMetadataList from "./CustomMetadataListSingleValue.vue";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { ListValue, Metadata } from "../../../../store/metadata/module";
+import { createDocumentLocalVue } from "../../../../helpers/local-vue-for-test";
 
-describe("CustomMetadataList", () => {
-    let store, factory;
-    beforeEach(() => {
-        store = createStoreMock({}, { metadata: {} });
-
-        factory = (props = {}) => {
-            return shallowMount(CustomMetadataList, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-    });
+describe("CustomMetadataListSingleValue", () => {
+    const store_options = { state: { metadata: {} } };
+    async function createWrapper(metadata: Metadata): Promise<Wrapper<CustomMetadataList>> {
+        const store = createStoreMock(store_options);
+        return shallowMount(CustomMetadataList, {
+            localVue: await createDocumentLocalVue(),
+            propsData: { currentlyUpdatedItemMetadata: metadata },
+            mocks: {
+                $store: store,
+            },
+        });
+    }
 
     it(`Given a list metadata
         Then it renders only the possible values of this list metadata`, async () => {
-        store.state.metadata = {
+        store_options.state.metadata = {
             project_metadata_list: [
                 {
                     short_name: "list",
@@ -62,10 +63,10 @@ describe("CustomMetadataList", () => {
             is_required: false,
             type: "list",
             is_multiple_value_allowed: false,
-        };
-        const wrapper = factory({ currentlyUpdatedItemMetadata });
+        } as Metadata;
+        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
 
-        await wrapper.vm.$nextTick().then(() => {});
+        await wrapper.vm.$nextTick();
 
         const all_options = wrapper
             .get("[data-test=document-custom-list-select]")
@@ -78,8 +79,8 @@ describe("CustomMetadataList", () => {
     });
 
     it(`Given a list metadata is required
-        Then the input is required`, () => {
-        store.state.metadata = {
+        Then the input is required`, async () => {
+        store_options.state.metadata = {
             project_metadata_list: [
                 {
                     short_name: "list",
@@ -95,17 +96,20 @@ describe("CustomMetadataList", () => {
             is_required: true,
             type: "list",
             is_multiple_value_allowed: false,
-        };
-        const wrapper = factory({ currentlyUpdatedItemMetadata });
+        } as Metadata;
+        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
 
         expect(wrapper.find("[data-test=document-custom-list-select]").exists()).toBeTruthy();
 
         const input = wrapper.get("[data-test=document-custom-list-select]");
+        if (!(input.element instanceof HTMLSelectElement)) {
+            throw new Error("Can not find list in DOM");
+        }
         expect(input.element.required).toBe(true);
     });
 
-    it(`does not render the component when type does not match`, () => {
-        store.state.metadata = {
+    it(`does not render the component when type does not match`, async () => {
+        store_options.state.metadata = {
             project_metadata_list: [
                 {
                     short_name: "list",
@@ -120,14 +124,14 @@ describe("CustomMetadataList", () => {
             value: "test",
             is_required: true,
             type: "text",
-        };
+        } as Metadata;
 
-        const wrapper = factory({ currentlyUpdatedItemMetadata });
+        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
         expect(wrapper.find("[data-test=document-custom-metadata-list]").exists()).toBeFalsy();
     });
 
-    it(`does not render the component when list is multiple`, () => {
-        store.state.metadata = {
+    it(`does not render the component when list is multiple`, async () => {
+        store_options.state.metadata = {
             project_metadata_list: [
                 {
                     short_name: "list",
@@ -136,16 +140,18 @@ describe("CustomMetadataList", () => {
             ],
         };
 
+        const list_value: Array<ListValue> = [{ id: 101 } as ListValue];
+
         const currentlyUpdatedItemMetadata = {
             short_name: "list",
             name: "custom list",
-            list_value: [101],
+            list_value: list_value,
             is_required: true,
             type: "list",
             is_multiple_value_allowed: true,
-        };
+        } as Metadata;
 
-        const wrapper = factory({ currentlyUpdatedItemMetadata });
+        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
         expect(wrapper.find("[data-test=document-custom-metadata-list]").exists()).toBeFalsy();
     });
 });

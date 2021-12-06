@@ -37,39 +37,23 @@
             <date-flat-picker
                 v-bind:id="`${currentlyUpdatedItemMetadata.short_name}`"
                 v-bind:required="currentlyUpdatedItemMetadata.is_required"
-                v-model="custom_metadata_date"
+                v-model="value"
+                v-on:input="$emit('input', value)"
             />
         </div>
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Metadata } from "../../../../store/metadata/module";
 import DateFlatPicker from "../DateFlatPicker.vue";
 
-export default {
-    name: "CustomMetadataDate",
-    components: { DateFlatPicker },
-    props: {
-        currentlyUpdatedItemMetadata: {
-            type: Object,
-            required: true,
-            readonly: true,
-        },
-        value: {
-            type: String,
-            required: true,
-            readonly: true,
-        },
-    },
-    computed: {
-        custom_metadata_date: {
-            get() {
-                return this.value;
-            },
-            set(value) {
-                this.$emit("input", value);
-            },
-        },
-    },
-};
+@Component({ components: { DateFlatPicker } })
+export default class CustomMetadataDate extends Vue {
+    @Prop({ required: true })
+    readonly currentlyUpdatedItemMetadata!: Metadata;
+
+    private value = String(this.currentlyUpdatedItemMetadata.value);
+}
 </script>

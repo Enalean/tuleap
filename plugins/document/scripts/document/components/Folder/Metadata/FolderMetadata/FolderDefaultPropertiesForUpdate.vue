@@ -69,7 +69,10 @@
                             data-test="document-custom-metadata-checkbox"
                         />
                     </div>
-                    <custom-metadata-component-type-renderer v-bind:item-metadata="custom" />
+                    <custom-metadata-component-type-renderer
+                        v-bind:item-metadata="custom"
+                        v-on:input="custom.value = $event.target.value"
+                    />
                 </div>
                 <recursion-options
                     v-model="recursion_option"

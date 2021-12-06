@@ -17,7 +17,6 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div
         class="tlp-form-element"
@@ -38,16 +37,21 @@
             data-test="document-string-input"
             v-bind:id="`document-{{currentlyUpdatedItemMetadata.short_name}}`"
             v-bind:required="currentlyUpdatedItemMetadata.is_required"
-            v-model="currentlyUpdatedItemMetadata.value"
+            v-model="value"
+            v-on:input="$emit('input', value)"
         />
     </div>
 </template>
 
-<script>
-export default {
-    name: "CustomMetadataString",
-    props: {
-        currentlyUpdatedItemMetadata: Object,
-    },
-};
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Metadata } from "../../../../store/metadata/module";
+
+@Component
+export default class CustomMetadataString extends Vue {
+    @Prop({ required: true })
+    readonly currentlyUpdatedItemMetadata!: Metadata;
+
+    private value = String(this.currentlyUpdatedItemMetadata.value);
+}
 </script>

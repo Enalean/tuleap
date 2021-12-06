@@ -18,47 +18,40 @@
  *
  */
 
-import localVue from "../../../helpers/local-vue.js";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DateFlatPicker from "./DateFlatPicker.vue";
 
 describe("DateFlatPicker", () => {
-    let factory;
-    beforeEach(() => {
-        factory = (props = {}) => {
-            return shallowMount(DateFlatPicker, {
-                localVue,
-                propsData: { ...props },
-            });
-        };
-    });
+    function createWrapper(props = {}): Wrapper<DateFlatPicker> {
+        return shallowMount(DateFlatPicker, {
+            propsData: { ...props },
+        });
+    }
 
-    it(`User can choose a date value`, async () => {
-        const wrapper = factory({ id: "input-date", value: "2019-06-30" });
+    it(`User can reset date value to empty one`, () => {
+        const wrapper = createWrapper({ id: "input-date", value: "2019-01-01", required: false });
 
-        wrapper.vm.onDatePickerChange();
-        await wrapper.vm.$nextTick().then(() => {});
-
-        expect(wrapper.emitted().input).toEqual([["2019-06-30"]]);
-    });
-
-    it(`User can reset date value to empty one`, async () => {
-        const wrapper = factory({ id: "input-date", value: "" });
-
-        wrapper.vm.onDatePickerChange();
-        await wrapper.vm.$nextTick().then(() => {});
-
+        const input = wrapper.get("input");
+        if (!(wrapper.vm.$el instanceof HTMLInputElement)) {
+            throw new Error("Date element is not an input");
+        }
+        wrapper.vm.$el.value = "";
+        input.trigger("input");
         expect(wrapper.emitted().input).toEqual([[""]]);
     });
 
     it(`User can set a date value manually`, () => {
-        const wrapper = factory({ id: "input-date", value: "" });
+        const wrapper = createWrapper({ id: "input-date", value: "", required: false });
 
         const input = wrapper.get("input");
-        input.element.value = "2019-06-30";
+        if (!(wrapper.vm.$el instanceof HTMLInputElement)) {
+            throw new Error("Date element is not an input");
+        }
+        wrapper.vm.$el.value = "2019-06-30";
         input.trigger("input");
 
         expect(wrapper.emitted().input).toBeTruthy();
-        expect(wrapper.emitted().input[0]).toEqual(["2019-06-30"]);
+        expect(wrapper.emitted().input).toEqual([["2019-06-30"]]);
     });
 });

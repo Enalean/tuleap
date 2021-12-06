@@ -17,67 +17,72 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import localVue from "../../../../helpers/local-vue.js";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomMetadataText from "./CustomMetadataText.vue";
+import type { Metadata } from "../../../../store/metadata/module";
+import { createDocumentLocalVue } from "../../../../helpers/local-vue-for-test";
 
 describe("CustomMetadataText", () => {
-    let factory;
-    beforeEach(() => {
-        factory = (props = {}) => {
-            return shallowMount(CustomMetadataText, {
-                localVue,
-                propsData: { ...props },
-            });
-        };
-    });
+    async function createWrapper(metadata: Metadata): Promise<Wrapper<CustomMetadataText>> {
+        return shallowMount(CustomMetadataText, {
+            localVue: await createDocumentLocalVue(),
+            propsData: { currentlyUpdatedItemMetadata: metadata },
+        });
+    }
 
-    it(`renders an input with a required value`, () => {
+    it(`renders an input with a required value`, async () => {
         const currentlyUpdatedItemMetadata = {
             value: "text value",
             is_required: true,
             name: "field",
             type: "text",
             short_name: "short_name",
-        };
-        const wrapper = factory({ currentlyUpdatedItemMetadata });
-        const date_input = wrapper.get("[data-test=document-text-input]");
+        } as Metadata;
+        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        const text_input = wrapper.get("[data-test=document-text-input]");
 
-        expect(date_input.element.value).toEqual("text value");
-        expect(date_input.element.required).toBe(true);
+        if (!(text_input.element instanceof HTMLTextAreaElement)) {
+            throw new Error("Could not find text element in component");
+        }
+        expect(text_input.element.value).toEqual("text value");
+        expect(text_input.element.required).toBe(true);
         expect(
             wrapper.find("[data-test=document-custom-metadata-is-required]").exists()
         ).toBeTruthy();
     });
 
-    it(`renders an input with an empty value`, () => {
+    it(`renders an input with an empty value`, async () => {
         const currentlyUpdatedItemMetadata = {
             value: "",
             is_required: false,
             name: "field",
             type: "text",
             short_name: "short_name",
-        };
-        const wrapper = factory({ currentlyUpdatedItemMetadata });
-        const date_input = wrapper.get("[data-test=document-text-input]");
+        } as Metadata;
+        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        const text_input = wrapper.get("[data-test=document-text-input]");
 
-        expect(date_input.element.value).toEqual("");
-        expect(date_input.element.required).toBe(false);
+        if (!(text_input.element instanceof HTMLTextAreaElement)) {
+            throw new Error("Could not find text element in component");
+        }
+        expect(text_input.element.value).toEqual("");
+        expect(text_input.element.required).toBe(false);
         expect(
             wrapper.find("[data-test=document-custom-metadata-is-required]").exists()
         ).toBeFalsy();
     });
 
     it(`Given custom text metadata
-        Then it renders the corresponding component`, () => {
+        Then it renders the corresponding component`, async () => {
         const currentlyUpdatedItemMetadata = {
             value: "",
             is_required: false,
             name: "field",
             short_name: "text",
             type: "text",
-        };
-        const wrapper = factory({ currentlyUpdatedItemMetadata });
+        } as Metadata;
+        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
 
         expect(wrapper.find("[data-test=document-custom-metadata-text]").exists()).toBeTruthy();
     });

@@ -62,6 +62,7 @@ export function transformCustomMetadataForItemCreation(
             is_used: parent_metadata.is_used,
             list_value: null,
             value: null,
+            allowed_list_values: null,
         };
 
         switch (parent_metadata.type) {
