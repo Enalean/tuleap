@@ -24,7 +24,6 @@
             class="tlp-pane-header planned-iteration-header"
             v-on:click="toggleIsOpen"
             data-test="iteration-card-header"
-            v-bind:data-test-iteration-id="iteration.id"
         >
             <span
                 class="tlp-pane-title planned-iteration-header-label"
