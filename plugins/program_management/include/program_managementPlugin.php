@@ -487,15 +487,7 @@ final class program_managementPlugin extends Plugin
             $program_dao,
             new ProjectReferenceRetriever($project_manager_adapter),
             new TeamDao(),
-            new ProgramAdapter(
-                $project_manager_adapter,
-                new ProjectAccessChecker(
-                    new RestrictedUserCanAccessProjectVerifier(),
-                    $event_manager
-                ),
-                $program_dao,
-                $user_manager_adapter
-            ),
+            ProgramAdapter::instance(),
             $this->getVisibleProgramIncrementTrackerRetriever($user_manager_adapter),
             $this->getVisibleIterationTrackerRetriever($user_manager_adapter),
             new PotentialPlannableTrackersConfigurationPresentersBuilder(new PlanDao()),
@@ -558,12 +550,7 @@ final class program_managementPlugin extends Plugin
             EventManager::instance()
         );
 
-        $program_adapter = new ProgramAdapter(
-            $project_manager_adapter,
-            $project_access_checker,
-            $program_dao,
-            $user_retriever,
-        );
+        $program_adapter = ProgramAdapter::instance();
 
         return new DisplayPlanIterationsController(
             ProjectManager::instance(),
@@ -903,12 +890,7 @@ final class program_managementPlugin extends Plugin
         $user_manager_adapter    = new UserManagerAdapter(UserManager::instance());
         $project_manager_adapter = new ProjectManagerAdapter($project_manager, $user_manager_adapter);
         $action_builder          = new ArtifactTopBacklogActionBuilder(
-            new ProgramAdapter(
-                $project_manager_adapter,
-                $project_access_checker,
-                new ProgramDao(),
-                $user_manager_adapter
-            ),
+            ProgramAdapter::instance(),
             new PrioritizeFeaturesPermissionVerifier(
                 $project_manager_adapter,
                 $project_access_checker,
@@ -950,12 +932,7 @@ final class program_managementPlugin extends Plugin
         $user_manager_adapter    = new UserManagerAdapter(UserManager::instance());
         $project_manager_adapter = new ProjectManagerAdapter($project_manager, $user_manager_adapter);
         $action_builder          = new MassChangeTopBacklogActionBuilder(
-            new ProgramAdapter(
-                $project_manager_adapter,
-                $project_access_checker,
-                new ProgramDao(),
-                $user_manager_adapter
-            ),
+            ProgramAdapter::instance(),
             new PrioritizeFeaturesPermissionVerifier(
                 $project_manager_adapter,
                 $project_access_checker,
@@ -1232,18 +1209,7 @@ final class program_managementPlugin extends Plugin
 
     private function getProgramAdapter(): ProgramAdapter
     {
-        $user_manager_adapter    = new UserManagerAdapter(UserManager::instance());
-        $project_manager_adapter = new ProjectManagerAdapter(ProjectManager::instance(), $user_manager_adapter);
-
-        return new ProgramAdapter(
-            $project_manager_adapter,
-            new ProjectAccessChecker(
-                new RestrictedUserCanAccessProjectVerifier(),
-                \EventManager::instance()
-            ),
-            new ProgramDao(),
-            $user_manager_adapter
-        );
+        return ProgramAdapter::instance();
     }
 
     private function getCanSubmitNewArtifactHandler(): CanSubmitNewArtifactHandler
@@ -1458,12 +1424,7 @@ final class program_managementPlugin extends Plugin
                 Tracker_ArtifactFactory::instance(),
                 $user_manager_adapter
             ),
-            new ProgramAdapter(
-                $project_manager_adapter,
-                $project_access_checker,
-                new ProgramDao(),
-                $user_manager_adapter
-            ),
+            ProgramAdapter::instance(),
             new TeamDao(),
             $features_dao,
             $features_dao,

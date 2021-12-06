@@ -140,12 +140,7 @@ final class ProjectResource extends AuthenticatedResource
             new RestrictedUserCanAccessProjectVerifier(),
             \EventManager::instance()
         );
-        $this->build_program    = new ProgramAdapter(
-            $project_manager_adapter,
-            $project_access_checker,
-            $program_dao,
-            $this->user_manager_adapter
-        );
+        $this->build_program    = ProgramAdapter::instance();
 
         $this->plan_creator = new PlanCreator(
             $tracker_retriever,

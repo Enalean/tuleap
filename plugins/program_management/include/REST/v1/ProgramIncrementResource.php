@@ -146,12 +146,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             ),
             new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
             $program_dao,
-            new ProgramAdapter(
-                new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever),
-                new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
-                $program_dao,
-                $user_retriever
-            )
+            ProgramAdapter::instance(),
         );
 
         $user = $user_manager->getCurrentUser();
@@ -233,12 +228,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             \EventManager::instance()
         );
 
-        $program_adapter = new ProgramAdapter(
-            $project_manager_adapter,
-            $project_access_checker,
-            $program_dao,
-            $user_retriever
-        );
+        $program_adapter = ProgramAdapter::instance();
 
         $modifier             = new ContentModifier(
             new PrioritizeFeaturesPermissionVerifier(

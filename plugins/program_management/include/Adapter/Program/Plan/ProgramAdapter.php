@@ -23,8 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Project_AccessException;
+use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveFullProject;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
@@ -33,9 +36,38 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
 final class ProgramAdapter implements BuildProgram
 {
+    private static ?self $instance;
+
+    /**
+     * @var array<int, bool>
+     */
+    private array $permission_cache = [];
+
+    public static function instance(): self
+    {
+        if (! isset(self::$instance)) {
+            $user_manager_adapter = new UserManagerAdapter(\UserManager::instance());
+            self::$instance       = new self(
+                new ProjectManagerAdapter(\ProjectManager::instance(), $user_manager_adapter),
+                new ProjectAccessChecker(
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    \EventManager::instance()
+                ),
+                new ProgramDao(),
+                $user_manager_adapter
+            );
+        }
+
+        return self::$instance;
+    }
+
+    /**
+     * @psalm-internal Tuleap\ProgramManagement\Adapter\Program\Plan
+     */
     public function __construct(
         private RetrieveFullProject $retrieve_full_project,
         private ProjectAccessChecker $project_access_checker,
@@ -46,10 +78,16 @@ final class ProgramAdapter implements BuildProgram
 
     public function ensureProgramIsAProject(int $project_id, UserIdentifier $user, ?PermissionBypass $bypass): void
     {
+        if (isset($this->permission_cache[$project_id])) {
+            return;
+        }
+
         $this->ensureUserCanAccessToProject($project_id, $user, $bypass);
         if (! $this->program_verifier->isAProgram($project_id)) {
             throw new ProjectIsNotAProgramException($project_id);
         }
+
+        $this->permission_cache[$project_id] = true;
     }
 
     /**
