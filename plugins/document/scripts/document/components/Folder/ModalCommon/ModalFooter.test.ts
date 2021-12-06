@@ -18,37 +18,35 @@
  *
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue.js";
+import { createDocumentLocalVue } from "../../../helpers/local-vue-for-test";
 
 import ModalFooter from "./ModalFooter.vue";
 
 describe("ModalFooter", () => {
-    let footer_factory;
-    beforeEach(() => {
-        footer_factory = (isLoading) => {
-            return shallowMount(ModalFooter, {
-                localVue,
-                context: {
-                    props: {
-                        isLoading: isLoading,
-                    },
+    async function createWrapper(isLoading: boolean): Promise<Wrapper<ModalFooter>> {
+        return shallowMount(ModalFooter, {
+            localVue: await createDocumentLocalVue(),
+            context: {
+                props: {
+                    isLoading: isLoading,
                 },
-            });
-        };
-    });
+            },
+        });
+    }
     it(`Given: the footer is not loading
     'When an item is created or updated
-    'Then the button does not display the loading icon`, () => {
-        const wrapper = footer_factory(false);
+    'Then the button does not display the loading icon`, async () => {
+        const wrapper = await createWrapper(false);
         expect(wrapper.find("[data-test=document-modal-footer-icon]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-modal-footer-spinner]").exists()).toBeFalsy();
     });
 
     it(`Given: the footer is loading
     'When an item is created or updated
-    'Then the button display the loading icon`, () => {
-        const wrapper = footer_factory(true);
+    'Then the button display the loading icon`, async () => {
+        const wrapper = await createWrapper(true);
         expect(wrapper.find("[data-test=document-modal-footer-icon]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-modal-footer-spinner]").exists()).toBeTruthy();
     });

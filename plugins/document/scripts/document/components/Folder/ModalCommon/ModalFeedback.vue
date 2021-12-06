@@ -21,19 +21,24 @@
 
 <template>
     <section class="tlp-modal-feedback" v-if="has_modal_error">
-        <div class="tlp-alert-danger">
+        <div class="tlp-alert-danger" data-test="modal-has-error">
             {{ modal_error }}
         </div>
     </section>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import { namespace } from "vuex-class";
 
-export default {
-    name: "ModalFeedback",
-    computed: {
-        ...mapState("error", ["modal_error", "has_modal_error"]),
-    },
-};
+const error = namespace("error");
+
+@Component
+export default class ModalFeedback extends Vue {
+    @error.State
+    readonly modal_error!: string;
+
+    @error.State
+    readonly has_modal_error!: boolean;
+}
 </script>
