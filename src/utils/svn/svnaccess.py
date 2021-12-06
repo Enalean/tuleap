@@ -68,8 +68,6 @@ def get_group_from_svnrepo_path(svnrepo):
     return group_name
 
 def check_read_access(username, svnrepo, svnpath):
-    if user.user_is_super_user():
-        return True
     if user.user_is_restricted():
         group_name = get_group_from_svnrepo_path(svnrepo)
         group_id = group.set_group_info_from_name(group_name)

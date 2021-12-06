@@ -142,6 +142,7 @@ class ViewVCProxy
             'HTTP_ACCEPT_LANGUAGE=' . $this->escapeStringFromServer($request, 'HTTP_ACCEPT_LANGUAGE') . ' ' .
             'TULEAP_REPO_NAME=' . escapeshellarg($project->getUnixNameMixedCase()) . ' ' .
             'TULEAP_REPO_PATH=' . escapeshellarg($this->getCVSRootPath($project)) . ' ' .
+            'TULEAP_USER_IS_SUPER_USER=' . escapeshellarg($user->isSuperUser() ? '1' : '0') . ' ' .
             __DIR__ . '/viewvc-epel.cgi 2>&1';
 
         $content = $this->setLocaleOnCommand($command, $return_var);
