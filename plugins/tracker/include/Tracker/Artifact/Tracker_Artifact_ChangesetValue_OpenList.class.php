@@ -70,8 +70,8 @@ class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_Changese
             Tracker_FormElementFactory::instance()->getType($this->field),
             $this->field->getLabel(),
             $this->field->getBind()->getType(),
-            array_values($full_values),
-            array_values($labels)
+            $full_values,
+            $labels
         );
         return $representation;
     }

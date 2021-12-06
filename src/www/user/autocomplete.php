@@ -184,7 +184,7 @@ if ($json_format) {
     }
 
     $output = [
-        'results' => array_values($json_entries),
+        'results' => $json_entries,
         'pagination' => [
             'more' => $has_more,
         ],
