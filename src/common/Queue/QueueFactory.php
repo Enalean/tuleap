@@ -49,10 +49,11 @@ class QueueFactory
                 $this->logger,
                 new BackOffDelayFailedMessage(
                     $this->logger,
+                    /**
+                     * @psalm-param positive-int|0 $time_to_sleep
+                     */
                     static function (int $time_to_sleep): void {
-                        if ($time_to_sleep > 0) {
-                            sleep($time_to_sleep);
-                        }
+                        sleep($time_to_sleep);
                     }
                 ),
                 $queue_name

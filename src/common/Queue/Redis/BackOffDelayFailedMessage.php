@@ -35,12 +35,12 @@ final class BackOffDelayFailedMessage
     private $logger;
     /**
      * @var callable
-     * @psalm-var callable(int):void $delay_function
+     * @psalm-var callable(positive-int|0):void $delay_function
      */
     private $delay_function;
 
     /**
-     * @psalm-param callable(int):void $delay_function
+     * @psalm-param callable(positive-int|0):void $delay_function
      */
     public function __construct(LoggerInterface $logger, callable $delay_function)
     {
@@ -59,10 +59,15 @@ final class BackOffDelayFailedMessage
         ($this->delay_function)(($time_to_sleep));
     }
 
+    /**
+     * @psalm-param positive-int|0 $nb_time_message_has_been_queued
+     * @psalm-return positive-int|0
+     */
     private function computeTimeToSleep(int $nb_time_message_has_been_queued): int
     {
         $exponent = min($nb_time_message_has_been_queued - 1, self::MAX_RETRIES_EXPONENT);
 
+        /** @psalm-var positive-int|0 */
         return (int) (self::BASE_DELAY_SEC * (2 ** $exponent));
     }
 }

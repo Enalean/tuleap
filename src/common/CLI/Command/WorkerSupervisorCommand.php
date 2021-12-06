@@ -119,7 +119,7 @@ class WorkerSupervisorCommand extends Command
             return 1;
         }
 
-        file_put_contents(self::PID_FILE_PATH, getmypid());
+        file_put_contents(self::PID_FILE_PATH, (string) getmypid());
 
         $worker_count = $this->worker_availability->getWorkerCount();
         if ($worker_count < 1) {

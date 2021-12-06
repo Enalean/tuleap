@@ -231,13 +231,11 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     private function getOfficialPluginPaths(): array
     {
-        return array_values(
-            array_merge(
-                array_filter(
-                    array_map('trim', explode(',', ForgeConfig::get('sys_extra_plugin_path')))
-                ),
-                [$this->getOfficialPluginsRoot()]
-            )
+        return array_merge(
+            array_filter(
+                array_map('trim', explode(',', ForgeConfig::get('sys_extra_plugin_path')))
+            ),
+            [$this->getOfficialPluginsRoot()]
         );
     }
 

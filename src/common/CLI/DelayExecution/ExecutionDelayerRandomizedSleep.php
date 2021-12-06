@@ -40,9 +40,6 @@ final class ExecutionDelayerRandomizedSleep implements ExecutionDelayer
     public function delay(): void
     {
         $sleep_time = random_int(0, $this->max_randomization_delay);
-        if ($sleep_time <= 0) {
-            return;
-        }
         sleep($sleep_time);
     }
 }

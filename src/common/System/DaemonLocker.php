@@ -51,7 +51,7 @@ class DaemonLocker
                 }
             }
         }
-        file_put_contents($this->pid_file, getmypid());
+        file_put_contents($this->pid_file, (string) getmypid());
     }
 
     public function cleanExit()

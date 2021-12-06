@@ -72,7 +72,7 @@ class SetDateValueJsonParser implements PostActionUpdateJsonParser
                 sprintf(
                     dgettext('tuleap-tracker', "Unsupported value attribute content: '%s'. Allowed contents are: '%s'"),
                     $value,
-                    implode("', '", array_values(SetFieldValueRepresentation::DATE_VALUE_MAPPING))
+                    implode("', '", SetFieldValueRepresentation::DATE_VALUE_MAPPING)
                 )
             );
         }
