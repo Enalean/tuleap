@@ -278,7 +278,7 @@ class FRSPackageDao extends DataAccessObject
                         if ($key == 'rank') {
                             $value = $this->prepareRanking('frs_package', $package_id, $current['group_id'], $value, 'package_id', 'group_id');
                         }
-                        $set_array[] = $key . ' = ' . $this->da->quoteSmart($value, ['force_string' => ($key == 'name')]);
+                        $set_array[] = \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB()->escapeIdentifier($key) . ' = ' . $this->da->quoteSmart($value, ['force_string' => ($key === 'name')]);
                     }
                 }
                 if (count($set_array)) {

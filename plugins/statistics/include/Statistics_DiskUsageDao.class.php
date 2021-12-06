@@ -26,11 +26,14 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
 {
 
     // A day spreads From 00:00:00 ---> 23:59:59
-    private function returnDateStatement($date)
+    private function returnDateStatement(?string $date): string
     {
+        if ($date === null || ! str_contains($date, ' ')) {
+            return '(0=1)';
+        }
         $dateList              = explode(" ", $date, 2);
-        $interval['dateStart'] = $dateList[0] . " 00:00:00";
-        $interval['dateEnd']   = $dateList[0] . " 23:59:59";
+        $interval['dateStart'] = trim($dateList[0] . " 00:00:00");
+        $interval['dateEnd']   = trim($dateList[0] . " 23:59:59");
 
         $statement = ' ( date > ' . $this->da->quoteSmart($interval['dateStart']) .
             ' AND date < ' . $this->da->quoteSmart($interval['dateEnd']) . ' ) ';

@@ -97,7 +97,7 @@ class Tracker_Report_Renderer_Table_ColumnsDao extends DataAccessObject
     {
         $from_renderer_id = $this->da->escapeInt($from_renderer_id);
         $to_renderer_id   = $this->da->escapeInt($to_renderer_id);
-        $sql              = "INSERT INTO tracker_report_renderer_table_columns(renderer_id, field_id, width, rank, artlink_nature, artlink_nature_format)
+        $sql              = "INSERT INTO tracker_report_renderer_table_columns(renderer_id, field_id, width, `rank`, artlink_nature, artlink_nature_format)
                 SELECT $to_renderer_id, field_id, width, `rank`, artlink_nature, artlink_nature_format
                 FROM tracker_report_renderer_table_columns
                 WHERE renderer_id = $from_renderer_id";
