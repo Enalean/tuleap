@@ -13,6 +13,7 @@ case "${1:-}" in
     "mysql57")
     export DB_HOST="mysql57"
     ;;
+    *)
     echo "A database type must be provided as parameter. Allowed values are:"
     echo "* mysql57"
     exit 1
