@@ -3822,8 +3822,8 @@
       <code>getDao</code>
       <code>getHierarchyOfFolderBuilder</code>
       <code>getHooksAndCallbacks</code>
-      <code>getTypeIsChildLinkRetriever</code>
       <code>getPresenterBuilder</code>
+      <code>getTypeIsChildLinkRetriever</code>
       <code>get_post_save_new_changeset_queue</code>
       <code>hide_artifact</code>
       <code>isViewAddableForArtifact</code>
@@ -21968,8 +21968,6 @@
       <code>$store_in_session</code>
       <code>$store_in_session</code>
       <code>$store_in_session</code>
-      <code>$store_in_session</code>
-      <code>$store_in_session</code>
       <code>$title</code>
       <code>$title</code>
       <code>$title</code>
@@ -23812,13 +23810,15 @@
     </MissingReturnType>
   </file>
   <file src="plugins/ldap/bin/convertSvnToLdap.php">
-    <DeprecatedFunction occurrences="7">
+    <DeprecatedFunction occurrences="9">
+      <code>db_ei($row['group_id'])</code>
+      <code>db_ei($user-&gt;getId())</code>
       <code>db_error($res)</code>
       <code>db_fetch_array($res)</code>
       <code>db_numrows($res)</code>
       <code>db_query($sql)</code>
-      <code>db_query('INSERT INTO plugin_ldap_svn_repository(group_id, ldap_auth) VALUES(' . $row['group_id'] . ',1)')</code>
-      <code>db_query('SELECT ldap_uid FROM plugin_ldap_user WHERE user_id = ' . $user-&gt;getId())</code>
+      <code>db_query('INSERT INTO plugin_ldap_svn_repository(group_id, ldap_auth) VALUES(' . db_ei($row['group_id']) . ',1)')</code>
+      <code>db_query('SELECT ldap_uid FROM plugin_ldap_user WHERE user_id = ' . db_ei($user-&gt;getId()))</code>
       <code>db_result($res, 0, 'ldap_uid')</code>
     </DeprecatedFunction>
     <InvalidScalarArgument occurrences="2">
@@ -33776,12 +33776,12 @@
       <code>getEmailDomain</code>
       <code>getErrors</code>
       <code>getLastModifiedBy</code>
-      <code>getTypeIsChildLinkRetriever</code>
       <code>getPriorityHistory</code>
       <code>getProjectId</code>
       <code>getRestUri</code>
       <code>getSemanticStatusValue</code>
       <code>getSortedBySubmittedOn</code>
+      <code>getTypeIsChildLinkRetriever</code>
       <code>getXRefAndTitle</code>
       <code>hasChildren</code>
       <code>hasMoreThanOneChangeset</code>
@@ -34856,8 +34856,8 @@
       <code>$tracker-&gt;getGroupId()</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="2">
-      <code>$type</code>
       <code>$tracker_id</code>
+      <code>$type</code>
     </MissingParamType>
     <MissingPropertyType occurrences="5">
       <code>$artifact_id</code>
@@ -35593,19 +35593,16 @@
       <code>$linked_artifact_id</code>
       <code>$linked_type</code>
       <code>$mapped_artifact_id</code>
-      <code>$type</code>
       <code>$tracker_id</code>
+      <code>$type</code>
     </MissingParamType>
-    <MissingReturnType occurrences="6">
+    <MissingReturnType occurrences="4">
       <code>checkTypeExistOnPlateform</code>
       <code>extractArtifactLinkFromXml</code>
       <code>getTypeFromMappedArtifact</code>
-      <code>isLinkValid</code>
       <code>removeValuesIfDontExistInLastChangeset</code>
-      <code>retrieveSystemTypes</code>
     </MissingReturnType>
-    <PossiblyUndefinedVariable occurrences="2">
-      <code>$params</code>
+    <PossiblyUndefinedVariable occurrences="1">
       <code>$params</code>
     </PossiblyUndefinedVariable>
   </file>
@@ -36634,10 +36631,10 @@
       <code>$group_id</code>
       <code>$keyword</code>
       <code>$keyword</code>
-      <code>$type</code>
       <code>$oldKeyword</code>
       <code>$to</code>
       <code>$tracker_id</code>
+      <code>$type</code>
     </MissingParamType>
     <MissingReturnType occurrences="8">
       <code>create</code>
@@ -36654,17 +36651,17 @@
     <MissingParamType occurrences="5">
       <code>$existing_type</code>
       <code>$existing_type</code>
+      <code>$target_artifact_id</code>
+      <code>$target_artifact_id</code>
       <code>$type_by_plugin</code>
-      <code>$target_artifact_id</code>
-      <code>$target_artifact_id</code>
     </MissingParamType>
     <MissingReturnType occurrences="10">
       <code>canLinkArtifacts</code>
       <code>getAddedArtifactIds</code>
       <code>getArtifactIdsToLink</code>
+      <code>getRemovedArtifactIds</code>
       <code>getType</code>
       <code>getTypeDefinedByPlugin</code>
-      <code>getRemovedArtifactIds</code>
       <code>insertCrossReference</code>
       <code>removeCrossReference</code>
       <code>saveValue</code>
@@ -36685,15 +36682,15 @@
     </MissingParamType>
     <MissingPropertyType occurrences="6">
       <code>$can_user_artifact_link_cache</code>
-      <code>$grouped_by_type_with_presenter</code>
       <code>$grouped_by_project_then_tracker</code>
+      <code>$grouped_by_type_with_presenter</code>
       <code>$has_artifact_to_display</code>
-      <code>$type_presenter_cache</code>
       <code>$this-&gt;type_presenter_cache</code>
+      <code>$type_presenter_cache</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="6">
-      <code>getArtifactLinksForPerTypeDisplay</code>
       <code>getArtifactLinksForPerTrackerDisplay</code>
+      <code>getArtifactLinksForPerTypeDisplay</code>
       <code>getMatchingIDs</code>
       <code>groupAndEnhanceMatchingIDsPerProject</code>
       <code>groupPerTypeWithPresenter</code>
@@ -36710,11 +36707,49 @@
     </MissingParamType>
     <MissingReturnType occurrences="6">
       <code>buildFieldDataFromREST</code>
-      <code>formatTypesLikeWebUI</code>
       <code>formatNewValuesLikeWebUI</code>
       <code>formatRemovedValuesLikeWebUI</code>
+      <code>formatTypesLikeWebUI</code>
       <code>getArrayOfIdsFromString</code>
       <code>getDataLikeWebUI</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/PostSaveNewChangesetCommand.php">
+    <MissingReturnType occurrences="1">
+      <code>execute</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/PostSaveNewChangesetQueue.php">
+    <MissingReturnType occurrences="2">
+      <code>add</code>
+      <code>execute</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ProcessChildrenTriggersCommand.php">
+    <MissingReturnType occurrences="2">
+      <code>execute</code>
+      <code>hasChanges</code>
+    </MissingReturnType>
+    <PossiblyNullReference occurrences="1">
+      <code>getArtifactLinkInfoDiff</code>
+    </PossiblyNullReference>
+    <UndefinedMethod occurrences="1">
+      <code>getArtifactLinkInfoDiff</code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/SubmittedValueConvertor.php">
+    <MissingParamType occurrences="2">
+      <code>$artifact_id</code>
+      <code>$key</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="7">
+      <code>addLinksFromSubmittedValue</code>
+      <code>changeTypeOfExistingLinks</code>
+      <code>extractArrayFromSubmittedValue</code>
+      <code>extractNewValuesFromSubmittedValue</code>
+      <code>extractRemovedValuesFromSubmittedValue</code>
+      <code>extractTypesFromSubmittedValue</code>
+      <code>removeLinksFromSubmittedValue</code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/ArtifactInTypeTablePresenter.php">
@@ -36807,14 +36842,29 @@
       <code>$matching_field_names</code>
       <code>$type</code>
     </MissingParamType>
-    <MissingReturnType occurrences="3">
-      <code>fetchFormattedValue</code>
+    <MissingReturnType occurrences="2">
       <code>fillSearchAndReplace</code>
       <code>getFormattedValue</code>
     </MissingReturnType>
     <PossiblyNullReference occurrences="1">
       <code>getLastChangeset</code>
     </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/ParentOfArtifactCollection.php">
+    <MissingParamType occurrences="2">
+      <code>$artifacts</code>
+      <code>$is_graph</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="2">
+      <code>$artifacts</code>
+      <code>$is_graph</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="4">
+      <code>addArtifacts</code>
+      <code>getArtifacts</code>
+      <code>isGraph</code>
+      <code>setIsGraph</code>
+    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeConfigController.php">
     <MissingParamType occurrences="1">
@@ -36851,13 +36901,12 @@
       <code>$delete_modal_title</code>
       <code>$desc</code>
       <code>$edit_icon_label</code>
-      <code>$edit_type</code>
       <code>$edit_system_type_title</code>
+      <code>$edit_type</code>
       <code>$forward_label_help</code>
       <code>$forward_label_label</code>
       <code>$forward_label_placeholder</code>
       <code>$has_types</code>
-      <code>$types_usage</code>
       <code>$reverse_label_help</code>
       <code>$reverse_label_label</code>
       <code>$reverse_label_placeholder</code>
@@ -36867,6 +36916,7 @@
       <code>$shortname_pattern</code>
       <code>$shortname_placeholder</code>
       <code>$title</code>
+      <code>$types_usage</code>
     </MissingPropertyType>
     <UndefinedThisPropertyAssignment occurrences="3">
       <code>$this-&gt;cannot_delete_title</code>
@@ -36885,9 +36935,6 @@
       <code>$forward_label</code>
       <code>$limit</code>
       <code>$limit</code>
-      <code>$type</code>
-      <code>$type</code>
-      <code>$type</code>
       <code>$offset</code>
       <code>$offset</code>
       <code>$project_id</code>
@@ -36900,6 +36947,9 @@
       <code>$shortname</code>
       <code>$shortname</code>
       <code>$shortname</code>
+      <code>$type</code>
+      <code>$type</code>
+      <code>$type</code>
       <code>$type_shortname</code>
     </MissingParamType>
     <MissingReturnType occurrences="16">
@@ -36909,8 +36959,8 @@
       <code>edit</code>
       <code>getForwardLinkedArtifactIds</code>
       <code>getFromShortname</code>
-      <code>getTypeByShortname</code>
       <code>getReverseLinkedArtifactIds</code>
+      <code>getTypeByShortname</code>
       <code>getUsedTypes</code>
       <code>hasReverseLinkedArtifacts</code>
       <code>isOrHasBeenUsed</code>
@@ -36962,10 +37012,10 @@
     <MissingReturnType occurrences="7">
       <code>getCustomTypes</code>
       <code>getDefaultTypes</code>
-      <code>getTypePresenterByShortname</code>
       <code>getOnlyVisibleTypes</code>
       <code>getPluginsTypes</code>
       <code>getPluginsTypesEditableInProject</code>
+      <code>getTypePresenterByShortname</code>
       <code>instantiateFromRow</code>
     </MissingReturnType>
   </file>
@@ -36991,8 +37041,6 @@
       <code>$id_label</code>
       <code>$last_update_label</code>
       <code>$mass_unlink_title</code>
-      <code>$type</code>
-      <code>$type_label</code>
       <code>$project_label</code>
       <code>$status_label</code>
       <code>$submitted_by_label</code>
@@ -37000,6 +37048,8 @@
       <code>$table_id</code>
       <code>$tracker_id</code>
       <code>$tracker_label</code>
+      <code>$type</code>
+      <code>$type_label</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="2">
       <code>buildForHeader</code>
@@ -37031,60 +37081,6 @@
       <code>checkIsNotOrHasNotBeenUsed</code>
       <code>checkReverseLabel</code>
       <code>checkShortname</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/ParentOfArtifactCollection.php">
-    <MissingParamType occurrences="2">
-      <code>$artifacts</code>
-      <code>$is_graph</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="2">
-      <code>$artifacts</code>
-      <code>$is_graph</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="4">
-      <code>addArtifacts</code>
-      <code>getArtifacts</code>
-      <code>isGraph</code>
-      <code>setIsGraph</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/PostSaveNewChangesetCommand.php">
-    <MissingReturnType occurrences="1">
-      <code>execute</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/PostSaveNewChangesetQueue.php">
-    <MissingReturnType occurrences="2">
-      <code>add</code>
-      <code>execute</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ProcessChildrenTriggersCommand.php">
-    <MissingReturnType occurrences="2">
-      <code>execute</code>
-      <code>hasChanges</code>
-    </MissingReturnType>
-    <PossiblyNullReference occurrences="1">
-      <code>getArtifactLinkInfoDiff</code>
-    </PossiblyNullReference>
-    <UndefinedMethod occurrences="1">
-      <code>getArtifactLinkInfoDiff</code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/SubmittedValueConvertor.php">
-    <MissingParamType occurrences="2">
-      <code>$artifact_id</code>
-      <code>$key</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="7">
-      <code>addLinksFromSubmittedValue</code>
-      <code>changeTypeOfExistingLinks</code>
-      <code>extractArrayFromSubmittedValue</code>
-      <code>extractTypesFromSubmittedValue</code>
-      <code>extractNewValuesFromSubmittedValue</code>
-      <code>extractRemovedValuesFromSubmittedValue</code>
-      <code>removeLinksFromSubmittedValue</code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownCacheGenerationChecker.php">
@@ -38507,18 +38503,18 @@
       <code>$from_aid</code>
       <code>$id</code>
       <code>$is_reverse_artifact_links</code>
-      <code>$type</code>
-      <code>$type</code>
       <code>$prefill_edited_types</code>
       <code>$prefill_edited_types</code>
-      <code>$prefill_type</code>
       <code>$prefill_removed_values</code>
+      <code>$prefill_type</code>
       <code>$read_only</code>
       <code>$report</code>
       <code>$report</code>
       <code>$report</code>
       <code>$reverse_artifact_links</code>
       <code>$reverse_artifact_links</code>
+      <code>$type</code>
+      <code>$type</code>
       <code>$value</code>
       <code>$value</code>
       <code>$value</code>
@@ -38535,10 +38531,10 @@
       <code>fetchChangesetValueForType</code>
       <code>fetchLinks</code>
       <code>fetchLinksReadOnly</code>
-      <code>fetchTypeTables</code>
       <code>fetchRendererAsArtifactLink</code>
       <code>fetchReverseLinks</code>
       <code>fetchSubmitForOverlay</code>
+      <code>fetchTypeTables</code>
       <code>getArtifactLinkIdsOfLastChangeset</code>
       <code>getArtifactLinksToRenderFromChangesetValue</code>
       <code>getFieldDataBuilder</code>
@@ -44530,8 +44526,8 @@
       <code>$id_suffix</code>
       <code>$is_desc</code>
       <code>$is_first</code>
-      <code>$is_type_col</code>
       <code>$is_reverse</code>
+      <code>$is_type_col</code>
       <code>$key</code>
       <code>$link_artifact_id</code>
       <code>$matching_ids</code>
@@ -44545,9 +44541,9 @@
       <code>$only_one_column</code>
       <code>$only_one_column</code>
       <code>$only_rows</code>
-      <code>$prefill_types</code>
-      <code>$prefill_types</code>
       <code>$prefill_removed_values</code>
+      <code>$prefill_types</code>
+      <code>$prefill_types</code>
       <code>$read_only</code>
       <code>$read_only</code>
       <code>$read_only</code>
@@ -48594,7 +48590,7 @@
       <code>$t-&gt;id</code>
       <code>$t-&gt;name</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="80">
+    <MissingReturnType occurrences="79">
       <code>agiledashboard_event_rest_get_burndown</code>
       <code>agiledashboard_event_rest_get_milestone</code>
       <code>agiledashboard_event_rest_options_burndown</code>
@@ -48620,7 +48616,6 @@
       <code>getArtifactFactory</code>
       <code>getHistoryEntryCollection</code>
       <code>getHooksAndCallbacks</code>
-      <code>getTypeDao</code>
       <code>getObjectTypeFromPermissions</code>
       <code>getPluginInfo</code>
       <code>getProjectManager</code>
@@ -48631,6 +48626,7 @@
       <code>getTrackerFactory</code>
       <code>getTrackerFormElementFactory</code>
       <code>getTrackerSystemEventManager</code>
+      <code>getTypeDao</code>
       <code>getUserManager</code>
       <code>getUserWidgetList</code>
       <code>get_artifact_reference_group_id</code>
@@ -48678,9 +48674,8 @@
     <PossiblyNullArgument occurrences="1">
       <code>$user</code>
     </PossiblyNullArgument>
-    <PossiblyUndefinedVariable occurrences="2">
+    <PossiblyUndefinedVariable occurrences="1">
       <code>$params</code>
-      <code>$platform_types</code>
     </PossiblyUndefinedVariable>
     <UndefinedMethod occurrences="1">
       <code>getText</code>
@@ -72409,7 +72404,13 @@
     </InvalidScalarArgument>
   </file>
   <file src="src/www/admin/approve_pending_users.php">
-    <DeprecatedFunction occurrences="12">
+    <DeprecatedFunction occurrences="18">
+      <code>db_ei(UserManager::instance()-&gt;getCurrentUser()-&gt;getId())</code>
+      <code>db_ei(UserManager::instance()-&gt;getCurrentUser()-&gt;getId())</code>
+      <code>db_ei(UserManager::instance()-&gt;getCurrentUser()-&gt;getId())</code>
+      <code>db_ei_implode($users_array)</code>
+      <code>db_ei_implode($users_array)</code>
+      <code>db_ei_implode($users_array)</code>
       <code>db_ei_implode($users_array)</code>
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res_user)</code>
@@ -74422,7 +74423,7 @@
       <code>db_result($result, 0, 0)</code>
       <code>db_result($result, 0, 0)</code>
     </DeprecatedFunction>
-    <MissingParamType occurrences="53">
+    <MissingParamType occurrences="50">
       <code>$absolute</code>
       <code>$address</code>
       <code>$address</code>
@@ -74446,10 +74447,8 @@
       <code>$date</code>
       <code>$date</code>
       <code>$date</code>
-      <code>$default_value</code>
       <code>$filename</code>
       <code>$fn</code>
-      <code>$format</code>
       <code>$group_id</code>
       <code>$group_id</code>
       <code>$index</code>
@@ -74473,14 +74472,12 @@
       <code>$username</code>
       <code>$usernames</code>
       <code>$usernames</code>
-      <code>$value</code>
       <code>$wrap</code>
       <code>$wrap</code>
     </MissingParamType>
-    <MissingReturnType occurrences="35">
+    <MissingReturnType occurrences="34">
       <code>ShowResultSet</code>
       <code>formatByteToMb</code>
-      <code>format_date</code>
       <code>getMonth</code>
       <code>get_list_server_url</code>
       <code>get_priority_color</code>
