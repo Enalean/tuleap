@@ -113,4 +113,28 @@ final class BuildRedirectFormActionEventProxyTest extends TestCase
         );
         self::assertSame("true", $this->redirect->query_parameters["immediate"]);
     }
+
+    public function testItInjectsAndInformsUserAboutUpdatingIteration(): void
+    {
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+            \Feedback::INFO,
+            $this->stringContains('update')
+        );
+        $increment_id = "100";
+        $this->proxy->injectAndInformUserAboutUpdatingIteration(
+            IterationRedirectionParametersStub::withValues(
+                IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION,
+                $increment_id
+            )
+        );
+        self::assertCount(2, $this->redirect->query_parameters);
+        self::assertSame(
+            IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION,
+            $this->redirect->query_parameters[IterationRedirectionParameters::FLAG]
+        );
+        self::assertSame(
+            $increment_id,
+            $this->redirect->query_parameters[IterationRedirectionParameters::PARAM_INCREMENT_ID]
+        );
+    }
 }

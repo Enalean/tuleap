@@ -31,5 +31,7 @@ interface BuildRedirectFormActionEvent
 
     public function injectAndInformUserAboutCreatingIteration(IterationRedirectionParameters $iteration_redirection_parameters): void;
 
+    public function injectAndInformUserAboutUpdatingIteration(IterationRedirectionParameters $iteration_redirection_parameters): void;
+
     public function injectAndInformUserAboutCreatingProgramIncrement(): void;
 }

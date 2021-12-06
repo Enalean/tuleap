@@ -38,6 +38,7 @@ export interface Iteration {
     start_date: string;
     end_date: string;
     status: string;
+    user_can_update: boolean;
 }
 
 export interface State {

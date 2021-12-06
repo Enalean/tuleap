@@ -28,22 +28,35 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class IterationRedirectionParametersProxyTest extends TestCase
 {
-    public function testItBuildsAProxyAroundRequestForIterationApp(): void
+    public function testItBuildsAProxyAroundRequestForIterationAppAfterCreate(): void
     {
-        $request = $this->buildCodendiRequest();
+        $request = $this->buildCodendiRequest(IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION);
 
         $proxy = IterationRedirectionParametersProxy::buildFromCodendiRequest($request);
         self::assertSame(IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION, $proxy->getValue());
         self::assertSame("1280", $proxy->getIncrementId());
         self::assertTrue($proxy->needsRedirectionAfterCreate());
+        self::assertFalse($proxy->needsRedirectionAfterUpdate());
         self::assertTrue($proxy->isRedirectionNeeded());
     }
 
-    private function buildCodendiRequest(): \Codendi_Request
+    public function testItBuildsAProxyAroundRequestForIterationAppAfterUpdate(): void
+    {
+        $request = $this->buildCodendiRequest(IterationRedirectionParameters::REDIRECT_AFTER_UPDATE_ACTION);
+
+        $proxy = IterationRedirectionParametersProxy::buildFromCodendiRequest($request);
+        self::assertSame(IterationRedirectionParameters::REDIRECT_AFTER_UPDATE_ACTION, $proxy->getValue());
+        self::assertSame("1280", $proxy->getIncrementId());
+        self::assertFalse($proxy->needsRedirectionAfterCreate());
+        self::assertTrue($proxy->needsRedirectionAfterUpdate());
+        self::assertTrue($proxy->isRedirectionNeeded());
+    }
+
+    private function buildCodendiRequest(string $action): \Codendi_Request
     {
         return new \Codendi_Request(
             [
-                IterationRedirectionParameters::FLAG               => IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION,
+                IterationRedirectionParameters::FLAG               => $action,
                 IterationRedirectionParameters::PARAM_INCREMENT_ID => "1280",
             ],
             null

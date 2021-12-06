@@ -18,13 +18,14 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
-
 import { shallowMount } from "@vue/test-utils";
-import IterationCard from "./IterationCard.vue";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-test";
 import { formatDateYearMonthDay } from "@tuleap/date-helper/src";
+
+import IterationCard from "./IterationCard.vue";
+
+import type { Wrapper } from "@vue/test-utils";
 import type { Iteration } from "../../../type";
 
 describe("IterationCard", () => {
@@ -36,6 +37,9 @@ describe("IterationCard", () => {
                 $store: createStoreMock({
                     state: {
                         user_locale: "en-US",
+                        program_increment: {
+                            id: 1280,
+                        },
                     },
                 }),
             },
@@ -53,6 +57,7 @@ describe("IterationCard", () => {
             status: "On going",
             start_date: "2021-10-01T00:00:00+02:00",
             end_date: "2021-10-15T00:00:00+02:00",
+            user_can_update: true,
         };
     });
 
@@ -66,6 +71,24 @@ describe("IterationCard", () => {
             wrapper.get("[data-test=planned-iteration-toggle-icon]").classes("fa-caret-down")
         ).toBe(false);
         expect(wrapper.find("[data-test=planned-iteration-content]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=planned-iteration-info]").exists()).toBe(false);
+    });
+
+    it("Display the iteration with an open state", async () => {
+        const wrapper = await getWrapper();
+
+        wrapper.get("[data-test=iteration-card-header]").trigger("click");
+
+        await wrapper.vm.$nextTick();
+
+        expect(
+            wrapper.get("[data-test=planned-iteration-toggle-icon]").classes("fa-caret-right")
+        ).toBe(false);
+        expect(
+            wrapper.get("[data-test=planned-iteration-toggle-icon]").classes("fa-caret-down")
+        ).toBe(true);
+        expect(wrapper.find("[data-test=planned-iteration-content]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=planned-iteration-info]").exists()).toBe(true);
     });
 
     it("displays the content of an iteration", async () => {
@@ -89,5 +112,13 @@ describe("IterationCard", () => {
         expect(
             wrapper.get("[data-test=iteration-header-status]").text().includes(iteration.status)
         ).toBe(true);
+    });
+
+    it("should not display the info header if the user cannot update the iteration", async () => {
+        iteration.user_can_update = false;
+
+        const wrapper = await getWrapper();
+
+        expect(wrapper.find("[data-test=planned-iteration-info]").exists()).toBe(false);
     });
 });

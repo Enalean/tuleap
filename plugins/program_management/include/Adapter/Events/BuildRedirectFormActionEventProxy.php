@@ -64,6 +64,20 @@ final class BuildRedirectFormActionEventProxy implements BuildRedirectFormAction
         $this->redirect->query_parameters["immediate"]                                        = "true";
     }
 
+    public function injectAndInformUserAboutUpdatingIteration(IterationRedirectionParameters $iteration_redirection_parameters): void
+    {
+        $GLOBALS['Response']->addFeedback(
+            \Feedback::INFO,
+            dgettext(
+                'tuleap-program_management',
+                'You are editing an iteration, it will update associated milestones in team projects.'
+            )
+        );
+
+        $this->redirect->query_parameters[IterationRedirectionParameters::FLAG]               = IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION;
+        $this->redirect->query_parameters[IterationRedirectionParameters::PARAM_INCREMENT_ID] = $iteration_redirection_parameters->getIncrementId();
+    }
+
     public function injectAndInformUserAboutCreatingProgramIncrement(): void
     {
         $feedback_message = dgettext(

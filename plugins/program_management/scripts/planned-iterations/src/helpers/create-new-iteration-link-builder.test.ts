@@ -17,12 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { buildIterationCreationUrl } from "./create-new-iteration-link-builder";
+import {
+    buildIterationCreationUrl,
+    buildIterationEditionUrl,
+} from "./create-new-iteration-link-builder";
 
 describe("create-new-iteration-link-builder", () => {
-    it("should build the url", () => {
+    it("should build the iteration creation url", () => {
         expect(buildIterationCreationUrl(1280, 101)).toEqual(
             "/plugins/tracker/?redirect-to-planned-iterations=create&increment-id=1280&tracker=101&func=new-artifact"
+        );
+    });
+
+    it("should build the iteration edition url", () => {
+        expect(buildIterationEditionUrl(1281, 1280)).toEqual(
+            "/plugins/tracker/?aid=1281&redirect-to-planned-iterations=update&increment-id=1280"
         );
     });
 });

@@ -48,6 +48,12 @@ final class BuildRedirectFormActionHandler
             return;
         }
 
+        if ($redirection_to_iteration->needsRedirectionAfterUpdate()) {
+            $event->injectAndInformUserAboutUpdatingIteration($redirection_to_iteration);
+
+            return;
+        }
+
         $event->injectAndInformUserAboutCreatingProgramIncrement();
     }
 }

@@ -101,3 +101,18 @@
     display: block;
     margin: var(--tlp-large-spacing) auto;
 }
+
+.planned-iteration-info-link {
+    font-size: 14px;
+    white-space: nowrap;
+
+    &:not(:first-child) {
+        margin: 0 0 0 var(--tlp-medium-spacing);
+    }
+
+    > .planned-iteration-info-link-icon {
+        margin: 0 6px 0 0;
+        font-size: 12px;
+        text-decoration: none;
+    }
+}

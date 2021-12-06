@@ -57,6 +57,24 @@
                 </span>
             </div>
         </div>
+        <div
+            class="planned-iteration-info"
+            v-if="is_open && iteration.user_can_update"
+            data-test="planned-iteration-info"
+        >
+            <a
+                v-bind:href="edition_url"
+                class="planned-iteration-info-link"
+                v-bind:title="$gettext('Edit')"
+                data-test="planned-iteration-info-edit-link"
+            >
+                <i
+                    class="fas fa-pencil-alt planned-iteration-info-link-icon"
+                    aria-hidden="true"
+                ></i>
+                <span v-translate>Edit</span>
+            </a>
+        </div>
         <section
             class="tlp-pane-section planned-iteration-content"
             v-if="is_open"
@@ -72,15 +90,21 @@ import Vue from "vue";
 import { State } from "vuex-class";
 import { Component, Prop } from "vue-property-decorator";
 import { formatDateYearMonthDay } from "@tuleap/date-helper";
+import { buildIterationEditionUrl } from "../../../helpers/create-new-iteration-link-builder";
 
-import type { Iteration } from "../../../type";
 import IterationUserStoryList from "./IterationUserStoryList.vue";
+
+import type { Iteration, ProgramIncrement } from "../../../type";
+
 @Component({
     components: { IterationUserStoryList },
 })
 export default class IterationCard extends Vue {
     @Prop({ required: true })
     readonly iteration!: Iteration;
+
+    @State
+    readonly program_increment!: ProgramIncrement;
 
     @State
     readonly user_locale!: string;
@@ -93,6 +117,10 @@ export default class IterationCard extends Vue {
 
     toggleIsOpen(): void {
         this.is_open = !this.is_open;
+    }
+
+    get edition_url(): string {
+        return buildIterationEditionUrl(this.iteration.id, this.program_increment.id);
     }
 }
 </script>

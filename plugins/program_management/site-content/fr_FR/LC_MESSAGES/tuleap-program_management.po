@@ -591,6 +591,13 @@ msgstr ""
 "seront créés dans les projets des équipes."
 
 msgid ""
+"You are editing an iteration, it will update associated milestones in team "
+"projects."
+msgstr ""
+"Vous êtes en train d'éditer une itération, les jalons correspondants seront "
+"mis à jour dans les projets des équipes."
+
+msgid ""
 "You are updating a program increment, it will update associated milestones "
 "in team projects."
 msgstr ""
