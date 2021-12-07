@@ -44,12 +44,15 @@ use Tuleap\TestPlan\TestPlanPaneDisplayable;
 use Tuleap\TestPlan\TestPlanPaneInfo;
 use Tuleap\TestPlan\TestPlanPresenterBuilder;
 use Tuleap\TestPlan\TestPlanTestDefinitionTrackerRetriever;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -193,7 +196,8 @@ final class testplanPlugin extends Plugin
                 $testmanagement_config,
                 $tracker_factory,
                 new TestPlanTestDefinitionTrackerRetriever($testmanagement_config, $tracker_factory),
-                UserHelper::instance()
+                UserHelper::instance(),
+                (new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()))
             ),
             new TestPlanHeaderOptionsProvider(
                 new HeaderOptionsProvider(

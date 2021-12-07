@@ -65,6 +65,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const testdefinition_tracker_name = vue_mount_point.dataset.testDefinitionTrackerName || "";
     const platform_name = vue_mount_point.dataset.platformName || "Tuleap";
     const platform_logo_url = vue_mount_point.dataset.platformLogoUrl || "";
+    const base_url = vue_mount_point.dataset.baseUrl || "";
+    const artifact_links_types =
+        typeof vue_mount_point.dataset.artifactLinksTypes !== "undefined"
+            ? JSON.parse(vue_mount_point.dataset.artifactLinksTypes)
+            : [];
 
     await initVueGettext(
         Vue,
@@ -93,6 +98,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         highlight_test_definition_id,
         platform_name,
         platform_logo_url,
+        base_url,
+        artifact_links_types,
     } as unknown as RootState;
 
     new AppComponent({

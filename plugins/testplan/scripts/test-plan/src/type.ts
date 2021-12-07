@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ArtifactLinkType, FormattedArtifact } from "@tuleap/plugin-docgen-docx";
+
 export interface Campaign {
     readonly id: number;
     readonly label: string;
@@ -31,6 +33,7 @@ export interface Campaign {
 
 interface ArtifactReference {
     readonly id: number;
+    readonly tracker: { readonly id: number };
 }
 
 interface TestExecutionUsedToDefineStatus extends ArtifactReference {
@@ -91,7 +94,7 @@ export type TestDefinition = TestDefinitionFromREST & TestDefinitionRefreshInfor
 
 export interface ExportDocument {
     readonly name: string;
-    readonly backlog: ReadonlyArray<BacklogItem>;
+    readonly backlog: ReadonlyArray<FormattedArtifact>;
 }
 
 export interface GlobalExportProperties {
@@ -104,6 +107,8 @@ export interface GlobalExportProperties {
     readonly milestone_name: string;
     readonly parent_milestone_name: string;
     readonly milestone_url: string;
+    readonly base_url: string;
+    readonly artifact_links_types: ReadonlyArray<ArtifactLinkType>;
 }
 
 export interface DateTimeLocaleInformation {

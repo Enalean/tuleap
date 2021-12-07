@@ -31,6 +31,8 @@ use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\IRetrieveAllUsableTypesInProject;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 
 final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -84,12 +86,22 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_helper = \Mockery::mock(\UserHelper::class);
         $user_helper->shouldReceive('getDisplayNameFromUser')->andReturn('User Name');
 
+        $type_presenter_factory = new class implements IRetrieveAllUsableTypesInProject {
+            public function getAllUsableTypesInProject(\Project $project): array
+            {
+                return [
+                    new TypeIsChildPresenter(),
+                ];
+            }
+        };
+
         $this->builder = new TestPlanPresenterBuilder(
             $pane_factory,
             $this->testmanagement_config,
             $this->tracker_factory,
             $test_definition_tracker_retriever,
-            $user_helper
+            $user_helper,
+            $type_presenter_factory,
         );
     }
 
@@ -176,5 +188,21 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertFalse($presenter->user_can_create_campaign);
+    }
+
+    public function testItExportsArtifactLinkTypesJsonEncoded(): void
+    {
+        $this->testmanagement_config->shouldReceive('getCampaignTrackerId')->andReturn(false);
+        $presenter = $this->builder->getPresenter(
+            $this->milestone,
+            UserTestBuilder::aUser()->build(),
+            42,
+            101,
+        );
+
+        $this->assertEquals(
+            '[{"reverse_label":"Parent","forward_label":"Child","shortname":"_is_child","is_system":true,"is_visible":true}]',
+            $presenter->artifact_links_types
+        );
     }
 }

@@ -40,5 +40,9 @@ export async function retrieveReportArtifacts(
 
     const tracker_structure = await tracker_structure_promise;
 
-    return retrieveArtifactsStructure(tracker_structure, report_artifacts, get_test_execution);
+    return retrieveArtifactsStructure(
+        new Map([[tracker_id, tracker_structure]]),
+        report_artifacts,
+        get_test_execution
+    );
 }

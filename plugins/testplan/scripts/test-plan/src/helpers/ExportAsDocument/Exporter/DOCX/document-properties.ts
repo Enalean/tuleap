@@ -24,6 +24,8 @@ export const MAIN_TITLES_NUMBERING_ID = "main-titles";
 export const HEADER_STYLE_SECTION_TITLE = "SectionTitle";
 export const HEADER_LEVEL_SECTION = HeadingLevel.HEADING_1;
 export const HEADER_LEVEL_SECTION_TITLE = HeadingLevel.HEADING_2;
+export const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
+export const HEADER_LEVEL_ARTIFACT_TITLE = HeadingLevel.HEADING_2;
 
 export const properties: IPropertiesOptions = {
     features: {
@@ -69,6 +71,13 @@ export const properties: IPropertiesOptions = {
                 name: HEADER_STYLE_SECTION_TITLE,
                 basedOn: HEADER_LEVEL_SECTION_TITLE,
                 next: HEADER_LEVEL_SECTION_TITLE,
+                quickFormat: true,
+            },
+            {
+                id: HEADER_STYLE_ARTIFACT_TITLE,
+                name: HEADER_STYLE_ARTIFACT_TITLE,
+                basedOn: HEADER_LEVEL_ARTIFACT_TITLE,
+                next: HEADER_LEVEL_ARTIFACT_TITLE,
                 quickFormat: true,
             },
             {

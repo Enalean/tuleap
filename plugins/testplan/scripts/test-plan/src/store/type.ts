@@ -19,6 +19,7 @@
 
 import type { CampaignState } from "./campaign/type";
 import type { BacklogItemState } from "./backlog-item/type";
+import type { ArtifactLinkType } from "@tuleap/plugin-docgen-docx";
 
 export interface State {
     readonly user_display_name: string;
@@ -37,6 +38,8 @@ export interface State {
     readonly highlight_test_definition_id: number | null;
     readonly platform_name: string;
     readonly platform_logo_url: string;
+    readonly base_url: string;
+    readonly artifact_links_types: ReadonlyArray<ArtifactLinkType>;
 }
 
 export interface RootState extends State {

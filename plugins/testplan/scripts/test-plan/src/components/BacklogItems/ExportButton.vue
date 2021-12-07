@@ -71,6 +71,7 @@ import type { BacklogItem, Campaign } from "../../type";
 import ExportError from "./ExportError.vue";
 import { createDropdown } from "tlp";
 import { isFeatureFlagDocxEnabled } from "../../helpers/ExportAsDocument/feature-flag-docx";
+import type { ArtifactLinkType } from "@tuleap/plugin-docgen-docx";
 
 const backlog_item = namespace("backlog_item");
 const campaign = namespace("campaign");
@@ -124,6 +125,12 @@ export default class ExportButton extends Vue {
 
     @State
     readonly milestone_url!: string;
+
+    @State
+    readonly base_url!: string;
+
+    @State
+    readonly artifact_links_types!: ReadonlyArray<ArtifactLinkType>;
 
     private is_preparing_the_download = false;
 
@@ -214,6 +221,8 @@ export default class ExportButton extends Vue {
                     milestone_name: this.milestone_title,
                     parent_milestone_name: this.parent_milestone_title,
                     milestone_url: this.milestone_url,
+                    base_url: this.base_url,
+                    artifact_links_types: this.artifact_links_types,
                 },
                 this,
                 downloadDocx,

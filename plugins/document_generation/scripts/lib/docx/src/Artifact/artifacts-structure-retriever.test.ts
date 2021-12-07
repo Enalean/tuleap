@@ -33,6 +33,9 @@ describe("retrieveArtifactsStructure", () => {
                 id: 74,
                 title: null,
                 xref: "bug #74",
+                tracker: {
+                    id: 102,
+                },
                 html_url: "/plugins/tracker/?aid=74",
                 values: [
                     {
@@ -190,6 +193,7 @@ describe("retrieveArtifactsStructure", () => {
                     {
                         id: 359,
                         xref: "bug #359",
+                        tracker: { id: 102 },
                         html_url: "/plugins/tracker/?aid=359",
                         title: "Linked artifact",
                         values: [],
@@ -200,6 +204,7 @@ describe("retrieveArtifactsStructure", () => {
                     {
                         id: 3,
                         xref: "bug #3",
+                        tracker: { id: 102 },
                         html_url: "/plugins/tracker/?aid=3",
                         title: "Reverse linked artifact",
                         values: [],
@@ -320,7 +325,7 @@ describe("retrieveArtifactsStructure", () => {
             Promise.resolve(testmanagement_execution_response);
 
         const artifacts = await retrieveArtifactsStructure(
-            tracker_structure,
+            new Map([[102, tracker_structure]]),
             artifacts_report_response,
             get_test_exec
         );
@@ -329,6 +334,9 @@ describe("retrieveArtifactsStructure", () => {
             {
                 id: 74,
                 xref: "bug #74",
+                tracker: {
+                    id: 102,
+                },
                 title: null,
                 html_url: "/plugins/tracker/?aid=74",
                 values: [

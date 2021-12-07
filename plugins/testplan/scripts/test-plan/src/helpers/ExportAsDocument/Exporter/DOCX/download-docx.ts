@@ -95,7 +95,11 @@ export async function downloadDocx(
             {
                 headers,
                 children: [
-                    ...buildMilestoneBacklog(document, gettext_provider, global_export_properties),
+                    ...(await buildMilestoneBacklog(
+                        document,
+                        gettext_provider,
+                        global_export_properties
+                    )),
                 ],
                 footers,
             },

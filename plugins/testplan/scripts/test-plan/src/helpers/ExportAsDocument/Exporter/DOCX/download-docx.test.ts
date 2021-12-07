@@ -57,6 +57,8 @@ describe("download-docx", () => {
                 milestone_name: "Tuleap 13.3",
                 parent_milestone_name: "",
                 milestone_url: "/path/to/13.3",
+                base_url: "https://example.com",
+                artifact_links_types: [],
             },
             {
                 locale: "en-US",
