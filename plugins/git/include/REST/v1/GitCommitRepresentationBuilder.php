@@ -60,7 +60,7 @@ class GitCommitRepresentationBuilder
             $message = implode("\n", $commit->GetComment());
 
             $verification = new GitCommitVerificationRepresentation();
-            $verification->build($commit->getPGPSignature());
+            $verification->build($commit->getSignature());
 
             $commit_representation = $this->buildGitCommitRepresentation(
                 $commit,
@@ -82,7 +82,7 @@ class GitCommitRepresentationBuilder
         $message = implode("\n", $commit->GetComment());
 
         $verification = new GitCommitVerificationRepresentation();
-        $verification->build($commit->getPGPSignature());
+        $verification->build($commit->getSignature());
 
         return $this->buildGitCommitRepresentation(
             $commit,
