@@ -161,10 +161,10 @@ class WikiCloner
                  $res     = db_query(sprintf(
                      "INSERT INTO wiki_version (id, version, mtime, minor_edit, content, versiondata)"
                      . "VALUES(%d, %d, %d, %d, '%s', '%s')",
-                     $value,
-                     $num_ver,
-                     $row['mtime'],
-                     $row['minor_edit'],
+                     db_ei($value),
+                     db_ei($num_ver),
+                     db_ei($row['mtime']),
+                     db_ei($row['minor_edit']),
                      $this->escapeString($row['content']),
                      $this->escapeString($this->_serialize($tmpl_version_data[$num_ver]))
                  ));
@@ -309,7 +309,7 @@ class WikiCloner
     public function getMappedUGroupId($ugid)
     {
         if ($ugid > 100) {
-            $res = db_query(sprintf("SELECT dst_ugroup_id FROM ugroup_mapping WHERE to_group_id=%d AND src_ugroup_id=%d", $this->group_id, $ugid));
+            $res = db_query(sprintf("SELECT dst_ugroup_id FROM ugroup_mapping WHERE to_group_id=%d AND src_ugroup_id=%d", db_ei($this->group_id), db_ei($ugid)));
             return db_result($res, 0, 'dst_ugroup_id');
         } else {
             return $ugid;
@@ -375,20 +375,20 @@ class WikiCloner
     {
         $array_rev = [];
         foreach ($array as $tmpl_id => $new_id) {
-            $result = db_query(sprintf("SELECT user_id, date, revision, mimetype, size FROM wiki_attachment_revision WHERE attachment_id=%d", $tmpl_id));
+            $result = db_query(sprintf("SELECT user_id, date, revision, mimetype, size FROM wiki_attachment_revision WHERE attachment_id=%d", db_ei($tmpl_id)));
             while ($row = db_fetch_array($result)) {
                 $res = db_query(sprintf(
                     "INSERT INTO wiki_attachment_revision (attachment_id, user_id, date, revision, mimetype, size)"
                                  . "VALUES (%d, %d, %d, %d, '%s', %d)",
-                    $new_id,
-                    $row['user_id'],
-                    $row['date'],
-                    $row['revision'],
+                    db_ei($new_id),
+                    db_ei($row['user_id']),
+                    db_ei($row['date']),
+                    db_ei($row['revision']),
                     $this->escapeString($row['mimetype']),
-                    $row['size']
+                    db_ei($row['size'])
                 ));
                 if (db_affected_rows($res) > 0) {
-                    $sql = db_query(sprintf("SELECT id from wiki_attachment_revision WHERE attachment_id=%d AND revision=%d", $new_id, $row['revision']));
+                    $sql = db_query(sprintf("SELECT id from wiki_attachment_revision WHERE attachment_id=%d AND revision=%d", db_ei($new_id), db_ei($row['revision'])));
                     if (db_numrows($sql) > 0) {
                         $array_rev[$tmpl_id] = db_result($sql, 0, 'id');
                         // Clone attachment file revision.
@@ -449,7 +449,7 @@ class WikiCloner
             $result = db_query(sprintf("SELECT * FROM wiki_attachment_log WHERE group_id=%d AND wiki_attachment_id=%d", $this->template_id, $tmpl_id));
             while ($row = db_fetch_array($result)) {
                 $res = db_query(sprintf("INSERT INTO wiki_attachment_log (user_id, group_id, wiki_attachment_id, wiki_attachment_revision_id, time)"
-                . "VALUES (%d, %d, %d, %d, %d)", $row['user_id'], $this->group_id, $new_id, $array_rev[$tmpl_id], $row['time']));
+                . "VALUES (%d, %d, %d, %d, %d)", db_ei($row['user_id']), db_ei($this->group_id), db_ei($new_id), db_ei($array_rev[$tmpl_id]), db_ei($row['time'])));
             }
         }
     }

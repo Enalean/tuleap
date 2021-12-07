@@ -122,7 +122,7 @@ function plugin_forumml_build_flattened_thread_children(&$thread, $parents, $lis
             ' LEFT JOIN plugin_forumml_messageheader mh_cc ON (mh_cc.id_message = m.id_message AND mh_cc.id_header = ' . FORUMML_CC . ') ' .
             ' LEFT JOIN plugin_forumml_attachment a ON (a.id_message = m.id_message AND a.content_id = "")' .
             ' WHERE
-                m.id_parent IN (' . implode(',', $parents) . ')' .
+                m.id_parent IN (' . db_ei_implode($parents) . ')' .
                 "AND m.id_list = " . db_ei($list_id);
         //echo $sql.'<br>';
         $result = db_query($sql);

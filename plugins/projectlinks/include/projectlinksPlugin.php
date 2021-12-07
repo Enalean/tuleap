@@ -966,10 +966,10 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                         target_group_id,
                         creation_date
                     ) VALUES (
-                        " . $row2['link_type_id'] . ",
-                        $group_id,
-                        " . $row['target_group_id'] . ",
-                        " . time() . "
+                        " . db_ei($row2['link_type_id']) . ",
+                        " . db_ei($group_id) . ",
+                        " . db_ei($row['target_group_id']) . ",
+                        " . db_ei(time()) . "
                     );");
             }
         }
@@ -986,10 +986,10 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                     target_group_id,
                     creation_date
                 ) VALUES (
-                    " . $row['link_type_id'] . ",
-                    " . $row['master_group_id'] . ",
-                    $group_id,
-                    " . time() . "
+                    " . db_ei($row['link_type_id']) . ",
+                    " . db_ei($row['master_group_id']) . ",
+                    " . db_ei($group_id) . ",
+                    " . db_ei(time()) . "
                 );");
         }
     }

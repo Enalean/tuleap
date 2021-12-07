@@ -690,7 +690,7 @@ function permission_fetch_selection_field(
             if ($predefined_ugroups) {
                 $predefined_ugroups .= ' ,';
             }
-            $predefined_ugroups .= $row['ugroup_id'];
+            $predefined_ugroups .= db_ei($row['ugroup_id']);
             if ($row['is_default']) {
                 $default_values[] = $row['ugroup_id'];
             }

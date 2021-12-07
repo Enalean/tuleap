@@ -47,7 +47,7 @@ class Docman_PermissionsExport
         '   JOIN permissions p ON (p.object_id = CAST(i.item_id as CHAR CHARACTER SET utf8) AND p.permission_type IN (\'PLUGIN_DOCMAN_READ\', \'PLUGIN_DOCMAN_WRITE\', \'PLUGIN_DOCMAN_MANAGE\'))' .
         '   JOIN ugroup ug ON (ug.ugroup_id = p.ugroup_id)' .
         ' WHERE i.group_id = ' . db_ei($this->group->getId()) .
-        '   AND i.parent_id IN (' . implode(',', $parentIds) . ') ' .
+        '   AND i.parent_id IN (' . db_ei_implode($parentIds) . ') ' .
         '   AND i.delete_date IS NULL' .
         ' ORDER BY i.rank ASC, permission_type';
 

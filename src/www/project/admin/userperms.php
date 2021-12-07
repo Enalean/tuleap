@@ -55,14 +55,14 @@ if ($request->exist('submit')) {
     (new ProjectHistoryDao())->groupAddHistory('changed_member_perm', '', $group_id);
     $nb_errors = 0;
 
-    $res_dev = db_query("SELECT * FROM user_group WHERE group_id=$group_id");
+    $res_dev = db_query("SELECT * FROM user_group WHERE group_id=" . db_ei($group_id));
     while ($row_dev = db_fetch_array($res_dev)) {
         if ($request->exist("update_user_$row_dev[user_id]")) {
             $svn_flags = "svn_user_$row_dev[user_id]";
             $res       = true;
             if ($request->exist($svn_flags)) {
                 $sql  = "UPDATE user_group SET svn_flags = '" . db_es($request->get($svn_flags)) . "'";
-                $sql .= " WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'";
+                $sql .= " WHERE user_id=" . db_ei($row_dev['user_id']) . " AND group_id=" . db_ei($group_id);
 
                 $res = db_query($sql);
             }
