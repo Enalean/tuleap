@@ -26,8 +26,7 @@ import type {
 } from "@tuleap/plugin-docgen-docx";
 import { createTraceabilityMatrix } from "./create-traceability-matrix";
 import { memoize } from "./memoize";
-import { getTestManagementExecution } from "./rest-querier";
-import { formatArtifact } from "@tuleap/plugin-docgen-docx";
+import { formatArtifact, getTestManagementExecution } from "@tuleap/plugin-docgen-docx";
 
 export async function createExportDocument(
     report_id: number,

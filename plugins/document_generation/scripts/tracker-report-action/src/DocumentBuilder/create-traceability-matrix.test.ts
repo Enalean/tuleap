@@ -17,15 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactResponse, TestExecutionResponse } from "./artifacts-retriever";
 import type { TraceabilityMatrixElement } from "../type";
 import { createTraceabilityMatrix } from "./create-traceability-matrix";
-import * as rest_querier from "./rest-querier";
-import type { getTestManagementExecution } from "./rest-querier";
+import * as docgen_docx from "@tuleap/plugin-docgen-docx";
 import type {
     ArtifactFromReport,
     ArtifactReportResponseUserRepresentation,
+    ArtifactResponse,
+    TestExecutionResponse,
 } from "@tuleap/plugin-docgen-docx/src";
+import type { getTestManagementExecution } from "@tuleap/plugin-docgen-docx";
 
 describe("create-traceability-matrix", () => {
     it("creates a row in the matrix when a test execution with all the information is encountered", async () => {
@@ -47,7 +48,7 @@ describe("create-traceability-matrix", () => {
                 },
             } as TestExecutionResponse);
 
-        jest.spyOn(rest_querier, "getArtifacts").mockResolvedValue(
+        jest.spyOn(docgen_docx, "getArtifacts").mockResolvedValue(
             new Map<number, ArtifactResponse>([
                 [800, { id: 800, title: "Campaign title" } as ArtifactResponse],
             ])
@@ -319,7 +320,7 @@ describe("create-traceability-matrix", () => {
                 },
             } as TestExecutionResponse);
 
-        jest.spyOn(rest_querier, "getArtifacts").mockRejectedValue(new Error());
+        jest.spyOn(docgen_docx, "getArtifacts").mockRejectedValue(new Error());
 
         const matrix = await buildMatrix(
             [

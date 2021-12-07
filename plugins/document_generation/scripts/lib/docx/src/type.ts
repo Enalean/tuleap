@@ -393,3 +393,99 @@ export type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseCrossReferencesFieldValue
     | ArtifactReportResponseStepDefinitionFieldValue
     | ArtifactReportResponseArtifactLinksFieldValue;
+
+export interface TrackerStructure {
+    fields: ReadonlyMap<number, FieldsStructure>;
+    disposition: ReadonlyArray<StructureFormat>;
+}
+
+export type FieldsStructure =
+    | UnknownFieldStructure
+    | DateFieldStructure
+    | ContainerFieldStructure
+    | ListFieldStructure
+    | PermissionsOnArtifactFieldStructure
+    | StepExecutionFieldStructure
+    | ArtifactLinkFieldStructure;
+
+interface BaseFieldStructure {
+    field_id: number;
+}
+
+interface UnknownFieldStructure extends BaseFieldStructure {
+    type: never;
+}
+
+interface DateFieldStructure extends BaseFieldStructure {
+    type: "date" | "lud" | "subon";
+    is_time_displayed: boolean;
+}
+
+interface ContainerFieldStructure extends BaseFieldStructure {
+    type: "column" | "fieldset";
+    label: string;
+}
+
+interface ListFieldStructure extends BaseFieldStructure {
+    type: "sb" | "rb" | "msb" | "cb" | "tbl";
+}
+
+export interface StepExecutionFieldStructure extends BaseFieldStructure {
+    type: "ttmstepexec";
+    label: string;
+}
+
+interface PermissionsOnArtifactFieldStructure extends BaseFieldStructure {
+    type: "perm";
+    values: {
+        is_used_by_default: boolean;
+        ugroup_representations: Array<ArtifactReportResponseUserGroupRepresentation>;
+    };
+}
+
+interface ArtifactLinkFieldStructure extends BaseFieldStructure {
+    type: "art_link";
+    label: string;
+}
+
+export interface StructureFormat {
+    id: number;
+    content: null | ReadonlyArray<this>;
+}
+
+export interface TrackerDefinition {
+    fields: ReadonlyArray<FieldsStructure>;
+    structure: ReadonlyArray<StructureFormat>;
+}
+
+export interface ArtifactResponse {
+    readonly id: number;
+    readonly title: string | null;
+    readonly xref: string;
+    readonly html_url: string;
+    readonly values: ReadonlyArray<ArtifactReportResponseFieldValue>;
+}
+
+export interface TestExecutionResponse {
+    definition: {
+        summary: string;
+        description: string;
+        description_format: string;
+        steps: Array<ArtifactReportResponseStepRepresentation>;
+        requirement: {
+            id: number;
+            title: string | null;
+        } | null;
+    };
+    steps_results: {
+        [key: string]: {
+            step_id: number;
+            status: TestExecStatus;
+        };
+    };
+    previous_result: {
+        status: TestExecStatus | null;
+        submitted_on: string;
+        submitted_by: ArtifactReportResponseUserRepresentation;
+    } | null;
+}
