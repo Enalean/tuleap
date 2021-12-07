@@ -20,5 +20,6 @@
 export * from "./Image/image-loader";
 export * from "./Artifact/build-list-of-artifacts-content";
 export * from "./Artifact/sections-anchor";
+export * from "./Artifact/artifact-formatter";
 export * from "./html-styles";
 export * from "./type";

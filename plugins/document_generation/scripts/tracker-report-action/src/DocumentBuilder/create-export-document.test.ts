@@ -21,15 +21,16 @@ import * as artifact_retriever from "./artifacts-retriever";
 import { createExportDocument } from "./create-export-document";
 import type {
     ArtifactFromReport,
-    ArtifactReportResponseUnknownFieldValue,
     ArtifactReportResponseStepDefinitionFieldValue,
-} from "./artifacts-retriever";
+    ArtifactReportResponseUnknownFieldValue,
+} from "@tuleap/plugin-docgen-docx/src";
 
 describe("Create ArtifactValues Collection", () => {
     it("Transforms json content into a collection", async () => {
         const report_artifacts: ArtifactFromReport[] = [
             {
                 id: 1001,
+                xref: "tracker_shortname #1001",
                 title: "title01",
                 values: [
                     {
@@ -408,6 +409,7 @@ describe("Create ArtifactValues Collection", () => {
             },
             {
                 id: 1002,
+                xref: "tracker_shortname #1002",
                 title: "",
                 values: [
                     {
