@@ -35,8 +35,8 @@ import {
     XmlComponent,
 } from "docx";
 import { TOCFieldInstruction } from "./toc-field-instruction";
-import type { FormattedArtifact } from "../../../type";
-import { getAnchorToArtifactContent } from "../sections-anchor";
+import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx";
+import { getAnchorToArtifactContent } from "@tuleap/plugin-docgen-docx";
 import { ComplexFieldCharacter } from "../base-elements";
 
 class AliasAttributes extends XmlAttributeComponent<{ readonly alias: string }> {

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ArtifactFieldValueStatus, FormattedArtifact } from "@tuleap/plugin-docgen-docx";
+
 export interface GlobalExportProperties {
     readonly report_id: number;
     readonly report_name: string;
@@ -85,107 +87,10 @@ interface DateReportCriterionAdvancedValue {
     readonly is_advanced: true;
 }
 
-interface ArtifactFieldValueContent {
-    readonly field_name: string;
-    readonly field_value: string;
-    readonly value_type: "string";
-}
-
-interface ArtifactFieldValueShort {
-    readonly content_length: "short";
-}
-
-interface ArtifactFieldValueLong {
-    readonly content_length: "long";
-    readonly content_format: "plaintext" | "html";
-}
-
-interface ArtifactFieldValueLinksContent {
-    readonly field_name: string;
-    readonly field_value: Array<ArtifactFieldValueLink>;
-    readonly value_type: "links";
-    readonly content_length: "short";
-}
-
-interface ArtifactFieldValueLink {
-    readonly link_label: string;
-    readonly link_url: string;
-}
-
-interface ArtifactFieldValueStepDefinitionContent {
-    readonly field_name: string;
-    readonly content_length: "blockttmstepdef";
-    readonly value_type: "string";
-    readonly steps: Array<ArtifactFieldValueStepDefinition>;
-}
-
-export type ArtifactFieldValueStatus = "notrun" | "passed" | "failed" | "blocked" | null;
-
-interface ArtifactFieldValueStepExecutionContent {
-    readonly field_name: string;
-    readonly content_length: "blockttmstepexec";
-    readonly value_type: "string";
-    readonly steps: Array<ArtifactFieldValueStepDefinitionEnhanced>;
-    readonly steps_values: ReadonlyArray<ArtifactFieldValueStatus>;
-}
-
-interface ArtifactFieldValueArtifactLinkContent {
-    readonly field_name: string;
-    readonly content_length: "artlinktable";
-    readonly value_type: "string";
-    readonly links: ReadonlyArray<ArtifactFieldValueArtifactLink>;
-    readonly reverse_links: ReadonlyArray<ArtifactFieldValueArtifactLink>;
-}
-
-export interface ArtifactFieldValueArtifactLink {
-    readonly artifact_id: number;
-    readonly title: string;
-    readonly type: string;
-    readonly is_linked_artifact_part_of_document: boolean;
-    readonly html_url: URL | null;
-}
-
-export interface ArtifactFieldValueStepDefinition {
-    readonly description: string;
-    readonly description_format: "plaintext" | "html";
-    readonly expected_results: string;
-    readonly expected_results_format: "plaintext" | "html";
-    readonly rank: number;
-}
-
-export interface ArtifactFieldValueStepDefinitionEnhanced extends ArtifactFieldValueStepDefinition {
-    readonly status: ArtifactFieldValueStatus;
-}
-
-export type ArtifactFieldValue =
-    | (ArtifactFieldValueContent & (ArtifactFieldValueShort | ArtifactFieldValueLong))
-    | ArtifactFieldValueLinksContent
-    | ArtifactFieldValueStepDefinitionContent
-    | ArtifactFieldValueStepExecutionContent
-    | ArtifactFieldValueArtifactLinkContent;
-
-export type ArtifactFieldShortValue =
-    | (ArtifactFieldValueContent & ArtifactFieldValueShort)
-    | ArtifactFieldValueLinksContent;
-
 export interface ExportDocument {
     readonly name: string;
     readonly artifacts: ReadonlyArray<FormattedArtifact>;
     readonly traceability_matrix: ReadonlyArray<TraceabilityMatrixElement>;
-}
-
-export interface ArtifactContainer {
-    readonly name: string;
-    readonly fields: ReadonlyArray<ArtifactFieldValue>;
-    readonly containers: ReadonlyArray<this>;
-}
-
-export interface FormattedArtifact {
-    readonly id: number;
-    readonly title: string;
-    readonly short_title: string;
-    readonly fields: ReadonlyArray<ArtifactFieldValue>;
-    readonly containers: ReadonlyArray<ArtifactContainer>;
 }
 
 export interface DateTimeLocaleInformation {

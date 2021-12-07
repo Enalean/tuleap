@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GetText } from "../../../../../../src/scripts/tuleap/gettext/gettext-init";
+import type { GettextProvider } from "@tuleap/gettext";
 import { getInternationalizedTestStatus } from "./internationalize-test-status";
-import type { ArtifactFieldValueStatus } from "@tuleap/plugin-docgen-docx";
+import type { ArtifactFieldValueStatus } from "../type";
 
 describe("Internationalize test status", () => {
     it.each([
@@ -33,7 +33,7 @@ describe("Internationalize test status", () => {
             getInternationalizedTestStatus(
                 {
                     gettext: (str: string) => str,
-                } as GetText,
+                } as GettextProvider,
                 status as ArtifactFieldValueStatus
             )
         ).toBe(expected);

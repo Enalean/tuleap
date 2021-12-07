@@ -17,11 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    ArtifactFieldValueStatus,
-    DateTimeLocaleInformation,
-    TraceabilityMatrixElement,
-} from "../type";
+import type { DateTimeLocaleInformation, TraceabilityMatrixElement } from "../type";
+import type { ArtifactFieldValueStatus } from "@tuleap/plugin-docgen-docx";
 import type {
     ArtifactFromReport,
     ArtifactReportContainer,

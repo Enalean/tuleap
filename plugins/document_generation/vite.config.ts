@@ -38,7 +38,7 @@ export default defineAppConfig(
             },
         },
         resolve: {
-            dedupe: ["docx"],
+            dedupe: ["@tuleap/gettext", "@tuleap/tlp-fetch", "docx", "sprintf-js"],
         },
     },
     { typescript: true }

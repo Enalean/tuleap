@@ -32,9 +32,21 @@ export default defineConfig(
                 name: "DocGenDocx",
             },
             rollupOptions: {
-                external: ["docx"],
+                external: [
+                    "@tuleap/gettext",
+                    "@tuleap/tlp-fetch",
+                    "docx",
+                    "dompurify",
+                    "sprintf-js",
+                ],
                 output: {
-                    globals: { docx: "docx" },
+                    globals: {
+                        "@tuleap/gettext": "@tuleap/gettext",
+                        "@tuleap/tlp-fetch": "@tuleap/tlp-fetch",
+                        docx: "docx",
+                        dompurify: "dompurify",
+                        "sprintf-js": "sprintf-js",
+                    },
                 },
             },
         },

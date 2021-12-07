@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./Image/image-loader";
-export * from "./Artifact/build-list-of-artifacts-content";
-export * from "./Artifact/sections-anchor";
-export * from "./html-styles";
-export * from "./type";
+declare module "*.po" {
+    import type { GettextParserPoFile } from "@tuleap/gettext";
+    const content: GettextParserPoFile;
+    export default content;
+}

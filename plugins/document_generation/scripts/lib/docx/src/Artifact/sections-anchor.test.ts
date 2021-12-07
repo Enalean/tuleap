@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./Image/image-loader";
-export * from "./Artifact/build-list-of-artifacts-content";
-export * from "./Artifact/sections-anchor";
-export * from "./html-styles";
-export * from "./type";
+import type { FormattedArtifact } from "../type";
+import { getAnchorToArtifactContent } from "./sections-anchor";
+
+describe("sections-anchor", () => {
+    it("builds an anchor to the content of an artifact", () => {
+        const formatted_artifact: FormattedArtifact = {
+            id: 123,
+        } as FormattedArtifact;
+
+        expect(getAnchorToArtifactContent(formatted_artifact)).toBe("artifact-123");
+    });
+});
