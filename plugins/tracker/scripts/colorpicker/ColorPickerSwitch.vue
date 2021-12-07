@@ -25,8 +25,8 @@
         <a
             v-bind:class="{ 'colorpicker-switch-disabled': isSwitchDisabled }"
             v-bind:title="switch_title"
-            v-on:click="switchPalette"
-            href="javascript:;"
+            v-on:click.prevent="switchPalette"
+            href="#"
         >
             <i class="fa fa-random"></i>
             <span v-if="isOldPaletteShown" v-translate>Switch to default colors</span>
