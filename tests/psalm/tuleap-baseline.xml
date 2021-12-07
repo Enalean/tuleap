@@ -72591,7 +72591,7 @@
     </DeprecatedFunction>
   </file>
   <file src="src/www/cvs/commit_utils.php">
-    <DeprecatedFunction occurrences="70">
+    <DeprecatedFunction occurrences="74">
       <code>db_ei($_branch)</code>
       <code>db_ei($_commit_id)</code>
       <code>db_ei($commit_id)</code>
@@ -72605,6 +72605,10 @@
       <code>db_ei(db_result($result, $i, 'dirid'))</code>
       <code>db_ei(db_result($result, $i, 'fileid'))</code>
       <code>db_ei(db_result($result, $i, 'repositoryid'))</code>
+      <code>db_ei($repo_id ? $repo_id : -1)</code>
+      <code>db_ei($offset)</code>
+      <code>db_ei($chunksz)</code>
+      <code>db_ei(check_cvs_access(user_getname(), $project-&gt;getUnixName(false), '') ? 1 : 0)</code>
       <code>db_es($_commiter)</code>
       <code>db_es($revision)</code>
       <code>db_es('%' . $_srch . '%')</code>
