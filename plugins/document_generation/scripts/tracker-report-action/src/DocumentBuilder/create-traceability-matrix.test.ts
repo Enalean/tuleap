@@ -17,16 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    ArtifactFromReport,
-    ArtifactReportResponseUserRepresentation,
-    ArtifactResponse,
-    TestExecutionResponse,
-} from "./artifacts-retriever";
+import type { ArtifactResponse, TestExecutionResponse } from "./artifacts-retriever";
 import type { TraceabilityMatrixElement } from "../type";
 import { createTraceabilityMatrix } from "./create-traceability-matrix";
 import * as rest_querier from "./rest-querier";
 import type { getTestManagementExecution } from "./rest-querier";
+import type {
+    ArtifactFromReport,
+    ArtifactReportResponseUserRepresentation,
+} from "@tuleap/plugin-docgen-docx/src";
 
 describe("create-traceability-matrix", () => {
     it("creates a row in the matrix when a test execution with all the information is encountered", async () => {
@@ -58,6 +57,7 @@ describe("create-traceability-matrix", () => {
             [
                 {
                     id: 10,
+                    xref: "bug #10",
                     title: null,
                     values: [
                         {
@@ -112,6 +112,7 @@ describe("create-traceability-matrix", () => {
             [
                 {
                     id: 11,
+                    xref: "bug #11",
                     title: null,
                     values: [],
                     containers: [],
@@ -131,6 +132,7 @@ describe("create-traceability-matrix", () => {
             [
                 {
                     id: 400,
+                    xref: "bug #400",
                     title: null,
                     values: [
                         {
@@ -173,6 +175,7 @@ describe("create-traceability-matrix", () => {
             [
                 {
                     id: 14,
+                    xref: "bug #14",
                     title: null,
                     values: [
                         {
@@ -207,6 +210,7 @@ describe("create-traceability-matrix", () => {
             [
                 {
                     id: 13,
+                    xref: "bug #13",
                     title: null,
                     values: [
                         {
@@ -258,6 +262,7 @@ describe("create-traceability-matrix", () => {
             [
                 {
                     id: 15,
+                    xref: "bug #15",
                     title: null,
                     values: [
                         {
@@ -320,6 +325,7 @@ describe("create-traceability-matrix", () => {
             [
                 {
                     id: 10,
+                    xref: "bug #10",
                     title: null,
                     values: [
                         {

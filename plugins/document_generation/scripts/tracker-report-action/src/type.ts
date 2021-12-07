@@ -17,7 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactFieldValueStatus, FormattedArtifact } from "@tuleap/plugin-docgen-docx";
+import type {
+    ArtifactFieldValueStatus,
+    ArtifactLinkType,
+    FormattedArtifact,
+} from "@tuleap/plugin-docgen-docx";
 
 export interface GlobalExportProperties {
     readonly report_id: number;
@@ -35,14 +39,6 @@ export interface GlobalExportProperties {
     readonly report_criteria: ReportCriteria;
     readonly base_url: string;
     readonly artifact_links_types: ReadonlyArray<ArtifactLinkType>;
-}
-
-export interface ArtifactLinkType {
-    readonly reverse_label: string;
-    readonly forward_label: string;
-    readonly shortname: string;
-    readonly is_system: boolean;
-    readonly is_visible: boolean;
 }
 
 export type ReportCriteria = ExportReportCriteria | ClassicReportCriteria;
@@ -91,11 +87,6 @@ export interface ExportDocument {
     readonly name: string;
     readonly artifacts: ReadonlyArray<FormattedArtifact>;
     readonly traceability_matrix: ReadonlyArray<TraceabilityMatrixElement>;
-}
-
-export interface DateTimeLocaleInformation {
-    readonly locale: string;
-    readonly timezone: string;
 }
 
 export interface TraceabilityMatrixElement {

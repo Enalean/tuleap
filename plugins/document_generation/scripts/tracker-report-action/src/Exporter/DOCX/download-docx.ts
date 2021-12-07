@@ -19,7 +19,6 @@
 
 import type {
     DateReportCriterionValue,
-    DateTimeLocaleInformation,
     ExportDocument,
     GlobalExportProperties,
     ReportCriterionValue,
@@ -57,7 +56,10 @@ import { TableOfContentsPrefilled } from "./TableOfContents/table-of-contents";
 import type { GetText } from "../../../../../../../src/scripts/tuleap/gettext/gettext-init";
 import { sprintf } from "sprintf-js";
 import { triggerBlobDownload } from "../trigger-blob-download";
-import type { ArtifactFieldValueStatus } from "@tuleap/plugin-docgen-docx";
+import type {
+    ArtifactFieldValueStatus,
+    DateTimeLocaleInformation,
+} from "@tuleap/plugin-docgen-docx";
 import {
     loadImage,
     buildListOfArtifactsContent,

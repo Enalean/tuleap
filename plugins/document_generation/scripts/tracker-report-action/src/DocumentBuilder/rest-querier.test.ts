@@ -30,7 +30,7 @@ import {
     getTrackerDefinition,
 } from "./rest-querier";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import type { ArtifactReportResponseUserRepresentation } from "./artifacts-retriever";
+import type { ArtifactReportResponseUserRepresentation } from "@tuleap/plugin-docgen-docx/src";
 
 jest.mock("tlp");
 
@@ -69,6 +69,7 @@ describe("API querier", () => {
             const artifacts_report_response: ArtifactResponse[] = [
                 {
                     id: 74,
+                    xref: "bug #74",
                     title: null,
                     html_url: "/plugins/tracker/?aid=74",
                     values: [

@@ -22,9 +22,9 @@ import type {
     ArtifactResponse,
     TrackerDefinition,
     TestExecutionResponse,
-    ArtifactReportResponseUserRepresentation,
 } from "./artifacts-retriever";
 import { retrieveReportArtifacts } from "./artifacts-retriever";
+import type { ArtifactReportResponseUserRepresentation } from "@tuleap/plugin-docgen-docx/src";
 
 describe("artifacts-retriever", () => {
     it("retrieves artifacts from a report with additional information", async () => {
@@ -33,6 +33,7 @@ describe("artifacts-retriever", () => {
             {
                 id: 74,
                 title: null,
+                xref: "bug #74",
                 html_url: "/plugins/tracker/?aid=74",
                 values: [
                     {
@@ -190,6 +191,7 @@ describe("artifacts-retriever", () => {
                     359,
                     {
                         id: 359,
+                        xref: "bug #359",
                         html_url: "/plugins/tracker/?aid=359",
                         title: "Linked artifact",
                         values: [],
@@ -199,6 +201,7 @@ describe("artifacts-retriever", () => {
                     3,
                     {
                         id: 3,
+                        xref: "bug #3",
                         html_url: "/plugins/tracker/?aid=3",
                         title: "Reverse linked artifact",
                         values: [],
@@ -323,6 +326,7 @@ describe("artifacts-retriever", () => {
         expect(artifacts).toStrictEqual([
             {
                 id: 74,
+                xref: "bug #74",
                 title: null,
                 html_url: "/plugins/tracker/?aid=74",
                 values: [

@@ -18,8 +18,9 @@
  */
 
 import type { GetText } from "../../../../../src/scripts/tuleap/gettext/gettext-init";
-import type { DateTimeLocaleInformation, ExportDocument, GlobalExportProperties } from "./type";
+import type { ExportDocument, GlobalExportProperties } from "./type";
 import { createExportDocument } from "./DocumentBuilder/create-export-document";
+import type { DateTimeLocaleInformation } from "@tuleap/plugin-docgen-docx/src";
 
 export async function startDownloadExportDocument(
     global_export_properties: GlobalExportProperties,
