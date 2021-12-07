@@ -19,15 +19,60 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import IterationUserStoryList from "./IterationUserStoryList.vue";
 import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-test";
+import * as retriever from "../../../helpers/iteration-content-retriever";
+
+import IterationUserStoryList from "./IterationUserStoryList.vue";
+import BacklogElementSkeleton from "../../BacklogElementSkeleton.vue";
+import FeatureCard from "./FeatureCard.vue";
+
+import type { Wrapper } from "@vue/test-utils";
+import type { Feature } from "../../../type";
 
 describe("IterationUserStoryList", () => {
-    it("Displays the empty state when no features are found", async () => {
-        const wrapper = shallowMount(IterationUserStoryList, {
+    async function getWrapper(): Promise<Wrapper<IterationUserStoryList>> {
+        return shallowMount(IterationUserStoryList, {
             localVue: await createPlanIterationsLocalVue(),
+            propsData: {
+                iteration: {
+                    id: 666,
+                },
+            },
         });
+    }
+
+    it("Displays the empty state when no features are found", async () => {
+        jest.spyOn(retriever, "retrieveIterationContent").mockResolvedValue([]);
+
+        const wrapper = await getWrapper();
+
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
+
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(true);
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
+    });
+
+    it("Displays the features", async () => {
+        jest.spyOn(retriever, "retrieveIterationContent").mockResolvedValue([
+            { id: 1201 } as Feature,
+            { id: 1202 } as Feature,
+            { id: 1203 } as Feature,
+        ]);
+
+        const wrapper = await getWrapper();
+
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
+
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+
+        const feature_cards = wrapper.findAllComponents(FeatureCard);
+
+        expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
+        expect(feature_cards.length).toEqual(3);
     });
 });

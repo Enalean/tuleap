@@ -79,7 +79,7 @@
             v-if="is_open"
             data-test="planned-iteration-content"
         >
-            <iteration-user-story-list v-if="is_open" />
+            <iteration-user-story-list v-bind:iteration="iteration" v-if="is_open" />
         </section>
     </div>
 </template>
