@@ -242,6 +242,7 @@ class LDAP
                 $this->bound = true;
             } else {
                 $error_message = 'Unable to bind to LDAP server: ' . $this->ldapParams['server'] .
+                    ' ***Bind DN:' . ($binddn ?? '<NULL>') .
                     ' ***ERROR:' . ldap_error($this->ds) .
                     ' ***ERROR no:' . $this->getErrno();
                 if (ldap_get_option($this->ds, LDAP_OPT_DIAGNOSTIC_MESSAGE, $extended_error)) {
