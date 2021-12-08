@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Domain\FeatureFlag\VerifyIterationsFeatureActive;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\SearchIterations;
@@ -39,7 +38,6 @@ use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 final class IterationCreationDetector
 {
     public function __construct(
-        private VerifyIterationsFeatureActive $feature_flag_verifier,
         private SearchIterations $iterations_searcher,
         private VerifyIsVisibleArtifact $visibility_verifier,
         private VerifyIterationHasBeenLinkedBefore $iteration_link_verifier,
@@ -54,9 +52,6 @@ final class IterationCreationDetector
      */
     public function detectNewIterationCreations(ProgramIncrementUpdate $program_increment_update): array
     {
-        if (! $this->feature_flag_verifier->isIterationsFeatureActive()) {
-            return [];
-        }
         $iterations             = IterationIdentifier::buildCollectionFromProgramIncrement(
             $this->iterations_searcher,
             $this->visibility_verifier,

@@ -31,11 +31,7 @@ import {
     PROGRAM_INCREMENT_SUB_LABEL_ID,
 } from "./init-preview-labels-helper";
 
-export function buildProgramConfiguration(
-    doc: Document,
-    program_id: number,
-    use_iteration: boolean
-): ProgramConfiguration {
+export function buildProgramConfiguration(doc: Document, program_id: number): ProgramConfiguration {
     const program_increment_tracker_element = getHTMLSelectElementFromId(
         doc,
         PROGRAM_INCREMENT_TRACKER_ID
@@ -52,7 +48,7 @@ export function buildProgramConfiguration(
         program_increment_label: getHTMLInputElementFromId(doc, PROGRAM_INCREMENT_LABEL_ID).value,
         program_increment_sub_label: getHTMLInputElementFromId(doc, PROGRAM_INCREMENT_SUB_LABEL_ID)
             .value,
-        iteration: use_iteration ? extractIterationConfigurationObject(doc) : null,
+        iteration: extractIterationConfigurationObject(doc),
     };
 }
 

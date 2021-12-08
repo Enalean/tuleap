@@ -32,12 +32,11 @@ describe(`submitConfigurationHandler`, () => {
 
     it(`returns when form is not displayed (aka no team have been configured)`, () => {
         const program_id = 101;
-        const use_iteration = true;
         const createDocument = (): Document => document.implementation.createHTMLDocument();
 
-        expect(() =>
-            submitConfigurationHandler(createDocument(), gettext, program_id, use_iteration)
-        ).not.toThrow(Error);
+        expect(() => submitConfigurationHandler(createDocument(), gettext, program_id)).not.toThrow(
+            Error
+        );
     });
 
     it(`throws when  button is not found`, () => {
@@ -48,10 +47,7 @@ describe(`submitConfigurationHandler`, () => {
         doc.body.appendChild(form);
 
         const program_id = 101;
-        const use_iteration = true;
 
-        expect(() => submitConfigurationHandler(doc, gettext, program_id, use_iteration)).toThrow(
-            Error
-        );
+        expect(() => submitConfigurationHandler(doc, gettext, program_id)).toThrow(Error);
     });
 });

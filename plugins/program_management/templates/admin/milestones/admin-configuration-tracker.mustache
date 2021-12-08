@@ -1,21 +1,14 @@
 <div class="tlp-framed-horizontally">
     <h2 class="program-management-subtitle">
         {{# dgettext }}tuleap-program_management | Milestones{{/ dgettext }}
-        {{# display_iteration_section }}
-            <small>{{# dgettext }}tuleap-program_management | Program Increments, Iterations{{/ dgettext }}</small>
-        {{/ display_iteration_section }}
-        {{^ display_iteration_section }}
-            <small>{{# dgettext }}tuleap-program_management | Program Increments{{/ dgettext }}</small>
-        {{/ display_iteration_section }}
+        <small>{{# dgettext }}tuleap-program_management | Program Increments, Iterations{{/ dgettext }}</small>
     </h2>
 
     <section class="tlp-pane program-management-admin-pane">
         <div class="tlp-alert-danger program-management-error-rest-not-show" id="program-management-save-configuration-error-rest"></div>
         <form id="form-program-configuration" class="program-management-admin-form">
             {{> milestones/admin-configuration-program-increment-section}}
-            {{# display_iteration_section }}
-                {{> milestones/admin-configuration-iteration-section}}
-            {{/ display_iteration_section }}
+            {{> milestones/admin-configuration-iteration-section}}
             <section class="tlp-pane-section tlp-pane-section-submit">
                 <button
                     class="tlp-button-primary program-management-admin-button-save-configuration"

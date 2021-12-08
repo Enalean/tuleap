@@ -47,7 +47,6 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTrackersOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationsFeatureActiveStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyTrackerSemanticsStub;
 use Tuleap\Request\ForbiddenException;
@@ -134,7 +133,6 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             ),
             RetrieveIterationLabelsStub::buildLabels(null, null),
             AllProgramSearcherStub::buildPrograms(),
-            VerifyIterationsFeatureActiveStub::withActiveFeature(),
             new ConfigurationErrorPresenterBuilder(
                 new ConfigurationErrorsGatherer(
                     BuildProgramStub::stubValidProgram(),

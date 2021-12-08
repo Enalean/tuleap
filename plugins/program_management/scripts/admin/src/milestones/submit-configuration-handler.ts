@@ -36,8 +36,7 @@ const SUBMIT_BUTTON_ID = "program-management-admin-button-save-configuration";
 export function submitConfigurationHandler(
     doc: Document,
     gettext_provider: GetText,
-    program_id: number,
-    use_iteration: boolean
+    program_id: number
 ): void {
     const form = doc.getElementById(FORM_ID);
     if (!(form instanceof HTMLFormElement)) {
@@ -61,7 +60,7 @@ export function submitConfigurationHandler(
         }
 
         try {
-            await saveConfiguration(buildProgramConfiguration(doc, program_id, use_iteration));
+            await saveConfiguration(buildProgramConfiguration(doc, program_id));
             window.location.reload();
         } catch (e) {
             if (!(e instanceof FetchWrapperError)) {

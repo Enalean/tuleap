@@ -37,8 +37,7 @@ const ITERATION_ILLUSTRATION_ID = "program-management-admin-iterations-illustrat
 
 export function initPreviewTrackerLabels(
     retriever: RetrieveElement,
-    gettext_provider: GettextProvider,
-    use_iteration: boolean
+    gettext_provider: GettextProvider
 ): void {
     let program_increment_label: TimeboxLabel;
     try {
@@ -66,9 +65,6 @@ export function initPreviewTrackerLabels(
 
     program_increments_actualizer.initTimeboxPreview();
 
-    if (!use_iteration) {
-        return;
-    }
     const iterations_label = TimeboxLabel.fromId(retriever, ITERATIONS_LABEL_ID);
     const iterations_sub_label = TimeboxLabel.fromId(retriever, ITERATIONS_SUB_LABEL_ID);
     const iteration_selector = TrackerSelector.fromId(retriever, ITERATION_SELECT_ID);

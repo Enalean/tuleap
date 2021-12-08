@@ -24,7 +24,6 @@ use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
-use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\Dashboard\Project\DisplayCreatedProjectModalPresenter;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -47,7 +46,6 @@ use Tuleap\ProgramManagement\Adapter\Events\ProjectServiceBeforeActivationProxy;
 use Tuleap\ProgramManagement\Adapter\Events\RedirectUserAfterArtifactCreationOrUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\RootPlanningEditionEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ServiceDisabledCollectorProxy;
-use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
@@ -292,7 +290,6 @@ final class program_managementPlugin extends Plugin
         $this->addHook(CollectLinkedProjects::NAME);
         $this->addHook(ServiceDisabledCollector::NAME);
         $this->addHook(ProjectServiceBeforeActivation::NAME);
-        $this->addHook(GetWhitelistedKeys::NAME);
         $this->addHook(DisplayCreatedProjectModalPresenter::NAME);
         $this->addHook(CollectCategorisedExternalTemplatesEvent::NAME);
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
@@ -317,11 +314,6 @@ final class program_managementPlugin extends Plugin
     public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
-    }
-
-    public function getWhitelistedKeys(GetWhitelistedKeys $event): void
-    {
-        $event->addConfigClass(ForgeConfigAdapter::class);
     }
 
     public function serviceUrlCollector(ServiceUrlCollector $collector): void
@@ -501,7 +493,6 @@ final class program_managementPlugin extends Plugin
             new TrackerFactoryAdapter($tracker_factory),
             new IterationsDAO(),
             $program_dao,
-            new ForgeConfigAdapter(),
             new ConfigurationErrorPresenterBuilder(
                 new ConfigurationErrorsGatherer(
                     $this->getProgramAdapter(),
@@ -745,7 +736,6 @@ final class program_managementPlugin extends Plugin
             ),
             new ArtifactsExplicitTopBacklogDAO(),
             new IterationCreationDetector(
-                new ForgeConfigAdapter(),
                 $iterations_linked_dao,
                 $visibility_verifier,
                 $iterations_linked_dao,
