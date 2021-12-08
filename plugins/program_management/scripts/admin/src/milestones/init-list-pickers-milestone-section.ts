@@ -30,8 +30,7 @@ export const PERMISSION_PRIORITIZE_ID = "admin-configuration-permission-prioriti
 
 export async function initListPickersMilestoneSection(
     doc: Document,
-    gettext_provider: GetText,
-    use_iteration: boolean
+    gettext_provider: GetText
 ): Promise<void> {
     const program_increment_tracker_element = doc.getElementById(PROGRAM_INCREMENT_TRACKER_ID);
 
@@ -74,14 +73,12 @@ export async function initListPickersMilestoneSection(
         disabledPlannableTrackers(doc, event.target);
     });
 
-    if (use_iteration) {
-        await setIterationSection(
-            doc,
-            program_increment_tracker_element,
-            plannable_trackers_element,
-            gettext_provider
-        );
-    }
+    await setIterationSection(
+        doc,
+        program_increment_tracker_element,
+        plannable_trackers_element,
+        gettext_provider
+    );
 }
 
 async function setIterationSection(

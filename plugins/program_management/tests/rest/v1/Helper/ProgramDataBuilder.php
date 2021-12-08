@@ -28,7 +28,6 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
-use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessorBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
@@ -68,8 +67,6 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
     public function setUp(): void
     {
         echo 'Setup Program Management REST Tests configuration' . PHP_EOL;
-
-        \ForgeConfig::setFeatureFlag(ForgeConfigAdapter::FEATURE_FLAG_KEY, '1');
 
         $user_manager                 = UserManager::instance();
         $user_adapter                 = new UserManagerAdapter($user_manager);

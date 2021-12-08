@@ -31,14 +31,12 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationsFeatureActiveStub;
 
 final class IterationCreationDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIRST_ITERATION_ID  = 828;
     private const SECOND_ITERATION_ID = 251;
     private ProgramIncrementUpdate $program_increment_update;
-    private VerifyIterationsFeatureActiveStub $feature_flag_verifier;
     private SearchIterationsStub $iterations_searcher;
     private VerifyIsVisibleArtifactStub $visibility_verifier;
     private VerifyIterationHasBeenLinkedBeforeStub $iteration_link_verifier;
@@ -46,7 +44,6 @@ final class IterationCreationDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->program_increment_update = ProgramIncrementUpdateBuilder::build();
-        $this->feature_flag_verifier    = VerifyIterationsFeatureActiveStub::withActiveFeature();
         $this->iterations_searcher      = SearchIterationsStub::withIterationIds(
             self::FIRST_ITERATION_ID,
             self::SECOND_ITERATION_ID
@@ -58,7 +55,6 @@ final class IterationCreationDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getDetector(): IterationCreationDetector
     {
         return new IterationCreationDetector(
-            $this->feature_flag_verifier,
             $this->iterations_searcher,
             $this->visibility_verifier,
             $this->iteration_link_verifier,
@@ -66,14 +62,6 @@ final class IterationCreationDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveLastChangesetStub::withLastChangesetIds(4297, 7872),
             RetrieveIterationTrackerStub::withValidTracker(4)
         );
-    }
-
-    public function testItReturnsEmptyArrayWhenFeatureFlagIsDisabled(): void
-    {
-        $this->feature_flag_verifier = VerifyIterationsFeatureActiveStub::withDisabledFeature();
-
-        $creations = $this->getDetector()->detectNewIterationCreations($this->program_increment_update);
-        self::assertEmpty($creations);
     }
 
     public function testItReturnsEmptyArrayWhenProgramIncrementHasNoIteration(): void

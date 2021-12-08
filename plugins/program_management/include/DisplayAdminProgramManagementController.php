@@ -38,7 +38,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Admin\TimeboxTrackerConfiguration\P
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
-use Tuleap\ProgramManagement\Domain\FeatureFlag\VerifyIterationsFeatureActive;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
@@ -88,7 +87,6 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         private SearchTrackersOfProgram $trackers_searcher,
         private RetrieveIterationLabels $iteration_labels_retriever,
         private AllProgramSearcher $all_program_searcher,
-        private VerifyIterationsFeatureActive $feature_flag_verifier,
         private ConfigurationErrorPresenterBuilder $error_presenter_builder,
         private \ProjectManager $project_manager,
     ) {
@@ -240,7 +238,6 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                     $all_potential_trackers,
                     $iteration_tracker
                 )->presenters,
-                $this->feature_flag_verifier->isIterationsFeatureActive(),
                 $iteration_labels->label,
                 $iteration_labels->sub_label,
                 $increment_error_presenter,

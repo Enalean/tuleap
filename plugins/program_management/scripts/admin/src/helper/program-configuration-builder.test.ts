@@ -23,37 +23,18 @@ describe("program-configuration-builder", function () {
     describe("buildProgramConfiguration", function () {
         it("should throw error when no input label", () => {
             expect(() =>
-                buildProgramConfiguration(createDocumentWithSelectorWithoutLabels(), 100, false)
+                buildProgramConfiguration(createDocumentWithSelectorWithoutLabels(), 100)
             ).toThrow("No admin-configuration-program-increment-label-section input");
         });
         it("should throw error when no iteration selector and feature flag is true", () => {
             expect(() =>
-                buildProgramConfiguration(
-                    createDocumentWithSelectorWithoutIterationSelector(),
-                    100,
-                    true
-                )
+                buildProgramConfiguration(createDocumentWithSelectorWithoutIterationSelector(), 100)
             ).toThrow("admin-configuration-iteration-tracker element does not exist");
-        });
-        it("should not throw error when no iteration selector and feature flag is false", () => {
-            const configuration = buildProgramConfiguration(
-                createDocumentWithSelectorWithoutIterationSelector(),
-                100,
-                false
-            );
-
-            expect(configuration.program_id).toEqual(100);
-            expect(configuration.plannable_tracker_ids).toEqual([9, 10]);
-            expect(configuration.program_increment_tracker_id).toEqual(8);
-            expect(configuration.permissions.can_prioritize_features).toEqual(["100_3", "150"]);
-            expect(configuration.program_increment_label).toEqual("PI");
-            expect(configuration.iteration).toBeNull();
         });
         it("should return configuration with selected value and not empty iteration object", function () {
             const configuration = buildProgramConfiguration(
                 createDocumentWithSelectorWithoutEmptyField("8"),
-                100,
-                true
+                100
             );
 
             expect(configuration.program_id).toEqual(100);
@@ -68,8 +49,7 @@ describe("program-configuration-builder", function () {
         it("should return configuration with empty iteration object when no tracker iteration was selected", function () {
             const configuration = buildProgramConfiguration(
                 createDocumentWithSelectorWithoutEmptyField(""),
-                100,
-                true
+                100
             );
             expect(configuration.program_id).toEqual(100);
             expect(configuration.plannable_tracker_ids).toEqual([9, 10]);

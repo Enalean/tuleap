@@ -21,6 +21,7 @@
 <template>
     <div class="planned-iteration-content-items" data-test="iteration-user-story-list">
         <iteration-no-content data-test="empty-state" />
+        <span class="empty-state-text" v-translate>This is not implemented yet</span>
     </div>
 </template>
 

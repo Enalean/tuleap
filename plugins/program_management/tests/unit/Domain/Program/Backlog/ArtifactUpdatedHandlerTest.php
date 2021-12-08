@@ -38,7 +38,6 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationsFeatureActiveStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ArtifactUpdatedHandlerTest extends TestCase
@@ -71,7 +70,6 @@ final class ArtifactUpdatedHandlerTest extends TestCase
             $this->user_stories_planner,
             $this->feature_remover,
             new IterationCreationDetector(
-                VerifyIterationsFeatureActiveStub::withActiveFeature(),
                 SearchIterationsStub::withIterationIds(101, 102),
                 VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
                 VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),

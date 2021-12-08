@@ -30,9 +30,6 @@ msgstr "Itérations"
 msgid "New %{ iteration_sub_label }"
 msgstr "Ajouter un(e) %{ iteration_sub_label }"
 
-msgid "Nothing to see here for the moment"
-msgstr "Rien à voir ici pour le moment"
-
 msgid "Program"
 msgstr "Programme"
 
@@ -47,6 +44,9 @@ msgstr "Il n'y a pas encore de %s."
 
 msgid "There is no iteration yet."
 msgstr "Il n'y a pas encore d'itérations."
+
+msgid "This is not implemented yet"
+msgstr "Cette partie n'est pas encore implémentée"
 
 msgid "To be planned by the Teams"
 msgstr "À plannifier par les équipes"

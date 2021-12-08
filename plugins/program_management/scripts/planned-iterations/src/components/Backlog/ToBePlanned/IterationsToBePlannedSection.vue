@@ -21,7 +21,7 @@
     <div class="planned-iterations">
         <h2 class="planned-iterations-section-title" v-translate>To be planned by the Teams</h2>
         <div class="empty-state-page" data-test="app-tmp-empty-state">
-            <p class="empty-state-text" v-translate>Nothing to see here for the moment</p>
+            <p class="empty-state-text" v-translate>This is not implemented yet</p>
         </div>
     </div>
 </template>
