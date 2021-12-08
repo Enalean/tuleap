@@ -71,7 +71,6 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-plugin-tee-container \
     tuleap-plugin-testmanagement \
     tuleap-plugin-testplan \
-    tuleap-plugin-textualreport \
     tuleap-plugin-timetracking \
     tuleap-plugin-velocity \
     tuleap-plugin-embed \
