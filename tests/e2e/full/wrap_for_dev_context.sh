@@ -5,7 +5,6 @@
 
 set -euxo pipefail
 plugins_compose_file="$(find ./plugins/*/tests/e2e/ -name docker-compose.yml -printf '-f %p ')"
-DOCKERCOMPOSE="docker-compose -f docker-compose-e2e-full-tests.yml $plugins_compose_file -p e2e-tests"
 
 case "${1:-}" in
     "mysql57")
@@ -20,6 +19,8 @@ case "${1:-}" in
     echo "* mysql80"
     exit 1
 esac
+
+DOCKERCOMPOSE="docker-compose -f docker-compose-e2e-full-tests.yml -f tests/e2e/docker-compose-db-${DB_HOST}.yml $plugins_compose_file -p e2e-tests"
 
 test_results_folder='./test_results_e2e_full'
 if [ "$#" -eq "2" ]; then
@@ -37,5 +38,5 @@ clean_env
 
 TEST_RESULT_OUTPUT="$test_results_folder" $DOCKERCOMPOSE up -d --build
 
-HOSTS="$($DOCKERCOMPOSE ps -q | xargs docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}{{range .NetworkSettings.Networks}}{{range .Aliases}} {{ . }}{{end}}{{end}}' | grep -v mysql57)"
+HOSTS="$($DOCKERCOMPOSE ps -q | xargs docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}{{range .NetworkSettings.Networks}}{{range .Aliases}} {{ . }}{{end}}{{end}}' | grep -v ${DB_HOST})"
 echo -e "Please set in /etc/hosts:\n\e[32m$HOSTS\e[0m"
