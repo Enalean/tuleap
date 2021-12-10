@@ -23,11 +23,11 @@ import type {
     ArtifactFromReport,
     ArtifactReportContainer,
     ArtifactReportFieldValue,
+    ArtifactResponse,
     DateTimeLocaleInformation,
+    getTestManagementExecution,
 } from "@tuleap/plugin-docgen-docx";
-import type { ArtifactResponse } from "./artifacts-retriever";
-import type { getTestManagementExecution } from "./rest-querier";
-import { getArtifacts } from "./rest-querier";
+import { getArtifacts } from "@tuleap/plugin-docgen-docx";
 
 export async function createTraceabilityMatrix(
     artifacts: ReadonlyArray<ArtifactFromReport>,

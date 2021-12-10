@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,23 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { recursiveGet } from "@tuleap/tlp-fetch";
-import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx/src";
+import { get } from "@tuleap/tlp-fetch";
+import type { TestExecutionResponse } from "../type";
 
-export async function getReportArtifacts(
-    report_id: number,
-    report_has_changed: boolean
-): Promise<ArtifactResponse[]> {
-    const report_artifacts: ArtifactResponse[] = await recursiveGet(
-        `/api/v1/tracker_reports/${encodeURIComponent(report_id)}/artifacts`,
-        {
-            params: {
-                values: "all",
-                with_unsaved_changes: report_has_changed,
-                limit: 50,
-            },
-        }
+export async function getTestManagementExecution(
+    artifact_id: number
+): Promise<TestExecutionResponse> {
+    const test_execution_response = await get(
+        `/api/v1/testmanagement_executions/${encodeURIComponent(artifact_id)}`
     );
 
-    return report_artifacts;
+    return test_execution_response.json();
 }
