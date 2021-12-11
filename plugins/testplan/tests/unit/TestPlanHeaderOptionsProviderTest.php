@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tracker;
 use TrackerFactory;
@@ -36,38 +34,33 @@ use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
 class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|HeaderOptionsProvider
+     * @var \PHPUnit\Framework\MockObject\MockObject&HeaderOptionsProvider
      */
-    private $header_options_provider;
+    private mixed $header_options_provider;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Config
+     * @var \PHPUnit\Framework\MockObject\MockObject&Config
      */
-    private $testmanagement_config;
+    private mixed $testmanagement_config;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerFactory
      */
-    private $tracker_factory;
+    private mixed $tracker_factory;
+    private TestPlanHeaderOptionsProvider $provider;
     /**
-     * @var TestPlanHeaderOptionsProvider
+     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
      */
-    private $provider;
+    private mixed $user;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Planning_Milestone
      */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Planning_Milestone
-     */
-    private $milestone;
+    private mixed $milestone;
 
     protected function setUp(): void
     {
-        $this->header_options_provider = Mockery::mock(HeaderOptionsProvider::class);
-        $this->testmanagement_config   = Mockery::mock(Config::class);
-        $this->tracker_factory         = Mockery::mock(TrackerFactory::class);
+        $this->header_options_provider = $this->createMock(HeaderOptionsProvider::class);
+        $this->testmanagement_config   = $this->createMock(Config::class);
+        $this->tracker_factory         = $this->createMock(TrackerFactory::class);
         $presenter_builder             = new TrackerNewDropdownLinkPresenterBuilder();
         $header_options_inserter       = new CurrentContextSectionToHeaderOptionsInserter();
 
@@ -79,30 +72,23 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             $header_options_inserter,
         );
 
-        $this->user      = Mockery::mock(\PFUser::class);
-        $this->milestone = Mockery::mock(\Planning_Milestone::class)
-            ->shouldReceive(
-                [
-                    'getProject'       => Mockery::mock(Project::class),
-                    'getArtifactTitle' => 'Milestone title',
-                ]
-            )->getMock();
+        $this->user      = $this->createMock(\PFUser::class);
+        $this->milestone = $this->createMock(\Planning_Milestone::class);
+        $this->milestone->method('getProject')->willReturn($this->createMock(Project::class));
+        $this->milestone->method('getArtifactTitle')->willReturn('Milestone title');
     }
 
     public function testItAddsTheFluidMainToExistingMainClasses(): void
     {
         $this->header_options_provider
-            ->shouldReceive(
-                [
-                    'getHeaderOptions' => [
-                        'main_classes' => ['toto'],
-                    ],
-                ]
-            );
+            ->method('getHeaderOptions')
+            ->willReturn([
+                'main_classes' => ['toto'],
+            ]);
 
         $this->testmanagement_config
-            ->shouldReceive('getCampaignTrackerId')
-            ->andReturnFalse();
+            ->method('getCampaignTrackerId')
+            ->willReturn(false);
 
         $header_options = $this->provider->getHeaderOptions($this->user, $this->milestone);
 
@@ -112,15 +98,12 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAddsTheFluidMainToMainClasses(): void
     {
         $this->header_options_provider
-            ->shouldReceive(
-                [
-                    'getHeaderOptions' => [],
-                ]
-            );
+            ->method('getHeaderOptions')
+            ->willReturn([]);
 
         $this->testmanagement_config
-            ->shouldReceive('getCampaignTrackerId')
-            ->andReturnFalse();
+            ->method('getCampaignTrackerId')
+            ->willReturn(false);
 
         $header_options = $this->provider->getHeaderOptions($this->user, $this->milestone);
 
@@ -130,15 +113,12 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotAddLinkToCampaignInCurrentContextSectionIfThereIsNoCampaignTrackerIdInConfig(): void
     {
         $this->header_options_provider
-            ->shouldReceive(
-                [
-                    'getHeaderOptions' => [],
-                ]
-            );
+            ->method('getHeaderOptions')
+            ->willReturn([]);
 
         $this->testmanagement_config
-            ->shouldReceive('getCampaignTrackerId')
-            ->andReturnFalse();
+            ->method('getCampaignTrackerId')
+            ->willReturn(false);
 
         $header_options = $this->provider->getHeaderOptions($this->user, $this->milestone);
 
@@ -148,19 +128,16 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotAddLinkToCampaignInCurrentContextSectionIfTheCampaignTrackerCannotBeInstantiated(): void
     {
         $this->header_options_provider
-            ->shouldReceive(
-                [
-                    'getHeaderOptions' => [],
-                ]
-            );
+            ->method('getHeaderOptions')
+            ->willReturn([]);
 
         $this->testmanagement_config
-            ->shouldReceive('getCampaignTrackerId')
-            ->andReturn(42);
+            ->method('getCampaignTrackerId')
+            ->willReturn(42);
 
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->andReturnNull();
+            ->method('getTrackerById')
+            ->willReturn(null);
 
         $header_options = $this->provider->getHeaderOptions($this->user, $this->milestone);
 
@@ -170,23 +147,19 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotAddLinkToCampaignInCurrentContextSectionIfUserCannotCreateArtifactInTheCampaignTracker(): void
     {
         $this->header_options_provider
-            ->shouldReceive(
-                [
-                    'getHeaderOptions' => [],
-                ]
-            );
+            ->method('getHeaderOptions')
+            ->willReturn([]);
 
         $this->testmanagement_config
-            ->shouldReceive('getCampaignTrackerId')
-            ->andReturn(42);
+            ->method('getCampaignTrackerId')
+            ->willReturn(42);
 
-        $tracker = Mockery::mock(Tracker::class)
-            ->shouldReceive(['userCanSubmitArtifact' => false])
-            ->getMock();
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('userCanSubmitArtifact')->willReturn(false);
 
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->andReturn($tracker);
+            ->method('getTrackerById')
+            ->willReturn($tracker);
 
         $header_options = $this->provider->getHeaderOptions($this->user, $this->milestone);
 
@@ -196,29 +169,22 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAddsLinkToCampaignInCurrentContextSection(): NewDropdownLinkSectionPresenter
     {
         $this->header_options_provider
-            ->shouldReceive(
-                [
-                    'getHeaderOptions' => [],
-                ]
-            );
+            ->method('getHeaderOptions')
+            ->willReturn([]);
 
         $this->testmanagement_config
-            ->shouldReceive('getCampaignTrackerId')
-            ->andReturn(42);
+            ->method('getCampaignTrackerId')
+            ->willReturn(42);
 
-        $tracker = Mockery::mock(Tracker::class)
-            ->shouldReceive(
-                [
-                    'getId'                 => 102,
-                    'getSubmitUrl'          => '/path/to/102',
-                    'getItemName'           => 'campaign',
-                    'userCanSubmitArtifact' => true,
-                ]
-            )->getMock();
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(102);
+        $tracker->method('getSubmitUrl')->willReturn('/path/to/102');
+        $tracker->method('getItemName')->willReturn('campaign');
+        $tracker->method('userCanSubmitArtifact')->willReturn(true);
 
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->andReturn($tracker);
+            ->method('getTrackerById')
+            ->willReturn($tracker);
 
         $header_options = $this->provider->getHeaderOptions($this->user, $this->milestone);
 
@@ -242,36 +208,29 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAddsLinkToCampaignInExistingCurrentContextSection(): void
     {
         $this->header_options_provider
-            ->shouldReceive(
-                [
-                    'getHeaderOptions' => [
-                        'new_dropdown_current_context_section' => new NewDropdownLinkSectionPresenter(
-                            'Milestone title',
-                            [
-                                new NewDropdownLinkPresenter('url', 'New story', 'icon', []),
-                            ]
-                        ),
-                    ],
-                ]
-            );
+            ->method('getHeaderOptions')
+            ->willReturn([
+                'new_dropdown_current_context_section' => new NewDropdownLinkSectionPresenter(
+                    'Milestone title',
+                    [
+                        new NewDropdownLinkPresenter('url', 'New story', 'icon', []),
+                    ]
+                ),
+            ]);
 
         $this->testmanagement_config
-            ->shouldReceive('getCampaignTrackerId')
-            ->andReturn(42);
+            ->method('getCampaignTrackerId')
+            ->willReturn(42);
 
-        $tracker = Mockery::mock(Tracker::class)
-            ->shouldReceive(
-                [
-                    'getId'                 => 102,
-                    'getSubmitUrl'          => '/path/to/102',
-                    'getItemName'           => 'campaign',
-                    'userCanSubmitArtifact' => true,
-                ]
-            )->getMock();
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(102);
+        $tracker->method('getSubmitUrl')->willReturn('/path/to/102');
+        $tracker->method('getItemName')->willReturn('campaign');
+        $tracker->method('userCanSubmitArtifact')->willReturn(true);
 
         $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->andReturn($tracker);
+            ->method('getTrackerById')
+            ->willReturn($tracker);
 
         $header_options = $this->provider->getHeaderOptions($this->user, $this->milestone);
 

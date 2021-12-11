@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan;
 
 use HTTPRequest;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
@@ -35,60 +33,75 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Planning_MilestoneFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Planning_MilestoneFactory
      */
-    private $milestone_factory;
+    private mixed $milestone_factory;
     /**
-     * @var TestPlanController
+     * @var \PHPUnit\Framework\MockObject\MockObject&TestPlanPaneDisplayable
      */
-    private $controller;
+    private mixed $testplan_pane_displayable;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
+     * @var \PHPUnit\Framework\MockObject\MockObject&VisitRecorder
      */
-    private $user;
+    private mixed $visit_recorder;
     /**
-     * @var HTTPRequest|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&TemplateRenderer
      */
-    private $request;
+    private mixed $renderer;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TestPlanPaneDisplayable
+     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
      */
-    private $testplan_pane_displayable;
+    private mixed $user;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|VisitRecorder
+     * @var HTTPRequest&\PHPUnit\Framework\MockObject\MockObject
      */
-    private $visit_recorder;
+    private mixed $request;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TemplateRenderer
+     * @var \PHPUnit\Framework\MockObject\MockObject&IncludeAssets
      */
-    private $renderer;
+    private mixed $agiledashboard_asset;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&AllBreadCrumbsForMilestoneBuilder
+     */
+    private mixed $bread_crumbs_builder;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&TestPlanPresenterBuilder
+     */
+    private mixed $presenter_builder;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&IncludeAssets
+     */
+    private mixed $testplan_asset;
 
     protected function setUp(): void
     {
-        $this->milestone_factory         = Mockery::mock(\Planning_MilestoneFactory::class);
-        $this->testplan_pane_displayable = Mockery::mock(TestPlanPaneDisplayable::class);
-        $this->visit_recorder            = Mockery::mock(VisitRecorder::class);
-        $this->renderer                  = Mockery::mock(TemplateRenderer::class);
+        $this->milestone_factory         = $this->createMock(\Planning_MilestoneFactory::class);
+        $this->testplan_pane_displayable = $this->createMock(TestPlanPaneDisplayable::class);
+        $this->visit_recorder            = $this->createMock(VisitRecorder::class);
+        $this->renderer                  = $this->createMock(TemplateRenderer::class);
 
-        $this->user    = Mockery::mock(\PFUser::class);
-        $this->request = Mockery::mock(HTTPRequest::class);
-        $this->request->shouldReceive(['getCurrentUser' => $this->user]);
+        $this->user    = $this->createMock(\PFUser::class);
+        $this->request = $this->createMock(HTTPRequest::class);
+        $this->request->method('getCurrentUser')->willReturn($this->user);
 
-        $header_options_provider = Mockery::mock(TestPlanHeaderOptionsProvider::class);
-        $header_options_provider->shouldReceive(['getHeaderOptions' => []]);
+        $header_options_provider = $this->createMock(TestPlanHeaderOptionsProvider::class);
+        $header_options_provider->method('getHeaderOptions')->willReturn([]);
+
+        $this->bread_crumbs_builder = $this->createMock(AllBreadCrumbsForMilestoneBuilder::class);
+        $this->agiledashboard_asset = $this->createMock(IncludeAssets::class);
+        $this->testplan_asset       = $this->createMock(IncludeAssets::class);
+        $this->presenter_builder    = $this->createMock(TestPlanPresenterBuilder::class);
 
         $this->controller = new TestPlanController(
             $this->renderer,
-            Mockery::spy(AllBreadCrumbsForMilestoneBuilder::class),
-            Mockery::spy(IncludeAssets::class),
-            Mockery::spy(IncludeAssets::class),
+            $this->bread_crumbs_builder,
+            $this->agiledashboard_asset,
+            $this->testplan_asset,
             $this->testplan_pane_displayable,
             $this->visit_recorder,
             $this->milestone_factory,
-            Mockery::spy(TestPlanPresenterBuilder::class),
+            $this->presenter_builder,
             $header_options_provider,
         );
     }
@@ -96,151 +109,166 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test404IfMilestoneCannotBeFound(): void
     {
         $this->milestone_factory
-            ->shouldReceive('getBareMilestoneByArtifactId')
+            ->expects(self::once())
+            ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 42)
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(NotFoundException::class);
 
-        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['id' => 42]);
+        $this->controller->process($this->request, $this->createMock(BaseLayout::class), ['id' => 42]);
     }
 
     public function test404IfNoMilestone(): void
     {
         $this->milestone_factory
-            ->shouldReceive('getBareMilestoneByArtifactId')
+            ->expects(self::once())
+            ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 42)
-            ->once()
-            ->andReturn(Mockery::mock(\Planning_NoMilestone::class));
+            ->willReturn($this->createMock(\Planning_NoMilestone::class));
 
         $this->expectException(NotFoundException::class);
 
-        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['id' => 42]);
+        $this->controller->process($this->request, $this->createMock(BaseLayout::class), ['id' => 42]);
     }
 
     public function test404IfVirtualTopMilestone(): void
     {
         $this->milestone_factory
-            ->shouldReceive('getBareMilestoneByArtifactId')
+            ->expects(self::once())
+            ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 42)
-            ->once()
-            ->andReturn(Mockery::mock(\Planning_VirtualTopMilestone::class));
+            ->willReturn($this->createMock(\Planning_VirtualTopMilestone::class));
 
         $this->expectException(NotFoundException::class);
 
-        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['id' => 42]);
+        $this->controller->process($this->request, $this->createMock(BaseLayout::class), ['id' => 42]);
     }
 
     public function test404IfProjectMilestoneDoesNotMatchRequestedOne(): void
     {
-        $another_project = Mockery::mock(Project::class);
-        $another_project->shouldReceive('getUnixNameMixedCase')->andReturn('another-project');
+        $another_project = $this->createMock(Project::class);
+        $another_project->method('getUnixNameMixedCase')->willReturn('another-project');
 
-        $milestone = Mockery::mock(\Planning_ArtifactMilestone::class);
-        $milestone->shouldReceive('getProject')->andReturn($another_project);
+        $milestone = $this->createMock(\Planning_ArtifactMilestone::class);
+        $milestone->method('getProject')->willReturn($another_project);
 
         $this->milestone_factory
-            ->shouldReceive('getBareMilestoneByArtifactId')
+            ->expects(self::once())
+            ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 42)
-            ->once()
-            ->andReturn($milestone);
+            ->willReturn($milestone);
 
         $this->expectException(NotFoundException::class);
 
         $this->controller->process(
             $this->request,
-            Mockery::mock(BaseLayout::class),
+            $this->createMock(BaseLayout::class),
             ['id' => 42, 'project_name' => 'my-project']
         );
     }
 
     public function test404IfProjectDoesNotUseAgiledashboard(): void
     {
-        $my_project = Mockery::mock(Project::class);
-        $my_project->shouldReceive('getUnixNameMixedCase')->andReturn('my-project');
+        $my_project = $this->createMock(Project::class);
+        $my_project->method('getUnixNameMixedCase')->willReturn('my-project');
         $my_project
-            ->shouldReceive('getService')
+            ->expects(self::once())
+            ->method('getService')
             ->with('plugin_agiledashboard')
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
-        $milestone = Mockery::mock(\Planning_ArtifactMilestone::class);
-        $milestone->shouldReceive('getProject')->andReturn($my_project);
+        $milestone = $this->createMock(\Planning_ArtifactMilestone::class);
+        $milestone->method('getProject')->willReturn($my_project);
 
         $this->milestone_factory
-            ->shouldReceive('getBareMilestoneByArtifactId')
+            ->expects(self::once())
+            ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 42)
-            ->once()
-            ->andReturn($milestone);
+            ->willReturn($milestone);
 
         $this->expectException(NotFoundException::class);
 
         $this->controller->process(
             $this->request,
-            Mockery::mock(BaseLayout::class),
+            $this->createMock(BaseLayout::class),
             ['id' => 42, 'project_name' => 'my-project']
         );
     }
 
     public function test404IfThePaneIsNotDisplayable(): void
     {
-        $my_project = Mockery::mock(Project::class);
-        $my_project->shouldReceive('getUnixNameMixedCase')->andReturn('my-project');
+        $my_project = $this->createMock(Project::class);
+        $my_project->method('getUnixNameMixedCase')->willReturn('my-project');
         $my_project
-            ->shouldReceive('getService')
+            ->expects(self::once())
+            ->method('getService')
             ->with('plugin_agiledashboard')
-            ->once()
-            ->andReturn(Mockery::mock(\Service::class));
-        $this->testplan_pane_displayable->shouldReceive('isTestPlanPaneDisplayable')->andReturn(false);
+            ->willReturn($this->createMock(\Service::class));
+        $this->testplan_pane_displayable->method('isTestPlanPaneDisplayable')->willReturn(false);
 
-        $milestone = Mockery::mock(\Planning_ArtifactMilestone::class);
-        $milestone->shouldReceive('getProject')->andReturn($my_project);
+        $milestone = $this->createMock(\Planning_ArtifactMilestone::class);
+        $milestone->method('getProject')->willReturn($my_project);
 
         $this->milestone_factory
-            ->shouldReceive('getBareMilestoneByArtifactId')
+            ->expects(self::once())
+            ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 42)
-            ->once()
-            ->andReturn($milestone);
+            ->willReturn($milestone);
 
         $this->expectException(NotFoundException::class);
 
         $this->controller->process(
             $this->request,
-            Mockery::mock(BaseLayout::class),
+            $this->createMock(BaseLayout::class),
             ['id' => 42, 'project_name' => 'my-project']
         );
     }
 
     public function testItDisplaysThePage(): void
     {
-        $my_project = Mockery::mock(Project::class);
-        $my_project->shouldReceive('getUnixNameMixedCase')->andReturn('my-project');
-        $my_project
-            ->shouldReceive('getService')
-            ->with('plugin_agiledashboard')
-            ->once()
-            ->andReturn(Mockery::spy(\Service::class));
-        $this->testplan_pane_displayable->shouldReceive('isTestPlanPaneDisplayable')->andReturn(true);
+        $service = $this->createMock(\Service::class);
+        $service->method('displayHeader');
+        $service->method('displayFooter');
 
-        $milestone = Mockery::mock(\Planning_ArtifactMilestone::class);
-        $milestone->shouldReceive('getProject')->andReturn($my_project);
-        $milestone->shouldReceive('getArtifact')->andReturn(Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class));
-        $milestone->shouldReceive('getArtifactTitle')->andReturn("Title");
+        $my_project = $this->createMock(Project::class);
+        $my_project->method('getUnixNameMixedCase')->willReturn('my-project');
+        $my_project
+            ->expects(self::once())
+            ->method('getService')
+            ->with('plugin_agiledashboard')
+            ->willReturn($service);
+
+        $this->testplan_pane_displayable->method('isTestPlanPaneDisplayable')->willReturn(true);
+
+        $milestone = $this->createMock(\Planning_ArtifactMilestone::class);
+        $milestone->method('getProject')->willReturn($my_project);
+        $milestone->method('getArtifact')->willReturn($this->createMock(\Tuleap\Tracker\Artifact\Artifact::class));
+        $milestone->method('getArtifactTitle')->willReturn("Title");
 
         $this->milestone_factory
-            ->shouldReceive('getBareMilestoneByArtifactId')
+            ->expects(self::once())
+            ->method('getBareMilestoneByArtifactId')
             ->with($this->user, 42)
-            ->once()
-            ->andReturn($milestone);
+            ->willReturn($milestone);
 
-        $this->visit_recorder->shouldReceive('record')->once();
+        $this->visit_recorder->expects(self::once())->method('record');
 
-        $this->renderer->shouldReceive('renderToPage')->with('test-plan', Mockery::type(TestPlanPresenter::class));
+        $this->renderer->method('renderToPage')->with('test-plan', self::isInstanceOf(TestPlanPresenter::class));
+
+        $this->agiledashboard_asset->method('getFileURL');
+        $this->testplan_asset->method('getFileURL');
+
+        $base_layout = $this->createMock(BaseLayout::class);
+        $base_layout->method('includeFooterJavascriptFile');
+        $base_layout->method('addCssAsset');
+
+        $this->bread_crumbs_builder->method('getBreadcrumbs');
+        $this->presenter_builder->method('getPresenter');
 
         $this->controller->process(
             $this->request,
-            Mockery::spy(BaseLayout::class),
+            $base_layout,
             ['id' => 42, 'project_name' => 'my-project']
         );
     }
