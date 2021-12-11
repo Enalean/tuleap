@@ -22,6 +22,7 @@
 namespace Tuleap\Mediawiki\Migration;
 
 use DataAccessObject;
+use Tuleap\DB\DBFactory;
 
 class MoveToCentralDbDao extends DataAccessObject
 {
@@ -91,7 +92,7 @@ class MoveToCentralDbDao extends DataAccessObject
                 FROM plugin_mediawiki_database
                   JOIN `groups` ON (group_id = project_id)
                   JOIN service ON (service.group_id = `groups`.group_id AND short_name = 'plugin_mediawiki')
-                WHERE project_id = $project_id
+                WHERE project_id = " . $this->da->escapeInt($project_id) . "
                   AND `groups`.status IN ('A', 's')
                   AND is_used = 1";
         $row = $this->retrieveFirstRow($sql);
@@ -103,16 +104,17 @@ class MoveToCentralDbDao extends DataAccessObject
 
     private function moveTables($project_id, $database_name)
     {
-        $dar = $this->retrieve("SHOW TABLES FROM $database_name");
+        $db  = DBFactory::getMainTuleapDBConnection()->getDB();
+        $dar = $this->retrieve("SHOW TABLES FROM " . $db->escapeIdentifier($database_name));
         foreach ($dar as $row) {
             $table_name     = array_pop($row);
             $new_table_name = 'mw_' . $project_id . '_' . substr($table_name, 2);
             $sql            = sprintf(
-                'ALTER TABLE `%s`.`%s` RENAME `%s`.`%s`',
-                $database_name,
-                $table_name,
-                $this->central_database_name,
-                $new_table_name
+                'ALTER TABLE %s.%s RENAME %s.%s',
+                $db->escapeIdentifier($database_name),
+                $db->escapeIdentifier($table_name),
+                $db->escapeIdentifier($this->central_database_name),
+                $db->escapeIdentifier($new_table_name)
             );
             $this->update($sql);
         }
@@ -120,15 +122,16 @@ class MoveToCentralDbDao extends DataAccessObject
 
     private function dropDatabase($database_name)
     {
-        $dar = $this->retrieve("SHOW TABLES FROM $database_name");
+        $db  = DBFactory::getMainTuleapDBConnection()->getDB();
+        $dar = $this->retrieve("SHOW TABLES FROM " . $db->escapeIdentifier($database_name));
         if (count($dar) === 0) {
-            $this->update("DROP DATABASE $database_name");
+            $this->update("DROP DATABASE " . $db->escapeIdentifier($database_name));
         }
     }
 
     private function updateUsedDatabase($project_id)
     {
         $central_database_name = $this->da->quoteSmart($this->central_database_name);
-        $this->update("UPDATE plugin_mediawiki_database SET database_name = $central_database_name WHERE project_id = $project_id");
+        $this->update("UPDATE plugin_mediawiki_database SET database_name = $central_database_name WHERE project_id = " . $this->da->escapeInt($project_id));
     }
 }

@@ -129,7 +129,7 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent
         }
 
         $sql = 'INSERT INTO plugin_statistics_user_session (user_id, time)' .
-               ' SELECT user_id, time FROM session WHERE time > ' . $max;
+               ' SELECT user_id, time FROM session WHERE time > ' . db_ei($max);
         db_query($sql);
     }
 

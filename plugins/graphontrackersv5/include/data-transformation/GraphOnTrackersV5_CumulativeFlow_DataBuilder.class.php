@@ -114,7 +114,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
                     JOIN `tracker_changeset_value` v ON (v.changeset_id = c.id AND v.field_id = $this->observed_field_id )
                     JOIN tracker_changeset_value_list l ON (l.changeset_value_id = v.id)
                     WHERE artifact_id in (" . $this->artifacts['id'] . ")
-                    AND c.id IN (" . implode(',', $changesets) . ")
+                    AND c.id IN (" . db_ei_implode($changesets) . ")
                     GROUP BY l.bindvalue_id";
 
             $res = db_query($sql);

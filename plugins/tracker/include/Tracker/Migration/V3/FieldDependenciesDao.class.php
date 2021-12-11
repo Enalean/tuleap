@@ -39,6 +39,8 @@ class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject
 
     private function sourceAndTargetAreStatic($tv3_id, $tv5_id)
     {
+        $tv3_id    = $this->da->escapeInt($tv3_id);
+        $tv5_id    = $this->da->escapeInt($tv5_id);
         $sql       = "SELECT sf.id AS my_source_field_id, sbv.id AS my_source_value_id, tf.id AS my_target_field_id, tbv.id AS my_target_value_id, r.rule_type
                 FROM artifact_rule AS r
                     INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND sf.tracker_id = $tv5_id)
@@ -52,7 +54,9 @@ class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject
 
     private function sourceIsUserAndTargetIsStatic($tv3_id, $tv5_id)
     {
-        $sql = "SELECT sf.id AS my_source_field_id, r.source_value_id AS my_source_value_id, tf.id AS my_target_field_id, tbv.id AS my_target_value_id, r.rule_type
+        $tv3_id = $this->da->escapeInt($tv3_id);
+        $tv5_id = $this->da->escapeInt($tv5_id);
+        $sql    = "SELECT sf.id AS my_source_field_id, r.source_value_id AS my_source_value_id, tf.id AS my_target_field_id, tbv.id AS my_target_value_id, r.rule_type
                 FROM artifact_rule AS r
                     INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND sf.tracker_id = $tv5_id)
                     INNER JOIN tracker_field_list_bind_users AS sfu ON(sf.id = sfu.field_id)
@@ -66,6 +70,8 @@ class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject
 
     private function sourceIsStaticAndTargetIsUser($tv3_id, $tv5_id)
     {
+        $tv3_id    = $this->da->escapeInt($tv3_id);
+        $tv5_id    = $this->da->escapeInt($tv5_id);
         $sql       = "SELECT sf.id AS my_source_field_id, sbv.id AS my_source_value_id, tf.id AS my_target_field_id, r.target_value_id AS my_target_value_id, r.rule_type
                 FROM artifact_rule AS r
                     INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND sf.tracker_id = $tv5_id)
@@ -79,6 +85,8 @@ class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject
 
     private function sourceAndTargetAreUser($tv3_id, $tv5_id)
     {
+        $tv3_id    = $this->da->escapeInt($tv3_id);
+        $tv5_id    = $this->da->escapeInt($tv5_id);
         $sql       = "SELECT sf.id AS my_source_field_id, r.source_value_id AS my_source_value_id, tf.id AS my_target_field_id, r.target_value_id AS my_target_value_id, r.rule_type
                 FROM artifact_rule AS r
                     INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND sf.tracker_id = $tv5_id)
@@ -99,19 +107,19 @@ class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject
     {
         foreach ($old_rules as $old_rule) {
             $tracker_rule_insert = "INSERT INTO tracker_rule(tracker_id, rule_type)
-                    VALUES ($tv5_id, " . $old_rule['rule_type'] . ")";
+                    VALUES (" . $this->da->escapeInt($tv5_id) . ", " . $this->da->escapeInt($old_rule['rule_type']) . ")";
 
-            $tracker_rule_id = $this->updateAndGetLastId($tracker_rule_insert);
+            $tracker_rule_id = $this->da->escapeInt($this->updateAndGetLastId($tracker_rule_insert));
 
             $tracker_rule_list_insert = "
                 INSERT INTO tracker_rule_list
                     (tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
                 VALUES (
                     $tracker_rule_id," .
-                    $old_rule['my_source_field_id'] . "," .
-                    $old_rule['my_source_value_id'] . "," .
-                    $old_rule['my_target_field_id'] . "," .
-                    $old_rule['my_target_value_id'] .
+                    $this->da->escapeInt($old_rule['my_source_field_id']) . "," .
+                    $this->da->escapeInt($old_rule['my_source_value_id']) . "," .
+                    $this->da->escapeInt($old_rule['my_target_field_id']) . "," .
+                    $this->da->escapeInt($old_rule['my_target_value_id']) .
                 ");";
             $this->update($tracker_rule_list_insert);
         }

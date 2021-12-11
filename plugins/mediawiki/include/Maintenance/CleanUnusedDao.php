@@ -24,6 +24,7 @@ namespace Tuleap\Mediawiki\Maintenance;
 use DataAccessObject;
 use MediawikiDao;
 use Psr\Log\LoggerInterface;
+use Tuleap\DB\DBFactory;
 use WrapperLogger;
 use Psr\Log\NullLogger;
 use ForgeConfig;
@@ -115,9 +116,10 @@ class CleanUnusedDao extends DataAccessObject
         $this->logger->info("Attempt to purge tables in central database for $project_id");
         $project_id = (int) $project_id;
         if ($this->central_database && $project_id > 0) {
+            $db = DBFactory::getMainTuleapDBConnection()->getDB();
             foreach ($this->getTablesToDrop($project_id) as $row) {
                 $fullname = $this->central_database . '.' . $row['name'];
-                $sql      = "DROP TABLE $fullname";
+                $sql      = "DROP TABLE " . $db->escapeIdentifier($fullname);
                 $this->logger->info("$sql");
                 if (! $dry_run) {
                     $this->update($sql);
@@ -170,7 +172,7 @@ class CleanUnusedDao extends DataAccessObject
     private function dereferenceDatabase($project_id, $dry_run)
     {
         $this->logger->info("Remove project from plugin_mediawiki_database");
-        $project_id = (int) $project_id;
+        $project_id = $this->da->escapeInt($project_id);
         if (! $dry_run) {
             $sql = "DELETE FROM plugin_mediawiki_database WHERE project_id = $project_id";
             $this->update($sql);
@@ -259,7 +261,8 @@ class CleanUnusedDao extends DataAccessObject
 
     public function doesDatabaseHaveContent($database_name)
     {
-        $table_name = $database_name . '.' . MediawikiDao::DEDICATED_DATABASE_TABLE_PREFIX . 'page';
+        $db         = DBFactory::getMainTuleapDBConnection()->getDB();
+        $table_name = $db->escapeIdentifier($database_name) . '.' . $db->escapeIdentifier(MediawikiDao::DEDICATED_DATABASE_TABLE_PREFIX . 'page');
         $sql        = "SELECT 1 FROM $table_name LIMIT 1";
         $this->retrieveCount($sql) !== 0;
     }

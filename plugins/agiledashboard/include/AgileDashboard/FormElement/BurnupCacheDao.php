@@ -64,7 +64,8 @@ class BurnupCacheDao extends DataAccessObject
 
     public function searchCachedDaysValuesByArtifactId($artifact_id, $start_timestamp)
     {
-        $artifact_id = $this->da->escapeInt($artifact_id);
+        $artifact_id     = $this->da->escapeInt($artifact_id);
+        $start_timestamp = $this->da->escapeInt($start_timestamp);
 
         $sql = "SELECT timestamp, team_effort, total_effort
                 FROM plugin_agiledashboard_tracker_field_burnup_cache

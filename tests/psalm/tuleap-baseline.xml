@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.13.0@cd489407a0219b93cadd04d5aff9845a942f7e5d">
+<files psalm-version="v4.14.0@14dcbc908ab2625cd7a74258ee6c740cbecc6140">
   <file src="plugins/agiledashboard/include/AgileDashboard/AdminChartsPresenter.php">
     <PossiblyInvalidPropertyAssignmentValue occurrences="1">
       <code>$project-&gt;getID()</code>
@@ -10197,8 +10197,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_PermissionsExport.class.php">
-    <DeprecatedFunction occurrences="4">
+    <DeprecatedFunction occurrences="5">
       <code>db_ei($this-&gt;group-&gt;getId())</code>
+      <code>db_ei_implode($parentIds)</code>
       <code>db_fetch_array($result)</code>
       <code>db_fetch_array($result)</code>
       <code>db_query($sql)</code>
@@ -14536,11 +14537,12 @@
     </MissingReturnType>
   </file>
   <file src="plugins/forumml/include/forumml_utils.php">
-    <DeprecatedFunction occurrences="17">
+    <DeprecatedFunction occurrences="18">
       <code>db_ei($id_message)</code>
       <code>db_ei($id_message)</code>
       <code>db_ei($list_id)</code>
       <code>db_ei($topic)</code>
+      <code>db_ei_implode($parents)</code>
       <code>db_error($result)</code>
       <code>db_error($result)</code>
       <code>db_es($match)</code>
@@ -19144,9 +19146,6 @@
       <code>ReferenceParents</code>
       <code>ReferenceTree</code>
     </MissingReturnType>
-    <PossiblyNullArgument occurrences="1">
-      <code>$this-&gt;pgp_signature</code>
-    </PossiblyNullArgument>
   </file>
   <file src="plugins/git/include/GitPHP/git/DiffExe.php">
     <ForbiddenCode occurrences="1">
@@ -22671,7 +22670,8 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/graphontrackersv5/include/data-transformation/GraphOnTrackersV5_CumulativeFlow_DataBuilder.class.php">
-    <DeprecatedFunction occurrences="4">
+    <DeprecatedFunction occurrences="5">
+      <code>db_ei_implode($changesets)</code>
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res)</code>
       <code>db_query($sql)</code>
@@ -27027,7 +27027,9 @@
     </UndefinedConstant>
   </file>
   <file src="plugins/projectlinks/include/projectlinksPlugin.php">
-    <DeprecatedFunction occurrences="98">
+    <DeprecatedFunction occurrences="106">
+      <code>db_ei($group_id)</code>
+      <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
@@ -27052,6 +27054,10 @@
       <code>db_ei($link_type_id)</code>
       <code>db_ei($link_type_id)</code>
       <code>db_ei($link_type_id)</code>
+      <code>db_ei($row2['link_type_id'])</code>
+      <code>db_ei($row['link_type_id'])</code>
+      <code>db_ei($row['master_group_id'])</code>
+      <code>db_ei($row['target_group_id'])</code>
       <code>db_ei($row_templLinks['target_group_id'])</code>
       <code>db_ei($target_group_id)</code>
       <code>db_ei($target_group_id)</code>
@@ -27063,6 +27069,8 @@
       <code>db_ei($template_id)</code>
       <code>db_ei($template_type_id)</code>
       <code>db_ei($typeMatch[$row_templLinks['link_type_id']])</code>
+      <code>db_ei(time())</code>
+      <code>db_ei(time())</code>
       <code>db_error()</code>
       <code>db_error()</code>
       <code>db_error()</code>
@@ -29443,8 +29451,7 @@
       <code>DataAccessResult</code>
       <code>DataAccessResult</code>
     </InvalidFalsableReturnType>
-    <MissingParamType occurrences="50">
-      <code>$date</code>
+    <MissingParamType occurrences="49">
       <code>$date</code>
       <code>$date</code>
       <code>$date</code>
@@ -29495,7 +29502,7 @@
       <code>$userId</code>
       <code>$userId</code>
     </MissingParamType>
-    <MissingReturnType occurrences="23">
+    <MissingReturnType occurrences="22">
       <code>_getGroupByFromDateMethod</code>
       <code>addGroup</code>
       <code>addSite</code>
@@ -29505,7 +29512,6 @@
       <code>getProjectContributionForService</code>
       <code>purgeDataBetweenTwoDates</code>
       <code>purgeDataOlderThan</code>
-      <code>returnDateStatement</code>
       <code>returnTotalSizeProjectNearDate</code>
       <code>returnUserDetails</code>
       <code>searchAllGroups</code>
@@ -29911,7 +29917,8 @@
     </MissingReturnType>
   </file>
   <file src="plugins/statistics/include/SystemEvent_STATISTICS_DAILY.php">
-    <DeprecatedFunction occurrences="4">
+    <DeprecatedFunction occurrences="5">
+      <code>db_ei($max)</code>
       <code>db_fetch_array($res)</code>
       <code>db_numrows($res)</code>
       <code>db_query($sql)</code>
@@ -30393,15 +30400,13 @@
     <InvalidScalarArgument occurrences="1">
       <code>$repository-&gt;getProject()-&gt;getID()</code>
     </InvalidScalarArgument>
-    <MissingParamType occurrences="5">
-      <code>$immutable_tags_path</code>
+    <MissingParamType occurrences="4">
       <code>$immutable_tags_path</code>
       <code>$immutable_tags_path</code>
       <code>$immutable_tags_whitelist</code>
       <code>$immutable_tags_whitelist</code>
     </MissingParamType>
-    <MissingReturnType occurrences="3">
-      <code>cleanImmutableTag</code>
+    <MissingReturnType occurrences="2">
       <code>save</code>
       <code>saveWithoutHistory</code>
     </MissingReturnType>
@@ -33406,18 +33411,15 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Action/CreateArtifact.class.php">
-    <MissingParamType occurrences="8">
+    <MissingParamType occurrences="6">
       <code>$artifact_id</code>
       <code>$artifact_id</code>
       <code>$continue</code>
-      <code>$doitnow</code>
-      <code>$link_artifact_id</code>
       <code>$stay</code>
       <code>$tracker_id</code>
       <code>$tracker_id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="10">
-      <code>associateImmediatelyIfNeeded</code>
+    <MissingReturnType occurrences="9">
       <code>calculateRedirectParams</code>
       <code>executeRedirect</code>
       <code>getRedirect</code>
@@ -36167,9 +36169,6 @@
     <InvalidScalarArgument occurrences="1">
       <code>$selected_users_ids</code>
     </InvalidScalarArgument>
-    <RedundantCast occurrences="1">
-      <code>(int) TrackerImporterUser::ID</code>
-    </RedundantCast>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Semantic/SemanticsXMLExporter.php">
     <RedundantCast occurrences="1">
@@ -40754,6 +40753,12 @@
       <code>$old_rules</code>
       <code>$old_rules</code>
     </InvalidArgument>
+    <InvalidScalarArgument occurrences="4">
+      <code>$tv5_id</code>
+      <code>$tv5_id</code>
+      <code>$tv5_id</code>
+      <code>$tv5_id</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="10">
       <code>$tv3_id</code>
       <code>$tv3_id</code>
@@ -48687,7 +48692,9 @@
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/tracker_permissions.php">
-    <DeprecatedFunction occurrences="6">
+    <DeprecatedFunction occurrences="8">
+      <code>db_ei($row['ugroup_id'])</code>
+      <code>db_es($permission_type)</code>
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res)</code>
       <code>db_numrows($res)</code>
@@ -71643,19 +71650,38 @@
     </MissingReturnType>
   </file>
   <file src="src/common/wiki/lib/WikiCloner.class.php">
-    <DeprecatedFunction occurrences="83">
+    <DeprecatedFunction occurrences="102">
       <code>db_affected_rows($res)</code>
+      <code>db_ei($array_rev[$tmpl_id])</code>
       <code>db_ei($attachment_id)</code>
       <code>db_ei($attachment_id)</code>
       <code>db_ei($new_attachment_id)</code>
+      <code>db_ei($new_id)</code>
+      <code>db_ei($new_id)</code>
+      <code>db_ei($new_id)</code>
+      <code>db_ei($num_ver)</code>
       <code>db_ei($permission)</code>
+      <code>db_ei($row['date'])</code>
+      <code>db_ei($row['minor_edit'])</code>
+      <code>db_ei($row['mtime'])</code>
+      <code>db_ei($row['revision'])</code>
+      <code>db_ei($row['revision'])</code>
+      <code>db_ei($row['size'])</code>
+      <code>db_ei($row['time'])</code>
+      <code>db_ei($row['user_id'])</code>
+      <code>db_ei($row['user_id'])</code>
       <code>db_ei($this-&gt;getMappedUGroupId($row['ugroup_id']))</code>
       <code>db_ei($this-&gt;getMappedUGroupId($row['ugroup_id']))</code>
       <code>db_ei($this-&gt;getWikiPageCloneId($array, $row['object_id']))</code>
       <code>db_ei($this-&gt;group_id)</code>
+      <code>db_ei($this-&gt;group_id)</code>
+      <code>db_ei($this-&gt;group_id)</code>
       <code>db_ei($this-&gt;template_id)</code>
       <code>db_ei($this-&gt;template_id)</code>
       <code>db_ei($this-&gt;template_id)</code>
+      <code>db_ei($tmpl_id)</code>
+      <code>db_ei($ugid)</code>
+      <code>db_ei($value)</code>
       <code>db_es($pagename)</code>
       <code>db_es($pagename)</code>
       <code>db_es($pagename)</code>
@@ -71683,9 +71709,9 @@
       <code>db_query(sprintf("INSERT INTO wiki_nonempty (id) VALUES(%d)", $new))</code>
       <code>db_query(sprintf("SELECT * FROM wiki_attachment_log WHERE group_id=%d AND wiki_attachment_id=%d", $this-&gt;template_id, $tmpl_id))</code>
       <code>db_query(sprintf("SELECT * from wiki_nonempty where id=%d", $id))</code>
-      <code>db_query(sprintf("SELECT dst_ugroup_id FROM ugroup_mapping WHERE to_group_id=%d AND src_ugroup_id=%d", $this-&gt;group_id, $ugid))</code>
+      <code>db_query(sprintf("SELECT dst_ugroup_id FROM ugroup_mapping WHERE to_group_id=%d AND src_ugroup_id=%d", db_ei($this-&gt;group_id), db_ei($ugid)))</code>
       <code>db_query(sprintf("SELECT id FROM wiki_attachment WHERE group_id=%d AND name='%s'", $this-&gt;group_id, $this-&gt;escapeString($name)))</code>
-      <code>db_query(sprintf("SELECT id from wiki_attachment_revision WHERE attachment_id=%d AND revision=%d", $new_id, $row['revision']))</code>
+      <code>db_query(sprintf("SELECT id from wiki_attachment_revision WHERE attachment_id=%d AND revision=%d", db_ei($new_id), db_ei($row['revision'])))</code>
       <code>db_query(sprintf("SELECT id from wiki_page where pagename='%s' and group_id=%d", db_es($pagename), $this-&gt;group_id))</code>
       <code>db_query(sprintf("SELECT id, name FROM wiki_attachment WHERE group_id=%d", $this-&gt;template_id))</code>
       <code>db_query(sprintf("SELECT id, pagename FROM wiki_page WHERE group_id=%d", $this-&gt;template_id))</code>
@@ -71695,7 +71721,7 @@
       <code>db_query(sprintf("SELECT latestversion, latestmajor, latestminor FROM wiki_recent where id=%d", $id))</code>
       <code>db_query(sprintf("SELECT name from wiki_attachment where id=%d", $id))</code>
       <code>db_query(sprintf("SELECT pagedata FROM wiki_page WHERE pagename='%s' AND group_id=%d", db_es($pagename), $this-&gt;template_id))</code>
-      <code>db_query(sprintf("SELECT user_id, date, revision, mimetype, size FROM wiki_attachment_revision WHERE attachment_id=%d", $tmpl_id))</code>
+      <code>db_query(sprintf("SELECT user_id, date, revision, mimetype, size FROM wiki_attachment_revision WHERE attachment_id=%d", db_ei($tmpl_id)))</code>
       <code>db_query(sprintf("SELECT version, versiondata FROM wiki_version WHERE id=%d", $id))</code>
       <code>db_query(sprintf("select linkto FROM wiki_link WHERE linkfrom=%d", $tmpl_id))</code>
       <code>db_query(sprintf("select version, mtime, minor_edit, content FROM wiki_version WHERE id=%d", $key))</code>
@@ -72594,6 +72620,7 @@
     <DeprecatedFunction occurrences="74">
       <code>db_ei($_branch)</code>
       <code>db_ei($_commit_id)</code>
+      <code>db_ei($chunksz)</code>
       <code>db_ei($commit_id)</code>
       <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
@@ -72601,14 +72628,13 @@
       <code>db_ei($group_id)</code>
       <code>db_ei($na[1])</code>
       <code>db_ei($na[2])</code>
+      <code>db_ei($offset)</code>
+      <code>db_ei($repo_id ? $repo_id : -1)</code>
       <code>db_ei($user_id)</code>
+      <code>db_ei(check_cvs_access(user_getname(), $project-&gt;getUnixName(false), '') ? 1 : 0)</code>
       <code>db_ei(db_result($result, $i, 'dirid'))</code>
       <code>db_ei(db_result($result, $i, 'fileid'))</code>
       <code>db_ei(db_result($result, $i, 'repositoryid'))</code>
-      <code>db_ei($repo_id ? $repo_id : -1)</code>
-      <code>db_ei($offset)</code>
-      <code>db_ei($chunksz)</code>
-      <code>db_ei(check_cvs_access(user_getname(), $project-&gt;getUnixName(false), '') ? 1 : 0)</code>
       <code>db_es($_commiter)</code>
       <code>db_es($revision)</code>
       <code>db_es('%' . $_srch . '%')</code>
@@ -74818,7 +74844,7 @@
     </RedundantCast>
   </file>
   <file src="src/www/project/admin/permissions.php">
-    <DeprecatedFunction occurrences="78">
+    <DeprecatedFunction occurrences="79">
       <code>db_affected_rows($res)</code>
       <code>db_affected_rows($res)</code>
       <code>db_ei($group_id)</code>
@@ -74827,6 +74853,7 @@
       <code>db_ei($key)</code>
       <code>db_ei($object_id)</code>
       <code>db_ei($object_id)</code>
+      <code>db_ei($row['ugroup_id'])</code>
       <code>db_ei($ugroup_id)</code>
       <code>db_ei($ugroup_id)</code>
       <code>db_ei($ugroup_id)</code>
@@ -75255,11 +75282,14 @@
     </UndefinedDocblockClass>
   </file>
   <file src="src/www/project/admin/userperms.php">
-    <DeprecatedFunction occurrences="15">
+    <DeprecatedFunction occurrences="18">
       <code>db_ei($at_arr[$j]-&gt;getID())</code>
+      <code>db_ei($group_id)</code>
+      <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
       <code>db_ei($number_per_page)</code>
       <code>db_ei($offset)</code>
+      <code>db_ei($row_dev['user_id'])</code>
       <code>db_error()</code>
       <code>db_es($request-&gt;get($svn_flags))</code>
       <code>db_fetch_array($res)</code>
@@ -75267,7 +75297,7 @@
       <code>db_fetch_array($res_dev)</code>
       <code>db_numrows($res_dev)</code>
       <code>db_numrows($res_dev)</code>
-      <code>db_query("SELECT * FROM user_group WHERE group_id=$group_id")</code>
+      <code>db_query("SELECT * FROM user_group WHERE group_id=" . db_ei($group_id))</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql['select'] . $sql['from'] . $sql['where'] . $sql['filter'] . $sql['order'] . $sql['limit'])</code>

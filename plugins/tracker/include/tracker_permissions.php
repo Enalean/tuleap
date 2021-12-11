@@ -532,7 +532,7 @@ function plugin_tracker_permission_fetch_selection_field($permission_type, $obje
         $nb_set      = count($res_ugroups);
     }
     // Now retrieve all possible ugroups for this project, as well as the default values
-    $sql = "SELECT ugroup_id,is_default FROM permissions_values WHERE permission_type='$permission_type'";
+    $sql = "SELECT ugroup_id,is_default FROM permissions_values WHERE permission_type='" . db_es($permission_type) . "'";
 
     $res                = db_query($sql);
     $predefined_ugroups = '';
@@ -545,7 +545,7 @@ function plugin_tracker_permission_fetch_selection_field($permission_type, $obje
             if ($predefined_ugroups) {
                 $predefined_ugroups .= ' ,';
             }
-            $predefined_ugroups .= $row['ugroup_id'];
+            $predefined_ugroups .= db_ei($row['ugroup_id']);
             if ($row['is_default']) {
                 $default_values[] = $row['ugroup_id'];
             }
