@@ -30,6 +30,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedToProgramIncrementDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureAdditionProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
@@ -44,7 +45,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UserCanUpdateTimebo
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureContentRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;

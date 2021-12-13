@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,29 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content;
 
-final class ContentStoreStub implements \Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\ContentStore
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+
+interface SearchFeatures
 {
-    private function __construct(private array $rows)
-    {
-    }
-
     /**
-     * @param array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}[] $rows
+     * @psalm-return array{artifact_id: int, artifact_title: string, field_title_id: int}[]
      */
-    public static function withRows(array $rows): self
-    {
-        return new self($rows);
-    }
-
-    public static function withoutRows(): self
-    {
-        return new self([]);
-    }
-
-    public function searchContent(int $program_increment_id): array
-    {
-        return $this->rows;
-    }
+    public function searchFeatures(ProgramIncrementIdentifier $program_increment): array;
 }
