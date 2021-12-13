@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\ContentStoreStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchFeaturesStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
@@ -77,7 +77,7 @@ final class FeatureContentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $pfuser_with_read_all_permission = new \Tracker_UserWithReadAllPermission(UserTestBuilder::aUser()->build());
         return new FeatureContentRetriever(
             VerifyIsProgramIncrementStub::withValidProgramIncrement(),
-            ContentStoreStub::withRows([
+            SearchFeaturesStub::withRows([
                 [
                     'tracker_name'   => 'Irrelevant',
                     'artifact_id'    => self::BUG_ARTIFACT_ID,

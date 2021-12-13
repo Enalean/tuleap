@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\ContentStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\SearchFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
@@ -36,7 +36,7 @@ final class FeatureContentRetriever
 {
     public function __construct(
         private VerifyIsProgramIncrement $program_increment_verifier,
-        private ContentStore $content_store,
+        private SearchFeatures $features_searcher,
         private FeatureRepresentationBuilder $feature_representation_builder,
         private VerifyIsVisibleArtifact $visibility_verifier,
         private RetrieveProgramOfProgramIncrement $program_retriever,
@@ -58,7 +58,7 @@ final class FeatureContentRetriever
             $program_increment,
             $user
         );
-        $planned_content   = $this->content_store->searchContent($program_increment->getId());
+        $planned_content   = $this->features_searcher->searchFeatures($program_increment);
 
         $elements = [];
         foreach ($planned_content as $artifact) {
