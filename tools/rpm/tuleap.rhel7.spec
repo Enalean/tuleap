@@ -455,13 +455,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tule
 %description plugin-testplan
 %{summary}.
 
-%package plugin-textualreport
-Summary: Textual Report
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-%description plugin-textualreport
-%{summary}.
-
 %package plugin-timetracking
 Summary: Timetracking plugin for Tuleap
 Group: Development/Tools
@@ -494,6 +487,8 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tule
 Summary: Document Generation
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
+Obsoletes: tuleap-plugin-textualreport < 13.4
+Provides: tuleap-plugin-textualreport
 %description plugin-document_generation
 %{summary}.
 
@@ -562,7 +557,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/roadmap
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/textualreport
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/timetracking
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/dynamic_credentials
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/velocity
@@ -1460,9 +1454,6 @@ fi
 %{APP_DIR}/plugins/testplan
 %{APP_DIR}/src/www/assets/testplan
 
-%files plugin-textualreport
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/textualreport
 
 %files plugin-timetracking
 %defattr(-,root,root,-)
