@@ -53,6 +53,7 @@ describe("IterationUserStoryList", () => {
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(true);
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
+        expect(wrapper.find("[data-test=iteration-content-error-message]").exists()).toBe(false);
     });
 
     it("Displays the features", async () => {
@@ -73,6 +74,20 @@ describe("IterationUserStoryList", () => {
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
+        expect(wrapper.find("[data-test=iteration-content-error-message]").exists()).toBe(false);
         expect(feature_cards.length).toEqual(3);
+    });
+
+    it("displays an error message when the loading of the iteration content has failed", async () => {
+        jest.spyOn(retriever, "retrieveIterationContent").mockRejectedValue("Nope");
+
+        const wrapper = await getWrapper();
+
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.find("[data-test=iteration-content-error-message]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
     });
 });

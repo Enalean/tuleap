@@ -15,6 +15,9 @@ msgstr ""
 msgid "Administration"
 msgstr "Administration"
 
+msgid "An error has occurred loading content"
+msgstr "Une erreur s'est produite lors du chargement du contenu"
+
 msgid "Create the first %s"
 msgstr "Créer un(e) %s"
 

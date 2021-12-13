@@ -21,7 +21,13 @@
 <template>
     <div class="planned-iteration-content-items" data-test="iteration-user-story-list">
         <backlog-element-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
-        <iteration-no-content v-if="!has_features && !is_loading" data-test="empty-state" />
+        <iteration-no-content
+            v-if="!has_features && !is_loading && !has_error"
+            data-test="empty-state"
+        />
+        <div v-if="has_error" class="tlp-alert-danger" data-test="iteration-content-error-message">
+            {{ error_message }}
+        </div>
         <feature-card
             v-else
             v-for="feature in features"
@@ -56,11 +62,19 @@ export default class IterationUserStoryList extends Vue {
 
     private features: Feature[] = [];
     private is_loading = false;
+    private has_error = false;
+    private error_message = "";
 
     async mounted(): Promise<void> {
-        this.is_loading = true;
-        this.features = await retrieveIterationContent(this.iteration.id);
-        this.is_loading = false;
+        try {
+            this.is_loading = true;
+            this.features = await retrieveIterationContent(this.iteration.id);
+        } catch (e) {
+            this.has_error = true;
+            this.error_message = this.$gettext("An error has occurred loading content");
+        } finally {
+            this.is_loading = false;
+        }
     }
 
     get has_features(): boolean {
