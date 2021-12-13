@@ -32,10 +32,10 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\CrossReferenceRetri
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\URIRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory\IsOpenRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory\TrackerFromUserStoryRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\Content\IterationContentSearcher;
@@ -89,7 +89,7 @@ final class IterationResource
             new CrossReferenceRetriever($artifact_retriever),
             new IsOpenRetriever($artifact_retriever),
             new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever()), $artifact_retriever, $this->user_adapter),
-            new TrackerFromUserStoryRetriever($artifact_retriever),
+            new TrackerOfArtifactRetriever($artifact_retriever),
             new MirroredTimeboxesDao(),
         );
 

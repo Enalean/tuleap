@@ -147,7 +147,7 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
             new SubmissionDateRetriever($artifact_retriever),
             new MirroredTimeboxesDao(),
             $visibility_verifier,
-            new TrackerOfArtifactRetriever($artifact_retriever, $tracker_retriever),
+            new TrackerOfArtifactRetriever($artifact_retriever),
             new StatusValueMapper($form_element_factory),
             new ChangesetAdder(
                 $artifact_retriever,

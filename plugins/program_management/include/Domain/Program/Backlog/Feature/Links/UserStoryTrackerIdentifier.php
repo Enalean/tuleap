@@ -44,6 +44,6 @@ final class UserStoryTrackerIdentifier implements TrackerIdentifier
 
     public static function fromUserStory(RetrieveTrackerFromUserStory $tracker_retriever, UserStoryIdentifier $user_story): self
     {
-        return new self($tracker_retriever->getTracker($user_story));
+        return new self($tracker_retriever->getUserStoryTracker($user_story));
     }
 }

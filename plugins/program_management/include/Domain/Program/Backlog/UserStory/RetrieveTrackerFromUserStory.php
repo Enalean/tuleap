@@ -27,5 +27,5 @@ use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
 interface RetrieveTrackerFromUserStory
 {
-    public function getTracker(UserStoryIdentifier $user_story_identifier): TrackerIdentifier;
+    public function getUserStoryTracker(UserStoryIdentifier $user_story_identifier): TrackerIdentifier;
 }

@@ -23,11 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker;
 
+use Tuleap\ProgramManagement\Tests\Builder\UserStoryIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
-use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -35,32 +33,30 @@ final class TrackerOfArtifactRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ARTIFACT_ID = 550;
     private const TRACKER_ID  = 908;
-    private ArtifactIdentifierStub $artifact_identifier;
-    private Artifact $artifact;
-
-    protected function setUp(): void
-    {
-        $this->artifact_identifier = ArtifactIdentifierStub::withId(self::ARTIFACT_ID);
-
-        $full_tracker   = TrackerTestBuilder::aTracker()
-            ->withId(self::TRACKER_ID)
-            ->build();
-        $this->artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)
-            ->inTracker($full_tracker)
-            ->build();
-    }
 
     private function getRetriever(): TrackerOfArtifactRetriever
     {
+        $full_tracker = TrackerTestBuilder::aTracker()
+            ->withId(self::TRACKER_ID)
+            ->build();
+        $artifact     = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)
+            ->inTracker($full_tracker)
+            ->build();
+
         return new TrackerOfArtifactRetriever(
-            RetrieveFullArtifactStub::withArtifact($this->artifact),
-            RetrieveTrackerStub::withTracker(TrackerReferenceStub::withId(self::TRACKER_ID))
+            RetrieveFullArtifactStub::withArtifact($artifact)
         );
     }
 
     public function testItReturnsTrackerOfArtifact(): void
     {
-        $tracker = $this->getRetriever()->getTrackerOfArtifact($this->artifact_identifier);
+        $tracker = $this->getRetriever()->getTrackerOfArtifact(ArtifactIdentifierStub::withId(self::ARTIFACT_ID));
+        self::assertSame(self::TRACKER_ID, $tracker->getId());
+    }
+
+    public function testItReturnsTrackerOfUserStory(): void
+    {
+        $tracker = $this->getRetriever()->getUserStoryTracker(UserStoryIdentifierBuilder::withId(self::ARTIFACT_ID));
         self::assertSame(self::TRACKER_ID, $tracker->getId());
     }
 }
