@@ -37,7 +37,7 @@ final class PlannableFeatureIdentifierTest extends TestCase
     protected function setUp(): void
     {
         $this->retrieve_tracker   = RetrieveTrackerOfArtifactStub::withIds(1);
-        $this->feature_identifier = FeatureIdentifierBuilder::build(100, 20);
+        $this->feature_identifier = FeatureIdentifierBuilder::withId(100);
     }
 
     public function testItThrowExceptionWhenFeatureIsNotPlannable(): void

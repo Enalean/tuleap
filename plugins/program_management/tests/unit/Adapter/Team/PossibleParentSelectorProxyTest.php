@@ -70,7 +70,7 @@ final class PossibleParentSelectorProxyTest extends TestCase
 
         $this->retrieve_root_planning = RetrieveRootPlanningStub::withProjectAndBacklogTracker((int) $team_project->getID(), $this->user_story_tracker->getId());
 
-        $this->feature_53           = FeatureIdentifierBuilder::build(53, 110);
+        $this->feature_53           = FeatureIdentifierBuilder::withId(53);
         $this->feature_53_reference = new FeatureReference($this->feature_53, 'A fine feature');
 
         $this->retrieve_artifact = RetrieveArtifactStub::withArtifacts(

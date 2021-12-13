@@ -22,11 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchPlannedUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\VerifyIsLinkedToAnotherMilestone;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildPlanningStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
@@ -43,7 +41,6 @@ final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\Te
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
      */
     private $artifact_factory;
-    private UserIdentifier $user_identifier;
     private BuildPlanningStub $planning_builder;
     private SearchChildrenOfFeature $search_children_of_feature;
     private VerifyIsLinkedToAnotherMilestone $check_is_linked;
@@ -53,7 +50,6 @@ final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\Te
         $this->planning_builder           = BuildPlanningStub::withValidRootPlanning();
         $this->search_planned_user_story  = SearchPlannedUserStoryStub::withoutUserStories();
         $this->artifact_factory           = $this->createMock(\Tracker_ArtifactFactory::class);
-        $this->user_identifier            = UserIdentifierStub::buildGenericUser();
         $this->search_children_of_feature = SearchChildrenOfFeatureStub::withoutChildren();
         $this->check_is_linked            = VerifyIsLinkedToAnotherMilestoneStub::buildIsLinked();
     }
@@ -70,12 +66,17 @@ final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\Te
         );
     }
 
+    private function isLinkedToAtLeastOnePlannedUserStory(): bool
+    {
+        $user    = UserIdentifierStub::buildGenericUser();
+        $feature = FeatureIdentifierBuilder::withId(101);
+        return $this->getVerifier()->isLinkedToAtLeastOnePlannedUserStory($user, $feature);
+    }
+
     public function testHasNotAPlannedUserStoryIfNoUserStoryIsLinked(): void
     {
         $this->search_planned_user_story = SearchPlannedUserStoryStub::withoutUserStories();
-        self::assertFalse(
-            $this->getVerifier()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
-        );
+        self::assertFalse($this->isLinkedToAtLeastOnePlannedUserStory());
     }
 
     public function testHasAPlannedUserStory(): void
@@ -87,9 +88,7 @@ final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\Te
             [$user_story_666, $user_story_236]
         );
 
-        self::assertTrue(
-            $this->getVerifier()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
-        );
+        self::assertTrue($this->isLinkedToAtLeastOnePlannedUserStory());
     }
 
     public function testHasNotAPlannedUserStoryIfUserStoriesAreLinkedButNotPlanned(): void
@@ -101,16 +100,29 @@ final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\Te
         $this->search_children_of_feature = SearchChildrenOfFeatureStub::withoutChildren();
         $this->check_is_linked            = VerifyIsLinkedToAnotherMilestoneStub::buildIsNotLinked();
 
-        self::assertFalse(
-            $this->getVerifier()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
-        );
+        self::assertFalse($this->isLinkedToAtLeastOnePlannedUserStory());
+    }
+
+    public function testReturnFalseWhenUserHasAccessedToTheUserStory(): void
+    {
+        $user_story = ['project_id' => 101, 'user_story_id' => 666];
+
+        $this->search_children_of_feature = SearchChildrenOfFeatureStub::withChildren([$user_story]);
+        $this->planning_builder           = BuildPlanningStub::withoutRootValid();
+
+        self::assertFalse($this->isLinkedToAtLeastOnePlannedUserStory());
+    }
+
+    private function hasAtLeastOneStory(): bool
+    {
+        $user    = UserIdentifierStub::buildGenericUser();
+        $feature = FeatureIdentifierBuilder::withId(101);
+        return $this->getVerifier()->hasStoryLinked($user, $feature);
     }
 
     public function testHasNotALinkedUserStoryToFeature(): void
     {
-        self::assertFalse(
-            $this->getVerifier()->hasStoryLinked($this->user_identifier, $this->buildFeature(101))
-        );
+        self::assertFalse($this->hasAtLeastOneStory());
     }
 
     public function testHasNotALinkedUserStoryToFeatureThatUserCanSee(): void
@@ -125,9 +137,7 @@ final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\Te
             ->with(self::isInstanceOf(\PFUser::class), 666)
             ->willReturn(null);
 
-        self::assertFalse(
-            $this->getVerifier()->hasStoryLinked($this->user_identifier, $this->buildFeature(101))
-        );
+        self::assertFalse($this->hasAtLeastOneStory());
     }
 
     public function testHasALinkedUserStoryToFeature(): void
@@ -141,25 +151,6 @@ final class UserStoryLinkedToFeatureVerifierTest extends \Tuleap\Test\PHPUnit\Te
             ->with(self::isInstanceOf(\PFUser::class), 236)
             ->willReturn(ArtifactTestBuilder::anArtifact(964)->build());
 
-        self::assertTrue(
-            $this->getVerifier()->hasStoryLinked($this->user_identifier, $this->buildFeature(101))
-        );
-    }
-
-    public function testReturnFalseWhenUserHasAccessedToTheUserStory(): void
-    {
-        $user_story                       = ['project_id' => 101, 'user_story_id' => 666];
-        $this->search_children_of_feature = SearchChildrenOfFeatureStub::withChildren([$user_story]);
-
-        $this->planning_builder = BuildPlanningStub::withoutRootValid();
-
-        self::assertFalse(
-            $this->getVerifier()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
-        );
-    }
-
-    private function buildFeature(int $feature_id): FeatureIdentifier
-    {
-        return FeatureIdentifierBuilder::build($feature_id, 110);
+        self::assertTrue($this->hasAtLeastOneStory());
     }
 }
