@@ -23,10 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan;
 
 use AgileDashboardPlugin;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\LegacyMockInterface;
-use Mockery\MockInterface;
 use PFUser;
 use Project;
 use testmanagementPlugin;
@@ -36,25 +32,21 @@ use Tuleap\TestManagement\Config;
 
 final class TestPlanPaneDisplayableTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
 
     /**
-     * @var LegacyMockInterface|MockInterface|Config
+     * @var \PHPUnit\Framework\MockObject\MockObject&Config
      */
-    private $testmanagement_config;
+    private mixed $testmanagement_config;
     /**
-     * @var TestPlanPaneDisplayable
+     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerFactory
      */
-    private $testplan_pane_displayable;
-    /**
-     * @var LegacyMockInterface|MockInterface|TrackerFactory
-     */
-    private $tracker_factory;
+    private mixed $tracker_factory;
+    private TestPlanPaneDisplayable $testplan_pane_displayable;
 
     protected function setUp(): void
     {
-        $this->testmanagement_config = Mockery::mock(Config::class);
-        $this->tracker_factory       = Mockery::mock(TrackerFactory::class);
+        $this->testmanagement_config = $this->createMock(Config::class);
+        $this->tracker_factory       = $this->createMock(TrackerFactory::class);
 
         $this->testplan_pane_displayable = new TestPlanPaneDisplayable(
             $this->testmanagement_config,
@@ -64,96 +56,110 @@ final class TestPlanPaneDisplayableTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testPaneCanBeDisplayed(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->andReturn(true);
-        $project->shouldReceive('usesService')->with(testmanagementPlugin::SERVICE_SHORTNAME)->andReturn(true);
-        $this->testmanagement_config->shouldReceive('isConfigNeeded')->andReturn(false);
-        $this->testmanagement_config->shouldReceive('getTestDefinitionTrackerId')->andReturn(123);
+        $project = $this->createMock(Project::class);
+        $project->method('usesService')->willReturnMap([
+            [AgileDashboardPlugin::PLUGIN_SHORTNAME, true],
+            [testmanagementPlugin::SERVICE_SHORTNAME, true],
+        ]);
+        $this->testmanagement_config->method('isConfigNeeded')->willReturn(false);
+        $this->testmanagement_config->method('getTestDefinitionTrackerId')->willReturn(123);
 
-        $tracker = Mockery::mock(Tracker::class);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
+        $tracker = $this->createMock(Tracker::class);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
 
-        $user = Mockery::mock(PFUser::class);
-        $tracker->shouldReceive('userCanView')->andReturnTrue();
+        $user = $this->createMock(PFUser::class);
+        $tracker->method('userCanView')->willReturn(true);
 
         $this->assertTrue($this->testplan_pane_displayable->isTestPlanPaneDisplayable($project, $user));
     }
 
     public function testPaneCanNotBeDisplayedWhenUserCannotViewTheTracker(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->andReturn(true);
-        $project->shouldReceive('usesService')->with(testmanagementPlugin::SERVICE_SHORTNAME)->andReturn(true);
-        $this->testmanagement_config->shouldReceive('isConfigNeeded')->andReturn(false);
-        $this->testmanagement_config->shouldReceive('getTestDefinitionTrackerId')->andReturn(123);
+        $project = $this->createMock(Project::class);
+        $project->method('usesService')->willReturnMap([
+            [AgileDashboardPlugin::PLUGIN_SHORTNAME, true],
+            [testmanagementPlugin::SERVICE_SHORTNAME, true],
+        ]);
+        $this->testmanagement_config->method('isConfigNeeded')->willReturn(false);
+        $this->testmanagement_config->method('getTestDefinitionTrackerId')->willReturn(123);
 
-        $tracker = Mockery::mock(Tracker::class);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
+        $tracker = $this->createMock(Tracker::class);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
 
-        $user = Mockery::mock(PFUser::class);
-        $tracker->shouldReceive('userCanView')->andReturnFalse();
+        $user = $this->createMock(PFUser::class);
+        $tracker->method('userCanView')->willReturn(false);
 
         $this->assertFalse($this->testplan_pane_displayable->isTestPlanPaneDisplayable($project, $user));
     }
 
     public function testPaneCanNotBeDisplayedWhenTrackerDoesNotExist(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->andReturn(true);
-        $project->shouldReceive('usesService')->with(testmanagementPlugin::SERVICE_SHORTNAME)->andReturn(true);
-        $this->testmanagement_config->shouldReceive('isConfigNeeded')->andReturn(false);
-        $this->testmanagement_config->shouldReceive('getTestDefinitionTrackerId')->andReturn(123);
+        $project = $this->createMock(Project::class);
+        $project->method('usesService')->willReturnMap([
+            [AgileDashboardPlugin::PLUGIN_SHORTNAME, true],
+            [testmanagementPlugin::SERVICE_SHORTNAME, true],
+        ]);
+        $this->testmanagement_config->method('isConfigNeeded')->willReturn(false);
+        $this->testmanagement_config->method('getTestDefinitionTrackerId')->willReturn(123);
 
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturnNull();
+        $this->tracker_factory->method('getTrackerById')->willReturn(null);
 
-        $user = Mockery::mock(PFUser::class);
+        $user = $this->createMock(PFUser::class);
 
         $this->assertFalse($this->testplan_pane_displayable->isTestPlanPaneDisplayable($project, $user));
     }
 
     public function testPaneCanNotBeDisplayedWhenConfigIsNotNeededButThereIsNoTestDefinitionTrackerIdHonestlyThisIsAWeirdSituation(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->andReturn(true);
-        $project->shouldReceive('usesService')->with(testmanagementPlugin::SERVICE_SHORTNAME)->andReturn(true);
-        $this->testmanagement_config->shouldReceive('isConfigNeeded')->andReturn(false);
-        $this->testmanagement_config->shouldReceive('getTestDefinitionTrackerId')->andReturnNull();
+        $project = $this->createMock(Project::class);
+        $project->method('usesService')->willReturnMap([
+            [AgileDashboardPlugin::PLUGIN_SHORTNAME, true],
+            [testmanagementPlugin::SERVICE_SHORTNAME, true],
+        ]);
+        $this->testmanagement_config->method('isConfigNeeded')->willReturn(false);
+        $this->testmanagement_config->method('getTestDefinitionTrackerId')->willReturn(null);
 
-        $user = Mockery::mock(PFUser::class);
+        $user = $this->createMock(PFUser::class);
 
         $this->assertFalse($this->testplan_pane_displayable->isTestPlanPaneDisplayable($project, $user));
     }
 
     public function testPaneCanNotBeDisplayedWhenTheAgileDashboardServiceIsNotUsed(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->andReturn(false);
-        $project->shouldReceive('usesService')->with(testmanagementPlugin::SERVICE_SHORTNAME)->andReturn(true);
+        $project = $this->createMock(Project::class);
+        $project->method('usesService')->willReturnMap([
+            [AgileDashboardPlugin::PLUGIN_SHORTNAME, false],
+            [testmanagementPlugin::SERVICE_SHORTNAME, true],
+        ]);
 
-        $user = Mockery::mock(PFUser::class);
+        $user = $this->createMock(PFUser::class);
 
         $this->assertFalse($this->testplan_pane_displayable->isTestPlanPaneDisplayable($project, $user));
     }
 
     public function testPaneCanNotBeDisplayedWhenTheTestManagementServiceIsNotUsed(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->andReturn(true);
-        $project->shouldReceive('usesService')->with(testmanagementPlugin::SERVICE_SHORTNAME)->andReturn(false);
+        $project = $this->createMock(Project::class);
+        $project->method('usesService')->willReturnMap([
+            [AgileDashboardPlugin::PLUGIN_SHORTNAME, true],
+            [testmanagementPlugin::SERVICE_SHORTNAME, false],
+        ]);
 
-        $user = Mockery::mock(PFUser::class);
+        $user = $this->createMock(PFUser::class);
 
         $this->assertFalse($this->testplan_pane_displayable->isTestPlanPaneDisplayable($project, $user));
     }
 
     public function testPaneCanNotBeDisplayedWhenTheTestManagementServiceIsMisconfigured(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->andReturn(true);
-        $project->shouldReceive('usesService')->with(testmanagementPlugin::SERVICE_SHORTNAME)->andReturn(true);
+        $project = $this->createMock(Project::class);
+        $project->method('usesService')->willReturnMap([
+            [AgileDashboardPlugin::PLUGIN_SHORTNAME, true],
+            [testmanagementPlugin::SERVICE_SHORTNAME, true],
+        ]);
 
-        $user = Mockery::mock(PFUser::class);
-        $this->testmanagement_config->shouldReceive('isConfigNeeded')->andReturn(true);
+        $user = $this->createMock(PFUser::class);
+        $this->testmanagement_config->method('isConfigNeeded')->willReturn(true);
 
         $this->assertFalse($this->testplan_pane_displayable->isTestPlanPaneDisplayable($project, $user));
     }
