@@ -56,3 +56,19 @@ export interface IterationLabels {
     label: string;
     sub_label: string;
 }
+
+export interface Feature {
+    readonly background_color: string;
+    readonly has_user_story_planned: boolean;
+    readonly has_user_story_linked: boolean;
+    readonly is_open: boolean;
+    readonly id: number;
+    readonly uri: string;
+    readonly xref: string;
+    readonly title: string;
+    readonly tracker: TrackerMinimalRepresentation;
+}
+
+interface TrackerMinimalRepresentation {
+    readonly color_name: string;
+}

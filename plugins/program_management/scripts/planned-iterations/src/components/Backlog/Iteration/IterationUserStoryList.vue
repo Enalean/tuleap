@@ -20,20 +20,51 @@
 
 <template>
     <div class="planned-iteration-content-items" data-test="iteration-user-story-list">
-        <iteration-no-content data-test="empty-state" />
-        <span class="empty-state-text" v-translate>This is not implemented yet</span>
+        <backlog-element-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
+        <iteration-no-content v-if="!has_features && !is_loading" data-test="empty-state" />
+        <feature-card
+            v-else
+            v-for="feature in features"
+            v-bind:key="feature.id"
+            v-bind:feature="feature"
+            v-bind:iteration="iteration"
+        />
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
+import { retrieveIterationContent } from "../../../helpers/iteration-content-retriever";
+
 import IterationNoContent from "./IterationNoContent.vue";
+import FeatureCard from "./FeatureCard.vue";
+import BacklogElementSkeleton from "../../BacklogElementSkeleton.vue";
+
+import type { Feature, Iteration } from "../../../type";
 
 @Component({
     components: {
         IterationNoContent,
+        FeatureCard,
+        BacklogElementSkeleton,
     },
 })
-export default class IterationUserStoryList extends Vue {}
+export default class IterationUserStoryList extends Vue {
+    @Prop({ required: true })
+    readonly iteration!: Iteration;
+
+    private features: Feature[] = [];
+    private is_loading = false;
+
+    async mounted(): Promise<void> {
+        this.is_loading = true;
+        this.features = await retrieveIterationContent(this.iteration.id);
+        this.is_loading = false;
+    }
+
+    get has_features(): boolean {
+        return this.features.length > 0;
+    }
+}
 </script>
