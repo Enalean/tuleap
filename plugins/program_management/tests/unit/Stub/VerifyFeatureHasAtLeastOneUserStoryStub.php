@@ -22,36 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\VerifyFeatureHasAtLeastOneUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class VerifyLinkedUserStoryIsNotPlannedStub implements VerifyLinkedUserStoryIsNotPlanned
+final class VerifyFeatureHasAtLeastOneUserStoryStub implements VerifyFeatureHasAtLeastOneUserStory
 {
-    private bool $is_linked;
-
-    private function __construct(bool $is_linked = false)
+    private function __construct(private bool $has_story)
     {
-        $this->is_linked = $is_linked;
     }
 
-    public function isLinkedToAtLeastOnePlannedUserStory(UserIdentifier $user_identifier, FeatureIdentifier $feature): bool
-    {
-        return $this->is_linked;
-    }
-
-    public function hasStoryLinked(UserIdentifier $user_identifier, FeatureIdentifier $feature): bool
-    {
-        return false;
-    }
-
-    public static function buildLinkedStories(): self
+    public static function withStories(): self
     {
         return new self(true);
     }
 
-    public static function buildNotLinkedStories(): self
+    public static function withoutStories(): self
     {
         return new self(false);
+    }
+
+    public function hasStoryLinked(FeatureIdentifier $feature, UserIdentifier $user): bool
+    {
+        return $this->has_story;
     }
 }

@@ -42,7 +42,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsPlannedInProgramIncrement
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleByProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use function PHPUnit\Framework\assertTrue;
 
@@ -74,7 +74,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->visible_feature_verifier,
             $this->can_be_planned_verifier,
             new FeaturePlanner(
-                VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
+                VerifyHasAtLeastOnePlannedUserStoryStub::withNothingPlanned(),
                 $this->buildFeatureRemoverStub(),
                 $this->buildTopBacklogStoreStub(),
                 $this->buildFeatureAdderStub()

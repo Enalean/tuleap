@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 
 final class FeatureRemovalTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -56,7 +56,7 @@ final class FeatureRemovalTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectException(FeatureHasPlannedUserStoryException::class);
         FeatureRemoval::fromFeature(
-            VerifyLinkedUserStoryIsNotPlannedStub::buildLinkedStories(),
+            VerifyHasAtLeastOnePlannedUserStoryStub::withPlannedUserStory(),
             $this->feature,
             $this->user_can_prioritize
         );
@@ -65,7 +65,7 @@ final class FeatureRemovalTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsAValidPayload(): void
     {
         $payload = FeatureRemoval::fromFeature(
-            VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
+            VerifyHasAtLeastOnePlannedUserStoryStub::withNothingPlanned(),
             $this->feature,
             $this->user_can_prioritize
         );

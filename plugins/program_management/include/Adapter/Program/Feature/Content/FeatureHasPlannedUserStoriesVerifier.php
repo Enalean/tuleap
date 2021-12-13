@@ -20,39 +20,33 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
+namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 
-use Tracker_ArtifactFactory;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\VerifyHasAtLeastOnePlannedUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\VerifyIsLinkedToAnotherMilestone;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchPlannedUserStory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\VerifyIsLinkedToAnotherMilestone;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class UserStoryLinkedToFeatureVerifier implements VerifyLinkedUserStoryIsNotPlanned
+final class FeatureHasPlannedUserStoriesVerifier implements VerifyHasAtLeastOnePlannedUserStory
 {
     public function __construct(
         private SearchPlannedUserStory $search_planned_user_story,
         private BuildPlanning $planning_adapter,
-        private Tracker_ArtifactFactory $artifact_factory,
-        private RetrieveUser $retrieve_user,
-        private SearchChildrenOfFeature $search_children_of_feature,
         private VerifyIsLinkedToAnotherMilestone $verify_is_linked_to_program_increment,
     ) {
     }
 
-    public function isLinkedToAtLeastOnePlannedUserStory(
-        UserIdentifier $user_identifier,
+    public function hasAtLeastOnePlannedUserStory(
         FeatureIdentifier $feature,
+        UserIdentifier $user,
     ): bool {
         $planned_user_stories = $this->search_planned_user_story->getPlannedUserStory($feature->id);
         foreach ($planned_user_stories as $user_story) {
             try {
-                $planning = $this->planning_adapter->getRootPlanning($user_identifier, $user_story['project_id']);
+                $planning = $this->planning_adapter->getRootPlanning($user, $user_story['project_id']);
             } catch (TopPlanningNotFoundInProjectException $e) {
                 continue;
             }
@@ -63,20 +57,6 @@ final class UserStoryLinkedToFeatureVerifier implements VerifyLinkedUserStoryIsN
                 $user_story['project_id']
             );
             if ($is_linked_to_a_sprint_in_mirrored_program_increments) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function hasStoryLinked(UserIdentifier $user_identifier, FeatureIdentifier $feature): bool
-    {
-        $user            = $this->retrieve_user->getUserWithId($user_identifier);
-        $linked_children = $this->search_children_of_feature->getChildrenOfFeatureInTeamProjects($feature->id);
-        foreach ($linked_children as $linked_child) {
-            $child = $this->artifact_factory->getArtifactByIdUserCanView($user, $linked_child['children_id']);
-            if ($child) {
                 return true;
             }
         }

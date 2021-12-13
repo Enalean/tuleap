@@ -44,11 +44,12 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplici
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasUserStoriesVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUserStoriesVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureElementsRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturesDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
@@ -115,7 +116,7 @@ final class ProjectResource extends AuthenticatedResource
     private BuildProgram $build_program;
     private UserManagerAdapter $user_manager_adapter;
     private PrioritizeFeaturesPermissionVerifier $features_permission_verifier;
-    private UserStoryLinkedToFeatureVerifier $user_story_linked_verifier;
+    private FeatureHasPlannedUserStoriesVerifier $user_story_linked_verifier;
 
     public function __construct()
     {
@@ -166,12 +167,9 @@ final class ProjectResource extends AuthenticatedResource
         );
 
         $artifacts_linked_to_parent_dao     = new ArtifactsLinkedToParentDao();
-        $this->user_story_linked_verifier   = new UserStoryLinkedToFeatureVerifier(
+        $this->user_story_linked_verifier   = new FeatureHasPlannedUserStoriesVerifier(
             $artifacts_linked_to_parent_dao,
             new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
-            $artifact_factory,
-            $this->user_manager_adapter,
-            $artifacts_linked_to_parent_dao,
             $artifacts_linked_to_parent_dao
         );
         $this->features_retriever           = new FeatureElementsRetriever(
@@ -187,6 +185,7 @@ final class ProjectResource extends AuthenticatedResource
                 ),
                 new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
                 $this->user_story_linked_verifier,
+                new FeatureHasUserStoriesVerifier($artifact_factory, $this->user_manager_adapter, $artifacts_linked_to_parent_dao),
                 $this->user_manager_adapter
             )
         );

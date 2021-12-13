@@ -35,10 +35,11 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureHasAtLeastOneUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleByProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -96,7 +97,8 @@ final class FeatureContentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->form_element_factory,
                 RetrieveBackgroundColorStub::withDefaults(),
                 VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
-                VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
+                VerifyHasAtLeastOnePlannedUserStoryStub::withNothingPlanned(),
+                VerifyFeatureHasAtLeastOneUserStoryStub::withoutStories(),
                 RetrieveUserStub::withUser($pfuser_with_read_all_permission)
             ),
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),

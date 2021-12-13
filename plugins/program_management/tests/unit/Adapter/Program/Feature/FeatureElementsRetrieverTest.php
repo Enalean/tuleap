@@ -33,8 +33,9 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureHasAtLeastOneUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleByProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
@@ -76,7 +77,8 @@ final class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->form_element_factory,
                 RetrieveBackgroundColorStub::withDefaults(),
                 VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
-                VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
+                VerifyHasAtLeastOnePlannedUserStoryStub::withNothingPlanned(),
+                VerifyFeatureHasAtLeastOneUserStoryStub::withoutStories(),
                 RetrieveUserStub::withGenericUser()
             )
         );

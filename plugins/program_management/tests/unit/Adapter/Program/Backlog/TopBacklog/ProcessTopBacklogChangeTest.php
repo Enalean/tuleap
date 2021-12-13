@@ -36,7 +36,7 @@ use Tuleap\ProgramManagement\Tests\Stub\OrderFeatureRankStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProgramIncrementLinkedToFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -161,7 +161,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao,
             new DBTransactionExecutorPassthrough(),
             $this->feature_orderer,
-            VerifyLinkedUserStoryIsNotPlannedStub::buildLinkedStories(),
+            VerifyHasAtLeastOnePlannedUserStoryStub::withPlannedUserStory(),
             new VerifyIsVisibleFeatureAdapter($this->artifact_factory, $this->retrieve_user),
             new FeatureRemovalProcessor($this->program_increment_dao, $this->artifact_factory, $this->artifact_link_updater, $this->retrieve_user)
         );
@@ -193,7 +193,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao,
             new DBTransactionExecutorPassthrough(),
             $this->feature_orderer,
-            VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
+            VerifyHasAtLeastOnePlannedUserStoryStub::withNothingPlanned(),
             new VerifyIsVisibleFeatureAdapter($this->artifact_factory, $retrieve_user),
             new FeatureRemovalProcessor($this->program_increment_dao, $this->artifact_factory, $this->artifact_link_updater, $retrieve_user),
         );
@@ -239,7 +239,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao,
             new DBTransactionExecutorPassthrough(),
             $this->feature_orderer,
-            VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
+            VerifyHasAtLeastOnePlannedUserStoryStub::withNothingPlanned(),
             new VerifyIsVisibleFeatureAdapter($this->artifact_factory, $this->retrieve_user),
             new FeatureRemovalProcessor(
                 $this->program_increment_dao,
