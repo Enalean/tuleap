@@ -35,7 +35,7 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncremen
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\ContentStoreStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUnlinkedUserStoriesOfMirroredProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchUnlinkedUserStoriesOfMirroredProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchArtifactsLinksStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchMirroredTimeboxesStub;
@@ -87,7 +87,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
             $this->content_dao,
             new NullLogger(),
             RetrieveUserStub::withGenericUser(),
-            RetrieveUnlinkedUserStoriesOfMirroredProgramIncrementStub::buildEmptyUserStories()
+            SearchUnlinkedUserStoriesOfMirroredProgramIncrementStub::withNoUserStories()
         );
     }
 

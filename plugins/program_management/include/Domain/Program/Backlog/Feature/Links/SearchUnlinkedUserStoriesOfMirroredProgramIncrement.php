@@ -21,19 +21,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIdentifier;
 
-final class RetrieveUnlinkedUserStoriesOfMirroredProgramIncrementStub implements RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement
+interface SearchUnlinkedUserStoriesOfMirroredProgramIncrement
 {
-    public static function buildEmptyUserStories(): self
-    {
-        return new self();
-    }
-
-    public function getUserStoriesOfMirroredProgramIncrementThatAreNotLinkedToASprint(int $milestone_id): array
-    {
-        return [];
-    }
+    /**
+     * @return int[]
+     */
+    public function getUserStoriesOfMirroredProgramIncrementThatAreNotLinkedToASprint(
+        MirroredProgramIncrementIdentifier $mirrored_program_increment,
+    ): array;
 }

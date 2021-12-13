@@ -24,13 +24,14 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\VerifyIsLinkedToAnotherMilestone;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchPlannedUserStory;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchUnlinkedUserStoriesOfMirroredProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\VerifyIsLinkedToAnotherMilestone;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIdentifier;
 
-final class ArtifactsLinkedToParentDao extends DataAccessObject implements SearchArtifactsLinks, RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement, SearchPlannedUserStory, SearchChildrenOfFeature, VerifyIsLinkedToAnotherMilestone
+final class ArtifactsLinkedToParentDao extends DataAccessObject implements SearchArtifactsLinks, SearchUnlinkedUserStoriesOfMirroredProgramIncrement, SearchPlannedUserStory, SearchChildrenOfFeature, VerifyIsLinkedToAnotherMilestone
 {
     /**
      * @psalm-return array{id: int, project_id: int}[]
@@ -71,12 +72,11 @@ final class ArtifactsLinkedToParentDao extends DataAccessObject implements Searc
         return count($rows) > 0;
     }
 
-    /**
-     * @psalm-return array{id: int}[]
-     */
-    public function getUserStoriesOfMirroredProgramIncrementThatAreNotLinkedToASprint(int $milestone_id): array
-    {
-        $sql = "SELECT user_story.id, user_story_tracker.group_id AS project_id
+    public function getUserStoriesOfMirroredProgramIncrementThatAreNotLinkedToASprint(
+        MirroredProgramIncrementIdentifier $mirrored_program_increment,
+    ): array {
+        $sql = <<<SQL
+            SELECT user_story.id, user_story_tracker.group_id AS project_id
                 FROM tracker_artifact AS mirrored_program_increment
                 -- retrieve the artifact_links of milestone
                     INNER JOIN tracker_field                        AS milestone_field    ON (milestone_field.tracker_id = mirrored_program_increment.tracker_id AND milestone_field.formElement_type = 'art_link' AND milestone_field.use_it = 1)
@@ -113,9 +113,10 @@ final class ArtifactsLinkedToParentDao extends DataAccessObject implements Searc
                             AND user_story_in_sprint_tracker.group_id = user_story_tracker.group_id
                             AND user_story_in_sprint_tracker.deletion_date IS NULL
                     )
-                ";
+        SQL;
 
-        return $this->getDB()->run($sql, $milestone_id);
+        $rows = $this->getDB()->run($sql, $mirrored_program_increment->getId());
+        return array_map((static fn(array $row): int => $row['id']), $rows);
     }
 
     /**
