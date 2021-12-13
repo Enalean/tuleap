@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\REST\v1;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\RetrieveFullTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Feature;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 /**
@@ -47,7 +49,7 @@ final class FeatureRepresentation extends ElementRepresentation
      */
     public $has_user_story_linked;
 
-    public function __construct(
+    private function __construct(
         int $artifact_id,
         ?string $artifact_title,
         string $artifact_xref,
@@ -62,5 +64,21 @@ final class FeatureRepresentation extends ElementRepresentation
         $this->background_color       = $background_color->getBackgroundColorName();
         $this->has_user_story_planned = $has_user_story_planned;
         $this->has_user_story_linked  = $has_user_story_linked;
+    }
+
+    public static function fromFeature(RetrieveFullTracker $tracker_retriever, Feature $feature): self
+    {
+        $tracker = $tracker_retriever->getNonNullTracker($feature->feature_tracker_identifier);
+
+        return new self(
+            $feature->feature_identifier->getId(),
+            $feature->title,
+            $feature->cross_reference,
+            $feature->uri,
+            MinimalTrackerRepresentation::build($tracker),
+            $feature->background_color,
+            $feature->is_linked_to_at_least_one_planned_user_story,
+            $feature->has_at_least_one_story
+        );
     }
 }

@@ -45,11 +45,9 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UserCanUpdateTimebo
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureContentRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasUserStoriesVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUserStoriesVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasUserStoriesVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
@@ -63,9 +61,11 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\FormElementFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserIsProgramAdminVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Feature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationsRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
@@ -73,10 +73,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\Add
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\ContentChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\ContentModifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeaturePlanner;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\ProgramIncrementContentSearcher;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementHasNoProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
@@ -112,49 +112,53 @@ final class ProgramIncrementResource extends AuthenticatedResource
      * @throws RestException 401
      * @throws RestException 400
      */
-    public function getBacklog(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
+    public function getContent(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
     {
-        $user_manager       = \UserManager::instance();
-        $user_retriever     = new UserManagerAdapter($user_manager);
-        $artifact_factory   = \Tracker_ArtifactFactory::instance();
-        $artifact_retriever = new ArtifactFactoryAdapter($artifact_factory);
-
+        $user_manager                   = \UserManager::instance();
+        $user_retriever                 = new UserManagerAdapter($user_manager);
+        $artifact_factory               = \Tracker_ArtifactFactory::instance();
+        $artifact_retriever             = new ArtifactFactoryAdapter($artifact_factory);
+        $tracker_retriever              = new TrackerFactoryAdapter(\TrackerFactory::instance());
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
-        $user_story_linked_verifier     = new FeatureHasPlannedUserStoriesVerifier(
-            $artifacts_linked_to_parent_dao,
-            new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
-            $artifacts_linked_to_parent_dao
-        );
 
-        $program_increment_content_retriever = new FeatureContentRetriever(
+        $program_increment_content_retriever = new ProgramIncrementContentSearcher(
             new ProgramIncrementsDAO(),
+            new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
             new ContentDao(),
             new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_retriever),
-            new FeatureRepresentationBuilder(
+            new TitleValueRetriever($artifact_retriever),
+            new URIRetriever($artifact_retriever),
+            new CrossReferenceRetriever($artifact_retriever),
+            new TrackerOfArtifactRetriever($artifact_retriever),
+            new BackgroundColorRetriever(
+                new BackgroundColorBuilder(new BindDecoratorRetriever()),
                 $artifact_retriever,
-                new TitleValueRetriever($artifact_retriever),
-                new BackgroundColorRetriever(
-                    new BackgroundColorBuilder(new BindDecoratorRetriever()),
-                    $artifact_retriever,
-                    $user_retriever
-                ),
-                $user_story_linked_verifier,
-                new FeatureHasUserStoriesVerifier($artifact_factory, $user_retriever, $artifacts_linked_to_parent_dao)
+                $user_retriever
             ),
-            new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
+            new FeatureHasPlannedUserStoriesVerifier(
+                $artifacts_linked_to_parent_dao,
+                new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
+                $artifacts_linked_to_parent_dao
+            ),
+            new FeatureHasUserStoriesVerifier($artifact_factory, $user_retriever, $artifacts_linked_to_parent_dao)
         );
 
         $user = $user_manager->getCurrentUser();
         try {
-            $elements = $program_increment_content_retriever->retrieveProgramIncrementContent(
+            $features = $program_increment_content_retriever->retrieveProgramIncrementContent(
                 $id,
                 UserProxy::buildFromPFUser($user)
             );
 
-            Header::sendPaginationHeaders($limit, $offset, count($elements), self::MAX_LIMIT);
+            $representations = array_map(
+                static fn(Feature $feature) => FeatureRepresentation::fromFeature($tracker_retriever, $feature),
+                $features
+            );
 
-            return array_slice($elements, $offset, $limit);
-        } catch (ProgramIncrementNotFoundException | ProgramIncrementHasNoProgramException | PlanTrackerException | ProgramTrackerException $e) {
+            Header::sendPaginationHeaders($limit, $offset, count($representations), self::MAX_LIMIT);
+
+            return array_slice($representations, $offset, $limit);
+        } catch (ProgramIncrementNotFoundException $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());
         }
     }

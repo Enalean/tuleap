@@ -51,7 +51,9 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class IterationContentSearcherTest extends TestCase
 {
     private const USER_STORY_ONE_ID = 555;
+    private const FIRST_COLOR       = 'sherwood-green';
     private const USER_STORY_TWO_ID = 666;
+    private const SECOND_COLOR      = 'deep-blue';
     private const ITERATION_ID      = 777;
 
     private VerifyIsIterationStub $verify_is_iteration;
@@ -82,7 +84,7 @@ final class IterationContentSearcherTest extends TestCase
         $this->retrieve_uri              = new RetrieveUserStoryURIStub();
         $this->retrieve_cross_ref        = RetrieveUserStoryCrossRefStub::withShortname('Story');
         $this->retrieve_is_open          = VerifyIsOpenStub::withOpen();
-        $this->retrieve_background_color = RetrieveBackgroundColorStub::withDefaults();
+        $this->retrieve_background_color = RetrieveBackgroundColorStub::withSuccessiveColors(self::FIRST_COLOR, self::SECOND_COLOR);
         $this->retrieve_tracker_id       = RetrieveTrackerFromUserStoryStub::withDefault();
 
         $this->user_identifier = UserIdentifierStub::buildGenericUser();
@@ -116,7 +118,12 @@ final class IterationContentSearcherTest extends TestCase
     {
         $content = $this->getSearcher()->retrievePlannedUserStories(self::ITERATION_ID, $this->user_identifier);
         self::assertCount(2, $content);
-        self::assertSame(self::USER_STORY_ONE_ID, $content[0]->user_story_identifier->getId());
-        self::assertSame(self::USER_STORY_TWO_ID, $content[1]->user_story_identifier->getId());
+
+        [$first_user_story, $second_user_story] = $content;
+        self::assertSame(self::USER_STORY_ONE_ID, $first_user_story->user_story_identifier->getId());
+        self::assertSame(self::FIRST_COLOR, $first_user_story->background_color->getBackgroundColorName());
+
+        self::assertSame(self::USER_STORY_TWO_ID, $second_user_story->user_story_identifier->getId());
+        self::assertSame(self::SECOND_COLOR, $second_user_story->background_color->getBackgroundColorName());
     }
 }

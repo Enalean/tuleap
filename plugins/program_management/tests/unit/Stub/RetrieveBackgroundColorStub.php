@@ -30,24 +30,30 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class RetrieveBackgroundColorStub implements RetrieveBackgroundColor
 {
-    private function __construct(private string $color)
+    private function __construct(private array $colors)
     {
-    }
-
-    public static function withDefaults(): self
-    {
-        return new self('lake-placid-blue');
     }
 
     public static function withColor(string $color_name): self
     {
-        return new self($color_name);
+        return new self([$color_name]);
+    }
+
+    /**
+     * @no-named-arguments
+     */
+    public static function withSuccessiveColors(string $color_name, string ...$other_colors): self
+    {
+        return new self([$color_name, ...$other_colors]);
     }
 
     public function retrieveBackgroundColor(
         ArtifactIdentifier $artifact_identifier,
         UserIdentifier $user_identifier,
     ): BackgroundColor {
-        return new BackgroundColor($this->color);
+        if (count($this->colors) > 0) {
+            return new BackgroundColor(array_shift($this->colors));
+        }
+        throw new \LogicException('No color name configured');
     }
 }

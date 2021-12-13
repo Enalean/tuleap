@@ -20,30 +20,43 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\VerifyFeatureHasAtLeastOneUserStory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\VerifyHasAtLeastOnePlannedUserStory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Feature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureCrossReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureTitle;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureURI;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveTrackerOfFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchPlannableFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisible;
+use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 
-final class FeatureElementsRetriever
+final class ProgramBacklogSearcher
 {
     public function __construct(
         private BuildProgram $build_program,
         private SearchPlannableFeatures $search_plannable_features,
         private VerifyFeatureIsVisible $feature_verifier,
-        private FeatureRepresentationBuilder $feature_representation_builder,
+        private RetrieveFeatureTitle $title_retriever,
+        private RetrieveFeatureURI $uri_retriever,
+        private RetrieveFeatureCrossReference $cross_reference_retriever,
+        private RetrieveTrackerOfFeature $tracker_retriever,
+        private RetrieveBackgroundColor $background_retriever,
+        private VerifyHasAtLeastOnePlannedUserStory $planned_verifier,
+        private VerifyFeatureHasAtLeastOneUserStory $story_verifier,
     ) {
     }
 
     /**
-     * @return FeatureRepresentation[]
+     * @return Feature[]
      *
      * @throws ProgramAccessException
      * @throws ProjectIsNotAProgramException
@@ -60,7 +73,14 @@ final class FeatureElementsRetriever
         );
 
         return array_map(
-            fn(FeatureIdentifier $feature) => $this->feature_representation_builder->buildFeatureRepresentation(
+            fn(FeatureIdentifier $feature) => Feature::fromFeatureIdentifier(
+                $this->title_retriever,
+                $this->uri_retriever,
+                $this->cross_reference_retriever,
+                $this->planned_verifier,
+                $this->story_verifier,
+                $this->background_retriever,
+                $this->tracker_retriever,
                 $feature,
                 $user
             ),

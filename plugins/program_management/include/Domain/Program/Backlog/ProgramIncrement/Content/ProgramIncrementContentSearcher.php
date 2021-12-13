@@ -20,30 +20,43 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content;
 
-use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\VerifyFeatureHasAtLeastOneUserStory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\VerifyHasAtLeastOnePlannedUserStory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Feature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureCrossReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureTitle;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureURI;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveTrackerOfFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisible;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\SearchFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class FeatureContentRetriever
+final class ProgramIncrementContentSearcher
 {
     public function __construct(
         private VerifyIsProgramIncrement $program_increment_verifier,
+        private VerifyIsVisibleArtifact $visibility_verifier,
         private SearchFeatures $features_searcher,
         private VerifyFeatureIsVisible $feature_verifier,
-        private FeatureRepresentationBuilder $feature_representation_builder,
-        private VerifyIsVisibleArtifact $visibility_verifier,
+        private RetrieveFeatureTitle $title_retriever,
+        private RetrieveFeatureURI $uri_retriever,
+        private RetrieveFeatureCrossReference $cross_reference_retriever,
+        private RetrieveTrackerOfFeature $tracker_retriever,
+        private RetrieveBackgroundColor $background_retriever,
+        private VerifyHasAtLeastOnePlannedUserStory $planned_verifier,
+        private VerifyFeatureHasAtLeastOneUserStory $story_verifier,
     ) {
     }
 
     /**
+     * @return Feature[]
      * @throws ProgramIncrementNotFoundException
      */
     public function retrieveProgramIncrementContent(int $id, UserIdentifier $user): array
@@ -62,7 +75,14 @@ final class FeatureContentRetriever
         );
 
         return array_map(
-            fn(FeatureIdentifier $feature) => $this->feature_representation_builder->buildFeatureRepresentation(
+            fn(FeatureIdentifier $feature) => Feature::fromFeatureIdentifier(
+                $this->title_retriever,
+                $this->uri_retriever,
+                $this->cross_reference_retriever,
+                $this->planned_verifier,
+                $this->story_verifier,
+                $this->background_retriever,
+                $this->tracker_retriever,
                 $feature,
                 $user
             ),

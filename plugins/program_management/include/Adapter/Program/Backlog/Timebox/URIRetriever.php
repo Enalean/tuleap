@@ -24,12 +24,14 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureURI;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveUri;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryURI;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 
-final class URIRetriever implements RetrieveUri, RetrieveUserStoryURI
+final class URIRetriever implements RetrieveUri, RetrieveUserStoryURI, RetrieveFeatureURI
 {
     public function __construct(private RetrieveFullArtifact $artifact_retriever)
     {
@@ -45,5 +47,10 @@ final class URIRetriever implements RetrieveUri, RetrieveUserStoryURI
     {
         $artifact = $this->artifact_retriever->getNonNullArtifact($user_story_identifier);
         return $artifact->getUri();
+    }
+
+    public function getFeatureURI(FeatureIdentifier $feature_identifier): string
+    {
+        return $this->artifact_retriever->getNonNullArtifact($feature_identifier)->getUri();
     }
 }
