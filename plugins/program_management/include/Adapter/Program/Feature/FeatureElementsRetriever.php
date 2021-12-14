@@ -22,8 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchPlannableFeatures;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisible;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
@@ -33,6 +37,7 @@ final class FeatureElementsRetriever
     public function __construct(
         private BuildProgram $build_program,
         private SearchPlannableFeatures $search_plannable_features,
+        private VerifyFeatureIsVisible $feature_verifier,
         private FeatureRepresentationBuilder $feature_representation_builder,
     ) {
     }
@@ -40,29 +45,26 @@ final class FeatureElementsRetriever
     /**
      * @return FeatureRepresentation[]
      *
-     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException
-     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException
+     * @throws ProgramAccessException
+     * @throws ProjectIsNotAProgramException
      */
     public function retrieveFeaturesToBePlanned(int $program_id, UserIdentifier $user): array
     {
         $program = ProgramIdentifier::fromId($this->build_program, $program_id, $user, null);
 
-        $to_be_planned_artifacts = $this->search_plannable_features->searchPlannableFeatures($program);
+        $feature_identifiers = FeatureIdentifier::buildCollectionFromProgram(
+            $this->search_plannable_features,
+            $this->feature_verifier,
+            $program,
+            $user
+        );
 
-        $elements = [];
-        foreach ($to_be_planned_artifacts as $artifact) {
-            $feature = $this->feature_representation_builder->buildFeatureRepresentation(
-                $user,
-                $program,
-                $artifact['artifact_id'],
-                $artifact['field_title_id'],
-                $artifact['artifact_title']
-            );
-            if ($feature) {
-                $elements[] = $feature;
-            }
-        }
-
-        return $elements;
+        return array_map(
+            fn(FeatureIdentifier $feature) => $this->feature_representation_builder->buildFeatureRepresentation(
+                $feature,
+                $user
+            ),
+            $feature_identifiers
+        );
     }
 }

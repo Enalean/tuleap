@@ -39,6 +39,11 @@ final class RetrieveBackgroundColorStub implements RetrieveBackgroundColor
         return new self('lake-placid-blue');
     }
 
+    public static function withColor(string $color_name): self
+    {
+        return new self($color_name);
+    }
+
     public function retrieveBackgroundColor(
         ArtifactIdentifier $artifact_identifier,
         UserIdentifier $user_identifier,

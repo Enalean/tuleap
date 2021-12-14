@@ -117,7 +117,6 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $user_manager       = \UserManager::instance();
         $user_retriever     = new UserManagerAdapter($user_manager);
         $artifact_factory   = \Tracker_ArtifactFactory::instance();
-        $program_dao        = new ProgramDao();
         $artifact_retriever = new ArtifactFactoryAdapter($artifact_factory);
 
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
@@ -130,22 +129,19 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $program_increment_content_retriever = new FeatureContentRetriever(
             new ProgramIncrementsDAO(),
             new ContentDao(),
+            new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_retriever),
             new FeatureRepresentationBuilder(
                 $artifact_retriever,
-                \Tracker_FormElementFactory::instance(),
+                new TitleValueRetriever($artifact_retriever),
                 new BackgroundColorRetriever(
                     new BackgroundColorBuilder(new BindDecoratorRetriever()),
                     $artifact_retriever,
                     $user_retriever
                 ),
-                new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_retriever),
                 $user_story_linked_verifier,
-                new FeatureHasUserStoriesVerifier($artifact_factory, $user_retriever, $artifacts_linked_to_parent_dao),
-                $user_retriever
+                new FeatureHasUserStoriesVerifier($artifact_factory, $user_retriever, $artifacts_linked_to_parent_dao)
             ),
             new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
-            $program_dao,
-            ProgramAdapter::instance(),
         );
 
         $user = $user_manager->getCurrentUser();
@@ -158,7 +154,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             Header::sendPaginationHeaders($limit, $offset, count($elements), self::MAX_LIMIT);
 
             return array_slice($elements, $offset, $limit);
-        } catch (ProgramIncrementNotFoundException | ProgramIncrementHasNoProgramException | PlanTrackerException | ProgramTrackerException | ProgramAccessException $e) {
+        } catch (ProgramIncrementNotFoundException | ProgramIncrementHasNoProgramException | PlanTrackerException | ProgramTrackerException $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());
         }
     }

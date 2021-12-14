@@ -36,7 +36,7 @@ final class PlannableFeatureBuilder
     {
         $user_identifier = UserIdentifierStub::buildGenericUser();
         $feature         = FeatureIdentifier::fromId(
-            VerifyFeatureIsVisibleStub::buildVisibleFeature(),
+            VerifyFeatureIsVisibleStub::withAlwaysVisibleFeatures(),
             $feature_id,
             $user_identifier
         );

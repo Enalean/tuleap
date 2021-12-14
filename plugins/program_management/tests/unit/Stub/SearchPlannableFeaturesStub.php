@@ -22,38 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisible;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchPlannableFeatures;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
-final class VerifyFeatureIsVisibleStub implements VerifyFeatureIsVisible
+final class SearchPlannableFeaturesStub implements SearchPlannableFeatures
 {
-    private function __construct(private bool $always_visible, private array $visible = [])
+    private function __construct(private array $rows)
     {
-    }
-
-    public function isVisible(int $feature_id, UserIdentifier $user_identifier): bool
-    {
-        if ($this->always_visible) {
-            return true;
-        }
-        return in_array($feature_id, $this->visible, true);
-    }
-
-    public static function withAlwaysVisibleFeatures(): self
-    {
-        return new self(true);
     }
 
     /**
      * @no-named-arguments
      */
-    public static function withVisibleIds(int $feature_id, int ...$other_feature_ids): self
+    public static function withFeatureIds(int $feature_id, int ...$other_ids): self
     {
-        return new self(false, [$feature_id, ...$other_feature_ids]);
+        return new self([$feature_id, ...$other_ids]);
     }
 
-    public static function withNotVisibleFeature(): self
+    public static function withoutFeatures(): self
     {
-        return new self(false);
+        return new self([]);
+    }
+
+    public function searchPlannableFeatures(ProgramIdentifier $program): array
+    {
+        return $this->rows;
     }
 }

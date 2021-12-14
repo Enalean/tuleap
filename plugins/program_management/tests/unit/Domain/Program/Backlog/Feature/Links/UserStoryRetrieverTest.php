@@ -48,7 +48,7 @@ final class UserStoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             SearchChildrenOfFeatureStub::withChildren([['children_id' => self::USER_STORY_ONE_ID], ['children_id' => self::USER_STORY_TWO_ID]]),
             VerifyIsPlannableStub::buildPlannableElement(),
             RetrieveBackgroundColorStub::withDefaults(),
-            VerifyFeatureIsVisibleStub::buildVisibleFeature(),
+            VerifyFeatureIsVisibleStub::withAlwaysVisibleFeatures(),
             RetrieveUserStoryTitleStub::withSuccessiveValues('Title', 'Other title'),
             new RetrieveUserStoryURIStub(),
             RetrieveUserStoryCrossRefStub::withShortname('story'),

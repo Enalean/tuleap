@@ -74,16 +74,13 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 
     private function getPlanner(): UserStoriesInMirroredProgramIncrementsPlanner
     {
-        $features_searcher = SearchFeaturesStub::withRows([
-            ['artifact_id' => self::FEATURE_ID, 'artifact_title' => 'My artifact', 'field_title_id' => 1],
-        ]);
         return new UserStoriesInMirroredProgramIncrementsPlanner(
             new DBTransactionExecutorPassthrough(),
             $this->search_artifacts_links,
             RetrieveFullArtifactStub::withArtifact($this->milestone),
             SearchMirroredTimeboxesStub::withIds(self::MIRRORED_TIMEBOX_ID),
             $this->visibility_verifier,
-            $features_searcher,
+            SearchFeaturesStub::withFeatureIds(self::FEATURE_ID),
             new NullLogger(),
             RetrieveUserStub::withGenericUser(),
             SearchUnlinkedUserStoriesOfMirroredProgramIncrementStub::withNoUserStories()

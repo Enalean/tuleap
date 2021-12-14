@@ -23,41 +23,42 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
+use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\UserStoryIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\TimeboxIdentifierStub;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class TitleValueRetrieverTest extends TestCase
 {
     private const ARTIFACT_ID = 1;
-    private Artifact $artifact;
-
-    protected function setUp(): void
-    {
-        $this->artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->build();
-    }
+    private const TITLE       = 'Unawful paramine';
 
     private function getRetriever(): TitleValueRetriever
     {
-        return new TitleValueRetriever(RetrieveFullArtifactStub::withArtifact($this->artifact));
+        $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)
+            ->withTitle(self::TITLE)
+            ->build();
+
+        return new TitleValueRetriever(RetrieveFullArtifactStub::withArtifact($artifact));
     }
 
-    public function testItReturnsValueOfTimebox(): void
+    public function testItReturnsTitleOfTimebox(): void
     {
-        $this->artifact->setTitle('My artifact');
-
         $artifact_identifier = TimeboxIdentifierStub::withId(self::ARTIFACT_ID);
-        self::assertSame('My artifact', $this->getRetriever()->getTitle($artifact_identifier));
+        self::assertSame(self::TITLE, $this->getRetriever()->getTitle($artifact_identifier));
     }
 
-    public function testItReturnsValueOfUserStory(): void
+    public function testItReturnsTitleOfUserStory(): void
     {
-        $this->artifact->setTitle('My artifact');
+        $user_story_identifier = UserStoryIdentifierBuilder::withId(self::ARTIFACT_ID);
+        self::assertSame(self::TITLE, $this->getRetriever()->getUserStoryTitle($user_story_identifier));
+    }
 
-        $artifact_identifier = UserStoryIdentifierBuilder::withId(self::ARTIFACT_ID);
-        self::assertSame('My artifact', $this->getRetriever()->getUserStoryTitle($artifact_identifier));
+    public function testItReturnsTitleOfFeature(): void
+    {
+        $feature_identifier = FeatureIdentifierBuilder::withId(self::ARTIFACT_ID);
+        self::assertSame(self::TITLE, $this->getRetriever()->getFeatureTitle($feature_identifier));
     }
 }

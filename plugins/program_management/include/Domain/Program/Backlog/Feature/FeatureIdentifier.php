@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\SearchFeatures;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -62,6 +64,42 @@ final class FeatureIdentifier implements ArtifactIdentifier
             return null;
         }
         return new self($feature_id);
+    }
+
+    /**
+     * @return self[]
+     */
+    public static function buildCollectionFromProgramIncrement(
+        SearchFeatures $features_searcher,
+        VerifyFeatureIsVisible $feature_verifier,
+        ProgramIncrementIdentifier $program_increment,
+        UserIdentifier $user,
+    ): array {
+        $features = [];
+        foreach ($features_searcher->searchFeatures($program_increment) as $feature_id) {
+            if ($feature_verifier->isVisible($feature_id, $user)) {
+                $features[] = new self($feature_id);
+            }
+        }
+        return $features;
+    }
+
+    /**
+     * @return self[]
+     */
+    public static function buildCollectionFromProgram(
+        SearchPlannableFeatures $features_searcher,
+        VerifyFeatureIsVisible $feature_verifier,
+        ProgramIdentifier $program,
+        UserIdentifier $user,
+    ): array {
+        $features = [];
+        foreach ($features_searcher->searchPlannableFeatures($program) as $feature_id) {
+            if ($feature_verifier->isVisible($feature_id, $user)) {
+                $features[] = new self($feature_id);
+            }
+        }
+        return $features;
     }
 
     public function getId(): int

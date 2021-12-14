@@ -48,7 +48,7 @@ final class FeatureIdentifierBuilder
     public static function withId(int $feature_id): FeatureIdentifier
     {
         $feature = FeatureIdentifier::fromId(
-            VerifyFeatureIsVisibleStub::buildVisibleFeature(),
+            VerifyFeatureIsVisibleStub::withAlwaysVisibleFeatures(),
             $feature_id,
             UserIdentifierStub::buildGenericUser()
         );

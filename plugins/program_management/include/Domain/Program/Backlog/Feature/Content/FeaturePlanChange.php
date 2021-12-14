@@ -43,13 +43,13 @@ final class FeaturePlanChange
     }
 
     /**
-     * @psalm-param array{artifact_id:int|string}[] $feature_to_links
+     * @param int[] $feature_to_links
      */
     public static function fromRaw(SearchArtifactsLinks $searcher, array $feature_to_links, int $program_increment_tracker_id): self
     {
         $feature_change = [];
-        foreach ($feature_to_links as $feature_to_link) {
-            $links = $searcher->getArtifactsLinkedToId((int) $feature_to_link['artifact_id'], $program_increment_tracker_id);
+        foreach ($feature_to_links as $feature_id_to_link) {
+            $links = $searcher->getArtifactsLinkedToId($feature_id_to_link, $program_increment_tracker_id);
 
             foreach ($links as $link) {
                 $feature_change[] = FeatureChange::fromRaw($link);

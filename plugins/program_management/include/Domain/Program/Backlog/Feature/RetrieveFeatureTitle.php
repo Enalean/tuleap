@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
-
-interface SearchFeatures
+interface RetrieveFeatureTitle
 {
-    /**
-     * @return int[]
-     */
-    public function searchFeatures(ProgramIncrementIdentifier $program_increment): array;
+    public function getFeatureTitle(FeatureIdentifier $feature_identifier): ?string;
 }

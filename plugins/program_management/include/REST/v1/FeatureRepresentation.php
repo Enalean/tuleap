@@ -49,7 +49,7 @@ final class FeatureRepresentation extends ElementRepresentation
 
     public function __construct(
         int $artifact_id,
-        string $artifact_title,
+        ?string $artifact_title,
         string $artifact_xref,
         string $artifact_url,
         MinimalTrackerRepresentation $minimal_tracker_representation,
