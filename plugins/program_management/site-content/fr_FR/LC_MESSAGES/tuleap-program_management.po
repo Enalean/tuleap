@@ -228,6 +228,15 @@ msgstr "Itérations"
 msgid "M d"
 msgstr "j M"
 
+msgid ""
+"Manage sets of applications and products into a portfolio to align strategy "
+"to execution. This template has to be used with the 2 Essential SAFe(R) "
+"templates."
+msgstr ""
+"Organiser plusieurs applications et produits dans un portfolio afin "
+"d'aligner la stratégie avec l'exécution. Ce modèle doit être utilisé avec "
+"les 2 modèles Essential SAFe(R)."
+
 msgid "Milestones"
 msgstr "Jalons"
 
@@ -275,6 +284,9 @@ msgid "Plural. Leave it blank to keep default label \"Program Increments\"."
 msgstr ""
 "Au pluriel. Laisser vide pour garder le label par défaut \"Program Increments"
 "\"."
+
+msgid "Portfolio SAFe(R)"
+msgstr "Portfolio SAFe(R)"
 
 #, php-format
 msgid ""

@@ -180,6 +180,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
 use Tuleap\ProgramManagement\ProgramManagementBreadCrumbsBuilder;
 use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\REST\ResourcesInjector;
+use Tuleap\ProgramManagement\Templates\PortfolioTemplate;
 use Tuleap\ProgramManagement\Templates\ProgramTemplate;
 use Tuleap\ProgramManagement\Templates\TeamTemplate;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
@@ -1334,18 +1335,9 @@ final class program_managementPlugin extends Plugin
             $event_manager,
             new ServiceEnableForXmlImportRetriever(\PluginFactory::instance())
         );
-        $event->addCategorisedTemplate(
-            new ProgramTemplate(
-                $glyph_finder,
-                $consistency_checker
-            )
-        );
-        $event->addCategorisedTemplate(
-            new TeamTemplate(
-                $glyph_finder,
-                $consistency_checker
-            )
-        );
+        $event->addCategorisedTemplate(new PortfolioTemplate($glyph_finder, $consistency_checker));
+        $event->addCategorisedTemplate(new ProgramTemplate($glyph_finder, $consistency_checker));
+        $event->addCategorisedTemplate(new TeamTemplate($glyph_finder, $consistency_checker));
     }
 
     public function collectGlyphLocations(GlyphLocationsCollector $glyph_locations_collector): void
