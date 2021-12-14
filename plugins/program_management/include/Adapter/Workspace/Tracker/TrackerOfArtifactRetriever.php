@@ -24,28 +24,28 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
-use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveTrackerFromUserStory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTrackerOfArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
-final class TrackerOfArtifactRetriever implements RetrieveTrackerOfArtifact
+final class TrackerOfArtifactRetriever implements RetrieveTrackerOfArtifact, RetrieveTrackerFromUserStory
 {
     public function __construct(
         private RetrieveFullArtifact $artifact_retriever,
-        private RetrieveTracker $tracker_retriever,
     ) {
     }
 
     public function getTrackerOfArtifact(ArtifactIdentifier $artifact): TrackerIdentifier
     {
         $full_artifact = $this->artifact_retriever->getNonNullArtifact($artifact);
-        $tracker_id    = $full_artifact->getTrackerId();
-        $tracker       = $this->tracker_retriever->getTrackerById($tracker_id);
-        if (! $tracker) {
-            throw new TrackerNotFoundException($tracker_id);
-        }
-        return $tracker;
+        return TrackerIdentifierProxy::fromTracker($full_artifact->getTracker());
+    }
+
+    public function getUserStoryTracker(UserStoryIdentifier $user_story_identifier): TrackerIdentifier
+    {
+        $artifact = $this->artifact_retriever->getNonNullArtifact($user_story_identifier);
+        return TrackerIdentifierProxy::fromTracker($artifact->getTracker());
     }
 }

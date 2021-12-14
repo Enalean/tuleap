@@ -29,13 +29,11 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\CrossReferenceRetri
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\URIRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory\IsOpenRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory\TrackerFromUserStoryRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
-use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
@@ -71,10 +69,11 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
      */
     public function getChildren(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
     {
-        $user_manager       = \UserManager::instance();
-        $user_retriever     = new UserManagerAdapter($user_manager);
-        $artifact_factory   = \Tracker_ArtifactFactory::instance();
-        $artifact_retriever = new ArtifactFactoryAdapter($artifact_factory);
+        $user_manager                  = \UserManager::instance();
+        $user_retriever                = new UserManagerAdapter($user_manager);
+        $artifact_factory              = \Tracker_ArtifactFactory::instance();
+        $artifact_retriever            = new ArtifactFactoryAdapter($artifact_factory);
+        $tracker_of_artifact_retriever = new TrackerOfArtifactRetriever($artifact_retriever);
 
         $tracker_factory                   = \TrackerFactory::instance();
         $user_story_representation_builder = new UserStoryRetriever(
@@ -90,9 +89,9 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
             new URIRetriever($artifact_retriever),
             new CrossReferenceRetriever($artifact_retriever),
             new IsOpenRetriever($artifact_retriever),
-            new TrackerFromUserStoryRetriever($artifact_retriever),
+            $tracker_of_artifact_retriever,
             new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
-            new TrackerOfArtifactRetriever($artifact_retriever, new TrackerFactoryAdapter($tracker_factory))
+            $tracker_of_artifact_retriever
         );
 
         $user = $user_manager->getCurrentUser();

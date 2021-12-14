@@ -42,7 +42,7 @@ final class RetrieveTrackerFromUserStoryStub implements RetrieveTrackerFromUserS
         return new self(TrackerIdentifierStub::withId($id));
     }
 
-    public function getTracker(UserStoryIdentifier $user_story_identifier): TrackerIdentifier
+    public function getUserStoryTracker(UserStoryIdentifier $user_story_identifier): TrackerIdentifier
     {
         return $this->tracker_id;
     }
