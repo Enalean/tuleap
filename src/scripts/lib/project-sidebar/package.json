@@ -1,0 +1,35 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/project-sidebar",
+  "homepage": "https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=tree&hb=refs/heads/master&f=src%2Fscripts%2Fproject-sidebar",
+  "license": "MIT",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/project-sidebar.es.js",
+  "main": "dist/project-sidebar.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/project-sidebar.es.js",
+      "require": "./dist/project-sidebar.umd.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://tuleap.net/plugins/git/tuleap/tuleap/stable.git",
+    "directory": "src/scripts/project-sidebar/"
+  },
+  "bugs": {
+    "url": "https://tuleap.net/plugins/tracker/?tracker=140"
+  },
+  "keywords": [
+    "tuleap"
+  ],
+  "files": ["dist/", "src/"],
+  "devDependencies": {
+    "vue": "^3.2.26"
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite"
+  }
+}
