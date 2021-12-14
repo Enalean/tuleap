@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\VerifyHasAtLeastOnePlannedUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
@@ -49,7 +49,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
     private VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier;
     private DBTransactionExecutor $db_transaction_executor;
     private OrderFeatureRank $features_rank_orderer;
-    private VerifyLinkedUserStoryIsNotPlanned $story_verifier;
+    private VerifyHasAtLeastOnePlannedUserStory $story_verifier;
     private VerifyFeatureIsVisibleByProgram $visible_feature_verifier;
     private FeatureRemovalProcessor $feature_removal_processor;
 
@@ -58,7 +58,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         TopBacklogStore $top_backlog_store,
         DBTransactionExecutor $db_transaction_executor,
         OrderFeatureRank $features_rank_orderer,
-        VerifyLinkedUserStoryIsNotPlanned $story_verifier,
+        VerifyHasAtLeastOnePlannedUserStory $story_verifier,
         VerifyFeatureIsVisibleByProgram $visible_feature_verifier,
         FeatureRemovalProcessor $feature_removal_processor,
     ) {

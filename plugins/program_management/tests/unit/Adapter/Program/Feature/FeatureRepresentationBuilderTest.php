@@ -24,24 +24,17 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use Project;
 use Tracker_ArtifactFactory;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchPlannedUserStory;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\VerifyIsLinkedToAnotherMilestone;
-use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\BuildPlanningStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchPlannedUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsLinkedToAnotherMilestoneStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureHasAtLeastOneUserStoryStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -62,25 +55,17 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $form_element_factory;
     private RetrieveBackgroundColor $retrieve_background;
-    private BuildPlanning $build_planning;
-    private SearchPlannedUserStory $search_planned_user_stories;
-    private SearchChildrenOfFeature $search_children_of_feature;
-    private VerifyIsLinkedToAnotherMilestone $check_is_linked;
     private \PFUser $user;
     private Artifact $artifact;
 
     protected function setUp(): void
     {
-        $this->user                        = UserTestBuilder::aUser()->build();
-        $this->artifact_factory            = $this->createMock(Tracker_ArtifactFactory::class);
-        $this->form_element_factory        = $this->createMock(\Tracker_FormElementFactory::class);
-        $this->retrieve_background         = RetrieveBackgroundColorStub::withDefaults();
-        $this->search_planned_user_stories = SearchPlannedUserStoryStub::withoutUserStories();
-        $this->build_planning              = BuildPlanningStub::withValidRootPlanning();
+        $this->user                 = UserTestBuilder::aUser()->build();
+        $this->artifact_factory     = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->retrieve_background  = RetrieveBackgroundColorStub::withDefaults();
 
-        $this->user_identifier            = UserIdentifierStub::buildGenericUser();
-        $this->search_children_of_feature = SearchChildrenOfFeatureStub::withoutChildren();
-        $this->check_is_linked            = VerifyIsLinkedToAnotherMilestoneStub::buildIsLinked();
+        $this->user_identifier = UserIdentifierStub::buildGenericUser();
     }
 
     private function getBuilder(): FeatureRepresentationBuilder
@@ -93,14 +78,8 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->form_element_factory,
             $this->retrieve_background,
             new VerifyIsVisibleFeatureAdapter($this->artifact_factory, $retrieve_user),
-            new UserStoryLinkedToFeatureVerifier(
-                $this->search_planned_user_stories,
-                $this->build_planning,
-                $this->artifact_factory,
-                $retrieve_user,
-                $this->search_children_of_feature,
-                $this->check_is_linked
-            ),
+            VerifyHasAtLeastOnePlannedUserStoryStub::withPlannedUserStory(),
+            VerifyFeatureHasAtLeastOneUserStoryStub::withStories(),
             $retrieve_user
         );
     }
@@ -150,20 +129,6 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         $field->method('userCanRead')->willReturn(true);
 
         $background_color = new BackgroundColor("lake-placid-blue");
-
-        $this->search_planned_user_stories = SearchPlannedUserStoryStub::withUserStories(
-            [
-                ['user_story_id' => 1, 'project_id' => 100],
-            ]
-        );
-
-        $this->search_children_of_feature = SearchChildrenOfFeatureStub::withChildren(
-            [
-                ['children_id' => 2],
-                ['children_id' => 3],
-            ]
-        );
-        $this->check_is_linked            = VerifyIsLinkedToAnotherMilestoneStub::buildIsLinked();
 
         $expected = new FeatureRepresentation(
             1,

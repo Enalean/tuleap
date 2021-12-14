@@ -24,7 +24,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\VerifyFeatureHasAtLeastOneUserStory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\VerifyHasAtLeastOnePlannedUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisibleByProgram;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
@@ -40,7 +41,8 @@ final class FeatureRepresentationBuilder
         private \Tracker_FormElementFactory $form_element_factory,
         private RetrieveBackgroundColor $retrieve_background_color,
         private VerifyFeatureIsVisibleByProgram $feature_verifier,
-        private VerifyLinkedUserStoryIsNotPlanned $user_story_verifier,
+        private VerifyHasAtLeastOnePlannedUserStory $planned_user_story_verifier,
+        private VerifyFeatureHasAtLeastOneUserStory $story_verifier,
         private RetrieveUser $retrieve_user,
     ) {
     }
@@ -66,14 +68,14 @@ final class FeatureRepresentationBuilder
         }
 
         return new FeatureRepresentation(
-            $feature->id,
+            $feature->getId(),
             $artifact_title,
             $full_artifact->getXRef(),
             $full_artifact->getUri(),
             MinimalTrackerRepresentation::build($full_artifact->getTracker()),
             $this->retrieve_background_color->retrieveBackgroundColor($feature, $user_identifier),
-            $this->user_story_verifier->isLinkedToAtLeastOnePlannedUserStory($user_identifier, $feature),
-            $this->user_story_verifier->hasStoryLinked($user_identifier, $feature)
+            $this->planned_user_story_verifier->hasAtLeastOnePlannedUserStory($feature, $user_identifier),
+            $this->story_verifier->hasStoryLinked($feature, $user_identifier)
         );
     }
 }

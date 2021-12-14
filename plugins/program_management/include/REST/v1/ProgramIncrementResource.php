@@ -46,10 +46,11 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplici
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureContentRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasUserStoriesVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUserStoriesVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
@@ -120,12 +121,9 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $artifact_retriever = new ArtifactFactoryAdapter($artifact_factory);
 
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
-        $user_story_linked_verifier     = new UserStoryLinkedToFeatureVerifier(
+        $user_story_linked_verifier     = new FeatureHasPlannedUserStoriesVerifier(
             $artifacts_linked_to_parent_dao,
             new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
-            $artifact_factory,
-            $user_retriever,
-            $artifacts_linked_to_parent_dao,
             $artifacts_linked_to_parent_dao
         );
 
@@ -142,6 +140,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 ),
                 new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_retriever),
                 $user_story_linked_verifier,
+                new FeatureHasUserStoriesVerifier($artifact_factory, $user_retriever, $artifacts_linked_to_parent_dao),
                 $user_retriever
             ),
             new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
@@ -214,12 +213,9 @@ final class ProgramIncrementResource extends AuthenticatedResource
         );
 
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
-        $user_story_linked_verifier     = new UserStoryLinkedToFeatureVerifier(
+        $user_story_linked_verifier     = new FeatureHasPlannedUserStoriesVerifier(
             $artifacts_linked_to_parent_dao,
             new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
-            $artifact_factory,
-            $user_retriever,
-            $artifacts_linked_to_parent_dao,
             $artifacts_linked_to_parent_dao
         );
 

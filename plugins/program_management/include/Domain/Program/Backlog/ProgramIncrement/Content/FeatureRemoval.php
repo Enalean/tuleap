@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\VerifyHasAtLeastOnePlannedUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
@@ -46,11 +46,11 @@ final class FeatureRemoval
      * @throws FeatureHasPlannedUserStoryException
      */
     public static function fromFeature(
-        VerifyLinkedUserStoryIsNotPlanned $story_verifier,
+        VerifyHasAtLeastOnePlannedUserStory $story_verifier,
         FeatureIdentifier $feature,
         UserCanPrioritize $user,
     ): self {
-        if ($story_verifier->isLinkedToAtLeastOnePlannedUserStory($user, $feature)) {
+        if ($story_verifier->hasAtLeastOnePlannedUserStory($feature, $user)) {
             throw new FeatureHasPlannedUserStoryException($feature->id);
         }
         return new self($feature->id, $user);
