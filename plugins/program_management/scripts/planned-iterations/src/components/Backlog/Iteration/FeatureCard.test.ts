@@ -41,6 +41,12 @@ describe("FeatureCard", () => {
                     tracker: {
                         color_name: "red-wine",
                     },
+                    project: {
+                        id: 101,
+                        uri: "uri/to/g-pig",
+                        label: "Guinea Pigs",
+                        icon: "🐹",
+                    },
                 },
             },
         });

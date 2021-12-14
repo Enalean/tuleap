@@ -67,8 +67,16 @@ export interface Feature {
     readonly xref: string;
     readonly title: string;
     readonly tracker: TrackerMinimalRepresentation;
+    readonly project: ProjectMinimalRepresentation;
 }
 
 interface TrackerMinimalRepresentation {
     readonly color_name: string;
+}
+
+interface ProjectMinimalRepresentation {
+    readonly id: number;
+    readonly uri: string;
+    readonly label: string;
+    readonly icon: string;
 }
