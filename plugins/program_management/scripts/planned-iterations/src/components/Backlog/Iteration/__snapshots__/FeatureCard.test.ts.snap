@@ -14,6 +14,24 @@ exports[`FeatureCard should display the feature as a card with tracker and backg
       <div
         class="element-card-xref-label"
       >
+        <div
+          class="element-card-xref-project"
+        >
+          <span
+            class="element-card-xref-project-icon"
+          >
+            
+                        🐹
+                    
+          </span>
+          
+                    Guinea Pigs
+                    
+          <i
+            class="fas fa-long-arrow-alt-right element-card-xref-icon"
+          />
+        </div>
+         
         <a
           class="element-card-xref element-card-xref-red-wine"
           href="/plugins/tracker/?aid=101"
@@ -22,13 +40,13 @@ exports[`FeatureCard should display the feature as a card with tracker and backg
                     feature #101
                 
         </a>
-         
-        <span
-          class="element-card-label"
-        >
-          Feature 101
-        </span>
       </div>
+       
+      <span
+        class="element-card-label"
+      >
+        Feature 101
+      </span>
     </div>
   </div>
 </div>

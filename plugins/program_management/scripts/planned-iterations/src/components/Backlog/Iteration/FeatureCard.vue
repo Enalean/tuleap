@@ -22,6 +22,13 @@
         <div class="element-card" v-bind:class="additional_classnames" data-test="feature-card">
             <div class="element-card-content">
                 <div class="element-card-xref-label">
+                    <div class="element-card-xref-project">
+                        <span class="element-card-xref-project-icon" v-if="feature.project.icon">
+                            {{ feature.project.icon }}
+                        </span>
+                        {{ feature.project.label }}
+                        <i class="fas fa-long-arrow-alt-right element-card-xref-icon"></i>
+                    </div>
                     <a
                         v-bind:href="`/plugins/tracker/?aid=${feature.id}`"
                         class="element-card-xref"
@@ -29,8 +36,8 @@
                     >
                         {{ feature.xref }}
                     </a>
-                    <span class="element-card-label">{{ feature.title }}</span>
                 </div>
+                <span class="element-card-label">{{ feature.title }}</span>
             </div>
         </div>
     </div>
