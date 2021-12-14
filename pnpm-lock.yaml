@@ -11,7 +11,8 @@ specifiers:
   '@types/jest': ^27.0.2
   '@typescript-eslint/eslint-plugin': ^5.5.0
   '@typescript-eslint/parser': ^5.5.0
-  '@vue/component-compiler-utils': ^3.2.0
+  '@vitejs/plugin-vue': ^2.0.0
+  '@vue/component-compiler-utils': ^3.3.0
   '@vue/runtime-dom': ^3.2.12
   '@vue/vue2-jest': ^27.0.0-alpha.2
   angular-gettext-cli: ^1.2.0
@@ -88,7 +89,8 @@ devDependencies:
   '@types/jest': 27.0.2
   '@typescript-eslint/eslint-plugin': 5.5.0_0dd1545c6f784ec14480bcac2ceca364
   '@typescript-eslint/parser': 5.5.0_eslint@8.1.0+typescript@4.5.2
-  '@vue/component-compiler-utils': 3.2.0
+  '@vitejs/plugin-vue': 2.0.0_vite@2.7.2
+  '@vue/component-compiler-utils': 3.3.0
   '@vue/runtime-dom': 3.2.12
   '@vue/vue2-jest': 27.0.0-alpha.2_dd0e2c08f8c0c7be6a276593ddd47019
   angular-gettext-cli: 1.2.0
@@ -2615,6 +2617,16 @@ packages:
       eslint-visitor-keys: 3.1.0
     dev: true
 
+  /@vitejs/plugin-vue/2.0.0_vite@2.7.2:
+    resolution: {integrity: sha512-4Xn1h9OcaAf7KYrvz2oEi52fCCCLcCzyr3pDOrzYTWrs0DrzNOXt9fT5IiGb1f/uoNTdX3aAkXVGNXrGkzF/zw==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      vite: ^2.5.10
+      vue: ^3.2.25
+    dependencies:
+      vite: 2.7.2_sass@1.32.2
+    dev: true
+
   /@volar/code-gen/0.29.8:
     resolution: {integrity: sha512-eohLLUqPChHRPDFT5gXn4V6pr/CeTri7Ou5GI26lUvBRRAbP8p+oYfQRcbMPGeKmVkYjfVj0chsxQGx6T8PQ4Q==}
     dependencies:
@@ -2786,21 +2798,6 @@ packages:
       '@vue/shared': 3.2.26
     dev: true
 
-  /@vue/component-compiler-utils/3.2.0:
-    resolution: {integrity: sha512-lejBLa7xAMsfiZfNp7Kv51zOzifnb29FwdnMLa96z26kXErPFioSf9BMcePVIQ6/Gc6/mC0UrPpxAWIHyae0vw==}
-    dependencies:
-      consolidate: 0.15.1
-      hash-sum: 1.0.2
-      lru-cache: 4.1.5
-      merge-source-map: 1.1.0
-      postcss: 7.0.36
-      postcss-selector-parser: 6.0.6
-      source-map: 0.6.1
-      vue-template-es2015-compiler: 1.9.1
-    optionalDependencies:
-      prettier: 1.19.1
-    dev: true
-
   /@vue/component-compiler-utils/3.3.0:
     resolution: {integrity: sha512-97sfH2mYNU+2PzGrmK2haqffDpVASuib9/w2/noxiFi31Z54hW+q3izKQXXQZSNhtiUpAI36uSuYepeBe4wpHQ==}
     dependencies:
@@ -2866,7 +2863,7 @@ packages:
     dependencies:
       '@babel/core': 7.11.6
       '@babel/plugin-transform-modules-commonjs': 7.10.4_@babel+core@7.11.6
-      '@vue/component-compiler-utils': 3.2.0
+      '@vue/component-compiler-utils': 3.3.0
       babel-jest: 27.2.4_@babel+core@7.11.6
       chalk: 2.4.2
       extract-from-css: 0.4.4
@@ -8321,14 +8318,6 @@ packages:
       fast-diff: 1.2.0
     dev: true
 
-  /prettier/1.19.1:
-    resolution: {integrity: sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==}
-    engines: {node: '>=4'}
-    hasBin: true
-    requiresBuild: true
-    dev: true
-    optional: true
-
   /prettier/2.5.0:
     resolution: {integrity: sha512-FM/zAKgWTxj40rH03VxzIPdXmj39SwSjwG0heUcNFwI+EMZJnY93yAiKXM3dObIKAM5TA88werc8T/EwhB45eg==}
     engines: {node: '>=10.13.0'}
@@ -10156,7 +10145,7 @@ packages:
       vue-template-compiler:
         optional: true
     dependencies:
-      '@vue/component-compiler-utils': 3.2.0
+      '@vue/component-compiler-utils': 3.3.0
       css-loader: 6.2.0_webpack@5.64.4
       hash-sum: 1.0.2
       loader-utils: 1.4.0
