@@ -26,6 +26,7 @@ namespace Tuleap\ProgramManagement\Tests\Builder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleByProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleStub;
 
 final class FeatureIdentifierBuilder
 {
@@ -40,10 +41,18 @@ final class FeatureIdentifierBuilder
             $program,
             null
         );
-        if (! $feature) {
-            throw new \LogicException("Feature is not defined");
-        }
+        assert($feature !== null);
+        return $feature;
+    }
 
+    public static function withId(int $feature_id): FeatureIdentifier
+    {
+        $feature = FeatureIdentifier::fromId(
+            VerifyFeatureIsVisibleStub::buildVisibleFeature(),
+            $feature_id,
+            UserIdentifierStub::buildGenericUser()
+        );
+        assert($feature !== null);
         return $feature;
     }
 }
