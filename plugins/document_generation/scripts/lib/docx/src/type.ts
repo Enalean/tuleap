@@ -462,6 +462,7 @@ export interface ArtifactResponse {
     readonly id: number;
     readonly title: string | null;
     readonly xref: string;
+    readonly tracker: { readonly id: number };
     readonly html_url: string;
     readonly values: ReadonlyArray<ArtifactReportResponseFieldValue>;
 }

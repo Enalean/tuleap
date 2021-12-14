@@ -16,15 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { BacklogItem, ExportDocument, GlobalExportProperties } from "../../../../type";
+import type { ExportDocument, GlobalExportProperties } from "../../../../type";
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
-import { Bookmark, Paragraph, Table, TableLayoutType, TableRow, TextRun, WidthType } from "docx";
+import type { Table } from "docx";
+import { Bookmark, Paragraph, TextRun } from "docx";
 import {
+    HEADER_LEVEL_ARTIFACT_TITLE,
     HEADER_LEVEL_SECTION_TITLE,
+    HEADER_STYLE_ARTIFACT_TITLE,
     HEADER_STYLE_SECTION_TITLE,
     MAIN_TITLES_NUMBERING_ID,
 } from "./document-properties";
-import { buildTableCellContent, TABLE_BORDERS } from "./Table/table-builder";
+import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx/src";
+import { buildListOfArtifactsContent } from "@tuleap/plugin-docgen-docx/src";
 
 export function getMilestoneBacklogTitle(
     gettext_provider: VueGettextProvider,
@@ -39,45 +43,49 @@ export function getMilestoneBacklogTitle(
     };
 }
 
-export function buildMilestoneBacklog(
+export async function buildMilestoneBacklog(
     document: ExportDocument,
     gettext_provider: VueGettextProvider,
     global_export_properties: GlobalExportProperties
-): (Paragraph | Table)[] {
+): Promise<(Paragraph | Table)[]> {
     const title = getMilestoneBacklogTitle(gettext_provider, global_export_properties);
 
+    const section_title = new Paragraph({
+        heading: HEADER_LEVEL_SECTION_TITLE,
+        style: HEADER_STYLE_SECTION_TITLE,
+        numbering: {
+            reference: MAIN_TITLES_NUMBERING_ID,
+            level: 0,
+        },
+        children: [
+            new Bookmark({
+                id: title.id,
+                children: [new TextRun(title.text)],
+            }),
+        ],
+    });
+
+    if (document.backlog.length === 0) {
+        return [
+            section_title,
+            new Paragraph(gettext_provider.$gettext("There is no backlog item yet")),
+        ];
+    }
+
     return [
-        new Paragraph({
-            heading: HEADER_LEVEL_SECTION_TITLE,
-            style: HEADER_STYLE_SECTION_TITLE,
-            numbering: {
-                reference: MAIN_TITLES_NUMBERING_ID,
-                level: 0,
-            },
-            children: [
-                new Bookmark({
-                    id: title.id,
-                    children: [new TextRun(title.text)],
-                }),
-            ],
-        }),
-        document.backlog.length === 0
-            ? new Paragraph(gettext_provider.$gettext("There is no backlog item yet"))
-            : buildBacklogSection(document.backlog),
+        section_title,
+        ...(await buildBacklogSection(document.backlog, global_export_properties)),
     ];
 }
 
-function buildBacklogSection(backlog: ReadonlyArray<BacklogItem>): Table {
-    return new Table({
-        width: {
-            size: 100,
-            type: WidthType.PERCENTAGE,
-        },
-        borders: TABLE_BORDERS,
-        layout: TableLayoutType.AUTOFIT,
-        rows: backlog.map(
-            (backlog_item) =>
-                new TableRow({ children: [buildTableCellContent(new TextRun(backlog_item.label))] })
-        ),
-    });
+function buildBacklogSection(
+    backlog: ReadonlyArray<FormattedArtifact>,
+    global_export_properties: GlobalExportProperties
+): Promise<(Paragraph | Table)[]> {
+    return buildListOfArtifactsContent(
+        backlog,
+        HEADER_LEVEL_ARTIFACT_TITLE,
+        HEADER_STYLE_ARTIFACT_TITLE,
+        global_export_properties.user_locale
+    );
 }

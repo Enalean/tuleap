@@ -42,7 +42,8 @@ export async function downloadExportDocument(
     const report = await createExportReport(
         gettext_provider,
         global_export_properties,
-        backlog_items
+        backlog_items,
+        datetime_locale_information
     );
 
     download_document(

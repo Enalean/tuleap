@@ -26,43 +26,19 @@ use Planning_MilestonePaneFactory;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\IRetrieveAllUsableTypesInProject;
 use UserHelper;
 
 class TestPlanPresenterBuilder
 {
-    /**
-     * @var Planning_MilestonePaneFactory
-     */
-    private $pane_factory;
-    /**
-     * @var Config
-     */
-    private $testmanagement_config;
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var TestPlanTestDefinitionTrackerRetriever
-     */
-    private $definition_tracker_retriever;
-    /**
-     * @var UserHelper
-     */
-    private $user_helper;
-
     public function __construct(
-        Planning_MilestonePaneFactory $pane_factory,
-        Config $testmanagement_config,
-        TrackerFactory $tracker_factory,
-        TestPlanTestDefinitionTrackerRetriever $definition_tracker_retriever,
-        UserHelper $user_helper,
+        private Planning_MilestonePaneFactory $pane_factory,
+        private Config $testmanagement_config,
+        private TrackerFactory $tracker_factory,
+        private TestPlanTestDefinitionTrackerRetriever $definition_tracker_retriever,
+        private UserHelper $user_helper,
+        private IRetrieveAllUsableTypesInProject $type_presenter_factory,
     ) {
-        $this->pane_factory                 = $pane_factory;
-        $this->testmanagement_config        = $testmanagement_config;
-        $this->tracker_factory              = $tracker_factory;
-        $this->definition_tracker_retriever = $definition_tracker_retriever;
-        $this->user_helper                  = $user_helper;
     }
 
     public function getPresenter(
@@ -98,6 +74,8 @@ class TestPlanPresenterBuilder
             $highlight_test_definition_id,
             \ForgeConfig::get('sys_name'),
             \Admin_Homepage_LogoFinder::getCurrentUrl(),
+            \Tuleap\ServerHostname::HTTPSUrl(),
+            $this->type_presenter_factory->getAllUsableTypesInProject($project),
         );
     }
 

@@ -38,7 +38,7 @@ import type { getTestManagementExecution } from "./test-execution-retriever";
 import { getArtifacts } from "./artifacts-retriever";
 
 export async function retrieveArtifactsStructure(
-    tracker_structure: TrackerStructure,
+    tracker_structure_map: Map<number, TrackerStructure>,
     artifacts_from_response: ReadonlyArray<ArtifactResponse>,
     get_test_execution: typeof getTestManagementExecution
 ): Promise<ReadonlyArray<ArtifactFromReport>> {
@@ -53,6 +53,11 @@ export async function retrieveArtifactsStructure(
             const values_by_field_id = new Map(
                 report_artifact.values.map((value) => [value.field_id, value])
             );
+
+            const tracker_structure = tracker_structure_map.get(report_artifact.tracker.id);
+            if (!tracker_structure) {
+                throw new Error("Missing tracker structure");
+            }
 
             return {
                 ...report_artifact,

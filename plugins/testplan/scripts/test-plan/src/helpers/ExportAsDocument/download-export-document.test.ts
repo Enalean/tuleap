@@ -30,7 +30,7 @@ describe("Start download of export document", () => {
 
         const create_export_report = jest
             .spyOn(report_creator, "createExportReport")
-            .mockReturnValue({} as ExportDocument);
+            .mockResolvedValue({} as ExportDocument);
 
         await downloadExportDocument(
             {
@@ -43,6 +43,8 @@ describe("Start download of export document", () => {
                 milestone_name: "Tuleap 13.3",
                 parent_milestone_name: "",
                 milestone_url: "/path/to/13.3",
+                base_url: "https://example.com",
+                artifact_links_types: [],
             },
             gettext_provider,
             download_document,

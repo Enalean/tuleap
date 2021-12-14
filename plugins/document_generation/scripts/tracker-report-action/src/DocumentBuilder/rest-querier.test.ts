@@ -36,6 +36,9 @@ describe("API querier", () => {
                     id: 74,
                     xref: "bug #74",
                     title: null,
+                    tracker: {
+                        id: 102,
+                    },
                     html_url: "/plugins/tracker/?aid=74",
                     values: [
                         {

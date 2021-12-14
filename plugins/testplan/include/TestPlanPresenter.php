@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan;
 
 use AgileDashboard_MilestonePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 class TestPlanPresenter
 {
@@ -108,7 +109,18 @@ class TestPlanPresenter
      * @psalm-readonly
      */
     public string $platform_logo_url;
+    /**
+     * @psalm-readonly
+     */
+    public string $artifact_links_types;
+    /**
+     * @psalm-readonly
+     */
+    public string $base_url;
 
+    /**
+     * @param TypePresenter[] $artifact_links_types
+     */
     public function __construct(
         AgileDashboard_MilestonePresenter $milestone_presenter,
         string $user_display_name,
@@ -124,6 +136,8 @@ class TestPlanPresenter
         int $highlight_test_definition_id,
         string $platform_name,
         string $platform_logo_url,
+        string $base_url,
+        array $artifact_links_types,
     ) {
         $this->milestone_presenter          = $milestone_presenter;
         $this->user_display_name            = $user_display_name;
@@ -138,6 +152,8 @@ class TestPlanPresenter
         $this->highlight_test_definition_id = $highlight_test_definition_id;
         $this->platform_name                = $platform_name;
         $this->platform_logo_url            = $platform_logo_url;
+        $this->base_url                     = $base_url;
+        $this->artifact_links_types         = json_encode($artifact_links_types, JSON_THROW_ON_ERROR);
         if ($test_definition_tracker !== null) {
             $this->test_definition_tracker_id   = $test_definition_tracker->getId();
             $this->test_definition_tracker_name = $test_definition_tracker->getName();
