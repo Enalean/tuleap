@@ -244,5 +244,8 @@ msgstr ""
 msgid "Title"
 msgstr "Titre"
 
+msgid "Traceability matrix"
+msgstr "Matrice de traçabilité"
+
 msgid "Type"
 msgstr "Type"
