@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SidebarHeader displays the sidebar header 1`] = `
+<div
+  class="project-sidebar-header-name"
+>
+  <div
+    class="project-title-container"
+  >
+    <a
+      class="project-sidebar-title"
+      href="/projects/project1"
+    >
+      project1
+    </a>
+  </div>
+</div>
+`;

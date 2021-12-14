@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjectSidebar displays sidebar 1`] = `
+<aside
+  class="sidebar"
+>
+  <div
+    class="sidebar-content-vertical-scroll"
+  >
+    <sidebar-header-stub
+      project_href="/projects/project1"
+      project_name="project1"
+    />
+  </div>
+</aside>
+`;

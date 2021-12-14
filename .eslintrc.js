@@ -25,6 +25,7 @@ module.exports = {
     env: {
         es6: true,
         browser: true,
+        "vue/setup-compiler-macros": true,
     },
     reportUnusedDisableDirectives: true,
     rules: {

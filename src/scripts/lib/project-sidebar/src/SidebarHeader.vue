@@ -21,28 +21,15 @@
   -->
 
 <template>
-    <aside class="sidebar" v-if="sidebar_configuration !== undefined">
-        <div class="sidebar-content-vertical-scroll">
-            <sidebar-header
-                v-bind:project_name="sidebar_configuration.project.name"
-                v-bind:project_href="sidebar_configuration.project.href"
-            />
+    <div class="project-sidebar-header-name">
+        <div class="project-title-container">
+            <a v-bind:href="project_href" class="project-sidebar-title">{{ project_name }}</a>
         </div>
-    </aside>
+    </div>
 </template>
 <script setup lang="ts">
-import { unserializeConfiguration } from "./configuration";
-import { ref } from "vue";
-import SidebarHeader from "./SidebarHeader.vue";
-
-const props = defineProps<{ config: string | undefined }>();
-const sidebar_configuration = ref(unserializeConfiguration(props.config));
+defineProps<{
+    project_name: string;
+    project_href: string;
+}>();
 </script>
-<style lang="scss">
-@use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-generic";
-@use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-project";
-
-.sidebar {
-    font-family: var(--tlp-font-family);
-}
-</style>

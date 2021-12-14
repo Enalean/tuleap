@@ -24,12 +24,17 @@
   "keywords": [
     "tuleap"
   ],
-  "files": ["dist/", "src/"],
+  "files": [
+    "dist/",
+    "src/"
+  ],
   "devDependencies": {
+    "@vue/test-utils": "^2.0.0-rc.17",
     "vue": "^3.2.26"
   },
   "scripts": {
     "build": "vite build",
-    "dev": "vite"
+    "dev": "vite",
+    "test": "jest"
   }
 }

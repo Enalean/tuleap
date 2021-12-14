@@ -1,9 +1,11 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@vue/test-utils': ^2.0.0-rc.17
   vue: ^3.2.26
 
 devDependencies:
+  '@vue/test-utils': 2.0.0-rc.17_vue@3.2.26
   vue: 3.2.26
 
 packages:
@@ -95,6 +97,14 @@ packages:
 
   /@vue/shared/3.2.26:
     resolution: {integrity: sha512-vPV6Cq+NIWbH5pZu+V+2QHE9y1qfuTq49uNWw4f7FDEeZaDU2H2cx5jcUZOAKW7qTrUS4k6qZPbMy1x4N96nbA==}
+    dev: true
+
+  /@vue/test-utils/2.0.0-rc.17_vue@3.2.26:
+    resolution: {integrity: sha512-7LHZKsFRV/HqDoMVY+cJamFzgHgsrmQFalROHC5FMWrzPzd+utG5e11krj1tVsnxYufGA2ABShX4nlcHXED+zQ==}
+    peerDependencies:
+      vue: ^3.0.1
+    dependencies:
+      vue: 3.2.26
     dev: true
 
   /csstype/2.6.19:
