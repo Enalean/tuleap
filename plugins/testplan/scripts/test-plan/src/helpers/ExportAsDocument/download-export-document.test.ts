@@ -48,6 +48,7 @@ describe("Start download of export document", () => {
             },
             gettext_provider,
             download_document,
+            [],
             []
         );
 

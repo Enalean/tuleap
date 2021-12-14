@@ -469,6 +469,7 @@ export interface ArtifactResponse {
 
 export interface TestExecutionResponse {
     definition: {
+        id: number;
         summary: string;
         description: string;
         description_format: string;
@@ -476,6 +477,7 @@ export interface TestExecutionResponse {
         requirement: {
             id: number;
             title: string | null;
+            xref: string;
         } | null;
     };
     steps_results: {

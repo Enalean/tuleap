@@ -17,7 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactLinkType, FormattedArtifact } from "@tuleap/plugin-docgen-docx";
+import type {
+    ArtifactFieldValueStatus,
+    ArtifactLinkType,
+    FormattedArtifact,
+} from "@tuleap/plugin-docgen-docx";
 
 export interface Campaign {
     readonly id: number;
@@ -92,9 +96,29 @@ interface TestDefinitionRefreshInformation {
 
 export type TestDefinition = TestDefinitionFromREST & TestDefinitionRefreshInformation;
 
+export interface TraceabilityMatrixRequirement {
+    readonly id: number;
+    readonly title: string;
+}
+
+export interface TraceabilityMatrixTest {
+    readonly id: number;
+    readonly title: string;
+    readonly campaign: string;
+    readonly status: ArtifactFieldValueStatus;
+    readonly executed_by: string | null;
+    readonly executed_on: string | null;
+}
+
+export interface TraceabilityMatrixElement {
+    readonly requirement: TraceabilityMatrixRequirement;
+    readonly tests: ReadonlyArray<TraceabilityMatrixTest>;
+}
+
 export interface ExportDocument {
     readonly name: string;
     readonly backlog: ReadonlyArray<FormattedArtifact>;
+    readonly traceability_matrix: ReadonlyArray<TraceabilityMatrixElement>;
 }
 
 export interface GlobalExportProperties {

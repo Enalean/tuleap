@@ -18,7 +18,7 @@
  */
 
 import { createExportReport } from "./Reporter/report-creator";
-import type { ExportDocument, GlobalExportProperties } from "../../type";
+import type { Campaign, ExportDocument, GlobalExportProperties } from "../../type";
 import type { VueGettextProvider } from "../vue-gettext-provider";
 import type { DateTimeLocaleInformation } from "../../type";
 import type { BacklogItem } from "../../type";
@@ -32,7 +32,8 @@ export async function downloadExportDocument(
         global_export_properties: GlobalExportProperties,
         datetime_locale_information: DateTimeLocaleInformation
     ) => void,
-    backlog_items: ReadonlyArray<BacklogItem>
+    backlog_items: ReadonlyArray<BacklogItem>,
+    campaigns: ReadonlyArray<Campaign>
 ): Promise<void> {
     const datetime_locale_information: DateTimeLocaleInformation = {
         locale: global_export_properties.user_locale.replace("_", "-"),
@@ -43,6 +44,7 @@ export async function downloadExportDocument(
         gettext_provider,
         global_export_properties,
         backlog_items,
+        campaigns,
         datetime_locale_information
     );
 

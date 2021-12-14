@@ -53,13 +53,13 @@ export const TABLE_BORDERS = {
     },
 };
 
-const TABLE_LABEL_SHADING = {
+export const TABLE_LABEL_SHADING = {
     val: ShadingType.CLEAR,
     color: "auto",
     fill: "EEEEEE",
 };
 
-const TABLE_MARGINS = {
+export const TABLE_MARGINS = {
     top: convertInchesToTwip(0.05),
     bottom: convertInchesToTwip(0.05),
     left: convertInchesToTwip(0.05),

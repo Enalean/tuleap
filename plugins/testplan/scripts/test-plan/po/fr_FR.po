@@ -77,6 +77,9 @@ msgstr "ID de la campagne"
 msgid "Campaign Name"
 msgstr "Nom de la campagne"
 
+msgid "Campaigns"
+msgstr "Campagnes"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -94,6 +97,12 @@ msgstr "Créer une nouvelle campagne"
 
 msgid "Edit %{ item_type } #%{ item_id }"
 msgstr "Éditer %{ item_type } #%{ item_id }"
+
+msgid "Executed By"
+msgstr "Executé par"
+
+msgid "Executed On"
+msgstr "Executé le"
 
 msgid "Export"
 msgstr "Exporter"
@@ -177,6 +186,9 @@ msgstr "Rapport extrait le"
 msgid "Requirements"
 msgstr "Exigences"
 
+msgid "Results"
+msgstr "Résultats"
+
 msgid "Table of contents"
 msgstr "Table des matières"
 
@@ -231,6 +243,9 @@ msgstr "Il n'y a pas d'élément dans le backlog"
 
 msgid "There is no test campaign yet"
 msgstr "Il n'y a pas de campagne de test"
+
+msgid "There isn't any requirements to put in the traceability matrix."
+msgstr "Il n'y a aucune exigences pour la matrice de traçabilité."
 
 msgid "This item isn't covered yet"
 msgstr "Cet élément n'est pas encore couvert"

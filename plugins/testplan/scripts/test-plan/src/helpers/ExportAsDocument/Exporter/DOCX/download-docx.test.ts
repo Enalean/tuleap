@@ -45,6 +45,7 @@ describe("download-docx", () => {
             {
                 name: "Document Title",
                 backlog: [],
+                traceability_matrix: [],
             },
             gettext_provider,
             {

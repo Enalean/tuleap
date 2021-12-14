@@ -126,6 +126,7 @@ describe("Create an export report", () => {
                     },
                 } as BacklogItem,
             ],
+            [],
             { locale: "en-US", timezone: "UTC" }
         );
 

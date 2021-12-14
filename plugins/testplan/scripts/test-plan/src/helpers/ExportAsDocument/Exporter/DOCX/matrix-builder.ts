@@ -17,15 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ExportDocument } from "../../../../type";
+import type { ExportDocument, TraceabilityMatrixElement } from "../../../../type";
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
-import type { Table } from "docx";
+import type { IShadingAttributesProperties, ITableCellOptions } from "docx";
+import { InternalHyperlink, Table, TableCell } from "docx";
 import {
     HEADER_LEVEL_SECTION_TITLE,
     HEADER_STYLE_SECTION_TITLE,
     MAIN_TITLES_NUMBERING_ID,
 } from "./document-properties";
-import { Bookmark, TextRun, Paragraph } from "docx";
+import { Bookmark, TextRun, Paragraph, WidthType, TableRow } from "docx";
+import type { ArtifactFieldValueStatus } from "@tuleap/plugin-docgen-docx/src";
+import { getAnchorToArtifactContent } from "@tuleap/plugin-docgen-docx/src";
+import { TABLE_BORDERS, TABLE_LABEL_SHADING, TABLE_MARGINS } from "./Table/table-builder";
+import { getInternationalizedTestStatus } from "../../../ExportAsSpreadsheet/Report/internationalize-test-status";
 
 export function getTraceabilityMatrixTitle(gettext_provider: VueGettextProvider): {
     id: string;
@@ -58,5 +63,133 @@ export function buildTraceabilityMatrix(
         ],
     });
 
-    return [section_title];
+    if (document.traceability_matrix.length === 0) {
+        return [
+            section_title,
+            new Paragraph(
+                gettext_provider.$gettext(
+                    "There isn't any requirements to put in the traceability matrix."
+                )
+            ),
+        ];
+    }
+
+    return [
+        section_title,
+        buildTraceabilityMatrixTable(document.traceability_matrix, gettext_provider),
+    ];
+}
+
+const buildHeaderCell = (value: string): TableCell =>
+    new TableCell({
+        children: [
+            new Paragraph({
+                text: value,
+            }),
+        ],
+        margins: TABLE_MARGINS,
+        shading: TABLE_LABEL_SHADING,
+    });
+
+const buildCellContentOptions = (content: TextRun | InternalHyperlink): ITableCellOptions => {
+    return {
+        children: [
+            new Paragraph({
+                children: [content],
+                style: "table_value",
+            }),
+        ],
+        margins: TABLE_MARGINS,
+    };
+};
+
+const buildCellContent = (content: TextRun | InternalHyperlink): TableCell =>
+    new TableCell(buildCellContentOptions(content));
+
+const buildCellContentResult = (
+    result: ArtifactFieldValueStatus,
+    gettext_provider: VueGettextProvider
+): TableCell => {
+    const status = getInternationalizedTestStatus(gettext_provider, result);
+    let table_cell_options = buildCellContentOptions(new TextRun(status));
+
+    const additional_cell_options: { shading?: IShadingAttributesProperties } = {};
+    switch (result) {
+        case "passed":
+            additional_cell_options.shading = {
+                fill: "1aa350",
+            };
+            break;
+        case "blocked":
+            additional_cell_options.shading = {
+                fill: "1aacd8",
+            };
+            break;
+        case "failed":
+            additional_cell_options.shading = {
+                fill: "e04b4b",
+            };
+            break;
+        default:
+            additional_cell_options.shading = {
+                fill: "717171",
+            };
+            table_cell_options = buildCellContentOptions(
+                new TextRun({
+                    text: status,
+                    color: "ffffff",
+                })
+            );
+            break;
+    }
+
+    return new TableCell({ ...table_cell_options, ...additional_cell_options });
+};
+
+function buildTraceabilityMatrixTable(
+    elements: ReadonlyArray<TraceabilityMatrixElement>,
+    gettext_provider: VueGettextProvider
+): Table {
+    return new Table({
+        width: {
+            size: 100,
+            type: WidthType.PERCENTAGE,
+        },
+        borders: TABLE_BORDERS,
+        rows: [
+            new TableRow({
+                tableHeader: true,
+                children: [
+                    buildHeaderCell(gettext_provider.$gettext("Requirements")),
+                    buildHeaderCell(gettext_provider.$gettext("Tests")),
+                    buildHeaderCell(gettext_provider.$gettext("Campaigns")),
+                    buildHeaderCell(gettext_provider.$gettext("Results")),
+                    buildHeaderCell(gettext_provider.$gettext("Executed By")),
+                    buildHeaderCell(gettext_provider.$gettext("Executed On")),
+                ],
+            }),
+            ...elements.reduce((acc: TableRow[], element) => {
+                for (const test of element.tests) {
+                    acc.push(
+                        new TableRow({
+                            children: [
+                                buildCellContent(new TextRun(element.requirement.title)),
+                                buildCellContent(
+                                    new InternalHyperlink({
+                                        children: [new TextRun(test.title)],
+                                        anchor: getAnchorToArtifactContent(test),
+                                    })
+                                ),
+                                buildCellContent(new TextRun(test.campaign)),
+                                buildCellContentResult(test.status, gettext_provider),
+                                buildCellContent(new TextRun(test.executed_by || "")),
+                                buildCellContent(new TextRun(test.executed_on || "")),
+                            ],
+                        })
+                    );
+                }
+                return acc;
+            }, []),
+        ],
+    });
 }

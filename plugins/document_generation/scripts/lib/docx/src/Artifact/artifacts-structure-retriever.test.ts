@@ -275,6 +275,7 @@ describe("retrieveArtifactsStructure", () => {
 
         const testmanagement_execution_response: TestExecutionResponse = {
             definition: {
+                id: 359,
                 summary: "Summary",
                 description: "",
                 description_format: "text",
@@ -307,6 +308,7 @@ describe("retrieveArtifactsStructure", () => {
                 requirement: {
                     id: 888,
                     title: null,
+                    xref: "story #888",
                 },
             },
             previous_result: null,
