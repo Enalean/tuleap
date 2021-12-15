@@ -31,7 +31,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\URIRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory\IsOpenRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
@@ -74,8 +73,9 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
         $artifact_factory              = \Tracker_ArtifactFactory::instance();
         $artifact_retriever            = new ArtifactFactoryAdapter($artifact_factory);
         $tracker_of_artifact_retriever = new TrackerOfArtifactRetriever($artifact_retriever);
+        $visibility_verifier           = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
+        $tracker_factory               = \TrackerFactory::instance();
 
-        $tracker_factory                   = \TrackerFactory::instance();
         $user_story_representation_builder = new UserStoryRetriever(
             new ArtifactsLinkedToParentDao(),
             new PlanDao(),
@@ -84,13 +84,13 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
                 $artifact_retriever,
                 $user_retriever
             ),
-            new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_retriever),
+            $visibility_verifier,
             new TitleValueRetriever($artifact_retriever),
             new URIRetriever($artifact_retriever),
             new CrossReferenceRetriever($artifact_retriever),
             new IsOpenRetriever($artifact_retriever),
             $tracker_of_artifact_retriever,
-            new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
+            $visibility_verifier,
             $tracker_of_artifact_retriever
         );
 

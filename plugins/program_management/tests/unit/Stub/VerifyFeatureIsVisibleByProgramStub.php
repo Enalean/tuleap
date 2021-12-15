@@ -29,28 +29,36 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class VerifyFeatureIsVisibleByProgramStub implements VerifyFeatureIsVisibleByProgram
 {
-    private bool $is_visible;
-
-    private function __construct(bool $is_visible = true)
+    private function __construct(private bool $always_visible, private array $visible_ids = [])
     {
-        $this->is_visible = $is_visible;
     }
 
-    public function isVisibleFeature(
+    public function isFeatureVisibleAndInProgram(
         int $feature_id,
         UserIdentifier $user_identifier,
         ProgramIdentifier $program,
         ?PermissionBypass $bypass,
     ): bool {
-        return $this->is_visible;
+        if ($this->always_visible) {
+            return true;
+        }
+        return in_array($feature_id, $this->visible_ids, true);
     }
 
-    public static function buildVisibleFeature(): self
+    public static function withAlwaysVisibleFeatures(): self
     {
         return new self(true);
     }
 
-    public static function withNotVisibleFeature(): self
+    /**
+     * @no-named-arguments
+     */
+    public static function withVisibleIds(int $feature_id, int ...$other_feature_ids): self
+    {
+        return new self(false, [$feature_id, ...$other_feature_ids]);
+    }
+
+    public static function withFeatureNotVisibleOrNotInProgram(): self
     {
         return new self(false);
     }

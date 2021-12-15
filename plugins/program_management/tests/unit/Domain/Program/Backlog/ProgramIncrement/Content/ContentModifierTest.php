@@ -60,7 +60,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->user                           = UserIdentifierStub::buildGenericUser();
         $this->prioritize_permission_verifier = VerifyPrioritizeFeaturesPermissionStub::canPrioritize();
-        $this->visible_feature_verifier       = VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature();
+        $this->visible_feature_verifier       = VerifyFeatureIsVisibleByProgramStub::withAlwaysVisibleFeatures();
         $this->can_be_planned_verifier        = VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier();
         $this->feature_is_planned_verifier    = VerifyFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature();
         $this->feature_reorderer              = $this->getStubOrderFeature();
@@ -102,7 +102,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenUserCannotSeeFeatureToAdd(): void
     {
-        $this->visible_feature_verifier = VerifyFeatureIsVisibleByProgramStub::withNotVisibleFeature();
+        $this->visible_feature_verifier = VerifyFeatureIsVisibleByProgramStub::withFeatureNotVisibleOrNotInProgram();
 
         $this->expectException(FeatureNotFoundException::class);
         $this->getModifier()->modifyContent(

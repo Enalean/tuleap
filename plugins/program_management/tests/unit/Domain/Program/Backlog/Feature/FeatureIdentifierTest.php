@@ -47,7 +47,7 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->getId                       = static fn(FeatureIdentifier $feature): int => $feature->getId();
-        $this->visible_by_program_verifier = VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature();
+        $this->visible_by_program_verifier = VerifyFeatureIsVisibleByProgramStub::withAlwaysVisibleFeatures();
         $this->feature_verifier            = VerifyFeatureIsVisibleStub::withAlwaysVisibleFeatures();
         $this->feature_searcher            = SearchFeaturesStub::withFeatureIds(
             self::FIRST_FEATURE_ID,
@@ -73,7 +73,7 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenProgramFeatureIsNotVisibleByUser(): void
     {
-        $this->visible_by_program_verifier = VerifyFeatureIsVisibleByProgramStub::withNotVisibleFeature();
+        $this->visible_by_program_verifier = VerifyFeatureIsVisibleByProgramStub::withFeatureNotVisibleOrNotInProgram();
         self::assertNull($this->getFeatureFromProgram(null));
     }
 
