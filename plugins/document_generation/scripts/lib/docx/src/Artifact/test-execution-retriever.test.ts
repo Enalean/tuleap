@@ -29,6 +29,7 @@ describe("getTestManagementExecution", () => {
 
         const testmanagement_execution_response: TestExecutionResponse = {
             definition: {
+                id: 101,
                 summary: "Summary",
                 description: "",
                 description_format: "text",
@@ -61,6 +62,7 @@ describe("getTestManagementExecution", () => {
                 requirement: {
                     id: 888,
                     title: null,
+                    xref: "story #888",
                 },
             },
             steps_results: {

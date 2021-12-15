@@ -18,7 +18,7 @@
  */
 
 import type { VueGettextProvider } from "../../vue-gettext-provider";
-import type { BacklogItem, ExportDocument, GlobalExportProperties } from "../../../type";
+import type { BacklogItem, Campaign, ExportDocument, GlobalExportProperties } from "../../../type";
 import type {
     TrackerStructure,
     DateTimeLocaleInformation,
@@ -33,6 +33,7 @@ import {
 } from "@tuleap/plugin-docgen-docx";
 import { memoize } from "./memoize";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
+import { getTraceabilityMatrix } from "./traceability-matrix-creator";
 
 interface TrackerStructurePromiseTuple {
     readonly tracker_id: number;
@@ -43,6 +44,7 @@ export async function createExportReport(
     gettext_provider: VueGettextProvider,
     global_properties: GlobalExportProperties,
     backlog_items: ReadonlyArray<BacklogItem>,
+    campaigns: ReadonlyArray<Campaign>,
     datetime_locale_information: DateTimeLocaleInformation
 ): Promise<ExportDocument> {
     const get_test_execution = memoize(getTestManagementExecution);
@@ -94,5 +96,6 @@ export async function createExportReport(
                 global_properties.artifact_links_types
             )
         ),
+        traceability_matrix: await getTraceabilityMatrix(campaigns, datetime_locale_information),
     };
 }

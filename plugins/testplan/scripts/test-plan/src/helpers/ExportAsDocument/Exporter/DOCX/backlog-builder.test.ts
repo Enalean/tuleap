@@ -22,7 +22,7 @@ import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import { createVueGettextProviderPassthrough } from "../../../vue-gettext-provider-for-test";
 import type { IContext } from "docx";
 import type { ExportDocument, GlobalExportProperties } from "../../../../type";
-import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx/src";
+import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx";
 
 describe("buildMilestoneBacklog", () => {
     let global_export_properties: GlobalExportProperties;
@@ -50,6 +50,7 @@ describe("buildMilestoneBacklog", () => {
         const document: ExportDocument = {
             name: "Test Report",
             backlog: [],
+            traceability_matrix: [],
         };
 
         const backlog = await buildMilestoneBacklog(
@@ -81,6 +82,7 @@ describe("buildMilestoneBacklog", () => {
                     containers: [],
                 } as FormattedArtifact,
             ],
+            traceability_matrix: [],
         };
 
         const backlog = await buildMilestoneBacklog(

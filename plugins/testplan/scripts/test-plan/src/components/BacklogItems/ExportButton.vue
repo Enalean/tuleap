@@ -226,7 +226,8 @@ export default class ExportButton extends Vue {
                 },
                 this,
                 downloadDocx,
-                this.backlog_items
+                this.backlog_items,
+                this.campaigns
             );
         } catch (e) {
             this.has_encountered_error_during_the_export = true;

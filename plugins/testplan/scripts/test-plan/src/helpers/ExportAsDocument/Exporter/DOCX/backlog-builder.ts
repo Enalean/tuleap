@@ -27,8 +27,8 @@ import {
     HEADER_STYLE_SECTION_TITLE,
     MAIN_TITLES_NUMBERING_ID,
 } from "./document-properties";
-import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx/src";
-import { buildListOfArtifactsContent } from "@tuleap/plugin-docgen-docx/src";
+import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx";
+import { buildListOfArtifactsContent } from "@tuleap/plugin-docgen-docx";
 
 export function getMilestoneBacklogTitle(
     gettext_provider: VueGettextProvider,
