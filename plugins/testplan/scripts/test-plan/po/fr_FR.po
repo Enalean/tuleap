@@ -15,6 +15,9 @@ msgstr ""
 msgid "%{ milestone_title } backlog"
 msgstr "Backlog de %{ milestone_title }"
 
+msgid "%{ milestone_title } tests"
+msgstr "Tests de %{ milestone_title }"
+
 msgid "%{ nb } blocked"
 msgid_plural "%{ nb } blocked"
 msgstr[0] "%{ nb } bloqué"
@@ -240,6 +243,9 @@ msgid ""
 msgstr ""
 "La récupération des rapports de l'outil de suivi de définition de test a "
 "échoué, veuillez réessayer plus tard"
+
+msgid "There are no tests planned in the milestone."
+msgstr "Il n'y a aucun tests planifiés dans le jalon."
 
 msgid "There is no backlog item yet"
 msgstr "Il n'y a pas d'élément dans le backlog"

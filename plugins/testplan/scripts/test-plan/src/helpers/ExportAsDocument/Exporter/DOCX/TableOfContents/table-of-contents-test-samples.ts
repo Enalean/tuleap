@@ -216,6 +216,80 @@ export const TOC_WITH_CONTENT = {
                 {
                     "w:p": [
                         {
+                            "w:pPr": [
+                                {
+                                    "w:tabs": [
+                                        {
+                                            "w:tab": {
+                                                _attr: {
+                                                    "w:leader": "dot",
+                                                    "w:pos": 9026,
+                                                    "w:val": "right",
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                        {
+                            "w:hyperlink": [
+                                {
+                                    _attr: {
+                                        "w:anchor": "testplan",
+                                        "w:history": 1,
+                                    },
+                                },
+                                {
+                                    "w:r": [
+                                        {
+                                            "w:t": [
+                                                {
+                                                    _attr: {
+                                                        "xml:space": "preserve",
+                                                    },
+                                                },
+                                                "%{ milestone_title } tests\t",
+                                            ],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                        {
+                            "w:r": [
+                                {
+                                    "w:fldChar": {
+                                        _attr: {
+                                            "w:dirty": true,
+                                            "w:fldCharType": "begin",
+                                        },
+                                    },
+                                },
+                                {
+                                    "w:instrText": [
+                                        {
+                                            _attr: {
+                                                "xml:space": "preserve",
+                                            },
+                                        },
+                                        "PAGEREF testplan",
+                                    ],
+                                },
+                                {
+                                    "w:fldChar": {
+                                        _attr: {
+                                            "w:fldCharType": "end",
+                                        },
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    "w:p": [
+                        {
                             "w:r": [
                                 {
                                     "w:fldChar": {

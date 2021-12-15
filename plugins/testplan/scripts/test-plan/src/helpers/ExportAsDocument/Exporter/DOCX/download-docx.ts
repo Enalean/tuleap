@@ -36,6 +36,7 @@ import { buildMilestoneBacklog } from "./backlog-builder";
 import { buildFooter, buildHeader } from "./header-footer";
 import { TableOfContentsPrefilled } from "./TableOfContents/table-of-contents";
 import { buildTraceabilityMatrix } from "./matrix-builder";
+import { buildMilestoneTestPlan } from "./testplan-builder";
 
 export async function downloadDocx(
     document: ExportDocument,
@@ -102,6 +103,17 @@ export async function downloadDocx(
                 headers,
                 children: [
                     ...(await buildMilestoneBacklog(
+                        document,
+                        gettext_provider,
+                        global_export_properties
+                    )),
+                ],
+                footers,
+            },
+            {
+                headers,
+                children: [
+                    ...(await buildMilestoneTestPlan(
                         document,
                         gettext_provider,
                         global_export_properties

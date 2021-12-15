@@ -40,6 +40,7 @@ import type { GlobalExportProperties } from "../../../../../type";
 import { getMilestoneBacklogTitle } from "../backlog-builder";
 import { ComplexFieldCharacter } from "../base-elements";
 import { getTraceabilityMatrixTitle } from "../matrix-builder";
+import { getMilestoneTestPlanTitle } from "../testplan-builder";
 
 class AliasAttributes extends XmlAttributeComponent<{ readonly alias: string }> {
     protected override readonly xmlKeys = { alias: "w:val" };
@@ -118,6 +119,7 @@ export class TableOfContentsPrefilled extends XmlComponent {
         for (const title of [
             getTraceabilityMatrixTitle(gettext_provider),
             getMilestoneBacklogTitle(gettext_provider, global_export_properties),
+            getMilestoneTestPlanTitle(gettext_provider, global_export_properties),
         ]) {
             links_to_content.push(
                 new Paragraph({
