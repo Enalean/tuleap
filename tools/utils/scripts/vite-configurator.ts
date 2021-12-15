@@ -17,21 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { BuildOptions, ServerOptions, UserConfig, UserConfigExport } from "vite";
+import type { BuildOptions, CSSOptions, ServerOptions, UserConfig, UserConfigExport } from "vite";
 import { defineConfig as viteDefineConfig } from "vite";
 export { createPOGettextPlugin } from "./rollup-plugin-po-gettext";
-import { esbuild_target } from "./browserslist_config";
+import { browserlist_config, esbuild_target } from "./browserslist_config";
 import type { UserPluginConfig as PluginCheckerConfig } from "vite-plugin-checker";
 import checker from "vite-plugin-checker";
 import dts from "vite-dts";
 import path from "path";
+import autoprefixer from "autoprefixer";
 
 type OverloadedBuildOptions = Omit<BuildOptions, "brotliSize" | "minify" | "target">;
 type OverloadedServerOptions = Omit<ServerOptions, "fs">;
+type OverloadedCSSOptions = Omit<CSSOptions, "postcss">;
 type UserConfigWithoutBuildAndServer = Omit<UserConfig, "build" | "server">;
 type OverloadedUserConfig = UserConfigWithoutBuildAndServer & { build?: OverloadedBuildOptions } & {
     server?: OverloadedServerOptions;
-};
+} & { css?: OverloadedCSSOptions };
 
 export function defineConfig(
     config: OverloadedUserConfig,
@@ -89,6 +91,12 @@ function defineBaseConfig(
             brotliSize: false,
             minify: "esbuild",
             target: esbuild_target,
+        },
+        css: {
+            ...config.css,
+            postcss: {
+                plugins: [autoprefixer({ overrideBrowserslist: browserlist_config })],
+            },
         },
         plugins,
         server: {
