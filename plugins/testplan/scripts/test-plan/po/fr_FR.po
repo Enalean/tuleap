@@ -189,6 +189,9 @@ msgstr "Exigences"
 msgid "Results"
 msgstr "Résultats"
 
+msgid "Status"
+msgstr "Statut"
+
 msgid "Table of contents"
 msgstr "Table des matières"
 
