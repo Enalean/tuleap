@@ -34,6 +34,7 @@ describe("ProjectSidebar", () => {
                     version_identifier: "Dev Build 13.2.99.999",
                     full_descriptive_version: "Tuleap Community Edition — Dev Build 13.2.99.999",
                 },
+                copyright: null,
             },
         } as Configuration;
         const wrapper = shallowMount(ProjectSidebar, { props: { config: JSON.stringify(config) } });

@@ -31,6 +31,7 @@
         <div class="sidebar-spacer"></div>
         <sidebar-footer
             v-bind:instance_version="sidebar_configuration.instance_information.version"
+            v-bind:copyright="sidebar_configuration.instance_information.copyright"
         />
     </aside>
 </template>
