@@ -50,27 +50,6 @@ form_genSubmitImg($ImageFileHTMLPath)
 the form is built using the following form items. In all cases the $ParamName, $Caption and $DefaultValue parameters
 are the form item name and printed caption and the current value of the selection or text control.
 
-form_genSelectBox($ParamName, $Caption, $optionsList, $DefaultValue = "", $SubmitOnChange = NO_SUBMIT_ON_CHANGE)
-    $optionsList - array
-    $SubmitOnChange - form submit when user changes the value
-        SUBMIT_ON_CHANGE
-        NO_SUBMIT_ON_CHANGE
-
-form_genSelectBoxFromSQL(
-            $ParamName,
-            $Caption,
-            $SQLstr,
-            $DefaultValue = "",
-            $PrefixWithBlankItem = NO_BLANK_ROW_PREFIX,
-            $SubmitOnChange = NO_SUBMIT_ON_CHANGE
-        )
-    as form_genSelectBox() except the options are provided form the database - the first field is the key
-    and all subsequent fields are concatenated as the user-visible options
-
-    $PrefixWithBlankItem - add a blank selection to the start of the list
-        NO_BLANK_ROW_PREFIX
-        BLANK_ROW_PREFIX
-
 form_genTextBox($ParamName, $Caption, $DefaultValue = "", $Width = FORM_TEXT_AREA_WIDTH, $MaxInputLength = 0)
     if the default value is prefixed with "COF:" (clear on focus) the box is displayed with the DefaultValue as
     text, and the text vanishes when the box is clicked
@@ -683,45 +662,9 @@ function form_genJSButton($Caption, $JavaScript, $ImageFileHTMLPath = null)
 define("SUBMIT_ON_CHANGE", 1);
 define("NO_SUBMIT_ON_CHANGE", 0);
 
-function form_genSelectBox($ParamName, $Caption, $optionsList, $DefaultValue = "", $SubmitOnChange = NO_SUBMIT_ON_CHANGE)
-{
-    global $gInForm, $gFormCaptions;
-
-    if (! $gInForm) {
-        trigger_error("Form item outside form: form_genSelectBox()");
-    }
-    if (isset($gFormCaptions[$ParamName])) {
-        trigger_error("Form item name is reused: $ParamName");
-    }
-    $gFormCaptions[$ParamName] = $Caption;
-    print "<td" . FORM_CAPTION_STYLE . ">$Caption</td><td><select name='$ParamName'" . ($SubmitOnChange ? " onchange='this.form.submit();'" : "") . ">\n";
-    foreach ($optionsList as $name => $value) {
-        print "<option value='" . addslashes($value) . "'" . (($value == $DefaultValue) ? " SELECTED" : "") . ">$name</option>\n";
-    }
-    print "</select>\n</td>\n";
-}
-
 //=============================================================================
 define("NO_BLANK_ROW_PREFIX", false);
 define("BLANK_ROW_PREFIX", true);
-
-function form_genSelectBoxFromSQL($ParamName, $Caption, $SQLstr, $DefaultValue = "", $PrefixWithBlankItem = NO_BLANK_ROW_PREFIX, $SubmitOnChange = NO_SUBMIT_ON_CHANGE)
-{
-    $db_res      = db_query($SQLstr);
-    $optionsList = [];
-    if ($PrefixWithBlankItem) {
-        $optionsList["- - -"] = "";
-    }
-    while ($row = db_fetch_array($db_res)) {
-        $i        = 2;
-        $itemname = $row[1];
-        while (isset($row[$i])) {
-            $itemname .= " - " . $row[$i++];
-        }
-        $optionsList[$itemname] = $row[0];
-    }
-    form_genSelectBox($ParamName, $Caption, $optionsList, $DefaultValue, $SubmitOnChange);
-}
 
 //=============================================================================
 function form_genTextBox($ParamName, $Caption, $DefaultValue = "", $Width = FORM_TEXT_AREA_WIDTH, $MaxInputLength = 0)

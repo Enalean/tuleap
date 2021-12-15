@@ -406,6 +406,8 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 $this->_adminURI() . "?disp=edit_link_type&group_id=$group_id"
             )
         );
+
+        $purifier = Codendi_HTMLPurifier::instance();
         if (db_numrows($db_res) <= 0) {
             print sprintf(dgettext('tuleap-projectlinks', 'To enable project linking, you must first define at least one project link type - click <i>%1$s</i> to get started.'), dgettext('tuleap-projectlinks', 'Add a project link type'));
         } else {
@@ -428,14 +430,14 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                     mkAH(
                         htmlentities($row['name']),
                         $this->_adminURI() . "?disp=edit_link_type" .
-                        "&amp;group_id=" . $row["group_id"] .
-                        "&amp;link_type_id=" . $row["link_type_id"],
+                        "&amp;group_id=" . $purifier->purify(urlencode($row["group_id"])) .
+                        "&amp;link_type_id=" . $purifier->purify(urlencode($row["link_type_id"])),
                         dgettext('tuleap-projectlinks', 'update details')
                     ) . "</td>
                     <td $cls style='white-space: nowrap; vertical-align: top;'>" .
-                    htmlentities($row['reverse_name']) . "</td>
+                      $purifier->purify($row['reverse_name']) . "</td>
                     <td $cls style='vertical-align: top;'>" .
-                    htmlentities($row['description']) . "</td>\n";
+                      $purifier->purify($row['description']) . "</td>\n";
                 /** **1 commented out for now - until we can decide how to deal with project links functionality
                  * print "<td $cls style='vertical-align: top;'>".
                  * htmlentities($row['uri_plus'])."</td>\n";
@@ -444,8 +446,8 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                     mkAH(
                         $this->_icon('trash'),
                         $this->_adminURI() . "?func=pl_type_delete" .
-                        "&amp;group_id=$group_id" .
-                        "&amp;link_type_id=" . $row["link_type_id"],
+                        "&amp;group_id=" . $purifier->purify(urlencode($group_id)) .
+                        "&amp;link_type_id=" . $purifier->purify(urlencode($row["link_type_id"])),
                         dgettext('tuleap-projectlinks', 'Delete project link type (including all links of this type)'),
                         [
                             'onclick' => "return confirm('" .
@@ -651,9 +653,9 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                     );");
             $basicURI = $this->_adminURI() .
                 "?disp=resync_template" .
-                "&amp;group_id=$group_id" .
-                "&amp;template_id=$template_id" .
-                "&amp;template_type_id={$ltr_tmplt['link_type_id']}";
+                "&amp;group_id=" . $hp->purify(urlencode($group_id)) .
+                "&amp;template_id=" . $hp->purify(urlencode($template_id)) .
+                "&amp;template_type_id=" . $hp->purify(urlencode($ltr_tmplt['link_type_id']));
             if (db_numrows($rs_grp) == 0) {
                 // does not exist
                 print "<td $cls style='text-align: center;
@@ -665,7 +667,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
             } else {
                 // same name - any differences?
                 $ltr_grp                               = db_fetch_array($rs_grp);
-                $basicURI                             .= "&link_type_id={$ltr_grp['link_type_id']}";
+                $basicURI                             .= "&link_type_id=" . $hp->purify(urlencode($ltr_tmplt['link_type_id']));
                 $typeMatch[$ltr_tmplt['link_type_id']] = $ltr_grp['link_type_id'];
                 foreach (['reverse_name', 'description', 'uri_plus'] as $param) {
                     if ($ltr_tmplt[$param] <> $ltr_grp[$param]) {
@@ -679,11 +681,11 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                         mkAH(
                             dgettext('tuleap-projectlinks', 'update'),
                             $basicURI .
-                            "&name=" . urlencode($ltr_tmplt['name']) .
-                            "&reverse_name=" . urlencode($ltr_tmplt['reverse_name']) .
-                            "&description=" . urlencode($ltr_tmplt['description']) .
-                            "&uri_plus=" . urlencode($ltr_tmplt['uri_plus']) .
-                            "&link_type_id=" . urlencode($ltr_grp['link_type_id']) .
+                            "&name=" . $hp->purify(urlencode($ltr_tmplt['name'])) .
+                            "&reverse_name=" . $hp->purify(urlencode($ltr_tmplt['reverse_name'])) .
+                            "&description=" . $hp->purify(urlencode($ltr_tmplt['description'])) .
+                            "&uri_plus=" . $hp->purify(urlencode($ltr_tmplt['uri_plus'])) .
+                            "&link_type_id=" . $hp->purify(urlencode($ltr_grp['link_type_id'])) .
                             "&func=pl_type_update"
                         ) .
                         "</td></tr><tr>" .
@@ -802,9 +804,9 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                             $this->_icon("add"),
                             $basicURI .
                             "&amp;target_group_id=" .
-                            $row_templLinks['target_group_id'] .
+                            $hp->purify(urlencode($row_templLinks['target_group_id'])) .
                             "&amp;link_type_id=" .
-                            $typeMatch[$row_templLinks['link_type_id']]
+                            $hp->purify(urlencode($typeMatch[$row_templLinks['link_type_id']]))
                         );
                     } else {
                         print $this->_icon('matched');

@@ -66,9 +66,9 @@ class WikiServiceAdminViews extends WikiViews
     {
         $purifier = Codendi_HTMLPurifier::instance();
         print '<form name="wikiEntry" method="post" action="' . $this->wikiAdminLink . '&view=wikiDocuments">
-             <input type="hidden" name="group_id" value="' . $this->gid . '" />
-             <input type="hidden" name="action" value="' . $act . '" />
-             <input type="hidden" name="id" value="' . $id . '" />
+             <input type="hidden" name="group_id" value="' . $purifier->purify($this->gid) . '" />
+             <input type="hidden" name="action" value="' . $purifier->purify($act) . '" />
+             <input type="hidden" name="id" value="' . $purifier->purify($id) . '" />
            <table>';
 
         print '<tr>
@@ -102,7 +102,7 @@ class WikiServiceAdminViews extends WikiViews
 
         print '<tr>
              <td>' . $GLOBALS['Language']->getText('wiki_views_wkserviews', 'rank_screen') . '</td>
-             <td><input type="text" name="rank" value="' . $rank . '" size="3" maxlength="3"/></td>
+             <td><input type="text" name="rank" value="' . $purifier->purify($rank) . '" size="3" maxlength="3"/></td>
              <td>' . $GLOBALS['Language']->getText('wiki_views_wkserviews', 'rank_screen_em') . '</td>
            </tr>';
 
@@ -539,10 +539,12 @@ class WikiServiceAdminViews extends WikiViews
         $nbGroupPending = null;
         $nextId         = $wpw->getNextGroupWithWiki($this->gid, $nbGroupPending);
 
-        $html .= 'Nb project to go: ' . $nbGroupPending . '<br>';
+        $purifier = Codendi_HTMLPurifier::instance();
 
-        $url   = '/wiki/admin/index.php?group_id=' . $nextId . '&view=upgrade';
-        $href  = '<a href="' . $url . '">' . $nextId . '</a>';
+        $html = 'Nb project to go: ' . $purifier->purify($nbGroupPending) . '<br>';
+
+        $url   = $purifier->purify('/wiki/admin/index.php?group_id=' . urlencode($nextId) . '&view=upgrade');
+        $href  = '<a href="' . $url . '">' . $purifier->purify($nextId) . '</a>';
         $html .= 'Next project: ' . $href . '<br>';
 
         print $html;

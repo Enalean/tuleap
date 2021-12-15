@@ -208,10 +208,10 @@ function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_project
     $proj_name = '';
     if ($show_projectname && $limit) {
         //show the project name
-        $proj_name = ' &middot; <a href="/projects/' . strtolower($data['unix_group_name']) . '/">' . $purifier->purify($data['group_name']) . '</a>';
+        $proj_name = ' &middot; <a href="/projects/' . $purifier->purify(urlencode(strtolower($data['unix_group_name']))) . '/">' . $purifier->purify($data['group_name']) . '</a>';
     }
 
-    $forum_url = '/forum/forum.php?forum_id=' . urlencode($data['forum_id']);
+    $forum_url = '/forum/forum.php?forum_id=' . $purifier->purify(urlencode($data['forum_id']));
     if (! $limit) {
         $html .= '<li><span class="news_summary"><a href="' . $purifier->purify($forum_url) . '">' . $purifier->purify($data['summary']) . '</a></span> ';
         $html .= '<small><span class="news_date">' . DateHelper::relativeDateInlineContext((int) $data['date'], $user) . '</span></small></li>';
@@ -466,7 +466,7 @@ function news_fetch_ugroups($project)
     $html   .= '<select multiple="multiple" name="send_news_to[]">';
 
     foreach ($ugroups as $ugroup) {
-        $html .= '<option value="' . $ugroup->getId() . '">';
+        $html .= '<option value="' . $hp->purify($ugroup->getId()) . '">';
         $html .= $hp->purify($ugroup->getTranslatedName());
         $html .= '</option>';
     }

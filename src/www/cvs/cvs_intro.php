@@ -54,9 +54,11 @@ echo '<TABLE width="100%"><TR valign="top"><TD width="65%">' . "\n";
 $res_grp = db_query("SELECT * FROM `groups` WHERE group_id=" . db_ei($group_id));
 $row_grp = db_fetch_array($res_grp);
 
+$purifier = Codendi_HTMLPurifier::instance();
+
 // Show CVS access information
 if ($row_grp['cvs_preamble'] != '') {
-    echo Codendi_HTMLPurifier::instance()->purify(util_unconvert_htmlspecialchars($row_grp['cvs_preamble']));
+    echo $purifier->purify(util_unconvert_htmlspecialchars($row_grp['cvs_preamble']));
 } else {
     include($GLOBALS['Language']->getContent('cvs/intro'));
 }
@@ -68,7 +70,7 @@ echo format_cvs_history($group_id);
 
 
 // CVS Browsing Box
-$uri = session_make_url('/cvs/viewvc.php/?root=' . $row_grp['unix_group_name'] . '&roottype=cvs');
+$uri = session_make_url('/cvs/viewvc.php/?root=' . $purifier->purify(urlencode($row_grp['unix_group_name'])) . '&roottype=cvs');
 echo '<HR><B>' . _('Browse the CVS Tree') . '</B>
 <P>' . _('Browsing the CVS tree gives you a great view into the current status of this project\'s code. You may also view the complete histories of any file in the repository.') . '
 <UL>

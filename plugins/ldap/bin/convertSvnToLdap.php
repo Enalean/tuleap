@@ -65,7 +65,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
 
     $f = fopen($srcFileName, "rb");
     if ($f === false) {
-        echo "** ERROR: $srcFileName: No such file or directory" . PHP_EOL;
+        fwrite(STDERR, "** ERROR: $srcFileName: No such file or directory" . PHP_EOL);
     } else {
         $path_pat    = '/^\s*\[(.*)\]/'; // assume no repo name 'repo:'
         $perm_pat    = '/^\s*([^=]*)\s*=\s*(.*)$/';
@@ -150,7 +150,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
         // Write new file
         $fd = fopen($dstFileName, "w");
         if (! $fd) {
-            echo "** ERROR: $dstFileName: Not writable" . PHP_EOL;
+            fwrite(STDERR, "** ERROR: $dstFileName: Not writable" . PHP_EOL);
         } else {
             fwrite($fd, $newContent);
             fclose($fd);
@@ -174,7 +174,7 @@ if ($ldapPlugin && $plugin_manager->isPluginAvailable($ldapPlugin)) {
             //if($dirInfo->isDot()) continue;
             $svnaccessfile = new SplFileInfo('/svnroot/' . $row['unix_group_name'] . '/.SVNAccessFile');
             if ($svnaccessfile->isFile()) {
-                echo "Process " . $row['unix_group_name'] . PHP_EOL;
+                fwrite(STDOUT, "Process " . $row['unix_group_name'] . PHP_EOL);
                 if (copy($svnaccessfile->getPathname(), $svnaccessfile->getPathname() . '.beforeldap')) {
                     svn_utils_convert_access_file_to_ldap(
                         $ldapUm,
@@ -186,6 +186,6 @@ if ($ldapPlugin && $plugin_manager->isPluginAvailable($ldapPlugin)) {
             }
         }
     } else {
-        echo "** ERROR: either --src or --dst are missing" . PHP_EOL;
+        fwrite(STDERR, "** ERROR: either --src or --dst are missing" . PHP_EOL);
     }
 }
