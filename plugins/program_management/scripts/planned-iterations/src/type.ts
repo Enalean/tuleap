@@ -58,10 +58,8 @@ export interface IterationLabels {
     sub_label: string;
 }
 
-export interface Feature {
+export interface UserStory {
     readonly background_color: string;
-    readonly has_user_story_planned: boolean;
-    readonly has_user_story_linked: boolean;
     readonly is_open: boolean;
     readonly id: number;
     readonly uri: string;

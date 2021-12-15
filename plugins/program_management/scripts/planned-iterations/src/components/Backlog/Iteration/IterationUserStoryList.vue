@@ -22,17 +22,17 @@
     <div class="planned-iteration-content-items" data-test="iteration-user-story-list">
         <backlog-element-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
         <iteration-no-content
-            v-if="!has_features && !is_loading && !has_error"
+            v-if="!has_user_stories && !is_loading && !has_error"
             data-test="empty-state"
         />
         <div v-if="has_error" class="tlp-alert-danger" data-test="iteration-content-error-message">
             {{ error_message }}
         </div>
-        <feature-card
+        <user-story-card
             v-else
-            v-for="feature in features"
-            v-bind:key="feature.id"
-            v-bind:feature="feature"
+            v-for="user_story in user_stories"
+            v-bind:key="user_story.id"
+            v-bind:user_story="user_story"
             v-bind:iteration="iteration"
         />
     </div>
@@ -44,15 +44,15 @@ import { Component, Prop } from "vue-property-decorator";
 import { retrieveIterationContent } from "../../../helpers/iteration-content-retriever";
 
 import IterationNoContent from "./IterationNoContent.vue";
-import FeatureCard from "./FeatureCard.vue";
+import UserStoryCard from "./UserStoryCard.vue";
 import BacklogElementSkeleton from "../../BacklogElementSkeleton.vue";
 
-import type { Feature, Iteration } from "../../../type";
+import type { UserStory, Iteration } from "../../../type";
 
 @Component({
     components: {
         IterationNoContent,
-        FeatureCard,
+        UserStoryCard,
         BacklogElementSkeleton,
     },
 })
@@ -60,7 +60,7 @@ export default class IterationUserStoryList extends Vue {
     @Prop({ required: true })
     readonly iteration!: Iteration;
 
-    private features: Feature[] = [];
+    private user_stories: UserStory[] = [];
     private is_loading = false;
     private has_error = false;
     private error_message = "";
@@ -68,7 +68,7 @@ export default class IterationUserStoryList extends Vue {
     async mounted(): Promise<void> {
         try {
             this.is_loading = true;
-            this.features = await retrieveIterationContent(this.iteration.id);
+            this.user_stories = await retrieveIterationContent(this.iteration.id);
         } catch (e) {
             this.has_error = true;
             this.error_message = this.$gettext("An error has occurred loading content");
@@ -77,8 +77,8 @@ export default class IterationUserStoryList extends Vue {
         }
     }
 
-    get has_features(): boolean {
-        return this.features.length > 0;
+    get has_user_stories(): boolean {
+        return this.user_stories.length > 0;
     }
 }
 </script>

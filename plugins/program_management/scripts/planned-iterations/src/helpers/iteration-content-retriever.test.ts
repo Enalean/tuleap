@@ -20,18 +20,16 @@
 import * as tlp from "tlp";
 import { retrieveIterationContent } from "./iteration-content-retriever";
 
-import type { Feature } from "../type";
+import type { UserStory } from "../type";
 
 jest.mock("tlp");
 
 describe("iteration-content-retriever", () => {
     it("retrieves the content of a given iteration", async () => {
         const recursiveGetSpy = jest.spyOn(tlp, "recursiveGet");
-        const increment_iterations: Feature[] = [
+        const increment_iterations: UserStory[] = [
             {
                 background_color: "peggy-pink",
-                has_user_story_planned: false,
-                has_user_story_linked: false,
                 is_open: true,
                 id: 101,
                 uri: "/uri/of/feature",

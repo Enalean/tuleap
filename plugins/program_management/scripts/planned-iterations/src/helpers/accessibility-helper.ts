@@ -17,19 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Feature } from "../type";
+import type { UserStory } from "../type";
 
 export function getAccessibilityClasses(
-    feature: Feature,
+    user_story: UserStory,
     should_display_accessibility: boolean
 ): string[] {
-    const classnames = [`element-card-${feature.tracker.color_name}`];
+    const classnames = [`element-card-${user_story.tracker.color_name}`];
 
-    if (feature.background_color) {
-        classnames.push(`element-card-background-${feature.background_color}`);
+    if (user_story.background_color) {
+        classnames.push(`element-card-background-${user_story.background_color}`);
     }
 
-    if (showAccessibilityPattern(feature, should_display_accessibility)) {
+    if (showAccessibilityPattern(user_story, should_display_accessibility)) {
         classnames.push("element-card-with-accessibility");
     }
 
@@ -37,8 +37,8 @@ export function getAccessibilityClasses(
 }
 
 export function showAccessibilityPattern(
-    feature: Feature,
+    user_story: UserStory,
     should_display_accessibility: boolean
 ): boolean {
-    return should_display_accessibility && feature.background_color !== "";
+    return should_display_accessibility && user_story.background_color !== "";
 }

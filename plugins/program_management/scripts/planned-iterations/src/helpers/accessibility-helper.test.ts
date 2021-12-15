@@ -18,24 +18,24 @@
  */
 
 import { getAccessibilityClasses, showAccessibilityPattern } from "./accessibility-helper";
-import type { Feature } from "../type";
+import type { UserStory } from "../type";
 
 describe("accessibility-helper", () => {
-    let feature: Feature;
+    let user_story: UserStory;
 
     beforeEach(() => {
-        feature = {
+        user_story = {
             tracker: {
                 color_name: "red-wine",
             },
             background_color: "lemon-green",
-        } as Feature;
+        } as UserStory;
     });
 
     it.each([true, false])(
         "should return background and accessibility classes when mode is enabled",
         (is_accessibility_mode_enabled: boolean) => {
-            const classes = getAccessibilityClasses(feature, is_accessibility_mode_enabled);
+            const classes = getAccessibilityClasses(user_story, is_accessibility_mode_enabled);
 
             expect(classes.includes("element-card-red-wine")).toBe(true);
             expect(classes.includes("element-card-background-lemon-green")).toBe(true);
@@ -50,14 +50,14 @@ describe("accessibility-helper", () => {
         ["lemon-green", false, false],
         ["", true, false],
     ])(
-        "should return true only when feature has a bg color and accessibility mode is enabled",
+        "should return true only when user_story has a bg color and accessibility mode is enabled",
         (
             card_bg_color: string,
             is_accessibility_mode_enabled: boolean,
             expected_return: boolean
         ) => {
             const is_accessibility_patter_shown = showAccessibilityPattern(
-                { background_color: card_bg_color } as Feature,
+                { background_color: card_bg_color } as UserStory,
                 is_accessibility_mode_enabled
             );
 
