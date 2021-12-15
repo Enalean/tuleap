@@ -4,9 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project sidebar</title>
+    <style>
+        /* Not forced by the implementation, requirements might be different in your context */
+        tuleap-project-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+    </style>
 </head>
 <body>
-    <tuleap-project-sidebar></tuleap-project-sidebar>
-    <script type="module" src="/src/main.ts"></script>
+    <tuleap-project-sidebar
+            config='{"project": { "name": "project1", "href": "/projects/project1"}}'
+    ></tuleap-project-sidebar>
+    <div class="project-sidebar-title">Foooooo</div>
+    <script type="module" src="/dev-loader.ts"></script>
 </body>
 </html>
