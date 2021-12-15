@@ -117,7 +117,7 @@ services:
     image: redis:3.2
     volumes:
       - redis-data:/data
-    command: redis-server --appendonly yes
+    command: redis-server --appendonly yes --auto-aof-rewrite-percentage 20 --auto-aof-rewrite-min-size 200kb
 
   prometheus:
     image: prom/prometheus:v2.3.0
