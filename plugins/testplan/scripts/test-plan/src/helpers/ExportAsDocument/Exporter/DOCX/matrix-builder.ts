@@ -31,6 +31,7 @@ import type { ArtifactFieldValueStatus } from "@tuleap/plugin-docgen-docx/src";
 import { getAnchorToArtifactContent } from "@tuleap/plugin-docgen-docx/src";
 import { TABLE_BORDERS, TABLE_LABEL_SHADING, TABLE_MARGINS } from "./Table/table-builder";
 import { getInternationalizedTestStatus } from "../../../ExportAsSpreadsheet/Report/internationalize-test-status";
+import { computeRequirementStatus } from "./matrix-compute-requirement-status";
 
 export function getTraceabilityMatrixTitle(gettext_provider: VueGettextProvider): {
     id: string;
@@ -117,7 +118,8 @@ const buildCellContentWithRowspan = (
 
 const buildCellContentResult = (
     result: ArtifactFieldValueStatus,
-    gettext_provider: VueGettextProvider
+    gettext_provider: VueGettextProvider,
+    rowSpan: number
 ): TableCell => {
     const status = getInternationalizedTestStatus(gettext_provider, result);
     let table_cell_options = buildCellContentOptions(new TextRun(status));
@@ -152,7 +154,7 @@ const buildCellContentResult = (
             break;
     }
 
-    return new TableCell({ ...table_cell_options, ...additional_cell_options });
+    return new TableCell({ ...table_cell_options, rowSpan, ...additional_cell_options });
 };
 
 function buildTraceabilityMatrixTable(
@@ -170,6 +172,7 @@ function buildTraceabilityMatrixTable(
                 tableHeader: true,
                 children: [
                     buildHeaderCell(gettext_provider.$gettext("Requirements")),
+                    buildHeaderCell(gettext_provider.$gettext("Status")),
                     buildHeaderCell(gettext_provider.$gettext("Tests")),
                     buildHeaderCell(gettext_provider.$gettext("Campaigns")),
                     buildHeaderCell(gettext_provider.$gettext("Results")),
@@ -186,6 +189,11 @@ function buildTraceabilityMatrixTable(
                             buildCellContentWithRowspan(
                                 new TextRun(element.requirement.title),
                                 element.tests.length
+                            ),
+                            buildCellContentResult(
+                                computeRequirementStatus(element.tests),
+                                gettext_provider,
+                                element.tests.length
                             )
                         );
                         is_first = false;
@@ -199,7 +207,7 @@ function buildTraceabilityMatrixTable(
                             })
                         ),
                         buildCellContent(new TextRun(test.campaign)),
-                        buildCellContentResult(test.status, gettext_provider),
+                        buildCellContentResult(test.status, gettext_provider, 1),
                         buildCellContent(new TextRun(test.executed_by || "")),
                         buildCellContent(new TextRun(test.executed_on || "")),
                     ];
