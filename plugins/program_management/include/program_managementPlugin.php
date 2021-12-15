@@ -139,6 +139,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserCanSubmitInTrackerVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserIsProgramAdminVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserPreferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\Adapter\XML\ProgramManagementConfigXMLImporter;
@@ -587,7 +588,8 @@ final class program_managementPlugin extends Plugin
             $visibility_verifier,
             new UserIsProgramAdminVerifier($user_retriever),
             $this->getVisibleIterationTrackerRetriever($user_retriever),
-            new IterationsDAO()
+            new IterationsDAO(),
+            new UserPreferenceRetriever($user_retriever)
         );
     }
 

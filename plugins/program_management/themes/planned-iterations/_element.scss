@@ -19,6 +19,9 @@
 
 @use "../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
+$accessibility-pattern-width: 20px;
+$accessibility-pattern-right-margin: 6px;
+
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .element-card-#{$color-name} {
         --card-color: #{map-get($colors, "primary")};
@@ -63,6 +66,34 @@
         height: calc(100% + 2px);
         border-radius: var(--tlp-medium-radius) 0 0 var(--tlp-medium-radius);
         background: var(--card-color);
+    }
+
+    &.element-card-with-accessibility {
+        &[class*="element-card-background-"] {
+            padding: var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + #{$accessibility-pattern-width} + #{$accessibility-pattern-right-margin}) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
+
+            > .element-card-accessibility {
+                opacity: 0.5;
+                background-color: var(--text-color);
+                mask-image: var(--accessibility-pattern);
+            }
+        }
+
+        &:not([class*="element-card-background-"]) > .element-card-accessibility {
+            display: none;
+        }
+
+        > .element-card-content > .element-card-info {
+            margin: 0 5px 0 0;
+        }
+    }
+
+    .element-card-accessibility {
+        position: absolute;
+        top: 0;
+        right: $accessibility-pattern-right-margin;
+        width: $accessibility-pattern-width;
+        height: 100%;
     }
 }
 

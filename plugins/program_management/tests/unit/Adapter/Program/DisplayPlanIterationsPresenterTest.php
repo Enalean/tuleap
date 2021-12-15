@@ -23,6 +23,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlannedIterations;
 use Tuleap\ProgramManagement\Tests\Builder\IterationsLabelsBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\UserPreferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramBaseInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementInfoStub;
@@ -48,7 +49,8 @@ final class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\Test
                 ProgramIdentifierBuilder::build(),
                 UserIdentifierStub::withId(666),
                 ProgramIncrementIdentifierBuilder::buildWithId(1260),
-                IterationsLabelsBuilder::buildWithLabels('Cycles', 'cycle')
+                IterationsLabelsBuilder::buildWithLabels('Cycles', 'cycle'),
+                UserPreferenceBuilder::withPreference('accessibility_mode', '1')
             )
         );
 
@@ -63,5 +65,6 @@ final class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\Test
         self::assertEquals('{"label":"Cycles","sub_label":"cycle"}', $presenter->iterations_labels);
         self::assertTrue($presenter->is_user_admin);
         self::assertEquals('101', $presenter->iteration_tracker_id);
+        self::assertTrue($presenter->is_accessibility_mode_enabled);
     }
 }
