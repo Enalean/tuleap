@@ -244,5 +244,12 @@ module.exports = {
                 "import/no-extraneous-dependencies": "off", // Vite is installed globally
             },
         },
+        // Specify Vue 3 app and library
+        // At some point in the future this should the default and the Vue 2 rules should be explitcly enabled on the
+        // remaining apps
+        {
+            files: ["src/scripts/lib/project-sidebar/**/*.vue"],
+            extends: ["plugin:vue/vue3-recommended"],
+        },
     ],
 };
