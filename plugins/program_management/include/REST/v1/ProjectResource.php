@@ -44,10 +44,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplici
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasUserStoriesVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUserStoriesVerifier;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureElementsRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasUserStoriesVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturesDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
@@ -66,11 +64,14 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\FormElementFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserIsProgramAdminVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Feature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramBacklogSearcher;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementsSearcher;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
@@ -108,7 +109,6 @@ final class ProjectResource extends AuthenticatedResource
 {
     private const MAX_LIMIT = 50;
 
-    private FeatureElementsRetriever $features_retriever;
     private CreateTeam $team_creator;
     private CreatePlan $plan_creator;
     private \UserManager $user_manager;
@@ -136,7 +136,6 @@ final class ProjectResource extends AuthenticatedResource
         $form_element_factory        = \Tracker_FormElementFactory::instance();
         $field_retriever             = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
         $project_manager_adapter     = new ProjectManagerAdapter($project_manager, $this->user_manager_adapter);
-        $title_retriever             = new TitleValueRetriever($artifact_retriever);
 
         $project_access_checker = new ProjectAccessChecker(
             new RestrictedUserCanAccessProjectVerifier(),
@@ -174,26 +173,6 @@ final class ProjectResource extends AuthenticatedResource
             $artifacts_linked_to_parent_dao
         );
 
-        $this->features_retriever           = new FeatureElementsRetriever(
-            $this->build_program,
-            new FeaturesDao(),
-            new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
-            new FeatureRepresentationBuilder(
-                $artifact_retriever,
-                $title_retriever,
-                new BackgroundColorRetriever(
-                    new BackgroundColorBuilder(new BindDecoratorRetriever()),
-                    $artifact_retriever,
-                    $this->user_manager_adapter
-                ),
-                $this->user_story_linked_verifier,
-                new FeatureHasUserStoriesVerifier(
-                    $artifact_factory,
-                    $this->user_manager_adapter,
-                    $artifacts_linked_to_parent_dao
-                )
-            )
-        );
         $this->features_permission_verifier = new PrioritizeFeaturesPermissionVerifier(
             $project_manager_adapter,
             $project_access_checker,
@@ -212,7 +191,7 @@ final class ProjectResource extends AuthenticatedResource
             new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
             new ProgramIncrementRetriever(
                 new StatusValueRetriever($artifact_retriever, $this->user_manager_adapter),
-                $title_retriever,
+                new TitleValueRetriever($artifact_retriever),
                 new TimeframeValueRetriever(
                     $artifact_retriever,
                     $this->user_manager_adapter,
@@ -380,13 +359,46 @@ final class ProjectResource extends AuthenticatedResource
      */
     public function getBacklog(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
     {
-        $user = $this->user_manager->getCurrentUser();
+        $user_manager                   = \UserManager::instance();
+        $user_retriever                 = new UserManagerAdapter($user_manager);
+        $artifact_factory               = \Tracker_ArtifactFactory::instance();
+        $artifact_retriever             = new ArtifactFactoryAdapter($artifact_factory);
+        $tracker_retriever              = new TrackerFactoryAdapter(\TrackerFactory::instance());
+        $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
+
+        $program_backlog_searcher = new ProgramBacklogSearcher(
+            ProgramAdapter::instance(),
+            new FeaturesDao(),
+            new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_retriever),
+            new TitleValueRetriever($artifact_retriever),
+            new URIRetriever($artifact_retriever),
+            new CrossReferenceRetriever($artifact_retriever),
+            new TrackerOfArtifactRetriever($artifact_retriever),
+            new BackgroundColorRetriever(
+                new BackgroundColorBuilder(new BindDecoratorRetriever()),
+                $artifact_retriever,
+                $user_retriever
+            ),
+            new FeatureHasPlannedUserStoriesVerifier(
+                $artifacts_linked_to_parent_dao,
+                new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
+                $artifacts_linked_to_parent_dao
+            ),
+            new FeatureHasUserStoriesVerifier($artifact_factory, $user_retriever, $artifacts_linked_to_parent_dao)
+        );
+
+        $user = $user_manager->getCurrentUser();
         try {
-            $elements = $this->features_retriever->retrieveFeaturesToBePlanned($id, UserProxy::buildFromPFUser($user));
+            $features = $program_backlog_searcher->retrieveFeaturesToBePlanned($id, UserProxy::buildFromPFUser($user));
 
-            Header::sendPaginationHeaders($limit, $offset, count($elements), self::MAX_LIMIT);
+            $representations = array_map(
+                static fn(Feature $feature) => FeatureRepresentation::fromFeature($tracker_retriever, $feature),
+                $features
+            );
 
-            return array_slice($elements, $offset, $limit);
+            Header::sendPaginationHeaders($limit, $offset, count($representations), self::MAX_LIMIT);
+
+            return array_slice($representations, $offset, $limit);
         } catch (ProgramAccessException $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());
         } catch (ProjectIsNotAProgramException $e) {

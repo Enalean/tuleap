@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker;
 
+use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\UserStoryIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
@@ -57,6 +58,12 @@ final class TrackerOfArtifactRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTrackerOfUserStory(): void
     {
         $tracker = $this->getRetriever()->getUserStoryTracker(UserStoryIdentifierBuilder::withId(self::ARTIFACT_ID));
+        self::assertSame(self::TRACKER_ID, $tracker->getId());
+    }
+
+    public function testItReturnsTrackerOfFeature(): void
+    {
+        $tracker = $this->getRetriever()->getFeatureTracker(FeatureIdentifierBuilder::withId(self::ARTIFACT_ID));
         self::assertSame(self::TRACKER_ID, $tracker->getId());
     }
 }

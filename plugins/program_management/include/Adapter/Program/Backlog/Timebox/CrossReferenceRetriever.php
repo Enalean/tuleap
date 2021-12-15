@@ -24,12 +24,14 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureCrossReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveCrossRef;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryCrossRef;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 
-final class CrossReferenceRetriever implements RetrieveCrossRef, RetrieveUserStoryCrossRef
+final class CrossReferenceRetriever implements RetrieveCrossRef, RetrieveUserStoryCrossRef, RetrieveFeatureCrossReference
 {
     public function __construct(private RetrieveFullArtifact $artifact_retriever)
     {
@@ -45,5 +47,10 @@ final class CrossReferenceRetriever implements RetrieveCrossRef, RetrieveUserSto
     {
         $artifact = $this->artifact_retriever->getNonNullArtifact($user_story_identifier);
         return $artifact->getXRef();
+    }
+
+    public function getFeatureCrossReference(FeatureIdentifier $feature_identifier): string
+    {
+        return $this->artifact_retriever->getNonNullArtifact($feature_identifier)->getXRef();
     }
 }

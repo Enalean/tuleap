@@ -23,31 +23,33 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
 
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStoryCrossRefStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStoryTitleStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStoryURIStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsOpenStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsPlannableStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromUserStoryStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
 final class UserStoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TRACKER_ID        = 56;
     private const USER_STORY_ONE_ID = 125;
+    private const FIRST_COLOR       = 'teddy-brown';
     private const USER_STORY_TWO_ID = 126;
+    private const SECOND_COLOR      = 'army-green';
 
     private function getRetriever(): UserStoryRetriever
     {
         return new UserStoryRetriever(
             SearchChildrenOfFeatureStub::withChildren([['children_id' => self::USER_STORY_ONE_ID], ['children_id' => self::USER_STORY_TWO_ID]]),
             VerifyIsPlannableStub::buildPlannableElement(),
-            RetrieveBackgroundColorStub::withDefaults(),
+            RetrieveBackgroundColorStub::withSuccessiveColors(self::FIRST_COLOR, self::SECOND_COLOR),
             VerifyFeatureIsVisibleStub::withAlwaysVisibleFeatures(),
             RetrieveUserStoryTitleStub::withSuccessiveValues('Title', 'Other title'),
             new RetrieveUserStoryURIStub(),
@@ -71,7 +73,7 @@ final class UserStoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame('/plugins/tracker/?aid=' . self::USER_STORY_ONE_ID, $first_story->uri);
         self::assertSame('story #' . self::USER_STORY_ONE_ID, $first_story->cross_ref);
         self::assertTrue($first_story->is_open);
-        self::assertSame("lake-placid-blue", $first_story->background_color->getBackgroundColorName());
+        self::assertSame(self::FIRST_COLOR, $first_story->background_color->getBackgroundColorName());
         self::assertSame(self::TRACKER_ID, $first_story->tracker_identifier->getId());
 
         self::assertSame(self::USER_STORY_TWO_ID, $second_story->user_story_identifier->getId());
@@ -79,7 +81,7 @@ final class UserStoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame('/plugins/tracker/?aid=' . self::USER_STORY_TWO_ID, $second_story->uri);
         self::assertSame('story #' . self::USER_STORY_TWO_ID, $second_story->cross_ref);
         self::assertTrue($second_story->is_open);
-        self::assertSame("lake-placid-blue", $second_story->background_color->getBackgroundColorName());
+        self::assertSame(self::SECOND_COLOR, $second_story->background_color->getBackgroundColorName());
         self::assertSame(self::TRACKER_ID, $second_story->tracker_identifier->getId());
     }
 }
