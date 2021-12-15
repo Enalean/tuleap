@@ -12,5 +12,11 @@ exports[`ProjectSidebar displays sidebar 1`] = `
       project_name="project1"
     />
   </div>
+  <div
+    class="sidebar-spacer"
+  />
+  <sidebar-footer-stub
+    instance_version="[object Object]"
+  />
 </aside>
 `;

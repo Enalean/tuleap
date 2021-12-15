@@ -28,6 +28,13 @@ describe("ProjectSidebar", () => {
     it("displays sidebar", () => {
         const config: Configuration = {
             project: { name: "project1", href: "/projects/project1" },
+            instance_information: {
+                version: {
+                    flavor_name: "Tuleap Community Edition",
+                    version_identifier: "Dev Build 13.2.99.999",
+                    full_descriptive_version: "Tuleap Community Edition — Dev Build 13.2.99.999",
+                },
+            },
         } as Configuration;
         const wrapper = shallowMount(ProjectSidebar, { props: { config: JSON.stringify(config) } });
 

@@ -15,7 +15,16 @@
 </head>
 <body>
     <tuleap-project-sidebar
-            config='{"project": { "name": "project1", "href": "/projects/project1"}}'
+            config='{
+                "project": { "name": "project1", "href": "/projects/project1"},
+                "instance_information": {
+                    "version": {
+                        "flavor_name": "Tuleap Community Edition",
+                        "version_identifier": "Dev Build 13.2.99.999",
+                        "full_descriptive_version": "Tuleap Community Edition — Dev Build 13.2.99.999"
+                    }
+                }
+            }'
     ></tuleap-project-sidebar>
     <div class="project-sidebar-title">Foooooo</div>
     <script type="module" src="/dev-loader.ts"></script>

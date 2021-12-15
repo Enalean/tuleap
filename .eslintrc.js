@@ -250,6 +250,11 @@ module.exports = {
         {
             files: ["src/scripts/lib/project-sidebar/**/*.vue"],
             extends: ["plugin:vue/vue3-recommended"],
+            rules: {
+                "vue/html-indent": "off", // Conflict with Prettier
+                "vue/max-attributes-per-line": "off", // Conflict with Prettier
+                "vue/prop-name-casing": ["error", "snake_case"],
+            },
         },
     ],
 };
