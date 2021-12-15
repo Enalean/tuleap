@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-final class FeatureNotAccessException extends \Exception
+use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsFeature;
+
+final class VerifyIsFeatureStub implements VerifyIsFeature
 {
-    private string $i18n_message;
-
-    public function __construct()
+    private function __construct(private bool $is_allowed)
     {
-        parent::__construct('You can not see this feature.');
-        $this->i18n_message = dgettext('tuleap-program_management', 'You can not see this feature.');
     }
 
-    public function getI18NExceptionMessage(): string
+    public function isFeature(int $potential_feature_id): bool
     {
-        return $this->i18n_message;
+        return $this->is_allowed;
+    }
+
+    public static function withValidFeature(): self
+    {
+        return new self(true);
+    }
+
+    public static function withNotFeature(): self
+    {
+        return new self(false);
     }
 }

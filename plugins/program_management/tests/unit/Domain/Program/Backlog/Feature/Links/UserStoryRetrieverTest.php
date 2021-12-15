@@ -23,17 +23,15 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
 
+use Tuleap\ProgramManagement\Tests\Stub\CheckIsValidFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromUserStoryStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStoryCrossRefStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStoryTitleStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStoryURIStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsOpenStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsPlannableStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
 final class UserStoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -47,17 +45,17 @@ final class UserStoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getRetriever(): UserStoryRetriever
     {
         return new UserStoryRetriever(
-            SearchChildrenOfFeatureStub::withChildren([['children_id' => self::USER_STORY_ONE_ID], ['children_id' => self::USER_STORY_TWO_ID]]),
-            VerifyIsPlannableStub::buildPlannableElement(),
+            SearchChildrenOfFeatureStub::withChildren(
+                [['children_id' => self::USER_STORY_ONE_ID], ['children_id' => self::USER_STORY_TWO_ID]]
+            ),
+            CheckIsValidFeatureStub::withAlwaysValidFeatures(),
             RetrieveBackgroundColorStub::withSuccessiveColors(self::FIRST_COLOR, self::SECOND_COLOR),
-            VerifyFeatureIsVisibleStub::withAlwaysVisibleFeatures(),
             RetrieveUserStoryTitleStub::withSuccessiveValues('Title', 'Other title'),
             new RetrieveUserStoryURIStub(),
             RetrieveUserStoryCrossRefStub::withShortname('story'),
             VerifyIsOpenStub::withOpen(),
             RetrieveTrackerFromUserStoryStub::withId(self::TRACKER_ID),
-            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
-            RetrieveTrackerOfArtifactStub::withIds(self::TRACKER_ID)
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts()
         );
     }
 

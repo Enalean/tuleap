@@ -616,9 +616,6 @@ msgstr ""
 "Vous allez mettre à jour un incrément de programme, les jalons "
 "correspondants seront mis à jour dans les projets des équipes."
 
-msgid "You can not see this feature."
-msgstr "Vous ne pouvez pas voir cette fonctionnalité."
-
 msgid "You must be administrator of the projects you want aggregate."
 msgstr "Vous devez être administrateur des projets que vous voulez regrouper."
 

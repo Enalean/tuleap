@@ -35,7 +35,7 @@ final class UserStoryIdentifierBuilder
         return UserStoryIdentifier::buildCollectionFromFeature(
             SearchChildrenOfFeatureStub::withChildren([['children_id' => $id]]),
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
-            PlannableFeatureBuilder::build(1),
+            FeatureIdentifierBuilder::withId(1),
             UserIdentifierStub::buildGenericUser()
         )[0];
     }

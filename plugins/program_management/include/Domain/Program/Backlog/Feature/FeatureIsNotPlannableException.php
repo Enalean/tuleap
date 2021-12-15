@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,19 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
-final class FeatureNotFoundException extends \Exception implements FeatureException
+final class FeatureIsNotPlannableException extends \Exception
 {
     private string $i18n_message;
 
-    public function __construct(int $feature_id)
+    public function __construct(int $id)
     {
-        parent::__construct(sprintf('Could not find feature with id #%d', $feature_id));
+        parent::__construct("Tracker id #$id is not a plannable tracker");
         $this->i18n_message = sprintf(
             dgettext(
                 'tuleap-program_management',
-                'Could not find feature with id #%d'
+                'Tracker id #%d is not a plannable tracker'
             ),
-            $feature_id
+            $id
         );
     }
 

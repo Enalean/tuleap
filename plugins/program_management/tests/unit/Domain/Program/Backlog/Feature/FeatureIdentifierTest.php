@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\SearchFeatures;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\CheckIsValidFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchFeaturesStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPlannableFeaturesStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -39,7 +40,8 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private const FIRST_FEATURE_ID  = 623;
     private const SECOND_FEATURE_ID = 374;
     private VerifyFeatureIsVisibleByProgramStub $visible_by_program_verifier;
-    private VerifyFeatureIsVisibleStub $feature_verifier;
+    private VerifyFeatureIsVisible $visible_verifier;
+    private CheckIsValidFeatureStub $feature_checker;
     private SearchFeatures $feature_searcher;
     private \Closure $getId;
     private SearchPlannableFeatures $program_features_searcher;
@@ -48,7 +50,8 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->getId                       = static fn(FeatureIdentifier $feature): int => $feature->getId();
         $this->visible_by_program_verifier = VerifyFeatureIsVisibleByProgramStub::withAlwaysVisibleFeatures();
-        $this->feature_verifier            = VerifyFeatureIsVisibleStub::withAlwaysVisibleFeatures();
+        $this->visible_verifier            = VerifyFeatureIsVisibleStub::withAlwaysVisibleFeatures();
+        $this->feature_checker             = CheckIsValidFeatureStub::withAlwaysValidFeatures();
         $this->feature_searcher            = SearchFeaturesStub::withFeatureIds(
             self::FIRST_FEATURE_ID,
             self::SECOND_FEATURE_ID
@@ -93,10 +96,10 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::FEATURE_ID, $feature->getId());
     }
 
-    private function getFeatureFromId(): ?FeatureIdentifier
+    private function getFeatureFromId(): FeatureIdentifier
     {
         return FeatureIdentifier::fromId(
-            $this->feature_verifier,
+            $this->feature_checker,
             self::FEATURE_ID,
             UserIdentifierStub::buildGenericUser()
         );
@@ -105,22 +108,15 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsAVisibleFeature(): void
     {
         $feature = $this->getFeatureFromId();
-        self::assertNotNull($feature);
         self::assertSame(self::FEATURE_ID, $feature->id);
         self::assertSame(self::FEATURE_ID, $feature->getId());
-    }
-
-    public function testItReturnsNullWhenFeatureIsNotVisible(): void
-    {
-        $this->feature_verifier = VerifyFeatureIsVisibleStub::withNotVisibleFeature();
-        self::assertNull($this->getFeatureFromId());
     }
 
     private function getFeaturesFromProgramIncrement(): array
     {
         return FeatureIdentifier::buildCollectionFromProgramIncrement(
             $this->feature_searcher,
-            $this->feature_verifier,
+            $this->visible_verifier,
             ProgramIncrementIdentifierBuilder::buildWithId(866),
             UserIdentifierStub::buildGenericUser()
         );
@@ -136,7 +132,7 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSkipsFeaturesUserCannotSee(): void
     {
-        $this->feature_verifier = VerifyFeatureIsVisibleStub::withVisibleIds(self::SECOND_FEATURE_ID);
+        $this->visible_verifier = VerifyFeatureIsVisibleStub::withVisibleIds(self::SECOND_FEATURE_ID);
         $features               = $this->getFeaturesFromProgramIncrement();
         $feature_ids            = array_map($this->getId, $features);
         self::assertNotContains(self::FIRST_FEATURE_ID, $feature_ids);
@@ -153,7 +149,7 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return FeatureIdentifier::buildCollectionFromProgram(
             $this->program_features_searcher,
-            $this->feature_verifier,
+            $this->visible_verifier,
             ProgramIdentifierBuilder::build(),
             UserIdentifierStub::buildGenericUser()
         );
@@ -169,7 +165,7 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSkipsFeaturesOfProgramUserCannotSee(): void
     {
-        $this->feature_verifier = VerifyFeatureIsVisibleStub::withVisibleIds(self::SECOND_FEATURE_ID);
+        $this->visible_verifier = VerifyFeatureIsVisibleStub::withVisibleIds(self::SECOND_FEATURE_ID);
         $features               = $this->getFeaturesFromProgram();
         $feature_ids            = array_map($this->getId, $features);
         self::assertNotContains(self::FIRST_FEATURE_ID, $feature_ids);

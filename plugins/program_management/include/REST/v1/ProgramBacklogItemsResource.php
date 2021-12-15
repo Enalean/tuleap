@@ -30,14 +30,15 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\URIRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory\IsOpenRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\FeatureIsNotPlannableException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIsNotPlannableException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\UserStoryRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -78,20 +79,18 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
 
         $user_story_representation_builder = new UserStoryRetriever(
             new ArtifactsLinkedToParentDao(),
-            new PlanDao(),
+            new FeatureChecker(new PlanDao(), $visibility_verifier),
             new BackgroundColorRetriever(
                 new BackgroundColorBuilder(new BindDecoratorRetriever()),
                 $artifact_retriever,
                 $user_retriever
             ),
-            $visibility_verifier,
             new TitleValueRetriever($artifact_retriever),
             new URIRetriever($artifact_retriever),
             new CrossReferenceRetriever($artifact_retriever),
             new IsOpenRetriever($artifact_retriever),
             $tracker_of_artifact_retriever,
-            $visibility_verifier,
-            $tracker_of_artifact_retriever
+            $visibility_verifier
         );
 
         $user = $user_manager->getCurrentUser();
@@ -117,7 +116,7 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
             return array_slice($linked_children, $offset, $limit);
         } catch (FeatureIsNotPlannableException $e) {
             throw new I18NRestException(400, $e->getI18NExceptionMessage());
-        } catch (FeatureNotAccessException $e) {
+        } catch (FeatureNotFoundException $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());
         }
     }
