@@ -106,6 +106,15 @@ const buildCellContentOptions = (content: TextRun | InternalHyperlink): ITableCe
 const buildCellContent = (content: TextRun | InternalHyperlink): TableCell =>
     new TableCell(buildCellContentOptions(content));
 
+const buildCellContentWithRowspan = (
+    content: TextRun | InternalHyperlink,
+    rowSpan: number
+): TableCell =>
+    new TableCell({
+        ...buildCellContentOptions(content),
+        rowSpan,
+    });
+
 const buildCellContentResult = (
     result: ArtifactFieldValueStatus,
     gettext_provider: VueGettextProvider
@@ -169,22 +178,35 @@ function buildTraceabilityMatrixTable(
                 ],
             }),
             ...elements.reduce((acc: TableRow[], element) => {
+                let is_first = true;
                 for (const test of element.tests) {
+                    const first_cell: TableCell[] = [];
+                    if (is_first) {
+                        first_cell.push(
+                            buildCellContentWithRowspan(
+                                new TextRun(element.requirement.title),
+                                element.tests.length
+                            )
+                        );
+                        is_first = false;
+                    }
+                    const children = [
+                        ...first_cell,
+                        buildCellContent(
+                            new InternalHyperlink({
+                                children: [new TextRun(test.title)],
+                                anchor: getAnchorToArtifactContent(test),
+                            })
+                        ),
+                        buildCellContent(new TextRun(test.campaign)),
+                        buildCellContentResult(test.status, gettext_provider),
+                        buildCellContent(new TextRun(test.executed_by || "")),
+                        buildCellContent(new TextRun(test.executed_on || "")),
+                    ];
+
                     acc.push(
                         new TableRow({
-                            children: [
-                                buildCellContent(new TextRun(element.requirement.title)),
-                                buildCellContent(
-                                    new InternalHyperlink({
-                                        children: [new TextRun(test.title)],
-                                        anchor: getAnchorToArtifactContent(test),
-                                    })
-                                ),
-                                buildCellContent(new TextRun(test.campaign)),
-                                buildCellContentResult(test.status, gettext_provider),
-                                buildCellContent(new TextRun(test.executed_by || "")),
-                                buildCellContent(new TextRun(test.executed_on || "")),
-                            ],
+                            children,
                         })
                     );
                 }
