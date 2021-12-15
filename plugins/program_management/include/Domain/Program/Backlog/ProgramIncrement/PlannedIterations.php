@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\ProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramFlag;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramPrivacy;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramPrivacy;
+use Tuleap\ProgramManagement\Domain\Workspace\UserPreference;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserIsProgramAdmin;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -49,6 +50,7 @@ final class PlannedIterations
         private bool $is_user_admin,
         private IterationLabels $iteration_labels,
         private TrackerReference $iteration_tracker_reference,
+        private bool $is_accessibility_mode_enabled,
     ) {
     }
 
@@ -68,6 +70,7 @@ final class PlannedIterations
         UserIdentifier $user_identifier,
         ProgramIncrementIdentifier $increment_identifier,
         IterationLabels $iterations_labels,
+        UserPreference $user_preference_for_accessibility_mode,
     ): self {
         $program_flags     = $build_program_flags->build($program_identifier);
         $program_privacy   = $build_program_privacy->build($program_identifier);
@@ -80,7 +83,16 @@ final class PlannedIterations
             throw new ProgramIterationTrackerNotFoundException($program_identifier);
         }
 
-        return new self($program_flags, $program_privacy, $program_base_info, $program_increment, $is_user_admin, $iterations_labels, $iteration_tracker);
+        return new self(
+            $program_flags,
+            $program_privacy,
+            $program_base_info,
+            $program_increment,
+            $is_user_admin,
+            $iterations_labels,
+            $iteration_tracker,
+            (bool) $user_preference_for_accessibility_mode->getPreferenceValue()
+        );
     }
 
     /**
@@ -119,5 +131,10 @@ final class PlannedIterations
     public function getIterationTrackerId(): int
     {
         return $this->iteration_tracker_reference->getId();
+    }
+
+    public function isAccessibilityModeEnabled(): bool
+    {
+        return $this->is_accessibility_mode_enabled;
     }
 }

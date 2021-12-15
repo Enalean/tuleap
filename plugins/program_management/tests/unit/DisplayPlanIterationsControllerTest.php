@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserPreferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserIsProgramAdminStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
@@ -159,7 +160,8 @@ final class DisplayPlanIterationsControllerTest extends TestCase
             VerifyIsVisibleArtifactStub::withVisibleIds(self::PROGRAM_INCREMENT_ID),
             VerifyUserIsProgramAdminStub::withProgramAdminUser(),
             RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerReferenceStub::withId(224)),
-            RetrieveIterationLabelsStub::buildLabels('Cycles', 'cycle')
+            RetrieveIterationLabelsStub::buildLabels('Cycles', 'cycle'),
+            RetrieveUserPreferenceStub::withNameAndValue('accessibility_mode', '1')
         );
     }
 

@@ -5,7 +5,7 @@ exports[`FeatureCard should display the feature as a card with tracker and backg
   class="element-backlog-item"
 >
   <div
-    class="element-card element-card-red-wine element-card-background-peggy-pink"
+    class="element-card element-card-red-wine element-card-background-peggy-pink element-card-with-accessibility"
     data-test="feature-card"
   >
     <div
@@ -48,6 +48,11 @@ exports[`FeatureCard should display the feature as a card with tracker and backg
         Feature 101
       </span>
     </div>
+     
+    <div
+      class="element-card-accessibility"
+      data-test="element-card-accessibility"
+    />
   </div>
 </div>
 `;

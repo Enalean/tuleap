@@ -39,13 +39,23 @@
                 </div>
                 <span class="element-card-label">{{ feature.title }}</span>
             </div>
+            <div
+                class="element-card-accessibility"
+                data-test="element-card-accessibility"
+                v-if="show_accessibility"
+            ></div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import { State } from "vuex-class";
 import { Component, Prop } from "vue-property-decorator";
+import {
+    getAccessibilityClasses,
+    showAccessibilityPattern,
+} from "../../../helpers/accessibility-helper";
 
 import type { Feature } from "../../../type";
 
@@ -54,14 +64,15 @@ export default class FeatureCard extends Vue {
     @Prop({ required: true })
     readonly feature!: Feature;
 
+    @State
+    readonly is_accessibility_mode_enabled!: boolean;
+
     get additional_classnames(): string {
-        const classnames = [`element-card-${this.feature.tracker.color_name}`];
+        return getAccessibilityClasses(this.feature, this.is_accessibility_mode_enabled).join(" ");
+    }
 
-        if (this.feature.background_color) {
-            classnames.push(`element-card-background-${this.feature.background_color}`);
-        }
-
-        return classnames.join(" ");
+    get show_accessibility(): boolean {
+        return showAccessibilityPattern(this.feature, this.is_accessibility_mode_enabled);
     }
 }
 </script>

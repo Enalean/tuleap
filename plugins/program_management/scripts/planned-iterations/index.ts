@@ -61,6 +61,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 getDatasetPropertyValue(vue_mount_point, "iterationTrackerId"),
                 10
             ),
+            is_accessibility_mode_enabled: Boolean(
+                vue_mount_point.dataset.isAccessibilityModeEnabled
+            ),
         }),
     }).$mount(vue_mount_point);
 });

@@ -23,9 +23,12 @@ import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-tes
 import FeatureCard from "./FeatureCard.vue";
 
 import type { Wrapper } from "@vue/test-utils";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
 describe("FeatureCard", () => {
-    async function getWrapper(): Promise<Wrapper<FeatureCard>> {
+    async function getWrapper(
+        is_accessibility_mode_enabled: boolean
+    ): Promise<Wrapper<FeatureCard>> {
         return shallowMount(FeatureCard, {
             localVue: await createPlanIterationsLocalVue(),
             propsData: {
@@ -49,11 +52,23 @@ describe("FeatureCard", () => {
                     },
                 },
             },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        is_accessibility_mode_enabled,
+                    },
+                }),
+            },
         });
     }
 
     it("should display the feature as a card with tracker and background color", async () => {
-        const wrapper = await getWrapper();
+        const wrapper = await getWrapper(true);
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("should not display accessiblity patterns when the mode is disabled", async () => {
+        const wrapper = await getWrapper(false);
+        expect(wrapper.find("[data-test=element-card-accessibility]").exists()).toBe(false);
     });
 });

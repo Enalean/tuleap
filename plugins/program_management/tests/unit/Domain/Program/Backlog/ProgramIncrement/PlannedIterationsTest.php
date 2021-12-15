@@ -25,6 +25,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\ProgramFlag;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramPrivacy;
 use Tuleap\ProgramManagement\Tests\Builder\IterationsLabelsBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\UserPreferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramBaseInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementInfoStub;
@@ -49,7 +50,8 @@ final class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
             ProgramIdentifierBuilder::build(),
             UserIdentifierStub::withId(666),
             ProgramIncrementIdentifierBuilder::buildWithId(1260),
-            IterationsLabelsBuilder::buildWithLabels('Cycles', 'cycle')
+            IterationsLabelsBuilder::buildWithLabels('Cycles', 'cycle'),
+            UserPreferenceBuilder::withPreference('accessibility_mode', '1')
         );
 
         self::assertEquals([
@@ -90,5 +92,6 @@ final class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals(IterationsLabelsBuilder::buildWithLabels("Cycles", "cycle"), $planned_iterations->getIterationLabels());
         self::assertTrue($planned_iterations->isUserAdmin());
         self::assertEquals('101', $planned_iterations->getIterationTrackerId());
+        self::assertTrue($planned_iterations->isAccessibilityModeEnabled());
     }
 }

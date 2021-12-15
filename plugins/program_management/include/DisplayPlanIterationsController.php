@@ -44,6 +44,8 @@ use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramFlags;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramPrivacy;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUserPreference;
+use Tuleap\ProgramManagement\Domain\Workspace\UserPreference;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserIsProgramAdmin;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -66,6 +68,7 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         private VerifyUserIsProgramAdmin $verify_user_is_program_admin,
         private RetrieveVisibleIterationTracker $retrieve_visible_iteration_tracker,
         private RetrieveIterationLabels $retrieve_iteration_labels,
+        private RetrieveUserPreference $retrieve_user_preference,
     ) {
     }
 
@@ -114,6 +117,11 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
                 IterationLabels::fromIterationTracker(
                     $this->retrieve_iteration_labels,
                     $this->retrieve_visible_iteration_tracker->retrieveVisibleIterationTracker($program_identifier, $user_identifier)
+                ),
+                UserPreference::fromUserIdentifierAndPreferenceName(
+                    $this->retrieve_user_preference,
+                    $user_identifier,
+                    \PFUser::ACCESSIBILITY_MODE
                 )
             );
         } catch (

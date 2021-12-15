@@ -50,6 +50,7 @@ export interface State {
     readonly iterations_labels: IterationLabels;
     readonly user_locale: string;
     readonly iteration_tracker_id: number;
+    readonly is_accessibility_mode_enabled: boolean;
 }
 
 export interface IterationLabels {
