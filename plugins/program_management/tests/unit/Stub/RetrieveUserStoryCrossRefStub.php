@@ -28,17 +28,36 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifie
 
 final class RetrieveUserStoryCrossRefStub implements RetrieveUserStoryCrossRef
 {
-    private function __construct(private string $tracker_short_name)
+    /**
+     * @param string[] $short_names
+     */
+    private function __construct(private bool $always_return, private array $short_names)
     {
     }
 
     public static function withShortname(string $tracker_shortname): self
     {
-        return new self($tracker_shortname);
+        return new self(true, [$tracker_shortname]);
+    }
+
+    /**
+     * @no-named-arguments
+     */
+    public static function withSuccessiveShortNames(string $tracker_shortname, string ...$other_names): self
+    {
+        return new self(false, [$tracker_shortname, ...$other_names]);
     }
 
     public function getUserStoryCrossRef(UserStoryIdentifier $user_story_identifier): string
     {
-        return $this->tracker_short_name . ' #' . $user_story_identifier->getId();
+        if ($this->always_return) {
+            $name = $this->short_names[0];
+            return $name . ' #' . $user_story_identifier->getId();
+        }
+        if (count($this->short_names) > 0) {
+            $name = array_shift($this->short_names);
+            return $name . ' #' . $user_story_identifier->getId();
+        }
+        throw new \LogicException('No tracker shortname configured');
     }
 }

@@ -29,8 +29,10 @@ use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
- * I am the ID (identifier) of an Artifact from the Iteration tracker.
- * I am a child of a ProgramIncrement.
+ * I hold the identifier of an Artifact from the Iteration tracker.
+ * Program Administrator can choose a Tracker to be the Iteration tracker.
+ * Inside a single Program, Iterations are always from the same tracker.
+ * Iterations are always in programs. They are always children of Program Increments
  * @see ProgramIncrementIdentifier
  * @psalm-immutable
  */

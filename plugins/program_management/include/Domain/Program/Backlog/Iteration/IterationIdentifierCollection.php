@@ -23,41 +23,38 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
- * I am a collection of IterationIdentifiers that have just been linked to a Program Increment.
- * They have never been linked to it before.
- * @see IterationIdentifier
  * @psalm-immutable
  */
-final class JustLinkedIterationCollection
+final class IterationIdentifierCollection
 {
     /**
-     * @param IterationIdentifier[] $ids
+     * @param IterationIdentifier[] $iterations
      */
-    private function __construct(
-        public ProgramIncrementIdentifier $program_increment,
-        public array $ids,
-    ) {
-    }
-
-    public static function fromIterations(
-        VerifyIterationHasBeenLinkedBefore $link_verifier,
-        ProgramIncrementIdentifier $program_increment,
-        IterationIdentifierCollection $iterations,
-    ): self {
-        $iterations_that_have_never_been_linked_before = array_filter(
-            $iterations->getIterations(),
-            static fn(IterationIdentifier $iteration): bool => ! $link_verifier->hasIterationBeenLinkedBefore(
-                $program_increment,
-                $iteration
-            )
-        );
-        return new self($program_increment, array_values($iterations_that_have_never_been_linked_before));
-    }
-
-    public function isEmpty(): bool
+    private function __construct(private array $iterations)
     {
-        return empty($this->ids);
+    }
+
+    public function getIterations(): array
+    {
+        return $this->iterations;
+    }
+
+    public static function fromProgramIncrement(
+        SearchIterations $iteration_searcher,
+        VerifyIsVisibleArtifact $visibility_verifier,
+        ProgramIncrementIdentifier $program_increment,
+        UserIdentifier $user,
+    ): self {
+        $iterations = IterationIdentifier::buildCollectionFromProgramIncrement(
+            $iteration_searcher,
+            $visibility_verifier,
+            $program_increment,
+            $user
+        );
+        return new self($iterations);
     }
 }

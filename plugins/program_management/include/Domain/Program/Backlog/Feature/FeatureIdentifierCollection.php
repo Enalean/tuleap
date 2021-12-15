@@ -20,44 +20,42 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\SearchFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
- * I am a collection of IterationIdentifiers that have just been linked to a Program Increment.
- * They have never been linked to it before.
- * @see IterationIdentifier
  * @psalm-immutable
  */
-final class JustLinkedIterationCollection
+final class FeatureIdentifierCollection
 {
     /**
-     * @param IterationIdentifier[] $ids
+     * @param FeatureIdentifier[] $features
      */
-    private function __construct(
-        public ProgramIncrementIdentifier $program_increment,
-        public array $ids,
-    ) {
+    private function __construct(private array $features)
+    {
     }
 
-    public static function fromIterations(
-        VerifyIterationHasBeenLinkedBefore $link_verifier,
+    public static function fromProgramIncrement(
+        SearchFeatures $feature_searcher,
+        VerifyFeatureIsVisible $feature_verifier,
         ProgramIncrementIdentifier $program_increment,
-        IterationIdentifierCollection $iterations,
+        UserIdentifier $user,
     ): self {
-        $iterations_that_have_never_been_linked_before = array_filter(
-            $iterations->getIterations(),
-            static fn(IterationIdentifier $iteration): bool => ! $link_verifier->hasIterationBeenLinkedBefore(
+        return new self(
+            FeatureIdentifier::buildCollectionFromProgramIncrement(
+                $feature_searcher,
+                $feature_verifier,
                 $program_increment,
-                $iteration
+                $user
             )
         );
-        return new self($program_increment, array_values($iterations_that_have_never_been_linked_before));
     }
 
-    public function isEmpty(): bool
+    public function getFeatures(): array
     {
-        return empty($this->ids);
+        return $this->features;
     }
 }

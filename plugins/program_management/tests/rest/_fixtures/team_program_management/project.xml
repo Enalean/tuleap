@@ -570,6 +570,7 @@
                   <label><![CDATA[Status]]></label>
                   <bind type="static" is_rank_alpha="0">
                     <items>
+                      <item ID="V6885" label="Todo" is_hidden="0"/>
                       <item ID="V6886" label="On Going" is_hidden="0"/>
                       <item ID="V6887" label="Planned" is_hidden="0"/>
                       <item ID="V6888" label="Current" is_hidden="0"/>
@@ -635,6 +636,7 @@
           <description><![CDATA[Define the status of an artifact]]></description>
           <field REF="F21383"/>
           <open_values>
+            <open_value REF="V6885"/>
             <open_value REF="V6886"/>
             <open_value REF="V6887"/>
             <open_value REF="V6888"/>

@@ -611,6 +611,17 @@
         </semantic>
         <semantic type="tooltip"/>
         <semantic type="plugin_cardwall_card_fields"/>
+        <semantic type="status">
+          <shortname><![CDATA[status]]></shortname>
+          <label><![CDATA[Status]]></label>
+          <description><![CDATA[ Define the status of an artifact ]]></description>
+          <field REF="F20509"/>
+          <open_values>
+            <open_value REF="V6535"/>
+            <open_value REF="V6536"/>
+            <open_value REF="V6537"/>
+          </open_values>
+        </semantic>
       </semantics>
       <permissions>
         <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>

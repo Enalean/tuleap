@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifierCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\SearchIterations;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIterationHasBeenLinkedBefore;
@@ -52,16 +53,17 @@ final class IterationCreationDetector
      */
     public function detectNewIterationCreations(ProgramIncrementUpdate $program_increment_update): array
     {
-        $iterations             = IterationIdentifier::buildCollectionFromProgramIncrement(
+        $iterations = IterationIdentifierCollection::fromProgramIncrement(
             $this->iterations_searcher,
             $this->visibility_verifier,
             $program_increment_update->getProgramIncrement(),
             $program_increment_update->getUser()
         );
+
         $just_linked_iterations = JustLinkedIterationCollection::fromIterations(
             $this->iteration_link_verifier,
             $program_increment_update->getProgramIncrement(),
-            ...$iterations
+            $iterations
         );
         if ($just_linked_iterations->isEmpty()) {
             return [];

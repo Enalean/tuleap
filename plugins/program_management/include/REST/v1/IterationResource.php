@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory\IsOpenRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
@@ -68,13 +69,14 @@ final class IterationResource
      * @param int $limit Number of elements displayed per page {@min 0} {@max 50}
      * @param int $offset Position of the first element to display {@min 0}
      *
+     * @return UserStoryRepresentation[]
      *
      * @throws RestException 401
      * @throws RestException 400
      */
     public function getIterations(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
     {
-        $tracker_factory     = \TrackerFactory::instance();
+        $tracker_retriever   = new TrackerFactoryAdapter(\TrackerFactory::instance());
         $artifact_factory    = \Tracker_ArtifactFactory::instance();
         $artifact_retriever  = new ArtifactFactoryAdapter($artifact_factory);
         $visibility_verifier = new ArtifactVisibleVerifier($artifact_factory, $this->user_adapter);
@@ -104,7 +106,7 @@ final class IterationResource
 
             $representations = [];
             foreach ($planned_user_stories as $user_story) {
-                $representations[] = UserStoryRepresentation::build($tracker_factory, $user_story);
+                $representations[] = UserStoryRepresentation::build($tracker_retriever, $user_story);
             }
 
             Header::sendPaginationHeaders($limit, $offset, count($representations), self::MAX_LIMIT);

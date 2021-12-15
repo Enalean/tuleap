@@ -249,7 +249,7 @@ final class ProjectResourceTest extends \RestBase
 
         // Check backlog and program increment are empty
         self::assertEmpty($this->getTopBacklogContent($project_id));
-        $this->checkGetEmptyProgramIncrementBacklog($program_increment_id);
+        $this->checkGetEmptyProgramIncrementContent($program_increment_id);
 
         // Add bug in program increment
         $this->updateArtifactLinks($program_increment_id, [['id' => $bug_id]], $program_increment['artifact_link_id']);
@@ -258,7 +258,7 @@ final class ProjectResourceTest extends \RestBase
         // Remove bug from program increment and add it in program backlog because
         // parameter `remove_from_program_increment_to_add_to_the_backlog` is true
         $this->patchTopBacklog($project_id, [$bug_id], [], true);
-        $this->checkGetEmptyProgramIncrementBacklog($program_increment_id);
+        $this->checkGetEmptyProgramIncrementContent($program_increment_id);
 
         // Check bug is moved to backlog
         $backlog_content = $this->getTopBacklogContent($project_id);
@@ -284,7 +284,7 @@ final class ProjectResourceTest extends \RestBase
 
         // Check backlog and program increment are empty
         self::assertEmpty($this->getTopBacklogContent($project_id));
-        $this->checkGetEmptyProgramIncrementBacklog($program_increment_id);
+        $this->checkGetEmptyProgramIncrementContent($program_increment_id);
 
         // Add bug in program increment
         $this->updateArtifactLinks($program_increment_id, [['id' => $bug_id]], $program_increment['artifact_link_id']);
@@ -300,11 +300,12 @@ final class ProjectResourceTest extends \RestBase
     /**
      * @depends testPUTTeam
      */
-    public function testCannotUnplannedFeatureWithLinkedPlannedStoryInTeam(): void
+    public function testCannotUnplannedFeatureWithLinkedPlannedStoryInTeam(): int
     {
         $project_id        = $this->getProgramProjectId();
         $program_increment = $this->getArtifactWithArtifactLink('release_number', 'PI', $project_id, 'pi');
         $featureA          = $this->getArtifactWithArtifactLink('description', 'FeatureA', $project_id, 'features');
+
 
         $team_id     = $this->getTeamProjectId();
         $user_story1 = $this->getArtifactWithArtifactLink('i_want_to', 'US1', $team_id, 'story');
@@ -334,6 +335,25 @@ final class ProjectResourceTest extends \RestBase
 
         // Check program increment has still feature with planned US
         $this->checkGetFirstElementOfProgramIncrement($program_increment['id'], "id", (string) $featureA['id']);
+
+        return $program_increment['id'];
+    }
+
+    /**
+     * @depends testCannotUnplannedFeatureWithLinkedPlannedStoryInTeam
+     */
+    public function testGetProgramIncrementBacklog(int $program_increment_id): void
+    {
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'program_increment/' . urlencode((string) $program_increment_id) . '/backlog')
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+        $user_stories = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(1, $user_stories);
+        self::assertEquals('US1', $user_stories[0]['title']);
+        self::assertEquals('User Stories', $user_stories[0]['tracker']['label']);
+        self::assertEquals('team', $user_stories[0]['project']['label']);
     }
 
     /**
@@ -351,7 +371,7 @@ final class ProjectResourceTest extends \RestBase
 
         // Check backlog has one item and program increment element is empty
         self::assertCount(1, $this->getTopBacklogContent($project_id));
-        $this->checkGetEmptyProgramIncrementBacklog($program_increment_id);
+        $this->checkGetEmptyProgramIncrementContent($program_increment_id);
 
         // Add bug_2 in program increment
         $this->updateArtifactLinks($program_increment_id, [['id' => $bug_id_2]], $program_increment['artifact_link_id']);
@@ -368,7 +388,7 @@ final class ProjectResourceTest extends \RestBase
             ['ids' => [$bug_id_2], 'direction' => "after", 'compared_to' => $bug_id_1]
         );
 
-        $this->checkGetEmptyProgramIncrementBacklog($program_increment_id);
+        $this->checkGetEmptyProgramIncrementContent($program_increment_id);
 
         $backlog_content = $this->getTopBacklogContent($project_id);
 
@@ -434,7 +454,7 @@ final class ProjectResourceTest extends \RestBase
     }
 
     /**
-     * @depends testPUTTeam
+     * @depends testGetProgramIncrementBacklog
      */
     public function testManipulateFeature(): void
     {
@@ -511,7 +531,7 @@ final class ProjectResourceTest extends \RestBase
         $this->checkGetElementNumberNOfProgramIncrement($program_increment_id, 1, "id", (string) $bug_id_1);
     }
 
-    private function checkGetEmptyProgramIncrementBacklog(int $program_id): void
+    private function checkGetEmptyProgramIncrementContent(int $program_id): void
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'program_increment/' . urlencode((string) $program_id) . '/content')

@@ -29,6 +29,7 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationContentDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedToProgramIncrementDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureAdditionProcessor;
@@ -44,6 +45,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\URIRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UserCanUpdateTimeboxVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory\IsOpenRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUserStoriesVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureDAO;
@@ -54,6 +56,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVe
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
+use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\VisibleTeamSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
@@ -66,8 +69,10 @@ use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureHasUserStoriesVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Feature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\UserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationsRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Backlog\BacklogSearcher;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\AddOrOrderMustBeSetException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\ContentChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\ContentModifier;
@@ -370,6 +375,86 @@ final class ProgramIncrementResource extends AuthenticatedResource
      * @param int $id Id of the program increment
      */
     public function optionsIterations(int $id): void
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get the backlog of the program increment
+     *
+     * It returns all user stories (from Team projects) that are children of
+     * features planned in the program increment and that are _not_ also planned in any
+     * of the teams' iterations. Contrary to the "content" route, it returns user stories, not features.
+     * Features are in the Program project, user stories are children of features and are in Team projects.
+     *
+     * @url    GET {id}/backlog
+     * @access hybrid
+     *
+     * @param int $id     Identifier of the program increment
+     * @param int $limit  Number of elements displayed per page {@min 0} {@max 50}
+     * @param int $offset Position of the first element to display {@min 0}
+     *
+     * @return UserStoryRepresentation[]
+     *
+     * @throws RestException 401
+     * @throws RestException 400
+     */
+    public function getBacklog(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
+    {
+        $user_manager        = \UserManager::instance();
+        $user_retriever      = new UserManagerAdapter($user_manager);
+        $tracker_retriever   = new TrackerFactoryAdapter(\TrackerFactory::instance());
+        $artifact_factory    = \Tracker_ArtifactFactory::instance();
+        $artifact_retriever  = new ArtifactFactoryAdapter($artifact_factory);
+        $visibility_verifier = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
+
+        $backlog_searcher = new BacklogSearcher(
+            new ProgramIncrementsDAO(),
+            $visibility_verifier,
+            new ContentDao(),
+            $visibility_verifier,
+            new ArtifactsLinkedToParentDao(),
+            $visibility_verifier,
+            new IterationsLinkedToProgramIncrementDAO(),
+            new MirroredTimeboxesDao(),
+            new IterationContentDAO(),
+            new TitleValueRetriever($artifact_retriever),
+            new URIRetriever($artifact_retriever),
+            new CrossReferenceRetriever($artifact_retriever),
+            new IsOpenRetriever($artifact_retriever),
+            new BackgroundColorRetriever(
+                new BackgroundColorBuilder(new BindDecoratorRetriever()),
+                $artifact_retriever,
+                $user_retriever
+            ),
+            new TrackerOfArtifactRetriever($artifact_retriever)
+        );
+
+        $current_user = $user_manager->getCurrentUser();
+
+        try {
+            $user_identifier = UserProxy::buildFromPFUser($current_user);
+            $user_stories    = $backlog_searcher->searchUnplannedUserStories($id, $user_identifier);
+
+            $representations = array_map(
+                static fn(UserStory $user_story) => UserStoryRepresentation::build($tracker_retriever, $user_story),
+                $user_stories
+            );
+
+            Header::sendPaginationHeaders($limit, $offset, count($representations), self::MAX_LIMIT);
+
+            return array_slice($representations, $offset, $limit);
+        } catch (ProgramIncrementNotFoundException $e) {
+            throw new I18NRestException(404, $e->getI18NExceptionMessage());
+        }
+    }
+
+    /**
+     * @url OPTIONS {id}/backlog
+     *
+     * @param int $id Id of the program increment
+     */
+    public function optionsBacklog(int $id): void
     {
         Header::allowOptionsGet();
     }

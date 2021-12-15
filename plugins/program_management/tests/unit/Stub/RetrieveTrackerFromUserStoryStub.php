@@ -29,21 +29,45 @@ use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
 final class RetrieveTrackerFromUserStoryStub implements RetrieveTrackerFromUserStory
 {
-    private function __construct(private TrackerIdentifier $tracker_id)
+    /**
+     * @param TrackerIdentifier[] $tracker_ids
+     */
+    private function __construct(private bool $always_return, private array $tracker_ids)
     {
     }
+
     public static function withDefault(): self
     {
-        return new self(TrackerIdentifierStub::buildWithDefault());
+        return new self(true, [TrackerIdentifierStub::buildWithDefault()]);
     }
 
     public static function withId(int $id): self
     {
-        return new self(TrackerIdentifierStub::withId($id));
+        return new self(true, [TrackerIdentifierStub::withId($id)]);
+    }
+
+    /**
+     * @no-named-arguments
+     */
+    public static function withSuccessiveIds(int $tracker_id, int ...$other_ids): self
+    {
+        return new self(
+            false,
+            array_map(
+                static fn(int $id) => TrackerIdentifierStub::withId($id),
+                [$tracker_id, ...$other_ids]
+            )
+        );
     }
 
     public function getUserStoryTracker(UserStoryIdentifier $user_story_identifier): TrackerIdentifier
     {
-        return $this->tracker_id;
+        if ($this->always_return) {
+            return $this->tracker_ids[0];
+        }
+        if (count($this->tracker_ids) > 0) {
+            return array_shift($this->tracker_ids);
+        }
+        throw new \LogicException('No tracker id configured');
     }
 }
