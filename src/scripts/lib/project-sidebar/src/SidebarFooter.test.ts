@@ -20,32 +20,22 @@
  * SOFTWARE.
  */
 
-export interface InstanceVersionInformation {
-    flavor_name: string;
-    version_identifier: string;
-    full_descriptive_version: string;
-}
+import { shallowMount } from "@vue/test-utils";
+import SidebarFooter from "./SidebarFooter.vue";
 
-export interface Configuration {
-    project: {
-        name: string;
-        href: string;
-    };
-    instance_information: {
-        version: InstanceVersionInformation;
-    };
-}
+describe("SidebarFooter", () => {
+    it("displays a link with the version information", () => {
+        const wrapper = shallowMount(SidebarFooter, {
+            props: {
+                instance_version: {
+                    flavor_name: "Tuleap Community Edition",
+                    version_identifier: "Dev Build 13.2.99.999",
+                    full_descriptive_version: "Tuleap Community Edition — Dev Build 13.2.99.999",
+                },
+            },
+        });
 
-export function unserializeConfiguration(
-    serialized_config: string | undefined
-): Configuration | undefined {
-    if (serialized_config === undefined) {
-        return undefined;
-    }
-
-    try {
-        return JSON.parse(serialized_config);
-    } catch (e) {
-        return undefined;
-    }
-}
+        expect(wrapper.find("a").exists()).toBe(true);
+        expect(wrapper.text()).toContain("Dev Build 13.2.99.999");
+    });
+});
