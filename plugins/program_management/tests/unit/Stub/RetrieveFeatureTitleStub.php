@@ -22,38 +22,38 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisible;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureTitle;
 
-final class VerifyFeatureIsVisibleStub implements VerifyFeatureIsVisible
+final class RetrieveFeatureTitleStub implements RetrieveFeatureTitle
 {
-    private function __construct(private bool $always_visible, private array $visible = [])
+    private function __construct(private array $titles)
     {
     }
 
-    public function isVisible(int $feature_id, UserIdentifier $user_identifier): bool
+    public static function withTitle(string $title): self
     {
-        if ($this->always_visible) {
-            return true;
-        }
-        return in_array($feature_id, $this->visible, true);
-    }
-
-    public static function withAlwaysVisibleFeatures(): self
-    {
-        return new self(true);
+        return new self([$title]);
     }
 
     /**
      * @no-named-arguments
      */
-    public static function withVisibleIds(int $feature_id, int ...$other_feature_ids): self
+    public static function withSuccessiveTitles(string $title, string ...$titles): self
     {
-        return new self(false, [$feature_id, ...$other_feature_ids]);
+        return new self([$title, ...$titles]);
     }
 
-    public static function withNotVisibleFeature(): self
+    public static function withNotVisibleTitle(): self
     {
-        return new self(false);
+        return new self([]);
+    }
+
+    public function getFeatureTitle(FeatureIdentifier $feature_identifier): ?string
+    {
+        if (count($this->titles) > 0) {
+            return array_shift($this->titles);
+        }
+        return null;
     }
 }

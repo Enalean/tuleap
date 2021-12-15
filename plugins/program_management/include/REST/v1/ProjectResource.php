@@ -136,6 +136,7 @@ final class ProjectResource extends AuthenticatedResource
         $form_element_factory        = \Tracker_FormElementFactory::instance();
         $field_retriever             = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
         $project_manager_adapter     = new ProjectManagerAdapter($project_manager, $this->user_manager_adapter);
+        $title_retriever             = new TitleValueRetriever($artifact_retriever);
 
         $project_access_checker = new ProjectAccessChecker(
             new RestrictedUserCanAccessProjectVerifier(),
@@ -166,27 +167,31 @@ final class ProjectResource extends AuthenticatedResource
             $team_dao
         );
 
-        $artifacts_linked_to_parent_dao     = new ArtifactsLinkedToParentDao();
-        $this->user_story_linked_verifier   = new FeatureHasPlannedUserStoriesVerifier(
+        $artifacts_linked_to_parent_dao   = new ArtifactsLinkedToParentDao();
+        $this->user_story_linked_verifier = new FeatureHasPlannedUserStoriesVerifier(
             $artifacts_linked_to_parent_dao,
             new PlanningAdapter(\PlanningFactory::build(), $this->user_manager_adapter),
             $artifacts_linked_to_parent_dao
         );
+
         $this->features_retriever           = new FeatureElementsRetriever(
             $this->build_program,
             new FeaturesDao(),
+            new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
             new FeatureRepresentationBuilder(
                 $artifact_retriever,
-                $form_element_factory,
+                $title_retriever,
                 new BackgroundColorRetriever(
                     new BackgroundColorBuilder(new BindDecoratorRetriever()),
                     $artifact_retriever,
                     $this->user_manager_adapter
                 ),
-                new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
                 $this->user_story_linked_verifier,
-                new FeatureHasUserStoriesVerifier($artifact_factory, $this->user_manager_adapter, $artifacts_linked_to_parent_dao),
-                $this->user_manager_adapter
+                new FeatureHasUserStoriesVerifier(
+                    $artifact_factory,
+                    $this->user_manager_adapter,
+                    $artifacts_linked_to_parent_dao
+                )
             )
         );
         $this->features_permission_verifier = new PrioritizeFeaturesPermissionVerifier(
@@ -207,7 +212,7 @@ final class ProjectResource extends AuthenticatedResource
             new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
             new ProgramIncrementRetriever(
                 new StatusValueRetriever($artifact_retriever, $this->user_manager_adapter),
-                new TitleValueRetriever($artifact_retriever),
+                $title_retriever,
                 new TimeframeValueRetriever(
                     $artifact_retriever,
                     $this->user_manager_adapter,

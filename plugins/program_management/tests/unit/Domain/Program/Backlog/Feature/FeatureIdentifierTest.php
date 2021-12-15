@@ -23,83 +23,162 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\SearchFeatures;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\SearchFeaturesStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchPlannableFeaturesStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleByProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleStub;
 
 final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private UserIdentifierStub $user;
-    private ProgramIdentifier $program;
+    private const FEATURE_ID        = 87;
+    private const FIRST_FEATURE_ID  = 623;
+    private const SECOND_FEATURE_ID = 374;
+    private VerifyFeatureIsVisibleByProgramStub $visible_by_program_verifier;
+    private VerifyFeatureIsVisibleStub $feature_verifier;
+    private SearchFeatures $feature_searcher;
+    private \Closure $getId;
+    private SearchPlannableFeatures $program_features_searcher;
 
     protected function setUp(): void
     {
-        $this->user    = UserIdentifierStub::buildGenericUser();
-        $this->program = ProgramIdentifierBuilder::build();
+        $this->getId                       = static fn(FeatureIdentifier $feature): int => $feature->getId();
+        $this->visible_by_program_verifier = VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature();
+        $this->feature_verifier            = VerifyFeatureIsVisibleStub::withAlwaysVisibleFeatures();
+        $this->feature_searcher            = SearchFeaturesStub::withFeatureIds(
+            self::FIRST_FEATURE_ID,
+            self::SECOND_FEATURE_ID
+        );
+
+        $this->program_features_searcher = SearchPlannableFeaturesStub::withFeatureIds(
+            self::FIRST_FEATURE_ID,
+            self::SECOND_FEATURE_ID
+        );
+    }
+
+    private function getFeatureFromProgram(?PermissionBypass $bypass): ?FeatureIdentifier
+    {
+        return FeatureIdentifier::fromIdAndProgram(
+            $this->visible_by_program_verifier,
+            self::FEATURE_ID,
+            UserIdentifierStub::buildGenericUser(),
+            ProgramIdentifierBuilder::build(),
+            $bypass
+        );
     }
 
     public function testItReturnsNullWhenProgramFeatureIsNotVisibleByUser(): void
     {
-        self::assertNull(
-            FeatureIdentifier::fromIdAndProgram(
-                VerifyFeatureIsVisibleByProgramStub::withNotVisibleFeature(),
-                404,
-                $this->user,
-                $this->program,
-                null
-            )
-        );
+        $this->visible_by_program_verifier = VerifyFeatureIsVisibleByProgramStub::withNotVisibleFeature();
+        self::assertNull($this->getFeatureFromProgram(null));
     }
 
     public function testItBuildsAFeatureVisibleByProgram(): void
     {
-        $feature = FeatureIdentifier::fromIdAndProgram(
-            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
-            87,
-            $this->user,
-            $this->program,
-            null
-        );
+        $feature = $this->getFeatureFromProgram(null);
         self::assertNotNull($feature);
-        self::assertSame(87, $feature->id);
-        self::assertSame(87, $feature->getId());
+        self::assertSame(self::FEATURE_ID, $feature->id);
+        self::assertSame(self::FEATURE_ID, $feature->getId());
     }
 
     public function testItBuildsAValidProgramFeatureWithPermissionBypass(): void
     {
-        $feature = FeatureIdentifier::fromIdAndProgram(
-            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
-            5,
-            $this->user,
-            $this->program,
-            new WorkflowUserPermissionBypass()
-        );
+        $feature = $this->getFeatureFromProgram(new WorkflowUserPermissionBypass());
         self::assertNotNull($feature);
-        self::assertSame(5, $feature->id);
-        self::assertSame(5, $feature->getId());
+        self::assertSame(self::FEATURE_ID, $feature->id);
+        self::assertSame(self::FEATURE_ID, $feature->getId());
+    }
+
+    private function getFeatureFromId(): ?FeatureIdentifier
+    {
+        return FeatureIdentifier::fromId(
+            $this->feature_verifier,
+            self::FEATURE_ID,
+            UserIdentifierStub::buildGenericUser()
+        );
     }
 
     public function testItBuildsAVisibleFeature(): void
     {
-        $feature = FeatureIdentifier::fromId(
-            VerifyFeatureIsVisibleStub::buildVisibleFeature(),
-            5,
-            $this->user
-        );
+        $feature = $this->getFeatureFromId();
         self::assertNotNull($feature);
-        self::assertSame(5, $feature->id);
-        self::assertSame(5, $feature->getId());
+        self::assertSame(self::FEATURE_ID, $feature->id);
+        self::assertSame(self::FEATURE_ID, $feature->getId());
     }
 
     public function testItReturnsNullWhenFeatureIsNotVisible(): void
     {
-        $feature = FeatureIdentifier::fromId(
-            VerifyFeatureIsVisibleStub::withNotVisibleFeature(),
-            5,
-            $this->user
+        $this->feature_verifier = VerifyFeatureIsVisibleStub::withNotVisibleFeature();
+        self::assertNull($this->getFeatureFromId());
+    }
+
+    private function getFeaturesFromProgramIncrement(): array
+    {
+        return FeatureIdentifier::buildCollectionFromProgramIncrement(
+            $this->feature_searcher,
+            $this->feature_verifier,
+            ProgramIncrementIdentifierBuilder::buildWithId(866),
+            UserIdentifierStub::buildGenericUser()
         );
-        self::assertNull($feature);
+    }
+
+    public function testItReturnsFeaturesFromProgramIncrement(): void
+    {
+        $features    = $this->getFeaturesFromProgramIncrement();
+        $feature_ids = array_map($this->getId, $features);
+        self::assertContains(self::FIRST_FEATURE_ID, $feature_ids);
+        self::assertContains(self::SECOND_FEATURE_ID, $feature_ids);
+    }
+
+    public function testItSkipsFeaturesUserCannotSee(): void
+    {
+        $this->feature_verifier = VerifyFeatureIsVisibleStub::withVisibleIds(self::SECOND_FEATURE_ID);
+        $features               = $this->getFeaturesFromProgramIncrement();
+        $feature_ids            = array_map($this->getId, $features);
+        self::assertNotContains(self::FIRST_FEATURE_ID, $feature_ids);
+        self::assertContains(self::SECOND_FEATURE_ID, $feature_ids);
+    }
+
+    public function testItReturnsEmptyArrayWhenProgramIncrementHasNoFeatures(): void
+    {
+        $this->feature_searcher = SearchFeaturesStub::withoutFeatures();
+        self::assertCount(0, $this->getFeaturesFromProgramIncrement());
+    }
+
+    private function getFeaturesFromProgram(): array
+    {
+        return FeatureIdentifier::buildCollectionFromProgram(
+            $this->program_features_searcher,
+            $this->feature_verifier,
+            ProgramIdentifierBuilder::build(),
+            UserIdentifierStub::buildGenericUser()
+        );
+    }
+
+    public function testItReturnsFeaturesOfProgram(): void
+    {
+        $features    = $this->getFeaturesFromProgram();
+        $feature_ids = array_map($this->getId, $features);
+        self::assertContains(self::FIRST_FEATURE_ID, $feature_ids);
+        self::assertContains(self::SECOND_FEATURE_ID, $feature_ids);
+    }
+
+    public function testItSkipsFeaturesOfProgramUserCannotSee(): void
+    {
+        $this->feature_verifier = VerifyFeatureIsVisibleStub::withVisibleIds(self::SECOND_FEATURE_ID);
+        $features               = $this->getFeaturesFromProgram();
+        $feature_ids            = array_map($this->getId, $features);
+        self::assertNotContains(self::FIRST_FEATURE_ID, $feature_ids);
+        self::assertContains(self::SECOND_FEATURE_ID, $feature_ids);
+    }
+
+    public function testItReturnsEmptyArrayWhenProgramHasNoFeatures(): void
+    {
+        $this->program_features_searcher = SearchPlannableFeaturesStub::withoutFeatures();
+        self::assertCount(0, $this->getFeaturesFromProgram());
     }
 }

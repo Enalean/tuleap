@@ -28,10 +28,7 @@ final class FeaturePlanChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetUserStoriesLinkedToFeature(): void
     {
-        $feature_to_links = [
-            ['artifact_id' => "123"],
-            ['artifact_id' => "456"],
-        ];
+        $feature_to_links = [123, 456];
 
         $artifact_link_search = SearchArtifactsLinksStub::withSuccessiveRows(
             ['id' => 789, 'project_id' => 101],

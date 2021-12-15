@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 interface SearchPlannableFeatures
 {
     /**
-     * @psalm-return list<array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}>
+     * @return int[]
      */
     public function searchPlannableFeatures(ProgramIdentifier $program): array;
 }

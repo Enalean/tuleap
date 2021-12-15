@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisible;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\SearchFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
-use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -37,43 +37,36 @@ final class FeatureContentRetriever
     public function __construct(
         private VerifyIsProgramIncrement $program_increment_verifier,
         private SearchFeatures $features_searcher,
+        private VerifyFeatureIsVisible $feature_verifier,
         private FeatureRepresentationBuilder $feature_representation_builder,
         private VerifyIsVisibleArtifact $visibility_verifier,
-        private RetrieveProgramOfProgramIncrement $program_retriever,
-        private BuildProgram $program_builder,
     ) {
     }
 
+    /**
+     * @throws ProgramIncrementNotFoundException
+     */
     public function retrieveProgramIncrementContent(int $id, UserIdentifier $user): array
     {
-        $program_increment = ProgramIncrementIdentifier::fromId(
+        $program_increment   = ProgramIncrementIdentifier::fromId(
             $this->program_increment_verifier,
             $this->visibility_verifier,
             $id,
             $user
         );
-        $program           = ProgramIdentifier::fromProgramIncrement(
-            $this->program_retriever,
-            $this->program_builder,
+        $feature_identifiers = FeatureIdentifier::buildCollectionFromProgramIncrement(
+            $this->features_searcher,
+            $this->feature_verifier,
             $program_increment,
             $user
         );
-        $planned_content   = $this->features_searcher->searchFeatures($program_increment);
 
-        $elements = [];
-        foreach ($planned_content as $artifact) {
-            $feature = $this->feature_representation_builder->buildFeatureRepresentation(
-                $user,
-                $program,
-                $artifact['artifact_id'],
-                $artifact['field_title_id'],
-                $artifact['artifact_title']
-            );
-            if ($feature) {
-                $elements[] = $feature;
-            }
-        }
-
-        return $elements;
+        return array_map(
+            fn(FeatureIdentifier $feature) => $this->feature_representation_builder->buildFeatureRepresentation(
+                $feature,
+                $user
+            ),
+            $feature_identifiers
+        );
     }
 }

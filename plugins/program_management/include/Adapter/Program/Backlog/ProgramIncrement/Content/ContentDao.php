@@ -31,11 +31,8 @@ final class ContentDao extends DataAccessObject implements SearchFeatures
     public function searchFeatures(ProgramIncrementIdentifier $program_increment): array
     {
         $sql = <<<SQL
-        SELECT artifact_link_value.artifact_id AS artifact_id,
-               title_value.value AS artifact_title,
-               title.field_id AS field_title_id
-        FROM
-            tracker_artifact                                AS program_increment
+        SELECT artifact_link_value.artifact_id AS artifact_id
+        FROM tracker_artifact                               AS program_increment
             INNER JOIN tracker_changeset                    AS tc                        ON (program_increment.id = tc.artifact_id AND tc.id = program_increment.last_changeset_id)
             INNER JOIN tracker_changeset_value              AS cv                        ON tc.id = cv.changeset_id
             INNER JOIN tracker_changeset_value_artifactlink AS artifact_link_value       ON artifact_link_value.changeset_value_id = cv.id
@@ -45,19 +42,14 @@ final class ContentDao extends DataAccessObject implements SearchFeatures
                 feature_artifact.id = feature_changeset.artifact_id
                 AND feature_changeset.id = feature_artifact.last_changeset_id
             )
-            -- get title value
-            INNER JOIN (
-                tracker_semantic_title AS title
-                    INNER JOIN tracker_changeset_value AS title_changeset ON (title.field_id = title_changeset.field_id)
-                    INNER JOIN tracker_changeset_value_text AS title_value on title_changeset.id = title_value.changeset_value_id
-                ) ON (feature_artifact.tracker_id = title.tracker_id AND feature_changeset.id = title_changeset.changeset_id)
-            LEFT JOIN plugin_program_management_explicit_top_backlog ON plugin_program_management_explicit_top_backlog.artifact_id = program_increment.id
+            LEFT JOIN plugin_program_management_explicit_top_backlog AS top_backlog ON top_backlog.artifact_id = program_increment.id
             INNER JOIN tracker_artifact_priority_rank ON feature_artifact.id = tracker_artifact_priority_rank.artifact_id
         WHERE program_increment.id =  ?
-          AND plugin_program_management_explicit_top_backlog.artifact_id IS NULL
+          AND top_backlog.artifact_id IS NULL
         ORDER BY tracker_artifact_priority_rank.`rank`
         SQL;
 
-        return $this->getDB()->run($sql, $program_increment->getId());
+        $rows = $this->getDB()->run($sql, $program_increment->getId());
+        return array_map(static fn(array $row): int => $row['artifact_id'], $rows);
     }
 }

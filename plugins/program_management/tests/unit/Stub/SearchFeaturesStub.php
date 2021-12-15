@@ -32,11 +32,16 @@ final class SearchFeaturesStub implements SearchFeatures
     }
 
     /**
-     * @param array{artifact_id: int, artifact_title: string, field_title_id: int}[] $rows
+     * @no-named-arguments
      */
-    public static function withRows(array $rows): self
+    public static function withFeatureIds(int $feature_id, int ...$other_ids): self
     {
-        return new self($rows);
+        return new self([$feature_id, ...$other_ids]);
+    }
+
+    public static function withoutFeatures(): self
+    {
+        return new self([]);
     }
 
     public function searchFeatures(ProgramIncrementIdentifier $program_increment): array
