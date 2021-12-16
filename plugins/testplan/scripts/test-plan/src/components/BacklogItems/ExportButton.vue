@@ -132,6 +132,9 @@ export default class ExportButton extends Vue {
     @State
     readonly artifact_links_types!: ReadonlyArray<ArtifactLinkType>;
 
+    @State
+    readonly testdefinition_tracker_id!: number | null;
+
     private is_preparing_the_download = false;
 
     private has_encountered_error_during_the_export = false;
@@ -223,6 +226,7 @@ export default class ExportButton extends Vue {
                     milestone_url: this.milestone_url,
                     base_url: this.base_url,
                     artifact_links_types: this.artifact_links_types,
+                    testdefinition_tracker_id: this.testdefinition_tracker_id,
                 },
                 this,
                 downloadDocx,

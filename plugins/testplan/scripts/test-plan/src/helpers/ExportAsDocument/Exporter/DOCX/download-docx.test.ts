@@ -61,6 +61,7 @@ describe("download-docx", () => {
                 milestone_url: "/path/to/13.3",
                 base_url: "https://example.com",
                 artifact_links_types: [],
+                testdefinition_tracker_id: 10,
             },
             {
                 locale: "en-US",

@@ -45,6 +45,7 @@ describe("Start download of export document", () => {
                 milestone_url: "/path/to/13.3",
                 base_url: "https://example.com",
                 artifact_links_types: [],
+                testdefinition_tracker_id: 10,
             },
             gettext_provider,
             download_document,

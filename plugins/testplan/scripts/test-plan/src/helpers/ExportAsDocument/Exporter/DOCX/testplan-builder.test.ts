@@ -22,6 +22,8 @@ import type { IContext } from "docx";
 import { buildMilestoneTestPlan } from "./testplan-builder";
 import type { GlobalExportProperties } from "../../../../type";
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
+import type { ExportDocument } from "../../../../type";
+import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx/src";
 
 describe("buildMilestoneTestPlan", () => {
     let global_export_properties: GlobalExportProperties;
@@ -40,13 +42,14 @@ describe("buildMilestoneTestPlan", () => {
             milestone_url: "/path/to/13.3",
             base_url: "http://example.com",
             artifact_links_types: [],
+            testdefinition_tracker_id: 10,
         };
 
         gettext_provider = createVueGettextProviderPassthrough();
     });
 
-    it("should display a message if there is no tests", () => {
-        const section = buildMilestoneTestPlan(
+    it("should display a message if there is no tests", async () => {
+        const section = await buildMilestoneTestPlan(
             {
                 name: "Tuleap 13.4",
                 backlog: [],
@@ -59,5 +62,38 @@ describe("buildMilestoneTestPlan", () => {
 
         const tree = section[1].prepForXml({} as IContext);
         expect(JSON.stringify(tree)).toContain("There are no tests planned in the milestone.");
+    });
+
+    it("should display each test", async () => {
+        const document: ExportDocument = {
+            name: "Test Report",
+            backlog: [],
+            traceability_matrix: [],
+            tests: [
+                {
+                    id: 1,
+                    title: "Lorem",
+                    short_title: "Lorem",
+                    fields: [],
+                    containers: [],
+                } as FormattedArtifact,
+                {
+                    id: 2,
+                    title: "Ipsum",
+                    short_title: "Ipsum",
+                    fields: [],
+                    containers: [],
+                } as FormattedArtifact,
+            ],
+        };
+
+        const backlog = await buildMilestoneTestPlan(
+            document,
+            gettext_provider,
+            global_export_properties
+        );
+
+        expect(JSON.stringify(backlog[1].prepForXml({} as IContext))).toContain("Lorem");
+        expect(JSON.stringify(backlog[3].prepForXml({} as IContext))).toContain("Ipsum");
     });
 });
