@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
+use Tuleap\ProgramManagement\Tests\Builder\FeatureHasUserStoriesVerifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFeatureCrossReferenceStub;
@@ -29,7 +30,6 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFeatureTitleStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFeatureURIStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureHasAtLeastOneUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 
 final class FeatureTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -56,7 +56,7 @@ final class FeatureTest extends \Tuleap\Test\PHPUnit\TestCase
             new RetrieveFeatureURIStub(),
             RetrieveFeatureCrossReferenceStub::withShortname(self::TRACKER_SHORT_NAME),
             VerifyHasAtLeastOnePlannedUserStoryStub::withNothingPlanned(),
-            VerifyFeatureHasAtLeastOneUserStoryStub::withStories(),
+            FeatureHasUserStoriesVerifierBuilder::buildWithUserStories(),
             RetrieveBackgroundColorStub::withColor(self::BACKGROUND_COLOR),
             RetrieveTrackerOfFeatureStub::withId(self::TRACKER_ID),
             $feature_identifier,

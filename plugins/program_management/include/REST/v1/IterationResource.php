@@ -77,18 +77,21 @@ final class IterationResource
         $tracker_factory     = \TrackerFactory::instance();
         $artifact_factory    = \Tracker_ArtifactFactory::instance();
         $artifact_retriever  = new ArtifactFactoryAdapter($artifact_factory);
+        $visibility_verifier = new ArtifactVisibleVerifier($artifact_factory, $this->user_adapter);
         $iteration_retriever = new IterationContentSearcher(
             new IterationsDAO(),
-            new ArtifactVisibleVerifier(
-                $artifact_factory,
-                $this->user_adapter,
-            ),
+            $visibility_verifier,
             new IterationContentDAO(),
+            $visibility_verifier,
             new TitleValueRetriever($artifact_retriever),
             new URIRetriever($artifact_retriever),
             new CrossReferenceRetriever($artifact_retriever),
             new IsOpenRetriever($artifact_retriever),
-            new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever()), $artifact_retriever, $this->user_adapter),
+            new BackgroundColorRetriever(
+                new BackgroundColorBuilder(new BindDecoratorRetriever()),
+                $artifact_retriever,
+                $this->user_adapter
+            ),
             new TrackerOfArtifactRetriever($artifact_retriever),
             new MirroredTimeboxesDao(),
         );

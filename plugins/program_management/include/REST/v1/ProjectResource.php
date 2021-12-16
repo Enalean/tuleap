@@ -45,7 +45,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorde
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUserStoriesVerifier;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasUserStoriesVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturesDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
@@ -68,6 +67,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\UserIsProgramAdminVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureHasUserStoriesVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Feature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramBacklogSearcher;
@@ -364,11 +364,12 @@ final class ProjectResource extends AuthenticatedResource
         $artifact_retriever             = new ArtifactFactoryAdapter($artifact_factory);
         $tracker_retriever              = new TrackerFactoryAdapter(\TrackerFactory::instance());
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
+        $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
 
         $program_backlog_searcher = new ProgramBacklogSearcher(
             ProgramAdapter::instance(),
             new FeaturesDao(),
-            new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
+            $visibility_verifier,
             new TitleValueRetriever($artifact_retriever),
             new URIRetriever($artifact_retriever),
             new CrossReferenceRetriever($artifact_retriever),
@@ -383,7 +384,7 @@ final class ProjectResource extends AuthenticatedResource
                 new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
                 $artifacts_linked_to_parent_dao
             ),
-            new FeatureHasUserStoriesVerifier($artifact_factory, $user_retriever, $artifacts_linked_to_parent_dao)
+            new FeatureHasUserStoriesVerifier($artifacts_linked_to_parent_dao, $visibility_verifier)
         );
 
         $user = $user_manager->getCurrentUser();

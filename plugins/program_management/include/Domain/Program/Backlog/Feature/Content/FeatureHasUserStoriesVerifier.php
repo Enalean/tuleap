@@ -18,12 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyUserStoryIsVisible;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-interface VerifyFeatureHasAtLeastOneUserStory
+final class FeatureHasUserStoriesVerifier
 {
-    public function hasStoryLinked(FeatureIdentifier $feature, UserIdentifier $user): bool;
+    public function __construct(
+        private SearchChildrenOfFeature $search_children_of_feature,
+        private VerifyUserStoryIsVisible $visibility_verifier,
+    ) {
+    }
+
+    public function hasStoryLinked(FeatureIdentifier $feature, UserIdentifier $user): bool
+    {
+        $user_story_ids = $this->search_children_of_feature->getChildrenOfFeatureInTeamProjects($feature);
+        foreach ($user_story_ids as $user_story_id) {
+            if ($this->visibility_verifier->isUserStoryVisible($user_story_id, $user)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

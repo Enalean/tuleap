@@ -46,7 +46,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplici
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUserStoriesVerifier;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasUserStoriesVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
@@ -64,6 +63,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetrieve
 use Tuleap\ProgramManagement\Adapter\Workspace\UserIsProgramAdminVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureHasUserStoriesVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Feature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationsRetriever;
@@ -140,7 +140,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
                 $artifacts_linked_to_parent_dao
             ),
-            new FeatureHasUserStoriesVerifier($artifact_factory, $user_retriever, $artifacts_linked_to_parent_dao)
+            new FeatureHasUserStoriesVerifier($artifacts_linked_to_parent_dao, $visibility_verifier)
         );
 
         $user = $user_manager->getCurrentUser();

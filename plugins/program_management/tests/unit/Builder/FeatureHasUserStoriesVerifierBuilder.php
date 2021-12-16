@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,23 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureHasUserStoriesVerifier;
 use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserStoryIsVisibleStub;
 
-final class UserStoryIdentifierBuilder
+final class FeatureHasUserStoriesVerifierBuilder
 {
-    public static function withId(int $id): UserStoryIdentifier
+    public static function buildWithUserStories(): FeatureHasUserStoriesVerifier
     {
-        return UserStoryIdentifier::buildCollectionFromFeature(
-            SearchChildrenOfFeatureStub::withUserStoryIds($id),
-            VerifyUserStoryIsVisibleStub::withAlwaysVisibleUserStories(),
-            FeatureIdentifierBuilder::withId(1),
-            UserIdentifierStub::buildGenericUser()
-        )[0];
+        return new FeatureHasUserStoriesVerifier(
+            SearchChildrenOfFeatureStub::withUserStoryIds(690),
+            VerifyUserStoryIsVisibleStub::withAlwaysVisibleUserStories()
+        );
     }
 }

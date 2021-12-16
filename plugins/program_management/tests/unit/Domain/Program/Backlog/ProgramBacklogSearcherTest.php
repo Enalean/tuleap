@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Feature;
+use Tuleap\ProgramManagement\Tests\Builder\FeatureHasUserStoriesVerifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFeatureCrossReferenceStub;
@@ -31,7 +32,6 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFeatureURIStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPlannableFeaturesStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureHasAtLeastOneUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 
@@ -74,7 +74,7 @@ final class ProgramBacklogSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveTrackerOfFeatureStub::withSuccessiveIds(self::BUG_TRACKER_ID, self::USER_STORY_TRACKER_ID),
             RetrieveBackgroundColorStub::withSuccessiveColors(self::BUG_COLOR, self::USER_STORY_COLOR),
             VerifyHasAtLeastOnePlannedUserStoryStub::withPlannedUserStory(),
-            VerifyFeatureHasAtLeastOneUserStoryStub::withStories()
+            FeatureHasUserStoriesVerifierBuilder::buildWithUserStories()
         );
 
         return $retriever->retrieveFeaturesToBePlanned(self::PROGRAM_ID, UserIdentifierStub::buildGenericUser());

@@ -46,6 +46,7 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsOpenStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyUserStoryIsVisibleStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class IterationContentSearcherTest extends TestCase
@@ -73,8 +74,9 @@ final class IterationContentSearcherTest extends TestCase
         $this->verify_is_iteration                    = VerifyIsIterationStub::withValidIteration();
         $this->is_visible_artifact                    = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
         $this->search_mirrored_timeboxes              = SearchMirroredTimeboxesStub::withIds(self::ITERATION_ID);
-        $this->search_user_story_planned_in_iteration = SearchUserStoryPlannedInIterationStub::withUserStory(
-            [self::USER_STORY_ONE_ID, self::USER_STORY_TWO_ID]
+        $this->search_user_story_planned_in_iteration = SearchUserStoryPlannedInIterationStub::withUserStoryIds(
+            self::USER_STORY_ONE_ID,
+            self::USER_STORY_TWO_ID
         );
 
         $this->retrieve_title_value      = RetrieveUserStoryTitleStub::withSuccessiveValues(
@@ -96,6 +98,7 @@ final class IterationContentSearcherTest extends TestCase
             $this->verify_is_iteration,
             $this->is_visible_artifact,
             $this->search_user_story_planned_in_iteration,
+            VerifyUserStoryIsVisibleStub::withAlwaysVisibleUserStories(),
             $this->retrieve_title_value,
             $this->retrieve_uri,
             $this->retrieve_cross_ref,

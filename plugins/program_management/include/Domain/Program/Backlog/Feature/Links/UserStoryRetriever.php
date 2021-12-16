@@ -32,9 +32,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryT
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryURI;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyIsOpen;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyUserStoryIsVisible;
 use Tuleap\ProgramManagement\Domain\Program\Feature\CheckIsValidFeature;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
-use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class UserStoryRetriever
@@ -48,7 +48,7 @@ final class UserStoryRetriever
         private RetrieveUserStoryCrossRef $retrieve_cross_ref,
         private VerifyIsOpen $retrieve_is_open,
         private RetrieveTrackerFromUserStory $retrieve_tracker_id,
-        private VerifyIsVisibleArtifact $verify_is_visible_artifact,
+        private VerifyUserStoryIsVisible $verify_user_story_is_visible,
     ) {
     }
 
@@ -67,7 +67,7 @@ final class UserStoryRetriever
 
         $planned_children = UserStoryIdentifier::buildCollectionFromFeature(
             $this->search_children_of_feature,
-            $this->verify_is_visible_artifact,
+            $this->verify_user_story_is_visible,
             $feature,
             $user_identifier
         );

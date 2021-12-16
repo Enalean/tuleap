@@ -32,7 +32,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStoryURIStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsOpenStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyUserStoryIsVisibleStub;
 
 final class UserStoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -45,9 +45,7 @@ final class UserStoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getRetriever(): UserStoryRetriever
     {
         return new UserStoryRetriever(
-            SearchChildrenOfFeatureStub::withChildren(
-                [['children_id' => self::USER_STORY_ONE_ID], ['children_id' => self::USER_STORY_TWO_ID]]
-            ),
+            SearchChildrenOfFeatureStub::withUserStoryIds(self::USER_STORY_ONE_ID, self::USER_STORY_TWO_ID),
             CheckIsValidFeatureStub::withAlwaysValidFeatures(),
             RetrieveBackgroundColorStub::withSuccessiveColors(self::FIRST_COLOR, self::SECOND_COLOR),
             RetrieveUserStoryTitleStub::withSuccessiveValues('Title', 'Other title'),
@@ -55,7 +53,7 @@ final class UserStoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveUserStoryCrossRefStub::withShortname('story'),
             VerifyIsOpenStub::withOpen(),
             RetrieveTrackerFromUserStoryStub::withId(self::TRACKER_ID),
-            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts()
+            VerifyUserStoryIsVisibleStub::withAlwaysVisibleUserStories()
         );
     }
 

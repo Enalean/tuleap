@@ -26,11 +26,12 @@ use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisible;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisibleByProgram;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyUserStoryIsVisible;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class ArtifactVisibleVerifier implements VerifyIsVisibleArtifact, VerifyFeatureIsVisibleByProgram, VerifyFeatureIsVisible
+final class ArtifactVisibleVerifier implements VerifyIsVisibleArtifact, VerifyFeatureIsVisibleByProgram, VerifyFeatureIsVisible, VerifyUserStoryIsVisible
 {
     public function __construct(
         private \Tracker_ArtifactFactory $artifact_factory,
@@ -63,5 +64,10 @@ final class ArtifactVisibleVerifier implements VerifyIsVisibleArtifact, VerifyFe
     public function isVisibleFeature(int $feature_id, UserIdentifier $user): bool
     {
         return $this->isVisible($feature_id, $user);
+    }
+
+    public function isUserStoryVisible(int $user_story_id, UserIdentifier $user): bool
+    {
+        return $this->isVisible($user_story_id, $user);
     }
 }
