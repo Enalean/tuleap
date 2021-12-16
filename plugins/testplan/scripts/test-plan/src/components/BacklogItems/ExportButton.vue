@@ -41,7 +41,6 @@
                 <a
                     href="#"
                     v-on:click.prevent="exportTestPlanAsDocx"
-                    v-if="is_docx_allowed"
                     class="tlp-dropdown-menu-item"
                     role="menuitem"
                     data-test="testplan-export-docx-button"
@@ -70,7 +69,6 @@ import { namespace, State } from "vuex-class";
 import type { BacklogItem, Campaign } from "../../type";
 import ExportError from "./ExportError.vue";
 import { createDropdown } from "tlp";
-import { isFeatureFlagDocxEnabled } from "../../helpers/ExportAsDocument/feature-flag-docx";
 import type { ArtifactLinkType } from "@tuleap/plugin-docgen-docx";
 
 const backlog_item = namespace("backlog_item");
@@ -159,10 +157,6 @@ export default class ExportButton extends Vue {
         }
 
         return "fa-download";
-    }
-
-    get is_docx_allowed(): boolean {
-        return isFeatureFlagDocxEnabled(document);
     }
 
     async exportTestPlanAsXlsx(): Promise<void> {
