@@ -35,7 +35,7 @@ final class FeatureIdentifierBuilder
         $user_identifier = UserIdentifierStub::buildGenericUser();
         $program         = ProgramIdentifierBuilder::buildWithId($program_id);
         $feature         = FeatureIdentifier::fromIdAndProgram(
-            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
+            VerifyFeatureIsVisibleByProgramStub::withAlwaysVisibleFeatures(),
             $feature_id,
             $user_identifier,
             $program,

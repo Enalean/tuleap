@@ -49,7 +49,7 @@ final class FeatureIdentifier implements ArtifactIdentifier
         ProgramIdentifier $program,
         ?PermissionBypass $bypass,
     ): ?self {
-        if (! $feature_verifier->isVisibleFeature($feature_id, $user_identifier, $program, $bypass)) {
+        if (! $feature_verifier->isFeatureVisibleAndInProgram($feature_id, $user_identifier, $program, $bypass)) {
             return null;
         }
         return new self($feature_id);
@@ -60,7 +60,7 @@ final class FeatureIdentifier implements ArtifactIdentifier
         int $feature_id,
         UserIdentifier $user_identifier,
     ): ?self {
-        if (! $feature_verifier->isVisible($feature_id, $user_identifier)) {
+        if (! $feature_verifier->isVisibleFeature($feature_id, $user_identifier)) {
             return null;
         }
         return new self($feature_id);
@@ -77,7 +77,7 @@ final class FeatureIdentifier implements ArtifactIdentifier
     ): array {
         $features = [];
         foreach ($features_searcher->searchFeatures($program_increment) as $feature_id) {
-            if ($feature_verifier->isVisible($feature_id, $user)) {
+            if ($feature_verifier->isVisibleFeature($feature_id, $user)) {
                 $features[] = new self($feature_id);
             }
         }
@@ -95,7 +95,7 @@ final class FeatureIdentifier implements ArtifactIdentifier
     ): array {
         $features = [];
         foreach ($features_searcher->searchPlannableFeatures($program) as $feature_id) {
-            if ($feature_verifier->isVisible($feature_id, $user)) {
+            if ($feature_verifier->isVisibleFeature($feature_id, $user)) {
                 $features[] = new self($feature_id);
             }
         }

@@ -101,7 +101,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUs
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturesDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\IterationTracker\VisibleIterationTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
@@ -990,13 +989,11 @@ final class program_managementPlugin extends Plugin
 
     private function getTopBacklogChangeProcessor(): TopBacklogChangeProcessor
     {
-        $artifact_factory     = Tracker_ArtifactFactory::instance();
-        $priority_manager     = \Tracker_Artifact_PriorityManager::build();
-        $user_manager_adapter = new UserManagerAdapter(UserManager::instance());
-
+        $artifact_factory               = Tracker_ArtifactFactory::instance();
+        $priority_manager               = \Tracker_Artifact_PriorityManager::build();
+        $user_manager_adapter           = new UserManagerAdapter(UserManager::instance());
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
-
-        $project_manager_adapter = new ProjectManagerAdapter(ProjectManager::instance(), $user_manager_adapter);
+        $project_manager_adapter        = new ProjectManagerAdapter(ProjectManager::instance(), $user_manager_adapter);
 
         return new ProcessTopBacklogChange(
             new PrioritizeFeaturesPermissionVerifier(
@@ -1017,7 +1014,7 @@ final class program_managementPlugin extends Plugin
                 new PlanningAdapter(\PlanningFactory::build(), $user_manager_adapter),
                 $artifacts_linked_to_parent_dao
             ),
-            new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_manager_adapter),
+            new ArtifactVisibleVerifier($artifact_factory, $user_manager_adapter),
             new FeatureRemovalProcessor(
                 new ProgramIncrementsDAO(),
                 $artifact_factory,
@@ -1388,23 +1385,10 @@ final class program_managementPlugin extends Plugin
     public function trackerArtifactPossibleParentSelector(PossibleParentSelector $possible_parent_selector): void
     {
         $user_manager_adapter = new UserManagerAdapter(UserManager::instance());
-
-        $project_manager         = ProjectManager::instance();
-        $project_manager_adapter = new ProjectManagerAdapter(
-            $project_manager,
-            $user_manager_adapter
-        );
-        $project_access_checker  = new ProjectAccessChecker(
-            new RestrictedUserCanAccessProjectVerifier(),
-            \EventManager::instance()
-        );
-
-        $features_dao = new FeaturesDao();
+        $artifact_factory     = \Tracker_ArtifactFactory::instance();
+        $features_dao         = new FeaturesDao();
         (new PossibleParentHandler(
-            new VerifyIsVisibleFeatureAdapter(
-                Tracker_ArtifactFactory::instance(),
-                $user_manager_adapter
-            ),
+            new ArtifactVisibleVerifier($artifact_factory, $user_manager_adapter),
             ProgramAdapter::instance(),
             new TeamDao(),
             $features_dao,

@@ -49,7 +49,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUs
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasUserStoriesVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
@@ -120,12 +119,13 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $artifact_retriever             = new ArtifactFactoryAdapter($artifact_factory);
         $tracker_retriever              = new TrackerFactoryAdapter(\TrackerFactory::instance());
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
+        $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
 
         $program_increment_content_retriever = new ProgramIncrementContentSearcher(
             new ProgramIncrementsDAO(),
-            new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
+            $visibility_verifier,
             new ContentDao(),
-            new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_retriever),
+            $visibility_verifier,
             new TitleValueRetriever($artifact_retriever),
             new URIRetriever($artifact_retriever),
             new CrossReferenceRetriever($artifact_retriever),
@@ -206,6 +206,8 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $form_element_factory    = \Tracker_FormElementFactory::instance();
         $field_retriever         = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
         $project_manager_adapter = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
+        $program_adapter         = ProgramAdapter::instance();
+        $visibility_verifier     = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
 
         $artifact_link_updater = new ArtifactLinkUpdater(
             \Tracker_Artifact_PriorityManager::build(),
@@ -224,8 +226,6 @@ final class ProgramIncrementResource extends AuthenticatedResource
             \EventManager::instance()
         );
 
-        $program_adapter = ProgramAdapter::instance();
-
         $modifier             = new ContentModifier(
             new PrioritizeFeaturesPermissionVerifier(
                 $project_manager_adapter,
@@ -235,7 +235,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 new UserIsProgramAdminVerifier($user_retriever)
             ),
             $program_increments_dao,
-            new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_retriever),
+            $visibility_verifier,
             $plan_dao,
             new FeaturePlanner(
                 $user_story_linked_verifier,
@@ -263,7 +263,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                     $project_access_checker,
                 ),
             ),
-            new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
+            $visibility_verifier,
             $program_dao,
             $program_adapter,
         );

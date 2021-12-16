@@ -48,7 +48,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUs
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasUserStoriesVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturesDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
@@ -369,7 +368,7 @@ final class ProjectResource extends AuthenticatedResource
         $program_backlog_searcher = new ProgramBacklogSearcher(
             ProgramAdapter::instance(),
             new FeaturesDao(),
-            new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_retriever),
+            new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
             new TitleValueRetriever($artifact_retriever),
             new URIRetriever($artifact_retriever),
             new CrossReferenceRetriever($artifact_retriever),
@@ -472,7 +471,7 @@ final class ProjectResource extends AuthenticatedResource
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
             $this->user_story_linked_verifier,
-            new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
+            new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
             new FeatureRemovalProcessor(
                 new ProgramIncrementsDAO(),
                 $artifact_factory,

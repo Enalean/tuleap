@@ -27,8 +27,5 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 interface VerifyFeatureIsVisible
 {
-    public function isVisible(
-        int $feature_id,
-        UserIdentifier $user_identifier,
-    ): bool;
+    public function isVisibleFeature(int $feature_id, UserIdentifier $user): bool;
 }

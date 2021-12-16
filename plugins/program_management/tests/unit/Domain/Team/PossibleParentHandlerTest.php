@@ -90,7 +90,7 @@ final class PossibleParentHandlerTest extends TestCase
         );
 
         $this->possible_parent = new PossibleParentHandler(
-            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
+            VerifyFeatureIsVisibleByProgramStub::withAlwaysVisibleFeatures(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $this->search_open_features,
@@ -144,7 +144,7 @@ final class PossibleParentHandlerTest extends TestCase
         $this->retrieve_open_feature_count = RetrieveOpenFeatureCountStub::withValue(200);
 
         $possible_parent = new PossibleParentHandler(
-            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
+            VerifyFeatureIsVisibleByProgramStub::withAlwaysVisibleFeatures(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $this->search_open_features,
@@ -164,7 +164,7 @@ final class PossibleParentHandlerTest extends TestCase
         $search_open_features              = SearchOpenFeaturesStub::withRows([]);
 
         $possible_parent = new PossibleParentHandler(
-            VerifyFeatureIsVisibleByProgramStub::withNotVisibleFeature(),
+            VerifyFeatureIsVisibleByProgramStub::withFeatureNotVisibleOrNotInProgram(),
             BuildProgramStub::stubInvalidProgramAccess(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $search_open_features,
@@ -188,7 +188,7 @@ final class PossibleParentHandlerTest extends TestCase
     public function testItDoesntFillPossibleParentWhenTrackerIsNotInATeam(): void
     {
         $possible_parent = new PossibleParentHandler(
-            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
+            VerifyFeatureIsVisibleByProgramStub::withAlwaysVisibleFeatures(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(),
             $this->search_open_features,
@@ -221,7 +221,7 @@ final class PossibleParentHandlerTest extends TestCase
     public function testItDoesntAddToPossibleParentsAnArtifactThatIsNotVisible(): void
     {
         $possible_parent = new PossibleParentHandler(
-            VerifyFeatureIsVisibleByProgramStub::withNotVisibleFeature(),
+            VerifyFeatureIsVisibleByProgramStub::withFeatureNotVisibleOrNotInProgram(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $this->search_open_features,
@@ -236,7 +236,7 @@ final class PossibleParentHandlerTest extends TestCase
     public function testItLooksForProgramsAtOnce(): void
     {
         $possible_parent = new PossibleParentHandler(
-            VerifyFeatureIsVisibleByProgramStub::buildVisibleFeature(),
+            VerifyFeatureIsVisibleByProgramStub::withAlwaysVisibleFeatures(),
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1, self::PROGRAM_ID_2),
             $this->search_open_features,

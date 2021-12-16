@@ -22,19 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter;
 
-use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisible;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisibleByProgram;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class ArtifactVisibleVerifier implements VerifyIsVisibleArtifact
+final class ArtifactVisibleVerifier implements VerifyIsVisibleArtifact, VerifyFeatureIsVisibleByProgram, VerifyFeatureIsVisible
 {
-    private \Tracker_ArtifactFactory $artifact_factory;
-    private RetrieveUser $user_retriever;
-
-    public function __construct(\Tracker_ArtifactFactory $artifact_factory, RetrieveUser $user_retriever)
-    {
-        $this->artifact_factory = $artifact_factory;
-        $this->user_retriever   = $user_retriever;
+    public function __construct(
+        private \Tracker_ArtifactFactory $artifact_factory,
+        private RetrieveUser $user_retriever,
+    ) {
     }
 
     public function isVisible(int $artifact_id, UserIdentifier $user_identifier): bool
@@ -42,5 +43,25 @@ final class ArtifactVisibleVerifier implements VerifyIsVisibleArtifact
         $user     = $this->user_retriever->getUserWithId($user_identifier);
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $artifact_id);
         return $artifact !== null;
+    }
+
+    public function isFeatureVisibleAndInProgram(
+        int $feature_id,
+        UserIdentifier $user_identifier,
+        ProgramIdentifier $program,
+        ?PermissionBypass $bypass,
+    ): bool {
+        if ($bypass) {
+            $artifact = $this->artifact_factory->getArtifactById($feature_id);
+            return $artifact !== null && (int) $artifact->getTracker()->getGroupId() === $program->getId();
+        }
+        $user     = $this->user_retriever->getUserWithId($user_identifier);
+        $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $feature_id);
+        return $artifact !== null && (int) $artifact->getTracker()->getGroupId() === $program->getId();
+    }
+
+    public function isVisibleFeature(int $feature_id, UserIdentifier $user): bool
+    {
+        return $this->isVisible($feature_id, $user);
     }
 }
