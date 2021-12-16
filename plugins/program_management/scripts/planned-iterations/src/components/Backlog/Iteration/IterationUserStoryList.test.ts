@@ -24,10 +24,10 @@ import * as retriever from "../../../helpers/iteration-content-retriever";
 
 import IterationUserStoryList from "./IterationUserStoryList.vue";
 import BacklogElementSkeleton from "../../BacklogElementSkeleton.vue";
-import FeatureCard from "./FeatureCard.vue";
+import UserStoryCard from "./UserStoryCard.vue";
 
 import type { Wrapper } from "@vue/test-utils";
-import type { Feature } from "../../../type";
+import type { UserStory } from "../../../type";
 
 describe("IterationUserStoryList", () => {
     async function getWrapper(): Promise<Wrapper<IterationUserStoryList>> {
@@ -41,7 +41,7 @@ describe("IterationUserStoryList", () => {
         });
     }
 
-    it("Displays the empty state when no features are found", async () => {
+    it("Displays the empty state when no user story are found", async () => {
         jest.spyOn(retriever, "retrieveIterationContent").mockResolvedValue([]);
 
         const wrapper = await getWrapper();
@@ -56,11 +56,11 @@ describe("IterationUserStoryList", () => {
         expect(wrapper.find("[data-test=iteration-content-error-message]").exists()).toBe(false);
     });
 
-    it("Displays the features", async () => {
+    it("Displays the user stories", async () => {
         jest.spyOn(retriever, "retrieveIterationContent").mockResolvedValue([
-            { id: 1201 } as Feature,
-            { id: 1202 } as Feature,
-            { id: 1203 } as Feature,
+            { id: 1201 } as UserStory,
+            { id: 1202 } as UserStory,
+            { id: 1203 } as UserStory,
         ]);
 
         const wrapper = await getWrapper();
@@ -70,12 +70,12 @@ describe("IterationUserStoryList", () => {
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
 
-        const feature_cards = wrapper.findAllComponents(FeatureCard);
+        const user_stories_card = wrapper.findAllComponents(UserStoryCard);
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
         expect(wrapper.find("[data-test=iteration-content-error-message]").exists()).toBe(false);
-        expect(feature_cards.length).toEqual(3);
+        expect(user_stories_card.length).toEqual(3);
     });
 
     it("displays an error message when the loading of the iteration content has failed", async () => {

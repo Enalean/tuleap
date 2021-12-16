@@ -19,25 +19,25 @@
 
 <template>
     <div class="element-backlog-item">
-        <div class="element-card" v-bind:class="additional_classnames" data-test="feature-card">
+        <div class="element-card" v-bind:class="additional_classnames" data-test="user-story-card">
             <div class="element-card-content">
                 <div class="element-card-xref-label">
                     <div class="element-card-xref-project">
-                        <span class="element-card-xref-project-icon" v-if="feature.project.icon">
-                            {{ feature.project.icon }}
+                        <span class="element-card-xref-project-icon" v-if="user_story.project.icon">
+                            {{ user_story.project.icon }}
                         </span>
-                        {{ feature.project.label }}
+                        {{ user_story.project.label }}
                         <i class="fas fa-long-arrow-alt-right element-card-xref-icon"></i>
                     </div>
                     <a
-                        v-bind:href="`/plugins/tracker/?aid=${feature.id}`"
+                        v-bind:href="`/plugins/tracker/?aid=${user_story.id}`"
                         class="element-card-xref"
-                        v-bind:class="`element-card-xref-${feature.tracker.color_name}`"
+                        v-bind:class="`element-card-xref-${user_story.tracker.color_name}`"
                     >
-                        {{ feature.xref }}
+                        {{ user_story.xref }}
                     </a>
                 </div>
-                <span class="element-card-label">{{ feature.title }}</span>
+                <span class="element-card-label">{{ user_story.title }}</span>
             </div>
             <div
                 class="element-card-accessibility"
@@ -57,22 +57,24 @@ import {
     showAccessibilityPattern,
 } from "../../../helpers/accessibility-helper";
 
-import type { Feature } from "../../../type";
+import type { UserStory } from "../../../type";
 
 @Component
-export default class FeatureCard extends Vue {
+export default class UserStoryCard extends Vue {
     @Prop({ required: true })
-    readonly feature!: Feature;
+    readonly user_story!: UserStory;
 
     @State
     readonly is_accessibility_mode_enabled!: boolean;
 
     get additional_classnames(): string {
-        return getAccessibilityClasses(this.feature, this.is_accessibility_mode_enabled).join(" ");
+        return getAccessibilityClasses(this.user_story, this.is_accessibility_mode_enabled).join(
+            " "
+        );
     }
 
     get show_accessibility(): boolean {
-        return showAccessibilityPattern(this.feature, this.is_accessibility_mode_enabled);
+        return showAccessibilityPattern(this.user_story, this.is_accessibility_mode_enabled);
     }
 }
 </script>

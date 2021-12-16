@@ -18,9 +18,9 @@
  */
 
 import { recursiveGet } from "tlp";
-import type { Feature } from "../type";
+import type { UserStory } from "../type";
 
-export function retrieveIterationContent(iteration_id: number): Promise<Feature[]> {
+export function retrieveIterationContent(iteration_id: number): Promise<UserStory[]> {
     return recursiveGet(`/api/v1/iteration/${encodeURIComponent(iteration_id)}/content`, {
         params: {
             limit: 50,

@@ -20,27 +20,25 @@
 import { shallowMount } from "@vue/test-utils";
 import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-test";
 
-import FeatureCard from "./FeatureCard.vue";
+import UserStoryCard from "./UserStoryCard.vue";
 
 import type { Wrapper } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
-describe("FeatureCard", () => {
+describe("UserStoryCard", () => {
     async function getWrapper(
         is_accessibility_mode_enabled: boolean
-    ): Promise<Wrapper<FeatureCard>> {
-        return shallowMount(FeatureCard, {
+    ): Promise<Wrapper<UserStoryCard>> {
+        return shallowMount(UserStoryCard, {
             localVue: await createPlanIterationsLocalVue(),
             propsData: {
-                feature: {
+                user_story: {
                     background_color: "peggy-pink",
-                    has_user_story_planned: false,
-                    has_user_story_linked: false,
                     is_open: true,
                     id: 101,
-                    uri: "/uri/of/feature",
-                    xref: "feature #101",
-                    title: "Feature 101",
+                    uri: "/uri/of/user_story",
+                    xref: "user_story #101",
+                    title: "User Story 101",
                     tracker: {
                         color_name: "red-wine",
                     },
@@ -62,7 +60,7 @@ describe("FeatureCard", () => {
         });
     }
 
-    it("should display the feature as a card with tracker and background color", async () => {
+    it("should display the user_story as a card with tracker and background color", async () => {
         const wrapper = await getWrapper(true);
         expect(wrapper.element).toMatchSnapshot();
     });

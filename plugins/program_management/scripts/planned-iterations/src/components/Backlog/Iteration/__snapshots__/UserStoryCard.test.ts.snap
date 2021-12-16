@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`FeatureCard should display the feature as a card with tracker and background color 1`] = `
+exports[`UserStoryCard should display the user_story as a card with tracker and background color 1`] = `
 <div
   class="element-backlog-item"
 >
   <div
     class="element-card element-card-red-wine element-card-background-peggy-pink element-card-with-accessibility"
-    data-test="feature-card"
+    data-test="user-story-card"
   >
     <div
       class="element-card-content"
@@ -37,7 +37,7 @@ exports[`FeatureCard should display the feature as a card with tracker and backg
           href="/plugins/tracker/?aid=101"
         >
           
-                    feature #101
+                    user_story #101
                 
         </a>
       </div>
@@ -45,7 +45,7 @@ exports[`FeatureCard should display the feature as a card with tracker and backg
       <span
         class="element-card-label"
       >
-        Feature 101
+        User Story 101
       </span>
     </div>
      
