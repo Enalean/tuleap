@@ -19,7 +19,7 @@
 
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import { triggerBlobDownload } from "./trigger-blob-download";
-import { File, Packer, Paragraph, StyleLevel } from "docx";
+import { File, Packer, PageOrientation, Paragraph, StyleLevel } from "docx";
 import type {
     DateTimeLocaleInformation,
     ExportDocument,
@@ -98,6 +98,13 @@ export async function downloadDocx(
                 headers,
                 children: [...(await buildTraceabilityMatrix(document, gettext_provider))],
                 footers,
+                properties: {
+                    page: {
+                        size: {
+                            orientation: PageOrientation.LANDSCAPE,
+                        },
+                    },
+                },
             },
             {
                 headers,
