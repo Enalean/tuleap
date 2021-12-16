@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\SearchFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Feature\CheckIsValidFeature;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -55,14 +56,16 @@ final class FeatureIdentifier implements ArtifactIdentifier
         return new self($feature_id);
     }
 
+    /**
+     * @throws FeatureNotFoundException
+     * @throws FeatureIsNotPlannableException
+     */
     public static function fromId(
-        VerifyFeatureIsVisible $feature_verifier,
+        CheckIsValidFeature $feature_checker,
         int $feature_id,
         UserIdentifier $user_identifier,
-    ): ?self {
-        if (! $feature_verifier->isVisibleFeature($feature_id, $user_identifier)) {
-            return null;
-        }
+    ): self {
+        $feature_checker->checkIsFeature($feature_id, $user_identifier);
         return new self($feature_id);
     }
 

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\VerifyCanBePlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Plan\Plan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
@@ -30,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePlannedInProgramIncrement, RetrievePlannableTrackers, VerifyIsPlannable
+final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePlannedInProgramIncrement, RetrievePlannableTrackers, VerifyIsPlannable, VerifyIsFeature
 {
     /**
      * @throws \Throwable
@@ -148,6 +149,16 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
         $sql = 'SELECT count(*) FROM plugin_program_management_plan WHERE plannable_tracker_id = ?';
 
         return $this->getDB()->exists($sql, $plannable_tracker_id);
+    }
+
+    public function isFeature(int $potential_feature_id): bool
+    {
+        $sql = <<<SQL
+        SELECT 1 FROM plugin_program_management_plan AS plan
+            INNER JOIN tracker_artifact ON tracker_artifact.tracker_id = plan.plannable_tracker_id
+            WHERE tracker_artifact.id = ?
+        SQL;
+        return $this->getDB()->exists($sql, $potential_feature_id);
     }
 
     /**

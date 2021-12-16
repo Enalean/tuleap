@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,26 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links;
+namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
-final class FeatureIsNotPlannableException extends \Exception
+interface VerifyIsFeature
 {
-    private string $i18n_message;
-
-    public function __construct(int $id)
-    {
-        parent::__construct("Tracker id #$id is not a plannable tracker");
-        $this->i18n_message = sprintf(
-            dgettext(
-                'tuleap-program_management',
-                'Tracker id #%d is not a plannable tracker'
-            ),
-            $id
-        );
-    }
-
-    public function getI18NExceptionMessage(): string
-    {
-        return $this->i18n_message;
-    }
+    public function isFeature(int $potential_feature_id): bool;
 }

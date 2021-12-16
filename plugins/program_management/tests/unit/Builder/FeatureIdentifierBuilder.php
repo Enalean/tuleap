@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\CheckIsValidFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleByProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleStub;
 
 final class FeatureIdentifierBuilder
 {
@@ -47,12 +47,10 @@ final class FeatureIdentifierBuilder
 
     public static function withId(int $feature_id): FeatureIdentifier
     {
-        $feature = FeatureIdentifier::fromId(
-            VerifyFeatureIsVisibleStub::withAlwaysVisibleFeatures(),
+        return FeatureIdentifier::fromId(
+            CheckIsValidFeatureStub::withAlwaysValidFeatures(),
             $feature_id,
             UserIdentifierStub::buildGenericUser()
         );
-        assert($feature !== null);
-        return $feature;
     }
 }

@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlannableFeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\Content\SearchUserStoryPlannedInIteration;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\MirroredIterationIdentifierCollectionBuilder;
-use Tuleap\ProgramManagement\Tests\Builder\PlannableFeatureBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchUserStoryPlannedInIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -42,13 +42,12 @@ final class UserStoryIdentifierTest extends TestCase
     private const ITERATION_ID  = 777;
     private SearchChildrenOfFeature $user_story_searcher;
     private VerifyIsVisibleArtifact $verify_is_visible;
-    private PlannableFeatureIdentifier $feature_identifier;
+    private FeatureIdentifier $feature_identifier;
     private UserIdentifier $user_identifier;
 
     private array $visible_user_story;
     private array $invisible_user_story;
     private SearchUserStoryPlannedInIteration $search_user_story_planned_in_iteration;
-
 
     protected function setUp(): void
     {
@@ -58,7 +57,7 @@ final class UserStoryIdentifierTest extends TestCase
         $this->verify_is_visible                      = VerifyIsVisibleArtifactStub::withVisibleIds(self::USER_STORY_ID);
         $this->search_user_story_planned_in_iteration = SearchUserStoryPlannedInIterationStub::withoutUserStory();
 
-        $this->feature_identifier = PlannableFeatureBuilder::build(1);
+        $this->feature_identifier = FeatureIdentifierBuilder::withId(1);
         $this->user_identifier    = UserIdentifierStub::buildGenericUser();
     }
 

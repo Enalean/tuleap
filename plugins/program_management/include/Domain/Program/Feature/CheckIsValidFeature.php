@@ -18,28 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\ProgramManagement\Domain\Program\Feature;
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIsNotPlannableException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class FeatureNotFoundException extends \Exception implements FeatureException
+interface CheckIsValidFeature
 {
-    private string $i18n_message;
-
-    public function __construct(int $feature_id)
-    {
-        parent::__construct(sprintf('Could not find feature with id #%d', $feature_id));
-        $this->i18n_message = sprintf(
-            dgettext(
-                'tuleap-program_management',
-                'Could not find feature with id #%d'
-            ),
-            $feature_id
-        );
-    }
-
-    public function getI18NExceptionMessage(): string
-    {
-        return $this->i18n_message;
-    }
+    /**
+     * @throws FeatureIsNotPlannableException
+     * @throws FeatureNotFoundException
+     */
+    public function checkIsFeature(int $feature_id, UserIdentifier $user): void;
 }
