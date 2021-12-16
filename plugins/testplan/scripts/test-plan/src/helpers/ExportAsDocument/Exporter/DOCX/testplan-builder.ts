@@ -19,12 +19,17 @@
 
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import type { ExportDocument, GlobalExportProperties } from "../../../../type";
+import type { Table } from "docx";
 import { Bookmark, Paragraph, TextRun } from "docx";
 import {
+    HEADER_LEVEL_ARTIFACT_TITLE,
     HEADER_LEVEL_SECTION_TITLE,
+    HEADER_STYLE_ARTIFACT_TITLE,
     HEADER_STYLE_SECTION_TITLE,
     MAIN_TITLES_NUMBERING_ID,
 } from "./document-properties";
+import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx/src";
+import { buildListOfArtifactsContent } from "@tuleap/plugin-docgen-docx/src";
 
 export function getMilestoneTestPlanTitle(
     gettext_provider: VueGettextProvider,
@@ -39,11 +44,11 @@ export function getMilestoneTestPlanTitle(
     };
 }
 
-export function buildMilestoneTestPlan(
-    docemunt: ExportDocument,
+export async function buildMilestoneTestPlan(
+    document: ExportDocument,
     gettext_provider: VueGettextProvider,
     global_export_properties: GlobalExportProperties
-): Paragraph[] {
+): Promise<(Paragraph | Table)[]> {
     const title = getMilestoneTestPlanTitle(gettext_provider, global_export_properties);
 
     const section_title = new Paragraph({
@@ -61,8 +66,29 @@ export function buildMilestoneTestPlan(
         ],
     });
 
+    if (document.tests.length === 0) {
+        return [
+            section_title,
+            new Paragraph(
+                gettext_provider.$gettext("There are no tests planned in the milestone.")
+            ),
+        ];
+    }
+
     return [
         section_title,
-        new Paragraph(gettext_provider.$gettext("There are no tests planned in the milestone.")),
+        ...(await buildTestPlanSection(document.tests, global_export_properties)),
     ];
+}
+
+function buildTestPlanSection(
+    tests: ReadonlyArray<FormattedArtifact>,
+    global_export_properties: GlobalExportProperties
+): Promise<(Paragraph | Table)[]> {
+    return buildListOfArtifactsContent(
+        tests,
+        HEADER_LEVEL_ARTIFACT_TITLE,
+        HEADER_STYLE_ARTIFACT_TITLE,
+        global_export_properties.user_locale
+    );
 }

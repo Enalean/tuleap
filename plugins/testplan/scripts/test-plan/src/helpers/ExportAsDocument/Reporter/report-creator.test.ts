@@ -19,7 +19,7 @@
 
 import { createVueGettextProviderPassthrough } from "../../vue-gettext-provider-for-test";
 import { createExportReport } from "./report-creator";
-import type { BacklogItem } from "../../../type";
+import type { BacklogItem, Campaign } from "../../../type";
 import * as docgen_docx from "@tuleap/plugin-docgen-docx";
 import type {
     ArtifactResponse,
@@ -27,7 +27,9 @@ import type {
     TrackerStructure,
     ArtifactFromReport,
     FormattedArtifact,
+    TestExecutionResponse,
 } from "@tuleap/plugin-docgen-docx";
+import * as querier from "./execution-querier";
 
 describe("Create an export report", () => {
     it("generates the report", async () => {
@@ -48,6 +50,12 @@ describe("Create an export report", () => {
                         disposition: [],
                     });
                 }
+                if (tracker_id === 10) {
+                    return Promise.resolve({
+                        fields: new Map([[3, { type: "sb" } as FieldsStructure]]),
+                        disposition: [],
+                    });
+                }
                 throw Error("Unknown tracker id");
             }
         );
@@ -58,6 +66,7 @@ describe("Create an export report", () => {
                 [1, { id: 1 } as ArtifactResponse],
                 [2, { id: 2 } as ArtifactResponse],
                 [3, { id: 3 } as ArtifactResponse],
+                [123, { id: 123 } as ArtifactResponse],
             ])
         );
 
@@ -69,6 +78,7 @@ describe("Create an export report", () => {
             { id: 1 } as ArtifactFromReport,
             { id: 2 } as ArtifactFromReport,
             { id: 3 } as ArtifactFromReport,
+            { id: 123 } as ArtifactFromReport,
         ]);
 
         const formatArtifactMock = jest.spyOn(docgen_docx, "formatArtifact");
@@ -82,8 +92,31 @@ describe("Create an export report", () => {
             if (artifact.id === 3) {
                 return { id: 3 } as FormattedArtifact;
             }
+            if (artifact.id === 123) {
+                return { id: 123 } as FormattedArtifact;
+            }
             throw Error("Unknown artifact");
         });
+
+        jest.spyOn(querier, "getExecutions").mockResolvedValue([
+            {
+                definition: {
+                    id: 123,
+                    summary: "Test A",
+                    requirement: {
+                        id: 1231,
+                        title: "Lorem",
+                    },
+                },
+                previous_result: {
+                    status: "passed",
+                    submitted_on: "2020-06-23T08:01:04-04:00",
+                    submitted_by: {
+                        display_name: "John Doe",
+                    },
+                },
+            } as TestExecutionResponse,
+        ]);
 
         const report = await createExportReport(
             gettext_provider,
@@ -99,6 +132,7 @@ describe("Create an export report", () => {
                 milestone_url: "/path/to/13.3",
                 base_url: "https://example.com",
                 artifact_links_types: [],
+                testdefinition_tracker_id: 10,
             },
             [
                 {
@@ -126,11 +160,12 @@ describe("Create an export report", () => {
                     },
                 } as BacklogItem,
             ],
-            [],
+            [{ id: 101, label: "Tuleap 13.3" } as Campaign],
             { locale: "en-US", timezone: "UTC" }
         );
 
-        expect(retrieveTrackerStructureMock).toHaveBeenCalledTimes(2);
+        expect(retrieveTrackerStructureMock).toHaveBeenCalledTimes(3);
         expect(report.backlog.length).toBe(3);
+        expect(report.tests.length).toBe(1);
     });
 });

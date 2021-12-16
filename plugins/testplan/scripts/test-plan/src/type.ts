@@ -135,6 +135,7 @@ export interface GlobalExportProperties {
     readonly milestone_url: string;
     readonly base_url: string;
     readonly artifact_links_types: ReadonlyArray<ArtifactLinkType>;
+    readonly testdefinition_tracker_id: number | null;
 }
 
 export interface DateTimeLocaleInformation {

@@ -51,9 +51,18 @@ export async function createExportReport(
     const get_test_execution = memoize(getTestManagementExecution);
 
     const tracker_structure_promises_map: Map<number, TrackerStructurePromiseTuple> = new Map();
-    const artifact_ids: Set<number> = new Set();
+    if (global_properties.testdefinition_tracker_id !== null) {
+        tracker_structure_promises_map.set(global_properties.testdefinition_tracker_id, {
+            tracker_id: global_properties.testdefinition_tracker_id,
+            tracker_structure_promise: retrieveTrackerStructure(
+                global_properties.testdefinition_tracker_id
+            ),
+        });
+    }
+
+    const backlog_item_artifact_ids: Set<number> = new Set();
     for (const item of backlog_items) {
-        artifact_ids.add(item.artifact.id);
+        backlog_item_artifact_ids.add(item.artifact.id);
 
         const tracker_id = item.artifact.tracker.id;
         if (tracker_structure_promises_map.has(tracker_id)) {
@@ -77,32 +86,52 @@ export async function createExportReport(
         }
     );
 
-    const artifacts: ArtifactResponse[] = [...(await getArtifacts(artifact_ids)).values()];
-    const artifacts_structure = await retrieveArtifactsStructure(
+    const executions_map = await getExecutionsForCampaigns(campaigns);
+    const test_def_artifact_ids: Set<number> = new Set();
+    if (global_properties.testdefinition_tracker_id !== null) {
+        for (const { executions } of executions_map.values()) {
+            for (const exec of executions) {
+                test_def_artifact_ids.add(exec.definition.id);
+            }
+        }
+    }
+
+    const all_artifacts: ArtifactResponse[] = [
+        ...(
+            await getArtifacts(new Set([...backlog_item_artifact_ids, ...test_def_artifact_ids]))
+        ).values(),
+    ];
+    const all_artifacts_structures = await retrieveArtifactsStructure(
         tracker_structure_map,
-        artifacts,
+        all_artifacts,
         get_test_execution
     );
-
-    const executions_map = await getExecutionsForCampaigns(campaigns);
 
     return {
         name: gettext_provider.$gettextInterpolate(
             gettext_provider.$gettext("Test Report %{ milestone_title }"),
             { milestone_title: global_properties.milestone_name }
         ),
-        backlog: artifacts_structure.map((artifact) =>
-            formatArtifact(
-                artifact,
-                datetime_locale_information,
-                global_properties.base_url,
-                global_properties.artifact_links_types
-            )
-        ),
-        traceability_matrix: await getTraceabilityMatrix(
-            executions_map,
-            datetime_locale_information
-        ),
-        tests: [],
+        backlog: all_artifacts_structures
+            .filter((artifact) => backlog_item_artifact_ids.has(artifact.id))
+            .map((artifact) =>
+                formatArtifact(
+                    artifact,
+                    datetime_locale_information,
+                    global_properties.base_url,
+                    global_properties.artifact_links_types
+                )
+            ),
+        traceability_matrix: getTraceabilityMatrix(executions_map, datetime_locale_information),
+        tests: all_artifacts_structures
+            .filter((artifact) => test_def_artifact_ids.has(artifact.id))
+            .map((artifact) =>
+                formatArtifact(
+                    artifact,
+                    datetime_locale_information,
+                    global_properties.base_url,
+                    global_properties.artifact_links_types
+                )
+            ),
     };
 }
