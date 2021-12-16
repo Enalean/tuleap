@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\REST\v1;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Feature;
+use Tuleap\ProgramManagement\Tests\Builder\FeatureHasUserStoriesVerifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFeatureCrossReferenceStub;
@@ -31,7 +32,6 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFeatureURIStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureHasAtLeastOneUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -65,7 +65,7 @@ final class FeatureRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
                 new RetrieveFeatureURIStub(),
                 RetrieveFeatureCrossReferenceStub::withShortname(self::TRACKER_SHORTNAME),
                 VerifyHasAtLeastOnePlannedUserStoryStub::withNothingPlanned(),
-                VerifyFeatureHasAtLeastOneUserStoryStub::withStories(),
+                FeatureHasUserStoriesVerifierBuilder::buildWithUserStories(),
                 RetrieveBackgroundColorStub::withColor(self::BACKGROUND_COLOR),
                 RetrieveTrackerOfFeatureStub::withId(self::TRACKER_ID),
                 FeatureIdentifierBuilder::withId(self::FEATURE_ID),

@@ -23,17 +23,20 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\MirroredIterationIdentifierCollection;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredIterationIdentifierCollection;
 use Tuleap\ProgramManagement\Tests\Stub\SearchMirroredTimeboxesStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
 final class MirroredIterationIdentifierCollectionBuilder
 {
-    public static function withId(int $id): MirroredIterationIdentifierCollection
+    /**
+     * @no-named-arguments
+     */
+    public static function withIds(int $mirrored_iteration_id, int ...$other_ids): MirroredIterationIdentifierCollection
     {
         return MirroredIterationIdentifierCollection::fromIteration(
-            SearchMirroredTimeboxesStub::withIds($id),
+            SearchMirroredTimeboxesStub::withIds($mirrored_iteration_id, ...$other_ids),
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
             IterationIdentifierBuilder::buildWithId(1234),
             UserIdentifierStub::buildGenericUser()

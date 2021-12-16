@@ -28,19 +28,36 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredIterationIdenti
 
 final class SearchUserStoryPlannedInIterationStub implements SearchUserStoryPlannedInIteration
 {
-    private function __construct(private array $user_story)
+    private function __construct(private array $user_stories)
     {
     }
-    public static function withUserStory(array $user_story): self
+
+    /**
+     * @no-named-arguments
+     */
+    public static function withUserStoryIds(int $user_story_id, int ...$other_ids): self
     {
-        return new self($user_story);
+        return new self([[$user_story_id, ...$other_ids]]);
     }
+
+    /**
+     * @param array<int[]> $user_story_ids
+     */
+    public static function withSuccessiveIds(array $user_story_ids): self
+    {
+        return new self($user_story_ids);
+    }
+
     public static function withoutUserStory(): self
     {
         return new self([]);
     }
+
     public function searchStoriesOfMirroredIteration(MirroredIterationIdentifier $mirrored_iteration_identifier): array
     {
-        return $this->user_story;
+        if (count($this->user_stories) > 0) {
+            return array_shift($this->user_stories);
+        }
+        return [];
     }
 }

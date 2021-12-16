@@ -23,140 +23,136 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\Content\SearchUserStoryPlannedInIteration;
-use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredIterationIdentifierCollection;
 use Tuleap\ProgramManagement\Tests\Builder\FeatureIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\MirroredIterationIdentifierCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\SearchChildrenOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchUserStoryPlannedInIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyUserStoryIsVisibleStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class UserStoryIdentifierTest extends TestCase
 {
-    private const USER_STORY_ID = 666;
-    private const ITERATION_ID  = 777;
+    private const FIRST_USER_STORY_ID  = 666;
+    private const SECOND_USER_STORY_ID = 698;
+    private const THIRD_USER_STORY_ID  = 714;
+    private const FOURTH_USER_STORY_ID = 182;
     private SearchChildrenOfFeature $user_story_searcher;
-    private VerifyIsVisibleArtifact $verify_is_visible;
-    private FeatureIdentifier $feature_identifier;
-    private UserIdentifier $user_identifier;
-
-    private array $visible_user_story;
-    private array $invisible_user_story;
+    private VerifyUserStoryIsVisibleStub $verify_is_visible;
     private SearchUserStoryPlannedInIteration $search_user_story_planned_in_iteration;
+    private \Closure $getId;
+    private MirroredIterationIdentifierCollection $mirrored_iterations;
 
     protected function setUp(): void
     {
-        $this->visible_user_story   = ['children_id' => self::USER_STORY_ID];
-        $this->invisible_user_story = ['children_id' => 404,];
+        $this->getId = static fn(UserStoryIdentifier $story): int => $story->getId();
 
-        $this->verify_is_visible                      = VerifyIsVisibleArtifactStub::withVisibleIds(self::USER_STORY_ID);
-        $this->search_user_story_planned_in_iteration = SearchUserStoryPlannedInIterationStub::withoutUserStory();
+        $this->verify_is_visible                      = VerifyUserStoryIsVisibleStub::withAlwaysVisibleUserStories();
+        $this->user_story_searcher                    = SearchChildrenOfFeatureStub::withUserStoryIds(
+            self::FIRST_USER_STORY_ID,
+            self::SECOND_USER_STORY_ID
+        );
+        $this->search_user_story_planned_in_iteration = SearchUserStoryPlannedInIterationStub::withSuccessiveIds([
+            [self::FIRST_USER_STORY_ID, self::SECOND_USER_STORY_ID],
+            [self::THIRD_USER_STORY_ID, self::FOURTH_USER_STORY_ID],
+        ]);
 
-        $this->feature_identifier = FeatureIdentifierBuilder::withId(1);
-        $this->user_identifier    = UserIdentifierStub::buildGenericUser();
+        $this->mirrored_iterations = MirroredIterationIdentifierCollectionBuilder::withIds(777, 821);
     }
 
-    public function testSkipsIfUserCanNotSeeFromFeature(): void
+    /**
+     * @return UserStoryIdentifier[]
+     */
+    private function getCollectionFromFeature(): array
     {
-        $this->user_story_searcher = SearchChildrenOfFeatureStub::withChildren(
-            [$this->invisible_user_story]
-        );
-        self::assertCount(
-            0,
-            UserStoryIdentifier::buildCollectionFromFeature(
-                $this->user_story_searcher,
-                $this->verify_is_visible,
-                $this->feature_identifier,
-                $this->user_identifier
-            )
+        return UserStoryIdentifier::buildCollectionFromFeature(
+            $this->user_story_searcher,
+            $this->verify_is_visible,
+            FeatureIdentifierBuilder::withId(1),
+            UserIdentifierStub::buildGenericUser()
         );
     }
 
     public function testItBuildsUserStoryIdFromFeature(): void
     {
-        $this->user_story_searcher = SearchChildrenOfFeatureStub::withChildren([$this->visible_user_story]);
-
-        self::assertSame(
-            self::USER_STORY_ID,
-            UserStoryIdentifier::buildCollectionFromFeature(
-                $this->user_story_searcher,
-                $this->verify_is_visible,
-                $this->feature_identifier,
-                $this->user_identifier
-            )[0]->getId()
-        );
+        $user_stories   = $this->getCollectionFromFeature();
+        $user_story_ids = array_map($this->getId, $user_stories);
+        self::assertCount(2, $user_story_ids);
+        self::assertContains(self::FIRST_USER_STORY_ID, $user_story_ids);
+        self::assertContains(self::SECOND_USER_STORY_ID, $user_story_ids);
     }
 
-    public function testSkipsIfUserCanNotSeeFromIteration(): void
+    public function testSkipsIfUserCanNotSeeFromFeature(): void
     {
-        $this->user_story_searcher = SearchChildrenOfFeatureStub::withChildren([404]);
-        self::assertEmpty(
-            UserStoryIdentifier::buildCollectionFromIteration(
-                $this->search_user_story_planned_in_iteration,
-                MirroredIterationIdentifierCollectionBuilder::withId(self::ITERATION_ID),
-                $this->verify_is_visible,
-                $this->user_identifier
-            )
-        );
+        $this->verify_is_visible = VerifyUserStoryIsVisibleStub::withVisibleIds(self::SECOND_USER_STORY_ID);
+        $user_stories            = $this->getCollectionFromFeature();
+        $user_story_ids          = array_map($this->getId, $user_stories);
+        self::assertNotContains(self::FIRST_USER_STORY_ID, $user_story_ids);
+        self::assertContains(self::SECOND_USER_STORY_ID, $user_story_ids);
     }
 
-    public function testItBuildsAnEmptyArrayIfNoMirrorIsFound(): void
+    public function testItReturnsEmptyArrayWhenThereAreNoStoryInFeature(): void
     {
-        self::assertEmpty(
-            UserStoryIdentifier::buildCollectionFromIteration(
-                $this->search_user_story_planned_in_iteration,
-                MirroredIterationIdentifierCollectionBuilder::withoutIteration(),
-                $this->verify_is_visible,
-                $this->user_identifier
-            )
-        );
+        $this->user_story_searcher = SearchChildrenOfFeatureStub::withoutUserStories();
+        self::assertCount(0, $this->getCollectionFromFeature());
     }
 
-    public function testItBuildsAnEmptyArrayIfMirrorHasNoUserStory(): void
+    /**
+     * @return UserStoryIdentifier[]
+     */
+    private function getCollectionFromMirroredIterations(): array
     {
-        self::assertEmpty(
-            UserStoryIdentifier::buildCollectionFromIteration(
-                $this->search_user_story_planned_in_iteration,
-                MirroredIterationIdentifierCollectionBuilder::withId(self::ITERATION_ID),
-                $this->verify_is_visible,
-                $this->user_identifier
-            )
-        );
-    }
-
-    public function testItBuildsAnEmptyArrayWhenUserCanNotSeeUserStory(): void
-    {
-        $this->search_user_story_planned_in_iteration = SearchUserStoryPlannedInIterationStub::withUserStory([self::USER_STORY_ID]);
-        $this->verify_is_visible                      = VerifyIsVisibleArtifactStub::withNoVisibleArtifact();
-
-        self::assertEmpty(
-            UserStoryIdentifier::buildCollectionFromIteration(
-                $this->search_user_story_planned_in_iteration,
-                MirroredIterationIdentifierCollectionBuilder::withId(self::ITERATION_ID),
-                $this->verify_is_visible,
-                $this->user_identifier
-            )
+        return UserStoryIdentifier::buildCollectionFromIteration(
+            $this->search_user_story_planned_in_iteration,
+            $this->verify_is_visible,
+            $this->mirrored_iterations,
+            UserIdentifierStub::buildGenericUser()
         );
     }
 
     public function testItBuildsUserStoryIdFromIteration(): void
     {
-        $this->search_user_story_planned_in_iteration = SearchUserStoryPlannedInIterationStub::withUserStory([self::USER_STORY_ID]);
-        $this->verify_is_visible                      = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
+        $user_stories   = $this->getCollectionFromMirroredIterations();
+        $user_story_ids = array_map($this->getId, $user_stories);
+        self::assertCount(4, $user_story_ids);
+        self::assertContains(self::FIRST_USER_STORY_ID, $user_story_ids);
+        self::assertContains(self::SECOND_USER_STORY_ID, $user_story_ids);
+        self::assertContains(self::THIRD_USER_STORY_ID, $user_story_ids);
+        self::assertContains(self::FOURTH_USER_STORY_ID, $user_story_ids);
+    }
 
-        self::assertSame(
-            self::USER_STORY_ID,
-            UserStoryIdentifier::buildCollectionFromIteration(
-                $this->search_user_story_planned_in_iteration,
-                MirroredIterationIdentifierCollectionBuilder::withId(self::ITERATION_ID),
-                $this->verify_is_visible,
-                $this->user_identifier
-            )[0]->getId()
+    public function testSkipsIfUserCanNotSeeUserStoriesFromIteration(): void
+    {
+        $this->verify_is_visible = VerifyUserStoryIsVisibleStub::withVisibleIds(
+            self::SECOND_USER_STORY_ID,
+            self::FOURTH_USER_STORY_ID
         );
+        $user_stories            = $this->getCollectionFromMirroredIterations();
+        $user_story_ids          = array_map($this->getId, $user_stories);
+        self::assertContains(self::SECOND_USER_STORY_ID, $user_story_ids);
+        self::assertContains(self::FOURTH_USER_STORY_ID, $user_story_ids);
+        self::assertNotContains(self::FIRST_USER_STORY_ID, $user_story_ids);
+        self::assertNotContains(self::THIRD_USER_STORY_ID, $user_story_ids);
+    }
+
+    public function testItBuildsAnEmptyArrayIfNoMirrorIsFound(): void
+    {
+        $this->mirrored_iterations = MirroredIterationIdentifierCollectionBuilder::withoutIteration();
+        self::assertCount(0, $this->getCollectionFromMirroredIterations());
+    }
+
+    public function testItBuildsAnEmptyArrayIfMirrorHasNoUserStory(): void
+    {
+        $this->search_user_story_planned_in_iteration = SearchUserStoryPlannedInIterationStub::withoutUserStory();
+        self::assertCount(0, $this->getCollectionFromMirroredIterations());
+    }
+
+    public function testItBuildsAnEmptyArrayWhenUserCanNotSeeUserStory(): void
+    {
+        $this->verify_is_visible = VerifyUserStoryIsVisibleStub::withNoVisibleUserStory();
+        self::assertCount(0, $this->getCollectionFromMirroredIterations());
     }
 }

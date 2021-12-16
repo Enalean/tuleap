@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
 
 final class SearchChildrenOfFeatureStub implements SearchChildrenOfFeature
@@ -30,15 +31,21 @@ final class SearchChildrenOfFeatureStub implements SearchChildrenOfFeature
     private function __construct(private array $children)
     {
     }
-    public static function withChildren(array $children): self
+
+    /**
+     * @no-named-arguments
+     */
+    public static function withUserStoryIds(int $user_story_id, int ...$other_ids): self
     {
-        return new self($children);
+        return new self([$user_story_id, ...$other_ids]);
     }
-    public static function withoutChildren(): self
+
+    public static function withoutUserStories(): self
     {
         return new self([]);
     }
-    public function getChildrenOfFeatureInTeamProjects(int $artifact_id): array
+
+    public function getChildrenOfFeatureInTeamProjects(FeatureIdentifier $feature): array
     {
         return $this->children;
     }

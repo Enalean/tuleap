@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\VerifyFeatureHasAtLeastOneUserStory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureHasUserStoriesVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\VerifyHasAtLeastOnePlannedUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Feature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
@@ -51,7 +51,7 @@ final class ProgramIncrementContentSearcher
         private RetrieveTrackerOfFeature $tracker_retriever,
         private RetrieveBackgroundColor $background_retriever,
         private VerifyHasAtLeastOnePlannedUserStory $planned_verifier,
-        private VerifyFeatureHasAtLeastOneUserStory $story_verifier,
+        private FeatureHasUserStoriesVerifier $story_verifier,
     ) {
     }
 

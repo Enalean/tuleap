@@ -133,7 +133,6 @@ final class ArtifactVisibleVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsFalseWithBypassAndArtifactCantBeFound(): void
     {
         $this->artifact_factory->method('getArtifactById')->willReturn(null);
-
         self::assertFalse($this->isFeatureVisibleAndInProgram(new WorkflowUserPermissionBypass()));
     }
 
@@ -168,7 +167,6 @@ final class ArtifactVisibleVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testReturnsFalseWhenUserCanNotViewFeature(): void
     {
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(null);
-
         self::assertFalse($this->isFeatureVisible());
     }
 
@@ -178,5 +176,24 @@ final class ArtifactVisibleVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
 
         self::assertTrue($this->isFeatureVisible());
+    }
+
+    private function isUserStoryVisible(): bool
+    {
+        return $this->getVerifier()->isUserStoryVisible(self::ARTIFACT_ID, UserIdentifierStub::withId(self::USER_ID));
+    }
+
+    public function testReturnsFalseWhenUserCannotSeeUserStory(): void
+    {
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(null);
+        self::assertFalse($this->isUserStoryVisible());
+    }
+
+    public function testReturnsTrueWhenUserCanSeeUserStory(): void
+    {
+        $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->build();
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
+
+        self::assertTrue($this->isUserStoryVisible());
     }
 }

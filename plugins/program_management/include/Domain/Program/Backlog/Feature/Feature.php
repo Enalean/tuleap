@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\VerifyFeatureHasAtLeastOneUserStory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureHasUserStoriesVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\VerifyHasAtLeastOnePlannedUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -49,7 +49,7 @@ final class Feature
         RetrieveFeatureURI $uri_retriever,
         RetrieveFeatureCrossReference $cross_reference_retriever,
         VerifyHasAtLeastOnePlannedUserStory $planned_verifier,
-        VerifyFeatureHasAtLeastOneUserStory $story_verifier,
+        FeatureHasUserStoriesVerifier $story_verifier,
         RetrieveBackgroundColor $background_retriever,
         RetrieveTrackerOfFeature $tracker_retriever,
         FeatureIdentifier $feature_identifier,

@@ -20,30 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\VerifyFeatureHasAtLeastOneUserStory;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class VerifyFeatureHasAtLeastOneUserStoryStub implements VerifyFeatureHasAtLeastOneUserStory
+interface VerifyUserStoryIsVisible
 {
-    private function __construct(private bool $has_story)
-    {
-    }
-
-    public static function withStories(): self
-    {
-        return new self(true);
-    }
-
-    public static function withoutStories(): self
-    {
-        return new self(false);
-    }
-
-    public function hasStoryLinked(FeatureIdentifier $feature, UserIdentifier $user): bool
-    {
-        return $this->has_story;
-    }
+    public function isUserStoryVisible(int $user_story_id, UserIdentifier $user): bool;
 }

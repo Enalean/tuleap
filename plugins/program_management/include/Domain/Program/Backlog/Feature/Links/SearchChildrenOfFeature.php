@@ -23,10 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+
 interface SearchChildrenOfFeature
 {
     /**
-     * @psalm-return array{children_id:int}[]
+     * @return int[]
      */
-    public function getChildrenOfFeatureInTeamProjects(int $artifact_id): array;
+    public function getChildrenOfFeatureInTeamProjects(FeatureIdentifier $feature): array;
 }

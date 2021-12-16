@@ -26,11 +26,13 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\Content\SearchUserStoryPlannedInIteration;
-use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredIterationIdentifierCollection;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
+ * I hold the identifier of a User Story. User Stories are always in Teams.
+ * They are always children of Features (in a Program).
  * @psalm-immutable
  */
 final class UserStoryIdentifier implements ArtifactIdentifier
@@ -44,15 +46,14 @@ final class UserStoryIdentifier implements ArtifactIdentifier
      */
     public static function buildCollectionFromFeature(
         SearchChildrenOfFeature $user_stories_searcher,
-        VerifyIsVisibleArtifact $visibility_verifier,
+        VerifyUserStoryIsVisible $visibility_verifier,
         FeatureIdentifier $feature,
         UserIdentifier $user_identifier,
     ): array {
-        $rows         = $user_stories_searcher->getChildrenOfFeatureInTeamProjects($feature->getId());
-        $user_stories = [];
-        foreach ($rows as $row) {
-            $id = $row['children_id'];
-            if ($visibility_verifier->isVisible($id, $user_identifier)) {
+        $user_story_ids = $user_stories_searcher->getChildrenOfFeatureInTeamProjects($feature);
+        $user_stories   = [];
+        foreach ($user_story_ids as $id) {
+            if ($visibility_verifier->isUserStoryVisible($id, $user_identifier)) {
                 $user_stories[] = new self($id);
             }
         }
@@ -64,16 +65,16 @@ final class UserStoryIdentifier implements ArtifactIdentifier
      */
     public static function buildCollectionFromIteration(
         SearchUserStoryPlannedInIteration $search_user_story_planned_in_iteration,
+        VerifyUserStoryIsVisible $visibility_verifier,
         MirroredIterationIdentifierCollection $mirrored_iterations,
-        VerifyIsVisibleArtifact $artifact_visibility_verifier,
         UserIdentifier $user,
     ): array {
         $user_stories = [];
         foreach ($mirrored_iterations->getMirroredIterations() as $mirrored_iteration) {
             $planned_user_stories = $search_user_story_planned_in_iteration->searchStoriesOfMirroredIteration($mirrored_iteration);
             foreach ($planned_user_stories as $user_story_id) {
-                if ($artifact_visibility_verifier->isVisible($user_story_id, $user)) {
-                    $user_stories[] =  new self($user_story_id);
+                if ($visibility_verifier->isUserStoryVisible($user_story_id, $user)) {
+                    $user_stories[] = new self($user_story_id);
                 }
             }
         }

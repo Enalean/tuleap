@@ -27,14 +27,15 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\UserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIteration;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\MirroredIterationIdentifierCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveTrackerFromUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryCrossRef;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryTitle;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryURI;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyIsOpen;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyUserStoryIsVisible;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredIterationIdentifierCollection;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -45,6 +46,7 @@ final class IterationContentSearcher
         private VerifyIsIteration $verify_is_iteration,
         private VerifyIsVisibleArtifact $is_visible_artifact,
         private SearchUserStoryPlannedInIteration $search_user_story_planned_in_iteration,
+        private VerifyUserStoryIsVisible $is_visible_story,
         private RetrieveUserStoryTitle $retrieve_title_value,
         private RetrieveUserStoryURI $retrieve_uri,
         private RetrieveUserStoryCrossRef $retrieve_cross_ref,
@@ -67,8 +69,6 @@ final class IterationContentSearcher
             throw new IterationNotFoundException($id);
         }
 
-        $content = [];
-
         $mirrored_iterations = MirroredIterationIdentifierCollection::fromIteration(
             $this->iteration_searcher,
             $this->is_visible_artifact,
@@ -78,24 +78,23 @@ final class IterationContentSearcher
 
         $planned_user_stories = UserStoryIdentifier::buildCollectionFromIteration(
             $this->search_user_story_planned_in_iteration,
+            $this->is_visible_story,
             $mirrored_iterations,
-            $this->is_visible_artifact,
             $user_identifier
         );
 
-        foreach ($planned_user_stories as $user_story) {
-            $content[] = UserStory::build(
+        return array_map(
+            fn(UserStoryIdentifier $user_story_identifier) => UserStory::build(
                 $this->retrieve_title_value,
                 $this->retrieve_uri,
                 $this->retrieve_cross_ref,
                 $this->retrieve_is_open,
                 $this->retrieve_background_color,
                 $this->retrieve_tracker_id,
-                $user_story,
+                $user_story_identifier,
                 $user_identifier
-            );
-        }
-
-        return $content;
+            ),
+            $planned_user_stories
+        );
     }
 }

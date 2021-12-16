@@ -31,7 +31,9 @@ use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifie
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
- * I identify a Feature, I'm its ID property
+ * I hold the identifier of a Feature. Features are always in a Program.
+ * Features are chosen by the Program Administrator and can be planned in
+ * Program Increments.
  * @psalm-immutable
  */
 final class FeatureIdentifier implements ArtifactIdentifier
