@@ -50,7 +50,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { State } from "vuex-class";
+import { namespace } from "vuex-class";
 import { Component, Prop } from "vue-property-decorator";
 import {
     getAccessibilityClasses,
@@ -59,12 +59,14 @@ import {
 
 import type { UserStory } from "../../../type";
 
+const configuration = namespace("configuration");
+
 @Component
 export default class UserStoryCard extends Vue {
     @Prop({ required: true })
     readonly user_story!: UserStory;
 
-    @State
+    @configuration.State
     readonly is_accessibility_mode_enabled!: boolean;
 
     get additional_classnames(): string {

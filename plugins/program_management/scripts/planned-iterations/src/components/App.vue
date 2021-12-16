@@ -34,14 +34,16 @@
 </template>
 
 <script lang="ts">
-import type { ProgramIncrement } from "../type";
+import type { ProgramIncrement } from "../store/configuration";
 
 import Vue from "vue";
-import { State } from "vuex-class";
+import { namespace } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import Breadcrumb from "./Breadcrumb.vue";
 import IterationsToBePlannedSection from "./Backlog/ToBePlanned/IterationsToBePlannedSection.vue";
 import PlannedIterationsSection from "./Backlog/Iteration/PlannedIterationsSection.vue";
+
+const configuration = namespace("configuration");
 
 @Component({
     components: {
@@ -51,7 +53,7 @@ import PlannedIterationsSection from "./Backlog/Iteration/PlannedIterationsSecti
     },
 })
 export default class App extends Vue {
-    @State
+    @configuration.State
     readonly program_increment!: ProgramIncrement;
 
     get are_dates_displayed(): boolean {

@@ -86,14 +86,17 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { State } from "vuex-class";
+import { namespace } from "vuex-class";
 import { Component, Prop } from "vue-property-decorator";
 import { formatDateYearMonthDay } from "@tuleap/date-helper";
 import { buildIterationEditionUrl } from "../../../helpers/create-new-iteration-link-builder";
 
 import IterationUserStoryList from "./IterationUserStoryList.vue";
 
-import type { Iteration, ProgramIncrement } from "../../../type";
+import type { Iteration } from "../../../type";
+import type { ProgramIncrement } from "../../../store/configuration";
+
+const configuration = namespace("configuration");
 
 @Component({
     components: { IterationUserStoryList },
@@ -102,10 +105,10 @@ export default class IterationCard extends Vue {
     @Prop({ required: true })
     readonly iteration!: Iteration;
 
-    @State
+    @configuration.State
     readonly program_increment!: ProgramIncrement;
 
-    @State
+    @configuration.State
     readonly user_locale!: string;
 
     private is_open = false;

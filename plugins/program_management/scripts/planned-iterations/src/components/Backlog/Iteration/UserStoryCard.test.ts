@@ -53,7 +53,9 @@ describe("UserStoryCard", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        is_accessibility_mode_enabled,
+                        configuration: {
+                            is_accessibility_mode_enabled,
+                        },
                     },
                 }),
             },

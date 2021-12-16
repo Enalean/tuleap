@@ -44,14 +44,16 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { State } from "vuex-class";
+import { namespace } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import { sprintf } from "sprintf-js";
 import { buildIterationCreationUrl } from "../../../helpers/create-new-iteration-link-builder";
 
 import SvgPlannedIterationsEmptyState from "./SVGPlannedIterationsEmptyState.vue";
 
-import type { IterationLabels, ProgramIncrement } from "../../../type";
+import type { IterationLabels, ProgramIncrement } from "../../../store/configuration";
+
+const configuration = namespace("configuration");
 
 @Component({
     components: {
@@ -59,13 +61,13 @@ import type { IterationLabels, ProgramIncrement } from "../../../type";
     },
 })
 export default class PlannedIterationsSectionEmptyState extends Vue {
-    @State
+    @configuration.State
     readonly iterations_labels!: IterationLabels;
 
-    @State
+    @configuration.State
     readonly iteration_tracker_id!: number;
 
-    @State
+    @configuration.State
     readonly program_increment!: ProgramIncrement;
 
     get planned_iterations_empty_state_text(): string {

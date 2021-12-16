@@ -71,12 +71,14 @@
 
 <script lang="ts">
 import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
-import type { ProgramIncrement, Program } from "../type";
+import type { ProgramIncrement, Program } from "../store/configuration";
 
 import Vue from "vue";
-import { State } from "vuex-class";
+import { namespace } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+
+const configuration = namespace("configuration");
 
 @Component({
     components: {
@@ -84,19 +86,19 @@ import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
     },
 })
 export default class Breadcrumb extends Vue {
-    @State
+    @configuration.State
     readonly program!: Program;
 
-    @State
+    @configuration.State
     readonly program_privacy!: ProjectPrivacy;
 
-    @State
+    @configuration.State
     readonly program_flags!: Array<ProjectFlag>;
 
-    @State
+    @configuration.State
     readonly is_program_admin!: boolean;
 
-    @State
+    @configuration.State
     readonly program_increment!: ProgramIncrement;
 
     get program_url(): string {

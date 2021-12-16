@@ -36,9 +36,11 @@ describe("IterationCard", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        user_locale: "en-US",
-                        program_increment: {
-                            id: 1280,
+                        configuration: {
+                            user_locale: "en-US",
+                            program_increment: {
+                                id: 1280,
+                            },
                         },
                     },
                 }),
