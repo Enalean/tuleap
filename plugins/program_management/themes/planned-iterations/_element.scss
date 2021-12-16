@@ -46,6 +46,7 @@ $accessibility-pattern-right-margin: 6px;
 .element-card {
     position: relative;
     z-index: 1;
+    justify-content: space-between;
     padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
     border: 1px solid var(--border-color, transparent);
     border-radius: var(--tlp-medium-radius);
@@ -101,6 +102,7 @@ $accessibility-pattern-right-margin: 6px;
     display: flex;
     font-size: 0.625rem;
     line-height: 0.8125rem;
+    white-space: nowrap;
 
     > .element-card-xref-project {
         color: var(--text-color);
@@ -125,9 +127,10 @@ $accessibility-pattern-right-margin: 6px;
     }
 }
 
-.element-card-content {
+.element-card-metadata {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .element-card-label {
@@ -156,4 +159,14 @@ $accessibility-pattern-right-margin: 6px;
 
 .element-skeleton-title {
     width: 300px;
+}
+
+.feature-link {
+    color: var(--tlp-dark-color);
+    white-space: normal;
+    cursor: pointer;
+}
+
+.element-card-feature-title {
+    margin: 0 0 0 var(--tlp-small-spacing);
 }

@@ -408,12 +408,13 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $artifact_retriever  = new ArtifactFactoryAdapter($artifact_factory);
         $visibility_verifier = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
 
-        $backlog_searcher = new BacklogSearcher(
+        $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
+        $backlog_searcher               = new BacklogSearcher(
             new ProgramIncrementsDAO(),
             $visibility_verifier,
             new ContentDao(),
             $visibility_verifier,
-            new ArtifactsLinkedToParentDao(),
+            $artifacts_linked_to_parent_dao,
             $visibility_verifier,
             new IterationsLinkedToProgramIncrementDAO(),
             new MirroredTimeboxesDao(),

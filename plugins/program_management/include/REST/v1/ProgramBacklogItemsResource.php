@@ -31,17 +31,20 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\URIRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory\IsOpenRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureChecker;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUserStoriesVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
+use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureHasUserStoriesVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIsNotPlannableException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\UserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\UserStoryRetriever;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\FeatureOfUserStoryRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -79,6 +82,39 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
         $visibility_verifier           = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
         $tracker_retriever             = new TrackerFactoryAdapter(\TrackerFactory::instance());
 
+        $artifact_retriever         = new ArtifactFactoryAdapter($artifact_factory);
+        $title_value_retriever      = new TitleValueRetriever($artifact_retriever);
+        $URI_retriever              = new URIRetriever($artifact_retriever);
+        $cross_reference_retriever  = new CrossReferenceRetriever($artifact_retriever);
+        $background_color_retriever = new BackgroundColorRetriever(
+            new BackgroundColorBuilder(new BindDecoratorRetriever()),
+            $artifact_retriever,
+            $user_retriever
+        );
+
+        $artifacts_linked_to_parent_dao           = new ArtifactsLinkedToParentDao();
+        $feature_has_planned_user_story_retriever = new FeatureHasPlannedUserStoriesVerifier(
+            $artifacts_linked_to_parent_dao,
+            new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
+            $artifacts_linked_to_parent_dao
+        );
+        $feature_has_user_story_verifier          = new FeatureHasUserStoriesVerifier(
+            $artifacts_linked_to_parent_dao,
+            $visibility_verifier
+        );
+
+        $feature_representation_builder = new FeatureOfUserStoryRetriever(
+            $title_value_retriever,
+            $URI_retriever,
+            $cross_reference_retriever,
+            $feature_has_planned_user_story_retriever,
+            new FeatureChecker(new PlanDao(), $visibility_verifier),
+            $background_color_retriever,
+            $tracker_of_artifact_retriever,
+            $artifacts_linked_to_parent_dao,
+            $feature_has_user_story_verifier
+        );
+
         $user_story_representation_builder = new UserStoryRetriever(
             new ArtifactsLinkedToParentDao(),
             new FeatureChecker(new PlanDao(), $visibility_verifier),
@@ -92,24 +128,31 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
             new CrossReferenceRetriever($artifact_retriever),
             new IsOpenRetriever($artifact_retriever),
             $tracker_of_artifact_retriever,
-            $visibility_verifier
+            $visibility_verifier,
         );
 
         $user = $user_manager->getCurrentUser();
         try {
-            $user_stories = $user_story_representation_builder->retrieveStories(
+            $user_identifier = UserProxy::buildFromPFUser($user);
+            $user_stories    = $user_story_representation_builder->retrieveStories(
                 $id,
-                UserProxy::buildFromPFUser($user)
+                $user_identifier
             );
 
-            $representations = array_map(
-                static fn(UserStory $story) => UserStoryRepresentation::build($tracker_retriever, $story),
-                $user_stories
-            );
+            $linked_children = [];
+            foreach ($user_stories as $user_story) {
+                $user_story_representation = UserStoryRepresentation::build(
+                    $tracker_retriever,
+                    $user_story,
+                );
+                if ($user_story_representation) {
+                    $linked_children[] = $user_story_representation;
+                }
+            }
 
-            Header::sendPaginationHeaders($limit, $offset, count($representations), self::MAX_LIMIT);
+            Header::sendPaginationHeaders($limit, $offset, count($linked_children), self::MAX_LIMIT);
 
-            return array_slice($representations, $offset, $limit);
+            return array_slice($linked_children, $offset, $limit);
         } catch (FeatureIsNotPlannableException $e) {
             throw new I18NRestException(400, $e->getI18NExceptionMessage());
         } catch (FeatureNotFoundException $e) {

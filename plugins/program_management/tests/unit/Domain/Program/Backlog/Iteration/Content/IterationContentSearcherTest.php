@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\FeatureOfUserStoryRetrieverBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStoryCrossRefStub;
@@ -105,7 +106,8 @@ final class IterationContentSearcherTest extends TestCase
             $this->retrieve_is_open,
             $this->retrieve_background_color,
             $this->retrieve_tracker_id,
-            $this->search_mirrored_timeboxes
+            $this->search_mirrored_timeboxes,
+            FeatureOfUserStoryRetrieverBuilder::withSuccessiveFeatures('feature', 'feature 2')
         );
     }
 

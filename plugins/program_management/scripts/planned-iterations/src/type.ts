@@ -30,7 +30,7 @@ export interface State {
     iterations_content: Map<number, UserStory[]>;
 }
 
-export interface UserStory {
+export interface Element {
     readonly background_color: string;
     readonly is_open: boolean;
     readonly id: number;
@@ -40,6 +40,12 @@ export interface UserStory {
     readonly tracker: TrackerMinimalRepresentation;
     readonly project: ProjectMinimalRepresentation;
 }
+
+export interface UserStory extends Element {
+    feature: Feature | null;
+}
+
+export type Feature = Element;
 
 interface TrackerMinimalRepresentation {
     readonly color_name: string;

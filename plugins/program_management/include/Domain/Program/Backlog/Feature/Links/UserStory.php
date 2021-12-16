@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Feature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyIsOpen;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveTrackerFromUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryCrossRef;
@@ -31,6 +32,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryT
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryURI;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\FeatureOfUserStoryRetriever;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
@@ -46,9 +48,14 @@ final class UserStory
         public bool $is_open,
         public UserStoryTrackerIdentifier $tracker_identifier,
         public BackgroundColor $background_color,
+        public ?Feature $feature,
     ) {
     }
 
+    /**
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIsNotPlannableException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException
+     */
     public static function build(
         RetrieveUserStoryTitle $retrieve_title_value,
         RetrieveUserStoryURI $retrieve_uri,
@@ -67,6 +74,34 @@ final class UserStory
             $retrieve_is_open->isOpen($user_story_identifier),
             UserStoryTrackerIdentifier::fromUserStory($retrieve_tracker_id, $user_story_identifier),
             $retrieve_background_color->retrieveBackgroundColor($user_story_identifier, $user_identifier),
+            null,
+        );
+    }
+
+    /**
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIsNotPlannableException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException
+     */
+    public static function buildWithParentFeature(
+        RetrieveUserStoryTitle $retrieve_title_value,
+        RetrieveUserStoryURI $retrieve_uri,
+        RetrieveUserStoryCrossRef $retrieve_cross_ref,
+        VerifyIsOpen $retrieve_is_open,
+        RetrieveBackgroundColor $retrieve_background_color,
+        RetrieveTrackerFromUserStory $retrieve_tracker_id,
+        FeatureOfUserStoryRetriever $retrieve_feature_of_user_story,
+        UserStoryIdentifier $user_story_identifier,
+        UserIdentifier $user_identifier,
+    ): self {
+        return new self(
+            $user_story_identifier,
+            $retrieve_uri->getUserStoryURI($user_story_identifier),
+            $retrieve_cross_ref->getUserStoryCrossRef($user_story_identifier),
+            $retrieve_title_value->getUserStoryTitle($user_story_identifier),
+            $retrieve_is_open->isOpen($user_story_identifier),
+            UserStoryTrackerIdentifier::fromUserStory($retrieve_tracker_id, $user_story_identifier),
+            $retrieve_background_color->retrieveBackgroundColor($user_story_identifier, $user_identifier),
+            $retrieve_feature_of_user_story->retrieveFeature($user_story_identifier, $user_identifier),
         );
     }
 }

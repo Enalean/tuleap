@@ -21,21 +21,35 @@
     <div class="element-backlog-item">
         <div class="element-card" v-bind:class="additional_classnames" data-test="user-story-card">
             <div class="element-card-content">
-                <div class="element-card-xref-label">
-                    <div class="element-card-xref-project">
-                        <span class="element-card-xref-project-icon" v-if="user_story.project.icon">
-                            {{ user_story.project.icon }}
-                        </span>
-                        {{ user_story.project.label }}
-                        <i class="fas fa-long-arrow-alt-right element-card-xref-icon"></i>
+                <div class="element-card-metadata">
+                    <div class="element-card-xref-label">
+                        <div class="element-card-xref-project">
+                            <span
+                                class="element-card-xref-project-icon"
+                                v-if="user_story.project.icon"
+                            >
+                                {{ user_story.project.icon }}
+                            </span>
+                            {{ user_story.project.label }}
+                            <i class="fas fa-long-arrow-alt-right element-card-xref-icon"></i>
+                        </div>
+                        <a
+                            v-bind:href="`/plugins/tracker/?aid=${user_story.id}`"
+                            class="element-card-xref"
+                            v-bind:class="`element-card-xref-${user_story.tracker.color_name}`"
+                        >
+                            {{ user_story.xref }}
+                        </a>
                     </div>
-                    <a
-                        v-bind:href="`/plugins/tracker/?aid=${user_story.id}`"
-                        class="element-card-xref"
-                        v-bind:class="`element-card-xref-${user_story.tracker.color_name}`"
+                    <div
+                        class="element-card-feature-title tlp-badge-secondary tlp-badge-outline"
+                        v-if="user_story.feature"
                     >
-                        {{ user_story.xref }}
-                    </a>
+                        <i class="fas fa-level-up-alt"></i>
+                        <a v-bind:href="user_story.feature.uri" class="feature-link">
+                            {{ user_story.feature.title }}
+                        </a>
+                    </div>
                 </div>
                 <span class="element-card-label">{{ user_story.title }}</span>
             </div>

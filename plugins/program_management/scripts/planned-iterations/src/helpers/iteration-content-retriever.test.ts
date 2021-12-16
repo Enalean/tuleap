@@ -44,6 +44,7 @@ describe("iteration-content-retriever", () => {
                     label: "Guinea Pigs",
                     icon: "🐹",
                 },
+                feature: null,
             },
         ];
 

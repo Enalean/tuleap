@@ -24,6 +24,7 @@ import UserStoryCard from "./UserStoryCard.vue";
 
 import type { Wrapper } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { Feature } from "../../../type";
 
 describe("UserStoryCard", () => {
     async function getWrapper(
@@ -48,6 +49,10 @@ describe("UserStoryCard", () => {
                         label: "Guinea Pigs",
                         icon: "🐹",
                     },
+                    feature: {
+                        title: "My parent feature",
+                        uri: "uri/to/feature",
+                    } as Feature,
                 },
             },
             mocks: {
