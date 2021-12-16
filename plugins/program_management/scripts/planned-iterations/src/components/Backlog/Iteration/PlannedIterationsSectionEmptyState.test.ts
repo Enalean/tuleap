@@ -25,7 +25,7 @@ import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapp
 import PlannedIterationsSectionEmptyState from "./PlannedIterationsSectionEmptyState.vue";
 
 import type { Wrapper } from "@vue/test-utils";
-import type { IterationLabels } from "../../../type";
+import type { IterationLabels } from "../../../store/configuration";
 
 describe("PlannedIterationsSectionEmptyState", () => {
     async function getWrapper(
@@ -36,12 +36,14 @@ describe("PlannedIterationsSectionEmptyState", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        iterations_labels,
-                        program_increment: {
-                            id: 666,
-                            title: "Mating",
+                        configuration: {
+                            iterations_labels,
+                            program_increment: {
+                                id: 666,
+                                title: "Mating",
+                            },
+                            iteration_tracker_id: 101,
                         },
-                        iteration_tracker_id: 101,
                     },
                 }),
             },

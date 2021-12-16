@@ -40,9 +40,8 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Getter } from "vuex-class";
 import { Component, Prop } from "vue-property-decorator";
-import { retrieveIterationContent } from "../../../helpers/iteration-content-retriever";
-
 import IterationNoContent from "./IterationNoContent.vue";
 import UserStoryCard from "./UserStoryCard.vue";
 import BacklogElementSkeleton from "../../BacklogElementSkeleton.vue";
@@ -60,15 +59,26 @@ export default class IterationUserStoryList extends Vue {
     @Prop({ required: true })
     readonly iteration!: Iteration;
 
+    @Getter
+    readonly hasIterationContentInStore!: (iteration: Iteration) => boolean;
+
+    @Getter
+    readonly getIterationContentFromStore!: (iteration: Iteration) => UserStory[];
+
     private user_stories: UserStory[] = [];
     private is_loading = false;
     private has_error = false;
     private error_message = "";
 
     async mounted(): Promise<void> {
+        if (this.hasIterationContentInStore(this.iteration)) {
+            this.user_stories = this.getIterationContentFromStore(this.iteration);
+            return;
+        }
+
         try {
             this.is_loading = true;
-            this.user_stories = await retrieveIterationContent(this.iteration.id);
+            this.user_stories = await this.$store.dispatch("fetchIterationContent", this.iteration);
         } catch (e) {
             this.has_error = true;
             this.error_message = this.$gettext("An error has occurred loading content");

@@ -33,11 +33,13 @@ describe("App", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        program_increment: {
-                            id: 666,
-                            title: "Mating",
-                            start_date: "Oct 01",
-                            end_date: "Oct 31",
+                        configuration: {
+                            program_increment: {
+                                id: 666,
+                                title: "Mating",
+                                start_date: "Oct 01",
+                                end_date: "Oct 31",
+                            },
                         },
                     },
                 }),

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,31 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
-import state_defaults from "./state-defaults";
-
-import * as actions from "./actions";
 import * as mutations from "./mutations";
-import * as getters from "./getters";
-import { createConfigurationModule } from "./configuration";
+import type { UserStory, State } from "../type";
 
-import type { Store } from "vuex";
-import type { State } from "../type";
-import type { ConfigurationState } from "./configuration";
+describe("mutations", () => {
+    let state: State;
 
-Vue.use(Vuex);
-
-export function createStore(configuration_state: ConfigurationState): Store<State> {
-    const configuration = createConfigurationModule(configuration_state);
-
-    return new Vuex.Store({
-        state: { ...state_defaults },
-        actions,
-        mutations,
-        getters,
-        modules: {
-            configuration,
-        },
+    beforeEach(() => {
+        state = { iterations_content: new Map<number, UserStory[]>() } as State;
     });
-}
+
+    describe("storeIterationContent", () => {
+        it("should store the iteration content", () => {
+            const us_1281 = { id: 1281 } as UserStory;
+
+            mutations.storeIterationContent(state, {
+                iteration_id: 1280,
+                user_stories: [{ id: 1281 } as UserStory],
+            });
+
+            expect(Array.from(state.iterations_content.entries())).toEqual([[1280, [us_1281]]]);
+        });
+    });
+});

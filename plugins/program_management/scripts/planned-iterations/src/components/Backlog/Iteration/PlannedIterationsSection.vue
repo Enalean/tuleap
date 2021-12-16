@@ -64,17 +64,22 @@
 </template>
 
 <script lang="ts">
-import type { Iteration, IterationLabels, ProgramIncrement } from "../../../type";
-
 import Vue from "vue";
-import { State } from "vuex-class";
+
+import { namespace } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import { sprintf } from "sprintf-js";
 import { getIncrementIterations } from "../../../helpers/increment-iterations-retriever";
 import { buildIterationCreationUrl } from "../../../helpers/create-new-iteration-link-builder";
+
 import BacklogElementSkeleton from "../../BacklogElementSkeleton.vue";
 import PlannedIterationsSectionEmptyState from "./PlannedIterationsSectionEmptyState.vue";
 import IterationCard from "./IterationCard.vue";
+
+import type { Iteration } from "../../../type";
+import type { IterationLabels, ProgramIncrement } from "../../../store/configuration";
+
+const configuration = namespace("configuration");
 
 @Component({
     components: {
@@ -84,13 +89,13 @@ import IterationCard from "./IterationCard.vue";
     },
 })
 export default class PlannedIterationsSection extends Vue {
-    @State
+    @configuration.State
     readonly iterations_labels!: IterationLabels;
 
-    @State
+    @configuration.State
     readonly program_increment!: ProgramIncrement;
 
-    @State
+    @configuration.State
     readonly iteration_tracker_id!: number;
 
     private iterations: Array<Iteration> = [];

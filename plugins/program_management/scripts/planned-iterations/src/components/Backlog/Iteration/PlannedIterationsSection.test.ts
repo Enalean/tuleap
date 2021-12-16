@@ -25,7 +25,7 @@ import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapp
 import * as retriever from "../../../helpers/increment-iterations-retriever";
 
 import type { Wrapper } from "@vue/test-utils";
-import type { IterationLabels } from "../../../type";
+import type { IterationLabels } from "../../../store/configuration";
 import PlannedIterationsSection from "./PlannedIterationsSection.vue";
 import PlannedIterationsSectionEmptyState from "./PlannedIterationsSectionEmptyState.vue";
 import IterationCard from "./IterationCard.vue";
@@ -40,12 +40,14 @@ describe("PlannedIterationsSection", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        iterations_labels,
-                        program_increment: {
-                            id: 666,
-                            title: "Mating",
+                        configuration: {
+                            iterations_labels,
+                            program_increment: {
+                                id: 666,
+                                title: "Mating",
+                            },
+                            iteration_tracker_id: "101",
                         },
-                        iteration_tracker_id: "101",
                     },
                 }),
             },

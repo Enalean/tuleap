@@ -31,18 +31,20 @@ describe("Breadcrumb", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        program: {
-                            program_label: "Guinea pig",
-                            program_shortname: "guinea-pig",
-                            program_icon: "🐹",
+                        configuration: {
+                            program: {
+                                program_label: "Guinea pig",
+                                program_shortname: "guinea-pig",
+                                program_icon: "🐹",
+                            },
+                            program_increment: {
+                                id: 666,
+                                title: "Mating",
+                            },
+                            program_privacy: {},
+                            program_flags: [],
+                            is_program_admin,
                         },
-                        program_increment: {
-                            id: 666,
-                            title: "Mating",
-                        },
-                        program_privacy: {},
-                        program_flags: [],
-                        is_program_admin,
                     },
                 }),
             },
