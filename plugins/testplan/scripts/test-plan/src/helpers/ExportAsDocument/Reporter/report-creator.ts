@@ -34,6 +34,7 @@ import {
 import { memoize } from "./memoize";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 import { getTraceabilityMatrix } from "./traceability-matrix-creator";
+import { getExecutionsForCampaigns } from "./executions-for-campaigns-retriever";
 
 interface TrackerStructurePromiseTuple {
     readonly tracker_id: number;
@@ -83,6 +84,8 @@ export async function createExportReport(
         get_test_execution
     );
 
+    const executions_map = await getExecutionsForCampaigns(campaigns);
+
     return {
         name: gettext_provider.$gettextInterpolate(
             gettext_provider.$gettext("Test Report %{ milestone_title }"),
@@ -96,6 +99,10 @@ export async function createExportReport(
                 global_properties.artifact_links_types
             )
         ),
-        traceability_matrix: await getTraceabilityMatrix(campaigns, datetime_locale_information),
+        traceability_matrix: await getTraceabilityMatrix(
+            executions_map,
+            datetime_locale_information
+        ),
+        tests: [],
     };
 }

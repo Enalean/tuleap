@@ -21,6 +21,7 @@ import type {
     ArtifactFieldValueStatus,
     ArtifactLinkType,
     FormattedArtifact,
+    TestExecutionResponse,
 } from "@tuleap/plugin-docgen-docx";
 
 export interface Campaign {
@@ -118,6 +119,7 @@ export interface TraceabilityMatrixElement {
 export interface ExportDocument {
     readonly name: string;
     readonly backlog: ReadonlyArray<FormattedArtifact>;
+    readonly tests: ReadonlyArray<FormattedArtifact>;
     readonly traceability_matrix: ReadonlyArray<TraceabilityMatrixElement>;
 }
 
@@ -139,3 +141,11 @@ export interface DateTimeLocaleInformation {
     readonly locale: string;
     readonly timezone: string;
 }
+
+export type ExecutionsForCampaignMap = Map<
+    number,
+    {
+        campaign: Campaign;
+        executions: ReadonlyArray<TestExecutionResponse>;
+    }
+>;

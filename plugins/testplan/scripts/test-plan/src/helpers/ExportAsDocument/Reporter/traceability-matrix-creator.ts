@@ -16,17 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Campaign, DateTimeLocaleInformation, TraceabilityMatrixElement } from "../../../type";
-import { getExecutions } from "./execution-querier";
+import type {
+    DateTimeLocaleInformation,
+    ExecutionsForCampaignMap,
+    TraceabilityMatrixElement,
+} from "../../../type";
 
-export async function getTraceabilityMatrix(
-    campaigns: ReadonlyArray<Campaign>,
+export function getTraceabilityMatrix(
+    executions_map: ExecutionsForCampaignMap,
     datetime_locale_information: DateTimeLocaleInformation
-): Promise<TraceabilityMatrixElement[]> {
+): TraceabilityMatrixElement[] {
     const matrix_map: Map<number, TraceabilityMatrixElement> = new Map();
 
-    for (const campaign of campaigns) {
-        const executions = await getExecutions(campaign);
+    for (const { campaign, executions } of executions_map.values()) {
         for (const execution of executions) {
             if (execution.definition.requirement === null) {
                 continue;
