@@ -33,12 +33,6 @@ jest.mock("../../helpers/ExportAsDocument/download-export-document", () => {
     };
 });
 
-jest.mock("../../helpers/ExportAsDocument/feature-flag-docx", () => {
-    return {
-        isFeatureFlagDocxEnabled: (): boolean => true,
-    };
-});
-
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
