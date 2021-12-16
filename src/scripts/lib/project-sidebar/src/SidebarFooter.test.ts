@@ -24,7 +24,7 @@ import { shallowMount } from "@vue/test-utils";
 import SidebarFooter from "./SidebarFooter.vue";
 
 describe("SidebarFooter", () => {
-    it("displays a link with the version information", () => {
+    it("displays a link with the version information without copyright", () => {
         const wrapper = shallowMount(SidebarFooter, {
             props: {
                 instance_version: {
@@ -32,10 +32,29 @@ describe("SidebarFooter", () => {
                     version_identifier: "Dev Build 13.2.99.999",
                     full_descriptive_version: "Tuleap Community Edition — Dev Build 13.2.99.999",
                 },
+                copyright: null,
             },
         });
 
         expect(wrapper.find("a").exists()).toBe(true);
+        expect(wrapper.find("[data-test=copyright]").exists()).toBe(false);
         expect(wrapper.text()).toContain("Dev Build 13.2.99.999");
+    });
+
+    it("can display copyright information", () => {
+        const expected_copyright = "My Copyright Notice";
+        const wrapper = shallowMount(SidebarFooter, {
+            props: {
+                instance_version: {
+                    flavor_name: "Tuleap Community Edition",
+                    version_identifier: "Dev Build 13.2.99.999",
+                    full_descriptive_version: "Tuleap Community Edition — Dev Build 13.2.99.999",
+                },
+                copyright: expected_copyright,
+            },
+        });
+
+        expect(wrapper.find("[data-test=copyright]").exists()).toBe(true);
+        expect(wrapper.text()).toContain(expected_copyright);
     });
 });

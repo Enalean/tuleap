@@ -33,6 +33,7 @@ export interface Configuration {
     };
     instance_information: {
         version: InstanceVersionInformation;
+        copyright: string | null;
     };
 }
 

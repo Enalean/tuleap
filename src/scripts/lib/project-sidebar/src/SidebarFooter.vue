@@ -56,11 +56,15 @@
             {{ instance_version.version_identifier }}
         </span>
     </a>
+    <span v-if="copyright !== null" class="sidebar-copyright" data-test="copyright">
+        {{ copyright }}
+    </span>
 </template>
 <script setup lang="ts">
 import type { InstanceVersionInformation } from "./configuration";
 
 defineProps<{
     instance_version: InstanceVersionInformation;
+    copyright: string | null;
 }>();
 </script>
