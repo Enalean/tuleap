@@ -187,7 +187,10 @@ function buildTraceabilityMatrixTable(
                     if (is_first) {
                         first_cell.push(
                             buildCellContentWithRowspan(
-                                new TextRun(element.requirement.title),
+                                new InternalHyperlink({
+                                    children: [new TextRun(element.requirement.title)],
+                                    anchor: getAnchorToArtifactContent(element.requirement),
+                                }),
                                 element.tests.length
                             ),
                             buildCellContentResult(
