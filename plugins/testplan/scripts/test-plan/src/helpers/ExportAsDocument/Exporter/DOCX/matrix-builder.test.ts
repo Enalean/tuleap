@@ -64,6 +64,7 @@ describe("matrix-builder", () => {
                             ],
                         },
                     ],
+                    tests: [],
                 },
                 gettext_provider
             );
@@ -81,6 +82,7 @@ describe("matrix-builder", () => {
                     name: "Tuleap 13.4",
                     backlog: [],
                     traceability_matrix: [],
+                    tests: [],
                 },
                 gettext_provider
             );

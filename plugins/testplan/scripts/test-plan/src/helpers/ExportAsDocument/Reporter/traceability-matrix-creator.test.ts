@@ -19,69 +19,83 @@
 
 import { getTraceabilityMatrix } from "./traceability-matrix-creator";
 import type { Campaign } from "../../../type";
-import * as querier from "./execution-querier";
 import type { TestExecutionResponse } from "@tuleap/plugin-docgen-docx";
 
 describe("getTraceabilityMatrix", () => {
-    it("should return empty array if no campaign", async () => {
-        const matrix = await getTraceabilityMatrix([], {
+    it("should return empty array if no campaign", () => {
+        const matrix = getTraceabilityMatrix(new Map(), {
             locale: "en-US",
             timezone: "UTC",
         });
         expect(matrix).toStrictEqual([]);
     });
 
-    it("should return empty array if no requirement", async () => {
-        jest.spyOn(querier, "getExecutions").mockResolvedValue([
+    it("should return empty array if no requirement", () => {
+        const matrix = getTraceabilityMatrix(
+            new Map([
+                [
+                    101,
+                    {
+                        campaign: { id: 101 } as Campaign,
+                        executions: [
+                            {
+                                definition: {
+                                    id: 123,
+                                    requirement: null,
+                                },
+                            } as TestExecutionResponse,
+                            {
+                                definition: {
+                                    id: 124,
+                                    requirement: null,
+                                },
+                            } as TestExecutionResponse,
+                        ],
+                    },
+                ],
+            ]),
             {
-                definition: {
-                    id: 123,
-                    requirement: null,
-                },
-            } as TestExecutionResponse,
-            {
-                definition: {
-                    id: 124,
-                    requirement: null,
-                },
-            } as TestExecutionResponse,
-        ]);
-
-        const matrix = await getTraceabilityMatrix([{ id: 101 } as Campaign], {
-            locale: "en-US",
-            timezone: "UTC",
-        });
+                locale: "en-US",
+                timezone: "UTC",
+            }
+        );
         expect(matrix).toStrictEqual([]);
     });
 
-    it("should return the requirements with their test", async () => {
-        jest.spyOn(querier, "getExecutions").mockResolvedValue([
-            {
-                definition: {
-                    id: 123,
-                    summary: "Test A",
-                    requirement: {
-                        id: 1231,
-                        title: "Lorem",
+    it("should return the requirements with their test", () => {
+        const matrix = getTraceabilityMatrix(
+            new Map([
+                [
+                    101,
+                    {
+                        campaign: { id: 101, label: "Tuleap 13.4" } as Campaign,
+                        executions: [
+                            {
+                                definition: {
+                                    id: 123,
+                                    summary: "Test A",
+                                    requirement: {
+                                        id: 1231,
+                                        title: "Lorem",
+                                    },
+                                },
+                                previous_result: null,
+                            } as TestExecutionResponse,
+                            {
+                                definition: {
+                                    id: 124,
+                                    summary: "Test B",
+                                    requirement: {
+                                        id: 1241,
+                                        title: "Ipsum",
+                                    },
+                                },
+                                previous_result: null,
+                            } as TestExecutionResponse,
+                        ],
                     },
-                },
-                previous_result: null,
-            } as TestExecutionResponse,
-            {
-                definition: {
-                    id: 124,
-                    summary: "Test B",
-                    requirement: {
-                        id: 1241,
-                        title: "Ipsum",
-                    },
-                },
-                previous_result: null,
-            } as TestExecutionResponse,
-        ]);
-
-        const matrix = await getTraceabilityMatrix(
-            [{ id: 101, label: "Tuleap 13.4" } as Campaign],
+                ],
+            ]),
             {
                 locale: "en-US",
                 timezone: "UTC",
@@ -123,29 +137,35 @@ describe("getTraceabilityMatrix", () => {
         ]);
     });
 
-    it("should return the tests status", async () => {
-        jest.spyOn(querier, "getExecutions").mockResolvedValue([
-            {
-                definition: {
-                    id: 123,
-                    summary: "Test A",
-                    requirement: {
-                        id: 1231,
-                        title: "Lorem",
+    it("should return the tests status", () => {
+        const matrix = getTraceabilityMatrix(
+            new Map([
+                [
+                    101,
+                    {
+                        campaign: { id: 101, label: "Tuleap 13.4" } as Campaign,
+                        executions: [
+                            {
+                                definition: {
+                                    id: 123,
+                                    summary: "Test A",
+                                    requirement: {
+                                        id: 1231,
+                                        title: "Lorem",
+                                    },
+                                },
+                                previous_result: {
+                                    status: "passed",
+                                    submitted_on: "2020-06-23T08:01:04-04:00",
+                                    submitted_by: {
+                                        display_name: "John Doe",
+                                    },
+                                },
+                            } as TestExecutionResponse,
+                        ],
                     },
-                },
-                previous_result: {
-                    status: "passed",
-                    submitted_on: "2020-06-23T08:01:04-04:00",
-                    submitted_by: {
-                        display_name: "John Doe",
-                    },
-                },
-            } as TestExecutionResponse,
-        ]);
-
-        const matrix = await getTraceabilityMatrix(
-            [{ id: 101, label: "Tuleap 13.4" } as Campaign],
+                ],
+            ]),
             {
                 locale: "en-US",
                 timezone: "UTC",
@@ -171,50 +191,48 @@ describe("getTraceabilityMatrix", () => {
         ]);
     });
 
-    it("should collects requirements accross all campaigns", async () => {
-        jest.spyOn(querier, "getExecutions").mockImplementation(
-            (campaign: Campaign): Promise<TestExecutionResponse[]> => {
-                if (campaign.id === 101) {
-                    return Promise.resolve([
-                        {
-                            definition: {
-                                id: 123,
-                                summary: "Test A",
-                                requirement: {
-                                    id: 1231,
-                                    title: "Lorem",
+    it("should collects requirements across all campaigns", () => {
+        const matrix = getTraceabilityMatrix(
+            new Map([
+                [
+                    101,
+                    {
+                        campaign: { id: 101, label: "Tuleap 13.4" } as Campaign,
+                        executions: [
+                            {
+                                definition: {
+                                    id: 123,
+                                    summary: "Test A",
+                                    requirement: {
+                                        id: 1231,
+                                        title: "Lorem",
+                                    },
                                 },
-                            },
-                            previous_result: null,
-                        } as TestExecutionResponse,
-                    ]);
-                }
-
-                if (campaign.id === 102) {
-                    return Promise.resolve([
-                        {
-                            definition: {
-                                id: 124,
-                                summary: "Test B",
-                                requirement: {
-                                    id: 1241,
-                                    title: "Ipsum",
+                                previous_result: null,
+                            } as TestExecutionResponse,
+                        ],
+                    },
+                ],
+                [
+                    102,
+                    {
+                        campaign: { id: 102, label: "New features" } as Campaign,
+                        executions: [
+                            {
+                                definition: {
+                                    id: 124,
+                                    summary: "Test B",
+                                    requirement: {
+                                        id: 1241,
+                                        title: "Ipsum",
+                                    },
                                 },
-                            },
-                            previous_result: null,
-                        } as TestExecutionResponse,
-                    ]);
-                }
-
-                throw Error("Unknown campaign");
-            }
-        );
-
-        const matrix = await getTraceabilityMatrix(
-            [
-                { id: 101, label: "Tuleap 13.4" } as Campaign,
-                { id: 102, label: "New features" } as Campaign,
-            ],
+                                previous_result: null,
+                            } as TestExecutionResponse,
+                        ],
+                    },
+                ],
+            ]),
             {
                 locale: "en-US",
                 timezone: "UTC",
@@ -256,56 +274,54 @@ describe("getTraceabilityMatrix", () => {
         ]);
     });
 
-    it("should merge requirements if they are covered by different test executions", async () => {
-        jest.spyOn(querier, "getExecutions").mockImplementation(
-            (campaign: Campaign): Promise<TestExecutionResponse[]> => {
-                if (campaign.id === 101) {
-                    return Promise.resolve([
-                        {
-                            definition: {
-                                id: 123,
-                                summary: "Test A",
-                                requirement: {
-                                    id: 1231,
-                                    title: "Lorem",
+    it("should merge requirements if they are covered by different test executions", () => {
+        const matrix = getTraceabilityMatrix(
+            new Map([
+                [
+                    101,
+                    {
+                        campaign: { id: 101, label: "Tuleap 13.4" } as Campaign,
+                        executions: [
+                            {
+                                definition: {
+                                    id: 123,
+                                    summary: "Test A",
+                                    requirement: {
+                                        id: 1231,
+                                        title: "Lorem",
+                                    },
                                 },
-                            },
-                            previous_result: {
-                                status: "passed",
-                                submitted_on: "2020-06-23T08:01:04-04:00",
-                                submitted_by: {
-                                    display_name: "John Doe",
+                                previous_result: {
+                                    status: "passed",
+                                    submitted_on: "2020-06-23T08:01:04-04:00",
+                                    submitted_by: {
+                                        display_name: "John Doe",
+                                    },
                                 },
-                            },
-                        } as TestExecutionResponse,
-                    ]);
-                }
-
-                if (campaign.id === 102) {
-                    return Promise.resolve([
-                        {
-                            definition: {
-                                id: 124,
-                                summary: "Test B",
-                                requirement: {
-                                    id: 1231,
-                                    title: "Lorem",
+                            } as TestExecutionResponse,
+                        ],
+                    },
+                ],
+                [
+                    102,
+                    {
+                        campaign: { id: 102, label: "New features" } as Campaign,
+                        executions: [
+                            {
+                                definition: {
+                                    id: 124,
+                                    summary: "Test B",
+                                    requirement: {
+                                        id: 1231,
+                                        title: "Lorem",
+                                    },
                                 },
-                            },
-                            previous_result: null,
-                        } as TestExecutionResponse,
-                    ]);
-                }
-
-                throw Error("Unknown campaign");
-            }
-        );
-
-        const matrix = await getTraceabilityMatrix(
-            [
-                { id: 101, label: "Tuleap 13.4" } as Campaign,
-                { id: 102, label: "New features" } as Campaign,
-            ],
+                                previous_result: null,
+                            } as TestExecutionResponse,
+                        ],
+                    },
+                ],
+            ]),
             {
                 locale: "en-US",
                 timezone: "UTC",

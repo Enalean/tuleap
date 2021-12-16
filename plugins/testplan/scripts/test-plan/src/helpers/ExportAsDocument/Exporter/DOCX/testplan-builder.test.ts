@@ -51,6 +51,7 @@ describe("buildMilestoneTestPlan", () => {
                 name: "Tuleap 13.4",
                 backlog: [],
                 traceability_matrix: [],
+                tests: [],
             },
             gettext_provider,
             global_export_properties

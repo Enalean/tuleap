@@ -51,6 +51,7 @@ describe("buildMilestoneBacklog", () => {
             name: "Test Report",
             backlog: [],
             traceability_matrix: [],
+            tests: [],
         };
 
         const backlog = await buildMilestoneBacklog(
@@ -83,6 +84,7 @@ describe("buildMilestoneBacklog", () => {
                 } as FormattedArtifact,
             ],
             traceability_matrix: [],
+            tests: [],
         };
 
         const backlog = await buildMilestoneBacklog(
