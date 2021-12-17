@@ -36,32 +36,40 @@ describe("matrix-builder", () => {
                                 id: 1,
                                 title: "Lorem",
                             },
-                            tests: [
-                                {
-                                    id: 11,
-                                    title: "Test A",
-                                    campaign: "Tuleap 13.4",
-                                    status: "passed",
-                                    executed_by: "John Doe",
-                                    executed_on: "Today",
-                                },
-                            ],
+                            tests: new Map([
+                                [
+                                    11,
+                                    {
+                                        id: 11,
+                                        title: "Test A",
+                                        campaign: "Tuleap 13.4",
+                                        status: "passed",
+                                        executed_by: "John Doe",
+                                        executed_on: "Today",
+                                        executed_on_date: new Date(),
+                                    },
+                                ],
+                            ]),
                         },
                         {
                             requirement: {
                                 id: 2,
                                 title: "Ipsum",
                             },
-                            tests: [
-                                {
-                                    id: 22,
-                                    title: "Test B",
-                                    campaign: "Tuleap 13.4",
-                                    status: "passed",
-                                    executed_by: "John Doe",
-                                    executed_on: "Today",
-                                },
-                            ],
+                            tests: new Map([
+                                [
+                                    22,
+                                    {
+                                        id: 22,
+                                        title: "Test B",
+                                        campaign: "Tuleap 13.4",
+                                        status: "passed",
+                                        executed_by: "John Doe",
+                                        executed_on: "Today",
+                                        executed_on_date: new Date(),
+                                    },
+                                ],
+                            ]),
                         },
                     ],
                     tests: [],

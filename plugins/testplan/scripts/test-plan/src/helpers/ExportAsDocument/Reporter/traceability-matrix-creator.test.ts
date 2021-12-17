@@ -101,40 +101,37 @@ describe("getTraceabilityMatrix", () => {
                 timezone: "UTC",
             }
         );
-        expect(matrix).toStrictEqual([
-            {
-                requirement: {
-                    id: 1231,
-                    title: "Lorem",
-                },
-                tests: [
-                    {
-                        id: 123,
-                        title: "Test A",
-                        campaign: "Tuleap 13.4",
-                        executed_by: null,
-                        executed_on: null,
-                        status: null,
-                    },
-                ],
-            },
-            {
-                requirement: {
-                    id: 1241,
-                    title: "Ipsum",
-                },
-                tests: [
-                    {
-                        id: 124,
-                        title: "Test B",
-                        campaign: "Tuleap 13.4",
-                        executed_by: null,
-                        executed_on: null,
-                        status: null,
-                    },
-                ],
-            },
-        ]);
+
+        expect(matrix.length).toBe(2);
+        expect(matrix[0].requirement).toStrictEqual({
+            id: 1231,
+            title: "Lorem",
+        });
+        expect(matrix[0].tests.size).toBe(1);
+        expect(matrix[0].tests.get(123)).toStrictEqual({
+            id: 123,
+            title: "Test A",
+            campaign: "Tuleap 13.4",
+            executed_by: null,
+            executed_on: null,
+            executed_on_date: null,
+            status: null,
+        });
+
+        expect(matrix[1].requirement).toStrictEqual({
+            id: 1241,
+            title: "Ipsum",
+        });
+        expect(matrix[1].tests.size).toBe(1);
+        expect(matrix[1].tests.get(124)).toStrictEqual({
+            id: 124,
+            title: "Test B",
+            campaign: "Tuleap 13.4",
+            executed_by: null,
+            executed_on: null,
+            executed_on_date: null,
+            status: null,
+        });
     });
 
     it("should return the tests status", () => {
@@ -171,24 +168,22 @@ describe("getTraceabilityMatrix", () => {
                 timezone: "UTC",
             }
         );
-        expect(matrix).toStrictEqual([
-            {
-                requirement: {
-                    id: 1231,
-                    title: "Lorem",
-                },
-                tests: [
-                    {
-                        id: 123,
-                        title: "Test A",
-                        campaign: "Tuleap 13.4",
-                        executed_by: "John Doe",
-                        executed_on: "6/23/2020 12:01:04 PM",
-                        status: "passed",
-                    },
-                ],
-            },
-        ]);
+
+        expect(matrix.length).toBe(1);
+        expect(matrix[0].requirement).toStrictEqual({
+            id: 1231,
+            title: "Lorem",
+        });
+        expect(matrix[0].tests.size).toBe(1);
+        expect(matrix[0].tests.get(123)).toStrictEqual({
+            id: 123,
+            title: "Test A",
+            campaign: "Tuleap 13.4",
+            executed_by: "John Doe",
+            executed_on: "6/23/2020 12:01:04 PM",
+            executed_on_date: new Date("2020-06-23T08:01:04-04:00"),
+            status: "passed",
+        });
     });
 
     it("should collects requirements across all campaigns", () => {
@@ -238,40 +233,37 @@ describe("getTraceabilityMatrix", () => {
                 timezone: "UTC",
             }
         );
-        expect(matrix).toStrictEqual([
-            {
-                requirement: {
-                    id: 1231,
-                    title: "Lorem",
-                },
-                tests: [
-                    {
-                        id: 123,
-                        title: "Test A",
-                        campaign: "Tuleap 13.4",
-                        executed_by: null,
-                        executed_on: null,
-                        status: null,
-                    },
-                ],
-            },
-            {
-                requirement: {
-                    id: 1241,
-                    title: "Ipsum",
-                },
-                tests: [
-                    {
-                        id: 124,
-                        title: "Test B",
-                        campaign: "New features",
-                        executed_by: null,
-                        executed_on: null,
-                        status: null,
-                    },
-                ],
-            },
-        ]);
+
+        expect(matrix.length).toBe(2);
+        expect(matrix[0].requirement).toStrictEqual({
+            id: 1231,
+            title: "Lorem",
+        });
+        expect(matrix[0].tests.size).toBe(1);
+        expect(matrix[0].tests.get(123)).toStrictEqual({
+            id: 123,
+            title: "Test A",
+            campaign: "Tuleap 13.4",
+            executed_by: null,
+            executed_on: null,
+            executed_on_date: null,
+            status: null,
+        });
+
+        expect(matrix[1].requirement).toStrictEqual({
+            id: 1241,
+            title: "Ipsum",
+        });
+        expect(matrix[1].tests.size).toBe(1);
+        expect(matrix[1].tests.get(124)).toStrictEqual({
+            id: 124,
+            title: "Test B",
+            campaign: "New features",
+            executed_by: null,
+            executed_on: null,
+            executed_on_date: null,
+            status: null,
+        });
     });
 
     it("should merge requirements if they are covered by different test executions", () => {
@@ -327,31 +319,139 @@ describe("getTraceabilityMatrix", () => {
                 timezone: "UTC",
             }
         );
-        expect(matrix).toStrictEqual([
-            {
-                requirement: {
+
+        expect(matrix.length).toBe(1);
+        expect(matrix[0].requirement).toStrictEqual({
+            id: 1231,
+            title: "Lorem",
+        });
+        expect(matrix[0].tests.size).toBe(2);
+        expect(matrix[0].tests.get(123)).toStrictEqual({
+            id: 123,
+            title: "Test A",
+            campaign: "Tuleap 13.4",
+            executed_by: "John Doe",
+            executed_on: "6/23/2020 12:01:04 PM",
+            executed_on_date: new Date("2020-06-23T08:01:04-04:00"),
+            status: "passed",
+        });
+        expect(matrix[0].tests.get(124)).toStrictEqual({
+            id: 124,
+            title: "Test B",
+            campaign: "New features",
+            executed_by: null,
+            executed_on: null,
+            executed_on_date: null,
+            status: null,
+        });
+    });
+
+    describe("when same test is exetuced in different campaigns", () => {
+        it.each([
+            [null, null, null, null],
+            [null, "08:01", "failed", "08:01"],
+            ["08:01", null, "passed", "08:01"],
+            ["08:01", "08:01", "passed", "08:01"],
+            ["08:00", "08:01", "failed", "08:01"],
+            ["08:01", "08:00", "passed", "08:01"],
+        ])(
+            `when time of passed test is %s and time of failed test is %s, then test is %s`,
+            (
+                time_of_passed_test: string | null,
+                time_of_failed_test: string | null,
+                expected_status: string | null,
+                expected_submitted_on_time: string | null
+            ): void => {
+                const date_of_passed_test = time_of_passed_test
+                    ? `2020-06-23T${time_of_passed_test}:04-04:00`
+                    : null;
+                const date_of_failed_test = time_of_failed_test
+                    ? `2020-06-23T${time_of_failed_test}:04-04:00`
+                    : null;
+                const expected_submitted_on_date = expected_submitted_on_time
+                    ? `2020-06-23T${expected_submitted_on_time}:04-04:00`
+                    : null;
+                const matrix = getTraceabilityMatrix(
+                    new Map([
+                        [
+                            101,
+                            {
+                                campaign: { id: 101, label: "Tuleap 13.4" } as Campaign,
+                                executions: [
+                                    {
+                                        definition: {
+                                            id: 123,
+                                            summary: "Test A",
+                                            requirement: {
+                                                id: 1231,
+                                                title: "Lorem",
+                                            },
+                                        },
+                                        previous_result: date_of_passed_test
+                                            ? {
+                                                  status: "passed",
+                                                  submitted_on: date_of_passed_test,
+                                                  submitted_by: {
+                                                      display_name: "John Doe",
+                                                  },
+                                              }
+                                            : null,
+                                    } as TestExecutionResponse,
+                                ],
+                            },
+                        ],
+                        [
+                            102,
+                            {
+                                campaign: { id: 102, label: "New features" } as Campaign,
+                                executions: [
+                                    {
+                                        definition: {
+                                            id: 123,
+                                            summary: "Test A",
+                                            requirement: {
+                                                id: 1231,
+                                                title: "Lorem",
+                                            },
+                                        },
+                                        previous_result: date_of_failed_test
+                                            ? {
+                                                  status: "failed",
+                                                  submitted_on: date_of_failed_test,
+                                                  submitted_by: {
+                                                      display_name: "John Doe",
+                                                  },
+                                              }
+                                            : null,
+                                    } as TestExecutionResponse,
+                                ],
+                            },
+                        ],
+                    ]),
+                    {
+                        locale: "en-US",
+                        timezone: "UTC",
+                    }
+                );
+
+                expect(matrix.length).toBe(1);
+                expect(matrix[0].requirement).toStrictEqual({
                     id: 1231,
                     title: "Lorem",
-                },
-                tests: [
-                    {
-                        id: 123,
-                        title: "Test A",
-                        campaign: "Tuleap 13.4",
-                        executed_by: "John Doe",
-                        executed_on: "6/23/2020 12:01:04 PM",
-                        status: "passed",
-                    },
-                    {
-                        id: 124,
-                        title: "Test B",
-                        campaign: "New features",
-                        executed_by: null,
-                        executed_on: null,
-                        status: null,
-                    },
-                ],
-            },
-        ]);
+                });
+                expect(matrix[0].tests.size).toBe(1);
+                expect(matrix[0].tests.get(123)).toStrictEqual({
+                    id: 123,
+                    title: "Test A",
+                    campaign: expected_status === "failed" ? "New features" : "Tuleap 13.4",
+                    executed_by: expected_status ? "John Doe" : null,
+                    executed_on: expected_submitted_on_date ? "6/23/2020 12:01:04 PM" : null,
+                    executed_on_date: expected_submitted_on_date
+                        ? new Date(expected_submitted_on_date)
+                        : null,
+                    status: expected_status,
+                });
+            }
+        );
     });
 });

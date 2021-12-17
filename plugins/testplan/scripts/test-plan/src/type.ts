@@ -109,11 +109,12 @@ export interface TraceabilityMatrixTest {
     readonly status: ArtifactFieldValueStatus;
     readonly executed_by: string | null;
     readonly executed_on: string | null;
+    readonly executed_on_date: Date | null;
 }
 
 export interface TraceabilityMatrixElement {
     readonly requirement: TraceabilityMatrixRequirement;
-    readonly tests: ReadonlyArray<TraceabilityMatrixTest>;
+    readonly tests: Map<number, TraceabilityMatrixTest>;
 }
 
 export interface ExportDocument {

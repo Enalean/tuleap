@@ -182,7 +182,7 @@ function buildTraceabilityMatrixTable(
             }),
             ...elements.reduce((acc: TableRow[], element) => {
                 let is_first = true;
-                for (const test of element.tests) {
+                for (const test of element.tests.values()) {
                     const first_cell: TableCell[] = [];
                     if (is_first) {
                         first_cell.push(
@@ -191,12 +191,12 @@ function buildTraceabilityMatrixTable(
                                     children: [new TextRun(element.requirement.title)],
                                     anchor: getAnchorToArtifactContent(element.requirement),
                                 }),
-                                element.tests.length
+                                element.tests.size
                             ),
                             buildCellContentResult(
-                                computeRequirementStatus(element.tests),
+                                computeRequirementStatus([...element.tests.values()]),
                                 gettext_provider,
-                                element.tests.length
+                                element.tests.size
                             )
                         );
                         is_first = false;
