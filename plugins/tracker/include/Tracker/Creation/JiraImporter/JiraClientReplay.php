@@ -55,6 +55,28 @@ final class JiraClientReplay implements JiraClient
         return new self($log_dir, false);
     }
 
+    public function getJiraProject(): ?string
+    {
+        foreach ($this->payloads as $url => $payload) {
+            $match = [];
+            if (preg_match('%^/rest/api/2/project/(.*)/statuses$%', $url, $match) === 1) {
+                return $match[1];
+            }
+        }
+        return null;
+    }
+
+    public function getJiraIssueTypeId(): ?string
+    {
+        foreach ($this->payloads as $url => $payload) {
+            $match = [];
+            if (preg_match('%^/rest/api/2/issuetype/(.*)$%', $url, $match) === 1) {
+                return $match[1];
+            }
+        }
+        return null;
+    }
+
     private function getResponse(string $file_path): string
     {
         $file_contents = file_get_contents($file_path);
