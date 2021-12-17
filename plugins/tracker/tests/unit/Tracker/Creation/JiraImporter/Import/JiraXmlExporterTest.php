@@ -370,7 +370,7 @@ class JiraXmlExporterTest extends TestCase
         );
 
         // Uncomment below to update the fixture
-        //$tidy_xml = self::getTidyXML($tracker_xml, );
+        //$tidy_xml = self::getTidyXML($tracker_xml);
         //file_put_contents($fixture_path . '/tracker.xml', $tidy_xml);
 
         $tests($tracker_xml);
