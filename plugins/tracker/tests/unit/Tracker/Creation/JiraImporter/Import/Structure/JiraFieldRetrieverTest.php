@@ -24,55 +24,59 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Psr\Log\NullLogger;
+use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 
 final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var string
-     */
-    private $jira_project_id = 'projID';
+    private string $jira_project_id = 'projID';
 
-    /**
-     * @var string
-     */
-    private $jira_issue_type_name = 'issueName';
+    private string $jira_issue_type_name = 'issueName';
 
     public function testItExportsJiraFieldAndBuildAnArraySortedById(): void
     {
         $wrapper = new class extends JiraCloudClientStub {
-            public function getUrl(string $url): ?array
-            {
-                $system_field                     = [];
-                $system_field['required']         = true;
-                $system_field['schema']['type']   = 'string';
-                $system_field['schema']['system'] = 'summary';
-                $system_field['name']             = 'Summary';
-                $system_field['key']              = 'summary';
-                $system_field['hasDefaultValue']  = false;
-                $system_field['operation']        = [
-                    'set',
-                ];
-
-                $custom_field                       = [];
-                $custom_field['required']           = false;
-                $custom_field['schema']['type']     = 'user';
-                $custom_field['schema']['custom']   = "com.atlassian.jira.toolkit:lastupdaterorcommenter";
-                $custom_field['schema']['customId'] = 10071;
-                $custom_field['name']               = '[opt] Last updator';
-                $custom_field['key']                = 'customfield_10071';
-                $custom_field['hasDefaultValue']    = false;
-                $custom_field['operation']          = [
-                    'set',
-                ];
-
-                $project_meta_content['projects'][0]['issuetypes'][0]['fields'] = [
-                    'summary' => $system_field,
-                    'custom_01' => $custom_field,
-                ];
-
-                return $project_meta_content;
-            }
+            public array $urls = [
+                ClientWrapper::JIRA_CORE_BASE_URL . "/issue/createmeta?projectKeys=projID&issuetypeIds=issueName&expand=projects.issuetypes.fields" => [
+                    'projects' => [
+                        [
+                            'issuetypes' => [
+                                [
+                                    'fields' => [
+                                        'summary' => [
+                                            'required' => true,
+                                            'schema' => [
+                                                'type' => 'string',
+                                                'system' => 'summary',
+                                            ],
+                                            'name' => 'Summary',
+                                            'key' => 'summary',
+                                            'hasDefaultValue' => false,
+                                            'operation' => [
+                                                'set',
+                                            ],
+                                        ],
+                                        'custom_01' => [
+                                            'required' => false,
+                                            'schema' => [
+                                                'type' => 'user',
+                                                'custom' => 'com.atlassian.jira.toolkit:lastupdaterorcommenter',
+                                                'customId' => 10071,
+                                            ],
+                                            'name' => '[opt] Last updator',
+                                            'key' => 'customfield_10071',
+                                            'hasDefaultValue' => false,
+                                            'operation' => [
+                                                'set',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ];
         };
 
         $field_retriever = new JiraFieldRetriever($wrapper, new NullLogger());
