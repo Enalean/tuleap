@@ -21,14 +21,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\ListFields\XML;
+namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML;
 
-use Tuleap\Tracker\XML\IDGenerator;
-
-final class XMLSelectBoxField extends XMLListField
+final class XMLBindUsersValue
 {
-    public function __construct(string|IDGenerator $id, string $name)
+    /**
+     * @readonly
+     */
+    public string $label;
+
+    public function __construct(string $label)
     {
-        parent::__construct($id, \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $name);
+        $this->label = $label;
+    }
+
+    public function export(\SimpleXMLElement $bind): void
+    {
+        $item = $bind->addChild('item');
+        $item->addAttribute('label', $this->label);
     }
 }

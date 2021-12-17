@@ -26,7 +26,6 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 use EventManager;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
-use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollectionBuilder;
@@ -59,10 +58,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportTableExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportUpdatedRecentlyExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlTQLReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectionBuilder;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\StoryPointFieldExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
@@ -74,7 +70,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
-use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;
@@ -83,6 +78,7 @@ use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
+use Tuleap\Tracker\XML\XMLTracker;
 use UserManager;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
@@ -100,7 +96,6 @@ class JiraXmlExporter
         private PermissionsXMLExporter $permissions_xml_exporter,
         private ArtifactsXMLExporter $artifacts_xml_exporter,
         private SemanticsXMLExporter $semantics_xml_exporter,
-        private ContainersXMLCollectionBuilder $containers_xml_collection_builder,
         private AlwaysThereFieldsExporter $always_there_fields_exporter,
         private StoryPointFieldExporter $story_point_field_exporter,
         private XmlReportAllIssuesExporter $xml_report_all_issues_exporter,
@@ -124,12 +119,7 @@ class JiraXmlExporter
 
         $cdata_factory = new XML_SimpleXMLCDATAFactory();
 
-        $field_xml_exporter = new FieldXmlExporter(
-            new XML_SimpleXMLCDATAFactory(),
-            new FieldNameFormatter()
-        );
-
-        $jira_field_mapper         = new JiraToTuleapFieldTypeMapper($field_xml_exporter, $error_collector, $logger);
+        $jira_field_mapper         = new JiraToTuleapFieldTypeMapper($error_collector, $logger);
         $report_table_exporter     = new XmlReportTableExporter();
         $default_criteria_exporter = new XmlReportDefaultCriteriaExporter();
 
@@ -240,12 +230,8 @@ class JiraXmlExporter
                 $logger
             ),
             new SemanticsXMLExporter(),
-            new ContainersXMLCollectionBuilder(),
-            new AlwaysThereFieldsExporter(
-                $field_xml_exporter
-            ),
+            new AlwaysThereFieldsExporter(),
             new StoryPointFieldExporter(
-                $field_xml_exporter,
                 $logger,
             ),
             new XmlReportAllIssuesExporter(
@@ -271,29 +257,19 @@ class JiraXmlExporter
      */
     public function exportJiraToXml(
         PlatformConfiguration $jira_platform_configuration,
-        SimpleXMLElement $node_tracker,
+        XMLTracker $xml_tracker,
         string $jira_base_url,
         string $jira_project_key,
         IssueType $issue_type,
         IDGenerator $field_id_generator,
         LinkedIssuesCollection $linked_issues_collection,
-    ): void {
+    ): \SimpleXMLElement {
         $this->logger->debug("Start export Jira to XML: " . $issue_type->getId());
 
-        if (! isset($node_tracker->formElements)) {
-            throw new \RuntimeException('XML node should have a `formElements` child');
-        }
-
-        $containers_collection         = new ContainersXMLCollection($field_id_generator);
-        $jira_field_mapping_collection = new FieldMappingCollection($field_id_generator);
+        $jira_field_mapping_collection = new FieldMappingCollection();
         $status_values_collection      = new StatusValuesCollection(
             $this->wrapper,
             $this->logger
-        );
-
-        $this->containers_xml_collection_builder->buildCollectionOfJiraContainersXML(
-            $node_tracker->formElements,
-            $containers_collection,
         );
 
         $this->logger->debug("Handle status");
@@ -303,30 +279,35 @@ class JiraXmlExporter
             $field_id_generator,
         );
 
-        $this->logger->debug("Export always there jira fields");
-        $this->always_there_fields_exporter->exportFields(
-            $containers_collection,
-            $jira_field_mapping_collection,
+        $xml_tracker = $this->always_there_fields_exporter->exportFields(
+            $field_id_generator,
+            $xml_tracker,
             $status_values_collection,
+            $jira_field_mapping_collection,
         );
 
         $this->logger->debug("Export Story Points field");
-        $this->story_point_field_exporter->exportFields(
+        $xml_tracker = $this->story_point_field_exporter->exportFields(
             $jira_platform_configuration,
-            $containers_collection,
+            $xml_tracker,
             $jira_field_mapping_collection,
             $issue_type,
+            $field_id_generator,
         );
 
         $this->logger->debug("Export custom jira fields");
-        $this->exportJiraField(
-            $containers_collection,
-            $jira_field_mapping_collection,
+        $xml_tracker = $this->exportJiraField(
+            $xml_tracker,
             $field_id_generator,
             $jira_project_key,
             $issue_type,
             $jira_platform_configuration,
+            $jira_field_mapping_collection,
         );
+
+        $xml          = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
+        $trackers_xml = $xml->addChild('trackers');
+        $node_tracker = $xml_tracker->export($trackers_xml);
 
         $this->logger->debug("Export semantics");
         $this->semantics_xml_exporter->exportSemantics(
@@ -386,26 +367,57 @@ class JiraXmlExporter
                 $this->logger->error($error);
             }
         }
+
+        return $node_tracker;
+    }
+
+    public function getProjectSimpleXmlElement(\SimpleXMLElement $tracker_xml): \SimpleXMLElement
+    {
+        $project_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers></trackers></project>');
+
+        $this->appendTrackerXML($project_xml->trackers, $tracker_xml);
+
+        return $project_xml;
+    }
+
+    public function appendTrackerXML(\SimpleXMLElement $all_trackers_node, \SimpleXMLElement $one_tracker_node): void
+    {
+        $dom_trackers = dom_import_simplexml($all_trackers_node);
+        if (! $dom_trackers) {
+            throw new \Exception('Cannot get DOM from trackers XML');
+        }
+        $dom_tracker = dom_import_simplexml($one_tracker_node);
+        if (! $dom_tracker) {
+            throw new \Exception('Cannot get DOM from tracker XML');
+        }
+        if (! $dom_trackers->ownerDocument) {
+            throw new \Exception('No ownerDocument node in trackers');
+        }
+
+        $dom_tracker = $dom_trackers->ownerDocument->importNode($dom_tracker, true);
+        $dom_trackers->appendChild($dom_tracker);
     }
 
     private function exportJiraField(
-        ContainersXMLCollection $containers_collection,
-        FieldMappingCollection $jira_field_mapping_collection,
+        XMLTracker $xml_tracker,
         IDGenerator $id_generator,
         string $jira_project_id,
         IssueType $issue_type,
         PlatformConfiguration $platform_configuration,
-    ): void {
+        FieldMappingCollection $field_mapping_collection,
+    ): XMLTracker {
         $this->logger->debug("Start exporting jira field structure (custom fields) ...");
         $fields = $this->jira_field_retriever->getAllJiraFields($jira_project_id, $issue_type->getId(), $id_generator);
         foreach ($fields as $key => $field) {
-            $this->field_type_mapper->exportFieldToXml(
+            $xml_tracker = $this->field_type_mapper->exportFieldToXml(
                 $field,
-                $containers_collection,
-                $jira_field_mapping_collection,
+                $xml_tracker,
+                $id_generator,
                 $platform_configuration,
+                $field_mapping_collection,
             );
         }
         $this->logger->debug("Field structure exported successfully");
+        return $xml_tracker;
     }
 }

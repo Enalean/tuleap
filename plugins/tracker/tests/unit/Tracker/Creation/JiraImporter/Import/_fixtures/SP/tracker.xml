@@ -6,65 +6,65 @@
   <color><![CDATA[inca-silver]]></color>
   <cannedResponses/>
   <formElements>
-    <formElement type="fieldset" ID="F1" rank="1">
+    <formElement type="fieldset" ID="F4" rank="1">
       <name><![CDATA[details_fieldset]]></name>
       <label><![CDATA[Details]]></label>
       <formElements>
-        <formElement type="column" ID="Fcol5" rank="1">
-          <name><![CDATA[c1]]></name>
-          <label><![CDATA[c1]]></label>
+        <formElement type="column" ID="F5" rank="1">
+          <name><![CDATA[left_column]]></name>
+          <label><![CDATA[left_column]]></label>
           <formElements>
-            <formElement type="string" ID="F31" rank="1" use_it="1" required="1">
+            <formElement type="string" ID="F31" rank="1" required="1">
               <name><![CDATA[summary]]></name>
               <label><![CDATA[Summary]]></label>
             </formElement>
-            <formElement type="text" ID="F32" rank="2" use_it="1">
+            <formElement type="text" ID="F32" rank="2">
               <name><![CDATA[description]]></name>
               <label><![CDATA[Description]]></label>
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="column" ID="Fcol6" rank="2">
-          <name><![CDATA[c2]]></name>
-          <label><![CDATA[c2]]></label>
+        <formElement type="column" ID="F6" rank="2">
+          <name><![CDATA[right_column]]></name>
+          <label><![CDATA[right_column]]></label>
           <formElements>
-            <formElement type="aid" ID="F10" rank="7" use_it="1">
+            <formElement type="aid" ID="F7" rank="7">
               <name><![CDATA[artifact_id]]></name>
               <label><![CDATA[Artifact id]]></label>
             </formElement>
-            <formElement type="string" ID="F11" rank="8" use_it="1">
+            <formElement type="string" ID="F8" rank="8">
               <name><![CDATA[jira_issue_url]]></name>
               <label><![CDATA[Link to original issue]]></label>
             </formElement>
-            <formElement type="subby" ID="F12" rank="2" use_it="1">
+            <formElement type="subby" ID="F9" rank="2">
               <name><![CDATA[creator]]></name>
               <label><![CDATA[Created by]]></label>
             </formElement>
-            <formElement type="subon" ID="F13" rank="3" use_it="1">
+            <formElement type="subon" ID="F10" rank="3">
               <name><![CDATA[created]]></name>
               <label><![CDATA[Creation date]]></label>
             </formElement>
-            <formElement type="lud" ID="F14" rank="4" use_it="1">
+            <formElement type="lud" ID="F11" rank="4">
               <name><![CDATA[updated]]></name>
               <label><![CDATA[Last update date]]></label>
             </formElement>
-            <formElement type="date" ID="F15" rank="5" use_it="1">
+            <formElement type="date" ID="F12" rank="5">
               <name><![CDATA[resolutiondate]]></name>
               <label><![CDATA[Resolved]]></label>
               <properties display_time="1"/>
             </formElement>
-            <formElement type="sb" ID="F16" rank="1" use_it="1">
+            <formElement type="sb" ID="F13" rank="1">
               <name><![CDATA[status]]></name>
               <label><![CDATA[Status]]></label>
               <bind type="static" is_rank_alpha="0">
                 <items>
-                  <item ID="V7" label="To Do" is_hidden="0"/>
-                  <item ID="V8" label="In Progress" is_hidden="0"/>
-                  <item ID="V9" label="Done" is_hidden="0"/>
+                  <item ID="V1" label="To Do"/>
+                  <item ID="V2" label="In Progress"/>
+                  <item ID="V3" label="Done"/>
                 </items>
               </bind>
             </formElement>
-            <formElement type="sb" ID="F33" rank="10" use_it="1" required="1">
+            <formElement type="sb" ID="F33" rank="10" required="1">
               <name><![CDATA[reporter]]></name>
               <label><![CDATA[Reporter]]></label>
               <bind type="users">
@@ -73,7 +73,7 @@
                 </items>
               </bind>
             </formElement>
-            <formElement type="sb" ID="F34" rank="9" use_it="1">
+            <formElement type="sb" ID="F34" rank="9">
               <name><![CDATA[assignee]]></name>
               <label><![CDATA[Assignee]]></label>
               <bind type="users">
@@ -82,16 +82,16 @@
                 </items>
               </bind>
             </formElement>
-            <formElement type="sb" ID="F35" rank="6" use_it="1">
+            <formElement type="sb" ID="F35" rank="6">
               <name><![CDATA[priority]]></name>
               <label><![CDATA[Priority]]></label>
               <bind type="static" is_rank_alpha="0">
                 <items>
-                  <item ID="V22" label="Highest" is_hidden="0"/>
-                  <item ID="V23" label="High" is_hidden="0"/>
-                  <item ID="V24" label="Medium" is_hidden="0"/>
-                  <item ID="V25" label="Low" is_hidden="0"/>
-                  <item ID="V26" label="Lowest" is_hidden="0"/>
+                  <item ID="V36" label="Highest"/>
+                  <item ID="V37" label="High"/>
+                  <item ID="V38" label="Medium"/>
+                  <item ID="V39" label="Low"/>
+                  <item ID="V40" label="Lowest"/>
                 </items>
               </bind>
             </formElement>
@@ -99,30 +99,30 @@
         </formElement>
       </formElements>
     </formElement>
-    <formElement type="fieldset" ID="F2" rank="2">
+    <formElement type="fieldset" ID="F14" rank="2">
       <name><![CDATA[custom_fieldset]]></name>
       <label><![CDATA[Custom Fields]]></label>
       <formElements/>
     </formElement>
-    <formElement type="fieldset" ID="F3" rank="3">
+    <formElement type="fieldset" ID="F15" rank="3">
       <name><![CDATA[attachment_fieldset]]></name>
       <label><![CDATA[Attachments]]></label>
       <formElements>
-        <formElement type="file" ID="F17" rank="1" use_it="1">
+        <formElement type="file" ID="F16" rank="1">
           <name><![CDATA[attachment]]></name>
           <label><![CDATA[Attachments]]></label>
         </formElement>
       </formElements>
     </formElement>
-    <formElement type="fieldset" ID="F4" rank="4">
+    <formElement type="fieldset" ID="F17" rank="4">
       <name><![CDATA[links_fieldset]]></name>
       <label><![CDATA[Links]]></label>
       <formElements>
-        <formElement type="art_link" ID="F18" rank="1" use_it="1">
+        <formElement type="art_link" ID="F18" rank="1">
           <name><![CDATA[issuelinks]]></name>
           <label><![CDATA[Links]]></label>
         </formElement>
-        <formElement type="cross" ID="F19" rank="2" use_it="1">
+        <formElement type="cross" ID="F19" rank="2">
           <name><![CDATA[orgtuleapcrossreferences]]></name>
           <label><![CDATA[References]]></label>
         </formElement>
@@ -146,10 +146,10 @@
       <shortname>status</shortname>
       <label>Status</label>
       <description>Define the status of an artifact</description>
-      <field REF="F16"/>
+      <field REF="F13"/>
       <open_values>
-        <open_value REF="V7"/>
-        <open_value REF="V8"/>
+        <open_value REF="V1"/>
+        <open_value REF="V2"/>
       </open_values>
     </semantic>
     <semantic type="done">
@@ -157,7 +157,7 @@
       <label><![CDATA[Done]]></label>
       <description><![CDATA[Define the closed status that are considered Done]]></description>
       <closed_values>
-        <closed_value REF="V9"/>
+        <closed_value REF="V3"/>
       </closed_values>
     </semantic>
     <semantic type="contributor">
@@ -180,7 +180,7 @@
           <field REF="F32"/>
         </criteria>
         <criteria rank="3">
-          <field REF="F16"/>
+          <field REF="F13"/>
         </criteria>
         <criteria rank="4">
           <field REF="F35"/>
@@ -191,8 +191,8 @@
           <name><![CDATA[Results]]></name>
           <columns>
             <field REF="F31"/>
-            <field REF="F16"/>
-            <field REF="F11"/>
+            <field REF="F13"/>
+            <field REF="F8"/>
             <field REF="F35"/>
           </columns>
         </renderer>
@@ -203,10 +203,10 @@
       <description><![CDATA[All open issues in this tracker]]></description>
       <criterias>
         <criteria rank="0" is_advanced="1">
-          <field REF="F16"/>
+          <field REF="F13"/>
           <criteria_value type="list">
-            <selected_value REF="V7"/>
-            <selected_value REF="V8"/>
+            <selected_value REF="V1"/>
+            <selected_value REF="V2"/>
           </criteria_value>
         </criteria>
         <criteria rank="1">
@@ -224,8 +224,8 @@
           <name><![CDATA[Results]]></name>
           <columns>
             <field REF="F31"/>
-            <field REF="F16"/>
-            <field REF="F11"/>
+            <field REF="F13"/>
+            <field REF="F8"/>
             <field REF="F35"/>
           </columns>
         </renderer>
@@ -236,9 +236,9 @@
       <description><![CDATA[All done issues in this tracker]]></description>
       <criterias>
         <criteria rank="0" is_advanced="1">
-          <field REF="F16"/>
+          <field REF="F13"/>
           <criteria_value type="list">
-            <selected_value REF="V9"/>
+            <selected_value REF="V3"/>
           </criteria_value>
         </criteria>
         <criteria rank="1">
@@ -256,8 +256,8 @@
           <name><![CDATA[Results]]></name>
           <columns>
             <field REF="F31"/>
-            <field REF="F16"/>
-            <field REF="F11"/>
+            <field REF="F13"/>
+            <field REF="F8"/>
             <field REF="F35"/>
           </columns>
         </renderer>
@@ -277,7 +277,7 @@
           <field REF="F35"/>
         </criteria>
         <criteria rank="3">
-          <field REF="F13"/>
+          <field REF="F10"/>
         </criteria>
       </criterias>
       <renderers>
@@ -285,10 +285,10 @@
           <name><![CDATA[Results]]></name>
           <columns>
             <field REF="F31"/>
-            <field REF="F16"/>
-            <field REF="F11"/>
-            <field REF="F35"/>
             <field REF="F13"/>
+            <field REF="F8"/>
+            <field REF="F35"/>
+            <field REF="F10"/>
           </columns>
         </renderer>
       </renderers>
@@ -307,7 +307,7 @@
           <field REF="F35"/>
         </criteria>
         <criteria rank="3">
-          <field REF="F14"/>
+          <field REF="F11"/>
         </criteria>
       </criterias>
       <renderers>
@@ -315,10 +315,10 @@
           <name><![CDATA[Results]]></name>
           <columns>
             <field REF="F31"/>
-            <field REF="F16"/>
-            <field REF="F11"/>
+            <field REF="F13"/>
+            <field REF="F8"/>
             <field REF="F35"/>
-            <field REF="F14"/>
+            <field REF="F11"/>
           </columns>
         </renderer>
       </renderers>
@@ -326,26 +326,26 @@
   </reports>
   <workflow/>
   <permissions>
+    <permission scope="field" REF="F7" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F8" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F9" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F9" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F9" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F10" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F10" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F10" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F11" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F11" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F11" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F12" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F12" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F12" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F13" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F13" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F13" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F14" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F14" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F14" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F15" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F15" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F15" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F16" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F16" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F16" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F17" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F17" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F17" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F18" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F18" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F18" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
@@ -375,11 +375,11 @@
         <submitted_on format="ISO8601"><![CDATA[2020-01-14T14:07:16+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[7]]></value>
+          <value format="id"><![CDATA[1]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">John</value>
@@ -401,14 +401,14 @@
         <submitted_on format="ISO8601"><![CDATA[2018-01-11T03:54:07+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="assignee" type="list" bind="users">
           <value format="username">thomas_cottier</value>
         </field_change>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[9]]></value>
+          <value format="id"><![CDATA[3]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">thomas_cottier</value>
@@ -445,11 +445,11 @@ To Do to Done 9 days 1 hours 45 minutes ago</p>]]></body>
           <value format="username">thomas_cottier</value>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[9]]></value>
+          <value format="id"><![CDATA[3]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">thomas_cottier</value>
@@ -491,14 +491,14 @@ To Do to Done 11 days 3 hours 23 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-01-11T03:54:07+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="assignee" type="list" bind="users">
           <value format="username">thomas_cottier</value>
         </field_change>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[9]]></value>
+          <value format="id"><![CDATA[3]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">thomas_cottier</value>
@@ -532,14 +532,14 @@ To Do to Done 13 days 18 hours 43 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-01-11T03:54:07+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="assignee" type="list" bind="users">
           <value format="username">thomas_cottier</value>
         </field_change>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[9]]></value>
+          <value format="id"><![CDATA[3]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">thomas_cottier</value>
@@ -573,14 +573,14 @@ To Do to Done 16 days 1 hours 21 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-01-11T03:54:07+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="assignee" type="list" bind="users">
           <value format="username">thomas_cottier</value>
         </field_change>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[9]]></value>
+          <value format="id"><![CDATA[3]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">thomas_cottier</value>
@@ -614,14 +614,14 @@ To Do to Done 17 days 13 hours 56 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-01-11T03:54:07+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="assignee" type="list" bind="users">
           <value format="username">thomas_cottier</value>
         </field_change>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[9]]></value>
+          <value format="id"><![CDATA[3]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">thomas_cottier</value>
@@ -655,11 +655,11 @@ To Do to Done 20 days 13 hours 50 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-01-04T09:00:07+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[9]]></value>
+          <value format="id"><![CDATA[3]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">thomas_cottier</value>
@@ -693,11 +693,11 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-01-25T05:04:07+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[9]]></value>
+          <value format="id"><![CDATA[3]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">thomas_cottier</value>
@@ -736,7 +736,7 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
           </comment>
         </comments>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks">
           <value nature="_is_child"><![CDATA[10131]]></value>
@@ -746,7 +746,7 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
           <value format="username">thomas_cottier</value>
         </field_change>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[7]]></value>
+          <value format="id"><![CDATA[1]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">thomas_cottier</value>
@@ -776,10 +776,10 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
           </comment>
         </comments>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[8]]></value>
+          <value format="id"><![CDATA[2]]></value>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks">
           <value nature="_is_child"><![CDATA[10010]]></value>
@@ -807,7 +807,7 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2020-06-09T18:11:08+02:00]]></submitted_on>
         <comments/>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[9]]></value>
+          <value format="id"><![CDATA[3]]></value>
         </field_change>
       </changeset>
     </artifact>
@@ -817,11 +817,11 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:09+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[7]]></value>
+          <value format="id"><![CDATA[1]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">thomas_cottier</value>
@@ -840,10 +840,10 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:09+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[7]]></value>
+          <value format="id"><![CDATA[1]]></value>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks">
           <value nature="_is_child"><![CDATA[10006]]></value>
@@ -873,7 +873,7 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2021-03-03T17:14:20+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[9]]></value>
+          <value format="id"><![CDATA[3]]></value>
         </field_change>
       </changeset>
     </artifact>
@@ -883,11 +883,11 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:09+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[7]]></value>
+          <value format="id"><![CDATA[1]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">thomas_cottier</value>
@@ -911,11 +911,11 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:09+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[7]]></value>
+          <value format="id"><![CDATA[1]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">thomas_cottier</value>
@@ -979,11 +979,11 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:09+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[7]]></value>
+          <value format="id"><![CDATA[1]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">thomas_cottier</value>
@@ -1007,11 +1007,11 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:08+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[7]]></value>
+          <value format="id"><![CDATA[1]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">thomas_cottier</value>
@@ -1041,13 +1041,13 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:08+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[24]]></value>
+          <value format="id"><![CDATA[38]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks">
           <value nature="Blocks"><![CDATA[10013]]></value>
         </field_change>
         <field_change field_name="status" type="list" bind="static">
-          <value format="id"><![CDATA[7]]></value>
+          <value format="id"><![CDATA[1]]></value>
         </field_change>
         <field_change field_name="reporter" type="list" bind="users">
           <value format="username">thomas_cottier</value>

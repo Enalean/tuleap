@@ -24,6 +24,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLListField;
+
 /**
  * @psalm-immutable
  */
@@ -76,6 +79,35 @@ class ListFieldMapping implements FieldMapping
         $this->type             = $type;
         $this->bind_type        = $bind_type;
         $this->bound_values     = $bound_values;
+    }
+
+    public static function buildFromJiraAndTuleapFields(JiraFieldAPIRepresentation $jira_field, XMLListField $tuleap_field): self
+    {
+        if (! $tuleap_field->bind_type) {
+            throw new \LogicException('Cannot have a mapping with an unbound list field');
+        }
+
+        $jira_values_by_name = [];
+        foreach ($jira_field->getBoundValues() as $value) {
+            $jira_values_by_name[$value->getName()] = $value->getId();
+        }
+
+        $bound_values = [];
+        foreach ($tuleap_field->bind_values as $bind_value) {
+            if (isset($jira_values_by_name[$bind_value->label]) && $bind_value instanceof XMLBindStaticValue) {
+                $bound_values[] = JiraFieldAPIAllowedValueRepresentation::buildFromTuleapXML($jira_values_by_name[$bind_value->label], $bind_value);
+            }
+        }
+
+        return new self(
+            $jira_field->getId(),
+            $jira_field->getLabel(),
+            $tuleap_field->id,
+            $tuleap_field->name,
+            $tuleap_field->type,
+            $tuleap_field->bind_type,
+            $bound_values,
+        );
     }
 
     public function getJiraFieldId(): string

@@ -25,54 +25,47 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Psr\Log\LoggerInterface;
 use Tracker_FormElement_Field_List_Bind_Users;
-use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
+use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
+use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\XML\XMLFloatField;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindUsersValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLMultiSelectBoxField;
+use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLRadioButtonField;
+use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
+use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringField;
+use Tuleap\Tracker\FormElement\Field\Text\XML\XMLTextField;
+use Tuleap\Tracker\XML\IDGenerator;
+use Tuleap\Tracker\XML\XMLTracker;
 
 class JiraToTuleapFieldTypeMapper
 {
-    /**
-     * @var FieldXmlExporter
-     */
-    private $field_xml_exporter;
-    /**
-     * @var ErrorCollector
-     */
-    private $error_collector;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        FieldXmlExporter $field_xml_exporter,
-        ErrorCollector $error_collector,
-        LoggerInterface $logger,
+        private ErrorCollector $error_collector,
+        private LoggerInterface $logger,
     ) {
-        $this->field_xml_exporter = $field_xml_exporter;
-        $this->error_collector    = $error_collector;
-        $this->logger             = $logger;
     }
 
     public function exportFieldToXml(
         JiraFieldAPIRepresentation $jira_field,
-        ContainersXMLCollection $containers_collection,
-        FieldMappingCollection $jira_field_mapping_collection,
+        XMLTracker $xml_tracker,
+        IDGenerator $id_generator,
         PlatformConfiguration $platform_configuration,
-    ): void {
+        FieldMappingCollection $jira_field_mapping_collection,
+    ): XMLTracker {
         $id               = $jira_field->getId();
         $jira_field_label = $jira_field->getLabel();
-        $required         = $jira_field->isRequired();
 
         // ignore this jira always there mapping who is created like a custom one
         if ($jira_field_label === "Flagged") {
-            return;
+            return $xml_tracker;
         }
 
         if ($platform_configuration->hasStoryPointsField() && $platform_configuration->getStoryPointsField() === $jira_field->getId()) {
             $this->logger->debug('Field ' . $jira_field->getId() . ' is managed in dedicated converter.');
-            return;
+            return $xml_tracker;
         }
 
         if ($jira_field->getSchema() === null) {
@@ -82,242 +75,227 @@ class JiraToTuleapFieldTypeMapper
                 case 'issuekey':
                 case 'thumbnail':
                 default:
-                    return;
+                    return $xml_tracker;
             }
         } else {
             $jira_type = $jira_field->getSchema();
 
             switch ($jira_type) {
                 case 'summary':
-                    $this->field_xml_exporter->exportField(
-                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::LEFT_COLUMN_NAME),
-                        Tracker_FormElementFactory::FIELD_STRING_TYPE,
-                        $id,
-                        $jira_field_label,
-                        $id,
-                        AlwaysThereFieldsExporter::JIRA_SUMMARY_RANK,
-                        $required,
-                        [],
-                        $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection,
-                        null
-                    );
-                    break;
+                    $field = (new XMLStringField($id_generator, AlwaysThereFieldsExporter::JIRA_SUMMARY_FIELD_NAME))
+                        ->withLabel($jira_field->getLabel())
+                        ->withRank(AlwaysThereFieldsExporter::JIRA_SUMMARY_RANK)
+                        ->withRequired($jira_field->isRequired())
+                        ->withoutPermissions();
+
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::LEFT_COLUMN_NAME, $field);
+
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:textfield':
-                    $this->field_xml_exporter->exportField(
-                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
-                        Tracker_FormElementFactory::FIELD_STRING_TYPE,
-                        $id,
-                        $jira_field_label,
-                        $id,
-                        1,
-                        $required,
-                        [],
-                        $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection,
-                        null
-                    );
-                    break;
+                    $field = (new XMLStringField($id_generator, $id))
+                        ->withLabel($jira_field->getLabel())
+                        ->withRank(1)
+                        ->withRequired($jira_field->isRequired())
+                        ->withoutPermissions();
+
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
+
                 case 'description':
-                    $this->field_xml_exporter->exportField(
-                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::LEFT_COLUMN_NAME),
-                        Tracker_FormElementFactory::FIELD_TEXT_TYPE,
-                        $id,
-                        $jira_field_label,
-                        $id,
-                        AlwaysThereFieldsExporter::JIRA_DESCRIPTION_RANK,
-                        $required,
-                        [],
-                        $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection,
-                        null
-                    );
-                    break;
+                    $field = (new XMLTextField($id_generator, AlwaysThereFieldsExporter::JIRA_DESCRIPTION_FIELD_NAME))
+                        ->withLabel($jira_field->getLabel())
+                        ->withRank(AlwaysThereFieldsExporter::JIRA_DESCRIPTION_RANK)
+                        ->withRequired($jira_field->isRequired())
+                        ->withoutPermissions();
+
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::LEFT_COLUMN_NAME, $field);
+
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:textarea':
-                    $this->field_xml_exporter->exportField(
-                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
-                        Tracker_FormElementFactory::FIELD_TEXT_TYPE,
-                        $id,
-                        $jira_field_label,
-                        $id,
-                        2,
-                        $required,
-                        [],
-                        $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection,
-                        null
-                    );
-                    break;
+                    $field = (new XMLTextField($id_generator, $jira_field->getId()))
+                        ->withLabel($jira_field->getLabel())
+                        ->withRank(2)
+                        ->withRequired($jira_field->isRequired())
+                        ->withoutPermissions();
+
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
+
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:float':
-                    $this->field_xml_exporter->exportField(
-                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
-                        Tracker_FormElementFactory::FIELD_FLOAT_TYPE,
-                        $id,
-                        $jira_field_label,
-                        $id,
-                        3,
-                        $required,
-                        [],
-                        $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection,
-                        null
-                    );
-                    break;
+                    $field = (new XMLFloatField($id_generator, $jira_field->getId()))
+                        ->withLabel($jira_field->getLabel())
+                        ->withRank(3)
+                        ->withRequired($jira_field->isRequired())
+                        ->withoutPermissions();
+
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
+
                 case 'duedate':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:datepicker':
-                    $this->field_xml_exporter->exportField(
-                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
-                        Tracker_FormElementFactory::FIELD_DATE_TYPE,
-                        $id,
-                        $jira_field_label,
-                        $id,
-                        4,
-                        $required,
-                        [
-                            'display_time' => '0',
-                        ],
-                        $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection,
-                        null
-                    );
-                    break;
+                    $field = (new XMLDateField($id_generator, $jira_field->getId()))
+                        ->withLabel($jira_field->getLabel())
+                        ->withRank(4)
+                        ->withRequired($jira_field->isRequired())
+                        ->withoutPermissions();
+
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
+
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:datetime':
-                    $this->field_xml_exporter->exportField(
-                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
-                        Tracker_FormElementFactory::FIELD_DATE_TYPE,
-                        $id,
-                        $jira_field_label,
-                        $id,
-                        4,
-                        $required,
-                        [
-                            'display_time' => '1',
-                        ],
-                        $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection,
-                        null
-                    );
-                    break;
+                    $field = (new XMLDateField($id_generator, $jira_field->getId()))
+                        ->withLabel($jira_field->getLabel())
+                        ->withRank(4)
+                        ->withRequired($jira_field->isRequired())
+                        ->withDateTime()
+                        ->withoutPermissions();
+
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
+
                 case AlwaysThereFieldsExporter::JIRA_PRIORITY_NAME:
-                    $this->field_xml_exporter->exportField(
-                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
-                        Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                        $id,
-                        $jira_field_label,
-                        $id,
-                        AlwaysThereFieldsExporter::JIRA_PRIORITY_RANK,
-                        $required,
-                        [],
-                        $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection,
-                        \Tracker_FormElement_Field_List_Bind_Static::TYPE
-                    );
-                    break;
+                    $field = (new XMLSelectBoxField($id_generator, $jira_field->getId()))
+                        ->withLabel($jira_field->getLabel())
+                        ->withRank(AlwaysThereFieldsExporter::JIRA_PRIORITY_RANK)
+                        ->withRequired($jira_field->isRequired())
+                        ->withStaticValues(
+                            ...array_map(
+                                static fn (JiraFieldAPIAllowedValueRepresentation $value) => new XMLBindStaticValue(
+                                    $id_generator,
+                                    $value->getName()
+                                ),
+                                $jira_field->getBoundValues()
+                            )
+                        )
+                        ->withoutPermissions();
+
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::RIGHT_COLUMN_NAME, $field);
+
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons':
-                    $this->field_xml_exporter->exportField(
-                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
-                        Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE,
-                        $id,
-                        $jira_field_label,
-                        $id,
-                        5,
-                        $required,
-                        [],
-                        $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection,
-                        \Tracker_FormElement_Field_List_Bind_Static::TYPE
-                    );
-                    break;
+                    $field = (new XMLRadioButtonField($id_generator, $jira_field->getId()))
+                        ->withLabel($jira_field->getLabel())
+                        ->withRank(5)
+                        ->withRequired($jira_field->isRequired())
+                        ->withStaticValues(
+                            ...array_map(
+                                static fn (JiraFieldAPIAllowedValueRepresentation $value) => new XMLBindStaticValue(
+                                    $id_generator,
+                                    $value->getName()
+                                ),
+                                $jira_field->getBoundValues()
+                            )
+                        )
+                        ->withoutPermissions();
+
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
+
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multiselect':
-                    $this->field_xml_exporter->exportField(
-                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
-                        Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-                        $id,
-                        $jira_field_label,
-                        $id,
-                        6,
-                        $required,
-                        [],
-                        $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection,
-                        \Tracker_FormElement_Field_List_Bind_Static::TYPE
-                    );
-                    break;
+                    $field = (new XMLMultiSelectBoxField($id_generator, $jira_field->getId()))
+                        ->withLabel($jira_field->getLabel())
+                        ->withRank(6)
+                        ->withRequired($jira_field->isRequired())
+                        ->withStaticValues(
+                            ...array_map(
+                                static fn (JiraFieldAPIAllowedValueRepresentation $value) => new XMLBindStaticValue(
+                                    $id_generator,
+                                    $value->getName()
+                                ),
+                                $jira_field->getBoundValues()
+                            )
+                        )
+                        ->withoutPermissions();
+
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
+
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:select':
-                    $this->field_xml_exporter->exportField(
-                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
-                        Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                        $id,
-                        $jira_field_label,
-                        $id,
-                        5,
-                        $required,
-                        [],
-                        $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection,
-                        \Tracker_FormElement_Field_List_Bind_Static::TYPE
-                    );
-                    break;
+                    $field = (new XMLSelectBoxField($id_generator, $jira_field->getId()))
+                        ->withLabel($jira_field->getLabel())
+                        ->withRank(5)
+                        ->withRequired($jira_field->isRequired())
+                        ->withStaticValues(
+                            ...array_map(
+                                static fn (JiraFieldAPIAllowedValueRepresentation $value) => new XMLBindStaticValue(
+                                    $id_generator,
+                                    $value->getName()
+                                ),
+                                $jira_field->getBoundValues()
+                            )
+                        )
+                        ->withoutPermissions();
+
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
+
                 case AlwaysThereFieldsExporter::JIRA_ASSIGNEE_NAME:
-                    $this->field_xml_exporter->exportField(
-                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
-                        Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                        $id,
-                        $jira_field_label,
-                        $id,
-                        AlwaysThereFieldsExporter::JIRA_ASSIGNEE_RANK,
-                        $required,
-                        [],
-                        $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection,
-                        Tracker_FormElement_Field_List_Bind_Users::TYPE
-                    );
-                    break;
+                    $field = (new XMLSelectBoxField($id_generator, $jira_field->getId()))
+                        ->withLabel($jira_field->getLabel())
+                        ->withRank(AlwaysThereFieldsExporter::JIRA_ASSIGNEE_RANK)
+                        ->withRequired($jira_field->isRequired())
+                        ->withUsersValues(
+                            new XMLBindUsersValue(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME)
+                        )
+                        ->withoutPermissions();
+
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::RIGHT_COLUMN_NAME, $field);
+
                 case AlwaysThereFieldsExporter::JIRA_REPORTER_NAME:
-                    $this->field_xml_exporter->exportField(
-                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
-                        Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                        $id,
-                        $jira_field_label,
-                        $id,
-                        AlwaysThereFieldsExporter::JIRA_REPORTER_RANK,
-                        $required,
-                        [],
-                        $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection,
-                        Tracker_FormElement_Field_List_Bind_Users::TYPE
-                    );
-                    break;
+                    $field = (new XMLSelectBoxField($id_generator, $jira_field->getId()))
+                        ->withLabel($jira_field->getLabel())
+                        ->withRank(AlwaysThereFieldsExporter::JIRA_REPORTER_RANK)
+                        ->withRequired($jira_field->isRequired())
+                        ->withUsersValues(
+                            new XMLBindUsersValue(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME)
+                        )
+                        ->withoutPermissions();
+
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::RIGHT_COLUMN_NAME, $field);
+
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:userpicker':
-                    $this->field_xml_exporter->exportField(
-                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
-                        Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                        $id,
-                        $jira_field_label,
-                        $id,
-                        11,
-                        $required,
-                        [],
-                        $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection,
-                        Tracker_FormElement_Field_List_Bind_Users::TYPE
-                    );
-                    break;
+                    $field = (new XMLSelectBoxField($id_generator, $jira_field->getId()))
+                        ->withLabel($jira_field->getLabel())
+                        ->withRank(11)
+                        ->withRequired($jira_field->isRequired())
+                        ->withUsersValues(
+                            new XMLBindUsersValue(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME)
+                        )
+                        ->withoutPermissions();
+
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
+
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multiuserpicker':
-                    $this->field_xml_exporter->exportField(
-                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
-                        Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-                        $id,
-                        $jira_field_label,
-                        $id,
-                        12,
-                        $required,
-                        [],
-                        $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection,
-                        Tracker_FormElement_Field_List_Bind_Users::TYPE
-                    );
-                    break;
+                    $field = (new XMLMultiSelectBoxField($id_generator, $jira_field->getId()))
+                        ->withLabel($jira_field->getLabel())
+                        ->withRank(12)
+                        ->withRequired($jira_field->isRequired())
+                        ->withUsersValues(
+                            new XMLBindUsersValue(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME)
+                        )
+                        ->withoutPermissions();
+
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
+
                 case 'attachment':
                 case 'status':
                 case 'creator':
@@ -400,5 +378,7 @@ class JiraToTuleapFieldTypeMapper
                     $this->error_collector->addError("Unknown mapping type " . $jira_type);
             }
         }
+
+        return $xml_tracker;
     }
 }

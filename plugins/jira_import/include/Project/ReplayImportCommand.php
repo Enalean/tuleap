@@ -137,18 +137,14 @@ final class ReplayImportCommand extends Command
     {
         $platform_configuration_collection = new PlatformConfiguration();
 
-        $tracker_for_export = (new XMLTracker('T200', $item_name))
+        $tracker = (new XMLTracker('T200', $item_name))
             ->withName($item_name)
             ->withDescription('Bug')
             ->withColor(TrackerColor::default());
 
-        $xml          = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
-        $trackers_xml = $xml->addChild('trackers');
-        $tracker_xml  = $tracker_for_export->export($trackers_xml);
-
-        $jira_xml_exporter->exportJiraToXml(
+        $tracker_xml = $jira_xml_exporter->exportJiraToXml(
             $platform_configuration_collection,
-            $tracker_xml,
+            $tracker,
             'https://jira.example.com',
             $jira_project_key,
             new IssueType($jira_issue_type_id, 'undefined', false),
@@ -156,7 +152,7 @@ final class ReplayImportCommand extends Command
             new LinkedIssuesCollection(),
         );
 
-        return $xml;
+        return $jira_xml_exporter->getProjectSimpleXmlElement($tracker_xml);
     }
 
     private function getJiraXmlExporter(JiraClient $jira_client, LoggerInterface $logger): JiraXmlExporter

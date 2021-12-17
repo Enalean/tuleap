@@ -51,12 +51,12 @@ abstract class XMLFormElement
      * @var string
      * @readonly
      */
-    private $label = '';
+    public $label = '';
     /**
      * @var string
      * @readonly
      */
-    private $type;
+    public $type;
     /**
      * @var string
      * @readonly

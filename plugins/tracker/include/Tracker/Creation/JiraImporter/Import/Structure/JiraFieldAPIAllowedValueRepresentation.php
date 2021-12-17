@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
 use Tuleap\Tracker\XML\IDGenerator;
 
 /**
@@ -84,6 +85,15 @@ class JiraFieldAPIAllowedValueRepresentation
     public static function buildWithJiraIdOnly(int $jira_id, IDGenerator $id_generator): self
     {
         return new self($jira_id, '', $id_generator->getNextId());
+    }
+
+    public static function buildFromTuleapXML(int $jira_id, XMLBindStaticValue $value): self
+    {
+        return new self(
+            $jira_id,
+            $value->label,
+            (int) substr($value->id, 1),
+        );
     }
 
     public function getId(): int

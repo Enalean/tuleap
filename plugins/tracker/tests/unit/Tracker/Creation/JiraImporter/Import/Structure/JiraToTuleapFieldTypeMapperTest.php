@@ -23,555 +23,439 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
+use Tracker_FormElement_Field_List_Bind_Static;
+use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
+use Tuleap\Tracker\XML\IDGenerator;
+use Tuleap\Tracker\XML\XMLTracker;
+use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertEquals;
 
 final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FieldXmlExporter
-     */
-    private $field_exporter;
-
-    /**
-     * @var JiraToTuleapFieldTypeMapper
-     */
-    private $mapper;
-
-    /**
-     * @var ContainersXMLCollection
-     */
-    private $containers_collection;
-
-    /**
-     * @var SimpleXMLElement
-     */
-    private $left_column;
-
-    /**
-     * @var SimpleXMLElement
-     */
-    private $custom_fieldset;
-
-    /**
-     * @var SimpleXMLElement
-     */
-    private $right_column;
+    private LoggerInterface $logger;
+    private JiraToTuleapFieldTypeMapper $mapper;
+    private XMLTracker $xml_tracker;
+    private FieldMappingCollection $field_mapping_collection;
+    private IDGenerator $id_generator;
 
     protected function setUp(): void
     {
-        $this->logger         = new class extends AbstractLogger {
+        $this->logger = new class extends AbstractLogger {
             public $messages = [];
             public function log($level, $message, array $context = [])
             {
                 $this->messages[$level][] = $message;
             }
         };
-        $this->field_exporter = Mockery::mock(FieldXmlExporter::class);
-        $this->mapper         = new JiraToTuleapFieldTypeMapper(
-            $this->field_exporter,
+        $this->mapper = new JiraToTuleapFieldTypeMapper(
             new ErrorCollector(),
             $this->logger
         );
 
-        $form_elements               = new SimpleXMLElement("<formElements/>");
-        $this->containers_collection = new ContainersXMLCollection(new FieldAndValueIDGenerator());
-        (new ContainersXMLCollectionBuilder())->buildCollectionOfJiraContainersXML(
-            $form_elements,
-            $this->containers_collection,
-        );
+        $this->id_generator = new FieldAndValueIDGenerator();
+        $builder            = new AlwaysThereFieldsExporter();
+        $jira_client        = new class extends JiraCloudClientStub {
+        };
 
-        $this->left_column     = $this->containers_collection->getContainerByName(ContainersXMLCollectionBuilder::LEFT_COLUMN_NAME);
-        $this->right_column    = $this->containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME);
-        $this->custom_fieldset = $this->containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME);
-    }
+        $this->field_mapping_collection = new FieldMappingCollection();
 
-    public function testJiraSummaryFieldIsMappedToStringField(): void
-    {
-        $jira_field = new JiraFieldAPIRepresentation(
-            'summary',
-            'Summary',
-            true,
-            'summary',
-            [],
-            true,
-        );
-
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
-
-        $this->field_exporter->shouldReceive('exportField')->withArgs(
-            [
-                $this->left_column,
-                Tracker_FormElementFactory::FIELD_STRING_TYPE,
-                $jira_field->getId(),
-                $jira_field->getLabel(),
-                $jira_field->getId(),
-                1,
-                $jira_field->isRequired(),
-                [],
-                [],
-                $collection,
-                null,
-            ]
-        );
-
-        $this->mapper->exportFieldToXml(
-            $jira_field,
-            $this->containers_collection,
-            $collection,
-            new PlatformConfiguration(),
+        $this->xml_tracker = $builder->exportFields(
+            $this->id_generator,
+            new XMLTracker($this->id_generator, 'whatever'),
+            new StatusValuesCollection(
+                $jira_client,
+                new NullLogger()
+            ),
+            $this->field_mapping_collection,
         );
     }
 
-    public function testJiraDescriptionFieldIsMappedToStringField(): void
+    public function getJiraFieldsAreMappedToXMLObjects(): iterable
     {
-        $jira_field = new JiraFieldAPIRepresentation(
-            'description',
-            'Description',
-            false,
-            'description',
-            [],
-            true
-        );
-
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
-
-        $this->field_exporter->shouldReceive('exportField')->withArgs(
-            [
-                $this->left_column,
-                Tracker_FormElementFactory::FIELD_TEXT_TYPE,
-                $jira_field->getId(),
-                $jira_field->getLabel(),
-                $jira_field->getId(),
-                2,
-                $jira_field->isRequired(),
+        yield 'JiraSummaryFieldIsMappedToStringField' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'summary',
+                'Summary',
+                true,
+                'summary',
                 [],
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="left_column"]//formElement[name="summary"]')[0];
+
+                self::assertEquals('string', $node['type']);
+                self::assertEquals('Summary', $node->label);
+                self::assertEquals(1, (int) $node['rank']);
+                self::assertEquals('1', $node['required']);
+
+                $mapping = $collection->getMappingFromJiraField('summary');
+                self::assertEquals('summary', $mapping->getFieldName());
+            },
+        ];
+
+        yield 'JiraDescriptionFieldIsMappedToStringField' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'description',
+                'Description',
+                false,
+                'description',
                 [],
-                $collection,
-                null,
-            ]
-        );
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="left_column"]//formElement[name="description"]')[0];
 
-        $this->mapper->exportFieldToXml(
-            $jira_field,
-            $this->containers_collection,
-            $collection,
-            new PlatformConfiguration(),
-        );
-    }
+                self::assertEquals(Tracker_FormElementFactory::FIELD_TEXT_TYPE, $node['type']);
+                self::assertEquals('Description', $node->label);
+                self::assertEquals(2, (int) $node['rank']);
+                self::assertFalse(isset($node['required']), 'Field is not required');
 
-    public function testJiraTextFieldFieldIsMappedToStringField(): void
-    {
-        $jira_field = new JiraFieldAPIRepresentation(
-            'fieldid',
-            'String Field',
-            false,
-            'com.atlassian.jira.plugin.system.customfieldtypes:textfield',
-            [],
-            true
-        );
+                $mapping = $collection->getMappingFromJiraField('description');
+                self::assertEquals('description', $mapping->getFieldName());
+            },
+        ];
 
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
-
-        $this->field_exporter->shouldReceive('exportField')->withArgs(
-            [
-                $this->custom_fieldset,
-                Tracker_FormElementFactory::FIELD_STRING_TYPE,
-                $jira_field->getId(),
-                $jira_field->getLabel(),
-                $jira_field->getId(),
-                1,
-                $jira_field->isRequired(),
+        yield 'JiraTextFieldFieldIsMappedToStringField' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'fieldid',
+                'String Field',
+                false,
+                'com.atlassian.jira.plugin.system.customfieldtypes:textfield',
                 [],
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME . '"]//formElement[name="fieldid"]')[0];
+
+                self::assertEquals(Tracker_FormElementFactory::FIELD_STRING_TYPE, $node['type']);
+                self::assertEquals('String Field', $node->label);
+
+                $mapping = $collection->getMappingFromJiraField('fieldid');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_STRING_TYPE, $mapping->getType());
+            },
+        ];
+
+        yield 'testJiraTextAreaFieldIsMappedToStringField' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'fieldid',
+                'Text Field',
+                false,
+                'com.atlassian.jira.plugin.system.customfieldtypes:textarea',
                 [],
-                $collection,
-                null,
-            ]
-        );
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME . '"]//formElement[name="fieldid"]')[0];
 
-        $this->mapper->exportFieldToXml(
-            $jira_field,
-            $this->containers_collection,
-            $collection,
-            new PlatformConfiguration(),
-        );
-    }
+                self::assertEquals(Tracker_FormElementFactory::FIELD_TEXT_TYPE, $node['type']);
+                self::assertEquals('fieldid', $node->name);
+                self::assertEquals('Text Field', $node->label);
 
-    public function testJiraTextAreaFieldIsMappedToStringField(): void
-    {
-        $jira_field = new JiraFieldAPIRepresentation(
-            'fieldid',
-            'Text Field',
-            false,
-            'com.atlassian.jira.plugin.system.customfieldtypes:textarea',
-            [],
-            true
-        );
+                $mapping = $collection->getMappingFromJiraField('fieldid');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_TEXT_TYPE, $mapping->getType());
+            },
+        ];
 
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
-
-        $this->field_exporter->shouldReceive('exportField')->withArgs(
-            [
-                $this->custom_fieldset,
-                Tracker_FormElementFactory::FIELD_TEXT_TYPE,
-                $jira_field->getId(),
-                $jira_field->getLabel(),
-                $jira_field->getId(),
-                2,
-                $jira_field->isRequired(),
+        yield 'testJiraFloatFieldIsMappedToFloatField' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'fieldid',
+                'Float Field',
+                false,
+                'com.atlassian.jira.plugin.system.customfieldtypes:float',
                 [],
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME . '"]//formElement[name="fieldid"]')[0];
+
+                self::assertEquals(Tracker_FormElementFactory::FIELD_FLOAT_TYPE, $node['type']);
+                self::assertEquals('fieldid', $node->name);
+                self::assertEquals('Float Field', $node->label);
+
+                $mapping = $collection->getMappingFromJiraField('fieldid');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_FLOAT_TYPE, $mapping->getType());
+            },
+        ];
+
+        yield 'testJiraDatepickerFieldIsMappedToDateField' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'fieldid',
+                'Datepicker Field',
+                false,
+                'com.atlassian.jira.plugin.system.customfieldtypes:datepicker',
                 [],
-                $collection,
-                null,
-            ]
-        );
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME . '"]//formElement[name="fieldid"]')[0];
 
-        $this->mapper->exportFieldToXml(
-            $jira_field,
-            $this->containers_collection,
-            $collection,
-            new PlatformConfiguration(),
-        );
-    }
+                self::assertEquals(Tracker_FormElementFactory::FIELD_DATE_TYPE, $node['type']);
+                self::assertEquals('Datepicker Field', $node->label);
+                self::assertFalse(isset($container_node->formElements[0]->properties), 'Time is not displayed');
 
-    public function testJiraFloatFieldIsMappedToFloatField(): void
-    {
-        $jira_field = new JiraFieldAPIRepresentation(
-            'fieldid',
-            'String Field',
-            false,
-            'com.atlassian.jira.plugin.system.customfieldtypes:float',
-            [],
-            true
-        );
+                $mapping = $collection->getMappingFromJiraField('fieldid');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_DATE_TYPE, $mapping->getType());
+            },
+        ];
 
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
-
-        $this->field_exporter->shouldReceive('exportField')->withArgs(
-            [
-                $this->custom_fieldset,
-                Tracker_FormElementFactory::FIELD_FLOAT_TYPE,
-                $jira_field->getId(),
-                $jira_field->getLabel(),
-                $jira_field->getId(),
-                3,
-                $jira_field->isRequired(),
+        yield 'testJiraDatetimeFieldIsMappedToDateFieldWithTimeDisplayed' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'fieldid',
+                'DateTimePicker Field',
+                false,
+                'com.atlassian.jira.plugin.system.customfieldtypes:datetime',
                 [],
-                [],
-                $collection,
-                null,
-            ]
-        );
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME . '"]//formElement[name="fieldid"]')[0];
 
-        $this->mapper->exportFieldToXml(
-            $jira_field,
-            $this->containers_collection,
-            $collection,
-            new PlatformConfiguration(),
-        );
-    }
+                self::assertEquals(Tracker_FormElementFactory::FIELD_DATE_TYPE, $node['type']);
+                self::assertEquals('DateTimePicker Field', $node->label);
+                self::assertEquals('1', $node->properties['display_time']);
 
-    public function testJiraDatepickerFieldIsMappedToDateField(): void
-    {
-        $jira_field = new JiraFieldAPIRepresentation(
-            'fieldid',
-            'Datepicker Field',
-            false,
-            'com.atlassian.jira.plugin.system.customfieldtypes:datepicker',
-            [],
-            true
-        );
+                $mapping = $collection->getMappingFromJiraField('fieldid');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_DATE_TYPE, $mapping->getType());
+            },
+        ];
 
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
-
-        $this->field_exporter->shouldReceive('exportField')->withArgs(
-            [
-                $this->custom_fieldset,
-                Tracker_FormElementFactory::FIELD_DATE_TYPE,
-                $jira_field->getId(),
-                $jira_field->getLabel(),
-                $jira_field->getId(),
-                4,
-                $jira_field->isRequired(),
+        yield 'testJiraPriorityFieldIsMappedToSelectBoxField' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'priority',
+                'Priorité',
+                false,
+                'priority',
                 [
-                    'display_time' => '0',
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 1, 'name' => 'P1'], new FieldAndValueIDGenerator()),
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 2, 'name' => 'P2'], new FieldAndValueIDGenerator()),
                 ],
-                [],
-                $collection,
-                null,
-            ]
-        );
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::RIGHT_COLUMN_NAME . '"]//formElement[name="priority"]')[0];
 
-        $this->mapper->exportFieldToXml(
-            $jira_field,
-            $this->containers_collection,
-            $collection,
-            new PlatformConfiguration(),
-        );
-    }
+                self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, (string) $node['type']);
+                self::assertEquals('priority', $node->name);
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $node->bind['type']);
+                self::assertCount(2, $node->bind->items->item);
+                self::assertEquals('P1', $node->bind->items->item[0]['label']);
+                self::assertEquals('P2', $node->bind->items->item[1]['label']);
 
-    public function testJiraDatetimeFieldIsMappedToDateFieldWithTimeDisplayed(): void
-    {
-        $jira_field = new JiraFieldAPIRepresentation(
-            'fieldid',
-            'Datepicker Field',
-            false,
-            'com.atlassian.jira.plugin.system.customfieldtypes:datetime',
-            [],
-            true
-        );
+                $mapping = $collection->getMappingFromJiraField('priority');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+            },
+        ];
 
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
-
-        $this->field_exporter->shouldReceive('exportField')->withArgs(
-            [
-                $this->custom_fieldset,
-                Tracker_FormElementFactory::FIELD_DATE_TYPE,
-                $jira_field->getId(),
-                $jira_field->getLabel(),
-                $jira_field->getId(),
-                4,
-                $jira_field->isRequired(),
+        yield 'testJiraRadioButtonsFieldIsMappedToRadioButtonField' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'radiobuttonsid',
+                'Radio buttons',
+                false,
+                'com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons',
                 [
-                    'display_time' => '1',
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 1, 'name' => 'red'], new FieldAndValueIDGenerator()),
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 2, 'name' => 'green'], new FieldAndValueIDGenerator()),
                 ],
-                [],
-                $collection,
-                null,
-            ]
-        );
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME . '"]//formElement[name="radiobuttonsid"]')[0];
 
-        $this->mapper->exportFieldToXml(
-            $jira_field,
-            $this->containers_collection,
-            $collection,
-            new PlatformConfiguration(),
-        );
-    }
+                self::assertEquals(Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE, $node['type']);
+                self::assertEquals('Radio buttons', $node->label);
+                self::assertEquals('static', $node->bind['type']);
+                self::assertCount(2, $node->bind->items->item);
+                self::assertEquals('red', $node->bind->items->item[0]['label']);
+                self::assertEquals('green', $node->bind->items->item[1]['label']);
 
-    public function testJiraPriorityFieldIsMappedToSelectBoxField(): void
-    {
-        $bound_values = [
-            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(1, new FieldAndValueIDGenerator()),
-            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(2, new FieldAndValueIDGenerator()),
+                $mapping = $collection->getMappingFromJiraField('radiobuttonsid');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE, $mapping->getType());
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+            },
         ];
 
-        $jira_field = new JiraFieldAPIRepresentation(
-            'fieldid',
-            'Priorité',
-            false,
-            'priority',
-            $bound_values,
-            true
-        );
+        yield 'testJiraMultiSelectFieldIsMappedToMultiSelectBoxField' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'multiselectid',
+                'Multi Select',
+                false,
+                'com.atlassian.jira.plugin.system.customfieldtypes:multiselect',
+                [
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 1, 'name' => 'V1'], new FieldAndValueIDGenerator()),
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 2, 'name' => 'V2'], new FieldAndValueIDGenerator()),
+                ],
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME . '"]//formElement[name="multiselectid"]')[0];
 
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
+                self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $node['type']);
+                self::assertEquals('Multi Select', $node->label);
+                self::assertEquals('static', $node->bind['type']);
+                self::assertCount(2, $node->bind->items->item);
+                self::assertEquals('V1', $node->bind->items->item[0]['label']);
+                self::assertEquals('V2', $node->bind->items->item[1]['label']);
 
-        $this->field_exporter->shouldReceive('exportField')->withArgs(
-            [
-                $this->right_column,
-                Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                $jira_field->getId(),
-                $jira_field->getLabel(),
-                $jira_field->getId(),
-                AlwaysThereFieldsExporter::JIRA_PRIORITY_RANK,
-                $jira_field->isRequired(),
-                [],
-                $bound_values,
-                $collection,
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
-            ]
-        );
-
-        $this->mapper->exportFieldToXml(
-            $jira_field,
-            $this->containers_collection,
-            $collection,
-            new PlatformConfiguration(),
-        );
-    }
-
-    public function testJiraRadioButtonsFieldIsMappedToRadioButtonField(): void
-    {
-        $bound_values = [
-            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(1, new FieldAndValueIDGenerator()),
-            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(2, new FieldAndValueIDGenerator()),
+                $mapping = $collection->getMappingFromJiraField('multiselectid');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $mapping->getType());
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+            },
         ];
 
-        $jira_field = new JiraFieldAPIRepresentation(
-            'radiobuttonsid',
-            'Radio buttons',
-            false,
-            'com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons',
-            $bound_values,
-            true
-        );
+        yield 'testJiraSelectFieldIsMappedToSelectBoxField' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'selectid',
+                'Select Single',
+                false,
+                'com.atlassian.jira.plugin.system.customfieldtypes:select',
+                [
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 1, 'name' => 'foo'], new FieldAndValueIDGenerator()),
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 2, 'name' => 'bar'], new FieldAndValueIDGenerator()),
+                ],
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME . '"]//formElement[name="selectid"]')[0];
 
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
+                self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $node['type']);
+                self::assertEquals('Select Single', $node->label);
+                self::assertEquals('static', $node->bind['type']);
+                self::assertCount(2, $node->bind->items->item);
+                self::assertEquals('foo', $node->bind->items->item[0]['label']);
+                self::assertEquals('bar', $node->bind->items->item[1]['label']);
 
-        $this->field_exporter->shouldReceive('exportField')->withArgs(
-            [
-                $this->custom_fieldset,
-                Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE,
-                $jira_field->getId(),
-                $jira_field->getLabel(),
-                $jira_field->getId(),
-                5,
-                $jira_field->isRequired(),
-                [],
-                $bound_values,
-                $collection,
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
-            ]
-        );
-
-        $this->mapper->exportFieldToXml(
-            $jira_field,
-            $this->containers_collection,
-            $collection,
-            new PlatformConfiguration(),
-        );
-    }
-
-    public function testJiraMultiSelectFieldIsMappedToMultiSelectBoxField(): void
-    {
-        $bound_values = [
-            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(1, new FieldAndValueIDGenerator()),
-            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(2, new FieldAndValueIDGenerator()),
+                $mapping = $collection->getMappingFromJiraField('selectid');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+            },
         ];
 
-        $jira_field = new JiraFieldAPIRepresentation(
-            'multiselectid',
-            'Multi Select',
-            false,
-            'com.atlassian.jira.plugin.system.customfieldtypes:multiselect',
-            $bound_values,
-            true,
-        );
-
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
-
-        $this->field_exporter->shouldReceive('exportField')->withArgs(
-            [
-                $this->custom_fieldset,
-                Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-                $jira_field->getId(),
-                $jira_field->getLabel(),
-                $jira_field->getId(),
-                6,
-                $jira_field->isRequired(),
+        yield 'testJiraMultiUserPickerFieldIsMappedToMultiSelectBoxField' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'multiselectid',
+                'Multi Select',
+                false,
+                'com.atlassian.jira.plugin.system.customfieldtypes:multiuserpicker',
                 [],
-                $bound_values,
-                $collection,
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
-            ]
-        );
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME . '"]//formElement[name="multiselectid"]')[0];
 
-        $this->mapper->exportFieldToXml(
-            $jira_field,
-            $this->containers_collection,
-            $collection,
-            new PlatformConfiguration(),
-        );
-    }
+                self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $node['type']);
+                self::assertEquals('Multi Select', $node->label);
+                self::assertEquals('users', $node->bind['type']);
+                self::assertCount(1, $node->bind->items->item);
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME, $node->bind->items->item[0]['label']);
 
-    public function testJiraSelectFieldIsMappedToSelectBoxField(): void
-    {
-        $bound_values = [
-            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(1, new FieldAndValueIDGenerator()),
-            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(2, new FieldAndValueIDGenerator()),
+                $mapping = $collection->getMappingFromJiraField('multiselectid');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $mapping->getType());
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::TYPE, $mapping->getBindType());
+            },
         ];
 
-        $jira_field = new JiraFieldAPIRepresentation(
-            'selectid',
-            'Select Single',
-            false,
-            'com.atlassian.jira.plugin.system.customfieldtypes:select',
-            $bound_values,
-            true
-        );
-
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
-
-        $this->field_exporter->shouldReceive('exportField')->withArgs(
-            [
-                $this->custom_fieldset,
-                Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                $jira_field->getId(),
-                $jira_field->getLabel(),
-                $jira_field->getId(),
-                5,
-                $jira_field->isRequired(),
+        yield 'Jira assignee field is mapped to select box bound to users' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                AlwaysThereFieldsExporter::JIRA_ASSIGNEE_NAME,
+                'Assignee',
+                false,
+                AlwaysThereFieldsExporter::JIRA_ASSIGNEE_NAME,
                 [],
-                $bound_values,
-                $collection,
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
-            ]
-        );
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::RIGHT_COLUMN_NAME . '"]//formElement[name="' . AlwaysThereFieldsExporter::JIRA_ASSIGNEE_NAME . '"]')[0];
 
-        $this->mapper->exportFieldToXml(
-            $jira_field,
-            $this->containers_collection,
-            $collection,
-            new PlatformConfiguration(),
-        );
-    }
+                self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $node['type']);
+                self::assertEquals('Assignee', $node->label);
+                self::assertEquals('users', $node->bind['type']);
+                self::assertCount(1, $node->bind->items->item);
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME, $node->bind->items->item[0]['label']);
 
-    public function testJiraMultiUserPickerFieldIsMappedToMultiSelectBoxField(): void
-    {
-        $bound_values = [
-            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(1, new FieldAndValueIDGenerator()),
-            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(2, new FieldAndValueIDGenerator()),
+                $mapping = $collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_ASSIGNEE_NAME);
+                self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::TYPE, $mapping->getBindType());
+            },
         ];
 
-        $jira_field = new JiraFieldAPIRepresentation(
-            'multiselectid',
-            'Multi Select',
-            false,
-            'com.atlassian.jira.plugin.system.customfieldtypes:multiuserpicker',
-            $bound_values,
-            true
-        );
-
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
-
-        $this->field_exporter->shouldReceive('exportField')->withArgs(
-            [
-                $this->custom_fieldset,
-                Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-                $jira_field->getId(),
-                $jira_field->getLabel(),
-                $jira_field->getId(),
-                12,
-                $jira_field->isRequired(),
+        yield 'Jira reporter field is mapped to select box bound to users' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                AlwaysThereFieldsExporter::JIRA_REPORTER_NAME,
+                'Reporter',
+                false,
+                AlwaysThereFieldsExporter::JIRA_REPORTER_NAME,
                 [],
-                $bound_values,
-                $collection,
-                \Tracker_FormElement_Field_List_Bind_Users::TYPE,
-            ]
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::RIGHT_COLUMN_NAME . '"]//formElement[name="' . AlwaysThereFieldsExporter::JIRA_REPORTER_NAME . '"]')[0];
+
+                self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, (string) $node['type']);
+                self::assertEquals('Reporter', $node->label);
+                self::assertEquals('users', $node->bind['type']);
+                self::assertCount(1, $node->bind->items->item);
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME, $node->bind->items->item[0]['label']);
+
+                $mapping = $collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_REPORTER_NAME);
+                self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::TYPE, $mapping->getBindType());
+            },
+        ];
+
+        yield 'Jira generic user picker field is mapped to select box bound to users' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'custom_123214',
+                'Reviewers',
+                false,
+                'com.atlassian.jira.plugin.system.customfieldtypes:userpicker',
+                [],
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME . '"]//formElement[name="custom_123214"]')[0];
+
+                self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $node['type']);
+                self::assertEquals('Reviewers', $node->label);
+                self::assertEquals('users', $node->bind['type']);
+                self::assertCount(1, $node->bind->items->item);
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME, $node->bind->items->item[0]['label']);
+
+                $mapping = $collection->getMappingFromJiraField('custom_123214');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::TYPE, $mapping->getBindType());
+            },
+        ];
+    }
+
+    /**
+     * @dataProvider getJiraFieldsAreMappedToXMLObjects
+     */
+    public function testJiraFieldsAreMappedToXMLObjects(JiraFieldAPIRepresentation $jira_field, callable $tests): void
+    {
+        $xml_tracker = $this->mapper->exportFieldToXml(
+            $jira_field,
+            $this->xml_tracker,
+            $this->id_generator,
+            new PlatformConfiguration(),
+            $this->field_mapping_collection,
         );
 
-        $this->mapper->exportFieldToXml(
-            $jira_field,
-            $this->containers_collection,
-            $collection,
-            new PlatformConfiguration(),
-        );
+        $xml              = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+        $exported_tracker = $xml_tracker->export($xml);
+
+        $tests($exported_tracker, $this->field_mapping_collection);
     }
 
     public function testUnsupportedFieldIsLoggedForDebugPurpose(): void
@@ -585,13 +469,12 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             true,
         );
 
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
-
         $this->mapper->exportFieldToXml(
             $jira_field,
-            $this->containers_collection,
-            $collection,
+            $this->xml_tracker,
+            $this->id_generator,
             new PlatformConfiguration(),
+            $this->field_mapping_collection,
         );
 
         assertEquals(" |_ Field votes_id (votes) ignored ", $this->logger->messages['debug'][0]);
@@ -599,8 +482,10 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testStoryPointsFieldIsNotAddedTwiceWhenConfiguredOnTheCreationScreen(): void
     {
-        $story_points_jira_field_id    = 'customfield_10014';
-        $story_points_jira_field_label = 'Story points';
+        $story_points_jira_field_id = 'customfield_10014';
+
+        $platform_configuration = new PlatformConfiguration();
+        $platform_configuration->setStoryPointsField($story_points_jira_field_id);
 
         $jira_field = new JiraFieldAPIRepresentation(
             $story_points_jira_field_id,
@@ -611,25 +496,17 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             true,
         );
 
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
-        $collection->addMapping(new ScalarFieldMapping(
-            $story_points_jira_field_id,
-            $story_points_jira_field_label,
-            'F1234',
-            'story_points',
-            Tracker_FormElementFactory::FIELD_FLOAT_TYPE,
-        ));
-
-        $platform_configuration = new PlatformConfiguration();
-        $platform_configuration->setStoryPointsField($story_points_jira_field_id);
-
-        $this->field_exporter->shouldNotReceive('exportField');
-
-        $this->mapper->exportFieldToXml(
+        $xml_tracker = $this->mapper->exportFieldToXml(
             $jira_field,
-            $this->containers_collection,
-            $collection,
+            $this->xml_tracker,
+            $this->id_generator,
             $platform_configuration,
+            $this->field_mapping_collection,
         );
+
+        $xml              = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+        $exported_tracker = $xml_tracker->export($xml);
+
+        assertEmpty($exported_tracker->xpath('//formElement[label="Story points"]'));
     }
 }

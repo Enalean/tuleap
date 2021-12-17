@@ -32,7 +32,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCo
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\JiraCloudChangelogEntryValueRepresentation;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
@@ -307,7 +306,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildFieldMappingCollection(): FieldMappingCollection
     {
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $collection = new FieldMappingCollection();
         $collection->addMapping(
             new ScalarFieldMapping(
                 "customfield_10036",

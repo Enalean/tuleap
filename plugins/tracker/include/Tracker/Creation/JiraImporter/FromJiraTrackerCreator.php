@@ -144,26 +144,23 @@ class FromJiraTrackerCreator
             throw new TrackerCreationHasFailedException($exception->getMessage());
         }
 
-
         $tracker_for_export = (new XMLTracker('T200', $itemname))
             ->withName($name)
             ->withDescription($description)
             ->withColor(TrackerColor::fromName($color));
 
-        $xml          = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
-        $trackers_xml = $xml->addChild('trackers');
-        $tracker_xml  = $tracker_for_export->export($trackers_xml);
-
         $jira_exporter = $this->getJiraExporter($jira_client, $this->logger);
-        $jira_exporter->exportJiraToXml(
+        $tracker_xml   = $jira_exporter->exportJiraToXml(
             $platform_configuration_collection,
-            $tracker_xml,
+            $tracker_for_export,
             $jira_credentials->getJiraUrl(),
             $jira_project_id,
             $issue_type,
             new FieldAndValueIDGenerator(),
             new LinkedIssuesCollection(),
         );
+
+        $xml = $jira_exporter->getProjectSimpleXmlElement($tracker_xml);
 
         try {
             $trackers = $this->tracker_xml_import->import(

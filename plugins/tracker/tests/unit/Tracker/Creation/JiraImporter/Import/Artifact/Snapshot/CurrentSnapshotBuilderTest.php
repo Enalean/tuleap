@@ -33,7 +33,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
@@ -141,7 +140,7 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildFieldMappingCollection(): FieldMappingCollection
     {
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $collection = new FieldMappingCollection();
         $collection->addMapping(
             new ScalarFieldMapping(
                 'summary',
@@ -190,7 +189,7 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAddsSubTasksToIssueLinksForArtifactLinks(): void
     {
-        $jira_field_mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $jira_field_mapping_collection = new FieldMappingCollection();
         $jira_field_mapping_collection->addMapping(
             new ScalarFieldMapping(
                 AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
@@ -245,7 +244,7 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAddsTheLinkedIssuesThatAreDefinedInOuterScope(): void
     {
-        $jira_field_mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $jira_field_mapping_collection = new FieldMappingCollection();
         $jira_field_mapping_collection->addMapping(
             new ScalarFieldMapping(
                 AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,

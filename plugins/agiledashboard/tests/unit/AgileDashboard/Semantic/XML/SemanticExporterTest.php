@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Semantic\XML;
 
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use function PHPUnit\Framework\assertCount;
@@ -42,7 +41,7 @@ final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $add->process(
             new \SimpleXMLElement('<tracker />'),
             new PlatformConfiguration(),
-            new FieldMappingCollection(new FieldAndValueIDGenerator())
+            new FieldMappingCollection()
         );
     }
 
@@ -54,7 +53,7 @@ final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $add = new SemanticsExporter();
 
-        $mapping = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $mapping = new FieldMappingCollection();
         $mapping->addMapping(
             new ScalarFieldMapping(
                 $jira_story_points_field_id,
@@ -91,7 +90,7 @@ final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $add->process(
             $xml,
             $platform_configuration,
-            new FieldMappingCollection(new FieldAndValueIDGenerator())
+            new FieldMappingCollection()
         );
 
         $semantic = $xml->xpath('/tracker/semantics/semantic[@type="initial_effort"]');
@@ -109,7 +108,7 @@ final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $platform_configuration = new PlatformConfiguration();
         $platform_configuration->setStoryPointsField($jira_story_points_field_id);
 
-        $mapping = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $mapping = new FieldMappingCollection();
         $mapping->addMapping(
             new ScalarFieldMapping(
                 $jira_story_points_field_id,

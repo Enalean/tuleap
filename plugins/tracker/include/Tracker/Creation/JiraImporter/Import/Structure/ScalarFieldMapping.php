@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
+use Tuleap\Tracker\FormElement\Field\XML\XMLField;
+
 /**
  * @psalm-immutable
  */
@@ -63,6 +65,17 @@ class ScalarFieldMapping implements FieldMapping
         $this->xml_id           = $xml_id;
         $this->field_name       = $field_name;
         $this->type             = $type;
+    }
+
+    public static function buildFromJiraAndTuleapFields(JiraFieldAPIRepresentation $jira_field, XMLField $tuleap_field): self
+    {
+        return new self(
+            $jira_field->getId(),
+            $jira_field->getLabel(),
+            $tuleap_field->id,
+            $tuleap_field->name,
+            $tuleap_field->type,
+        );
     }
 
     public function getJiraFieldId(): string

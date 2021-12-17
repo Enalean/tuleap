@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,307 +23,58 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Log\LoggerInterface;
-use SimpleXMLElement;
-use Tracker_FormElementFactory;
-use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
-use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
+use Tuleap\Tracker\XML\XMLTracker;
+use function PHPUnit\Framework\assertCount;
+use function PHPUnit\Framework\assertEquals;
 
 class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var AlwaysThereFieldsExporter
-     */
-    private $exporter;
-
-    /**
-     * @var Structure\ContainersXMLCollection
-     */
-    private $containers_collection;
-
-    /**
-     * @var FieldMappingCollection
-     */
-    private $field_mapping_collection;
-
-    /**
-     * @var StatusValuesCollection
-     */
-    private $status_values_collection;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FieldXmlExporter
-     */
-    private $field_xml_exporter;
-
-    protected function setUp(): void
+    public function testItExportsAFieldset(): void
     {
-        parent::setUp();
+        $builder = new AlwaysThereFieldsExporter();
 
-        $this->field_xml_exporter = Mockery::mock(FieldXmlExporter::class);
-        $this->exporter           = new AlwaysThereFieldsExporter(
-            $this->field_xml_exporter
-        );
+        $id_generator = new FieldAndValueIDGenerator();
 
-        $field_id_generator = new FieldAndValueIDGenerator();
+        $status_value_collection = $this->createMock(StatusValuesCollection::class);
+        $status_value_collection->method('getAllValues')->willReturn([
+            JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => '10000', 'name' => 'A new state'], $id_generator),
+            JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => '3', 'name' => 'In progress'], $id_generator),
+            JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => '4', 'name' => 'Fini'], $id_generator),
+        ]);
 
-        $root_form_elements          = new SimpleXMLElement("<formElements/>");
-        $this->containers_collection = new ContainersXMLCollection($field_id_generator);
+        $field_mapping_collection = new FieldMappingCollection();
+        $xml_tracker              = $builder->exportFields($id_generator, new XMLTracker($id_generator, 'bug'), $status_value_collection, $field_mapping_collection);
 
-        (new ContainersXMLCollectionBuilder())
-            ->buildCollectionOfJiraContainersXML($root_form_elements, $this->containers_collection);
+        $xml = $xml_tracker->export(new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />'));
 
-        $this->field_mapping_collection = new FieldMappingCollection($field_id_generator);
+        $custom_elements_fieldset = $xml->xpath('//formElement[name="' . AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME . '"]')[0];
+        assertEquals(\Tracker_FormElementFactory::CONTAINER_FIELDSET_TYPE, $custom_elements_fieldset['type'], 'There is a fieldset named customelement');
 
-        $wrapper = new class extends JiraCloudClientStub {
-            public function __construct()
-            {
-                $this->urls[ClientWrapper::JIRA_CORE_BASE_URL . "/project/TEST/statuses"] = [
-                    [
-                    'self' => 'URL/rest/api/3/issuetype/10002',
-                    'id' => '10002' ,
-                    'name' => 'Story' ,
-                    'subtask' => false,
-                    'statuses' => [
-                        [
-                            'self' => 'URL/rest/api/3/status/3',
-                            'description' => 'This issue is being actively worked on at the moment by the assignee.',
-                            'iconUrl' => 'URL/images/icons/statuses/inprogress.png',
-                            'name' => 'In Progress',
-                            'untranslatedName' => 'In Progress',
-                            'id' => '3',
-                            'statusCategory' => [
-                                'self' => 'URL/rest/api/3/statuscategory/4',
-                                'id' => 4,
-                                'key' => 'indeterminate',
-                                'colorName' => 'yellow',
-                                'name' => 'In Progress',
-                            ],
-                        ],
-                    ],
-                    ],
-                    ];
-            }
-        };
+        $custom_elements_fieldset = $xml->xpath('//formElement[name="' . AlwaysThereFieldsExporter::LEFT_COLUMN_NAME . '"]')[0];
+        assertEquals(\Tracker_FormElementFactory::CONTAINER_COLUMN_TYPE, $custom_elements_fieldset['type'], 'There is a column named left column');
 
-        $this->logger                   = Mockery::mock(LoggerInterface::class);
-        $this->status_values_collection = new StatusValuesCollection(
-            $wrapper,
-            $this->logger
-        );
-        $this->logger->shouldReceive('debug');
+        $artifact_id_field = $xml->xpath('//formElement[name="' . AlwaysThereFieldsExporter::RIGHT_COLUMN_NAME . '"]//formElement[name="' . AlwaysThereFieldsExporter::JIRA_ARTIFACT_ID_FIELD_ID . '"]')[0];
+        assertEquals(\Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE, $artifact_id_field['type'], 'There is an artifact_id field in the right column');
 
-        $this->status_values_collection->initCollectionForProjectAndIssueType(
-            'TEST',
-            '10002',
-            $field_id_generator
-        );
-    }
+        $status_field = $xml->xpath('//formElement[name="' . AlwaysThereFieldsExporter::RIGHT_COLUMN_NAME . '"]//formElement[name="' . AlwaysThereFieldsExporter::JIRA_STATUS_NAME . '"]')[0];
+        assertEquals(\Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $status_field['type'], 'There is a status field in the right column');
+        assertEquals("Status", $status_field->label);
+        assertEquals(\Tracker_FormElement_Field_List_Bind_Static::TYPE, $status_field->bind['type']);
+        assertCount(3, $status_field->bind->items->item);
+        assertEquals('V1', $status_field->bind->items->item[0]['ID']);
+        assertEquals('A new state', $status_field->bind->items->item[0]['label']);
 
-    public function testItProcessATFExport(): void
-    {
-        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
-            [
-                Mockery::on(function (SimpleXMLElement $fieldset_xml) {
-                    return isset($fieldset_xml->formElements);
-                }),
-                Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
-                "artifact_id",
-                "Artifact id",
-                "artifact_id",
-                AlwaysThereFieldsExporter::JIRA_ARTIFACT_ID_RANK,
-                false,
-                [],
-                [],
-                $this->field_mapping_collection,
-                null,
-            ]
-        )->once();
-
-        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
-            [
-                Mockery::on(function (SimpleXMLElement $fieldset_xml) {
-                    return isset($fieldset_xml->formElements);
-                }),
-                Tracker_FormElementFactory::FIELD_STRING_TYPE,
-                "jira_issue_url",
-                "Link to original issue",
-                "jira_issue_url",
-                AlwaysThereFieldsExporter::JIRA_LINK_RANK,
-                false,
-                [],
-                [],
-                $this->field_mapping_collection,
-                null,
-            ]
-        )->once();
-
-        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
-            [
-                Mockery::on(function (SimpleXMLElement $fieldset_xml) {
-                    return isset($fieldset_xml->formElements);
-                }),
-                Tracker_FormElementFactory::FIELD_SUBMITTED_BY_TYPE,
-                "creator",
-                "Created by",
-                "creator",
-                AlwaysThereFieldsExporter::JIRA_DESCRIPTION_RANK,
-                false,
-                [],
-                [],
-                $this->field_mapping_collection,
-                null,
-            ]
-        )->once();
-
-        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
-            [
-                Mockery::on(function (SimpleXMLElement $fieldset_xml) {
-                    return isset($fieldset_xml->formElements);
-                }),
-                Tracker_FormElementFactory::FIELD_SUBMITTED_ON_TYPE,
-                "created",
-                "Creation date",
-                "created",
-                AlwaysThereFieldsExporter::JIRA_CREATED_RANK,
-                false,
-                [],
-                [],
-                $this->field_mapping_collection,
-                null,
-            ]
-        )->once();
-
-        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
-            [
-                Mockery::on(function (SimpleXMLElement $fieldset_xml) {
-                    return isset($fieldset_xml->formElements);
-                }),
-                Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE,
-                "updated",
-                "Last update date",
-                "updated",
-                AlwaysThereFieldsExporter::JIRA_UPDATED_ON_RANK,
-                false,
-                [],
-                [],
-                $this->field_mapping_collection,
-                null,
-            ]
-        )->once();
-
-        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
-            [
-                Mockery::on(function (SimpleXMLElement $fieldset_xml) {
-                    return isset($fieldset_xml->formElements);
-                }),
-                Tracker_FormElementFactory::FIELD_DATE_TYPE,
-                "resolutiondate",
-                "Resolved",
-                "resolutiondate",
-                AlwaysThereFieldsExporter::JIRA_RESOLUTION_DATE_RANK,
-                false,
-                [
-                    'display_time' => '1',
-                ],
-                [],
-                $this->field_mapping_collection,
-                null,
-            ]
-        )->once();
-
-        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
-            [
-                Mockery::on(function (SimpleXMLElement $fieldset_xml) {
-                    return isset($fieldset_xml->formElements);
-                }),
-                Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                "status",
-                "Status",
-                "status",
-                AlwaysThereFieldsExporter::JIRA_ATTACHMENT_RANK,
-                false,
-                [],
-                Mockery::on(function (array $statuses) {
-                    $status = $statuses[0];
-                    assert($status instanceof JiraFieldAPIAllowedValueRepresentation);
-                    return $status->getId() === 3 && $status->getName() === "In Progress";
-                }),
-                $this->field_mapping_collection,
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
-            ]
-        )->once();
-
-        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
-            [
-                Mockery::on(function (SimpleXMLElement $fieldset_xml) {
-                    return isset($fieldset_xml->formElements);
-                }),
-                Tracker_FormElementFactory::FIELD_FILE_TYPE,
-                "attachment",
-                "Attachments",
-                "attachment",
-                AlwaysThereFieldsExporter::JIRA_ATTACHMENT_RANK,
-                false,
-                [],
-                [],
-                $this->field_mapping_collection,
-                null,
-            ]
-        )->once();
-
-        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
-            [
-                $this->containers_collection->getContainerByName(ContainersXMLCollectionBuilder::LINKS_FIELDSET_NAME),
-                Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
-                'issuelinks',
-                'Links',
-                'issuelinks',
-                1,
-                false,
-                [],
-                [],
-                $this->field_mapping_collection,
-                null,
-            ]
-        )->once();
-
-        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
-            [
-                $this->containers_collection->getContainerByName(ContainersXMLCollectionBuilder::LINKS_FIELDSET_NAME),
-                Tracker_FormElementFactory::FIELD_CROSS_REFERENCES,
-                'org.tuleap.crossreferences',
-                'References',
-                'org.tuleap.crossreferences',
-                2,
-                false,
-                [],
-                [],
-                $this->field_mapping_collection,
-                null,
-            ]
-        )->once();
-
-        $this->exporter->exportFields(
-            $this->containers_collection,
-            $this->field_mapping_collection,
-            $this->status_values_collection
-        );
+        $mapping = $field_mapping_collection->getMappingFromJiraField('status');
+        assert($mapping instanceof ListFieldMapping);
+        $values = $mapping->getBoundValues();
+        assertEquals('10000', $values[0]->getId());
+        assertEquals('V1', $values[0]->getXMLId());
+        assertEquals('1', $values[0]->getXMLIdValue());
+        assertEquals('A new state', $values[0]->getName());
     }
 }

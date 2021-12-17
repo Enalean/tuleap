@@ -24,56 +24,56 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Psr\Log\LoggerInterface;
-use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
+use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\XML\XMLFloatField;
+use Tuleap\Tracker\XML\IDGenerator;
+use Tuleap\Tracker\XML\XMLTracker;
 
 final class StoryPointFieldExporter
 {
-    /**
-     * @var FieldXmlExporter
-     */
-    private $field_xml_exporter;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(FieldXmlExporter $field_xml_exporter, LoggerInterface $logger)
+    public function __construct(private LoggerInterface $logger)
     {
-        $this->field_xml_exporter = $field_xml_exporter;
-        $this->logger             = $logger;
     }
 
     public function exportFields(
         PlatformConfiguration $configuration,
-        ContainersXMLCollection $containers_collection,
+        XMLTracker $xml_tracker,
         FieldMappingCollection $field_mapping_collection,
         IssueType $issue_type,
-    ): void {
+        IDGenerator $id_generator,
+    ): XMLTracker {
         if ($issue_type->isSubtask()) {
             $this->logger->debug('-- is sub task, abort');
-            return;
+            return $xml_tracker;
         }
 
         if (! $configuration->hasStoryPointsField()) {
             $this->logger->debug('-- there is no Story Point Field, abort');
-            return;
+            return $xml_tracker;
         }
 
-        $this->field_xml_exporter->exportField(
-            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
-            Tracker_FormElementFactory::FIELD_FLOAT_TYPE,
-            AlwaysThereFieldsExporter::JIRA_STORY_POINTS_NAME,
-            'Story points (initial effort)',
-            $configuration->getStoryPointsField(),
-            AlwaysThereFieldsExporter::JIRA_STORY_POINTS_RANK,
-            false,
-            [],
-            [],
-            $field_mapping_collection,
-            null,
+        $field = (new XMLFloatField($id_generator, AlwaysThereFieldsExporter::JIRA_STORY_POINTS_NAME))
+            ->withLabel('Story points (initial effort)')
+            ->withRank(AlwaysThereFieldsExporter::JIRA_STORY_POINTS_RANK)
+            ->withoutPermissions();
+
+        $field_mapping_collection->addMappingBetweenTuleapAndJiraField(
+            new JiraFieldAPIRepresentation(
+                $configuration->getStoryPointsField(),
+                $field->label,
+                false,
+                null,
+                [],
+                true,
+            ),
+            $field,
+        );
+
+        return $xml_tracker->appendFormElement(
+            AlwaysThereFieldsExporter::RIGHT_COLUMN_NAME,
+            $field,
         );
     }
 }
