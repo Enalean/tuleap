@@ -55,6 +55,11 @@ final class JiraClientReplay implements JiraClient
         return new self($log_dir, false);
     }
 
+    public static function buildJiraCloud(string $log_dir): self
+    {
+        return new self($log_dir, true);
+    }
+
     public function getJiraProject(): ?string
     {
         foreach ($this->payloads as $url => $payload) {

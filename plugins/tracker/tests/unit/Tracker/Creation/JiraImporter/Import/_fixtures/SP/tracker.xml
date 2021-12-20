@@ -1,0 +1,1073 @@
+<?xml version="1.0"?>
+<tracker id="T200" parent_id="0">
+  <name><![CDATA[Bugs]]></name>
+  <item_name><![CDATA[bug]]></item_name>
+  <description><![CDATA[Bug]]></description>
+  <color><![CDATA[inca-silver]]></color>
+  <cannedResponses/>
+  <formElements>
+    <formElement type="fieldset" ID="F1" rank="1">
+      <name><![CDATA[details_fieldset]]></name>
+      <label><![CDATA[Details]]></label>
+      <formElements>
+        <formElement type="column" ID="Fcol5" rank="1">
+          <name><![CDATA[c1]]></name>
+          <label><![CDATA[c1]]></label>
+          <formElements>
+            <formElement type="string" ID="F31" rank="1" use_it="1" required="1">
+              <name><![CDATA[summary]]></name>
+              <label><![CDATA[Summary]]></label>
+            </formElement>
+            <formElement type="text" ID="F32" rank="2" use_it="1">
+              <name><![CDATA[description]]></name>
+              <label><![CDATA[Description]]></label>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="column" ID="Fcol6" rank="2">
+          <name><![CDATA[c2]]></name>
+          <label><![CDATA[c2]]></label>
+          <formElements>
+            <formElement type="aid" ID="F10" rank="7" use_it="1">
+              <name><![CDATA[artifact_id]]></name>
+              <label><![CDATA[Artifact id]]></label>
+            </formElement>
+            <formElement type="string" ID="F11" rank="8" use_it="1">
+              <name><![CDATA[jira_issue_url]]></name>
+              <label><![CDATA[Link to original issue]]></label>
+            </formElement>
+            <formElement type="subby" ID="F12" rank="2" use_it="1">
+              <name><![CDATA[creator]]></name>
+              <label><![CDATA[Created by]]></label>
+            </formElement>
+            <formElement type="subon" ID="F13" rank="3" use_it="1">
+              <name><![CDATA[created]]></name>
+              <label><![CDATA[Creation date]]></label>
+            </formElement>
+            <formElement type="lud" ID="F14" rank="4" use_it="1">
+              <name><![CDATA[updated]]></name>
+              <label><![CDATA[Last update date]]></label>
+            </formElement>
+            <formElement type="date" ID="F15" rank="5" use_it="1">
+              <name><![CDATA[resolutiondate]]></name>
+              <label><![CDATA[Resolved]]></label>
+              <properties display_time="1"/>
+            </formElement>
+            <formElement type="sb" ID="F16" rank="1" use_it="1">
+              <name><![CDATA[status]]></name>
+              <label><![CDATA[Status]]></label>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V7" label="To Do" is_hidden="0"/>
+                  <item ID="V8" label="In Progress" is_hidden="0"/>
+                  <item ID="V9" label="Done" is_hidden="0"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="sb" ID="F33" rank="10" use_it="1" required="1">
+              <name><![CDATA[reporter]]></name>
+              <label><![CDATA[Reporter]]></label>
+              <bind type="users">
+                <items>
+                  <item label="ugroup_2"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="sb" ID="F34" rank="9" use_it="1">
+              <name><![CDATA[assignee]]></name>
+              <label><![CDATA[Assignee]]></label>
+              <bind type="users">
+                <items>
+                  <item label="ugroup_2"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="sb" ID="F35" rank="6" use_it="1">
+              <name><![CDATA[priority]]></name>
+              <label><![CDATA[Priority]]></label>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V22" label="Highest" is_hidden="0"/>
+                  <item ID="V23" label="High" is_hidden="0"/>
+                  <item ID="V24" label="Medium" is_hidden="0"/>
+                  <item ID="V25" label="Low" is_hidden="0"/>
+                  <item ID="V26" label="Lowest" is_hidden="0"/>
+                </items>
+              </bind>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+    </formElement>
+    <formElement type="fieldset" ID="F2" rank="2">
+      <name><![CDATA[custom_fieldset]]></name>
+      <label><![CDATA[Custom Fields]]></label>
+      <formElements/>
+    </formElement>
+    <formElement type="fieldset" ID="F3" rank="3">
+      <name><![CDATA[attachment_fieldset]]></name>
+      <label><![CDATA[Attachments]]></label>
+      <formElements>
+        <formElement type="file" ID="F17" rank="1" use_it="1">
+          <name><![CDATA[attachment]]></name>
+          <label><![CDATA[Attachments]]></label>
+        </formElement>
+      </formElements>
+    </formElement>
+    <formElement type="fieldset" ID="F4" rank="4">
+      <name><![CDATA[links_fieldset]]></name>
+      <label><![CDATA[Links]]></label>
+      <formElements>
+        <formElement type="art_link" ID="F18" rank="1" use_it="1">
+          <name><![CDATA[issuelinks]]></name>
+          <label><![CDATA[Links]]></label>
+        </formElement>
+        <formElement type="cross" ID="F19" rank="2" use_it="1">
+          <name><![CDATA[orgtuleapcrossreferences]]></name>
+          <label><![CDATA[References]]></label>
+        </formElement>
+      </formElements>
+    </formElement>
+  </formElements>
+  <semantics>
+    <semantic type="title">
+      <shortname>title</shortname>
+      <label>Title</label>
+      <description>Define the title of an artifact</description>
+      <field REF="F31"/>
+    </semantic>
+    <semantic type="description">
+      <shortname>description</shortname>
+      <label>Description</label>
+      <description>Define the description of an artifact</description>
+      <field REF="F32"/>
+    </semantic>
+    <semantic type="status">
+      <shortname>status</shortname>
+      <label>Status</label>
+      <description>Define the status of an artifact</description>
+      <field REF="F16"/>
+      <open_values>
+        <open_value REF="V7"/>
+        <open_value REF="V8"/>
+      </open_values>
+    </semantic>
+    <semantic type="done">
+      <shortname><![CDATA[done]]></shortname>
+      <label><![CDATA[Done]]></label>
+      <description><![CDATA[Define the closed status that are considered Done]]></description>
+      <closed_values>
+        <closed_value REF="V9"/>
+      </closed_values>
+    </semantic>
+    <semantic type="contributor">
+      <shortname>contributor</shortname>
+      <label>Contributor/assignee</label>
+      <description>Define the contributor/assignee of an artifact</description>
+      <field REF="F34"/>
+    </semantic>
+  </semantics>
+  <rules/>
+  <reports>
+    <report is_default="1">
+      <name><![CDATA[All issues]]></name>
+      <description><![CDATA[All the issues in this tracker]]></description>
+      <criterias>
+        <criteria rank="1">
+          <field REF="F31"/>
+        </criteria>
+        <criteria rank="2">
+          <field REF="F32"/>
+        </criteria>
+        <criteria rank="3">
+          <field REF="F16"/>
+        </criteria>
+        <criteria rank="4">
+          <field REF="F35"/>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer rank="0" type="table" chunksz="15">
+          <name><![CDATA[Results]]></name>
+          <columns>
+            <field REF="F31"/>
+            <field REF="F16"/>
+            <field REF="F11"/>
+            <field REF="F35"/>
+          </columns>
+        </renderer>
+      </renderers>
+    </report>
+    <report>
+      <name><![CDATA[Open issues]]></name>
+      <description><![CDATA[All open issues in this tracker]]></description>
+      <criterias>
+        <criteria rank="0" is_advanced="1">
+          <field REF="F16"/>
+          <criteria_value type="list">
+            <selected_value REF="V7"/>
+            <selected_value REF="V8"/>
+          </criteria_value>
+        </criteria>
+        <criteria rank="1">
+          <field REF="F31"/>
+        </criteria>
+        <criteria rank="2">
+          <field REF="F32"/>
+        </criteria>
+        <criteria rank="3">
+          <field REF="F35"/>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer rank="0" type="table" chunksz="15">
+          <name><![CDATA[Results]]></name>
+          <columns>
+            <field REF="F31"/>
+            <field REF="F16"/>
+            <field REF="F11"/>
+            <field REF="F35"/>
+          </columns>
+        </renderer>
+      </renderers>
+    </report>
+    <report>
+      <name><![CDATA[Done issues]]></name>
+      <description><![CDATA[All done issues in this tracker]]></description>
+      <criterias>
+        <criteria rank="0" is_advanced="1">
+          <field REF="F16"/>
+          <criteria_value type="list">
+            <selected_value REF="V9"/>
+          </criteria_value>
+        </criteria>
+        <criteria rank="1">
+          <field REF="F31"/>
+        </criteria>
+        <criteria rank="2">
+          <field REF="F32"/>
+        </criteria>
+        <criteria rank="3">
+          <field REF="F35"/>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer rank="0" type="table" chunksz="15">
+          <name><![CDATA[Results]]></name>
+          <columns>
+            <field REF="F31"/>
+            <field REF="F16"/>
+            <field REF="F11"/>
+            <field REF="F35"/>
+          </columns>
+        </renderer>
+      </renderers>
+    </report>
+    <report is_default="0" is_in_expert_mode="1" expert_query="created BETWEEN(NOW() - 1w, NOW())">
+      <name><![CDATA[Created recently]]></name>
+      <description><![CDATA[All issues created recently in this tracker]]></description>
+      <criterias>
+        <criteria rank="0">
+          <field REF="F31"/>
+        </criteria>
+        <criteria rank="1">
+          <field REF="F32"/>
+        </criteria>
+        <criteria rank="2">
+          <field REF="F35"/>
+        </criteria>
+        <criteria rank="3">
+          <field REF="F13"/>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer rank="0" type="table" chunksz="15">
+          <name><![CDATA[Results]]></name>
+          <columns>
+            <field REF="F31"/>
+            <field REF="F16"/>
+            <field REF="F11"/>
+            <field REF="F35"/>
+            <field REF="F13"/>
+          </columns>
+        </renderer>
+      </renderers>
+    </report>
+    <report is_default="0" is_in_expert_mode="1" expert_query="updated BETWEEN(NOW() - 1w, NOW())">
+      <name><![CDATA[Updated recently]]></name>
+      <description><![CDATA[All issues updated recently in this tracker]]></description>
+      <criterias>
+        <criteria rank="0">
+          <field REF="F31"/>
+        </criteria>
+        <criteria rank="1">
+          <field REF="F32"/>
+        </criteria>
+        <criteria rank="2">
+          <field REF="F35"/>
+        </criteria>
+        <criteria rank="3">
+          <field REF="F14"/>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer rank="0" type="table" chunksz="15">
+          <name><![CDATA[Results]]></name>
+          <columns>
+            <field REF="F31"/>
+            <field REF="F16"/>
+            <field REF="F11"/>
+            <field REF="F35"/>
+            <field REF="F14"/>
+          </columns>
+        </renderer>
+      </renderers>
+    </report>
+  </reports>
+  <workflow/>
+  <permissions>
+    <permission scope="field" REF="F10" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F11" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F12" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F12" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F12" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F13" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F13" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F13" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F14" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F14" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F14" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F15" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F15" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F15" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F16" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F16" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F16" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F17" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F17" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F17" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F18" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F18" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F18" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F19" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F19" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F19" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F31" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F31" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F31" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F32" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F32" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F32" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F33" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F33" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F33" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F34" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F34" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F34" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F35" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F35" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F35" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+  </permissions>
+  <artifacts>
+    <artifact id="10033">
+      <changeset>
+        <submitted_by format="username"><![CDATA[John]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2020-01-14T14:07:16+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[7]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">John</value>
+        </field_change>
+        <field_change type="text" field_name="description">
+          <value format="html"><![CDATA[<p>ok</p>]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[this is a story]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-24]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10022">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-11T03:54:07+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[9]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="resolutiondate" type="date">
+          <value format="ISO8601"><![CDATA[2018-01-23T12:29:07+01:00]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As a user, I'd like a historical story to show in reports]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-23]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-23T12:29:07+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2018-01-23T12:29:07+01:00]]></submitted_on>
+            <body format="html"><![CDATA[<p>Joined Sample Sprint 1 21 days 10 hours 20 minutes ago<br/>
+To Do to Done 9 days 1 hours 45 minutes ago</p>]]></body>
+          </comment>
+        </comments>
+      </changeset>
+    </artifact>
+    <artifact id="10021">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-11T03:54:07+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[9]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="resolutiondate" type="date">
+          <value format="ISO8601"><![CDATA[2018-01-21T10:51:07+01:00]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As a user, I'd like a historical story to show in reports]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-22]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-21T10:51:07+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2018-01-21T10:51:07+01:00]]></submitted_on>
+            <body format="html"><![CDATA[<p>Joined Sample Sprint 1 21 days 10 hours 20 minutes ago<br/>
+To Do to Done 11 days 3 hours 23 minutes ago</p>]]></body>
+          </comment>
+        </comments>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[John]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-04-06T12:09:31+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">John</value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10020">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-11T03:54:07+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[9]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="resolutiondate" type="date">
+          <value format="ISO8601"><![CDATA[2018-01-18T19:31:07+01:00]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As a user, I'd like a historical story to show in reports]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-21]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-18T19:31:07+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2018-01-18T19:31:07+01:00]]></submitted_on>
+            <body format="html"><![CDATA[<p>Joined Sample Sprint 1 21 days 10 hours 20 minutes ago<br/>
+To Do to Done 13 days 18 hours 43 minutes ago</p>]]></body>
+          </comment>
+        </comments>
+      </changeset>
+    </artifact>
+    <artifact id="10019">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-11T03:54:07+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[9]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="resolutiondate" type="date">
+          <value format="ISO8601"><![CDATA[2018-01-16T12:53:07+01:00]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As a user, I'd like a historical story to show in reports]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-20]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-16T12:53:07+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2018-01-16T12:53:07+01:00]]></submitted_on>
+            <body format="html"><![CDATA[<p>Joined Sample Sprint 1 21 days 10 hours 20 minutes ago<br/>
+To Do to Done 16 days 1 hours 21 minutes ago</p>]]></body>
+          </comment>
+        </comments>
+      </changeset>
+    </artifact>
+    <artifact id="10018">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-11T03:54:07+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[9]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="resolutiondate" type="date">
+          <value format="ISO8601"><![CDATA[2018-01-15T00:18:07+01:00]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As a user, I'd like a historical story to show in reports]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-19]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-15T00:18:07+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2018-01-15T00:18:07+01:00]]></submitted_on>
+            <body format="html"><![CDATA[<p>Joined Sample Sprint 1 21 days 10 hours 20 minutes ago<br/>
+To Do to Done 17 days 13 hours 56 minutes ago</p>]]></body>
+          </comment>
+        </comments>
+      </changeset>
+    </artifact>
+    <artifact id="10017">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-11T03:54:07+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[9]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="resolutiondate" type="date">
+          <value format="ISO8601"><![CDATA[2018-01-12T00:24:07+01:00]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As a user, I'd like a historical story to show in reports]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-18]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-12T00:24:07+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2018-01-12T00:24:07+01:00]]></submitted_on>
+            <body format="html"><![CDATA[<p>Joined Sample Sprint 1 21 days 10 hours 20 minutes ago<br/>
+To Do to Done 20 days 13 hours 50 minutes ago</p>]]></body>
+          </comment>
+        </comments>
+      </changeset>
+    </artifact>
+    <artifact id="10015">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-04T09:00:07+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[9]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="resolutiondate" type="date">
+          <value format="ISO8601"><![CDATA[2018-01-26T11:36:07+01:00]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As a team, we can finish the sprint by clicking the cog icon next to the sprint name above the "To Do" column then selecting "Complete Sprint" >> Try closing this sprint now]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-16]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-26T11:36:07+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2018-01-26T11:36:07+01:00]]></submitted_on>
+            <body format="html"><![CDATA[<p>Created 28 days 5 hours 14 minutes ago<br/>
+Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
+          </comment>
+        </comments>
+      </changeset>
+    </artifact>
+    <artifact id="10014">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-25T05:04:07+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[9]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="resolutiondate" type="date">
+          <value format="ISO8601"><![CDATA[2018-01-29T19:40:07+01:00]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As a scrum master, I can see the progress of a sprint via the Burndown Chart >> Click "Reports" to view the Burndown Chart]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-15]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-29T19:40:07+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2018-01-29T19:40:07+01:00]]></submitted_on>
+            <body format="html"><![CDATA[<p>Joined Sample Sprint 2 7 days 9 hours 10 minutes ago</p>]]></body>
+          </comment>
+        </comments>
+      </changeset>
+    </artifact>
+    <artifact id="10013">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-31T10:04:07+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2018-01-31T10:04:07+01:00]]></submitted_on>
+            <body format="html"><![CDATA[<p>Joined Sample Sprint 2 1 days 4 hours 10 minutes ago</p>]]></body>
+          </comment>
+        </comments>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks">
+          <value nature="_is_child"><![CDATA[10131]]></value>
+          <value nature="_is_child"><![CDATA[10132]]></value>
+        </field_change>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[7]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change type="text" field_name="description">
+          <value format="html"><![CDATA[<p><b>Creating Quick Filters</b></p>
+
+<p>You can add your own Quick Filters in the board configuration (select <b>Board &gt; Configure</b>)</p>]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As a user, I can find important items on the board by using the customisable "Quick Filters" above >> Try clicking the "Only My Issues" Quick Filter above]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-14]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10009">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-01-25T05:04:07+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2018-01-25T05:04:07+01:00]]></submitted_on>
+            <body format="html"><![CDATA[<p>Joined Sample Sprint 2 7 days 9 hours 10 minutes ago</p>]]></body>
+          </comment>
+        </comments>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[8]]></value>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks">
+          <value nature="_is_child"><![CDATA[10010]]></value>
+          <value nature="_is_child"><![CDATA[10011]]></value>
+          <value nature="_is_child"><![CDATA[10105]]></value>
+        </field_change>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="resolutiondate" type="date">
+          <value format="ISO8601"><![CDATA[2020-06-09T18:11:08+02:00]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As a developer, I can update story and task status with drag and drop (click the triangle at far left of this story to show sub-tasks)]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-10]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manon_midy]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2020-06-09T18:11:08+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[9]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10008">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:09+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[7]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As a developer, I'd like to update story status during the sprint >> Click the Active sprints link at the top right of the screen to go to the Active sprints where the current Sprint's items can be updated]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-9]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10005">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:09+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[7]]></value>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks">
+          <value nature="_is_child"><![CDATA[10006]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change field_name="resolutiondate" type="date">
+          <value format="ISO8601"><![CDATA[2021-03-03T17:14:20+01:00]]></value>
+        </field_change>
+        <field_change type="text" field_name="description">
+          <value format="html"><![CDATA[<p><b>Task Breakdown</b></p>
+
+<p>Many teams choose to break down user stories into a set of tasks needed to implement the story. They then update the status of these tasks during a sprint to track progress. The completion of the last task signals the end of the story. </p>
+
+<p>You can add sub-tasks to a story on the sub-task tab (folder icon) above.</p>]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As a scrum master, I'd like to break stories down into tasks we can track during the sprint >> Try creating a task by clicking the Sub-Tasks tab in the Detail View on the right]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-6]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manuel_vacelet]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-03T17:14:20+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[9]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10004">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:09+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[7]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change type="text" field_name="description">
+          <value format="html"><![CDATA[<p><b>Starting a Sprint</b></p>
+
+<p>During the Planning Meeting the team will examine the stories at the top of the backlog and determine which they can commit to completing during the coming sprint. Based on this information the Product Owner might break down stories into smaller stories, adjust story priorities or otherwise work with the team to define the ideal sprint outcome. When the sprint is started the stories are moved into the sprint backlog.</p>]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As a team, I'd like to commit to a set of stories to be completed in a sprint (or iteration) >> Click "Create Sprint" then drag the footer down to select issues for a sprint (you can't start a sprint at the moment because one is already active)]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-5]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10003">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:09+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[7]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change type="text" field_name="description">
+          <value format="html"><![CDATA[<p>This story is estimated at 5 Story Points (as shown in the "Estimate" field at the top right of the Detail View). </p>
+
+<p>Try updating the Story Point estimate to 4 by clicking on the "Estimate" then typing.</p>
+
+<p><b>Estimating using Story Points</b></p>
+
+<p>Because the traditional process of estimating tasks in weeks or days is often wildly inaccurate, many Scrum teams estimate in Story Points instead. Story Points exist merely as a way to estimate a task's difficulty compared to some other task (for example, a 10-point story would probably take double the effort of a 5-point story). As teams mature with Scrum they tend to achieve a consistent number of Story Points from Sprint to Sprint &#8211; this is termed the team's <em>velocity</em>. This allows the Product Owner to use the velocity to predict how many Sprints it will take to deliver parts of the backlog. </p>
+
+<p>Many teams use Planning Poker to achieve consensus on Story Point estimates.</p>
+
+<p><b>Using Other Estimation Units</b></p>
+
+<p>You can configure JIRA Software to use time-based estimates if you wish. In the configuration for the board, on the "Estimation" tab, select "Original Time Estimate" as your Estimation Statistic. If you also wish to track the time used during the Sprint, select "Remaining Estimate and Time Spent" to enable Time Tracking in JIRA Software.</p>]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As a team, I'd like to estimate the effort of a story in Story Points so we can understand the work remaining >> Try setting the Story Points for this story in the "Estimate" field]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-4]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manuel_vacelet]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2020-07-27T14:39:19+02:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[manuel_vacelet]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2020-07-27T14:39:19+02:00]]></submitted_on>
+            <body format="html"><![CDATA[<p>I have something to say about it</p>]]></body>
+          </comment>
+        </comments>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_gorka]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2020-07-27T14:41:16+02:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[thomas_gorka]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2020-07-27T14:41:16+02:00]]></submitted_on>
+            <body format="html"><![CDATA[<p>#meetoo</p>]]></body>
+          </comment>
+        </comments>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[manuel_vacelet]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2020-07-27T15:04:42+02:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="assignee" type="list" bind="users">
+          <value format="username">thomas_gorka</value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10002">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:09+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[7]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change type="text" field_name="description">
+          <value format="html"><![CDATA[<p><b>About the Product Backlog</b></p>
+
+<p>The backlog is the source of truth for the order of work to be completed. It is expected that the Product Owner will work with the team to make sure that the backlog represents the current approach to delivering the product. JIRA Software makes it easy to prioritise (rank) Stories by dragging them up and down the backlog.</p>]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As a product owner, I'd like to rank stories in the backlog so I can communicate the proposed implementation order >> Try dragging this story up above the previous story]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-3]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10001">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:08+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[7]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change type="text" field_name="description">
+          <value format="html"><![CDATA[<p>When you click "+ Create Issue" you will be asked for the correct project (select "Scrum Project") and Issue Type (select "Story").</p>
+
+<p><b>About User Stories</b></p>
+
+<p>The Scrum methodology drops traditional software requirement statements in favour of real world problems expressed as User Stories. Stories describe the task a particular user is trying to achieve and its value. They are typically of the form "As a (role) I want (something) so that (benefit)". This approach focuses the team on the core user need rather than on implementation details. </p>
+
+<p>Stories are "placeholders for a conversation" &#8211; they do not need to be especially detailed since it is expected that the team will work together to resolve ambiguity as the story is developed. </p>
+
+<p>Stories to be implemented in the future are stored in the Product Backlog. The backlog is ranked by the Product Owner so that the next items to be completed are at the top.</p>]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As a product owner, I'd like to express work in terms of actual user problems, aka User Stories, and place them in the backlog >> Try creating a new story with the "+ Create Issue" button (top right of screen)]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-2]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10000">
+      <changeset>
+        <submitted_by format="username"><![CDATA[thomas_cottier]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:08+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[24]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks">
+          <value nature="Blocks"><![CDATA[10013]]></value>
+        </field_change>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[7]]></value>
+        </field_change>
+        <field_change field_name="reporter" type="list" bind="users">
+          <value format="username">thomas_cottier</value>
+        </field_change>
+        <field_change type="text" field_name="description">
+          <value format="html"><![CDATA[<p><b>About Scrum</b></p>
+
+<p>Scrum is an iterative approach to Agile software development. The methodology has been around since the 1980s but was popularised by Jeff Sutherland and Ken Schwaber. </p>
+
+<p>Scrum breaks the development of a product down in to discrete iterations (termed Sprints) that each deliver functionality that could potentially be shipped to users.</p>
+
+<p>The Scrum Alliance offers an excellent <a href="http://www.scrumalliance.org/resources/47" class="external-link" rel="nofollow noreferrer">introduction to Scrum</a> that provides an overview of key Scrum concepts, stakeholders, processes and artefacts.</p>]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[As an Agile team, I'd like to learn about Scrum >> Click the "SP-1" link at the left of this row to see detail in the Description tab on the right]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SP-1]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+  </artifacts>
+</tracker>

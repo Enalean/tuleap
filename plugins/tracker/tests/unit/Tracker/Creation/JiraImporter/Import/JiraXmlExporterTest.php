@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 
+use DOMDocument;
 use org\bovigo\vfs\vfsStream;
 use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
@@ -32,12 +33,15 @@ use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentNameGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\JiraCloudChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\JiraServerChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChangeInitialValueRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraCloudCommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraServerCommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
@@ -93,18 +97,20 @@ class JiraXmlExporterTest extends TestCase
     {
         yield 'SBX' => [
             'fixtures_path' => __DIR__ . '/_fixtures/SBX',
+            'is_jira_cloud' => false,
             'users' => [
                 'john.doe@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('john_doe')->build(),
             ],
             'jira_issue_key' => 'SBX',
             'jira_issue_type_id' => '10102',
             'tests' => function (\SimpleXMLElement $tracker_xml) {
-                self::assertCount(3, $tracker_xml->xpath('//artifacts/artifact'));
+                self::assertStringEqualsFile(__DIR__ . '/_fixtures/SBX/tracker.xml', self::getTidyXML($tracker_xml));
             },
         ];
 
         yield 'IXMC' => [
             'fixtures_path' => __DIR__ . '/_fixtures/IXMC',
+            'is_jira_cloud' => false,
             'users' => [
                 'user_1@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('user_1')->build(),
                 'user_2@example.com' => UserTestBuilder::anActiveUser()->withId(102)->withUserName('user_2')->build(),
@@ -115,7 +121,23 @@ class JiraXmlExporterTest extends TestCase
             'jira_issue_key' => 'IXMC',
             'jira_issue_type_id' => '10105',
             'tests' => function (\SimpleXMLElement $tracker_xml) {
-                self::assertCount(1, $tracker_xml->xpath('//artifacts/artifact'));
+                self::assertStringEqualsFile(__DIR__ . '/_fixtures/IXMC/tracker.xml', self::getTidyXML($tracker_xml));
+            },
+        ];
+
+        yield 'SP' => [
+            'fixtures_path' => __DIR__ . '/_fixtures/SP',
+            'is_jira_cloud' => true,
+            'users' => [
+                'manuel.vacelet@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('manuel_vacelet')->build(),
+                'thomas.cottier@example.com' => UserTestBuilder::anActiveUser()->withId(102)->withUserName('thomas_cottier')->build(),
+                'manon.midy@example.com' => UserTestBuilder::anActiveUser()->withId(103)->withUserName('manon_midy')->build(),
+                'thomas.gorka@example.com' => UserTestBuilder::anActiveUser()->withId(104)->withUserName('thomas_gorka')->build(),
+            ],
+            'jira_issue_key' => 'SP',
+            'jira_issue_type_id' => '10001',
+            'tests' => function (\SimpleXMLElement $tracker_xml) {
+                self::assertStringEqualsFile(__DIR__ . '/_fixtures/SP/tracker.xml', self::getTidyXML($tracker_xml));
             },
         ];
     }
@@ -123,15 +145,35 @@ class JiraXmlExporterTest extends TestCase
     /**
      * @dataProvider debugTracesProvider
      */
-    public function testImportFromDebugTraces(string $fixture_path, array $users, string $jira_issue_key, string $jira_issue_type_id, callable $tests): void
+    public function testImportFromDebugTraces(string $fixture_path, bool $is_jira_cloud, array $users, string $jira_issue_key, string $jira_issue_type_id, callable $tests): void
     {
         $root = vfsStream::setup();
 
         \ForgeConfig::set('tmp_dir', $root->url());
 
-        $jira_client = JiraClientReplay::buildJiraServer($fixture_path);
-
         $logger = new NullLogger();
+
+        if ($is_jira_cloud) {
+            $jira_client               = JiraClientReplay::buildJiraCloud($fixture_path);
+            $changelog_entries_builder = new JiraCloudChangelogEntriesBuilder(
+                $jira_client,
+                $logger
+            );
+            $comment_values_builder    = new JiraCloudCommentValuesBuilder(
+                $jira_client,
+                $logger
+            );
+        } else {
+            $jira_client               = JiraClientReplay::buildJiraServer($fixture_path);
+            $changelog_entries_builder = new JiraServerChangelogEntriesBuilder(
+                $jira_client,
+                $logger
+            );
+            $comment_values_builder    = new JiraServerCommentValuesBuilder(
+                $jira_client,
+                $logger
+            );
+        }
 
         $error_collector = new ErrorCollector();
 
@@ -157,16 +199,23 @@ class JiraXmlExporterTest extends TestCase
 
         $forge_user = UserTestBuilder::buildWithId(TrackerImporterUser::ID);
 
-        $user_email_map = [];
-        $user_id_map    = [
-            [TrackerImporterUser::ID, $forge_user],
-        ];
-        foreach ($users as $email => $user) {
-            $user_email_map[] = [$email, [$user]];
-            $user_id_map[]    = [(string) $user->getId(), $user];
-        }
-        $user_manager->method('getAllUsersByEmail')->willReturnMap($user_email_map);
-        $user_manager->method('getUserById')->willReturnMap($user_id_map);
+        $user_manager->method('getAllUsersByEmail')->willReturnCallback(function ($email) use ($users) {
+            if (isset($users[$email])) {
+                return [$users[$email]];
+            }
+            throw new \Exception('User email ' . $email . ' is missing in test setup');
+        });
+        $user_manager->method('getUserById')->willReturnCallback(function ($id) use ($forge_user, $users) {
+            if ($id == TrackerImporterUser::ID) {
+                return $forge_user;
+            }
+            foreach ($users as $user) {
+                if ($user->getId() == $id) {
+                    return $user;
+                }
+            }
+            throw new \Exception('User id ' . $id . ' is missing in test setup');
+        });
 
         $jira_user_on_tuleap_cache = new JiraUserOnTuleapCache(
             new JiraTuleapUsersMapping(),
@@ -183,6 +232,16 @@ class JiraXmlExporterTest extends TestCase
             ),
             $forge_user
         );
+
+        $attachment_name_generator = new class implements AttachmentNameGenerator {
+
+            private int $i = 0;
+
+            public function getName(): string
+            {
+                return 'file_' . $this->i++;
+            }
+        };
 
         $exporter = new JiraXmlExporter(
             $logger,
@@ -228,10 +287,7 @@ class JiraXmlExporterTest extends TestCase
                         ),
                     ),
                     new IssueSnapshotCollectionBuilder(
-                        new JiraServerChangelogEntriesBuilder(
-                            $jira_client,
-                            $logger
-                        ),
+                        $changelog_entries_builder,
                         new CurrentSnapshotBuilder(
                             $logger,
                             $creation_state_list_value_formatter,
@@ -249,10 +305,7 @@ class JiraXmlExporterTest extends TestCase
                             $logger,
                             $jira_user_retriever
                         ),
-                        new JiraServerCommentValuesBuilder(
-                            $jira_client,
-                            $logger
-                        ),
+                        $comment_values_builder,
                         $logger,
                         $jira_user_retriever
                     ),
@@ -264,7 +317,7 @@ class JiraXmlExporterTest extends TestCase
                 ),
                 new AttachmentCollectionBuilder(),
                 new AttachmentXMLExporter(
-                    AttachmentDownloader::build($jira_client, $logger),
+                    new AttachmentDownloader($jira_client, $logger, $attachment_name_generator),
                     new XML_SimpleXMLCDATAFactory()
                 ),
                 $logger
@@ -316,6 +369,19 @@ class JiraXmlExporterTest extends TestCase
             new LinkedIssuesCollection(),
         );
 
+        // Uncomment below to update the fixture
+        //$tidy_xml = self::getTidyXML($tracker_xml, );
+        //file_put_contents($fixture_path . '/tracker.xml', $tidy_xml);
+
         $tests($tracker_xml);
+    }
+
+    private static function getTidyXML(\SimpleXMLElement $xml): string
+    {
+        $domxml                     = new DOMDocument('1.0');
+        $domxml->preserveWhiteSpace = false;
+        $domxml->formatOutput       = true;
+        $domxml->loadXML($xml->asXML());
+        return $domxml->saveXML();
     }
 }
