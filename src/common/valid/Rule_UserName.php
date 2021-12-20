@@ -92,16 +92,10 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
         return \true;
     }
-    /**
-     * Needs to check the name start by a char
-     *
-     * @param String $val
-     *
-     * @return bool
-     */
-    public function atLeastOneChar($val)
+
+    public function atLeastOneChar(string $val): bool
     {
-        if (\strspn($val, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == 0) {
+        if (is_numeric($val)) {
             $this->error = $GLOBALS['Language']->getText('include_account', 'char_err');
             return \false;
         }
@@ -225,12 +219,15 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         return $this->isUnixValid($val) && ! $this->isReservedName($val) && ! $this->isCvsAccount($val) && ! $this->isAlreadyUserName($val) && ! $this->isAlreadyProjectName($val) && ! $this->isSystemName($val) && $this->getPendingUserRename($val);
     }
-    /**
-     * @return bool
-     */
-    public function isUnixValid($val)
+
+    public function isUnixValid(string $val): bool
     {
-        return $this->noSpaces($val) && $this->atLeastOneChar($val) && ! $this->lessThanMin($val) && ! $this->greaterThanMax($val) && ! $this->containsIllegalChars($val);
+        $is_valid = true;
+        if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
+            $is_valid = $this->atLeastOneChar($val);
+        }
+
+        return $this->noSpaces($val) && $is_valid && ! $this->lessThanMin($val) && ! $this->greaterThanMax($val) && ! $this->containsIllegalChars($val);
     }
     /**
      * Error message
@@ -250,7 +247,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      *
      * @return bool
      */
-    protected function _getErrorExists()
+    protected function _getErrorExists() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $GLOBALS['Language']->getText('rule_user_name', 'error_exists');
     }
@@ -263,7 +260,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      *
      * @return bool
      */
-    protected function _getErrorNoSpaces()
+    protected function _getErrorNoSpaces() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $GLOBALS['Language']->getText('include_account', 'login_err');
     }
@@ -272,7 +269,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      *
      * @return ProjectManager
      */
-    protected function _getProjectManager()
+    protected function _getProjectManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return \ProjectManager::instance();
     }
@@ -281,7 +278,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      *
      * @return UserManager
      */
-    protected function _getUserManager()
+    protected function _getUserManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return \UserManager::instance();
     }
@@ -290,7 +287,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      *
      * @return Backend
      */
-    protected function _getBackend($type = '')
+    protected function _getBackend($type = '') // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return \Backend::instance($type);
     }
@@ -299,7 +296,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      *
      * @return SystemEventManager
      */
-    protected function _getSystemEventManager()
+    protected function _getSystemEventManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return \SystemEventManager::instance();
     }

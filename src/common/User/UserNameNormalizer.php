@@ -21,10 +21,13 @@
 namespace Tuleap\User;
 
 use Cocur\Slugify\Slugify;
+use ForgeConfig;
 use Rule_UserName;
 
 class UserNameNormalizer
 {
+    private const TULEAP_PREFIX = "tlp-";
+
     public function __construct(private Rule_UserName $username_rule, private Slugify $slugify)
     {
     }
@@ -36,8 +39,14 @@ class UserNameNormalizer
     {
         $username = $this->slugify->slugify($username, "_");
 
-        if (! $this->username_rule->isUnixValid($username)) {
-            throw new DataIncompatibleWithUsernameGenerationException();
+        if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
+            if (! $this->username_rule->atLeastOneChar($username)) {
+                $username = self::TULEAP_PREFIX . $username;
+            }
+
+            if (! $this->username_rule->isUnixValid($username)) {
+                throw new DataIncompatibleWithUsernameGenerationException();
+            }
         }
 
         if ($this->username_rule->isValid($username)) {
