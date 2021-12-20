@@ -42,6 +42,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifie
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyIsOpen;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyUserStoryIsVisible;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\FeatureOfUserStoryRetriever;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredIterationIdentifierCollection;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
@@ -65,6 +66,7 @@ final class BacklogSearcher
         private VerifyIsOpen $open_verifier,
         private RetrieveBackgroundColor $background_color_retriever,
         private RetrieveTrackerFromUserStory $story_tracker_retriever,
+        private FeatureOfUserStoryRetriever $feature_of_user_story_retriever,
     ) {
     }
 
@@ -129,13 +131,14 @@ final class BacklogSearcher
         $unplanned_user_stories = $all_user_stories->difference($planned_user_stories);
 
         return array_map(
-            fn(UserStoryIdentifier $story_identifier) => UserStory::build(
+            fn(UserStoryIdentifier $story_identifier) => UserStory::buildWithParentFeature(
                 $this->title_retriever,
                 $this->uri_retriever,
                 $this->cross_reference_retriever,
                 $this->open_verifier,
                 $this->background_color_retriever,
                 $this->story_tracker_retriever,
+                $this->feature_of_user_story_retriever,
                 $story_identifier,
                 $user
             ),

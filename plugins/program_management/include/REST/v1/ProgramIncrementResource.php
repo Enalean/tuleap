@@ -48,6 +48,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorde
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory\IsOpenRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUserStoriesVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
@@ -84,6 +85,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\UserCanPlan
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\FeatureOfUserStoryRetriever;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\REST\AuthenticatedResource;
@@ -394,10 +396,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
      * @param int $limit  Number of elements displayed per page {@min 0} {@max 50}
      * @param int $offset Position of the first element to display {@min 0}
      *
-     * @return UserStoryRepresentation[]
-     *
-     * @throws RestException 401
-     * @throws RestException 400
+     * @throws I18NRestException
      */
     public function getBacklog(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
     {
@@ -409,6 +408,15 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $visibility_verifier = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
 
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
+        $title_retriever                = new TitleValueRetriever($artifact_retriever);
+        $uri_retriever                  = new URIRetriever($artifact_retriever);
+        $background_color_retriever     = new BackgroundColorRetriever(
+            new BackgroundColorBuilder(new BindDecoratorRetriever()),
+            $artifact_retriever,
+            $user_retriever
+        );
+        $cross_reference_retriever      = new CrossReferenceRetriever($artifact_retriever);
+        $story_tracker_retriever        = new TrackerOfArtifactRetriever($artifact_retriever);
         $backlog_searcher               = new BacklogSearcher(
             new ProgramIncrementsDAO(),
             $visibility_verifier,
@@ -419,16 +427,27 @@ final class ProgramIncrementResource extends AuthenticatedResource
             new IterationsLinkedToProgramIncrementDAO(),
             new MirroredTimeboxesDao(),
             new IterationContentDAO(),
-            new TitleValueRetriever($artifact_retriever),
-            new URIRetriever($artifact_retriever),
-            new CrossReferenceRetriever($artifact_retriever),
+            $title_retriever,
+            $uri_retriever,
+            $cross_reference_retriever,
             new IsOpenRetriever($artifact_retriever),
-            new BackgroundColorRetriever(
-                new BackgroundColorBuilder(new BindDecoratorRetriever()),
-                $artifact_retriever,
-                $user_retriever
-            ),
-            new TrackerOfArtifactRetriever($artifact_retriever)
+            $background_color_retriever,
+            $story_tracker_retriever,
+            new FeatureOfUserStoryRetriever(
+                $title_retriever,
+                $uri_retriever,
+                $cross_reference_retriever,
+                new FeatureHasPlannedUserStoriesVerifier(
+                    $artifacts_linked_to_parent_dao,
+                    new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
+                    $artifacts_linked_to_parent_dao
+                ),
+                new FeatureChecker(new PlanDao(), $visibility_verifier),
+                $background_color_retriever,
+                $story_tracker_retriever,
+                $artifacts_linked_to_parent_dao,
+                new FeatureHasUserStoriesVerifier($artifacts_linked_to_parent_dao, $visibility_verifier),
+            )
         );
 
         $current_user = $user_manager->getCurrentUser();
@@ -438,7 +457,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             $user_stories    = $backlog_searcher->searchUnplannedUserStories($id, $user_identifier);
 
             $representations = array_map(
-                static fn(UserStory $user_story) => UserStoryRepresentation::build($tracker_retriever, $user_story),
+                static fn(UserStory $user_story) => UserStoryWithParentRepresentation::build($tracker_retriever, $user_story),
                 $user_stories
             );
 
