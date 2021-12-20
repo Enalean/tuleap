@@ -16,6 +16,7 @@
         },
         "esModuleInterop": true,
         "experimentalDecorators": true,
-        "types": ["jest"] // Do not include cypress globals, they clash with jest
+        "types": ["jest"], // Do not include cypress globals, they clash with jest
+        "incremental": true
     }
 }
