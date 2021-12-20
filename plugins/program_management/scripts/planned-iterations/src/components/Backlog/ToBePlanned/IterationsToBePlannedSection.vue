@@ -17,11 +17,75 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
-    <div class="planned-iterations">
+<template>
+    <div class="unplanned-iterations">
         <h2 class="planned-iterations-section-title" v-translate>To be planned by the Teams</h2>
-        <div class="empty-state-page" data-test="app-tmp-empty-state">
-            <p class="empty-state-text" v-translate>This is not implemented yet</p>
+
+        <backlog-element-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
+        <div
+            v-if="has_error"
+            class="tlp-alert-danger"
+            data-test="unplanned-elements-retrieval-error-message"
+        >
+            {{ error_message }}
         </div>
+
+        <div
+            v-if="!is_loading && !has_error && user_stories.length === 0"
+            class="empty-state-page"
+            data-test="no-unplanned-elements-empty-state"
+        >
+            <p class="empty-state-text" v-translate>There is no unplanned element</p>
+        </div>
+
+        <user-story-card
+            v-else
+            v-for="user_story in user_stories"
+            v-bind:key="user_story.id"
+            v-bind:user_story="user_story"
+        />
     </div>
 </template>
+
+<script lang="ts">
+import Vue from "vue";
+import { namespace } from "vuex-class";
+import { Component } from "vue-property-decorator";
+import { retrieveUnplannedElements } from "../../../helpers/increment-unplanned-elements-retriever";
+
+import UserStoryCard from "../Iteration/UserStoryCard.vue";
+import BacklogElementSkeleton from "../../BacklogElementSkeleton.vue";
+
+import type { UserStory } from "../../../type";
+import type { ProgramIncrement } from "../../../store/configuration";
+
+const configuration = namespace("configuration");
+
+@Component({
+    components: {
+        UserStoryCard,
+        BacklogElementSkeleton,
+    },
+})
+export default class IterationsToBePlannedSection extends Vue {
+    @configuration.State
+    readonly program_increment!: ProgramIncrement;
+
+    private user_stories: UserStory[] = [];
+    private is_loading = false;
+    private has_error = false;
+    private error_message = "";
+
+    async mounted(): Promise<void> {
+        try {
+            this.is_loading = true;
+            this.user_stories = await retrieveUnplannedElements(this.program_increment.id);
+        } catch (e) {
+            this.has_error = true;
+            this.error_message = this.$gettext("An error occurred loading unplanned elements");
+        } finally {
+            this.is_loading = false;
+        }
+    }
+}
+</script>
