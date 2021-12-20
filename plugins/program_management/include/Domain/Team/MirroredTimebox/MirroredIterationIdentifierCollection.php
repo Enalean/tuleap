@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifierCollection;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -40,12 +41,36 @@ final class MirroredIterationIdentifierCollection
 
     public static function fromIteration(
         SearchMirroredTimeboxes $iteration_searcher,
-        VerifyIsVisibleArtifact $artifact_visibility_verifier,
+        VerifyIsVisibleArtifact $visibility_verifier,
         IterationIdentifier $iteration,
         UserIdentifier $user,
     ): self {
-        $mirrors = MirroredIterationIdentifier::buildCollectionFromIteration($iteration_searcher, $artifact_visibility_verifier, $iteration, $user);
+        $mirrors = MirroredIterationIdentifier::buildCollectionFromIteration(
+            $iteration_searcher,
+            $visibility_verifier,
+            $iteration,
+            $user
+        );
         return new self($mirrors);
+    }
+
+    public static function fromIterationCollection(
+        SearchMirroredTimeboxes $iteration_searcher,
+        VerifyIsVisibleArtifact $visibility_verifier,
+        IterationIdentifierCollection $iterations,
+        UserIdentifier $user,
+    ): self {
+        $all_mirrors = [];
+        foreach ($iterations->getIterations() as $iteration) {
+            $mirrors_of_iteration = MirroredIterationIdentifier::buildCollectionFromIteration(
+                $iteration_searcher,
+                $visibility_verifier,
+                $iteration,
+                $user
+            );
+            array_push($all_mirrors, ...$mirrors_of_iteration);
+        }
+        return new self($all_mirrors);
     }
 
     /**

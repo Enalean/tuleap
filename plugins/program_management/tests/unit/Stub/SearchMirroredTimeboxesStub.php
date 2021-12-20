@@ -28,27 +28,41 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes
 final class SearchMirroredTimeboxesStub implements SearchMirroredTimeboxes
 {
     /**
-     * @var int[]
+     * @param array<int[]> $successive_returns
      */
-    private array $ids;
-
-    private function __construct(int ...$ids)
+    private function __construct(private bool $always_return, private array $successive_returns)
     {
-        $this->ids = $ids;
     }
 
-    public static function withIds(int ...$ids): self
+    /**
+     * @no-named-arguments
+     */
+    public static function withIds(int $mirrored_iteration_id, int ...$other_ids): self
     {
-        return new self(...$ids);
+        return new self(true, [[$mirrored_iteration_id, ...$other_ids]]);
+    }
+
+    /**
+     * @param array<int[]> $mirrored_iteration_ids
+     */
+    public static function withSuccessiveIds(array $mirrored_iteration_ids): self
+    {
+        return new self(false, $mirrored_iteration_ids);
     }
 
     public static function withNoMirrors(): self
     {
-        return new self();
+        return new self(true, [[]]);
     }
 
     public function searchMirroredTimeboxes(TimeboxIdentifier $timebox): array
     {
-        return $this->ids;
+        if ($this->always_return) {
+            return $this->successive_returns[0];
+        }
+        if (count($this->successive_returns) > 0) {
+            return array_shift($this->successive_returns);
+        }
+        return [];
     }
 }

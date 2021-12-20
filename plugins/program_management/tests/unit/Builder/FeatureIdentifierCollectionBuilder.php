@@ -20,32 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Tests\Builder;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\SearchIterations;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifierCollection;
+use Tuleap\ProgramManagement\Tests\Stub\SearchFeaturesStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleStub;
 
-final class SearchIterationsStub implements SearchIterations
+final class FeatureIdentifierCollectionBuilder
 {
-    private function __construct(private array $iteration_ids)
-    {
-    }
-
-    public function searchIterations(ProgramIncrementIdentifier $program_increment): array
-    {
-        return $this->iteration_ids;
-    }
-
     /**
      * @no-named-arguments
      */
-    public static function withIterationIds(int $iteration_id, int ...$other_ids): self
+    public static function buildWithIds(int $feature_id, int ...$other_ids): FeatureIdentifierCollection
     {
-        return new self([$iteration_id, ...$other_ids]);
-    }
-
-    public static function withNoIteration(): self
-    {
-        return new self([]);
+        return FeatureIdentifierCollection::fromProgramIncrement(
+            SearchFeaturesStub::withFeatureIds($feature_id, ...$other_ids),
+            VerifyFeatureIsVisibleStub::withAlwaysVisibleFeatures(),
+            ProgramIncrementIdentifierBuilder::buildWithId(196),
+            UserIdentifierStub::buildGenericUser()
+        );
     }
 }

@@ -44,22 +44,18 @@ final class FeatureRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
     private const URI               = '/plugins/tracker/?aid=' . self::FEATURE_ID;
     private const BACKGROUND_COLOR  = 'chrome-silver';
     private const TITLE             = 'Upscale Recti';
-    private RetrieveFullTrackerStub $tracker_retriever;
-
-    protected function setUp(): void
-    {
-        $program_project         = ProjectTestBuilder::aProject()->build();
-        $feature_tracker         = TrackerTestBuilder::aTracker()
-            ->withId(self::TRACKER_ID)
-            ->withProject($program_project)
-            ->build();
-        $this->tracker_retriever = RetrieveFullTrackerStub::withTracker($feature_tracker);
-    }
+    private const PROJECT_ID        = 296;
 
     private function getRepresentation(): FeatureRepresentation
     {
+        $program_project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $feature_tracker = TrackerTestBuilder::aTracker()
+            ->withId(self::TRACKER_ID)
+            ->withProject($program_project)
+            ->build();
+
         return FeatureRepresentation::fromFeature(
-            $this->tracker_retriever,
+            RetrieveFullTrackerStub::withTracker($feature_tracker),
             Feature::fromFeatureIdentifier(
                 RetrieveFeatureTitleStub::withTitle(self::TITLE),
                 new RetrieveFeatureURIStub(),
@@ -80,10 +76,11 @@ final class FeatureRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::FEATURE_ID, $representation->id);
         self::assertSame(self::TITLE, $representation->title);
         self::assertSame(self::URI, $representation->uri);
-        self::assertSame('feature #673', $representation->xref);
+        self::assertSame('feature #' . self::FEATURE_ID, $representation->xref);
         self::assertFalse($representation->has_user_story_planned);
         self::assertTrue($representation->has_user_story_linked);
         self::assertSame(self::BACKGROUND_COLOR, $representation->background_color);
         self::assertSame(self::TRACKER_ID, $representation->tracker->id);
+        self::assertSame(self::PROJECT_ID, $representation->tracker->project->id);
     }
 }

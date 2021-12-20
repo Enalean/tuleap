@@ -22,18 +22,13 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\JustLinkedIterationCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\PendingIterationCreationBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\ProgramIncrementUpdateEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 
 final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -45,64 +40,43 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
     private const SECOND_ITERATION_ID            = 268;
     private const FIRST_CHANGESET_ID             = 4021;
     private const SECOND_CHANGESET_ID            = 4997;
-    private UserIdentifier $user;
-    private JustLinkedIterationCollection $just_linked_iterations;
     private RetrieveLastChangesetStub $changeset_retriever;
     private TestLogger $logger;
     private RetrieveIterationTrackerStub $tracker_retriever;
-    private ProgramIncrementUpdateEventStub $update_event;
 
     protected function setUp(): void
     {
-        $this->user                   = UserIdentifierStub::withId(self::USER_ID);
-        $program_increment            = ProgramIncrementIdentifierBuilder::buildWithIdAndUser(
-            self::PROGRAM_INCREMENT_ID,
-            $this->user
-        );
-        $iterations                   = IterationIdentifier::buildCollectionFromProgramIncrement(
-            SearchIterationsStub::withIterationIds(self::FIRST_ITERATION_ID, self::SECOND_ITERATION_ID),
-            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
-            $program_increment,
-            $this->user
-        );
-        $this->just_linked_iterations = JustLinkedIterationCollection::fromIterations(
-            VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
-            $program_increment,
-            ...$iterations
-        );
-        $this->changeset_retriever    = RetrieveLastChangesetStub::withLastChangesetIds(
+        $this->changeset_retriever = RetrieveLastChangesetStub::withLastChangesetIds(
             self::FIRST_CHANGESET_ID,
             self::SECOND_CHANGESET_ID
         );
-        $this->logger                 = new TestLogger();
-        $this->tracker_retriever      = RetrieveIterationTrackerStub::withValidTracker(self::ITERATION_TRACKER_ID);
+        $this->logger              = new TestLogger();
+        $this->tracker_retriever   = RetrieveIterationTrackerStub::withValidTracker(self::ITERATION_TRACKER_ID);
+    }
 
-        $first_iteration    = PendingIterationCreationBuilder::buildWithIds(
+    /**
+     * @return IterationCreation[]
+     */
+    private function getCreationsFromJustLinkedIterations(): array
+    {
+        $program_increment      = ProgramIncrementIdentifierBuilder::buildWithId(self::PROGRAM_INCREMENT_ID);
+        $just_linked_iterations = JustLinkedIterationCollectionBuilder::buildWithProgramIncrementAndIterationIds(
+            $program_increment,
             self::FIRST_ITERATION_ID,
-            self::FIRST_CHANGESET_ID
+            self::SECOND_ITERATION_ID
         );
-        $second_iteration   = PendingIterationCreationBuilder::buildWithIds(
-            self::SECOND_ITERATION_ID,
-            self::SECOND_CHANGESET_ID
-        );
-        $this->update_event = ProgramIncrementUpdateEventStub::withIds(
-            self::PROGRAM_INCREMENT_ID,
-            self::USER_ID,
-            self::PROGRAM_INCREMENT_CHANGESET_ID,
-            $first_iteration,
-            $second_iteration
+        return IterationCreation::buildCollectionFromJustLinkedIterations(
+            $this->changeset_retriever,
+            $this->tracker_retriever,
+            MessageLog::buildFromLogger($this->logger),
+            $just_linked_iterations,
+            UserIdentifierStub::withId(self::USER_ID)
         );
     }
 
     public function testItRetrievesLastChangesetOfEachIterationAndBuildsCollection(): void
     {
-        [$first_creation, $second_creation] = IterationCreation::buildCollectionFromJustLinkedIterations(
-            $this->changeset_retriever,
-            $this->tracker_retriever,
-            MessageLog::buildFromLogger($this->logger),
-            $this->just_linked_iterations,
-            $this->user
-        );
+        [$first_creation, $second_creation] = $this->getCreationsFromJustLinkedIterations();
         self::assertSame(self::FIRST_ITERATION_ID, $first_creation->getIteration()->getId());
         self::assertSame(self::FIRST_ITERATION_ID, $first_creation->getTimebox()->getId());
         self::assertSame(self::ITERATION_TRACKER_ID, $first_creation->getTracker()->getId());
@@ -122,26 +96,42 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->changeset_retriever = RetrieveLastChangesetStub::withNoLastChangeset();
 
-        self::assertEmpty(
-            IterationCreation::buildCollectionFromJustLinkedIterations(
-                $this->changeset_retriever,
-                $this->tracker_retriever,
-                MessageLog::buildFromLogger($this->logger),
-                $this->just_linked_iterations,
-                $this->user
-            )
-        );
+        self::assertEmpty($this->getCreationsFromJustLinkedIterations());
         self::assertTrue(
             $this->logger->hasErrorThatMatches('/Could not retrieve last changeset of iteration #[0-9]+, skipping it$/')
         );
     }
 
+    /**
+     * @return IterationCreation[]
+     */
+    private function getCreationsFromProgramIncrementUpdate(): array
+    {
+        $first_iteration  = PendingIterationCreationBuilder::buildWithIds(
+            self::FIRST_ITERATION_ID,
+            self::FIRST_CHANGESET_ID
+        );
+        $second_iteration = PendingIterationCreationBuilder::buildWithIds(
+            self::SECOND_ITERATION_ID,
+            self::SECOND_CHANGESET_ID
+        );
+
+        $update_event = ProgramIncrementUpdateEventStub::withIds(
+            self::PROGRAM_INCREMENT_ID,
+            self::USER_ID,
+            self::PROGRAM_INCREMENT_CHANGESET_ID,
+            $first_iteration,
+            $second_iteration
+        );
+        return IterationCreation::buildCollectionFromProgramIncrementUpdateEvent(
+            $this->tracker_retriever,
+            $update_event
+        );
+    }
+
     public function testItBuildsCollectionFromProgramIncrementUpdateEvent(): void
     {
-        [$first_creation, $second_creation] = IterationCreation::buildCollectionFromProgramIncrementUpdateEvent(
-            $this->tracker_retriever,
-            $this->update_event
-        );
+        [$first_creation, $second_creation] = $this->getCreationsFromProgramIncrementUpdate();
         self::assertSame(self::FIRST_ITERATION_ID, $first_creation->getIteration()->getId());
         self::assertSame(self::FIRST_ITERATION_ID, $first_creation->getTimebox()->getId());
         self::assertSame(self::ITERATION_TRACKER_ID, $first_creation->getTracker()->getId());

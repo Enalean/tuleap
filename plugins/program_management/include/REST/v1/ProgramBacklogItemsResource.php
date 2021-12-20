@@ -34,11 +34,13 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIsNotPlannableException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\UserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\UserStoryRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -75,7 +77,7 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
         $artifact_retriever            = new ArtifactFactoryAdapter($artifact_factory);
         $tracker_of_artifact_retriever = new TrackerOfArtifactRetriever($artifact_retriever);
         $visibility_verifier           = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
-        $tracker_factory               = \TrackerFactory::instance();
+        $tracker_retriever             = new TrackerFactoryAdapter(\TrackerFactory::instance());
 
         $user_story_representation_builder = new UserStoryRetriever(
             new ArtifactsLinkedToParentDao(),
@@ -100,20 +102,14 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
                 UserProxy::buildFromPFUser($user)
             );
 
-            $linked_children = [];
-            foreach ($user_stories as $user_story) {
-                $user_story_representation = UserStoryRepresentation::build(
-                    $tracker_factory,
-                    $user_story
-                );
-                if ($user_story_representation) {
-                    $linked_children[] = $user_story_representation;
-                }
-            }
+            $representations = array_map(
+                static fn(UserStory $story) => UserStoryRepresentation::build($tracker_retriever, $story),
+                $user_stories
+            );
 
-            Header::sendPaginationHeaders($limit, $offset, count($linked_children), self::MAX_LIMIT);
+            Header::sendPaginationHeaders($limit, $offset, count($representations), self::MAX_LIMIT);
 
-            return array_slice($linked_children, $offset, $limit);
+            return array_slice($representations, $offset, $limit);
         } catch (FeatureIsNotPlannableException $e) {
             throw new I18NRestException(400, $e->getI18NExceptionMessage());
         } catch (FeatureNotFoundException $e) {

@@ -28,7 +28,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildren
 
 final class SearchChildrenOfFeatureStub implements SearchChildrenOfFeature
 {
-    private function __construct(private array $children)
+    /**
+     * @param array<int[]> $successive_returns
+     */
+    private function __construct(private bool $always_return, private array $successive_returns)
     {
     }
 
@@ -37,16 +40,30 @@ final class SearchChildrenOfFeatureStub implements SearchChildrenOfFeature
      */
     public static function withUserStoryIds(int $user_story_id, int ...$other_ids): self
     {
-        return new self([$user_story_id, ...$other_ids]);
+        return new self(true, [[$user_story_id, ...$other_ids]]);
+    }
+
+    /**
+     * @param array<int[]> $user_story_ids
+     */
+    public static function withSuccessiveIds(array $user_story_ids): self
+    {
+        return new self(false, $user_story_ids);
     }
 
     public static function withoutUserStories(): self
     {
-        return new self([]);
+        return new self(true, [[]]);
     }
 
     public function getChildrenOfFeatureInTeamProjects(FeatureIdentifier $feature): array
     {
-        return $this->children;
+        if ($this->always_return) {
+            return $this->successive_returns[0];
+        }
+        if (count($this->successive_returns) > 0) {
+            return array_shift($this->successive_returns);
+        }
+        return [];
     }
 }

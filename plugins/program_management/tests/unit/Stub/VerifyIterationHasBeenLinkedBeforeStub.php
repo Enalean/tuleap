@@ -29,13 +29,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 final class VerifyIterationHasBeenLinkedBeforeStub implements VerifyIterationHasBeenLinkedBefore
 {
     /**
-     * @var int[]
+     * @param int[] $iterations_that_have_been_linked_before
      */
-    private array $iterations_that_have_been_linked_before;
-
-    private function __construct(int ...$iteration_ids)
+    private function __construct(private array $iterations_that_have_been_linked_before)
     {
-        $this->iterations_that_have_been_linked_before = $iteration_ids;
     }
 
     public function hasIterationBeenLinkedBefore(
@@ -45,13 +42,16 @@ final class VerifyIterationHasBeenLinkedBeforeStub implements VerifyIterationHas
         return in_array($iteration->getId(), $this->iterations_that_have_been_linked_before, true);
     }
 
-    public static function withIterationIds(int ...$iterations_that_have_been_linked_before): self
+    /**
+     * @no-named-arguments
+     */
+    public static function withIterationIds(int $iteration_that_has_been_linked_before_id, int ...$other_ids): self
     {
-        return new self(...$iterations_that_have_been_linked_before);
+        return new self([$iteration_that_has_been_linked_before_id, ...$other_ids]);
     }
 
     public static function withNoIteration(): self
     {
-        return new self();
+        return new self([]);
     }
 }

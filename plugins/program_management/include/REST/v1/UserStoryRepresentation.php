@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\REST\v1;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\RetrieveFullTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\UserStory;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
@@ -66,13 +67,10 @@ final class UserStoryRepresentation extends ElementRepresentation
     }
 
     public static function build(
-        \TrackerFactory $tracker_factory,
+        RetrieveFullTracker $tracker_retriever,
         UserStory $user_story,
-    ): ?self {
-        $tracker = $tracker_factory->getTrackerById($user_story->tracker_identifier->getId());
-        if (! $tracker) {
-            return null;
-        }
+    ): self {
+        $tracker = $tracker_retriever->getNonNullTracker($user_story->tracker_identifier);
 
         return new self(
             $user_story->user_story_identifier->getId(),

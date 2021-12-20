@@ -25,22 +25,15 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\JSON\PendingProgramIncrementUpdateRepresentation;
-use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
+use Tuleap\ProgramManagement\Tests\Builder\IterationCreationBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildIterationCreationProcessorStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementUpdateProcessorStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProcessIterationCreationStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProcessProgramIncrementUpdateStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
@@ -49,6 +42,8 @@ use Tuleap\Queue\QueueServerConnectionException;
 final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_INCREMENT_ID = 83;
+    private const USER_ID              = 110;
+    private const ITERATION_TRACKER_ID = 25;
     private TestLogger $logger;
     /**
      * @var Stub&QueueFactory
@@ -70,30 +65,27 @@ final class ProgramIncrementUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\Te
         $this->iteration_processor = ProcessIterationCreationStub::withCount();
 
         $this->program_increment_update = ProgramIncrementUpdateBuilder::buildWithIds(
-            110,
+            self::USER_ID,
             self::PROGRAM_INCREMENT_ID,
             17,
             6104
         );
 
-        $iterations                = IterationIdentifier::buildCollectionFromProgramIncrement(
-            SearchIterationsStub::withIterationIds(54, 89),
-            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
-            $this->program_increment_update->getProgramIncrement(),
-            $this->program_increment_update->getUser()
+        $first_iteration_creation  = IterationCreationBuilder::buildWithIds(
+            54,
+            self::ITERATION_TRACKER_ID,
+            self::PROGRAM_INCREMENT_ID,
+            self::USER_ID,
+            5539
         );
-        $just_linked_iterations    = JustLinkedIterationCollection::fromIterations(
-            VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
-            $this->program_increment_update->getProgramIncrement(),
-            ...$iterations
+        $second_iteration_creation = IterationCreationBuilder::buildWithIds(
+            89,
+            self::ITERATION_TRACKER_ID,
+            self::PROGRAM_INCREMENT_ID,
+            self::USER_ID,
+            5174
         );
-        $this->iteration_creations = IterationCreation::buildCollectionFromJustLinkedIterations(
-            RetrieveLastChangesetStub::withLastChangesetIds(5539, 5174),
-            RetrieveIterationTrackerStub::withValidTracker(25),
-            MessageLog::buildFromLogger($this->logger),
-            $just_linked_iterations,
-            $this->program_increment_update->getUser()
-        );
+        $this->iteration_creations = [$first_iteration_creation, $second_iteration_creation];
     }
 
     private function getDispatcher(): ProgramIncrementUpdateDispatcher

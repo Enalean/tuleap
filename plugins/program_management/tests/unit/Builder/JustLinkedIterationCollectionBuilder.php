@@ -20,32 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Tests\Builder;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\SearchIterations;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 
-final class SearchIterationsStub implements SearchIterations
+final class JustLinkedIterationCollectionBuilder
 {
-    private function __construct(private array $iteration_ids)
-    {
-    }
-
-    public function searchIterations(ProgramIncrementIdentifier $program_increment): array
-    {
-        return $this->iteration_ids;
-    }
-
     /**
      * @no-named-arguments
      */
-    public static function withIterationIds(int $iteration_id, int ...$other_ids): self
-    {
-        return new self([$iteration_id, ...$other_ids]);
-    }
-
-    public static function withNoIteration(): self
-    {
-        return new self([]);
+    public static function buildWithProgramIncrementAndIterationIds(
+        ProgramIncrementIdentifier $program_increment,
+        int $just_linked_iteration_id,
+        int ...$other_ids,
+    ): JustLinkedIterationCollection {
+        $iterations = IterationIdentifierCollectionBuilder::buildWithIds($just_linked_iteration_id, ...$other_ids);
+        return JustLinkedIterationCollection::fromIterations(
+            VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
+            $program_increment,
+            $iterations
+        );
     }
 }

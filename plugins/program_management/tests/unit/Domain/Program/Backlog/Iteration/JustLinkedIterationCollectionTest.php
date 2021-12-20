@@ -23,10 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\IterationIdentifierCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 
 final class JustLinkedIterationCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -35,44 +33,39 @@ final class JustLinkedIterationCollectionTest extends \Tuleap\Test\PHPUnit\TestC
     private const SECOND_PREVIOUS_ITERATION_ID   = 730;
     private const FIRST_JUST_ADDED_ITERATION_ID  = 878;
     private const SECOND_JUST_ADDED_ITERATION_ID = 182;
+    private VerifyIterationHasBeenLinkedBeforeStub $link_verifier;
     private ProgramIncrementIdentifier $program_increment;
-    /**
-     * @var IterationIdentifier[]
-     */
-    private array $iterations;
 
     protected function setUp(): void
     {
-        $user                    = UserIdentifierStub::buildGenericUser();
-        $this->program_increment = ProgramIncrementIdentifierBuilder::buildWithIdAndUser(10, $user);
-        $iterations_searcher     = SearchIterationsStub::withIterationIds(
+        $this->program_increment = ProgramIncrementIdentifierBuilder::buildWithId(10);
+        $this->link_verifier     = VerifyIterationHasBeenLinkedBeforeStub::withIterationIds(
             self::FIRST_PREVIOUS_ITERATION_ID,
-            self::SECOND_PREVIOUS_ITERATION_ID,
-            self::FIRST_JUST_ADDED_ITERATION_ID,
-            self::SECOND_JUST_ADDED_ITERATION_ID
+            self::SECOND_PREVIOUS_ITERATION_ID
         );
-        $visibility_verifier     = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
-        $this->iterations        = IterationIdentifier::buildCollectionFromProgramIncrement(
-            $iterations_searcher,
-            $visibility_verifier,
+    }
+
+    private function getCollection(): JustLinkedIterationCollection
+    {
+        return JustLinkedIterationCollection::fromIterations(
+            $this->link_verifier,
             $this->program_increment,
-            $user
+            IterationIdentifierCollectionBuilder::buildWithIds(
+                self::FIRST_PREVIOUS_ITERATION_ID,
+                self::SECOND_PREVIOUS_ITERATION_ID,
+                self::FIRST_JUST_ADDED_ITERATION_ID,
+                self::SECOND_JUST_ADDED_ITERATION_ID
+            )
         );
     }
 
     public function testItFiltersIterationsThatHaveBeenLinkedInPreviousChangesets(): void
     {
-        $link_verifier = VerifyIterationHasBeenLinkedBeforeStub::withIterationIds(
-            self::FIRST_PREVIOUS_ITERATION_ID,
-            self::SECOND_PREVIOUS_ITERATION_ID
+        $collection = $this->getCollection();
+        $ids        = array_map(
+            static fn(IterationIdentifier $iteration): int => $iteration->getId(),
+            $collection->ids
         );
-        $collection    = JustLinkedIterationCollection::fromIterations(
-            $link_verifier,
-            $this->program_increment,
-            ...$this->iterations
-        );
-
-        $ids = array_map(static fn(IterationIdentifier $iteration): int => $iteration->getId(), $collection->ids);
         self::assertNotContains(self::FIRST_PREVIOUS_ITERATION_ID, $ids);
         self::assertNotContains(self::SECOND_PREVIOUS_ITERATION_ID, $ids);
         self::assertContains(self::FIRST_JUST_ADDED_ITERATION_ID, $ids);
@@ -83,18 +76,14 @@ final class JustLinkedIterationCollectionTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItCanBuildAnEmptyCollection(): void
     {
-        $link_verifier = VerifyIterationHasBeenLinkedBeforeStub::withIterationIds(
+        $this->link_verifier = VerifyIterationHasBeenLinkedBeforeStub::withIterationIds(
             self::FIRST_PREVIOUS_ITERATION_ID,
             self::SECOND_PREVIOUS_ITERATION_ID,
             self::FIRST_JUST_ADDED_ITERATION_ID,
             self::SECOND_JUST_ADDED_ITERATION_ID
         );
-        $collection    = JustLinkedIterationCollection::fromIterations(
-            $link_verifier,
-            $this->program_increment,
-            ...$this->iterations
-        );
 
+        $collection = $this->getCollection();
         self::assertTrue($collection->isEmpty());
         self::assertSame($this->program_increment, $collection->program_increment);
     }
