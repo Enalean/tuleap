@@ -18,6 +18,9 @@ msgstr "Administration"
 msgid "An error has occurred loading content"
 msgstr "Une erreur s'est produite lors du chargement du contenu"
 
+msgid "An error occurred loading unplanned elements"
+msgstr "Une erreur s'est produite lors du chargement des éléments non plannifiés"
+
 msgid "Create the first %s"
 msgstr "Créer un(e) %s"
 
@@ -48,8 +51,8 @@ msgstr "Il n'y a pas encore de %s."
 msgid "There is no iteration yet."
 msgstr "Il n'y a pas encore d'itérations."
 
-msgid "This is not implemented yet"
-msgstr "Cette partie n'est pas encore implémentée"
+msgid "There is no unplanned element"
+msgstr "Il n'y a aucun élément non plannifié"
 
 msgid "To be planned by the Teams"
 msgstr "À plannifier par les équipes"

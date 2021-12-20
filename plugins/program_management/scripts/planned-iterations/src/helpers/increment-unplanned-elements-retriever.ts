@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,28 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.planned-iterations {
-    flex: 1 1 50%;
-}
+import { recursiveGet } from "tlp";
+import type { UserStory } from "../type";
 
-.unplanned-iterations {
-    flex: 1 1 50%;
-    margin: 0 var(--tlp-jumbo-spacing) 0 0;
-}
-
-.iterations-backlog {
-    display: flex;
-    padding: 0 var(--tlp-medium-spacing);
-}
-
-.planned-iterations-section-title {
-    color: var(--tlp-typo-default-text-color);
-    font-size: 1.5rem;
-    font-weight: 600;
-    line-height: 1.875rem;
-}
-
-.planned-iterations-empty-state-svg,
-.planned-iterations-empty-state-text {
-    margin: 0 0 var(--tlp-x-large-spacing) 0;
+export function retrieveUnplannedElements(iteration_id: number): Promise<UserStory[]> {
+    return recursiveGet(`/api/v1/program_increment/${encodeURIComponent(iteration_id)}/backlog`, {
+        params: {
+            limit: 50,
+            offset: 0,
+        },
+    });
 }
