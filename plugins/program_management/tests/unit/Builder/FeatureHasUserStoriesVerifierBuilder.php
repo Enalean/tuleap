@@ -35,4 +35,12 @@ final class FeatureHasUserStoriesVerifierBuilder
             VerifyUserStoryIsVisibleStub::withAlwaysVisibleUserStories()
         );
     }
+
+    public static function buildWithoutUserStories(): FeatureHasUserStoriesVerifier
+    {
+        return new FeatureHasUserStoriesVerifier(
+            SearchChildrenOfFeatureStub::withoutUserStories(),
+            VerifyUserStoryIsVisibleStub::withNoVisibleUserStory()
+        );
+    }
 }

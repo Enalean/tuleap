@@ -12,34 +12,55 @@ exports[`UserStoryCard should display the user_story as a card with tracker and 
       class="element-card-content"
     >
       <div
-        class="element-card-xref-label"
+        class="element-card-metadata"
       >
         <div
-          class="element-card-xref-project"
+          class="element-card-xref-label"
         >
-          <span
-            class="element-card-xref-project-icon"
+          <div
+            class="element-card-xref-project"
+          >
+            <span
+              class="element-card-xref-project-icon"
+            >
+              
+                            🐹
+                        
+            </span>
+            
+                        Guinea Pigs
+                        
+            <i
+              class="fas fa-long-arrow-alt-right element-card-xref-icon"
+            />
+          </div>
+           
+          <a
+            class="element-card-xref element-card-xref-red-wine"
+            href="/plugins/tracker/?aid=101"
           >
             
-                        🐹
+                        user_story #101
                     
-          </span>
-          
-                    Guinea Pigs
-                    
-          <i
-            class="fas fa-long-arrow-alt-right element-card-xref-icon"
-          />
+          </a>
         </div>
          
-        <a
-          class="element-card-xref element-card-xref-red-wine"
-          href="/plugins/tracker/?aid=101"
+        <div
+          class="element-card-feature-title tlp-badge-secondary tlp-badge-outline"
         >
-          
-                    user_story #101
-                
-        </a>
+          <i
+            class="fas fa-level-up-alt"
+          />
+           
+          <a
+            class="feature-link"
+            href="uri/to/feature"
+          >
+            
+                        My parent feature
+                    
+          </a>
+        </div>
       </div>
        
       <span

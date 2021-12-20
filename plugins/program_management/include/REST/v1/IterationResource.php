@@ -33,14 +33,21 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\URIRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory\IsOpenRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUserStoriesVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureChecker;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
+use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureHasUserStoriesVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\Content\IterationContentSearcher;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationNotFoundException;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\FeatureOfUserStoryRetriever;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -69,18 +76,26 @@ final class IterationResource
      * @param int $limit Number of elements displayed per page {@min 0} {@max 50}
      * @param int $offset Position of the first element to display {@min 0}
      *
-     * @return UserStoryRepresentation[]
-     *
      * @throws RestException 401
      * @throws RestException 400
      */
     public function getIterations(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
     {
-        $tracker_retriever   = new TrackerFactoryAdapter(\TrackerFactory::instance());
-        $artifact_factory    = \Tracker_ArtifactFactory::instance();
-        $artifact_retriever  = new ArtifactFactoryAdapter($artifact_factory);
-        $visibility_verifier = new ArtifactVisibleVerifier($artifact_factory, $this->user_adapter);
-        $iteration_retriever = new IterationContentSearcher(
+        $tracker_factory_adapter        = new TrackerFactoryAdapter(\TrackerFactory::instance());
+        $artifact_factory               = \Tracker_ArtifactFactory::instance();
+        $artifact_retriever             = new ArtifactFactoryAdapter($artifact_factory);
+        $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $this->user_adapter);
+        $retrieve_title_value           = new TitleValueRetriever($artifact_retriever);
+        $retrieve_uri                   = new URIRetriever($artifact_retriever);
+        $retrieve_cross_ref             = new CrossReferenceRetriever($artifact_retriever);
+        $retrieve_background_color      = new BackgroundColorRetriever(
+            new BackgroundColorBuilder(new BindDecoratorRetriever()),
+            $artifact_retriever,
+            $this->user_adapter
+        );
+        $retrieve_tracker_id            = new TrackerOfArtifactRetriever($artifact_retriever);
+        $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
+        $iteration_retriever            = new IterationContentSearcher(
             new IterationsDAO(),
             $visibility_verifier,
             new IterationContentDAO(),
@@ -96,6 +111,21 @@ final class IterationResource
             ),
             new TrackerOfArtifactRetriever($artifact_retriever),
             new MirroredTimeboxesDao(),
+            new FeatureOfUserStoryRetriever(
+                $retrieve_title_value,
+                $retrieve_uri,
+                $retrieve_cross_ref,
+                new FeatureHasPlannedUserStoriesVerifier(
+                    $artifacts_linked_to_parent_dao,
+                    new PlanningAdapter(\PlanningFactory::build(), $this->user_adapter),
+                    $artifacts_linked_to_parent_dao
+                ),
+                new FeatureChecker(new PlanDao(), $visibility_verifier),
+                $retrieve_background_color,
+                $retrieve_tracker_id,
+                $artifacts_linked_to_parent_dao,
+                new FeatureHasUserStoriesVerifier($artifacts_linked_to_parent_dao, $visibility_verifier),
+            )
         );
 
         $user = $this->user_manager->getCurrentUser();
@@ -106,7 +136,10 @@ final class IterationResource
 
             $representations = [];
             foreach ($planned_user_stories as $user_story) {
-                $representations[] = UserStoryRepresentation::build($tracker_retriever, $user_story);
+                $representations[] = UserStoryWithParentRepresentation::build(
+                    $tracker_factory_adapter,
+                    $user_story,
+                );
             }
 
             Header::sendPaginationHeaders($limit, $offset, count($representations), self::MAX_LIMIT);

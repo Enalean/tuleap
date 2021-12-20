@@ -21,12 +21,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\Content;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\UserStory;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIteration;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIsNotPlannableException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveTrackerFromUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryCrossRef;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryTitle;
@@ -34,54 +33,44 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryU
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyIsOpen;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyUserStoryIsVisible;
+use Tuleap\ProgramManagement\Domain\Program\Feature\CheckIsValidFeature;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredIterationIdentifierCollection;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\FeatureOfUserStoryRetriever;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
-use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class IterationContentSearcher
+final class UserStoryWithParentRetriever
 {
     public function __construct(
-        private VerifyIsIteration $verify_is_iteration,
-        private VerifyIsVisibleArtifact $is_visible_artifact,
-        private SearchUserStoryPlannedInIteration $search_user_story_planned_in_iteration,
-        private VerifyUserStoryIsVisible $is_visible_story,
+        private SearchChildrenOfFeature $search_children_of_feature,
+        private CheckIsValidFeature $feature_verifier,
+        private RetrieveBackgroundColor $retrieve_background_color,
         private RetrieveUserStoryTitle $retrieve_title_value,
         private RetrieveUserStoryURI $retrieve_uri,
         private RetrieveUserStoryCrossRef $retrieve_cross_ref,
         private VerifyIsOpen $retrieve_is_open,
-        private RetrieveBackgroundColor $retrieve_background_color,
         private RetrieveTrackerFromUserStory $retrieve_tracker_id,
-        private SearchMirroredTimeboxes $iteration_searcher,
-        private FeatureOfUserStoryRetriever $retrieve_feature,
+        private VerifyUserStoryIsVisible $verify_user_story_is_visible,
+        private FeatureOfUserStoryRetriever $retrieve_feature_of_user_story,
     ) {
     }
 
     /**
      * @return UserStory[]
-     *
-     * @throws IterationNotFoundException
+     * @throws FeatureNotFoundException
+     * @throws FeatureIsNotPlannableException
      */
-    public function retrievePlannedUserStories(int $id, UserIdentifier $user_identifier): array
+    public function retrieveStories(int $feature_id, UserIdentifier $user_identifier): array
     {
-        $iteration_identifier = IterationIdentifier::fromId($this->verify_is_iteration, $this->is_visible_artifact, $id, $user_identifier);
-        if (! $iteration_identifier) {
-            throw new IterationNotFoundException($id);
-        }
-
-        $mirrored_iterations = MirroredIterationIdentifierCollection::fromIteration(
-            $this->iteration_searcher,
-            $this->is_visible_artifact,
-            $iteration_identifier,
-            $user_identifier
+        $feature = FeatureIdentifier::fromId(
+            $this->feature_verifier,
+            $feature_id,
+            $user_identifier,
         );
 
-        $planned_user_stories = UserStoryIdentifier::buildCollectionFromIteration(
-            $this->search_user_story_planned_in_iteration,
-            $this->is_visible_story,
-            $mirrored_iterations,
+        $planned_children = UserStoryIdentifier::buildCollectionFromFeature(
+            $this->search_children_of_feature,
+            $this->verify_user_story_is_visible,
+            $feature,
             $user_identifier
         );
 
@@ -93,11 +82,11 @@ final class IterationContentSearcher
                 $this->retrieve_is_open,
                 $this->retrieve_background_color,
                 $this->retrieve_tracker_id,
-                $this->retrieve_feature,
+                $this->retrieve_feature_of_user_story,
                 $user_story_identifier,
                 $user_identifier
             ),
-            $planned_user_stories
+            $planned_children
         );
     }
 }

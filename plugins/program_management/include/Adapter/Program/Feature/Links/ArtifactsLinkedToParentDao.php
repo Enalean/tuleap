@@ -25,13 +25,15 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchParentFeatureOfAUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchPlannedUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchUnlinkedUserStoriesOfMirroredProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\VerifyIsLinkedToAnotherMilestone;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIdentifier;
 
-final class ArtifactsLinkedToParentDao extends DataAccessObject implements SearchArtifactsLinks, SearchUnlinkedUserStoriesOfMirroredProgramIncrement, SearchPlannedUserStory, SearchChildrenOfFeature, VerifyIsLinkedToAnotherMilestone
+final class ArtifactsLinkedToParentDao extends DataAccessObject implements SearchArtifactsLinks, SearchUnlinkedUserStoriesOfMirroredProgramIncrement, SearchPlannedUserStory, SearchChildrenOfFeature, VerifyIsLinkedToAnotherMilestone, SearchParentFeatureOfAUserStory
 {
     /**
      * @psalm-return array{id: int, project_id: int}[]
@@ -158,6 +160,31 @@ final class ArtifactsLinkedToParentDao extends DataAccessObject implements Searc
             $feature->getId(),
             \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD
         );
+
         return array_map(static fn(array $row): int => $row['children_id'], $rows);
+    }
+
+    public function getParentOfUserStory(UserStoryIdentifier $story_identifier): ?int
+    {
+        $sql = "SELECT feature.id AS id
+            FROM tracker_artifact AS feature
+                     INNER JOIN tracker_field                        AS feature_field          ON (feature_field.tracker_id = feature.tracker_id AND feature_field.formElement_type = 'art_link' AND use_it = 1)
+                     INNER JOIN tracker_changeset_value              AS feature_cv         ON (feature_cv.changeset_id = feature.last_changeset_id AND feature_cv.field_id = feature_field.id)
+                     INNER JOIN tracker_changeset_value_artifactlink AS artlink    ON (artlink.changeset_value_id = feature_cv.id)
+                     INNER JOIN tracker_artifact                     AS user_story ON (user_story.id = artlink.artifact_id)
+            WHERE user_story.id  = ?
+              AND artlink.nature = ?
+            ";
+
+        $feature_id = $this->getDB()->single($sql, [
+            $story_identifier->getId(),
+            \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+        ]);
+
+        if (! $feature_id) {
+            return null;
+        }
+
+        return $feature_id;
     }
 }
