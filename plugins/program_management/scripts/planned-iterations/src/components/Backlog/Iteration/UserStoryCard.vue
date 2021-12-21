@@ -23,22 +23,22 @@
             <div class="element-card-content">
                 <div class="element-card-metadata">
                     <div class="element-card-xref-label">
-                        <div class="element-card-xref-project">
-                            <span
-                                class="element-card-xref-project-icon"
-                                v-if="user_story.project.icon"
-                            >
-                                {{ user_story.project.icon }}
-                            </span>
-                            {{ user_story.project.label }}
-                            <i class="fas fa-long-arrow-alt-right element-card-xref-icon"></i>
-                        </div>
                         <a
                             v-bind:href="`/plugins/tracker/?aid=${user_story.id}`"
                             class="element-card-xref"
                             v-bind:class="`element-card-xref-${user_story.tracker.color_name}`"
                         >
-                            {{ user_story.xref }}
+                            <div class="element-card-xref-project">
+                                <span
+                                    class="element-card-xref-project-icon"
+                                    v-if="user_story.project.icon"
+                                >
+                                    {{ user_story.project.icon }}
+                                </span>
+                                {{ user_story.project.label }}
+                                <i class="fas fa-long-arrow-alt-right element-card-xref-icon"></i>
+                                {{ user_story.xref }}
+                            </div>
                         </a>
                     </div>
                     <div

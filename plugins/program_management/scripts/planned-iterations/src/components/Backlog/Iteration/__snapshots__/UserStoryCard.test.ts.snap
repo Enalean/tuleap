@@ -17,31 +17,30 @@ exports[`UserStoryCard should display the user_story as a card with tracker and 
         <div
           class="element-card-xref-label"
         >
-          <div
-            class="element-card-xref-project"
-          >
-            <span
-              class="element-card-xref-project-icon"
-            >
-              
-                            🐹
-                        
-            </span>
-            
-                        Guinea Pigs
-                        
-            <i
-              class="fas fa-long-arrow-alt-right element-card-xref-icon"
-            />
-          </div>
-           
           <a
             class="element-card-xref element-card-xref-red-wine"
             href="/plugins/tracker/?aid=101"
           >
-            
-                        user_story #101
-                    
+            <div
+              class="element-card-xref-project"
+            >
+              <span
+                class="element-card-xref-project-icon"
+              >
+                
+                                🐹
+                            
+              </span>
+              
+                            Guinea Pigs
+                            
+              <i
+                class="fas fa-long-arrow-alt-right element-card-xref-icon"
+              />
+              
+                            user_story #101
+                        
+            </div>
           </a>
         </div>
          
