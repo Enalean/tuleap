@@ -104,25 +104,19 @@ $accessibility-pattern-right-margin: 6px;
     line-height: 0.8125rem;
     white-space: nowrap;
 
-    > .element-card-xref-project {
-        color: var(--text-color);
-        font-weight: 600;
-        text-transform: uppercase;
-
-        > .element-card-xref-icon {
-            margin: 0 calc(var(--tlp-small-spacing) / 2);
-        }
-
-        > .element-card-xref-project-icon {
-            margin: 0 calc(var(--tlp-small-spacing) / 2) 0 0;
-        }
-    }
-
     > .element-card-xref {
         margin: 0 0 calc(var(--tlp-small-spacing) / 2);
 
-        &:hover {
-            text-decoration: underline;
+        > .element-card-xref-project {
+            font-weight: 600;
+
+            > .element-card-xref-icon {
+                margin: 0 calc(var(--tlp-small-spacing) / 2);
+            }
+
+            > .element-card-xref-project-icon {
+                margin: 0 calc(var(--tlp-small-spacing) / 2) 0 0;
+            }
         }
     }
 }
