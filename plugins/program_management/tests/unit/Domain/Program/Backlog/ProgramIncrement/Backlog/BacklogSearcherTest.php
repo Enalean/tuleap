@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Backl
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\UserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Tests\Builder\FeatureOfUserStoryRetrieverBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveBackgroundColorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStoryCrossRefStub;
@@ -93,7 +94,8 @@ final class BacklogSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
             VerifyIsOpenStub::withOpen(),
             RetrieveBackgroundColorStub::withSuccessiveColors(self::FIRST_COLOR, self::SECOND_COLOR),
-            RetrieveTrackerFromUserStoryStub::withSuccessiveIds(self::FIRST_TRACKER_ID, self::SECOND_TRACKER_ID)
+            RetrieveTrackerFromUserStoryStub::withSuccessiveIds(self::FIRST_TRACKER_ID, self::SECOND_TRACKER_ID),
+            FeatureOfUserStoryRetrieverBuilder::withSuccessiveFeatures('Feature 1', 'Feature 2')
         );
 
         return $searcher->searchUnplannedUserStories(
@@ -114,6 +116,7 @@ final class BacklogSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::EXPECTED_URI . self::FIRST_USER_STORY_ID, $first_story->uri);
         self::assertSame(self::FIRST_COLOR, $first_story->background_color->getBackgroundColorName());
         self::assertSame(self::FIRST_TRACKER_ID, $first_story->tracker_identifier->getId());
+        self::assertSame('Feature 1', $first_story->feature?->title);
         self::assertTrue($first_story->is_open);
 
         self::assertSame(self::SECOND_USER_STORY_ID, $second_story->user_story_identifier->getId());
@@ -122,6 +125,7 @@ final class BacklogSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::EXPECTED_URI . self::SECOND_USER_STORY_ID, $second_story->uri);
         self::assertSame(self::SECOND_COLOR, $second_story->background_color->getBackgroundColorName());
         self::assertSame(self::SECOND_TRACKER_ID, $second_story->tracker_identifier->getId());
+        self::assertSame('Feature 2', $second_story->feature?->title);
         self::assertTrue($second_story->is_open);
     }
 
