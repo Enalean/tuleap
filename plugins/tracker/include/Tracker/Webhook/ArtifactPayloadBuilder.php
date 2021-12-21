@@ -42,6 +42,8 @@ class ArtifactPayloadBuilder
         $user               = $last_changeset->getSubmitter();
         $previous_changeset = $last_changeset->getArtifact()->getPreviousChangeset((int) $last_changeset->getId());
 
+        $artifact_id = $last_changeset->getArtifact()->getId();
+
         $last_changeset_content     = $this->changeset_representation_builder->buildWithFieldValuesWithoutPermissions(
             $last_changeset,
             $user
@@ -58,6 +60,7 @@ class ArtifactPayloadBuilder
 
         return new ArtifactPayload(
             [
+                'id'       => $artifact_id,
                 'action'   => $previous_changeset === null ? 'create' : 'update',
                 'user'     => $user_representation,
                 'current'  => $last_changeset_content,

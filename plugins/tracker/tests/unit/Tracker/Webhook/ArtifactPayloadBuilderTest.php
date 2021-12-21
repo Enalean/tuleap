@@ -64,6 +64,7 @@ final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getPreviousChangeset')->andReturns(null);
+        $artifact->shouldReceive('getId')->andReturns(103);
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('getId')->andReturns(1);
         $changeset->shouldReceive('getSubmitter')->andReturns($user);
