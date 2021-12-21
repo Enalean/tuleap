@@ -22,13 +22,16 @@
 
 import { shallowMount } from "@vue/test-utils";
 import SidebarHeader from "./SidebarHeader.vue";
+import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
+import { example_config } from "./project-sidebar-example-config";
 
 describe("SidebarHeader", () => {
     it("displays the sidebar header", () => {
         const wrapper = shallowMount(SidebarHeader, {
-            props: {
-                project_name: "project1",
-                project_href: "/projects/project1",
+            global: {
+                provide: {
+                    [SIDEBAR_CONFIGURATION.valueOf()]: example_config,
+                },
             },
         });
 

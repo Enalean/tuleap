@@ -23,26 +23,23 @@
 <template>
     <aside v-if="sidebar_configuration !== undefined" class="sidebar">
         <div class="sidebar-content-vertical-scroll">
-            <sidebar-header
-                v-bind:project_name="sidebar_configuration.project.name"
-                v-bind:project_href="sidebar_configuration.project.href"
-            />
+            <sidebar-header />
         </div>
         <div class="sidebar-spacer"></div>
-        <sidebar-footer
-            v-bind:instance_version="sidebar_configuration.instance_information.version"
-            v-bind:copyright="sidebar_configuration.instance_information.copyright"
-        />
+        <sidebar-footer />
     </aside>
 </template>
 <script setup lang="ts">
 import { unserializeConfiguration } from "./configuration";
-import { ref } from "vue";
+import { provide, readonly, ref } from "vue";
 import SidebarHeader from "./SidebarHeader.vue";
 import SidebarFooter from "./SidebarFooter.vue";
+import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
 
 const props = defineProps<{ config: string | undefined }>();
-const sidebar_configuration = ref(unserializeConfiguration(props.config));
+const sidebar_configuration = readonly(ref(unserializeConfiguration(props.config)));
+
+provide(SIDEBAR_CONFIGURATION, sidebar_configuration);
 </script>
 <style lang="scss">
 @use "../../../themes/tlp/src/scss/components/typography";

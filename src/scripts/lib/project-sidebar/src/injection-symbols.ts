@@ -20,33 +20,8 @@
  * SOFTWARE.
  */
 
-interface InstanceVersionInformation {
-    flavor_name: string;
-    version_identifier: string;
-    full_descriptive_version: string;
-}
+import type { DeepReadonly, InjectionKey, Ref } from "vue";
+import type { Configuration } from "./configuration";
 
-export interface Configuration {
-    project: {
-        name: string;
-        href: string;
-    };
-    instance_information: {
-        version: InstanceVersionInformation;
-        copyright: string | null;
-    };
-}
-
-export function unserializeConfiguration(
-    serialized_config: string | undefined
-): Configuration | undefined {
-    if (serialized_config === undefined) {
-        return undefined;
-    }
-
-    try {
-        return JSON.parse(serialized_config);
-    } catch (e) {
-        return undefined;
-    }
-}
+export const SIDEBAR_CONFIGURATION: InjectionKey<DeepReadonly<Ref<Configuration>>> =
+    Symbol("sidebar_configuration");

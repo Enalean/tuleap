@@ -23,13 +23,15 @@
 <template>
     <div class="project-sidebar-header-name">
         <div class="project-title-container">
-            <a v-bind:href="project_href" class="project-sidebar-title">{{ project_name }}</a>
+            <a v-bind:href="config.project.href" class="project-sidebar-title">
+                {{ config.project.name }}
+            </a>
         </div>
     </div>
 </template>
 <script setup lang="ts">
-defineProps<{
-    project_name: string;
-    project_href: string;
-}>();
+import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
+import { strictInject } from "./strict-inject";
+
+const config = strictInject(SIDEBAR_CONFIGURATION);
 </script>
