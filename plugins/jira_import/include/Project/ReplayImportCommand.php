@@ -80,7 +80,19 @@ final class ReplayImportCommand extends Command
 
             $jira_xml_exporter = $this->getJiraXmlExporter($jira_client, $logger);
 
-            $generated_xml = $this->generateXML($jira_xml_exporter, $input->getOption('tracker-name'));
+            $jira_project       = $jira_client->getJiraProject();
+            $jira_issue_type_id = $jira_client->getJiraIssueTypeId();
+            if ($jira_project === null || $jira_issue_type_id === null) {
+                $output->writeln('<error>Unable to find Jira project or Issue type in provided archive</error>');
+                return 1;
+            }
+
+            $generated_xml = $this->generateXML(
+                $jira_xml_exporter,
+                $input->getOption('tracker-name'),
+                $jira_project,
+                $jira_issue_type_id,
+            );
 
             $project = $input->getOption('project');
             if ($project) {
@@ -121,7 +133,7 @@ final class ReplayImportCommand extends Command
         }
     }
 
-    private function generateXML(JiraXmlExporter $jira_xml_exporter, string $item_name): SimpleXMLElement
+    private function generateXML(JiraXmlExporter $jira_xml_exporter, string $item_name, string $jira_project_key, string $jira_issue_type_id): SimpleXMLElement
     {
         $platform_configuration_collection = new PlatformConfiguration();
 
@@ -138,8 +150,8 @@ final class ReplayImportCommand extends Command
             $platform_configuration_collection,
             $tracker_xml,
             'https://jira.example.com',
-            'IXMC',
-            new IssueType('10105', 'Bogue', false),
+            $jira_project_key,
+            new IssueType($jira_issue_type_id, 'undefined', false),
             new FieldAndValueIDGenerator(),
             new LinkedIssuesCollection(),
         );
