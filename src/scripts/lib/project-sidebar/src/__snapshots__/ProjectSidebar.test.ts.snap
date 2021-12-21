@@ -16,6 +16,7 @@ exports[`ProjectSidebar displays sidebar 1`] = `
     class="sidebar-spacer"
   />
   <sidebar-footer-stub
+    copyright="ACME"
     instance_version="[object Object]"
   />
 </aside>
