@@ -12,22 +12,12 @@
             left: 0;
         }
     </style>
+    <script type="module" src="/dev-loader.ts"></script>
 </head>
 <body>
-    <tuleap-project-sidebar
-            config='{
-                "project": { "name": "project1", "href": "/projects/project1"},
-                "instance_information": {
-                    "version": {
-                        "flavor_name": "Tuleap Community Edition",
-                        "version_identifier": "Dev Build 13.2.99.999",
-                        "full_descriptive_version": "Tuleap Community Edition — Dev Build 13.2.99.999"
-                    },
-                    "copyright": "ACME"
-                }
-            }'
-    ></tuleap-project-sidebar>
-    <div class="project-sidebar-title">Foooooo</div>
-    <script type="module" src="/dev-loader.ts"></script>
+    <!--
+    To ease the tests and dev processes we insert the sidebar directly from the JS DOM API.
+    In production setup it is preferable to insert it directly via your template engine `<tuleap-project-sidebar config="..."/>`
+    -->
 </body>
 </html>

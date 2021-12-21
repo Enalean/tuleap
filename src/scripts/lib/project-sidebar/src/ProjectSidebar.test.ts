@@ -22,22 +22,13 @@
 
 import ProjectSidebar from "./ProjectSidebar.vue";
 import { shallowMount } from "@vue/test-utils";
-import type { Configuration } from "./configuration";
+import { example_config } from "./project-sidebar-example-config";
 
 describe("ProjectSidebar", () => {
     it("displays sidebar", () => {
-        const config: Configuration = {
-            project: { name: "project1", href: "/projects/project1" },
-            instance_information: {
-                version: {
-                    flavor_name: "Tuleap Community Edition",
-                    version_identifier: "Dev Build 13.2.99.999",
-                    full_descriptive_version: "Tuleap Community Edition — Dev Build 13.2.99.999",
-                },
-                copyright: null,
-            },
-        } as Configuration;
-        const wrapper = shallowMount(ProjectSidebar, { props: { config: JSON.stringify(config) } });
+        const wrapper = shallowMount(ProjectSidebar, {
+            props: { config: JSON.stringify(example_config) },
+        });
 
         expect(wrapper.element).toMatchSnapshot();
     });

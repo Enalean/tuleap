@@ -20,12 +20,19 @@
  * SOFTWARE.
  */
 
-import "../../../themes/tlp/src/scss/tlp-vars-orange.scss";
-import "./src/main";
-import { example_config } from "./src/project-sidebar-example-config";
+import type { Configuration } from "./configuration";
 
-document.addEventListener("DOMContentLoaded", () => {
-    const sidebar = document.createElement("tuleap-project-sidebar");
-    sidebar.setAttribute("config", JSON.stringify(example_config));
-    document.body.appendChild(sidebar);
-});
+export const example_config: Configuration = {
+    project: {
+        name: "project1",
+        href: "/projects/project1",
+    },
+    instance_information: {
+        version: {
+            flavor_name: "Tuleap Community Edition",
+            version_identifier: "Dev Build 13.2.99.999",
+            full_descriptive_version: "Tuleap Community Edition — Dev Build 13.2.99.999",
+        },
+        copyright: "ACME",
+    },
+};

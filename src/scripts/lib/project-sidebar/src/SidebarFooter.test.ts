@@ -22,16 +22,13 @@
 
 import { shallowMount } from "@vue/test-utils";
 import SidebarFooter from "./SidebarFooter.vue";
+import { example_config } from "./project-sidebar-example-config";
 
 describe("SidebarFooter", () => {
     it("displays a link with the version information without copyright", () => {
         const wrapper = shallowMount(SidebarFooter, {
             props: {
-                instance_version: {
-                    flavor_name: "Tuleap Community Edition",
-                    version_identifier: "Dev Build 13.2.99.999",
-                    full_descriptive_version: "Tuleap Community Edition — Dev Build 13.2.99.999",
-                },
+                instance_version: example_config.instance_information.version,
                 copyright: null,
             },
         });
@@ -45,11 +42,7 @@ describe("SidebarFooter", () => {
         const expected_copyright = "My Copyright Notice";
         const wrapper = shallowMount(SidebarFooter, {
             props: {
-                instance_version: {
-                    flavor_name: "Tuleap Community Edition",
-                    version_identifier: "Dev Build 13.2.99.999",
-                    full_descriptive_version: "Tuleap Community Edition — Dev Build 13.2.99.999",
-                },
+                instance_version: example_config.instance_information.version,
                 copyright: expected_copyright,
             },
         });
