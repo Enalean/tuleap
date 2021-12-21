@@ -685,7 +685,8 @@ class Tracker_ArtifactDao extends DataAccessObject
                     INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
                 WHERE child_art.id IN ($artifact_ids)
                     AND artlink.nature=$is_child_shortname
-                    AND parent_tracker.deletion_date IS NULL";
+                    AND parent_tracker.deletion_date IS NULL
+                    ORDER BY parent_art.id";
 
         return $this->retrieve($sql);
     }

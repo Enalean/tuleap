@@ -517,7 +517,9 @@ class Tracker_ArtifactFactory implements RetrieveArtifact
 
         $parents = [];
         foreach ($this->getDao()->getParents($artifact_ids) as $row) {
-            $parents[$row['child_id']] = $this->getInstanceFromRow($row);
+            if (! isset($parents[$row['child_id']])) {
+                $parents[$row['child_id']] = $this->getInstanceFromRow($row);
+            }
         }
 
         return $parents;

@@ -285,7 +285,8 @@ class HierarchyDAO extends DataAccessObject
                     INNER JOIN tracker                              parent_tracker ON (parent_art.tracker_id = parent_tracker.id)
                     INNER JOIN tracker_hierarchy                    hierarchy  ON (hierarchy.parent_id = parent_art.tracker_id AND hierarchy.child_id = child_art.tracker_id)
                 WHERE artlink.artifact_id = ?
-                    AND parent_tracker.deletion_date IS NULL";
+                    AND parent_tracker.deletion_date IS NULL
+                    ORDER BY parent_art.id";
 
         return $this->getDB()->run($sql, $artifact_id);
     }

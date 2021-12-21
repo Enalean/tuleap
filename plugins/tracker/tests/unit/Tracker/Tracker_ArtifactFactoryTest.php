@@ -109,4 +109,49 @@ class Tracker_ArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals('Zoum', $art24_1->getTitle());
         $this->assertEquals('Zoum', $art24_2->getTitle());
     }
+
+    public function testItGetFirstParentFoundOfArtifact(): void
+    {
+        $artifact_with_multiple_parents_id = 1;
+        $artifact_with_single_parents_id   = 2;
+        $this->dao->shouldReceive('getParents')
+                  ->andReturns(
+                      \TestHelper::arrayToDar(
+                          [
+                              'child_id'                 => $artifact_with_multiple_parents_id,
+                              'id'                       => 10,
+                              'tracker_id'               => 1,
+                              'submitted_by'             => 123,
+                              'submitted_on'             => 123456789,
+                              'use_artifact_permissions' => false,
+                          ],
+                          [
+                              'child_id'                 => $artifact_with_multiple_parents_id,
+                              'id'                       => 20,
+                              'tracker_id'               => 1,
+                              'submitted_by'             => 123,
+                              'submitted_on'             => 123456789,
+                              'use_artifact_permissions' => false,
+                          ],
+                          [
+                              'child_id'                 => $artifact_with_single_parents_id,
+                              'id'                       => 100,
+                              'tracker_id'               => 1,
+                              'submitted_by'             => 123,
+                              'submitted_on'             => 123456789,
+                              'use_artifact_permissions' => false,
+                          ]
+                      ),
+                  );
+
+        $parents = $this->artifact_factory->getParents(
+            [
+                $artifact_with_multiple_parents_id,
+                $artifact_with_single_parents_id,
+            ]
+        );
+
+        self::assertSame(10, $parents[$artifact_with_multiple_parents_id]->getId());
+        self::assertSame(100, $parents[$artifact_with_single_parents_id]->getId());
+    }
 }
