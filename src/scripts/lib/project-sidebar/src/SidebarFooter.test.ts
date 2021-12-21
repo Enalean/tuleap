@@ -23,13 +23,23 @@
 import { shallowMount } from "@vue/test-utils";
 import SidebarFooter from "./SidebarFooter.vue";
 import { example_config } from "./project-sidebar-example-config";
+import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
+import type { Configuration } from "./configuration";
 
 describe("SidebarFooter", () => {
     it("displays a link with the version information without copyright", () => {
-        const wrapper = shallowMount(SidebarFooter, {
-            props: {
-                instance_version: example_config.instance_information.version,
+        const config: Configuration = {
+            ...example_config,
+            instance_information: {
+                ...example_config.instance_information,
                 copyright: null,
+            },
+        };
+        const wrapper = shallowMount(SidebarFooter, {
+            global: {
+                provide: {
+                    [SIDEBAR_CONFIGURATION.valueOf()]: config,
+                },
             },
         });
 
@@ -40,10 +50,18 @@ describe("SidebarFooter", () => {
 
     it("can display copyright information", () => {
         const expected_copyright = "My Copyright Notice";
-        const wrapper = shallowMount(SidebarFooter, {
-            props: {
-                instance_version: example_config.instance_information.version,
+        const config: Configuration = {
+            ...example_config,
+            instance_information: {
+                ...example_config.instance_information,
                 copyright: expected_copyright,
+            },
+        };
+        const wrapper = shallowMount(SidebarFooter, {
+            global: {
+                provide: {
+                    [SIDEBAR_CONFIGURATION.valueOf()]: config,
+                },
             },
         });
 

@@ -20,33 +20,14 @@
  * SOFTWARE.
  */
 
-interface InstanceVersionInformation {
-    flavor_name: string;
-    version_identifier: string;
-    full_descriptive_version: string;
-}
+import type { InjectionKey } from "vue";
+import { inject } from "vue";
 
-export interface Configuration {
-    project: {
-        name: string;
-        href: string;
-    };
-    instance_information: {
-        version: InstanceVersionInformation;
-        copyright: string | null;
-    };
-}
-
-export function unserializeConfiguration(
-    serialized_config: string | undefined
-): Configuration | undefined {
-    if (serialized_config === undefined) {
-        return undefined;
+export function strictInject<T>(key: InjectionKey<T>): T {
+    const resolved_injection = inject(key);
+    if (resolved_injection === undefined) {
+        throw new Error(`Could not find the injection key ${key.toString()}`);
     }
 
-    try {
-        return JSON.parse(serialized_config);
-    } catch (e) {
-        return undefined;
-    }
+    return resolved_injection;
 }

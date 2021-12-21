@@ -7,17 +7,11 @@ exports[`ProjectSidebar displays sidebar 1`] = `
   <div
     class="sidebar-content-vertical-scroll"
   >
-    <sidebar-header-stub
-      project_href="/projects/project1"
-      project_name="project1"
-    />
+    <sidebar-header-stub />
   </div>
   <div
     class="sidebar-spacer"
   />
-  <sidebar-footer-stub
-    copyright="ACME"
-    instance_version="[object Object]"
-  />
+  <sidebar-footer-stub />
 </aside>
 `;
