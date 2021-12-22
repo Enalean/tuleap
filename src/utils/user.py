@@ -28,31 +28,6 @@ USER_IS_RESTRICTED = None
 def user_isloggedin():
     return session.G_USER.has_key('user_id')
 
-
-def user_is_super_user():
-    
-    global USER_IS_SUPER_USER
-    
-    if USER_IS_SUPER_USER is not None: return USER_IS_SUPER_USER
-
-    if user_isloggedin():
-
-        cursor = include.dbh.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-        cursor.execute("SELECT * FROM user_group WHERE user_id='"+str(user_getid())+
-                       "' AND group_id='1' AND admin_flags='A'")
-        row = cursor.fetchone()
-        cursor.close()
-        
-        if row is None:
-            USER_IS_SUPER_USER = False
-        else:
-            USER_IS_SUPER_USER = True
-    else:
-        USER_IS_SUPER_USER = False
-  
-    return USER_IS_SUPER_USER
-
-
 def user_is_restricted():
 
     global USER_IS_RESTRICTED
@@ -85,10 +60,6 @@ def user_is_member(group_id, type='0'):
         return False
 
     user_id = user_getid() #optimization
-
-    # Super User always a project member
-    if user_is_super_user():
-        return True
 
     # for everyone else, do a query
     query = "SELECT user_id FROM user_group WHERE user_id='"+str(user_id)+"' AND group_id='"+str(group_id)+"'"

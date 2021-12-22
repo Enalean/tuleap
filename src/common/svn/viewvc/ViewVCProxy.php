@@ -180,6 +180,7 @@ class ViewVCProxy
             'TULEAP_PROJECT_NAME=' . escapeshellarg($project->getUnixNameMixedCase()) . ' ' .
             'TULEAP_REPO_NAME=' . escapeshellarg($project->getUnixNameMixedCase()) . ' ' .
             'TULEAP_REPO_PATH=' . escapeshellarg($project->getSVNRootPath()) . ' ' .
+            'TULEAP_USER_IS_SUPER_USER=' . escapeshellarg($user->isSuperUser() ? '1' : '0') . ' ' .
             $this->getPythonLauncher() . ' ' . __DIR__ . '/viewvc-epel.cgi 2>&1';
 
         $content = $this->setLocaleOnCommand($command, $return_var);
