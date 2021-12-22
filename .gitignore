@@ -52,6 +52,7 @@ test-results.xml
 .phpunit.result.cache
 ENTERPRISE_BUILD
 .deptrac.cache
+tsconfig.tsbuildinfo
 
 #legacy
 coverage/

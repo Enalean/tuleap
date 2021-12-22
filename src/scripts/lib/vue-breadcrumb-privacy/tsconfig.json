@@ -4,7 +4,8 @@
         "lib": ["ES2016", "DOM", "DOM.Iterable"],
         "outDir": "types/",
         "types": ["jest"],
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "incremental": false
     },
     "vueCompilerOptions": {
         "experimentalCompatMode": 2

@@ -12,6 +12,7 @@
         "allowSyntheticDefaultImports": true,
         "moduleResolution": "Node",
         "skipLibCheck": true,
-        "types": []
+        "types": [],
+        "incremental": true
     }
 }

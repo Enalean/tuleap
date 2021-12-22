@@ -4,7 +4,8 @@
         "lib": ["ES2021", "DOM"],
         "types": ["jest"],
         "target": "ESNext",
-        "module": "ESNext"
+        "module": "ESNext",
+        "incremental": false
     },
     "include": ["src/**/*"],
     "exclude": ["src/**/*.test.ts"]

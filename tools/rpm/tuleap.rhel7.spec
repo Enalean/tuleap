@@ -590,6 +590,7 @@ done
 %endif
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.json
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/tsconfig.tsbuildinfo
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/composer.lock
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/scripts/
@@ -623,7 +624,9 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BU
 find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/additional-packages" -type d -execdir %{__rm} -rf "{}" \;
 find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
     -name 'composer.json' -o -name 'composer.lock' -o -name 'package.json' -o -name 'pnpm-lock.yaml' -o \
-    -name 'tsconfig.json' -o -name 'webpack.common.js' -o -name 'webpack.dev.js' -o -name 'webpack.prod.js' -o \
+    -name 'tsconfig.json' -o -name 'tsconfig.tsbuildinfo' -o \
+    -name 'vite.config.ts' -o \
+    -name 'webpack.common.js' -o -name 'webpack.dev.js' -o -name 'webpack.prod.js' -o \
     -name 'Makefile' -o -name 'jest.config.js' -o -name 'build-manifest.json' \
     \) -a -delete
 
