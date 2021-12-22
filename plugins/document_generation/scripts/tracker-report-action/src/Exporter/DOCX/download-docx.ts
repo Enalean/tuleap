@@ -62,12 +62,12 @@ import type {
 } from "@tuleap/plugin-docgen-docx";
 import {
     loadImage,
-    buildListOfArtifactsContent,
     getAnchorToArtifactContent,
     HTML_ORDERED_LIST_NUMBERING,
     HTML_UNORDERED_LIST_NUMBERING,
 } from "@tuleap/plugin-docgen-docx";
-import { getInternationalizedTestStatus } from "../internationalize-test-status";
+import { getInternationalizedTestStatus } from "./internationalize-test-status";
+import { buildListOfArtifactsContent } from "./build-list-of-artifacts-content";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
 const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
@@ -140,7 +140,7 @@ export async function downloadDocx(
         document.artifacts,
         HEADER_LEVEL_ARTIFACT_TITLE,
         HEADER_STYLE_ARTIFACT_TITLE,
-        gettext_provider.locale
+        gettext_provider
     );
 
     const table_of_contents = [

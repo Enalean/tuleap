@@ -2,7 +2,6 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/concurrency-limit-pool': file:../../../../../src/scripts/lib/concurrency-limit-pool
-  '@tuleap/gettext': file:../../../../../src/scripts/lib/gettext
   '@tuleap/tlp-fetch': file:../../../../../src/scripts/lib/tlp-fetch
   '@types/dompurify': ^2.3.1
   '@types/sprintf-js': ^1.1.2
@@ -12,7 +11,6 @@ specifiers:
 
 dependencies:
   '@tuleap/concurrency-limit-pool': link:../../../../../src/scripts/lib/concurrency-limit-pool
-  '@tuleap/gettext': link:../../../../../src/scripts/lib/gettext
   '@tuleap/tlp-fetch': link:../../../../../src/scripts/lib/tlp-fetch
   docx: 7.2.0
   dompurify: 2.3.3

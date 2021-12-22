@@ -71,6 +71,15 @@ msgstr ""
 "Une erreur est survenue lors de la récupération des informations de la "
 "nouvelle campagne."
 
+msgid "Artifact ID"
+msgstr "Artéfact ID"
+
+msgid "Artifacts referenced by “%s”"
+msgstr "Les artéfacts qui sont référencés par “%s”"
+
+msgid "Artifacts that reference “%s”"
+msgstr "Les artéfacts qui référencent “%s”"
+
 msgid "Blocked"
 msgstr "Bloqué"
 
@@ -98,6 +107,9 @@ msgstr "Créer la campagne"
 msgid "Create new campaign"
 msgstr "Créer une nouvelle campagne"
 
+msgid "Description"
+msgstr "Description"
+
 msgid "Edit %{ item_type } #%{ item_id }"
 msgstr "Éditer %{ item_type } #%{ item_id }"
 
@@ -106,6 +118,9 @@ msgstr "Executé par"
 
 msgid "Executed On"
 msgstr "Executé le"
+
+msgid "Expected results"
+msgstr "Résultats attendus"
 
 msgid "Export"
 msgstr "Exporter"
@@ -146,6 +161,9 @@ msgid "Justifications (for planned tests that are not-run, failed, blocked)"
 msgstr ""
 "Justifications (pour les tests planifiés qui sont non exécutés, échoués ou "
 "bloqués)"
+
+msgid "Link type"
+msgstr "Type de lien"
 
 msgid "Milestone"
 msgstr "Jalon"
@@ -194,6 +212,15 @@ msgstr "Résultats"
 
 msgid "Status"
 msgstr "Statut"
+
+msgid "Status: %s"
+msgstr "Statut : %s"
+
+msgid "Step"
+msgstr "Étape"
+
+msgid "Step %d"
+msgstr "Étape %d"
 
 msgid "Table of contents"
 msgstr "Table des matières"

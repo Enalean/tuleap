@@ -29,7 +29,7 @@ import {
     MAIN_TITLES_NUMBERING_ID,
 } from "./document-properties";
 import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx/src";
-import { buildListOfArtifactsContent } from "@tuleap/plugin-docgen-docx/src";
+import { buildListOfArtifactsContent } from "./build-list-of-artifacts-content";
 
 export function getMilestoneTestPlanTitle(
     gettext_provider: VueGettextProvider,
@@ -75,20 +75,17 @@ export async function buildMilestoneTestPlan(
         ];
     }
 
-    return [
-        section_title,
-        ...(await buildTestPlanSection(document.tests, global_export_properties)),
-    ];
+    return [section_title, ...(await buildTestPlanSection(document.tests, gettext_provider))];
 }
 
 function buildTestPlanSection(
     tests: ReadonlyArray<FormattedArtifact>,
-    global_export_properties: GlobalExportProperties
+    gettext_provider: VueGettextProvider
 ): Promise<(Paragraph | Table)[]> {
     return buildListOfArtifactsContent(
+        gettext_provider,
         tests,
         HEADER_LEVEL_ARTIFACT_TITLE,
-        HEADER_STYLE_ARTIFACT_TITLE,
-        global_export_properties.user_locale
+        HEADER_STYLE_ARTIFACT_TITLE
     );
 }
