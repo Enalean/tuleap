@@ -22,6 +22,7 @@ export * from "./Artifact/sections-anchor";
 export * from "./Artifact/artifact-formatter";
 export * from "./Artifact/artifacts-retriever";
 export * from "./Artifact/artifacts-structure-retriever";
+export * from "./Artifact/step-test-definition-generic-formatter";
 export * from "./Artifact/tracker-structure-retriever";
 export * from "./Artifact/test-execution-retriever";
 export * from "./TextContent/transform-large-content-into-paragraphs";

@@ -19,12 +19,13 @@
 
 import type { FormattedArtifact } from "../type";
 import { getAnchorToArtifactContent } from "./sections-anchor";
+import type { ArtifactFieldValueStepDefinitionContent } from "../type";
 
 describe("sections-anchor", () => {
     it("builds an anchor to the content of an artifact", () => {
-        const formatted_artifact: FormattedArtifact = {
+        const formatted_artifact: FormattedArtifact<ArtifactFieldValueStepDefinitionContent> = {
             id: 123,
-        } as FormattedArtifact;
+        } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>;
 
         expect(getAnchorToArtifactContent(formatted_artifact)).toBe("artifact-123");
     });

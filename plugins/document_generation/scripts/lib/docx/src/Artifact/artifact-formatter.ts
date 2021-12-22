@@ -20,7 +20,6 @@ import type {
     ArtifactContainer,
     ArtifactFieldValue,
     ArtifactFieldValueArtifactLink,
-    ArtifactFieldValueStepDefinition,
     ArtifactFieldValueStepDefinitionEnhanced,
     ArtifactFromReport,
     ArtifactLink,
@@ -29,14 +28,16 @@ import type {
     ArtifactReportFieldValue,
     DateTimeLocaleInformation,
     FormattedArtifact,
+    TransformStepDefFieldValue,
 } from "../type";
 
-export function formatArtifact(
+export function formatArtifact<StepDefFieldValue>(
     artifact: ArtifactFromReport,
     datetime_locale_information: DateTimeLocaleInformation,
     base_url: string,
-    artifact_links_types: ReadonlyArray<ArtifactLinkType>
-): FormattedArtifact {
+    artifact_links_types: ReadonlyArray<ArtifactLinkType>,
+    transform_step_def_field: TransformStepDefFieldValue<StepDefFieldValue>
+): FormattedArtifact<StepDefFieldValue> {
     const artifact_id = artifact.id;
     const artifact_title = artifact.title;
 
@@ -55,29 +56,33 @@ export function formatArtifact(
             artifact.values,
             datetime_locale_information,
             base_url,
-            artifact_links_types
+            artifact_links_types,
+            transform_step_def_field
         ),
         containers: formatContainers(
             artifact.containers,
             datetime_locale_information,
             base_url,
-            artifact_links_types
+            artifact_links_types,
+            transform_step_def_field
         ),
     };
 }
 
-function formatFieldValues(
+function formatFieldValues<StepDefFieldValue>(
     values: ReadonlyArray<ArtifactReportFieldValue>,
     datetime_locale_information: DateTimeLocaleInformation,
     base_url: string,
-    artifact_links_types: ReadonlyArray<ArtifactLinkType>
-): ReadonlyArray<ArtifactFieldValue> {
+    artifact_links_types: ReadonlyArray<ArtifactLinkType>,
+    transform_step_def_field: TransformStepDefFieldValue<StepDefFieldValue>
+): ReadonlyArray<ArtifactFieldValue<StepDefFieldValue>> {
     return values.flatMap((value) => {
         const formatted_field_value = formatFieldValue(
             value,
             datetime_locale_information,
             base_url,
-            artifact_links_types
+            artifact_links_types,
+            transform_step_def_field
         );
         if (formatted_field_value === null) {
             return [];
@@ -86,12 +91,13 @@ function formatFieldValues(
     });
 }
 
-function formatFieldValue(
+function formatFieldValue<StepDefFieldValue>(
     value: ArtifactReportFieldValue,
     datetime_locale_information: DateTimeLocaleInformation,
     base_url: string,
-    artifact_links_types: ReadonlyArray<ArtifactLinkType>
-): ArtifactFieldValue | null {
+    artifact_links_types: ReadonlyArray<ArtifactLinkType>,
+    transform_step_def_field: TransformStepDefFieldValue<StepDefFieldValue>
+): ArtifactFieldValue<StepDefFieldValue> | null {
     if (value.type === "text") {
         return {
             field_name: value.label,
@@ -103,24 +109,7 @@ function formatFieldValue(
     }
 
     if (value.type === "ttmstepdef") {
-        const steps: ArtifactFieldValueStepDefinition[] = [];
-        for (const step of value.value) {
-            steps.push({
-                description: step.description,
-                description_format: step.description_format === "html" ? "html" : "plaintext",
-                expected_results: step.expected_results,
-                expected_results_format:
-                    step.expected_results_format === "html" ? "html" : "plaintext",
-                rank: step.rank,
-            });
-        }
-
-        return {
-            field_name: value.label,
-            content_length: "blockttmstepdef",
-            value_type: "string",
-            steps: steps,
-        };
+        return transform_step_def_field(value);
     }
 
     if (value.type === "ttmstepexec") {
@@ -308,12 +297,13 @@ function getArtifactLinkReverseLabel(
     return "";
 }
 
-function formatContainers(
+function formatContainers<StepDefFieldValue>(
     containers: ReadonlyArray<ArtifactReportContainer>,
     datetime_locale_information: DateTimeLocaleInformation,
     base_url: string,
-    artifact_links_types: ReadonlyArray<ArtifactLinkType>
-): ReadonlyArray<ArtifactContainer> {
+    artifact_links_types: ReadonlyArray<ArtifactLinkType>,
+    transform_step_def_field: TransformStepDefFieldValue<StepDefFieldValue>
+): ReadonlyArray<ArtifactContainer<StepDefFieldValue>> {
     return containers.map((container) => {
         return {
             name: container.name,
@@ -321,13 +311,15 @@ function formatContainers(
                 container.values,
                 datetime_locale_information,
                 base_url,
-                artifact_links_types
+                artifact_links_types,
+                transform_step_def_field
             ),
             containers: formatContainers(
                 container.containers,
                 datetime_locale_information,
                 base_url,
-                artifact_links_types
+                artifact_links_types,
+                transform_step_def_field
             ),
         };
     });

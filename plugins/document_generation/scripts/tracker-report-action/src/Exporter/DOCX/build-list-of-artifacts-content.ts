@@ -48,6 +48,7 @@ import type {
     ArtifactFieldValueStepDefinition,
     FormattedArtifact,
     ReadonlyArrayWithAtLeastOneElement,
+    ArtifactFieldValueStepDefinitionContent,
 } from "@tuleap/plugin-docgen-docx";
 import type { GettextProvider } from "@tuleap/gettext";
 import { sprintf } from "sprintf-js";
@@ -98,7 +99,7 @@ const TABLE_BORDERS = {
 };
 
 export async function buildListOfArtifactsContent(
-    artifacts: ReadonlyArray<FormattedArtifact>,
+    artifacts: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionContent>>,
     heading: HeadingLevel,
     style: string,
     gettext_provider: GettextProvider
@@ -126,8 +127,8 @@ export async function buildListOfArtifactsContent(
 }
 
 async function buildContainersDisplayZone(
-    artifact: FormattedArtifact,
-    containers: ReadonlyArray<ArtifactContainer>,
+    artifact: FormattedArtifact<ArtifactFieldValueStepDefinitionContent>,
+    containers: ReadonlyArray<ArtifactContainer<ArtifactFieldValueStepDefinitionContent>>,
     gettext_provider: GettextProvider
 ): Promise<XmlComponent[]> {
     const xml_components_promises = containers.map(async (container): Promise<XmlComponent[]> => {
@@ -164,8 +165,8 @@ async function buildContainersDisplayZone(
 }
 
 async function buildFieldValuesDisplayZone(
-    artifact: FormattedArtifact,
-    artifact_values: ReadonlyArray<ArtifactFieldValue>,
+    artifact: FormattedArtifact<ArtifactFieldValueStepDefinitionContent>,
+    artifact_values: ReadonlyArray<ArtifactFieldValue<ArtifactFieldValueStepDefinitionContent>>,
     gettext_provider: GettextProvider
 ): Promise<XmlComponent[]> {
     const short_fields: ArtifactFieldShortValue[] = [];

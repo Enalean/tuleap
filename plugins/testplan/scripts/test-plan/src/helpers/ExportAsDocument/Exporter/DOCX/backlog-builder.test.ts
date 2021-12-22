@@ -23,6 +23,7 @@ import { createVueGettextProviderPassthrough } from "../../../vue-gettext-provid
 import type { IContext } from "docx";
 import type { ExportDocument, GlobalExportProperties } from "../../../../type";
 import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx";
+import type { ArtifactFieldValueStepDefinitionContent } from "@tuleap/plugin-docgen-docx";
 
 describe("buildMilestoneBacklog", () => {
     let global_export_properties: GlobalExportProperties;
@@ -75,14 +76,14 @@ describe("buildMilestoneBacklog", () => {
                     short_title: "Lorem",
                     fields: [],
                     containers: [],
-                } as FormattedArtifact,
+                } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>,
                 {
                     id: 2,
                     title: "Ipsum",
                     short_title: "Ipsum",
                     fields: [],
                     containers: [],
-                } as FormattedArtifact,
+                } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>,
             ],
             traceability_matrix: [],
             tests: [],

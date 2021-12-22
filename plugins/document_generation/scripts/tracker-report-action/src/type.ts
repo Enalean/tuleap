@@ -83,9 +83,9 @@ interface DateReportCriterionAdvancedValue {
     readonly is_advanced: true;
 }
 
-export interface ExportDocument {
+export interface ExportDocument<StepDefFieldValue> {
     readonly name: string;
-    readonly artifacts: ReadonlyArray<FormattedArtifact>;
+    readonly artifacts: ReadonlyArray<FormattedArtifact<StepDefFieldValue>>;
     readonly traceability_matrix: ReadonlyArray<TraceabilityMatrixElement>;
 }
 

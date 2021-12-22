@@ -21,12 +21,13 @@ import type { GetText } from "../../../../../src/scripts/tuleap/gettext/gettext-
 import type { ExportDocument, GlobalExportProperties } from "./type";
 import { createExportDocument } from "./DocumentBuilder/create-export-document";
 import type { DateTimeLocaleInformation } from "@tuleap/plugin-docgen-docx/src";
+import type { ArtifactFieldValueStepDefinitionContent } from "@tuleap/plugin-docgen-docx/src";
 
 export async function startDownloadExportDocument(
     global_export_properties: GlobalExportProperties,
     gettext_provider: GetText,
     document_exporter: (
-        doc: ExportDocument,
+        doc: ExportDocument<ArtifactFieldValueStepDefinitionContent>,
         gettext_provider: GetText,
         global_export_properties: GlobalExportProperties,
         datetime_locale_information: DateTimeLocaleInformation

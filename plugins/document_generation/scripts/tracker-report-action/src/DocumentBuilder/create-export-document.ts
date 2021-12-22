@@ -20,13 +20,18 @@
 import type { ExportDocument } from "../type";
 import { retrieveReportArtifacts } from "./artifacts-retriever";
 import type {
+    ArtifactFieldValueStepDefinitionContent,
     ArtifactLinkType,
     DateTimeLocaleInformation,
     FormattedArtifact,
 } from "@tuleap/plugin-docgen-docx";
 import { createTraceabilityMatrix } from "./create-traceability-matrix";
 import { memoize } from "./memoize";
-import { formatArtifact, getTestManagementExecution } from "@tuleap/plugin-docgen-docx";
+import {
+    formatArtifact,
+    formatStepDefinitionField,
+    getTestManagementExecution,
+} from "@tuleap/plugin-docgen-docx";
 
 export async function createExportDocument(
     report_id: number,
@@ -37,7 +42,7 @@ export async function createExportDocument(
     datetime_locale_information: DateTimeLocaleInformation,
     base_url: string,
     artifact_links_types: ReadonlyArray<ArtifactLinkType>
-): Promise<ExportDocument> {
+): Promise<ExportDocument<ArtifactFieldValueStepDefinitionContent>> {
     const get_test_execution = memoize(getTestManagementExecution);
 
     const report_artifacts = await retrieveReportArtifacts(
@@ -53,9 +58,16 @@ export async function createExportDocument(
         get_test_execution
     );
 
-    const artifact_data: FormattedArtifact[] = report_artifacts.map((artifact) =>
-        formatArtifact(artifact, datetime_locale_information, base_url, artifact_links_types)
-    );
+    const artifact_data: FormattedArtifact<ArtifactFieldValueStepDefinitionContent>[] =
+        report_artifacts.map((artifact) =>
+            formatArtifact(
+                artifact,
+                datetime_locale_information,
+                base_url,
+                artifact_links_types,
+                formatStepDefinitionField
+            )
+        );
 
     return {
         name: `${tracker_shortname} - ${report_name}`,

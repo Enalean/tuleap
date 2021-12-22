@@ -35,7 +35,10 @@ import {
     XmlComponent,
 } from "docx";
 import { TOCFieldInstruction } from "./toc-field-instruction";
-import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx";
+import type {
+    FormattedArtifact,
+    ArtifactFieldValueStepDefinitionContent,
+} from "@tuleap/plugin-docgen-docx";
 import { getAnchorToArtifactContent } from "@tuleap/plugin-docgen-docx";
 import { ComplexFieldCharacter } from "../base-elements";
 
@@ -52,7 +55,7 @@ class Alias extends XmlComponent {
 
 export class TableOfContentsPrefilled extends XmlComponent {
     public constructor(
-        artifacts: ReadonlyArray<FormattedArtifact>,
+        artifacts: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionContent>>,
         properties?: ITableOfContentsOptions
     ) {
         super("w:sdt");
@@ -107,7 +110,7 @@ export class TableOfContentsPrefilled extends XmlComponent {
     }
 
     private buildPrefilledTOC(
-        artifacts: ReadonlyArray<FormattedArtifact>
+        artifacts: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionContent>>
     ): ReadonlyArray<Paragraph> {
         const links_to_content = [];
 
