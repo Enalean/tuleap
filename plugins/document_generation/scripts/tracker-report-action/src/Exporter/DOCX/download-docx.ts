@@ -59,6 +59,7 @@ import { triggerBlobDownload } from "../trigger-blob-download";
 import type {
     ArtifactFieldValueStatus,
     DateTimeLocaleInformation,
+    ArtifactFieldValueStepDefinitionContent,
 } from "@tuleap/plugin-docgen-docx";
 import {
     loadImage,
@@ -118,7 +119,7 @@ const TABLE_BORDERS = {
 };
 
 export async function downloadDocx(
-    document: ExportDocument,
+    document: ExportDocument<ArtifactFieldValueStepDefinitionContent>,
     gettext_provider: GetText,
     global_export_properties: GlobalExportProperties,
     datetime_locale_information: DateTimeLocaleInformation

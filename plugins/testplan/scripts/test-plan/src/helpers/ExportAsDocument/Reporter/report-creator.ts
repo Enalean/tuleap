@@ -26,6 +26,7 @@ import type {
 } from "@tuleap/plugin-docgen-docx";
 import {
     formatArtifact,
+    formatStepDefinitionField,
     getArtifacts,
     getTestManagementExecution,
     retrieveArtifactsStructure,
@@ -119,7 +120,8 @@ export async function createExportReport(
                     artifact,
                     datetime_locale_information,
                     global_properties.base_url,
-                    global_properties.artifact_links_types
+                    global_properties.artifact_links_types,
+                    formatStepDefinitionField
                 )
             ),
         traceability_matrix: getTraceabilityMatrix(executions_map, datetime_locale_information),
@@ -130,7 +132,8 @@ export async function createExportReport(
                     artifact,
                     datetime_locale_information,
                     global_properties.base_url,
-                    global_properties.artifact_links_types
+                    global_properties.artifact_links_types,
+                    formatStepDefinitionField
                 )
             ),
     };

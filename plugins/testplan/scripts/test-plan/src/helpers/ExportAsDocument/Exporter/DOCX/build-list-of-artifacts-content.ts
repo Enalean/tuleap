@@ -48,6 +48,7 @@ import type {
     ArtifactFieldValueStepDefinition,
     FormattedArtifact,
     ReadonlyArrayWithAtLeastOneElement,
+    ArtifactFieldValueStepDefinitionContent,
 } from "@tuleap/plugin-docgen-docx";
 import { sprintf } from "sprintf-js";
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
@@ -99,7 +100,7 @@ const TABLE_BORDERS = {
 
 export async function buildListOfArtifactsContent(
     gettext_provider: VueGettextProvider,
-    artifacts: ReadonlyArray<FormattedArtifact>,
+    artifacts: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionContent>>,
     heading: HeadingLevel,
     style: string
 ): Promise<(Paragraph | Table)[]> {
@@ -126,8 +127,8 @@ export async function buildListOfArtifactsContent(
 }
 
 async function buildContainersDisplayZone(
-    artifact: FormattedArtifact,
-    containers: ReadonlyArray<ArtifactContainer>,
+    artifact: FormattedArtifact<ArtifactFieldValueStepDefinitionContent>,
+    containers: ReadonlyArray<ArtifactContainer<ArtifactFieldValueStepDefinitionContent>>,
     gettext_provider: VueGettextProvider
 ): Promise<XmlComponent[]> {
     const xml_components_promises = containers.map(async (container): Promise<XmlComponent[]> => {
@@ -164,8 +165,8 @@ async function buildContainersDisplayZone(
 }
 
 async function buildFieldValuesDisplayZone(
-    artifact: FormattedArtifact,
-    artifact_values: ReadonlyArray<ArtifactFieldValue>,
+    artifact: FormattedArtifact<ArtifactFieldValueStepDefinitionContent>,
+    artifact_values: ReadonlyArray<ArtifactFieldValue<ArtifactFieldValueStepDefinitionContent>>,
     gettext_provider: VueGettextProvider
 ): Promise<XmlComponent[]> {
     const short_fields: ArtifactFieldShortValue[] = [];

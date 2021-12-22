@@ -44,7 +44,7 @@ interface ArtifactFieldValueLink {
     readonly link_url: string;
 }
 
-interface ArtifactFieldValueStepDefinitionContent {
+export interface ArtifactFieldValueStepDefinitionContent {
     readonly field_name: string;
     readonly content_length: "blockttmstepdef";
     readonly value_type: "string";
@@ -89,10 +89,14 @@ export interface ArtifactFieldValueStepDefinitionEnhanced extends ArtifactFieldV
     readonly status: ArtifactFieldValueStatus;
 }
 
-export type ArtifactFieldValue =
+export type TransformStepDefFieldValue<StepDefFieldValue> = (
+    value: ArtifactReportResponseStepDefinitionFieldValue
+) => StepDefFieldValue;
+
+export type ArtifactFieldValue<StepDefFieldValue> =
     | (ArtifactFieldValueContent & (ArtifactFieldValueShort | ArtifactFieldValueLong))
     | ArtifactFieldValueLinksContent
-    | ArtifactFieldValueStepDefinitionContent
+    | StepDefFieldValue
     | ArtifactFieldValueStepExecutionContent
     | ArtifactFieldValueArtifactLinkContent;
 
@@ -100,18 +104,17 @@ export type ArtifactFieldShortValue =
     | (ArtifactFieldValueContent & ArtifactFieldValueShort)
     | ArtifactFieldValueLinksContent;
 
-export interface ArtifactContainer {
+export interface ArtifactContainer<StepDefFieldValue> {
     readonly name: string;
-    readonly fields: ReadonlyArray<ArtifactFieldValue>;
+    readonly fields: ReadonlyArray<ArtifactFieldValue<StepDefFieldValue>>;
     readonly containers: ReadonlyArray<this>;
 }
-
-export interface FormattedArtifact {
+export interface FormattedArtifact<StepDefFieldValue> {
     readonly id: number;
     readonly title: string;
     readonly short_title: string;
-    readonly fields: ReadonlyArray<ArtifactFieldValue>;
-    readonly containers: ReadonlyArray<ArtifactContainer>;
+    readonly fields: ReadonlyArray<ArtifactFieldValue<StepDefFieldValue>>;
+    readonly containers: ReadonlyArray<ArtifactContainer<StepDefFieldValue>>;
 }
 
 export interface ArtifactLinkType {

@@ -19,7 +19,10 @@
 
 import { TableOfContentsPrefilled } from "./table-of-contents";
 import type { IContext } from "docx";
-import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx";
+import type {
+    FormattedArtifact,
+    ArtifactFieldValueStepDefinitionContent,
+} from "@tuleap/plugin-docgen-docx";
 import { EMPTY_TOC, TOC_WITH_CONTENT } from "./table-of-contents-test-samples";
 
 describe("Table of contents", () => {
@@ -41,6 +44,9 @@ describe("Table of contents", () => {
     });
 });
 
-function buildFakeFormattedArtifact(id: number, title: string): FormattedArtifact {
-    return { id, title } as FormattedArtifact;
+function buildFakeFormattedArtifact(
+    id: number,
+    title: string
+): FormattedArtifact<ArtifactFieldValueStepDefinitionContent> {
+    return { id, title } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>;
 }

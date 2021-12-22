@@ -30,6 +30,7 @@ import type {
     TestExecutionResponse,
 } from "@tuleap/plugin-docgen-docx";
 import * as querier from "./execution-querier";
+import type { ArtifactFieldValueStepDefinitionContent } from "@tuleap/plugin-docgen-docx";
 
 describe("Create an export report", () => {
     it("generates the report", async () => {
@@ -82,21 +83,27 @@ describe("Create an export report", () => {
         ]);
 
         const formatArtifactMock = jest.spyOn(docgen_docx, "formatArtifact");
-        formatArtifactMock.mockImplementation((artifact: ArtifactFromReport): FormattedArtifact => {
-            if (artifact.id === 1) {
-                return { id: 1 } as FormattedArtifact;
+        formatArtifactMock.mockImplementation(
+            (
+                artifact: ArtifactFromReport
+            ): FormattedArtifact<ArtifactFieldValueStepDefinitionContent> => {
+                if (artifact.id === 1) {
+                    return { id: 1 } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>;
+                }
+                if (artifact.id === 2) {
+                    return { id: 2 } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>;
+                }
+                if (artifact.id === 3) {
+                    return { id: 3 } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>;
+                }
+                if (artifact.id === 123) {
+                    return {
+                        id: 123,
+                    } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>;
+                }
+                throw Error("Unknown artifact");
             }
-            if (artifact.id === 2) {
-                return { id: 2 } as FormattedArtifact;
-            }
-            if (artifact.id === 3) {
-                return { id: 3 } as FormattedArtifact;
-            }
-            if (artifact.id === 123) {
-                return { id: 123 } as FormattedArtifact;
-            }
-            throw Error("Unknown artifact");
-        });
+        );
 
         jest.spyOn(querier, "getExecutions").mockResolvedValue([
             {

@@ -27,7 +27,10 @@ import {
     HEADER_STYLE_SECTION_TITLE,
     MAIN_TITLES_NUMBERING_ID,
 } from "./document-properties";
-import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx";
+import type {
+    ArtifactFieldValueStepDefinitionContent,
+    FormattedArtifact,
+} from "@tuleap/plugin-docgen-docx";
 import { buildListOfArtifactsContent } from "./build-list-of-artifacts-content";
 
 export function getMilestoneBacklogTitle(
@@ -83,7 +86,7 @@ export async function buildMilestoneBacklog(
 }
 
 function buildBacklogSection(
-    backlog: ReadonlyArray<FormattedArtifact>,
+    backlog: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionContent>>,
     global_export_properties: GlobalExportProperties,
     gettext_provider: VueGettextProvider
 ): Promise<(Paragraph | Table)[]> {
