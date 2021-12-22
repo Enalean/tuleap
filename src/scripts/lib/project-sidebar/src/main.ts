@@ -22,8 +22,13 @@
 
 import { defineCustomElement } from "vue";
 import ProjectSidebar from "./ProjectSidebar.vue";
+import fonts_style from "./font-faces.scss?inline";
 
 if (!window.customElements.get("tuleap-project-sidebar")) {
+    const font_face_styles = document.createElement("style");
+    font_face_styles.textContent = fonts_style.toString();
+    document.head.appendChild(font_face_styles);
+
     const custom_element = defineCustomElement(ProjectSidebar);
     window.customElements.define("tuleap-project-sidebar", custom_element);
 }

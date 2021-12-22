@@ -47,6 +47,9 @@ provide(SIDEBAR_CONFIGURATION, sidebar_configuration);
 @use "../../../themes/tlp/src/scss/components/typography";
 @use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-generic";
 @use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-project";
+@use "@fortawesome/fontawesome-free/scss/fontawesome";
+@use "./fontawesome-classes";
+@use "../../../themes/tlp/src/fonts/tlp-font/icons";
 
 .sidebar {
     font-family: var(--tlp-font-family);

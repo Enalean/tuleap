@@ -20,48 +20,14 @@
  * SOFTWARE.
  */
 
-export interface Tool {
-    href: string;
-    label: string;
-    description: string;
-    icon: string;
-    open_in_new_tab: boolean;
-    is_active: boolean;
+declare module "*.vue" {
+    import type { DefineComponent } from "vue";
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
+    const component: DefineComponent<{}, {}, any>;
+    export default component;
 }
 
-interface InstanceVersionInformation {
-    flavor_name: string;
-    version_identifier: string;
-    full_descriptive_version: string;
-}
-
-interface Internationalization {
-    tools: string;
-}
-
-export interface Configuration {
-    internationalization: Internationalization;
-    project: {
-        name: string;
-        href: string;
-    };
-    instance_information: {
-        version: InstanceVersionInformation;
-        copyright: string | null;
-    };
-    tools: Tool[];
-}
-
-export function unserializeConfiguration(
-    serialized_config: string | undefined
-): Configuration | undefined {
-    if (serialized_config === undefined) {
-        return undefined;
-    }
-
-    try {
-        return JSON.parse(serialized_config);
-    } catch (e) {
-        return undefined;
-    }
+declare module "*?inline" {
+    const src: string;
+    export default src;
 }
