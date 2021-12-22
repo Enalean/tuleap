@@ -20,13 +20,26 @@
  * SOFTWARE.
  */
 
+export interface Tool {
+    href: string;
+    label: string;
+    description: string;
+    open_in_new_tab: boolean;
+    is_active: boolean;
+}
+
 interface InstanceVersionInformation {
     flavor_name: string;
     version_identifier: string;
     full_descriptive_version: string;
 }
 
+interface Internationalization {
+    tools: string;
+}
+
 export interface Configuration {
+    internationalization: Internationalization;
     project: {
         name: string;
         href: string;
@@ -35,6 +48,7 @@ export interface Configuration {
         version: InstanceVersionInformation;
         copyright: string | null;
     };
+    tools: Tool[];
 }
 
 export function unserializeConfiguration(

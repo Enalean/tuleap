@@ -21,35 +21,30 @@
   -->
 
 <template>
-    <aside v-if="sidebar_configuration !== undefined" class="sidebar">
-        <div class="sidebar-content-vertical-scroll">
-            <sidebar-header />
-            <tools />
-        </div>
-        <div class="sidebar-spacer"></div>
-        <sidebar-footer />
-    </aside>
+    <a
+        v-bind:href="sanitized_href"
+        v-bind:aria-label="label"
+        class="project-sidebar-nav-item"
+        v-bind:class="{ active: is_active }"
+        v-bind:title="description"
+        v-bind:target="open_in_new_tab ? '_blank' : '_self'"
+        v-bind:rel="open_in_new_tab ? 'noopener noreferrer' : ''"
+    >
+        <span class="project-sidebar-nav-item-label">{{ label }}</span>
+    </a>
 </template>
 <script setup lang="ts">
-import { unserializeConfiguration } from "./configuration";
-import { provide, readonly, ref } from "vue";
-import SidebarHeader from "./SidebarHeader.vue";
-import SidebarFooter from "./SidebarFooter.vue";
-import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
-import Tools from "./Tools/Tools.vue";
+import { ref } from "vue";
+import { sanitizeURL } from "./url-sanitizer";
 
-const props = defineProps<{ config: string | undefined }>();
-const sidebar_configuration = readonly(ref(unserializeConfiguration(props.config)));
-
-provide(SIDEBAR_CONFIGURATION, sidebar_configuration);
+// We cannot directly import the Tool interface from the external file so we duplicate the content for now
+// See https://github.com/vuejs/vue-next/issues/4294
+const props = defineProps<{
+    href: string;
+    label: string;
+    description: string;
+    open_in_new_tab: boolean;
+    is_active: boolean;
+}>();
+const sanitized_href = ref(sanitizeURL(props.href));
 </script>
-<style lang="scss">
-@use "../../../themes/tlp/src/scss/components/typography";
-@use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-generic";
-@use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-project";
-
-.sidebar {
-    font-family: var(--tlp-font-family);
-    font-size: 100%;
-}
-</style>

@@ -21,35 +21,21 @@
   -->
 
 <template>
-    <aside v-if="sidebar_configuration !== undefined" class="sidebar">
-        <div class="sidebar-content-vertical-scroll">
-            <sidebar-header />
-            <tools />
-        </div>
-        <div class="sidebar-spacer"></div>
-        <sidebar-footer />
-    </aside>
+    <h2 class="project-sidebar-tools-section-label">
+        {{ config.internationalization.tools }}
+    </h2>
+    <nav class="project-sidebar-nav">
+        <tool
+            v-for="tool in config.tools"
+            v-bind="tool"
+            v-bind:key="tool.href + tool.label + tool.description"
+        />
+    </nav>
 </template>
 <script setup lang="ts">
-import { unserializeConfiguration } from "./configuration";
-import { provide, readonly, ref } from "vue";
-import SidebarHeader from "./SidebarHeader.vue";
-import SidebarFooter from "./SidebarFooter.vue";
-import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
-import Tools from "./Tools/Tools.vue";
+import Tool from "./Tool.vue";
+import { strictInject } from "../strict-inject";
+import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 
-const props = defineProps<{ config: string | undefined }>();
-const sidebar_configuration = readonly(ref(unserializeConfiguration(props.config)));
-
-provide(SIDEBAR_CONFIGURATION, sidebar_configuration);
+const config = strictInject(SIDEBAR_CONFIGURATION);
 </script>
-<style lang="scss">
-@use "../../../themes/tlp/src/scss/components/typography";
-@use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-generic";
-@use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-project";
-
-.sidebar {
-    font-family: var(--tlp-font-family);
-    font-size: 100%;
-}
-</style>

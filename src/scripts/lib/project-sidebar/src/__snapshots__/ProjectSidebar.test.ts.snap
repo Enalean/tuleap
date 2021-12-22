@@ -8,6 +8,7 @@ exports[`ProjectSidebar displays sidebar 1`] = `
     class="sidebar-content-vertical-scroll"
   >
     <sidebar-header-stub />
+    <tools-stub />
   </div>
   <div
     class="sidebar-spacer"

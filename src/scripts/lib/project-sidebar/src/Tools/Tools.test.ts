@@ -20,38 +20,23 @@
  * SOFTWARE.
  */
 
-import type { Configuration } from "./configuration";
+import { shallowMount } from "@vue/test-utils";
+import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
+import { example_config } from "../project-sidebar-example-config";
+import Tools from "./Tools.vue";
+import Tool from "./Tool.vue";
 
-export const example_config: Configuration = {
-    internationalization: {
-        tools: "Tools",
-    },
-    project: {
-        name: "project1",
-        href: "/projects/project1",
-    },
-    instance_information: {
-        version: {
-            flavor_name: "Tuleap Community Edition",
-            version_identifier: "Dev Build 13.2.99.999",
-            full_descriptive_version: "Tuleap Community Edition — Dev Build 13.2.99.999",
-        },
-        copyright: "ACME",
-    },
-    tools: [
-        {
-            label: "Service A",
-            href: "/service/a",
-            description: "Description service A",
-            open_in_new_tab: false,
-            is_active: true,
-        },
-        {
-            label: "Custom",
-            href: "https://example.com",
-            description: "",
-            open_in_new_tab: true,
-            is_active: false,
-        },
-    ],
-};
+describe("Tools", () => {
+    it("displays all the tools", () => {
+        const wrapper = shallowMount(Tools, {
+            global: {
+                provide: {
+                    [SIDEBAR_CONFIGURATION.valueOf()]: example_config,
+                },
+            },
+        });
+
+        const tools = wrapper.findAllComponents(Tool);
+        expect(tools).toHaveLength(example_config.tools.length);
+    });
+});
