@@ -3,6 +3,7 @@
         class="tlp-pane-header milestone-header"
         ng-click="milestoneController.toggleMilestone()"
         data-test="expand-collapse-milestone"
+        data-artifact-id="{{ milestoneController.milestone.id }}"
     >
         <i class="tlp-pane-title-icon fa fa-fw"
             ng-class="{

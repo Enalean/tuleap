@@ -41,6 +41,8 @@ describe("Program management", () => {
         checkThatProgramAndTeamsAreCorrect(program_project_name, team_project_name);
         updateProgramIncrementAndIteration(program_project_name);
         checkThatMirrorsAreSynchronized(team_project_name);
+
+        planUserStory(team_project_name, program_project_name);
     });
 });
 
@@ -177,11 +179,41 @@ function createIteration(): void {
     cy.log("Create an iteration");
     cy.get("[data-test=program-increment-toggle]").click();
     cy.get("[data-test=program-increment-plan-iterations-link]").click();
+    cy.log("Check that iteration have an unplanned user story");
+    cy.get("[data-test=user-story-card]").contains("My US");
     cy.get("[data-test=planned-iterations-add-iteration-button]").click();
     cy.get("[data-test=iteration_name]").type("Iteration One");
     cy.get("[data-test=date-time-start_date]").type("2021-08-03");
     cy.get("[data-test=date-time-end_date]").type("2021-08-13");
     cy.get("[data-test=artifact-submit-button]").click();
+}
+
+function planUserStory(team_project_name: string, program_project_name: string): void {
+    cy.log("plan the user story in team");
+    cy.visitProjectService(team_project_name, "Agile Dashboard");
+    cy.get("[data-test=go-to-planning]").click();
+    cy.get("[data-test=backlog-item-details-link]")
+        .invoke("data", "artifact-id")
+        .then((user_story_id) => {
+            cy.get("[data-test=expand-collapse-milestone]")
+                .invoke("data", "artifact-id")
+                .then((sprint_id) => {
+                    cy.visit("https://tuleap/plugins/tracker/?&aid=" + sprint_id);
+                    cy.get("[data-test=edit-field-links]").click();
+                    cy.get("[data-test=artifact-link-submit]").type(String(user_story_id));
+                    cy.get("[data-test=artifact-link-type-selector]").first().select("_is_child");
+                    cy.get("[data-test=artifact-submit-options]").click();
+                    cy.get("[data-test=artifact-submit]").click();
+                });
+        });
+
+    cy.log("Check user story is now planned in iteration app");
+
+    cy.visitProjectService(program_project_name, "Program");
+    cy.get("[data-test=program-increment-toggle]").click();
+    cy.get("[data-test=program-increment-plan-iterations-link").click();
+    cy.get("[data-test=iteration-card-header]").click();
+    cy.get("[data-test=user-story-card]").contains("My US");
 }
 
 function checkThatProgramAndTeamsAreCorrect(
