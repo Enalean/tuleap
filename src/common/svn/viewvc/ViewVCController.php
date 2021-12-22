@@ -35,6 +35,9 @@ use Valid_String;
 
 class ViewVCController implements DispatchableWithRequest
 {
+    public function __construct(private ViewVCProxy $viewvc_proxy)
+    {
+    }
 
     /**
      * Is able to process a request routed by FrontRouter
@@ -64,8 +67,7 @@ class ViewVCController implements DispatchableWithRequest
         $svn_core_access = EventManager::instance()->dispatch(new SvnCoreAccess($project, $_SERVER['REQUEST_URI'], $layout));
         $svn_core_access->redirect();
 
-        $viewvc_proxy = new ViewVCProxy(EventManager::instance());
-        $viewvc_proxy->displayContent($project, $request, $this->fixPathInfo($variables));
+        $this->viewvc_proxy->displayContent($project, $request, $this->fixPathInfo($variables));
     }
 
     private function fixPathInfo(array $variables): string

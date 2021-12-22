@@ -26,6 +26,7 @@ require_once __DIR__ . '/../../../www/svn/svn_utils.php';
 use HTTPRequest;
 use Project;
 use Codendi_HTMLPurifier;
+use Tuleap\Project\CheckProjectAccess;
 use Tuleap\svn\Event\GetSVNLoginNameEvent;
 
 class ViewVCProxy
@@ -35,7 +36,7 @@ class ViewVCProxy
      */
     private $event_manager;
 
-    public function __construct(\EventManager $event_manager)
+    public function __construct(\EventManager $event_manager, private CheckProjectAccess $check_project_access)
     {
         $this->event_manager = $event_manager;
     }
@@ -167,6 +168,13 @@ class ViewVCProxy
     public function displayContent(Project $project, HTTPRequest $request, string $path)
     {
         $user = $request->getCurrentUser();
+
+        try {
+            $this->check_project_access->checkUserCanAccessProject($user, $project);
+        } catch (\Project_AccessException $exception) {
+            $this->display($project, $path, $this->getPermissionDeniedError($project));
+            return;
+        }
 
         viewvc_utils_track_browsing($project->getID(), 'svn');
 

@@ -570,7 +570,15 @@ class RouteCollector
 
     public static function getSvnViewVC()
     {
-        return new \Tuleap\SvnCore\ViewVC\ViewVCController();
+        return new \Tuleap\SvnCore\ViewVC\ViewVCController(
+            new \Tuleap\SvnCore\ViewVC\ViewVCProxy(
+                EventManager::instance(),
+                new \Tuleap\Project\ProjectAccessChecker(
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    EventManager::instance()
+                )
+            )
+        );
     }
 
     public static function getCVSViewVC()
