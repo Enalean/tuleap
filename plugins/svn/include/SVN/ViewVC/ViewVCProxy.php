@@ -27,6 +27,7 @@ use HTTPRequest;
 use Project;
 use ReferenceManager;
 use Tuleap\Error\ProjectAccessSuspendedController;
+use Tuleap\Project\CheckProjectAccess;
 use Tuleap\svn\Event\GetSVNLoginNameEvent;
 use Tuleap\SVN\Repository\Repository;
 
@@ -50,6 +51,7 @@ class ViewVCProxy
         AccessHistorySaver $access_history_saver,
         EventManager $event_manager,
         ProjectAccessSuspendedController $access_suspended_controller,
+        private CheckProjectAccess $check_project_access,
     ) {
         $this->access_history_saver        = $access_history_saver;
         $this->event_manager               = $event_manager;
@@ -195,6 +197,12 @@ class ViewVCProxy
         if ($project->isSuspended() && ! $user->isSuperUser()) {
             $this->access_suspended_controller->displayError($user);
             exit();
+        }
+
+        try {
+            $this->check_project_access->checkUserCanAccessProject($user, $project);
+        } catch (\Project_AccessException $exception) {
+            return $this->getPermissionDeniedError($project);
         }
 
         $this->access_history_saver->saveAccess($user, $repository);

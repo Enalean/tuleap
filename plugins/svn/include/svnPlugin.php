@@ -44,6 +44,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Project\Event\ProjectRegistrationActivateService;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
@@ -638,6 +639,10 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                                 )
                             )
                         )
+                    ),
+                    new \Tuleap\Project\ProjectAccessChecker(
+                        new RestrictedUserCanAccessProjectVerifier(),
+                        EventManager::instance()
                     )
                 ),
                 EventManager::instance()

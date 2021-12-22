@@ -30,9 +30,7 @@ sys.path.insert(0, TULEAP_UTILS)
 sys.path.insert(0, TULEAP_UTILS_SVN)
 sys.path.insert(0, LIBRARY_DIR)
 
-import include
 import svnaccess
-import session
 
 username = os.getenv('REMOTE_USER', '')
 repo_name = os.getenv('TULEAP_REPO_NAME', '')
@@ -42,9 +40,6 @@ path_info = os.getenv('PATH_INFO', '/')
 # Remove potential / duplicates
 path_parts = filter(None, string.split(path_info, '/'))
 requested_path = string.join(path_parts, '/')
-
-include.db_connect()
-session.session_set()
 
 if tuleap_user_is_super_user != '1' and not svnaccess.check_read_access(username, repo_path, requested_path):
     exit(128)

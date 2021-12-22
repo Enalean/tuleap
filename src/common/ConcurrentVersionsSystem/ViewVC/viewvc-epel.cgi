@@ -30,23 +30,19 @@ sys.path.insert(0, TULEAP_UTILS)
 sys.path.insert(0, TULEAP_UTILS_CVS)
 sys.path.insert(0, LIBRARY_DIR)
 
-import include
 import cvsaccess
-import session
 
 username = os.getenv('REMOTE_USER', '')
 repo_name = os.getenv('TULEAP_REPO_NAME', '')
 repo_path = os.getenv('TULEAP_REPO_PATH', '')
 path_info = os.getenv('PATH_INFO', '/')
 tuleap_user_is_super_user = os.getenv('TULEAP_USER_IS_SUPER_USER', '0')
+tuleap_user_is_project_member = os.getenv('TULEAP_USER_IS_PROJECT_MEMBER', '0')
 # Remove potential / duplicates
 path_parts = filter(None, string.split(path_info, '/'))
 requested_path = string.join(path_parts, '/')
 
-include.db_connect()
-session.session_set()
-
-if tuleap_user_is_super_user != '1' and not cvsaccess.check_read_access(username, repo_path, requested_path):
+if tuleap_user_is_super_user != '1' and not cvsaccess.check_read_access(repo_path, requested_path, tuleap_user_is_project_member == '1'):
     exit(128)
 
 import sapi
