@@ -30,7 +30,19 @@
         v-bind:target="open_in_new_tab ? '_blank' : '_self'"
         v-bind:rel="open_in_new_tab ? 'noopener noreferrer' : ''"
     >
+        <i
+            class="project-sidebar-nav-item-icon"
+            aria-hidden="true"
+            v-bind:class="icon"
+            data-test="tool-icon"
+        ></i>
         <span class="project-sidebar-nav-item-label">{{ label }}</span>
+        <i
+            v-if="open_in_new_tab"
+            class="fas fa-arrow-right project-sidebar-nav-item-new-tab"
+            aria-hidden="true"
+            data-test="tool-new-tab-icon"
+        ></i>
     </a>
 </template>
 <script setup lang="ts">
@@ -43,6 +55,7 @@ const props = defineProps<{
     href: string;
     label: string;
     description: string;
+    icon: string;
     open_in_new_tab: boolean;
     is_active: boolean;
 }>();

@@ -1,0 +1,69 @@
+/**
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$tlp-fontawesome-icons: (
+    lock-plus-r: "\f000",
+    unlock-plus-r: "\f001",
+    baseline: "\f002",
+    baseline-comparison: "\f003",
+    gavel-pending: "\f004",
+    gavel-approved: "\f005",
+    gavel-rejected: "\f006",
+    gavel-comment: "\f007",
+    text-large: "\f008",
+    text-narrow: "\f009",
+    versioning-cvs: "\f010",
+    versioning-svn: "\f011",
+    versioning-git: "\f012",
+    wiki: "\f013",
+    mediawiki: "\f014",
+    folder-globe: "\f015",
+    add-to-backlog: "\f016",
+    dependencies-graph: "\f017",
+    backlog: "\f018",
+    remove-from-backlog: "\f019",
+    taskboard: "\f020",
+    kanban: "\f021",
+    esc-key: "\f022",
+    enter-key: "\f023",
+    hierarchy-plus: "\f024",
+    user-pencil: "\f025",
+    gerrit: "\f026",
+    tuleap: "\f027",
+    zip-download: "\f028",
+    robot: "\f029",
+    robot-happy: "\f030",
+    robot-unhappy: "\f031",
+    go-to-user: "\f032",
+    webhooks: "\f033",
+    select-test: "\f034",
+    project-boxes: "\f035",
+    level-down: "\f036",
+);
+
+@each $label, $unicode in $tlp-fontawesome-icons {
+    .fa-tlp-#{$label} {
+        font-family: TLPFontAwesome;
+        font-weight: 400;
+
+        &::before {
+            content: $unicode;
+        }
+    }
+}

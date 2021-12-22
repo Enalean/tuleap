@@ -1,10 +1,12 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@fortawesome/fontawesome-free': ^5.15.2
   '@vue/test-utils': ^2.0.0-rc.17
   vue: ^3.2.26
 
 devDependencies:
+  '@fortawesome/fontawesome-free': 5.15.4
   '@vue/test-utils': 2.0.0-rc.17_vue@3.2.26
   vue: 3.2.26
 
@@ -14,6 +16,12 @@ packages:
     resolution: {integrity: sha512-+Ce7T5iPNWzfu9C1aB5tN3Lyafs5xb3Ic7vBWyZL2KXT3QSdD1dD3CvgOzPmQKoNNRt6uauc0XwNJTQtXC2/Mw==}
     engines: {node: '>=6.0.0'}
     hasBin: true
+    dev: true
+
+  /@fortawesome/fontawesome-free/5.15.4:
+    resolution: {integrity: sha512-eYm8vijH/hpzr/6/1CJ/V/Eb1xQFW2nnUKArb3z+yUWv7HTwj6M7SP957oMjfZjAHU6qpoNc2wQvIxBLWYa/Jg==}
+    engines: {node: '>=6'}
+    requiresBuild: true
     dev: true
 
   /@vue/compiler-core/3.2.26:

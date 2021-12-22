@@ -19,7 +19,10 @@
 
 $tlp-font-basepath: "../" !default;
 
-@use "font-face" with (
-    $tlp-font-basepath: $tlp-font-basepath
-);
-@use "icons";
+@font-face {
+    font-family: "TLPFontAwesome";
+    font-style: normal;
+    font-weight: normal;
+    src: url("#{$tlp-font-basepath}/fonts/tlp-font/TLP.woff2") format("woff2");
+    font-display: block;
+}
