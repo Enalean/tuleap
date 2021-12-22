@@ -20,38 +20,13 @@
  * SOFTWARE.
  */
 
-import type { Configuration } from "./configuration";
+// See https://github.com/cure53/DOMPurify/blob/2.3.4/src/regexp.js#L8-L10
+const IS_ALLOWED = /^(?:(?:f|ht)tps?:|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i;
 
-export const example_config: Configuration = {
-    internationalization: {
-        tools: "Tools",
-    },
-    project: {
-        name: "project1",
-        href: "/projects/project1",
-    },
-    instance_information: {
-        version: {
-            flavor_name: "Tuleap Community Edition",
-            version_identifier: "Dev Build 13.2.99.999",
-            full_descriptive_version: "Tuleap Community Edition — Dev Build 13.2.99.999",
-        },
-        copyright: "ACME",
-    },
-    tools: [
-        {
-            label: "Service A",
-            href: "/service/a",
-            description: "Description service A",
-            open_in_new_tab: false,
-            is_active: true,
-        },
-        {
-            label: "Custom",
-            href: "https://example.com",
-            description: "",
-            open_in_new_tab: true,
-            is_active: false,
-        },
-    ],
-};
+export function sanitizeURL(url: string): string {
+    if (IS_ALLOWED.test(url)) {
+        return url;
+    }
+
+    return "";
+}
