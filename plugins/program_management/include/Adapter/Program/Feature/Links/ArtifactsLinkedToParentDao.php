@@ -174,6 +174,7 @@ final class ArtifactsLinkedToParentDao extends DataAccessObject implements Searc
                      INNER JOIN tracker_artifact                     AS user_story ON (user_story.id = artlink.artifact_id)
             WHERE user_story.id  = ?
               AND artlink.nature = ?
+            ORDER BY feature.id
             ";
 
         $feature_id = $this->getDB()->single($sql, [
