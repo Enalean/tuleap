@@ -46,6 +46,7 @@ class AttachmentDownloaderTest extends \Tuleap\Test\PHPUnit\TestCase
         $downloader = new AttachmentDownloader(
             $client,
             new NullLogger(),
+            new RandomAttachmentNameGenerator(),
         );
 
         $attachment = new Attachment(

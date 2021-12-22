@@ -61,6 +61,9 @@ class UserXMLExporter
     public function exportUserByUserId($user_id, SimpleXMLElement $members_node, $child_name)
     {
         $user = $this->user_manager->getUserById($user_id);
+        if (! $user) {
+            throw new \RuntimeException('Invalid user : ' . $user_id);
+        }
 
         $this->exportUser($user, $members_node, $child_name);
     }

@@ -31,7 +31,7 @@ class AttachmentDownloader
 {
     public const JIRA_TEMP_FOLDER = 'jira_import';
 
-    public function __construct(private JiraClient $client, private LoggerInterface $logger)
+    public function __construct(private JiraClient $client, private LoggerInterface $logger, private AttachmentNameGenerator $name_generator)
     {
     }
 
@@ -47,7 +47,7 @@ class AttachmentDownloader
             $this->logger->debug(sprintf('%s is not created on filesystem' . self::getTmpFolderURL()));
         }
 
-        $random_name = bin2hex(random_bytes(32));
+        $random_name = $this->name_generator->getName();
         if (
             file_put_contents(
                 self::getTmpFolderURL() . $random_name,
@@ -62,7 +62,7 @@ class AttachmentDownloader
 
     public static function build(JiraClient $client, LoggerInterface $logger): self
     {
-        return new self($client, $logger);
+        return new self($client, $logger, new RandomAttachmentNameGenerator());
     }
 
     public static function getTmpFolderURL(): string
