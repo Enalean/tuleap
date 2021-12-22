@@ -18,8 +18,17 @@ msgstr "Après le"
 msgid "After %s and before %s"
 msgstr "Après le %S et avant le %s"
 
+msgid "Artifact ID"
+msgstr "Artéfact ID"
+
 msgid "Artifacts"
 msgstr "Artéfacts"
+
+msgid "Artifacts referenced by “%s”"
+msgstr "Les artéfacts qui sont référencés par “%s”"
+
+msgid "Artifacts that reference “%s”"
+msgstr "Les artéfacts qui référencent “%s”"
 
 msgid "As of %s"
 msgstr "Le %s"
@@ -33,11 +42,17 @@ msgstr "Bloqué"
 msgid "Campaigns"
 msgstr "Campagnes"
 
+msgid "Description"
+msgstr "Description"
+
 msgid "Executed By"
 msgstr "Éxécuté par"
 
 msgid "Executed On"
 msgstr "Éxécuté le"
+
+msgid "Expected results"
+msgstr "Résultats attendus"
 
 msgid "Exported by"
 msgstr "Exporté par"
@@ -50,6 +65,9 @@ msgstr "Exporté le %s par %s"
 
 msgid "Failed"
 msgstr "Échoué"
+
+msgid "Link type"
+msgstr "Type de lien"
 
 msgid ""
 "No filter has been applied to this report because no TQL query has been set"
@@ -88,6 +106,18 @@ msgstr "Résultats"
 msgid "Search criteria"
 msgstr "Critère de recherche"
 
+msgid "Status"
+msgstr "Statut"
+
+msgid "Status: %s"
+msgstr "Statut : %s"
+
+msgid "Step"
+msgstr "Étape"
+
+msgid "Step %d"
+msgstr "Étape %d"
+
 msgid "TQL query: "
 msgstr "Requête TQL : "
 
@@ -96,6 +126,9 @@ msgstr "Table des matières"
 
 msgid "Tests"
 msgstr "Tests"
+
+msgid "Title"
+msgstr "Titre"
 
 msgid "Traceability Matrix"
 msgstr "Matrice de traçabilité"

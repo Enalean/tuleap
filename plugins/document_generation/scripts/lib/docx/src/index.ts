@@ -18,12 +18,13 @@
  */
 
 export * from "./Image/image-loader";
-export * from "./Artifact/build-list-of-artifacts-content";
 export * from "./Artifact/sections-anchor";
 export * from "./Artifact/artifact-formatter";
 export * from "./Artifact/artifacts-retriever";
 export * from "./Artifact/artifacts-structure-retriever";
 export * from "./Artifact/tracker-structure-retriever";
 export * from "./Artifact/test-execution-retriever";
+export * from "./TextContent/transform-large-content-into-paragraphs";
+export * from "./TextContent/transform-html-into-paragraphs";
 export * from "./html-styles";
 export * from "./type";

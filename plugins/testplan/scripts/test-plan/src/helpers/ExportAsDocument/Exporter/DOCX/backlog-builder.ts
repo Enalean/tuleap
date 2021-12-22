@@ -28,7 +28,7 @@ import {
     MAIN_TITLES_NUMBERING_ID,
 } from "./document-properties";
 import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx";
-import { buildListOfArtifactsContent } from "@tuleap/plugin-docgen-docx";
+import { buildListOfArtifactsContent } from "./build-list-of-artifacts-content";
 
 export function getMilestoneBacklogTitle(
     gettext_provider: VueGettextProvider,
@@ -74,18 +74,23 @@ export async function buildMilestoneBacklog(
 
     return [
         section_title,
-        ...(await buildBacklogSection(document.backlog, global_export_properties)),
+        ...(await buildBacklogSection(
+            document.backlog,
+            global_export_properties,
+            gettext_provider
+        )),
     ];
 }
 
 function buildBacklogSection(
     backlog: ReadonlyArray<FormattedArtifact>,
-    global_export_properties: GlobalExportProperties
+    global_export_properties: GlobalExportProperties,
+    gettext_provider: VueGettextProvider
 ): Promise<(Paragraph | Table)[]> {
     return buildListOfArtifactsContent(
+        gettext_provider,
         backlog,
         HEADER_LEVEL_ARTIFACT_TITLE,
-        HEADER_STYLE_ARTIFACT_TITLE,
-        global_export_properties.user_locale
+        HEADER_STYLE_ARTIFACT_TITLE
     );
 }

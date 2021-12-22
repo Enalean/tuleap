@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GettextProvider } from "@tuleap/gettext";
 import { getInternationalizedTestStatus } from "./internationalize-test-status";
-import type { ArtifactFieldValueStatus } from "../type";
+import type { VueGettextProvider } from "../../../vue-gettext-provider";
+import type { ArtifactFieldValueStatus } from "@tuleap/plugin-docgen-docx/src";
 
 describe("Internationalize test status", () => {
     it.each([
@@ -32,8 +32,8 @@ describe("Internationalize test status", () => {
         expect(
             getInternationalizedTestStatus(
                 {
-                    gettext: (str: string) => str,
-                } as GettextProvider,
+                    $gettext: (str: string) => str,
+                } as VueGettextProvider,
                 status as ArtifactFieldValueStatus
             )
         ).toBe(expected);

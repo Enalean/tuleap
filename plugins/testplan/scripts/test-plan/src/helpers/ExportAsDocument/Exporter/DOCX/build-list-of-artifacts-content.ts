@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import french_translations from "../../po/fr_FR.po";
 import type { XmlComponent } from "docx";
 import {
     Bookmark,
@@ -36,21 +35,23 @@ import {
     TextRun,
     WidthType,
 } from "docx";
-import { getAnchorToArtifactContent } from "./sections-anchor";
+import {
+    getAnchorToArtifactContent,
+    transformLargeContentIntoParagraphs,
+    HTML_ORDERED_LIST_NUMBERING,
+    HTML_UNORDERED_LIST_NUMBERING,
+} from "@tuleap/plugin-docgen-docx";
 import type {
     ArtifactContainer,
     ArtifactFieldShortValue,
     ArtifactFieldValue,
     ArtifactFieldValueStepDefinition,
     FormattedArtifact,
-} from "../type";
-import type { GettextProvider } from "@tuleap/gettext";
-import { initGettextSync } from "@tuleap/gettext";
+    ReadonlyArrayWithAtLeastOneElement,
+} from "@tuleap/plugin-docgen-docx";
 import { sprintf } from "sprintf-js";
+import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import { getInternationalizedTestStatus } from "./internationalize-test-status";
-import type { ReadonlyArrayWithAtLeastOneElement } from "../TextContent/transform-html-into-paragraphs";
-import { transformLargeContentIntoParagraphs } from "../TextContent/transform-large-content-into-paragraphs";
-import { HTML_ORDERED_LIST_NUMBERING, HTML_UNORDERED_LIST_NUMBERING } from "../html-styles";
 
 const TABLE_LABEL_SHADING = {
     val: ShadingType.CLEAR,
@@ -97,13 +98,11 @@ const TABLE_BORDERS = {
 };
 
 export async function buildListOfArtifactsContent(
+    gettext_provider: VueGettextProvider,
     artifacts: ReadonlyArray<FormattedArtifact>,
     heading: HeadingLevel,
-    style: string,
-    locale: string
+    style: string
 ): Promise<(Paragraph | Table)[]> {
-    const gettext_provider = initGettextSync("tuleap-docgen-docx", french_translations, locale);
-
     const artifacts_content = [];
     for (const artifact of artifacts) {
         artifacts_content.push(
@@ -129,7 +128,7 @@ export async function buildListOfArtifactsContent(
 async function buildContainersDisplayZone(
     artifact: FormattedArtifact,
     containers: ReadonlyArray<ArtifactContainer>,
-    gettext_provider: GettextProvider
+    gettext_provider: VueGettextProvider
 ): Promise<XmlComponent[]> {
     const xml_components_promises = containers.map(async (container): Promise<XmlComponent[]> => {
         const sub_containers_display_zones = await buildContainersDisplayZone(
@@ -167,7 +166,7 @@ async function buildContainersDisplayZone(
 async function buildFieldValuesDisplayZone(
     artifact: FormattedArtifact,
     artifact_values: ReadonlyArray<ArtifactFieldValue>,
-    gettext_provider: GettextProvider
+    gettext_provider: VueGettextProvider
 ): Promise<XmlComponent[]> {
     const short_fields: ArtifactFieldShortValue[] = [];
     const display_zone_long_fields: XmlComponent[] = [];
@@ -202,7 +201,7 @@ async function buildFieldValuesDisplayZone(
                             heading: HeadingLevel.HEADING_5,
                             children: [
                                 new TextRun(
-                                    sprintf(gettext_provider.gettext("Step %d"), step.rank)
+                                    sprintf(gettext_provider.$gettext("Step %d"), step.rank)
                                 ),
                             ],
                         }),
@@ -226,8 +225,8 @@ async function buildFieldValuesDisplayZone(
                 step_exec_table_rows.push(
                     new TableRow({
                         children: [
-                            buildTableCellHeaderLabel(gettext_provider.gettext("Step")),
-                            buildTableCellHeaderValue(gettext_provider.gettext("Status")),
+                            buildTableCellHeaderLabel(gettext_provider.$gettext("Step")),
+                            buildTableCellHeaderValue(gettext_provider.$gettext("Status")),
                         ],
                         tableHeader: true,
                     })
@@ -238,7 +237,7 @@ async function buildFieldValuesDisplayZone(
                         new TableRow({
                             children: [
                                 buildTableCellLabel(
-                                    sprintf(gettext_provider.gettext("Step %d"), step_number)
+                                    sprintf(gettext_provider.$gettext("Step %d"), step_number)
                                 ),
                                 buildTableCellContent(
                                     new TextRun(
@@ -261,7 +260,7 @@ async function buildFieldValuesDisplayZone(
                             heading: HeadingLevel.HEADING_5,
                             children: [
                                 new TextRun(
-                                    sprintf(gettext_provider.gettext("Step %d"), step.rank)
+                                    sprintf(gettext_provider.$gettext("Step %d"), step.rank)
                                 ),
                             ],
                         }),
@@ -269,7 +268,7 @@ async function buildFieldValuesDisplayZone(
                             children: [
                                 new TextRun(
                                     sprintf(
-                                        gettext_provider.gettext("Status: %s"),
+                                        gettext_provider.$gettext("Status: %s"),
                                         getInternationalizedTestStatus(
                                             gettext_provider,
                                             step.status
@@ -298,7 +297,7 @@ async function buildFieldValuesDisplayZone(
                             children: [
                                 new TextRun(
                                     sprintf(
-                                        gettext_provider.gettext("Artifacts referenced by “%s”"),
+                                        gettext_provider.$gettext("Artifacts referenced by “%s”"),
                                         artifact.short_title
                                     )
                                 ),
@@ -308,9 +307,9 @@ async function buildFieldValuesDisplayZone(
                     const links_table_rows: TableRow[] = [
                         new TableRow({
                             children: [
-                                buildTableCellHeaderValue(gettext_provider.gettext("Artifact ID")),
-                                buildTableCellHeaderValue(gettext_provider.gettext("Title")),
-                                buildTableCellHeaderValue(gettext_provider.gettext("Link type")),
+                                buildTableCellHeaderValue(gettext_provider.$gettext("Artifact ID")),
+                                buildTableCellHeaderValue(gettext_provider.$gettext("Title")),
+                                buildTableCellHeaderValue(gettext_provider.$gettext("Link type")),
                             ],
                             tableHeader: true,
                         }),
@@ -359,7 +358,7 @@ async function buildFieldValuesDisplayZone(
                             children: [
                                 new TextRun(
                                     sprintf(
-                                        gettext_provider.gettext("Artifacts that reference “%s”"),
+                                        gettext_provider.$gettext("Artifacts that reference “%s”"),
                                         artifact.short_title
                                     )
                                 ),
@@ -369,9 +368,9 @@ async function buildFieldValuesDisplayZone(
                     const reverse_links_table_rows: TableRow[] = [
                         new TableRow({
                             children: [
-                                buildTableCellHeaderValue(gettext_provider.gettext("Artifact ID")),
-                                buildTableCellHeaderValue(gettext_provider.gettext("Title")),
-                                buildTableCellHeaderValue(gettext_provider.gettext("Link type")),
+                                buildTableCellHeaderValue(gettext_provider.$gettext("Artifact ID")),
+                                buildTableCellHeaderValue(gettext_provider.$gettext("Title")),
+                                buildTableCellHeaderValue(gettext_provider.$gettext("Link type")),
                             ],
                             tableHeader: true,
                         }),
@@ -569,21 +568,21 @@ function buildTableCellLinksContent(links: Array<ExternalHyperlink>): TableCell 
 
 async function buildStepDefinitionParagraphs(
     step: ArtifactFieldValueStepDefinition,
-    gettext_provider: GettextProvider
+    gettext_provider: VueGettextProvider
 ): Promise<Paragraph[]> {
     const paragraphs: Paragraph[] = [];
 
     paragraphs.push(
         new Paragraph({
             heading: HeadingLevel.HEADING_6,
-            children: [new TextRun(gettext_provider.gettext("Description"))],
+            children: [new TextRun(gettext_provider.$gettext("Description"))],
         }),
         ...(await buildParagraphsFromContent(step.description, step.description_format, [
             HeadingLevel.HEADING_6,
         ])),
         new Paragraph({
             heading: HeadingLevel.HEADING_6,
-            children: [new TextRun(gettext_provider.gettext("Expected results"))],
+            children: [new TextRun(gettext_provider.$gettext("Expected results"))],
         }),
         ...(await buildParagraphsFromContent(step.expected_results, step.expected_results_format, [
             HeadingLevel.HEADING_6,

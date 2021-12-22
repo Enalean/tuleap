@@ -4,10 +4,6 @@
         "artifact-additional-action": {
             "src": "scripts/tracker-report-action/src",
             "po": "scripts/tracker-report-action/po"
-        },
-        "docgen-docx": {
-            "src": "scripts/lib/docx/src",
-            "po": "scripts/lib/docx/po"
         }
     }
 }

@@ -17,31 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    defineConfig,
-    createPOGettextPlugin,
-} from "../../../../../tools/utils/scripts/vite-configurator";
+import { defineConfig } from "../../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
 
 export default defineConfig(
     {
-        plugins: [createPOGettextPlugin()],
         build: {
             lib: {
                 entry: path.resolve(__dirname, "src/index.ts"),
                 name: "DocGenDocx",
             },
             rollupOptions: {
-                external: [
-                    "@tuleap/gettext",
-                    "@tuleap/tlp-fetch",
-                    "docx",
-                    "dompurify",
-                    "sprintf-js",
-                ],
+                external: ["@tuleap/tlp-fetch", "docx", "dompurify", "sprintf-js"],
                 output: {
                     globals: {
-                        "@tuleap/gettext": "@tuleap/gettext",
                         "@tuleap/tlp-fetch": "@tuleap/tlp-fetch",
                         docx: "docx",
                         dompurify: "dompurify",
