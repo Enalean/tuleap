@@ -190,11 +190,13 @@ class ArtifactRepresentationBuilder
 
     private function mapFilterSlice(array $collection, $offset, $limit, Closure $function, bool $reverse_order)
     {
-        return $this->mapAndFilter(
-            array_slice($collection, $offset, $limit),
+        $filtered_collection = $this->mapAndFilter(
+            $collection,
             $function,
             $reverse_order
         );
+
+        return array_slice($filtered_collection, $offset, $limit);
     }
 
     private function getFieldsValuesFilter(PFUser $user, Tracker_Artifact_Changeset $changeset)
