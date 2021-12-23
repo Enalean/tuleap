@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { unserializeConfiguration } from "./configuration";
 import { provide, readonly, ref } from "vue";
-import SidebarHeader from "./SidebarHeader.vue";
+import SidebarHeader from "./Header/SidebarHeader.vue";
 import SidebarFooter from "./SidebarFooter.vue";
 import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
 import Tools from "./Tools/Tools.vue";
@@ -50,9 +50,15 @@ provide(SIDEBAR_CONFIGURATION, sidebar_configuration);
 @use "@fortawesome/fontawesome-free/scss/fontawesome";
 @use "./fontawesome-classes";
 @use "../../../themes/tlp/src/fonts/tlp-font/icons";
+@use "@tuleap/tlp-popovers";
+@use "../../../themes/BurningParrot/css/includes/project-privacy-popover";
 
 .sidebar {
     font-family: var(--tlp-font-family);
     font-size: 100%;
+}
+
+.sidebar-popover-anchor {
+    margin-right: calc(-1 * var(--tlp-medium-spacing));
 }
 </style>

@@ -27,11 +27,13 @@
                 {{ config.project.name }}
             </a>
         </div>
+        <privacy-badge />
     </div>
 </template>
 <script setup lang="ts">
-import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
-import { strictInject } from "./strict-inject";
+import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
+import { strictInject } from "../strict-inject";
+import PrivacyBadge from "./PrivacyBadge.vue";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
 </script>
