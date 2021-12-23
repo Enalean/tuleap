@@ -35,8 +35,17 @@ interface InstanceVersionInformation {
     full_descriptive_version: string;
 }
 
+interface LogoInformation {
+    logo_link_href: string;
+    svg: {
+        normal: string;
+        small: string;
+    } | null;
+}
+
 interface Internationalization {
     tools: string;
+    homepage: string;
 }
 
 interface ProjectPrivacy {
@@ -59,6 +68,7 @@ export interface Configuration {
     instance_information: {
         version: InstanceVersionInformation;
         copyright: string | null;
+        logo: LogoInformation;
     };
     tools: Tool[];
 }

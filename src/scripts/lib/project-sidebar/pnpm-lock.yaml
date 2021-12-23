@@ -4,11 +4,13 @@ specifiers:
   '@fortawesome/fontawesome-free': ^5.15.2
   '@vue/test-utils': ^2.0.0-rc.17
   vue: ^3.2.26
+  vue-dompurify-html: ^3.0.0-beta.2
 
 devDependencies:
   '@fortawesome/fontawesome-free': 5.15.4
   '@vue/test-utils': 2.0.0-rc.17_vue@3.2.26
   vue: 3.2.26
+  vue-dompurify-html: 3.0.0-beta.2_vue@3.2.26
 
 packages:
 
@@ -119,6 +121,10 @@ packages:
     resolution: {integrity: sha512-ZVxXaNy28/k3kJg0Fou5MiYpp88j7H9hLZp8PDC3jV0WFjfH5E9xHb56L0W59cPbKbcHXeP4qyT8PrHp8t6LcQ==}
     dev: true
 
+  /dompurify/2.3.4:
+    resolution: {integrity: sha512-6BVcgOAVFXjI0JTjEvZy901Rghm+7fDQOrNIcxB4+gdhj6Kwp6T9VBhBY/AbagKHJocRkDYGd6wvI+p4/10xtQ==}
+    dev: true
+
   /estree-walker/2.0.2:
     resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
     dev: true
@@ -160,6 +166,15 @@ packages:
 
   /sourcemap-codec/1.4.8:
     resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
+    dev: true
+
+  /vue-dompurify-html/3.0.0-beta.2_vue@3.2.26:
+    resolution: {integrity: sha512-2gWkaStpTDETuoRpUBvPSZ7KDXH4Axerz7k/wwso6p+MYz51VDVNU4GZPbWTso5IWrDyQ/fVQ5jpYx0UZugFng==}
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      dompurify: 2.3.4
+      vue: 3.2.26
     dev: true
 
   /vue/3.2.26:

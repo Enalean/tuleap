@@ -4,6 +4,7 @@ exports[`ProjectSidebar displays sidebar 1`] = `
 <aside
   class="sidebar"
 >
+  <sidebar-logo-stub />
   <div
     class="sidebar-content-vertical-scroll"
   >
