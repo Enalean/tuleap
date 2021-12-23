@@ -32,14 +32,14 @@
 </template>
 <script setup lang="ts">
 import { unserializeConfiguration } from "./configuration";
-import { provide, readonly, ref } from "vue";
+import { provide, readonly, computed } from "vue";
 import SidebarHeader from "./Header/SidebarHeader.vue";
 import SidebarFooter from "./SidebarFooter.vue";
 import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
 import Tools from "./Tools/Tools.vue";
 
 const props = defineProps<{ config: string | undefined }>();
-const sidebar_configuration = readonly(ref(unserializeConfiguration(props.config)));
+const sidebar_configuration = readonly(computed(() => unserializeConfiguration(props.config)));
 
 provide(SIDEBAR_CONFIGURATION, sidebar_configuration);
 </script>
