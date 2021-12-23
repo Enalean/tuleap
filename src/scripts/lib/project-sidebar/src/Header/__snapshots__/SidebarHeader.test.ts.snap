@@ -14,5 +14,6 @@ exports[`SidebarHeader displays the sidebar header 1`] = `
       project1
     </a>
   </div>
+  <privacy-badge-stub />
 </div>
 `;

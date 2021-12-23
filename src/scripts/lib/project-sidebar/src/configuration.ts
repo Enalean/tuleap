@@ -39,11 +39,22 @@ interface Internationalization {
     tools: string;
 }
 
+interface ProjectPrivacy {
+    are_restricted_users_allowed: boolean;
+    project_is_public_incl_restricted: boolean;
+    project_is_private: boolean;
+    project_is_public: boolean;
+    project_is_private_incl_restricted: boolean;
+    explanation_text: string;
+    privacy_title: string;
+}
+
 export interface Configuration {
     internationalization: Internationalization;
     project: {
         name: string;
         href: string;
+        privacy: ProjectPrivacy;
     };
     instance_information: {
         version: InstanceVersionInformation;

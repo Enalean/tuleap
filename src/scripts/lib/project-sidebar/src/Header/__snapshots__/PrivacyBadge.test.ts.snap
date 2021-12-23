@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PrivacyBadge displays the badge with its popover 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <div
+    class="sidebar-popover-anchor"
+  >
+    <span
+      class="project-sidebar-privacy-badge"
+    >
+      <i
+        aria-hidden="true"
+        class="sidebar-dashboard-privacy-icon fas fa-lock-open"
+        data-test="project-icon"
+      />
+       Public
+    </span>
+  </div>
+  <div
+    class="tlp-popover"
+    id="project-sidebar-nav-title-popover"
+  >
+    <div
+      class="tlp-popover-arrow"
+    />
+    <div
+      class="tlp-popover-header"
+    >
+      <h1
+        class="tlp-popover-title"
+      >
+        Public
+      </h1>
+    </div>
+    <div
+      class="tlp-popover-body"
+    >
+      <p
+        class="current-project-nav-title-popover-description"
+      >
+        Project privacy set to public. By default, its content is available to all authenticated, but not restricted, users. Please note that more restrictive permissions might exist on some items.
+      </p>
+    </div>
+  </div>
+  
+</div>
+`;
