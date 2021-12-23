@@ -67,6 +67,7 @@ class FieldXmlExporter
         $field = $container_parent_node->formElements->addChild(\Tracker_FormElement::XML_TAG);
         $field->addAttribute('type', $type);
 
+
         $xml_id = \Tracker_FormElement::XML_ID_PREFIX . $jira_field_mapping_collection->getNextId();
         $field->addAttribute('ID', $xml_id);
         $field->addAttribute('rank', (string) $rank);
