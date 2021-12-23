@@ -21,13 +21,13 @@ import { createExportReport } from "./Reporter/report-creator";
 import type { Campaign, ExportDocument, GlobalExportProperties } from "../../type";
 import type { VueGettextProvider } from "../vue-gettext-provider";
 import type { DateTimeLocaleInformation } from "../../type";
-import type { BacklogItem } from "../../type";
+import type { BacklogItem, ArtifactFieldValueStepDefinitionEnhancedWithResults } from "../../type";
 
 export async function downloadExportDocument(
     global_export_properties: GlobalExportProperties,
     gettext_provider: VueGettextProvider,
     download_document: (
-        document: ExportDocument,
+        document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
         gettext_provider: VueGettextProvider,
         global_export_properties: GlobalExportProperties,
         datetime_locale_information: DateTimeLocaleInformation

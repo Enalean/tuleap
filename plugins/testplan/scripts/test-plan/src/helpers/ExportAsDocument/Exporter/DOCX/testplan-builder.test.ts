@@ -20,11 +20,13 @@
 import { createVueGettextProviderPassthrough } from "../../../vue-gettext-provider-for-test";
 import type { IContext } from "docx";
 import { buildMilestoneTestPlan } from "./testplan-builder";
-import type { GlobalExportProperties } from "../../../../type";
+import type {
+    GlobalExportProperties,
+    ArtifactFieldValueStepDefinitionEnhancedWithResults,
+} from "../../../../type";
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import type { ExportDocument } from "../../../../type";
 import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx/src";
-import type { ArtifactFieldValueStepDefinitionContent } from "@tuleap/plugin-docgen-docx/src";
 
 describe("buildMilestoneTestPlan", () => {
     let global_export_properties: GlobalExportProperties;
@@ -66,7 +68,7 @@ describe("buildMilestoneTestPlan", () => {
     });
 
     it("should display each test", async () => {
-        const document: ExportDocument = {
+        const document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults> = {
             name: "Test Report",
             backlog: [],
             traceability_matrix: [],
@@ -77,14 +79,14 @@ describe("buildMilestoneTestPlan", () => {
                     short_title: "Lorem",
                     fields: [],
                     containers: [],
-                } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>,
+                } as FormattedArtifact<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
                 {
                     id: 2,
                     title: "Ipsum",
                     short_title: "Ipsum",
                     fields: [],
                     containers: [],
-                } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>,
+                } as FormattedArtifact<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
             ],
         };
 

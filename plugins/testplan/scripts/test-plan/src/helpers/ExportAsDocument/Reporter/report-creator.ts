@@ -18,7 +18,13 @@
  */
 
 import type { VueGettextProvider } from "../../vue-gettext-provider";
-import type { BacklogItem, Campaign, ExportDocument, GlobalExportProperties } from "../../../type";
+import type {
+    BacklogItem,
+    Campaign,
+    ExportDocument,
+    GlobalExportProperties,
+    ArtifactFieldValueStepDefinitionEnhancedWithResults,
+} from "../../../type";
 import type {
     TrackerStructure,
     DateTimeLocaleInformation,
@@ -26,7 +32,6 @@ import type {
 } from "@tuleap/plugin-docgen-docx";
 import {
     formatArtifact,
-    formatStepDefinitionField,
     getArtifacts,
     getTestManagementExecution,
     retrieveArtifactsStructure,
@@ -36,6 +41,7 @@ import { memoize } from "./memoize";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 import { getTraceabilityMatrix } from "./traceability-matrix-creator";
 import { getExecutionsForCampaigns } from "./executions-for-campaigns-retriever";
+import { buildStepDefinitionEnhancedWithResultsFunction } from "./step-test-definition-with-results-formatter";
 
 interface TrackerStructurePromiseTuple {
     readonly tracker_id: number;
@@ -48,7 +54,7 @@ export async function createExportReport(
     backlog_items: ReadonlyArray<BacklogItem>,
     campaigns: ReadonlyArray<Campaign>,
     datetime_locale_information: DateTimeLocaleInformation
-): Promise<ExportDocument> {
+): Promise<ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>> {
     const get_test_execution = memoize(getTestManagementExecution);
 
     const tracker_structure_promises_map: Map<number, TrackerStructurePromiseTuple> = new Map();
@@ -121,7 +127,7 @@ export async function createExportReport(
                     datetime_locale_information,
                     global_properties.base_url,
                     global_properties.artifact_links_types,
-                    formatStepDefinitionField
+                    buildStepDefinitionEnhancedWithResultsFunction(artifact, executions_map)
                 )
             ),
         traceability_matrix: getTraceabilityMatrix(executions_map, datetime_locale_information),
@@ -133,7 +139,7 @@ export async function createExportReport(
                     datetime_locale_information,
                     global_properties.base_url,
                     global_properties.artifact_links_types,
-                    formatStepDefinitionField
+                    buildStepDefinitionEnhancedWithResultsFunction(artifact, executions_map)
                 )
             ),
     };

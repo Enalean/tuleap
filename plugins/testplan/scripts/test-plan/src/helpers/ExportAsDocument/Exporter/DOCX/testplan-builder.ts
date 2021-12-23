@@ -18,7 +18,11 @@
  */
 
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
-import type { ExportDocument, GlobalExportProperties } from "../../../../type";
+import type {
+    ExportDocument,
+    GlobalExportProperties,
+    ArtifactFieldValueStepDefinitionEnhancedWithResults,
+} from "../../../../type";
 import type { Table } from "docx";
 import { Bookmark, Paragraph, TextRun } from "docx";
 import {
@@ -28,10 +32,7 @@ import {
     HEADER_STYLE_SECTION_TITLE,
     MAIN_TITLES_NUMBERING_ID,
 } from "./document-properties";
-import type {
-    ArtifactFieldValueStepDefinitionContent,
-    FormattedArtifact,
-} from "@tuleap/plugin-docgen-docx/src";
+import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx/src";
 import { buildListOfArtifactsContent } from "./build-list-of-artifacts-content";
 
 export function getMilestoneTestPlanTitle(
@@ -48,7 +49,7 @@ export function getMilestoneTestPlanTitle(
 }
 
 export async function buildMilestoneTestPlan(
-    document: ExportDocument,
+    document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
     gettext_provider: VueGettextProvider,
     global_export_properties: GlobalExportProperties
 ): Promise<(Paragraph | Table)[]> {
@@ -82,7 +83,7 @@ export async function buildMilestoneTestPlan(
 }
 
 function buildTestPlanSection(
-    tests: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionContent>>,
+    tests: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionEnhancedWithResults>>,
     gettext_provider: VueGettextProvider
 ): Promise<(Paragraph | Table)[]> {
     return buildListOfArtifactsContent(
