@@ -7,7 +7,7 @@
   "version": "0.0.0",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.2",
-    "@joeattardi/emoji-button": "^4.6.0",
+    "@joeattardi/emoji-button": "^4.6.2",
     "@tuleap/date-helper": "file:scripts/lib/date-helper",
     "@tuleap/filter-inline-table": "file:scripts/lib/filter-table",
     "@tuleap/gettext": "file:scripts/lib/gettext",
