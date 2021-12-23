@@ -19,7 +19,7 @@
     "@tuleap/tlp-popovers": "file:scripts/lib/tlp-popovers",
     "@tuleap/tooltip": "file:scripts/lib/tooltip",
     "@tuleap/vue-breadcrumb-privacy": "file:scripts/lib/vue-breadcrumb-privacy",
-    "ckeditor4": "^4.16.2",
+    "ckeditor4": "^4.17.1",
     "d3-array": "^3.0.1",
     "d3-axis": "^3.0.0",
     "d3-interpolate": "^3.0.1",

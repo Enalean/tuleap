@@ -29,7 +29,7 @@ specifiers:
   '@types/prismjs': ^1.16.3
   '@types/sprintf-js': ^1.1.2
   '@vue/test-utils': ^1.3.0
-  ckeditor4: ^4.16.2
+  ckeditor4: ^4.17.1
   d3-array: ^3.0.1
   d3-axis: ^3.0.0
   d3-interpolate: ^3.0.1
@@ -76,7 +76,7 @@ dependencies:
   '@tuleap/tlp-popovers': link:scripts/lib/tlp-popovers
   '@tuleap/tooltip': link:scripts/lib/tooltip
   '@tuleap/vue-breadcrumb-privacy': link:scripts/lib/vue-breadcrumb-privacy
-  ckeditor4: 4.16.2
+  ckeditor4: 4.17.1
   d3-array: 3.0.1
   d3-axis: 3.0.0
   d3-interpolate: 3.0.1
@@ -610,8 +610,8 @@ packages:
       supports-color: 5.5.0
     dev: true
 
-  /ckeditor4/4.16.2:
-    resolution: {integrity: sha512-5x2FmI+yGpQIKISh24Wp4HwjQxN6C4Lw59yh68HbFwcnMu8DvSiZLJfeINGvRG1oQ1L9GzJ5Pqd0PL0KDH08Jw==}
+  /ckeditor4/4.17.1:
+    resolution: {integrity: sha512-VSTyro6tWd0B356SjJX8Zbix2Q85M/5h7469+vLb7DeNUP2vAimrPYoo29am2RRTTllyKxfLzVuTF8E9A1ssdA==}
     dev: false
 
   /color-convert/1.9.3:
