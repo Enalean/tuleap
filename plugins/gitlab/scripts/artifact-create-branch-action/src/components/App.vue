@@ -237,6 +237,7 @@ export default class App extends Vue {
 .artifact-create-branch-action-mandatory-information {
     color: var(--tlp-danger-color);
 }
+
 .artifact-create-gitlab-branch-form-block {
     margin: 0 0 var(--tlp-medium-spacing);
 }

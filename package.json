@@ -62,7 +62,7 @@
     "sass": "^1.32.2",
     "sass-loader": "^11.0.1",
     "stylelint": "^13.12.0",
-    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-property-sort-order-smacss": "^7.0.0",
     "stylelint-config-sass-guidelines": "^8.0.0",
     "stylelint-prettier": "^1.2.0",

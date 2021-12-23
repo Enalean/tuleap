@@ -61,7 +61,7 @@ specifiers:
   sass: ^1.32.2
   sass-loader: ^11.0.1
   stylelint: ^13.12.0
-  stylelint-config-prettier: ^8.0.2
+  stylelint-config-prettier: ^9.0.3
   stylelint-config-property-sort-order-smacss: ^7.0.0
   stylelint-config-sass-guidelines: ^8.0.0
   stylelint-prettier: ^1.2.0
@@ -141,7 +141,7 @@ devDependencies:
   sass: 1.32.2
   sass-loader: 11.0.1_sass@1.32.2+webpack@5.64.4
   stylelint: 13.12.0
-  stylelint-config-prettier: 8.0.2_stylelint@13.12.0
+  stylelint-config-prettier: 9.0.3_stylelint@13.12.0
   stylelint-config-property-sort-order-smacss: 7.1.0_stylelint@13.12.0
   stylelint-config-sass-guidelines: 8.0.0_stylelint@13.12.0
   stylelint-prettier: 1.2.0_prettier@2.5.0+stylelint@13.12.0
@@ -9162,9 +9162,9 @@ packages:
     resolution: {integrity: sha1-eVjHk+R+MuB9K1yv5cC/jhLneQI=}
     dev: true
 
-  /stylelint-config-prettier/8.0.2_stylelint@13.12.0:
-    resolution: {integrity: sha512-TN1l93iVTXpF9NJstlvP7nOu9zY2k+mN0NSFQ/VEGz15ZIP9ohdDZTtCWHs5LjctAhSAzaILULGbgiM0ItId3A==}
-    engines: {node: '>= 10', npm: '>= 5'}
+  /stylelint-config-prettier/9.0.3_stylelint@13.12.0:
+    resolution: {integrity: sha512-5n9gUDp/n5tTMCq1GLqSpA30w2sqWITSSEiAWQlpxkKGAUbjcemQ0nbkRvRUa0B1LgD3+hCvdL7B1eTxy1QHJg==}
+    engines: {node: '>= 12'}
     hasBin: true
     peerDependencies:
       stylelint: '>=11.0.0'
