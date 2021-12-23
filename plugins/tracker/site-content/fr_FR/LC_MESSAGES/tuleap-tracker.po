@@ -1464,6 +1464,10 @@ msgstr "Erreur de dates : %1$s doit être %2$s à %3$s."
 msgid "Error while updating the parent artifact %1$s: %2$s"
 msgstr "Erreur lors de la mise à jour de l'artefact %1$s : %2$s"
 
+#, php-format
+msgid "Error with the field '%s'. The user '%s' does not exist."
+msgstr "Error sur le champs '%s'. L'utilisateur '%s' n'existe pas."
+
 msgid "Example: (field_1 = 'value' OR field_2 = 'value') AND field_3 = 'value'"
 msgstr ""
 "Exemple : (champ_1 = 'valeur' OR champ_2 = 'valeur') AND champ_3 = 'valeur'"
@@ -4769,3 +4773,7 @@ msgstr ""
 
 msgid "« Go back to semantic overview"
 msgstr "« Retour à l'administration de la sémantique"
+
+#, php-format
+#~ msgid "The user '%s' doesn't exist, in the field '%s'."
+#~ msgstr "L'utilisateur '%s' n’existe pas, pour le champ ‘%s’."
