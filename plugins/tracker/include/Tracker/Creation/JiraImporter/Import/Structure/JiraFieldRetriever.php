@@ -61,6 +61,36 @@ class JiraFieldRetriever
             $fields_by_id[$jira_field_api_representation->getId()] = $jira_field_api_representation;
         }
 
+        return array_merge($fields_by_id, $this->getFromEditMeta($jira_project_key, $jira_issue_type_id, $id_generator));
+    }
+
+    private function getFromEditMeta(string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): array
+    {
+        $params = [
+            'jql'        => 'project=' . $jira_project_key . ' AND issuetype=' . $jira_issue_type_id,
+            'expand'     => 'editmeta',
+            'startAt'    => 0,
+            'maxResults' => 1,
+        ];
+
+        $get_one_issue_url =  ClientWrapper::JIRA_CORE_BASE_URL . '/search?' . http_build_query($params);
+
+        $one_issue = $this->wrapper->getUrl($get_one_issue_url);
+        if (! isset($one_issue['issues']) || count($one_issue['issues']) !== 1 || ! isset($one_issue['issues'][0]['editmeta'])) {
+            return [];
+        }
+
+        $fields_by_id = [];
+        foreach ($one_issue['issues'][0]['editmeta']['fields'] as $jira_field_id => $jira_field) {
+            $jira_field_api_representation = JiraFieldAPIRepresentation::buildFromAPIResponseAndID(
+                $jira_field_id,
+                $jira_field,
+                $id_generator
+            );
+
+            $fields_by_id[$jira_field_api_representation->getId()] = $jira_field_api_representation;
+        }
+
         return $fields_by_id;
     }
 }
