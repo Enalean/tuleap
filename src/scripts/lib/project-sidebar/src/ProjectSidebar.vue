@@ -50,7 +50,7 @@ provide(SIDEBAR_CONFIGURATION, sidebar_configuration);
 @use "@fortawesome/fontawesome-free/scss/fontawesome";
 @use "./fontawesome-classes";
 @use "../../../themes/tlp/src/fonts/tlp-font/icons";
-@use "@tuleap/tlp-popovers";
+@use "../../tlp-popovers/themes/style";
 @use "../../../themes/BurningParrot/css/includes/project-privacy-popover";
 
 .sidebar {
