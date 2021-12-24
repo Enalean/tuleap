@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@fortawesome/fontawesome-free': ^5.15.2
-  '@joeattardi/emoji-button': ^4.6.0
+  '@joeattardi/emoji-button': ^4.6.2
   '@shopify/jest-dom-mocks': ^2.10.0
   '@tuleap/date-helper': file:scripts/lib/date-helper
   '@tuleap/filter-inline-table': file:scripts/lib/filter-table
@@ -64,7 +64,7 @@ specifiers:
 
 dependencies:
   '@fortawesome/fontawesome-free': 5.15.4
-  '@joeattardi/emoji-button': 4.6.0
+  '@joeattardi/emoji-button': 4.6.2
   '@tuleap/date-helper': link:scripts/lib/date-helper
   '@tuleap/filter-inline-table': link:scripts/lib/filter-table
   '@tuleap/gettext': link:scripts/lib/gettext
@@ -387,14 +387,15 @@ packages:
       '@fortawesome/fontawesome-common-types': 0.2.36
     dev: false
 
-  /@joeattardi/emoji-button/4.6.0:
-    resolution: {integrity: sha512-KwOE1j+YxX47JmT0pXNCa+9Ai4Wf2fmABtvuxy6JBJ5QV0HdoThRKjL6CxAreVwwLbNQ/PDoR36xpc5QJjLXPA==}
+  /@joeattardi/emoji-button/4.6.2:
+    resolution: {integrity: sha512-FhuzTmW3nVHLVp2BJfNX17CYV77fqtKZlx328D4h6Dw3cPTT1gJRNXN0jV7BvHgsl6Q/tN8DIQQxTUIO4jW3gQ==}
     dependencies:
       '@fortawesome/fontawesome-svg-core': 1.2.36
       '@fortawesome/free-regular-svg-icons': 5.15.4
       '@fortawesome/free-solid-svg-icons': 5.15.4
       '@popperjs/core': 2.9.2
       '@types/twemoji': 12.1.2
+      escape-html: 1.0.3
       focus-trap: 5.1.0
       fuzzysort: 1.1.4
       tiny-emitter: 2.1.0
@@ -1240,6 +1241,10 @@ packages:
     resolution: {integrity: sha512-k0er2gUkLf8O0zKJiAhmkTnJlTvINGv7ygDNPbeIsX/TJjGJZHuh9B2UxbsaEkmlEo9MfhrSzmhIlhRlI2GXnw==}
     engines: {node: '>=6'}
     dev: true
+
+  /escape-html/1.0.3:
+    resolution: {integrity: sha1-Aljq5NPQwJdN4cFpGI7wBR0dGYg=}
+    dev: false
 
   /escape-string-regexp/1.0.5:
     resolution: {integrity: sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=}
