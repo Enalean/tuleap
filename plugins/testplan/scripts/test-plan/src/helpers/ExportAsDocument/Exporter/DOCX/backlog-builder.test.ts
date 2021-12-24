@@ -21,9 +21,12 @@ import { buildMilestoneBacklog } from "./backlog-builder";
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import { createVueGettextProviderPassthrough } from "../../../vue-gettext-provider-for-test";
 import type { IContext } from "docx";
-import type { ExportDocument, GlobalExportProperties } from "../../../../type";
+import type {
+    ExportDocument,
+    GlobalExportProperties,
+    ArtifactFieldValueStepDefinitionEnhancedWithResults,
+} from "../../../../type";
 import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx";
-import type { ArtifactFieldValueStepDefinitionContent } from "@tuleap/plugin-docgen-docx";
 
 describe("buildMilestoneBacklog", () => {
     let global_export_properties: GlobalExportProperties;
@@ -49,7 +52,7 @@ describe("buildMilestoneBacklog", () => {
     });
 
     it("should indicate that there is nothing in the backlog", async () => {
-        const document: ExportDocument = {
+        const document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults> = {
             name: "Test Report",
             backlog: [],
             traceability_matrix: [],
@@ -67,7 +70,7 @@ describe("buildMilestoneBacklog", () => {
     });
 
     it("should display each backlog item", async () => {
-        const document: ExportDocument = {
+        const document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults> = {
             name: "Test Report",
             backlog: [
                 {
@@ -76,14 +79,14 @@ describe("buildMilestoneBacklog", () => {
                     short_title: "Lorem",
                     fields: [],
                     containers: [],
-                } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>,
+                } as FormattedArtifact<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
                 {
                     id: 2,
                     title: "Ipsum",
                     short_title: "Ipsum",
                     fields: [],
                     containers: [],
-                } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>,
+                } as FormattedArtifact<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
             ],
             traceability_matrix: [],
             tests: [],

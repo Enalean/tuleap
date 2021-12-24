@@ -24,6 +24,7 @@ import type {
     DateTimeLocaleInformation,
     ExportDocument,
     GlobalExportProperties,
+    ArtifactFieldValueStepDefinitionEnhancedWithResults,
 } from "../../../../type";
 import { buildCoverPage } from "./cover-builder";
 import {
@@ -39,7 +40,7 @@ import { buildTraceabilityMatrix } from "./matrix-builder";
 import { buildMilestoneTestPlan } from "./testplan-builder";
 
 export async function downloadDocx(
-    document: ExportDocument,
+    document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
     gettext_provider: VueGettextProvider,
     global_export_properties: GlobalExportProperties,
     datetime_locale_information: DateTimeLocaleInformation

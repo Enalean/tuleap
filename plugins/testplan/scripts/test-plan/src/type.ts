@@ -19,6 +19,7 @@
 
 import type {
     ArtifactFieldValueStatus,
+    ArtifactFieldValueStepDefinitionEnhanced,
     ArtifactLinkType,
     FormattedArtifact,
     TestExecutionResponse,
@@ -117,10 +118,17 @@ export interface TraceabilityMatrixElement {
     readonly tests: Map<number, TraceabilityMatrixTest>;
 }
 
-export interface ExportDocument {
+export interface ArtifactFieldValueStepDefinitionEnhancedWithResults {
+    readonly field_name: string;
+    readonly content_length: "blockttmstepdef";
+    readonly value_type: "string";
+    readonly steps: Array<ArtifactFieldValueStepDefinitionEnhanced>;
+}
+
+export interface ExportDocument<StepDefFieldValue> {
     readonly name: string;
-    readonly backlog: ReadonlyArray<FormattedArtifact>;
-    readonly tests: ReadonlyArray<FormattedArtifact>;
+    readonly backlog: ReadonlyArray<FormattedArtifact<StepDefFieldValue>>;
+    readonly tests: ReadonlyArray<FormattedArtifact<StepDefFieldValue>>;
     readonly traceability_matrix: ReadonlyArray<TraceabilityMatrixElement>;
 }
 

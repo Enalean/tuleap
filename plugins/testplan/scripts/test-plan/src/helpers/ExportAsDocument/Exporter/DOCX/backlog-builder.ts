@@ -16,7 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { ExportDocument, GlobalExportProperties } from "../../../../type";
+import type {
+    ExportDocument,
+    GlobalExportProperties,
+    ArtifactFieldValueStepDefinitionEnhancedWithResults,
+} from "../../../../type";
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import type { Table } from "docx";
 import { Bookmark, Paragraph, TextRun } from "docx";
@@ -27,10 +31,7 @@ import {
     HEADER_STYLE_SECTION_TITLE,
     MAIN_TITLES_NUMBERING_ID,
 } from "./document-properties";
-import type {
-    ArtifactFieldValueStepDefinitionContent,
-    FormattedArtifact,
-} from "@tuleap/plugin-docgen-docx";
+import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx";
 import { buildListOfArtifactsContent } from "./build-list-of-artifacts-content";
 
 export function getMilestoneBacklogTitle(
@@ -47,7 +48,7 @@ export function getMilestoneBacklogTitle(
 }
 
 export async function buildMilestoneBacklog(
-    document: ExportDocument,
+    document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
     gettext_provider: VueGettextProvider,
     global_export_properties: GlobalExportProperties
 ): Promise<(Paragraph | Table)[]> {
@@ -86,7 +87,7 @@ export async function buildMilestoneBacklog(
 }
 
 function buildBacklogSection(
-    backlog: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionContent>>,
+    backlog: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionEnhancedWithResults>>,
     global_export_properties: GlobalExportProperties,
     gettext_provider: VueGettextProvider
 ): Promise<(Paragraph | Table)[]> {

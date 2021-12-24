@@ -17,7 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ExportDocument, TraceabilityMatrixElement } from "../../../../type";
+import type {
+    ExportDocument,
+    TraceabilityMatrixElement,
+    ArtifactFieldValueStepDefinitionEnhancedWithResults,
+} from "../../../../type";
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import type { IShadingAttributesProperties, ITableCellOptions } from "docx";
 import { InternalHyperlink, Table, TableCell } from "docx";
@@ -44,7 +48,7 @@ export function getTraceabilityMatrixTitle(gettext_provider: VueGettextProvider)
 }
 
 export function buildTraceabilityMatrix(
-    document: ExportDocument,
+    document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
     gettext_provider: VueGettextProvider
 ): (Paragraph | Table)[] {
     const title = getTraceabilityMatrixTitle(gettext_provider);

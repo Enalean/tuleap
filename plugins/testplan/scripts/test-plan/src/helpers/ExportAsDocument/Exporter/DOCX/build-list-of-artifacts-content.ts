@@ -45,14 +45,14 @@ import type {
     ArtifactContainer,
     ArtifactFieldShortValue,
     ArtifactFieldValue,
-    ArtifactFieldValueStepDefinition,
     FormattedArtifact,
     ReadonlyArrayWithAtLeastOneElement,
-    ArtifactFieldValueStepDefinitionContent,
+    ArtifactFieldValueStepDefinitionEnhanced,
 } from "@tuleap/plugin-docgen-docx";
 import { sprintf } from "sprintf-js";
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import { getInternationalizedTestStatus } from "./internationalize-test-status";
+import type { ArtifactFieldValueStepDefinitionEnhancedWithResults } from "../../../../type";
 
 const TABLE_LABEL_SHADING = {
     val: ShadingType.CLEAR,
@@ -100,7 +100,9 @@ const TABLE_BORDERS = {
 
 export async function buildListOfArtifactsContent(
     gettext_provider: VueGettextProvider,
-    artifacts: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionContent>>,
+    artifacts: ReadonlyArray<
+        FormattedArtifact<ArtifactFieldValueStepDefinitionEnhancedWithResults>
+    >,
     heading: HeadingLevel,
     style: string
 ): Promise<(Paragraph | Table)[]> {
@@ -127,8 +129,10 @@ export async function buildListOfArtifactsContent(
 }
 
 async function buildContainersDisplayZone(
-    artifact: FormattedArtifact<ArtifactFieldValueStepDefinitionContent>,
-    containers: ReadonlyArray<ArtifactContainer<ArtifactFieldValueStepDefinitionContent>>,
+    artifact: FormattedArtifact<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
+    containers: ReadonlyArray<
+        ArtifactContainer<ArtifactFieldValueStepDefinitionEnhancedWithResults>
+    >,
     gettext_provider: VueGettextProvider
 ): Promise<XmlComponent[]> {
     const xml_components_promises = containers.map(async (container): Promise<XmlComponent[]> => {
@@ -165,8 +169,10 @@ async function buildContainersDisplayZone(
 }
 
 async function buildFieldValuesDisplayZone(
-    artifact: FormattedArtifact<ArtifactFieldValueStepDefinitionContent>,
-    artifact_values: ReadonlyArray<ArtifactFieldValue<ArtifactFieldValueStepDefinitionContent>>,
+    artifact: FormattedArtifact<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
+    artifact_values: ReadonlyArray<
+        ArtifactFieldValue<ArtifactFieldValueStepDefinitionEnhancedWithResults>
+    >,
     gettext_provider: VueGettextProvider
 ): Promise<XmlComponent[]> {
     const short_fields: ArtifactFieldShortValue[] = [];
@@ -568,12 +574,22 @@ function buildTableCellLinksContent(links: Array<ExternalHyperlink>): TableCell 
 }
 
 async function buildStepDefinitionParagraphs(
-    step: ArtifactFieldValueStepDefinition,
+    step: ArtifactFieldValueStepDefinitionEnhanced,
     gettext_provider: VueGettextProvider
 ): Promise<Paragraph[]> {
     const paragraphs: Paragraph[] = [];
 
     paragraphs.push(
+        new Paragraph({
+            children: [
+                new TextRun(
+                    sprintf(
+                        gettext_provider.$gettext("Status: %s"),
+                        getInternationalizedTestStatus(gettext_provider, step.status)
+                    )
+                ),
+            ],
+        }),
         new Paragraph({
             heading: HeadingLevel.HEADING_6,
             children: [new TextRun(gettext_provider.$gettext("Description"))],

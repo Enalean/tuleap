@@ -20,7 +20,10 @@
 import { createVueGettextProviderPassthrough } from "../vue-gettext-provider-for-test";
 import { downloadExportDocument } from "./download-export-document";
 import * as report_creator from "./Reporter/report-creator";
-import type { ExportDocument } from "../../type";
+import type {
+    ExportDocument,
+    ArtifactFieldValueStepDefinitionEnhancedWithResults,
+} from "../../type";
 
 describe("Start download of export document", () => {
     it("generates the report and start the download of the document", async () => {
@@ -30,7 +33,9 @@ describe("Start download of export document", () => {
 
         const create_export_report = jest
             .spyOn(report_creator, "createExportReport")
-            .mockResolvedValue({} as ExportDocument);
+            .mockResolvedValue(
+                {} as ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>
+            );
 
         await downloadExportDocument(
             {
