@@ -51,7 +51,7 @@ import { ref, computed, onMounted } from "vue";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { strictInject } from "../strict-inject";
 import { getProjectPrivacyIcon } from "../../../vue-breadcrumb-privacy/src/project-privacy-helper";
-import { createPopover } from "@tuleap/tlp-popovers";
+import { createPopover } from "../../../tlp-popovers/src/popovers";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
 const project_privacy_icon = computed(() => getProjectPrivacyIcon(config.value.project.privacy));
@@ -62,7 +62,7 @@ const popover_anchor = ref<InstanceType<typeof HTMLElement>>();
 
 onMounted(() => {
     if (badge.value !== undefined && popover_content.value !== undefined) {
-        createPopover(badge.value, popover_content.value, {
+        createPopover(document, badge.value, popover_content.value, {
             placement: "right-start",
             anchor: popover_anchor.value,
         });

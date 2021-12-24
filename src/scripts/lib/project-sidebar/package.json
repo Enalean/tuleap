@@ -30,7 +30,6 @@
   ],
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.15.2",
-    "@tuleap/tlp-popovers": "link:../tlp-popovers",
     "@vue/test-utils": "^2.0.0-rc.17",
     "vue": "^3.2.26"
   },
