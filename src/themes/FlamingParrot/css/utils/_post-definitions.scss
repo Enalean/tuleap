@@ -44,7 +44,8 @@ body {
         #logo {
             width: variables-common.$sidebar-width-collapsed;
             max-width: variables-common.$sidebar-width-collapsed;
-            background: var(--tlp-dark-color-darker-05) url("/images/organization_logo_small.png") no-repeat center center;
+            background: var(--tlp-dark-color-darker-05) url("/images/organization_logo_small.png")
+                no-repeat center center;
         }
 
         .sidebar-nav {
@@ -92,7 +93,7 @@ body {
         margin: 0 0 0 variables-common.$sidebar-width;
     }
 
-    //stylelint-disable-next-line selector-class-pattern
+    // stylelint-disable-next-line selector-class-pattern
     &.admin_register {
         #register-form form label .label-help {
             display: none;
@@ -104,7 +105,7 @@ body {
         }
     }
 
-    //stylelint-disable-next-line selector-class-pattern
+    // stylelint-disable-next-line selector-class-pattern
     &.register-page:not(.admin_register) {
         > .wrapper {
             background-color: #fbfbfb;

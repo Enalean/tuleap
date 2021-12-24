@@ -53,6 +53,7 @@
 
     &[data-nodrag="true"] > .backlog-item-details {
         @extend %hide-moves-icons;
+
         cursor: auto;
     }
 }
@@ -87,11 +88,11 @@
         }
 
         &::before {
-            animation: stackedFirstCard 100ms ease-in-out forwards;
+            animation: stacked-first-card 100ms ease-in-out forwards;
         }
 
         &::after {
-            animation: stackedSecondCard 100ms ease-in-out forwards;
+            animation: stacked-second-card 100ms ease-in-out forwards;
         }
     }
 
@@ -104,7 +105,7 @@
     }
 }
 
-@keyframes stackedFirstCard {
+@keyframes stacked-first-card {
     0% {
         left: -8px;
         transform: rotate(-1deg);
@@ -116,7 +117,7 @@
     }
 }
 
-@keyframes stackedSecondCard {
+@keyframes stacked-second-card {
     0% {
         left: 8px;
         transform: rotate(1deg);

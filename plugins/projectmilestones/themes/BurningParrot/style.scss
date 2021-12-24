@@ -62,7 +62,17 @@
         left: 10px;
         width: 4px;
         height: 100%;
-        background: linear-gradient(to top, var(--tlp-white-color) 0, release-chart.$timeline-color var(--tlp-medium-spacing), transparent calc(var(--tlp-medium-spacing) + 1px)), linear-gradient(to bottom, var(--tlp-white-color) 0, release-chart.$timeline-color var(--tlp-medium-spacing));
+        background: linear-gradient(
+                to top,
+                var(--tlp-white-color) 0,
+                release-chart.$timeline-color var(--tlp-medium-spacing),
+                transparent calc(var(--tlp-medium-spacing) + 1px)
+            ),
+            linear-gradient(
+                to bottom,
+                var(--tlp-white-color) 0,
+                release-chart.$timeline-color var(--tlp-medium-spacing)
+            );
     }
 }
 
@@ -117,7 +127,8 @@
 
 .release-loader {
     height: 100px;
-    background: url("../../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center center;
+    background: url("../../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center
+        center;
 }
 
 .button-backlog-link {

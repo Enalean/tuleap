@@ -18,13 +18,10 @@
  */
 
 @use "../../../../../src/themes/BurningParrot/css/includes/global-variables";
-
 @import "../../../scripts/kanban/node_modules/@tuleap/plugin-tracker-artifact-modal";
 @import "../../../scripts/kanban/node_modules/ng-scrollbar/dist/ng-scrollbar";
 @import "../../../scripts/kanban/node_modules/dragular/dist/dragular";
-
 @import "./highlight";
-
 @import "kanban/socket";
 @import "kanban/edit-kanban";
 @import "kanban/kanban-item";
@@ -41,7 +38,7 @@ $kanban-column-closed-width: 60px;
 $kanban-column-header-height: 50px;
 $kanban-column-footer-height: 50px;
 
-@keyframes loadingItems {
+@keyframes loading-items {
     0% {
         opacity: 0.4;
     }
@@ -62,28 +59,42 @@ $kanban-column-footer-height: 50px;
 }
 
 .has-visible-project-banner .kanban {
-    height: calc(100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$project-banner-base-height});
+    height: calc(
+        100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$project-banner-base-height}
+    );
 }
 
 .has-visible-project-banner.sidebar-collapsed .kanban {
-    height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$project-banner-base-height});
+    height: calc(
+        100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$project-banner-base-height}
+    );
 }
 
 .has-visible-platform-banner {
     .kanban {
-        height: calc(100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$platform-banner-base-height});
+        height: calc(
+            100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$platform-banner-base-height}
+        );
     }
 
     &.sidebar-collapsed .kanban {
-        height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$platform-banner-base-height});
+        height: calc(
+            100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$platform-banner-base-height}
+        );
     }
 
     &.has-visible-project-banner .kanban {
-        height: calc(100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$project-banner-base-height} - #{global-variables.$platform-banner-base-height} - #{global-variables.$extra-platform-banner-white-space-height});
+        height: calc(
+            100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$project-banner-base-height} -
+                #{global-variables.$platform-banner-base-height} - #{global-variables.$extra-platform-banner-white-space-height}
+        );
     }
 
     &.has-visible-project-banner.sidebar-collapsed .kanban {
-        height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$project-banner-base-height} - #{global-variables.$platform-banner-base-height} - #{global-variables.$extra-platform-banner-white-space-height});
+        height: calc(
+            100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$project-banner-base-height} -
+                #{global-variables.$platform-banner-base-height} - #{global-variables.$extra-platform-banner-white-space-height}
+        );
     }
 }
 
@@ -348,7 +359,7 @@ $kanban-column-footer-height: 50px;
     font-weight: 300;
 
     &.loading {
-        animation: 250ms linear 0s infinite alternate loadingItems;
+        animation: 250ms linear 0s infinite alternate loading-items;
     }
 }
 
@@ -487,7 +498,7 @@ kanban-column {
     font-weight: 300;
 
     &.loading {
-        animation: 250ms linear 0s infinite alternate loadingItems;
+        animation: 250ms linear 0s infinite alternate loading-items;
     }
 }
 

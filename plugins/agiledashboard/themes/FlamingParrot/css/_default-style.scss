@@ -25,6 +25,7 @@ body.agiledashboard_homepage .main .content {
 
 .empty-home {
     $muted-text-color: #676767;
+
     min-height: 500px;
     padding: 285px 0 0;
     text-align: center;
@@ -64,6 +65,7 @@ body.agiledashboard_homepage .main .content {
 
 #home {
     $border-color: #dddddd;
+
     padding: 12px;
 
     .date-bar {
@@ -195,9 +197,9 @@ body.agiledashboard_homepage .main .content {
 
     .milestone {
         $min-width: 320px;
+
         min-width: $min-width;
         margin: 0 10px 10px 0;
-
         float: left;
         border: 1px solid $border-color;
         border-radius: var(--tlp-large-radius);
@@ -234,10 +236,10 @@ body.agiledashboard_homepage .main .content {
         .content {
             $start-color: #ffffff;
             $stop-color: #fafafa;
+
             height: 150px;
             padding: 0;
             border-bottom: 1px solid $border-color;
-
             background: linear-gradient(to bottom, $start-color 0%, $stop-color 100%);
 
             .milestone-burndown {

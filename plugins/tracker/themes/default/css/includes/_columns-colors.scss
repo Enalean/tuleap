@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
 @use "../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .cardwall-column-header-color-#{$color-name} {
-        background-color: map-get($colors, "primary");
+        background-color: map.get($colors, "primary");
     }
 }

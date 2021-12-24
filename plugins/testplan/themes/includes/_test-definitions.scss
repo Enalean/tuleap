@@ -169,10 +169,10 @@
 }
 
 .test-plan-test-definition-test-status-tooltip-position {
-    @include tooltip.tlp-tooltip-right();
+    @include tooltip.tlp-tooltip-right;
 
-    @include media-query.not-large-screen() {
-        @include tooltip.tlp-tooltip-left();
+    @include media-query.not-large-screen {
+        @include tooltip.tlp-tooltip-left;
     }
 }
 

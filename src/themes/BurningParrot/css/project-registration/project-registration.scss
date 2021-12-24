@@ -26,7 +26,9 @@ $illustration-spacing: calc(2 * var(--tlp-jumbo-spacing));
 $title-margin-left: calc(#{$illustration-width} + #{$illustration-spacing});
 $template-category-active-tab-right-border-width: 3px;
 $template-category-inactive-tab-right-border-width: 1px;
-$template-category-inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #{$template-category-active-tab-right-border-width} - #{$template-category-inactive-tab-right-border-width});
+$template-category-inactive-tab-right-margin: calc(
+    var(--tlp-medium-spacing) + #{$template-category-active-tab-right-border-width} - #{$template-category-inactive-tab-right-border-width}
+);
 
 .project-registration {
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 100px;
@@ -73,7 +75,7 @@ $template-category-inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #
     }
 
     &.pinned {
-        @keyframes footerAppear {
+        @keyframes footer-appear {
             from {
                 transform: translateY(100%);
             }
@@ -88,7 +90,7 @@ $template-category-inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #
         left: 0;
         width: 100vw;
         padding: var(--tlp-large-spacing);
-        animation: footerAppear ease-out 150ms;
+        animation: footer-appear ease-out 150ms;
         border-top: 0;
         background: var(--tlp-white-color-transparent-10);
         box-shadow: var(--tlp-sticky-footer-shadow);

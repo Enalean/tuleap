@@ -49,13 +49,23 @@ $spacing-between-nav-items: 5px;
 
 %background-action {
     background-color: var(--tlp-dark-color);
-    background-image: linear-gradient(0, var(--tlp-sidebar-action-background), var(--tlp-sidebar-action-background));
+    // stylelint-disable-next-line function-linear-gradient-no-nonstandard-direction
+    background-image: linear-gradient(
+        0,
+        var(--tlp-sidebar-action-background),
+        var(--tlp-sidebar-action-background)
+    );
     background-blend-mode: overlay;
 }
 
 %background-action-hover {
     background-color: var(--tlp-dark-color);
-    background-image: linear-gradient(0, var(--tlp-sidebar-action-background-hover), var(--tlp-sidebar-action-background-hover));
+    // stylelint-disable-next-line function-linear-gradient-no-nonstandard-direction
+    background-image: linear-gradient(
+        0,
+        var(--tlp-sidebar-action-background-hover),
+        var(--tlp-sidebar-action-background-hover)
+    );
     background-blend-mode: overlay;
 }
 
@@ -70,6 +80,7 @@ $spacing-between-nav-items: 5px;
     max-width: variables-common.$sidebar-width;
     height: 100vh;
     background: var(--tlp-dark-color);
+
     @media screen and (max-width: 880px) {
         padding: variables-common.$navbar-height 0 0;
     }
@@ -115,6 +126,7 @@ $spacing-between-nav-items: 5px;
     .active > .project-sidebar-nav-item:focus,
     .active > .project-sidebar-nav-item:hover {
         @extend %background-action-hover;
+
         color: var(--tlp-white-color);
     }
 }
@@ -123,14 +135,17 @@ $spacing-between-nav-items: 5px;
     @extend %override-button-default;
     @extend %round-icon;
     @extend %background-action;
+
     display: flex;
     box-sizing: border-box;
-    margin: calc(var(--tlp-medium-spacing) + #{$spacing-between-nav-items}) auto var(--tlp-medium-spacing);
+    margin: calc(var(--tlp-medium-spacing) + #{$spacing-between-nav-items}) auto
+        var(--tlp-medium-spacing);
     color: var(--tlp-neutral-normal-color);
 
     &:hover,
     &:focus {
         @extend %background-action-hover;
+
         color: var(--tlp-white-color);
     }
 }
@@ -286,6 +301,7 @@ $spacing-between-nav-items: 5px;
     &:focus,
     &:hover {
         @extend %background-action-hover;
+
         color: var(--tlp-white-color);
         text-decoration: none;
     }
@@ -298,6 +314,7 @@ $spacing-between-nav-items: 5px;
 .project-administration-link {
     @extend %round-icon;
     @extend %background-action;
+
     flex: 0 0 auto;
     transition: color ease-in-out 100ms;
     color: var(--tlp-neutral-normal-color);
@@ -311,6 +328,7 @@ $spacing-between-nav-items: 5px;
     &:focus,
     &:hover {
         @extend %background-action-hover;
+
         color: var(--tlp-white-color);
         text-decoration: none;
     }
@@ -318,6 +336,7 @@ $spacing-between-nav-items: 5px;
 
 .project-sidebar-banner-button {
     @extend %override-button-default;
+
     display: flex;
     align-items: center;
     margin: 0 var(--tlp-small-spacing);
@@ -333,6 +352,7 @@ $spacing-between-nav-items: 5px;
 
 .project-sidebar-banner-button-icon {
     @extend %round-icon;
+
     background-color: var(--tlp-warning-color);
 
     .fa-bullhorn {
@@ -340,12 +360,13 @@ $spacing-between-nav-items: 5px;
         top: -1px;
         color: var(--tlp-white-color);
         font-size: 0.6rem;
-        text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+        text-shadow: 0 0 1px rgb(0 0 0 / 50%);
     }
 }
 
 .project-sidebar-banner-button-label {
     @extend %uppercase-title;
+
     margin: 0 0 0 var(--tlp-small-spacing);
     color: var(--tlp-warning-color);
 }
@@ -359,6 +380,7 @@ $spacing-between-nav-items: 5px;
 
     > .project-sidebar-project-flags-icon {
         @extend %round-icon;
+
         flex: 0 0 auto;
         background: var(--tlp-main-color-transparent-85);
 
@@ -399,6 +421,7 @@ $spacing-between-nav-items: 5px;
 
 .project-sidebar-project-flags-label {
     @extend %uppercase-title;
+
     max-width: 185px;
 }
 
@@ -502,6 +525,7 @@ $spacing-between-nav-items: 5px;
 
 .project-sidebar-linked-projects-icon {
     @extend %round-icon;
+
     flex: 0 0 auto;
     background: var(--tlp-main-color-transparent-85);
     color: var(--tlp-main-color-lighter-40);
@@ -522,6 +546,7 @@ $spacing-between-nav-items: 5px;
 .project-sidebar-linked-projects-label-popover,
 .project-sidebar-linked-projects-label {
     @extend %uppercase-title;
+
     margin: 0 0 0 var(--tlp-small-spacing);
     color: var(--tlp-white-color-transparent-10);
 }
@@ -575,6 +600,7 @@ $spacing-between-nav-items: 5px;
 
 .project-sidebar-tools-section-label {
     @extend %uppercase-title;
+
     margin: 0 0 var(--tlp-small-spacing) 0;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     border: 0;

@@ -3,12 +3,10 @@ const fs = require('fs')
 const prettier_config = JSON.parse(fs.readFileSync("./.prettierrc", "utf-8"));
 
 module.exports = {
-    extends: ["stylelint-config-sass-guidelines", "stylelint-config-property-sort-order-smacss", "stylelint-prettier/recommended"],
-    syntax: "scss",
+    extends: ["stylelint-config-sass-guidelines", "stylelint-config-property-sort-order-smacss", "stylelint-config-standard-scss", "stylelint-config-html/vue", "stylelint-prettier/recommended"],
     reportNeedlessDisables: true,
     reportInvalidScopeDisables: true,
     rules: {
-        indentation: [4],
         "comment-word-disallowed-list": [
             [/^!/],
             {
@@ -65,9 +63,12 @@ module.exports = {
         "scss/at-else-empty-line-before": ["never"],
         "scss/dollar-variable-colon-space-before": null,
         "scss/operator-no-unspaced": true,
-        "prettier/prettier": [
-            true,
-            {...prettier_config, "printWidth": 9999} // Override printWidth to play nice with existing .scss files
-        ]
+        "font-family-no-missing-generic-family-keyword": null,
+        "no-descending-specificity": null, // Need a lot of work with existing files
+        "no-invalid-position-at-import-rule": null, // Need work with existing files
+        "scss/operator-no-newline-after": null, // Does not play well with Prettier
+        "max-line-length": null, // Managed by Prettier
+        "indentation": null, // Managed by Prettier
+        "prettier/prettier": [true, prettier_config]
     }
 };

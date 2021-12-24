@@ -125,11 +125,11 @@ q {
 }
 
 input[type="number"] {
-    -moz-appearance: textfield; //stylelint-disable-line property-no-vendor-prefix
+    -moz-appearance: textfield; // stylelint-disable-line property-no-vendor-prefix
 
     &:hover,
     &:focus {
-        -moz-appearance: number-input; //stylelint-disable-line property-no-vendor-prefix
+        -moz-appearance: number-input; // stylelint-disable-line property-no-vendor-prefix
     }
 }
 

@@ -142,7 +142,11 @@
         }
 
         > .test-plan-campaign-progression-bar {
-            background-image: linear-gradient(45deg, var(--tlp-success-color), var(--tlp-success-color-lighter-20));
+            background-image: linear-gradient(
+                45deg,
+                var(--tlp-success-color),
+                var(--tlp-success-color-lighter-20)
+            );
         }
     }
 
@@ -154,7 +158,11 @@
         }
 
         > .test-plan-campaign-progression-bar {
-            background-image: linear-gradient(45deg, var(--tlp-danger-color), var(--tlp-danger-color-lighter-20));
+            background-image: linear-gradient(
+                45deg,
+                var(--tlp-danger-color),
+                var(--tlp-danger-color-lighter-20)
+            );
         }
     }
 
@@ -166,7 +174,11 @@
         }
 
         > .test-plan-campaign-progression-bar {
-            background-image: linear-gradient(45deg, var(--tlp-info-color), var(--tlp-info-color-lighter-20));
+            background-image: linear-gradient(
+                45deg,
+                var(--tlp-info-color),
+                var(--tlp-info-color-lighter-20)
+            );
         }
     }
 
@@ -178,7 +190,11 @@
         }
 
         > .test-plan-campaign-progression-bar {
-            background-image: linear-gradient(45deg, var(--tlp-neutral-dark-color), var(--tlp-neutral-dark-color-lighter-20));
+            background-image: linear-gradient(
+                45deg,
+                var(--tlp-neutral-dark-color),
+                var(--tlp-neutral-dark-color-lighter-20)
+            );
         }
     }
 }

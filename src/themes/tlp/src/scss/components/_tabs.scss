@@ -18,10 +18,11 @@
  */
 
 $tlp-tabs-transition: 75ms ease-out;
-
 $active-tab-border-width: 3px;
 $inactive-tab-right-border-width: 1px;
-$inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #{$active-tab-border-width} - #{$inactive-tab-right-border-width});
+$inactive-tab-right-margin: calc(
+    var(--tlp-medium-spacing) + #{$active-tab-border-width} - #{$inactive-tab-right-border-width}
+);
 
 .tlp-tabs {
     display: flex;
@@ -56,7 +57,8 @@ $inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #{$active-tab-borde
     min-width: 100%;
     padding: var(--tlp-medium-spacing) / 2 0;
     transform: translateY(100%);
-    transition: bottom $tlp-tabs-transition, opacity $tlp-tabs-transition, box-shadow $tlp-tabs-transition;
+    transition: bottom $tlp-tabs-transition, opacity $tlp-tabs-transition,
+        box-shadow $tlp-tabs-transition;
     border-top: 0;
     border-bottom: 0;
     border-radius: 0 0 var(--tlp-large-radius) var(--tlp-large-radius);
@@ -152,10 +154,12 @@ $inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #{$active-tab-borde
 .tlp-tabs-vertical > .tlp-tab {
     justify-content: flex-end;
     width: 100%;
-    padding: var(--tlp-medium-spacing) $inactive-tab-right-margin var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+    padding: var(--tlp-medium-spacing) $inactive-tab-right-margin var(--tlp-medium-spacing)
+        var(--tlp-medium-spacing);
     transition: color $tlp-tabs-transition, border-right-color $tlp-tabs-transition;
     border: 0;
-    border-right: $inactive-tab-right-border-width solid var(--tlp-neutral-dark-color-transparent-50);
+    border-right: $inactive-tab-right-border-width solid
+        var(--tlp-neutral-dark-color-transparent-50);
     line-height: 0.875rem;
     white-space: nowrap;
 
@@ -168,8 +172,10 @@ $inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #{$active-tab-borde
 
     &.tlp-tab-disabled,
     &.tlp-tab-disabled:hover {
-        padding: var(--tlp-medium-spacing) $inactive-tab-right-margin var(--tlp-medium-spacing) var(--tlp-medium-spacing);
-        border-right: $inactive-tab-right-border-width solid var(--tlp-neutral-dark-color-transparent-50);
+        padding: var(--tlp-medium-spacing) $inactive-tab-right-margin var(--tlp-medium-spacing)
+            var(--tlp-medium-spacing);
+        border-right: $inactive-tab-right-border-width solid
+            var(--tlp-neutral-dark-color-transparent-50);
         opacity: 1;
         color: var(--tlp-dimmed-color-lighter-50);
 
@@ -195,7 +201,8 @@ $inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #{$active-tab-borde
 }
 
 .tlp-tab-badge-append {
-    margin: calc(-1 * var(--tlp-small-spacing)) 0 calc(-1 * var(--tlp-small-spacing)) var(--tlp-small-spacing);
+    margin: calc(-1 * var(--tlp-small-spacing)) 0 calc(-1 * var(--tlp-small-spacing))
+        var(--tlp-small-spacing);
     transition: opacity $tlp-tabs-transition;
     border-radius: var(--tlp-medium-spacing);
     letter-spacing: normal;

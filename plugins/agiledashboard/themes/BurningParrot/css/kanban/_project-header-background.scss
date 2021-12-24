@@ -18,14 +18,13 @@
  */
 
 @use "../../src/themes/BurningParrot/css/includes/global-variables";
-
 @use "../../src/themes/common/css/project-background/background";
 
 .project-with-background .kanban:not(.widget-context) {
     .kanban-header-title,
     .kanban-header-filter-label,
     .kanban-header-filter-text-info {
-        @include background.project-background-title-header-typography();
+        @include background.project-background-title-header-typography;
     }
 
     .kanban-column-header {
@@ -34,9 +33,14 @@
 }
 
 .agiledashboard-body {
-    $elements-with-project-background: ".kanban-feedbacks", ".kanban-header", ".kanban-filtered-info";
+    $elements-with-project-background: ".kanban-feedbacks", ".kanban-header",
+        ".kanban-filtered-info";
 
     @each $element-with-project-background in $elements-with-project-background {
-        @include background.apply-background($element-with-project-background, global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
+        @include background.apply-background(
+            $element-with-project-background,
+            global-variables.$sidebar-expanded-width,
+            global-variables.$sidebar-collapsed-width
+        );
     }
 }

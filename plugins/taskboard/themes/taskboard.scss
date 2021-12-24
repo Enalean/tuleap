@@ -54,32 +54,52 @@
 }
 
 .sidebar-collapsed .taskboard-root {
-    height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - var(--tlp-medium-spacing));
+    height: calc(
+        100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - var(--tlp-medium-spacing)
+    );
 }
 
 .has-visible-project-banner .taskboard-root {
-    height: calc(100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$project-banner-base-height} - var(--tlp-medium-spacing));
+    height: calc(
+        100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$project-banner-base-height} -
+            var(--tlp-medium-spacing)
+    );
 }
 
 .has-visible-project-banner.sidebar-collapsed .taskboard-root {
-    height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$project-banner-base-height} - var(--tlp-medium-spacing));
+    height: calc(
+        100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$project-banner-base-height} -
+            var(--tlp-medium-spacing)
+    );
 }
 
 .has-visible-platform-banner {
     .taskboard-root {
-        height: calc(100vh - #{global-variables.$breadcrumb-height} - var(--tlp-medium-spacing) - #{global-variables.$platform-banner-base-height});
+        height: calc(
+            100vh - #{global-variables.$breadcrumb-height} - var(--tlp-medium-spacing) - #{global-variables.$platform-banner-base-height}
+        );
     }
 
     &.sidebar-collapsed .taskboard-root {
-        height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - var(--tlp-medium-spacing) - #{global-variables.$platform-banner-base-height});
+        height: calc(
+            100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - var(
+                    --tlp-medium-spacing
+                ) - #{global-variables.$platform-banner-base-height}
+        );
     }
 
     &.has-visible-project-banner .taskboard-root {
-        height: calc(100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$project-banner-base-height} - var(--tlp-medium-spacing) - #{global-variables.$platform-banner-base-height});
+        height: calc(
+            100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$project-banner-base-height} -
+                var(--tlp-medium-spacing) - #{global-variables.$platform-banner-base-height}
+        );
     }
 
     &.has-visible-project-banner.sidebar-collapsed .taskboard-root {
-        height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$project-banner-base-height} - var(--tlp-medium-spacing) - #{global-variables.$platform-banner-base-height});
+        height: calc(
+            100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$project-banner-base-height} -
+                var(--tlp-medium-spacing) - #{global-variables.$platform-banner-base-height}
+        );
     }
 }
 

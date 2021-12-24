@@ -23,7 +23,8 @@
 .project-with-background {
     .trackers-homepage-title,
     .tracker-administration-title {
-        @include background.project-background-title-header-typography();
+        @include background.project-background-title-header-typography;
+
         margin: 0;
         padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
     }
@@ -38,6 +39,14 @@
 }
 
 body {
-    @include background.apply-background(".tracker-administration-title", global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
-    @include background.apply-background(".trackers-homepage-title", global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
+    @include background.apply-background(
+        ".tracker-administration-title",
+        global-variables.$sidebar-expanded-width,
+        global-variables.$sidebar-collapsed-width
+    );
+    @include background.apply-background(
+        ".trackers-homepage-title",
+        global-variables.$sidebar-expanded-width,
+        global-variables.$sidebar-collapsed-width
+    );
 }

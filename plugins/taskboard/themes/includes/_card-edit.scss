@@ -18,6 +18,8 @@
  */
 
 @use "../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "sass:map";
+@use "sass:color";
 
 @mixin pencil-background($color) {
     background: $color;
@@ -29,8 +31,7 @@
 }
 
 .taskboard-card-edit-mode-assignees {
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
     align-items: center;
     justify-content: flex-end;
     transition: color ease-in-out 100ms;
@@ -97,10 +98,13 @@
 
     > .taskboard-card-edit-trigger {
         @include pencil-background(var(--secondary-color, var(--tlp-white-color)));
+
         display: flex;
         position: absolute;
         z-index: 10;
-        top: calc(var(--tlp-small-spacing) + #{$assignee-negative-margin} - #{$additional-size-to-hide-assignee});
+        top: calc(
+            var(--tlp-small-spacing) + #{$assignee-negative-margin} - #{$additional-size-to-hide-assignee}
+        );
         right: calc(var(--tlp-small-spacing) - #{$additional-size-to-hide-assignee});
         justify-content: center;
         width: $assignee-avatar-size + ($additional-size-to-hide-assignee * 2);
@@ -125,7 +129,9 @@
     }
 
     &.taskboard-card-with-accessibility > .taskboard-card-edit-trigger {
-        right: calc(var(--tlp-medium-spacing) + #{$card-info-margin-right} - #{$additional-size-to-hide-assignee});
+        right: calc(
+            var(--tlp-medium-spacing) + #{$card-info-margin-right} - #{$additional-size-to-hide-assignee}
+        );
     }
 
     &:hover,
@@ -140,7 +146,9 @@
     }
 }
 
-.taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card.taskboard-card-edit-mode,
+.taskboard-cell:first-child
+    > .taskboard-cell-parent-card
+    > .taskboard-card.taskboard-card-edit-mode,
 .taskboard-card.taskboard-card-edit-mode {
     margin: 0;
     border: 1px solid var(--tlp-main-color);
@@ -156,7 +164,8 @@
     }
 
     &.taskboard-card-with-accessibility {
-        padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
+        padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing)
+            calc(var(--tlp-small-spacing) + 2px);
     }
 
     > .taskboard-card-content > .taskboard-card-xref-label {
@@ -180,7 +189,10 @@
     }
 }
 
-.taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card:not([class*="taskboard-card-background-"]) > .taskboard-card-edit-trigger {
+.taskboard-cell:first-child
+    > .taskboard-cell-parent-card
+    > .taskboard-card:not([class*="taskboard-card-background-"])
+    > .taskboard-card-edit-trigger {
     @include pencil-background(var(--tlp-background-color));
 
     &:focus {
@@ -267,17 +279,17 @@
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.tlp-badge-#{$color-name}::before {
-            color: darken(map-get($colors, "text"), 5%);
+            color: color.adjust(map.get($colors, "text"), $lightness: - 5%);
         }
 
         &.taskboard-card-remaining-effort-edit-mode,
         &:focus,
         &:hover {
             &.tlp-badge-#{$color-name} {
-                background: darken(map-get($colors, "text"), 5%);
+                background: color.adjust(map.get($colors, "text"), $lightness: - 5%);
 
                 &::after {
-                    background: darken(map-get($colors, "text"), 5%);
+                    background: color.adjust(map.get($colors, "text"), $lightness: - 5%);
                 }
             }
         }

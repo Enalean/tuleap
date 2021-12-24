@@ -1,4 +1,5 @@
 /* stylelint-disable selector-no-qualifying-type */
+
 /* TextboxList CSS */
 *:first-child + html div.holder {
     padding-bottom: 2px;
@@ -12,7 +13,7 @@
 
 div.holder *,
 div.autocomplete * {
-    font: 11px "Lucida Grande", "Verdana";
+    font: 11px "Lucida Grande", Verdana;
 }
 
 /* DIV holder */
@@ -25,7 +26,7 @@ div.holder {
     border: 1px solid #cccccc;
     border-radius: var(--tlp-medium-radius);
     background-color: #ffffff;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgb(0 0 0 / 7.5%);
     cursor: text;
 }
 

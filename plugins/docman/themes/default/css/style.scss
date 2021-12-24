@@ -212,6 +212,7 @@ a img {
 #docman_filters_fieldset {
     /* Linked to #docman_filters_title::margin-bottom */
     margin-top: -0.3em;
+
     /* Need to be the same value than #docman_filters_title::margin-bottom */
     margin-bottom: 0.3em;
     padding: 0.2em;
@@ -259,7 +260,8 @@ a img {
     border-right: 2px solid #bcbcad;
     border-bottom: 2px solid #bcbcad;
     background: #e8e8e0;
-    /*background:#e8e8e0 url('../images/bg-menu.png') 0 0 repeat-y;*/
+
+    /* background:#e8e8e0 url('../images/bg-menu.png') 0 0 repeat-y; */
 }
 
 .docman_item_menu ul {
@@ -269,12 +271,10 @@ a img {
 }
 
 .docman_item_menu ul li a {
-    padding-top: 0;
-    padding-right: 1em;
-    padding-bottom: 0;
-    padding-left: 24px;
+    padding: 0 1em 0 24px;
     border: 1px solid #e8e8e0;
-    /*display: block;*/
+
+    /* display: block; */
     background-repeat: no-repeat;
     background-position: 2px 1px;
     text-decoration: none;
@@ -333,10 +333,7 @@ a img {
  */
 .docman_item_option_move {
     display: inline;
-    padding-top: 0;
-    padding-right: 1em;
-    padding-bottom: 0;
-    padding-left: 24px;
+    padding: 0 1em 0 24px;
     border: 1px solid #e8e8e0;
     background-image: url("../../../www/themes/default/images/ic/item-move.png");
     background-repeat: no-repeat;
@@ -396,7 +393,7 @@ a img {
     padding: 0;
 }
 
-/**********/
+/*********   */
 .docman_item_actual_parent {
     font-weight: bold;
 }
@@ -415,7 +412,7 @@ a img {
 .docman_md_equivalent,
 .docman_md_conflict {
     /* This color is orange light */
-    background-color: rgb(253, 185, 111);
+    background-color: rgb(253 185 111);
     text-align: center;
 }
 

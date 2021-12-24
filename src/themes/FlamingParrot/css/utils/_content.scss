@@ -3,6 +3,7 @@
 
 .main {
     padding: 0;
+
     @media screen and (max-width: 880px) {
         padding: variables-common.$navbar-height 0 0 0;
     }

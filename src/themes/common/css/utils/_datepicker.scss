@@ -1,4 +1,5 @@
 /* stylelint-disable selector-no-qualifying-type, selector-class-pattern */
+
 /* The wrapper div */
 div.datePicker {
     position: absolute;
@@ -7,14 +8,14 @@ div.datePicker {
     min-width: 18em;
 
     /* For Example: If using the YUI font CSS, uncomment the following line to get a 10px font-size within the datePicker */
+
     /* font:900 77%/77% Verdana; */
 
     background: transparent;
 
     /* Change the font-size to suit your design's CSS. The following line is for the demo that has a 12px font-size defined on the body tag */
-    font: 0.8em/0.8em Verdana, Sans-Serif;
+    font: 0.8em/0.8em Verdana, sans-serif;
     text-align: center;
-
     user-select: none;
 }
 
@@ -50,7 +51,8 @@ a.date-picker-control:focus {
     margin: 0 0 0 4px;
     padding: 0;
     border: 0 none;
-    background: transparent url("#{$tuleap-common-theme-basepath}images/ic/cal.png") no-repeat 50% 50%;
+    background: transparent url("#{$tuleap-common-theme-basepath}images/ic/cal.png") no-repeat 50%
+        50%;
     line-height: 1;
     text-decoration: none;
     vertical-align: middle;
@@ -82,7 +84,7 @@ div.datePicker th span {
     border-width: 0;
     background: transparent;
     color: #000000;
-    font-family: georgia, times new roman, palatino, times, bookman, serif;
+    font-family: georgia, "times new roman", palatino, times, bookman, serif;
     font-weight: bold;
     line-height: 1.2em;
     text-align: center;
@@ -91,7 +93,7 @@ div.datePicker th span {
 
 div.datePicker th span.month-display,
 div.datePicker th span.year-display {
-    font: normal 1em Verdana, Sans-Serif;
+    font: normal 1em Verdana, sans-serif;
     letter-spacing: 1px;
     text-transform: uppercase;
     cursor: default;
@@ -106,7 +108,7 @@ div.datePicker th span.next-but {
 div.datePicker th span.today-but {
     width: 100%;
     margin: 0 auto;
-    font: normal 0.8em Verdana, Sans-Serif;
+    font: normal 0.8em Verdana, sans-serif;
     line-height: 1em;
     text-align: center;
     text-decoration: none;
@@ -124,7 +126,7 @@ div.datePicker th span.fd-day-header {
     width: 2em;
     height: 1.2em;
     margin: 0 auto;
-    font: 900 1em Verdana, Sans-Serif;
+    font: 900 1em Verdana, sans-serif;
     line-height: 1em;
     text-align: center;
     text-decoration: none;
@@ -153,6 +155,7 @@ div.datePicker table td {
     border: 1px solid #cccccc;
     outline: none;
     background: #ffffff;
+
     /* Opera requires a line-height bigger than 1em in order to redraw properly */
     line-height: 1.2em;
     text-align: center;
@@ -196,7 +199,7 @@ div.datePicker table th.date-picker-day-header span {
 /* The "todays date" style */
 div.datePicker table td.date-picker-today {
     background: #ffffa3;
-    color: rgb(100, 100, 100) !important;
+    color: rgb(100 100 100) !important;
 }
 
 /* The "selected date" style */
@@ -227,9 +230,9 @@ div.datePicker table td.day-disabled {
 
 /* The "active cursor" style */
 div.datePicker table tbody td.date-picker-hover {
-    border-color: rgb(100, 130, 170);
+    border-color: rgb(100 130 170);
     background: #ffffff;
-    color: rgb(100, 130, 170);
+    color: rgb(100 130 170);
     cursor: pointer;
 }
 

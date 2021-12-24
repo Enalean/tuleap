@@ -22,7 +22,7 @@
 
 .project-with-background {
     .agiledashboard-administration-title {
-        @include background.project-background-title-header-typography();
+        @include background.project-background-title-header-typography;
 
         .tlp-dropdown-menu-item {
             text-shadow: initial;
@@ -31,7 +31,11 @@
 }
 
 body {
-    @include background.apply-background(".agiledashboard-administration-title", global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
+    @include background.apply-background(
+        ".agiledashboard-administration-title",
+        global-variables.$sidebar-expanded-width,
+        global-variables.$sidebar-collapsed-width
+    );
 }
 
 .agiledashboard-administration-title {

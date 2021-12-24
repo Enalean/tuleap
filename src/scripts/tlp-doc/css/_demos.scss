@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
+
 .demo {
     display: flex;
     justify-content: space-between;
@@ -119,17 +121,17 @@
         width: 50%;
         margin: 0 0 0 10px;
 
-        //stylelint-disable-next-line selector-class-pattern
+        // stylelint-disable-next-line selector-class-pattern
         .CodeMirror {
             flex: 1;
             background-image: none;
             line-height: 18px;
         }
 
-        //stylelint-disable selector-class-pattern
+        // stylelint-disable selector-class-pattern
         .CodeMirror-overlayscroll-horizontal > div,
         .CodeMirror-overlayscroll-vertical > div {
-            //stylelint-enable
+            // stylelint-enable
             background: $editor-scrollbar-color;
         }
     }
@@ -183,45 +185,50 @@
 
         @each $color-name, $colors in $tlp-swatch-color-map {
             .doc-color-#{$color-name} {
-                border: 3px solid map-get($colors, "primary");
-                background-color: map-get($colors, "secondary");
+                border: 3px solid map.get($colors, "primary");
+                background-color: map.get($colors, "secondary");
             }
 
             .doc-color-code-#{$color-name}-primary {
                 @extend %size;
-                background-color: map-get($colors, "primary");
+
+                background-color: map.get($colors, "primary");
                 color: $tlp-white-color;
             }
 
             .doc-color-code-#{$color-name}-secondary {
                 @extend %size;
-                background-color: map-get($colors, "secondary");
-                color: map-get($colors, "text");
+
+                background-color: map.get($colors, "secondary");
+                color: map.get($colors, "text");
             }
 
             .doc-color-code-#{$color-name}-border {
                 @extend %size;
-                border: 2px solid map-get($colors, "border");
-                color: map-get($colors, "border");
+
+                border: 2px solid map.get($colors, "border");
+                color: map.get($colors, "border");
             }
 
             .doc-color-code-#{$color-name}-text {
                 @extend %size;
-                background-color: map-get($colors, "secondary");
-                color: map-get($colors, "text");
+
+                background-color: map.get($colors, "secondary");
+                color: map.get($colors, "text");
             }
 
             .doc-color-code-#{$color-name}-text-on-dark {
                 @extend %size;
+
                 background-color: var(--tlp-dark-color);
-                color: map-get($colors, "text-on-dark");
+                color: map.get($colors, "text-on-dark");
             }
 
             .doc-color-#{$color-name}-pattern {
                 width: 30px;
                 height: 30px;
-                background-color: map-get($colors, "text");
-                mask-image: url("#{map-get($colors, 'pattern')}");
+                background-color: map.get($colors, "text");
+                mask-image: url("#{map.get($colors, 'pattern')}");
             }
         }
     }

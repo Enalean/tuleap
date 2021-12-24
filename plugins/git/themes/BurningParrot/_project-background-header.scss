@@ -25,7 +25,7 @@
     .git-repository-list-header-badge,
     .git-repository-actions-select-owners > .tlp-label,
     .git-repository-name {
-        @include background.project-background-title-header-typography();
+        @include background.project-background-title-header-typography;
     }
 
     .git-repository-parent {
@@ -45,8 +45,14 @@
 }
 
 body {
-    $elements-with-project-background: ".git-repository-list-header", ".git-repository-list-actions", ".git-repository-header";
+    $elements-with-project-background: ".git-repository-list-header", ".git-repository-list-actions",
+        ".git-repository-header";
+
     @each $element-with-project-background in $elements-with-project-background {
-        @include background.apply-background($element-with-project-background, global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
+        @include background.apply-background(
+            $element-with-project-background,
+            global-variables.$sidebar-expanded-width,
+            global-variables.$sidebar-collapsed-width
+        );
     }
 }

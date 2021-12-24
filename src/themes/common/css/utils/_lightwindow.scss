@@ -30,16 +30,19 @@
     left: 0;
     width: 100%;
     height: 100px;
+
     /* REQUIRED */
 }
 
 #lightwindow {
     /* REQUIRED */
+
     /* Of Note - The height and width of this element are set to 0px */
     display: none;
     visibility: hidden;
     position: absolute;
     z-index: 2001;
+
     /* REQUIRED */
 }
 
@@ -49,6 +52,7 @@
     visibility: hidden;
     position: absolute;
     margin: 0;
+
     /* REQUIRED */
     padding: 0;
 }
@@ -72,9 +76,11 @@
     top: 0;
     left: 0;
     width: 100%;
+
     /* REQUIRED */
     height: 100%;
     padding: 10px;
+
     /* REQUIRED */
     background-color: #f0f0f0;
 }
@@ -114,17 +120,19 @@
     float: left;
 }
 
-/*-----------------------------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------------------------
     I liked the Navigation so much from http://www.huddletogether.com/projects/lightbox2/
     I mean let's face it, it works really well and is very easy to figure out.
------------------------------------------------------------------------------------------------*/
+----------------------------------------------------------------------------------------------- */
 
 #lightwindow_navigation {
     display: none;
+
     /* REQUIRED */
     position: absolute;
     top: 0;
     left: 0;
+
     /* REQUIRED */
 }
 
@@ -137,6 +145,7 @@
     left: 0;
     width: 100%;
     height: 100%;
+
     /* REQUIRED */
 }
 
@@ -147,6 +156,7 @@
 #lightwindow_navigation a:active {
     /* REQUIRED */
     outline: none;
+
     /* REQUIRED */
 }
 
@@ -155,7 +165,8 @@
     display: block;
     width: 49%;
     height: 100%;
-    background: transparent url("#{$tuleap-common-theme-basepath}images/lightwindow/blank.gif") no-repeat; /* Trick IE into showing hover */
+    background: transparent url("#{$tuleap-common-theme-basepath}images/lightwindow/blank.gif")
+        no-repeat; /* Trick IE into showing hover */
 }
 
 #lightwindow_previous {
@@ -170,12 +181,14 @@
 
 #lightwindow_previous:hover,
 #lightwindow_previous:active {
-    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/prevlabel.gif") left 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/prevlabel.gif") left 15%
+        no-repeat;
 }
 
 #lightwindow_next:hover,
 #lightwindow_next:active {
-    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/nextlabel.gif") right 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/nextlabel.gif") right 15%
+        no-repeat;
 }
 
 #lightwindow_previous_title,
@@ -207,7 +220,8 @@ a:visited#lightwindow_galleries_tab {
     width: 77px;
     height: 20px;
     float: right;
-    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/black-70.png") repeat 0 0 transparent;
+    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/black-70.png") repeat 0 0
+        transparent;
     color: #ffffbe;
     font-size: 11px;
     font-weight: bold;
@@ -238,17 +252,20 @@ a:active#lightwindow_galleries_tab {
 }
 
 #lightwindow_galleries_tab .up {
-    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/arrow-up.gif") no-repeat 60px 5px transparent;
+    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/arrow-up.gif") no-repeat
+        60px 5px transparent;
 }
 
 #lightwindow_galleries_tab .down {
-    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/arrow-down.gif") no-repeat 60px 6px transparent;
+    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/arrow-down.gif") no-repeat
+        60px 6px transparent;
 }
 
 #lightwindow_galleries_list {
     height: 0;
     overflow: hidden;
-    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/black-70.png") repeat 0 0 transparent;
+    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/black-70.png") repeat 0 0
+        transparent;
 }
 
 * html #lightwindow_galleries_list {
@@ -303,12 +320,14 @@ a:active#lightwindow_galleries_tab {
 #lightwindow_data {
     /* REQUIRED */
     position: absolute;
+
     /* REQUIRED */
 }
 
 #lightwindow_data_slide {
     /* REQUIRED */
     position: relative;
+
     /* REQUIRED */
 }
 
@@ -382,9 +401,9 @@ a:active#lightwindow_title_bar_close_link {
     color: #ffffff;
 }
 
-/*-----------------------------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------------------------
     Theme styling stuff
------------------------------------------------------------------------------------------------*/
+----------------------------------------------------------------------------------------------- */
 
 #lightwindow p {
     padding-right: 10px;

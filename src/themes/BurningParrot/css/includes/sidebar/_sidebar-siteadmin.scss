@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:color";
+
 .admin-sidebar-section {
     flex: 0 0 auto;
     padding: var(--tlp-medium-spacing) 0;
@@ -56,8 +58,9 @@
 
 .tlp-search.tlp-search-small.admin-sidebar-search {
     border-color: var(--tlp-dark-color-darker-10);
-    background: transparentize(#ffffff, 0.95) url("../images/admin-sidebar-search-background.png") no-repeat 10px center;
-    color: transparentize(#ffffff, 0.2);
+    background: color.adjust(#ffffff, $alpha: - 0.95)
+        url("../images/admin-sidebar-search-background.png") no-repeat 10px center;
+    color: color.adjust(#ffffff, $alpha: - 0.2);
 }
 
 .admin-sidebar-section-nav {

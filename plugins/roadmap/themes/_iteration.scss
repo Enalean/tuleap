@@ -58,12 +58,22 @@
 .roadmap-gantt-ribbon-iterations-iteration-level-1 {
     border: 1px solid var(--tlp-neutral-normal-color);
     border-bottom: 0;
-    background: linear-gradient(180deg, var(--tlp-neutral-normal-color) roadmap-variables.$iteration-height, transparent 24px, transparent 100%);
+    background: linear-gradient(
+        180deg,
+        var(--tlp-neutral-normal-color) roadmap-variables.$iteration-height,
+        transparent 24px,
+        transparent 100%
+    );
 }
 
 .roadmap-gantt-ribbon-iterations-iteration-level-2 {
     margin-top: 2px;
     border: 1px solid var(--tlp-neutral-normal-color-lighter-40);
     border-bottom: 0;
-    background: linear-gradient(180deg, var(--tlp-neutral-normal-color-lighter-40) roadmap-variables.$iteration-height, transparent 24px, transparent 100%);
+    background: linear-gradient(
+        180deg,
+        var(--tlp-neutral-normal-color-lighter-40) roadmap-variables.$iteration-height,
+        transparent 24px,
+        transparent 100%
+    );
 }

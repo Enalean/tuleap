@@ -63,8 +63,14 @@
 }
 
 .has-visible-platform-banner.has-visible-project-banner .document-upload-to-current-folder {
-    top: calc(#{global-variables.$project-banner-base-height} + #{global-variables.$platform-banner-base-height} + #{global-variables.$extra-platform-banner-white-space-height});
-    height: calc(100vh - #{global-variables.$project-banner-base-height} - #{global-variables.$platform-banner-base-height} - #{global-variables.$extra-platform-banner-white-space-height});
+    top: calc(
+        #{global-variables.$project-banner-base-height} + #{global-variables.$platform-banner-base-height} +
+            #{global-variables.$extra-platform-banner-white-space-height}
+    );
+    height: calc(
+        100vh - #{global-variables.$project-banner-base-height} - #{global-variables.$platform-banner-base-height} -
+            #{global-variables.$extra-platform-banner-white-space-height}
+    );
 }
 
 .document-upload-to-current-folder-message {

@@ -143,7 +143,11 @@ $above-highlight-line: 2;
     position: absolute;
     width: 100%;
     margin-left: -10px;
-    background: linear-gradient(to right, var(--tlp-main-color-transparent-90) 60%, transparent 70%);
+    background: linear-gradient(
+        to right,
+        var(--tlp-main-color-transparent-90) 60%,
+        transparent 70%
+    );
 
     &.shown {
         display: block;

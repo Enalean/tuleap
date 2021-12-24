@@ -20,14 +20,13 @@
 @use "sass:map";
 
 $project-background-images-path: "../../images/project-background/" !default;
-
 $definitions: (
     aerial-water: (
         // Photo by Chris
         // https://unsplash.com/@blaichch?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/aerial-water-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/aerial-water-1680px.webp) no-repeat,
-        color: rgb(63, 108, 115),
+        color: rgb(63 108 115),
         size: 100%,
     ),
     asphalt-rock: (
@@ -35,7 +34,7 @@ $definitions: (
         // https://unsplash.com/@jakeblucker?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/asphalt-rock-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/asphalt-rock-1680px.webp) no-repeat,
-        color: rgb(53, 37, 40),
+        color: rgb(53 37 40),
         size: 100%,
     ),
     beach-daytime: (
@@ -43,7 +42,7 @@ $definitions: (
         // https://unsplash.com/@chrisstenger?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/beach-daytime-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/beach-daytime-1680px.webp) no-repeat,
-        color: rgb(92, 113, 117),
+        color: rgb(92 113 117),
         size: 100%,
     ),
     blue-rain: (
@@ -51,7 +50,7 @@ $definitions: (
         // https://unsplash.com/@jacksondavid?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/blue-rain-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/blue-rain-1680px.webp) no-repeat,
-        color: rgb(6, 62, 90),
+        color: rgb(6 62 90),
         size: 100%,
     ),
     blue-sand: (
@@ -59,7 +58,7 @@ $definitions: (
         // https://unsplash.com/@amyjoyhumphries?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/blue-sand-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/blue-sand-1680px.webp) no-repeat,
-        color: rgb(82, 117, 116),
+        color: rgb(82 117 116),
         size: 100%,
     ),
     brown-alpaca: (
@@ -67,7 +66,7 @@ $definitions: (
         // https://pixabay.com/fr/photos/alpaga-animaux-herbe-prairie-1845919/
         image-2400px: url(#{$project-background-images-path}/brown-alpaca-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/brown-alpaca-1680px.webp) no-repeat,
-        color: rgb(131, 100, 62),
+        color: rgb(131 100 62),
         size: 100%,
     ),
     brown-desert: (
@@ -75,7 +74,7 @@ $definitions: (
         // https://unsplash.com/@wolfgang_hasselmann?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/brown-desert-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/brown-desert-1680px.webp) no-repeat,
-        color: rgb(118, 90, 83),
+        color: rgb(118 90 83),
         size: 100%,
     ),
     brown-grass: (
@@ -83,7 +82,7 @@ $definitions: (
         // https://unsplash.com/@hasanalmasi?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/brown-grass-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/brown-grass-1680px.webp) no-repeat,
-        color: rgb(104, 66, 38),
+        color: rgb(104 66 38),
         size: 100%,
     ),
     brown-textile: (
@@ -91,7 +90,7 @@ $definitions: (
         // https://unsplash.com/@noahkroes?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/brown-textile-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/brown-textile-1680px.webp) no-repeat,
-        color: rgb(123, 57, 28),
+        color: rgb(123 57 28),
         size: 100%,
     ),
     brush-daytime: (
@@ -99,7 +98,7 @@ $definitions: (
         // https://unsplash.com/@darwiiiin?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/brush-daytime-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/brush-daytime-1680px.webp) no-repeat,
-        color: rgb(95, 114, 112),
+        color: rgb(95 114 112),
         size: 100%,
     ),
     green-grass: (
@@ -107,7 +106,7 @@ $definitions: (
         // https://unsplash.com/@ann3l13_t?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/green-grass-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/green-grass-1680px.webp) no-repeat,
-        color: rgb(64, 82, 48),
+        color: rgb(64 82 48),
         size: 100%,
     ),
     green-leaf: (
@@ -115,7 +114,7 @@ $definitions: (
         // https://unsplash.com/@adamkring?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/green-leaf-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/green-leaf-1680px.webp) no-repeat,
-        color: rgb(23, 65, 41),
+        color: rgb(23 65 41),
         size: 100%,
     ),
     green-trees: (
@@ -123,7 +122,7 @@ $definitions: (
         // https://unsplash.com/@bruno_kelzer?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/green-trees-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/green-trees-1680px.webp) no-repeat,
-        color: rgb(34, 45, 62),
+        color: rgb(34 45 62),
         size: 100%,
     ),
     led-light: (
@@ -131,7 +130,7 @@ $definitions: (
         // https://unsplash.com/@bubo?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/led-light-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/led-light-1680px.webp) no-repeat,
-        color: rgb(82, 22, 66),
+        color: rgb(82 22 66),
         size: 100%,
     ),
     ocean-waves: (
@@ -139,7 +138,7 @@ $definitions: (
         // https://unsplash.com/@cosmicblort?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/ocean-waves-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/ocean-waves-1680px.webp) no-repeat,
-        color: rgb(147, 92, 95),
+        color: rgb(147 92 95),
         size: 100%,
     ),
     octopus-black: (
@@ -147,7 +146,7 @@ $definitions: (
         // https://unsplash.com/@isagalvezphoto?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/octopus-black-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/octopus-black-1680px.webp) no-repeat,
-        color: rgb(32, 42, 73),
+        color: rgb(32 42 73),
         size: 100%,
     ),
     orange-tulip: (
@@ -155,7 +154,7 @@ $definitions: (
         // https://unsplash.com/@laimannung?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/orange-tulip-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/orange-tulip-1680px.webp) no-repeat,
-        color: rgb(76, 52, 34),
+        color: rgb(76 52 34),
         size: 100%,
     ),
     purple-building: (
@@ -163,7 +162,7 @@ $definitions: (
         // https://unsplash.com/@beckerworks?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/purple-building-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/purple-building-1680px.webp) no-repeat,
-        color: rgb(85, 11, 88),
+        color: rgb(85 11 88),
         size: 100%,
     ),
     purple-droplet: (
@@ -171,7 +170,7 @@ $definitions: (
         // https://unsplash.com/@mary_ray?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/purple-droplet-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/purple-droplet-1680px.webp) no-repeat,
-        color: rgb(41, 29, 36),
+        color: rgb(41 29 36),
         size: 100%,
     ),
     purple-textile: (
@@ -179,7 +178,7 @@ $definitions: (
         // https://unsplash.com/@delaneyvan?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/purple-textile-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/purple-textile-1680px.webp) no-repeat,
-        color: rgb(186, 47, 158),
+        color: rgb(186 47 158),
         size: 100%,
     ),
     snow-mountain: (
@@ -187,7 +186,7 @@ $definitions: (
         // https://unsplash.com/@apphex?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/snow-mountain-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/snow-mountain-1680px.webp) no-repeat,
-        color: rgb(80, 70, 120),
+        color: rgb(80 70 120),
         size: 100%,
     ),
     tree-water: (
@@ -195,7 +194,7 @@ $definitions: (
         // https://unsplash.com/@draufsicht?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/tree-water-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/tree-water-1680px.webp) no-repeat,
-        color: rgb(55, 121, 124),
+        color: rgb(55 121 124),
         size: 100%,
     ),
     wooden-surface: (
@@ -203,7 +202,7 @@ $definitions: (
         // https://unsplash.com/@idze3?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/wooden-surface-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/wooden-surface-1680px.webp) no-repeat,
-        color: rgb(108, 86, 79),
+        color: rgb(108 86 79),
         size: 100%,
     ),
     white-sheep: (
@@ -211,27 +210,31 @@ $definitions: (
         // https://unsplash.com/@will_bolding_photography?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
         image-2400px: url(#{$project-background-images-path}/white-sheep-2400px.webp) no-repeat,
         image-1680px: url(#{$project-background-images-path}/white-sheep-1680px.webp) no-repeat,
-        color: rgb(50, 38, 21),
+        color: rgb(50 38 21),
         size: 100%,
     ),
 );
 
 @function get-image($background, $width: 2400px) {
-    $def: map-get($definitions, $background);
+    $def: map.get($definitions, $background);
+
     @if map-has-key($def, "image-" + $width) {
-        @return map-get($def, "image-" + $width);
+        @return map.get($def, "image-" + $width);
     }
-    @error 'No header background image found with the width ' + $width;
+
+    @error "No header background image found with the width " + $width;
 }
 
 @function get-color($background) {
-    $def: map-get($definitions, $background);
-    @return map-get($def, "color");
+    $def: map.get($definitions, $background);
+
+    @return map.get($def, "color");
 }
 
 @function get-size($background) {
-    $def: map-get($definitions, $background);
-    @return map-get($def, "size");
+    $def: map.get($definitions, $background);
+
+    @return map.get($def, "size");
 }
 
 @mixin css-custom-properties($background) {
@@ -241,8 +244,10 @@ $definitions: (
 
     $base-image: get-image($background);
     $widths: 1680px;
+
     @each $width in $widths {
         $image-specific-width: get-image($background, $width);
+
         @if $base-image != $image-specific-width {
             @media (max-width: $width) {
                 --project-background-image: #{$image-specific-width};
@@ -256,13 +261,24 @@ $definitions: (
     $project-banner-minimum-height: 56px;
 
     .project-with-background #{$element} {
-        background: linear-gradient(var(--tlp-dark-color-transparent-70), var(--tlp-dark-color-transparent-70)), var(--project-background-image), linear-gradient(var(--project-background-prominent-color), var(--project-background-prominent-color));
+        background: linear-gradient(
+                var(--tlp-dark-color-transparent-70),
+                var(--tlp-dark-color-transparent-70)
+            ),
+            var(--project-background-image),
+            linear-gradient(
+                var(--project-background-prominent-color),
+                var(--project-background-prominent-color)
+            );
         background-attachment: fixed;
         background-position: $sidebar-expanded-width 0;
         background-size: calc(var(--project-background-size) - #{$sidebar-expanded-width});
     }
 
-    .platform-banner:not(.platform-banner-hidden) ~ #main-container .project-with-background #{$element} {
+    .platform-banner:not(.platform-banner-hidden)
+        ~ #main-container
+        .project-with-background
+        #{$element} {
         background-position: $sidebar-expanded-width $motd-minimum-height;
     }
 
@@ -272,7 +288,10 @@ $definitions: (
             background-size: calc(var(--project-background-size) - #{$sidebar-collapsed-width});
         }
 
-        .platform-banner:not(.platform-banner-hidden) ~ #main-container .project-with-background #{$element} {
+        .platform-banner:not(.platform-banner-hidden)
+            ~ #main-container
+            .project-with-background
+            #{$element} {
             background-position: $sidebar-collapsed-width $motd-minimum-height;
             background-size: calc(var(--project-background-size) - #{$sidebar-collapsed-width});
         }
@@ -281,9 +300,9 @@ $definitions: (
 
 @mixin project-background-title-header-typography() {
     color: var(--tlp-white-color);
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 1px 4px rgb(0 0 0 / 30%);
 }
 
 @mixin background-for-links() {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgb(0 0 0 / 30%);
 }

@@ -159,7 +159,8 @@
 
         &:last-child {
             margin: 0;
-            padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing) var(--tlp-medium-spacing);
+            padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing)
+                var(--tlp-medium-spacing);
             border-top: 1px solid var(--tlp-neutral-light-color);
         }
 
@@ -193,7 +194,8 @@
 
     display: flex;
     align-items: baseline;
-    padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) / 2) calc(var(--tlp-small-spacing) - #{$border-width});
+    padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spacing)
+        calc(var(--tlp-small-spacing) / 2) calc(var(--tlp-small-spacing) - #{$border-width});
     line-height: 1.5rem;
     cursor: pointer;
 

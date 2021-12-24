@@ -8,7 +8,7 @@ execution-detail-just-updated > .feedback-info {
     border-bottom: 1px solid var(--tlp-neutral-light-color);
 }
 
-/* stylelint-disable selector-no-qualifying-type */
+/* stylelint-disable selector-no-qualifying-type,selector-type-no-unknown */
 step {
     display: flex;
     align-items: baseline;

@@ -22,7 +22,12 @@ $main-color-on-dark-background: var(--tlp-main-color-on-dark-background);
 $profile-max-width: 720px;
 
 .body-user-profile {
-    background: linear-gradient(to bottom, $profile-header-background 0, $profile-header-background 195px, var(--tlp-background-color) 195px);
+    background: linear-gradient(
+        to bottom,
+        $profile-header-background 0,
+        $profile-header-background 195px,
+        var(--tlp-background-color) 195px
+    );
 
     header:not(.pinned) {
         #logo {

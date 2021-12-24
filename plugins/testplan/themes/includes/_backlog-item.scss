@@ -46,7 +46,8 @@
     align-items: baseline;
     justify-content: space-between;
     margin: 0;
-    padding: var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) - 1px) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+    padding: var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) - 1px)
+        var(--tlp-medium-spacing) var(--tlp-medium-spacing);
 
     &.test-plan-backlog-item-is-just-refreshed {
         animation: pulse-backlog-item-card 500ms ease-in-out;

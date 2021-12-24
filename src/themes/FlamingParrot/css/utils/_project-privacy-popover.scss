@@ -169,7 +169,7 @@
 
 /* stylelint-disable selector-no-qualifying-type */
 body.sidebar-expanded .project-sidebar-project-flags-popover {
-    left: calc(#{variables-common.$sidebar-width} - 2px) !important; //override inset popers
+    left: calc(#{variables-common.$sidebar-width} - 2px) !important; // override inset popers
 
     > .arrow {
         top: calc(50% - var(--tlp-large-spacing));

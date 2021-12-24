@@ -18,25 +18,27 @@
  */
 
 @use "../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "sass:map";
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .taskboard-card-#{$color-name} {
-        --card-color: #{map-get($colors, "primary")};
-        --card-text-color: #{map-get($colors, "text")};
+        --card-color: #{map.get($colors, "primary")};
+        --card-text-color: #{map.get($colors, "text")};
     }
 
     .taskboard-card-background-#{$color-name} {
-        --secondary-color: #{map-get($colors, "secondary")};
-        --border-color: #{map-get($colors, "border")};
-        --text-color: #{map-get($colors, "text")};
-        --accessibility-pattern: url("#{map-get($colors, 'pattern')}");
+        --secondary-color: #{map.get($colors, "secondary")};
+        --border-color: #{map.get($colors, "border")};
+        --text-color: #{map.get($colors, "text")};
+        --accessibility-pattern: url("#{map.get($colors, 'pattern')}");
     }
 }
 
 .taskboard-card {
     position: relative;
     margin: 0 0 var(--tlp-small-spacing);
-    padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
+    padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing)
+        calc(var(--tlp-small-spacing) + 2px);
     border: 1px solid var(--border-color, transparent);
     border-radius: var(--tlp-medium-radius);
     background: var(--secondary-color, var(--tlp-white-color));
@@ -44,7 +46,8 @@
 
     &.taskboard-card-with-accessibility {
         &[class*="taskboard-card-background-"] {
-            padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
+            padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing)
+                calc(var(--tlp-small-spacing) + 2px);
 
             > .taskboard-card-accessibility {
                 opacity: 0.5;

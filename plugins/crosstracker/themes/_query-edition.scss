@@ -43,7 +43,7 @@ $expert-query-area-height: 75px;
         border-radius: var(--tlp-medium-radius);
 
         &.CodeMirror-focused {
-            border-color: rgba(82, 168, 236, 0.8);
+            border-color: rgb(82 168 236 / 80%);
             outline: 0;
             box-shadow: var(--tlp-shadow-focus);
         }

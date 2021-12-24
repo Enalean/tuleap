@@ -37,7 +37,7 @@ body.viewvc-epel {
         }
     }
 
-    /* stylelint-disable selector-max-compound-selectors */
+    /* stylelint-disable selector-max-compound-selectors,selector-class-pattern */
     #tuleap-viewvc-diff-changes > thead > tr > th,
     #tuleap-viewvc-properties > table > thead > tr > th,
     .log-revision.log-revision--selected > .log-revision-header,

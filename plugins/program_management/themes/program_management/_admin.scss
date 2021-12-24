@@ -80,7 +80,8 @@
 }
 
 .program-management-admin-timebox-illustration {
-    margin: auto var(--tlp-jumbo-spacing) auto calc(var(--tlp-jumbo-spacing) + var(--tlp-medium-spacing));
+    margin: auto var(--tlp-jumbo-spacing) auto
+        calc(var(--tlp-jumbo-spacing) + var(--tlp-medium-spacing));
 
     > svg {
         display: block;

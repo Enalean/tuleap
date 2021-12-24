@@ -41,7 +41,8 @@
 .tlp-table > tbody > tr:nth-child(odd) > td.dashboard-add-widget-content-loading,
 .edit-widget-modal-content-loading {
     height: 200px;
-    background: var(--tlp-white-color) url("../../../../www/themes/BurningParrot/images/spinner.gif") center center no-repeat;
+    background: var(--tlp-white-color)
+        url("../../../../www/themes/BurningParrot/images/spinner.gif") center center no-repeat;
 }
 /* stylelint-enable */
 
@@ -134,7 +135,8 @@
         background: var(--tlp-main-color-transparent-90);
     }
 
-    > .dashboard-add-widget-list-table-widget-content-link > .dashboard-add-widget-list-table-widget-content-link-icon {
+    > .dashboard-add-widget-list-table-widget-content-link
+        > .dashboard-add-widget-list-table-widget-content-link-icon {
         transform: scale(1.2);
         color: var(--tlp-main-color);
     }

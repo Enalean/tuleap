@@ -26,4 +26,6 @@ $sidebar-collapsed-width: 50px;
 $sidebar-item-height: 40px;
 $project-banner-base-height: calc(24px + var(--tlp-medium-spacing) * 2);
 $platform-banner-base-height: calc(22px + var(--tlp-medium-spacing) * 2);
-$extra-platform-banner-white-space-height: calc(#{$top-floating-buttons-space} - var(--tlp-medium-spacing));
+$extra-platform-banner-white-space-height: calc(
+    #{$top-floating-buttons-space} - var(--tlp-medium-spacing)
+);

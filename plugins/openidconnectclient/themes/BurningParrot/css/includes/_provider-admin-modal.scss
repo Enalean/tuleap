@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:color";
 @use "../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
 %color-list {
@@ -26,8 +27,8 @@
         background: swatch-colors.$tlp-swatch-inca-silver;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken(swatch-colors.$tlp-swatch-inca-silver, 5%);
-            background: darken(swatch-colors.$tlp-swatch-inca-silver, 5%);
+            border-color: color.adjust(swatch-colors.$tlp-swatch-inca-silver, $lightness: - 5%);
+            background: color.adjust(swatch-colors.$tlp-swatch-inca-silver, $lightness: - 5%);
         }
     }
 
@@ -36,8 +37,8 @@
         background: swatch-colors.$tlp-swatch-chrome-silver;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken(swatch-colors.$tlp-swatch-chrome-silver, 5%);
-            background: darken(swatch-colors.$tlp-swatch-chrome-silver, 5%);
+            border-color: color.adjust(swatch-colors.$tlp-swatch-chrome-silver, $lightness: - 5%);
+            background: color.adjust(swatch-colors.$tlp-swatch-chrome-silver, $lightness: - 5%);
         }
     }
 
@@ -46,8 +47,8 @@
         background: swatch-colors.$tlp-swatch-fiesta-red;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken(swatch-colors.$tlp-swatch-fiesta-red, 5%);
-            background: darken(swatch-colors.$tlp-swatch-fiesta-red, 5%);
+            border-color: color.adjust(swatch-colors.$tlp-swatch-fiesta-red, $lightness: - 5%);
+            background: color.adjust(swatch-colors.$tlp-swatch-fiesta-red, $lightness: - 5%);
         }
     }
 
@@ -56,8 +57,8 @@
         background: swatch-colors.$tlp-swatch-teddy-brown;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken(swatch-colors.$tlp-swatch-teddy-brown, 5%);
-            background: darken(swatch-colors.$tlp-swatch-teddy-brown, 5%);
+            border-color: color.adjust(swatch-colors.$tlp-swatch-teddy-brown, $lightness: - 5%);
+            background: color.adjust(swatch-colors.$tlp-swatch-teddy-brown, $lightness: - 5%);
         }
     }
 
@@ -66,8 +67,11 @@
         background: swatch-colors.$tlp-swatch-clockwork-orange;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken(swatch-colors.$tlp-swatch-clockwork-orange, 5%);
-            background: darken(swatch-colors.$tlp-swatch-clockwork-orange, 5%);
+            border-color: color.adjust(
+                swatch-colors.$tlp-swatch-clockwork-orange,
+                $lightness: - 5%
+            );
+            background: color.adjust(swatch-colors.$tlp-swatch-clockwork-orange, $lightness: - 5%);
         }
     }
 
@@ -76,8 +80,8 @@
         background: swatch-colors.$tlp-swatch-red-wine;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken(swatch-colors.$tlp-swatch-red-wine, 5%);
-            background: darken(swatch-colors.$tlp-swatch-red-wine, 5%);
+            border-color: color.adjust(swatch-colors.$tlp-swatch-red-wine, $lightness: - 5%);
+            background: color.adjust(swatch-colors.$tlp-swatch-red-wine, $lightness: - 5%);
         }
     }
 
@@ -86,8 +90,8 @@
         background: swatch-colors.$tlp-swatch-acid-green;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken(swatch-colors.$tlp-swatch-acid-green, 5%);
-            background: darken(swatch-colors.$tlp-swatch-acid-green, 5%);
+            border-color: color.adjust(swatch-colors.$tlp-swatch-acid-green, $lightness: - 5%);
+            background: color.adjust(swatch-colors.$tlp-swatch-acid-green, $lightness: - 5%);
         }
     }
 
@@ -96,8 +100,8 @@
         background: swatch-colors.$tlp-swatch-army-green;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken(swatch-colors.$tlp-swatch-army-green, 5%);
-            background: darken(swatch-colors.$tlp-swatch-army-green, 5%);
+            border-color: color.adjust(swatch-colors.$tlp-swatch-army-green, $lightness: - 5%);
+            background: color.adjust(swatch-colors.$tlp-swatch-army-green, $lightness: - 5%);
         }
     }
 
@@ -106,8 +110,8 @@
         background: swatch-colors.$tlp-swatch-sherwood-green;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken(swatch-colors.$tlp-swatch-sherwood-green, 5%);
-            background: darken(swatch-colors.$tlp-swatch-sherwood-green, 5%);
+            border-color: color.adjust(swatch-colors.$tlp-swatch-sherwood-green, $lightness: - 5%);
+            background: color.adjust(swatch-colors.$tlp-swatch-sherwood-green, $lightness: - 5%);
         }
     }
 
@@ -116,8 +120,8 @@
         background: swatch-colors.$tlp-swatch-ocean-turquoise;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken(swatch-colors.$tlp-swatch-ocean-turquoise, 5%);
-            background: darken(swatch-colors.$tlp-swatch-ocean-turquoise, 5%);
+            border-color: color.adjust(swatch-colors.$tlp-swatch-ocean-turquoise, $lightness: - 5%);
+            background: color.adjust(swatch-colors.$tlp-swatch-ocean-turquoise, $lightness: - 5%);
         }
     }
 
@@ -126,8 +130,8 @@
         background: swatch-colors.$tlp-swatch-daphne-blue;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken(swatch-colors.$tlp-swatch-daphne-blue, 5%);
-            background: darken(swatch-colors.$tlp-swatch-daphne-blue, 5%);
+            border-color: color.adjust(swatch-colors.$tlp-swatch-daphne-blue, $lightness: - 5%);
+            background: color.adjust(swatch-colors.$tlp-swatch-daphne-blue, $lightness: - 5%);
         }
     }
 
@@ -136,8 +140,11 @@
         background: swatch-colors.$tlp-swatch-lake-placid-blue;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken(swatch-colors.$tlp-swatch-lake-placid-blue, 5%);
-            background: darken(swatch-colors.$tlp-swatch-lake-placid-blue, 5%);
+            border-color: color.adjust(
+                swatch-colors.$tlp-swatch-lake-placid-blue,
+                $lightness: - 5%
+            );
+            background: color.adjust(swatch-colors.$tlp-swatch-lake-placid-blue, $lightness: - 5%);
         }
     }
 
@@ -146,8 +153,8 @@
         background: swatch-colors.$tlp-swatch-deep-blue;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken(swatch-colors.$tlp-swatch-deep-blue, 5%);
-            background: darken(swatch-colors.$tlp-swatch-deep-blue, 5%);
+            border-color: color.adjust(swatch-colors.$tlp-swatch-deep-blue, $lightness: - 5%);
+            background: color.adjust(swatch-colors.$tlp-swatch-deep-blue, $lightness: - 5%);
         }
     }
 
@@ -156,8 +163,8 @@
         background: swatch-colors.$tlp-swatch-plum-crazy;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken(swatch-colors.$tlp-swatch-plum-crazy, 5%);
-            background: darken(swatch-colors.$tlp-swatch-plum-crazy, 5%);
+            border-color: color.adjust(swatch-colors.$tlp-swatch-plum-crazy, $lightness: - 5%);
+            background: color.adjust(swatch-colors.$tlp-swatch-plum-crazy, $lightness: - 5%);
         }
     }
 
@@ -166,8 +173,8 @@
         background: swatch-colors.$tlp-swatch-peggy-pink;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken(swatch-colors.$tlp-swatch-peggy-pink, 5%);
-            background: darken(swatch-colors.$tlp-swatch-peggy-pink, 5%);
+            border-color: color.adjust(swatch-colors.$tlp-swatch-peggy-pink, $lightness: - 5%);
+            background: color.adjust(swatch-colors.$tlp-swatch-peggy-pink, $lightness: - 5%);
         }
     }
 
@@ -176,8 +183,8 @@
         background: swatch-colors.$tlp-swatch-flamingo-pink;
 
         &:hover:not(:disabled):not(.disabled):not(:active) {
-            border-color: darken(swatch-colors.$tlp-swatch-flamingo-pink, 5%);
-            background: darken(swatch-colors.$tlp-swatch-flamingo-pink, 5%);
+            border-color: color.adjust(swatch-colors.$tlp-swatch-flamingo-pink, $lightness: - 5%);
+            background: color.adjust(swatch-colors.$tlp-swatch-flamingo-pink, $lightness: - 5%);
         }
     }
     /* stylelint-enable */

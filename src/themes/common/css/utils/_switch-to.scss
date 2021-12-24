@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
 @use "../../../tlp/src/scss/variables/colors/swatch-colors";
 
 $projects-container-width: 400px;
@@ -31,9 +32,10 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 }
 
 .switch-to-modal-header {
-    padding: calc(var(--tlp-medium-spacing) + 1px) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) + 1px) var(--tlp-large-spacing);
-    border-bottom: 1px solid rgba(104, 122, 124, 0.2);
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.07), rgba(0, 0, 0, 0.07)), var(--tlp-dark-color);
+    padding: calc(var(--tlp-medium-spacing) + 1px) var(--tlp-medium-spacing)
+        calc(var(--tlp-medium-spacing) + 1px) var(--tlp-large-spacing);
+    border-bottom: 1px solid rgb(104 122 124 / 20%);
+    background: linear-gradient(0deg, rgb(0 0 0 / 7%), rgb(0 0 0 / 7%)), var(--tlp-dark-color);
     background-blend-mode: overlay;
 }
 
@@ -100,7 +102,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     &:focus,
     &:hover {
         opacity: 1;
-        background: rgba(0, 0, 0, 0.2);
+        background: rgb(0 0 0 / 20%);
     }
 
     > .fa-long-arrow-right {
@@ -110,7 +112,8 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
 .switch-to-modal-body {
     display: flex;
-    padding: var(--tlp-large-spacing) var(--tlp-large-spacing) var(--tlp-large-spacing) calc(var(--tlp-large-spacing) - var(--tlp-small-spacing));
+    padding: var(--tlp-large-spacing) var(--tlp-large-spacing) var(--tlp-large-spacing)
+        calc(var(--tlp-large-spacing) - var(--tlp-small-spacing));
     background: var(--tlp-dark-color);
     color: var(--tlp-typo-default-text-color-on-dark-background);
 }
@@ -154,7 +157,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
     &:hover,
     &:focus {
-        background: rgba(0, 0, 0, 0.2);
+        background: rgb(0 0 0 / 20%);
         color: var(--tlp-typo-default-text-color-on-dark-background);
         text-decoration: none;
 
@@ -194,7 +197,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
     &:hover,
     &:focus {
-        background: rgba(0, 0, 0, 0.2);
+        background: rgb(0 0 0 / 20%);
         color: var(--tlp-dimmed-color-on-dark-background);
         text-decoration: none;
     }
@@ -346,7 +349,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
     &:focus,
     &:hover {
-        background: rgba(0, 0, 0, 0.2);
+        background: rgb(0 0 0 / 20%);
         color: var(--tlp-white-color);
         text-decoration: none;
     }
@@ -387,7 +390,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
     &:focus,
     &:hover {
-        background: rgba(0, 0, 0, 0.2);
+        background: rgb(0 0 0 / 20%);
         color: var(--tlp-typo-default-text-color-on-dark-background);
         text-decoration: none;
     }
@@ -395,6 +398,6 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .switch-to-recent-items-entry-link.#{$color-name} > .switch-to-recent-items-entry-icon {
-        color: map-get($colors, "primary");
+        color: map.get($colors, "primary");
     }
 }

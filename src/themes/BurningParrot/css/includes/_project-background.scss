@@ -22,38 +22,44 @@
 );
 @use "sass:map";
 @use "global-variables";
-
 @import "../../../common/css/project-background/project-background";
 
 @each $identifier, $definition in background.$definitions {
     .project-admin-background-preview-#{$identifier} {
-        background: linear-gradient(var(--tlp-dark-color-transparent-70), var(--tlp-dark-color-transparent-70)), map-get($definition, "image-1680px"), linear-gradient(map-get($definition, "color"), map-get($definition, "color"));
-        background-size: map-get($definition, "size");
+        background: linear-gradient(
+                var(--tlp-dark-color-transparent-70),
+                var(--tlp-dark-color-transparent-70)
+            ),
+            map.get($definition, "image-1680px"),
+            linear-gradient(map.get($definition, "color"), map.get($definition, "color"));
+        background-size: map.get($definition, "size");
     }
 }
 
 .project-with-background {
     .project-administration-title {
-        @include background.project-background-title-header-typography();
+        @include background.project-background-title-header-typography;
+
         margin: 0;
         padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
     }
 
     .dashboard-project-title {
-        @include background.project-background-title-header-typography();
+        @include background.project-background-title-header-typography;
     }
 
     .dashboard-project-header-trovecat {
-        @include background.project-background-title-header-typography();
+        @include background.project-background-title-header-typography;
+
         font-weight: 500;
     }
 
     .dashboard-project-header-trovecat-icon {
-        @include background.project-background-title-header-typography();
+        @include background.project-background-title-header-typography;
     }
 
     .dashboard-project-header-trovecat > .tlp-text-warning {
-        @include background.project-background-title-header-typography();
+        @include background.project-background-title-header-typography;
 
         > .dashboard-project-header-trovecat-link {
             color: inherit;
@@ -61,7 +67,8 @@
     }
 
     .main-project-tabs > .tlp-tabs {
-        @include background.background-for-links();
+        @include background.background-for-links;
+
         box-shadow: none;
 
         > .tlp-tab {
@@ -72,7 +79,8 @@
             &:hover,
             &:focus,
             &.tlp-tab-active {
-                @include background.background-for-links();
+                @include background.background-for-links;
+
                 border-top-color: var(--tlp-white-color);
             }
 
@@ -92,7 +100,7 @@
     .breadcrumb,
     .breadcrumb-link,
     #dashboard-tabs-dropdown-trigger {
-        @include background.project-background-title-header-typography();
+        @include background.project-background-title-header-typography;
     }
 
     .breadcrumb-dropdown-item,
@@ -102,7 +110,8 @@
 
     .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link,
     .breadcrumb-item:not(.breadcrumb-item-disabled):focus-within > .breadcrumb-link {
-        @include background.background-for-links();
+        @include background.background-for-links;
+
         color: var(--tlp-white-color);
     }
 
@@ -120,13 +129,15 @@
 
         &.fa-lock-open,
         &.fa-tlp-unlock-plus-r {
-            @include background.background-for-links();
+            @include background.background-for-links;
+
             color: var(--tlp-white-color);
         }
     }
 
     .breadcrumb-project-privacy-icon-with-flags {
-        @include background.background-for-links();
+        @include background.background-for-links;
+
         color: var(--tlp-white-color);
 
         > .fas {
@@ -144,7 +155,7 @@
     .dashboard-project-header-access.tlp-badge-primary {
         background: var(--tlp-white-color-transparent-80);
         color: var(--tlp-white-color);
-        text-shadow: 0 0 1px rgba(0, 0, 0);
+        text-shadow: 0 0 1px rgb(0 0 0);
     }
 }
 
@@ -239,12 +250,13 @@
         left: global-variables.$sidebar-expanded-width;
         width: calc(100% - #{global-variables.$sidebar-expanded-width});
         padding: var(--tlp-large-spacing);
-        animation: footerAppear ease-out 150ms;
+        animation: footer-appear ease-out 150ms;
         border-top: 0;
         background: var(--tlp-white-color-transparent-10);
         box-shadow: var(--tlp-sticky-footer-shadow);
         text-align: center;
-        @keyframes footerAppear {
+
+        @keyframes footer-appear {
             from {
                 transform: translateY(100%);
             }
@@ -256,7 +268,9 @@
     }
 }
 
-.sidebar-collapsed #project-admin-background-submit-section.pinned > .project-admin-background-submit-button-container {
+.sidebar-collapsed
+    #project-admin-background-submit-section.pinned
+    > .project-admin-background-submit-button-container {
     left: global-variables.$sidebar-collapsed-width;
     width: calc(100% - #{global-variables.$sidebar-collapsed-width});
 }

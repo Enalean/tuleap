@@ -108,7 +108,9 @@
     }
 }
 
-.program-increment-content-items > .element-backlog-item.drek-ghost ~ .program-increment-no-content {
+.program-increment-content-items
+    > .element-backlog-item.drek-ghost
+    ~ .program-increment-no-content {
     visibility: hidden;
 }
 

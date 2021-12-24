@@ -26,7 +26,8 @@ $tlp-tooltip-margin: 5px;
     &::before {
         top: 0;
         left: 50%;
-        transform: translateX(-50%) translateY(-100%) translateY(-$tlp-tooltip-arrow-size) translateY(-$tlp-tooltip-margin);
+        transform: translateX(-50%) translateY(-100%) translateY(-$tlp-tooltip-arrow-size)
+            translateY(-$tlp-tooltip-margin);
     }
 
     &::after {
@@ -44,7 +45,8 @@ $tlp-tooltip-margin: 5px;
         top: 50%;
         right: 0;
         left: initial;
-        transform: translateX(100%) translateX($tlp-tooltip-arrow-size) translateX($tlp-tooltip-margin) translateY(-50%);
+        transform: translateX(100%) translateX($tlp-tooltip-arrow-size)
+            translateX($tlp-tooltip-margin) translateY(-50%);
     }
 
     &::after {
@@ -62,7 +64,8 @@ $tlp-tooltip-margin: 5px;
     &::before {
         bottom: 0;
         left: 50%;
-        transform: translateX(-50%) translateY(100%) translateY($tlp-tooltip-arrow-size) translateY($tlp-tooltip-margin);
+        transform: translateX(-50%) translateY(100%) translateY($tlp-tooltip-arrow-size)
+            translateY($tlp-tooltip-margin);
     }
 
     &::after {
@@ -80,7 +83,8 @@ $tlp-tooltip-margin: 5px;
         top: 50%;
         right: initial;
         left: 0;
-        transform: translateX(-100%) translateX(-$tlp-tooltip-arrow-size) translateX(-$tlp-tooltip-margin) translateY(-50%);
+        transform: translateX(-100%) translateX(-$tlp-tooltip-arrow-size)
+            translateX(-$tlp-tooltip-margin) translateY(-50%);
     }
 
     &::after {

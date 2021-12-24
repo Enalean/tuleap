@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
 @use "../../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
 item-progress {
@@ -31,7 +32,7 @@ item-progress {
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
-            border-bottom-color: map-get($colors, "primary");
+            border-bottom-color: map.get($colors, "primary");
         }
     }
 }

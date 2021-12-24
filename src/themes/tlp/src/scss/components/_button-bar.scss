@@ -52,7 +52,8 @@
     opacity: 0;
 
     &:checked {
-        $button-bar-checked-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.08), 0 -1px 0 rgba(0, 0, 0, 0.03);
+        $button-bar-checked-box-shadow: 0 1px 2px rgb(0 0 0 / 8%), 0 0 1px rgb(0 0 0 / 8%),
+            0 -1px 0 rgb(0 0 0 / 3%);
 
         + .tlp-button-primary {
             border-color: var(--tlp-main-color-darker-10);

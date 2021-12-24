@@ -17,25 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
 @use "../../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
 .tracker-color-selector {
     width: 75px;
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .select2-container--open.select2-container--tlp-select2 > .select2-dropdown.tracker-color-results {
     height: 250px;
     border: 0;
     border-radius: 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
 
-    /* stylelint-disable selector-class-pattern,selector-no-qualifying-type*/
+    /* stylelint-disable selector-class-pattern,selector-no-qualifying-type */
     .select2-results__option[aria-selected="true"]::before,
-    span.select2-container--tlp-select2-large .select2-dropdown .select2-results__option[aria-selected="true"]::before,
-    span.select2-container--tlp-select2-small .select2-dropdown .select2-results__option[aria-selected="true"]::before {
+    span.select2-container--tlp-select2-large
+        .select2-dropdown
+        .select2-results__option[aria-selected="true"]::before,
+    span.select2-container--tlp-select2-small
+        .select2-dropdown
+        .select2-results__option[aria-selected="true"]::before {
         top: 15px;
     }
-    /* stylelint-enable selector-class-pattern,selector-no-qualifying-type*/
+    /* stylelint-enable selector-class-pattern,selector-no-qualifying-type */
 
+    /* stylelint-disable-next-line selector-class-pattern */
     &.select2-dropdown--above #select2-tracker-creation-field-color-results {
         margin-top: 1px;
         border-radius: var(--tlp-medium-radius) var(--tlp-medium-radius) var(--tlp-medium-radius) 0;
@@ -86,10 +93,10 @@
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
-            background: map-get($colors, "secondary");
+            background: map.get($colors, "secondary");
 
             &::after {
-                border-color: map-get($colors, "primary");
+                border-color: map.get($colors, "primary");
             }
         }
     }
@@ -101,7 +108,7 @@ body[data-user-has-accessibility-mode="1"] {
         @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
             &.#{$color-name} {
                 &::before {
-                    background: map-get($colors, "primary");
+                    background: map.get($colors, "primary");
                     mask-image: url("#{map-get($colors, 'pattern')}");
                 }
             }
@@ -109,7 +116,7 @@ body[data-user-has-accessibility-mode="1"] {
     }
 }
 
-/* stylelint-disable-next-line selector-no-qualifying-type */
+/* stylelint-disable-next-line selector-no-qualifying-type,selector-class-pattern */
 span.select2-container--tlp-select2 .select2-selection--single.tracker-color-container {
     height: 46px;
     padding: 7px 32px 7px 9px;

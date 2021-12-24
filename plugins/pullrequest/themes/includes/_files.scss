@@ -101,5 +101,6 @@
 .pull-request-modified-files-loading {
     height: 30px;
     margin: 0 0 var(--tlp-medium-spacing);
-    background: url("../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center center;
+    background: url("../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center
+        center;
 }

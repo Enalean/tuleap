@@ -26,11 +26,12 @@
     .test-campaign-header-title,
     .test-administration-title,
     .test-dependency-graph-title {
-        @include background.project-background-title-header-typography();
+        @include background.project-background-title-header-typography;
     }
 
     .execution-header-button-edit:focus-visible {
-        @include background.background-for-links();
+        @include background.background-for-links;
+
         box-shadow: none;
     }
 
@@ -40,7 +41,7 @@
 
     .test-campaign-testers {
         &:hover {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgb(0 0 0 / 30%);
         }
 
         > .test-campaign-testers-more {
@@ -50,11 +51,11 @@
 
     .test-campaign-header-container > .test-campaign-progressions > .test-campaign-progression {
         > .test-campaign-progression-bar {
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 3px rgb(0 0 0 / 40%);
         }
 
         > .test-campaign-progression-value {
-            text-shadow: 0 0 3px rgb(0, 0, 0);
+            text-shadow: 0 0 3px rgb(0 0 0);
         }
 
         &.passed {
@@ -100,8 +101,14 @@
 }
 
 body {
-    $elements-with-project-background: ".test-campaigns-header", ".test-campaign-header", ".test-administration-title", ".test-dependency-graph-title";
+    $elements-with-project-background: ".test-campaigns-header", ".test-campaign-header",
+        ".test-administration-title", ".test-dependency-graph-title";
+
     @each $element-with-project-background in $elements-with-project-background {
-        @include background.apply-background($element-with-project-background, global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
+        @include background.apply-background(
+            $element-with-project-background,
+            global-variables.$sidebar-expanded-width,
+            global-variables.$sidebar-collapsed-width
+        );
     }
 }

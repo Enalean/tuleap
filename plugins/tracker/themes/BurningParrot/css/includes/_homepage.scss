@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
 @use "../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
 .trackers-homepage-title {
@@ -39,11 +40,11 @@
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
             &:hover {
-                border-color: map-get($colors, "border");
+                border-color: map.get($colors, "border");
             }
 
             > .trackers-homepage-tracker-title-container > .trackers-homepage-tracker-title {
-                color: map-get($colors, "text");
+                color: map.get($colors, "text");
             }
         }
     }

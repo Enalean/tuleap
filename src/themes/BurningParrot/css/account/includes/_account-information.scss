@@ -49,7 +49,10 @@ $avatar-size: 100px;
 }
 
 .account-information-submit {
-    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) + var(--tlp-medium-spacing) + var(--tlp-large-spacing) + #{$avatar-size});
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing)
+        calc(
+            var(--tlp-medium-spacing) + var(--tlp-medium-spacing) + var(--tlp-large-spacing) + #{$avatar-size}
+        );
 }
 
 .account-information-avatar-modal-body {

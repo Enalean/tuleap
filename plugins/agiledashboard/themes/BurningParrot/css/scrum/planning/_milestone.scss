@@ -42,7 +42,10 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-white
 
     &:hover {
         transition: background 0.1s linear;
-        background: var(--project-color-background-gradient-light-hover, var(--tlp-white-color-darker-02));
+        background: var(
+            --project-color-background-gradient-light-hover,
+            var(--tlp-white-color-darker-02)
+        );
     }
 }
 

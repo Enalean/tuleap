@@ -1,7 +1,7 @@
 /* stylelint-disable-next-line selector-class-pattern */
 .searchAsYouType {
     border: 1px solid #cccccc;
-    border: 1px solid rgba(0, 0, 0, 0.2); /* stylelint-disable-line declaration-block-no-duplicate-properties */
+    border: 1px solid rgb(0 0 0 / 20%); /* stylelint-disable-line declaration-block-no-duplicate-properties */
     border-radius: var(--tlp-medium-radius);
     background: #ffffff;
     box-shadow: var(--tlp-flyover-shadow);

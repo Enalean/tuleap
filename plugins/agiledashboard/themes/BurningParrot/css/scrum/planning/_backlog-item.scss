@@ -43,7 +43,9 @@
 
     // We must use the child combinator because backlog-item can have children backlog-items
     &:first-child {
-        > .backlog-item-details > .backlog-item-details-moves > .backlog-item-details-move:first-child {
+        > .backlog-item-details
+            > .backlog-item-details-moves
+            > .backlog-item-details-move:first-child {
             visibility: hidden;
         }
     }
@@ -51,7 +53,9 @@
     &:last-child {
         margin: 0;
 
-        > .backlog-item-details:not(.moving-to) > .backlog-item-details-moves > .backlog-item-details-move:last-child {
+        > .backlog-item-details:not(.moving-to)
+            > .backlog-item-details-moves
+            > .backlog-item-details-move:last-child {
             visibility: hidden;
         }
     }

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:color";
+@use "sass:map";
 @import "../../../../../src/themes/tlp/src/scss/variables/colors/common-colors";
 
 .planning-admin-color-picker {
@@ -87,7 +89,7 @@
         cursor: pointer;
 
         &:hover {
-            color: darken(#787878, 20%);
+            color: color.adjust(#787878, $lightness: - 20%);
         }
     }
 }
@@ -133,14 +135,14 @@
 
 @each $color-name, $colors in $tlp-swatch-color-map {
     .colorpicker-circular-color-#{$color-name} {
-        border: 3px solid map-get($colors, "primary");
-        background-color: map-get($colors, "secondary");
-        color: map-get($colors, "primary");
+        border: 3px solid map.get($colors, "primary");
+        background-color: map.get($colors, "secondary");
+        color: map.get($colors, "primary");
     }
 
     .color-picker-preview-#{$color-name} {
         border: 0;
-        background-color: map-get($colors, "primary");
+        background-color: map.get($colors, "primary");
     }
 }
 

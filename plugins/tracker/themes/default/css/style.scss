@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
 @use "codemirror/lib/codemirror";
 @use "codemirror/addon/hint/show-hint";
 @use "../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
@@ -33,7 +34,8 @@
 
 $tracker-artifact-submit-buttons-height: 80px;
 $tracker-artifact-submit-buttons-concurrent-edition-height: 286px;
-$tracker-artifact-followup-comments-in-concurrent-edition-padding-bottom: $tracker-artifact-submit-buttons-height + $tracker-artifact-submit-buttons-concurrent-edition-height;
+$tracker-artifact-followup-comments-in-concurrent-edition-padding-bottom: $tracker-artifact-submit-buttons-height +
+    $tracker-artifact-submit-buttons-concurrent-edition-height;
 $tracker-artifact-markup-diff-text-color: #838383;
 
 /* stylelint-disable selector-id-pattern, selector-class-pattern, selector-no-qualifying-type, selector-max-compound-selectors */
@@ -121,7 +123,8 @@ button[name="tracker_query_submit"] {
 #tracker_report_save_or_revert.tracker_report_haschanged_and_isobsolete,
 #tracker_report_save_or_revert.tracker_report_haschanged #tracker_report_haschanged_explenations,
 #tracker_report_save_or_revert.tracker_report_isobsolete #tracker_report_isobsolete_explenations,
-#tracker_report_save_or_revert.tracker_report_haschanged_and_isobsolete #tracker_report_haschanged_and_isobsolete_explenations {
+#tracker_report_save_or_revert.tracker_report_haschanged_and_isobsolete
+    #tracker_report_haschanged_and_isobsolete_explenations {
     display: inline;
 }
 
@@ -235,7 +238,7 @@ button[name="tracker_query_submit"] {
         border-radius: var(--tlp-medium-radius);
 
         &.CodeMirror-focused {
-            border-color: rgba(82, 168, 236, 0.8);
+            border-color: rgb(82 168 236 / 80%);
             outline: 0;
             box-shadow: var(--tlp-shadow-focus);
         }
@@ -794,7 +797,7 @@ select.tracker-report-expert-allowed-fields {
     color: #ffffff;
     font-size: 0.9em;
     font-weight: normal;
-    text-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 0 3px rgb(0 0 0 / 20%);
     white-space: nowrap;
 
     &:hover {
@@ -888,7 +891,10 @@ select.tracker-report-expert-allowed-fields {
 }
 
 .has-visible-platform-banner .tracker_artifact_followup {
-    scroll-margin-top: calc(#{variables-common.$platform-banner-base-height} + #{variables-common.$navbar-height} + var(--tlp-medium-spacing));
+    scroll-margin-top: calc(
+        #{variables-common.$platform-banner-base-height} + #{variables-common.$navbar-height} +
+            var(--tlp-medium-spacing)
+    );
 }
 
 .tracker_artifact_followup:not(.tracker_artifact_followup-with_comment) {
@@ -1021,7 +1027,8 @@ select.tracker-report-expert-allowed-fields {
     padding: 0 0 1px;
     border-radius: var(--tlp-large-radius);
     background: var(--tlp-white-color);
-    box-shadow: inset 1px 0 var(--tlp-neutral-normal-color), inset 0 -1px var(--tlp-neutral-normal-color), inset -1px 0 var(--tlp-neutral-normal-color);
+    box-shadow: inset 1px 0 var(--tlp-neutral-normal-color),
+        inset 0 -1px var(--tlp-neutral-normal-color), inset -1px 0 var(--tlp-neutral-normal-color);
 
     &.tracker_artifact_fieldset_hidden {
         display: none;
@@ -1145,8 +1152,9 @@ select.tracker-report-expert-allowed-fields {
     }
 
     &:hover {
-        background-color: rgba(217, 237, 247, 0.9);
-        box-shadow: inset 0 1px 0 #8fcedb, inset 1px 0 0 #8fcedb, inset -1px 0 0 #8fcedb, inset 0 -1px 0 #8fcedb;
+        background-color: rgb(217 237 247 / 90%);
+        box-shadow: inset 0 1px 0 #8fcedb, inset 1px 0 0 #8fcedb, inset -1px 0 0 #8fcedb,
+            inset 0 -1px 0 #8fcedb;
 
         div {
             opacity: 1;
@@ -1158,11 +1166,15 @@ select.tracker-report-expert-allowed-fields {
 .tracker_artifact_preview_attachment {
     height: 110px;
     background-color: #fcfcfc;
-    box-shadow: inset 0 1px 0 #e5e5e5, inset 1px 0 0 #e5e5e5, inset -1px 0 0 #e5e5e5, inset 0 -1px 0 #e5e5e5;
+    box-shadow: inset 0 1px 0 #e5e5e5, inset 1px 0 0 #e5e5e5, inset -1px 0 0 #e5e5e5,
+        inset 0 -1px 0 #e5e5e5;
 
     &:not(.image) {
-        background: #fcfcfc url("../../../../../src/www/themes/common/images/ic/artifact_attachment_default.png") no-repeat center center;
-        box-shadow: inset 0 1px 0 #e5e5e5, inset 1px 0 0 #e5e5e5, inset -1px 0 0 #e5e5e5, inset 0 -1px 0 #e5e5e5;
+        background: #fcfcfc
+            url("../../../../../src/www/themes/common/images/ic/artifact_attachment_default.png")
+            no-repeat center center;
+        box-shadow: inset 0 1px 0 #e5e5e5, inset 1px 0 0 #e5e5e5, inset -1px 0 0 #e5e5e5,
+            inset 0 -1px 0 #e5e5e5;
     }
 
     div {
@@ -1343,7 +1355,8 @@ div.tracker-admin-field-controls {
 
     &.editable {
         .tracker_formelement_edit {
-            background: url("../../../../../src/www/themes/common/images/ic/artifact_editable_field.png") no-repeat 4px center;
+            background: url("../../../../../src/www/themes/common/images/ic/artifact_editable_field.png")
+                no-repeat 4px center;
         }
 
         &:not(.field-masschange):not(.in-edition):not(.field-in-modal) > label {
@@ -1355,7 +1368,9 @@ div.tracker-admin-field-controls {
         .tracker_formelement_edit:hover {
             border: 1px solid #8fcedb;
             border-radius: var(--tlp-medium-radius);
-            background: #d9edf7 url("../../../../../src/www/themes/common/images/ic/artifact_editable_field_active.png") no-repeat 4px center;
+            background: #d9edf7
+                url("../../../../../src/www/themes/common/images/ic/artifact_editable_field_active.png")
+                no-repeat 4px center;
         }
     }
 
@@ -1456,7 +1471,7 @@ div.tracker-admin-field-controls {
 
 .tracker-admin-field label,
 .tracker-admin-container label {
-    /*cursor:move; (don't let somebody experience bad trip with drag 'n drop on admin part) */
+    /* cursor:move; (don't let somebody experience bad trip with drag 'n drop on admin part) */
 }
 
 .tracker-admin-column label .tracker-admin-field-controls {
@@ -1472,7 +1487,8 @@ div.tracker-admin-field-controls {
     padding: 2px 5px;
     padding-left: 16px;
     border: 1px solid #add8e6;
-    background: #f1fcff url("../../default/images/ic/information-small-white.png") top left no-repeat;
+    background: #f1fcff url("../../default/images/ic/information-small-white.png") top left
+        no-repeat;
     color: #666666;
     font-size: 0.8em;
 }
@@ -1725,7 +1741,8 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
 .tracker-admin-palette a.button:active {
     padding-top: 5px; /* push text down 1px */
     padding-bottom: 2px; /* push text down 1px */
-    background: transparent url("../../default/images/button-gradient-hover.png") bottom left repeat-x;
+    background: transparent url("../../default/images/button-gradient-hover.png") bottom left
+        repeat-x;
 }
 
 .tracker-admin-palette-content {
@@ -1852,14 +1869,14 @@ td.first-column {
 }
 
 .node-last-left {
-    /* 8px - 1px of border*/
+    /* 8px - 1px of border */
     width: 7px;
     overflow: visible;
     border-right: 1px #808080 dotted;
 }
 
 .node-last-right {
-    /* 8px - 1px of border*/
+    /* 8px - 1px of border */
     height: 7px;
     margin-left: -4px;
     overflow: hidden;
@@ -1876,7 +1893,8 @@ td.first-column {
 
 .node-pipe {
     display: inline-block;
-    /* 8px - 1px of border*/
+
+    /* 8px - 1px of border */
     width: 7px;
     height: inherit;
     border-right: 1px #808080 dotted;
@@ -1884,7 +1902,7 @@ td.first-column {
 }
 
 .node-minus {
-    /* 8px - 1px of border*/
+    /* 8px - 1px of border */
     height: 7px;
     margin-left: -4px;
     overflow: hidden;
@@ -1958,10 +1976,12 @@ td.first-column {
     padding: 0;
     border: 2px solid #ffffff;
     border-radius: 50%;
-    background: #777777 url("../../../../../src/www/themes/common/images/ic/cross_white.png") center center no-repeat;
+    background: #777777 url("../../../../../src/www/themes/common/images/ic/cross_white.png") center
+        center no-repeat;
 
     &.pc_check_unchecked {
-        background: #777777 url("../../../../../src/www/themes/common/images/ic/cross_white.png") center center no-repeat;
+        background: #777777 url("../../../../../src/www/themes/common/images/ic/cross_white.png")
+            center center no-repeat;
 
         &:hover {
             background-color: #999999;
@@ -1969,7 +1989,8 @@ td.first-column {
     }
 
     &.pc_check_checked {
-        background: #f33c3c url("../../../../../src/www/themes/common/images/ic/cross_white.png") center center no-repeat;
+        background: #f33c3c url("../../../../../src/www/themes/common/images/ic/cross_white.png")
+            center center no-repeat;
 
         &:hover {
             background-color: #fd6060;
@@ -2147,6 +2168,7 @@ td.first-column {
 #artifact-submit-keeper-message {
     display: none;
     width: 30em;
+
     /* LESS/Bootstrap: .well; */
     min-height: 20px;
     margin: auto;
@@ -2174,7 +2196,7 @@ td.first-column {
     width: 100%;
     padding: 20px 0;
     border-top: 1px solid #e0e0e0;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgb(255 255 255 / 95%);
     /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
     background: #ffffff;
     text-align: center;
@@ -2202,6 +2224,7 @@ td.first-column {
 .hidden-artifact-submit-button {
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .artifact-submit-button;
+
     display: none;
 }
 
@@ -2619,7 +2642,7 @@ body.in_tracker_report .main .content {
         width: 100%;
         padding: 20px 0;
         border-top: 1px solid #e0e0e0;
-        background: rgba(255, 255, 255, 0.95);
+        background: rgb(255 255 255 / 95%);
         text-align: center;
     }
 }
@@ -2632,12 +2655,12 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
     .#{$color-name} {
         &.fa-circle.tracker_color_info,
         &.tracker_color_selector_container {
-            color: map-get($colors, "primary");
+            color: map.get($colors, "primary");
         }
 
         &.xref-in-title,
         &.colored-xref {
-            background-color: map-get($colors, "primary");
+            background-color: map.get($colors, "primary");
         }
     }
 }
@@ -3038,6 +3061,7 @@ td.tracker-unsubscriber-actions {
 
 #tracker-semantic-disabled {
     $muted-text-color: #676767;
+
     margin: 25vmin 0 0;
     text-align: center;
 
@@ -3225,7 +3249,11 @@ td.tracker-unsubscriber-actions {
 
 .tracker-field-dependency-highlight,
 .list-picker-field-dependency-highlight > .list-picker > .list-picker-selection,
-.list-picker-field-dependency-highlight > .list-picker > .list-picker-selection > .list-picker-multiple-search-section > .list-picker-search-field {
+.list-picker-field-dependency-highlight
+    > .list-picker
+    > .list-picker-selection
+    > .list-picker-multiple-search-section
+    > .list-picker-search-field {
     animation: 1s linear 0s field-dependencies-highlight-anim;
 }
 

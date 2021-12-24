@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
 @use "../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
 .roadmap-gantt-task-popover {
@@ -72,10 +73,10 @@
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.roadmap-gantt-task-popover-header-#{$color-name} {
-            border-top-color: map-get($colors, "primary");
+            border-top-color: map.get($colors, "primary");
 
             > .roadmap-gantt-task-popover-title > .roadmap-gantt-task-popover-xref {
-                color: map-get($colors, "text-on-dark");
+                color: map.get($colors, "text-on-dark");
             }
         }
     }

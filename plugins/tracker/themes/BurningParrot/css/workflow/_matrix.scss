@@ -153,6 +153,9 @@
     margin: var(--tlp-small-spacing) 0 0;
 }
 
-.sidebar-collapsed .tracker-workflow-transition-tbody > tr > .tracker-workflow-transition-row-label:first-child {
+.sidebar-collapsed
+    .tracker-workflow-transition-tbody
+    > tr
+    > .tracker-workflow-transition-row-label:first-child {
     left: 50px;
 }

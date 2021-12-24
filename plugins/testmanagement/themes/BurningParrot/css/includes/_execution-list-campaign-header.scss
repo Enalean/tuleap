@@ -136,7 +136,9 @@ $testers-padding: 4px;
         position: absolute;
         z-index: 2;
         top: $testers-padding;
-        right: calc(-8px + #{$more-testers-icon-width-including-margins}); // not related to --tlp-medium-spacing
+        right: calc(
+            -8px + #{$more-testers-icon-width-including-margins}
+        ); // not related to --tlp-medium-spacing
 
         > .tlp-badge-primary {
             display: none;
@@ -147,7 +149,9 @@ $testers-padding: 4px;
         position: absolute;
         z-index: 1;
         top: $testers-padding;
-        right: calc(-20px + #{$more-testers-icon-width-including-margins}); // -avatar.width / 2 - right position of nth-child(4)
+        right: calc(
+            -20px + #{$more-testers-icon-width-including-margins}
+        ); // -avatar.width / 2 - right position of nth-child(4)
 
         > .tlp-badge-primary {
             display: none;

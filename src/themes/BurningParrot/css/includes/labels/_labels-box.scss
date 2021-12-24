@@ -17,17 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
 @use "../global-variables";
 @use "../../../../tlp/src/scss/variables/colors/common-colors";
 
 /* stylelint-disable selector-class-pattern */
-.select2-selection.item-labels-box-select2 > .select2-selection__rendered > .select2-selection__choice {
+.select2-selection.item-labels-box-select2
+    > .select2-selection__rendered
+    > .select2-selection__choice {
     color: var(--tlp-main-color);
 
     @each $color-name, $colors in common-colors.$tlp-swatch-color-map {
         &.select-item-label-color-#{$color-name} {
-            border-color: map-get($colors, "primary");
-            background: map-get($colors, "primary");
+            border-color: map.get($colors, "primary");
+            background: map.get($colors, "primary");
             color: var(--tlp-white-color);
 
             > .select2-selection__choice__remove {
@@ -38,12 +41,12 @@
 
             &.select-item-label-outline {
                 background: transparent;
-                color: map-get($colors, "primary");
+                color: map.get($colors, "primary");
 
                 > .select2-selection__choice__remove {
                     // stylelint-disable-next-line max-nesting-depth
                     &::before {
-                        color: map-get($colors, "primary");
+                        color: map.get($colors, "primary");
                     }
                 }
             }
@@ -55,10 +58,13 @@
     display: none;
 }
 
-.item-labels-box-select2-results > .select2-results > .select2-results__options > .select2-results__option {
+.item-labels-box-select2-results
+    > .select2-results
+    > .select2-results__options
+    > .select2-results__option {
     @each $color-name, $colors in common-colors.$tlp-swatch-color-map {
         &.select-item-label-color-#{$color-name} {
-            color: map-get($colors, "primary");
+            color: map.get($colors, "primary");
         }
     }
 
@@ -67,7 +73,7 @@
 
         @each $color-name, $colors in common-colors.$tlp-swatch-color-map {
             &.select-item-label-color-#{$color-name} {
-                background: map-get($colors, "primary");
+                background: map.get($colors, "primary");
                 color: var(--tlp-white-color);
             }
         }
@@ -90,7 +96,7 @@
                 margin: 0 5px 5px 0;
             }
 
-            //stylelint-disable-next-line selector-max-compound-selectors
+            // stylelint-disable-next-line selector-max-compound-selectors
             > .select2-search > .select2-search__field {
                 display: none;
             }
@@ -98,8 +104,13 @@
     }
 
     &:not(.select2-container--disabled) {
-        //stylelint-disable-next-line selector-max-compound-selectors
-        &.select2-container--focus > .selection > .item-labels-box-select2 > .select2-selection__rendered > .select2-search > .select2-search__field {
+        // stylelint-disable-next-line selector-max-compound-selectors
+        &.select2-container--focus
+            > .selection
+            > .item-labels-box-select2
+            > .select2-selection__rendered
+            > .select2-search
+            > .select2-search__field {
             width: 200px !important;
         }
 
@@ -117,21 +128,21 @@
                     font-weight: 900;
                 }
 
-                //stylelint-disable-next-line selector-max-compound-selectors
+                // stylelint-disable-next-line selector-max-compound-selectors
                 &:not(:only-child) > .select2-search__field {
                     display: none;
                     pointer-events: none;
                 }
 
                 &:only-child {
-                    //stylelint-disable-next-line max-nesting-depth
+                    // stylelint-disable-next-line max-nesting-depth
                     &::after {
                         content: "\f02c"; // fa-tags
                         right: 5px;
                         left: auto;
                     }
 
-                    //stylelint-disable-next-line selector-max-compound-selectors, max-nesting-depth
+                    // stylelint-disable-next-line selector-max-compound-selectors, max-nesting-depth
                     > .select2-search__field {
                         width: 200px !important;
                         padding: 0 10px 0 0;
@@ -146,25 +157,33 @@
 
 /* stylelint-disable selector-no-qualifying-type */
 span.select2 {
-    //stylelint-disable-next-line selector-max-compound-selectors
-    > .selection > .item-labels-box-select2 > .select2-selection__rendered > .select2-selection__choice > .select2-selection__choice__remove {
+    // stylelint-disable-next-line selector-max-compound-selectors
+    > .selection
+        > .item-labels-box-select2
+        > .select2-selection__rendered
+        > .select2-selection__choice
+        > .select2-selection__choice__remove {
         margin: 0 5px 0 0;
 
-        //stylelint-disable-next-line selector-max-compound-selectors
+        // stylelint-disable-next-line selector-max-compound-selectors
         &::before {
             content: "\f02b"; // fa-tag
             font-family: "Font Awesome 5 Free";
             font-weight: 900;
         }
 
-        //stylelint-disable-next-line selector-max-compound-selectors
+        // stylelint-disable-next-line selector-max-compound-selectors
         &:hover::before {
             color: inherit;
         }
     }
 
-    &:not(.select2-container--disabled) > .selection > .item-labels-box-select2 > .select2-selection__rendered > .select2-selection__choice {
-        //stylelint-disable-next-line selector-max-compound-selectors
+    &:not(.select2-container--disabled)
+        > .selection
+        > .item-labels-box-select2
+        > .select2-selection__rendered
+        > .select2-selection__choice {
+        // stylelint-disable-next-line selector-max-compound-selectors
         &:hover > .select2-selection__choice__remove::before {
             content: "\f057"; // fa-times-circle
             font-family: "Font Awesome 5 Free";
