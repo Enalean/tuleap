@@ -494,4 +494,5 @@ export interface TestExecutionResponse {
         submitted_on: string;
         submitted_by: ArtifactReportResponseUserRepresentation;
     } | null;
+    status: TestExecStatus | null;
 }

@@ -50,6 +50,7 @@ export function buildStepDefinitionFunction(): TransformStepDefFieldValue<Artifa
             content_length: "blockttmstepdef",
             value_type: "string",
             steps: steps,
+            result: null,
         };
     };
 }
@@ -58,20 +59,17 @@ export function buildStepDefinitionEnhancedWithResultsFunction(
     artifact: ArtifactFromReport,
     executions_map: ExecutionsForCampaignMap
 ): TransformStepDefFieldValue<ArtifactFieldValueStepDefinitionEnhancedWithResults> {
-    let execution_for_test: TestExecutionResponse | null = null;
-    for (const { executions } of executions_map.values()) {
-        for (const exec of executions) {
-            if (exec.definition.id === artifact.id) {
-                execution_for_test = exec;
-                break;
-            }
-        }
-    }
+    const execution_for_test = getLastExecutionForTest(artifact, executions_map);
 
     return (
         value: ArtifactReportResponseStepDefinitionFieldValue
     ): ArtifactFieldValueStepDefinitionEnhancedWithResults => {
         const steps: ArtifactFieldValueStepDefinitionEnhanced[] = [];
+        let test_status = null;
+        if (execution_for_test !== null) {
+            test_status = execution_for_test.status;
+        }
+
         for (const step of value.value) {
             let step_status = null;
             if (
@@ -96,6 +94,51 @@ export function buildStepDefinitionEnhancedWithResultsFunction(
             content_length: "blockttmstepdefenhanced",
             value_type: "string",
             steps: steps,
+            result: test_status,
         };
     };
+}
+
+function getLastExecutionForTest(
+    artifact: ArtifactFromReport,
+    executions_map: ExecutionsForCampaignMap
+): TestExecutionResponse | null {
+    let execution_for_test: TestExecutionResponse | null = null;
+    const all_execution_for_test: TestExecutionResponse[] = [];
+
+    for (const { executions } of executions_map.values()) {
+        for (const exec of executions) {
+            if (exec.definition.id === artifact.id) {
+                all_execution_for_test.push(exec);
+            }
+        }
+    }
+
+    if (all_execution_for_test.length === 0) {
+        return null;
+    }
+
+    if (all_execution_for_test.length === 1) {
+        return all_execution_for_test[0];
+    }
+
+    let higher_found_execution_date: Date | null = null;
+    for (const execution of all_execution_for_test) {
+        if (execution.previous_result === null) {
+            if (execution_for_test === null) {
+                execution_for_test = execution;
+            }
+        } else {
+            const current_execution_date = new Date(execution.previous_result.submitted_on);
+            if (
+                higher_found_execution_date === null ||
+                current_execution_date > higher_found_execution_date
+            ) {
+                execution_for_test = execution;
+                higher_found_execution_date = current_execution_date;
+            }
+        }
+    }
+
+    return execution_for_test;
 }

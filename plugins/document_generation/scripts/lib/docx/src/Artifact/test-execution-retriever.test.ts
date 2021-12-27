@@ -82,6 +82,7 @@ describe("getTestManagementExecution", () => {
                 } as ArtifactReportResponseUserRepresentation,
                 status: "passed",
             },
+            status: "blocked",
         };
         mockFetchSuccess(tlpGet, {
             return_json: {

@@ -237,6 +237,9 @@ async function buildFieldValuesDisplayZone(
                         ...(await buildStepDefinitionParagraphs(step, gettext_provider, true))
                     );
                 }
+                display_zone_long_fields.push(
+                    ...buildStepDefinitionTestResultParagraphs(field, gettext_provider)
+                );
                 break;
             case "blockttmstepexec": {
                 display_zone_long_fields.push(
@@ -602,7 +605,7 @@ async function buildStepDefinitionParagraphs(
 ): Promise<(Table | Paragraph)[]> {
     const paragraphs: (Table | Paragraph)[] = [];
 
-    if (must_display_enhanced_data === true) {
+    if (must_display_enhanced_data) {
         paragraphs.push(
             buildTable([
                 new TableRow({
@@ -630,6 +633,30 @@ async function buildStepDefinitionParagraphs(
         ...(await buildParagraphsFromContent(step.expected_results, step.expected_results_format, [
             HeadingLevel.HEADING_6,
         ]))
+    );
+
+    return paragraphs;
+}
+
+function buildStepDefinitionTestResultParagraphs(
+    field: ArtifactFieldValueStepDefinitionEnhancedWithResults,
+    gettext_provider: VueGettextProvider
+): (Table | Paragraph)[] {
+    const paragraphs: (Table | Paragraph)[] = [];
+
+    paragraphs.push(
+        new Paragraph({
+            heading: HeadingLevel.HEADING_5,
+            children: [new TextRun(gettext_provider.$gettext("Test Results"))],
+        }),
+        buildTable([
+            new TableRow({
+                children: [
+                    buildTableCellLabel(gettext_provider.$gettext("Status")),
+                    buildCellContentResult(field.result, gettext_provider, 1),
+                ],
+            }),
+        ])
     );
 
     return paragraphs;
