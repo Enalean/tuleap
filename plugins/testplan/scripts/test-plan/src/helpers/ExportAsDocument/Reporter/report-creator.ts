@@ -41,7 +41,10 @@ import { memoize } from "./memoize";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 import { getTraceabilityMatrix } from "./traceability-matrix-creator";
 import { getExecutionsForCampaigns } from "./executions-for-campaigns-retriever";
-import { buildStepDefinitionEnhancedWithResultsFunction } from "./step-test-definition-with-results-formatter";
+import {
+    buildStepDefinitionEnhancedWithResultsFunction,
+    buildStepDefinitionFunction,
+} from "./step-test-definition-formatter";
 
 interface TrackerStructurePromiseTuple {
     readonly tracker_id: number;
@@ -127,7 +130,7 @@ export async function createExportReport(
                     datetime_locale_information,
                     global_properties.base_url,
                     global_properties.artifact_links_types,
-                    buildStepDefinitionEnhancedWithResultsFunction(artifact, executions_map)
+                    buildStepDefinitionFunction()
                 )
             ),
         traceability_matrix: getTraceabilityMatrix(executions_map, datetime_locale_information),

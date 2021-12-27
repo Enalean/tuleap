@@ -18,11 +18,14 @@
  */
 
 import type { ArtifactFromReport } from "@tuleap/plugin-docgen-docx";
-import { buildStepDefinitionEnhancedWithResultsFunction } from "./step-test-definition-with-results-formatter";
+import {
+    buildStepDefinitionEnhancedWithResultsFunction,
+    buildStepDefinitionFunction,
+} from "./step-test-definition-formatter";
 import type { Campaign, ExecutionsForCampaignMap } from "../../../type";
 import type { ArtifactReportResponseStepDefinitionFieldValue } from "@tuleap/plugin-docgen-docx";
 
-describe("buildStepDefinitionEnhancedWithResultsFunction", () => {
+describe("step-test-definition-formatter", () => {
     it("should build a function that enhance the step definition field with steps results", () => {
         const artifact: ArtifactFromReport = {
             id: 359,
@@ -126,7 +129,7 @@ describe("buildStepDefinitionEnhancedWithResultsFunction", () => {
 
         expect(enhanced_step_def_value).toEqual({
             field_name: "Step Definition",
-            content_length: "blockttmstepdef",
+            content_length: "blockttmstepdefenhanced",
             value_type: "string",
             steps: [
                 {
@@ -152,6 +155,76 @@ describe("buildStepDefinitionEnhancedWithResultsFunction", () => {
                     expected_results_format: "html",
                     rank: 3,
                     status: "blocked",
+                },
+            ],
+        });
+    });
+
+    it("should build a function that returns the step definition field without steps results", () => {
+        const format_step_def_builder = buildStepDefinitionFunction();
+
+        const field_value = {
+            field_id: 24,
+            type: "ttmstepdef",
+            label: "Step Definition",
+            value: [
+                {
+                    id: 13,
+                    description: "01",
+                    description_format: "text",
+                    expected_results: "01",
+                    expected_results_format: "text",
+                    rank: 1,
+                },
+                {
+                    id: 14,
+                    description: "This is text",
+                    description_format: "text",
+                    expected_results: "text\nwith\nnewlines",
+                    expected_results_format: "text",
+                    rank: 2,
+                },
+                {
+                    id: 15,
+                    description: "<p>This is HTML</p>",
+                    description_format: "html",
+                    expected_results: "<p>HTML</p>\n\n<p>with</p>\n\n<p>newlines</p>",
+                    expected_results_format: "html",
+                    rank: 3,
+                },
+            ],
+        } as ArtifactReportResponseStepDefinitionFieldValue;
+
+        const enhanced_step_def_value = format_step_def_builder(field_value);
+
+        expect(enhanced_step_def_value).toEqual({
+            field_name: "Step Definition",
+            content_length: "blockttmstepdef",
+            value_type: "string",
+            steps: [
+                {
+                    description: "01",
+                    description_format: "plaintext",
+                    expected_results: "01",
+                    expected_results_format: "plaintext",
+                    rank: 1,
+                    status: null,
+                },
+                {
+                    description: "This is text",
+                    description_format: "plaintext",
+                    expected_results: "text\nwith\nnewlines",
+                    expected_results_format: "plaintext",
+                    rank: 2,
+                    status: null,
+                },
+                {
+                    description: "<p>This is HTML</p>",
+                    description_format: "html",
+                    expected_results: "<p>HTML</p>\n\n<p>with</p>\n\n<p>newlines</p>",
+                    expected_results_format: "html",
+                    rank: 3,
+                    status: null,
                 },
             ],
         });

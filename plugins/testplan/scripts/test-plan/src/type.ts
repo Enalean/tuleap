@@ -120,7 +120,7 @@ export interface TraceabilityMatrixElement {
 
 export interface ArtifactFieldValueStepDefinitionEnhancedWithResults {
     readonly field_name: string;
-    readonly content_length: "blockttmstepdef";
+    readonly content_length: "blockttmstepdef" | "blockttmstepdefenhanced";
     readonly value_type: "string";
     readonly steps: Array<ArtifactFieldValueStepDefinitionEnhanced>;
 }
