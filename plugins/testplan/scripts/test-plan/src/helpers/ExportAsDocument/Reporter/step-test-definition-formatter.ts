@@ -29,6 +29,31 @@ import type {
     ExecutionsForCampaignMap,
 } from "../../../type";
 
+export function buildStepDefinitionFunction(): TransformStepDefFieldValue<ArtifactFieldValueStepDefinitionEnhancedWithResults> {
+    return (
+        value: ArtifactReportResponseStepDefinitionFieldValue
+    ): ArtifactFieldValueStepDefinitionEnhancedWithResults => {
+        const steps: ArtifactFieldValueStepDefinitionEnhanced[] = [];
+        for (const step of value.value) {
+            steps.push({
+                description: step.description,
+                description_format: step.description_format === "html" ? "html" : "plaintext",
+                expected_results: step.expected_results,
+                expected_results_format:
+                    step.expected_results_format === "html" ? "html" : "plaintext",
+                rank: step.rank,
+                status: null,
+            });
+        }
+        return {
+            field_name: value.label,
+            content_length: "blockttmstepdef",
+            value_type: "string",
+            steps: steps,
+        };
+    };
+}
+
 export function buildStepDefinitionEnhancedWithResultsFunction(
     artifact: ArtifactFromReport,
     executions_map: ExecutionsForCampaignMap
@@ -68,7 +93,7 @@ export function buildStepDefinitionEnhancedWithResultsFunction(
         }
         return {
             field_name: value.label,
-            content_length: "blockttmstepdef",
+            content_length: "blockttmstepdefenhanced",
             value_type: "string",
             steps: steps,
         };

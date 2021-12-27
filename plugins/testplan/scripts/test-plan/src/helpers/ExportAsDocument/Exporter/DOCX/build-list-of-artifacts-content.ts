@@ -212,7 +212,28 @@ async function buildFieldValuesDisplayZone(
                                 ),
                             ],
                         }),
-                        ...(await buildStepDefinitionParagraphs(step, gettext_provider))
+                        ...(await buildStepDefinitionParagraphs(step, gettext_provider, false))
+                    );
+                }
+                break;
+            case "blockttmstepdefenhanced":
+                display_zone_long_fields.push(
+                    new Paragraph({
+                        heading: HeadingLevel.HEADING_4,
+                        children: [new TextRun(field.field_name)],
+                    })
+                );
+                for (const step of field.steps) {
+                    display_zone_long_fields.push(
+                        new Paragraph({
+                            heading: HeadingLevel.HEADING_5,
+                            children: [
+                                new TextRun(
+                                    sprintf(gettext_provider.$gettext("Step %d"), step.rank)
+                                ),
+                            ],
+                        }),
+                        ...(await buildStepDefinitionParagraphs(step, gettext_provider, true))
                     );
                 }
                 break;
@@ -284,7 +305,7 @@ async function buildFieldValuesDisplayZone(
                                 ),
                             ],
                         }),
-                        ...(await buildStepDefinitionParagraphs(step, gettext_provider))
+                        ...(await buildStepDefinitionParagraphs(step, gettext_provider, false))
                     );
                 }
                 break;
@@ -575,21 +596,27 @@ function buildTableCellLinksContent(links: Array<ExternalHyperlink>): TableCell 
 
 async function buildStepDefinitionParagraphs(
     step: ArtifactFieldValueStepDefinitionEnhanced,
-    gettext_provider: VueGettextProvider
+    gettext_provider: VueGettextProvider,
+    must_display_enhanced_data: boolean
 ): Promise<Paragraph[]> {
     const paragraphs: Paragraph[] = [];
 
+    if (must_display_enhanced_data === true) {
+        paragraphs.push(
+            new Paragraph({
+                children: [
+                    new TextRun(
+                        sprintf(
+                            gettext_provider.$gettext("Status: %s"),
+                            getInternationalizedTestStatus(gettext_provider, step.status)
+                        )
+                    ),
+                ],
+            })
+        );
+    }
+
     paragraphs.push(
-        new Paragraph({
-            children: [
-                new TextRun(
-                    sprintf(
-                        gettext_provider.$gettext("Status: %s"),
-                        getInternationalizedTestStatus(gettext_provider, step.status)
-                    )
-                ),
-            ],
-        }),
         new Paragraph({
             heading: HeadingLevel.HEADING_6,
             children: [new TextRun(gettext_provider.$gettext("Description"))],
