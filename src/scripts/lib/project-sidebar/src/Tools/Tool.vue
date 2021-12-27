@@ -46,8 +46,8 @@
     </a>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
-import { sanitizeURL } from "./url-sanitizer";
+import { computed } from "vue";
+import { sanitizeURL } from "../url-sanitizer";
 
 // We cannot directly import the Tool interface from the external file so we duplicate the content for now
 // See https://github.com/vuejs/vue-next/issues/4294
@@ -59,5 +59,5 @@ const props = defineProps<{
     open_in_new_tab: boolean;
     is_active: boolean;
 }>();
-const sanitized_href = ref(sanitizeURL(props.href));
+const sanitized_href = computed(() => sanitizeURL(props.href));
 </script>

@@ -22,6 +22,7 @@
 
 <template>
     <aside v-if="sidebar_configuration !== undefined" class="sidebar">
+        <sidebar-logo />
         <div class="sidebar-content-vertical-scroll">
             <sidebar-header />
             <tools />
@@ -37,6 +38,7 @@ import SidebarHeader from "./Header/SidebarHeader.vue";
 import SidebarFooter from "./SidebarFooter.vue";
 import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
 import Tools from "./Tools/Tools.vue";
+import SidebarLogo from "./SidebarLogo.vue";
 
 const props = defineProps<{ config: string | undefined }>();
 const sidebar_configuration = readonly(computed(() => unserializeConfiguration(props.config)));
@@ -47,6 +49,7 @@ provide(SIDEBAR_CONFIGURATION, sidebar_configuration);
 @use "../../../themes/tlp/src/scss/components/typography";
 @use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-generic";
 @use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-project";
+@use "../../../themes/BurningParrot/css/includes/logo";
 @use "@fortawesome/fontawesome-free/scss/fontawesome";
 @use "./fontawesome-classes";
 @use "../../../themes/tlp/src/fonts/tlp-font/icons";

@@ -25,6 +25,7 @@ import type { Configuration } from "./configuration";
 export const example_config: Configuration = {
     internationalization: {
         tools: "Tools",
+        homepage: "Homepage",
     },
     project: {
         name: "project1",
@@ -47,6 +48,10 @@ export const example_config: Configuration = {
             full_descriptive_version: "Tuleap Community Edition — Dev Build 13.2.99.999",
         },
         copyright: "ACME",
+        logo: {
+            logo_link_href: "https://myinstance.example.com/",
+            svg: null,
+        },
     },
     tools: [
         {
