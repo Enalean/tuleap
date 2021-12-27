@@ -126,7 +126,12 @@ export const buildCellContentResult = (
     rowSpan: number
 ): TableCell => {
     const status = getInternationalizedTestStatus(gettext_provider, result);
-    let table_cell_options = buildCellContentOptions(new TextRun(status));
+    const table_cell_options = buildCellContentOptions(
+        new TextRun({
+            text: status,
+            color: "ffffff",
+        })
+    );
 
     const additional_cell_options: { shading?: IShadingAttributesProperties } = {};
     switch (result) {
@@ -149,12 +154,6 @@ export const buildCellContentResult = (
             additional_cell_options.shading = {
                 fill: "717171",
             };
-            table_cell_options = buildCellContentOptions(
-                new TextRun({
-                    text: status,
-                    color: "ffffff",
-                })
-            );
             break;
     }
 
