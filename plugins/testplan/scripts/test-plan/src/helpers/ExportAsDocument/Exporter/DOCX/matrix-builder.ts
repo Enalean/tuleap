@@ -120,7 +120,7 @@ const buildCellContentWithRowspan = (
         rowSpan,
     });
 
-const buildCellContentResult = (
+export const buildCellContentResult = (
     result: ArtifactFieldValueStatus,
     gettext_provider: VueGettextProvider,
     rowSpan: number

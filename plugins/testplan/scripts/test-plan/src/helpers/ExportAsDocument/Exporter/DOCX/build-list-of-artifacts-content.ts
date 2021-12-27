@@ -53,6 +53,7 @@ import { sprintf } from "sprintf-js";
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import { getInternationalizedTestStatus } from "./internationalize-test-status";
 import type { ArtifactFieldValueStepDefinitionEnhancedWithResults } from "../../../../type";
+import { buildCellContentResult } from "./matrix-builder";
 
 const TABLE_LABEL_SHADING = {
     val: ShadingType.CLEAR,
@@ -598,21 +599,19 @@ async function buildStepDefinitionParagraphs(
     step: ArtifactFieldValueStepDefinitionEnhanced,
     gettext_provider: VueGettextProvider,
     must_display_enhanced_data: boolean
-): Promise<Paragraph[]> {
-    const paragraphs: Paragraph[] = [];
+): Promise<(Table | Paragraph)[]> {
+    const paragraphs: (Table | Paragraph)[] = [];
 
     if (must_display_enhanced_data === true) {
         paragraphs.push(
-            new Paragraph({
-                children: [
-                    new TextRun(
-                        sprintf(
-                            gettext_provider.$gettext("Status: %s"),
-                            getInternationalizedTestStatus(gettext_provider, step.status)
-                        )
-                    ),
-                ],
-            })
+            buildTable([
+                new TableRow({
+                    children: [
+                        buildTableCellLabel(gettext_provider.$gettext("Status")),
+                        buildCellContentResult(step.status, gettext_provider, 1),
+                    ],
+                }),
+            ])
         );
     }
 
