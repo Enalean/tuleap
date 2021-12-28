@@ -22,6 +22,7 @@ import type {
     ArtifactReportResponseStepDefinitionFieldValue,
 } from "../type";
 export function formatStepDefinitionField(
+    base_url: string,
     value: ArtifactReportResponseStepDefinitionFieldValue
 ): ArtifactFieldValueStepDefinitionContent {
     const steps: ArtifactFieldValueStepDefinition[] = [];

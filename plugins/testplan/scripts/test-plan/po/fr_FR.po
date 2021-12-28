@@ -80,6 +80,9 @@ msgstr "Les artéfacts qui sont référencés par “%s”"
 msgid "Artifacts that reference “%s”"
 msgstr "Les artéfacts qui référencent “%s”"
 
+msgid "Attachments"
+msgstr "Attachements"
+
 msgid "Blocked"
 msgstr "Bloqué"
 

@@ -83,6 +83,7 @@ describe("getTestManagementExecution", () => {
                 status: "passed",
             },
             status: "blocked",
+            attachments: [],
         };
         mockFetchSuccess(tlpGet, {
             return_json: {

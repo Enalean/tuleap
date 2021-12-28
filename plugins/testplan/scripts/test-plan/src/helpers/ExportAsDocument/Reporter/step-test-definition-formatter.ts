@@ -31,6 +31,7 @@ import type {
 
 export function buildStepDefinitionFunction(): TransformStepDefFieldValue<ArtifactFieldValueStepDefinitionEnhancedWithResults> {
     return (
+        base_url: string,
         value: ArtifactReportResponseStepDefinitionFieldValue
     ): ArtifactFieldValueStepDefinitionEnhancedWithResults => {
         const steps: ArtifactFieldValueStepDefinitionEnhanced[] = [];
@@ -51,6 +52,7 @@ export function buildStepDefinitionFunction(): TransformStepDefFieldValue<Artifa
             value_type: "string",
             steps: steps,
             result: null,
+            attachments: [],
         };
     };
 }
@@ -62,6 +64,7 @@ export function buildStepDefinitionEnhancedWithResultsFunction(
     const execution_for_test = getLastExecutionForTest(artifact, executions_map);
 
     return (
+        base_url: string,
         value: ArtifactReportResponseStepDefinitionFieldValue
     ): ArtifactFieldValueStepDefinitionEnhancedWithResults => {
         const steps: ArtifactFieldValueStepDefinitionEnhanced[] = [];
@@ -89,12 +92,21 @@ export function buildStepDefinitionEnhancedWithResultsFunction(
                 status: step_status,
             });
         }
+
+        const attachments = (execution_for_test?.attachments ?? []).map((attachment) => {
+            return {
+                ...attachment,
+                html_url: new URL(base_url.replace(/\/$/, "") + attachment.html_url).href,
+            };
+        });
+
         return {
             field_name: value.label,
             content_length: "blockttmstepdefenhanced",
             value_type: "string",
             steps: steps,
             result: test_status,
+            attachments,
         };
     };
 }

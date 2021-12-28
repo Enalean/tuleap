@@ -323,6 +323,7 @@ describe("retrieveArtifactsStructure", () => {
                 },
             },
             status: "blocked",
+            attachments: [],
         };
         const get_test_exec = (): Promise<TestExecutionResponse> =>
             Promise.resolve(testmanagement_execution_response);

@@ -86,6 +86,7 @@ describe("step-test-definition-formatter", () => {
                         },
                     },
                     status: "passed",
+                    attachments: [],
                 },
                 {
                     definition: {
@@ -143,6 +144,7 @@ describe("step-test-definition-formatter", () => {
                         },
                     },
                     status: "blocked",
+                    attachments: [{ filename: "toto.png", html_url: "/path/to/file" }],
                 },
             ],
         });
@@ -184,7 +186,7 @@ describe("step-test-definition-formatter", () => {
             ],
         } as ArtifactReportResponseStepDefinitionFieldValue;
 
-        const enhanced_step_def_value = format_step_def_builder(field_value);
+        const enhanced_step_def_value = format_step_def_builder("https://example.com", field_value);
 
         expect(enhanced_step_def_value).toEqual({
             field_name: "Step Definition",
@@ -217,6 +219,7 @@ describe("step-test-definition-formatter", () => {
                 },
             ],
             result: "blocked",
+            attachments: [{ filename: "toto.png", html_url: "https://example.com/path/to/file" }],
         });
     });
 
@@ -255,7 +258,7 @@ describe("step-test-definition-formatter", () => {
             ],
         } as ArtifactReportResponseStepDefinitionFieldValue;
 
-        const enhanced_step_def_value = format_step_def_builder(field_value);
+        const enhanced_step_def_value = format_step_def_builder("https://example.com", field_value);
 
         expect(enhanced_step_def_value).toEqual({
             field_name: "Step Definition",
@@ -288,6 +291,7 @@ describe("step-test-definition-formatter", () => {
                 },
             ],
             result: null,
+            attachments: [],
         });
     });
 });

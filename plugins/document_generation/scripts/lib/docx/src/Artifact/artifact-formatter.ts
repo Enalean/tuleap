@@ -109,7 +109,7 @@ function formatFieldValue<StepDefFieldValue>(
     }
 
     if (value.type === "ttmstepdef") {
-        return transform_step_def_field(value);
+        return transform_step_def_field(base_url, value);
     }
 
     if (value.type === "ttmstepexec") {

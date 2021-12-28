@@ -24,6 +24,7 @@ import type {
     FormattedArtifact,
     TestExecutionResponse,
 } from "@tuleap/plugin-docgen-docx";
+import type { TestExecutionAttachment } from "@tuleap/plugin-docgen-docx";
 
 export interface Campaign {
     readonly id: number;
@@ -124,6 +125,7 @@ export interface ArtifactFieldValueStepDefinitionEnhancedWithResults {
     readonly value_type: "string";
     readonly steps: Array<ArtifactFieldValueStepDefinitionEnhanced>;
     readonly result: ArtifactFieldValueStatus;
+    readonly attachments: ReadonlyArray<TestExecutionAttachment>;
 }
 
 export interface ExportDocument<StepDefFieldValue> {
