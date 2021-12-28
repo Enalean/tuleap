@@ -90,6 +90,7 @@ export interface ArtifactFieldValueStepDefinitionEnhanced extends ArtifactFieldV
 }
 
 export type TransformStepDefFieldValue<StepDefFieldValue> = (
+    base_url: string,
     value: ArtifactReportResponseStepDefinitionFieldValue
 ) => StepDefFieldValue;
 
@@ -470,6 +471,11 @@ export interface ArtifactResponse {
     readonly values: ReadonlyArray<ArtifactReportResponseFieldValue>;
 }
 
+export interface TestExecutionAttachment {
+    readonly filename: string;
+    readonly html_url: string;
+}
+
 export interface TestExecutionResponse {
     definition: {
         id: number;
@@ -495,4 +501,5 @@ export interface TestExecutionResponse {
         submitted_by: ArtifactReportResponseUserRepresentation;
     } | null;
     status: TestExecStatus | null;
+    attachments: ReadonlyArray<TestExecutionAttachment>;
 }

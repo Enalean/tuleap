@@ -644,19 +644,41 @@ function buildStepDefinitionTestResultParagraphs(
 ): (Table | Paragraph)[] {
     const paragraphs: (Table | Paragraph)[] = [];
 
+    const rows = [
+        new TableRow({
+            children: [
+                buildTableCellLabel(gettext_provider.$gettext("Status")),
+                buildCellContentResult(field.result, gettext_provider, 1),
+            ],
+        }),
+    ];
+
+    const links_value: ExternalHyperlink[] = [];
+    for (const attachment of field.attachments) {
+        links_value.push(
+            new ExternalHyperlink({
+                children: [new TextRun({ text: attachment.filename, style: "Hyperlink" })],
+                link: attachment.html_url,
+            })
+        );
+    }
+
+    if (links_value.length > 0) {
+        const table_row = new TableRow({
+            children: [
+                buildTableCellLabel(gettext_provider.$gettext("Attachments")),
+                buildTableCellLinksContent(links_value),
+            ],
+        });
+        rows.push(table_row);
+    }
+
     paragraphs.push(
         new Paragraph({
             heading: HeadingLevel.HEADING_5,
             children: [new TextRun(gettext_provider.$gettext("Test Results"))],
         }),
-        buildTable([
-            new TableRow({
-                children: [
-                    buildTableCellLabel(gettext_provider.$gettext("Status")),
-                    buildCellContentResult(field.result, gettext_provider, 1),
-                ],
-            }),
-        ])
+        buildTable(rows)
     );
 
     return paragraphs;

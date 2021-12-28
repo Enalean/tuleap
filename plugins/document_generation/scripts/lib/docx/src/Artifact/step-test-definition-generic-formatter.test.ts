@@ -54,7 +54,10 @@ describe("step-test-definition-generic-formatter", () => {
             ],
         } as ArtifactReportResponseStepDefinitionFieldValue;
 
-        const enhanced_step_def_value = formatStepDefinitionField(field_value);
+        const enhanced_step_def_value = formatStepDefinitionField(
+            "https://example.com",
+            field_value
+        );
 
         expect(enhanced_step_def_value).toEqual({
             field_name: "Step Definition",
