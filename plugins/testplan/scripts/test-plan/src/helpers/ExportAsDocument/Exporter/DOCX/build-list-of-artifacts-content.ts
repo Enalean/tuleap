@@ -35,19 +35,19 @@ import {
     TextRun,
     WidthType,
 } from "docx";
-import {
-    getAnchorToArtifactContent,
-    transformLargeContentIntoParagraphs,
-    HTML_ORDERED_LIST_NUMBERING,
-    HTML_UNORDERED_LIST_NUMBERING,
-} from "@tuleap/plugin-docgen-docx";
 import type {
     ArtifactContainer,
     ArtifactFieldShortValue,
     ArtifactFieldValue,
+    ArtifactFieldValueStepDefinitionEnhanced,
     FormattedArtifact,
     ReadonlyArrayWithAtLeastOneElement,
-    ArtifactFieldValueStepDefinitionEnhanced,
+} from "@tuleap/plugin-docgen-docx";
+import {
+    getAnchorToArtifactContent,
+    HTML_ORDERED_LIST_NUMBERING,
+    HTML_UNORDERED_LIST_NUMBERING,
+    transformLargeContentIntoParagraphs,
 } from "@tuleap/plugin-docgen-docx";
 import { sprintf } from "sprintf-js";
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
@@ -238,7 +238,7 @@ async function buildFieldValuesDisplayZone(
                     );
                 }
                 display_zone_long_fields.push(
-                    ...buildStepDefinitionTestResultParagraphs(field, gettext_provider)
+                    ...(await buildStepDefinitionTestResultParagraphs(field, gettext_provider))
                 );
                 break;
             case "blockttmstepexec": {
@@ -638,48 +638,69 @@ async function buildStepDefinitionParagraphs(
     return paragraphs;
 }
 
-function buildStepDefinitionTestResultParagraphs(
+async function buildStepDefinitionTestResultParagraphs(
     field: ArtifactFieldValueStepDefinitionEnhancedWithResults,
     gettext_provider: VueGettextProvider
-): (Table | Paragraph)[] {
+): Promise<(Table | Paragraph)[]> {
     const paragraphs: (Table | Paragraph)[] = [];
-
-    const rows = [
-        new TableRow({
-            children: [
-                buildTableCellLabel(gettext_provider.$gettext("Status")),
-                buildCellContentResult(field.result, gettext_provider, 1),
-            ],
-        }),
-    ];
-
-    const links_value: ExternalHyperlink[] = [];
-    for (const attachment of field.attachments) {
-        links_value.push(
-            new ExternalHyperlink({
-                children: [new TextRun({ text: attachment.filename, style: "Hyperlink" })],
-                link: attachment.html_url,
-            })
-        );
-    }
-
-    if (links_value.length > 0) {
-        const table_row = new TableRow({
-            children: [
-                buildTableCellLabel(gettext_provider.$gettext("Attachments")),
-                buildTableCellLinksContent(links_value),
-            ],
-        });
-        rows.push(table_row);
-    }
 
     paragraphs.push(
         new Paragraph({
             heading: HeadingLevel.HEADING_5,
             children: [new TextRun(gettext_provider.$gettext("Test Results"))],
         }),
-        buildTable(rows)
+        new Paragraph({
+            heading: HeadingLevel.HEADING_6,
+            children: [new TextRun(gettext_provider.$gettext("Status"))],
+        }),
+        buildTable([
+            new TableRow({
+                children: [buildCellContentResult(field.status, gettext_provider, 1)],
+            }),
+        ])
     );
+
+    if (field.attachments.length > 0) {
+        paragraphs.push(
+            new Paragraph({
+                heading: HeadingLevel.HEADING_6,
+                children: [new TextRun(gettext_provider.$gettext("Attachments"))],
+            }),
+            buildTable([
+                new TableRow({
+                    children: [
+                        buildTableCellLinksContent(
+                            field.attachments.map(
+                                (attachment) =>
+                                    new ExternalHyperlink({
+                                        children: [
+                                            new TextRun({
+                                                text: attachment.filename,
+                                                style: "Hyperlink",
+                                            }),
+                                        ],
+                                        link: attachment.html_url,
+                                    })
+                            )
+                        ),
+                    ],
+                }),
+            ])
+        );
+    }
+
+    if (field.result.trim()) {
+        paragraphs.push(
+            new Paragraph({
+                heading: HeadingLevel.HEADING_6,
+                children: [new TextRun(gettext_provider.$gettext("Comment"))],
+            })
+        );
+
+        (await buildParagraphsFromContent(field.result, "html", [HeadingLevel.HEADING_6])).forEach(
+            (paragraph) => paragraphs.push(paragraph)
+        );
+    }
 
     return paragraphs;
 }

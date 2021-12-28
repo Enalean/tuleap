@@ -124,7 +124,8 @@ export interface ArtifactFieldValueStepDefinitionEnhancedWithResults {
     readonly content_length: "blockttmstepdef" | "blockttmstepdefenhanced";
     readonly value_type: "string";
     readonly steps: Array<ArtifactFieldValueStepDefinitionEnhanced>;
-    readonly result: ArtifactFieldValueStatus;
+    readonly status: ArtifactFieldValueStatus;
+    readonly result: string;
     readonly attachments: ReadonlyArray<TestExecutionAttachment>;
 }
 

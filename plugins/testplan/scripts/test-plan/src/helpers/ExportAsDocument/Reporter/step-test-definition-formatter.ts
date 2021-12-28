@@ -51,7 +51,8 @@ export function buildStepDefinitionFunction(): TransformStepDefFieldValue<Artifa
             content_length: "blockttmstepdef",
             value_type: "string",
             steps: steps,
-            result: null,
+            status: null,
+            result: "",
             attachments: [],
         };
     };
@@ -105,7 +106,8 @@ export function buildStepDefinitionEnhancedWithResultsFunction(
             content_length: "blockttmstepdefenhanced",
             value_type: "string",
             steps: steps,
-            result: test_status,
+            status: test_status,
+            result: execution_for_test?.previous_result?.result ?? "",
             attachments,
         };
     };

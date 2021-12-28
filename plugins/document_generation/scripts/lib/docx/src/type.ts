@@ -499,6 +499,7 @@ export interface TestExecutionResponse {
         status: TestExecStatus | null;
         submitted_on: string;
         submitted_by: ArtifactReportResponseUserRepresentation;
+        result: string;
     } | null;
     status: TestExecStatus | null;
     attachments: ReadonlyArray<TestExecutionAttachment>;

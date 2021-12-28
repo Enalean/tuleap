@@ -132,6 +132,7 @@ describe("step-test-definition-formatter", () => {
                             display_name: "Some name",
                         } as ArtifactReportResponseUserRepresentation,
                         status: "passed",
+                        result: "<b>it is blocked</b>",
                     },
                     steps_results: {
                         "13": {
@@ -218,7 +219,8 @@ describe("step-test-definition-formatter", () => {
                     status: "blocked",
                 },
             ],
-            result: "blocked",
+            status: "blocked",
+            result: "<b>it is blocked</b>",
             attachments: [{ filename: "toto.png", html_url: "https://example.com/path/to/file" }],
         });
     });
@@ -290,7 +292,8 @@ describe("step-test-definition-formatter", () => {
                     status: null,
                 },
             ],
-            result: null,
+            status: null,
+            result: "",
             attachments: [],
         });
     });
