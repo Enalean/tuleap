@@ -101,11 +101,6 @@ class JiraXmlExporterTest extends TestCase
             'users' => [
                 'john.doe@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('john_doe')->build(),
             ],
-            'jira_issue_key' => 'SBX',
-            'jira_issue_type_id' => '10102',
-            'tests' => function (\SimpleXMLElement $tracker_xml) {
-                self::assertStringEqualsFile(__DIR__ . '/_fixtures/SBX/tracker.xml', self::getTidyXML($tracker_xml));
-            },
         ];
 
         yield 'IXMC' => [
@@ -118,11 +113,6 @@ class JiraXmlExporterTest extends TestCase
                 'user_4@example.com' => UserTestBuilder::anActiveUser()->withId(104)->withUserName('user_4')->build(),
                 'user_5@example.com' => UserTestBuilder::anActiveUser()->withId(104)->withUserName('user_5')->build(),
             ],
-            'jira_issue_key' => 'IXMC',
-            'jira_issue_type_id' => '10105',
-            'tests' => function (\SimpleXMLElement $tracker_xml) {
-                self::assertStringEqualsFile(__DIR__ . '/_fixtures/IXMC/tracker.xml', self::getTidyXML($tracker_xml));
-            },
         ];
 
         yield 'SP' => [
@@ -134,18 +124,13 @@ class JiraXmlExporterTest extends TestCase
                 'manon.midy@example.com' => UserTestBuilder::anActiveUser()->withId(103)->withUserName('manon_midy')->build(),
                 'thomas.gorka@example.com' => UserTestBuilder::anActiveUser()->withId(104)->withUserName('thomas_gorka')->build(),
             ],
-            'jira_issue_key' => 'SP',
-            'jira_issue_type_id' => '10001',
-            'tests' => function (\SimpleXMLElement $tracker_xml) {
-                self::assertStringEqualsFile(__DIR__ . '/_fixtures/SP/tracker.xml', self::getTidyXML($tracker_xml));
-            },
         ];
     }
 
     /**
      * @dataProvider debugTracesProvider
      */
-    public function testImportFromDebugTraces(string $fixture_path, bool $is_jira_cloud, array $users, string $jira_issue_key, string $jira_issue_type_id, callable $tests): void
+    public function testImportFromDebugTraces(string $fixture_path, bool $is_jira_cloud, array $users): void
     {
         $root = vfsStream::setup();
 
@@ -363,8 +348,8 @@ class JiraXmlExporterTest extends TestCase
             $platform_configuration_collection,
             $tracker_xml,
             'https://jira.example.com',
-            $jira_issue_key,
-            new IssueType($jira_issue_type_id, 'Bogue', false),
+            $jira_client->getJiraProject(),
+            new IssueType($jira_client->getJiraIssueTypeId(), 'Bogue', false),
             new FieldAndValueIDGenerator(),
             new LinkedIssuesCollection(),
         );
@@ -373,7 +358,12 @@ class JiraXmlExporterTest extends TestCase
         //$tidy_xml = self::getTidyXML($tracker_xml);
         //file_put_contents($fixture_path . '/tracker.xml', $tidy_xml);
 
-        $tests($tracker_xml);
+        self::assertStringEqualsFile($fixture_path . '/tracker.xml', self::getTidyXML($tracker_xml));
+
+        $dom         = new DOMDocument("1.0", "UTF-8");
+        $dom_element = $dom->importNode(dom_import_simplexml($tracker_xml), true);
+        $dom->appendChild($dom_element);
+        self::assertTrue($dom->relaxNGValidateSource(\file_get_contents(__DIR__ . '/../../../../../../resources/tracker.rng')));
     }
 
     private static function getTidyXML(\SimpleXMLElement $xml): string
