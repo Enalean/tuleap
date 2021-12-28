@@ -322,6 +322,7 @@ describe("retrieveArtifactsStructure", () => {
                     status: "blocked",
                 },
             },
+            status: "blocked",
         };
         const get_test_exec = (): Promise<TestExecutionResponse> =>
             Promise.resolve(testmanagement_execution_response);

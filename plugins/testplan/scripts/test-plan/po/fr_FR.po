@@ -228,6 +228,9 @@ msgstr "Table des matières"
 msgid "Test Report %{ milestone_title }"
 msgstr "Rapport de test %{ milestone_title }"
 
+msgid "Test Results"
+msgstr "Résultats des tests"
+
 msgid "Test Results (planned tests)"
 msgstr "Résultats des tests (tests planifiés)"
 

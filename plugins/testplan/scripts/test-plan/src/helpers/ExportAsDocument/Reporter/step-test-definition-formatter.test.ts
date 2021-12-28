@@ -24,6 +24,7 @@ import {
 } from "./step-test-definition-formatter";
 import type { Campaign, ExecutionsForCampaignMap } from "../../../type";
 import type { ArtifactReportResponseStepDefinitionFieldValue } from "@tuleap/plugin-docgen-docx";
+import type { ArtifactReportResponseUserRepresentation } from "@tuleap/plugin-docgen-docx";
 
 describe("step-test-definition-formatter", () => {
     it("should build a function that enhance the step definition field with steps results", () => {
@@ -81,9 +82,67 @@ describe("step-test-definition-formatter", () => {
                         },
                         "15": {
                             step_id: 15,
+                            status: "passed",
+                        },
+                    },
+                    status: "passed",
+                },
+                {
+                    definition: {
+                        id: 359,
+                        summary: "Summary",
+                        description: "",
+                        description_format: "text",
+                        steps: [
+                            {
+                                id: 13,
+                                description: "01",
+                                description_format: "text",
+                                expected_results: "01",
+                                expected_results_format: "text",
+                                rank: 1,
+                            },
+                            {
+                                id: 14,
+                                description: "This is text",
+                                description_format: "text",
+                                expected_results: "text\nwith\nnewlines",
+                                expected_results_format: "text",
+                                rank: 2,
+                            },
+                            {
+                                id: 15,
+                                description: "<p>This is HTML</p>",
+                                description_format: "html",
+                                expected_results: "<p>HTML</p>\n\n<p>with</p>\n\n<p>newlines</p>",
+                                expected_results_format: "html",
+                                rank: 3,
+                            },
+                        ],
+                        requirement: {
+                            id: 888,
+                            title: null,
+                            xref: "story #888",
+                        },
+                    },
+                    previous_result: {
+                        submitted_on: "2021-11-04T15:30:00+01:00",
+                        submitted_by: {
+                            display_name: "Some name",
+                        } as ArtifactReportResponseUserRepresentation,
+                        status: "passed",
+                    },
+                    steps_results: {
+                        "13": {
+                            step_id: 13,
+                            status: "passed",
+                        },
+                        "15": {
+                            step_id: 15,
                             status: "blocked",
                         },
                     },
+                    status: "blocked",
                 },
             ],
         });
@@ -157,6 +216,7 @@ describe("step-test-definition-formatter", () => {
                     status: "blocked",
                 },
             ],
+            result: "blocked",
         });
     });
 
@@ -227,6 +287,7 @@ describe("step-test-definition-formatter", () => {
                     status: null,
                 },
             ],
+            result: null,
         });
     });
 });
