@@ -55,11 +55,13 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\ValueForFileExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
+use UserManager;
 
 class EqualComparisonVisitor implements
     Tracker_FormElement_FieldVisitor,
@@ -168,14 +170,14 @@ class EqualComparisonVisitor implements
         );
     }
 
-    public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
+    public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field): ArtifactSubmitterChecker
     {
-        return $this->visitList();
+        return new ArtifactSubmitterChecker(new CollectionOfListValuesExtractor(), UserManager::instance());
     }
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
     {
-        return $this->visitList();
+        return new ArtifactSubmitterChecker(new CollectionOfListValuesExtractor(), UserManager::instance());
     }
 
     public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $field)
