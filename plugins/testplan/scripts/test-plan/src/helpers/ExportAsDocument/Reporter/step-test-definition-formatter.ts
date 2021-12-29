@@ -90,7 +90,7 @@ export function buildStepDefinitionEnhancedWithResultsFunction(
                 expected_results_format:
                     step.expected_results_format === "html" ? "html" : "plaintext",
                 rank: step.rank,
-                status: step_status,
+                status: step_status ?? "notrun",
             });
         }
 
@@ -106,7 +106,7 @@ export function buildStepDefinitionEnhancedWithResultsFunction(
             content_length: "blockttmstepdefenhanced",
             value_type: "string",
             steps: steps,
-            status: test_status,
+            status: test_status ?? "notrun",
             result: execution_for_test?.previous_result?.result ?? "",
             attachments,
         };
