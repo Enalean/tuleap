@@ -913,7 +913,7 @@ describe("Create ArtifactValues Collection", () => {
                                 expected_results: "text\nwith\nnewlines",
                                 expected_results_format: "plaintext",
                                 rank: 2,
-                                status: null,
+                                status: "notrun",
                             },
                             {
                                 description: "<p>This is HTML</p>",
@@ -924,7 +924,7 @@ describe("Create ArtifactValues Collection", () => {
                                 status: "blocked",
                             },
                         ],
-                        steps_values: ["passed", null, "blocked"],
+                        steps_values: ["passed", "notrun", "blocked"],
                     },
                     {
                         content_length: "artlinktable",

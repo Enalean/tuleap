@@ -126,7 +126,7 @@ function formatFieldValue<StepDefFieldValue>(
                 expected_results_format:
                     step.expected_results_format === "html" ? "html" : "plaintext",
                 rank: step.rank,
-                status: step.status,
+                status: step.status ?? "notrun",
             });
         }
 
@@ -135,7 +135,7 @@ function formatFieldValue<StepDefFieldValue>(
             content_length: "blockttmstepexec",
             value_type: "string",
             steps: steps,
-            steps_values: value.value.steps_values,
+            steps_values: value.value.steps_values.map((status) => status ?? "notrun"),
         };
     }
 
