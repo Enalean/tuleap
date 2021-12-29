@@ -661,31 +661,28 @@ async function buildStepDefinitionTestResultParagraphs(
     );
 
     if (field.attachments.length > 0) {
+        const links = field.attachments.flatMap((attachment) => [
+            new ExternalHyperlink({
+                children: [
+                    new TextRun({
+                        text: attachment.filename,
+                        style: "Hyperlink",
+                    }),
+                ],
+                link: attachment.html_url,
+            }),
+            new TextRun(", "),
+        ]);
+        links.splice(-1);
+
         paragraphs.push(
             new Paragraph({
                 heading: HeadingLevel.HEADING_6,
                 children: [new TextRun(gettext_provider.$gettext("Attachments"))],
             }),
-            buildTable([
-                new TableRow({
-                    children: [
-                        buildTableCellLinksContent(
-                            field.attachments.map(
-                                (attachment) =>
-                                    new ExternalHyperlink({
-                                        children: [
-                                            new TextRun({
-                                                text: attachment.filename,
-                                                style: "Hyperlink",
-                                            }),
-                                        ],
-                                        link: attachment.html_url,
-                                    })
-                            )
-                        ),
-                    ],
-                }),
-            ])
+            new Paragraph({
+                children: links,
+            })
         );
     }
 
