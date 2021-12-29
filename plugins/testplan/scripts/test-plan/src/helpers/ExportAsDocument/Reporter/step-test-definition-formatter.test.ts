@@ -208,7 +208,7 @@ describe("step-test-definition-formatter", () => {
                     expected_results: "text\nwith\nnewlines",
                     expected_results_format: "plaintext",
                     rank: 2,
-                    status: null,
+                    status: "notrun",
                 },
                 {
                     description: "<p>This is HTML</p>",
@@ -222,6 +222,88 @@ describe("step-test-definition-formatter", () => {
             status: "blocked",
             result: "<b>it is blocked</b>",
             attachments: [{ filename: "toto.png", html_url: "https://example.com/path/to/file" }],
+        });
+    });
+
+    it("when status is null, it means that it is notrun", () => {
+        const artifact: ArtifactFromReport = {
+            id: 359,
+        } as ArtifactFromReport;
+
+        const executions_map: ExecutionsForCampaignMap = new Map();
+        executions_map.set(47, {
+            campaign: { id: 47 } as Campaign,
+            executions: [
+                {
+                    definition: {
+                        id: 359,
+                        summary: "Summary",
+                        description: "",
+                        description_format: "text",
+                        steps: [
+                            {
+                                id: 13,
+                                description: "01",
+                                description_format: "text",
+                                expected_results: "01",
+                                expected_results_format: "text",
+                                rank: 1,
+                            },
+                        ],
+                        requirement: {
+                            id: 888,
+                            title: null,
+                            xref: "story #888",
+                        },
+                    },
+                    previous_result: null,
+                    steps_results: {},
+                    status: null,
+                    attachments: [],
+                },
+            ],
+        });
+
+        const format_step_def_builder = buildStepDefinitionEnhancedWithResultsFunction(
+            artifact,
+            executions_map
+        );
+
+        const field_value = {
+            field_id: 24,
+            type: "ttmstepdef",
+            label: "Step Definition",
+            value: [
+                {
+                    id: 13,
+                    description: "01",
+                    description_format: "text",
+                    expected_results: "01",
+                    expected_results_format: "text",
+                    rank: 1,
+                },
+            ],
+        } as ArtifactReportResponseStepDefinitionFieldValue;
+
+        const enhanced_step_def_value = format_step_def_builder("https://example.com", field_value);
+
+        expect(enhanced_step_def_value).toEqual({
+            field_name: "Step Definition",
+            content_length: "blockttmstepdefenhanced",
+            value_type: "string",
+            steps: [
+                {
+                    description: "01",
+                    description_format: "plaintext",
+                    expected_results: "01",
+                    expected_results_format: "plaintext",
+                    rank: 1,
+                    status: "notrun",
+                },
+            ],
+            status: "notrun",
+            result: "",
+            attachments: [],
         });
     });
 
