@@ -81,6 +81,7 @@ describe("getTestManagementExecution", () => {
                     display_name: "Some name",
                 } as ArtifactReportResponseUserRepresentation,
                 status: "passed",
+                result: "",
             },
             status: "blocked",
             attachments: [],

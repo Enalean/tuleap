@@ -101,6 +101,9 @@ msgstr "Annuler"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Comment"
+msgstr "Commentaire"
+
 msgid "Create a new test"
 msgstr "Créer un nouveau test"
 
