@@ -217,7 +217,7 @@ class ArtifactLinkValidator
             if (! $type) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,
-                    sprintf(dgettext('tuleap-tracker', 'Type is missing for artifact #%1$s.'), $artifact->getId())
+                    sprintf(dgettext('tuleap-tracker', 'Type is missing for artifact #%1$s.'), $artifact_id)
                 );
 
                 return false;
