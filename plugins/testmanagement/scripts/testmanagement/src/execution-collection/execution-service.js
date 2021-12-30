@@ -411,6 +411,7 @@ function ExecutionService(
             additional_options = {
                 extraPlugins: "uploadimage",
                 uploadUrl: execution.upload_url,
+                clipboard_handleImages: false,
             };
         }
         let config = {

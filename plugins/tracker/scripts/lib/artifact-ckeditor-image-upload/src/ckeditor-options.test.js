@@ -48,6 +48,7 @@ describe(`ckeditor-options`, () => {
             expect(result).toEqual({
                 extraPlugins: "uploadimage",
                 uploadUrl: "https://example.com/disprobabilize/gavyuti",
+                clipboard_handleImages: false,
             });
             file_field.remove();
         });

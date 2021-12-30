@@ -28,5 +28,6 @@ export function getUploadImageOptions(element) {
     return {
         extraPlugins: "uploadimage",
         uploadUrl: element.dataset.uploadUrl,
+        clipboard_handleImages: false,
     };
 }
