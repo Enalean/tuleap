@@ -41,6 +41,7 @@ interface LogoInformation {
         normal: string;
         small: string;
     } | null;
+    legacy_png_href: string | null;
 }
 
 interface Internationalization {

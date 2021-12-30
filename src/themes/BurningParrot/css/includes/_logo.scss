@@ -24,7 +24,7 @@
     flex: 0 0 auto;
     width: global-variables.$sidebar-expanded-width;
     height: global-variables.$navbar-height;
-    background: var(--tlp-main-color) url("/images/organization_logo.png") no-repeat center center;
+    background: var(--tlp-main-color) var(--logo-url) no-repeat center center;
 }
 
 .sidebar > #logo {

@@ -22,7 +22,15 @@
 
 <template>
     <a
-        v-if="config.instance_information.logo.svg !== null"
+        v-if="config.instance_information.logo.legacy_png_href !== null"
+        id="logo"
+        ref="legacy_logo"
+        v-bind:href="homepage_link"
+        v-bind:aria-label="config.internationalization.homepage"
+        data-test="legacy-logo"
+    ></a>
+    <a
+        v-else-if="config.instance_information.logo.svg !== null"
         v-bind:href="homepage_link"
         class="logo-svg-link"
         v-bind:aria-label="config.internationalization.homepage"
@@ -85,7 +93,7 @@
     </a>
 </template>
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { sanitizeURL } from "./url-sanitizer";
 import { strictInject } from "./strict-inject";
 import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
@@ -101,5 +109,19 @@ const vDompurifyHtml = buildVueDompurifyHTMLDirective({
             svg: true,
         },
     },
+});
+const legacy_logo = ref<InstanceType<typeof HTMLElement>>();
+const updateLegacyLogoURLCssVar = (legacy_png_href: string | null): void => {
+    legacy_logo.value?.style.setProperty(
+        "--logo-url",
+        `url(${sanitizeURL(legacy_png_href ?? "")})`
+    );
+};
+onMounted(() => {
+    watch(
+        (): string | null => config.value.instance_information.logo.legacy_png_href,
+        updateLegacyLogoURLCssVar
+    );
+    updateLegacyLogoURLCssVar(config.value.instance_information.logo.legacy_png_href);
 });
 </script>
