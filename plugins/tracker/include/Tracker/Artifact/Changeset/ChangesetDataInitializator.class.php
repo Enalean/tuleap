@@ -64,7 +64,7 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator
                     ! array_key_exists($field->getId(), $tracker_data)
             ) {
                 //user doesn't have access to field
-                $tracker_data[$field->getId()] = $field->getValue($field->getId());
+                $tracker_data[$field->getId()] = $field->getDefaultValue();
             }
         }
 
