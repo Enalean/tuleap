@@ -25,8 +25,8 @@ import PrivacyBadge from "./PrivacyBadge.vue";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { example_config } from "../project-sidebar-example-config";
 import { ref } from "vue";
-import * as tlp_popovers from "../../../tlp-popovers/src/popovers";
-import type { Popover } from "../../../tlp-popovers/src/popovers";
+import * as tlp_popovers from "@tuleap/tlp-popovers";
+import type { Popover } from "@tuleap/tlp-popovers";
 
 describe("PrivacyBadge", () => {
     it("displays the badge with its popover", () => {
