@@ -51,6 +51,7 @@ export const example_config: Configuration = {
         logo: {
             logo_link_href: "https://myinstance.example.com/",
             svg: null,
+            legacy_png_href: null,
         },
     },
     tools: [

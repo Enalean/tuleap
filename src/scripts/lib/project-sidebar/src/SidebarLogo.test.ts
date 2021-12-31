@@ -57,6 +57,7 @@ describe("SidebarLogo", () => {
                         small: "<svg>small</svg>",
                         normal: "<svg>normal</svg>",
                     },
+                    legacy_png_href: null,
                 },
             },
         };
@@ -78,6 +79,33 @@ describe("SidebarLogo", () => {
         );
         expect(logo_link.find("[data-test=custom-small-logo]").element.innerHTML).toStrictEqual(
             config.instance_information.logo.svg?.small
+        );
+    });
+
+    it("displays legacy PNG logo", () => {
+        const config: Configuration = {
+            ...example_config,
+            instance_information: {
+                ...example_config.instance_information,
+                logo: {
+                    logo_link_href: "https://example.com/",
+                    svg: null,
+                    legacy_png_href: "https://example.com/logo.png",
+                },
+            },
+        };
+        const wrapper = shallowMount(SidebarLogo, {
+            global: {
+                provide: {
+                    [SIDEBAR_CONFIGURATION.valueOf()]: ref(config),
+                },
+            },
+        });
+
+        const logo = wrapper.find("[data-test=legacy-logo]");
+        expect(logo.exists()).toBe(true);
+        expect(window.getComputedStyle(logo.element).getPropertyValue("--logo-url")).toStrictEqual(
+            "url(https://example.com/logo.png)"
         );
     });
 });
