@@ -47,6 +47,7 @@ interface LogoInformation {
 interface Internationalization {
     tools: string;
     homepage: string;
+    project_administration: string;
 }
 
 interface ProjectPrivacy {
@@ -62,9 +63,14 @@ interface ProjectPrivacy {
 export interface Configuration {
     internationalization: Internationalization;
     project: {
+        icon: string;
         name: string;
         href: string;
+        administration_href: string;
         privacy: ProjectPrivacy;
+    };
+    user: {
+        is_project_administrator: boolean;
     };
     instance_information: {
         version: InstanceVersionInformation;

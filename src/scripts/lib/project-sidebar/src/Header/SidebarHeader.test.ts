@@ -24,17 +24,32 @@ import { shallowMount } from "@vue/test-utils";
 import SidebarHeader from "./SidebarHeader.vue";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { example_config } from "../project-sidebar-example-config";
+import { ref } from "vue";
 
 describe("SidebarHeader", () => {
     it("displays the sidebar header", () => {
         const wrapper = shallowMount(SidebarHeader, {
             global: {
                 provide: {
-                    [SIDEBAR_CONFIGURATION.valueOf()]: example_config,
+                    [SIDEBAR_CONFIGURATION.valueOf()]: ref(example_config),
                 },
             },
         });
 
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("does not display the administration link when the user is not a project administrator", () => {
+        const config = example_config;
+        config.user.is_project_administrator = false;
+        const wrapper = shallowMount(SidebarHeader, {
+            global: {
+                provide: {
+                    [SIDEBAR_CONFIGURATION.valueOf()]: ref(config),
+                },
+            },
+        });
+
+        expect(wrapper.find("[data-test=project-administration-link]").exists()).toBe(false);
     });
 });
