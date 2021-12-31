@@ -13,9 +13,9 @@
     "test": "jest"
   },
   "dependencies": {
-    "@tuleap/tlp-fetch": "file:../../../../../src/scripts/lib/tlp-fetch",
     "@tuleap/concurrency-limit-pool": "file:../../../../../src/scripts/lib/concurrency-limit-pool",
-    "docx": "^7.2.0",
+    "@tuleap/tlp-fetch": "file:../../../../../src/scripts/lib/tlp-fetch",
+    "docx": "^7.3.0",
     "dompurify": "^2.2.9",
     "sprintf-js": "^1.1.2"
   },

@@ -7,21 +7,21 @@
   "dependencies": {
     "@tuleap/concurrency-limit-pool": "file:../../src/scripts/lib/concurrency-limit-pool",
     "@tuleap/plugin-docgen-docx": "file:../document_generation/scripts/lib/docx",
-    "docx": "^7.2.0",
+    "docx": "^7.3.0",
+    "sprintf-js": "^1.1.2",
     "vue": "^2.6.14",
     "vue-gettext": "^2.1.12",
     "vuex": "^3.6.2",
     "vuex-class": "^0.3.2",
-    "xlsx": "^0.17.0",
-    "sprintf-js": "^1.1.2"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "@tuleap/gettext": "file:../../src/scripts/lib/gettext",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
+    "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.3.0",
     "vue-class-component": "^7.2.6",
-    "vue-property-decorator": "^9.1.2",
-    "@types/sprintf-js": "^1.1.2"
+    "vue-property-decorator": "^9.1.2"
   },
   "scripts": {
     "build": "webpack --config webpack.prod.js",
