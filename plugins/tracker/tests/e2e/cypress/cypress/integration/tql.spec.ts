@@ -206,7 +206,7 @@ describe("Report expert queries", () => {
             findArtifactsWithExpertQuery('submitted_by="username"');
 
             cy.get("[data-test=feedback]").contains(
-                "The value 'username' doesn't exist for the list field 'submitted_by'."
+                "Error with the field 'submitted_by'. The user 'username' does not exist."
             );
         });
 
