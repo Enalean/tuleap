@@ -26,10 +26,13 @@ export const example_config: Configuration = {
     internationalization: {
         tools: "Tools",
         homepage: "Homepage",
+        project_administration: "Project administration",
     },
     project: {
+        icon: "🌷",
         name: "project1",
         href: "/projects/project1",
+        administration_href: "https://myinstance.example.com/project/admin/?group_id=999",
         privacy: {
             are_restricted_users_allowed: true,
             project_is_public: true,
@@ -40,6 +43,9 @@ export const example_config: Configuration = {
                 "Project privacy set to public. By default, its content is available to all authenticated, but not restricted, users. Please note that more restrictive permissions might exist on some items.",
             privacy_title: "Public",
         },
+    },
+    user: {
+        is_project_administrator: true,
     },
     instance_information: {
         version: {

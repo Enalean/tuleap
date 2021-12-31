@@ -24,7 +24,22 @@
     <div class="project-sidebar-header-name">
         <div class="project-title-container">
             <a v-bind:href="config.project.href" class="project-sidebar-title">
+                <span class="project-sidebar-title-icon" aria-hidden="true">
+                    {{ config.project.icon }}
+                </span>
                 {{ config.project.name }}
+            </a>
+            <span class="project-title-spacer"></span>
+            <a
+                v-if="config.user.is_project_administrator"
+                v-bind:href="sanitized_admin_link"
+                class="project-administration-link"
+                data-test="project-administration-link"
+            >
+                <i
+                    class="fas fa-cog project-administration-link-icon"
+                    v-bind:title="config.internationalization.project_administration"
+                ></i>
             </a>
         </div>
         <privacy-badge />
@@ -34,6 +49,10 @@
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { strictInject } from "../strict-inject";
 import PrivacyBadge from "./PrivacyBadge.vue";
+import { computed } from "vue";
+import { sanitizeURL } from "../url-sanitizer";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
+
+const sanitized_admin_link = computed(() => sanitizeURL(config.value.project.administration_href));
 </script>
