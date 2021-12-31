@@ -68,6 +68,7 @@
     "stylelint-prettier": "^1.2.0",
     "ts-jest": "^27.0.5",
     "tslib": "^2.3.1",
+    "turbo": "^1.0.23",
     "typescript": "^4.5.2",
     "vite": "^2.7.2",
     "vite-dts": "^1.0.3",
@@ -85,7 +86,7 @@
     "webpack-remove-empty-scripts": "^0.7.1"
   },
   "scripts": {
-    "build": "pnpm --filter='!@tuleap/dev-and-build-tools' --workspace-concurrency=-2 run build",
+    "build": "turbo run build",
     "eslint": "eslint --config .eslintrc.js --no-eslintrc --ext .js,.ts,.vue",
     "stylelint": "stylelint --config .stylelintrc.js",
     "test": "BABEL_ENV=test pnpm --filter='!@tuleap/dev-and-build-tools' --no-bail --workspace-concurrency=2 test -- --verbose=false"
@@ -93,6 +94,17 @@
   "pnpm": {
     "overrides": {
       "esbuild": ">=0.13.9"
+    }
+  },
+  "turbo": {
+    "baseBranch": "origin/master",
+    "npmClient": "pnpm",
+    "pipeline": {
+      "build": {
+        "dependsOn": ["^build"],
+        "outputs": [],
+        "cache": false
+      }
     }
   }
 }

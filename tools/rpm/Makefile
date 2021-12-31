@@ -91,6 +91,7 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo gener
 			-name ".gitignore" -o\
 			-name ".gitmodules" -o\
 			-name "node_modules" -o\
+			-name ".turbo" -o\
 			-path "*/.DS_Store" \)\
 			-prune -o -print | \
 		cpio -o -H ustar --quiet |\

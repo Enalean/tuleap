@@ -67,6 +67,7 @@ specifiers:
   stylelint-prettier: ^1.2.0
   ts-jest: ^27.0.5
   tslib: ^2.3.1
+  turbo: ^1.0.23
   typescript: ^4.5.2
   vite: ^2.7.2
   vite-dts: ^1.0.3
@@ -147,6 +148,7 @@ devDependencies:
   stylelint-prettier: 1.2.0_prettier@2.5.0+stylelint@13.12.0
   ts-jest: 27.0.5_fb142a55d1f3c63ed09779b401f5650e
   tslib: 2.3.1
+  turbo: 1.0.23
   typescript: 4.5.2
   vite: 2.7.2_sass@1.32.2
   vite-dts: 1.0.3_vite@2.7.2
@@ -9587,6 +9589,121 @@ packages:
     resolution: {integrity: sha1-J6XeoGs2sEoKmWZ3SykIaPD8QP0=}
     dependencies:
       safe-buffer: 5.2.1
+    dev: true
+
+  /turbo-darwin-64/1.0.23:
+    resolution: {integrity: sha512-z6ArzNKpQIw/YhFf20lUGl5VaGTZ94MSppXuuYkCyxMQwK3qye3r2ENQbUKkxfv16fAmfr7z1bJt6YwfOjwPiw==}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-darwin-arm64/1.0.23:
+    resolution: {integrity: sha512-U02Ip7kO7eDN3WRliIrPtqYFqcpsvpNsE5fX1T0uFjXfSJruiDBrrNpGmZEh8hatS5wQyG7VaxW+izJqd7TCsw==}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-freebsd-64/1.0.23:
+    resolution: {integrity: sha512-5XT8pp0uJ1vRqNJydacn6ouY4COUeufOdLuiPOWAOsvMW5FOJNAOdAJ7lISBBqhCpYF8CEZ9kCAI2f9nOzzY0Q==}
+    cpu: [x64]
+    os: [freebsd]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-freebsd-arm64/1.0.23:
+    resolution: {integrity: sha512-70BGJTVX3jYvzDISp8dWM/rwiK4CDlNVQJnnlUMKrueFtpgHZhsRKjIeNgIKxVSTyp4xT0Vl4xhc9zFhMT17aw==}
+    cpu: [arm64]
+    os: [freebsd]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-linux-32/1.0.23:
+    resolution: {integrity: sha512-ee3N8f7h1qg5noKII5Tq2gyG6PVFl/apllX0TPbZiUab6553QPfVt+tB+5W6BZmKGUdHHCvW42xuig0krrrRGw==}
+    cpu: [ia32]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-linux-64/1.0.23:
+    resolution: {integrity: sha512-j2+1P2+rdOXb/yzz78SCmxXLdFSSlCzZS0Psg1vetYozuoT0k+xu7gr6iqEHdBWw39jNFuT72hVqrNZ4TClHcA==}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-linux-arm/1.0.23:
+    resolution: {integrity: sha512-+aD+v03bpkmuXEfk14w2fLH5cAyfyGlAs5gBwQmwyF3XllJ40OL/cw9xDnBREpZsnm9o1GTQpr0wmepjw9d4iQ==}
+    cpu: [arm]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-linux-arm64/1.0.23:
+    resolution: {integrity: sha512-VNW8yyBG63MGUzZ/Y2DS883P8rzz/hQuiCklw2lTBQ4O9dp2FxYrAVnmCxbnsIDZG/wEupdvaHVgqH7j2DJgwg==}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-linux-mips64le/1.0.23:
+    resolution: {integrity: sha512-CJNd7F9z8EhqcdJnd1rSiU/+hSNG3E+fudQ5pr55y0nhSShFMMdZxdLvL5zzhWpBl1g8YldphjPqNLChgGatKw==}
+    cpu: [mips64el]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-linux-ppc64le/1.0.23:
+    resolution: {integrity: sha512-RjzDqXQl+nqV+2A6MRk1sALBQtpCB/h8qDWhJIL/VUgToTMdllAThiYI+lALLmGWBumXs4XDbk+83FGJlJ1bDg==}
+    cpu: [ppc64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-windows-32/1.0.23:
+    resolution: {integrity: sha512-qTfldTd5OO/s8unGFnITe4IX8ua2SNj/VVQbvVcObDJK6xrfBY4tDS78rIo9//xTSRyK+28AoPxRZsVqqF2hlA==}
+    cpu: [ia32]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-windows-64/1.0.23:
+    resolution: {integrity: sha512-yzhF6GEYiyrXoO/l9T6amB16OITsFXdeMTc0Vf2BZFOG1fn9Muc4CxQ+CcdsLlai+TqQTKlpEf0+l83vI+R2Jw==}
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo/1.0.23:
+    resolution: {integrity: sha512-/VHsARQyl8wsfCJtuJicjYq7Do/P5yjJde3bjG9TAZHj/PzA9LuRU7WOEPfUrT+felOQ3vwUMZtC8xrYFmndLA==}
+    hasBin: true
+    requiresBuild: true
+    optionalDependencies:
+      turbo-darwin-64: 1.0.23
+      turbo-darwin-arm64: 1.0.23
+      turbo-freebsd-64: 1.0.23
+      turbo-freebsd-arm64: 1.0.23
+      turbo-linux-32: 1.0.23
+      turbo-linux-64: 1.0.23
+      turbo-linux-arm: 1.0.23
+      turbo-linux-arm64: 1.0.23
+      turbo-linux-mips64le: 1.0.23
+      turbo-linux-ppc64le: 1.0.23
+      turbo-windows-32: 1.0.23
+      turbo-windows-64: 1.0.23
     dev: true
 
   /tweetnacl/0.14.5:
