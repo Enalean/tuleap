@@ -30,14 +30,12 @@ import {
     MAIN_TITLES_NUMBERING_ID,
 } from "./document-properties";
 import { Bookmark, TextRun, Paragraph, WidthType, TableRow } from "docx";
-import { getAnchorToArtifactContent } from "@tuleap/plugin-docgen-docx/src";
 import {
     buildCellContentOptions,
-    buildCellContentResult,
-    TABLE_BORDERS,
-    TABLE_LABEL_SHADING,
+    getAnchorToArtifactContent,
     TABLE_MARGINS,
-} from "./Table/table-builder";
+} from "@tuleap/plugin-docgen-docx/src";
+import { buildCellContentResult, TABLE_BORDERS, TABLE_LABEL_SHADING } from "./Table/table-builder";
 import { computeRequirementStatus } from "./matrix-compute-requirement-status";
 
 export function getTraceabilityMatrixTitle(gettext_provider: VueGettextProvider): {
