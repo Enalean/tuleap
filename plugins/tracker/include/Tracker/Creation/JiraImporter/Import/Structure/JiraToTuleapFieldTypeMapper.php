@@ -86,7 +86,7 @@ class JiraToTuleapFieldTypeMapper
                         ->withLabel($jira_field->getLabel())
                         ->withRank(AlwaysThereFieldsExporter::JIRA_SUMMARY_RANK)
                         ->withRequired($jira_field->isRequired())
-                        ->withoutPermissions();
+                        ->withPermissions(... AlwaysThereFieldsExporter::getDefaultPermissions());
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -97,7 +97,7 @@ class JiraToTuleapFieldTypeMapper
                         ->withLabel($jira_field->getLabel())
                         ->withRank(1)
                         ->withRequired($jira_field->isRequired())
-                        ->withoutPermissions();
+                        ->withPermissions(... AlwaysThereFieldsExporter::getDefaultPermissions());
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -108,7 +108,7 @@ class JiraToTuleapFieldTypeMapper
                         ->withLabel($jira_field->getLabel())
                         ->withRank(AlwaysThereFieldsExporter::JIRA_DESCRIPTION_RANK)
                         ->withRequired($jira_field->isRequired())
-                        ->withoutPermissions();
+                        ->withPermissions(... AlwaysThereFieldsExporter::getDefaultPermissions());
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -119,7 +119,7 @@ class JiraToTuleapFieldTypeMapper
                         ->withLabel($jira_field->getLabel())
                         ->withRank(2)
                         ->withRequired($jira_field->isRequired())
-                        ->withoutPermissions();
+                        ->withPermissions(... AlwaysThereFieldsExporter::getDefaultPermissions());
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -130,7 +130,7 @@ class JiraToTuleapFieldTypeMapper
                         ->withLabel($jira_field->getLabel())
                         ->withRank(3)
                         ->withRequired($jira_field->isRequired())
-                        ->withoutPermissions();
+                        ->withPermissions(... AlwaysThereFieldsExporter::getDefaultPermissions());
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -142,7 +142,7 @@ class JiraToTuleapFieldTypeMapper
                         ->withLabel($jira_field->getLabel())
                         ->withRank(4)
                         ->withRequired($jira_field->isRequired())
-                        ->withoutPermissions();
+                        ->withPermissions(... AlwaysThereFieldsExporter::getDefaultPermissions());
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -154,7 +154,7 @@ class JiraToTuleapFieldTypeMapper
                         ->withRank(4)
                         ->withRequired($jira_field->isRequired())
                         ->withDateTime()
-                        ->withoutPermissions();
+                        ->withPermissions(... AlwaysThereFieldsExporter::getDefaultPermissions());
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -174,7 +174,7 @@ class JiraToTuleapFieldTypeMapper
                                 $jira_field->getBoundValues()
                             )
                         )
-                        ->withoutPermissions();
+                        ->withPermissions(... AlwaysThereFieldsExporter::getDefaultPermissions());
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -194,7 +194,7 @@ class JiraToTuleapFieldTypeMapper
                                 $jira_field->getBoundValues()
                             )
                         )
-                        ->withoutPermissions();
+                        ->withPermissions(... AlwaysThereFieldsExporter::getDefaultPermissions());
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -214,7 +214,7 @@ class JiraToTuleapFieldTypeMapper
                                 $jira_field->getBoundValues()
                             )
                         )
-                        ->withoutPermissions();
+                        ->withPermissions(... AlwaysThereFieldsExporter::getDefaultPermissions());
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -234,7 +234,7 @@ class JiraToTuleapFieldTypeMapper
                                 $jira_field->getBoundValues()
                             )
                         )
-                        ->withoutPermissions();
+                        ->withPermissions(... AlwaysThereFieldsExporter::getDefaultPermissions());
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -248,7 +248,7 @@ class JiraToTuleapFieldTypeMapper
                         ->withUsersValues(
                             new XMLBindUsersValue(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME)
                         )
-                        ->withoutPermissions();
+                        ->withPermissions(... AlwaysThereFieldsExporter::getDefaultPermissions());
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -262,7 +262,7 @@ class JiraToTuleapFieldTypeMapper
                         ->withUsersValues(
                             new XMLBindUsersValue(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME)
                         )
-                        ->withoutPermissions();
+                        ->withPermissions(... AlwaysThereFieldsExporter::getDefaultPermissions());
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -276,7 +276,7 @@ class JiraToTuleapFieldTypeMapper
                         ->withUsersValues(
                             new XMLBindUsersValue(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME)
                         )
-                        ->withoutPermissions();
+                        ->withPermissions(... AlwaysThereFieldsExporter::getDefaultPermissions());
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -290,7 +290,7 @@ class JiraToTuleapFieldTypeMapper
                         ->withUsersValues(
                             new XMLBindUsersValue(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME)
                         )
-                        ->withoutPermissions();
+                        ->withPermissions(... AlwaysThereFieldsExporter::getDefaultPermissions());
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 

@@ -101,6 +101,13 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 $mapping = $collection->getMappingFromJiraField('summary');
                 self::assertEquals('summary', $mapping->getFieldName());
+
+                $permissions = $exported_tracker->xpath('//permissions/permission[@REF="' . $node['ID'] . '"]');
+                self::assertCount(3, $permissions);
+
+                self::assertEquals('UGROUP_ANONYMOUS', $exported_tracker->xpath('//permissions/permission[@REF="' . $node['ID'] . '" and @type="PLUGIN_TRACKER_FIELD_READ"]')[0]['ugroup']);
+                self::assertEquals('UGROUP_REGISTERED', $exported_tracker->xpath('//permissions/permission[@REF="' . $node['ID'] . '" and @type="PLUGIN_TRACKER_FIELD_SUBMIT"]')[0]['ugroup']);
+                self::assertEquals('UGROUP_PROJECT_MEMBERS', $exported_tracker->xpath('//permissions/permission[@REF="' . $node['ID'] . '" and @type="PLUGIN_TRACKER_FIELD_UPDATE"]')[0]['ugroup']);
             },
         ];
 

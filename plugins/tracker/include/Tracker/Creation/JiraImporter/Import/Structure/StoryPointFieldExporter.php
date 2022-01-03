@@ -57,7 +57,7 @@ final class StoryPointFieldExporter
         $field = (new XMLFloatField($id_generator, AlwaysThereFieldsExporter::JIRA_STORY_POINTS_NAME))
             ->withLabel('Story points (initial effort)')
             ->withRank(AlwaysThereFieldsExporter::JIRA_STORY_POINTS_RANK)
-            ->withoutPermissions();
+            ->withPermissions(... AlwaysThereFieldsExporter::getDefaultPermissions());
 
         $field_mapping_collection->addMappingBetweenTuleapAndJiraField(
             new JiraFieldAPIRepresentation(

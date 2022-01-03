@@ -40,6 +40,9 @@ use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
 use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringField;
 use Tuleap\Tracker\FormElement\Field\SubmittedBy\XML\XMLSubmittedByField;
 use Tuleap\Tracker\FormElement\Field\SubmittedOn\XML\XMLSubmittedOnField;
+use Tuleap\Tracker\FormElement\Field\XML\ReadPermission;
+use Tuleap\Tracker\FormElement\Field\XML\SubmitPermission;
+use Tuleap\Tracker\FormElement\Field\XML\UpdatePermission;
 use Tuleap\Tracker\FormElement\Field\XML\XMLField;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\XML\XMLTracker;
@@ -115,35 +118,35 @@ class AlwaysThereFieldsExporter
                                     (new XMLArtifactIdField($id_generator, self::JIRA_ARTIFACT_ID_FIELD_ID))
                                         ->withLabel('Artifact id')
                                         ->withRank(self::JIRA_ARTIFACT_ID_RANK)
-                                        ->withoutPermissions()
+                                        ->withPermissions(... self::getReadOnlyPermissions())
                                 ),
                                 $this->addToMapping(
                                     $field_mapping_collection,
                                     (new XMLStringField($id_generator, self::JIRA_LINK_FIELD_NAME))
                                         ->withLabel('Link to original issue')
                                         ->withRank(self::JIRA_LINK_RANK)
-                                        ->withoutPermissions()
+                                        ->withPermissions(... self::getReadOnlyPermissions())
                                 ),
                                 $this->addToMapping(
                                     $field_mapping_collection,
                                     (new XMLSubmittedByField($id_generator, self::JIRA_CREATED_BY))
                                         ->withLabel('Created by')
                                         ->withRank(self::JIRA_CREATOR_RANK)
-                                        ->withoutPermissions()
+                                        ->withPermissions(... self::getDefaultPermissions())
                                 ),
                                 $this->addToMapping(
                                     $field_mapping_collection,
                                     (new XMLSubmittedOnField($id_generator, self::JIRA_CREATED_NAME))
                                         ->withLabel('Creation date')
                                         ->withRank(self::JIRA_CREATED_RANK)
-                                        ->withoutPermissions()
+                                        ->withPermissions(... self::getDefaultPermissions())
                                 ),
                                 $this->addToMapping(
                                     $field_mapping_collection,
                                     (new XMLLastUpdateDateField($id_generator, self::JIRA_UPDATED_ON_NAME))
                                         ->withLabel('Last update date')
                                         ->withRank(self::JIRA_UPDATED_ON_RANK)
-                                        ->withoutPermissions()
+                                        ->withPermissions(... self::getDefaultPermissions())
                                 ),
                                 $this->addToMapping(
                                     $field_mapping_collection,
@@ -151,7 +154,7 @@ class AlwaysThereFieldsExporter
                                         ->withLabel('Resolved')
                                         ->withDateTime()
                                         ->withRank(self::JIRA_RESOLUTION_DATE_RANK)
-                                        ->withoutPermissions()
+                                        ->withPermissions(... self::getDefaultPermissions())
                                 ),
                                 $this->addToMapping(
                                     $field_mapping_collection,
@@ -167,7 +170,7 @@ class AlwaysThereFieldsExporter
                                                 $status_values_collection->getAllValues(),
                                             )
                                         )
-                                        ->withoutPermissions(),
+                                        ->withPermissions(... self::getDefaultPermissions()),
                                     $status_values_collection->getAllValues(),
                                 ),
                             ),
@@ -184,7 +187,7 @@ class AlwaysThereFieldsExporter
                             (new XMLFileField($id_generator, self::JIRA_ATTACHMENT_NAME))
                                 ->withLabel('Attachments')
                                 ->withRank(self::JIRA_ATTACHMENT_RANK)
-                                ->withoutPermissions()
+                                ->withPermissions(... self::getDefaultPermissions())
                         ),
                     ),
                 (new XMLFieldset($id_generator, self::LINKS_FIELDSET_NAME))
@@ -196,14 +199,14 @@ class AlwaysThereFieldsExporter
                             (new XMLArtifactLinkField($id_generator, self::JIRA_ISSUE_LINKS_NAME))
                                 ->withLabel('Links')
                                 ->withRank(self::JIRA_ISSUE_LINKS_RANK)
-                                ->withoutPermissions()
+                                ->withPermissions(... self::getDefaultPermissions())
                         ),
                         $this->addToMapping(
                             $field_mapping_collection,
                             (new XMLCrossReferenceField($id_generator, self::JIRA_CROSS_REFERENCES_NAME))
                                 ->withLabel('References')
                                 ->withRank(self::JIRA_CROSS_REFERENCES_RANK)
-                                ->withoutPermissions()
+                                ->withPermissions(... self::getDefaultPermissions())
                         ),
                     ),
             );
@@ -220,5 +223,21 @@ class AlwaysThereFieldsExporter
             true,
         );
         return $field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $tuleap_field);
+    }
+
+    public static function getDefaultPermissions(): array
+    {
+        return [
+            new ReadPermission('UGROUP_ANONYMOUS'),
+            new SubmitPermission('UGROUP_REGISTERED'),
+            new UpdatePermission('UGROUP_PROJECT_MEMBERS'),
+        ];
+    }
+
+    public static function getReadOnlyPermissions(): array
+    {
+        return [
+            new ReadPermission('UGROUP_ANONYMOUS'),
+        ];
     }
 }

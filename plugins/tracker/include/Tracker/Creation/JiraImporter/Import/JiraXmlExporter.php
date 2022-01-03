@@ -47,7 +47,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InitialSnapsho
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\IssueSnapshotCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportAllIssuesExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportCreatedRecentlyExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportDefaultCriteriaExporter;
@@ -93,7 +92,6 @@ class JiraXmlExporter
         private JiraToTuleapFieldTypeMapper $field_type_mapper,
         private JiraUserRetriever $jira_user_retriever,
         private XmlReportExporter $report_exporter,
-        private PermissionsXMLExporter $permissions_xml_exporter,
         private ArtifactsXMLExporter $artifacts_xml_exporter,
         private SemanticsXMLExporter $semantics_xml_exporter,
         private AlwaysThereFieldsExporter $always_there_fields_exporter,
@@ -164,7 +162,6 @@ class JiraXmlExporter
             $jira_field_mapper,
             $jira_user_retriever,
             new XmlReportExporter(),
-            new PermissionsXMLExporter(),
             new ArtifactsXMLExporter(
                 $wrapper,
                 $user_manager,
@@ -305,22 +302,19 @@ class JiraXmlExporter
             $jira_field_mapping_collection,
         );
 
-        $xml          = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
-        $trackers_xml = $xml->addChild('trackers');
-        $node_tracker = $xml_tracker->export($trackers_xml);
-
         $this->logger->debug("Export semantics");
+        $tracker_for_semantic_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $this->semantics_xml_exporter->exportSemantics(
-            $node_tracker,
+            $tracker_for_semantic_xml,
             $jira_field_mapping_collection,
             $status_values_collection,
         );
 
-        $node_tracker->addChild('rules');
 
         $this->logger->debug("Export reports");
+        $tracker_for_reports_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $this->report_exporter->exportReports(
-            $node_tracker,
+            $tracker_for_reports_xml,
             $jira_field_mapping_collection,
             $status_values_collection,
             $this->xml_report_all_issues_exporter,
@@ -329,16 +323,10 @@ class JiraXmlExporter
             $this->xml_report_created_recently_exporter,
             $this->xml_report_updated_recently_exporter
         );
-        $node_tracker->addChild('workflow');
 
-        $this->logger->debug("Export permissions");
-        $this->permissions_xml_exporter->exportFieldsPermissions(
-            $node_tracker,
-            $jira_field_mapping_collection
-        );
+        $node_tracker = $this->getXMLNode($xml_tracker, $tracker_for_semantic_xml, $tracker_for_reports_xml);
 
         $this->logger->debug("Export artifact");
-
         $issue_representation_collection = new IssueAPIRepresentationCollection();
         $this->artifacts_xml_exporter->exportArtifacts(
             $node_tracker,
@@ -369,6 +357,42 @@ class JiraXmlExporter
         }
 
         return $node_tracker;
+    }
+
+    private function getXMLNode(XMLTracker $xml_tracker, \SimpleXMLElement $tracker_for_semantic_xml, \SimpleXMLElement $tracker_for_reports_xml): \SimpleXMLElement
+    {
+        $xml          = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
+        $trackers_xml = $xml->addChild('trackers');
+        $node_tracker = $xml_tracker->export($trackers_xml);
+
+        $dom_tracker = dom_import_simplexml($node_tracker);
+        if (! $dom_tracker) {
+            throw new \RuntimeException('Impossible to create DOMElement from tracker');
+        }
+        $permissions_tags = $dom_tracker->getElementsByTagName('permissions');
+        if (count($permissions_tags) !== 1) {
+            throw new \LogicException('There must be only one permission node');
+        }
+        $dom_tracker->insertBefore($this->getNodeToInsert($tracker_for_semantic_xml, '/tracker/semantics', $dom_tracker), $permissions_tags[0]);
+        $dom_tracker->insertBefore($this->getNodeToInsert($tracker_for_reports_xml, '/tracker/reports', $dom_tracker), $permissions_tags[0]);
+
+        return $node_tracker;
+    }
+
+    private function getNodeToInsert(\SimpleXMLElement $xml_tracker, string $path, \DOMElement $dom_tracker): \DOMNode
+    {
+        $requested_node = $xml_tracker->xpath($path);
+        if (count($requested_node) !== 1) {
+            throw new \LogicException('there should be only one ' . $path . ' in tracker XML');
+        }
+        $dom_node = dom_import_simplexml($requested_node[0]);
+        if (! $dom_node) {
+            throw new \RuntimeException('Impossible to convert ' . $path . ' node to DOM');
+        }
+        if (! $dom_tracker->ownerDocument) {
+            throw new \RuntimeException('No ownerDocument on DOM tracker');
+        }
+        return $dom_tracker->ownerDocument->importNode($dom_node, true);
     }
 
     public function getProjectSimpleXmlElement(\SimpleXMLElement $tracker_xml): \SimpleXMLElement

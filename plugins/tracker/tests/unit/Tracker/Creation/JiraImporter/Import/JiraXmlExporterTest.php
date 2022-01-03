@@ -50,7 +50,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnaps
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\CurrentSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InitialSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\IssueSnapshotCollectionBuilder;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportAllIssuesExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportCreatedRecentlyExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportDefaultCriteriaExporter;
@@ -228,7 +227,6 @@ class JiraXmlExporterTest extends TestCase
             $jira_field_mapper,
             $jira_user_retriever,
             new XmlReportExporter(),
-            new PermissionsXMLExporter(),
             new ArtifactsXMLExporter(
                 $jira_client,
                 $user_manager,
