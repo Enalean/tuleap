@@ -31,45 +31,29 @@ use Tuleap\Tracker\XML\IDGenerator;
 class JiraFieldAPIRepresentation
 {
     /**
-     * @var string
+     * @param JiraFieldAPIAllowedValueRepresentation[] $bound_values
      */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $label;
-
-    /**
-     * @var string|null
-     */
-    private $schema;
-
-    /**
-     * @var bool
-     */
-    private $required;
-
-    /**
-     * @var JiraFieldAPIAllowedValueRepresentation[]
-     */
-    private $bound_values;
-
     public function __construct(
-        string $id,
-        string $label,
-        bool $required,
-        ?string $schema,
-        array $bound_values,
+        private string $id,
+        private string $label,
+        private bool $required,
+        private ?string $schema,
+        private array $bound_values,
+        private bool $is_submit,
     ) {
-        $this->id           = $id;
-        $this->label        = $label;
-        $this->required     = $required;
-        $this->schema       = $schema;
-        $this->bound_values = $bound_values;
     }
 
-    public static function buildFromAPIResponseAndID(string $jira_field_id, array $jira_field, IDGenerator $id_generator): self
+    public static function buildFromAPIForSubmit(string $jira_field_id, array $jira_field, IDGenerator $id_generator): self
+    {
+        return self::buildFromAPI($jira_field_id, $jira_field, $id_generator, true);
+    }
+
+    public static function buildFromAPIForUpdate(string $jira_field_id, array $jira_field, IDGenerator $id_generator): self
+    {
+        return self::buildFromAPI($jira_field_id, $jira_field, $id_generator, false);
+    }
+
+    private static function buildFromAPI(string $jira_field_id, array $jira_field, IDGenerator $id_generator, bool $is_submit): self
     {
         $schema = null;
         if (isset($jira_field['schema']['system'])) {
@@ -90,7 +74,8 @@ class JiraFieldAPIRepresentation
             $jira_field['name'],
             $jira_field['required'],
             $schema,
-            $bound_values
+            $bound_values,
+            $is_submit,
         );
     }
 
@@ -114,8 +99,16 @@ class JiraFieldAPIRepresentation
         return $this->required;
     }
 
+    /**
+     * @return JiraFieldAPIAllowedValueRepresentation[]
+     */
     public function getBoundValues(): array
     {
         return $this->bound_values;
+    }
+
+    public function isSubmit(): bool
+    {
+        return $this->is_submit;
     }
 }

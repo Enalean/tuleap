@@ -108,7 +108,8 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             'Summary',
             true,
             'summary',
-            []
+            [],
+            true,
         );
 
         $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
@@ -144,7 +145,8 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             'Description',
             false,
             'description',
-            []
+            [],
+            true
         );
 
         $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
@@ -180,7 +182,8 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             'String Field',
             false,
             'com.atlassian.jira.plugin.system.customfieldtypes:textfield',
-            []
+            [],
+            true
         );
 
         $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
@@ -216,7 +219,8 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             'Text Field',
             false,
             'com.atlassian.jira.plugin.system.customfieldtypes:textarea',
-            []
+            [],
+            true
         );
 
         $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
@@ -252,7 +256,8 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             'String Field',
             false,
             'com.atlassian.jira.plugin.system.customfieldtypes:float',
-            []
+            [],
+            true
         );
 
         $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
@@ -288,7 +293,8 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             'Datepicker Field',
             false,
             'com.atlassian.jira.plugin.system.customfieldtypes:datepicker',
-            []
+            [],
+            true
         );
 
         $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
@@ -326,7 +332,8 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             'Datepicker Field',
             false,
             'com.atlassian.jira.plugin.system.customfieldtypes:datetime',
-            []
+            [],
+            true
         );
 
         $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
@@ -369,7 +376,8 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             'Priorité',
             false,
             'priority',
-            $bound_values
+            $bound_values,
+            true
         );
 
         $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
@@ -410,7 +418,8 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             'Radio buttons',
             false,
             'com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons',
-            $bound_values
+            $bound_values,
+            true
         );
 
         $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
@@ -451,7 +460,8 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             'Multi Select',
             false,
             'com.atlassian.jira.plugin.system.customfieldtypes:multiselect',
-            $bound_values
+            $bound_values,
+            true,
         );
 
         $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
@@ -492,7 +502,8 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             'Select Single',
             false,
             'com.atlassian.jira.plugin.system.customfieldtypes:select',
-            $bound_values
+            $bound_values,
+            true
         );
 
         $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
@@ -533,7 +544,8 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             'Multi Select',
             false,
             'com.atlassian.jira.plugin.system.customfieldtypes:multiuserpicker',
-            $bound_values
+            $bound_values,
+            true
         );
 
         $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
@@ -569,7 +581,8 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             'Votes',
             false,
             'votes',
-            []
+            [],
+            true,
         );
 
         $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
@@ -594,7 +607,8 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             'Story points',
             false,
             'com.atlassian.jira.plugin.system.customfieldtypes:float',
-            []
+            [],
+            true,
         );
 
         $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());

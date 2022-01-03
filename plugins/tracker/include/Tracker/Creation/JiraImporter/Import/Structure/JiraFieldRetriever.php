@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
+use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\IDGenerator;
 
 class JiraFieldRetriever
@@ -52,7 +53,7 @@ class JiraFieldRetriever
 
         $jira_fields = $project_meta_content['projects'][0]['issuetypes'][0]['fields'];
         foreach ($jira_fields as $jira_field_id => $jira_field) {
-            $jira_field_api_representation = JiraFieldAPIRepresentation::buildFromAPIResponseAndID(
+            $jira_field_api_representation = JiraFieldAPIRepresentation::buildFromAPIForSubmit(
                 $jira_field_id,
                 $jira_field,
                 $id_generator
@@ -61,10 +62,10 @@ class JiraFieldRetriever
             $fields_by_id[$jira_field_api_representation->getId()] = $jira_field_api_representation;
         }
 
-        return array_merge($fields_by_id, $this->getFromEditMeta($jira_project_key, $jira_issue_type_id, $id_generator));
+        return $this->appendFromEditMeta($fields_by_id, $jira_project_key, $jira_issue_type_id, $id_generator);
     }
 
-    private function getFromEditMeta(string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): array
+    private function appendFromEditMeta(array $fields_by_id, string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): array
     {
         $params = [
             'jql'        => 'project=' . $jira_project_key . ' AND issuetype=' . $jira_issue_type_id,
@@ -74,23 +75,32 @@ class JiraFieldRetriever
         ];
 
         $get_one_issue_url =  ClientWrapper::JIRA_CORE_BASE_URL . '/search?' . http_build_query($params);
+        try {
+            $this->logger->debug('GET ' . $get_one_issue_url);
 
-        $one_issue = $this->wrapper->getUrl($get_one_issue_url);
-        if (! isset($one_issue['issues']) || count($one_issue['issues']) !== 1 || ! isset($one_issue['issues'][0]['editmeta'])) {
-            return [];
+            $one_issue = $this->wrapper->getUrl($get_one_issue_url);
+            if (! isset($one_issue['issues']) || count($one_issue['issues']) !== 1 || ! isset($one_issue['issues'][0]['editmeta'])) {
+                return $fields_by_id;
+            }
+
+            foreach ($one_issue['issues'][0]['editmeta']['fields'] as $jira_field_id => $jira_field) {
+                if (isset($fields_by_id[$jira_field_id])) {
+                    continue;
+                }
+
+                $jira_field_api_representation = JiraFieldAPIRepresentation::buildFromAPIForUpdate(
+                    $jira_field_id,
+                    $jira_field,
+                    $id_generator
+                );
+
+                $fields_by_id[$jira_field_api_representation->getId()] = $jira_field_api_representation;
+            }
+
+            return $fields_by_id;
+        } catch (JiraConnectionException $exception) {
+            $this->logger->warning(sprintf('GET %s error (%d): %s', $get_one_issue_url, $exception->getCode(), $exception->getMessage()));
         }
-
-        $fields_by_id = [];
-        foreach ($one_issue['issues'][0]['editmeta']['fields'] as $jira_field_id => $jira_field) {
-            $jira_field_api_representation = JiraFieldAPIRepresentation::buildFromAPIResponseAndID(
-                $jira_field_id,
-                $jira_field,
-                $id_generator
-            );
-
-            $fields_by_id[$jira_field_api_representation->getId()] = $jira_field_api_representation;
-        }
-
         return $fields_by_id;
     }
 }

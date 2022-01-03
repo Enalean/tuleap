@@ -29,42 +29,47 @@ use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
+use function PHPUnit\Framework\assertTrue;
 
 final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function getTestData(): iterable
     {
-        $create_meta_payload = [
-            'projects' => [
-                [
-                    'issuetypes' => [
+        yield 'it exports jira fields and build an array indexed by id' => [
+            'payloads' => [
+                ClientWrapper::JIRA_CORE_BASE_URL . "/issue/createmeta?projectKeys=projID&issuetypeIds=issueName&expand=projects.issuetypes.fields" => [
+                    'projects' => [
                         [
-                            'fields' => [
-                                'summary' => [
-                                    'required' => true,
-                                    'schema' => [
-                                        'type' => 'string',
-                                        'system' => 'summary',
-                                    ],
-                                    'name' => 'Summary',
-                                    'key' => 'summary',
-                                    'hasDefaultValue' => false,
-                                    'operation' => [
-                                        'set',
-                                    ],
-                                ],
-                                'custom_01' => [
-                                    'required' => false,
-                                    'schema' => [
-                                        'type' => 'user',
-                                        'custom' => 'com.atlassian.jira.toolkit:lastupdaterorcommenter',
-                                        'customId' => 10071,
-                                    ],
-                                    'name' => '[opt] Last updator',
-                                    'key' => 'customfield_10071',
-                                    'hasDefaultValue' => false,
-                                    'operation' => [
-                                        'set',
+                            'issuetypes' => [
+                                [
+                                    'fields' => [
+                                        'summary' => [
+                                            'required' => true,
+                                            'schema' => [
+                                                'type' => 'string',
+                                                'system' => 'summary',
+                                            ],
+                                            'name' => 'Summary',
+                                            'key' => 'summary',
+                                            'hasDefaultValue' => false,
+                                            'operation' => [
+                                                'set',
+                                            ],
+                                        ],
+                                        'custom_01' => [
+                                            'required' => false,
+                                            'schema' => [
+                                                'type' => 'user',
+                                                'custom' => 'com.atlassian.jira.toolkit:lastupdaterorcommenter',
+                                                'customId' => 10071,
+                                            ],
+                                            'name' => '[opt] Last updator',
+                                            'key' => 'customfield_10071',
+                                            'hasDefaultValue' => false,
+                                            'operation' => [
+                                                'set',
+                                            ],
+                                        ],
                                     ],
                                 ],
                             ],
@@ -72,34 +77,66 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     ],
                 ],
             ],
-        ];
-
-        yield 'it exports jira fields and build an array indexed by id' => [
-            'payloads' => [
-                ClientWrapper::JIRA_CORE_BASE_URL . "/issue/createmeta?projectKeys=projID&issuetypeIds=issueName&expand=projects.issuetypes.fields" => $create_meta_payload,
-            ],
             'tests' => function (array $result) {
                 $this->assertCount(2, $result);
-                $this->assertArrayHasKey("summary", $result);
-                $this->assertArrayHasKey("custom_01", $result);
 
                 $system_field_representation = $result['summary'];
                 $this->assertEquals("summary", $system_field_representation->getId());
                 $this->assertEquals("Summary", $system_field_representation->getLabel());
                 $this->assertNotNull($system_field_representation->getSchema());
                 $this->assertTrue($system_field_representation->isRequired());
+                assertTrue($system_field_representation->isSubmit());
 
                 $custom_field_representation = $result['custom_01'];
                 $this->assertEquals("custom_01", $custom_field_representation->getId());
                 $this->assertEquals("[opt] Last updator", $custom_field_representation->getLabel());
                 $this->assertNotNull($custom_field_representation->getSchema());
                 $this->assertFalse($custom_field_representation->isRequired());
+                assertTrue($custom_field_representation->isSubmit());
             },
         ];
 
         yield 'it exports jira fields that are only visible in the edit screen' => [
             'payloads' => [
-                ClientWrapper::JIRA_CORE_BASE_URL . "/issue/createmeta?projectKeys=projID&issuetypeIds=issueName&expand=projects.issuetypes.fields" => $create_meta_payload,
+                ClientWrapper::JIRA_CORE_BASE_URL . "/issue/createmeta?projectKeys=projID&issuetypeIds=issueName&expand=projects.issuetypes.fields" => [
+                    'projects' => [
+                        [
+                            'issuetypes' => [
+                                [
+                                    'fields' => [
+                                        'summary' => [
+                                            'required' => true,
+                                            'schema' => [
+                                                'type' => 'string',
+                                                'system' => 'summary',
+                                            ],
+                                            'name' => 'Summary',
+                                            'key' => 'summary',
+                                            'hasDefaultValue' => false,
+                                            'operation' => [
+                                                'set',
+                                            ],
+                                        ],
+                                        'custom_01' => [
+                                            'required' => false,
+                                            'schema' => [
+                                                'type' => 'user',
+                                                'custom' => 'com.atlassian.jira.toolkit:lastupdaterorcommenter',
+                                                'customId' => 10071,
+                                            ],
+                                            'name' => '[opt] Last updator',
+                                            'key' => 'customfield_10071',
+                                            'hasDefaultValue' => false,
+                                            'operation' => [
+                                                'set',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
                 ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3DprojID+AND+issuetype%3DissueName&expand=editmeta&startAt=0&maxResults=1' => [
                     "expand"     => "names,schema",
                     "startAt"    => 0,
@@ -113,6 +150,33 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                             "key"    => "projID-6",
                             'editmeta' => [
                                 'fields' => [
+                                    'summary' => [
+                                        'required' => true,
+                                        'schema' => [
+                                            'type' => 'string',
+                                            'system' => 'summary',
+                                        ],
+                                        'name' => 'Summary',
+                                        'key' => 'summary',
+                                        'hasDefaultValue' => false,
+                                        'operation' => [
+                                            'set',
+                                        ],
+                                    ],
+                                    'custom_01' => [
+                                        'required' => false,
+                                        'schema' => [
+                                            'type' => 'user',
+                                            'custom' => 'com.atlassian.jira.toolkit:lastupdaterorcommenter',
+                                            'customId' => 10071,
+                                        ],
+                                        'name' => '[opt] Last updator',
+                                        'key' => 'customfield_10071',
+                                        'hasDefaultValue' => false,
+                                        'operation' => [
+                                            'set',
+                                        ],
+                                    ],
                                     "customfield_10249" => [
                                         "required"      => false,
                                         "schema"        => [
@@ -150,12 +214,18 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ],
             ],
             'tests' => function (array $result) {
+                assertCount(3, $result);
+
+                assertTrue($result['summary']->isSubmit());
+                assertTrue($result['custom_01']->isSubmit());
+
                 assertFalse($result['customfield_10249']->isRequired());
                 assertEquals('Branche intégration', $result['customfield_10249']->getLabel());
                 assertEquals('com.atlassian.jira.plugin.system.customfieldtypes:select', $result['customfield_10249']->getSchema());
                 assertCount(3, $result['customfield_10249']->getBoundValues());
                 assertEquals('10142', $result['customfield_10249']->getBoundValues()[0]->getId());
                 assertEquals('BACKBONE_ITG', $result['customfield_10249']->getBoundValues()[0]->getName());
+                assertFalse($result['customfield_10249']->isSubmit());
             },
         ];
 
