@@ -17,9 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { buildTableCellContent, buildTableCellLabel } from "./table-builder";
+import {
+    buildCellContentResult,
+    buildTableCellContent,
+    buildTableCellLabel,
+} from "./table-builder";
 import type { IContext } from "docx";
 import { TextRun } from "docx";
+import { createVueGettextProviderPassthrough } from "../../../../vue-gettext-provider-for-test";
+import type { ArtifactFieldValueStatus } from "@tuleap/plugin-docgen-docx";
 
 describe("table-builder", () => {
     describe("buildTableCellLabel", () => {
@@ -39,5 +45,28 @@ describe("table-builder", () => {
             expect(JSON.stringify(tree)).toContain("Lorem ipsum");
             expect(JSON.stringify(tree)).toContain("table_value");
         });
+    });
+    describe("buildCellContentResult", () => {
+        const cases: ReadonlyArray<[ArtifactFieldValueStatus, string]> = [
+            [null, ""],
+            ["notrun", "Not run"],
+            ["passed", "Passed"],
+            ["failed", "Failed"],
+            ["blocked", "Blocked"],
+        ];
+
+        it.each(cases)(
+            `whent status is %s then displayed label is %s`,
+            (status: ArtifactFieldValueStatus, expected_label) => {
+                const table_cell = buildCellContentResult(
+                    status,
+                    createVueGettextProviderPassthrough(),
+                    1
+                );
+
+                const tree = table_cell.prepForXml({} as IContext);
+                expect(JSON.stringify(tree)).toContain(expected_label);
+            }
+        );
     });
 });

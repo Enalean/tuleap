@@ -23,7 +23,6 @@ import type {
     ArtifactFieldValueStepDefinitionEnhancedWithResults,
 } from "../../../../type";
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
-import type { IShadingAttributesProperties, ITableCellOptions } from "docx";
 import { InternalHyperlink, Table, TableCell } from "docx";
 import {
     HEADER_LEVEL_SECTION_TITLE,
@@ -31,10 +30,14 @@ import {
     MAIN_TITLES_NUMBERING_ID,
 } from "./document-properties";
 import { Bookmark, TextRun, Paragraph, WidthType, TableRow } from "docx";
-import type { ArtifactFieldValueStatus } from "@tuleap/plugin-docgen-docx/src";
 import { getAnchorToArtifactContent } from "@tuleap/plugin-docgen-docx/src";
-import { TABLE_BORDERS, TABLE_LABEL_SHADING, TABLE_MARGINS } from "./Table/table-builder";
-import { getInternationalizedTestStatus } from "../../../ExportAsSpreadsheet/Report/internationalize-test-status";
+import {
+    buildCellContentOptions,
+    buildCellContentResult,
+    TABLE_BORDERS,
+    TABLE_LABEL_SHADING,
+    TABLE_MARGINS,
+} from "./Table/table-builder";
 import { computeRequirementStatus } from "./matrix-compute-requirement-status";
 
 export function getTraceabilityMatrixTitle(gettext_provider: VueGettextProvider): {
@@ -96,18 +99,6 @@ const buildHeaderCell = (value: string): TableCell =>
         shading: TABLE_LABEL_SHADING,
     });
 
-const buildCellContentOptions = (content: TextRun | InternalHyperlink): ITableCellOptions => {
-    return {
-        children: [
-            new Paragraph({
-                children: [content],
-                style: "table_value",
-            }),
-        ],
-        margins: TABLE_MARGINS,
-    };
-};
-
 const buildCellContent = (content: TextRun | InternalHyperlink): TableCell =>
     new TableCell(buildCellContentOptions(content));
 
@@ -119,46 +110,6 @@ const buildCellContentWithRowspan = (
         ...buildCellContentOptions(content),
         rowSpan,
     });
-
-export const buildCellContentResult = (
-    result: ArtifactFieldValueStatus,
-    gettext_provider: VueGettextProvider,
-    rowSpan: number
-): TableCell => {
-    const status = getInternationalizedTestStatus(gettext_provider, result);
-    const table_cell_options = buildCellContentOptions(
-        new TextRun({
-            text: status,
-            color: "ffffff",
-        })
-    );
-
-    const additional_cell_options: { shading?: IShadingAttributesProperties } = {};
-    switch (result) {
-        case "passed":
-            additional_cell_options.shading = {
-                fill: "1aa350",
-            };
-            break;
-        case "blocked":
-            additional_cell_options.shading = {
-                fill: "1aacd8",
-            };
-            break;
-        case "failed":
-            additional_cell_options.shading = {
-                fill: "e04b4b",
-            };
-            break;
-        default:
-            additional_cell_options.shading = {
-                fill: "717171",
-            };
-            break;
-    }
-
-    return new TableCell({ ...table_cell_options, rowSpan, ...additional_cell_options });
-};
 
 function buildTraceabilityMatrixTable(
     elements: ReadonlyArray<TraceabilityMatrixElement>,
