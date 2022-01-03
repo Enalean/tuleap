@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjectFlags displays the project flags with a popover 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <div
+    class="project-sidebar-project-flags"
+  >
+    <div
+      class="project-sidebar-project-flags-icon"
+    >
+      <project-shield-icon-stub />
+    </div>
+    <span
+      class="project-sidebar-project-flags-labels"
+    >
+      
+      <span
+        class="project-sidebar-project-flags-label"
+      >
+        Label A
+      </span>
+      <span
+        class="project-sidebar-project-flags-label"
+      >
+        Label B
+      </span>
+      
+    </span>
+  </div>
+  <div
+    class="tlp-popover"
+    id="project-sidebar-project-flags-popover"
+  >
+    <div
+      class="tlp-popover-arrow"
+    />
+    <div
+      class="tlp-popover-body"
+    >
+      
+      <div
+        class="current-project-nav-flag-popover-flag"
+      >
+        <project-shield-icon-stub />
+        <h2
+          class="current-project-nav-flag-popover-content-title"
+        >
+          Label A
+        </h2>
+        <p
+          class="current-project-nav-flag-popover-content-description"
+        >
+          Some label description A
+        </p>
+      </div>
+      <div
+        class="current-project-nav-flag-popover-flag"
+      >
+        <project-shield-icon-stub />
+        <h2
+          class="current-project-nav-flag-popover-content-title"
+        >
+          Label B
+        </h2>
+        <p
+          class="current-project-nav-flag-popover-content-description"
+        >
+          Some label description B
+        </p>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
+`;

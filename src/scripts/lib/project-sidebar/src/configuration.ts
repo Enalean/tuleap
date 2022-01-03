@@ -68,6 +68,7 @@ export interface Configuration {
         href: string;
         administration_href: string;
         privacy: ProjectPrivacy;
+        flags: { label: string; description: string }[];
     };
     user: {
         is_project_administrator: boolean;
