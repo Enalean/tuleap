@@ -43,6 +43,16 @@ export const example_config: Configuration = {
                 "Project privacy set to public. By default, its content is available to all authenticated, but not restricted, users. Please note that more restrictive permissions might exist on some items.",
             privacy_title: "Public",
         },
+        flags: [
+            {
+                label: "Label A",
+                description: "Some label description A",
+            },
+            {
+                label: "Label B",
+                description: "Some label description B",
+            },
+        ],
     },
     user: {
         is_project_administrator: true,

@@ -2,37 +2,44 @@
 
 exports[`SidebarHeader displays the sidebar header 1`] = `
 <div
-  class="project-sidebar-header-name"
+  data-v-app=""
 >
+  
   <div
-    class="project-title-container"
+    class="project-sidebar-header-name"
   >
-    <a
-      class="project-sidebar-title"
-      href="/projects/project1"
+    <div
+      class="project-title-container"
     >
-      <span
-        aria-hidden="true"
-        class="project-sidebar-title-icon"
+      <a
+        class="project-sidebar-title"
+        href="/projects/project1"
       >
-        🌷
-      </span>
-       project1
-    </a>
-    <span
-      class="project-title-spacer"
-    />
-    <a
-      class="project-administration-link"
-      data-test="project-administration-link"
-      href="https://myinstance.example.com/project/admin/?group_id=999"
-    >
-      <i
-        class="fas fa-cog project-administration-link-icon"
-        title="Project administration"
+        <span
+          aria-hidden="true"
+          class="project-sidebar-title-icon"
+        >
+          🌷
+        </span>
+         project1
+      </a>
+      <span
+        class="project-title-spacer"
       />
-    </a>
+      <a
+        class="project-administration-link"
+        data-test="project-administration-link"
+        href="https://myinstance.example.com/project/admin/?group_id=999"
+      >
+        <i
+          class="fas fa-cog project-administration-link-icon"
+          title="Project administration"
+        />
+      </a>
+    </div>
+    <privacy-badge-stub />
   </div>
-  <privacy-badge-stub />
+  <project-flags-stub />
+  
 </div>
 `;
