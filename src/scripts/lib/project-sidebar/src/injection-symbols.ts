@@ -25,3 +25,6 @@ import type { Configuration } from "./configuration";
 
 export const SIDEBAR_CONFIGURATION: InjectionKey<DeepReadonly<Ref<Configuration>>> =
     Symbol("sidebar_configuration");
+export const TRIGGER_SHOW_PROJECT_ANNOUNCEMENT: InjectionKey<() => void> = Symbol(
+    "trigger_show_project_announcement"
+);

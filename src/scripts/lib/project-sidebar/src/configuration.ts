@@ -48,6 +48,8 @@ interface Internationalization {
     tools: string;
     homepage: string;
     project_administration: string;
+    project_announcement: string;
+    show_project_announcement: string;
 }
 
 interface ProjectPrivacy {
@@ -68,6 +70,7 @@ export interface Configuration {
         href: string;
         administration_href: string;
         privacy: ProjectPrivacy;
+        has_project_announcement: boolean;
         flags: { label: string; description: string }[];
     };
     user: {
