@@ -657,7 +657,32 @@ async function buildStepDefinitionTestResultParagraphs(
             new TableRow({
                 children: [buildCellContentResult(field.status, gettext_provider, 1)],
             }),
-        ])
+        ]),
+        ...(field.steps.length > 0
+            ? [
+                  new Paragraph({ children: [new TextRun("")] }),
+                  buildTable([
+                      new TableRow({
+                          children: [
+                              buildTableCellHeaderLabel(gettext_provider.$gettext("Step")),
+                              buildTableCellHeaderValue(gettext_provider.$gettext("Status")),
+                          ],
+                          tableHeader: true,
+                      }),
+                      ...field.steps.map(
+                          ({ status }, index) =>
+                              new TableRow({
+                                  children: [
+                                      buildTableCellLabel(
+                                          sprintf(gettext_provider.$gettext("Step %d"), index + 1)
+                                      ),
+                                      buildCellContentResult(status, gettext_provider, 1),
+                                  ],
+                              })
+                      ),
+                  ]),
+              ]
+            : [])
     );
 
     if (field.attachments.length > 0) {
