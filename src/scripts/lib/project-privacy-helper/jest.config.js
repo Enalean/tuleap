@@ -17,10 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import BreadcrumbPrivacy from "./BreadcrumbPrivacy.vue";
-export { BreadcrumbPrivacy };
-
-export interface ProjectFlag {
-    readonly label: string;
-    readonly description: string;
-}
+const base_config = require("../../../../tests/jest/jest.base.config.js");
+module.exports = {
+    ...base_config,
+    displayName: "@tuleap/project-privacy-helper",
+};

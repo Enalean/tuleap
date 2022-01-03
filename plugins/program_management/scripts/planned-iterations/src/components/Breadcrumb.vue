@@ -70,13 +70,14 @@
 </template>
 
 <script lang="ts">
-import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
 import type { ProgramIncrement, Program } from "../store/configuration";
 
 import Vue from "vue";
 import { namespace } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 
 const configuration = namespace("configuration");
 

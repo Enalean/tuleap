@@ -66,7 +66,7 @@ import { Component } from "vue-property-decorator";
 import Breadcrumb from "./Breadcrumb.vue";
 import ProgramIncrementList from "./Backlog/ProgramIncrement/ProgramIncrementList.vue";
 import ToBePlanned from "./Backlog/ToBePlanned/ToBePlanned.vue";
-import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
 import { init } from "@tuleap/drag-and-drop";
 import type {
     Drekkenov,
@@ -86,6 +86,7 @@ import { Action, State, namespace, Getter } from "vuex-class";
 import ErrorModal from "./Backlog/ErrorModal.vue";
 import ConfigurationEmptyState from "./ConfigurationEmptyState.vue";
 import { sprintf } from "sprintf-js";
+import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 
 const configuration = namespace("configuration");
 

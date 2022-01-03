@@ -1,0 +1,21 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/project-privacy-helper",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/project-privacy-helper.es.js",
+  "main": "dist/project-privacy-helper.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/project-privacy-helper.es.js",
+      "require": "./dist/project-privacy-helper.umd.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "jest"
+  }
+}

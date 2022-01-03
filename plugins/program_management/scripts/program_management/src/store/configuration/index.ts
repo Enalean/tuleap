@@ -19,7 +19,8 @@
 
 import type { State } from "../../type";
 import type { Module } from "vuex";
-import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 
 export interface ConfigurationState {
     readonly public_name: string;

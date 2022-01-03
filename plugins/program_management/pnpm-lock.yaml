@@ -5,6 +5,7 @@ specifiers:
   '@tuleap/date-helper': file:../../src/scripts/lib/date-helper
   '@tuleap/drag-and-drop': file:../../src/scripts/lib/drag-and-drop
   '@tuleap/list-picker': file:../../src/scripts/lib/list-picker
+  '@tuleap/project-privacy-helper': link:../../src/scripts/lib/project-privacy-helper
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
   '@tuleap/vue-breadcrumb-privacy': file:../../src/scripts/lib/vue-breadcrumb-privacy
   '@types/sprintf-js': ^1.1.2
@@ -22,6 +23,7 @@ dependencies:
   '@tuleap/core': link:../../src
   '@tuleap/date-helper': link:../../src/scripts/lib/date-helper
   '@tuleap/drag-and-drop': link:../../src/scripts/lib/drag-and-drop
+  '@tuleap/project-privacy-helper': link:../../src/scripts/lib/project-privacy-helper
   '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
   '@tuleap/vue-breadcrumb-privacy': link:../../src/scripts/lib/vue-breadcrumb-privacy
   sprintf-js: 1.1.2

@@ -23,13 +23,9 @@ export default {
 ```
 
 ```typescript
-import { getProjectPrivacyIcon, ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
 
 const project_flag: ProjectFlag = {
   //...
 };
-const privacy: ProjectPrivacy = {
-  //...
-};
-const icon = getProjectPrivacyIcon(privacy);
 ```

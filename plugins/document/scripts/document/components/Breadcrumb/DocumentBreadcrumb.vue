@@ -105,7 +105,8 @@ import type { Folder, Item } from "../../type";
 import DocumentBreadcrumbElement from "./DocumentBreadcrumbElement.vue";
 import DocumentBreadcrumbDocument from "./DocumentBreadcrumbDocument.vue";
 import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
-import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 
 const configuration = namespace("configuration");
 

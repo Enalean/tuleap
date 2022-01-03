@@ -30,11 +30,12 @@ export default defineConfig(
                 name: "BreadcrumbPrivacy",
             },
             rollupOptions: {
-                external: ["vue", "@tuleap/tlp-popovers"],
+                external: ["vue", "@tuleap/tlp-popovers", "@tuleap/project-privacy-helper"],
                 output: {
                     globals: {
                         vue: "Vue",
                         "@tuleap/tlp-popovers": "tlp",
+                        "@tuleap/project-privacy-helper": "@tuleap/project-privacy-helper",
                     },
                 },
             },

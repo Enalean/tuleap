@@ -8,6 +8,7 @@
     "@tuleap/core": "file:../../src",
     "@tuleap/filter-inline-table": "file:../../src/scripts/lib/filter-table",
     "@tuleap/html-escaper": "file:../../src/scripts/lib/html-escaper",
+    "@tuleap/project-privacy-helper": "link:../../src/scripts/lib/project-privacy-helper",
     "@tuleap/vue-breadcrumb-privacy": "file:../../src/scripts/lib/vue-breadcrumb-privacy",
     "javascript-time-ago": "^2.3.4",
     "node-gettext": "^3.0.0",

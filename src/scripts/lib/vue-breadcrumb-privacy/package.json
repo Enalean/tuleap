@@ -14,6 +14,7 @@
     }
   },
   "dependencies": {
+    "@tuleap/project-privacy-helper": "link:../project-privacy-helper",
     "@tuleap/tlp-popovers": "file:../tlp-popovers"
   },
   "peerDependencies": {
