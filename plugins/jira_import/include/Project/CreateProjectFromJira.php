@@ -314,18 +314,19 @@ final class CreateProjectFromJira
             $tracker_fullname = $jira_issue_type->getName();
             $tracker_itemname = TrackerCreationDataChecker::getShortNameWithValidFormat($jira_issue_type->getName());
 
-            $tracker     = (new XMLTracker($jira_issue_type->getId(), $tracker_itemname))->withName($tracker_fullname);
-            $tracker_xml = $tracker->export($trackers_xml);
+            $tracker = (new XMLTracker($jira_issue_type->getId(), $tracker_itemname))->withName($tracker_fullname);
 
-            $jira_exporter->exportJiraToXml(
+            $tracker_xml = $jira_exporter->exportJiraToXml(
                 $platform_configuration_collection,
-                $tracker_xml,
+                $tracker,
                 $jira_credentials->getJiraUrl(),
                 $jira_project,
                 $jira_issue_type,
                 $field_id_generator,
                 $linked_issues_collection
             );
+
+            $jira_exporter->appendTrackerXML($trackers_xml, $tracker_xml);
         }
 
         if ($board && $board_configuration) {

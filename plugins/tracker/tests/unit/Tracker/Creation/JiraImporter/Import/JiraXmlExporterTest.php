@@ -61,9 +61,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportTableExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportUpdatedRecentlyExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlTQLReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\StoryPointFieldExporter;
@@ -73,7 +71,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClientReplay;
-use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
@@ -164,12 +161,7 @@ class JiraXmlExporterTest extends TestCase
 
         $cdata_factory = new XML_SimpleXMLCDATAFactory();
 
-        $field_xml_exporter = new FieldXmlExporter(
-            new XML_SimpleXMLCDATAFactory(),
-            new FieldNameFormatter()
-        );
-
-        $jira_field_mapper         = new JiraToTuleapFieldTypeMapper($field_xml_exporter, $error_collector, $logger);
+        $jira_field_mapper         = new JiraToTuleapFieldTypeMapper($error_collector, $logger);
         $report_table_exporter     = new XmlReportTableExporter();
         $default_criteria_exporter = new XmlReportDefaultCriteriaExporter();
 
@@ -308,12 +300,8 @@ class JiraXmlExporterTest extends TestCase
                 $logger
             ),
             new SemanticsXMLExporter(),
-            new ContainersXMLCollectionBuilder(),
-            new AlwaysThereFieldsExporter(
-                $field_xml_exporter
-            ),
+            new AlwaysThereFieldsExporter(),
             new StoryPointFieldExporter(
-                $field_xml_exporter,
                 $logger,
             ),
             new XmlReportAllIssuesExporter(
@@ -340,13 +328,9 @@ class JiraXmlExporterTest extends TestCase
             ->withDescription('Bug')
             ->withColor(TrackerColor::default());
 
-        $xml          = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
-        $trackers_xml = $xml->addChild('trackers');
-        $tracker_xml  = $tracker_for_export->export($trackers_xml);
-
-        $exporter->exportJiraToXml(
+        $tracker_xml = $exporter->exportJiraToXml(
             $platform_configuration_collection,
-            $tracker_xml,
+            $tracker_for_export,
             'https://jira.example.com',
             $jira_client->getJiraProject(),
             new IssueType($jira_client->getJiraIssueTypeId(), 'Bogue', false),
@@ -355,8 +339,7 @@ class JiraXmlExporterTest extends TestCase
         );
 
         // Uncomment below to update the fixture
-        //$tidy_xml = self::getTidyXML($tracker_xml);
-        //file_put_contents($fixture_path . '/tracker.xml', $tidy_xml);
+        // file_put_contents($fixture_path . '/tracker.xml', self::getTidyXML($tracker_xml));
 
         self::assertStringEqualsFile($fixture_path . '/tracker.xml', self::getTidyXML($tracker_xml));
 

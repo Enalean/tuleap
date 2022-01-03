@@ -48,7 +48,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InitialSnapsho
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\IssueSnapshotCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
@@ -204,7 +203,7 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->shouldReceive('getUserById')->with(91)->andReturn($user);
 
         $tracker_node       = new SimpleXMLElement('<tracker/>');
-        $mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $mapping_collection = new FieldMappingCollection();
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
                 'summary',
@@ -312,7 +311,7 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->shouldReceive('getUserById')->with(91)->andReturn($user);
 
         $tracker_node       = new SimpleXMLElement('<tracker/>');
-        $mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $mapping_collection = new FieldMappingCollection();
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
                 'summary',

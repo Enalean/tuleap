@@ -23,12 +23,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 
-use Tracker_FormElementFactory;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
+use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
+use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
+use Tuleap\Tracker\FormElement\Field\ArtifactId\XML\XMLArtifactIdField;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\CrossReference\XML\XMLCrossReferenceField;
+use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
+use Tuleap\Tracker\FormElement\Field\File\XML\XMLFileField;
+use Tuleap\Tracker\FormElement\Field\LastUpdateDate\XML\XMLLastUpdateDateField;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
+use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringField;
+use Tuleap\Tracker\FormElement\Field\SubmittedBy\XML\XMLSubmittedByField;
+use Tuleap\Tracker\FormElement\Field\SubmittedOn\XML\XMLSubmittedOnField;
+use Tuleap\Tracker\FormElement\Field\XML\XMLField;
+use Tuleap\Tracker\XML\IDGenerator;
+use Tuleap\Tracker\XML\XMLTracker;
 
 class AlwaysThereFieldsExporter
 {
@@ -51,20 +65,20 @@ class AlwaysThereFieldsExporter
 
     public const JIRA_ISSUE_LINKS_NAME      = 'issuelinks';
     public const JIRA_SUB_TASKS_NAME        = 'subtasks';
-    public const JIRA_CROSS_REFERENCES_NAME = 'org.tuleap.crossreferences'; // doesn't exist at jira side
+    public const JIRA_CROSS_REFERENCES_NAME = 'orgtuleapcrossreferences'; // doesn't exist at jira side
 
-    private const JIRA_RESOLUTION_DATE_NAME = "resolutiondate";
-    public const JIRA_STATUS_RANK           = 1;
-    public const JIRA_CREATOR_RANK          = 2;
-    public const JIRA_CREATED_RANK          = 3;
-    public const JIRA_UPDATED_ON_RANK       = 4;
-    public const JIRA_RESOLUTION_DATE_RANK  = 5;
-    public const JIRA_PRIORITY_RANK         = 6;
-    public const JIRA_ARTIFACT_ID_RANK      = 7;
-    public const JIRA_LINK_RANK             = 8;
-    public const JIRA_ASSIGNEE_RANK         = 9;
-    public const JIRA_REPORTER_RANK         = 10;
-    public const JIRA_STORY_POINTS_RANK     = 11;
+    public const JIRA_RESOLUTION_DATE_NAME = "resolutiondate";
+    public const JIRA_STATUS_RANK          = 1;
+    public const JIRA_CREATOR_RANK         = 2;
+    public const JIRA_CREATED_RANK         = 3;
+    public const JIRA_UPDATED_ON_RANK      = 4;
+    public const JIRA_RESOLUTION_DATE_RANK = 5;
+    public const JIRA_PRIORITY_RANK        = 6;
+    public const JIRA_ARTIFACT_ID_RANK     = 7;
+    public const JIRA_LINK_RANK            = 8;
+    public const JIRA_ASSIGNEE_RANK        = 9;
+    public const JIRA_REPORTER_RANK        = 10;
+    public const JIRA_STORY_POINTS_RANK    = 11;
 
     public const JIRA_ATTACHMENT_RANK  = 1;
     public const JIRA_SUMMARY_RANK     = 1;
@@ -73,161 +87,138 @@ class AlwaysThereFieldsExporter
     public const JIRA_ISSUE_LINKS_RANK      = 1;
     public const JIRA_CROSS_REFERENCES_RANK = 2;
 
-    /**
-     * @var FieldXmlExporter
-     */
-    private $field_xml_exporter;
+    public const DETAILS_FIELDSET_NAME    = 'details_fieldset';
+    public const CUSTOM_FIELDSET_NAME     = 'custom_fieldset';
+    public const ATTACHMENT_FIELDSET_NAME = 'attachment_fieldset';
+    public const LINKS_FIELDSET_NAME      = 'links_fieldset';
 
-    public function __construct(FieldXmlExporter $field_xml_exporter)
+    public const LEFT_COLUMN_NAME  = 'left_column';
+    public const RIGHT_COLUMN_NAME = 'right_column';
+
+    public function exportFields(IDGenerator $id_generator, XMLTracker $tracker, StatusValuesCollection $status_values_collection, FieldMappingCollection $field_mapping_collection): XMLTracker
     {
-        $this->field_xml_exporter = $field_xml_exporter;
+        return $tracker
+            ->withFormElement(
+                (new XMLFieldset($id_generator, self::DETAILS_FIELDSET_NAME))
+                    ->withRank(1)
+                    ->withLabel('Details')
+                    ->withFormElements(
+                        (new XMLColumn($id_generator, self::LEFT_COLUMN_NAME))
+                            ->withRank(1)
+                            ->withLabel(self::LEFT_COLUMN_NAME),
+                        (new XMLColumn($id_generator, self::RIGHT_COLUMN_NAME))
+                            ->withRank(2)
+                            ->withLabel(self::RIGHT_COLUMN_NAME)
+                            ->withFormElements(
+                                $this->addToMapping(
+                                    $field_mapping_collection,
+                                    (new XMLArtifactIdField($id_generator, self::JIRA_ARTIFACT_ID_FIELD_ID))
+                                        ->withLabel('Artifact id')
+                                        ->withRank(self::JIRA_ARTIFACT_ID_RANK)
+                                        ->withoutPermissions()
+                                ),
+                                $this->addToMapping(
+                                    $field_mapping_collection,
+                                    (new XMLStringField($id_generator, self::JIRA_LINK_FIELD_NAME))
+                                        ->withLabel('Link to original issue')
+                                        ->withRank(self::JIRA_LINK_RANK)
+                                        ->withoutPermissions()
+                                ),
+                                $this->addToMapping(
+                                    $field_mapping_collection,
+                                    (new XMLSubmittedByField($id_generator, self::JIRA_CREATED_BY))
+                                        ->withLabel('Created by')
+                                        ->withRank(self::JIRA_CREATOR_RANK)
+                                        ->withoutPermissions()
+                                ),
+                                $this->addToMapping(
+                                    $field_mapping_collection,
+                                    (new XMLSubmittedOnField($id_generator, self::JIRA_CREATED_NAME))
+                                        ->withLabel('Creation date')
+                                        ->withRank(self::JIRA_CREATED_RANK)
+                                        ->withoutPermissions()
+                                ),
+                                $this->addToMapping(
+                                    $field_mapping_collection,
+                                    (new XMLLastUpdateDateField($id_generator, self::JIRA_UPDATED_ON_NAME))
+                                        ->withLabel('Last update date')
+                                        ->withRank(self::JIRA_UPDATED_ON_RANK)
+                                        ->withoutPermissions()
+                                ),
+                                $this->addToMapping(
+                                    $field_mapping_collection,
+                                    (new XMLDateField($id_generator, self::JIRA_RESOLUTION_DATE_NAME))
+                                        ->withLabel('Resolved')
+                                        ->withDateTime()
+                                        ->withRank(self::JIRA_RESOLUTION_DATE_RANK)
+                                        ->withoutPermissions()
+                                ),
+                                $this->addToMapping(
+                                    $field_mapping_collection,
+                                    (new XMLSelectBoxField($id_generator, self::JIRA_STATUS_NAME))
+                                        ->withLabel('Status')
+                                        ->withRank(self::JIRA_STATUS_RANK)
+                                        ->withStaticValues(
+                                            ...array_map(
+                                                static fn (JiraFieldAPIAllowedValueRepresentation $value) => new XMLBindStaticValue(
+                                                    $value->getXMLId(),
+                                                    $value->getName()
+                                                ),
+                                                $status_values_collection->getAllValues(),
+                                            )
+                                        )
+                                        ->withoutPermissions(),
+                                    $status_values_collection->getAllValues(),
+                                ),
+                            ),
+                    ),
+                (new XMLFieldset($id_generator, self::CUSTOM_FIELDSET_NAME))
+                    ->withRank(2)
+                    ->withLabel('Custom Fields'),
+                (new XMLFieldset($id_generator, self::ATTACHMENT_FIELDSET_NAME))
+                    ->withRank(3)
+                    ->withLabel('Attachments')
+                    ->withFormElements(
+                        $this->addToMapping(
+                            $field_mapping_collection,
+                            (new XMLFileField($id_generator, self::JIRA_ATTACHMENT_NAME))
+                                ->withLabel('Attachments')
+                                ->withRank(self::JIRA_ATTACHMENT_RANK)
+                                ->withoutPermissions()
+                        ),
+                    ),
+                (new XMLFieldset($id_generator, self::LINKS_FIELDSET_NAME))
+                    ->withRank(4)
+                    ->withLabel('Links')
+                    ->withFormElements(
+                        $this->addToMapping(
+                            $field_mapping_collection,
+                            (new XMLArtifactLinkField($id_generator, self::JIRA_ISSUE_LINKS_NAME))
+                                ->withLabel('Links')
+                                ->withRank(self::JIRA_ISSUE_LINKS_RANK)
+                                ->withoutPermissions()
+                        ),
+                        $this->addToMapping(
+                            $field_mapping_collection,
+                            (new XMLCrossReferenceField($id_generator, self::JIRA_CROSS_REFERENCES_NAME))
+                                ->withLabel('References')
+                                ->withRank(self::JIRA_CROSS_REFERENCES_RANK)
+                                ->withoutPermissions()
+                        ),
+                    ),
+            );
     }
 
-    public function exportFields(
-        ContainersXMLCollection $containers_collection,
-        FieldMappingCollection $field_mapping_collection,
-        StatusValuesCollection $status_values_collection,
-    ): void {
-        $this->field_xml_exporter->exportField(
-            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
-            Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
-            self::JIRA_ARTIFACT_ID_FIELD_ID,
-            "Artifact id",
-            self::JIRA_ARTIFACT_ID_FIELD_ID,
-            self::JIRA_ARTIFACT_ID_RANK,
+    private function addToMapping(FieldMappingCollection $field_mapping_collection, XMLField $tuleap_field, array $jira_bound_values = []): XMLField
+    {
+        $jira_field = new JiraFieldAPIRepresentation(
+            $tuleap_field->name,
+            $tuleap_field->label,
             false,
-            [],
-            [],
-            $field_mapping_collection,
-            null
-        );
-
-        $this->field_xml_exporter->exportField(
-            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
-            Tracker_FormElementFactory::FIELD_STRING_TYPE,
-            self::JIRA_LINK_FIELD_NAME,
-            "Link to original issue",
-            self::JIRA_LINK_FIELD_ID,
-            self::JIRA_LINK_RANK,
-            false,
-            [],
-            [],
-            $field_mapping_collection,
-            null
-        );
-
-        $this->field_xml_exporter->exportField(
-            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
-            Tracker_FormElementFactory::FIELD_SUBMITTED_BY_TYPE,
-            self::JIRA_CREATED_BY,
-            "Created by",
-            self::JIRA_CREATED_BY,
-            self::JIRA_CREATOR_RANK,
-            false,
-            [],
-            [],
-            $field_mapping_collection,
-            null
-        );
-
-        $this->field_xml_exporter->exportField(
-            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
-            Tracker_FormElementFactory::FIELD_SUBMITTED_ON_TYPE,
-            self::JIRA_CREATED_NAME,
-            "Creation date",
-            self::JIRA_CREATED_NAME,
-            self::JIRA_CREATED_RANK,
-            false,
-            [],
-            [],
-            $field_mapping_collection,
-            null
-        );
-
-        $this->field_xml_exporter->exportField(
-            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
-            Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE,
-            self::JIRA_UPDATED_ON_NAME,
-            "Last update date",
-            self::JIRA_UPDATED_ON_NAME,
-            self::JIRA_UPDATED_ON_RANK,
-            false,
-            [],
-            [],
-            $field_mapping_collection,
-            null
-        );
-
-        $this->field_xml_exporter->exportField(
-            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
-            Tracker_FormElementFactory::FIELD_DATE_TYPE,
-            self::JIRA_RESOLUTION_DATE_NAME,
-            "Resolved",
-            self::JIRA_RESOLUTION_DATE_NAME,
-            self::JIRA_RESOLUTION_DATE_RANK,
-            false,
-            [
-                'display_time' => '1',
-            ],
-            [],
-            $field_mapping_collection,
-            null
-        );
-
-        $this->field_xml_exporter->exportField(
-            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
-            Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-            self::JIRA_STATUS_NAME,
-            "Status",
-            self::JIRA_STATUS_NAME,
-            self::JIRA_STATUS_RANK,
-            false,
-            [],
-            $status_values_collection->getAllValues(),
-            $field_mapping_collection,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE
-        );
-
-        $this->field_xml_exporter->exportField(
-            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::ATTACHMENT_FIELDSET_NAME),
-            Tracker_FormElementFactory::FIELD_FILE_TYPE,
-            self::JIRA_ATTACHMENT_NAME,
-            "Attachments",
-            self::JIRA_ATTACHMENT_NAME,
-            self::JIRA_ATTACHMENT_RANK,
-            false,
-            [],
-            [],
-            $field_mapping_collection,
-            null
-        );
-
-        $this->field_xml_exporter->exportField(
-            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::LINKS_FIELDSET_NAME),
-            Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
-            self::JIRA_ISSUE_LINKS_NAME,
-            'Links',
-            self::JIRA_ISSUE_LINKS_NAME,
-            self::JIRA_ISSUE_LINKS_RANK,
-            false,
-            [],
-            [],
-            $field_mapping_collection,
             null,
+            $jira_bound_values,
+            true,
         );
-
-        $this->field_xml_exporter->exportField(
-            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::LINKS_FIELDSET_NAME),
-            Tracker_FormElementFactory::FIELD_CROSS_REFERENCES,
-            self::JIRA_CROSS_REFERENCES_NAME,
-            'References',
-            self::JIRA_CROSS_REFERENCES_NAME,
-            self::JIRA_CROSS_REFERENCES_RANK,
-            false,
-            [],
-            [],
-            $field_mapping_collection,
-            null,
-        );
+        return $field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $tuleap_field);
     }
 }

@@ -309,9 +309,19 @@ final class XMLTracker
         }
 
         if (count($form_elements_flattened_collection) > 0) {
-            $tracker_xml->addChild('permissions');
+            $permissions_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><permissions />');
             foreach ($form_elements_flattened_collection as $form_element) {
-                $form_element->exportPermissions($tracker_xml->permissions);
+                $form_element->exportPermissions($permissions_xml);
+            }
+
+            if (isset($permissions_xml->permission)) {
+                $dom_tracker     = dom_import_simplexml($tracker_xml);
+                $dom_permissions = dom_import_simplexml($permissions_xml);
+                if (! $dom_tracker->ownerDocument) {
+                    throw new \LogicException('tracker node must have a ownerDocument property');
+                }
+                $dom_permissions = $dom_tracker->ownerDocument->importNode($dom_permissions, true);
+                $dom_tracker->appendChild($dom_permissions);
             }
         }
 

@@ -25,106 +25,117 @@ namespace unit\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectionBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\StoryPointFieldExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
-use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
-use Tuleap\Tracker\FormElement\FieldNameFormatter;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
+use Tuleap\Tracker\XML\IDGenerator;
+use Tuleap\Tracker\XML\XMLTracker;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
+use function PHPUnit\Framework\assertNotContains;
+use function PHPUnit\Framework\assertNull;
 
 final class StoryPointFieldExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var StoryPointFieldExporter
-     */
-    private $sp_exporter;
-    /**
-     * @var ContainersXMLCollection
-     */
-    private $xml_containers;
-    /**
-     * @var FieldMappingCollection
-     */
-    private $field_mapping;
-    /**
-     * @var \SimpleXMLElement
-     */
-    private $tracker_xml;
-    /**
-     * @var PlatformConfiguration
-     */
-    private $platform_configuration;
+    private StoryPointFieldExporter $sp_exporter;
+    private PlatformConfiguration $platform_configuration;
+    private XMLTracker $xml_tracker;
+    private IDGenerator $id_generator;
+    private FieldMappingCollection $field_mapping_collection;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $id_generator      = new FieldAndValueIDGenerator();
-        $this->tracker_xml = new \SimpleXMLElement('<tracker><formElements/></tracker>');
-
-        $this->xml_containers = new ContainersXMLCollection($id_generator);
-        $this->xml_containers->addContainerInCollection(
-            ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME,
-            (new XMLFieldset($id_generator, ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME))
-                ->export($this->tracker_xml->formElements)
-        );
-
-        $this->field_mapping = new FieldMappingCollection($id_generator);
+        $this->id_generator = new FieldAndValueIDGenerator();
 
         $this->platform_configuration = new PlatformConfiguration();
 
-        $this->sp_exporter = new StoryPointFieldExporter(new FieldXmlExporter(new \XML_SimpleXMLCDATAFactory(), new FieldNameFormatter()), new NullLogger());
+        $jira_client = new class extends JiraCloudClientStub {
+        };
+
+        $this->field_mapping_collection = new FieldMappingCollection();
+
+        $builder           = new AlwaysThereFieldsExporter();
+        $this->xml_tracker = $builder->exportFields(
+            $this->id_generator,
+            new XMLTracker($this->id_generator, 'whatever'),
+            new StatusValuesCollection(
+                $jira_client,
+                new NullLogger()
+            ),
+            $this->field_mapping_collection,
+        );
+
+
+        $this->sp_exporter = new StoryPointFieldExporter(new NullLogger());
     }
 
     public function testItExportsStoryPointOnStoryTracker(): void
     {
         $this->platform_configuration->setStoryPointsField('customfield_10013');
 
-        $this->sp_exporter->exportFields(
+        $xml_tracker = $this->sp_exporter->exportFields(
             $this->platform_configuration,
-            $this->xml_containers,
-            $this->field_mapping,
+            $this->xml_tracker,
+            $this->field_mapping_collection,
             new IssueType('10003', 'Story', false),
+            $this->id_generator,
         );
 
-        $story_points_xml = $this->tracker_xml->xpath('//formElement[name="right_column"]/formElements/formElement[name="story_points"]')[0];
+        $xml              = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+        $exported_tracker = $xml_tracker->export($xml);
+
+        $story_points_xml = $exported_tracker->xpath('//formElement[name="right_column"]/formElements/formElement[name="story_points"]')[0];
         assertEquals(\Tracker_FormElementFactory::FIELD_FLOAT_TYPE, $story_points_xml['type']);
 
-        $mapping = $this->field_mapping->getMappingFromJiraField('customfield_10013');
+        $mapping = $this->field_mapping_collection->getMappingFromJiraField('customfield_10013');
         assertEquals('story_points', $mapping->getFieldName());
-        assertEquals($story_points_xml['ID'], $mapping->getXMLId());
     }
 
     public function testItDoesNotExportStoryPointFieldOnSubTaskTracker(): void
     {
         $this->platform_configuration->setStoryPointsField('customfield_10014');
 
-        $this->sp_exporter->exportFields(
+        $xml_tracker = $this->sp_exporter->exportFields(
             $this->platform_configuration,
-            $this->xml_containers,
-            $this->field_mapping,
+            $this->xml_tracker,
+            $this->field_mapping_collection,
             new IssueType('10003', 'Sub-task', true),
+            $this->id_generator,
         );
 
-        $story_points_xml = $this->tracker_xml->xpath('//formElement[name="story_points"]');
+        $xml              = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+        $exported_tracker = $xml_tracker->export($xml);
+
+        $story_points_xml = $exported_tracker->xpath('//formElement[name="story_points"]');
         assertCount(0, $story_points_xml);
+
+        assertNull($this->field_mapping_collection->getMappingFromJiraField('customfield_10014'));
     }
 
     public function testItDoesNotExportStoryPointFieldWhenConfigurationHasNone(): void
     {
-        $this->sp_exporter->exportFields(
+        $xml_tracker = $this->sp_exporter->exportFields(
             $this->platform_configuration,
-            $this->xml_containers,
-            $this->field_mapping,
+            $this->xml_tracker,
+            $this->field_mapping_collection,
             new IssueType('10003', 'Story', false),
+            $this->id_generator,
         );
 
-        $story_points_xml = $this->tracker_xml->xpath('//formElement[name="story_points"]');
+
+        $xml              = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+        $exported_tracker = $xml_tracker->export($xml);
+
+        $story_points_xml = $exported_tracker->xpath('//formElement[name="story_points"]');
         assertCount(0, $story_points_xml);
+
+        assertNotContains('story_points', array_map(static fn (FieldMapping $mapping) => $mapping->getFieldName(), $this->field_mapping_collection->getAllMappings()));
     }
 }

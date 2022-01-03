@@ -43,7 +43,7 @@ class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testExportsTheSemantics(): void
     {
         $tracker_node = new SimpleXMLElement('<tracker/>');
-        $mapping      = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $mapping      = new FieldMappingCollection();
         $mapping->addMapping(
             new ScalarFieldMapping(
                 'summary',
@@ -137,7 +137,7 @@ class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotExportSemanticTitleIfSummaryFieldNotfoundInMapping(): void
     {
         $tracker_node = new SimpleXMLElement('<tracker/>');
-        $mapping      = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $mapping      = new FieldMappingCollection();
 
         $exporter = new SemanticsXMLExporter();
         $exporter->exportSemantics(

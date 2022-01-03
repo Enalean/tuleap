@@ -23,22 +23,24 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
-use Tuleap\Tracker\XML\IDGenerator;
+use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLListField;
+use Tuleap\Tracker\FormElement\Field\XML\XMLField;
 
 class FieldMappingCollection
 {
     /**
      * @var FieldMapping[]
      */
-    private $mapping = [];
-    /**
-     * @var IDGenerator
-     */
-    private $field_id_generator;
+    private array $mapping = [];
 
-    public function __construct(IDGenerator $field_id_generator)
+    public function addMappingBetweenTuleapAndJiraField(JiraFieldAPIRepresentation $jira_field, XMLField $tuleap_field): XMLField
     {
-        $this->field_id_generator = $field_id_generator;
+        if ($tuleap_field instanceof XMLListField) {
+            $this->addMapping(ListFieldMapping::buildFromJiraAndTuleapFields($jira_field, $tuleap_field));
+        } else {
+            $this->addMapping(ScalarFieldMapping::buildFromJiraAndTuleapFields($jira_field, $tuleap_field));
+        }
+        return $tuleap_field;
     }
 
     public function addMapping(FieldMapping $field_mapping): void
@@ -61,10 +63,5 @@ class FieldMappingCollection
     public function getAllMappings(): array
     {
         return $this->mapping;
-    }
-
-    public function getNextId(): int
-    {
-        return $this->field_id_generator->getNextId();
     }
 }

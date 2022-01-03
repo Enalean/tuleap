@@ -25,10 +25,10 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\XML;
 
 use Tuleap\Tracker\XML\IDGenerator;
 
-final class XMLSelectBoxField extends XMLListField
+final class XMLMultiSelectBoxField extends XMLListField
 {
     public function __construct(string|IDGenerator $id, string $name)
     {
-        parent::__construct($id, \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $name);
+        parent::__construct($id, \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $name);
     }
 }

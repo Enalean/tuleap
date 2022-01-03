@@ -785,4 +785,16 @@ class XMLTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         assertEquals('F2', $node->formElements->formElement[0]->formElements->formElement[0]['ID']);
         assertEquals('F3', $node->formElements->formElement[0]->formElements->formElement[0]->formElements->formElement[0]['ID']);
     }
+
+    public function testItDoesntProduceEmptyPermissionNodeWhenNoPermissionsSet(): void
+    {
+        $xml = (new XMLTracker('some_xml_id', 'bug'))
+            ->withFormElement(
+                (new XMLStringField('some_id', 'name'))
+                    ->withoutPermissions()
+            )
+            ->export(new \SimpleXMLElement('<tracker />'));
+
+        assertFalse(isset($xml->permissions));
+    }
 }

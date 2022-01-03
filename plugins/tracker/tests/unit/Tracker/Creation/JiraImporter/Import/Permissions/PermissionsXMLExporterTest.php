@@ -26,7 +26,6 @@ namespace Tracker\Creation\JiraImporter\Import\Permissions;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 
@@ -35,7 +34,7 @@ class PermissionsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportsDefaultPermissionsForFieldsInMapping(): void
     {
         $tracker_node       = new SimpleXMLElement('<tracker/>');
-        $mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $mapping_collection = new FieldMappingCollection();
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
                 'summary',
@@ -78,7 +77,7 @@ class PermissionsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportsOnlyReadPermissionsForArtifactIdField(): void
     {
         $tracker_node       = new SimpleXMLElement('<tracker/>');
-        $mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $mapping_collection = new FieldMappingCollection();
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
                 'artifact_id',
@@ -109,7 +108,7 @@ class PermissionsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportsOnlyReadPermissionsForOldJiraLinkField(): void
     {
         $tracker_node       = new SimpleXMLElement('<tracker/>');
-        $mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $mapping_collection = new FieldMappingCollection();
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
                 'jira_issue_url',
