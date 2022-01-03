@@ -39,7 +39,7 @@ main {
         width: 100%;
     }
 
-    //stylelint-disable-next-line selector-no-qualifying-type
+    // stylelint-disable-next-line selector-no-qualifying-type
     &.fluid-main {
         display: table;
     }
@@ -58,7 +58,8 @@ main {
 }
 
 main[role="main"]:not(.tlp-framed) > #feedback {
-    padding: calc(#{global-variables.$top-floating-buttons-space} + var(--tlp-medium-spacing)) var(--tlp-medium-spacing) 0;
+    padding: calc(#{global-variables.$top-floating-buttons-space} + var(--tlp-medium-spacing))
+        var(--tlp-medium-spacing) 0;
 
     &:empty {
         padding: 0;
@@ -66,7 +67,11 @@ main[role="main"]:not(.tlp-framed) > #feedback {
 }
 
 main[role="main"]:not(.tlp-framed) > .breadcrumb-container + #feedback:not(:empty) {
-    padding: calc(#{global-variables.$top-floating-buttons-space} - #{global-variables.$breadcrumb-height} + var(--tlp-medium-spacing)) var(--tlp-medium-spacing) 0;
+    padding: calc(
+            #{global-variables.$top-floating-buttons-space} - #{global-variables.$breadcrumb-height} +
+                var(--tlp-medium-spacing)
+        )
+        var(--tlp-medium-spacing) 0;
 }
 
 .full-width + #main-container > main[role="main"]:not(.tlp-framed) > #feedback:not(:empty) {

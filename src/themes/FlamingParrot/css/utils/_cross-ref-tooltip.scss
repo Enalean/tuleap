@@ -17,9 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:color";
+@use "sass:map";
 @use "themes/common/css/utils/colors";
 
-$dimmed-white-over-dark-background: transparentize(#ffffff, 0.2);
+$dimmed-white-over-dark-background: color.adjust(#ffffff, $alpha: - 0.2);
 
 .codendi-tooltip {
     position: absolute;
@@ -161,7 +163,7 @@ $dimmed-white-over-dark-background: transparentize(#ffffff, 0.2);
         width: 28px;
         height: 28px;
         border-radius: 50%;
-        background: map-get($colors, "primary");
+        background: map.get($colors, "primary");
         color: #ffffff;
     }
 }

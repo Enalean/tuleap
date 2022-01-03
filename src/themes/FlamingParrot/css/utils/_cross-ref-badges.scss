@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
+@use "sass:color";
 @use "themes/common/css/utils/colors";
 
 $cross-ref-badge-radius: 15px;
@@ -58,17 +60,25 @@ $cross-ref-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-sm
     .cross-ref-badge-#{$color-name} {
         @extend %cross-ref-badge;
 
-        border-color: map-get($colors, "border");
-        background: map-get($colors, "secondary");
-        color: map-get($colors, "text");
+        border-color: map.get($colors, "border");
+        background: map.get($colors, "secondary");
+        color: map.get($colors, "text");
 
         &.cross-ref-badge-on-dark-background {
-            border-color: mix(map-get($colors, "primary"), #ffffff, 85%);
-            background: transparentize(map-get($colors, "primary"), 0.85);
-            color: mix(map-get($colors, "border"), #ffffff, 90%);
+            border-color: color.mix(map.get($colors, "primary"), #ffffff, 85%);
+            background: color.adjust(map.get($colors, "primary"), $alpha: - 0.85);
+            color: color.mix(map.get($colors, "border"), #ffffff, 90%);
 
-            @if $color-name == "teddy-brown" or $color-name == "plum-crazy" or $color-name == "red-wine" or $color-name == "army-green" {
-                color: mix(map-get($colors, "border"), #ffffff, 70%);
+            @if $color-name ==
+                "teddy-brown" or
+                $color-name ==
+                "plum-crazy" or
+                $color-name ==
+                "red-wine" or
+                $color-name ==
+                "army-green"
+            {
+                color: color.mix(map.get($colors, "border"), #ffffff, 70%);
             }
         }
     }

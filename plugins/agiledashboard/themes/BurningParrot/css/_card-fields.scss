@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
 @use "../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
 card-fields {
@@ -47,7 +48,7 @@ card-fields {
     a {
         color: var(--tlp-dark-color);
         text-decoration: underline;
-        text-decoration-color: rgba(0, 0, 0, 0.2);
+        text-decoration-color: rgb(0 0 0 / 20%);
 
         &:hover {
             text-decoration-color: var(--tlp-dark-color);
@@ -68,7 +69,7 @@ card-fields {
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.card-field-#{$color-name} {
-            background-color: map-get($colors, "primary");
+            background-color: map.get($colors, "primary");
         }
     }
 }

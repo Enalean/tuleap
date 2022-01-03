@@ -47,13 +47,23 @@
 
 %background-action {
     background-color: var(--tlp-dark-color);
-    background-image: linear-gradient(0, var(--tlp-sidebar-action-background), var(--tlp-sidebar-action-background));
+    // stylelint-disable-next-line function-linear-gradient-no-nonstandard-direction
+    background-image: linear-gradient(
+        0,
+        var(--tlp-sidebar-action-background),
+        var(--tlp-sidebar-action-background)
+    );
     background-blend-mode: overlay;
 }
 
 %background-action-hover {
     background-color: var(--tlp-dark-color);
-    background-image: linear-gradient(0, var(--tlp-sidebar-action-background-hover), var(--tlp-sidebar-action-background-hover));
+    // stylelint-disable-next-line function-linear-gradient-no-nonstandard-direction
+    background-image: linear-gradient(
+        0,
+        var(--tlp-sidebar-action-background-hover),
+        var(--tlp-sidebar-action-background-hover)
+    );
     background-blend-mode: overlay;
 }
 
@@ -106,6 +116,7 @@
 
     &:hover {
         @extend %background-action-hover;
+
         text-decoration: none;
     }
 
@@ -117,6 +128,7 @@
 .project-administration-link {
     @extend %round-icon;
     @extend %background-action;
+
     flex: 0 0 auto;
     transition: color ease-in-out 100ms;
     color: var(--tlp-typo-default-text-color-on-dark-background);
@@ -130,6 +142,7 @@
     &:focus,
     &:hover {
         @extend %background-action-hover;
+
         color: var(--tlp-white-color);
         text-decoration: none;
     }
@@ -137,6 +150,7 @@
 
 .project-sidebar-banner-button {
     @extend %override-button-default;
+
     display: flex;
     align-items: center;
     margin: 0 var(--tlp-small-spacing);
@@ -152,6 +166,7 @@
 
 .project-sidebar-banner-button-icon {
     @extend %round-icon;
+
     flex: 0 0 auto;
     transition: opacity ease-in-out 100ms;
     background-color: var(--tlp-warning-color);
@@ -161,12 +176,13 @@
         top: -1px;
         color: var(--tlp-white-color);
         font-size: 0.6rem;
-        text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+        text-shadow: 0 0 1px rgb(0 0 0 / 50%);
     }
 }
 
 .project-sidebar-banner-button-label {
     @extend %uppercase-title;
+
     margin: 0 0 0 var(--tlp-small-spacing);
     color: var(--tlp-warning-color);
 }
@@ -180,6 +196,7 @@
 
     > .project-sidebar-project-flags-icon {
         @extend %round-icon;
+
         flex: 0 0 auto;
         background: var(--tlp-main-color-transparent-85);
 
@@ -203,6 +220,7 @@
 
 .project-sidebar-project-flags-label {
     @extend %uppercase-title;
+
     max-width: 185px;
 }
 
@@ -225,12 +243,14 @@
     &.active,
     &:focus {
         @extend %background-action;
+
         color: var(--tlp-white-color);
         text-decoration: none;
     }
 
     &:hover {
         @extend %background-action-hover;
+
         color: var(--tlp-white-color);
         text-decoration: none;
     }
@@ -272,6 +292,7 @@
     @extend %override-button-default;
     @extend %round-icon;
     @extend %background-action;
+
     display: flex;
     margin: 0 auto var(--tlp-medium-spacing);
     color: var(--tlp-neutral-normal-color);
@@ -325,6 +346,7 @@
 
 .project-sidebar-linked-projects-icon {
     @extend %round-icon;
+
     flex: 0 0 auto;
     background: var(--tlp-main-color-transparent-85);
     color: var(--tlp-main-color-lighter-40);
@@ -345,6 +367,7 @@
 .project-sidebar-linked-projects-label-popover,
 .project-sidebar-linked-projects-label {
     @extend %uppercase-title;
+
     margin: 0 0 0 var(--tlp-small-spacing);
     color: var(--tlp-neutral-normal-color);
 }
@@ -384,6 +407,7 @@
 
 .project-sidebar-tools-section-label {
     @extend %uppercase-title;
+
     margin: 0 0 var(--tlp-small-spacing) 0;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     color: var(--tlp-neutral-dark-color-transparent-40);
@@ -411,7 +435,7 @@
 
 .project-sidebar-linked-projects-popover {
     width: max-content;
-    margin-left: 1px !important; //override inset popers
+    margin-left: 1px !important; // override inset popers
 
     .fa-tlp-project-boxes,
     .project-sidebar-linked-projects-icon-parent {
@@ -425,7 +449,8 @@
     background: var(--tlp-dark-color);
 }
 
-#project-sidebar-linked-projects-popover > .tlp-popover-arrow.project-sidebar-linked-projects-popover-arrow {
+#project-sidebar-linked-projects-popover
+    > .tlp-popover-arrow.project-sidebar-linked-projects-popover-arrow {
     border-right-color: var(--tlp-dark-color-darker-05);
     border-bottom-color: transparent;
     background: var(--tlp-dark-color-darker-20);

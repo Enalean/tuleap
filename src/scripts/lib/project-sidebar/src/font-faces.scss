@@ -25,29 +25,32 @@
 );
 @use "font-face-names";
 
-$_fa-font-path: "@fortawesome/fontawesome-free/webfonts/";
-$_fa-font-display: block;
+$-fa-font-path: "@fortawesome/fontawesome-free/webfonts/";
+$-fa-font-display: block;
+
 // Solid
 @font-face {
     font-family: font-face-names.$font-awesome-font-family;
     font-style: normal;
     font-weight: 900;
-    font-display: $_fa-font-display;
-    src: url("#{$_fa-font-path}/fa-solid-900.woff2") format("woff2");
+    font-display: $-fa-font-display;
+    src: url("#{$-fa-font-path}/fa-solid-900.woff2") format("woff2");
 }
+
 // Regular
 @font-face {
     font-family: font-face-names.$font-awesome-font-family;
     font-style: normal;
     font-weight: 400;
-    font-display: $_fa-font-display;
-    src: url("#{$_fa-font-path}/fa-regular-400.woff2") format("woff2");
+    font-display: $-fa-font-display;
+    src: url("#{$-fa-font-path}/fa-regular-400.woff2") format("woff2");
 }
+
 // Brand
 @font-face {
     font-family: font-face-names.$font-awesome-font-family;
     font-style: normal;
     font-weight: 400;
-    font-display: $_fa-font-display;
-    src: url("#{$_fa-font-path}/fa-brands-400.woff2") format("woff2");
+    font-display: $-fa-font-display;
+    src: url("#{$-fa-font-path}/fa-brands-400.woff2") format("woff2");
 }

@@ -204,7 +204,8 @@ body.tracker-administration {
 .tracker-cross-reference-card-deletable.tlp-card-selectable {
     $room-for-trash-icon: calc(var(--tlp-medium-spacing) + 12px);
 
-    padding: var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) + #{$room-for-trash-icon}) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+    padding: var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) + #{$room-for-trash-icon})
+        var(--tlp-medium-spacing) var(--tlp-medium-spacing);
 }
 
 .tracker-cross-reference-creation-metadata {
@@ -223,7 +224,9 @@ body.tracker-administration {
     margin: 0 6px 0 0;
     overflow: hidden;
     border-radius: 50%;
-    background: var(--tlp-neutral-normal-color) url("../../../../../src/themes/tlp/src/images/tlp-default-avatar.svg") no-repeat center center;
+    background: var(--tlp-neutral-normal-color)
+        url("../../../../../src/themes/tlp/src/images/tlp-default-avatar.svg") no-repeat center
+        center;
     background-size: contain;
     vertical-align: top;
 

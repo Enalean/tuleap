@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
+@use "sass:color";
 @use "../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 @use "roadmap-variables";
 
@@ -59,7 +61,8 @@ $caret-width: 20px;
     width: roadmap-variables.$task-header-width;
     min-width: roadmap-variables.$task-header-width;
     height: roadmap-variables.$task-height;
-    padding: calc(var(--tlp-small-spacing) - 2px) var(--tlp-medium-spacing) calc(var(--tlp-small-spacing) - 2px) calc(var(--tlp-small-spacing) - 4px);
+    padding: calc(var(--tlp-small-spacing) - 2px) var(--tlp-medium-spacing)
+        calc(var(--tlp-small-spacing) - 2px) calc(var(--tlp-small-spacing) - 4px);
     border-bottom: 1px solid var(--tlp-neutral-normal-color);
     color: var(--tlp-typo-default-text-color);
     white-space: nowrap;
@@ -85,7 +88,9 @@ $caret-width: 20px;
     text-align: center;
 
     + .roadmap-gantt-task-header-link {
-        max-width: calc(#{roadmap-variables.$task-header-width - $caret-width} - var(--tlp-medium-spacing));
+        max-width: calc(
+            #{roadmap-variables.$task-header-width - $caret-width} - var(--tlp-medium-spacing)
+        );
     }
 }
 
@@ -106,15 +111,23 @@ $caret-width: 20px;
 }
 
 .roadmap-gantt-subtask-header-for-invalid-task > .roadmap-gantt-task-header-link {
-    max-width: calc(#{roadmap-variables.$task-header-width} - var(--tlp-medium-spacing) - var(--tlp-jumbo-spacing));
+    max-width: calc(
+        #{roadmap-variables.$task-header-width} - var(--tlp-medium-spacing) - var(--tlp-jumbo-spacing)
+    );
 }
 
 .roadmap-gantt-task-header-for-invalid-task > .roadmap-gantt-task-header-link {
-    max-width: calc(#{roadmap-variables.$task-header-width} - var(--tlp-medium-spacing) - var(--tlp-x-large-spacing));
+    max-width: calc(
+        #{roadmap-variables.$task-header-width} - var(--tlp-medium-spacing) - var(--tlp-x-large-spacing)
+    );
 }
 
-.roadmap-gantt-task-header-for-invalid-task > .roadmap-gantt-task-header-caret + .roadmap-gantt-task-header-link {
-    max-width: calc(#{roadmap-variables.$task-header-width - $caret-width} - var(--tlp-medium-spacing) - var(--tlp-large-spacing));
+.roadmap-gantt-task-header-for-invalid-task
+    > .roadmap-gantt-task-header-caret
+    + .roadmap-gantt-task-header-link {
+    max-width: calc(
+        #{roadmap-variables.$task-header-width - $caret-width} - var(--tlp-medium-spacing) - var(--tlp-large-spacing)
+    );
 }
 
 .roadmap-gantt-task-header-xref {
@@ -168,7 +181,10 @@ $caret-width: 20px;
     $offset-to-align-border-with-parent-caret: 4.5px;
 
     position: relative;
-    padding: 0 var(--tlp-medium-spacing) 0 calc(var(--tlp-small-spacing) + #{$offset-to-align-border-with-parent-caret} + #{$border-width});
+    padding: 0 var(--tlp-medium-spacing) 0
+        calc(
+            var(--tlp-small-spacing) + #{$offset-to-align-border-with-parent-caret} + #{$border-width}
+        );
     background: var(--tlp-fade-background-color);
 
     &.roadmap-gantt-subtask-header-last-one {
@@ -196,7 +212,8 @@ $caret-width: 20px;
     > .roadmap-gantt-task-header-link {
         position: relative;
         align-items: flex-start;
-        padding: calc(var(--tlp-small-spacing) - 2px) 0 calc(var(--tlp-small-spacing) - 2px) calc(var(--tlp-small-spacing) + #{$border-width});
+        padding: calc(var(--tlp-small-spacing) - 2px) 0 calc(var(--tlp-small-spacing) - 2px)
+            calc(var(--tlp-small-spacing) + #{$border-width});
 
         &::before {
             content: "";
@@ -257,21 +274,21 @@ $caret-width: 20px;
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .roadmap-gantt-task-header-#{$color-name} {
         &:not(.roadmap-gantt-subtask-header) {
-            border-left: $border-width solid map-get($colors, "border");
+            border-left: $border-width solid map.get($colors, "border");
         }
 
         &.roadmap-gantt-subtask-header::before {
-            background: transparentize(map-get($colors, "border"), 0.85);
+            background: color.adjust(map.get($colors, "border"), $alpha: - 0.85);
         }
     }
 
     .roadmap-gantt-task-header-link-#{$color-name} {
         > .roadmap-gantt-task-header-xref {
-            color: map-get($colors, "text");
+            color: map.get($colors, "text");
         }
     }
 
     .roadmap-gantt-subtask-header > .roadmap-gantt-task-header-link-#{$color-name}::before {
-        background: map-get($colors, "border");
+        background: map.get($colors, "border");
     }
 }

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@keyframes skeletonBlink {
+@keyframes skeleton-blink {
     0% {
         opacity: 1;
     }
@@ -27,7 +27,7 @@
     }
 }
 
-@keyframes skeletonProgress {
+@keyframes skeleton-progress {
     0% {
         background-position: 0, 0;
     }
@@ -49,9 +49,14 @@
         position: relative;
         width: 100%;
         height: 6px;
-        animation: skeletonProgress 1.5s linear infinite;
+        animation: skeleton-progress 1.5s linear infinite;
         border-radius: 2px;
-        background-image: linear-gradient(to right, var(--tlp-skeleton-color), var(--tlp-skeleton-highlight-color), var(--tlp-skeleton-color));
+        background-image: linear-gradient(
+            to right,
+            var(--tlp-skeleton-color),
+            var(--tlp-skeleton-highlight-color),
+            var(--tlp-skeleton-color)
+        );
         background-repeat: repeat-x;
         background-position: -50vw bottom;
         background-size: 100vw 100%;
@@ -93,7 +98,7 @@ p > .tlp-skeleton-text {
 }
 
 .tlp-skeleton-icon {
-    animation: skeletonBlink 750ms linear infinite alternate;
+    animation: skeleton-blink 750ms linear infinite alternate;
     color: var(--tlp-skeleton-color);
 
     + .tlp-skeleton-text {
@@ -102,7 +107,7 @@ p > .tlp-skeleton-text {
 }
 
 .tlp-skeleton-field {
-    animation: skeletonBlink 750ms linear infinite alternate;
+    animation: skeleton-blink 750ms linear infinite alternate;
     border: 1px solid var(--tlp-skeleton-color);
     background: transparent;
     box-shadow: inset 0 0 0 1px var(--tlp-skeleton-color);
@@ -110,7 +115,7 @@ p > .tlp-skeleton-text {
 
 .tlp-skeleton-card {
     min-height: 58px;
-    animation: skeletonBlink 750ms linear infinite alternate;
+    animation: skeleton-blink 750ms linear infinite alternate;
     border: 1px solid var(--tlp-skeleton-color);
     background: transparent;
     box-shadow: inset 0 0 0 1px var(--tlp-skeleton-color);

@@ -20,7 +20,7 @@
 $tlp-font-basepath: "../" !default;
 
 @font-face {
-    font-family: "TLPFontAwesome";
+    font-family: TLPFontAwesome;
     font-style: normal;
     font-weight: normal;
     src: url("#{$tlp-font-basepath}/fonts/tlp-font/TLP.woff2") format("woff2");

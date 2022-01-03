@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
 @use "../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
 /* stylelint-disable selector-class-pattern, max-nesting-depth, selector-max-compound-selectors */
@@ -31,8 +32,8 @@
 
                     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
                         &.select-item-label-color-#{$color-name} {
-                            border-color: map-get($colors, "primary");
-                            background: map-get($colors, "primary");
+                            border-color: map.get($colors, "primary");
+                            background: map.get($colors, "primary");
                             color: var(--tlp-white-color);
 
                             > .select2-selection__choice__remove {
@@ -43,11 +44,11 @@
 
                             &.select-item-label-outline {
                                 background: transparent;
-                                color: map-get($colors, "primary");
+                                color: map.get($colors, "primary");
 
                                 > .select2-selection__choice__remove {
                                     &::before {
-                                        color: map-get($colors, "primary");
+                                        color: map.get($colors, "primary");
                                     }
                                 }
                             }
@@ -69,7 +70,7 @@
     > .select2-results__options > .select2-results__option {
         @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
             &.select-item-label-color-#{$color-name} {
-                color: map-get($colors, "primary");
+                color: map.get($colors, "primary");
             }
         }
 
@@ -78,7 +79,7 @@
 
             @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
                 &.select-item-label-color-#{$color-name} {
-                    background: map-get($colors, "primary");
+                    background: map.get($colors, "primary");
                     color: var(--tlp-white-color);
                 }
             }

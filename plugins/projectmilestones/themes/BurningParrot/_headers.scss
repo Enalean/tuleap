@@ -29,7 +29,7 @@
 
     > .project-release-title,
     > .project-release-date {
-        @keyframes blinkText {
+        @keyframes blink-text {
             from {
                 color: var(--tlp-dimmed-color-lighter-70);
             }
@@ -38,11 +38,12 @@
                 color: var(--tlp-dimmed-color-lighter-95);
             }
         }
-        animation: blinkText 750ms linear infinite alternate;
+
+        animation: blink-text 750ms linear infinite alternate;
     }
 
     > .project-release-whats-hot-icon {
-        @keyframes blinkIcon {
+        @keyframes blink-icon {
             from {
                 background: var(--tlp-dimmed-color-lighter-70);
             }
@@ -51,7 +52,8 @@
                 background: var(--tlp-dimmed-color-lighter-95);
             }
         }
-        animation: blinkIcon 750ms linear infinite alternate;
+
+        animation: blink-icon 750ms linear infinite alternate;
     }
 }
 
@@ -59,11 +61,15 @@
     content: "\f141"; // fa-ellipsis-h
 }
 
-.project-release-toggle-closed > .project-release-header.disabled:hover > .project-release-whats-hot-icon::before {
+.project-release-toggle-closed
+    > .project-release-header.disabled:hover
+    > .project-release-whats-hot-icon::before {
     content: "\f141"; // fa-ellipsis-h
 }
 
-.project-release-toggle-closed > .project-release-header:hover > .project-release-whats-hot-icon::before {
+.project-release-toggle-closed
+    > .project-release-header:hover
+    > .project-release-whats-hot-icon::before {
     content: "\f0da"; // fa-caret-right
 }
 
@@ -77,7 +83,11 @@
     margin: 0 calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing) 0;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing) 0;
     overflow: hidden;
-    background: linear-gradient(to right, transparent, var(--tlp-background-color-transparent-50) 50%);
+    background: linear-gradient(
+        to right,
+        transparent,
+        var(--tlp-background-color-transparent-50) 50%
+    );
     cursor: pointer;
 }
 

@@ -76,12 +76,16 @@
         left: 9px;
         width: 2px;
         height: 70%;
-        background-image: linear-gradient(to bottom, var(--tlp-neutral-normal-color), var(--tlp-main-color));
+        background-image: linear-gradient(
+            to bottom,
+            var(--tlp-neutral-normal-color),
+            var(--tlp-main-color)
+        );
     }
 
     > .document-metadata-recursion-option-arrow {
         position: absolute;
-        top: calc(70% - 11px / 2); //11px is the height of the svg
+        top: calc(70% - 11px / 2); // 11px is the height of the svg
         left: 9px;
 
         > path {

@@ -27,14 +27,18 @@
 }
 
 .project-banner-clamped {
-    width: calc(100vw - #{global-variables.$sidebar-expanded-width} + var(--tlp-medium-spacing) * 4);
+    width: calc(
+        100vw - #{global-variables.$sidebar-expanded-width} + var(--tlp-medium-spacing) * 4
+    );
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .sidebar-collapsed .project-banner-clamped {
-    width: calc(100vw - #{global-variables.$sidebar-collapsed-width} + var(--tlp-medium-spacing) * 4);
+    width: calc(
+        100vw - #{global-variables.$sidebar-collapsed-width} + var(--tlp-medium-spacing) * 4
+    );
 }
 
 .project-banner-can-be-unclamped {

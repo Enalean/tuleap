@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
+@use "sass:color";
 @use "../../../../tlp/src/scss/variables/colors/common-colors";
 
 %color-area {
@@ -26,12 +28,12 @@
 
     @each $color-name, $colors in common-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
-            border-color: map-get($colors, "primary");
-            background: map-get($colors, "primary");
+            border-color: map.get($colors, "primary");
+            background: map.get($colors, "primary");
 
             &:hover:not(:disabled):not(.disabled):not(:active) {
-                border-color: darken(map-get($colors, "primary"), 5%);
-                background: darken(map-get($colors, "primary"), 5%);
+                border-color: color.adjust(map.get($colors, "primary"), $lightness: - 5%);
+                background: color.adjust(map.get($colors, "primary"), $lightness: - 5%);
             }
         }
     }
@@ -47,7 +49,7 @@
 
     @each $color-name, $colors in common-colors.$tlp-swatch-color-map {
         &.project-labels-table-name-icon-#{$color-name} {
-            color: map-get($colors, "primary");
+            color: map.get($colors, "primary");
         }
     }
 }

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:color";
+
 #disk-usage-pie-legend {
     padding: 20px;
 
@@ -82,7 +84,7 @@
     }
 
     > text {
-        fill: darken(#58b359, 10%);
+        fill: color.adjust(#58b359, $lightness: - 10%);
     }
 }
 
@@ -92,6 +94,6 @@
     }
 
     > text {
-        fill: darken(#cccccc, 10%);
+        fill: color.adjust(#cccccc, $lightness: - 10%);
     }
 }

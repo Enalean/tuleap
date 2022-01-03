@@ -38,7 +38,7 @@
     padding: calc(var(--tlp-small-spacing) / 2) 0;
 }
 
-@keyframes shakeWidget {
+@keyframes shake-widget {
     0% {
         transform: rotate(-0.2deg);
     }
@@ -67,7 +67,7 @@
 
     &.shake-widgets {
         .dashboard-widget {
-            animation: 100ms infinite alternate shakeWidget;
+            animation: 100ms infinite alternate shake-widget;
             border-right: 0;
             border-bottom: 0;
             border-left: 0;
@@ -157,7 +157,7 @@ body.gu-unselectable {
     $placeholder-height: 3px;
     $placeholder-radius: 10px;
 
-    @keyframes columnWave {
+    @keyframes column-wave {
         0% {
             height: $placeholder-height;
             opacity: 0.5;
@@ -177,7 +177,7 @@ body.gu-unselectable {
         }
     }
 
-    @keyframes rowWave {
+    @keyframes row-wave {
         0% {
             width: $placeholder-width;
             opacity: 0.5;
@@ -210,11 +210,11 @@ body.gu-unselectable {
         @if $direction == "column" {
             width: $placeholder-height;
             height: $placeholder-width;
-            animation: 1.5s ease-in-out infinite columnWave;
+            animation: 1.5s ease-in-out infinite column-wave;
         } @else {
             width: $placeholder-width;
             height: $placeholder-height;
-            animation: 1.5s ease-in-out infinite rowWave;
+            animation: 1.5s ease-in-out infinite row-wave;
         }
     }
 
@@ -295,15 +295,20 @@ body.gu-unselectable {
 
 $nb-empty-columns-separators-in-three-columns: 4;
 $nb-empty-columns-separators-in-four-columns: 5;
-
-$empty-space-taken-in-three-columns: calc(#{$nb-empty-columns-separators-in-three-columns} * var(--tlp-small-spacing));
-$empty-space-taken-in-four-columns: calc(#{$nb-empty-columns-separators-in-four-columns} * var(--tlp-small-spacing));
-
+$empty-space-taken-in-three-columns: calc(
+    #{$nb-empty-columns-separators-in-three-columns} * var(--tlp-small-spacing)
+);
+$empty-space-taken-in-four-columns: calc(
+    #{$nb-empty-columns-separators-in-four-columns} * var(--tlp-small-spacing)
+);
 $grid-width-in-three-columns: calc((100% - #{$empty-space-taken-in-three-columns}) / 3);
-$two-columns-span-in-three-columns: calc((#{$grid-width-in-three-columns} * 2) + var(--tlp-small-spacing));
-
+$two-columns-span-in-three-columns: calc(
+    (#{$grid-width-in-three-columns} * 2) + var(--tlp-small-spacing)
+);
 $grid-width-in-four-columns: calc((100% - #{$empty-space-taken-in-four-columns}) / 4);
-$two-columns-span-in-four-columns: calc((#{$grid-width-in-four-columns} * 2) + var(--tlp-small-spacing));
+$two-columns-span-in-four-columns: calc(
+    (#{$grid-width-in-four-columns} * 2) + var(--tlp-small-spacing)
+);
 
 .two-columns-small-big {
     > div:first-of-type {

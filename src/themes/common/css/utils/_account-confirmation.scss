@@ -107,11 +107,11 @@
 .envelope-animation {
     transform: translateY(-40px);
     transform-origin: 50% 50%;
-    animation: envelope_animation ease-out 2.2s;
+    animation: envelope-animation ease-out 2.2s;
     animation-iteration-count: 1;
 }
 
-@keyframes envelope_animation {
+@keyframes envelope-animation {
     0% {
         transform: translate(0, 0);
     }

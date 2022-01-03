@@ -22,7 +22,6 @@
 $border-width-px: calc(12px - 1px * var(--tlp-is-condensed));
 $heigh-bar-px: calc(32px - 6px * var(--tlp-is-condensed));
 $top-compress-icon-px: calc(6px - 2px * var(--tlp-is-condensed));
-
 $width-bar-left-sprints: 16px;
 
 .project-release-infos-badges .project-release-info-badge-open-sprint {
@@ -69,22 +68,28 @@ $width-bar-left-sprints: 16px;
     font-size: 0.8rem;
 }
 
-.can-close-sprint .project-release-open-sprint-badges:hover .project-release-open-sprint-badge-icon-toggle {
+.can-close-sprint
+    .project-release-open-sprint-badges:hover
+    .project-release-open-sprint-badge-icon-toggle {
     cursor: pointer;
 
     &::before {
-        content: "\f065"; //fa-expand
+        content: "\f065"; // fa-expand
         position: relative;
         top: -1px;
         font-size: 0.6rem;
     }
 }
 
-.on-open-sprints-details .project-release-open-sprint-badges .project-release-open-sprint-badge-icon-toggle::before {
+.on-open-sprints-details
+    .project-release-open-sprint-badges
+    .project-release-open-sprint-badge-icon-toggle::before {
     content: "";
 }
 
-.on-open-sprints-details .project-release-open-sprint-badges:hover .project-release-open-sprint-badge-icon-toggle {
+.on-open-sprints-details
+    .project-release-open-sprint-badges:hover
+    .project-release-open-sprint-badge-icon-toggle {
     cursor: default;
 
     &::before {
@@ -144,9 +149,14 @@ $width-bar-left-sprints: 16px;
 .milestone-badges-sprints-separator {
     width: calc(100% + var(--tlp-medium-spacing) + (var(--tlp-medium-spacing) + 6px));
     height: 1px;
-    margin: var(--tlp-small-spacing) calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing) calc(-1 * var(--tlp-medium-spacing) - 6px);
+    margin: var(--tlp-small-spacing) calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing)
+        calc(-1 * var(--tlp-medium-spacing) - 6px);
     border: 0;
-    background: linear-gradient(to right, release-chart.$timeline-color, var(--tlp-neutral-normal-color));
+    background: linear-gradient(
+        to right,
+        release-chart.$timeline-color,
+        var(--tlp-neutral-normal-color)
+    );
 }
 
 .project-release-closed-sprint-badge {
@@ -221,7 +231,7 @@ $width-bar-left-sprints: 16px;
 .can-close-sprint .open-badges-sprints:hover .icon-badge-sprint-to-close,
 .can-close-sprint .icon-badge-sprint-to-close:hover {
     &::before {
-        content: "\f066"; //fa-compress
+        content: "\f066"; // fa-compress
         font-size: 0.6rem;
     }
 }

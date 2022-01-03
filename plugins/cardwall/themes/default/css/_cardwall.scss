@@ -72,7 +72,7 @@
     border: 1px solid #cacaca;
     border-radius: var(--tlp-medium-radius);
     background: #ffffbb;
-    box-shadow: 0 1px 0 0 rgba(217, 217, 217, 0.5);
+    box-shadow: 0 1px 0 0 rgb(217 217 217 / 50%);
     cursor: move;
 }
 
@@ -96,7 +96,7 @@
 
 /* stylelint-disable-next-line selector-no-qualifying-type */
 .cardwall_board ul li.error {
-    box-shadow: 5px 5px 12px rgba(254, 0, 0, 0.7);
+    box-shadow: 5px 5px 12px rgb(254 0 0 / 70%);
 }
 
 /* stylelint-disable-next-line selector-no-qualifying-type */
@@ -107,7 +107,7 @@
 }
 
 .cardwall_board_column_hover {
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0 0 20px 0 rgb(0 0 0 / 10%) inset;
 }
 
 #plugin_cardwall_qrcode_toggler {
@@ -137,23 +137,16 @@
 
 .search-in-cardwall {
     display: inline-block;
-
     width: 330px;
     height: 20px;
-
     margin: 0;
     padding: 4px 6px;
-
     transition: border linear 0.2s, box-shadow linear 0.2s;
     border: 1px solid #cccccc;
-
     border-radius: var(--tlp-medium-radius);
     background-color: #ffffff;
-
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-
+    box-shadow: inset 0 1px 1px rgb(0 0 0 / 7.5%);
     color: #555555;
-
     font-size: 14px;
     font-weight: normal;
     line-height: 20px;
@@ -166,12 +159,11 @@ input[type="text"].search-in-cardwall {
 }
 
 .search-in-cardwall:focus {
-    border-color: rgba(82, 168, 236, 0.8);
+    border-color: rgb(82 168 236 / 80%);
     outline: 0;
     /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
     outline: thin dotted \9;
-
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    box-shadow: inset 0 1px 1px rgb(0 0 0 / 7.5%), 0 0 8px rgb(82 168 236 / 60%);
 }
 
 .cardwall-column-header {
@@ -220,7 +212,7 @@ input[type="text"].search-in-cardwall {
 }
 
 .cardwall_board_postit_flying {
-    box-shadow: -1px 13px 11px 0 rgba(203, 203, 203, 0.7);
+    box-shadow: -1px 13px 11px 0 rgb(203 203 203 / 70%);
 }
 
 .cardwall-cell-stacked > .cardwall-cell-container > ul > .cardwall_board_postit:nth-child(1) {
@@ -232,11 +224,17 @@ input[type="text"].search-in-cardwall {
 }
 
 .cardwall-cell > .cardwall-cell-container > .cardwall-cell-controls > .fa-minus-square-o,
-.cardwall-cell.cardwall-cell-stacked > .cardwall-cell-container > .cardwall-cell-controls > .fa-plus-square-o {
+.cardwall-cell.cardwall-cell-stacked
+    > .cardwall-cell-container
+    > .cardwall-cell-controls
+    > .fa-plus-square-o {
     display: inline;
 }
 
-.cardwall-cell.cardwall-cell-stacked > .cardwall-cell-container > .cardwall-cell-controls > .fa-minus-square-o,
+.cardwall-cell.cardwall-cell-stacked
+    > .cardwall-cell-container
+    > .cardwall-cell-controls
+    > .fa-minus-square-o,
 .cardwall-cell > .cardwall-cell-container > .cardwall-cell-controls > .fa-plus-square-o {
     display: none;
 }
@@ -288,10 +286,17 @@ input[type="text"].search-in-cardwall {
 body.fullscreen {
     $cardwall-full-screen-top-color: #e6e6e6;
     $cardwall-full-screen-bottom-color: #ffffff;
+
     min-width: 100%;
     min-height: 100%;
     padding: 0;
-    background: linear-gradient(to bottom, $cardwall-full-screen-top-color 0%, $cardwall-full-screen-bottom-color 20%, $cardwall-full-screen-bottom-color 100%) repeat-x;
+    background: linear-gradient(
+            to bottom,
+            $cardwall-full-screen-top-color 0%,
+            $cardwall-full-screen-bottom-color 20%,
+            $cardwall-full-screen-bottom-color 100%
+        )
+        repeat-x;
 
     /* stylelint-disable-next-line selector-no-qualifying-type */
     #header,
@@ -435,6 +440,7 @@ body.fullscreen {
             margin: 0 10px 0 0;
             font-size: 3em;
             font-weight: bold;
+
             @media screen and (max-width: 1230px) {
                 font-size: 2.5em;
             }

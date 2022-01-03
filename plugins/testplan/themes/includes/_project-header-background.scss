@@ -23,7 +23,7 @@
 .project-with-background {
     .testplan-root-title,
     .testplan-root-title small {
-        @include background.project-background-title-header-typography();
+        @include background.project-background-title-header-typography;
 
         .tlp-dropdown-menu-item {
             text-shadow: initial;
@@ -32,5 +32,9 @@
 }
 
 body {
-    @include background.apply-background(".testplan-root-title", $sidebar-expanded-width, $sidebar-collapsed-width);
+    @include background.apply-background(
+        ".testplan-root-title",
+        $sidebar-expanded-width,
+        $sidebar-collapsed-width
+    );
 }

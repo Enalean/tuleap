@@ -110,7 +110,12 @@ $timeline-color: var(--tlp-main-color-lighter-90);
 
     > text {
         fill: var(--tlp-info-color);
-        text-shadow: var(--tlp-white-color) 1px 1px, var(--tlp-white-color) -1px 1px, var(--tlp-white-color) -1px -1px, var(--tlp-white-color) 1px -1px, var(--tlp-white-color) 2px 2px, var(--tlp-white-color) -2px 2px, var(--tlp-white-color) -2px -2px, var(--tlp-white-color) 2px -2px, var(--tlp-white-color) 3px 3px, var(--tlp-white-color) -3px 3px, var(--tlp-white-color) -3px -3px, var(--tlp-white-color) 3px -3px;
+        text-shadow: var(--tlp-white-color) 1px 1px, var(--tlp-white-color) -1px 1px,
+            var(--tlp-white-color) -1px -1px, var(--tlp-white-color) 1px -1px,
+            var(--tlp-white-color) 2px 2px, var(--tlp-white-color) -2px 2px,
+            var(--tlp-white-color) -2px -2px, var(--tlp-white-color) 2px -2px,
+            var(--tlp-white-color) 3px 3px, var(--tlp-white-color) -3px 3px,
+            var(--tlp-white-color) -3px -3px, var(--tlp-white-color) 3px -3px;
     }
 }
 
@@ -121,7 +126,12 @@ $timeline-color: var(--tlp-main-color-lighter-90);
 
     > text {
         fill: var(--tlp-dimmed-color);
-        text-shadow: var(--tlp-white-color) 1px 1px, var(--tlp-white-color) -1px 1px, var(--tlp-white-color) -1px -1px, var(--tlp-white-color) 1px -1px, var(--tlp-white-color) 2px 2px, var(--tlp-white-color) -2px 2px, var(--tlp-white-color) -2px -2px, var(--tlp-white-color) 2px -2px, var(--tlp-white-color) 3px 3px, var(--tlp-white-color) -3px 3px, var(--tlp-white-color) -3px -3px, var(--tlp-white-color) 3px -3px;
+        text-shadow: var(--tlp-white-color) 1px 1px, var(--tlp-white-color) -1px 1px,
+            var(--tlp-white-color) -1px -1px, var(--tlp-white-color) 1px -1px,
+            var(--tlp-white-color) 2px 2px, var(--tlp-white-color) -2px 2px,
+            var(--tlp-white-color) -2px -2px, var(--tlp-white-color) 2px -2px,
+            var(--tlp-white-color) 3px 3px, var(--tlp-white-color) -3px 3px,
+            var(--tlp-white-color) -3px -3px, var(--tlp-white-color) 3px -3px;
     }
 }
 
@@ -132,7 +142,12 @@ $timeline-color: var(--tlp-main-color-lighter-90);
 
     > text {
         fill: var(--tlp-success-color);
-        text-shadow: var(--tlp-white-color) 1px 1px, var(--tlp-white-color) -1px 1px, var(--tlp-white-color) -1px -1px, var(--tlp-white-color) 1px -1px, var(--tlp-white-color) 2px 2px, var(--tlp-white-color) -2px 2px, var(--tlp-white-color) -2px -2px, var(--tlp-white-color) 2px -2px, var(--tlp-white-color) 3px 3px, var(--tlp-white-color) -3px 3px, var(--tlp-white-color) -3px -3px, var(--tlp-white-color) 3px -3px;
+        text-shadow: var(--tlp-white-color) 1px 1px, var(--tlp-white-color) -1px 1px,
+            var(--tlp-white-color) -1px -1px, var(--tlp-white-color) 1px -1px,
+            var(--tlp-white-color) 2px 2px, var(--tlp-white-color) -2px 2px,
+            var(--tlp-white-color) -2px -2px, var(--tlp-white-color) 2px -2px,
+            var(--tlp-white-color) 3px 3px, var(--tlp-white-color) -3px 3px,
+            var(--tlp-white-color) -3px -3px, var(--tlp-white-color) 3px -3px;
     }
 }
 
@@ -143,7 +158,12 @@ $timeline-color: var(--tlp-main-color-lighter-90);
 
     > text {
         fill: var(--tlp-danger-color);
-        text-shadow: var(--tlp-white-color) 1px 1px, var(--tlp-white-color) -1px 1px, var(--tlp-white-color) -1px -1px, var(--tlp-white-color) 1px -1px, var(--tlp-white-color) 2px 2px, var(--tlp-white-color) -2px 2px, var(--tlp-white-color) -2px -2px, var(--tlp-white-color) 2px -2px, var(--tlp-white-color) 3px 3px, var(--tlp-white-color) -3px 3px, var(--tlp-white-color) -3px -3px, var(--tlp-white-color) 3px -3px;
+        text-shadow: var(--tlp-white-color) 1px 1px, var(--tlp-white-color) -1px 1px,
+            var(--tlp-white-color) -1px -1px, var(--tlp-white-color) 1px -1px,
+            var(--tlp-white-color) 2px 2px, var(--tlp-white-color) -2px 2px,
+            var(--tlp-white-color) -2px -2px, var(--tlp-white-color) 2px -2px,
+            var(--tlp-white-color) 3px 3px, var(--tlp-white-color) -3px 3px,
+            var(--tlp-white-color) -3px -3px, var(--tlp-white-color) 3px -3px;
     }
 }
 
@@ -237,7 +257,8 @@ $timeline-color: var(--tlp-main-color-lighter-90);
     }
 }
 
-.project-milestones-display-burndown-chart.project-milestones-display-burnup-chart.project-milestones-display-ttm-chart .release-charts-row {
+.project-milestones-display-burndown-chart.project-milestones-display-burnup-chart.project-milestones-display-ttm-chart
+    .release-charts-row {
     flex-direction: column;
 
     @media screen and (max-width: 1800px) {
@@ -298,7 +319,8 @@ $timeline-color: var(--tlp-main-color-lighter-90);
         grid-row: 2;
     }
 
-    .project-milestones-display-burndown-chart.project-milestones-display-burnup-chart .container-chart-burndown-burnup {
+    .project-milestones-display-burndown-chart.project-milestones-display-burnup-chart
+        .container-chart-burndown-burnup {
         grid-row: 2;
 
         .release-charts-row {
@@ -311,7 +333,8 @@ $timeline-color: var(--tlp-main-color-lighter-90);
         grid-row: 1;
     }
 
-    .project-milestones-display-description.project-milestones-display-only-ttm .container-chart-ttm {
+    .project-milestones-display-description.project-milestones-display-only-ttm
+        .container-chart-ttm {
         grid-column: 1 / span 2;
         grid-row: 2;
     }

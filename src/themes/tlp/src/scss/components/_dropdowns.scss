@@ -35,7 +35,8 @@ $tlp-dropdown-transition: 75ms ease-out;
     margin: $tlp-dropdown-arrow-size 0 0;
     padding: var(--tlp-small-spacing) 0;
     transform: translateY(-10px);
-    transition: opacity $tlp-dropdown-transition, transform $tlp-dropdown-transition, box-shadow $tlp-dropdown-transition;
+    transition: opacity $tlp-dropdown-transition, transform $tlp-dropdown-transition,
+        box-shadow $tlp-dropdown-transition;
     border-bottom: 0;
     border-radius: $tlp-dropdown-radius;
     background: var(--tlp-white-color);
@@ -222,9 +223,9 @@ $tlp-dropdown-transition: 75ms ease-out;
 
 $flatpickr-day-hover: #f3f3f3;
 $flatpickr-day-dimmed: #d0d0d0;
-$flatpickr-animation: 100ms ease-in-out showFlatPickr;
+$flatpickr-animation: 100ms ease-in-out show-flat-pickr;
 
-@keyframes showFlatPickr {
+@keyframes show-flat-pickr {
     0% {
         transform: translateY(-10px);
         opacity: 0;
@@ -254,7 +255,7 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
         border-width: $tlp-dropdown-arrow-size;
     }
 
-    //stylelint-disable-next-line selector-class-pattern
+    // stylelint-disable-next-line selector-class-pattern
     &.arrowTop::after {
         border-bottom-color: var(--tlp-main-color);
     }
@@ -303,7 +304,7 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
     left: 10px;
     width: 100%;
 
-    //stylelint-disable selector-no-qualifying-type
+    // stylelint-disable selector-no-qualifying-type
     span.cur-month {
         // stylelint-enable
         margin: 0;
@@ -315,7 +316,7 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
         }
     }
 
-    //stylelint-disable-next-line selector-class-pattern
+    // stylelint-disable-next-line selector-class-pattern
     .numInputWrapper {
         margin-left: 5px;
 
@@ -323,7 +324,7 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
             background: transparent;
         }
 
-        //stylelint-disable selector-no-qualifying-type
+        // stylelint-disable selector-no-qualifying-type
         input.cur-year {
             // stylelint-enable
             padding: 0 10px 0 0;
@@ -343,7 +344,7 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
     color: var(--tlp-white-color);
 }
 
-//stylelint-disable-next-line selector-no-qualifying-type
+// stylelint-disable-next-line selector-no-qualifying-type
 span.flatpickr-weekday {
     background: var(--tlp-main-color);
     color: var(--tlp-white-color-transparent-30);
@@ -357,7 +358,7 @@ span.flatpickr-weekday {
         color: var(--tlp-main-color);
     }
 
-    //stylelint-disable selector-no-qualifying-type
+    // stylelint-disable selector-no-qualifying-type
     span.flatpickr-day {
         // stylelint-enable
         color: var(--tlp-main-color);
@@ -390,10 +391,10 @@ span.flatpickr-weekday {
         }
     }
 
-    //stylelint-disable selector-class-pattern
+    // stylelint-disable selector-class-pattern
     &.prevMonthDay,
     &.nextMonthDay {
-        //stylelint-enable
+        // stylelint-enable
         color: var(--tlp-dimmed-color);
 
         &:hover {

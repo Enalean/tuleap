@@ -54,7 +54,8 @@ $button-with-label-height: 32px;
 }
 
 .taskboard-add-in-place-button {
-    margin: calc(#{$button-size} - #{$button-with-label-height} + var(--tlp-small-spacing)) 0 var(--tlp-small-spacing);
+    margin: calc(#{$button-size} - #{$button-with-label-height} + var(--tlp-small-spacing)) 0
+        var(--tlp-small-spacing);
 
     &:not(.taskboard-add-in-place-button-with-label) {
         width: $button-size;

@@ -24,7 +24,8 @@ $dropdown-width: 250px;
 
 /* stylelint-disable selector-no-qualifying-type */
 body.has-visible-project-banner > .platform-banner:not(.platform-banner-hidden) {
-    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) variables-common.$top-floating-buttons-space;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing)
+        variables-common.$top-floating-buttons-space;
 
     + header > .header-container {
         padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) 0 0;
@@ -109,7 +110,8 @@ body.has-sidebar {
         margin: 0 0 0 var(--tlp-small-spacing);
         padding: 0 var(--tlp-medium-spacing);
         overflow: hidden;
-        transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out, border-color 75ms ease-in-out, padding 75ms ease-in-out;
+        transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out,
+            border-color 75ms ease-in-out, padding 75ms ease-in-out;
         border-radius: 30px;
         border-color: var(--tlp-white-color) !important;
         background: var(--tlp-white-color) !important;
@@ -129,7 +131,8 @@ body.has-sidebar {
         &:hover:not(:disabled):not(.disabled):not(.active),
         &:active:not(:disabled):not(.disabled):not(.active),
         &:focus:not(:disabled):not(.disabled):not(.active) {
-            transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out, border-color 75ms ease-in-out;
+            transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out,
+                border-color 75ms ease-in-out;
             border-color: var(--tlp-white-color) !important;
             background: #fafafa !important;
             box-shadow: var(--tlp-button-shadow-hover) !important;
@@ -313,7 +316,10 @@ body.has-sidebar {
 
     .user-infos-real-name {
         // we substract the size of the tlp-avatar and the padding around and between the elements
-        max-width: calc(#{$dropdown-width} - (var(--tlp-small-spacing) + 40px + var(--tlp-small-spacing) + var(--tlp-small-spacing)));
+        max-width: calc(
+            #{$dropdown-width} - (var(--tlp-small-spacing) + 40px + var(--tlp-small-spacing) +
+                        var(--tlp-small-spacing))
+        );
         margin: 0 0 4px;
         overflow: hidden;
         color: var(--tlp-white-color);

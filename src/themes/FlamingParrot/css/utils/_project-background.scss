@@ -26,7 +26,8 @@
     .administration-title,
     .cvs-header > .administration-title,
     .project-header-title {
-        @include background.project-background-title-header-typography();
+        @include background.project-background-title-header-typography;
+
         margin: 0;
         padding: 0 var(--tlp-medium-spacing) 30px;
     }
@@ -35,7 +36,7 @@
         border-bottom: initial;
 
         li > a {
-            @include background.project-background-title-header-typography();
+            @include background.project-background-title-header-typography;
         }
 
         li > a:hover,
@@ -46,7 +47,7 @@
 
     .breadcrumb,
     .breadcrumb-link {
-        @include background.project-background-title-header-typography();
+        @include background.project-background-title-header-typography;
     }
 
     .breadcrumb-dropdown-item,
@@ -55,7 +56,8 @@
     }
 
     .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link {
-        @include background.background-for-links();
+        @include background.background-for-links;
+
         color: var(--tlp-white-color);
     }
 
@@ -72,13 +74,15 @@
 
         &.fa-lock-open,
         &.fa-tlp-unlock-plus-r {
-            @include background.background-for-links();
+            @include background.background-for-links;
+
             color: var(--tlp-white-color);
         }
     }
 
     .breadcrumb-project-privacy-icon-with-flags {
-        @include background.background-for-links();
+        @include background.background-for-links;
+
         color: var(--tlp-white-color);
 
         > .fas {
@@ -89,7 +93,8 @@
 
     // stylelint-disable selector-no-qualifying-type,max-nesting-depth,selector-max-compound-selectors
     .main-project-tabs > .nav-tabs {
-        @include background.background-for-links();
+        @include background.background-for-links;
+
         margin: 0;
         box-shadow: none;
 
@@ -104,7 +109,8 @@
                 > a,
                 > a:hover,
                 > a:focus {
-                    @include background.background-for-links();
+                    @include background.background-for-links;
+
                     border: 0;
                     border-top: 3px solid var(--tlp-white-color);
                     color: var(--tlp-white-color);
@@ -133,7 +139,8 @@
                 }
 
                 > a {
-                    @include background.background-for-links();
+                    @include background.background-for-links;
+
                     border-bottom: 0;
                     border-top-color: var(--tlp-white-color);
                 }

@@ -22,11 +22,16 @@
 
 .project-with-background {
     .program-management-title-header {
-        @include background.project-background-title-header-typography();
+        @include background.project-background-title-header-typography;
+
         margin: 0 0 var(--tlp-medium-spacing);
     }
 }
 
 body {
-    @include background.apply-background(".program-management-title-header", global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
+    @include background.apply-background(
+        ".program-management-title-header",
+        global-variables.$sidebar-expanded-width,
+        global-variables.$sidebar-collapsed-width
+    );
 }

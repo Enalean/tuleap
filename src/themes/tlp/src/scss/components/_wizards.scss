@@ -60,14 +60,23 @@
 
     &::before {
         @include circle;
+
         left: 32px;
     }
 
     &::after {
         @include dash;
+
         left: 0;
         width: 46px;
-        background: linear-gradient(90deg, var(--tlp-dimmed-color) 0, var(--tlp-dimmed-color) 33px, transparent 33px, transparent 41px, var(--tlp-dimmed-color) 41px);
+        background: linear-gradient(
+            90deg,
+            var(--tlp-dimmed-color) 0,
+            var(--tlp-dimmed-color) 33px,
+            transparent 33px,
+            transparent 41px,
+            var(--tlp-dimmed-color) 41px
+        );
     }
 
     &:first-child {
@@ -75,11 +84,13 @@
 
         &::before {
             @include circle;
+
             left: 0;
         }
 
         &::after {
             @include dash;
+
             left: 9px;
             width: 4px;
             background: var(--tlp-dimmed-color);
@@ -100,7 +111,14 @@
     }
 
     &::after {
-        background: linear-gradient(90deg, var(--tlp-main-color) 0, var(--tlp-main-color) 33px, transparent 33px, transparent 41px, var(--tlp-main-color) 41px);
+        background: linear-gradient(
+            90deg,
+            var(--tlp-main-color) 0,
+            var(--tlp-main-color) 33px,
+            transparent 33px,
+            transparent 41px,
+            var(--tlp-main-color) 41px
+        );
     }
 
     &:first-child {
@@ -116,7 +134,12 @@
 
 .tlp-wizard-step-current {
     &::before {
-        background: radial-gradient(circle, var(--tlp-main-color) 0, var(--tlp-main-color) 1px, transparent 2px);
+        background: radial-gradient(
+            circle,
+            var(--tlp-main-color) 0,
+            var(--tlp-main-color) 1px,
+            transparent 2px
+        );
     }
 }
 
@@ -135,7 +158,12 @@ a.tlp-wizard-step-previous:hover {
 a.tlp-wizard-step-current:hover {
     &::before {
         border-width: 2px;
-        background: radial-gradient(circle, var(--tlp-main-color) 0, var(--tlp-main-color) 1px, transparent 2px);
+        background: radial-gradient(
+            circle,
+            var(--tlp-main-color) 0,
+            var(--tlp-main-color) 1px,
+            transparent 2px
+        );
     }
 
     &::after {

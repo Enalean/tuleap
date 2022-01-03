@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:color";
 @use "../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 @use "./graph";
 
@@ -27,7 +28,7 @@ $remaining-effort-color: swatch-colors.$tlp-swatch-neon-green;
 
     &.highlighted {
         stroke-width: 2px;
-        stroke: lighten($remaining-effort-color, 20%);
+        stroke: color.adjust($remaining-effort-color, $lightness: 20%);
     }
 }
 

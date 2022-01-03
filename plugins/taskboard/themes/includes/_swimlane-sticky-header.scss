@@ -34,7 +34,9 @@
         &:not(.taskboard-cell-parent-card-edit-mode):not(.taskboard-cell-parent-card-no-mapping) {
             position: sticky;
             z-index: 9;
-            top: calc(#{global-variables.$navbar-height} + #{header.$taskboard-header-height} + 10px);
+            top: calc(
+                #{global-variables.$navbar-height} + #{header.$taskboard-header-height} + 10px
+            );
         }
     }
 

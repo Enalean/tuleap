@@ -23,6 +23,7 @@
 @use "sass:math";
 @use "dependencies";
 @use "popover";
+@use "sass:map";
 
 .roadmap-gantt-task {
     display: flex;
@@ -149,7 +150,9 @@
 
 .roadmap-gantt-task-bar-milestone-container {
     display: flex;
-    top: math.round((roadmap-variables.$task-height - roadmap-variables.$task-milestone-height) / 2);
+    top: math.round(
+        (roadmap-variables.$task-height - roadmap-variables.$task-milestone-height) / 2
+    );
     align-items: center;
 }
 
@@ -160,39 +163,39 @@
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .roadmap-gantt-task-bar-container-#{$color-name} {
         > .roadmap-gantt-task-bar {
-            border-color: map-get($colors, "border");
-            background: map-get($colors, "secondary");
-            color: map-get($colors, "text");
+            border-color: map.get($colors, "border");
+            background: map.get($colors, "secondary");
+            color: map.get($colors, "text");
 
             > .roadmap-gantt-task-bar-progress {
-                background: map-get($colors, "primary");
+                background: map.get($colors, "primary");
 
                 &::before {
-                    background: map-get($colors, "secondary");
-                    mask-image: url("#{map-get($colors, 'pattern')}");
+                    background: map.get($colors, "secondary");
+                    mask-image: url("#{map.get($colors, 'pattern')}");
                 }
 
                 > .roadmap-gantt-task-bar-progress-text-inside-progress-bar {
-                    background: map-get($colors, "primary");
+                    background: map.get($colors, "primary");
                 }
             }
         }
 
         > .roadmap-gantt-task-bar-milestone {
             > .roadmap-gantt-task-bar-milestone-border {
-                stroke: map-get($colors, "border");
-                fill: map-get($colors, "secondary");
+                stroke: map.get($colors, "border");
+                fill: map.get($colors, "secondary");
             }
 
             > .roadmap-gantt-task-bar-milestone-progress {
-                stroke: map-get($colors, "primary");
-                fill: map-get($colors, "primary");
+                stroke: map.get($colors, "primary");
+                fill: map.get($colors, "primary");
             }
         }
 
         > .roadmap-gantt-task-bar-progress-error-outside-bar,
         > .roadmap-gantt-task-bar-progress-text-outside-bar {
-            color: map-get($colors, "text");
+            color: map.get($colors, "text");
         }
     }
 }

@@ -68,8 +68,7 @@
 
 .release-description-link {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-flow: wrap row;
 }
 
 .release-planning-link {

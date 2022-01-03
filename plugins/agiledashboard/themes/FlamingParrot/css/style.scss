@@ -60,37 +60,43 @@ div.milestones > fieldset.milestone {
 body {
     &.FlamingParrot_Orange {
         .empty-home {
-            background: transparent url("../images/agile-dashboard-not-configured-orange.png") no-repeat center 20px;
+            background: transparent url("../images/agile-dashboard-not-configured-orange.png")
+                no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_Blue {
         .empty-home {
-            background: transparent url("../images/agile-dashboard-not-configured-blue.png") no-repeat center 20px;
+            background: transparent url("../images/agile-dashboard-not-configured-blue.png")
+                no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_Green {
         .empty-home {
-            background: transparent url("../images/agile-dashboard-not-configured-green.png") no-repeat center 20px;
+            background: transparent url("../images/agile-dashboard-not-configured-green.png")
+                no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_BlueGrey {
         .empty-home {
-            background: transparent url("../images/agile-dashboard-not-configured-bluegrey.png") no-repeat center 20px;
+            background: transparent url("../images/agile-dashboard-not-configured-bluegrey.png")
+                no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_Purple {
         .empty-home {
-            background: transparent url("../images/agile-dashboard-not-configured-purple.png") no-repeat center 20px;
+            background: transparent url("../images/agile-dashboard-not-configured-purple.png")
+                no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_Red {
         .empty-home {
-            background: transparent url("../images/agile-dashboard-not-configured-red.png") no-repeat center 20px;
+            background: transparent url("../images/agile-dashboard-not-configured-red.png")
+                no-repeat center 20px;
         }
     }
 }

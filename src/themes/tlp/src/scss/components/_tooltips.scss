@@ -62,17 +62,17 @@
 }
 
 .tlp-tooltip-top {
-    @include tooltips-mixins.tlp-tooltip-top();
+    @include tooltips-mixins.tlp-tooltip-top;
 }
 
 .tlp-tooltip-right {
-    @include tooltips-mixins.tlp-tooltip-right();
+    @include tooltips-mixins.tlp-tooltip-right;
 }
 
 .tlp-tooltip-bottom {
-    @include tooltips-mixins.tlp-tooltip-bottom();
+    @include tooltips-mixins.tlp-tooltip-bottom;
 }
 
 .tlp-tooltip-left {
-    @include tooltips-mixins.tlp-tooltip-left();
+    @include tooltips-mixins.tlp-tooltip-left;
 }

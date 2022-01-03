@@ -57,10 +57,7 @@
     }
 
     td[class="kmButtonCollectionInner"] {
-        padding-top: 9px !important;
-        padding-right: 9px !important;
-        padding-bottom: 0 !important;
-        padding-left: 9px !important;
+        padding: 9px 9px 0 !important;
         background-color: transparent !important;
     }
 
@@ -129,7 +126,9 @@
         padding-left: 9px !important;
     }
 
-    table[class="kmTableBlock kmTableMobile"] td[class="kmTableBlockInner"] [class="kmTextContent"] {
+    table[class="kmTableBlock kmTableMobile"]
+        td[class="kmTableBlockInner"]
+        [class="kmTextContent"] {
         padding-right: 4px !important;
         padding-left: 4px !important;
         font-size: 14px !important;

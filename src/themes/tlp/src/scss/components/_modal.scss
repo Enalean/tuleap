@@ -35,7 +35,8 @@ $tlp-modal-transition: 100ms ease-out;
     max-height: 90vh;
     margin: 5vh auto;
     transform: translateY(-25%);
-    transition: opacity $tlp-modal-transition, transform $tlp-modal-transition, box-shadow $tlp-modal-transition;
+    transition: opacity $tlp-modal-transition, transform $tlp-modal-transition,
+        box-shadow $tlp-modal-transition;
     border: 0;
     opacity: 0;
     box-shadow: unset;

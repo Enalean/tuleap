@@ -19,12 +19,13 @@
 
 .tlp-select.tracker-workflow-transition-modal-authorized-ugroups {
     $size-of-one-option: 19px;
+
     height: 8 * $size-of-one-option;
 }
 
 .tracker-workflow-transition-modal-actions-section {
     background-color: var(--tlp-background-color);
-    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), transparent 100%);
+    background-image: linear-gradient(to bottom, rgb(255 255 255 / 70%), transparent 100%);
 }
 
 .tracker-workflow-transition-modal-action-card {

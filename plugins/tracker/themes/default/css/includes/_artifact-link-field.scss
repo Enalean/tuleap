@@ -27,7 +27,8 @@
 
 .tracker-form-element-artifactlink-renderer-async {
     height: 100px;
-    background: url("../../../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center center;
+    background: url("../../../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat
+        center center;
 
     &.loaded {
         height: auto;
@@ -45,7 +46,8 @@
 }
 
 .tracker-form-element-artifactlink-list-nav {
-    > li:not(.tracker-form-element-artifactlink-list-nav-label) + .tracker-form-element-artifactlink-list-nav-label {
+    > li:not(.tracker-form-element-artifactlink-list-nav-label)
+        + .tracker-form-element-artifactlink-list-nav-label {
         margin-left: 30px;
     }
 }

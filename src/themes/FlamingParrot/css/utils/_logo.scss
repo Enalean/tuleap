@@ -30,7 +30,8 @@
     &.collapsed {
         width: variables-common.$sidebar-width-collapsed;
         max-width: variables-common.$sidebar-width-collapsed;
-        background: var(--tlp-main-color) url("/images/organization_logo_small.png") no-repeat center center;
+        background: var(--tlp-main-color) url("/images/organization_logo_small.png") no-repeat
+            center center;
     }
 }
 

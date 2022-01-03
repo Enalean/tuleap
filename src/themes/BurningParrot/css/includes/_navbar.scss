@@ -171,7 +171,10 @@ header.pinned > .header-container {
 
     > .name {
         // we substract the size of the tlp-avatar and the padding around and between the elements
-        max-width: calc(#{$dropdown-width} - (var(--tlp-small-spacing) + 40px + var(--tlp-small-spacing) + var(--tlp-small-spacing)));
+        max-width: calc(
+            #{$dropdown-width} - (var(--tlp-small-spacing) + 40px + var(--tlp-small-spacing) +
+                        var(--tlp-small-spacing))
+        );
         margin: 0 0 4px;
         overflow: hidden;
         color: var(--tlp-white-color);

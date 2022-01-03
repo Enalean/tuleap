@@ -29,7 +29,7 @@
     background: var(--tlp-dark-color);
     box-shadow: var(--tlp-flyover-shadow);
 
-    @keyframes modalLoading {
+    @keyframes modal-loading {
         from {
             transform: translate(-50%, -50%) rotate(0deg);
         }
@@ -47,7 +47,7 @@
         width: 30px;
         height: 30px;
         transform: translate(-50%, -50%);
-        animation: 500ms linear infinite modalLoading;
+        animation: 500ms linear infinite modal-loading;
         border: 5px solid var(--tlp-neutral-normal-color-transparent-50);
         border-top: 5px solid var(--tlp-white-color);
         border-radius: 50%;

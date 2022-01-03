@@ -26,10 +26,25 @@
     .project-color-#{$project-color-name} {
         --project-color: #{$project-color};
         --project-color-background: #{color.change($project-color, $alpha: 0.07)};
-        --project-color-background-gradient: linear-gradient(#{transparentize($project-color, 0.97), transparentize($project-color, 0.97)}), linear-gradient(var(--tlp-white-color), var(--tlp-white-color));
-        --project-color-background-gradient-light: linear-gradient(#{transparentize($project-color, 0.95), transparentize($project-color, 0.95)}), linear-gradient(var(--tlp-white-color), var(--tlp-white-color));
-        --project-color-background-gradient-light-hover: linear-gradient(#{darken(transparentize($project-color, 0.95), 2%), darken(transparentize($project-color, 0.95), 2%)}), linear-gradient(darken(#ffffff, 2%), darken(#ffffff, 2%));
-        --project-color-border: #{transparentize($project-color, 0.9)};
-        --project-color-border-light: #{transparentize($project-color, 0.8)};
+        --project-color-background-gradient: linear-gradient(
+                #{color.adjust($project-color, $alpha: - 0.97),
+                color.adjust($project-color, $alpha: - 0.97)}
+            ),
+            linear-gradient(var(--tlp-white-color), var(--tlp-white-color));
+        --project-color-background-gradient-light: linear-gradient(
+                #{color.adjust($project-color, $alpha: - 0.95),
+                color.adjust($project-color, $alpha: - 0.95)}
+            ),
+            linear-gradient(var(--tlp-white-color), var(--tlp-white-color));
+        --project-color-background-gradient-light-hover: linear-gradient(
+                #{color.adjust($project-color, $alpha: - 0.95, $lightness: - 2%),
+                color.adjust($project-color, $alpha: - 0.95, $lightness: - 2%)}
+            ),
+            linear-gradient(
+                color.adjust(#ffffff, $lightness: - 2%),
+                color.adjust(#ffffff, $lightness: - 2%)
+            );
+        --project-color-border: #{color.adjust($project-color, $alpha: - 0.9)};
+        --project-color-border-light: #{color.adjust($project-color, $alpha: - 0.8)};
     }
 }

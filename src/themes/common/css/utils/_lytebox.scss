@@ -142,32 +142,38 @@
     width: 49%;
     height: 100%;
     float: left;
-    background: transparent url("#{$tuleap-common-theme-basepath}images/lytebox/blank.gif") no-repeat;
+    background: transparent url("#{$tuleap-common-theme-basepath}images/lytebox/blank.gif")
+        no-repeat;
 }
 
 #lbPrev.grey:hover,
 #lbPrev.grey:visited:hover {
-    background: url("#{$tuleap-common-theme-basepath}images/lytebox/prev_grey.gif") left 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/prev_grey.gif") left 15%
+        no-repeat;
 }
 
 #lbPrev.red:hover,
 #lbPrev.red:visited:hover {
-    background: url("#{$tuleap-common-theme-basepath}images/lytebox/prev_red.gif") left 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/prev_red.gif") left 15%
+        no-repeat;
 }
 
 #lbPrev.green:hover,
 #lbPrev.green:visited:hover {
-    background: url("#{$tuleap-common-theme-basepath}images/lytebox/prev_green.gif") left 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/prev_green.gif") left 15%
+        no-repeat;
 }
 
 #lbPrev.blue:hover,
 #lbPrev.blue:visited:hover {
-    background: url("#{$tuleap-common-theme-basepath}images/lytebox/prev_blue.gif") left 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/prev_blue.gif") left 15%
+        no-repeat;
 }
 
 #lbPrev.gold:hover,
 #lbPrev.gold:visited:hover {
-    background: url("#{$tuleap-common-theme-basepath}images/lytebox/prev_gold.gif") left 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/prev_gold.gif") left 15%
+        no-repeat;
 }
 
 #lbNext {
@@ -176,32 +182,38 @@
     width: 49%;
     height: 100%;
     float: right;
-    background: transparent url("#{$tuleap-common-theme-basepath}images/lytebox/blank.gif") no-repeat;
+    background: transparent url("#{$tuleap-common-theme-basepath}images/lytebox/blank.gif")
+        no-repeat;
 }
 
 #lbNext.grey:hover,
 #lbNext.grey:visited:hover {
-    background: url("#{$tuleap-common-theme-basepath}images/lytebox/next_grey.gif") right 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/next_grey.gif") right 15%
+        no-repeat;
 }
 
 #lbNext.red:hover,
 #lbNext.red:visited:hover {
-    background: url("#{$tuleap-common-theme-basepath}images/lytebox/next_red.gif") right 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/next_red.gif") right 15%
+        no-repeat;
 }
 
 #lbNext.green:hover,
 #lbNext.green:visited:hover {
-    background: url("#{$tuleap-common-theme-basepath}images/lytebox/next_green.gif") right 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/next_green.gif") right 15%
+        no-repeat;
 }
 
 #lbNext.blue:hover,
 #lbNext.blue:visited:hover {
-    background: url("#{$tuleap-common-theme-basepath}images/lytebox/next_blue.gif") right 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/next_blue.gif") right 15%
+        no-repeat;
 }
 
 #lbNext.gold:hover,
 #lbNext.gold:visited:hover {
-    background: url("#{$tuleap-common-theme-basepath}images/lytebox/next_gold.gif") right 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/next_gold.gif") right 15%
+        no-repeat;
 }
 
 #lbPrev2,

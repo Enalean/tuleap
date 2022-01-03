@@ -44,6 +44,7 @@
 
 .roadmap-gantt-timeperiod-year {
     @include timeperiod-style;
+
     background: var(--tlp-fade-background-color);
 
     &:not(:last-child) {

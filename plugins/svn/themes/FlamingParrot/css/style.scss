@@ -23,7 +23,11 @@
 
 /* stylelint-disable selector-no-qualifying-type */
 body.viewvc-epel {
-    @include background.apply-background(".svn-repository-header", variables-common.$sidebar-width, variables-common.$sidebar-width-collapsed);
+    @include background.apply-background(
+        ".svn-repository-header",
+        variables-common.$sidebar-width,
+        variables-common.$sidebar-width-collapsed
+    );
 
     #svn-repository #svn-repository-viewvc {
         border-top-color: var(--tlp-main-color);

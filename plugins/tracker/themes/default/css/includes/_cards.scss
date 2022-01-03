@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
 @use "../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
 .cards {
@@ -49,26 +50,26 @@
 .card-preview {
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.card-style-#{$color-name} {
-            border-color: map-get($colors, "border");
-            background: map-get($colors, "secondary");
+            border-color: map.get($colors, "border");
+            background: map.get($colors, "secondary");
 
             > .card-container {
-                background: map-get($colors, "secondary");
+                background: map.get($colors, "secondary");
             }
 
             .card-accessibility {
                 opacity: 0.5;
-                background-color: map-get($colors, "text");
-                mask-image: url("#{map-get($colors, 'pattern')}");
+                background-color: map.get($colors, "text");
+                mask-image: url("#{map.get($colors, 'pattern')}");
             }
 
             .card-actions {
                 a.dropdown-toggle {
-                    color: map-get($colors, "text");
+                    color: map.get($colors, "text");
                 }
 
                 .caret {
-                    border-top-color: map-get($colors, "text");
+                    border-top-color: map.get($colors, "text");
                 }
             }
 
@@ -78,7 +79,7 @@
                 > .toggler-hide-noajax,
                 > .toggler-noajax,
                 tr td:first-child {
-                    color: map-get($colors, "text");
+                    color: map.get($colors, "text");
                 }
             }
         }
@@ -88,7 +89,7 @@
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     // Specificity added to win over .card.card-style-$color
     div.card.card-accent-#{$color-name} {
-        background: map-get($colors, "primary");
+        background: map.get($colors, "primary");
     }
 
     .card-type-border-#{$color-name} {
@@ -96,7 +97,7 @@
         width: 4px;
         border-top-left-radius: var(--tlp-medium-radius);
         border-bottom-left-radius: var(--tlp-medium-radius);
-        background: map-get($colors, "primary");
+        background: map.get($colors, "primary");
     }
 }
 

@@ -1,3 +1,5 @@
+@use "sass:color";
+
 $footer-white: #e5e8e9;
 
 .footer {
@@ -5,7 +7,7 @@ $footer-white: #e5e8e9;
     justify-content: center;
     padding: 15px 0;
     background: var(--tlp-dark-color);
-    color: transparentize($footer-white, 0.4);
+    color: color.adjust($footer-white, $alpha: - 0.4);
 }
 
 .footer-section {

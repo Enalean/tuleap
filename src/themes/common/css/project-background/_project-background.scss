@@ -20,10 +20,16 @@
 @use "background";
 @use "../../../BurningParrot/css/includes/global-variables";
 
-$elements-that-can-contain-background: ".main-project-tabs", ".dashboard-project-header", ".breadcrumb-container", "#feedback", ".administration-title", ".project-administration-title", ".project-header-title", ".toolbar.nav-pills";
+$elements-that-can-contain-background: ".main-project-tabs", ".dashboard-project-header",
+    ".breadcrumb-container", "#feedback", ".administration-title", ".project-administration-title",
+    ".project-header-title", ".toolbar.nav-pills";
 
 body {
     @each $element in $elements-that-can-contain-background {
-        @include background.apply-background($element, global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
+        @include background.apply-background(
+            $element,
+            global-variables.$sidebar-expanded-width,
+            global-variables.$sidebar-collapsed-width
+        );
     }
 }

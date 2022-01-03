@@ -55,10 +55,16 @@
 
 /* stylelint-disable selector-class-pattern */
 .theme-blue .select2-results__option--highlighted > .user-preferences-color-selector-selection-blue,
-.theme-green .select2-results__option--highlighted > .user-preferences-color-selector-selection-green,
+.theme-green
+    .select2-results__option--highlighted
+    > .user-preferences-color-selector-selection-green,
 .theme-grey .select2-results__option--highlighted > .user-preferences-color-selector-selection-grey,
-.theme-orange .select2-results__option--highlighted > .user-preferences-color-selector-selection-orange,
-.theme-purple .select2-results__option--highlighted > .user-preferences-color-selector-selection-purple,
+.theme-orange
+    .select2-results__option--highlighted
+    > .user-preferences-color-selector-selection-orange,
+.theme-purple
+    .select2-results__option--highlighted
+    > .user-preferences-color-selector-selection-purple,
 .theme-red .select2-results__option--highlighted > .user-preferences-color-selector-selection-red {
     color: var(--tlp-white-color);
 }
@@ -218,6 +224,9 @@
     }
 }
 
-.user-preferences-section-appearance-preview-without-accessibility > g > g > .user-preferences-section-appearance-preview-accessibility {
+.user-preferences-section-appearance-preview-without-accessibility
+    > g
+    > g
+    > .user-preferences-section-appearance-preview-accessibility {
     display: none;
 }

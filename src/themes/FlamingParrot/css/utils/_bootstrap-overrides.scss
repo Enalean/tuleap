@@ -347,7 +347,8 @@ legend {
 }
 
 @mixin btn-hover($color) {
-    transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out, border-color 75ms ease-in-out;
+    transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out,
+        border-color 75ms ease-in-out;
     border-color: $color !important;
     background: $color !important;
     box-shadow: var(--tlp-button-shadow-hover);
@@ -398,26 +399,56 @@ legend {
 }
 
 .btn:not(.btn-link) {
-    @include btn(var(--tlp-neutral-light-color), var(--tlp-neutral-light-color-lighter-30), var(--tlp-neutral-light-color-darker-10), var(--tlp-dark-color));
+    @include btn(
+        var(--tlp-neutral-light-color),
+        var(--tlp-neutral-light-color-lighter-30),
+        var(--tlp-neutral-light-color-darker-10),
+        var(--tlp-dark-color)
+    );
 
     &.btn-primary {
-        @include btn(var(--tlp-main-color), var(--tlp-main-color-lighter-30), var(--tlp-main-color-darker-10), var(--tlp-white-color));
+        @include btn(
+            var(--tlp-main-color),
+            var(--tlp-main-color-lighter-30),
+            var(--tlp-main-color-darker-10),
+            var(--tlp-white-color)
+        );
     }
 
     &.btn-danger {
-        @include btn(var(--tlp-danger-color), var(--tlp-danger-color-lighter-30), var(--tlp-danger-color-darker-10), var(--tlp-white-color));
+        @include btn(
+            var(--tlp-danger-color),
+            var(--tlp-danger-color-lighter-30),
+            var(--tlp-danger-color-darker-10),
+            var(--tlp-white-color)
+        );
     }
 
     &.btn-success {
-        @include btn(var(--tlp-success-color), var(--tlp-success-color-lighter-30), var(--tlp-success-color-darker-10), var(--tlp-white-color));
+        @include btn(
+            var(--tlp-success-color),
+            var(--tlp-success-color-lighter-30),
+            var(--tlp-success-color-darker-10),
+            var(--tlp-white-color)
+        );
     }
 
     &.btn-warning {
-        @include btn(var(--tlp-warning-color), var(--tlp-warning-color-lighter-30), var(--tlp-warning-color-darker-10), var(--tlp-white-color));
+        @include btn(
+            var(--tlp-warning-color),
+            var(--tlp-warning-color-lighter-30),
+            var(--tlp-warning-color-darker-10),
+            var(--tlp-white-color)
+        );
     }
 
     &.btn-info {
-        @include btn(var(--tlp-info-color), var(--tlp-info-color-lighter-30), var(--tlp-info-color-darker-10), var(--tlp-white-color));
+        @include btn(
+            var(--tlp-info-color),
+            var(--tlp-info-color-lighter-30),
+            var(--tlp-info-color-darker-10),
+            var(--tlp-white-color)
+        );
     }
 
     &:hover:not(:disabled):not(.disabled):not(.active) {

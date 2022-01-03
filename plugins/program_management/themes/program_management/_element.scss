@@ -18,13 +18,14 @@
  */
 
 @use "../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "sass:map";
 
 $accessibility-pattern-width: 20px;
 $accessibility-pattern-right-margin: 6px;
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .element-card-#{$color-name} {
-        --card-color: #{map-get($colors, "primary")};
+        --card-color: #{map.get($colors, "primary")};
 
         + .backlog-items-container > .backlog-items-children-container-handle:only-child {
             border-top: 0;
@@ -32,14 +33,14 @@ $accessibility-pattern-right-margin: 6px;
     }
 
     .element-card-xref-#{$color-name} {
-        color: #{map-get($colors, "text")};
+        color: #{map.get($colors, "text")};
     }
 
     .element-card-background-#{$color-name} {
-        --secondary-color: #{map-get($colors, "secondary")};
-        --border-color: #{map-get($colors, "border")};
-        --text-color: #{map-get($colors, "text")};
-        --accessibility-pattern: url("#{map-get($colors, 'pattern')}");
+        --secondary-color: #{map.get($colors, "secondary")};
+        --border-color: #{map.get($colors, "border")};
+        --text-color: #{map.get($colors, "text")};
+        --accessibility-pattern: url("#{map.get($colors, 'pattern')}");
 
         .element-card-xref {
             color: var(--text-color);
@@ -50,14 +51,15 @@ $accessibility-pattern-right-margin: 6px;
 .element-card {
     position: relative;
     z-index: 1;
-    padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
+    padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing)
+        calc(var(--tlp-small-spacing) + 2px);
     border: 1px solid var(--border-color, transparent);
     border-radius: var(--tlp-medium-radius);
     background: var(--secondary-color, var(--tlp-white-color));
     box-shadow: var(--tlp-card-shadow);
 
     &[class*="element-card-background-"] {
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
     }
 
     &::before {
@@ -74,7 +76,11 @@ $accessibility-pattern-right-margin: 6px;
 
     &.element-card-with-accessibility {
         &[class*="element-card-background-"] {
-            padding: var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + #{$accessibility-pattern-width} + #{$accessibility-pattern-right-margin}) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
+            padding: var(--tlp-small-spacing)
+                calc(
+                    var(--tlp-small-spacing) + #{$accessibility-pattern-width} + #{$accessibility-pattern-right-margin}
+                )
+                var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
 
             > .element-card-accessibility {
                 opacity: 0.5;

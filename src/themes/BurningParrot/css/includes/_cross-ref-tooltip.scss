@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
 @use "../../../tlp/src/scss/variables/colors/common-colors";
 
 .codendi-tooltip {
@@ -167,7 +168,7 @@
         width: 28px;
         height: 28px;
         border-radius: 50%;
-        background: map-get($colors, "primary");
+        background: map.get($colors, "primary");
         color: var(--tlp-white-color);
     }
 }

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+@use "sass:map";
 @use "../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
 .tracker-cross-reference-hide-referenced-by {
@@ -73,6 +74,6 @@
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .tracker-cross-reference-title-icon-#{$color-name} {
-        background: map-get($colors, "primary");
+        background: map.get($colors, "primary");
     }
 }

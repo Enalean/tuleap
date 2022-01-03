@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:color";
+@use "sass:map";
 @use "../variables/colors/swatch-colors";
 
 $tlp-badge-radius: var(--tlp-small-radius);
@@ -157,18 +159,26 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
     .tlp-badge-#{$color-name} {
         @extend %tlp-badge;
 
-        background: map-get($colors, "text");
+        background: map.get($colors, "text");
 
         &.tlp-badge-outline {
-            background: map-get($colors, "secondary");
-            color: map-get($colors, "text");
+            background: map.get($colors, "secondary");
+            color: map.get($colors, "text");
 
             &.tlp-badge-on-dark-background {
-                background: transparentize(map-get($colors, "primary"), 0.85);
-                color: mix(map-get($colors, "border"), #ffffff, 90%);
+                background: color.adjust(map.get($colors, "primary"), $alpha: - 0.85);
+                color: color.mix(map.get($colors, "border"), #ffffff, 90%);
 
-                @if $color-name == "teddy-brown" or $color-name == "plum-crazy" or $color-name == "red-wine" or $color-name == "army-green" {
-                    color: mix(map-get($colors, "border"), #ffffff, 70%);
+                @if $color-name ==
+                    "teddy-brown" or
+                    $color-name ==
+                    "plum-crazy" or
+                    $color-name ==
+                    "red-wine" or
+                    $color-name ==
+                    "army-green"
+                {
+                    color: color.mix(map.get($colors, "border"), #ffffff, 70%);
                 }
             }
         }

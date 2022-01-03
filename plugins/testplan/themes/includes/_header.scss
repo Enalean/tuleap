@@ -35,7 +35,7 @@
     grid-template-columns: 60% auto;
     column-gap: var(--tlp-large-spacing);
 
-    @include media-query.not-large-screen() {
+    @include media-query.not-large-screen {
         row-gap: var(--tlp-jumbo-spacing);
         grid-template-areas:
             "backlog-items"

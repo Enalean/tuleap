@@ -1,3 +1,5 @@
+@use "sass:map";
+@use "sass:color";
 @use "../../src/themes/common/css/utils/colors";
 @use "../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
@@ -29,7 +31,7 @@ circle {
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
-            stroke: darken(map-get($colors, "primary"), 20%);
+            stroke: color.adjust(map.get($colors, "primary"), $lightness: - 20%);
         }
     }
 }
@@ -75,6 +77,6 @@ text {
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .#{$color-name} {
-        fill: darken(map-get($colors, "primary"), 20%);
+        fill: color.adjust(map.get($colors, "primary"), $lightness: - 20%);
     }
 }

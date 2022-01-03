@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
+@use "sass:color";
 @use "../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
 $transition-duration: 100ms;
@@ -38,17 +40,22 @@ $accessibility-pattern-right-margin: 4px;
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.kanban-item-#{$color-name} {
-            --item-type-color: #{map-get($colors, "primary")};
-            --text-color: #{map-get($colors, "text")};
+            --item-type-color: #{map.get($colors, "primary")};
+            --text-color: #{map.get($colors, "text")};
         }
 
         > .tlp-swatch-#{$color-name} {
-            --box-shadow: inset 0 0 0 1px var(--border-color), 0 1px 2px rgba(0, 0, 0, 0.1);
-            --border-transparent-color: #{transparentize(map-get($colors, "border"), 0.75)};
+            --box-shadow: inset 0 0 0 1px var(--border-color), 0 1px 2px rgb(0 0 0 / 10%);
+            --border-transparent-color: #{color.adjust(map.get($colors, "border"), $alpha: - 0.75)};
         }
 
         .kanban-item-content.kanban-item-card-with-accessibility {
-            --extra-padding-right: calc(#{$accessibility-pattern-width} + 2 * #{$accessibility-pattern-right-margin} - var(--tlp-small-spacing));
+            --extra-padding-right: calc(
+                #{$accessibility-pattern-width} +
+                    2 *
+                    #{$accessibility-pattern-right-margin} -
+                    var(--tlp-small-spacing)
+            );
         }
     }
 
@@ -68,7 +75,8 @@ $accessibility-pattern-right-margin: 4px;
         margin: $margin-between-kanban-item var(--tlp-small-spacing) 0;
 
         + .kanban-item {
-            margin: $margin-between-kanban-item-on-hover var(--tlp-small-spacing) $expand-collapse-bar-height;
+            margin: $margin-between-kanban-item-on-hover var(--tlp-small-spacing)
+                $expand-collapse-bar-height;
         }
 
         .kanban-item-content-expand-collapse {
@@ -124,11 +132,9 @@ kanban-item {
 
 .kanban-item-content-type-border {
     flex: 0 0 auto;
-    border-left-width: 4px;
-    border-left-style: solid;
+    border-left: 4px solid var(--item-type-color, var(--tlp-white-color));
     border-top-left-radius: var(--tlp-medium-radius);
     border-bottom-left-radius: var(--tlp-medium-radius);
-    border-left-color: var(--item-type-color, var(--tlp-white-color));
 }
 
 .kanban-item-content {
@@ -211,8 +217,8 @@ time-info {
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
             opacity: 0.5;
-            background-color: map-get($colors, "text");
-            mask-image: url("#{map-get($colors, 'pattern')}");
+            background-color: map.get($colors, "text");
+            mask-image: url("#{map.get($colors, 'pattern')}");
         }
     }
 }

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:map";
 @use "../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
 
 .select-option-not-colored {
@@ -25,7 +26,7 @@
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .select-option-colored-#{$color-name} {
-        border-left: 16px solid map-get($colors, "primary");
+        border-left: 16px solid map.get($colors, "primary");
     }
 
     .colorpicker-preview-#{$color-name} {
@@ -33,7 +34,7 @@
         width: 16px;
         height: 16px;
         margin: 0;
-        background-color: map-get($colors, "primary");
+        background-color: map.get($colors, "primary");
         vertical-align: middle;
     }
 }

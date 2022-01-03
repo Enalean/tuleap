@@ -25,11 +25,13 @@
 
 .empty-state-page {
     @extend %empty-container;
+
     margin: calc(4 * var(--tlp-large-spacing)) auto var(--tlp-medium-spacing);
 }
 
 .empty-state-pane {
     @extend %empty-container;
+
     margin: var(--tlp-large-spacing) auto;
 }
 

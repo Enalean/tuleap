@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:color";
 @use "global-variables";
 
 #siteadmin-homepage-container {
@@ -318,7 +319,7 @@
     }
 
     > text {
-        fill: darken(#cccccc, 10%);
+        fill: color.adjust(#cccccc, $lightness: - 10%);
     }
 }
 

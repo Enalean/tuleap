@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .tuleap-modal-background {
     position: fixed;
     z-index: 2000;
@@ -22,7 +24,8 @@
     margin-top: -($loading-size / 2);
     margin-left: -($loading-size / 2);
     border-radius: 50%;
-    background: #303030 url("#{$tuleap-common-theme-basepath}images/tuleap-modal-spinner.gif") no-repeat center center;
+    background: #303030 url("#{$tuleap-common-theme-basepath}images/tuleap-modal-spinner.gif")
+        no-repeat center center;
 }
 
 .tuleap-modal {
@@ -42,6 +45,7 @@
     $side-content-background-color: #ffffff;
     $action-background-color: #f5f5f5;
     $side-action-background-color: #f5f5f5;
+
     display: none;
     position: fixed;
     z-index: 2001;
@@ -79,11 +83,11 @@
             border-top-right-radius: $modal-radius;
             border-bottom-right-radius: $modal-radius;
             background: $grip-background-color;
-            color: darken($grip-background-color, 50%);
+            color: color.adjust($grip-background-color, $lightness: - 50%);
             font-size: 0.8em;
             font-weight: bold;
             line-height: 1.2em;
-            text-shadow: 0 1px 0 lighten($grip-background-color, 10%);
+            text-shadow: 0 1px 0 color.adjust($grip-background-color, $lightness: 10%);
             text-transform: uppercase;
             cursor: pointer;
 
@@ -108,10 +112,7 @@
         &:first-child {
             .tuleap-modal-side-panel-grip {
                 float: left;
-                border-top-left-radius: $modal-radius;
-                border-top-right-radius: 0;
-                border-bottom-right-radius: 0;
-                border-bottom-left-radius: $modal-radius;
+                border-radius: $modal-radius 0 0 $modal-radius;
 
                 span {
                     top: auto;
@@ -131,7 +132,7 @@
     .tuleap-modal-title,
     .tuleap-modal-side-panel-content-title {
         padding: 7px $modal-padding;
-        border-bottom: 1px solid darken($title-background-color, 10%);
+        border-bottom: 1px solid color.adjust($title-background-color, $lightness: - 10%);
         background-color: $title-background-color;
         color: $title-color;
 
@@ -182,9 +183,9 @@
         box-sizing: border-box;
         min-height: 61px;
         padding: $modal-padding;
-        border-top: 1px solid lighten($action-background-color, 10%);
+        border-top: 1px solid color.adjust($action-background-color, $lightness: 10%);
         background-color: $action-background-color;
-        box-shadow: 0 -1px 0 darken($action-background-color, 10%);
+        box-shadow: 0 -1px 0 color.adjust($action-background-color, $lightness: - 10%);
         text-align: right;
     }
 

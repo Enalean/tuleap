@@ -27,7 +27,13 @@ $progress-bar-background-color: var(--tlp-neutral-normal-color);
 /* stylelint-disable selector-no-qualifying-type */
 .tlp-table > tbody > tr.document-tree-item-uploading > td {
     animation: document-uploading-animation 1.2s infinite linear;
-    background: linear-gradient(90deg, $document-upload-animation-color 0, $document-upload-animation-secondary-color 80px, $document-upload-animation-color 160px) repeat bottom left;
+    background: linear-gradient(
+            90deg,
+            $document-upload-animation-color 0,
+            $document-upload-animation-secondary-color 80px,
+            $document-upload-animation-color 160px
+        )
+        repeat bottom left;
     background-size: 600px 1px;
 }
 /* stylelint-enable selector-no-qualifying-type */
@@ -104,7 +110,7 @@ $progress-bar-background-color: var(--tlp-neutral-normal-color);
         animation: none;
 
         &::before {
-            content: "\f064"; //fa-mail-forward
+            content: "\f064"; // fa-mail-forward
         }
     }
 }

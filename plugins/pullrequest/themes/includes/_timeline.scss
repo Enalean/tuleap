@@ -66,7 +66,8 @@
     align-self: stretch;
     min-height: 30px;
     margin: 0 0 var(--tlp-medium-spacing);
-    background: url("../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center center;
+    background: url("../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center
+        center;
 }
 
 .pull-request-event {

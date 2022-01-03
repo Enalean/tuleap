@@ -18,8 +18,8 @@
  */
 
 @use "sass:color";
+@use "sass:map";
 @use "../../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
-
 @import "../../card-fields";
 @import "backlog-item-moves";
 
@@ -29,15 +29,18 @@ $accessibility-pattern-right-margin: 6px;
 .backlog-item-details {
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.backlog-item-color-#{$color-name} {
-            --item-type-color: #{map-get($colors, "primary")};
-            --text-color: #{map-get($colors, "text")};
+            --item-type-color: #{map.get($colors, "primary")};
+            --text-color: #{map.get($colors, "text")};
         }
 
         &.tlp-swatch-#{$color-name} {
-            --box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            --background-color-darker: #{darken(map-get($colors, "secondary"), 7%)};
-            --text-color-darker: #{darken(map-get($colors, "text"), 7%)};
-            --border-transparent-color: #{transparentize(map-get($colors, "border"), 0.75)};
+            --box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+            --background-color-darker: #{color.adjust(
+                    map.get($colors, "secondary"),
+                    $lightness: - 7%
+                )};
+            --text-color-darker: #{color.adjust(map.get($colors, "text"), $lightness: - 7%)};
+            --border-transparent-color: #{color.adjust(map.get($colors, "border"), $alpha: - 0.75)};
 
             &.closed {
                 --border-color: transparent;
@@ -46,7 +49,12 @@ $accessibility-pattern-right-margin: 6px;
             }
 
             &.accessibility-displayed {
-                --extra-padding-right: calc(#{$accessibility-pattern-width} + 2 * #{$accessibility-pattern-right-margin} - var(--tlp-small-spacing));
+                --extra-padding-right: calc(
+                    #{$accessibility-pattern-width} +
+                        2 *
+                        #{$accessibility-pattern-right-margin} -
+                        var(--tlp-small-spacing)
+                );
             }
 
             + .backlog-item-show-children > .backlog-item-show-children-handle {
@@ -55,7 +63,7 @@ $accessibility-pattern-right-margin: 6px;
 
             .backlog-item-details-shortname-content,
             .extra-card-field-title {
-                --text-color: #{map-get($colors, "text")};
+                --text-color: #{map.get($colors, "text")};
             }
         }
     }
@@ -166,7 +174,8 @@ $accessibility-pattern-right-margin: 6px;
     flex: 0 0 auto;
     justify-content: space-between;
     max-width: 100%;
-    padding: calc(var(--tlp-small-spacing) / 2) calc(var(--tlp-small-spacing) / 2) calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spacing);
+    padding: calc(var(--tlp-small-spacing) / 2) calc(var(--tlp-small-spacing) / 2)
+        calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spacing);
 }
 
 .backlog-item-details-metadata-container {
@@ -213,8 +222,14 @@ $accessibility-pattern-right-margin: 6px;
     font-size: 0.8em;
 }
 
-$backlog-item-details-parent-color: var(--project-color, var(--text-color-darker, var(--tlp-dimmed-color-darker-10)));
-$backlog-item-details-parent-background: var(--project-color-background, var(--background-color-darker, var(--tlp-neutral-dark-color-transparent-50)));
+$backlog-item-details-parent-color: var(
+    --project-color,
+    var(--text-color-darker, var(--tlp-dimmed-color-darker-10))
+);
+$backlog-item-details-parent-background: var(
+    --project-color-background,
+    var(--background-color-darker, var(--tlp-neutral-dark-color-transparent-50))
+);
 
 card-parent-link {
     flex: 0 1 auto;
@@ -311,8 +326,8 @@ card-parent-link {
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
             opacity: 0.5;
-            background-color: map-get($colors, "text");
-            mask-image: url("#{map-get($colors, 'pattern')}");
+            background-color: map.get($colors, "text");
+            mask-image: url("#{map.get($colors, 'pattern')}");
         }
     }
 }

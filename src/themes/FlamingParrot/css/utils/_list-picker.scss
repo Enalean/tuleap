@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:color";
+@use "sass:map";
 @use "themes/tlp/src/scss/variables/colors/swatch-colors";
-
 @import "~@tuleap/list-picker";
 
 $form-element-border-color: var(--tlp-neutral-dark-color-darker-05);
@@ -75,7 +76,8 @@ $form-element-small-font-size: 0.8125rem;
 
         &.list-picker-single {
             height: $form-element-height;
-            padding: 0 ($form-element-padding-horizontal * 2 + $form-element-select-background-size) 0 $form-element-padding-horizontal;
+            padding: 0 ($form-element-padding-horizontal * 2 + $form-element-select-background-size)
+                0 $form-element-padding-horizontal;
             background: var(--tlp-white-color) url("../images/list-picker-background.png") no-repeat;
             background-position: right $form-element-padding-horizontal center;
         }
@@ -84,7 +86,8 @@ $form-element-small-font-size: 0.8125rem;
             position: relative;
             min-height: $form-element-height;
             padding: 0 52px 5px 6px;
-            background: var(--tlp-white-color) url("../images/list-picker-multi-background.svg") no-repeat;
+            background: var(--tlp-white-color) url("../images/list-picker-multi-background.svg")
+                no-repeat;
             background-position: right 10px top 17px;
             background-size: 15px 5px;
         }
@@ -155,9 +158,9 @@ $form-element-small-font-size: 0.8125rem;
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .list-picker-badge-#{$color-name} {
-        border: 1px solid transparentize(map-get($colors, "primary"), 0.4);
-        background: transparentize(map-get($colors, "primary"), 0.9);
-        color: map-get($colors, "text");
+        border: 1px solid color.adjust(map.get($colors, "primary"), $alpha: - 0.4);
+        background: color.adjust(map.get($colors, "primary"), $alpha: - 0.9);
+        color: map.get($colors, "text");
     }
 }
 
@@ -252,10 +255,10 @@ $form-element-small-font-size: 0.8125rem;
         width: 14px;
         height: 14px;
         margin: 0 6px 0 0;
-        border: 3px solid map-get($colors, "primary");
+        border: 3px solid map.get($colors, "primary");
         border-radius: 50%;
-        background-color: map-get($colors, "secondary");
-        color: map-get($colors, "primary");
+        background-color: map.get($colors, "secondary");
+        color: map.get($colors, "primary");
         cursor: pointer;
     }
 }

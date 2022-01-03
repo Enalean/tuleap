@@ -39,7 +39,8 @@
 
 .dashboard-widget-content-projectheartbeat-loading {
     height: 200px;
-    background: url("../../../../www/themes/BurningParrot/images/spinner.gif") no-repeat center center;
+    background: url("../../../../www/themes/BurningParrot/images/spinner.gif") no-repeat center
+        center;
 }
 
 .widget-project-heartbeat-empty-icon {
@@ -60,7 +61,17 @@ $timeline-color: var(--tlp-main-color-lighter-90);
         left: 10px;
         width: 4px;
         height: 100%;
-        background: linear-gradient(to top, var(--tlp-white-color) 0, $timeline-color var(--tlp-medium-spacing), transparent var(--tlp-medium-spacing) + 1px), linear-gradient(to bottom, var(--tlp-white-color) 0, $timeline-color var(--tlp-medium-spacing));
+        background: linear-gradient(
+                to top,
+                var(--tlp-white-color) 0,
+                $timeline-color var(--tlp-medium-spacing),
+                transparent var(--tlp-medium-spacing) + 1px
+            ),
+            linear-gradient(
+                to bottom,
+                var(--tlp-white-color) 0,
+                $timeline-color var(--tlp-medium-spacing)
+            );
     }
 }
 

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:color";
 @import "../../../../tracker/themes/default/css/includes/graph";
 
 $team-effort-color: #57b258;
@@ -27,7 +28,7 @@ $total-effort-color: #bd2626;
 
     &.highlighted {
         stroke-width: 4px;
-        stroke: lighten($team-effort-color, 20%);
+        stroke: color.adjust($team-effort-color, $lightness: 20%);
     }
 }
 
@@ -36,7 +37,7 @@ $total-effort-color: #bd2626;
 
     &.highlighted {
         stroke-width: 4px;
-        stroke: lighten($total-effort-color, 20%);
+        stroke: color.adjust($total-effort-color, $lightness: 20%);
     }
 }
 

@@ -241,7 +241,9 @@
 }
 
 .has-visible-platform-banner .document-folder-right-container {
-    top: calc(#{global-variables.$navbar-height} + var(--tlp-medium-spacing) + #{global-variables.$platform-banner-base-height});
+    top: calc(
+        #{global-variables.$navbar-height} + var(--tlp-medium-spacing) + #{global-variables.$platform-banner-base-height}
+    );
 }
 
 .document-folder-content-quick-look-and-item-uploading {

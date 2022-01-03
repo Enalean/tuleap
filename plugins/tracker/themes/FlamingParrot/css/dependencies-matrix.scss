@@ -67,7 +67,9 @@
     }
 
     &.has-visible-project-banner .matrix-label-cell {
-        top: calc(#{variables-common.$top-floating-buttons-space} + var(--tlp-medium-spacing) * 2 + #{variables-common.$navbar-height});
+        top: calc(
+            #{variables-common.$top-floating-buttons-space} + var(--tlp-medium-spacing) * 2 + #{variables-common.$navbar-height}
+        );
     }
 }
 

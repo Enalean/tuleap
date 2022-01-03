@@ -19,7 +19,6 @@
 
 @use "codemirror/lib/codemirror";
 @use "codemirror/addon/merge/merge";
-
 @use "./includes/dashboard";
 @use "./includes/pull-request";
 @use "./includes/overview";
@@ -29,5 +28,4 @@
 @use "./includes/tuleap-username";
 @use "./includes/pull-request-refs";
 @use "./includes/codemirror-overrides";
-
 @use "../../../src/themes/BurningParrot/css/includes/labels/labels-box";

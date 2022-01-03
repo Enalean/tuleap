@@ -45,14 +45,14 @@
 }
 
 #recursive-get .code {
-    //stylelint-disable-next-line selector-class-pattern
+    // stylelint-disable-next-line selector-class-pattern
     > .CodeMirror {
         height: auto;
     }
 }
 
 #tlp-modal-service .code {
-    //stylelint-disable-next-line selector-class-pattern
+    // stylelint-disable-next-line selector-class-pattern
     > .CodeMirror {
         height: 600px;
     }

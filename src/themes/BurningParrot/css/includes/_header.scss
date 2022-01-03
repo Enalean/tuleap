@@ -21,7 +21,10 @@
 
 /* stylelint-disable selector-no-qualifying-type */
 body.has-visible-project-banner > .platform-banner:not(.platform-banner-hidden) {
-    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) + #{global-variables.$extra-platform-banner-white-space-height});
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing)
+        calc(
+            var(--tlp-medium-spacing) + #{global-variables.$extra-platform-banner-white-space-height}
+        );
 
     + header > .header-container {
         padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) 0 0;

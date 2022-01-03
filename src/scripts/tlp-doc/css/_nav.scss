@@ -58,7 +58,7 @@ $nav-item-color: #888888;
 
     /* stylelint-disable selector-no-qualifying-type */
     > a {
-        @keyframes bounceIn {
+        @keyframes bounce-in {
             0% {
                 transform: scale(1);
             }
@@ -75,7 +75,8 @@ $nav-item-color: #888888;
                 transform: scale(1.5);
             }
         }
-        @keyframes bounceOut {
+
+        @keyframes bounce-out {
             0% {
                 transform: scale(1.5);
             }
@@ -97,11 +98,11 @@ $nav-item-color: #888888;
         cursor: pointer;
 
         &:not(.active) {
-            animation: bounceOut 250ms ease-in-out;
+            animation: bounce-out 250ms ease-in-out;
         }
 
         &:hover:not(.active) {
-            animation: bounceIn 250ms ease-in-out forwards;
+            animation: bounce-in 250ms ease-in-out forwards;
         }
 
         &.active {

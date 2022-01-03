@@ -1,3 +1,5 @@
+@use "sass:color";
+
 $accordion-width: 200px;
 
 /* stylelint-disable selector-no-qualifying-type */
@@ -124,7 +126,7 @@ body.search-page .content {
                         color: #0088cc;
 
                         &.active {
-                            color: darken(#0088cc, 10%);
+                            color: color.adjust(#0088cc, $lightness: - 10%);
                             text-decoration: underline;
                         }
 
@@ -236,7 +238,8 @@ body > .select2-drop {
     float: left;
 
     &.loading {
-        background: url("#{$tuleap-common-theme-basepath}images/tuleap-spinner.gif") no-repeat center center;
+        background: url("#{$tuleap-common-theme-basepath}images/tuleap-spinner.gif") no-repeat
+            center center;
     }
 
     &.no-search-panes {
@@ -275,7 +278,7 @@ body > .select2-drop {
                 top: 6px;
                 right: 2px;
                 left: 0;
-                font-family: "tuleap-services", "Font Awesome 5 Free";
+                font-family: tuleap-services, "Font Awesome 5 Free";
             }
 
             &::before {

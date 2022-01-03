@@ -18,7 +18,8 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
             background: var(--tlp-success-color);
 
             > .current-test-latest-result {
-                background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), var(--tlp-success-color);
+                background: linear-gradient(0deg, rgb(0 0 0 / 20%), rgb(0 0 0 / 20%)),
+                    var(--tlp-success-color);
             }
         }
 
@@ -33,7 +34,8 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
             background: var(--tlp-danger-color);
 
             > .current-test-latest-result {
-                background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), var(--tlp-danger-color);
+                background: linear-gradient(0deg, rgb(0 0 0 / 20%), rgb(0 0 0 / 20%)),
+                    var(--tlp-danger-color);
             }
         }
 
@@ -48,7 +50,8 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
             background: var(--tlp-info-color);
 
             > .current-test-latest-result {
-                background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), var(--tlp-info-color);
+                background: linear-gradient(0deg, rgb(0 0 0 / 20%), rgb(0 0 0 / 20%)),
+                    var(--tlp-info-color);
             }
         }
 
@@ -63,7 +66,8 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
             background: var(--tlp-dimmed-color);
 
             > .current-test-latest-result {
-                background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), var(--tlp-dimmed-color);
+                background: linear-gradient(0deg, rgb(0 0 0 / 20%), rgb(0 0 0 / 20%)),
+                    var(--tlp-dimmed-color);
             }
         }
 
@@ -87,7 +91,8 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
             flex: 1 1 auto;
             min-height: 0;
 
-            &:not(.current-test-footer-section-readonly-comment-container) .current-test-results-container {
+            &:not(.current-test-footer-section-readonly-comment-container)
+                .current-test-results-container {
                 max-height: none;
             }
         }
@@ -114,8 +119,7 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
 
         .current-test-comment-attachments {
             flex: 1;
-            flex-direction: row;
-            flex-wrap: wrap;
+            flex-flow: row wrap;
         }
 
         .current-test-comment-attachements-container {
@@ -443,6 +447,7 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
 
 .current-test-comment-attachments {
     display: flex;
+    // stylelint-disable-next-line function-calc-no-unspaced-operator
     gap: calc(#{$attachments-gap});
     flex: 0 0 auto;
     flex-direction: column;
@@ -455,7 +460,11 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
     align-items: center;
     gap: calc(var(--tlp-small-spacing) / 2);
     height: $attachment-height;
-    padding: var(--tlp-small-spacing) calc((#{$attachment-height} - (var(--tlp-medium-spacing) + var(--tlp-small-spacing) / 2)) / 2) var(--tlp-small-spacing) var(--tlp-small-spacing);
+    padding: var(--tlp-small-spacing)
+        calc(
+            (#{$attachment-height} - (var(--tlp-medium-spacing) + var(--tlp-small-spacing) / 2)) / 2
+        )
+        var(--tlp-small-spacing) var(--tlp-small-spacing);
     border-radius: calc(var(--tlp-large-spacing) / 2);
     background: var(--tlp-background-color-darker-05);
     color: var(--tlp-dark-color);
@@ -592,7 +601,8 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
 
 .current-test-message-warning {
     margin: 0 0 var(--tlp-medium-spacing);
-    padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-x-large-spacing);
+    padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing)
+        var(--tlp-x-large-spacing);
     font-size: 0.875rem;
     line-height: 1.125rem;
 
