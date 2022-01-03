@@ -53,7 +53,7 @@ import { sprintf } from "sprintf-js";
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import { getInternationalizedTestStatus } from "./internationalize-test-status";
 import type { ArtifactFieldValueStepDefinitionEnhancedWithResults } from "../../../../type";
-import { buildCellContentResult } from "./matrix-builder";
+import { buildCellContentResult } from "./Table/table-builder";
 
 const TABLE_LABEL_SHADING = {
     val: ShadingType.CLEAR,
