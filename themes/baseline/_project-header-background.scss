@@ -22,10 +22,14 @@
 
 .project-with-background {
     .baseline-title-header {
-        @include background.project-background-title-header-typography();
+        @include background.project-background-title-header-typography;
     }
 }
 
 body {
-    @include background.apply-background(".baseline-title-header", global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
+    @include background.apply-background(
+        ".baseline-title-header",
+        global-variables.$sidebar-expanded-width,
+        global-variables.$sidebar-collapsed-width
+    );
 }

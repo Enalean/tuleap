@@ -87,7 +87,7 @@ class ComparisonService
         PFUser $current_user,
         Project $project,
         int $page_size,
-        int $comparison_offset
+        int $comparison_offset,
     ): ComparisonsPage {
         if (! $this->authorizations->canReadComparisonsOnProject($current_user, $project)) {
             throw new NotAuthorizedException(

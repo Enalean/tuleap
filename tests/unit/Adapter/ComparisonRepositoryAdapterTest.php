@@ -151,8 +151,8 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                         "base_baseline_id"        => 1,
                         "compared_to_baseline_id" => 2,
                         "user_id"                 => 9,
-                        "creation_date"           => 1553176023
-                    ]
+                        "creation_date"           => 1553176023,
+                    ],
                 ]
             );
 
@@ -224,8 +224,8 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                         "base_baseline_id"        => 1,
                         "compared_to_baseline_id" => 2,
                         "user_id"                 => 9,
-                        "creation_date"           => 1553176023
-                    ]
+                        "creation_date"           => 1553176023,
+                    ],
                 ]
             );
 
@@ -267,8 +267,8 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                         "base_baseline_id"        => 1,
                         "compared_to_baseline_id" => 2,
                         "user_id"                 => 9,
-                        "creation_date"           => 1553176023
-                    ]
+                        "creation_date"           => 1553176023,
+                    ],
                 ]
             );
 
@@ -301,8 +301,8 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                         "base_baseline_id"        => 1,
                         "compared_to_baseline_id" => 2,
                         "user_id"                 => 9,
-                        "creation_date"           => 1553176023
-                    ]
+                        "creation_date"           => 1553176023,
+                    ],
                 ]
             );
 
@@ -324,8 +324,8 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                         "base_baseline_id"        => 1,
                         "compared_to_baseline_id" => 2,
                         "user_id"                 => 22,
-                        "creation_date"           => 1553176023
-                    ]
+                        "creation_date"           => 1553176023,
+                    ],
                 ]
             );
 
@@ -378,8 +378,8 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                         "base_baseline_id"        => 1,
                         "compared_to_baseline_id" => 2,
                         "user_id"                 => 22,
-                        "creation_date"           => 1553176023
-                    ]
+                        "creation_date"           => 1553176023,
+                    ],
                 ]
             );
 

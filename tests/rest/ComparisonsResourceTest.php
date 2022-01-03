@@ -55,7 +55,7 @@ class ComparisonsResourceTest extends RestBase
                     'name'                    => 'new comparison',
                     'comment'                 => 'used fo tests',
                     'base_baseline_id'        => $base_baseline['id'],
-                    'compared_to_baseline_id' => $compared_to_baseline['id']
+                    'compared_to_baseline_id' => $compared_to_baseline['id'],
                 ]
             )))
         );
@@ -82,7 +82,7 @@ class ComparisonsResourceTest extends RestBase
                     'name'                    => 'new comparison',
                     'comment'                 => 'used fo tests',
                     'base_baseline_id'        => $base_baseline['id'],
-                    'compared_to_baseline_id' => $compared_to_baseline['id']
+                    'compared_to_baseline_id' => $compared_to_baseline['id'],
                 ]
             )))
         );
@@ -212,7 +212,7 @@ class ComparisonsResourceTest extends RestBase
             $this->request_factory->createRequest('POST', 'baselines')->withBody($this->stream_factory->createStream(json_encode(
                 [
                     'name'        => 'created baseline',
-                    'artifact_id' => $artifact_id
+                    'artifact_id' => $artifact_id,
                 ]
             )))
         );
@@ -230,7 +230,7 @@ class ComparisonsResourceTest extends RestBase
                 [
                     'name'                    => 'created comparison',
                     'base_baseline_id'        => $base_baseline['id'],
-                    'compared_to_baseline_id' => $compared_to_baseline['id']
+                    'compared_to_baseline_id' => $compared_to_baseline['id'],
                 ]
             )))
         );

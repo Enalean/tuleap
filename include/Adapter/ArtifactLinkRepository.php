@@ -45,7 +45,7 @@ class ArtifactLinkRepository
      */
     public function findLinkedArtifactIds(
         PFUser $current_user,
-        Tracker_Artifact_Changeset $changeset
+        Tracker_Artifact_Changeset $changeset,
     ): array {
         $artifact_link_field = $changeset->getArtifact()->getAnArtifactLinkField($current_user);
         if ($artifact_link_field === null) {

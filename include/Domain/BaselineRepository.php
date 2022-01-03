@@ -32,7 +32,7 @@ interface BaselineRepository
     public function add(
         TransientBaseline $baseline,
         PFUser $current_user,
-        DateTimeInterface $snapshot_date
+        DateTimeInterface $snapshot_date,
     ): Baseline;
 
     public function findById(PFUser $current_user, int $id): ?Baseline;

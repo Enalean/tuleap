@@ -60,7 +60,7 @@ class BaselineArtifactController
         BaselineArtifactService $baseline_artifact_service,
         CurrentUserProvider $current_user_provider,
         QueryParameterParser $query_parser,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->baseline_repository       = $baseline_repository;
         $this->baseline_artifact_service = $baseline_artifact_service;

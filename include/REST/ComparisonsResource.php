@@ -66,7 +66,7 @@ class ComparisonsResource extends AuthenticatedResource
         int $base_baseline_id,
         int $compared_to_baseline_id,
         ?string $name = null,
-        ?string $comment = null
+        ?string $comment = null,
     ): ComparisonRepresentation {
         $this->checkAccess();
         return $this->container

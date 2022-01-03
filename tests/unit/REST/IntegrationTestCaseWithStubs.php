@@ -112,7 +112,7 @@ abstract class IntegrationTestCaseWithStubs extends \Tuleap\Test\PHPUnit\TestCas
                     CurrentUserProvider::class        => $this->current_user_provider,
                     Authorizations::class             => new FullAccessAuthorizationsStub(),
                     Clock::class                      => $this->clock,
-                    LoggerInterface::class            => Mockery::mock(LoggerInterface::class)->shouldIgnoreMissing()
+                    LoggerInterface::class            => Mockery::mock(LoggerInterface::class)->shouldIgnoreMissing(),
                 ]
             )
             ->build();

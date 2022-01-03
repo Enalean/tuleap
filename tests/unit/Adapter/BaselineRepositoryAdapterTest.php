@@ -108,7 +108,7 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                         "artifact_id"   => 10,
                         "user_id"       => 22,
                         "snapshot_date" => 1553176023,
-                    ]
+                    ],
                 ]
             );
 
@@ -164,7 +164,7 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                         "artifact_id"   => 10,
                         "user_id"       => 22,
                         "snapshot_date" => 1553176023,
-                    ]
+                    ],
                 ]
             );
 
@@ -200,7 +200,7 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                         "artifact_id"   => 10,
                         "user_id"       => 22,
                         "snapshot_date" => 1553176023,
-                    ]
+                    ],
                 ]
             );
 
@@ -234,7 +234,7 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                         "artifact_id"   => 10,
                         "user_id"       => 22,
                         "snapshot_date" => 1553176023,
-                    ]
+                    ],
                 ]
             );
 
@@ -276,7 +276,7 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                         "artifact_id"   => 10,
                         "user_id"       => 22,
                         "snapshot_date" => 1553176023,
-                    ]
+                    ],
                 ]
             );
 

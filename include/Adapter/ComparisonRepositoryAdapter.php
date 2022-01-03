@@ -56,7 +56,7 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
         BaselineRepository $baseline_repository,
         UserManager $user_manager,
         Authorizations $authorizations,
-        ClockAdapter $clock
+        ClockAdapter $clock,
     ) {
         $this->db                  = $db;
         $this->baseline_repository = $baseline_repository;
@@ -80,7 +80,7 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
                 'base_baseline_id'        => $comparison->getBaseBaseline()->getId(),
                 'compared_to_baseline_id' => $comparison->getComparedToBaseline()->getId(),
                 'user_id'                 => $current_user->getId(),
-                'creation_date'           => $creation_date->getTimestamp()
+                'creation_date'           => $creation_date->getTimestamp(),
             ]
         );
 

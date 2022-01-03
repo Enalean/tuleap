@@ -45,7 +45,7 @@ interface ComparisonRepository
         PFUser $current_user,
         Project $project,
         int $page_size,
-        int $comparison_offset
+        int $comparison_offset,
     ): array;
 
     /**

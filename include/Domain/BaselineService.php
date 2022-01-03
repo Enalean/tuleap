@@ -44,7 +44,7 @@ class BaselineService
         BaselineRepository $baseline_repository,
         ComparisonRepository $comparison_repository,
         Clock $clock,
-        Authorizations $authorizations
+        Authorizations $authorizations,
     ) {
         $this->baseline_repository   = $baseline_repository;
         $this->comparison_repository = $comparison_repository;
@@ -110,7 +110,7 @@ class BaselineService
         PFUser $current_user,
         Project $project,
         int $page_size,
-        int $baseline_offset
+        int $baseline_offset,
     ): BaselinesPage {
         if (! $this->authorizations->canReadBaselinesOnProject($current_user, $project)) {
             throw new NotAuthorizedException(

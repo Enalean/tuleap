@@ -56,7 +56,7 @@ class ComparisonRepresentation
         int $base_baseline_id,
         int $compared_to_baseline_id,
         int $author_id,
-        string $creation_date
+        string $creation_date,
     ) {
         $this->id                      = $id;
         $this->name                    = $name;

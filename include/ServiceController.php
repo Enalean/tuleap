@@ -63,7 +63,7 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
         \ProjectManager $project_manager,
         TemplateRenderer $template_renderer,
         \baselinePlugin $plugin,
-        ProjectFlagsBuilder $project_flags_builder
+        ProjectFlagsBuilder $project_flags_builder,
     ) {
         $this->project_manager       = $project_manager;
         $this->template_renderer     = $template_renderer;
@@ -138,7 +138,7 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
                 'project_url'         => $project->getUrl(),
                 'privacy'             => json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR),
                 'project_flags'       => json_encode($this->project_flags_builder->buildProjectFlags($project), JSON_THROW_ON_ERROR),
-                'project_icon'        => EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint())
+                'project_icon'        => EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint()),
             ]
         );
         $layout->footer(["without_content" => true]);

@@ -52,7 +52,7 @@ class BaselineController
     public function __construct(
         CurrentUserProvider $current_user_provider,
         BaselineService $baseline_service,
-        BaselineArtifactRepository $baseline_artifact_repository
+        BaselineArtifactRepository $baseline_artifact_repository,
     ) {
         $this->current_user_provider        = $current_user_provider;
         $this->baseline_service             = $baseline_service;

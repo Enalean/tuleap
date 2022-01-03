@@ -76,7 +76,7 @@ class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 $this->mockArtifactWithId(1),
                 $this->mockArtifactWithId(2),
-                $this->mockArtifactWithId(3)
+                $this->mockArtifactWithId(3),
             ]
         );
 
@@ -132,7 +132,7 @@ class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->current_user,
             [
                 $this->mockArtifactWithIdAndTrackerId(1, 10),
-                $this->mockArtifactWithIdAndTrackerId(2, 11)
+                $this->mockArtifactWithIdAndTrackerId(2, 11),
             ]
         );
 
@@ -175,7 +175,7 @@ class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockArtifactLink(
         Tracker_Artifact_Changeset $changeset,
         PFUser $user,
-        array $artifacts
+        array $artifacts,
     ): Tracker_FormElement_Field_ArtifactLink {
         $artifact_link = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class)
             ->shouldReceive('getLinkedArtifacts')

@@ -44,7 +44,7 @@ class ProjectComparisonController
     public function __construct(
         CurrentUserProvider $current_user_provider,
         ComparisonService $comparison_service,
-        ProjectRepository $project_repository
+        ProjectRepository $project_repository,
     ) {
         $this->current_user_provider = $current_user_provider;
         $this->comparison_service    = $comparison_service;

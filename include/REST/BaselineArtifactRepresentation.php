@@ -56,7 +56,7 @@ class BaselineArtifactRepresentation
         ?string $status,
         int $tracker_id,
         string $tracker_name,
-        array $linked_artifact_ids
+        array $linked_artifact_ids,
     ) {
         $this->id                  = $id;
         $this->title               = $title;

@@ -101,7 +101,7 @@ class BaselineArtifactRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCas
                     'findTitle'         => 'Custom title',
                     'findDescription'   => 'Custom description',
                     'findStatus'        => 'Custom status',
-                    'findInitialEffort' => 5
+                    'findInitialEffort' => 5,
                 ]
             )
             ->with($changeset, $this->current_user);
@@ -150,7 +150,7 @@ class BaselineArtifactRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCas
                     'findTitle'         => 'Custom title',
                     'findDescription'   => 'Custom description',
                     'findStatus'        => 'Custom status',
-                    'findInitialEffort' => 5
+                    'findInitialEffort' => 5,
                 ]
             )
             ->with($changeset, $this->current_user);

@@ -50,7 +50,7 @@ final class BaselinesResourceTest extends RestBase
                 [
                     'name'          => 'new baseline',
                     'artifact_id'   => $this->an_artifact_id,
-                    'snapshot_date' => '2019-03-21T11:47:04+02:00'
+                    'snapshot_date' => '2019-03-21T11:47:04+02:00',
                 ]
             )))
         );
@@ -70,7 +70,7 @@ final class BaselinesResourceTest extends RestBase
                 [
                     'name'          => 'new baseline',
                     'artifact_id'   => $this->an_artifact_id,
-                    'snapshot_date' => '2019-03-21T11:47:04+02:00'
+                    'snapshot_date' => '2019-03-21T11:47:04+02:00',
                 ]
             )))
         );
@@ -247,7 +247,7 @@ final class BaselinesResourceTest extends RestBase
             $this->request_factory->createRequest('POST', 'baselines')->withBody($this->stream_factory->createStream(json_encode(
                 [
                     'name'        => 'created baseline',
-                    'artifact_id' => $artifact_id
+                    'artifact_id' => $artifact_id,
                 ]
             )))
         );

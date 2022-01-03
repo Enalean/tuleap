@@ -54,7 +54,7 @@ class ComparisonController
         ComparisonService $comparison_service,
         CurrentUserProvider $current_user_provider,
         BaselineRepository $baseline_repository,
-        ComparisonRepository $comparison_repository
+        ComparisonRepository $comparison_repository,
     ) {
         $this->comparison_service    = $comparison_service;
         $this->current_user_provider = $current_user_provider;
@@ -71,7 +71,7 @@ class ComparisonController
         ?string $name,
         ?string $comment,
         int $base_baseline_id,
-        int $compared_to_baseline_id
+        int $compared_to_baseline_id,
     ): ComparisonRepresentation {
         $current_user = $this->current_user_provider->getUser();
 

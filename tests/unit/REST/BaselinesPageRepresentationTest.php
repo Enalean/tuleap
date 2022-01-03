@@ -49,7 +49,7 @@ class BaselinesPageRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
                         ->artifact(BaselineArtifactFactory::one()->id(13)->build())
                         ->snapshotDate(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'))
                         ->author(new PFUser(['user_id' => 22]))
-                        ->build()
+                        ->build(),
 
                 ],
                 10,
@@ -66,7 +66,7 @@ class BaselinesPageRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
                     13,
                     '2019-03-21T14:47:03+01:00',
                     22
-                )
+                ),
             ],
             233
         );

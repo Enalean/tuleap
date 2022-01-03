@@ -50,7 +50,7 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_Artifact_ChangesetFactory $changeset_factory,
         SemanticValueAdapter $semantic_value_adapter,
-        ArtifactLinkRepository $artifact_link_adapter
+        ArtifactLinkRepository $artifact_link_adapter,
     ) {
         $this->artifact_factory       = $artifact_factory;
         $this->changeset_factory      = $changeset_factory;
@@ -103,7 +103,7 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
         PFUser $current_user,
         int $id,
         Project $project,
-        Tracker_Artifact_Changeset $changeset
+        Tracker_Artifact_Changeset $changeset,
     ): BaselineArtifact {
         $title          = $this->semantic_value_adapter->findTitle($changeset, $current_user);
         $description    = $this->semantic_value_adapter->findDescription($changeset, $current_user);

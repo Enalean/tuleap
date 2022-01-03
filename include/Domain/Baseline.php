@@ -39,7 +39,7 @@ class Baseline extends TransientBaseline
         string $name,
         BaselineArtifact $artifact,
         DateTimeInterface $snapshot_date,
-        PFUser $author
+        PFUser $author,
     ) {
         parent::__construct($name, $artifact, $snapshot_date);
         $this->id     = $id;

@@ -43,7 +43,7 @@ class TransientComparison
         ?string $name,
         ?string $comment,
         Baseline $base_baseline,
-        Baseline $compared_to_baseline
+        Baseline $compared_to_baseline,
     ) {
         $this->name                 = $name;
         $this->comment              = $comment;

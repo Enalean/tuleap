@@ -56,7 +56,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
         UserManager $user_manager,
         BaselineArtifactRepository $baseline_artifact_repository,
         Authorizations $authorizations,
-        ClockAdapter $clock
+        ClockAdapter $clock,
     ) {
         $this->db                           = $db;
         $this->user_manager                 = $user_manager;
@@ -71,7 +71,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
     public function add(
         TransientBaseline $baseline,
         PFUser $current_user,
-        DateTimeInterface $snapshot_date
+        DateTimeInterface $snapshot_date,
     ): Baseline {
         $id = (int) $this->db->insertReturnId(
             'plugin_baseline_baseline',
@@ -79,7 +79,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
                 'name'          => $baseline->getName(),
                 'artifact_id'   => $baseline->getArtifact()->getId(),
                 'user_id'       => $current_user->getId(),
-                'snapshot_date' => $snapshot_date->getTimestamp()
+                'snapshot_date' => $snapshot_date->getTimestamp(),
             ]
         );
 

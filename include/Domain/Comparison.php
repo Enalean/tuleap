@@ -44,7 +44,7 @@ class Comparison extends TransientComparison
         Baseline $base_baseline,
         Baseline $compared_to_baseline,
         PFUser $author,
-        DateTimeInterface $creation_date
+        DateTimeInterface $creation_date,
     ) {
         parent::__construct($name, $comment, $base_baseline, $compared_to_baseline);
         $this->id            = $id;

@@ -57,7 +57,9 @@ $artifact-body-padding: var(--tlp-medium-spacing);
     }
 }
 
-.comparison-content > .comparison-content-artifact-ol > .comparison-content-artifact-li:first-child {
+.comparison-content
+    > .comparison-content-artifact-ol
+    > .comparison-content-artifact-li:first-child {
     margin-top: 0;
 }
 
