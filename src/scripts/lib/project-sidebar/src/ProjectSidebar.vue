@@ -24,7 +24,7 @@
     <aside v-if="sidebar_configuration !== undefined" class="sidebar">
         <sidebar-logo />
         <div class="sidebar-content-vertical-scroll">
-            <sidebar-header />
+            <sidebar-header v-on:foo3="console.log('eee')" />
             <tools />
         </div>
         <div class="sidebar-spacer"></div>
@@ -36,7 +36,7 @@ import { unserializeConfiguration } from "./configuration";
 import { provide, readonly, computed } from "vue";
 import SidebarHeader from "./Header/SidebarHeader.vue";
 import SidebarFooter from "./SidebarFooter.vue";
-import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
+import { SIDEBAR_CONFIGURATION, TRIGGER_SHOW_PROJECT_ANNOUNCEMENT } from "./injection-symbols";
 import Tools from "./Tools/Tools.vue";
 import SidebarLogo from "./SidebarLogo.vue";
 
@@ -44,6 +44,13 @@ const props = defineProps<{ config: string | undefined }>();
 const sidebar_configuration = readonly(computed(() => unserializeConfiguration(props.config)));
 
 provide(SIDEBAR_CONFIGURATION, sidebar_configuration);
+const emit = defineEmits<{
+    (e: "show-project-announcement"): void;
+}>();
+
+provide(TRIGGER_SHOW_PROJECT_ANNOUNCEMENT, () => {
+    emit("show-project-announcement");
+});
 </script>
 <style lang="scss">
 @use "../../../themes/tlp/src/scss/components/typography";

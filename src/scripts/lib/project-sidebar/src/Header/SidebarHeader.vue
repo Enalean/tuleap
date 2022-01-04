@@ -44,6 +44,7 @@
         </div>
         <privacy-badge />
     </div>
+    <project-announcement />
     <project-flags />
 </template>
 <script setup lang="ts">
@@ -53,6 +54,7 @@ import PrivacyBadge from "./PrivacyBadge.vue";
 import { computed } from "vue";
 import { sanitizeURL } from "../url-sanitizer";
 import ProjectFlags from "./ProjectFlags.vue";
+import ProjectAnnouncement from "./ProjectAnnouncement.vue";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
 
