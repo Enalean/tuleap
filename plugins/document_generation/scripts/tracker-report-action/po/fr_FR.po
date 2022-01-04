@@ -109,9 +109,6 @@ msgstr "Critère de recherche"
 msgid "Status"
 msgstr "Statut"
 
-msgid "Status: %s"
-msgstr "Statut : %s"
-
 msgid "Step"
 msgstr "Étape"
 

@@ -40,6 +40,7 @@ import {
     transformLargeContentIntoParagraphs,
     HTML_ORDERED_LIST_NUMBERING,
     HTML_UNORDERED_LIST_NUMBERING,
+    buildCellContentStatus,
 } from "@tuleap/plugin-docgen-docx";
 import type {
     ArtifactContainer,
@@ -240,13 +241,12 @@ async function buildFieldValuesDisplayZone(
                                 buildTableCellLabel(
                                     sprintf(gettext_provider.gettext("Step %d"), step_number)
                                 ),
-                                buildTableCellContent(
-                                    new TextRun(
-                                        getInternationalizedTestStatus(
-                                            gettext_provider,
-                                            step_status
-                                        )
-                                    )
+
+                                buildCellContentStatus(
+                                    step_status,
+                                    (status) =>
+                                        getInternationalizedTestStatus(gettext_provider, status),
+                                    1
                                 ),
                             ],
                             tableHeader: true,
@@ -265,19 +265,22 @@ async function buildFieldValuesDisplayZone(
                                 ),
                             ],
                         }),
-                        new Paragraph({
-                            children: [
-                                new TextRun(
-                                    sprintf(
-                                        gettext_provider.gettext("Status: %s"),
-                                        getInternationalizedTestStatus(
-                                            gettext_provider,
-                                            step.status
-                                        )
-                                    )
-                                ),
-                            ],
-                        }),
+                        buildTable([
+                            new TableRow({
+                                children: [
+                                    buildTableCellLabel(gettext_provider.gettext("Status")),
+                                    buildCellContentStatus(
+                                        step.status,
+                                        (status) =>
+                                            getInternationalizedTestStatus(
+                                                gettext_provider,
+                                                status
+                                            ),
+                                        1
+                                    ),
+                                ],
+                            }),
+                        ]),
                         ...(await buildStepDefinitionParagraphs(step, gettext_provider))
                     );
                 }
