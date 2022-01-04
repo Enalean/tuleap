@@ -34,11 +34,11 @@ function setSidebarUserPreference(new_width) {
     var state = new_width === width_expanded ? "sidebar-expanded" : "sidebar-collapsed";
 
     $.ajax({
-        type: "POST",
-        url: "/account/update-sidebar-preference.php",
+        type: "PATCH",
+        url: "/api/users/self/preferences",
         data: {
-            user_preference_name: "sidebar_state",
-            sidebar_state: state,
+            key: "sidebar_state",
+            value: state,
         },
     });
 
