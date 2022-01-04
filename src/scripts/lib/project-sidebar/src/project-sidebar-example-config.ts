@@ -27,8 +27,6 @@ export const example_config: Configuration = {
         tools: "Tools",
         homepage: "Homepage",
         project_administration: "Project administration",
-        project_announcement: "Project announcement",
-        show_project_announcement: "Show project announcement",
     },
     project: {
         icon: "🌷",
@@ -45,7 +43,6 @@ export const example_config: Configuration = {
                 "Project privacy set to public. By default, its content is available to all authenticated, but not restricted, users. Please note that more restrictive permissions might exist on some items.",
             privacy_title: "Public",
         },
-        has_project_announcement: true,
         flags: [
             {
                 label: "Label A",

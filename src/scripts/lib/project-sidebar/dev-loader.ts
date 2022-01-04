@@ -28,10 +28,4 @@ document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.createElement("tuleap-project-sidebar");
     sidebar.setAttribute("config", JSON.stringify(example_config));
     document.body.appendChild(sidebar);
-
-    // Quick&dirty demo
-    sidebar.addEventListener("show-project-announcement", () => {
-        // eslint-disable-next-line no-alert
-        alert("Show project announcement");
-    });
 });
