@@ -40,7 +40,7 @@ final class ChangesetValuesFormatter
     }
 
     /**
-     * @return array<int,string|array>
+     * @return array<int,string|int|array>
      */
     public function formatForTrackerPlugin(MirroredTimeboxChangesetValues $values): array
     {
