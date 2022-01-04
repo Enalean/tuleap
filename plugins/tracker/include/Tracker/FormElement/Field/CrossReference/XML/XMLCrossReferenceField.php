@@ -24,15 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\CrossReference\XML;
 
 use Tuleap\Tracker\FormElement\Field\XML\XMLField;
-use Tuleap\Tracker\XML\IDGenerator;
 
 final class XMLCrossReferenceField extends XMLField
 {
-    /**
-     * @param string|IDGenerator $id
-     */
-    public function __construct($id, string $name)
+    public static function getType(): string
     {
-        parent::__construct($id, \Tracker_FormElementFactory::FIELD_CROSS_REFERENCES, $name);
+        return \Tracker_FormElementFactory::FIELD_CROSS_REFERENCES;
     }
 }

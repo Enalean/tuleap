@@ -23,7 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Container\XML;
 
+use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
+use Tuleap\Tracker\XML\IDGenerator;
+use Tuleap\Tracker\XML\XMLTracker;
 
 abstract class XMLContainer extends XMLFormElement
 {
@@ -31,7 +34,19 @@ abstract class XMLContainer extends XMLFormElement
      * @var XMLFormElement[]
      * @readonly
      */
-    public $form_elements = [];
+    public array $form_elements = [];
+
+    final public function __construct(string|IDGenerator $id, string $name)
+    {
+        parent::__construct($id, static::getType(), $name);
+    }
+
+    abstract public static function getType(): string;
+
+    public static function fromTrackerAndName(XMLTracker $tracker, string $name): static
+    {
+        return new static(FieldNameFormatter::getFormattedName($tracker->item_name . '_' . $name), $name);
+    }
 
     public function export(\SimpleXMLElement $form_elements): \SimpleXMLElement
     {

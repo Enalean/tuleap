@@ -277,7 +277,6 @@ class JiraXmlExporter
         );
 
         $xml_tracker = $this->always_there_fields_exporter->exportFields(
-            $field_id_generator,
             $xml_tracker,
             $status_values_collection,
             $jira_field_mapping_collection,

@@ -23,7 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\XML;
 
+use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
+use Tuleap\Tracker\XML\IDGenerator;
+use Tuleap\Tracker\XML\XMLTracker;
 
 abstract class XMLField extends XMLFormElement
 {
@@ -31,12 +34,23 @@ abstract class XMLField extends XMLFormElement
      * @var XMLFieldPermission[]
      * @readonly
      */
-    private $permissions = [];
+    private array $permissions = [];
     /**
-     * @var bool
      * @readonly
      */
-    private $without_permissions_authorized = false;
+    private bool $without_permissions_authorized = false;
+
+    final public function __construct(string|IDGenerator $id, string $name)
+    {
+        parent::__construct($id, static::getType(), $name);
+    }
+
+    abstract public static function getType(): string;
+
+    public static function fromTrackerAndName(XMLTracker $tracker, string $name): static
+    {
+        return new static(FieldNameFormatter::getFormattedName($tracker->item_name . '_' . $name), $name);
+    }
 
     /**
      * @psalm-mutation-free

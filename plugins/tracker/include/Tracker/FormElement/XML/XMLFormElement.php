@@ -93,10 +93,7 @@ abstract class XMLFormElement
      */
     private $scope = 'P';
 
-    /**
-     * @param string|IDGenerator $id
-     */
-    public function __construct($id, string $type, string $name)
+    public function __construct(string|IDGenerator $id, string $type, string $name)
     {
         if ($id instanceof IDGenerator) {
             $this->id = sprintf('%s%d', \Tracker_FormElement::XML_ID_PREFIX, $id->getNextId());

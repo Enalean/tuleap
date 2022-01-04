@@ -25,15 +25,11 @@ namespace Tuleap\AgileDashboard\FormElement\Burnup\XML;
 
 use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\Tracker\FormElement\Field\XML\XMLField;
-use Tuleap\Tracker\XML\IDGenerator;
 
 final class XMLBurnupField extends XMLField
 {
-    /**
-     * @param string|IDGenerator $id
-     */
-    public function __construct($id, string $name)
+    public static function getType(): string
     {
-        parent::__construct($id, Burnup::TYPE, $name);
+        return Burnup::TYPE;
     }
 }

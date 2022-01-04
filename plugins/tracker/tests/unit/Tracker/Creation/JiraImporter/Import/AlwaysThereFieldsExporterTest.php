@@ -48,7 +48,7 @@ class AlwaysThereFieldsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $field_mapping_collection = new FieldMappingCollection();
-        $xml_tracker              = $builder->exportFields($id_generator, new XMLTracker($id_generator, 'bug'), $status_value_collection, $field_mapping_collection);
+        $xml_tracker              = $builder->exportFields(new XMLTracker($id_generator, 'bug'), $status_value_collection, $field_mapping_collection);
 
         $xml = $xml_tracker->export(new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />'));
 

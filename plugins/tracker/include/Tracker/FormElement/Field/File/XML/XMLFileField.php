@@ -24,13 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\File\XML;
 
 use Tuleap\Tracker\FormElement\Field\XML\XMLField;
-use Tuleap\Tracker\XML\IDGenerator;
 
 final class XMLFileField extends XMLField
 {
-
-    public function __construct(string|IDGenerator $id, string $name)
+    public static function getType(): string
     {
-        parent::__construct($id, \Tracker_FormElementFactory::FIELD_FILE_TYPE, $name);
+        return \Tracker_FormElementFactory::FIELD_FILE_TYPE;
     }
 }

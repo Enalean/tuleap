@@ -30,7 +30,7 @@ class FieldNameFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $formatter = new FieldNameFormatter();
         $label     = 'titi est dans la brouSSe avec ro,min"ééééet';
-        $label     = $formatter->getFormattedName($label);
+        $label     = FieldNameFormatter::getFormattedName($label);
 
         $this->assertEquals('titi_est_dans_la_brousse_avec_rominet', $label);
     }

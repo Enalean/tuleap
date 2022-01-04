@@ -25,15 +25,11 @@ namespace Tuleap\Tracker\FormElement\Container\Fieldset\XML;
 
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\FormElement\Container\XML\XMLContainer;
-use Tuleap\Tracker\XML\IDGenerator;
 
 final class XMLFieldset extends XMLContainer
 {
-    /**
-     * @param string|IDGenerator $id
-     */
-    public function __construct($id, string $name)
+    public static function getType(): string
     {
-        parent::__construct($id, Tracker_FormElementFactory::CONTAINER_FIELDSET_TYPE, $name);
+        return Tracker_FormElementFactory::CONTAINER_FIELDSET_TYPE;
     }
 }

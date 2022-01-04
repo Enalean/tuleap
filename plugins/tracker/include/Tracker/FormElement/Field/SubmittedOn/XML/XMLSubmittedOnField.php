@@ -24,15 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\SubmittedOn\XML;
 
 use Tuleap\Tracker\FormElement\Field\XML\XMLField;
-use Tuleap\Tracker\XML\IDGenerator;
 
 final class XMLSubmittedOnField extends XMLField
 {
-    /**
-     * @param string|IDGenerator $id
-     */
-    public function __construct($id, string $name)
+    public static function getType(): string
     {
-        parent::__construct($id, \Tracker_FormElementFactory::FIELD_SUBMITTED_ON_TYPE, $name);
+        return \Tracker_FormElementFactory::FIELD_SUBMITTED_ON_TYPE;
     }
 }

@@ -25,16 +25,12 @@ namespace Tuleap\TestManagement\Step\Definition\Field\XML;
 
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\Tracker\FormElement\Field\XML\XMLField;
-use Tuleap\Tracker\XML\IDGenerator;
 
 final class XMLStepDefinition extends XMLField
 {
-    /**
-     * @param string|IDGenerator $id
-     */
-    public function __construct($id, string $name)
+    public static function getType(): string
     {
-        parent::__construct($id, StepDefinition::TYPE, $name);
+        return StepDefinition::TYPE;
     }
 
     protected function getXMLTagName(): string

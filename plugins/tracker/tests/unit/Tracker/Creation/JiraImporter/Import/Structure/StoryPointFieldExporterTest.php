@@ -63,7 +63,6 @@ final class StoryPointFieldExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $builder           = new AlwaysThereFieldsExporter();
         $this->xml_tracker = $builder->exportFields(
-            $this->id_generator,
             new XMLTracker($this->id_generator, 'whatever'),
             new StatusValuesCollection(
                 $jira_client,
