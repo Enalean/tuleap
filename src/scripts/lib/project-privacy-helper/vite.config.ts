@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,10 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import BreadcrumbPrivacy from "./BreadcrumbPrivacy.vue";
-export { BreadcrumbPrivacy };
+import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
+import * as path from "path";
 
-export interface ProjectFlag {
-    readonly label: string;
-    readonly description: string;
-}
+export default defineConfig(
+    {
+        build: {
+            lib: {
+                entry: path.resolve(__dirname, "src/project-privacy-helper.ts"),
+                name: "ProjectPrivacyHelper",
+            },
+        },
+    },
+    { typescript: true }
+);

@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/project-privacy-helper': link:../project-privacy-helper
   '@tuleap/tlp-popovers': file:../tlp-popovers
   '@vue/test-utils': ^1.3.0
   vue: ^2.6.14
@@ -8,6 +9,7 @@ specifiers:
   vue-property-decorator: ^9.1.2
 
 dependencies:
+  '@tuleap/project-privacy-helper': link:../project-privacy-helper
   '@tuleap/tlp-popovers': link:../tlp-popovers
 
 devDependencies:

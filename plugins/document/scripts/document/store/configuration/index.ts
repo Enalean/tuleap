@@ -19,7 +19,8 @@
 
 import type { RootState } from "../../type";
 import type { Module } from "vuex";
-import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 import * as getters from "./getters";
 
 export interface ConfigurationState {

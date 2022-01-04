@@ -50,7 +50,7 @@
 import { ref, computed, onMounted } from "vue";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { strictInject } from "../strict-inject";
-import { getProjectPrivacyIcon } from "../../../vue-breadcrumb-privacy/src/project-privacy-helper";
+import { getProjectPrivacyIcon } from "@tuleap/project-privacy-helper";
 import { createPopover } from "@tuleap/tlp-popovers";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);

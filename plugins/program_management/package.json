@@ -8,6 +8,7 @@
     "@tuleap/core": "file:../../src",
     "@tuleap/date-helper": "file:../../src/scripts/lib/date-helper",
     "@tuleap/drag-and-drop": "file:../../src/scripts/lib/drag-and-drop",
+    "@tuleap/project-privacy-helper": "link:../../src/scripts/lib/project-privacy-helper",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "@tuleap/vue-breadcrumb-privacy": "file:../../src/scripts/lib/vue-breadcrumb-privacy",
     "sprintf-js": "^1.1.2",

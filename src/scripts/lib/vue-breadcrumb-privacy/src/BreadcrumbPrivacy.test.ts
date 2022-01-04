@@ -19,7 +19,7 @@
 
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import BreadcrumbPrivacy from "./BreadcrumbPrivacy.vue";
-import type { ProjectPrivacy } from "./project-privacy-helper";
+import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 
 // Mock TLP as it is an "externals" in webpack
 jest.mock("@tuleap/tlp", () => {

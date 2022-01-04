@@ -27,11 +27,6 @@ export interface ProjectPrivacy {
     readonly privacy_title: string;
 }
 
-export interface ProjectFlag {
-    readonly label: string;
-    readonly description: string;
-}
-
 export function getProjectPrivacyIcon(privacy: ProjectPrivacy): string {
     if (privacy.are_restricted_users_allowed) {
         if (privacy.project_is_public) {

@@ -82,7 +82,8 @@ import {
 } from "../breadcrumb-presenter";
 import { getUserIsAdmin } from "../repository-list-presenter";
 import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
-import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 
 @Component({ components: { BreadcrumbPrivacy } })
 export default class GitBreadcrumbs extends Vue {
