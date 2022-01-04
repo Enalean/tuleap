@@ -21,40 +21,55 @@
   -->
 
 <template>
-    <aside v-if="sidebar_configuration !== undefined" class="sidebar">
-        <sidebar-logo />
-        <div class="sidebar-content-vertical-scroll">
-            <sidebar-header />
-            <tools />
-        </div>
-        <div class="sidebar-spacer"></div>
-        <sidebar-footer />
-    </aside>
+    <div
+        v-if="sidebar_configuration !== undefined"
+        v-bind:class="{ 'sidebar-collapsed': props.collapsed }"
+    >
+        <aside class="sidebar">
+            <sidebar-logo />
+            <div class="sidebar-content-vertical-scroll">
+                <sidebar-header />
+                <tools />
+                <sidebar-collapse-button v-model:is_sidebar_collapsed="is_sidebar_collapsed" />
+            </div>
+            <div class="sidebar-spacer"></div>
+            <sidebar-footer />
+        </aside>
+    </div>
 </template>
 <script setup lang="ts">
 import { unserializeConfiguration } from "./configuration";
-import { provide, readonly, computed } from "vue";
+import { provide, readonly, computed, ref, watch } from "vue";
 import SidebarHeader from "./Header/SidebarHeader.vue";
 import SidebarFooter from "./SidebarFooter.vue";
 import { SIDEBAR_CONFIGURATION, TRIGGER_SHOW_PROJECT_ANNOUNCEMENT } from "./injection-symbols";
 import Tools from "./Tools/Tools.vue";
 import SidebarLogo from "./SidebarLogo.vue";
+import SidebarCollapseButton from "./SidebarCollapseButton.vue";
 
-const props = defineProps<{ config: string | undefined }>();
+const props = defineProps<{ config: string | undefined; collapsed?: boolean | undefined }>();
 const sidebar_configuration = readonly(computed(() => unserializeConfiguration(props.config)));
+
+const is_sidebar_collapsed = ref(props.collapsed ?? false);
 
 provide(SIDEBAR_CONFIGURATION, sidebar_configuration);
 const emit = defineEmits<{
     (e: "show-project-announcement"): void;
+    (e: "sidebar-collapsed"): void;
 }>();
 
 provide(TRIGGER_SHOW_PROJECT_ANNOUNCEMENT, () => {
     emit("show-project-announcement");
 });
+
+watch(is_sidebar_collapsed, (): void => {
+    emit("sidebar-collapsed");
+});
 </script>
 <style lang="scss">
 @use "../../../themes/tlp/src/scss/components/typography";
 @use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-generic";
+@use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-collapsed";
 @use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-project";
 @use "../../../themes/BurningParrot/css/includes/logo";
 @use "@fortawesome/fontawesome-free/scss/fontawesome";

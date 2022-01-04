@@ -1,19 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ProjectSidebar displays sidebar 1`] = `
-<aside
-  class="sidebar"
+<div
+  class=""
 >
-  <sidebar-logo-stub />
-  <div
-    class="sidebar-content-vertical-scroll"
+  <aside
+    class="sidebar"
   >
-    <sidebar-header-stub />
-    <tools-stub />
-  </div>
-  <div
-    class="sidebar-spacer"
-  />
-  <sidebar-footer-stub />
-</aside>
+    <sidebar-logo-stub />
+    <div
+      class="sidebar-content-vertical-scroll"
+    >
+      <sidebar-header-stub />
+      <tools-stub />
+      <sidebar-collapse-button-stub
+        is_sidebar_collapsed="false"
+      />
+    </div>
+    <div
+      class="sidebar-spacer"
+    />
+    <sidebar-footer-stub />
+  </aside>
+</div>
 `;

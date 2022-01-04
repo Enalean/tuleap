@@ -54,8 +54,7 @@
 
     #logo {
         width: global-variables.$sidebar-collapsed-width;
-        background: var(--tlp-main-color) url("/images/organization_logo_small.png") no-repeat
-            center center;
+        background: var(--tlp-main-color) var(--logo-small-url) no-repeat center center;
     }
 
     .project-administration-link {

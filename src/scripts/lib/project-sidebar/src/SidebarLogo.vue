@@ -111,15 +111,20 @@ const vDompurifyHtml = buildVueDompurifyHTMLDirective({
     },
 });
 const legacy_logo = ref<InstanceType<typeof HTMLElement>>();
-const updateLegacyLogoURLCssVar = (legacy_png_href: string | null): void => {
+const updateLegacyLogoURLCssVar = (addresses: { normal: string; small: string } | null): void => {
     legacy_logo.value?.style.setProperty(
         "--logo-url",
-        `url(${sanitizeURL(legacy_png_href ?? "")})`
+        `url(${sanitizeURL(addresses?.normal ?? "")})`
+    );
+    legacy_logo.value?.style.setProperty(
+        "--logo-small-url",
+        `url(${sanitizeURL(addresses?.small ?? "")})`
     );
 };
 onMounted(() => {
     watch(
-        (): string | null => config.value.instance_information.logo.legacy_png_href,
+        (): { normal: string; small: string } | null =>
+            config.value.instance_information.logo.legacy_png_href,
         updateLegacyLogoURLCssVar
     );
     updateLegacyLogoURLCssVar(config.value.instance_information.logo.legacy_png_href);

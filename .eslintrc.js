@@ -254,6 +254,7 @@ module.exports = {
                 "vue/html-indent": "off", // Conflict with Prettier
                 "vue/max-attributes-per-line": "off", // Conflict with Prettier
                 "vue/no-multiple-template-root": "off", // Specific to Vue 2
+                "vue/no-v-model-argument": "off", // Specific to Vue 2
                 "vue/prop-name-casing": ["error", "snake_case"],
             },
         },
