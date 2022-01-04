@@ -25,7 +25,7 @@
             v-bind:data-privacy-icon="project_privacy_icon"
             ref="popover_icon"
         >
-            <i class="fa breadcrumb-project-privacy-icon" v-bind:class="project_privacy_icon"></i>
+            <i class="fas breadcrumb-project-privacy-icon" v-bind:class="project_privacy_icon"></i>
 
             <span class="current-project-nav-flag-labels" v-if="has_project_flags">
                 <span
