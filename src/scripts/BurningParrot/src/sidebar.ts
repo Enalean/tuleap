@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { post } from "tlp";
+import { patch } from "tlp";
 
 export { init };
 
@@ -40,23 +40,18 @@ function init(): void {
             const is_clicked_element_a_sidebar_collapser =
                 isClickedElementASidebarCollapser(clicked_element);
             const sidebar_collapsed_class = clicked_element.dataset.collapsedClass;
-            const user_preference_name = clicked_element.dataset.userPreferenceName;
 
-            if (
-                !is_clicked_element_a_sidebar_collapser ||
-                !sidebar_collapsed_class ||
-                !user_preference_name
-            ) {
+            if (!is_clicked_element_a_sidebar_collapser || !sidebar_collapsed_class) {
                 return;
             }
 
             if (document.body.classList.contains(sidebar_collapsed_class)) {
                 document.body.classList.remove(sidebar_collapsed_class);
-                updateUserPreferences(user_preference_name, "sidebar-expanded");
+                updateSidebarStateUserPreference("sidebar-expanded");
             } else {
                 document.body.classList.remove("sidebar-expanded", sidebar_collapsed_class);
                 document.body.classList.add(sidebar_collapsed_class);
-                updateUserPreferences(user_preference_name, sidebar_collapsed_class);
+                updateSidebarStateUserPreference(sidebar_collapsed_class);
             }
         });
     }
@@ -74,11 +69,14 @@ function init(): void {
     }
 }
 
-function updateUserPreferences(user_preference_name: string, state: string): void {
-    const headers = { "Content-Type": "application/x-www-form-urlencoded; charset=utf-8" };
-    const body = `user_preference_name=${user_preference_name}&sidebar_state=${state}`;
-    post("/account/update-sidebar-preference.php", {
-        headers,
-        body,
+function updateSidebarStateUserPreference(state: string): void {
+    patch("/api/users/self/preferences", {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            key: "sidebar_state",
+            value: state,
+        }),
     });
 }
