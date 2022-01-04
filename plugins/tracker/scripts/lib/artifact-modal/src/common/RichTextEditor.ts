@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TaggedHybrids } from "hybrids";
-import { dispatch, html, property } from "hybrids";
+import { define, dispatch, html } from "hybrids";
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
@@ -28,6 +27,7 @@ import {
     MaxSizeUploadExceededError,
     UploadError,
 } from "@tuleap/ckeditor-image-upload";
+import type { TextFieldFormat } from "../../../../constants/fields-constants";
 import {
     isValidTextFormat,
     TEXT_FORMAT_COMMONMARK,
@@ -37,7 +37,6 @@ import {
     setIsNotUploadingInCKEditor,
     setIsUploadingInCKEditor,
 } from "../fields/file-field/is-uploading-in-ckeditor-state";
-import type { TextFieldFormat } from "../../../../constants/fields-constants";
 import type { DisconnectFunction, FileField } from "../types";
 import {
     getNoPasteMessage,
@@ -207,9 +206,9 @@ export const connect = (host: HostElement): DisconnectFunction | void => {
     };
 };
 
-export const RichTextEditor: TaggedHybrids<RichTextEditor> = {
+export const RichTextEditor = define<RichTextEditor>({
     tag: "tuleap-artifact-modal-rich-text-editor",
-    identifier: property("", connect),
+    identifier: { value: "", connect },
     format: { set: getValidFormat },
     contentValue: "",
     disabled: false,
@@ -245,4 +244,4 @@ ${host.contentValue}</textarea
             <p data-test="help" class="tlp-text-muted">${getRTEHelpMessage()}</p>
         `}
     `,
-};
+});

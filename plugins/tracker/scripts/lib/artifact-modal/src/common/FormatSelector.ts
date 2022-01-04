@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TaggedHybrids } from "hybrids";
-import { dispatch, html, property } from "hybrids";
+import { define, dispatch, html } from "hybrids";
 import { getCommonMarkLabel, getHTMLLabel, getTextLabel } from "../gettext-catalog";
 import type { TextFieldFormat } from "../../../../constants/fields-constants";
 import {
@@ -26,6 +25,8 @@ import {
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
 } from "../../../../constants/fields-constants";
+import "./CommonmarkSyntaxHelper";
+import "./CommonmarkPreviewButton";
 
 export interface FormatSelector {
     identifier: string;
@@ -57,9 +58,9 @@ const onPreview = (host: HTMLElement): void => {
 
 const isSelected = (host: FormatSelector, value: TextFieldFormat): boolean => host.value === value;
 
-export const FormatSelector: TaggedHybrids<FormatSelector> = {
+export const FormatSelector = define<FormatSelector>({
     tag: "tuleap-artifact-modal-format-selector",
-    identifier: property("", connect),
+    identifier: { value: "", connect },
     label: "",
     value: "",
     disabled: false,
@@ -119,4 +120,4 @@ export const FormatSelector: TaggedHybrids<FormatSelector> = {
             </div>
         </div>
     `,
-};
+});

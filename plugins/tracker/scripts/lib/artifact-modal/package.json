@@ -21,7 +21,7 @@
     "buffer": "^6.0.3",
     "dompurify": "^2.2.9",
     "events": "^3.3.0",
-    "hybrids": "^6.0.0",
+    "hybrids": "^7.0.4",
     "lodash": "2.4.0",
     "moment": "^2.29.1",
     "ngVue": "^1.7.8",

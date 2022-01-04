@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TaggedHybrids } from "hybrids";
-import { dispatch, html } from "hybrids";
+import { define, dispatch, html } from "hybrids";
 import { getEditButtonLabel, getPreviewButtonLabel } from "../gettext-catalog";
 
 export interface CommonmarkPreviewButton {
@@ -48,7 +47,7 @@ export const onClick = (host: HTMLElement): void => {
     dispatch(host, "commonmark-preview-event");
 };
 
-export const CommonmarkPreviewButton: TaggedHybrids<CommonmarkPreviewButton> = {
+export const CommonmarkPreviewButton = define<CommonmarkPreviewButton>({
     tag: "tuleap-artifact-modal-commonmark-preview",
     isInPreviewMode: false,
     isPreviewLoading: false,
@@ -68,4 +67,4 @@ export const CommonmarkPreviewButton: TaggedHybrids<CommonmarkPreviewButton> = {
             ${buttonLabel(host)}
         </button>
     `,
-};
+});

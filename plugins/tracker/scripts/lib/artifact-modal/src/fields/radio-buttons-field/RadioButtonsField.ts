@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TaggedHybrids } from "hybrids";
-import { dispatch, html } from "hybrids";
+import { define, dispatch, html } from "hybrids";
 import { getNone } from "../../gettext-catalog";
 
 export const RADIO_BUTTONS_NONE_VALUE = "100";
@@ -36,7 +35,7 @@ export interface RadioButtonsField {
 export type HostElement = RadioButtonsField & HTMLElement;
 
 interface ListValue {
-    id: string;
+    id: number;
     label: string;
 }
 
@@ -55,14 +54,17 @@ export const onInput = (host: HostElement, event: Event): void => {
     });
 };
 
-export const RadioButtonsField: TaggedHybrids<RadioButtonsField> = {
+export const RadioButtonsField = define<RadioButtonsField>({
     tag: "tuleap-artifact-modal-radio-buttons-field",
     fieldId: 0,
     label: "",
     name: "",
     required: false,
     disabled: false,
-    values: [],
+    values: {
+        get: (host, value = []) => value,
+        set: (host, value) => [...value],
+    },
     value: RADIO_BUTTONS_NONE_VALUE,
     content: (host) => html`
         <div class="tlp-form-element">
@@ -100,7 +102,7 @@ export const RadioButtonsField: TaggedHybrids<RadioButtonsField> = {
                             data-test="radiobutton-field-input"
                             required="${host.required}"
                             disabled="${host.disabled}"
-                            checked="${host.value === value.id}"
+                            checked="${host.value === String(value.id)}"
                         />
                         ${value.label}
                     </label>
@@ -108,4 +110,4 @@ export const RadioButtonsField: TaggedHybrids<RadioButtonsField> = {
             )}
         </div>
     `,
-};
+});

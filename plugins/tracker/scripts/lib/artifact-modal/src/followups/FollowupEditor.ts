@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TaggedHybrids } from "hybrids";
-import { html, dispatch } from "hybrids";
+import { define, html, dispatch } from "hybrids";
 import { sanitize } from "dompurify";
 import { getCommentLabel, getCommonMarkPreviewErrorIntroduction } from "../gettext-catalog";
 import type { CommonMarkInterpreter } from "../common/interpret-commonmark";
 import { interpretCommonMark } from "../common/interpret-commonmark";
 import { getValidFormat } from "../common/RichTextEditor";
+import "../common/FormatSelector";
 
 export interface FollowupEditor extends CommonMarkInterpreter {
     contentValue: string;
@@ -60,7 +60,7 @@ const isPreviewShown = (host: FollowupEditor): boolean =>
 
 const HTML_ID = "followup_comment";
 
-export const FollowupEditor: TaggedHybrids<FollowupEditor> = {
+export const FollowupEditor = define<FollowupEditor>({
     tag: "tuleap-artifact-modal-followup-editor",
     contentValue: "",
     format: { set: getValidFormat },
@@ -107,4 +107,4 @@ export const FollowupEditor: TaggedHybrids<FollowupEditor> = {
             </div>
         `}
     `,
-};
+});

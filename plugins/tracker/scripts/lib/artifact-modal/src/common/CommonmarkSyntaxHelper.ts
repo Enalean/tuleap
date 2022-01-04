@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TaggedHybrids } from "hybrids";
-import { html } from "hybrids";
+import { define, html } from "hybrids";
 import { createPopover } from "tlp";
 import example_image from "../assets/image_example_commonmark.png";
 import type { DisconnectFunction } from "../types";
@@ -46,7 +45,7 @@ export const connect = (host: CommonmarkSyntaxHelper): DisconnectFunction | void
     };
 };
 
-export const CommonmarkSyntaxHelper: TaggedHybrids<CommonmarkSyntaxHelper> = {
+export const CommonmarkSyntaxHelper = define<CommonmarkSyntaxHelper>({
     tag: "tuleap-artifact-modal-commonmark-syntax-helper",
     button: (host) => {
         const target = host.content();
@@ -64,9 +63,7 @@ export const CommonmarkSyntaxHelper: TaggedHybrids<CommonmarkSyntaxHelper> = {
         }
         return section;
     },
-    disabled: {
-        connect,
-    },
+    disabled: { value: false, connect },
     content: (host) => html`
         <button
             type="button"
@@ -190,4 +187,4 @@ export const CommonmarkSyntaxHelper: TaggedHybrids<CommonmarkSyntaxHelper> = {
             </div>
         </section>
     `,
-};
+});

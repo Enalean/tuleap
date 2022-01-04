@@ -21,6 +21,8 @@
 import { buttonLabel, CommonmarkPreviewButton, iconClasses } from "./CommonmarkPreviewButton";
 import { setCatalog } from "../gettext-catalog";
 
+type HostElement = CommonmarkPreviewButton & HTMLElement;
+
 describe("CommonmarkPreviewButton", () => {
     beforeEach(() => {
         setCatalog({
@@ -73,7 +75,7 @@ describe("CommonmarkPreviewButton", () => {
                 buttonLabel: "Preview",
                 iconClasses: [],
                 dispatchEvent,
-            } as unknown as CommonmarkPreviewButton & HTMLElement;
+            } as unknown as HostElement;
             const update = CommonmarkPreviewButton.content(host);
             update(host, target);
 
@@ -89,7 +91,7 @@ describe("CommonmarkPreviewButton", () => {
                 isPreviewLoading: true,
                 buttonLabel: "Preview",
                 iconClasses: [],
-            } as unknown as CommonmarkPreviewButton & HTMLElement;
+            } as unknown as HostElement;
             const update = CommonmarkPreviewButton.content(host);
             update(host, target);
 
