@@ -115,12 +115,12 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         $purified_extra_class = $hp->purify($extra_class);
 
         $html  = '';
-        $html .= "<fieldset class=\"tracker_artifact_fieldset $purified_extra_class\">";
+        $html .= "<fieldset class=\"tracker_artifact_fieldset $purified_extra_class\" data-test='fieldset'>";
         $html .= '<legend title="' . $hp->purify($this->getDescription(), CODENDI_PURIFIER_CONVERT_HTML) . '"
                           class="' . Toggler::getClassName('fieldset_' . $this->getId(), $fieldset_is_expanded, true) . '"
                           id="fieldset_' . $this->getId() . '"
                           data-id="' . $this->getId() . '">';
-        $html .= '<table><tr><td class="tracker_artifact_fieldset_title">';
+        $html .= '<table><tr><td class="tracker_artifact_fieldset_title" data-test="fieldset-label">';
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</td>';
         $html .= '<td class="tracker_artifact_fieldset_alwayscollapsed ' . $always_collapsed . '">';
@@ -129,7 +129,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         }
         $html .= '</td></tr></table>';
         $html .= '</legend>';
-        $html .= '<div class="tracker_artifact_fieldset_content">';
+        $html .= '<div class="tracker_artifact_fieldset_content" data-test="fieldset-content">';
 
         return $html;
     }

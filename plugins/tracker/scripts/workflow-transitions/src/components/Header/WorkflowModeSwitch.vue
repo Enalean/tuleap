@@ -44,10 +44,12 @@
                     type="checkbox"
                     id="workflow-advanced-configuration"
                     class="tlp-switch-checkbox"
+                    data-test="switch-mode"
                     v-bind:checked="is_workflow_advanced"
                     v-bind:disabled="is_operation_running"
                 />
                 <label
+                    data-test="switch-button-mode"
                     class="tlp-switch-button"
                     for="workflow-advanced-configuration"
                     v-on:click.prevent="showModal()"

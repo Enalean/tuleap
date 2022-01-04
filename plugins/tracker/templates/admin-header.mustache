@@ -36,13 +36,17 @@
         </ul>
     </li>
     <li class="dropdown {{# is_workflow_tab_active }}active{{/ is_workflow_tab_active }}">
-        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-workflow" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-workflow"
+            class="dropdown-toggle"
+            data-toggle="dropdown"
+            data-target="#"
+            data-test="workflow">
             {{# dgettext }}tuleap-tracker | Workflow{{/ dgettext }}
             <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
             <li>
-                <a href="/plugins/tracker/workflow/{{ tracker_id }}/transitions">
+                <a href="/plugins/tracker/workflow/{{ tracker_id }}/transitions" data-test="transitions">
                     {{# dgettext }}tuleap-tracker | Transition rules{{/ dgettext }}
                 </a>
             </li>
