@@ -23,9 +23,8 @@ $fade-background-color: color.mix($tlp-background-color, $tlp-white-color, 50);
 
 :root {
     // Fonts
-    --tlp-font-family: -apple-system, blinkmacsystemfont, "Segoe UI", roboto, oxygen, ubuntu,
-        cantarell, "Helvetica Neue", arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol";
+    --tlp-font-family: system-ui, "Segoe UI", roboto, oxygen, ubuntu, cantarell, "Helvetica Neue",
+        arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     --tlp-font-family-mono: menlo, monaco, consolas, "Courier New", monospace;
 
     // colors
