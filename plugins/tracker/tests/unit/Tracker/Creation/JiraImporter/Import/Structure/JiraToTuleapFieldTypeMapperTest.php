@@ -101,13 +101,6 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 $mapping = $collection->getMappingFromJiraField('summary');
                 self::assertEquals('summary', $mapping->getFieldName());
-
-                $permissions = $exported_tracker->xpath('//permissions/permission[@REF="' . $node['ID'] . '"]');
-                self::assertCount(3, $permissions);
-
-                self::assertEquals('UGROUP_ANONYMOUS', $exported_tracker->xpath('//permissions/permission[@REF="' . $node['ID'] . '" and @type="PLUGIN_TRACKER_FIELD_READ"]')[0]['ugroup']);
-                self::assertEquals('UGROUP_REGISTERED', $exported_tracker->xpath('//permissions/permission[@REF="' . $node['ID'] . '" and @type="PLUGIN_TRACKER_FIELD_SUBMIT"]')[0]['ugroup']);
-                self::assertEquals('UGROUP_PROJECT_MEMBERS', $exported_tracker->xpath('//permissions/permission[@REF="' . $node['ID'] . '" and @type="PLUGIN_TRACKER_FIELD_UPDATE"]')[0]['ugroup']);
             },
         ];
 
@@ -442,6 +435,48 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 $mapping = $collection->getMappingFromJiraField('custom_123214');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
                 self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::TYPE, $mapping->getBindType());
+            },
+        ];
+
+        yield 'field is available at submit and update' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'summary',
+                'Summary',
+                true,
+                'summary',
+                [],
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="left_column"]//formElement[name="summary"]')[0];
+
+                $permissions = $exported_tracker->xpath('//permissions/permission[@REF="' . $node['ID'] . '"]');
+                self::assertCount(3, $permissions);
+
+                self::assertEquals('UGROUP_ANONYMOUS', $exported_tracker->xpath('//permissions/permission[@REF="' . $node['ID'] . '" and @type="PLUGIN_TRACKER_FIELD_READ"]')[0]['ugroup']);
+                self::assertEquals('UGROUP_REGISTERED', $exported_tracker->xpath('//permissions/permission[@REF="' . $node['ID'] . '" and @type="PLUGIN_TRACKER_FIELD_SUBMIT"]')[0]['ugroup']);
+                self::assertEquals('UGROUP_PROJECT_MEMBERS', $exported_tracker->xpath('//permissions/permission[@REF="' . $node['ID'] . '" and @type="PLUGIN_TRACKER_FIELD_UPDATE"]')[0]['ugroup']);
+            },
+        ];
+
+        yield 'field is only available at update' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'summary',
+                'Summary',
+                true,
+                'summary',
+                [],
+                false,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="left_column"]//formElement[name="summary"]')[0];
+
+                $permissions = $exported_tracker->xpath('//permissions/permission[@REF="' . $node['ID'] . '"]');
+                self::assertCount(2, $permissions);
+
+                self::assertEquals('UGROUP_ANONYMOUS', $exported_tracker->xpath('//permissions/permission[@REF="' . $node['ID'] . '" and @type="PLUGIN_TRACKER_FIELD_READ"]')[0]['ugroup']);
+                self::assertEquals('UGROUP_PROJECT_MEMBERS', $exported_tracker->xpath('//permissions/permission[@REF="' . $node['ID'] . '" and @type="PLUGIN_TRACKER_FIELD_UPDATE"]')[0]['ugroup']);
+                self::assertCount(0, $exported_tracker->xpath('//permissions/permission[@REF="' . $node['ID'] . '" and @type="PLUGIN_TRACKER_FIELD_SUBMIT"]'));
             },
         ];
     }
