@@ -24,7 +24,7 @@ import type {
     ReportCriterionValue,
     TraceabilityMatrixElement,
 } from "../../type";
-import type { IShadingAttributesProperties, ITableCellOptions, XmlComponent } from "docx";
+import type { ITableCellOptions, XmlComponent } from "docx";
 import {
     AlignmentType,
     BorderStyle,
@@ -66,6 +66,8 @@ import {
     getAnchorToArtifactContent,
     HTML_ORDERED_LIST_NUMBERING,
     HTML_UNORDERED_LIST_NUMBERING,
+    TABLE_MARGINS,
+    buildCellContentStatus,
 } from "@tuleap/plugin-docgen-docx";
 import { getInternationalizedTestStatus } from "./internationalize-test-status";
 import { buildListOfArtifactsContent } from "./build-list-of-artifacts-content";
@@ -78,12 +80,6 @@ const TABLE_LABEL_SHADING = {
     val: ShadingType.CLEAR,
     color: "auto",
     fill: "EEEEEE",
-};
-const TABLE_MARGINS = {
-    top: convertInchesToTwip(0.05),
-    bottom: convertInchesToTwip(0.05),
-    left: convertInchesToTwip(0.05),
-    right: convertInchesToTwip(0.05),
 };
 const TABLE_BORDERS = {
     top: {
@@ -788,36 +784,12 @@ function buildTraceabilityMatrix(
     const buildCellContent = (content: TextRun | InternalHyperlink): TableCell =>
         new TableCell(buildCellContentOptions(content));
 
-    const buildCellContentResult = (result: ArtifactFieldValueStatus): TableCell => {
-        const table_cell_options = buildCellContentOptions(
-            new TextRun(getInternationalizedTestStatus(gettext_provider, result))
+    const buildCellContentResult = (status: ArtifactFieldValueStatus): TableCell => {
+        return buildCellContentStatus(
+            status,
+            (status) => getInternationalizedTestStatus(gettext_provider, status),
+            1
         );
-
-        const additional_cell_options: { shading?: IShadingAttributesProperties } = {};
-        switch (result) {
-            case "passed":
-                additional_cell_options.shading = {
-                    fill: "1aa350",
-                };
-                break;
-            case "blocked":
-                additional_cell_options.shading = {
-                    fill: "1aacd8",
-                };
-                break;
-            case "failed":
-                additional_cell_options.shading = {
-                    fill: "e04b4b",
-                };
-                break;
-            default:
-                additional_cell_options.shading = {
-                    fill: "717171",
-                };
-                break;
-        }
-
-        return new TableCell({ ...table_cell_options, ...additional_cell_options });
     };
 
     const table = new Table({

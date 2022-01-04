@@ -27,5 +27,6 @@ export * from "./Artifact/tracker-structure-retriever";
 export * from "./Artifact/test-execution-retriever";
 export * from "./TextContent/transform-large-content-into-paragraphs";
 export * from "./TextContent/transform-html-into-paragraphs";
+export * from "./Table/table-builder";
 export * from "./html-styles";
 export * from "./type";
