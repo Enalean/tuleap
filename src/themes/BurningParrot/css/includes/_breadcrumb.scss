@@ -233,7 +233,7 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
         background: var(--tlp-main-color-transparent-90);
         color: var(--tlp-main-color);
 
-        > .fas {
+        > .breadcrumb-project-privacy-icon {
             color: var(--tlp-main-color);
         }
     }
@@ -243,7 +243,7 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
         background: var(--tlp-dark-color-transparent-90);
         color: var(--tlp-dark-color-lighter-10);
 
-        > .fas {
+        > .breadcrumb-project-privacy-icon {
             color: var(--tlp-dark-color-lighter-10);
         }
     }
