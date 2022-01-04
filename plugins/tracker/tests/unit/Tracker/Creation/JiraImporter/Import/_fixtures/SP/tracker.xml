@@ -87,11 +87,11 @@
               <label><![CDATA[Priority]]></label>
               <bind type="static" is_rank_alpha="0">
                 <items>
-                  <item ID="V15" label="Highest"/>
-                  <item ID="V16" label="High"/>
-                  <item ID="V17" label="Medium"/>
-                  <item ID="V18" label="Low"/>
-                  <item ID="V19" label="Lowest"/>
+                  <item ID="Vbug_priority_highest" label="Highest"/>
+                  <item ID="Vbug_priority_high" label="High"/>
+                  <item ID="Vbug_priority_medium" label="Medium"/>
+                  <item ID="Vbug_priority_low" label="Low"/>
+                  <item ID="Vbug_priority_lowest" label="Lowest"/>
                 </items>
               </bind>
             </formElement>
@@ -373,7 +373,7 @@
         <submitted_on format="ISO8601"><![CDATA[2020-01-14T14:07:16+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
@@ -399,7 +399,7 @@
         <submitted_on format="ISO8601"><![CDATA[2018-01-11T03:54:07+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="assignee" type="list" bind="users">
@@ -443,7 +443,7 @@ To Do to Done 9 days 1 hours 45 minutes ago</p>]]></body>
           <value format="username">thomas_cottier</value>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
@@ -489,7 +489,7 @@ To Do to Done 11 days 3 hours 23 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-01-11T03:54:07+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="assignee" type="list" bind="users">
@@ -530,7 +530,7 @@ To Do to Done 13 days 18 hours 43 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-01-11T03:54:07+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="assignee" type="list" bind="users">
@@ -571,7 +571,7 @@ To Do to Done 16 days 1 hours 21 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-01-11T03:54:07+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="assignee" type="list" bind="users">
@@ -612,7 +612,7 @@ To Do to Done 17 days 13 hours 56 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-01-11T03:54:07+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="assignee" type="list" bind="users">
@@ -653,7 +653,7 @@ To Do to Done 20 days 13 hours 50 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-01-04T09:00:07+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
@@ -691,7 +691,7 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-01-25T05:04:07+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
@@ -734,7 +734,7 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
           </comment>
         </comments>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks">
           <value nature="_is_child"><![CDATA[10131]]></value>
@@ -777,7 +777,7 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
           <value format="id"><![CDATA[2]]></value>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks">
           <value nature="_is_child"><![CDATA[10010]]></value>
@@ -815,7 +815,7 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:09+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
@@ -841,7 +841,7 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
           <value format="id"><![CDATA[1]]></value>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks">
           <value nature="_is_child"><![CDATA[10006]]></value>
@@ -881,7 +881,7 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:09+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
@@ -909,7 +909,7 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:09+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
@@ -977,7 +977,7 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:09+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
@@ -1005,7 +1005,7 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:08+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="status" type="list" bind="static">
@@ -1039,7 +1039,7 @@ Joined Sample Sprint 1 21 days 10 hours 20 minutes ago</p>]]></body>
         <submitted_on format="ISO8601"><![CDATA[2018-02-01T14:14:08+01:00]]></submitted_on>
         <comments/>
         <field_change field_name="priority" type="list" bind="static">
-          <value format="id"><![CDATA[17]]></value>
+          <value format="id"><![CDATA[bug_priority_medium]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks">
           <value nature="Blocks"><![CDATA[10013]]></value>

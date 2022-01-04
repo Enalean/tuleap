@@ -32,6 +32,7 @@ use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\XML\XMLFloatField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindUsersValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLListField;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLMultiSelectBoxField;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLRadioButtonField;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
@@ -167,16 +168,8 @@ class JiraToTuleapFieldTypeMapper
                         ->withLabel($jira_field->getLabel())
                         ->withRank(AlwaysThereFieldsExporter::JIRA_PRIORITY_RANK)
                         ->withRequired($jira_field->isRequired())
-                        ->withStaticValues(
-                            ...array_map(
-                                static fn (JiraFieldAPIAllowedValueRepresentation $value) => new XMLBindStaticValue(
-                                    $id_generator,
-                                    $value->getName()
-                                ),
-                                $jira_field->getBoundValues()
-                            )
-                        )
                         ->withPermissions(... $permissions);
+                    $field = $this->addBoundStaticValues($field, $jira_field);
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -187,16 +180,8 @@ class JiraToTuleapFieldTypeMapper
                         ->withLabel($jira_field->getLabel())
                         ->withRank(5)
                         ->withRequired($jira_field->isRequired())
-                        ->withStaticValues(
-                            ...array_map(
-                                static fn (JiraFieldAPIAllowedValueRepresentation $value) => new XMLBindStaticValue(
-                                    $id_generator,
-                                    $value->getName()
-                                ),
-                                $jira_field->getBoundValues()
-                            )
-                        )
                         ->withPermissions(... $permissions);
+                    $field = $this->addBoundStaticValues($field, $jira_field);
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -207,16 +192,8 @@ class JiraToTuleapFieldTypeMapper
                         ->withLabel($jira_field->getLabel())
                         ->withRank(6)
                         ->withRequired($jira_field->isRequired())
-                        ->withStaticValues(
-                            ...array_map(
-                                static fn (JiraFieldAPIAllowedValueRepresentation $value) => new XMLBindStaticValue(
-                                    $id_generator,
-                                    $value->getName()
-                                ),
-                                $jira_field->getBoundValues()
-                            )
-                        )
                         ->withPermissions(... $permissions);
+                    $field = $this->addBoundStaticValues($field, $jira_field);
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -227,16 +204,8 @@ class JiraToTuleapFieldTypeMapper
                         ->withLabel($jira_field->getLabel())
                         ->withRank(5)
                         ->withRequired($jira_field->isRequired())
-                        ->withStaticValues(
-                            ...array_map(
-                                static fn (JiraFieldAPIAllowedValueRepresentation $value) => new XMLBindStaticValue(
-                                    $id_generator,
-                                    $value->getName()
-                                ),
-                                $jira_field->getBoundValues()
-                            )
-                        )
                         ->withPermissions(... $permissions);
+                    $field = $this->addBoundStaticValues($field, $jira_field);
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -382,5 +351,15 @@ class JiraToTuleapFieldTypeMapper
         }
 
         return $xml_tracker;
+    }
+
+    private function addBoundStaticValues(XMLListField $tuleap_field, JiraFieldAPIRepresentation $jira_field): XMLListField
+    {
+        return $tuleap_field->withStaticValues(
+            ...array_map(
+                static fn (JiraFieldAPIAllowedValueRepresentation $value) => XMLBindStaticValue::fromLabel($tuleap_field, $value->getName()),
+                $jira_field->getBoundValues()
+            )
+        );
     }
 }

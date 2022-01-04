@@ -23,30 +23,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML;
 
+use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLListField;
+use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\XML\IDGenerator;
 
 class XMLBindStaticValue
 {
     /**
-     * @var string
      * @readonly
      */
-    public $id;
+    public string $id;
     /**
-     * @var string
      * @readonly
      */
-    public $id_for_field_change;
+    public string $id_for_field_change;
     /**
-     * @var string
      * @readonly
      */
-    public $label;
+    public string $label;
 
-    /**
-     * @param string|IDGenerator $id
-     */
-    public function __construct($id, string $label)
+    public function __construct(string|IDGenerator $id, string $label)
     {
         if ($id instanceof IDGenerator) {
             $next_id                   = $id->getNextId();
@@ -57,6 +53,11 @@ class XMLBindStaticValue
             $this->id                  = $id;
         }
         $this->label = $label;
+    }
+
+    public static function fromLabel(XMLListField $field, string $label): self
+    {
+        return new self(sprintf('V%s_%s', $field->id, FieldNameFormatter::getFormattedName($label)), $label);
     }
 
     public function export(\SimpleXMLElement $bind): void

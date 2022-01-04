@@ -31,28 +31,11 @@ use Tuleap\Tracker\XML\IDGenerator;
  */
 class JiraFieldAPIAllowedValueRepresentation
 {
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var int
-     */
-    private $xml_id;
-
     private function __construct(
-        int $id,
-        string $name,
-        int $xml_id,
+        private int $id,
+        private string $name,
+        private string $xml_id,
     ) {
-        $this->id     = $id;
-        $this->name   = $name;
-        $this->xml_id = $xml_id;
     }
 
     public static function buildFromAPIResponse(array $jira_field_allowed_value, IDGenerator $id_generator): self
@@ -69,7 +52,7 @@ class JiraFieldAPIAllowedValueRepresentation
         return new self(
             $allowed_value_id,
             $allowed_value_name,
-            $id_generator->getNextId(),
+            (string) $id_generator->getNextId(),
         );
     }
 
@@ -78,13 +61,13 @@ class JiraFieldAPIAllowedValueRepresentation
         return new self(
             (int) $status['id'],
             (string) $status['name'],
-            $id_generator->getNextId(),
+            (string) $id_generator->getNextId(),
         );
     }
 
     public static function buildWithJiraIdOnly(int $jira_id, IDGenerator $id_generator): self
     {
-        return new self($jira_id, '', $id_generator->getNextId());
+        return new self($jira_id, '', (string) $id_generator->getNextId());
     }
 
     public static function buildFromTuleapXML(int $jira_id, XMLBindStaticValue $value): self
@@ -92,7 +75,7 @@ class JiraFieldAPIAllowedValueRepresentation
         return new self(
             $jira_id,
             $value->label,
-            (int) substr($value->id, 1),
+            $value->id_for_field_change,
         );
     }
 
@@ -111,7 +94,7 @@ class JiraFieldAPIAllowedValueRepresentation
         return \Tracker_FormElement_Field_List_Bind_StaticValue::XML_ID_PREFIX . $this->xml_id;
     }
 
-    public function getXMLIdValue(): int
+    public function getXMLIdValue(): string
     {
         return $this->xml_id;
     }
