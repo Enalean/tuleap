@@ -24,7 +24,7 @@
     <aside v-if="sidebar_configuration !== undefined" class="sidebar">
         <sidebar-logo />
         <div class="sidebar-content-vertical-scroll">
-            <sidebar-header v-on:foo3="console.log('eee')" />
+            <sidebar-header />
             <tools />
         </div>
         <div class="sidebar-spacer"></div>
