@@ -7,3 +7,4 @@ node_modules/
 site-content/*/LC_MESSAGES/*.mo
 vendor
 *.po~
+.turbo/
