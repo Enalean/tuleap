@@ -77,7 +77,7 @@ class SendMailSupportController implements DispatchableWithRequest
         string $sys_https_host,
         PFUser $current_user,
         string $message_title,
-        string $message_content
+        string $message_content,
     ): void {
         $current_user_name = 'Anonymous';
 

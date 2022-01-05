@@ -46,7 +46,7 @@ build: export HOME = /build
 build: export TMPDIR = /build
 build:
 	cd /build/src && CYPRESS_INSTALL_BINARY=0 pnpm install && \
-	cd /build/src/ && pnpm --filter '@tuleap/plugin-mytuleap_contact_support...' --workspace-concurrency=-2 run build && \
+	cd /build/src/ && pnpm run build -- --scope=@tuleap/plugin-mytuleap_contact_support --include-dependencies && \
 	cd /build/src/plugins/mytuleap_contact_support && composer install --classmap-authoritative --no-dev --no-interaction --no-scripts
 
 $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz: build $(RPM_TMP)
