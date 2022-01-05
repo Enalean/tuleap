@@ -54,9 +54,8 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsTheJiraTimetrackingConfigurationName(): void
     {
-        $this->jira_client->urls['/rest/api/2/configuration/timetracking'] = [
-            'key'  => "JIRA",
-            'name' => "JIRA provided time tracking",
+        $this->jira_client->urls['/rest/api/2/configuration'] = [
+            'timeTrackingEnabled'  => true,
         ];
 
         $configuration = $this->retriever->getJiraTimetrackingConfiguration();
@@ -65,9 +64,11 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $this->assertSame("jira_timetracking", $configuration);
     }
 
-    public function testItReturnsNullIfTheWrapperReturnsEmptyJson(): void
+    public function testItReturnsNullIfTheWrapperReturnsFalseForTimeTrackingEnabled(): void
     {
-        $this->jira_client->urls['/rest/api/2/configuration/timetracking'] = [];
+        $this->jira_client->urls['/rest/api/2/configuration'] = [
+            'timeTrackingEnabled'  => false,
+        ];
 
         $configuration = $this->retriever->getJiraTimetrackingConfiguration();
 
@@ -76,21 +77,7 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsNullIfKeyEntryIsMissingInJson(): void
     {
-        $this->jira_client->urls['/rest/api/2/configuration/timetracking'] = [
-            'name' => "JIRA provided time tracking",
-        ];
-
-        $configuration = $this->retriever->getJiraTimetrackingConfiguration();
-
-        $this->assertNull($configuration);
-    }
-
-    public function testItReturnsNullIfKeyIsNotMachingExpectedValueInJson(): void
-    {
-        $this->jira_client->urls['/rest/api/2/configuration/timetracking'] = [
-            'key'  => "whatever",
-            'name' => "JIRA provided time tracking",
-        ];
+        $this->jira_client->urls['/rest/api/2/configuration'] = [];
 
         $configuration = $this->retriever->getJiraTimetrackingConfiguration();
 
@@ -99,7 +86,7 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsNullIfTimetrackingIsNotFoundOnServer(): void
     {
-        $request  = HTTPFactoryBuilder::requestFactory()->createRequest('GET', '/rest/api/2/configuration/timetracking');
+        $request  = HTTPFactoryBuilder::requestFactory()->createRequest('GET', '/rest/api/2/configuration');
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(404);
 
         $jira_server_client = new class ($request, $response) extends JiraServerClientStub {
