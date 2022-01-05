@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../../default/css/style';
+@use "../../default/css/style";
 
 #git-notification-mattermost-section .panel-header {
     border-bottom-color: var(--tlp-main-color);
