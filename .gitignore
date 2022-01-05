@@ -7,3 +7,5 @@ node_modules
 *.mo
 vendor
 *.po~
+.turbo/
+tsconfig.tsbuildinfo
