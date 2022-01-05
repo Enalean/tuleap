@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TaggedHybrids } from "hybrids";
-import { dispatch, html } from "hybrids";
+import { define, dispatch, html } from "hybrids";
 import { cleanValue } from "./int-field-value-formatter";
 
 export type AllowedValue = number | "";
@@ -47,7 +46,7 @@ export const onInput = (host: HostElement, event: Event): void => {
     });
 };
 
-export const IntField: TaggedHybrids<IntField> = {
+export const IntField = define<IntField>({
     tag: "tuleap-artifact-modal-int-field",
     fieldId: 0,
     label: "",
@@ -75,4 +74,4 @@ export const IntField: TaggedHybrids<IntField> = {
             />
         </div>
     `,
-};
+});

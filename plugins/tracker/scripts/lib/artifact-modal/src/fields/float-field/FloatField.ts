@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TaggedHybrids } from "hybrids";
-import { dispatch, html } from "hybrids";
+import { define, dispatch, html } from "hybrids";
 import { cleanValue } from "./float-field-value-formatter";
 
 export type AllowedValue = number | "";
@@ -48,7 +47,7 @@ export const onInput = (host: HostElement, event: Event): void => {
     });
 };
 
-export const FloatField: TaggedHybrids<FloatField> = {
+export const FloatField = define<FloatField>({
     tag: "tuleap-artifact-modal-float-field",
     fieldId: 0,
     label: "",
@@ -77,4 +76,4 @@ export const FloatField: TaggedHybrids<FloatField> = {
             />
         </div>
     `,
-};
+});

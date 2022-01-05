@@ -20,7 +20,7 @@ specifiers:
   buffer: ^6.0.3
   dompurify: ^2.2.9
   events: ^3.3.0
-  hybrids: ^6.0.0
+  hybrids: ^7.0.4
   lodash: 2.4.0
   moment: ^2.29.1
   ngVue: ^1.7.8
@@ -46,7 +46,7 @@ dependencies:
   buffer: 6.0.3
   dompurify: 2.3.1
   events: 3.3.0
-  hybrids: 6.0.0
+  hybrids: 7.0.4
   lodash: 2.4.0
   moment: 2.29.1
   ngVue: 1.7.8
@@ -222,8 +222,8 @@ packages:
       path-is-absolute: 1.0.1
     dev: true
 
-  /hybrids/6.0.0:
-    resolution: {integrity: sha512-5Q0AqvlrBgNC9DZHOt8SNATXaDokxNcG7u9f1ZXuh0ugDiOcOybKxhdMZqSOYMqKAnbgNB3+KUItnEkeyMstyQ==}
+  /hybrids/7.0.4:
+    resolution: {integrity: sha512-egw2e+IPyhET4kIaY+oKI/SN3CLcTDRwZtXjrI9TH/c6czQTqGG58AkW8EQKhY93um22rRuM6+l2TTzFkpFzwQ==}
     dev: false
 
   /ieee754/1.2.1:

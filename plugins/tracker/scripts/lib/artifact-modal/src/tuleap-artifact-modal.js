@@ -23,7 +23,6 @@ import angular_moment from "angular-moment";
 import filter from "angular-filter";
 import "angular-gettext";
 import angular_tlp from "@tuleap/angular-tlp";
-import { define } from "hybrids";
 import french_translations from "../po/fr_FR.po";
 
 import angular_custom_elements_module from "angular-custom-elements";
@@ -55,27 +54,11 @@ import HighlightDirective from "./tuleap-highlight/highlight-directive.js";
 import ListPickerDirective from "./fields/list-picker-field/list-picker-field-directive.js";
 import ListPickerMultipleDirective from "./fields/list-picker-multiple-field/list-picker-mulitple-field-directive.js";
 
-import { IntField } from "./fields/int-field/IntField";
-import { StringField } from "./fields/string-field/StringField";
-import { FloatField } from "./fields/float-field/FloatField";
-import { CommonmarkSyntaxHelper } from "./common/CommonmarkSyntaxHelper";
-import { CommonmarkPreviewButton } from "./common/CommonmarkPreviewButton";
-import { RadioButtonsField } from "./fields/radio-buttons-field/RadioButtonsField";
-import { FormatSelector } from "./common/FormatSelector";
-import { RichTextEditor } from "./common/RichTextEditor";
-import { FollowupEditor } from "./followups/FollowupEditor";
-
-define(
-    IntField,
-    StringField,
-    FloatField,
-    CommonmarkSyntaxHelper,
-    CommonmarkPreviewButton,
-    RadioButtonsField,
-    FormatSelector,
-    RichTextEditor,
-    FollowupEditor
-);
+import "./fields/int-field/IntField";
+import "./fields/string-field/StringField";
+import "./fields/float-field/FloatField";
+import "./fields/radio-buttons-field/RadioButtonsField";
+import "./followups/FollowupEditor";
 
 export default angular
     .module("tuleap.artifact-modal", [

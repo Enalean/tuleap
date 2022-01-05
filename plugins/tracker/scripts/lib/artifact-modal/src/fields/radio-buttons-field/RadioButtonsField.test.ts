@@ -18,7 +18,7 @@
  */
 
 import type { HostElement } from "./RadioButtonsField";
-import { onInput, RadioButtonsField } from "./RadioButtonsField";
+import { RadioButtonsField, onInput } from "./RadioButtonsField";
 import { setCatalog } from "../../gettext-catalog";
 
 const getDocument = (): Document => document.implementation.createHTMLDocument();
@@ -63,5 +63,25 @@ describe(`RadioButtonsField`, () => {
 
         const none_input = target.querySelector(`[data-test=radiobutton-field-input][value="100"]`);
         expect(none_input).not.toBeNull();
+    });
+
+    it(`checks matching radio button when given a bind_value_id`, () => {
+        const doc = document.implementation.createHTMLDocument();
+        const target = doc.createElement("text") as unknown as ShadowRoot;
+        host.values = [
+            { id: 505, label: "rondache" },
+            { id: 704, label: "pearlitic" },
+        ];
+        host.value = "505";
+        const update = RadioButtonsField.content(host);
+        update(host, target);
+
+        const inputs = target.querySelectorAll(
+            `[data-test=radiobutton-field-input]`
+        ) as NodeListOf<HTMLInputElement>;
+        const has_checked_input = [...inputs].some(
+            (input) => input.value === "505" && input.checked
+        );
+        expect(has_checked_input).toBe(true);
     });
 });
