@@ -31,7 +31,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 class JiraTimetrackingConfigurationRetriever
 {
     public const CONFIGURATION_KEY = 'jira_timetracking';
-    public const EXPECTED_VALUE    = 'JIRA';
+    private const TIMETRACKING_KEY = 'timeTrackingEnabled';
 
     public function __construct(private JiraClient $jira_client, private LoggerInterface $logger)
     {
@@ -41,7 +41,7 @@ class JiraTimetrackingConfigurationRetriever
     {
         $this->logger->debug("Get Jira timetracking platform configuration.");
 
-        $timetracking_configuration_url = ClientWrapper::JIRA_CORE_BASE_URL . '/configuration/timetracking';
+        $timetracking_configuration_url = ClientWrapper::JIRA_CORE_BASE_URL . '/configuration';
         $this->logger->debug("  GET " . $timetracking_configuration_url);
 
         try {
@@ -53,16 +53,7 @@ class JiraTimetrackingConfigurationRetriever
             throw $exception;
         }
 
-        if ($configuration_data === null) {
-            return null;
-        }
-
-        assert(is_array($configuration_data));
-        if (! array_key_exists('key', $configuration_data)) {
-            return null;
-        }
-
-        if ($configuration_data['key'] === self::EXPECTED_VALUE) {
+        if (isset($configuration_data[self::TIMETRACKING_KEY]) && $configuration_data[self::TIMETRACKING_KEY] === true) {
             return self::CONFIGURATION_KEY;
         }
 
