@@ -17,7 +17,6 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div
         class="tlp-form-element"
@@ -35,12 +34,12 @@
             class="tlp-form-element tlp-select"
             v-bind:id="`document-${currentlyUpdatedItemMetadata.short_name}`"
             v-on:input="$emit('input', $event.target.value)"
-            v-model="currentlyUpdatedItemMetadata.value"
+            v-model="value"
             v-bind:required="currentlyUpdatedItemMetadata.is_required"
             data-test="document-custom-list-select"
         >
             <option
-                v-for="possible_value in project_metadata_list_possible_values.allowed_list_values"
+                v-for="possible_value in project_metadata_list_possible_values"
                 v-bind:key="possible_value.id"
                 v-bind:value="possible_value.id"
                 v-bind:selected="possible_value.id === currentlyUpdatedItemMetadata.value"
@@ -52,25 +51,32 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
-export default {
-    name: "CustomMetadataListSingleValue",
-    props: {
-        currentlyUpdatedItemMetadata: Object,
-    },
-    data() {
-        return {
-            project_metadata_list_possible_values: [],
-        };
-    },
-    computed: {
-        ...mapState("metadata", ["project_metadata_list"]),
-    },
-    mounted() {
-        this.project_metadata_list_possible_values = this.project_metadata_list.find(
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { ListValue, Metadata } from "../../../../store/metadata/module";
+import { namespace } from "vuex-class";
+
+const metadata = namespace("metadata");
+
+@Component
+export default class CustomMetadataListSingleValue extends Vue {
+    @Prop({ required: true })
+    readonly currentlyUpdatedItemMetadata!: Metadata;
+
+    @metadata.State
+    readonly project_metadata_list!: Array<Metadata>;
+
+    private value = String(this.currentlyUpdatedItemMetadata.value);
+    private project_metadata_list_possible_values: Array<ListValue> | null = [];
+
+    mounted(): void {
+        const values = this.project_metadata_list.find(
             ({ short_name }) => short_name === this.currentlyUpdatedItemMetadata.short_name
-        );
-    },
-};
+        )?.allowed_list_values;
+        if (!values) {
+            return;
+        }
+        this.project_metadata_list_possible_values = values;
+    }
+}
 </script>

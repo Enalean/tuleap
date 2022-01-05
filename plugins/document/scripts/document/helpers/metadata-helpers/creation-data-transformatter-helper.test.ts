@@ -102,6 +102,7 @@ describe("creation metadata transformer", () => {
                 list_value: null,
                 is_used: true,
                 description: "",
+                allowed_list_values: null,
             },
         ];
 
@@ -116,6 +117,7 @@ describe("creation metadata transformer", () => {
                 list_value: null,
                 description: "",
                 is_used: true,
+                allowed_list_values: null,
             },
         ];
 
@@ -137,6 +139,7 @@ describe("creation metadata transformer", () => {
                 list_value: null,
                 is_used: true,
                 description: "",
+                allowed_list_values: null,
             },
         ];
 
@@ -151,6 +154,7 @@ describe("creation metadata transformer", () => {
                 list_value: null,
                 description: "",
                 is_used: true,
+                allowed_list_values: null,
             },
         ];
 
@@ -179,6 +183,7 @@ describe("creation metadata transformer", () => {
                 is_used: true,
                 description: "",
                 value: null,
+                allowed_list_values: null,
             },
         ];
 
@@ -193,6 +198,7 @@ describe("creation metadata transformer", () => {
                 list_value: null,
                 description: "",
                 is_used: true,
+                allowed_list_values: null,
             },
         ];
 
@@ -214,6 +220,7 @@ describe("creation metadata transformer", () => {
                 is_used: true,
                 description: "",
                 value: null,
+                allowed_list_values: null,
             },
         ];
 
@@ -228,6 +235,7 @@ describe("creation metadata transformer", () => {
                 list_value: null,
                 description: "",
                 is_used: true,
+                allowed_list_values: null,
             },
         ];
 
@@ -260,6 +268,7 @@ describe("creation metadata transformer", () => {
                 is_used: true,
                 description: "",
                 value: null,
+                allowed_list_values: null,
             },
         ];
 
@@ -274,6 +283,7 @@ describe("creation metadata transformer", () => {
                 value: null,
                 description: "",
                 is_used: true,
+                allowed_list_values: null,
             },
         ];
 
@@ -295,6 +305,7 @@ describe("creation metadata transformer", () => {
                 is_used: true,
                 description: "",
                 value: null,
+                allowed_list_values: null,
             },
         ];
 
@@ -309,6 +320,7 @@ describe("creation metadata transformer", () => {
                 value: null,
                 description: "",
                 is_used: true,
+                allowed_list_values: null,
             },
         ];
 
@@ -329,6 +341,7 @@ describe("creation metadata transformer", () => {
                 is_used: true,
                 description: "",
                 list_value: null,
+                allowed_list_values: null,
             },
         ];
 
@@ -343,6 +356,7 @@ describe("creation metadata transformer", () => {
                 list_value: null,
                 description: "",
                 is_used: true,
+                allowed_list_values: null,
             },
         ];
 
@@ -363,6 +377,7 @@ describe("creation metadata transformer", () => {
                 is_used: true,
                 description: "",
                 list_value: null,
+                allowed_list_values: null,
             },
         ];
 
@@ -377,6 +392,7 @@ describe("creation metadata transformer", () => {
                 list_value: null,
                 description: "",
                 is_used: true,
+                allowed_list_values: null,
             },
         ];
 

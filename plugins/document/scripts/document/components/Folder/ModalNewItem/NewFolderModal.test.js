@@ -113,6 +113,7 @@ describe("NewFolderModal", () => {
                     type: "text",
                     is_required: false,
                     list_value: null,
+                    allowed_list_values: null,
                 },
             ],
         };

@@ -18,42 +18,43 @@
  *
  */
 
-import localVue from "../../../../helpers/local-vue.js";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomMetadataDate from "./CustomMetadataDate.vue";
+import type { Metadata } from "../../../../store/metadata/module";
+import { createDocumentLocalVue } from "../../../../helpers/local-vue-for-test";
+import DateFlatPicker from "../DateFlatPicker.vue";
 
 describe("CustomMetadataDate", () => {
-    let factory;
-    beforeEach(() => {
-        factory = (props = {}) => {
-            return shallowMount(CustomMetadataDate, {
-                localVue,
-                propsData: { ...props },
-            });
-        };
-    });
-    it(`does not render the component when type does not match`, () => {
+    async function createWrapper(metadata: Metadata): Promise<Wrapper<CustomMetadataDate>> {
+        return shallowMount(CustomMetadataDate, {
+            localVue: await createDocumentLocalVue(),
+            propsData: { currentlyUpdatedItemMetadata: metadata },
+        });
+    }
+
+    it(`does not render the component when type does not match`, async () => {
         const currentlyUpdatedItemMetadata = {
             value: "2019-06-30T00:00:00+03:00",
             is_required: true,
             name: "date field",
             type: "text",
-        };
+        } as Metadata;
 
-        const wrapper = factory({ currentlyUpdatedItemMetadata, value: "" });
+        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
         expect(wrapper.find("[data-test=document-custom-metadata-date]").exists()).toBeFalsy();
     });
 
-    it(`User can choose a date value`, () => {
+    it(`User can choose a date value`, async () => {
         const currentlyUpdatedItemMetadata = {
             value: "2019-06-30T00:00:00+03:00",
             is_required: true,
             name: "date field",
-            type: "text",
-        };
+            type: "date",
+        } as Metadata;
 
-        const wrapper = factory({ currentlyUpdatedItemMetadata, value: "" });
-        wrapper.vm.custom_metadata_date = "2019-06-30";
+        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        wrapper.findComponent(DateFlatPicker).vm.$emit("input", "2019-06-30");
 
         expect(wrapper.emitted().input).toEqual([["2019-06-30"]]);
     });

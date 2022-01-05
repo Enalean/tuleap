@@ -23,15 +23,18 @@
     <custom-metadata-text
         v-if="itemMetadata.type === 'text'"
         v-bind:currently-updated-item-metadata="itemMetadata"
+        v-model="itemMetadata.value"
         data-test="document-custom-metadata-text"
     />
     <custom-metadata-string
         v-else-if="itemMetadata.type === 'string'"
         v-bind:currently-updated-item-metadata="itemMetadata"
+        v-model="itemMetadata.value"
         data-test="document-custom-metadata-string"
     />
     <custom-metadata-list-single-value
         v-else-if="itemMetadata.type === 'list' && !itemMetadata.is_multiple_value_allowed"
+        v-model="itemMetadata.value"
         v-bind:currently-updated-item-metadata="itemMetadata"
         data-test="document-custom-metadata-list-single"
     />

@@ -45,6 +45,7 @@ export interface Metadata {
     is_used: boolean;
     list_value: Array<number> | Array<ListValue> | null | [];
     value: number | string | null;
+    allowed_list_values: Array<ListValue> | null;
 }
 
 export interface FolderMetadata extends Metadata {

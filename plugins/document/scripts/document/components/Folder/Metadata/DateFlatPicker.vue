@@ -29,64 +29,64 @@
         v-model="input_value"
     />
 </template>
-<script>
+<script lang="ts">
+import type { DatePickerInstance } from "tlp";
 import { datePicker } from "tlp";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
-export default {
-    name: "DateFlatPicker",
-    model: {
-        prop: "value",
-    },
-    props: {
-        id: {
-            type: String,
-            required: true,
-        },
-        required: {
-            type: Boolean,
-            default: false,
-        },
-        value: {
-            default: null,
-            required: true,
-            validator: (value) => typeof value === "string" || value === null,
-        },
-    },
-    data() {
-        return { datepicker: null, input_value: this.value };
-    },
-    watch: {
-        value(newValue) {
-            if (this.datepicker === null) {
-                return;
-            }
-            if (newValue) {
-                this.datepicker.setDate(newValue, false);
-            }
-        },
-    },
-    mounted() {
-        this.datepicker = datePicker(this.$el, {
-            defaultDate: this.value,
-            onChange: this.onDatePickerChange,
-        });
-    },
-    beforeDestroy() {
+@Component
+export default class DateFlatPicker extends Vue {
+    @Prop({ required: true })
+    readonly id!: string;
+
+    @Prop({ required: true })
+    readonly required!: boolean;
+
+    @Prop({ required: true })
+    readonly value!: string;
+
+    private datepicker: null | DatePickerInstance = null;
+    private input_value = this.value;
+
+    @Watch("update_value")
+    public updateValue(newValue: string): void {
+        if (this.datepicker === null) {
+            return;
+        }
+        if (newValue) {
+            this.datepicker.setDate(newValue, false);
+        }
+    }
+
+    mounted(): void {
+        const element = this.$el;
+        if (element instanceof HTMLInputElement) {
+            this.datepicker = datePicker(element, {
+                defaultDate: this.value,
+                onChange: this.onDatePickerChange,
+            });
+        }
+    }
+    beforeDestroy(): void {
         if (this.datepicker === null) {
             return;
         }
         this.datepicker.destroy();
         this.datepicker = null;
-    },
-    methods: {
-        onDatePickerInput(event) {
+    }
+
+    onDatePickerInput(event: Event) {
+        if (event.target instanceof HTMLInputElement) {
             this.$emit("input", event.target.value);
-        },
-        onDatePickerChange() {
+        }
+    }
+    onDatePickerChange(): void {
+        const element = this.$el;
+        if (element instanceof HTMLInputElement) {
             this.$nextTick(() => {
-                this.$emit("input", this.$el.value);
+                this.$emit("input", element.value);
             });
-        },
-    },
-};
+        }
+    }
+}
 </script>
