@@ -159,12 +159,13 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue($r->containsIllegalChars("userç"));
     }
 
-    public function testBeginnigByAChar(): void
+    public function testItContainAtLeastOneChar(): void
     {
         $r = new Rule_UserName();
 
         $this->assertFalse($r->atLeastOneChar("1"));
-        $this->assertFalse($r->atLeastOneChar("1deux"));
+        $this->assertFalse($r->atLeastOneChar("1.123"));
+        $this->assertTrue($r->atLeastOneChar("1deux"));
         $this->assertTrue($r->atLeastOneChar("a1b"));
     }
 

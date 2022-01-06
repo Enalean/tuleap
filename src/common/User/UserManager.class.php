@@ -31,6 +31,8 @@ use Tuleap\User\InvalidSessionException;
 use Tuleap\User\SessionManager;
 use Tuleap\User\SessionNotCreatedException;
 use Tuleap\User\UserConnectionUpdateEvent;
+use Tuleap\User\UserLoginValidator;
+use Tuleap\User\UserNameNormalizer;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 use Tuleap\Widget\WidgetFactory;
 
@@ -55,7 +57,7 @@ class UserManager implements \Tuleap\User\ProvideCurrentUser // phpcs:ignore PSR
      */
     private $pending_user_notifier;
 
-    public function __construct(User_PendingUserNotifier $pending_user_notifier)
+    public function __construct(User_PendingUserNotifier $pending_user_notifier, private UserLoginValidator $user_login_validator)
     {
         $this->pending_user_notifier = $pending_user_notifier;
     }
@@ -69,7 +71,11 @@ class UserManager implements \Tuleap\User\ProvideCurrentUser // phpcs:ignore PSR
         if (! isset(self::$_instance)) {
             $userManager     = self::class;
             self::$_instance = new $userManager(
-                new User_PendingUserNotifier()
+                new User_PendingUserNotifier(),
+                new UserLoginValidator(
+                    new UserNameNormalizer(new Rule_UserName(), new Cocur\Slugify\Slugify()),
+                    EventManager::instance()
+                )
             );
         }
 
@@ -573,6 +579,7 @@ class UserManager implements \Tuleap\User\ProvideCurrentUser // phpcs:ignore PSR
                 $status_manager->checkStatus($user);
             }
 
+            $this->user_login_validator->validateUserLogin($user);
             $this->openWebSession($user);
             $password_expiration_checker->checkPasswordLifetime($user);
             $password_expiration_checker->warnUserAboutPasswordExpiration($user);

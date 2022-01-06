@@ -21,13 +21,14 @@
 namespace common\User;
 
 use Cocur\Slugify\Slugify;
+use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Rule_UserName;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\DataIncompatibleWithUsernameGenerationException;
 use Tuleap\User\UserNameNormalizer;
 
-class UsernameNameNormalizerTest extends TestCase
+class UserNameNormalizerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -36,6 +37,7 @@ class UsernameNameNormalizerTest extends TestCase
 
     protected function setUp(): void
     {
+        ForgeConfig::set('homedir_prefix', "");
         $this->rules               = \Mockery::mock(Rule_UserName::class);
         $this->username_normalizer = new UserNameNormalizer($this->rules, new Slugify());
     }
@@ -76,13 +78,42 @@ class UsernameNameNormalizerTest extends TestCase
 
     public function testGenerateThrowExceptionWhenUsernameIsNotUnixValid(): void
     {
-        $slugified_username = "jean_pierre";
+        $slugified_username = "666";
+        ForgeConfig::set('homedir_prefix', "home/user");
+
+        $this->rules->shouldReceive('atLeastOneChar')->andReturn(true);
         $this->rules->shouldReceive('isUnixValid')->with($slugified_username)->andReturn(false);
         $this->rules->shouldReceive('isValid')->never();
 
         $this->expectException(DataIncompatibleWithUsernameGenerationException::class);
 
-        $this->username_normalizer->normalize("jean_pierre");
+        $this->username_normalizer->normalize("666");
+    }
+
+    public function testItAddPrefixToUsernameIsNotUnixValidAndUnixUsersIsEnabled(): void
+    {
+        $slugified_username = "666";
+        $prefixed_username  = "tlp-666";
+        ForgeConfig::set('homedir_prefix', "home/user");
+
+        $this->rules->shouldReceive('atLeastOneChar')->andReturn(false);
+        $this->rules->shouldReceive('isUnixValid')->with($prefixed_username)->andReturn(true);
+
+        $this->rules->shouldReceive('isValid')->with($prefixed_username)->andReturn(true)->once();
+
+        $this->assertSame($prefixed_username, $this->username_normalizer->normalize("$slugified_username"));
+    }
+
+    public function testItDoesntCheckIfUsernameHasAtLeastOneCharIfUnixUsersNotEnabled(): void
+    {
+        $slugified_username = "666";
+
+        $this->rules->shouldReceive('atLeastOneChar')->never();
+        $this->rules->shouldReceive('isUnixValid')->never();
+
+        $this->rules->shouldReceive('isValid')->with($slugified_username)->andReturn(true)->once();
+
+        $this->assertSame($slugified_username, $this->username_normalizer->normalize($slugified_username));
     }
 
     public function testGenerateUserLoginIncrementIfLoginAlreadyExist(): void
