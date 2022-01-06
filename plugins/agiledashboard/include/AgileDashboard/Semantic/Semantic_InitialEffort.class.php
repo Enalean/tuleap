@@ -21,6 +21,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Tuleap\AgileDashboard\Semantic\SemanticInitialEffortPossibleFieldRetriever;
+
 class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
 {
     public const NAME = 'initial_effort';
@@ -129,7 +131,12 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
         $semantic_manager->displaySemanticHeader($this, $tracker_manager);
         $html = '';
 
-        if ($numeric_fields = Tracker_FormElementFactory::instance()->getUsedPotentiallyContainingNumericValueFields($this->tracker)) {
+        $numeric_fields = $this->getSemanticInitialEffortPossibleFieldRetriever()->getPossibleFieldsForInitialEffort(
+            $this->tracker,
+            $this->getFieldId()
+        );
+
+        if ($numeric_fields) {
             $html  .= '<form method="POST" action="' . $this->getUrl() . '">';
             $html  .= $this->getCSRFToken()->fetchHTMLInput();
             $select = '<select name="initial_effort_field_id">';
@@ -297,5 +304,10 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
     public function isUsedInSemantics(Tracker_FormElement_Field $field)
     {
         return $this->getFieldId() == $field->getId();
+    }
+
+    private function getSemanticInitialEffortPossibleFieldRetriever(): SemanticInitialEffortPossibleFieldRetriever
+    {
+        return new SemanticInitialEffortPossibleFieldRetriever(Tracker_FormElementFactory::instance());
     }
 }
