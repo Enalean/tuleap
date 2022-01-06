@@ -18,115 +18,18 @@
  */
 
 describe("Kanban for the Agile Dashboard service", () => {
-    it(`Project administrator can start Kanban`, function () {
-        cy.clearSessionCookie();
-        cy.projectAdministratorLogin();
-        cy.visitProjectService("kanban-project", "Agile Dashboard");
-
-        cy.get("[data-test=start-kanban]").click();
-        cy.get("[data-test=feedback]").contains("Kanban successfully activated.", {
-            timeout: 20000,
-        });
-
-        cy.get("[data-test=go-to-kanban]").first().click();
-
-        cy.get("[data-test=kanban-column-label]").then(($column_label) => {
-            expect($column_label).to.contain("To be done");
-        });
-        // Save kanban URL for later tests
-        cy.location()
-            .then((location) => location.href)
-            .debug()
-            .as("kanban_url");
-    });
     context("As Project Admin", function () {
         before(function () {
             cy.clearSessionCookie();
             cy.projectAdministratorLogin();
-            cy.visit(this.kanban_url);
-        });
-
-        beforeEach(() => {
             cy.preserveSessionCookies();
         });
 
-        it(`can rename the kanban`, function () {
-            cy.get("[data-test=kanban-header-title]").contains("Activities");
+        it(`kanban administration modal still works`, function () {
+            cy.log("administrator can reorder column");
+            cy.visitProjectService("kanban-project", "Agile Dashboard");
+            cy.get('[data-test="go-to-kanban"]').click();
             cy.get("[data-test=kanban-header-edit-button]").click();
-            cy.get("[data-test=edit-kanban-label-form]").within(() => {
-                cy.get("[data-test=input-kanban-label]").clear().type("Brabus");
-                cy.root().submit();
-            });
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get("body").type("{esc}");
-            cy.contains("[data-test=kanban-header-title]", "Brabus");
-            // The name of the kanban should be persisted after reload.
-            cy.reload();
-            cy.contains("[data-test=kanban-header-title]", "Brabus");
-        });
-        it(`can add columns`, function () {
-            cy.get("[data-test=kanban-column-header").should("have.length", 3);
-            cy.get("[data-test=kanban-header-edit-button]").click();
-            cy.get("[data-test=edit-kanban-column]").should("have.length", 3);
-            cy.get("[data-test=edit-modal-add-column-button]").click();
-            cy.get("[data-test=edit-kanban-add-column-form]").within(() => {
-                cy.get("[data-test=edit-kanban-add-column-form-input]").clear().type("B 35 S");
-                cy.root().submit();
-            });
-            cy.get("[data-test=edit-kanban-column").should("have.length", 4);
-            cy.get("[data-test=edit-kanban-column-b_35_s").should("contain", "B 35 S");
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get("body").type("{esc}");
-            // The number of columns should be the same after reload + the name of the last column should not change
-            cy.reload();
-            cy.get("[data-test=kanban-column-header").should("have.length", 4);
-            cy.get("[data-test=kanban-column-b_35_s]").should("contain", "B 35 S");
-        });
-        it(`can edit the last column of kanban`, function () {
-            cy.get("[data-test=kanban-column-header").should("have.length", 4);
-            cy.get("[data-test=kanban-header-edit-button]").click();
-            cy.get("[data-test=edit-kanban-column").should("have.length", 4);
-            cy.get("[data-test=edit-kanban-column-button-b_35_s]").click();
-            cy.get("[data-test=edit-kanban-edit-column-container-form]").within(() => {
-                cy.get("[data-test=edit-kanban-edit-column-container-form-input]")
-                    .clear()
-                    .type("Bullit");
-                cy.root().submit();
-            });
-            cy.get("[data-test=edit-kanban-column").should("have.length", 4);
-            cy.get("[data-test=edit-kanban-column-bullit").should("contain", "Bullit");
-            // The number of columns should be the same after reload + the name of the last column should not change
-            cy.reload();
-            cy.get("[data-test=kanban-column-header").should("have.length", 4);
-            cy.get("[data-test=kanban-column-header").last().should("contain", "Bullit");
-        });
-        it(`can remove the last column of kanban`, function () {
-            cy.get("[data-test=kanban-column-header").should("have.length", 4);
-            cy.get("[data-test=kanban-header-edit-button]").click();
-            cy.get("[data-test=edit-kanban-column").should("have.length", 4);
-            cy.get("[data-test=edit-kanban-column-bullit").should("contain", "Bullit");
-            cy.get("[data-test=edit-modal-remove-column-button-bullit").click();
-            cy.get("[data-test=edit-kanban-column-button-confirm-deletion-bullit").click();
-            cy.get("[data-test=edit-kanban-column").should("have.length", 3);
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get("body").type("{esc}");
-            // The number of columns should be the same after reload + the last column must not be Bullit
-            cy.reload();
-            cy.get("[data-test=kanban-column-header").should("have.length", 3);
-            cy.get("[data-test=kanban-column-review]").should("contain", "Review");
-        });
-        it(`reorders column`, function () {
-            cy.get("[data-test=kanban-column-header").should("have.length", 3);
-            cy.get("[data-test=kanban-header-edit-button]").click();
-
-            cy.get("[data-test=edit-kanban-column]").should("have.length", 3);
-            cy.get("[data-test=edit-kanban-column-label]").spread(
-                (first_column, second_column, third_column) => {
-                    expect(first_column).to.contain("To be done");
-                    expect(second_column).to.contain("In progress");
-                    expect(third_column).to.contain("Review");
-                }
-            );
             cy.dragAndDrop(
                 "[data-test=edit-kanban-column-review]",
                 "[data-test=edit-kanban-column-in_progress]",
@@ -160,123 +63,46 @@ describe("Kanban for the Agile Dashboard service", () => {
                 }
             );
         });
-        it(`I can change the value of the WIP`, function () {
-            cy.get("[data-test=kanban-column-header-wip-limit]").should(
-                "not.have.class",
-                "tlp-badge-warning"
-            );
-            cy.get("[data-test=kanban-column-header-wip-warning]").should(
-                "not.exist",
-                "kanban-column-header-wip-warning"
-            );
-
-            cy.get("[data-test=kanban-column-header-wip-limit]").first().click();
-            cy.get("[data-test=wip-limit-form]")
-                .first()
-                .within(function () {
-                    cy.get("[data-test=wip-limit-input]").clear();
-                    cy.get("[data-test=wip-limit-input]").type("4");
-                    cy.root().submit();
-                });
-
-            // Close The WIP limit dropdown
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get("body").click();
-
-            cy.get("[data-test=kanban-column-header-wip-limit]").contains("4");
-        });
     });
     context("As Project member", function () {
         before(function () {
             cy.clearSessionCookie();
             cy.projectMemberLogin();
-            cy.visit(this.kanban_url);
-        });
-
-        beforeEach(() => {
             cy.preserveSessionCookies();
+
+            cy.getProjectId("kanban-project").as("project_id");
         });
 
-        it(`I can create cards`, function () {
-            cy.get("[data-test=kanban-column-to_be_done]")
-                .first()
-                .within(() => {
-                    cy.get("[data-test=add-in-place]").invoke("css", "pointer-events", "all");
+        it(`I can use the kanban`, function () {
+            cy.visitProjectService("kanban-project", "Agile Dashboard");
+            cy.get('[data-test="go-to-kanban"]').click();
 
-                    cy.get("[data-test=add-in-place-button]").click();
-                    cy.get("[data-test=add-in-place-label-input]")
-                        .clear()
-                        .type("Think about my revenge");
-                    cy.get("[data-test=add-in-place-submit]").first().click();
+            cy.log("I can move cards");
+            cy.get("[data-test=kanban-column-to_be_done]").within(() => {
+                cy.get("[data-test=tuleap-simple-field-name]").spread(
+                    (first_card, second_card, third_card) => {
+                        cy.wrap(first_card.innerText).as("first_title");
+                        cy.wrap(second_card.innerText).as("second_title");
+                        cy.wrap(third_card.innerText).as("third_title");
 
-                    cy.get("[data-test=add-in-place-label-input]")
-                        .should("not.be.disabled")
-                        .clear()
-                        .type("Still speedin'");
+                        cy.get("[data-test=kanban-item]")
+                            .eq(1)
+                            .within(() => {
+                                cy.get("[data-test=kanban-item-content-move-to-top]").click();
+                            });
 
-                    cy.get("[data-test=add-in-place-submit]").first().click();
+                        cy.get("[data-test=tuleap-simple-field-name]").spread(
+                            (first_card, second_card, third_card) => {
+                                expect(first_card.innerText).to.equal(this.second_title);
+                                expect(second_card.innerText).to.equal(this.first_title);
+                                expect(third_card.innerText).to.equal(this.third_title);
+                            }
+                        );
+                    }
+                );
+            });
 
-                    cy.get("[data-test=add-in-place-label-input]")
-                        .should("not.be.disabled")
-                        .clear()
-                        .type("i30 Namyang");
-
-                    cy.get("[data-test=add-in-place-submit]").first().click();
-                });
-
-            // need to escape for drag and drop only works on body and global body seems erased by angular
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get("body").type("{esc}");
-
-            cy.contains("[data-test=kanban-column-header-wip-count]", "3");
-        });
-
-        it(`I can move second card to top`, function () {
-            cy.get("[data-test=tuleap-simple-field-name]").spread(
-                (first_card, second_card, third_card) => {
-                    expect(first_card).to.contain("Think about my revenge");
-                    expect(second_card).to.contain("Still speedin'");
-                    expect(third_card).to.contain("i30 Namyang");
-                }
-            );
-
-            cy.get("[data-test=kanban-item]")
-                .eq(1)
-                .within(() => {
-                    cy.get("[data-test=kanban-item-content-move-to-top]").click();
-                });
-
-            cy.get("[data-test=tuleap-simple-field-name]").spread(
-                (first_card, second_card, third_card) => {
-                    expect(first_card).to.contain("Still speedin'");
-                    expect(second_card).to.contain("Think about my revenge");
-                    expect(third_card).to.contain("i30 Namyang");
-                }
-            );
-        });
-
-        it(`I can move the first card to the bottom`, function () {
-            cy.get("[data-test=kanban-item]")
-                .first()
-                .within(() => {
-                    cy.get("[data-test=kanban-item-content-move-to-bottom]").click();
-                });
-
-            cy.get("[data-test=tuleap-simple-field-name]").spread(
-                (first_card, second_card, third_card) => {
-                    expect(first_card).to.contain("Think about my revenge");
-                    expect(second_card).to.contain("i30 Namyang");
-                    expect(third_card).to.contain("Still speedin'");
-                }
-            );
-        });
-
-        it(`I can expand the first card`, function () {
-            cy.get("[data-test=kanban-item-content-expand-collapse-icon]").should(
-                "have.class",
-                "fa-angle-down"
-            );
-
+            cy.log(`I can expand cards`);
             // To avoid force click = true
             cy.get("[data-test=kanban-item-content-expand-collapse]").invoke("css", "height", 10);
             cy.get("[data-test=kanban-item-content-expand-collapse]").first().click();
@@ -284,94 +110,72 @@ describe("Kanban for the Agile Dashboard service", () => {
                 "have.class",
                 "fa-angle-up"
             );
-            // The single card expand should not be persisted after reload
-            cy.reload();
-            cy.get("[data-test=kanban-item-content-expand-collapse-icon]").should(
-                "have.class",
-                "fa-angle-down"
-            );
-        });
 
-        it(`I can change the display view`, function () {
-            cy.get("[data-test=kanban-item]").should("have.class", "compact-view");
-            cy.get("[data-test=kanban-header-detailed-toggler-label]").click();
-
-            cy.get("[data-test=kanban-item]").should("not.have.class", "compact-view");
-            // The display of the cards should be persisted after reload
-            cy.reload();
-            cy.get("[data-test=kanban-item]").should("not.have.class", "compact-view");
-        });
-
-        it(`I can filter cards`, function () {
-            cy.get("[data-test=kanban-item]").should("have.length", 3);
+            cy.log(`I can filter cards`);
+            cy.get("[data-test=kanban-item]").its("length").should("be.gte", 4);
             cy.get("[data-test=kanban-header-search]").type("speedin");
             cy.get("[data-test=kanban-item]").should("have.length", 1);
             cy.contains("[data-test=tuleap-simple-field-name]", "Still speedin'");
 
             cy.get("[data-test=kanban-header-search]").clear();
-            cy.get("[data-test=kanban-item]").should("have.length", 3);
+            cy.get("[data-test=kanban-item]").its("length").should("be.gte", 4);
 
-            // Collapse the first card
-            cy.get("[data-test=kanban-item-content-expand-collapse]").invoke("css", "height", 10);
-            cy.get("[data-test=kanban-item-content-expand-collapse]").first().click();
-            cy.get("[data-test=kanban-item-content-expand-collapse-icon]").should(
-                "have.class",
-                "fa-angle-down"
+            cy.log(`I can check that WIP limit is reached`);
+            cy.get("[data-test=kanban-column-to_be_done]").within(() => {
+                cy.get("[data-test=kanban-column-header-wip-count]").contains("3");
+                cy.get("[data-test=kanban-column-header-wip-limit]").should(
+                    "have.class",
+                    "tlp-badge-warning"
+                );
+            });
+
+            cy.get("[data-test=kanban-column-in_progress]").within(() => {
+                cy.get("[data-test=kanban-column-header-wip-count]").contains("1");
+                cy.get("[data-test=kanban-column-header-wip-limit]").should(
+                    "not.have.class",
+                    "tlp-badge-warning"
+                );
+            });
+
+            cy.log(`I can drag and drop cards`);
+
+            const now = Date.now();
+            const drag_label = `drag${now}`;
+            const drop_label = `drop${now}`;
+            cy.get("[data-test=kanban-column-backlog]").within(() => {
+                cy.get("[data-test=add-in-place]").invoke("css", "pointer-events", "all");
+
+                cy.get("[data-test=add-in-place-button]").click();
+                cy.get("[data-test=add-in-place-label-input]").clear().type(drag_label);
+                cy.get("[data-test=add-in-place-submit]").first().click();
+            });
+
+            cy.get("[data-test=kanban-column-review]").within(() => {
+                cy.get("[data-test=add-in-place]").invoke("css", "pointer-events", "all");
+
+                cy.get("[data-test=add-in-place-button]").click();
+                cy.get("[data-test=add-in-place-label-input]").clear().type(drop_label);
+                cy.get("[data-test=add-in-place-submit]").first().click();
+            });
+
+            cy.dragAndDrop(
+                `[data-test=kanban-item-content-${drag_label}]`,
+                `[data-test=kanban-item-content-${drop_label}]`,
+                "top"
             );
-        });
 
-        it("I can move card and the WIP warning is displayed", function () {
-            cy.get("[data-test=kanban-column-header-wip-count]").contains("3");
-            cy.get("[data-test=kanban-column-header-wip-limit]").contains("4");
-
-            cy.get("[data-test=kanban-column-to_be_done]")
-                .first()
-                .within(() => {
-                    cy.get("[data-test=add-in-place]").invoke("css", "pointer-events", "all");
-
-                    cy.get("[data-test=add-in-place-button]").click();
-                    cy.get("[data-test=add-in-place-label-input]").clear().type("Miata");
-                    cy.get("[data-test=add-in-place-submit]").first().click();
-                });
-
-            // Close the Add to column form
+            // need to escape for drag and drop only works on body and global body seems erased by angular
             // eslint-disable-next-line cypress/require-data-selectors
             cy.get("body").type("{esc}");
 
-            cy.get("[data-test=kanban-column-header-wip-count]").contains("4");
-            cy.get("[data-test=kanban-column-header-wip-limit]").should(
-                "not.have.class",
-                "tlp-badge-warning"
-            );
-            cy.get("[data-test=kanban-column-header-wip-warning]").should(
-                "not.exist",
-                "kanban-column-header-wip-warning"
-            );
+            cy.get("[data-test=kanban-column-review]").within(() => {
+                cy.get("[data-test=kanban-item]").its("length").should("be.gte", 1);
+            });
+        });
 
-            cy.get("[data-test=kanban-column-in_progress]")
-                .first()
-                .within(() => {
-                    cy.get("[data-test=add-in-place]").invoke("css", "pointer-events", "all");
-
-                    cy.get("[data-test=add-in-place-button]").click();
-                    cy.get("[data-test=add-in-place-label-input]").clear().type("Stratos");
-                    cy.get("[data-test=add-in-place-submit]").first().click();
-                });
-
-            cy.dragAndDrop(
-                "[data-test=kanban-item-content-stratos]",
-                "[data-test=kanban-item-content-miata]",
-                "top"
-            );
-            cy.get("[data-test=kanban-column-header-wip-count]").contains("5");
-            cy.get("[data-test=kanban-column-header-wip-limit]").should(
-                "have.class",
-                "tlp-badge-warning"
-            );
-            cy.get("[data-test=kanban-column-header-wip-warning]").should(
-                "have.class",
-                "kanban-column-header-wip-warning"
-            );
+        it("can not access to administration page", function () {
+            cy.visit("/plugins/agiledashboard/?group_id=" + this.project_id + "&action=admin");
+            cy.get("[data-test=main-content]").contains("Kanban");
         });
     });
 });

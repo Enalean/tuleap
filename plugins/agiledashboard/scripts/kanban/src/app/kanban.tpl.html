@@ -109,6 +109,7 @@
     <div class="backlog kanban-column"
          ng-class="{'kanban-column-open': kanban.backlog.is_open, 'kanban-column-closed': ! kanban.backlog.is_open}"
          ng-click="kanban.expandBacklog()"
+         data-test="kanban-column-backlog"
          ng-attr-title="{{ kanban.backlog.is_open ? '' : 'Toggle the backlog' | translate }}"
     >
         <div class="kanban-column-header">
@@ -153,7 +154,9 @@
          data-column-id="{{ column.id }}"
          data-test="kanban-column-{{kanban.slugifyLabel(column.label)}}"
     >
-        <div class="kanban-column-header" data-test="kanban-column-header">
+        <div class="kanban-column-header"
+             data-test="kanban-column-header"
+        >
             <span class="kanban-column-header-toggle"
                   title="{{ 'Toggle this column' | translate }}"
                   ng-click="kanban.toggleColumn(column); $event.stopPropagation();"

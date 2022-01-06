@@ -5,8 +5,9 @@
         ng-if="backlog.addItemButtonCanBeDisplayed()"
     >
         <button type="button"
-            class="tlp-button-primary tlp-button-outline tlp-button-small"
-            open-tlp-dropdown
+                class="tlp-button-primary tlp-button-outline tlp-button-small"
+                data-test="add-item"
+                open-tlp-dropdown
         >
             <i class="fa fa-plus tlp-button-icon"></i>
             <span translate>Add item</span>
@@ -31,6 +32,7 @@
             <a href=""
                ng-repeat="accepted_type in backlog.details.accepted_types.content"
                ng-click="backlog.showAddBacklogItemModal($event, accepted_type)"
+               data-test="add-{{ accepted_type.label }}"
                class="tlp-dropdown-menu-item"
                role="menuitem"
             ><i class="tlp-dropdown-menu-item-icon fa fa-fw fa-plus"></i> <span translate>Add {{ accepted_type.label }}</span></a>
