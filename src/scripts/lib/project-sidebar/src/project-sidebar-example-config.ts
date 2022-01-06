@@ -29,6 +29,8 @@ export const example_config: Configuration = {
         project_administration: "Project administration",
         project_announcement: "Project announcement",
         show_project_announcement: "Show project announcement",
+        close_sidebar: "Close sidebar",
+        open_sidebar: "Open sidebar",
     },
     project: {
         icon: "🌷",
@@ -59,6 +61,7 @@ export const example_config: Configuration = {
     },
     user: {
         is_project_administrator: true,
+        is_logged_in: true,
     },
     instance_information: {
         version: {

@@ -90,7 +90,10 @@ describe("SidebarLogo", () => {
                 logo: {
                     logo_link_href: "https://example.com/",
                     svg: null,
-                    legacy_png_href: "https://example.com/logo.png",
+                    legacy_png_href: {
+                        normal: "https://example.com/logo.png",
+                        small: "https://example.com/logo_small.png",
+                    },
                 },
             },
         };
@@ -107,5 +110,8 @@ describe("SidebarLogo", () => {
         expect(window.getComputedStyle(logo.element).getPropertyValue("--logo-url")).toStrictEqual(
             "url(https://example.com/logo.png)"
         );
+        expect(
+            window.getComputedStyle(logo.element).getPropertyValue("--logo-small-url")
+        ).toStrictEqual("url(https://example.com/logo_small.png)");
     });
 });

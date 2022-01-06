@@ -41,7 +41,10 @@ interface LogoInformation {
         normal: string;
         small: string;
     } | null;
-    legacy_png_href: string | null;
+    legacy_png_href: {
+        normal: string;
+        small: string;
+    } | null;
 }
 
 interface Internationalization {
@@ -50,6 +53,8 @@ interface Internationalization {
     project_administration: string;
     project_announcement: string;
     show_project_announcement: string;
+    close_sidebar: string;
+    open_sidebar: string;
 }
 
 interface ProjectPrivacy {
@@ -75,6 +80,7 @@ export interface Configuration {
     };
     user: {
         is_project_administrator: boolean;
+        is_logged_in: boolean;
     };
     instance_information: {
         version: InstanceVersionInformation;

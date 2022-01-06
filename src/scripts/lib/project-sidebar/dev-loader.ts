@@ -29,9 +29,21 @@ document.addEventListener("DOMContentLoaded", () => {
     sidebar.setAttribute("config", JSON.stringify(example_config));
     document.body.appendChild(sidebar);
 
-    // Quick&dirty demo
+    // Quick&dirty demonstrations
+    // Show how to do something when the project announcement should be opened
     sidebar.addEventListener("show-project-announcement", () => {
         // eslint-disable-next-line no-alert
         alert("Show project announcement");
     });
+    // Show how to do something when the sidebar is modified
+    const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+            const current_state = sidebar.hasAttribute(mutation.attributeName ?? "")
+                ? "collapsed"
+                : "opened";
+            // eslint-disable-next-line no-alert
+            alert(`Sidebar state changed, currently: ${current_state}`);
+        }
+    });
+    observer.observe(sidebar, { attributes: true, attributeFilter: ["collapsed"] });
 });
