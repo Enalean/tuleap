@@ -20,7 +20,7 @@ specifiers:
   '@types/d3-scale': ^3.3.0
   '@types/d3-selection': ^2.0.0
   '@types/d3-shape': ^2.1.0
-  '@types/dompurify': ^2.2.2
+  '@types/dompurify': ^2.3.2
   '@types/jquery': ^3.5.5
   '@types/mermaid': ^8.2.6
   '@types/mustache': ^4.1.2
@@ -37,7 +37,7 @@ specifiers:
   d3-selection: ^3.0.0
   d3-shape: ^3.0.1
   d3-transition: ^3.0.1
-  dompurify: ^2.2.9
+  dompurify: ^2.3.4
   dragula: ^3.7.2
   jquery: ^3.6.0
   marked: ^4.0.0
@@ -53,7 +53,7 @@ specifiers:
   turndown: ^7.0.0
   vue: ^2.6.14
   vue-class-component: ^7.2.6
-  vue-dompurify-html: ^2.3.0
+  vue-dompurify-html: ^2.5.0
   vue-gettext: ^2.1.12
   vue-property-decorator: ^9.1.2
   vue-router: ^3.5.1
@@ -84,7 +84,7 @@ dependencies:
   d3-selection: 3.0.0
   d3-shape: 3.0.1
   d3-transition: 3.0.1_d3-selection@3.0.0
-  dompurify: 2.3.0
+  dompurify: 2.3.4
   dragula: 3.7.3
   marked: 4.0.0
   mermaid: 8.13.2
@@ -97,7 +97,7 @@ dependencies:
   sprintf-js: 1.1.2
   turndown: 7.1.1
   vue: 2.6.14
-  vue-dompurify-html: 2.3.0_vue@2.6.14
+  vue-dompurify-html: 2.5.0_vue@2.6.14
   vue-gettext: 2.1.12
   vue-router: 3.5.1
   vuex: 3.6.2_vue@2.6.14
@@ -109,7 +109,7 @@ devDependencies:
   '@types/d3-scale': 3.3.0
   '@types/d3-selection': 2.0.0
   '@types/d3-shape': 2.1.0
-  '@types/dompurify': 2.2.2
+  '@types/dompurify': 2.3.2
   '@types/jquery': 3.5.5
   '@types/mermaid': 8.2.7
   '@types/mustache': 4.1.2
@@ -477,8 +477,8 @@ packages:
     resolution: {integrity: sha512-qVCiT93utxN0cawScyQuNx8H82vBvZXSClZfgOu3l3dRRlRO6FjKEZlaPgXG9XUFjIAOsA4kAJY101vobHeJLQ==}
     dev: true
 
-  /@types/dompurify/2.2.2:
-    resolution: {integrity: sha512-8nNWfAa8/oZjH3OLY5Wsxu9ueo0NwVUotIi353g0P2+N5BuTLJyAVOnF4xBUY0NyFUGJHY05o1pO2bqLto+lmA==}
+  /@types/dompurify/2.3.2:
+    resolution: {integrity: sha512-iht/O0jie/hDur39Z1NzjfOT/O9Kn2aWY99aqOn7lwsjSttEoMyGWvZIuAzZy0cNvAZdjmqySp7Z4d3GfBEGQw==}
     dependencies:
       '@types/trusted-types': 2.0.1
     dev: true
@@ -1208,12 +1208,12 @@ packages:
     resolution: {integrity: sha512-3VdM/SXBZX2omc9JF9nOPCtDaYQ67BGp5CoLpIQlO2KCAPETs8TcDHacF26jXadGbvUteZzRTeos2fhID5+ucQ==}
     dev: false
 
-  /dompurify/2.3.0:
-    resolution: {integrity: sha512-VV5C6Kr53YVHGOBKO/F86OYX6/iLTw2yVSI721gKetxpHCK/V5TaLEf9ODjRgl1KLSWRMY6cUhAbv/c+IUnwQw==}
-    dev: false
-
   /dompurify/2.3.1:
     resolution: {integrity: sha512-xGWt+NHAQS+4tpgbOAI08yxW0Pr256Gu/FNE2frZVTbgrBUn8M7tz7/ktS/LZ2MHeGqz6topj0/xY+y8R5FBFw==}
+    dev: false
+
+  /dompurify/2.3.4:
+    resolution: {integrity: sha512-6BVcgOAVFXjI0JTjEvZy901Rghm+7fDQOrNIcxB4+gdhj6Kwp6T9VBhBY/AbagKHJocRkDYGd6wvI+p4/10xtQ==}
     dev: false
 
   /dragula/3.7.3:
@@ -1342,8 +1342,8 @@ packages:
     resolution: {integrity: sha512-nTnJ528pbqxYanhpDYsi4Rd8MAeaBA67+RZ10CM1m3bTAVFEDcd5AuA4a6W5YkGZ1iNXHzZz8T6TBKLeBuNriQ==}
     dev: false
 
-  /graceful-fs/4.2.8:
-    resolution: {integrity: sha512-qkIilPUYcNhJpd33n0GBXTB1MMPp14TxEsEs0pTrsSVucApsYzW5V+Q8Qxhik6KU3evy+qkAAowTByymK0avdg==}
+  /graceful-fs/4.2.9:
+    resolution: {integrity: sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==}
     dev: false
     optional: true
 
@@ -1464,7 +1464,7 @@ packages:
     dependencies:
       universalify: 0.1.2
     optionalDependencies:
-      graceful-fs: 4.2.8
+      graceful-fs: 4.2.9
     dev: false
 
   /khroma/1.4.1:
@@ -1773,12 +1773,12 @@ packages:
       vue: 2.6.14
     dev: true
 
-  /vue-dompurify-html/2.3.0_vue@2.6.14:
-    resolution: {integrity: sha512-Iz9wI4iiJF+rzC2x3r8quw/VXrkwgMsWXt9p0Le4wXtolBXwMDJOmK3QNMiNg36bzU2b0f3En/wjidoeRVNZ7A==}
+  /vue-dompurify-html/2.5.0_vue@2.6.14:
+    resolution: {integrity: sha512-k2ejMJmsCsREGtJFDXNwqMvvek447id5ZAOU10jm2+cmsZHXgFIEdlwDam4cU4wh0iOZM+uDmkwbVJAJtmgeVQ==}
     peerDependencies:
       vue: ^2.0.0
     dependencies:
-      dompurify: 2.3.0
+      dompurify: 2.3.4
       vue: 2.6.14
     dev: false
 
