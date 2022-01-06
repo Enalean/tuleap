@@ -1,0 +1,13 @@
+https://belledonne.atlassian.net/rest/api/2/configuration e5e936f7a131ed9d8c7a0d670a0468f125efac05 200
+https://belledonne.atlassian.net/rest/api/2/issuetype/10002 3a48d6e1db3cdeb9c0a8a9a115c87da71b1518cc 200
+https://belledonne.atlassian.net/rest/api/2/project/IE/roledetails?currentMember=true 6b68066a26400900ed98e86de2b788d9282ea831 200
+https://belledonne.atlassian.net/rest/api/2/project/IE/statuses e59eaddb00e1a43b3148e4630f900977bbaf9da4 200
+https://belledonne.atlassian.net/rest/api/2/issue/createmeta?projectKeys=IE&issuetypeIds=10002&expand=projects.issuetypes.fields 3150d3c6052884dfb394cb331079392ba7efc43b 200
+https://belledonne.atlassian.net/rest/api/2/search?jql=project%3DIE+AND+issuetype%3D10002&expand=editmeta&startAt=0&maxResults=1 87d8681d58d563b02afe8388fc92fbc7a891b98e 200
+https://belledonne.atlassian.net/rest/api/2/search?jql=project%3DIE+AND+issuetype%3D10002&fields=%2Aall&expand=renderedFields&startAt=0 788ef9a71944e2cb68600c30dc3518c2b648f81f 200
+https://belledonne.atlassian.net/rest/api/2/issue/IE-2/changelog?startAt=0 c1e8feb1fbaccf99143de8b2afc089d6c97798a7 200
+https://belledonne.atlassian.net/rest/api/2/issue/IE-2/comment?expand=renderedBody&startAt=0 511913218f7a8eaacfe37ff479cc8bfa597b5745 200
+https://belledonne.atlassian.net/rest/api/2/issue/IE-1/changelog?startAt=0 8fceb3bc2575602f8260e7f4e241c82e3a783940 200
+https://belledonne.atlassian.net/rest/api/2/issue/IE-1/comment?expand=renderedBody&startAt=0 1792ceabcf8d1b6e0eb6eeb678fb5c9141a3fec4 200
+https://belledonne.atlassian.net/rest/api/2/issue/IE-2/worklog?startAt=0 c2d7e4448f1703e36da963b1d5161ea5ef843621 200
+https://belledonne.atlassian.net/rest/api/2/issue/IE-1/worklog?startAt=0 426637cb58ad865431f2c576525c936476da738c 200

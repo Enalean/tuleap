@@ -437,6 +437,34 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             },
         ];
 
+        yield 'Jira version is mapped to a select box field' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'versions',
+                'Identified in version',
+                false,
+                'versions',
+                [
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 10109, 'name' => '1.0'], new FieldAndValueIDGenerator()),
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 10110, 'name' => '2.0'], new FieldAndValueIDGenerator()),
+                ],
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME . '"]//formElement[name="versions"]')[0];
+
+                self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $node['type']);
+                self::assertEquals('Identified in version', $node->label);
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $node->bind['type']);
+                self::assertCount(2, $node->bind->items->item);
+                self::assertEquals('1.0', $node->bind->items->item[0]['label']);
+                self::assertEquals('2.0', $node->bind->items->item[1]['label']);
+
+                $mapping = $collection->getMappingFromJiraField('versions');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $mapping->getType());
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+            },
+        ];
+
         yield 'field is available at submit and update' => [
             'jira_field' => new JiraFieldAPIRepresentation(
                 'summary',

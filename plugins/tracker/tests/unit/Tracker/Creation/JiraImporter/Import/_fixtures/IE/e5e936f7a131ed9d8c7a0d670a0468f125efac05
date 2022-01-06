@@ -1,0 +1,1 @@
+{"votingEnabled":true,"watchingEnabled":true,"unassignedIssuesAllowed":true,"subTasksEnabled":true,"issueLinkingEnabled":true,"timeTrackingEnabled":true,"attachmentsEnabled":true,"timeTrackingConfiguration":{"workingHoursPerDay":8.0,"workingDaysPerWeek":5.0,"timeFormat":"pretty","defaultUnit":"minute"}}

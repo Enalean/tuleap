@@ -1,0 +1,1 @@
+[{"self":"https://belledonne.atlassian.net/rest/api/2/project/10004/role/10002","name":"Administrators","id":10002,"description":"A project role that represents administrators in a project","admin":false,"default":false,"roleConfigurable":true,"translatedName":"Administrators"}]

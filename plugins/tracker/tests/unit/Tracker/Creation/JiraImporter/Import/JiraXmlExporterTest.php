@@ -122,6 +122,15 @@ class JiraXmlExporterTest extends TestCase
                 'thomas.gorka@example.com' => UserTestBuilder::anActiveUser()->withId(104)->withUserName('thomas_gorka')->build(),
             ],
         ];
+
+        yield 'IE' => [
+            'fixtures_path' => __DIR__ . '/_fixtures/IE',
+            'is_jira_cloud' => true,
+            'users' => [
+                'marie-ange.garnier@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('marie-ange.garnier')->build(),
+                'manuel.vacelet@example.com' => UserTestBuilder::anActiveUser()->withId(102)->withUserName('manuel_vacelet')->build(),
+            ],
+        ];
     }
 
     /**
