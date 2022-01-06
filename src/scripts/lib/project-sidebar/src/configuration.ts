@@ -27,6 +27,7 @@ export interface Tool {
     icon: string;
     open_in_new_tab: boolean;
     is_active: boolean;
+    shortcut_id: string;
 }
 
 interface InstanceVersionInformation {

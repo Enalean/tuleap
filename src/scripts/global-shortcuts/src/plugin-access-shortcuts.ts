@@ -23,7 +23,7 @@ import { AGILEDASHBOARD, DOCUMENTS, GIT, TESTMANAGEMENT, TRACKERS } from "./type
 import { sprintf } from "sprintf-js";
 
 export function getServicesShortcutsGroup(
-    doc: Document,
+    doc: HTMLElement,
     gettext_provider: GettextProvider
 ): ShortcutsGroup | null {
     const focus_sidebar_shortcut = getFocusSidebarShortcut(doc, gettext_provider);
@@ -41,7 +41,7 @@ export function getServicesShortcutsGroup(
 }
 
 function getFocusSidebarShortcut(
-    doc: Document,
+    doc: HTMLElement,
     gettext_provider: GettextProvider
 ): Shortcut | null {
     const first_sidebar_service = doc.querySelector("[data-shortcut-sidebar]");
@@ -56,7 +56,7 @@ function getFocusSidebarShortcut(
     };
 }
 
-function getServicesShortcuts(doc: Document, gettext_provider: GettextProvider): Shortcut[] {
+function getServicesShortcuts(doc: HTMLElement, gettext_provider: GettextProvider): Shortcut[] {
     const services: ServiceShortcut[] = [
         { name: TESTMANAGEMENT, keyboard_inputs: "g+e" },
         { name: TRACKERS, keyboard_inputs: "g+t" },
@@ -83,7 +83,7 @@ function getServicesShortcuts(doc: Document, gettext_provider: GettextProvider):
     return services_shortcuts;
 }
 
-function getSidebarServiceElement(doc: Document, service_id: ServiceID): HTMLElement | null {
+function getSidebarServiceElement(doc: HTMLElement, service_id: ServiceID): HTMLElement | null {
     const sidebar_service = doc.querySelector(`[data-shortcut-sidebar="sidebar-${service_id}"]`);
     if (!(sidebar_service instanceof HTMLElement) || !sidebar_service.title) {
         return null;

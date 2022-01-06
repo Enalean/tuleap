@@ -33,6 +33,7 @@ describe("Tool", () => {
             icon: "fa-fw fas fa-tlp-something",
             open_in_new_tab: false,
             is_active: true,
+            shortcut_id: "plugin_something",
         };
         const wrapper = shallowMount(ToolComponent, {
             props: tool_data,
@@ -44,6 +45,9 @@ describe("Tool", () => {
         expect(anchor.text()).toStrictEqual(tool_data.label);
         expect(anchor_element.getAttribute("href")).toStrictEqual(tool_data.href);
         expect(anchor_element.getAttribute("title")).toStrictEqual(tool_data.description);
+        expect(anchor_element.getAttribute("data-shortcut-sidebar")).toStrictEqual(
+            `sidebar-${tool_data.shortcut_id}`
+        );
         expect(anchor.find("[data-test=tool-icon]").element.className).toContain(tool_data.icon);
         expect(anchor_element.getAttribute("target")).toStrictEqual("_self");
         expect(anchor_element.classList.contains("active")).toBe(true);
@@ -58,6 +62,7 @@ describe("Tool", () => {
             icon: "fa-fw fas fa-tlp-somethingelse",
             open_in_new_tab: true,
             is_active: false,
+            shortcut_id: "",
         };
         const wrapper = shallowMount(ToolComponent, {
             props: tool_data,

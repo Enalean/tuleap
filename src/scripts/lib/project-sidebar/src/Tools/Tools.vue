@@ -24,7 +24,7 @@
     <h2 class="project-sidebar-tools-section-label">
         {{ config.internationalization.tools }}
     </h2>
-    <nav class="project-sidebar-nav">
+    <nav ref="tools_element" class="project-sidebar-nav">
         <tool
             v-for="tool in config.tools"
             v-bind="tool"
@@ -33,9 +33,46 @@
     </nav>
 </template>
 <script setup lang="ts">
+import { useMagicKeys } from "@vueuse/core";
 import Tool from "./Tool.vue";
 import { strictInject } from "../strict-inject";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
+import { nextTick, onMounted, onUpdated, ref, watch } from "vue";
+import { getServicesShortcutsGroup } from "@tuleap/core/scripts/global-shortcuts/src/plugin-access-shortcuts";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
+
+const tools_element = ref<InstanceType<typeof HTMLElement>>();
+
+function setupShortcutsInteraction(): void {
+    // We want to wait that everything has been rendered including child components
+    nextTick((): void => {
+        if (tools_element.value === undefined) {
+            return;
+        }
+        const shortcuts_group = getServicesShortcutsGroup(tools_element.value, {
+            gettext(msgid: string): string {
+                return msgid;
+            },
+        });
+
+        if (shortcuts_group === null) {
+            return;
+        }
+
+        const keys = useMagicKeys();
+
+        shortcuts_group.shortcuts.forEach((shortcut): void => {
+            watch(keys[shortcut.keyboard_inputs], (pressed): void => {
+                if (pressed) {
+                    const fake_event = new KeyboardEvent("keypress");
+                    shortcut.handle(fake_event);
+                }
+            });
+        });
+    });
+}
+
+onMounted(setupShortcutsInteraction);
+onUpdated(setupShortcutsInteraction);
 </script>
