@@ -4,8 +4,8 @@ pkgs.stdenvNoCC.mkDerivation {
   name = "php-mediawiki-tuleap";
   src = pkgs.fetchgit {
     url = "https://tuleap.net/plugins/git/tuleap/deps/tuleap/rhel/6/php-mediawiki-tuleap.git";
-    rev = "221a1338a76aef123ecee09c4f39b9479a29583c";
-    sha256 = "1y112086j0dgxy8i04pxg45vyjb2ibv9ji5459s47xak7n560inz";
+    rev = "c72dc2b55e0f56d278a997c6c5588a8ab1dac00d";
+    sha256 = "sha256-/nzcDAaL9iONRV5DCzzrq+gz/a4lthVu9mqSRFTqbRA=";
   };
 
   nativeBuildInputs = [ pkgs.rpm pkgs.file ];
