@@ -24,14 +24,11 @@
     "hybrids": "^7.0.4",
     "lodash": "2.4.0",
     "moment": "^2.29.1",
-    "ngVue": "^1.7.8",
     "pretty-kibibytes": "^4.0.4",
     "process": "^0.11.10",
     "pump": "^3.0.0",
     "readable-stream": "^2.3.6",
-    "sprintf-js": "^1.1.2",
-    "vue": "^2.6.14",
-    "vue-dompurify-html": "^2.5.0"
+    "sprintf-js": "^1.1.2"
   },
   "peerDependencies": {
     "angular": "^1.8.0",
@@ -40,7 +37,6 @@
   "devDependencies": {
     "@tuleap/tlp-fetch": "file:../../../../../src/scripts/lib/tlp-fetch",
     "@types/ckeditor": "^4.9.10",
-    "@vue/test-utils": "^1.3.0",
     "angular": "^1.8.2",
     "angular-mocks": "^1.8.2",
     "angular-sanitize": "^1.8.2"
@@ -48,6 +44,6 @@
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
-    "test": "BABEL_ENV=test jest"
+    "test": "jest"
   }
 }

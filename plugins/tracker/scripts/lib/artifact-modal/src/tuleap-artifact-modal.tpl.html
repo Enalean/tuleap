@@ -146,14 +146,19 @@
 </script>
 
 <script type="text/ng-template" id="field-text.tpl.html">
-<vue-component
-    name="TextField"
-    v-props-field="field"
-    v-props-value="modal.values[field.field_id].value"
-    v-props-project-id="modal.tracker.project.id"
-    v-on-input="modal.setFieldValue(field.field_id)"
-    v-on-upload-image="modal.addToFilesAddedByTextField"
-></vue-component>
+<tuleap-artifact-modal-text-field
+    field-id="field.field_id"
+    label="field.label"
+    format="modal.values[field.field_id].value.format"
+    content-value="modal.values[field.field_id].value.content"
+    required="field.required"
+    disabled="modal.isDisabled(field)"
+    project-id="modal.tracker.project.id"
+    on-value-changed="modal.setFieldValueForCustomElement($event)"
+    on-upload-image="modal.addToFilesAddedByTextField($event)"
+    ce-one-way
+    data-test="text-field"
+></tuleap-artifact-modal-text-field>
 </script>
 
 <script type="text/ng-template" id="field-art_link.tpl.html">
@@ -435,7 +440,7 @@
                 content-value="modal.new_followup_comment.body"
                 project-id="modal.tracker.project.id"
                 on-value-changed="modal.setFollowupComment($event)"
-                on-upload-image="modal.addToFilesAddedByTextFieldForCustomElement($event)"
+                on-upload-image="modal.addToFilesAddedByTextField($event)"
                 ce-one-way
                 data-test="add-comment-form"
             ></tuleap-artifact-modal-followup-editor>

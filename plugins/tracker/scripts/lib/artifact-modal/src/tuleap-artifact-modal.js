@@ -27,11 +27,6 @@ import french_translations from "../po/fr_FR.po";
 
 import angular_custom_elements_module from "angular-custom-elements";
 
-import "ngVue";
-import Vue from "vue";
-import TextField from "./fields/text-field/TextField.vue";
-import "./ng-vue-config.js";
-
 import "../../../../../../src/scripts/tuleap/custom-elements/relative-date";
 import { STRUCTURAL_FIELDS } from "../../../constants/fields-constants.js";
 import { setCatalog } from "./gettext-catalog";
@@ -58,13 +53,13 @@ import "./fields/int-field/IntField";
 import "./fields/string-field/StringField";
 import "./fields/float-field/FloatField";
 import "./fields/radio-buttons-field/RadioButtonsField";
+import "./fields/text-field/TextField";
 import "./followups/FollowupEditor";
 
 export default angular
     .module("tuleap.artifact-modal", [
         angular_moment,
         "gettext",
-        "ngVue",
         angular_tlp,
         angular_custom_elements_module,
         filter,
@@ -100,5 +95,4 @@ export default angular
     .service("NewTuleapArtifactModalService", ArtifactModalService)
     .value("TuleapArtifactModalLoading", {
         loading: false,
-    })
-    .value(TextField.name, Vue.component(TextField.name, TextField)).name;
+    }).name;

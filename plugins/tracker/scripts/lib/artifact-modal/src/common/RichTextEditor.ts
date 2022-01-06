@@ -20,6 +20,7 @@
 import { define, dispatch, html } from "hybrids";
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
+import type { TextEditorInterface } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import {
     isThereAnImageWithDataURI,
@@ -37,7 +38,7 @@ import {
     setIsNotUploadingInCKEditor,
     setIsUploadingInCKEditor,
 } from "../fields/file-field/is-uploading-in-ckeditor-state";
-import type { DisconnectFunction, FileField } from "../types";
+import type { FileField } from "../types";
 import {
     getNoPasteMessage,
     getRTEHelpMessage,
@@ -55,6 +56,7 @@ export interface RichTextEditor {
     required: boolean;
     rows: number;
     textarea: HTMLTextAreaElement | null;
+    editor: TextEditorInterface | undefined;
     is_help_shown: boolean;
     first_file_field: FileField | null;
     content: () => HTMLElement;
@@ -158,9 +160,9 @@ function disablePasteOfImages(ckeditor: CKEDITOR.editor): void {
     });
 }
 
-export const connect = (host: HostElement): DisconnectFunction | void => {
-    if (!host.textarea) {
-        return;
+export const createEditor = (host: HostElement): TextEditorInterface | undefined => {
+    if (!host.textarea || host.identifier === "") {
+        return undefined;
     }
     const locale = document.body.dataset.userLocale ?? "en_US";
     const default_format = getTextFieldDefaultFormat();
@@ -170,7 +172,7 @@ export const connect = (host: HostElement): DisconnectFunction | void => {
         default_format
     );
 
-    const editor = editor_factory.createRichTextEditor(host.textarea, {
+    return editor_factory.createRichTextEditor(host.textarea, {
         format_selectbox_id: "format_" + host.identifier,
         format_selectbox_value: host.format,
         getAdditionalOptions: () => {
@@ -201,14 +203,28 @@ export const connect = (host: HostElement): DisconnectFunction | void => {
             onInstanceReady(host, ckeditor);
         },
     });
-    return (): void => {
-        editor.destroy();
-    };
 };
+
+// Destroy the rich text editor on disconnect
+export const connect = (host: RichTextEditor) => (): void => host.editor?.destroy();
 
 export const RichTextEditor = define<RichTextEditor>({
     tag: "tuleap-artifact-modal-rich-text-editor",
-    identifier: { value: "", connect },
+    identifier: {
+        value: "",
+        observe: (host) => {
+            // identifier can be empty at connect() time. If we let it be empty,
+            // all format selectors will change all editors in the page.
+            // We want a single format selector to affect a single editor.
+            // identifier is used by @tuleap/plugin-tracker-rich-text-editor
+            // to find the format selector matching this editor.
+            if (host.editor) {
+                return;
+            }
+            host.editor = createEditor(host);
+        },
+    },
+    editor: { value: undefined, connect },
     format: { set: getValidFormat },
     contentValue: "",
     disabled: false,

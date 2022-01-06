@@ -20,7 +20,6 @@
 import { setCatalog } from "../gettext-catalog";
 import type { HostElement } from "./FollowupEditor";
 import { FollowupEditor } from "./FollowupEditor";
-import * as interpreter from "../common/interpret-commonmark";
 
 function getHost(data: Partial<HostElement>): HostElement {
     return { ...data, dispatchEvent: jest.fn() } as HostElement;
@@ -79,86 +78,6 @@ describe(`FollowupEditor`, () => {
             expect(value_changed.detail.format).toBe("commonmark");
             expect(host.format).toBe("commonmark");
             expect(host.contentValue).toBe("chrysopid");
-        });
-
-        it(`when the RichTextEditor emits an "upload-image" event, it will reemit it`, () => {
-            const detail = { image: { id: 9 } };
-            const dispatch = jest.spyOn(host, "dispatchEvent");
-            getSelector("[data-test=text-editor]").dispatchEvent(
-                new CustomEvent("upload-image", { detail })
-            );
-
-            const reemitted_event = dispatch.mock.calls[0][0];
-            if (!(reemitted_event instanceof CustomEvent)) {
-                throw new Error("Expected a CustomEvent");
-            }
-            expect(reemitted_event.type).toBe("upload-image");
-            expect(reemitted_event.detail).toBe(detail);
-        });
-
-        it(`when the format selector emits an "interpret-content-event",
-            it will delegate to the interpret commonmark module`, () => {
-            const interpret = jest.spyOn(interpreter, "interpretCommonMark").mockResolvedValue();
-            getSelector("[data-test=format-selector]").dispatchEvent(
-                new CustomEvent("interpret-content-event")
-            );
-
-            expect(interpret).toHaveBeenCalled();
-        });
-    });
-
-    describe("Component display", () => {
-        it("shows the Rich Text Editor if there is no error and if the user is in edit mode", () => {
-            const has_error = false;
-            const is_in_preview_mode = false;
-            const host = getHost({ has_error, is_in_preview_mode });
-            const update = FollowupEditor.content(host);
-            update(host, target);
-
-            expect(
-                getSelector("[data-test=text-editor]").classList.contains(
-                    "tuleap-artifact-modal-hidden"
-                )
-            ).toBe(false);
-            expect(target.querySelector("[data-test=text-field-commonmark-preview]")).toBe(null);
-            expect(target.querySelector("[data-test=text-field-error]")).toBe(null);
-        });
-
-        it("shows the CommonMark preview if there is no error and if the user is in preview mode", () => {
-            const has_error = false;
-            const is_in_preview_mode = true;
-            const host = getHost({ has_error, is_in_preview_mode });
-            const update = FollowupEditor.content(host);
-            update(host, target);
-
-            expect(
-                getSelector("[data-test=text-editor]").classList.contains(
-                    "tuleap-artifact-modal-hidden"
-                )
-            ).toBe(true);
-            expect(target.querySelector("[data-test=text-field-commonmark-preview]")).not.toBe(
-                null
-            );
-            expect(target.querySelector("[data-test=text-field-error]")).toBe(null);
-        });
-
-        it("shows the error message if there was a problem during the CommonMark interpretation", () => {
-            const has_error = true;
-            const error_message = "Interpretation failed !!!!!!!!";
-            const is_in_preview_mode = false;
-            const host = getHost({ has_error, error_message, is_in_preview_mode });
-            const update = FollowupEditor.content(host);
-            update(host, target);
-
-            expect(
-                getSelector("[data-test=text-editor]").classList.contains(
-                    "tuleap-artifact-modal-hidden"
-                )
-            ).toBe(true);
-            expect(target.querySelector("[data-test=text-field-commonmark-preview]")).toBe(null);
-            expect(getSelector("[data-test=text-field-error]").textContent).toContain(
-                error_message
-            );
         });
     });
 
