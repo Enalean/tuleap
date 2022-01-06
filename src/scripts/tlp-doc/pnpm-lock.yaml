@@ -4,13 +4,13 @@ specifiers:
   '@tuleap/filter-inline-table': file:../lib/filter-table
   '@tuleap/list-picker': file:../lib/list-picker
   codemirror: ^5.62.0
-  dompurify: ^2.2.9
+  dompurify: ^2.3.4
 
 dependencies:
   '@tuleap/filter-inline-table': link:../lib/filter-table
   '@tuleap/list-picker': link:../lib/list-picker
   codemirror: 5.62.0
-  dompurify: 2.3.1
+  dompurify: 2.3.4
 
 packages:
 
@@ -18,6 +18,6 @@ packages:
     resolution: {integrity: sha512-Xnl3304iCc8nyVZuRkzDVVwc794uc9QNX0UcPGeNic1fbzkSrO4l4GVXho9tRNKBgPYZXgocUqXyfIv3BILhCQ==}
     dev: false
 
-  /dompurify/2.3.1:
-    resolution: {integrity: sha512-xGWt+NHAQS+4tpgbOAI08yxW0Pr256Gu/FNE2frZVTbgrBUn8M7tz7/ktS/LZ2MHeGqz6topj0/xY+y8R5FBFw==}
+  /dompurify/2.3.4:
+    resolution: {integrity: sha512-6BVcgOAVFXjI0JTjEvZy901Rghm+7fDQOrNIcxB4+gdhj6Kwp6T9VBhBY/AbagKHJocRkDYGd6wvI+p4/10xtQ==}
     dev: false

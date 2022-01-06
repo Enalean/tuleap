@@ -7,17 +7,17 @@
   "dependencies": {
     "@tuleap/drag-and-drop": "file:../../src/scripts/lib/drag-and-drop",
     "@tuleap/keyboard-shortcuts": "file:../../src/scripts/lib/keyboard-shortcuts",
-    "dompurify": "^2.2.9",
+    "dompurify": "^2.3.4",
     "fscreen": "^1.2.0",
     "mustache": "^4.2.0",
     "p-retry": "^4.5.0",
     "vue": "^2.6.14",
-    "vue-dompurify-html": "^2.3.0",
+    "vue-dompurify-html": "^2.5.0",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
-    "@types/dompurify": "^2.2.2",
+    "@types/dompurify": "^2.3.2",
     "@types/fscreen": "^1.0.1",
     "@types/jquery": "^3.5.5",
     "@types/mustache": "^4.1.2",

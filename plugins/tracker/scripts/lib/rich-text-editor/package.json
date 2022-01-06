@@ -11,7 +11,7 @@
   "dependencies": {
     "@tuleap/gettext": "file:../../../../../src/scripts/lib/gettext",
     "@tuleap/tlp-fetch": "file:../../../../../src/scripts/lib/tlp-fetch",
-    "dompurify": "^2.2.9",
+    "dompurify": "^2.3.4",
     "lit": "^2.0.2",
     "marked": "^4.0.0",
     "turndown": "^7.0.0"
@@ -19,7 +19,7 @@
   "devDependencies": {
     "@types/bootstrap": "^3.4.0",
     "@types/ckeditor": "^4.9.10",
-    "@types/dompurify": "^2.2.2",
+    "@types/dompurify": "^2.3.2",
     "@types/marked": "^3.0.2",
     "@types/turndown": "^5.0.0"
   },

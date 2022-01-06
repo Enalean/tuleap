@@ -16,11 +16,11 @@
     "@tuleap/concurrency-limit-pool": "file:../../../../../src/scripts/lib/concurrency-limit-pool",
     "@tuleap/tlp-fetch": "file:../../../../../src/scripts/lib/tlp-fetch",
     "docx": "^7.3.0",
-    "dompurify": "^2.2.9",
+    "dompurify": "^2.3.4",
     "sprintf-js": "^1.1.2"
   },
   "devDependencies": {
-    "@types/dompurify": "^2.3.1",
+    "@types/dompurify": "^2.3.2",
     "@types/sprintf-js": "^1.1.2"
   }
 }

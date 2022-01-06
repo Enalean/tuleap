@@ -4,19 +4,19 @@ specifiers:
   '@tuleap/drag-and-drop': file:../../src/scripts/lib/drag-and-drop
   '@tuleap/keyboard-shortcuts': file:../../src/scripts/lib/keyboard-shortcuts
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
-  '@types/dompurify': ^2.2.2
+  '@types/dompurify': ^2.3.2
   '@types/fscreen': ^1.0.1
   '@types/jquery': ^3.5.5
   '@types/mustache': ^4.1.2
   '@vue/test-utils': ^1.3.0
-  dompurify: ^2.2.9
+  dompurify: ^2.3.4
   fscreen: ^1.2.0
   jquery: ^3.6.0
   mustache: ^4.2.0
   p-retry: ^4.5.0
   vue: ^2.6.14
   vue-class-component: ^7.2.6
-  vue-dompurify-html: ^2.3.0
+  vue-dompurify-html: ^2.5.0
   vue-property-decorator: ^9.1.2
   vuex: ^3.6.2
   vuex-class: ^0.3.2
@@ -24,17 +24,17 @@ specifiers:
 dependencies:
   '@tuleap/drag-and-drop': link:../../src/scripts/lib/drag-and-drop
   '@tuleap/keyboard-shortcuts': link:../../src/scripts/lib/keyboard-shortcuts
-  dompurify: 2.3.1
+  dompurify: 2.3.4
   fscreen: 1.2.0
   mustache: 4.2.0
   p-retry: 4.5.0
   vue: 2.6.14
-  vue-dompurify-html: 2.3.0_vue@2.6.14
+  vue-dompurify-html: 2.5.0_vue@2.6.14
   vuex: 3.6.2_vue@2.6.14
 
 devDependencies:
   '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
-  '@types/dompurify': 2.2.2
+  '@types/dompurify': 2.3.2
   '@types/fscreen': 1.0.1
   '@types/jquery': 3.5.5
   '@types/mustache': 4.1.2
@@ -46,8 +46,8 @@ devDependencies:
 
 packages:
 
-  /@types/dompurify/2.2.2:
-    resolution: {integrity: sha512-8nNWfAa8/oZjH3OLY5Wsxu9ueo0NwVUotIi353g0P2+N5BuTLJyAVOnF4xBUY0NyFUGJHY05o1pO2bqLto+lmA==}
+  /@types/dompurify/2.3.2:
+    resolution: {integrity: sha512-iht/O0jie/hDur39Z1NzjfOT/O9Kn2aWY99aqOn7lwsjSttEoMyGWvZIuAzZy0cNvAZdjmqySp7Z4d3GfBEGQw==}
     dependencies:
       '@types/trusted-types': 2.0.1
     dev: true
@@ -133,8 +133,8 @@ packages:
     resolution: {integrity: sha512-2G2Vwi2zXTHBGqXHsJ4+ak/iP0N8Ar+G8a7LiD2oup5o4sQWytwqqrZu/O6hIMV0KMID2PL69OhpshLO0n7UJQ==}
     dev: true
 
-  /dompurify/2.3.1:
-    resolution: {integrity: sha512-xGWt+NHAQS+4tpgbOAI08yxW0Pr256Gu/FNE2frZVTbgrBUn8M7tz7/ktS/LZ2MHeGqz6topj0/xY+y8R5FBFw==}
+  /dompurify/2.3.4:
+    resolution: {integrity: sha512-6BVcgOAVFXjI0JTjEvZy901Rghm+7fDQOrNIcxB4+gdhj6Kwp6T9VBhBY/AbagKHJocRkDYGd6wvI+p4/10xtQ==}
     dev: false
 
   /editorconfig/0.15.3:
@@ -312,12 +312,12 @@ packages:
       vue: 2.6.14
     dev: true
 
-  /vue-dompurify-html/2.3.0_vue@2.6.14:
-    resolution: {integrity: sha512-Iz9wI4iiJF+rzC2x3r8quw/VXrkwgMsWXt9p0Le4wXtolBXwMDJOmK3QNMiNg36bzU2b0f3En/wjidoeRVNZ7A==}
+  /vue-dompurify-html/2.5.0_vue@2.6.14:
+    resolution: {integrity: sha512-k2ejMJmsCsREGtJFDXNwqMvvek447id5ZAOU10jm2+cmsZHXgFIEdlwDam4cU4wh0iOZM+uDmkwbVJAJtmgeVQ==}
     peerDependencies:
       vue: ^2.0.0
     dependencies:
-      dompurify: 2.3.1
+      dompurify: 2.3.4
       vue: 2.6.14
     dev: false
 
