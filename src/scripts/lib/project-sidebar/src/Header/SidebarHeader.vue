@@ -46,6 +46,7 @@
     </div>
     <project-announcement />
     <project-flags />
+    <linked-projects />
 </template>
 <script setup lang="ts">
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
@@ -55,6 +56,7 @@ import { computed } from "vue";
 import { sanitizeURL } from "../url-sanitizer";
 import ProjectFlags from "./ProjectFlags.vue";
 import ProjectAnnouncement from "./ProjectAnnouncement.vue";
+import LinkedProjects from "./LinkedProjects.vue";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
 

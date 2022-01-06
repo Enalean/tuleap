@@ -71,10 +71,11 @@
     }
 
     .project-sidebar-linked-projects {
-        margin: var(--tlp-small-spacing) auto;
+        flex-direction: row;
+        justify-content: center;
     }
 
-    .tlp-popover-shown.project-sidebar-linked-projects-popover {
+    .tlp-popover.tlp-popover-shown.project-sidebar-linked-projects-popover {
         display: flex;
     }
 

@@ -58,6 +58,22 @@ export const example_config: Configuration = {
                 description: "Some label description B",
             },
         ],
+        linked_projects: {
+            label: "2 aggregated projects",
+            is_in_children_projects_context: true,
+            projects: [
+                {
+                    icon: "",
+                    name: "Team A",
+                    href: "https://myinstance.example.com/projects/teama",
+                },
+                {
+                    icon: "🏡",
+                    name: "Team B",
+                    href: "https://myinstance.example.com/projects/teamb",
+                },
+            ],
+        },
     },
     user: {
         is_project_administrator: true,
