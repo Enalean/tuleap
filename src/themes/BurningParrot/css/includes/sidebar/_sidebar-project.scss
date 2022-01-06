@@ -429,13 +429,12 @@
     cursor: help;
 }
 
-.tlp-popover-shown.project-sidebar-linked-projects-popover {
+.tlp-popover.tlp-popover-shown.project-sidebar-linked-projects-popover {
     display: none;
 }
 
 .project-sidebar-linked-projects-popover {
     width: max-content;
-    margin-left: 1px !important; // override inset popers
 
     .fa-tlp-project-boxes,
     .project-sidebar-linked-projects-icon-parent {

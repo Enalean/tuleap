@@ -41,6 +41,7 @@ exports[`SidebarHeader displays the sidebar header 1`] = `
   </div>
   <project-announcement-stub />
   <project-flags-stub />
+  <linked-projects-stub />
   
 </div>
 `;

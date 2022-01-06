@@ -77,6 +77,15 @@ export interface Configuration {
         privacy: ProjectPrivacy;
         has_project_announcement: boolean;
         flags: { label: string; description: string }[];
+        linked_projects: {
+            label: string;
+            is_in_children_projects_context: boolean;
+            projects: {
+                icon: string;
+                name: string;
+                href: string;
+            }[];
+        } | null;
     };
     user: {
         is_project_administrator: boolean;
