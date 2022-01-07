@@ -44,7 +44,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const global_shortcuts_group = createGlobalShortcutsGroup(gettext_provider);
     addGlobalShortcutsGroup(document, global_shortcuts_group);
 
-    const access_services_shortcuts_group = getServicesShortcutsGroup(document, gettext_provider);
+    const access_services_shortcuts_group = getServicesShortcutsGroup(
+        document.body,
+        gettext_provider
+    );
     if (access_services_shortcuts_group) {
         addGlobalShortcutsGroup(document, access_services_shortcuts_group);
     }

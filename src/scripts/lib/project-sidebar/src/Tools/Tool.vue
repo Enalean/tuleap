@@ -29,6 +29,7 @@
         v-bind:title="description"
         v-bind:target="open_in_new_tab ? '_blank' : '_self'"
         v-bind:rel="open_in_new_tab ? 'noopener noreferrer' : ''"
+        v-bind:data-shortcut-sidebar="shortcut"
     >
         <i
             class="project-sidebar-nav-item-icon"
@@ -58,6 +59,8 @@ const props = defineProps<{
     icon: string;
     open_in_new_tab: boolean;
     is_active: boolean;
+    shortcut_id: string;
 }>();
 const sanitized_href = computed(() => sanitizeURL(props.href));
+const shortcut = computed(() => `sidebar-${props.shortcut_id}`);
 </script>

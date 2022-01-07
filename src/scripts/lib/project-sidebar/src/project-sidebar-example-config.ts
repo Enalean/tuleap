@@ -100,6 +100,16 @@ export const example_config: Configuration = {
             icon: "fa-fw fas fa-folder-open",
             open_in_new_tab: false,
             is_active: true,
+            shortcut_id: "",
+        },
+        {
+            label: "Git",
+            href: "/service/fake_git",
+            description: "Fake Git",
+            icon: "fa-fw fas fa-tlp-versioning-git",
+            open_in_new_tab: false,
+            is_active: false,
+            shortcut_id: "plugin_git",
         },
         {
             label: "Custom",
@@ -108,6 +118,7 @@ export const example_config: Configuration = {
             icon: "fa-fw fas fa-tlp-baseline",
             open_in_new_tab: true,
             is_active: false,
+            shortcut_id: "",
         },
     ],
 };

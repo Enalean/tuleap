@@ -30,9 +30,11 @@
   ],
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.15.2",
+    "@tuleap/core": "link:../../..",
     "@tuleap/project-privacy-helper": "link:../project-privacy-helper",
     "@tuleap/tlp-popovers": "link:../tlp-popovers",
     "@vue/test-utils": "^2.0.0-rc.17",
+    "@vueuse/core": "^7.5.3",
     "vue": "^3.2.26",
     "vue-dompurify-html": "^3.0.0-beta.2"
   },

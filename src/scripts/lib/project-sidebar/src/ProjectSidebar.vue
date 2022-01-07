@@ -77,13 +77,20 @@ watch(is_sidebar_collapsed, (): void => {
 @use "../../../themes/tlp/src/fonts/tlp-font/icons";
 @use "@tuleap/tlp-popovers";
 @use "../../../themes/BurningParrot/css/includes/project-privacy-popover";
-
+</style>
+<style scoped>
 .sidebar {
     font-family: var(--tlp-font-family);
     font-size: 100%;
 }
 
-.sidebar-popover-anchor {
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown -- Stylelint does not know about the Vue :deep() selector */
+:deep(.sidebar-popover-anchor) {
     margin-right: calc(-1 * var(--tlp-medium-spacing));
+}
+
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown -- Stylelint does not know about the Vue :deep() selector */
+:deep(:focus) {
+    outline: 0;
 }
 </style>
