@@ -396,6 +396,9 @@ msgstr "Les informations de portées de la clé d'accès ne sont pas correctes."
 msgid "Access keys have been successfully deleted."
 msgstr "Les clés d'accès ont été supprimées avec succès."
 
+msgid "Access logs"
+msgstr "Journal des accès"
+
 msgid "Access to the REST API"
 msgstr "Accès à l'API REST"
 
@@ -3247,6 +3250,9 @@ msgstr ""
 msgid "Show %1$s"
 msgstr "Afficher %1$s"
 
+msgid "Show format"
+msgstr "Voir le format"
+
 msgid "Show project announcement"
 msgstr "Afficher l'annonce du projet"
 
@@ -3451,6 +3457,9 @@ msgstr "Conditions"
 
 msgid "Text"
 msgstr "Texte"
+
+msgid "Text file export"
+msgstr "Exporter au format texte"
 
 msgid "Thank you for using Tuleap"
 msgstr "Nous vous remercions d'utiliser Tuleap"
@@ -3985,6 +3994,10 @@ msgstr "Outils"
 msgid "Trace and Track all types of activities."
 msgstr "Suivez et gérez tous types d'activités."
 
+#, php-format
+msgid "Tracker %s"
+msgstr "Outils de suivi %s"
+
 msgid "Tracker email format"
 msgstr "Format des notifications de l'outil de suivi"
 
@@ -4150,6 +4163,9 @@ msgstr "Groupe utilisateur crée, mais impossible de retrouver son Id"
 msgid "User group does not exist"
 msgstr "Le groupe d'utilisateurs n'existe pas"
 
+msgid "User groups definition"
+msgstr "Définition des groupes"
+
 msgid "User is already member of the project"
 msgstr "L'utilisateur est déjà membre du projet"
 
@@ -4251,6 +4267,15 @@ msgstr ""
 
 msgid "Want to monitor this forum?"
 msgstr "Surveiller ce forum ?"
+
+msgid ""
+"Warning! This section will be deleted in June 2022. If this feature is "
+"important to you, please contact your administrator or raise your concern on "
+"the following ticket:"
+msgstr ""
+"Attention ! Cette section sera supprimée en juin 2022. Si cette "
+"fonctionnalité est important pour vous, veuillez contacter votre "
+"administrateur ou exprimez-vous sur le ticket suivant :"
 
 msgid "Warnings"
 msgstr "Alertes"
@@ -4871,7 +4896,10 @@ msgid ""
 "Your old Tuleap login was not was not valid against the configuration of "
 "your platform. It will be changed to \"%s\". If you use Ldap, it will not "
 "change your ldap login."
-msgstr "Votre ancien login Tuleap n'était plus valide par rapport à la configuration de votre plateforme. Il a été changé pour \"%s\". Si vous utilisez Ldap pour vous connecter, le login Ldap n'a pas changé."
+msgstr ""
+"Votre ancien login Tuleap n'était plus valide par rapport à la configuration "
+"de votre plateforme. Il a été changé pour \"%s\". Si vous utilisez Ldap pour "
+"vous connecter, le login Ldap n'a pas changé."
 
 msgid "Your place was saved"
 msgstr "Position dans le forum sauvegardée."

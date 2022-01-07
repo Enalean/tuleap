@@ -609,15 +609,11 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
      */
     public function project_export_entry($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        // Docman perms
-        $url                                                             = '?group_id=' . $params['group_id'] . '&export=plugin_docman_perms';
-        $params['labels']['plugin_eac_docman']                           = dgettext('tuleap-docman', 'Document Manager Permissions');
-        $params['data_export_links']['plugin_eac_docman']                = $url . '&show=csv';
-        $params['data_export_format_links']['plugin_eac_docman']         = $url . '&show=format';
-        $params['history_export_links']['plugin_eac_docman']             = null;
-        $params['history_export_format_links']['plugin_eac_docman']      = null;
-        $params['dependencies_export_links']['plugin_eac_docman']        = null;
-        $params['dependencies_export_format_links']['plugin_eac_docman'] = null;
+        $params['entries'][] = [
+            'label'               => dgettext('tuleap-docman', 'Document Manager Permissions'),
+            'data_dl_href'     => '/project/export/index.php?group_id=' . urlencode((string) $params['group_id']) . '&export=plugin_docman_perms&show=csv',
+            'data_format_href' => '/project/export/index.php?group_id=' . urlencode((string) $params['group_id']) . '&export=plugin_docman_perms&show=format',
+        ];
     }
 
     /**

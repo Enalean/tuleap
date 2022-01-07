@@ -139,7 +139,7 @@ class NavigationPresenterBuilder
             [
                 new NavigationDropdownItemPresenter(
                     _('Project Data Export'),
-                    '/project/export/index.php?' . http_build_query(['group_id' => $project_id])
+                    '/project/' . urlencode((string) $project_id) . '/admin/export'
                 ),
                 new NavigationDropdownItemPresenter(
                     _('Project History'),

@@ -112,6 +112,7 @@ use Tuleap\Platform\Banner\BannerDao;
 use Tuleap\Platform\Banner\BannerRetriever;
 use Tuleap\Platform\Banner\PlatformBannerAdministrationController;
 use Tuleap\Project\Admin\Categories;
+use Tuleap\Project\Admin\Export\ProjectExportController;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
 use Tuleap\Project\Admin\ProjectUGroup\MemberAdditionController;
@@ -892,6 +893,18 @@ class RouteCollector
         ];
     }
 
+    public static function getProjectExportController(): ProjectExportController
+    {
+        return new ProjectExportController(
+            ProjectRetriever::buildSelf(),
+            new ProjectAdministratorChecker(),
+            new ProjectAccessChecker(
+                new RestrictedUserCanAccessProjectVerifier(),
+                EventManager::instance()
+            ),
+        );
+    }
+
     public function collect(FastRoute\RouteCollector $r)
     {
         $r->get('/', [self::class, 'getSlash']);
@@ -929,6 +942,8 @@ class RouteCollector
             $r->post('/mailing-lists/delete/{list-id:\d+}', [self::class, 'getMailingListDeleteController']);
 
             $r->get('/references', [self::class, 'getReferencesController']);
+
+            $r->get('/export', [self::class, 'getProjectExportController']);
         });
 
         $r->get('/mail/', [self::class, 'getMailingListsHomepageController']);
