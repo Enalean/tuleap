@@ -22,5 +22,8 @@
 }
 
 .drek-ghost {
-    opacity: .2;
+    background: var(--tlp-neutral-normal-color);
+    border-color: transparent;
+    border-radius: var(--tlp-medium-radius);
+    box-shadow: none;
 }

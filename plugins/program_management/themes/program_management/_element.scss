@@ -197,6 +197,13 @@ $accessibility-pattern-right-margin: 6px;
 .element-backlog-item {
     margin: 0 0 var(--tlp-small-spacing);
 
+    &.drek-ghost {
+        .element-card,
+        .backlog-items-container {
+            visibility: hidden;
+        }
+    }
+
     &:last-child {
         margin: 0;
     }
