@@ -28,6 +28,7 @@ use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Project\XML\Export\ArchiveInterface;
+use Tuleap\Project\XML\Export\ExportOptions;
 
 class ExportXmlProject implements Dispatchable
 {
@@ -38,7 +39,7 @@ class ExportXmlProject implements Dispatchable
      */
     private $project;
     /**
-     * @var array
+     * @var ExportOptions
      */
     private $options;
     /**
@@ -68,7 +69,7 @@ class ExportXmlProject implements Dispatchable
 
     public function __construct(
         Project $project,
-        array $options,
+        ExportOptions $options,
         SimpleXMLElement $into_xml,
         \PFUser $user,
         \UserXMLExporter $user_XML_exporter,
@@ -91,9 +92,24 @@ class ExportXmlProject implements Dispatchable
         return $this->project;
     }
 
-    public function getOptions(): array
+    public function getExtraOptions(string $name): ?int
     {
-        return $this->options;
+        return $this->options->getExtraOption($name);
+    }
+
+    public function shouldExportAllData(): bool
+    {
+        return $this->options->shouldExportAllData();
+    }
+
+    public function shouldExportStructureOnly(): bool
+    {
+        return $this->options->shouldExportStructureOnly();
+    }
+
+    public function canBypassThreshold(): bool
+    {
+        return $this->options->canBypassThreshold();
     }
 
     public function getIntoXml(): SimpleXMLElement

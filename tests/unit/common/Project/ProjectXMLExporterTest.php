@@ -23,6 +23,7 @@
 use Mockery as M;
 use Tuleap\Project\ProjectIsInactiveException;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
+use Tuleap\Project\XML\Export\ExportOptions;
 use Tuleap\Test\Builders as B;
 
 final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -51,7 +52,14 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_manager = M::spy(UGroupManager::class);
         $xml_validator        = new XML_RNGValidator();
         $user_xml_exporter    = new UserXMLExporter(M::spy(UserManager::class), M::spy(UserXMLExportedCollection::class));
-        $this->project        = M::spy(Project::class, ['getPublicName' => 'Project01', "isActive" => true, "getIconUnicodeCodepoint" => '"\ud83d\ude2c"']);
+        $this->project        = M::spy(Project::class, [
+            'getPublicName'           => 'Project01',
+            'getUnixName'             => 'project01',
+            'getDescription'          => 'Wonderfull project',
+            'getAccess'               => \Project::ACCESS_PRIVATE,
+            "isActive"                => true,
+            "getIconUnicodeCodepoint" => '"\ud83d\ude2c"',
+        ]);
 
         $this->dashboard_exporter = $this->createMock(\Tuleap\Dashboard\Project\DashboardXMLExporter::class);
 
@@ -65,13 +73,78 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             M::spy(\Psr\Log\LoggerInterface::class)
         );
 
-        $this->options    = [
-            'tracker_id' => 10,
-        ];
+        $this->options    = new ExportOptions(
+            "",
+            false,
+            ['tracker_id' => 10]
+        );
         $this->export_dir = "__fixtures";
 
         $this->archive = M::spy(\Tuleap\Project\XML\Export\ArchiveInterface::class);
         $this->user    = M::spy(PFUser::class);
+    }
+
+    public function testItDoesNotExportUsersIfWeOnlyWantProjectStructure(): void
+    {
+        $user_01 = B\UserTestBuilder::aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
+        $user_02 = B\UserTestBuilder::aUser()->withId(102)->withLdapId('ldap_02')->withUserName('user_02')->build();
+        $user_03 = B\UserTestBuilder::aUser()->withId(103)->withLdapId('ldap_03')->withUserName('user_03')->build();
+        $user_04 = B\UserTestBuilder::aUser()->withId(104)->withUserName('user_04')->build();
+
+        $project_ugroup_project_admins  = M::spy(
+            ProjectUGroup::class,
+            [
+                'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_ADMIN],
+                'getMembers' => [$user_01],
+                'getTranslatedDescription' => 'descr01',
+            ]
+        );
+        $project_ugroup_project_members = M::spy(
+            ProjectUGroup::class,
+            [
+                'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
+                'getMembers' => [$user_01, $user_02, $user_03],
+                'getTranslatedDescription' => 'Project members',
+            ]
+        );
+        $project_ugroup_static          = M::spy(
+            ProjectUGroup::class,
+            [
+                'getNormalizedName' => 'Developers',
+                'getMembers' => [$user_01, $user_04],
+                'getTranslatedDescription' => 'Developers',
+            ]
+        );
+
+
+        $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_project_admins);
+        $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_project_members);
+        $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns([
+            $project_ugroup_static,
+        ]);
+
+        $this->project->shouldReceive('getServices')->andReturns([]);
+        $this->event_manager->shouldReceive('processEvent');
+        $this->dashboard_exporter->method('exportDashboards');
+
+        $xml = $this->xml_exporter->export(
+            $this->project,
+            new ExportOptions(ExportOptions::MODE_STRUCTURE, false, []),
+            $this->user,
+            $this->archive,
+            $this->export_dir
+        );
+
+        $xml_objet = simplexml_load_string($xml);
+
+        $this->assertNotNull($xml_objet->ugroups);
+        $this->assertNotNull($xml_objet->ugroups->ugroup[0]);
+        $this->assertNotNull($xml_objet->ugroups->ugroup[1]);
+        $this->assertNotNull($xml_objet->ugroups->ugroup[2]);
+
+        $this->assertCount(0, $xml_objet->ugroups->ugroup[0]->members->member);
+        $this->assertCount(0, $xml_objet->ugroups->ugroup[1]->members->member);
+        $this->assertCount(0, $xml_objet->ugroups->ugroup[2]->members->member);
     }
 
     public function testItExportsStaticUgroupsForTheGivenProject(): void
@@ -113,6 +186,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'getNormalizedName' => 'ugroup_dynamic',
                 'getMembers' => [],
+                'getTranslatedDescription' => 'dynamic',
             ]
         );
 
@@ -175,6 +249,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_ADMIN],
                 'getMembers' => [$user_admin_1],
+                'getTranslatedDescription' => 'Project admin',
             ]
         );
 
@@ -183,6 +258,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
                 'getMembers' => [$user_1, $user_2, $user_3],
+                'getTranslatedDescription' => 'Project member',
             ]
         );
 
@@ -245,7 +321,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project->shouldReceive('getDescription')->andReturns('my short desc');
         $this->project->shouldReceive('getServices')->andReturns([$service_01, $service_02]);
         $this->project->shouldReceive('getAccess')->andReturns('public');
-        $project_ugroup_dynamic = M::spy(ProjectUGroup::class, ['getNormalizedName' => 'ugroup_dynamic']);
+        $project_ugroup_dynamic = M::spy(ProjectUGroup::class, ['getNormalizedName' => 'ugroup_dynamic', 'getTranslatedDescription' => 'dynamic']);
         $project_ugroup_dynamic->shouldReceive('getMembers')->andReturns([]);
         $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
         $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);

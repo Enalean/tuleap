@@ -1630,6 +1630,10 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function exportXmlProject(ExportXmlProject $event): void
     {
+        if (! $event->shouldExportAllData()) {
+            return;
+        }
+
         $project = $event->getProject();
         if (! $project->usesService($this->getServiceShortname())) {
             return;

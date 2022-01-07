@@ -106,7 +106,11 @@ final class ProjectExportController implements DispatchableWithRequest, Dispatch
         $title = _("Project Data Export");
         $this->displayHeader($title, $project, $layout);
         $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/project');
-        $renderer->renderToPage('admin/export', ['entries' => $entries]);
+        $renderer->renderToPage('admin/export', [
+            'has_feature_flag' => $request->get('feature-flag-xml-structure'),
+            'entries'          => $entries,
+            'xml_export_href'  => '/project/' . urlencode((string) $group_id) . '/admin/export/xml',
+        ]);
         $renderer->renderToPage('end-project-admin-content', []);
         site_project_footer([]);
     }

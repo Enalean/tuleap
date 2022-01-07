@@ -1,4 +1,27 @@
 <div class="tlp-framed-horizontally">
+    {{# has_feature_flag }}
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{# gettext }}Project XML export{{/ gettext }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <p>
+                    {{# gettext }}This will generate a zip archive with a project.xml file that contains project structure.{{/ gettext }}
+                    {{# gettext }}Data (like artifacts or users) won't be included.{{/ gettext }}
+                </p>
+                <p>{{# gettext }}This archive is ready to be imported in a Tuleap instance.{{/ gettext }}</p>
+                <a href="{{ xml_export_href }}" class="tlp-button-primary">
+                    <i class="fas fa-download tlp-button-icon" aria-hidden="true"></i>
+                    {{# gettext }}Export project structure{{/ gettext }}
+                </a>
+            </section>
+        </div>
+    </section>
+    {{/ has_feature_flag }}
+
     <section class="tlp-pane">
         <div class="tlp-pane-container">
             <div class="tlp-pane-header">

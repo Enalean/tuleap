@@ -26,6 +26,7 @@ use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectIsInactiveException;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
+use Tuleap\Project\XML\Export\ExportOptions;
 
 class ProjectXMLExporter
 {
@@ -103,7 +104,7 @@ class ProjectXMLExporter
         }
     }
 
-    private function exportProjectUgroups(Project $project, SimpleXMLElement $into_xml)
+    private function exportProjectUgroups(Project $project, ExportOptions $options, SimpleXMLElement $into_xml)
     {
         $ugroups_node = $into_xml->addChild('ugroups');
         if ($this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($project)) {
@@ -112,23 +113,23 @@ class ProjectXMLExporter
 
         $this->logger->debug('Exporting project_admins ugroup');
         $project_admins_ugroup = $this->ugroup_manager->getProjectAdminsUGroup($project);
-        $this->exportProjectUgroup($ugroups_node, $project_admins_ugroup);
+        $this->exportProjectUgroup($ugroups_node, $options, $project_admins_ugroup);
 
         $this->logger->debug('Exporting project_admins ugroup');
         $project_members_ugroup = $this->ugroup_manager->getProjectMembersUGroup($project);
-        $this->exportProjectUgroup($ugroups_node, $project_members_ugroup);
+        $this->exportProjectUgroup($ugroups_node, $options, $project_members_ugroup);
 
         $this->logger->debug("Exporting project's static ugroups");
         $static_ugroups = $this->ugroup_manager->getStaticUGroups($project);
         foreach ($static_ugroups as $ugroup) {
-            $this->exportProjectUgroup($ugroups_node, $ugroup);
+            $this->exportProjectUgroup($ugroups_node, $options, $ugroup);
         }
 
         $rng_path = realpath(dirname(__FILE__) . '/../xml/resources/ugroups.rng');
         $this->xml_validator->validate($ugroups_node, $rng_path);
     }
 
-    private function exportProjectUgroup(SimpleXMLElement $ugroups_node, ProjectUGroup $ugroup)
+    private function exportProjectUgroup(SimpleXMLElement $ugroups_node, ExportOptions $options, ProjectUGroup $ugroup)
     {
         $this->logger->debug("Current ugroup: " . $ugroup->getName());
 
@@ -138,6 +139,10 @@ class ProjectXMLExporter
 
         $members_node = $ugroup_node->addChild('members');
 
+        if ($options->shouldExportStructureOnly()) {
+            return;
+        }
+
         foreach ($ugroup->getMembers() as $member) {
             $this->user_xml_exporter->exportUser($member, $members_node, 'member');
         }
@@ -146,7 +151,7 @@ class ProjectXMLExporter
     private function exportPlugins(
         Project $project,
         SimpleXMLElement $into_xml,
-        array $options,
+        ExportOptions $options,
         PFUser $user,
         ArchiveInterface $archive,
         $temporary_dump_path_on_filesystem,
@@ -172,7 +177,7 @@ class ProjectXMLExporter
         $this->dashboard_xml_exporter->exportDashboards($project, $xml_element);
     }
 
-    public function export(Project $project, array $options, PFUser $user, ArchiveInterface $archive, $temporary_dump_path_on_filesystem)
+    public function export(Project $project, ExportOptions $options, PFUser $user, ArchiveInterface $archive, $temporary_dump_path_on_filesystem)
     {
         if (! $project->isActive()) {
             throw new ProjectIsInactiveException();
@@ -183,7 +188,7 @@ class ProjectXMLExporter
                                              <project />');
 
         $this->exportProjectInfo($project, $xml_element);
-        $this->exportProjectUgroups($project, $xml_element);
+        $this->exportProjectUgroups($project, $options, $xml_element);
         $this->exportDashboards($project, $xml_element);
         $this->exportPlugins($project, $xml_element, $options, $user, $archive, $temporary_dump_path_on_filesystem);
 
