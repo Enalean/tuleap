@@ -919,8 +919,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             if ($current_renderer) {
                 $html .= '<div class="tracker_report_renderer"
                                id="tracker_report_renderer_current"
-                               data-renderer-id="' . $current_renderer->getId() . '"
-                               data-report-id="' . $this->id . '"
+                               data-renderer-id="' . $hp->purify($current_renderer->getId()) . '"
+                               data-report-id="' . $hp->purify($this->id) . '"
                                data-renderer-func="renderer"
                           >';
 

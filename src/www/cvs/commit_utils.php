@@ -162,10 +162,10 @@ function show_commitslist(
             '<A HREF="' . $purifier->purify($url) . '&offset=0#results"><B>&lt;&lt;  ' . $GLOBALS['Language']->getText('global', 'begin') . '</B></A>' .
             '&nbsp;&nbsp;&nbsp;&nbsp;' .
             '<A HREF="' . $purifier->purify($url) . '&offset=' . $purifier->purify(urlencode($offset - $chunksz)) .
-            '#results"><B>< ' . $GLOBALS['Language']->getText('global', 'prev') . ' ' . $chunksz . '</B></A></td>';
+            '#results"><B>< ' . $GLOBALS['Language']->getText('global', 'prev') . ' ' . $purifier->purify($chunksz) . '</B></A></td>';
         } else {
             $nav_bar .=
-            '<span class="disable">&lt;&lt; ' . $GLOBALS['Language']->getText('global', 'begin') . '&nbsp;&nbsp;&lt; ' . $GLOBALS['Language']->getText('global', 'prev') . ' ' . $chunksz . '</span>';
+            '<span class="disable">&lt;&lt; ' . $GLOBALS['Language']->getText('global', 'begin') . '&nbsp;&nbsp;&lt; ' . $GLOBALS['Language']->getText('global', 'prev') . ' ' . $purifier->purify($chunksz) . '</span>';
         }
     }
 
@@ -189,7 +189,7 @@ function show_commitslist(
             '<A HREF="' . $purifier->purify($url) . '&offset=' . $purifier->purify(urlencode($offset + $chunksz)) .
             '#results" class="small"><B>' . $GLOBALS['Language']->getText('global', 'next') . ' ' . $purifier->purify($chunksz) . ' &gt;</B></A>' .
             '&nbsp;&nbsp;&nbsp;&nbsp;' .
-            '<A HREF="' . $url . '&offset=' . ($offset_end) .
+            '<A HREF="' . $url . '&offset=' . urlencode($offset_end) .
             '#results" class="small"><B>' . $GLOBALS['Language']->getText('global', 'end') . ' &gt;&gt;</B></A></td>';
         } else {
             $nav_bar .=
@@ -276,20 +276,20 @@ function makeCvsLink($group_id, $filename, $text, $rev = '', $displayfunc = '')
 
     $view_str = $displayfunc;
     if ($rev) {
-        $view_str .= '&revision=' . $rev;
+        $view_str .= '&revision=' . urlencode($rev);
     }
 
     $row_grp    = db_fetch_array($res_grp);
-    $group_name = $row_grp['unix_group_name'];
-    return '<A HREF="/cvs/viewvc.php/' . $filename . '?root=' . $group_name . '&roottype=cvs' . $view_str . '"><B>' . $text . "</B></A>";
+    $group_name = urlencode($row_grp['unix_group_name']);
+    return '<A HREF="' . Codendi_HTMLPurifier::instance()->purify('/cvs/viewvc.php/' . $filename . '?root=' . $group_name . '&roottype=cvs' . $view_str) . '"><B>' . $text . "</B></A>";
 }
 
 function makeCvsDirLink($group_id, $filename, $text, $dir = '')
 {
     $res_grp    = db_query("SELECT * FROM `groups` WHERE group_id=" . db_ei($group_id));
     $row_grp    = db_fetch_array($res_grp);
-    $group_name = $row_grp['unix_group_name'];
-    return '<A HREF="/cvs/viewvc.php/' . $dir . '?root=' . $group_name . '&roottype=cvs"><B>' . $text . '</B></A>';
+    $group_name = urlencode($row_grp['unix_group_name']);
+    return '<A HREF="' . Codendi_HTMLPurifier::instance()->purify('/cvs/viewvc.php/' . $dir . '?root=' . $group_name . '&roottype=cvs') . '"><B>' . $text . '</B></A>';
 }
 
 // Check is a sort criteria is already in the list of comma
@@ -570,10 +570,11 @@ function format_cvs_history($group_id)
         }
 
       // Format output
-        $output = '<P><b>' . _('Developer Commits (Last 7 days/Total)') . '</b><BR>&nbsp;';
+        $output   = '<P><b>' . _('Developer Commits (Last 7 days/Total)') . '</b><BR>&nbsp;';
+        $purifier = Codendi_HTMLPurifier::instance();
         foreach ($cvshist as $user => $value) {
-            $output .= '<BR>' . $user . ' (' . $cvshist[$user]['last'] . '/'
-            . $cvshist[$user]['full'] . ')';
+            $output .= '<BR>' . $purifier->purify($user) . ' (' . $purifier->purify($cvshist[$user]['last']) . '/'
+            . $purifier->purify($cvshist[$user]['full']) . ')';
         }
     }
     return $output;

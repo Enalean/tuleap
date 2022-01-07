@@ -28,6 +28,7 @@ class EasyDB
      * @psalm-taint-sink sql $statement
      * @psalm-taint-source ldap
      * @psalm-taint-source sql
+     * @psalm-taint-source html
      */
     public function col(string $statement, int $offset = 0, ...$params)
     {
@@ -37,6 +38,7 @@ class EasyDB
      * @psalm-taint-sink sql $statement
      * @psalm-taint-source ldap
      * @psalm-taint-source sql
+     * @psalm-taint-source html
      */
     public function column(string $statement, array $params = [], int $offset = 0)
     {
@@ -46,6 +48,7 @@ class EasyDB
      * @psalm-taint-sink sql $statement
      * @psalm-taint-source ldap
      * @psalm-taint-source sql
+     * @psalm-taint-source html
      */
     public function cell(string $statement, ...$params)
     {
@@ -69,6 +72,7 @@ class EasyDB
      * @psalm-taint-sink sql $statement
      * @psalm-taint-source ldap
      * @psalm-taint-source sql
+     * @psalm-taint-source html
      */
     public function first(string $statement, int $offset = 0, ...$params)
     {
@@ -103,6 +107,7 @@ class EasyDB
      * @psalm-taint-source input $field
      * @psalm-taint-source ldap
      * @psalm-taint-source sql
+     * @psalm-taint-source html
      */
     public function insertGet(string $table, array $map, string $field)
     {
@@ -119,6 +124,7 @@ class EasyDB
      * @psalm-taint-source input $table
      * @psalm-taint-source ldap
      * @psalm-taint-source sql
+     * @psalm-taint-source html
      */
     public function insertReturnId(string $table, array $map, string $sequenceName = '')
     {
@@ -143,6 +149,7 @@ class EasyDB
      * @psalm-taint-sink sql $statement
      * @psalm-taint-source ldap
      * @psalm-taint-source sql
+     * @psalm-taint-source html
      */
     public function q(string $statement, ...$params)
     {
@@ -152,6 +159,7 @@ class EasyDB
      * @psalm-taint-sink sql $statement
      * @psalm-taint-source ldap
      * @psalm-taint-source sql
+     * @psalm-taint-source html
      */
     public function run(string $statement, ...$params)
     {
@@ -161,6 +169,7 @@ class EasyDB
      * @psalm-taint-sink sql $statement
      * @psalm-taint-source ldap
      * @psalm-taint-source sql
+     * @psalm-taint-source html
      */
     public function single(string $statement, array $params = [])
     {

@@ -295,7 +295,7 @@ class WikiServiceViews extends WikiViews
             // User is browsing a wiki page
                 $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
 
-                $permLink = $this->wikiAdminLink . '&view=pagePerms&id=' . $wp->getId();
+                $permLink = Codendi_HTMLPurifier::instance()->purify($this->wikiAdminLink . '&view=pagePerms&id=' . urlencode((string) $wp->getId()));
                 if ($wp->permissionExist()) {
                       $permInfo =  '<a href="' . $permLink . '"> ' . '<img src="' . util_get_image_theme("ic/lock.png") . '" border="0" alt="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lock_alt') . '" title="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lock_title_spec') . '"/></a>';
                 }

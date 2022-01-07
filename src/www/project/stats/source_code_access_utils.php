@@ -305,7 +305,7 @@ function cvsaccess_logs_daily($project, int $span = 7, $who = "allusers")
         while ($row = db_fetch_array($res)) {
             $i++;
             print '<TR class="' . util_get_alt_row_color($i) . '">'
-            . '<TD>' . substr($row["day"], 6, 2) . ' ' . $month_name[substr($row["day"], 4, 2) - 1] . ' ' . substr($row["day"], 0, 4) . '</TD>'
+            . '<TD>' . $hp->purify(substr($row["day"], 6, 2)) . ' ' . $hp->purify($month_name[substr($row["day"], 4, 2) - 1]) . ' ' . $hp->purify(substr($row["day"], 0, 4)) . '</TD>'
              . '<TD> <a href="/users/' . $hp->purify($row["user_name"]) . '/">' . $hp->purify($row["user_name"]) . '</a> (' . $hp->purify($row["realname"]) . ')</TD>'
             . '<TD>' . $hp->purify($row["email"]) . '</TD>'
             . '<TD>' . $hp->purify($row["cvs_checkouts"]) . '</TD>'
@@ -393,7 +393,7 @@ function svnaccess_logs_daily($project, int $span = 7, $who = "allusers")
         while ($row = db_fetch_array($res)) {
             $i++;
             print '<TR class="' . util_get_alt_row_color($i) . '">'
-            . '<TD>' . substr($row["day"], 6, 2) . ' ' . $month_name[substr($row["day"], 4, 2) - 1] . ' ' . substr($row["day"], 0, 4) . '</TD>'
+            . '<TD>' . $hp->purify(substr($row["day"], 6, 2)) . ' ' . $hp->purify($month_name[substr($row["day"], 4, 2) - 1]) . ' ' . $hp->purify(substr($row["day"], 0, 4)) . '</TD>'
              . '<TD> <a href="/users/' . $hp->purify($row["user_name"]) . '/">' . $hp->purify($row["user_name"]) . '</a> (' . $hp->purify($row["realname"]) . ')</TD>'
             . '<TD>' . $hp->purify($row["email"]) . '</TD>'
             . '<TD>' . $hp->purify($row["svn_access_count"]) . '</TD>'

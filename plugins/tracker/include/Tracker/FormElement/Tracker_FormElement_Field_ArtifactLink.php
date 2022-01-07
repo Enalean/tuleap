@@ -782,8 +782,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                         $head[$key] = $value["head"];
                         $rows[$key] = $value["rows"];
                     }
-                    header('Content-type: application/json');
-                    echo json_encode(['head' => $head, 'rows' => $rows]);
+                    $GLOBALS['HTML']->sendJSON(['head' => $head, 'rows' => $rows]);
                 }
                 exit();
             case 'fetch-aggregates':
@@ -827,8 +826,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                         }
                     }
                 }
-                header('Content-type: application/json');
-                echo json_encode($json);
+                $GLOBALS['HTML']->sendJSON($json);
                 exit();
             case 'artifactlink-renderer-async':
                 session_write_close();

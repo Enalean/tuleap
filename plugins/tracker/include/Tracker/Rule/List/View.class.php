@@ -46,17 +46,17 @@ class Tracker_Rule_List_View
     }
 
     /**
-     * @return a representation of an artifact rule
      * #id@tracker_id source_field(source_value) => target_field(target_value_1, target_value_2)
      */
-    public function fetch()
+    public function fetch(): string
     {
-        $output  = '#' . $this->rule->id;
-        $output .= '@' . $this->rule->tracker_id;
-        $output .= ' ' . $this->rule->source_field;
-        $output .= '(' . $this->rule->source_value . ') =>';
-        $output .= ' ' . $this->rule->target_field;
-        $output .= '(' . $this->rule->target_value . ')';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $output   = '#' . $purifier->purify($this->rule->id);
+        $output  .= '@' . $purifier->purify($this->rule->tracker_id);
+        $output  .= ' ' . $purifier->purify($this->rule->source_field);
+        $output  .= '(' . $purifier->purify($this->rule->source_value) . ') =>';
+        $output  .= ' ' . $purifier->purify($this->rule->target_field);
+        $output  .= '(' . $purifier->purify($this->rule->target_value) . ')';
         return $output;
     }
 

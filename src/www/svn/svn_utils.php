@@ -516,8 +516,8 @@ function svn_utils_format_svn_history($group_id)
         foreach ($svnhist as $user => $value) {
             $output .= '<BR>'
                 . $hp->purify($uh->getDisplayNameFromUserName($user), CODENDI_PURIFIER_CONVERT_HTML)
-                . ' (' . $svnhist[$user]['last'] . '/'
-                . $svnhist[$user]['full'] . ')';
+                . ' (' . $hp->purify($svnhist[$user]['last']) . '/'
+                . $hp->purify($svnhist[$user]['full']) . ')';
         }
     }
     return $output;
