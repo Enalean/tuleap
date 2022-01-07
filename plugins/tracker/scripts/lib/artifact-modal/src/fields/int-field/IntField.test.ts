@@ -20,51 +20,48 @@
 import type { HostElement } from "./IntField";
 import { onInput } from "./IntField";
 
+const FIELD_ID = 43;
+
+const noop = (): void => {
+    //Do nothing
+};
+
 const getDocument = (): Document => document.implementation.createHTMLDocument();
 
+function getHost(): HostElement {
+    return {
+        fieldId: FIELD_ID,
+        label: "Int Field",
+        required: false,
+        disabled: false,
+        value: 0,
+        dispatchEvent: noop,
+    } as unknown as HostElement;
+}
+
 describe(`IntField`, () => {
-    let dispatchEvent: jest.SpyInstance, host: HostElement, inner_input: HTMLInputElement;
-    beforeEach(() => {
-        dispatchEvent = jest.fn();
-        host = {
-            fieldId: 87,
-            label: "Int Field",
-            required: false,
-            disabled: false,
-            value: 0,
-            dispatchEvent,
-        } as unknown as HostElement;
-        inner_input = getDocument().createElement("input");
-        inner_input.addEventListener("input", (event) => onInput(host, event));
-    });
+    it.each([
+        ["when the input is emptied", "empty string", "", ""],
+        ["when the input's value is a number", "the number", "13", 13],
+        ["when the input's value is not a number", "empty string", "not a number", ""],
+    ])(
+        `%s, it dispatches a "value-changed" event with value as %s`,
+        (when_statement, expected_statement, input_value, expected_manual_value) => {
+            const host = getHost();
+            const dispatchEvent = jest.spyOn(host, "dispatchEvent");
+            const inner_input = getDocument().createElement("input");
+            inner_input.addEventListener("input", (event) => onInput(host, event));
 
-    it(`when the input is emptied, it dispatches a "value-changed" event with empty string value`, () => {
-        inner_input.value = "";
-        inner_input.dispatchEvent(new InputEvent("input"));
+            inner_input.value = input_value;
+            inner_input.dispatchEvent(new InputEvent("input"));
 
-        const event = dispatchEvent.mock.calls[0][0];
-        expect(event.type).toEqual("value-changed");
-        expect(event.detail.field_id).toEqual(87);
-        expect(event.detail.value).toEqual("");
-    });
-
-    it(`when the input's value is a number, it dispatches a "value-changed" event with the number`, () => {
-        inner_input.value = "13";
-        inner_input.dispatchEvent(new InputEvent("input"));
-
-        const event = dispatchEvent.mock.calls[0][0];
-        expect(event.type).toEqual("value-changed");
-        expect(event.detail.field_id).toEqual(87);
-        expect(event.detail.value).toEqual(13);
-    });
-
-    it(`when the input's value is not a number, it dispatches a "value-changed" event with empty string value`, () => {
-        inner_input.value = "not a number";
-        inner_input.dispatchEvent(new InputEvent("input"));
-
-        const event = dispatchEvent.mock.calls[0][0];
-        expect(event.type).toEqual("value-changed");
-        expect(event.detail.field_id).toEqual(87);
-        expect(event.detail.value).toEqual("");
-    });
+            const event = dispatchEvent.mock.calls[0][0];
+            if (!(event instanceof CustomEvent)) {
+                throw new Error("Expected a CustomEvent");
+            }
+            expect(event.type).toBe("value-changed");
+            expect(event.detail.field_id).toBe(FIELD_ID);
+            expect(event.detail.value).toBe(expected_manual_value);
+        }
+    );
 });

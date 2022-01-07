@@ -47,12 +47,12 @@ describe("computed-field-value-formatter", () => {
         });
 
         describe("Given that the field value was not set to autocomputed", () => {
-            it(`and the manual value was null, then it will return null`, () => {
+            it(`and the manual value was an empty string, then it will return null`, () => {
                 const field_value = {
                     field_id: 827,
                     is_autocomputed: false,
                     label: "Sangraal",
-                    manual_value: null,
+                    manual_value: "",
                     permissions: ["read", "update", "create"],
                     value: 97,
                 };

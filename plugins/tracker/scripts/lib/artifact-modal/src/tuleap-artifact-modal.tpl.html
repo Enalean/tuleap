@@ -223,12 +223,18 @@
 </script>
 
 <script type="text/ng-template" id="field-computed.tpl.html">
-<div class="tlp-form-element"
+<tuleap-artifact-modal-computed-field
+    field-id="field.field_id"
+    label="field.label"
+    required="field.required"
+    disabled="modal.isDisabled(field)"
+    value="field.value"
+    manual-value="modal.values[field.field_id].manual_value"
+    autocomputed="modal.values[field.field_id].is_autocomputed"
+    on-value-changed="modal.setFieldValueForComputedFieldElement($event)"
+    ce-one-way
     data-test="computed-field"
-    tuleap-artifact-modal-computed-field="field"
-    is-disabled="modal.isDisabled(field)"
-    value-model="modal.values[field.field_id]"
-></div>
+></tuleap-artifact-modal-computed-field>
 </script>
 
 <script type="text/ng-template" id="field-subby.tpl.html">

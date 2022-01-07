@@ -111,9 +111,9 @@ function ArtifactModalController(
         setupTooltips,
         submit,
         reopenFieldsetsWithInvalidInput,
-        setFieldValue,
         setFieldValueForCustomElement,
         setFieldValueForRadioButtonsCustomElement,
+        setFieldValueForComputedFieldElement,
         addToFilesAddedByTextField,
         setFollowupComment,
         toggleFieldset,
@@ -387,12 +387,6 @@ function ArtifactModalController(
         return isInCreationMode() && self.parent;
     }
 
-    function setFieldValue(field_id) {
-        return (value) => {
-            self.values[field_id].value = value;
-        };
-    }
-
     function setFieldValueForCustomElement(event) {
         const { field_id, value } = event.detail;
         self.values[field_id].value = value;
@@ -401,6 +395,12 @@ function ArtifactModalController(
     function setFieldValueForRadioButtonsCustomElement(event) {
         const { field_id, value } = event.detail;
         self.values[field_id].bind_value_ids[0] = value;
+    }
+
+    function setFieldValueForComputedFieldElement(event) {
+        const { field_id, autocomputed, manual_value } = event.detail;
+        self.values[field_id].is_autocomputed = autocomputed;
+        self.values[field_id].manual_value = manual_value;
     }
 
     function addToFilesAddedByTextField(event) {
