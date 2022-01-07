@@ -41,7 +41,7 @@ specifiers:
   dragula: ^3.7.2
   jquery: ^3.6.0
   marked: ^4.0.0
-  mermaid: ^8.13.2
+  mermaid: ^8.13.8
   moment: ^2.29.1
   mustache: ^4.2.0
   node-fetch: ^3.0.0
@@ -87,7 +87,7 @@ dependencies:
   dompurify: 2.3.4
   dragula: 3.7.3
   marked: 4.0.0
-  mermaid: 8.13.2
+  mermaid: 8.13.8
   moment: 2.29.1
   mustache: 4.2.0
   node-gettext: 3.0.0
@@ -1208,10 +1208,6 @@ packages:
     resolution: {integrity: sha512-3VdM/SXBZX2omc9JF9nOPCtDaYQ67BGp5CoLpIQlO2KCAPETs8TcDHacF26jXadGbvUteZzRTeos2fhID5+ucQ==}
     dev: false
 
-  /dompurify/2.3.1:
-    resolution: {integrity: sha512-xGWt+NHAQS+4tpgbOAI08yxW0Pr256Gu/FNE2frZVTbgrBUn8M7tz7/ktS/LZ2MHeGqz6topj0/xY+y8R5FBFw==}
-    dev: false
-
   /dompurify/2.3.4:
     resolution: {integrity: sha512-6BVcgOAVFXjI0JTjEvZy901Rghm+7fDQOrNIcxB4+gdhj6Kwp6T9VBhBY/AbagKHJocRkDYGd6wvI+p4/10xtQ==}
     dev: false
@@ -1514,14 +1510,14 @@ packages:
     hasBin: true
     dev: false
 
-  /mermaid/8.13.2:
-    resolution: {integrity: sha512-qTFI7MfC2d+x0Hft5gx063EH9tZg36lERG8o7Zq0Ag+MnO8CgVaMZEU6oA8gzTtTn9upMdy4UlYSLVmavu27cQ==}
+  /mermaid/8.13.8:
+    resolution: {integrity: sha512-Z5v31rvo8P7BPTiGicdJl9BbzyUe9s5sXILK8sM1g7ijkagpfFjPtXZVsq5P1WlN8m/fUp2PPNXVF9SqeTM91w==}
     dependencies:
       '@braintree/sanitize-url': 3.1.0
       d3: 7.1.1
       dagre: 0.8.5
       dagre-d3: 0.6.4
-      dompurify: 2.3.1
+      dompurify: 2.3.4
       graphlib: 2.1.8
       khroma: 1.4.1
       moment-mini: 2.24.0
