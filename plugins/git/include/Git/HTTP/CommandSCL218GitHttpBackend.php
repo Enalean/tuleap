@@ -26,6 +26,6 @@ final class CommandSCL218GitHttpBackend extends \Git_HTTP_Command
 {
     public function getCommand(): string
     {
-        return \Git_Exec::GIT218_PATH . '/usr/libexec/git-core/git-http-backend';
+        return \Git_Exec::GIT218_PATH . '/libexec/git-core/git-http-backend';
     }
 }

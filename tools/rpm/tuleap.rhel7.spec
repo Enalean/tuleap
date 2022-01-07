@@ -135,7 +135,7 @@ Summary: Git plugin for Tuleap
 Group: Development/Tools
 AutoReqProv: no
 Requires(pre): shadow-utils
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rh-git218-git, gitolite3
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-git-bin = @@VERSION@@, gitolite3
 Requires: sudo, openssh-server
 %description plugin-git
 Integration of git distributed software configuration management tool together
@@ -151,7 +151,7 @@ Group: Development/Tools
 
 %package plugin-pullrequest
 Summary: Pullrequest management for Tuleap
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git, rh-git218-git, grep
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git, %{name}-git-bin = @@VERSION@@, grep
 Group: Development/Tools
 %description plugin-pullrequest
 %{summary}.

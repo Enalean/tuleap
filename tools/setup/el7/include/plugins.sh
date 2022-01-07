@@ -1,5 +1,5 @@
 _pluginGit() {
-    local -r git="/opt/rh/rh-git218/root/usr/bin/git"
+    local -r git="/usr/lib/tuleap/git/bin/git"
     local -r gitolite="/usr/bin/gitolite"
     local -r git_group="gitolite"
     local -r git_user="gitolite"
@@ -111,7 +111,7 @@ _pluginGit() {
         plugin_git_configured="true"
     fi
 
-    if ! ${su} --command '/opt/rh/rh-git218/root/usr/bin/git \
+    if ! ${su} --command '/usr/lib/tuleap/git/bin/git \
         --git-dir="/var/lib/tuleap/gitolite/admin/.git"  \
         cat-file -e origin/master:conf/gitolite.conf' \
         --login ${tuleap_unix_user}; then

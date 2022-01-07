@@ -6,10 +6,10 @@
 #
 
 GIT=/usr/bin/git
-if [ -f /opt/rh/rh-git218/root/usr/bin/git ]; then
+if [ -f /usr/lib/tuleap/git/bin/git ]; then
+    GIT=/usr/lib/tuleap/git/bin/git
+elif [ -f /opt/rh/rh-git218/root/usr/bin/git ]; then
     GIT=/opt/rh/rh-git218/root/usr/bin/git
-elif [ -f /opt/rh/sclo-git212/root/usr/bin/git ]; then
-    GIT=/opt/rh/sclo-git212/root/usr/bin/git
 fi
 
 bundle_file_path="$1"
