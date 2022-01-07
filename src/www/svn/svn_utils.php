@@ -83,9 +83,9 @@ function svn_header(Project $project, $params)
 function svn_deprecation_notice(\Project $project): string
 {
     if ($project->usesService('plugin_svn')) {
-        return "<p><div class='alert alert-danger'> " . sprintf(_('Subversion Core is deprecated, please install and activate `SVN` plugin and <a href="/plugins/svn/%s/admin-migrate">migrate your repository.</a>'), urlencode($project->getUnixNameLowerCase())) .  "</div></p>";
+        return "<p><div class='alert alert-error'> " . sprintf(_('Subversion Core is deprecated, it will be removed on march 2022. Please install and activate `SVN` plugin and <a href="/plugins/svn/%s/admin-migrate">migrate your repository.</a>'), urlencode($project->getUnixNameLowerCase())) .  "</div></p>";
     }
-    return "<p><div class='alert alert-danger'> " . sprintf(_('Subversion Core is deprecated, please <a href="/project/%d/admin/services">install and activate `SVN` plugin.</a>'), urlencode((string) $project->getID())) .  "</div></p>";
+    return "<p><div class='alert alert-danger'> " . sprintf(_('Subversion Core is deprecated, it will be removed on march 2022. Please <a href="/project/%d/admin/services">install and activate `SVN` plugin.</a>'), urlencode((string) $project->getID())) .  "</div></p>";
 }
 
 function svn_header_admin($params)
