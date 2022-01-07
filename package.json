@@ -37,7 +37,7 @@
     "eslint-plugin-jest": "^25.2.2",
     "eslint-plugin-no-only-tests": "^2.6.0",
     "eslint-plugin-no-unsanitized": "^4.0.0",
-    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^8.2.0",
     "eslint-plugin-you-dont-need-lodash-underscore": "^6.12.0",
     "fork-ts-checker-webpack-plugin": "^5.2.0",

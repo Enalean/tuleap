@@ -36,7 +36,7 @@ specifiers:
   eslint-plugin-jest: ^25.2.2
   eslint-plugin-no-only-tests: ^2.6.0
   eslint-plugin-no-unsanitized: ^4.0.0
-  eslint-plugin-prettier: ^3.4.0
+  eslint-plugin-prettier: ^4.0.0
   eslint-plugin-vue: ^8.2.0
   eslint-plugin-you-dont-need-lodash-underscore: ^6.12.0
   fork-ts-checker-webpack-plugin: ^5.2.0
@@ -121,7 +121,7 @@ devDependencies:
   eslint-plugin-jest: 25.2.2_906f90f1bf466fd37e5366ded79ae806
   eslint-plugin-no-only-tests: 2.6.0
   eslint-plugin-no-unsanitized: 4.0.0_eslint@8.1.0
-  eslint-plugin-prettier: 3.4.0_9f4d32ac2112f0fec34a008f47b0fce8
+  eslint-plugin-prettier: 4.0.0_9f4d32ac2112f0fec34a008f47b0fce8
   eslint-plugin-vue: 8.2.0_eslint@8.1.0
   eslint-plugin-you-dont-need-lodash-underscore: 6.12.0
   fork-ts-checker-webpack-plugin: 5.2.0
@@ -5186,13 +5186,13 @@ packages:
       eslint: 8.1.0
     dev: true
 
-  /eslint-plugin-prettier/3.4.0_9f4d32ac2112f0fec34a008f47b0fce8:
-    resolution: {integrity: sha512-UDK6rJT6INSfcOo545jiaOwB701uAIt2/dR7WnFQoGCVl1/EMqdANBmwUaqqQ45aXprsTGzSa39LI1PyuRBxxw==}
+  /eslint-plugin-prettier/4.0.0_9f4d32ac2112f0fec34a008f47b0fce8:
+    resolution: {integrity: sha512-98MqmCJ7vJodoQK359bqQWaxOE0CS8paAz/GgjaZLyex4TTk3g9HugoO89EqWCrFiOqn9EVvcoo7gZzONCWVwQ==}
     engines: {node: '>=6.0.0'}
     peerDependencies:
-      eslint: '>=5.0.0'
+      eslint: '>=7.28.0'
       eslint-config-prettier: '*'
-      prettier: '>=1.13.0'
+      prettier: '>=2.0.0'
     peerDependenciesMeta:
       eslint-config-prettier:
         optional: true
