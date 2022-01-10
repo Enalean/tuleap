@@ -1214,7 +1214,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     private function deductNameFromLabel($label)
     {
-        return (new FieldNameFormatter())->getFormattedName($label);
+        return FieldNameFormatter::getFormattedName($label);
     }
 
     /**

@@ -70,7 +70,6 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->field_mapping_collection = new FieldMappingCollection();
 
         $this->xml_tracker = $builder->exportFields(
-            $this->id_generator,
             new XMLTracker($this->id_generator, 'whatever'),
             new StatusValuesCollection(
                 $jira_client,

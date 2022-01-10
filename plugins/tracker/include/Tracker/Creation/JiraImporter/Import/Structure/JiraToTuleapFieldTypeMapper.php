@@ -84,7 +84,7 @@ class JiraToTuleapFieldTypeMapper
 
             switch ($jira_type) {
                 case 'summary':
-                    $field = (new XMLStringField($id_generator, AlwaysThereFieldsExporter::JIRA_SUMMARY_FIELD_NAME))
+                    $field = XMLStringField::fromTrackerAndName($xml_tracker, AlwaysThereFieldsExporter::JIRA_SUMMARY_FIELD_NAME)
                         ->withLabel($jira_field->getLabel())
                         ->withRank(AlwaysThereFieldsExporter::JIRA_SUMMARY_RANK)
                         ->withRequired($jira_field->isRequired())
@@ -95,7 +95,7 @@ class JiraToTuleapFieldTypeMapper
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::LEFT_COLUMN_NAME, $field);
 
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:textfield':
-                    $field = (new XMLStringField($id_generator, $id))
+                    $field = XMLStringField::fromTrackerAndName($xml_tracker, $id)
                         ->withLabel($jira_field->getLabel())
                         ->withRank(1)
                         ->withRequired($jira_field->isRequired())
@@ -106,7 +106,7 @@ class JiraToTuleapFieldTypeMapper
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
 
                 case 'description':
-                    $field = (new XMLTextField($id_generator, AlwaysThereFieldsExporter::JIRA_DESCRIPTION_FIELD_NAME))
+                    $field = XMLTextField::fromTrackerAndName($xml_tracker, AlwaysThereFieldsExporter::JIRA_DESCRIPTION_FIELD_NAME)
                         ->withLabel($jira_field->getLabel())
                         ->withRank(AlwaysThereFieldsExporter::JIRA_DESCRIPTION_RANK)
                         ->withRequired($jira_field->isRequired())
@@ -117,7 +117,7 @@ class JiraToTuleapFieldTypeMapper
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::LEFT_COLUMN_NAME, $field);
 
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:textarea':
-                    $field = (new XMLTextField($id_generator, $jira_field->getId()))
+                    $field = XMLTextField::fromTrackerAndName($xml_tracker, $jira_field->getId())
                         ->withLabel($jira_field->getLabel())
                         ->withRank(2)
                         ->withRequired($jira_field->isRequired())
@@ -128,7 +128,7 @@ class JiraToTuleapFieldTypeMapper
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
 
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:float':
-                    $field = (new XMLFloatField($id_generator, $jira_field->getId()))
+                    $field = XMLFloatField::fromTrackerAndName($xml_tracker, $jira_field->getId())
                         ->withLabel($jira_field->getLabel())
                         ->withRank(3)
                         ->withRequired($jira_field->isRequired())
@@ -140,7 +140,7 @@ class JiraToTuleapFieldTypeMapper
 
                 case 'duedate':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:datepicker':
-                    $field = (new XMLDateField($id_generator, $jira_field->getId()))
+                    $field = XMLDateField::fromTrackerAndName($xml_tracker, $jira_field->getId())
                         ->withLabel($jira_field->getLabel())
                         ->withRank(4)
                         ->withRequired($jira_field->isRequired())
@@ -151,7 +151,7 @@ class JiraToTuleapFieldTypeMapper
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
 
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:datetime':
-                    $field = (new XMLDateField($id_generator, $jira_field->getId()))
+                    $field = XMLDateField::fromTrackerAndName($xml_tracker, $jira_field->getId())
                         ->withLabel($jira_field->getLabel())
                         ->withRank(4)
                         ->withRequired($jira_field->isRequired())
@@ -163,7 +163,7 @@ class JiraToTuleapFieldTypeMapper
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
 
                 case AlwaysThereFieldsExporter::JIRA_PRIORITY_NAME:
-                    $field = (new XMLSelectBoxField($id_generator, $jira_field->getId()))
+                    $field = XMLSelectBoxField::fromTrackerAndName($xml_tracker, $jira_field->getId())
                         ->withLabel($jira_field->getLabel())
                         ->withRank(AlwaysThereFieldsExporter::JIRA_PRIORITY_RANK)
                         ->withRequired($jira_field->isRequired())
@@ -183,7 +183,7 @@ class JiraToTuleapFieldTypeMapper
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::RIGHT_COLUMN_NAME, $field);
 
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons':
-                    $field = (new XMLRadioButtonField($id_generator, $jira_field->getId()))
+                    $field = XMLRadioButtonField::fromTrackerAndName($xml_tracker, $jira_field->getId())
                         ->withLabel($jira_field->getLabel())
                         ->withRank(5)
                         ->withRequired($jira_field->isRequired())
@@ -203,7 +203,7 @@ class JiraToTuleapFieldTypeMapper
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
 
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multiselect':
-                    $field = (new XMLMultiSelectBoxField($id_generator, $jira_field->getId()))
+                    $field = XMLMultiSelectBoxField::fromTrackerAndName($xml_tracker, $jira_field->getId())
                         ->withLabel($jira_field->getLabel())
                         ->withRank(6)
                         ->withRequired($jira_field->isRequired())
@@ -223,7 +223,7 @@ class JiraToTuleapFieldTypeMapper
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
 
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:select':
-                    $field = (new XMLSelectBoxField($id_generator, $jira_field->getId()))
+                    $field = XMLSelectBoxField::fromTrackerAndName($xml_tracker, $jira_field->getId())
                         ->withLabel($jira_field->getLabel())
                         ->withRank(5)
                         ->withRequired($jira_field->isRequired())
@@ -243,7 +243,7 @@ class JiraToTuleapFieldTypeMapper
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
 
                 case AlwaysThereFieldsExporter::JIRA_ASSIGNEE_NAME:
-                    $field = (new XMLSelectBoxField($id_generator, $jira_field->getId()))
+                    $field = XMLSelectBoxField::fromTrackerAndName($xml_tracker, $jira_field->getId())
                         ->withLabel($jira_field->getLabel())
                         ->withRank(AlwaysThereFieldsExporter::JIRA_ASSIGNEE_RANK)
                         ->withRequired($jira_field->isRequired())
@@ -257,7 +257,7 @@ class JiraToTuleapFieldTypeMapper
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::RIGHT_COLUMN_NAME, $field);
 
                 case AlwaysThereFieldsExporter::JIRA_REPORTER_NAME:
-                    $field = (new XMLSelectBoxField($id_generator, $jira_field->getId()))
+                    $field = XMLSelectBoxField::fromTrackerAndName($xml_tracker, $jira_field->getId())
                         ->withLabel($jira_field->getLabel())
                         ->withRank(AlwaysThereFieldsExporter::JIRA_REPORTER_RANK)
                         ->withRequired($jira_field->isRequired())
@@ -271,7 +271,7 @@ class JiraToTuleapFieldTypeMapper
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::RIGHT_COLUMN_NAME, $field);
 
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:userpicker':
-                    $field = (new XMLSelectBoxField($id_generator, $jira_field->getId()))
+                    $field = XMLSelectBoxField::fromTrackerAndName($xml_tracker, $jira_field->getId())
                         ->withLabel($jira_field->getLabel())
                         ->withRank(11)
                         ->withRequired($jira_field->isRequired())
@@ -285,7 +285,7 @@ class JiraToTuleapFieldTypeMapper
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
 
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multiuserpicker':
-                    $field = (new XMLMultiSelectBoxField($id_generator, $jira_field->getId()))
+                    $field = XMLMultiSelectBoxField::fromTrackerAndName($xml_tracker, $jira_field->getId())
                         ->withLabel($jira_field->getLabel())
                         ->withRank(12)
                         ->withRequired($jira_field->isRequired())

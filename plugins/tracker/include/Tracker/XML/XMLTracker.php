@@ -48,10 +48,9 @@ final class XMLTracker
      */
     private $name = '';
     /**
-     * @var string
      * @readonly
      */
-    private $item_name;
+    public string $item_name;
     /**
      * @var string
      * @readonly

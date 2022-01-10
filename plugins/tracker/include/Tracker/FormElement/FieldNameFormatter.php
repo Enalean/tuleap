@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\FormElement;
 
 class FieldNameFormatter
 {
-    public function getFormattedName(string $base_name): string
+    public static function getFormattedName(string $base_name): string
     {
         $normalizeChars = [
             'Š' => 'S', 'š' => 's', 'Ð' => 'Dj','Ž' => 'Z', 'ž' => 'z', 'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A',

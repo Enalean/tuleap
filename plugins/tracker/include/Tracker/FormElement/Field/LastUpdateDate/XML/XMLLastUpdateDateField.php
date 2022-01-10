@@ -24,15 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\LastUpdateDate\XML;
 
 use Tuleap\Tracker\FormElement\Field\XML\XMLField;
-use Tuleap\Tracker\XML\IDGenerator;
 
 final class XMLLastUpdateDateField extends XMLField
 {
-    /**
-     * @param string|IDGenerator $id
-     */
-    public function __construct($id, string $name)
+    public static function getType(): string
     {
-        parent::__construct($id, \Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE, $name);
+        return \Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE;
     }
 }

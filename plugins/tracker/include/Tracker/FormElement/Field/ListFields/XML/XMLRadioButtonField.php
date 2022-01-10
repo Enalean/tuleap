@@ -23,12 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields\XML;
 
-use Tuleap\Tracker\XML\IDGenerator;
-
 final class XMLRadioButtonField extends XMLListField
 {
-    public function __construct(string|IDGenerator $id, string $name)
+    public static function getType(): string
     {
-        parent::__construct($id, \Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE, $name);
+        return \Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE;
     }
 }

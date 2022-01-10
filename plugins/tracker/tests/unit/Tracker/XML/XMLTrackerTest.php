@@ -221,6 +221,22 @@ class XMLTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         assertCount(1, $node->formElements->formElement);
         assertEquals('F58', (string) $node->formElements->formElement[0]['ID']);
+        assertEquals('fieldset', $node->formElements->formElement[0]['type']);
+        assertEquals('details', $node->formElements->formElement->name);
+    }
+
+    public function testItHasOneFormElementWithIDGeneratedOutOfName(): void
+    {
+        $tracker = new XMLTracker('some_xml_id', 'bug');
+        $tracker = $tracker->withFormElement(XMLFieldset::fromTrackerAndName($tracker, 'details'));
+
+
+        $node = $tracker->export(new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>'));
+
+        assertCount(1, $node->formElements->formElement);
+        assertEquals('bug_details', $node->formElements->formElement[0]['ID']);
+        assertEquals('fieldset', $node->formElements->formElement[0]['type']);
+        assertEquals('details', $node->formElements->formElement->name);
     }
 
     public function testWithFormElementsDoNotChangeOriginalObject(): void
