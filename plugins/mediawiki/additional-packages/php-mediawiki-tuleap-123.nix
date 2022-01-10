@@ -15,7 +15,13 @@ pkgs.stdenvNoCC.mkDerivation {
   buildPhase = ''
     mkdir -p SOURCES
     tar -czf SOURCES/mediawiki-1.23.9.tar.gz mediawiki-1.23.9
-    rpmbuild --dbpath="$(pwd)"/rpmdb --define "%_topdir $(pwd)" --define "%_tmppath %{_topdir}/TMP" --define "%_datadir /usr/share" -bb php-mediawiki-tuleap.spec
+    rpmbuild \
+      --dbpath="$(pwd)"/rpmdb \
+      --define "%_topdir $(pwd)" \
+      --define "_binary_payload w9.xzdio" \
+      --define "%_tmppath %{_topdir}/TMP" \
+      --define "%_datadir /usr/share" \
+      -bb php-mediawiki-tuleap.spec
   '';
 
   installPhase = ''
