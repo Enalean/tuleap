@@ -23,8 +23,7 @@ export function formatComputedFieldValue(field_value) {
     }
 
     const is_autocomputed = Boolean(field_value.is_autocomputed);
-
-    if (!is_autocomputed && field_value.manual_value === null) {
+    if (!is_autocomputed && field_value.manual_value === "") {
         return null;
     }
 

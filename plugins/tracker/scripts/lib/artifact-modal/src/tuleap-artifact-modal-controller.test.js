@@ -497,20 +497,28 @@ describe("TuleapArtifactModalController", () => {
             ArtifactModalController.$onInit();
         });
 
-        describe(`setFieldValue()`, () => {
-            it(`Given a field id, it returns a function
-                that updates the field's value model`, () => {
-                ArtifactModalController.values = { 190: { value: "Some value" } };
+        describe(`setFieldValueForComputedFieldElement()`, () => {
+            it(`Given an event, it will update the computed field's model`, () => {
+                ArtifactModalController.values = {
+                    552: {
+                        is_autocomputed: true,
+                        manual_value: null,
+                    },
+                };
 
-                const updater = ArtifactModalController.setFieldValue(190);
-                updater("Changed value");
+                ArtifactModalController.setFieldValueForComputedFieldElement(
+                    new CustomEvent("value-changed", {
+                        detail: { field_id: 552, autocomputed: false, manual_value: 67 },
+                    })
+                );
 
-                expect(ArtifactModalController.values[190].value).toEqual("Changed value");
+                expect(ArtifactModalController.values[552].is_autocomputed).toBe(false);
+                expect(ArtifactModalController.values[552].manual_value).toBe(67);
             });
         });
 
         describe(`addToFilesAddedByTextField()`, () => {
-            it(`Given a file field id and an uploaded file,
+            it(`Given an event containing file field id and an uploaded file,
                 it adds the file to the field's value model`, () => {
                 ArtifactModalController.values = {
                     204: {

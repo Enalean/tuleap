@@ -48,3 +48,7 @@ export const getPreviewButtonLabel = (): string => gettextCatalog.getString("Pre
 export const getCommonMarkPreviewErrorIntroduction = (): string =>
     gettextCatalog.getString("There was an error in the Markdown preview: ");
 export const getNone = (): string => gettextCatalog.getString("None");
+export const getAutocomputeLabel = (): string => gettextCatalog.getString("Auto-compute");
+export const getAutoComputedValueLabel = (): string => gettextCatalog.getString("(auto-computed)");
+export const getComputedValueLabel = (): string => gettextCatalog.getString("Computed value:");
+export const getEmptyLabel = (): string => gettextCatalog.getString("Empty");
