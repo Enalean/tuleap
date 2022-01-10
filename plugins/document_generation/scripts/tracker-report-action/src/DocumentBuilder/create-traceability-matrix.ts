@@ -110,7 +110,7 @@ async function getMatrixElements(
             continue;
         }
 
-        if (test_exec.definition.requirement === null) {
+        if (test_exec.definition.all_requirements.length === 0) {
             continue;
         }
 
@@ -128,7 +128,8 @@ async function getMatrixElements(
 
         possible_elements.push({
             requirement:
-                test_exec.definition.requirement.title ?? `#${test_exec.definition.requirement.id}`,
+                test_exec.definition.all_requirements[0].title ??
+                `#${test_exec.definition.all_requirements[0].id}`,
             result: test_exec.previous_result?.status ?? null,
             executed_by: test_exec.previous_result?.submitted_by.display_name ?? null,
             executed_on: submitted_on,

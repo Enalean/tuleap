@@ -21,53 +21,35 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
-use Tracker_ArtifactFactory;
 use Tuleap\TestManagement\ArtifactDao;
-use Tuleap\TestManagement\Config;
+use Tuleap\TestManagement\IRetrieveTestExecutionTrackerIdFromConfig;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
 
 class RequirementRetriever
 {
-
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $tracker_artifact_factory;
-
-    /**
-     * @var ArtifactDao
-     */
-    private $artifact_dao;
-
-    /**
-     * @var Config
-     */
-    private $config;
-
     public function __construct(
-        Tracker_ArtifactFactory $tracker_artifact_factory,
-        ArtifactDao $artifact_dao,
-        Config $config,
+        private RetrieveViewableArtifact $artifact_retriever,
+        private ArtifactDao $artifact_dao,
+        private IRetrieveTestExecutionTrackerIdFromConfig $config,
     ) {
-        $this->tracker_artifact_factory = $tracker_artifact_factory;
-        $this->artifact_dao             = $artifact_dao;
-        $this->config                   = $config;
     }
 
     /**
-     * @return Artifact | null
+     * @return Artifact[]
      */
-    public function getRequirementForDefinition(Artifact $definition, PFUser $user)
+    public function getAllRequirementsForDefinition(Artifact $definition, PFUser $user): array
     {
-        $requirement_id = $this->artifact_dao->searchFirstRequirementId(
+        $all_requirement_ids = $this->artifact_dao->searchAllRequirementsForDefinition(
             $definition->getId(),
             $this->config->getTestExecutionTrackerId($definition->getTracker()->getProject())
         );
 
-        if ($requirement_id === null) {
-            return null;
-        }
-
-        return $this->tracker_artifact_factory->getArtifactByIdUserCanView($user, $requirement_id['id']);
+        return array_filter(
+            array_map(
+                fn(int $requirement_id): ?Artifact => $this->artifact_retriever->getArtifactByIdUserCanView($user, $requirement_id),
+                $all_requirement_ids
+            )
+        );
     }
 }

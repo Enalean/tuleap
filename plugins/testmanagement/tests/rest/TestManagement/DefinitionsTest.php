@@ -38,6 +38,7 @@ final class DefinitionsTest extends BaseTest
         $definition         = json_decode($this->getResponse($definition_request)->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($definition, $first_definition);
+        $this->assertEquals([], $definition['all_requirements']);
     }
 
     public function testGetDefinitionWithRESTReadOnlyUser(): void

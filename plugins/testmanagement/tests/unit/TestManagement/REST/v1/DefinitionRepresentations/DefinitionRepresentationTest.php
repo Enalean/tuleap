@@ -76,7 +76,7 @@ class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->form_element_factory,
             $user,
             'text',
-            null,
+            [],
             null
         );
 

@@ -124,15 +124,15 @@
                 </div>
             </div>
 
-            <section ng-if="execution.definition.requirement && execution.is_automated === false"
+            <section ng-if="execution.definition.all_requirements.length === 1 && execution.is_automated === false"
                      class="current-test-requirement-or-bug"
             >
                 <i class="fas fa-fw fa-long-arrow-alt-right current-test-requirement-or-bug-icon" aria-hidden="true"></i>
-                <a href="/plugins/tracker/?aid={{ execution.definition.requirement.id }}">
-                    <span ng-class="['current-test-requirement-or-bug-badge', 'cross-ref-badge', 'cross-ref-badge-' + execution.definition.requirement.tracker.color_name]">
-                        {{ execution.definition.requirement.xref }}
+                <a href="/plugins/tracker/?aid={{ execution.definition.all_requirements[0].id }}">
+                    <span ng-class="['current-test-requirement-or-bug-badge', 'cross-ref-badge', 'cross-ref-badge-' + execution.definition.all_requirements[0].tracker.color_name]">
+                        {{ execution.definition.all_requirements[0].xref }}
                     </span>
-                    <span>{{ execution.definition.requirement.title }}</span>
+                    <span>{{ execution.definition.all_requirements[0].title }}</span>
                 </a>
             </section>
 

@@ -41,12 +41,14 @@ describe("create-traceability-matrix", () => {
                 },
                 definition: {
                     summary: "Some definition summary",
-                    requirement: {
-                        id: 888,
-                        title: "Requirement title",
-                    },
+                    all_requirements: [
+                        {
+                            id: 888,
+                            title: "Requirement title",
+                        },
+                    ],
                 },
-            } as TestExecutionResponse);
+            } as unknown as TestExecutionResponse);
 
         jest.spyOn(docgen_docx, "getArtifacts").mockResolvedValue(
             new Map<number, ArtifactResponse>([
@@ -255,9 +257,9 @@ describe("create-traceability-matrix", () => {
                 },
                 definition: {
                     summary: "Some definition summary",
-                    requirement: null,
+                    all_requirements: [],
                 },
-            } as TestExecutionResponse);
+            } as unknown as TestExecutionResponse);
 
         const matrix = await buildMatrix(
             [
@@ -313,12 +315,14 @@ describe("create-traceability-matrix", () => {
                 },
                 definition: {
                     summary: "Some definition summary",
-                    requirement: {
-                        id: 888,
-                        title: "Requirement title",
-                    },
+                    all_requirements: [
+                        {
+                            id: 888,
+                            title: "Requirement title",
+                        },
+                    ],
                 },
-            } as TestExecutionResponse);
+            } as unknown as TestExecutionResponse);
 
         jest.spyOn(docgen_docx, "getArtifacts").mockRejectedValue(new Error());
 

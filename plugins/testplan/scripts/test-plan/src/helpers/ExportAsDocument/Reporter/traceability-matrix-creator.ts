@@ -31,7 +31,7 @@ export function getTraceabilityMatrix(
 
     for (const { campaign, executions } of executions_map.values()) {
         for (const execution of executions) {
-            if (execution.definition.requirement === null) {
+            if (execution.definition.all_requirements.length === 0) {
                 continue;
             }
 
@@ -49,9 +49,10 @@ export function getTraceabilityMatrix(
             }
 
             const requirement = {
-                id: execution.definition.requirement.id,
+                id: execution.definition.all_requirements[0].id,
                 title:
-                    execution.definition.requirement.title ?? execution.definition.requirement.xref,
+                    execution.definition.all_requirements[0].title ??
+                    execution.definition.all_requirements[0].xref,
             };
 
             const already_encountered_requirement = matrix_map.get(requirement.id);

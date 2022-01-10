@@ -187,9 +187,9 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $definition_artifact
         )->andReturnTrue();
 
-        $this->requirement_retriever->shouldReceive('getRequirementForDefinition')
+        $this->requirement_retriever->shouldReceive('getAllRequirementsForDefinition')
                                     ->with($definition_artifact, $user)
-                                    ->andReturnNull();
+                                    ->andReturn([]);
 
         $this->assertTrackerFormElementFactory($user, $field);
 
@@ -272,9 +272,9 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $definition_artifact
         )->andReturnTrue();
 
-        $this->requirement_retriever->shouldReceive('getRequirementForDefinition')
+        $this->requirement_retriever->shouldReceive('getAllRequirementsForDefinition')
                                     ->with($definition_artifact, $user)
-                                    ->andReturnNull();
+                                    ->andReturn([]);
 
         return $definition_artifact;
     }

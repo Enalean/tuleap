@@ -23,7 +23,7 @@ namespace Tuleap\TestManagement;
 use Project;
 use TrackerFactory;
 
-class Config
+class Config implements IRetrieveTestExecutionTrackerIdFromConfig
 {
 
     /** @var Dao */

@@ -23,9 +23,10 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
+use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_ArtifactFactory implements RetrieveArtifact
+class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtifact
 {
 
     protected $artifacts;
@@ -96,10 +97,8 @@ class Tracker_ArtifactFactory implements RetrieveArtifact
      * Return the artifact corresponding to $id the user can access
      *
      * @param int $id
-     *
-     * @return Artifact|null
      */
-    public function getArtifactByIdUserCanView(PFUser $user, $id)
+    public function getArtifactByIdUserCanView(PFUser $user, $id): ?Artifact
     {
         $artifact = $this->getArtifactById($id);
         if ($artifact && $artifact->userCanView($user)) {

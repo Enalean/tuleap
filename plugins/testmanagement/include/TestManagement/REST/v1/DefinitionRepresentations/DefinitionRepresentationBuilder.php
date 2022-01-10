@@ -30,6 +30,8 @@ use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations\StepDefinitionFormatNotFoundException;
 use Tuleap\TestManagement\REST\v1\RequirementRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 class DefinitionRepresentationBuilder
 {
@@ -79,8 +81,18 @@ class DefinitionRepresentationBuilder
      */
     public function getDefinitionRepresentation(PFUser $user, Artifact $definition_artifact, ?Tracker_Artifact_Changeset $changeset): DefinitionRepresentation
     {
-        $requirement = $this->requirement_retriever->getRequirementForDefinition($definition_artifact, $user);
-        $changeset   = $changeset ?: $definition_artifact->getLastChangeset();
+        $all_requirements = array_map(
+            static fn(Artifact $requirement): ArtifactRepresentation => ArtifactRepresentation::build(
+                $user,
+                $requirement,
+                [],
+                [],
+                MinimalTrackerRepresentation::build($requirement->getTracker())
+            ),
+            $this->requirement_retriever->getAllRequirementsForDefinition($definition_artifact, $user)
+        );
+
+        $changeset = $changeset ?: $definition_artifact->getLastChangeset();
 
         $description_text_field = self::getTextField(
             $this->tracker_form_element_factory,
@@ -105,8 +117,8 @@ class DefinitionRepresentationBuilder
                     $this->tracker_form_element_factory,
                     $user,
                     $description_text_field->getFormat(),
+                    $all_requirements,
                     $changeset,
-                    $requirement
                 );
             case Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT:
                 return new DefinitionCommonmarkRepresentation(
@@ -115,8 +127,8 @@ class DefinitionRepresentationBuilder
                     $definition_artifact,
                     $this->tracker_form_element_factory,
                     $user,
+                    $all_requirements,
                     $changeset,
-                    $requirement,
                 );
         }
         throw new DefinitionDescriptionFormatNotFoundException($description_text_field->getFormat());
