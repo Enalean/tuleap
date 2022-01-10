@@ -42,18 +42,16 @@ declare global {
             visitProjectService(project_unixname: string, service_label: string): void;
             visitProjectAdministration(project_unixname: string): void;
             visitProjectAdministrationInCurrentProject(): void;
-            uploadFixtureFile(
-                file_name: string,
-                file_type: string
-            ): Chainable<JQuery<HTMLInputElement>>;
             visitServiceInCurrentProject(service_label: string): void;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             getFromTuleapAPI(url: string): Chainable<Response<any>>;
-            postFromTuleapApi(url: string, payload: unknown): void;
-            putFromTuleapApi(url: string, payload: unknown): void;
+            postFromTuleapApi(url: string, payload: Record<string, unknown>): void;
+            putFromTuleapApi(url: string, payload: Record<string, unknown>): void;
         }
     }
 }
+
+import "cypress-file-upload";
 
 Cypress.Commands.add("clearSessionCookie", () => {
     cy.clearCookie("__Host-TULEAP_session_hash");
@@ -218,28 +216,6 @@ Cypress.Commands.add(
     (project_shortname: string): Cypress.Chainable<JQuery<HTMLElement>> => {
         cy.visit(`/projects/${project_shortname}/`);
         return cy.get("[data-test=project-sidebar]").should("have.attr", "data-project-id");
-    }
-);
-
-// Use this command to attach a file to a file input
-// Don't forget to pass the filename in the arguments
-// Also, the file has to be put under the fixtures folder
-// see https://github.com/cypress-io/cypress/issues/170#issuecomment-609395903
-Cypress.Commands.add(
-    "uploadFixtureFile",
-    {
-        prevSubject: "element",
-    },
-    (input: JQuery<HTMLInputElement>, file_name: string, file_type: string): void => {
-        cy.fixture(file_name).then((content) => {
-            const blob = Cypress.Blob.base64StringToBlob(content, file_type);
-            const test_file = new File([blob], file_name);
-            const data_transfer = new DataTransfer();
-
-            data_transfer.items.add(test_file);
-            input[0].files = data_transfer.files;
-            return input;
-        });
     }
 );
 
