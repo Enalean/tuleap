@@ -125,14 +125,26 @@
             </div>
 
             <section ng-if="execution.definition.requirement && execution.is_automated === false"
-                class="current-test-requirement"
+                     class="current-test-requirement-or-bug"
             >
-                <i class="fas fa-long-arrow-alt-right current-test-requirement-arrow"></i>
+                <i class="fas fa-fw fa-long-arrow-alt-right current-test-requirement-or-bug-icon" aria-hidden="true"></i>
                 <a href="/plugins/tracker/?aid={{ execution.definition.requirement.id }}">
-                    <span ng-class="['current-test-requirement-badge', 'cross-ref-badge', 'cross-ref-badge-' + execution.definition.requirement.tracker.color_name]">
+                    <span ng-class="['current-test-requirement-or-bug-badge', 'cross-ref-badge', 'cross-ref-badge-' + execution.definition.requirement.tracker.color_name]">
                         {{ execution.definition.requirement.xref }}
                     </span>
                     <span>{{ execution.definition.requirement.title }}</span>
+                </a>
+            </section>
+
+            <section ng-if="execution.linked_bugs.length === 1 && execution.is_automated === false"
+                     class="current-test-requirement-or-bug"
+            >
+                <i class="fas fa-fw fa-bug current-test-requirement-or-bug-icon" aria-hidden="true"></i>
+                <a href="/plugins/tracker/?aid={{ execution.linked_bugs[0].id }}">
+                    <span ng-class="['current-test-requirement-or-bug-badge', 'cross-ref-badge', 'cross-ref-badge-' + execution.linked_bugs[0].tracker.color_name]">
+                        {{ execution.linked_bugs[0].xref }}
+                    </span>
+                    <span>{{ execution.linked_bugs[0].title }}</span>
                 </a>
             </section>
 
