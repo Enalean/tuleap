@@ -26,7 +26,7 @@ class Docman_ReportColumn
 {
     public $md;
     public $sort;
-    public function __construct($md)
+    public function __construct(Docman_ListMetadata|Docman_Metadata|null $md)
     {
         $this->md   = $md;
         $this->sort = \null;
@@ -90,7 +90,7 @@ class Docman_ReportColumn
             $this->setSort((int) $request->get($sortparam));
         }
     }
-    public function _getMdHtml($item)
+    public function _getMdHtml($item) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $mdHtml = \null;
         $md     = $item->getMetadataFromLabel($this->md->getLabel());
