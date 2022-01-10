@@ -23,12 +23,12 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_SqlFilterDate extends \Docman_SqlFilter
 {
-    public function __construct($filter)
+    public function __construct(Docman_Filter $filter)
     {
         parent::__construct($filter);
     }
     // '<'
-    public function _getEndStatement($value)
+    public function _getEndStatement($value) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $stmt            = '';
         list($time, $ok) = \util_date_to_unixtime($value);
@@ -40,7 +40,7 @@ class Docman_SqlFilterDate extends \Docman_SqlFilter
         return $stmt;
     }
     // '=' means that day between 00:00 and 23:59
-    public function _getEqualStatement($value)
+    public function _getEqualStatement($value) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $stmt            = '';
         list($time, $ok) = \util_date_to_unixtime($value);
@@ -52,7 +52,7 @@ class Docman_SqlFilterDate extends \Docman_SqlFilter
         return $stmt;
     }
     // '>'
-    public function _getStartStatement($value)
+    public function _getStartStatement($value) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $stmt            = '';
         list($time, $ok) = \util_date_to_unixtime($value);
@@ -63,7 +63,7 @@ class Docman_SqlFilterDate extends \Docman_SqlFilter
         }
         return $stmt;
     }
-    public function _getSpecificSearchChunk()
+    public function _getSpecificSearchChunk() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $stmt = [];
         switch ($this->filter->getOperator()) {

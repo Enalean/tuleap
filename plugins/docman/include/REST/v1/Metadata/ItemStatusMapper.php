@@ -89,6 +89,24 @@ class ItemStatusMapper
     }
 
     /**
+     * @throws HardCodedMetadataException
+     */
+    public function getItemStatusFromItemStatusNumber(int $status_int): string
+    {
+        if (! isset(self::LEGACY_ITEM_STATUS_ARRAY_MAP[$status_int])) {
+            return "";
+        }
+        $status_string = self::LEGACY_ITEM_STATUS_ARRAY_MAP[$status_int];
+
+        $this->checkStatusIsAvailable($status_string);
+
+        $this->checkStatusExists($status_string);
+
+        return $status_string;
+    }
+
+
+    /**
      *
      * @throws HardCodedMetadataException
      */

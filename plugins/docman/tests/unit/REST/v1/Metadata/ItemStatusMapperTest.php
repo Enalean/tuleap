@@ -145,4 +145,15 @@ final class ItemStatusMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectExceptionMessage('Status is not enabled for project');
         $mapper->getItemStatusWithParentInheritance($parent, 'rejected');
     }
+
+    public function testItReturnsStringFromLegacyValue(): void
+    {
+        $mapper = new ItemStatusMapper($this->docman_setting_bo);
+
+        $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('1');
+
+        $status = $mapper->getItemStatusFromItemStatusNumber(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
+
+        $this->assertEquals(ItemStatusMapper::ITEM_STATUS_APPROVED, $status);
+    }
 }

@@ -30,7 +30,7 @@ class Docman_MetadataSqlQueryChunk
     public $mdv;
     public $mdId;
 
-    public function __construct($md)
+    public function __construct(Docman_Metadata $md)
     {
         $this->mdv  = 'mdv_' . $md->getLabel();
         $this->mdId = $md->getId();

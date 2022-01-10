@@ -107,4 +107,47 @@ final class ColumnReportAugmenterTest extends TestCase
         self::assertSame($metadata->getLabel(), $report->columns[0]->md->getLabel());
         self::assertSame($column_title->getSort(), $report->columns[0]->getSort());
     }
+
+    public function testItBuildsColumnFromArray(): void
+    {
+        $metadata = new Docman_Metadata();
+        $metadata->setLabel("My column");
+        $column_title = new Docman_ReportColumnTitle($metadata);
+        $this->column_factory->method("getColumnFromLabel")->with("title")->willReturn($column_title);
+
+        $report = new \Docman_Report();
+        $this->builder->addColumnsFromArray(["title"], $report);
+
+        self::assertSame($metadata->getLabel(), $report->columns[0]->md->getLabel());
+        self::assertNull($report->columns[0]->getSort());
+    }
+
+    public function testItKeepsColumnSortFromArray(): void
+    {
+        $metadata = new Docman_Metadata();
+        $metadata->setLabel("My column");
+        $column_title = new Docman_ReportColumnTitle($metadata);
+        $column_title->setSort('sort_' . $metadata->getLabel());
+        $this->column_factory->method("getColumnFromLabel")->with("title")->willReturn($column_title);
+
+        $report = new \Docman_Report();
+        $this->builder->addColumnsFromArray(["title"], $report);
+
+        self::assertSame($metadata->getLabel(), $report->columns[0]->md->getLabel());
+        self::assertSame($column_title->getSort(), $report->columns[0]->getSort());
+    }
+
+    public function testItHasASpecialSortWhenNoSortIsDefinedAndReportHasLastUpdateDateFromArray(): void
+    {
+        $metadata = new Docman_Metadata();
+        $metadata->setLabel("My column");
+        $column_title = new Docman_ReportColumnTitle($metadata);
+        $this->column_factory->method("getColumnFromLabel")->with("update_date")->willReturn($column_title);
+
+        $report = new \Docman_Report();
+        $this->builder->addColumnsFromArray(["update_date"], $report);
+
+        self::assertSame($metadata->getLabel(), $report->columns[0]->md->getLabel());
+        self::assertSame(0, $report->columns[0]->getSort());
+    }
 }

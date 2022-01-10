@@ -30,7 +30,7 @@ class Docman_SqlFilter extends \Docman_MetadataSqlQueryChunk
     public $filter;
     public $isRealMetadata;
     public $db;
-    public function __construct($filter)
+    public function __construct(Docman_Filter $filter)
     {
         $this->filter = $filter;
         parent::__construct($filter->md);
@@ -45,7 +45,7 @@ class Docman_SqlFilter extends \Docman_MetadataSqlQueryChunk
         }
         return $tables;
     }
-    public function _getSpecificSearchChunk()
+    public function _getSpecificSearchChunk() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $stmt = [];
         if ($this->filter->getValue() !== \null && $this->filter->getValue() != '') {

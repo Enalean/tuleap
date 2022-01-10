@@ -26,6 +26,7 @@ use DateTimeImmutable;
 use Docman_EmbeddedFile;
 use Docman_Empty;
 use Docman_File;
+use Docman_FilterFactory;
 use Docman_Folder;
 use Docman_Item;
 use Docman_ItemFactory;
@@ -34,6 +35,8 @@ use Docman_LinkVersionFactory;
 use Docman_MetadataFactory;
 use Docman_MetadataListOfValuesElementDao;
 use Docman_PermissionsManager;
+use Docman_ReportColumnFactory;
+use Docman_SettingsBo;
 use Docman_Wiki;
 use DocmanPlugin;
 use EventManager;
@@ -54,12 +57,16 @@ use Tuleap\Docman\REST\v1\CopyItem\DocmanValidateRepresentationForCopy;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Empties\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanPOSTFilesRepresentation;
+use Tuleap\Docman\REST\v1\Folders\BuildSearchedItemRepresentationsFromSearchReport;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
+use Tuleap\Docman\REST\v1\Folders\SearchReportBuilder;
+use Tuleap\Docman\REST\v1\Folders\SearchRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\CustomMetadataCollectionBuilder;
 use Tuleap\Docman\REST\v1\Metadata\CustomMetadataRepresentationRetriever;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
 use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
@@ -68,17 +75,23 @@ use Tuleap\Docman\REST\v1\Permissions\DocmanFolderPermissionsForGroupsPUTReprese
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
 use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
+use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
+use Tuleap\Docman\Search\ColumnReportAugmenter;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
+use Tuleap\REST\JsonDecoder;
+use Tuleap\REST\QueryParameterParser;
 use UGroupManager;
 use UserManager;
 
 class DocmanFoldersResource extends AuthenticatedResource
 {
+    public const MAX_LIMIT = 50;
+
     /**
      * @var UserManager
      */
@@ -824,6 +837,73 @@ class DocmanFoldersResource extends AuthenticatedResource
     }
 
     /**
+     * Search elements in folder
+     * Global search will search in all text properties of document (but does look inside the document)
+     *
+     * <pre>
+     * Search allowed pattern <br>
+     * - lorem   => exactly "lorem"<br>
+     * - lorem*  => starting by "lorem"<br>
+     * - *lorem  => finishing by "lorem"<br>
+     * - *lorem* => containing "lorem"<br>
+     * <br>
+     * use example:<br>
+     * {global_search: "lorem*"}
+     * </pre>
+     *
+     * @url    GET {id}/search
+     * @access hybrid
+     *
+     * @param int $id       Id of the folder
+     * @param string $query with property "global_search" to search on all string properties{@from body}
+     * @param int $limit    Number of elements displayed {@from path}{@min 0}{@max 50}
+     * @param int $offset   Position of the first element to display {@from path}{@min 0}
+     *
+     * @status 200
+     *
+     * @return SearchRepresentation[]
+     *
+     * @throws RestException 400
+     */
+    public function search(int $id, string $query, $limit = self::MAX_LIMIT, $offset = 0): array
+    {
+        $this->checkAccess();
+        $this->optionsSearch($id);
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $project      = $item_request->getProject();
+        $folder       = $item_request->getItem();
+        $user         = $item_request->getUser();
+
+        $folder->accept($this->getValidator($project, $user, $folder), []);
+        assert($folder instanceof Docman_Folder);
+
+        $project_id                     = $folder->getGroupId();
+        $docman_settings                = new Docman_SettingsBo($project_id);
+        $search_report_builder          = new SearchReportBuilder(
+            new Docman_FilterFactory($project_id),
+            new AlwaysThereColumnRetriever($docman_settings),
+            new ColumnReportAugmenter(new Docman_ReportColumnFactory($project_id))
+        );
+        $status_mapper                  = new ItemStatusMapper($docman_settings);
+        $item_dao                       = new \Docman_ItemDao();
+        $search_representations_builder = new BuildSearchedItemRepresentationsFromSearchReport(
+            $item_dao,
+            $status_mapper,
+            $this->user_manager,
+            Docman_PermissionsManager::instance($project_id)
+        );
+        $query_parameter_parser         = new QueryParameterParser(new JsonDecoder());
+        $global_search_parameters       = $query_parameter_parser->getString($query, "global_search");
+
+        $report          = $search_report_builder->buildReport($folder, $global_search_parameters);
+        $representations = $search_representations_builder->build($report, $folder, $user);
+        Header::sendPaginationHeaders($limit, $offset, count($representations), self::MAX_LIMIT);
+
+        return array_slice($representations, $offset, $limit);
+    }
+
+    /**
      * @throws I18NRestException
      *
      * @psalm-assert \Docman_Folder $item
@@ -889,5 +969,10 @@ class DocmanFoldersResource extends AuthenticatedResource
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
+    }
+
+    private function optionsSearch(int $id): void
+    {
+        Header::allowOptionsGet();
     }
 }

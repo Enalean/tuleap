@@ -37,7 +37,7 @@ class Docman_SqlFilterGlobalText extends \Docman_SqlFilterText
         }
         return $tables;
     }
-    public function _getSpecificSearchChunk()
+    public function _getSpecificSearchChunk() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $stmt = [];
         if ($this->filter->getValue() !== \null && $this->filter->getValue() != '') {
