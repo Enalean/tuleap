@@ -23,8 +23,8 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_FilterGlobalText extends \Docman_FilterText
 {
-    public $dynTextFields;
-    public function __construct($md, $dynTextFields)
+    public string|array $dynTextFields;
+    public function __construct(Docman_Metadata $md, string|array $dynTextFields)
     {
         parent::__construct($md);
         $this->dynTextFields = $dynTextFields;

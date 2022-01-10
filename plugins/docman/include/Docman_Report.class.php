@@ -34,7 +34,10 @@ class Docman_Report
     public $description;
     public $image;
 
-    public $filters;
+    /**
+     * @var Docman_Filter[]
+     */
+    public array $filters;
     /**
      * @var Docman_ReportColumn[]
      */
@@ -194,32 +197,39 @@ class Docman_Report
         }
     }
 
-    public function addColumn(&$c)
+    public function addColumn(Docman_ReportColumn $c): void
     {
         $this->columns[] = $c;
     }
 
-    public function &getColumnIterator()
+    public function &getColumnIterator(): ArrayIterator
     {
         $i = new ArrayIterator($this->columns);
         return $i;
     }
 
-    public function getFiltersArray()
+    /**
+     * @return Docman_Filter[]
+     */
+    public function getFiltersArray(): array
     {
         return $this->filters;
     }
-    public function setFiltersArray($a)
+
+    /**
+     * @param Docman_Filter[] $a
+     */
+    public function setFiltersArray(array $a): void
     {
         $this->filters = $a;
     }
 
-    public function addFilter(&$f)
+    public function addFilter(Docman_Filter $f): void
     {
         $this->filters[] = $f;
     }
 
-    public function &getFilterIterator()
+    public function &getFilterIterator(): ArrayIterator
     {
         $i = new ArrayIterator($this->filters);
         return $i;
@@ -241,13 +251,13 @@ class Docman_Report
         return $param;
     }
 
-    public function getGlobalSearchMetadata()
+    public function getGlobalSearchMetadata(): Docman_Metadata
     {
         $filterFactory = new Docman_FilterFactory($this->groupId);
         return $filterFactory->getGlobalSearchMetadata();
     }
 
-    public function getItemTypeSearchMetadata()
+    public function getItemTypeSearchMetadata(): Docman_Metadata
     {
         $filterFactory = new Docman_FilterFactory($this->groupId);
         return $filterFactory->getItemTypeSearchMetadata();

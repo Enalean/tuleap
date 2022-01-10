@@ -23,7 +23,10 @@
 
 class Docman_FilterFactory
 {
-    public $dynTextFields;
+    /**
+     * @var string[]
+     */
+    public array $dynTextFields;
     public $groupId;
 
     public function __construct($groupId)
@@ -32,7 +35,7 @@ class Docman_FilterFactory
         $this->groupId       = $groupId;
     }
 
-    public function addFiltersToReport(&$report)
+    public function addFiltersToReport(Docman_Report $report): void
     {
         $gsMd         = $this->getGlobalSearchMetadata();
         $globalSearch = false;
@@ -59,11 +62,14 @@ class Docman_FilterFactory
                 } else {
                     if (isset($filtersArray[$row['label']])) {
                         $f = $filtersArray[$row['label']];
-                        $f->initFromRow($row);
+                        $f?->initFromRow($row);
                     } else {
                         $md = $metadataFactory->getFromLabel($row['label']);
-                        $f  = $this->createFromMetadata($md, $report->getAdvancedSearch());
-                        $f->initFromRow($row);
+                        if (! $md) {
+                            continue;
+                        }
+                        $f = $this->createFromMetadata($md, $report->getAdvancedSearch());
+                        $f?->initFromRow($row);
                         $filtersArray[$row['label']] = $f;
                     }
                     unset($f);
@@ -85,6 +91,9 @@ class Docman_FilterFactory
         }
         // Then loop on the real md.
         foreach ($filtersArray as $f) {
+            if (! $f) {
+                continue;
+            }
             $report->addFilter($f);
             unset($f);
         }
@@ -109,7 +118,7 @@ class Docman_FilterFactory
         }
     }
 
-    public function getGlobalSearchMetadata()
+    public function getGlobalSearchMetadata(): Docman_Metadata
     {
         // Special case for a fake metadata: generic text search
         $md = new Docman_Metadata();
@@ -197,7 +206,7 @@ class Docman_FilterFactory
         return $this->_initFilter($f, $request);
     }
 
-    public function createFromMetadata($md, $advSearch)
+    public function createFromMetadata(Docman_Metadata $md, $advSearch): ?Docman_Filter
     {
         $filter = null;
 

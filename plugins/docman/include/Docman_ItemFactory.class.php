@@ -542,6 +542,7 @@ class Docman_ItemFactory
         $filter = null;
         if (isset($params['filter'])) {
             $filter = $params['filter'];
+            assert($filter instanceof Docman_Report);
         }
 
         // Obsolescence

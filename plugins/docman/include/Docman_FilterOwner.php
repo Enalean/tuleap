@@ -23,7 +23,7 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_FilterOwner extends \Docman_Filter
 {
-    public function __construct($md)
+    public function __construct(Docman_Metadata $md)
     {
         parent::__construct($md);
     }
@@ -31,7 +31,7 @@ class Docman_FilterOwner extends \Docman_Filter
     {
         $this->setValue($row['value_string']);
     }
-    public function _urlMatchUpdate($request)
+    public function _urlMatchUpdate($request)  // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (parent::_urlMatchUpdate($request)) {
             $user = \UserManager::instance()->findUser($this->getValue());

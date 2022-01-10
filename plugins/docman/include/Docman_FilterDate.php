@@ -26,7 +26,7 @@ class Docman_FilterDate extends \Docman_Filter
     public $operator;
     public $field_operator_name;
     public $field_value_name;
-    public function __construct($md)
+    public function __construct(Docman_Metadata $md)
     {
         parent::__construct($md);
         $this->operator = \null;
@@ -81,7 +81,7 @@ class Docman_FilterDate extends \Docman_Filter
         //}
         return $param;
     }
-    public function _urlMatchUpdate($request)
+    public function _urlMatchUpdate($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         // Simple date
         if ($request->exist($this->getFieldValueName())) {
