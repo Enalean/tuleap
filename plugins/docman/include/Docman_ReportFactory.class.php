@@ -21,6 +21,8 @@
  */
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
+
 class Docman_ReportFactory
 {
     public $groupId;
@@ -202,18 +204,12 @@ class Docman_ReportFactory
      * develop the feature. We only provide static metadata to display on table
      * report.
      */
-    public function initColumns(&$report, $request)
+    public function initColumns(Docman_Report $report, Codendi_Request $request): void
     {
-        $settingsBo =  Docman_SettingsBo::instance($this->groupId);
-        $useStatus  = $settingsBo->getMetadataUsage('status');
+        $settingsBo      =  Docman_SettingsBo::instance($this->groupId);
+        $retriever       = new AlwaysThereColumnRetriever($settingsBo);
+        $columnsOnReport = $retriever->getColumns();
 
-        if ($useStatus) {
-            $columnsOnReport = ['status', 'title', 'description', 'location', 'owner', 'update_date'];
-            // report with a dynamic field:
-            //$columnsOnReport = array('status', 'title', 'description', 'field_2', 'location', 'owner', 'update_date');
-        } else {
-            $columnsOnReport = ['title', 'description', 'location', 'owner', 'update_date'];
-        }
         $keepRefOnUpdateDate = null;
         $thereIsAsort        = false;
 
