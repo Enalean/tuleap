@@ -93,7 +93,7 @@
     "build": "turbo run build",
     "eslint": "eslint --config .eslintrc.js --no-eslintrc --ext .js,.ts,.vue",
     "stylelint": "stylelint --config .stylelintrc.js",
-    "test": "pnpm --filter='!@tuleap/dev-and-build-tools' --no-bail --workspace-concurrency=2 test -- --verbose=false"
+    "test": "turbo run test --continue --concurrency=2 -- -- --verbose=false"
   },
   "pnpm": {
     "overrides": {
@@ -103,6 +103,11 @@
   "turbo": {
     "baseBranch": "origin/master",
     "npmClient": "pnpm",
+    "globalDependencies": [
+      "tsconfig.json",
+      "tools/utils/scripts/**",
+      "tools/utils/nix/**"
+    ],
     "pipeline": {
       "build": {
         "dependsOn": [
@@ -110,6 +115,9 @@
         ],
         "outputs": [],
         "cache": false
+      },
+      "test": {
+        "outputs": []
       }
     }
   }

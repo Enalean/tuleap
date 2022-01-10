@@ -4,6 +4,8 @@
 * Deciders/Lead experimenter: Thomas Gerbet
 * Date: 2021-12-31
 
+Technical Story: [request #24241](https://tuleap.net/plugins/tracker/?aid=24241)
+
 ## Context and Problem Statement
 
 Tuleap is [(mostly) a monorepo](./0007-js-package-manager.md) and building it consume a non-negligible amount of time
