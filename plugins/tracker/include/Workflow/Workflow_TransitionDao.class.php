@@ -73,7 +73,7 @@ class Workflow_TransitionDao extends DataAccessObject
         $sql = "DELETE tracker_workflow_transition, tracker_workflow_transition_condition_field_notempty,
                 tracker_workflow_transition_condition_comment_notempty, tracker_workflow_transition_postactions_field_date,
                 tracker_workflow_transition_postactions_field_int, tracker_workflow_transition_postactions_field_float,
-                tracker_workflow_transition_postactions_cibuild, paro, parof
+                tracker_workflow_transition_postactions_cibuild, paro, parof, pahf, pahff
             FROM tracker_workflow_transition
                  LEFT JOIN tracker_workflow_transition_condition_field_notempty
             ON tracker_workflow_transition_condition_field_notempty.transition_id = tracker_workflow_transition.transition_id
@@ -93,6 +93,12 @@ class Workflow_TransitionDao extends DataAccessObject
                      ON paro.id = parof.postaction_id
                  )
             ON paro.transition_id = tracker_workflow_transition.transition_id
+                LEFT JOIN (
+                     plugin_tracker_workflow_postactions_hidden_fieldsets AS pahf
+                         JOIN plugin_tracker_workflow_postactions_hidden_fieldsets_value AS pahff
+                     ON pahf.id = pahff.postaction_id
+                 )
+            ON pahf.transition_id = tracker_workflow_transition.transition_id
             WHERE tracker_workflow_transition.workflow_id = $workflow_id";
 
         return $this->update($sql);
