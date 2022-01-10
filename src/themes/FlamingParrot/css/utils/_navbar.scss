@@ -225,7 +225,7 @@ body.has-sidebar {
     background: var(--tlp-white-color);
     color: var(--tlp-dark-color);
     font-family: var(--tlp-font-family);
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     font-weight: 500;
     letter-spacing: normal;
     line-height: 1rem;
@@ -247,18 +247,18 @@ body.has-sidebar {
     }
 
     > .nav-dropdown-item-icon {
-        margin: 0 4px 0 0;
-        font-size: 0.75rem;
+        margin: 0 calc(var(--tlp-small-spacing) / 1.5) 0 0;
+        font-size: 0.7rem;
     }
 }
 
 .nav-dropdown-item-title {
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
     color: var(--tlp-dimmed-color);
-    font-size: 0.65rem;
+    font-size: 0.625rem;
     font-weight: 600;
     letter-spacing: 0.5px;
-    line-height: 1;
+    line-height: 1rem;
     text-transform: uppercase;
 }
 

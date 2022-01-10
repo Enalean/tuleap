@@ -28,7 +28,7 @@
                 <div class="tlp-popover-body">
                     {{# has_no_dashboards }}
                         <a href="/my/"
-                        class="nav-dropdown-item nav-dropdown-item-unique-dashboard"
+                        class="tlp-dropdown-menu-item nav-dropdown-item nav-dropdown-item-unique-dashboard"
                         data-shortcut-mydashboard-option
                         data-test="my-dashboard-option"
                         >
@@ -37,12 +37,12 @@
                     {{/ has_no_dashboards }}
                     {{^ has_no_dashboards }}
                         {{^ has_one_dashboard }}
-                            <div class="nav-dropdown-item-title">Dashboards</div>
+                            <div class="tlp-dropdown-menu-title nav-dropdown-title">Dashboards</div>
                         {{/ has_one_dashboard }}
                         <div>
                             {{# dashboards }}
                                 <a href="/my/?dashboard_id={{ getId }}"
-                                    class="nav-dropdown-item {{# has_one_dashboard }}nav-dropdown-item-unique-dashboard{{/ has_one_dashboard }}"
+                                    class="tlp-dropdown-menu-item nav-dropdown-item {{# has_one_dashboard }}nav-dropdown-item-unique-dashboard{{/ has_one_dashboard }}"
                                     data-shortcut-mydashboard-option
                                     data-test="my-dashboard-option"
                                 >
@@ -52,10 +52,10 @@
                         </div>
                     {{/ has_no_dashboards }}
 
-                    <hr class="nav-dropdown-item-divider">
+                    <hr class="tlp-dropdown-menu-separator">
 
-                    <a href="/account/" class="nav-dropdown-item">
-                        <i class="fa fa-fw fa-cog nav-dropdown-item-icon" aria-hidden="true"></i>
+                    <a href="/account/" class="tlp-dropdown-menu-item nav-dropdown-item">
+                        <i class="fa fa-fw fa-cog tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
                         {{# gettext }}Preferences{{/ gettext }}
                     </a>
                     {{# logout_menu_item }}
@@ -67,12 +67,12 @@
                                 {{> csrf_token_input }}
                             {{/ csrf_token }}
                             <button
-                                class="nav-dropdown-item"
+                                class="tlp-dropdown-menu-item nav-dropdown-item"
                                 type="submit"
                                 title="{{ label }}"
                                 data-test="user_logout"
                             >
-                                <i class="fa fa-fw fa-power-off nav-dropdown-item-icon" aria-hidden="true"></i>
+                                <i class="fa fa-fw fa-power-off tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
                                 {{# gettext }}Logout{{/gettext}}
                             </button>
                         </form>

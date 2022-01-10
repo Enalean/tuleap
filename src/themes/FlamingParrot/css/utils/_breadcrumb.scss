@@ -23,7 +23,7 @@ $step-color: var(--tlp-dark-color);
 $step-active-color: var(--tlp-main-color);
 $step-active-background: var(--tlp-main-color-transparent-90);
 $switch-menu-background: var(--tlp-white-color);
-$switch-menu-item-color: var(--tlp-main-color);
+$switch-menu-item-color: var(--tlp-dark-color);
 $switch-menu-item-hover-background: var(--tlp-main-color-transparent-90);
 $switch-menu-item-hover-color: var(--tlp-main-color);
 
@@ -165,7 +165,7 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
     overflow: hidden;
     color: $switch-menu-item-color;
     font-size: 0.8125rem;
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: normal;
     line-height: 1rem;
     text-overflow: ellipsis;
@@ -187,19 +187,20 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
 }
 
 .breadcrumb-dropdown-section-title {
-    margin: 10px 0 0;
-    padding: 20px 20px 10px;
+    margin: var(--tlp-small-spacing) 0 0;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
     border-top: 1px solid var(--tlp-neutral-light-color);
-    color: #747474;
-    font-size: 0.65rem;
+    color: var(--tlp-dimmed-color);
+    font-size: 0.625rem;
     font-weight: 600;
     letter-spacing: 0.5px;
+    line-height: 1rem;
     text-transform: uppercase;
     white-space: nowrap;
 
     &:first-child {
         margin: 0;
-        padding: 10px 20px;
+        padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
         border-top: 0;
     }
 }

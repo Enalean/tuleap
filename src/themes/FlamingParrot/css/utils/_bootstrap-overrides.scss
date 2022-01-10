@@ -113,6 +113,8 @@ legend {
 
 .dropdown-menu {
     z-index: 3000;
+    padding: 0;
+    border-radius: 0 0 var(--tlp-large-radius) var(--tlp-large-radius);
 }
 
 .popover {
@@ -216,7 +218,6 @@ legend {
     .dropdown-menu {
         margin: 3px 0 0;
         border: 0;
-        border-radius: 0;
     }
 
     > li > .dropdown-toggle > .caret {
@@ -251,29 +252,52 @@ legend {
     }
 
     > .dropdown-menu {
-        font-size: 14px;
-        font-weight: normal;
+        font-size: 0.8125rem;
         letter-spacing: normal;
         text-transform: none;
 
+        .dropdown-menu-title {
+            margin: var(--tlp-small-spacing) 0 0;
+            padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
+            border-top: 1px solid var(--tlp-neutral-light-color);
+            color: var(--tlp-dimmed-color);
+            font-size: 0.625rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            line-height: 1rem;
+            text-transform: uppercase;
+
+            &:first-child {
+                margin: 0;
+                padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
+                border-top: 0;
+            }
+        }
+
+        > li:last-child > a {
+            border-radius: 0 0 var(--tlp-large-radius) var(--tlp-large-radius);
+        }
+
         a {
-            padding: 10px 20px;
-            color: var(--tlp-main-color);
-            line-height: 14px;
+            padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
+            color: var(--tlp-dark-color);
+            font-weight: 500;
+            line-height: 1rem;
 
             &:hover,
             &:focus {
                 border-color: transparent;
-                background: #f3f3f3;
+                background: var(--tlp-main-color-transparent-90);
                 color: var(--tlp-main-color);
             }
 
             &.text-error {
-                color: #b94a48;
+                color: var(--tlp-danger-dark-color);
 
                 &:hover,
                 &:focus {
-                    color: #953b39;
+                    background: var(--tlp-danger-color-transparent-90);
+                    color: var(--tlp-danger-dark-color);
                 }
             }
         }
