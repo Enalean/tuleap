@@ -46,7 +46,7 @@ specifiers:
   jest: ^27.2.4
   jest-each: ^27.2.4
   jest-jasmine2: ^27.2.4
-  jest-junit: ^12.0.0
+  jest-junit: ^13.0.0
   jest-serializer-vue: ^2.0.2
   json-loader: ^0.5.7
   lodash.map: 4.6.0
@@ -131,7 +131,7 @@ devDependencies:
   jest: 27.2.4
   jest-each: 27.2.4
   jest-jasmine2: 27.2.4
-  jest-junit: 12.0.0
+  jest-junit: 13.0.0
   jest-serializer-vue: 2.0.2
   json-loader: 0.5.7
   lodash.map: 4.6.0
@@ -3097,11 +3097,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /ansi-regex/4.1.0:
-    resolution: {integrity: sha512-1apePfXM1UOSqw0o9IiFAovVz9M5S1Dg+4TrDwfMewQ6p/rmMueb7tWZjQ1rx4Loy1ArBggoqGpfqqdI4rondg==}
-    engines: {node: '>=6'}
-    dev: true
-
   /ansi-regex/5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
     engines: {node: '>=8'}
@@ -4132,7 +4127,7 @@ packages:
       object-assign: 4.1.1
       string-width: 4.2.3
     optionalDependencies:
-      colors: 1.4.0
+      colors: 1.4.2
     dev: true
 
   /cli-truncate/2.1.0:
@@ -4205,8 +4200,8 @@ packages:
     resolution: {integrity: sha512-Y2oEozpomLn7Q3HFP7dpww7AtMJplbM9lGZP6RDfHqmbeRjiwRg4n6VM6j4KLmRke85uWEI7JqF17f3pqdRA0g==}
     dev: true
 
-  /colors/1.4.0:
-    resolution: {integrity: sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==}
+  /colors/1.4.2:
+    resolution: {integrity: sha512-5QhJWPFZqkKIieXJPpCprdOytvH7v0AGWpu9K2jZ4LWkGg3dVBNoYPgGGRpEsc0jb8Boy0ElYrdjH9uXfhRSqw==}
     engines: {node: '>=0.1.90'}
     requiresBuild: true
     dev: true
@@ -6643,13 +6638,13 @@ packages:
       - supports-color
     dev: true
 
-  /jest-junit/12.0.0:
-    resolution: {integrity: sha512-+8K35LlboWiPuCnXSyiid7rFdxNlpCWWM20WEYe6IZH6psfUWKZmSpSRQ5tk0C0cBeDsvsnIzcef5mYhyJsbug==}
+  /jest-junit/13.0.0:
+    resolution: {integrity: sha512-JSHR+Dhb32FGJaiKkqsB7AR3OqWKtldLd6ZH2+FJ8D4tsweb8Id8zEVReU4+OlrRO1ZluqJLQEETm+Q6/KilBg==}
     engines: {node: '>=10.12.0'}
     dependencies:
       mkdirp: 1.0.4
-      strip-ansi: 5.2.0
-      uuid: 3.4.0
+      strip-ansi: 6.0.1
+      uuid: 8.3.2
       xml: 1.0.1
     dev: true
 
@@ -8913,13 +8908,6 @@ packages:
       ansi-regex: 2.1.1
     dev: true
 
-  /strip-ansi/5.2.0:
-    resolution: {integrity: sha512-DuRs1gKbBqsMKIZlrffwlug8MHkcnpjs5VPmL1PAh+mA30U0DTotfDZ0d2UUsXpPmPmMMJ6W773MaA3J+lbiWA==}
-    engines: {node: '>=6'}
-    dependencies:
-      ansi-regex: 4.1.0
-    dev: true
-
   /strip-ansi/6.0.0:
     resolution: {integrity: sha512-AuvKTrTfQNYNIctbR1K/YGTR1756GycPsg7b9bdV9Duqur4gv6aKqHXah67Z8ImS7WEz5QVcOtlfW2rZEugt6w==}
     engines: {node: '>=8'}
@@ -9690,12 +9678,6 @@ packages:
 
   /util-deprecate/1.0.2:
     resolution: {integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=}
-    dev: true
-
-  /uuid/3.4.0:
-    resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
-    deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
-    hasBin: true
     dev: true
 
   /uuid/8.3.2:
