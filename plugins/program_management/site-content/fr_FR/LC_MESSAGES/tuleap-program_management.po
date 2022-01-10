@@ -12,6 +12,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0\n"
 
+#, php-format
+msgid "%s - Iterations - %s"
+msgstr "%s - Itérations - %s"
+
 msgid "%s of project %s"
 msgstr "%s du projet %s"
 
@@ -266,9 +270,6 @@ msgstr "Aucun projet n'a encore été regroupé."
 
 msgid "Permission"
 msgstr "Permission"
-
-msgid "Plan iterations"
-msgstr "Plannification des itérations"
 
 msgid "Plannable tracker id cannot be empty"
 msgstr "L'id de l'outils de suivi panifiable ne doit pas être vide"

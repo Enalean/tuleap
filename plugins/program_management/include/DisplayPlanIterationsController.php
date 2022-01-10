@@ -29,8 +29,9 @@ use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\DisplayPlanIterationsPresenter;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
@@ -40,8 +41,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
+use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramFlags;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramPrivacy;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUserPreference;
@@ -69,6 +70,7 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         private RetrieveVisibleIterationTracker $retrieve_visible_iteration_tracker,
         private RetrieveIterationLabels $retrieve_iteration_labels,
         private RetrieveUserPreference $retrieve_user_preference,
+        private TitleValueRetriever $title_value_retriever,
     ) {
     }
 
@@ -98,8 +100,19 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         $user_identifier = UserProxy::buildFromPFUser($user);
 
         try {
-            $program_identifier = ProgramIdentifier::fromId($this->program_adapter, (int) $project->getID(), $user_identifier, null);
-            $planned_iterations = PlannedIterations::build(
+            $program_identifier   = ProgramIdentifier::fromId(
+                $this->program_adapter,
+                (int) $project->getID(),
+                $user_identifier,
+                null
+            );
+            $increment_identifier = ProgramIncrementIdentifier::fromId(
+                $this->verify_is_program_increment,
+                $this->verify_is_visible_artifact,
+                (int) $variables['increment_id'],
+                $user_identifier
+            );
+            $planned_iterations   = PlannedIterations::build(
                 $this->build_program_flags,
                 $this->build_program_privacy,
                 $this->build_program_base_info,
@@ -108,15 +121,13 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
                 $this->retrieve_visible_iteration_tracker,
                 $program_identifier,
                 $user_identifier,
-                ProgramIncrementIdentifier::fromId(
-                    $this->verify_is_program_increment,
-                    $this->verify_is_visible_artifact,
-                    (int) $variables['increment_id'],
-                    $user_identifier
-                ),
+                $increment_identifier,
                 IterationLabels::fromIterationTracker(
                     $this->retrieve_iteration_labels,
-                    $this->retrieve_visible_iteration_tracker->retrieveVisibleIterationTracker($program_identifier, $user_identifier)
+                    $this->retrieve_visible_iteration_tracker->retrieveVisibleIterationTracker(
+                        $program_identifier,
+                        $user_identifier
+                    )
                 ),
                 UserPreference::fromUserIdentifierAndPreferenceName(
                     $this->retrieve_user_preference,
@@ -139,7 +150,7 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
 
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'planned-iterations-style'));
         $layout->includeFooterJavascriptFile($assets->getFileURL('planned-iterations.js'));
-        $this->includeHeaderAndNavigationBar($layout, $project);
+        $this->includeHeaderAndNavigationBar($layout, $project, $increment_identifier);
 
         $this->template_renderer->renderToPage(
             'plan-iterations',
@@ -149,11 +160,24 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         $layout->footer([]);
     }
 
-    private function includeHeaderAndNavigationBar(BaseLayout $layout, Project $project): void
-    {
+    private function includeHeaderAndNavigationBar(
+        BaseLayout $layout,
+        Project $project,
+        ProgramIncrementIdentifier $increment_identifier,
+    ): void {
+        $program_increment_title = (string) $this->title_value_retriever->getTitle($increment_identifier);
+        $project_title           = $project->getPublicName();
+        $title                   = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                "%s - Iterations - %s"
+            ),
+            $program_increment_title,
+            $project_title
+        );
         $layout->header(
             [
-                'title'                          => dgettext('tuleap-program_management', "Plan iterations"),
+                'title'                          => $title,
                 'group'                          => $project->getID(),
                 'toptab'                         => 'plugin_program_management',
                 'body_class'                     => ['has-sidebar-with-pinned-header'],
