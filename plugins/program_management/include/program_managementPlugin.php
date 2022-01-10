@@ -589,7 +589,8 @@ final class program_managementPlugin extends Plugin
             new UserIsProgramAdminVerifier($user_retriever),
             $this->getVisibleIterationTrackerRetriever($user_retriever),
             new IterationsDAO(),
-            new UserPreferenceRetriever($user_retriever)
+            new UserPreferenceRetriever($user_retriever),
+            new TitleValueRetriever($artifact_retriever)
         );
     }
 
