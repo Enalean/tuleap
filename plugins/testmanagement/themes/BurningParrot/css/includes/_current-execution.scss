@@ -232,10 +232,11 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
     stroke: var(--tlp-white-color);
 }
 
-.current-test-requirement {
+.current-test-requirement-or-bug {
     display: flex;
     flex: 0 0 auto;
     align-items: baseline;
+    margin: 0 0 calc(var(--tlp-small-spacing) / 2);
     padding: 0 var(--tlp-medium-spacing) 0 calc(var(--tlp-medium-spacing) + 2px);
     border: 0;
 
@@ -243,9 +244,9 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
         padding-bottom: var(--tlp-medium-spacing);
     }
 
-    > .current-test-requirement-arrow {
+    > .current-test-requirement-or-bug-icon {
         flex: 0 0 auto;
-        margin: 0 4px 0 0;
+        margin: 0 var(--tlp-small-spacing) 0 0;
         color: var(--tlp-white-color);
         vertical-align: middle;
     }
@@ -262,7 +263,7 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
             flex-wrap: wrap;
         }
 
-        .current-test-requirement-badge {
+        .current-test-requirement-or-bug-badge {
             margin: 0 4px 0 0;
             border-color: var(--tlp-white-color);
             background: var(--tlp-white-color-transparent-90);
