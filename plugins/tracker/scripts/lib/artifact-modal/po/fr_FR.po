@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-10 09:12+0100\n"
+"PO-Revision-Date: 2022-01-11 16:14+0100\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -68,6 +68,9 @@ msgstr "Entrer des ids d'artefacts séparés par une virgule"
 
 msgid "Error:"
 msgstr "Erreur :"
+
+msgid "Field under implementation, please come back later"
+msgstr "Champ en cours de construction, revenez plus tard"
 
 msgid "File description"
 msgstr "Description du fichier"

@@ -52,3 +52,5 @@ export const getAutocomputeLabel = (): string => gettextCatalog.getString("Auto-
 export const getAutoComputedValueLabel = (): string => gettextCatalog.getString("(auto-computed)");
 export const getComputedValueLabel = (): string => gettextCatalog.getString("Computed value:");
 export const getEmptyLabel = (): string => gettextCatalog.getString("Empty");
+export const getLinkFieldUnderConstructionPlaceholder = (): string =>
+    gettextCatalog.getString("Field under implementation, please come back later");

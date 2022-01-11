@@ -65,6 +65,11 @@ function MainCtrl(
         const is_list_picker_enabled = Boolean(JSON.parse(kanban_init_data.isListPickerEnabled));
         SharedPropertiesService.setIsListPickerEnabled(is_list_picker_enabled);
 
+        const is_links_field_v2_enabled = Boolean(
+            JSON.parse(kanban_init_data.isLinksFieldV2Enabled)
+        );
+        SharedPropertiesService.setIsLinksFieldV2Enabled(is_links_field_v2_enabled);
+
         const has_current_project_parents = Boolean(
             JSON.parse(kanban_init_data.hasCurrentProjectParents)
         );

@@ -27,6 +27,7 @@ use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
+use Tuleap\Tracker\Modal\FeatureFlagArtifactModalLinksFieldV2;
 use Tuleap\User\REST\UserRepresentation;
 
 class IndexPresenter
@@ -130,6 +131,7 @@ class IndexPresenter
      * @psalm-readonly
      */
     public string $project_icon;
+    public string $is_links_field_v2_enabled;
 
     /**
      * @param int|false                         $campaign_tracker_id
@@ -198,6 +200,11 @@ class IndexPresenter
         $this->has_current_project_parents = json_encode($has_current_project_parents, JSON_THROW_ON_ERROR);
 
         $this->file_upload_max_size = (int) \ForgeConfig::get('sys_max_size_upload');
+
+        $this->is_links_field_v2_enabled = json_encode(
+            FeatureFlagArtifactModalLinksFieldV2::isArtifactModalLinksFieldV2Enabled(),
+            JSON_THROW_ON_ERROR
+        );
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string

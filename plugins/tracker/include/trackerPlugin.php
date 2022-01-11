@@ -2348,6 +2348,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $event->addConfigClass(ListPickerIncluder::class);
         $event->addConfigClass(Tracker_Report::class);
         $event->addConfigClass(\Tuleap\Tracker\Creation\JiraImporter\ClientWrapper::class);
+        $event->addConfigClass(\Tuleap\Tracker\Modal\FeatureFlagArtifactModalLinksFieldV2::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder

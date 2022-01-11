@@ -18,6 +18,7 @@ function SharedPropertiesService() {
         kanban_url: "",
         is_list_picker_enabled: false,
         has_current_project_parents: false,
+        is_links_field_v2_enabled: false,
     };
 
     return {
@@ -124,6 +125,12 @@ function SharedPropertiesService() {
         },
         hasCurrentProjectParents() {
             return property.has_current_project_parents;
+        },
+        setIsLinksFieldV2Enabled(is_links_field_v2_enabled) {
+            property.is_links_field_v2_enabled = is_links_field_v2_enabled;
+        },
+        isLinksFieldV2Enabled() {
+            return property.is_links_field_v2_enabled;
         },
     };
 }

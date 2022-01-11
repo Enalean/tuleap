@@ -43,6 +43,11 @@ function TestManagementCtrl(
         const current_milestone = JSON.parse(testmanagement_init_data.currentMilestone);
         SharedPropertiesService.setCurrentMilestone(current_milestone);
 
+        const is_links_field_v2_enabled = Boolean(
+            JSON.parse(testmanagement_init_data.isLinksFieldV2Enabled)
+        );
+        SharedPropertiesService.setIsLinksFieldV2Enabled(is_links_field_v2_enabled);
+
         const project_public_name = testmanagement_init_data.projectPublicName;
         const project_url = testmanagement_init_data.projectUrl;
         const project_icon = testmanagement_init_data.projectIcon;
