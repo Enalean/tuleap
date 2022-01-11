@@ -124,27 +124,85 @@
                 </div>
             </div>
 
-            <section ng-if="execution.definition.all_requirements.length === 1 && execution.is_automated === false"
+            <section ng-if="execution.definition.all_requirements.length + execution.linked_bugs.length > 2 && execution.is_automated === false"
                      class="current-test-requirement-or-bug"
+             >
+                <div class="tlp-dropdown">
+                    <button ng-if="execution.definition.all_requirements.length > 0"
+                          ng-class="{
+                              'tlp-badge-success': execution.status === 'passed',
+                              'tlp-badge-danger': execution.status === 'failed',
+                              'tlp-badge-info': execution.status === 'blocked',
+                              'tlp-badge-secondary': execution.status === 'notrun'
+                          }"
+                        type="button"
+                        open-tlp-dropdown
+                    >
+                        <span translate translate-n="execution.definition.all_requirements.length" translate-plural="{{ $count }} requirements covered">1 requirement covered</span>
+                    </button>
+                    <div class="tlp-dropdown-menu">
+                        <a class="tlp-dropdown-menu-item"
+                            role="menuitem"
+                            href="/plugins/tracker/?aid={{ requirement.id }}"
+                            ng-repeat="requirement in execution.definition.all_requirements track by requirement.id"
+                        >
+                            <span ng-class="['cross-ref-badge', 'cross-ref-badge-' + requirement.tracker.color_name, 'linked-issues-dropdown-content-badge']">
+                                {{ requirement.xref }}
+                            </span> {{ requirement.title }}
+                        </a>
+                    </div>
+                </div>
+
+                <div class="tlp-dropdown">
+                    <button ng-if="execution.linked_bugs.length > 0"
+                          ng-class="{
+                              'tlp-badge-success': execution.status === 'passed',
+                              'tlp-badge-danger': execution.status === 'failed',
+                              'tlp-badge-info': execution.status === 'blocked',
+                              'tlp-badge-secondary': execution.status === 'notrun'
+                          }"
+                        type="button"
+                        open-tlp-dropdown
+                    >
+                        <span translate translate-n="execution.linked_bugs.length" translate-plural="{{ $count }} bugs linked">1 bug linked</span>
+                    </button>
+                    <div class="tlp-dropdown-menu">
+                        <a class="tlp-dropdown-menu-item"
+                            role="menuitem"
+                            href="/plugins/tracker/?aid={{ bug.id }}"
+                            ng-repeat="bug in execution.linked_bugs track by bug.id"
+                        >
+                            <span ng-class="['cross-ref-badge', 'cross-ref-badge-' + bug.tracker.color_name, 'linked-issues-dropdown-content-badge']">
+                                {{ bug.xref }}
+                            </span> {{ bug.title }}
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section ng-if="execution.definition.all_requirements.length > 0 && execution.definition.all_requirements.length + execution.linked_bugs.length <= 2 && execution.is_automated === false"
+                     class="current-test-requirement-or-bug"
+                     ng-repeat="requirement in execution.definition.all_requirements track by requirement.id"
             >
                 <i class="fas fa-fw fa-long-arrow-alt-right current-test-requirement-or-bug-icon" aria-hidden="true"></i>
-                <a href="/plugins/tracker/?aid={{ execution.definition.all_requirements[0].id }}">
-                    <span ng-class="['current-test-requirement-or-bug-badge', 'cross-ref-badge', 'cross-ref-badge-' + execution.definition.all_requirements[0].tracker.color_name]">
-                        {{ execution.definition.all_requirements[0].xref }}
+                <a href="/plugins/tracker/?aid={{ requirement.id }}">
+                    <span ng-class="['current-test-requirement-or-bug-badge', 'cross-ref-badge', 'cross-ref-badge-' + requirement.tracker.color_name]">
+                        {{ requirement.xref }}
                     </span>
-                    <span>{{ execution.definition.all_requirements[0].title }}</span>
+                    <span>{{ requirement.title }}</span>
                 </a>
             </section>
 
-            <section ng-if="execution.linked_bugs.length === 1 && execution.is_automated === false"
+            <section ng-if="execution.linked_bugs.length > 0 && execution.definition.all_requirements.length + execution.linked_bugs.length <= 2 && execution.is_automated === false"
                      class="current-test-requirement-or-bug"
+                     ng-repeat="bug in execution.linked_bugs track by bug.id"
             >
                 <i class="fas fa-fw fa-bug current-test-requirement-or-bug-icon" aria-hidden="true"></i>
-                <a href="/plugins/tracker/?aid={{ execution.linked_bugs[0].id }}">
-                    <span ng-class="['current-test-requirement-or-bug-badge', 'cross-ref-badge', 'cross-ref-badge-' + execution.linked_bugs[0].tracker.color_name]">
-                        {{ execution.linked_bugs[0].xref }}
+                <a href="/plugins/tracker/?aid={{ bug.id }}">
+                    <span ng-class="['current-test-requirement-or-bug-badge', 'cross-ref-badge', 'cross-ref-badge-' + bug.tracker.color_name]">
+                        {{ bug.xref }}
                     </span>
-                    <span>{{ execution.linked_bugs[0].title }}</span>
+                    <span>{{ bug.title }}</span>
                 </a>
             </section>
 
