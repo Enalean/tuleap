@@ -33,6 +33,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InvalidMapping
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
 use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
@@ -45,61 +46,24 @@ use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 class FieldChangeXMLExporter
 {
     /**
-     * @var FieldChangeDateBuilder
+     * @var array<string, bool>
      */
-    private $field_change_date_builder;
-
-    /**
-     * @var FieldChangeStringBuilder
-     */
-    private $field_change_string_builder;
-
-    /**
-     * @var FieldChangeTextBuilder
-     */
-    private $field_change_text_builder;
-
-    /**
-     * @var FieldChangeFloatBuilder
-     */
-    private $field_change_float_builder;
-
-    /**
-     * @var FieldChangeListBuilder
-     */
-    private $field_change_list_builder;
-
-    /**
-     * @var FieldChangeFileBuilder
-     */
-    private $field_change_file_builder;
-    /**
-     * @var FieldChangeArtifactLinksBuilder
-     */
-    private $field_change_artifact_links_builder;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private array $supported_link_types = [];
 
     public function __construct(
-        LoggerInterface $logger,
-        FieldChangeDateBuilder $field_change_date_builder,
-        FieldChangeStringBuilder $field_change_string_builder,
-        FieldChangeTextBuilder $field_change_text_builder,
-        FieldChangeFloatBuilder $field_change_float_builder,
-        FieldChangeListBuilder $field_change_list_builder,
-        FieldChangeFileBuilder $field_change_file_builder,
-        FieldChangeArtifactLinksBuilder $field_change_artifact_links_builder,
+        private LoggerInterface $logger,
+        private FieldChangeDateBuilder $field_change_date_builder,
+        private FieldChangeStringBuilder $field_change_string_builder,
+        private FieldChangeTextBuilder $field_change_text_builder,
+        private FieldChangeFloatBuilder $field_change_float_builder,
+        private FieldChangeListBuilder $field_change_list_builder,
+        private FieldChangeFileBuilder $field_change_file_builder,
+        private FieldChangeArtifactLinksBuilder $field_change_artifact_links_builder,
+        private AllTypesRetriever $all_types_retriever,
     ) {
-        $this->logger                              = $logger;
-        $this->field_change_date_builder           = $field_change_date_builder;
-        $this->field_change_string_builder         = $field_change_string_builder;
-        $this->field_change_text_builder           = $field_change_text_builder;
-        $this->field_change_float_builder          = $field_change_float_builder;
-        $this->field_change_list_builder           = $field_change_list_builder;
-        $this->field_change_file_builder           = $field_change_file_builder;
-        $this->field_change_artifact_links_builder = $field_change_artifact_links_builder;
+        foreach ($this->all_types_retriever->getAllTypes() as $type) {
+            $this->supported_link_types[$type->shortname] = true;
+        }
     }
 
     public function exportFieldChanges(
@@ -238,7 +202,11 @@ class FieldChangeXMLExporter
             $field_values = [];
             foreach ($value->issuelinks as $link) {
                 if (isset($link['outwardIssue'])) {
-                    $field_values[] = new ArtifactLinkChange((int) $link['outwardIssue']['id'], $link['type']['name']);
+                    $tuleap_link_type = $this->getTuleapLinkType($link['type']['name']);
+                    if ($tuleap_link_type !== $link['type']['name']) {
+                        $this->logger->warning(sprintf('Issue is linked to issue %s with type %s but this type does\'t exist on Tuleap yet. Type skipped.', $link['outwardIssue']['key'], $tuleap_link_type));
+                    }
+                    $field_values[] = new ArtifactLinkChange((int) $link['outwardIssue']['id'], $tuleap_link_type);
                 }
             }
             foreach ($value->subtasks as $link) {
@@ -246,5 +214,18 @@ class FieldChangeXMLExporter
             }
             $this->field_change_artifact_links_builder->build($changeset_node, $mapping->getFieldName(), $field_values);
         }
+    }
+
+    private function getTuleapLinkType(string $type_name): string
+    {
+        if ($this->isTypeKnown($type_name)) {
+            return $type_name;
+        }
+        return '';
+    }
+
+    private function isTypeKnown(string $type_name): bool
+    {
+        return isset($this->supported_link_types[$type_name]);
     }
 }

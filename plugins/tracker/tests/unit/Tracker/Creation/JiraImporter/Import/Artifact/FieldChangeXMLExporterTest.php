@@ -29,6 +29,8 @@ use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ArtifactLinkValue;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
@@ -54,21 +56,29 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
-     * @var FieldChangeXMLExporter
-     */
-    private $exporter;
-
-    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
      */
     private $user_manager;
+
+    private AllTypesRetriever $all_types_retriever;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user_manager = Mockery::mock(UserManager::class);
-        $this->exporter     = new FieldChangeXMLExporter(
+        $this->user_manager        = Mockery::mock(UserManager::class);
+        $this->all_types_retriever = new class implements AllTypesRetriever {
+            public array $types = [];
+            public function getAllTypes(): array
+            {
+                return $this->types;
+            }
+        };
+    }
+
+    private function getExporter(): FieldChangeXMLExporter
+    {
+        return new FieldChangeXMLExporter(
             new NullLogger(),
             new FieldChangeDateBuilder(
                 new XML_SimpleXMLCDATAFactory()
@@ -96,6 +106,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             new FieldChangeArtifactLinksBuilder(
                 new XML_SimpleXMLCDATAFactory(),
             ),
+            $this->all_types_retriever,
         );
     }
 
@@ -122,7 +133,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             null
         );
-        $this->exporter->exportFieldChanges(
+        $this->getExporter()->exportFieldChanges(
             $snapshot,
             $changeset_node,
         );
@@ -175,7 +186,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             null
         );
-        $this->exporter->exportFieldChanges(
+        $this->getExporter()->exportFieldChanges(
             $snapshot,
             $changeset_node
         );
@@ -218,7 +229,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             null
         );
-        $this->exporter->exportFieldChanges(
+        $this->getExporter()->exportFieldChanges(
             $snapshot,
             $changeset_node
         );
@@ -264,9 +275,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             null
         );
 
-
-
-        $this->exporter->exportFieldChanges(
+        $this->getExporter()->exportFieldChanges(
             $snapshot,
             $changeset_node
         );
@@ -328,7 +337,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             null
         );
-        $this->exporter->exportFieldChanges(
+        $this->getExporter()->exportFieldChanges(
             $snapshot,
             $changeset_node
         );
@@ -387,7 +396,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             null
         );
-        $this->exporter->exportFieldChanges(
+        $this->getExporter()->exportFieldChanges(
             $snapshot,
             $changeset_node
         );
@@ -430,7 +439,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $john_doe->shouldReceive('getLdapId')->andReturn(105);
         $john_doe->shouldReceive('getId')->andReturn(105);
         $this->user_manager->shouldReceive('getUserById')->andReturn($john_doe);
-        $this->exporter->exportFieldChanges(
+        $this->getExporter()->exportFieldChanges(
             $snapshot,
             $changeset_node
         );
@@ -481,7 +490,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_manager->shouldReceive('getUserById')->with(105)->andReturn($john_doe);
         $this->user_manager->shouldReceive('getUserById')->with(106)->andReturn($mysterio);
-        $this->exporter->exportFieldChanges(
+        $this->getExporter()->exportFieldChanges(
             $snapshot,
             $changeset_node
         );
@@ -495,6 +504,8 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsTheLinkedIssues(): void
     {
+        $this->all_types_retriever->types[] = new TypePresenter('Relates', '...', '...', true);
+
         $mapping = new ScalarFieldMapping(
             AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
             '?',
@@ -538,7 +549,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             null
         );
-        $this->exporter->exportFieldChanges(
+        $this->getExporter()->exportFieldChanges(
             $snapshot,
             $changeset_node
         );
@@ -589,7 +600,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             null
         );
-        $this->exporter->exportFieldChanges(
+        $this->getExporter()->exportFieldChanges(
             $snapshot,
             $changeset_node
         );
@@ -600,6 +611,63 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame('10131', (string) $field_change_node->value[0]);
         self::assertSame(\Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD, (string) $field_change_node->value[0]['nature']);
         self::assertSame('10132', (string) $field_change_node->value[1]);
+    }
+
+    public function testItExportsTheLinksWithoutTypesWhenTheyDontExist(): void
+    {
+        $mapping = new ScalarFieldMapping(
+            AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
+            '?',
+            '?',
+            '?',
+            \Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $snapshot       = new Snapshot(
+            Mockery::mock(PFUser::class),
+            new \DateTimeImmutable(),
+            [
+                new FieldSnapshot(
+                    $mapping,
+                    new ArtifactLinkValue(
+                        [
+                            [
+                                'id' => '10030',
+                                'self' => '...',
+                                'type' => [
+                                    'id'   => '10003',
+                                    'name' => 'Relates',
+                                    'inward' => 'relates to',
+                                    'outward' => 'relates to',
+                                    'self' => '...',
+                                ],
+                                'outwardIssue' => [
+                                    'id' => '10089',
+                                    'key' => 'JUS-1',
+                                    'self' => '...',
+                                    'fields' => [],
+
+                                ],
+                            ],
+                        ],
+                        [],
+                    ),
+                    null
+                ),
+            ],
+            null
+        );
+        $this->getExporter()->exportFieldChanges(
+            $snapshot,
+            $changeset_node
+        );
+
+        $field_change_node = $changeset_node->field_change;
+        self::assertSame(\Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS, (string) $field_change_node['type']);
+        self::assertCount(1, $field_change_node->value);
+        self::assertSame('10089', (string) $field_change_node->value[0]);
+        self::assertSame('', (string) $field_change_node->value[0]['nature']);
     }
 
     private function getPreWiredIDGenerator(int $pre_defined_id): IDGenerator
