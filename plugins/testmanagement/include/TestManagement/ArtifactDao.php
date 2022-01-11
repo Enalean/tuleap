@@ -203,8 +203,9 @@ class ArtifactDao extends DataAccessObject
 
     /**
      * @param false|int $test_exec_tracker_id
+     * @return int[]
      */
-    public function searchFirstRequirementId(int $test_definition_id, $test_exec_tracker_id): ?array
+    public function searchAllRequirementsForDefinition(int $test_definition_id, $test_exec_tracker_id): array
     {
         $sql = "SELECT DISTINCT a.id
                 FROM tracker_changeset_value_artifactlink AS artlink
@@ -215,9 +216,8 @@ class ArtifactDao extends DataAccessObject
                   AND artlink.nature = ?
                   AND t.id != ?
                   AND t.deletion_date IS NULL
-                ORDER BY a.id ASC
-                LIMIT 1";
+                ORDER BY a.id ASC";
 
-        return $this->getDB()->row($sql, $test_definition_id, TypeCoveredByPresenter::TYPE_COVERED_BY, $test_exec_tracker_id);
+        return $this->getDB()->col($sql, 0, $test_definition_id, TypeCoveredByPresenter::TYPE_COVERED_BY, $test_exec_tracker_id);
     }
 }

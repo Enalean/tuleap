@@ -55,11 +55,18 @@ final class DefinitionTextOrHTMLRepresentation extends MinimalDefinitionRepresen
     public $steps;
 
     /**
-     * @var ArtifactRepresentation | null The artifact linked to the test
+     * @var ArtifactRepresentation | null One of the artifacts linked to the test (deprecated, use all_requirements instead)
+     * @deprecated
      */
     public $requirement;
 
     /**
+     * @var array {@type ArtifactRepresentation}
+     */
+    public $all_requirements;
+
+    /**
+     * @param ArtifactRepresentation[] $all_requirements
      * @throws StepDefinitionFormatNotFoundException
      */
     public function __construct(
@@ -69,8 +76,8 @@ final class DefinitionTextOrHTMLRepresentation extends MinimalDefinitionRepresen
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
         string $description_format,
+        array $all_requirements,
         ?Tracker_Artifact_Changeset $changeset = null,
-        ?Artifact $requirement = null,
     ) {
         parent::__construct($artifact, $form_element_factory, $user, $changeset);
 
@@ -85,21 +92,8 @@ final class DefinitionTextOrHTMLRepresentation extends MinimalDefinitionRepresen
 
         $this->description_format = $description_format;
 
-        $artifact_representation = null;
-
-        if ($requirement) {
-            $requirement_tracker_representation = self::getMinimalTrackerRepresentation($requirement);
-
-            $artifact_representation = ArtifactRepresentation::build(
-                $user,
-                $requirement,
-                [],
-                [],
-                $requirement_tracker_representation
-            );
-        }
-
-        $this->requirement = $artifact_representation;
+        $this->all_requirements = $all_requirements;
+        $this->requirement      = empty($all_requirements) ? null : $all_requirements[0];
 
         $this->steps = [];
         $value       = DefinitionRepresentationBuilder::getFieldValue(

@@ -41,15 +41,15 @@ describe("getTraceabilityMatrix", () => {
                             {
                                 definition: {
                                     id: 123,
-                                    requirement: null,
+                                    all_requirements: [],
                                 },
-                            } as TestExecutionResponse,
+                            } as unknown as TestExecutionResponse,
                             {
                                 definition: {
                                     id: 124,
-                                    requirement: null,
+                                    all_requirements: [],
                                 },
-                            } as TestExecutionResponse,
+                            } as unknown as TestExecutionResponse,
                         ],
                     },
                 ],
@@ -74,24 +74,28 @@ describe("getTraceabilityMatrix", () => {
                                 definition: {
                                     id: 123,
                                     summary: "Test A",
-                                    requirement: {
-                                        id: 1231,
-                                        title: "Lorem",
-                                    },
+                                    all_requirements: [
+                                        {
+                                            id: 1231,
+                                            title: "Lorem",
+                                        },
+                                    ],
                                 },
                                 previous_result: null,
-                            } as TestExecutionResponse,
+                            } as unknown as TestExecutionResponse,
                             {
                                 definition: {
                                     id: 124,
                                     summary: "Test B",
-                                    requirement: {
-                                        id: 1241,
-                                        title: "Ipsum",
-                                    },
+                                    all_requirements: [
+                                        {
+                                            id: 1241,
+                                            title: "Ipsum",
+                                        },
+                                    ],
                                 },
                                 previous_result: null,
-                            } as TestExecutionResponse,
+                            } as unknown as TestExecutionResponse,
                         ],
                     },
                 ],
@@ -146,10 +150,12 @@ describe("getTraceabilityMatrix", () => {
                                 definition: {
                                     id: 123,
                                     summary: "Test A",
-                                    requirement: {
-                                        id: 1231,
-                                        title: "Lorem",
-                                    },
+                                    all_requirements: [
+                                        {
+                                            id: 1231,
+                                            title: "Lorem",
+                                        },
+                                    ],
                                 },
                                 previous_result: {
                                     status: "passed",
@@ -158,7 +164,7 @@ describe("getTraceabilityMatrix", () => {
                                         display_name: "John Doe",
                                     },
                                 },
-                            } as TestExecutionResponse,
+                            } as unknown as TestExecutionResponse,
                         ],
                     },
                 ],
@@ -198,13 +204,15 @@ describe("getTraceabilityMatrix", () => {
                                 definition: {
                                     id: 123,
                                     summary: "Test A",
-                                    requirement: {
-                                        id: 1231,
-                                        title: "Lorem",
-                                    },
+                                    all_requirements: [
+                                        {
+                                            id: 1231,
+                                            title: "Lorem",
+                                        },
+                                    ],
                                 },
                                 previous_result: null,
-                            } as TestExecutionResponse,
+                            } as unknown as TestExecutionResponse,
                         ],
                     },
                 ],
@@ -217,13 +225,15 @@ describe("getTraceabilityMatrix", () => {
                                 definition: {
                                     id: 124,
                                     summary: "Test B",
-                                    requirement: {
-                                        id: 1241,
-                                        title: "Ipsum",
-                                    },
+                                    all_requirements: [
+                                        {
+                                            id: 1241,
+                                            title: "Ipsum",
+                                        },
+                                    ],
                                 },
                                 previous_result: null,
-                            } as TestExecutionResponse,
+                            } as unknown as TestExecutionResponse,
                         ],
                     },
                 ],
@@ -278,10 +288,12 @@ describe("getTraceabilityMatrix", () => {
                                 definition: {
                                     id: 123,
                                     summary: "Test A",
-                                    requirement: {
-                                        id: 1231,
-                                        title: "Lorem",
-                                    },
+                                    all_requirements: [
+                                        {
+                                            id: 1231,
+                                            title: "Lorem",
+                                        },
+                                    ],
                                 },
                                 previous_result: {
                                     status: "passed",
@@ -290,7 +302,7 @@ describe("getTraceabilityMatrix", () => {
                                         display_name: "John Doe",
                                     },
                                 },
-                            } as TestExecutionResponse,
+                            } as unknown as TestExecutionResponse,
                         ],
                     },
                 ],
@@ -303,13 +315,15 @@ describe("getTraceabilityMatrix", () => {
                                 definition: {
                                     id: 124,
                                     summary: "Test B",
-                                    requirement: {
-                                        id: 1231,
-                                        title: "Lorem",
-                                    },
+                                    all_requirements: [
+                                        {
+                                            id: 1231,
+                                            title: "Lorem",
+                                        },
+                                    ],
                                 },
                                 previous_result: null,
-                            } as TestExecutionResponse,
+                            } as unknown as TestExecutionResponse,
                         ],
                     },
                 ],
@@ -382,10 +396,12 @@ describe("getTraceabilityMatrix", () => {
                                         definition: {
                                             id: 123,
                                             summary: "Test A",
-                                            requirement: {
-                                                id: 1231,
-                                                title: "Lorem",
-                                            },
+                                            all_requirements: [
+                                                {
+                                                    id: 1231,
+                                                    title: "Lorem",
+                                                },
+                                            ],
                                         },
                                         previous_result: date_of_passed_test
                                             ? {
@@ -396,7 +412,7 @@ describe("getTraceabilityMatrix", () => {
                                                   },
                                               }
                                             : null,
-                                    } as TestExecutionResponse,
+                                    } as unknown as TestExecutionResponse,
                                 ],
                             },
                         ],
@@ -409,10 +425,12 @@ describe("getTraceabilityMatrix", () => {
                                         definition: {
                                             id: 123,
                                             summary: "Test A",
-                                            requirement: {
-                                                id: 1231,
-                                                title: "Lorem",
-                                            },
+                                            all_requirements: [
+                                                {
+                                                    id: 1231,
+                                                    title: "Lorem",
+                                                },
+                                            ],
                                         },
                                         previous_result: date_of_failed_test
                                             ? {
@@ -423,7 +441,7 @@ describe("getTraceabilityMatrix", () => {
                                                   },
                                               }
                                             : null,
-                                    } as TestExecutionResponse,
+                                    } as unknown as TestExecutionResponse,
                                 ],
                             },
                         ],

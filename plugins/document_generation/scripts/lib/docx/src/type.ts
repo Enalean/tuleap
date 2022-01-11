@@ -483,11 +483,11 @@ export interface TestExecutionResponse {
         description: string;
         description_format: string;
         steps: Array<ArtifactReportResponseStepRepresentation>;
-        requirement: {
+        all_requirements: ReadonlyArray<{
             id: number;
             title: string | null;
             xref: string;
-        } | null;
+        }>;
     };
     steps_results: {
         [key: string]: {

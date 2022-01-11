@@ -61,11 +61,18 @@ final class DefinitionCommonmarkRepresentation extends MinimalDefinitionRepresen
     public $steps;
 
     /**
-     * @var ArtifactRepresentation | null The artifact linked to the test
+     * @var ArtifactRepresentation | null One of the artifacts linked to the test (deprecated, use all_requirements instead)
+     * @deprecated
      */
     public $requirement;
 
     /**
+     * @var array {@type ArtifactRepresentation}
+     */
+    public $all_requirements;
+
+    /**
+     * @param ArtifactRepresentation[] $all_requirements
      * @throws StepDefinitionFormatNotFoundException
      */
     public function __construct(
@@ -74,8 +81,8 @@ final class DefinitionCommonmarkRepresentation extends MinimalDefinitionRepresen
         Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
+        array $all_requirements,
         ?Tracker_Artifact_Changeset $changeset = null,
-        ?Artifact $requirement = null,
     ) {
         parent::__construct($artifact, $form_element_factory, $user, $changeset);
 
@@ -97,26 +104,14 @@ final class DefinitionCommonmarkRepresentation extends MinimalDefinitionRepresen
             self::FIELD_DESCRIPTION
         );
 
-        $this->description       = self::getCommonmarkContentWithReferences(
+        $this->description = self::getCommonmarkContentWithReferences(
             $interpreter,
             $description_text_field,
             $artifact
         );
-        $artifact_representation = null;
 
-        if ($requirement) {
-            $requirement_tracker_representation = self::getMinimalTrackerRepresentation($requirement);
-
-            $artifact_representation = ArtifactRepresentation::build(
-                $user,
-                $requirement,
-                [],
-                [],
-                $requirement_tracker_representation
-            );
-        }
-
-        $this->requirement = $artifact_representation;
+        $this->all_requirements = $all_requirements;
+        $this->requirement      = empty($all_requirements) ? null : $all_requirements[0];
 
         $this->steps = [];
         $value       = DefinitionRepresentationBuilder::getFieldValue(
