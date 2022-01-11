@@ -34,14 +34,13 @@ h2.almost-tlp-title {
 }
 
 .almost-tlp-menu-title {
-    margin: 10px 0 0;
-    padding: 20px 20px 10px;
-    border-top: 1px solid #e5e5e5;
-    color: #747474;
-    font-size: 12px;
+    margin: var(--tlp-small-spacing) 0 0;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
+    border-top: 1px solid var(--tlp-neutral-light-color);
+    color: var(--tlp-dimmed-color);
+    font-size: 0.625rem;
     font-weight: 600;
-    letter-spacing: 1px;
-    line-height: 20px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
 }
 

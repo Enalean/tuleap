@@ -11,15 +11,14 @@
                 <div class="tlp-popover-header"></div>
                 <div class="tlp-popover-body">
                     {{# sections }}
-                        <hr class="nav-dropdown-item-divider">
-                        <div class="nav-dropdown-item-title">{{ label }}</div>
+                        <div class="tlp-dropdown-menu-title nav-dropdown-title">{{ label }}</div>
                         {{# links }}
                             <a href="{{ url }}"
-                               class="nav-dropdown-item"
+                               class="tlp-dropdown-menu-item nav-dropdown-item"
                                data-shortcut-create-option {{# data_attributes }}data-{{ name }}="{{ value }}"{{/ data_attributes }}
                                data-test="create-new-item"
                             >
-                                <i class="fa fa-fw {{ icon }} nav-dropdown-item-icon" aria-hidden="true"></i>
+                                <i class="fa fa-fw {{ icon }} tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
                                 {{ label }}
                             </a>
                         {{/ links }}

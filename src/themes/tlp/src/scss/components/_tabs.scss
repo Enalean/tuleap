@@ -73,7 +73,11 @@ $inactive-tab-right-margin: calc(
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) / 2);
     border-top: 1px solid var(--tlp-neutral-light-color);
     color: var(--tlp-dimmed-color);
-    line-height: 20px;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    line-height: 1rem;
+    text-transform: uppercase;
 
     &:first-child {
         margin: 0;
@@ -84,16 +88,34 @@ $inactive-tab-right-margin: calc(
 
 .tlp-tab-menu-item {
     padding: calc(var(--tlp-medium-spacing) / 2) var(--tlp-medium-spacing);
-    font-size: 0.875rem;
-    font-weight: 400;
+    color: var(--tlp-dark-color);
+    font-size: 0.8125rem;
+    font-weight: 500;
     letter-spacing: normal;
+    line-height: 1rem;
     text-decoration: none;
     text-transform: none;
     white-space: nowrap;
 
+    &:focus,
     &:hover {
-        background: var(--tlp-neutral-light-color);
+        background: var(--tlp-main-color-transparent-90);
+        color: var(--tlp-main-color);
         text-decoration: none;
+    }
+
+    &:last-child {
+        border-radius: 0 0 var(--tlp-large-radius) var(--tlp-large-radius);
+    }
+
+    &.tlp-text-danger {
+        color: var(--tlp-danger-dark-color);
+
+        &:focus,
+        &:hover {
+            background: var(--tlp-danger-color-transparent-90);
+            color: var(--tlp-danger-dark-color);
+        }
     }
 }
 
