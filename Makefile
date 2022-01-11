@@ -192,7 +192,7 @@ ifeq ($(COVERAGE_ENABLED),1)
 COVERAGE_PARAMS_PHPUNIT=--coverage-html=/tmp/results/coverage/
 endif
 phpunit-ci-run:
-	$(PHP) -dzend.assertions=1 -d pcov.directory=. -d pcov.exclude='~(vendor|node_modules|tests/(?!(?:lib|phpcs))|plugins/\w+/(?!include))~' \
+	$(PHP) -dzend.assertions=1 -d pcov.directory=. -d pcov.exclude='~(vendor|node_modules|tests/(?!(?:lib|phpcs))|plugins/\w+/(?!include)|src/(?!(?:common|core|tuleap-cfg)))~' \
 		src/vendor/bin/phpunit \
 		-c tests/unit/phpunit.xml \
 		--log-junit /tmp/results/phpunit_tests_results.xml \

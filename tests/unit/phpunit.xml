@@ -32,8 +32,6 @@
             <directory suffix=".php">../../tests/phpcs/TuleapCodingStandard/</directory>
         </include>
         <exclude>
-            <directory suffix="DAO.php">../../</directory>
-            <directory suffix="Dao.php">../../</directory>
             <directory suffix=".php">../../src/common/wiki/</directory>
             <directory suffix=".php">../../src/common/chart/</directory>
             <file>../../src/common/admin/Homepage/Controller.php</file>
