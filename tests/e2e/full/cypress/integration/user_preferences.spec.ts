@@ -67,9 +67,9 @@ describe("User preferences", () => {
 
             it("Change his avatar", () => {
                 cy.get("[data-test=account-information-avatar-button]").click();
-                cy.get("[data-test=account-information-avatar-modal-select-file]")
-                    .uploadFixtureFile("heisenberg.jpg", "image/jpg")
-                    .trigger("change", { force: true });
+                cy.get("[data-test=account-information-avatar-modal-select-file]").attachFile(
+                    "heisenberg.jpg"
+                );
 
                 cy.get("[data-test=user-prefs-save-avatar-button]").click();
                 assertFeedbackContainsMessage("Avatar changed!");
