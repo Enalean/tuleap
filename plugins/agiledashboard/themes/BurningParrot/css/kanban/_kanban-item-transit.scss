@@ -1,13 +1,13 @@
 .kanban-item {
     &.gu-transit {
-        height: 3px;
-        margin: var(--tlp-medium-spacing) 10px;
-        border-radius: 3px;
+        border-radius: var(--tlp-medium-radius);
+        border-color: transparent;
         opacity: 1;
-        background: var(--tlp-main-color);
+        background: var(--tlp-neutral-normal-color);
+        box-shadow: none;
 
         > kanban-item {
-            display: none;
+            visibility: hidden;
         }
     }
 
@@ -43,7 +43,7 @@
     }
 
     &.wip-reached .kanban-item.gu-transit {
-        background: var(--tlp-warning-color);
+        background: var(--tlp-warning-color-transparent-85);
     }
 
     &.wip-reached.kanban-column-closed .kanban-item.gu-transit {

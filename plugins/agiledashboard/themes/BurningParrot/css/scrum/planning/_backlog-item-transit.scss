@@ -19,15 +19,15 @@
 
 .backlog-item {
     &.gu-transit {
-        height: 4px;
-        margin: var(--tlp-medium-spacing) 10px;
-        border-radius: 3px;
+        border-radius: var(--tlp-medium-radius);
+        border-color: transparent;
         opacity: 1;
-        background: var(--tlp-main-color);
+        background: var(--tlp-neutral-normal-color);
+        box-shadow: none;
 
         > .backlog-item-show-children,
         > .backlog-item-details {
-            display: none;
+            visibility: hidden;
         }
     }
 

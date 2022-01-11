@@ -104,6 +104,10 @@
 .taskboard-draggable-item {
     cursor: move;
 
+    &.drek-ghost > .taskboard-card {
+        visibility: hidden;
+    }
+
     &:last-child {
         margin-bottom: var(--tlp-x-large-spacing);
     }
