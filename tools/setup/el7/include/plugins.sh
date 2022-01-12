@@ -61,11 +61,14 @@ _pluginGit() {
         exit 1
     fi
 
-    if ! ${su} --command "${ssh} -q ${git_user}@gl-adm info" \
-        --login ${tuleap_unix_user} 2>&1 >/dev/null; then
+    if ! ${su} --command "${ssh} -q ${git_user}@gl-adm info" --login ${tuleap_unix_user} 2>&1 >/dev/null; then
+        # Need to setup .profile so gitolite setup finds git executable
+        ${tuleapcfg} site-deploy:gitolite3-config
         ${cp} --force "${tuleap_data}/.ssh/id_rsa_gl-adm.pub" /tmp
-        ${su} --command "${gitolite} setup --pubkey /tmp/id_rsa_gl-adm.pub" \
-        --login ${git_user}
+        ${su} --command "${gitolite} setup --pubkey /tmp/id_rsa_gl-adm.pub" --login ${git_user}
+        # Need to setup .gitolite.rc so gitolite then find Git
+        ${tuleapcfg} site-deploy:gitolite3-config
+
     fi
 
     if [ -f /tmp/id_rsa_gl-adm.pub ]; then
