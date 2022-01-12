@@ -31,6 +31,9 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use User\XML\Import\IFindUserFromXMLReference;
 
+/**
+ * @covers Tracker_Artifact_XMLImport_XMLImportFieldStrategyList
+ */
 class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -84,7 +87,77 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
               <value format="id"><![CDATA[13727]]></value>
             </field_change>'
         );
-        $this->xml_fields_mapping->shouldReceive("getNewValueId")->with(13727)->andReturn('111');
+
+        $xml_fields_mapping = new class implements TrackerXmlFieldsMapping {
+            public function getNewValueId($old_value_id)
+            {
+                if ($old_value_id === '13727') {
+                    return '111';
+                }
+                throw new \LogicException('test not covered');
+            }
+
+            public function getNewOpenValueId($old_value_id)
+            {
+            }
+        };
+
+        $import_field_strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyList(
+            $this->static_value_dao,
+            $this->user_finder,
+            $xml_fields_mapping
+        );
+
+        $result = $import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
+        self::assertEquals([111], $result);
+    }
+
+    public function testGetFieldDataStaticValueGetNewValueIDWhenXMLHasSpaces(): void
+    {
+        $field        = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $field_change = new SimpleXMLElement(
+            '<?xml version="1.0"?>
+                  <field_change field_name="status" type="list" bind="static">
+              <value format="id">
+                <![CDATA[13727]]>
+              </value>
+            </field_change>'
+        );
+
+        $xml_fields_mapping = new class implements TrackerXmlFieldsMapping {
+            public function getNewValueId($old_value_id)
+            {
+                if ($old_value_id === '13727') {
+                    return '111';
+                }
+                throw new \LogicException('test not covered');
+            }
+
+            public function getNewOpenValueId($old_value_id)
+            {
+            }
+        };
+
+        $import_field_strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyList(
+            $this->static_value_dao,
+            $this->user_finder,
+            $xml_fields_mapping
+        );
+
+        $result = $import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
+        self::assertEquals([111], $result);
+    }
+
+    public function testGetFieldDataStaticValueGetNewValueIDThatIsString(): void
+    {
+        $field        = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $field_change = new SimpleXMLElement(
+            '<?xml version="1.0"?>
+                  <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[bug_status_todo]]></value>
+            </field_change>'
+        );
+        $this->xml_fields_mapping->shouldReceive("getNewValueId")->with('bug_status_todo')->andReturn('111');
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
         self::assertEquals([111], $result);

@@ -82,7 +82,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
         }
 
         if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID) {
-            return (int) $this->xml_fields_mapping->getNewValueId((int) $value);
+            return (int) $this->xml_fields_mapping->getNewValueId(trim((string) $value));
         }
 
         $result = $this->static_value_dao->searchValueByLabel($field->getId(), (string) $value);

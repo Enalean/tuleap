@@ -91,9 +91,9 @@
           <label><![CDATA[Categories]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="V65" label="Logiciel"/>
-              <item ID="V66" label="Electrique"/>
-              <item ID="V67" label="M&#xE9;canique"/>
+              <item ID="Vbug_customfield_10202_logiciel" label="Logiciel"/>
+              <item ID="Vbug_customfield_10202_electrique" label="Electrique"/>
+              <item ID="Vbug_customfield_10202_mcanique" label="M&#xE9;canique"/>
             </items>
           </bind>
         </formElement>
@@ -106,9 +106,9 @@
           <label><![CDATA[Composants]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="V68" label="Composant_1"/>
-              <item ID="V69" label="Composant_2"/>
-              <item ID="V70" label="Composant_3"/>
+              <item ID="Vbug_customfield_10215_composant_1" label="Composant_1"/>
+              <item ID="Vbug_customfield_10215_composant_2" label="Composant_2"/>
+              <item ID="Vbug_customfield_10215_composant_3" label="Composant_3"/>
             </items>
           </bind>
         </formElement>
@@ -117,28 +117,28 @@
           <label><![CDATA[Version ciblée]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="V71" label="Agv4_11"/>
-              <item ID="V72" label="Agv4_12"/>
-              <item ID="V73" label="Agv4_13"/>
-              <item ID="V74" label="Agv4_14"/>
-              <item ID="V75" label="Agv4_15"/>
-              <item ID="V76" label="Agv4_16"/>
-              <item ID="V77" label="Agv4_17"/>
-              <item ID="V78" label="Agv4_18"/>
-              <item ID="V79" label="Agv4_19"/>
-              <item ID="V80" label="Agv4_20"/>
-              <item ID="V81" label="Agv4_21"/>
-              <item ID="V82" label="Agv4_22"/>
-              <item ID="V83" label="Agv4_23"/>
-              <item ID="V84" label="Agv4_24"/>
-              <item ID="V85" label="Agv4_25"/>
-              <item ID="V86" label="Agv4_26"/>
-              <item ID="V87" label="Agv4_26_1"/>
-              <item ID="V88" label="Agv4_26_2"/>
-              <item ID="V89" label="Agv4_27"/>
-              <item ID="V90" label="Agv4_27_1"/>
-              <item ID="V91" label="Agv4_27_2"/>
-              <item ID="V92" label="Agv4_28"/>
+              <item ID="Vbug_customfield_10214_agv4_11" label="Agv4_11"/>
+              <item ID="Vbug_customfield_10214_agv4_12" label="Agv4_12"/>
+              <item ID="Vbug_customfield_10214_agv4_13" label="Agv4_13"/>
+              <item ID="Vbug_customfield_10214_agv4_14" label="Agv4_14"/>
+              <item ID="Vbug_customfield_10214_agv4_15" label="Agv4_15"/>
+              <item ID="Vbug_customfield_10214_agv4_16" label="Agv4_16"/>
+              <item ID="Vbug_customfield_10214_agv4_17" label="Agv4_17"/>
+              <item ID="Vbug_customfield_10214_agv4_18" label="Agv4_18"/>
+              <item ID="Vbug_customfield_10214_agv4_19" label="Agv4_19"/>
+              <item ID="Vbug_customfield_10214_agv4_20" label="Agv4_20"/>
+              <item ID="Vbug_customfield_10214_agv4_21" label="Agv4_21"/>
+              <item ID="Vbug_customfield_10214_agv4_22" label="Agv4_22"/>
+              <item ID="Vbug_customfield_10214_agv4_23" label="Agv4_23"/>
+              <item ID="Vbug_customfield_10214_agv4_24" label="Agv4_24"/>
+              <item ID="Vbug_customfield_10214_agv4_25" label="Agv4_25"/>
+              <item ID="Vbug_customfield_10214_agv4_26" label="Agv4_26"/>
+              <item ID="Vbug_customfield_10214_agv4_26_1" label="Agv4_26_1"/>
+              <item ID="Vbug_customfield_10214_agv4_26_2" label="Agv4_26_2"/>
+              <item ID="Vbug_customfield_10214_agv4_27" label="Agv4_27"/>
+              <item ID="Vbug_customfield_10214_agv4_27_1" label="Agv4_27_1"/>
+              <item ID="Vbug_customfield_10214_agv4_27_2" label="Agv4_27_2"/>
+              <item ID="Vbug_customfield_10214_agv4_28" label="Agv4_28"/>
             </items>
           </bind>
         </formElement>
@@ -151,8 +151,8 @@
           <label><![CDATA[Sévérité]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="V93" label="Bloquant"/>
-              <item ID="V94" label="Mineur"/>
+              <item ID="Vbug_customfield_10290_bloquant" label="Bloquant"/>
+              <item ID="Vbug_customfield_10290_mineur" label="Mineur"/>
             </items>
           </bind>
         </formElement>
@@ -189,14 +189,14 @@
           <label><![CDATA[Branche intégration]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="V95" label="BACKBONE_ITG"/>
-              <item ID="V96" label="ETHERCAT_ITG"/>
-              <item ID="V97" label="STD_ITG_01.01"/>
-              <item ID="V98" label="STD_ITG_02.01"/>
-              <item ID="V99" label="STD_ITG_16.03"/>
-              <item ID="V100" label="STD_ITG"/>
-              <item ID="V101" label="LASER_ITG"/>
-              <item ID="V102" label="-"/>
+              <item ID="Vbug_customfield_10249_backbone_itg" label="BACKBONE_ITG"/>
+              <item ID="Vbug_customfield_10249_ethercat_itg" label="ETHERCAT_ITG"/>
+              <item ID="Vbug_customfield_10249_std_itg_0101" label="STD_ITG_01.01"/>
+              <item ID="Vbug_customfield_10249_std_itg_0201" label="STD_ITG_02.01"/>
+              <item ID="Vbug_customfield_10249_std_itg_1603" label="STD_ITG_16.03"/>
+              <item ID="Vbug_customfield_10249_std_itg" label="STD_ITG"/>
+              <item ID="Vbug_customfield_10249_laser_itg" label="LASER_ITG"/>
+              <item ID="Vbug_customfield_10249_-" label="-"/>
             </items>
           </bind>
         </formElement>
@@ -205,9 +205,9 @@
           <label><![CDATA[Motif]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="V103" label="Impossible &#xE0; reproduire"/>
-              <item ID="V104" label="doublon"/>
-              <item ID="V105" label="No fix"/>
+              <item ID="Vbug_customfield_10287_impossible_reproduire" label="Impossible &#xE0; reproduire"/>
+              <item ID="Vbug_customfield_10287_doublon" label="doublon"/>
+              <item ID="Vbug_customfield_10287_no_fix" label="No fix"/>
             </items>
           </bind>
         </formElement>
@@ -216,8 +216,8 @@
           <label><![CDATA[Ticket Jalon Client]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="V106" label="oui"/>
-              <item ID="V107" label="non"/>
+              <item ID="Vbug_customfield_10405_oui" label="oui"/>
+              <item ID="Vbug_customfield_10405_non" label="non"/>
             </items>
           </bind>
         </formElement>
@@ -547,7 +547,7 @@
           <value format="html"><![CDATA[-]]></value>
         </field_change>
         <field_change field_name="customfield_10215" type="list" bind="static">
-          <value format="id"><![CDATA[68]]></value>
+          <value format="id"><![CDATA[bug_customfield_10215_composant_1]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change type="text" field_name="description">
@@ -557,13 +557,13 @@
           <value format="html"><![CDATA[<p>dgdg</p>]]></value>
         </field_change>
         <field_change field_name="customfield_10249" type="list" bind="static">
-          <value format="id"><![CDATA[100]]></value>
+          <value format="id"><![CDATA[bug_customfield_10249_std_itg]]></value>
         </field_change>
         <field_change type="string" field_name="summary">
           <value><![CDATA[bug1]]></value>
         </field_change>
         <field_change field_name="customfield_10202" type="list" bind="static">
-          <value format="id"><![CDATA[65]]></value>
+          <value format="id"><![CDATA[bug_customfield_10202_logiciel]]></value>
         </field_change>
         <field_change type="text" field_name="customfield_10236">
           <value format="html"><![CDATA[-]]></value>
@@ -680,7 +680,7 @@
           <value format="html"><![CDATA[-]]></value>
         </field_change>
         <field_change field_name="customfield_10215" type="list" bind="static">
-          <value format="id"><![CDATA[68]]></value>
+          <value format="id"><![CDATA[bug_customfield_10215_composant_1]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change type="text" field_name="description">
@@ -690,13 +690,13 @@
           <value format="html"><![CDATA[<p>fsfsf</p>]]></value>
         </field_change>
         <field_change field_name="customfield_10249" type="list" bind="static">
-          <value format="id"><![CDATA[100]]></value>
+          <value format="id"><![CDATA[bug_customfield_10249_std_itg]]></value>
         </field_change>
         <field_change type="string" field_name="summary">
           <value><![CDATA[bug2]]></value>
         </field_change>
         <field_change field_name="customfield_10202" type="list" bind="static">
-          <value format="id"><![CDATA[65]]></value>
+          <value format="id"><![CDATA[bug_customfield_10202_logiciel]]></value>
         </field_change>
         <field_change type="text" field_name="customfield_10236">
           <value format="html"><![CDATA[-]]></value>
@@ -813,7 +813,7 @@
           <value format="html"><![CDATA[-]]></value>
         </field_change>
         <field_change field_name="customfield_10215" type="list" bind="static">
-          <value format="id"><![CDATA[68]]></value>
+          <value format="id"><![CDATA[bug_customfield_10215_composant_1]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks">
           <value nature="_is_child"><![CDATA[10750]]></value>
@@ -830,13 +830,13 @@
           <value format="html"><![CDATA[<p>fsqf</p>]]></value>
         </field_change>
         <field_change field_name="customfield_10249" type="list" bind="static">
-          <value format="id"><![CDATA[102]]></value>
+          <value format="id"><![CDATA[bug_customfield_10249_-]]></value>
         </field_change>
         <field_change type="string" field_name="summary">
           <value><![CDATA[bug1]]></value>
         </field_change>
         <field_change field_name="customfield_10202" type="list" bind="static">
-          <value format="id"><![CDATA[65]]></value>
+          <value format="id"><![CDATA[bug_customfield_10202_logiciel]]></value>
         </field_change>
         <field_change type="text" field_name="customfield_10236">
           <value format="html"><![CDATA[-]]></value>
