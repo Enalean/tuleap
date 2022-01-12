@@ -111,12 +111,6 @@ legend {
     box-sizing: border-box;
 }
 
-.dropdown-menu {
-    z-index: 3000;
-    padding: 0;
-    border-radius: 0 0 var(--tlp-large-radius) var(--tlp-large-radius);
-}
-
 .popover {
     z-index: 4000;
 
@@ -217,7 +211,11 @@ legend {
 
     .dropdown-menu {
         margin: 3px 0 0;
-        border: 0;
+        border-radius: 0 0 var(--tlp-large-radius) var(--tlp-large-radius);
+
+        > li:first-child > a {
+            border-radius: 0;
+        }
     }
 
     > li > .dropdown-toggle > .caret {
@@ -250,13 +248,24 @@ legend {
             color: var(--tlp-main-color);
         }
     }
+}
 
-    > .dropdown-menu {
-        font-size: 0.8125rem;
-        letter-spacing: normal;
-        text-transform: none;
+.dropdown-menu {
+    z-index: 3000;
+    padding: 0;
+    border: 0;
+    border-radius: var(--tlp-large-radius);
+    letter-spacing: normal;
+    text-transform: none;
 
-        .dropdown-menu-title {
+    > li {
+        &.divider {
+            margin: var(--tlp-small-spacing) 0;
+            border: 0;
+            background: var(--tlp-neutral-light-color);
+        }
+
+        &.dropdown-menu-title {
             margin: var(--tlp-small-spacing) 0 0;
             padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
             border-top: 1px solid var(--tlp-neutral-light-color);
@@ -274,13 +283,21 @@ legend {
             }
         }
 
-        > li:last-child > a {
+        &:first-child > a {
+            border-radius: var(--tlp-large-radius) var(--tlp-large-radius) 0 0;
+        }
+
+        &:last-child > a {
             border-radius: 0 0 var(--tlp-large-radius) var(--tlp-large-radius);
         }
 
-        a {
+        > a,
+        &.dropdown-submenu:hover > a,
+        &.dropdown-submenu:focus > a {
             padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
+            background: none;
             color: var(--tlp-dark-color);
+            font-size: 0.8125rem;
             font-weight: 500;
             line-height: 1rem;
 
@@ -299,6 +316,16 @@ legend {
                     background: var(--tlp-danger-color-transparent-90);
                     color: var(--tlp-danger-dark-color);
                 }
+            }
+        }
+
+        &.dropdown-submenu:hover > a {
+            border-color: transparent;
+            background: var(--tlp-main-color-transparent-90);
+            color: var(--tlp-main-color);
+
+            &::after {
+                border-left-color: var(--tlp-main-color);
             }
         }
     }
@@ -376,50 +403,6 @@ legend {
     border-color: $color !important;
     background: $color !important;
     box-shadow: var(--tlp-button-shadow-hover);
-}
-
-@mixin dropdown-menu($color) {
-    &:not(.disabled) > a,
-    > input:not(.btn-link) {
-        color: $color;
-
-        &:hover,
-        &:focus {
-            background: #f3f3f3;
-        }
-
-        &:focus {
-            outline: none;
-        }
-    }
-}
-
-.btn-group {
-    .btn-primary + .dropdown-menu > li {
-        @include dropdown-menu(var(--tlp-main-color));
-    }
-
-    /* stylelint-disable selector-no-qualifying-type */
-    > .dropdown-menu > li {
-        @include dropdown-menu(var(--tlp-main-color));
-
-        &.dropdown-submenu {
-            > .dropdown-menu > li {
-                @include dropdown-menu(var(--tlp-main-color));
-            }
-
-            &:hover > a,
-            &:hover > input {
-                background: none;
-            }
-        }
-    }
-    /* stylelint-enable */
-
-    > .btn.dropdown-toggle {
-        padding-right: 12px !important;
-        padding-left: 12px !important;
-    }
 }
 
 .btn:not(.btn-link) {
