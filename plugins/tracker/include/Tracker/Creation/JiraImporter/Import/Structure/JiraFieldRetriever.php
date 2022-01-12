@@ -25,12 +25,15 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\IDGenerator;
 
 class JiraFieldRetriever
 {
+    private const PRIORITY_URL = ClientWrapper::JIRA_CORE_BASE_URL . '/priority';
+
     public function __construct(private JiraClient $wrapper, private LoggerInterface $logger)
     {
     }
@@ -40,13 +43,25 @@ class JiraFieldRetriever
      */
     public function getAllJiraFields(string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): array
     {
+        $fields_by_id = [];
+
+        $fields_by_id = $this->appendFromCreateMeta($fields_by_id, $jira_project_key, $jira_issue_type_id, $id_generator);
+        $fields_by_id = $this->appendFromEditMeta($fields_by_id, $jira_project_key, $jira_issue_type_id, $id_generator);
+
+        return $fields_by_id;
+    }
+
+    /**
+     * @return JiraFieldAPIRepresentation[]
+     */
+    private function appendFromCreateMeta(array $fields_by_id, string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): array
+    {
         $meta_url = ClientWrapper::JIRA_CORE_BASE_URL . "/issue/createmeta?projectKeys=" . urlencode($jira_project_key) .
             "&issuetypeIds=" . urlencode($jira_issue_type_id) . "&expand=projects.issuetypes.fields";
 
         $this->logger->debug('GET ' . $meta_url);
         $project_meta_content = $this->wrapper->getUrl($meta_url);
 
-        $fields_by_id = [];
         if (! $project_meta_content || ! isset($project_meta_content['projects'][0]['issuetypes'][0]['fields'])) {
             return $fields_by_id;
         }
@@ -62,9 +77,12 @@ class JiraFieldRetriever
             $fields_by_id[$jira_field_api_representation->getId()] = $jira_field_api_representation;
         }
 
-        return $this->appendFromEditMeta($fields_by_id, $jira_project_key, $jira_issue_type_id, $id_generator);
+        return $fields_by_id;
     }
 
+    /**
+     * @return JiraFieldAPIRepresentation[]
+     */
     private function appendFromEditMeta(array $fields_by_id, string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): array
     {
         $params = [
@@ -97,10 +115,55 @@ class JiraFieldRetriever
                 $fields_by_id[$jira_field_api_representation->getId()] = $jira_field_api_representation;
             }
 
+            $fields_by_id = $this->addPriority($fields_by_id, $one_issue);
+
             return $fields_by_id;
         } catch (JiraConnectionException $exception) {
             $this->logger->warning(sprintf('GET %s error (%d): %s', $get_one_issue_url, $exception->getCode(), $exception->getMessage()));
         }
+        return $fields_by_id;
+    }
+
+    /**
+     * @return JiraFieldAPIRepresentation[]
+     */
+    private function addPriority(array $fields_by_id, array $one_issue): array
+    {
+        if (isset($fields_by_id[AlwaysThereFieldsExporter::JIRA_PRIORITY_NAME]) || ! isset($one_issue['issues'][0]['fields']['priority'])) {
+            return $fields_by_id;
+        }
+
+        try {
+            $this->logger->debug('GET ' . self::PRIORITY_URL);
+            $payload = $this->wrapper->getUrl(self::PRIORITY_URL);
+            if (! $payload) {
+                return $fields_by_id;
+            }
+            $priority_values = [];
+            foreach ($payload as $value) {
+                if (! isset($value['id'], $value['name'])) {
+                    continue;
+                }
+                $priority_values[] = JiraFieldAPIAllowedValueRepresentation::buildFromIDAndName(
+                    (int) $value['id'],
+                    $value['name'],
+                );
+            }
+
+            $fields_by_id[AlwaysThereFieldsExporter::JIRA_PRIORITY_NAME] = new JiraFieldAPIRepresentation(
+                AlwaysThereFieldsExporter::JIRA_PRIORITY_NAME,
+                'Priority',
+                false,
+                AlwaysThereFieldsExporter::JIRA_PRIORITY_NAME,
+                $priority_values,
+                true,
+            );
+
+            return $fields_by_id;
+        } catch (JiraConnectionException | \JsonException $exception) {
+            $this->logger->warning(sprintf('%s raised a failure (%s). No priorities exported', self::PRIORITY_URL, $exception->getMessage()));
+        }
+
         return $fields_by_id;
     }
 }
