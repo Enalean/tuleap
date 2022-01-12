@@ -35,7 +35,10 @@ class Docman_Report
     public $image;
 
     public $filters;
-    public $columns;
+    /**
+     * @var Docman_ReportColumn[]
+     */
+    public array $columns;
 
     public function __construct()
     {

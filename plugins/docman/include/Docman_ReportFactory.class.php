@@ -22,6 +22,7 @@
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
+use Tuleap\Docman\Search\ColumnReportAugmenter;
 
 class Docman_ReportFactory
 {
@@ -210,30 +211,9 @@ class Docman_ReportFactory
         $retriever       = new AlwaysThereColumnRetriever($settingsBo);
         $columnsOnReport = $retriever->getColumns();
 
-        $keepRefOnUpdateDate = null;
-        $thereIsAsort        = false;
-
         $colFactory = new Docman_ReportColumnFactory($this->groupId);
-        foreach ($columnsOnReport as $colLabel) {
-            $column = $colFactory->getColumnFromLabel($colLabel);
-            if ($column !== null) {
-                $column->initFromRequest($request);
-
-                // If no sort, sort on update_date in DESC by default
-                if ($colLabel == 'update_date') {
-                    $keepRefOnUpdateDate = $column;
-                }
-                if ($column->getSort() !== null) {
-                    $thereIsAsort = true;
-                }
-
-                $report->addColumn($column);
-            }
-            unset($column);
-        }
-        if (! $thereIsAsort && $keepRefOnUpdateDate !== null) {
-            $keepRefOnUpdateDate->setSort(PLUGIN_DOCMAN_SORT_DESC);
-        }
+        $augmenter  = new ColumnReportAugmenter($colFactory);
+        $augmenter->addColumnsFromRequest($request, $columnsOnReport, $report);
     }
 
     public function getReportById($id)

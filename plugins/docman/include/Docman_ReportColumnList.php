@@ -24,7 +24,7 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_ReportColumnList extends \Docman_ReportColumn
 {
-    public function __construct($md)
+    public function __construct(Docman_ListMetadata|Docman_Metadata|null $md)
     {
         parent::__construct($md);
     }
