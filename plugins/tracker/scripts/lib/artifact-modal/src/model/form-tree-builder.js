@@ -70,7 +70,7 @@ function recursiveGetCompleteField(structure_field, all_fields) {
     complete_field.template_url = "field-" + complete_field.type + ".tpl.html";
 
     if (structure_field.content !== null) {
-        var content = structure_field.content
+        const content = structure_field.content
             .map((sub_field) => recursiveGetCompleteField(sub_field, all_fields))
             .filter((field) => field !== null);
 

@@ -316,7 +316,8 @@ function BacklogController(
             null,
             callback,
             SharedPropertiesService.isListPickerEnabledForTracker(item_type.id),
-            SharedPropertiesService.hasCurrentProjectParents()
+            SharedPropertiesService.hasCurrentProjectParents(),
+            SharedPropertiesService.isLinksFieldV2Enabled()
         );
     }
 
@@ -341,7 +342,8 @@ function BacklogController(
             null,
             callback,
             SharedPropertiesService.isListPickerEnabledForTracker(item_type.id),
-            SharedPropertiesService.hasCurrentProjectParents()
+            SharedPropertiesService.hasCurrentProjectParents(),
+            SharedPropertiesService.isLinksFieldV2Enabled()
         );
     }
 

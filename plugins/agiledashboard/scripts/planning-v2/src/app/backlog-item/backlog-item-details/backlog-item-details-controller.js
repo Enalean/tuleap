@@ -54,7 +54,8 @@ function BacklogItemDetailsController(
             self.backlog_item.id,
             callback,
             SharedPropertiesService.isListPickerEnabledForTracker(item_type.id),
-            SharedPropertiesService.hasCurrentProjectParents()
+            SharedPropertiesService.hasCurrentProjectParents(),
+            SharedPropertiesService.isLinksFieldV2Enabled()
         );
     }
 

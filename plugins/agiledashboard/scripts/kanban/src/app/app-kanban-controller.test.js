@@ -599,6 +599,7 @@ describe("KanbanCtrl", function () {
                 4288,
                 expect.any(Function),
                 false,
+                false,
                 false
             );
         });
@@ -703,6 +704,7 @@ describe("KanbanCtrl", function () {
                 56,
                 null,
                 expect.any(Function),
+                false,
                 false,
                 false
             );

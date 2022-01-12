@@ -88,6 +88,7 @@ function ArtifactModalController(
         tracker: modal_model.tracker,
         values: modal_model.values,
         is_list_picker_enabled: modal_model.is_list_picker_enabled,
+        is_links_field_v2_enabled: modal_model.is_links_field_v2_enabled,
         has_current_project_parents: modal_model.has_current_project_parents,
         followups_comments: {
             content: [],

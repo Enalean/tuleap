@@ -231,6 +231,7 @@ function ExecutionDetailCtrl(
             callback,
             SharedPropertiesService.isListPickerUsedByTracker(issue_tracker_id),
             SharedPropertiesService.hasCurrentProjectParents(),
+            SharedPropertiesService.isLinksFieldV2Enabled(),
             prefill_values
         );
     }
@@ -312,7 +313,8 @@ function ExecutionDetailCtrl(
                     artifact.id,
                     callback,
                     SharedPropertiesService.isListPickerUsedByTracker(artifact.tracker.id),
-                    SharedPropertiesService.hasCurrentProjectParents()
+                    SharedPropertiesService.hasCurrentProjectParents(),
+                    SharedPropertiesService.isLinksFieldV2Enabled()
                 );
             });
         }

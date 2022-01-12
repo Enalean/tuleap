@@ -27,6 +27,7 @@ use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
+use Tuleap\Tracker\Modal\FeatureFlagArtifactModalLinksFieldV2;
 use Tuleap\Widget\WidgetFactory;
 
 class KanbanPresenter
@@ -70,6 +71,7 @@ class KanbanPresenter
     public $is_list_picker_enabled;
 
     public string $has_current_project_parents;
+    public string $is_links_field_v2_enabled;
 
     public function __construct(
         AgileDashboard_Kanban $kanban,
@@ -135,9 +137,13 @@ class KanbanPresenter
                 ]
         );
         $this->user_accessibility_mode           = json_encode((bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE));
+        $this->has_current_project_parents       = json_encode($has_current_project_parents, JSON_THROW_ON_ERROR);
         $this->is_list_picker_enabled            = json_encode(ListPickerIncluder::isListPickerEnabledAndBrowserCompatible(
             $kanban->getTrackerId()
         ));
-        $this->has_current_project_parents       = json_encode($has_current_project_parents, JSON_THROW_ON_ERROR);
+        $this->is_links_field_v2_enabled         = json_encode(
+            FeatureFlagArtifactModalLinksFieldV2::isArtifactModalLinksFieldV2Enabled(),
+            JSON_THROW_ON_ERROR
+        );
     }
 }

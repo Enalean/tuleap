@@ -77,6 +77,7 @@ describe("BacklogItemDetailsController -", function () {
                 BacklogItemDetailsController.backlog_item.id,
                 expect.any(Function),
                 false,
+                false,
                 false
             );
         });

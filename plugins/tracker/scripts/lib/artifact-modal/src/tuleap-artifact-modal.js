@@ -53,6 +53,7 @@ import "./fields/int-field/IntField";
 import "./fields/radio-buttons-field/RadioButtonsField";
 import "./fields/string-field/StringField";
 import "./fields/text-field/TextField";
+import "./fields/link-field-v2/LinkField";
 import "./followups/FollowupEditor";
 
 export default angular

@@ -162,7 +162,14 @@
 </script>
 
 <script type="text/ng-template" id="field-art_link.tpl.html">
+<tuleap-artifact-modal-link-field-v2
+    ng-if="modal.is_links_field_v2_enabled === true"
+    field-id="field.field_id"
+    label="field.label"
+    ce-one-way
+></tuleap-artifact-modal-link-field-v2>
 <div
+    ng-if="modal.is_links_field_v2_enabled === false"
     class="field"
     tuleap-artifact-modal-link-field="field"
     is-disabled="modal.isDisabled(field)"
@@ -175,7 +182,6 @@
     has-current-project-parents="modal.has_current_project_parents"
 ></div>
 </script>
-
 <script type="text/ng-template" id="field-burndown.tpl.html">
 <div class="tlp-property">
     <label class="tlp-label">

@@ -13,6 +13,7 @@ function SharedPropertiesService() {
         csrf_token_campaign_status: undefined,
         has_current_project_parents: false,
         file_upload_max_size: 0,
+        is_links_field_v2_enabled: false,
     };
 
     return {
@@ -48,6 +49,8 @@ function SharedPropertiesService() {
         hasCurrentProjectParents,
         setFileUploadMaxSize,
         getFileUploadMaxSize,
+        setIsLinksFieldV2Enabled,
+        isLinksFieldV2Enabled,
     };
 
     function getProjectId() {
@@ -176,5 +179,13 @@ function SharedPropertiesService() {
 
     function getFileUploadMaxSize() {
         return property.file_upload_max_size;
+    }
+
+    function setIsLinksFieldV2Enabled(is_links_field_v2_enabled) {
+        property.is_links_field_v2_enabled = is_links_field_v2_enabled;
+    }
+
+    function isLinksFieldV2Enabled() {
+        return property.is_links_field_v2_enabled;
     }
 }
