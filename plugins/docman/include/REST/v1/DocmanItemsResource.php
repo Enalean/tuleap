@@ -280,14 +280,14 @@ class DocmanItemsResource extends AuthenticatedResource
     private function getItemRepresentationVisitor(DocmanItemsRequest $items_request): ItemRepresentationVisitor
     {
         $event_adder = new DocmanItemsEventAdder($this->event_manager);
-        $event_adder->addLogEvents();
 
         return new ItemRepresentationVisitor(
             $this->getItemRepresentationBuilder($items_request->getItem(), $items_request->getProject()),
             new \Docman_VersionFactory(),
             new \Docman_LinkVersionFactory(),
             Docman_ItemFactory::instance($items_request->getProject()->getGroupId()),
-            $this->event_manager
+            $this->event_manager,
+            $event_adder
         );
     }
 

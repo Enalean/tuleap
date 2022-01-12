@@ -38,42 +38,15 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class ItemRepresentationVisitor implements ItemVisitor
 {
-    /**
-     * @var ItemRepresentationBuilder
-     */
-    private $item_representation_builder;
-
-    /**
-     * @var \Docman_VersionFactory
-     */
-    private $docman_version_factory;
-
-    /**
-     * @var \Docman_LinkVersionFactory
-     */
-    private $docman_link_version_factory;
-
-    /**
-     * @var \Docman_ItemFactory
-     */
-    private $item_factory;
-    /**
-     * @var \EventManager
-     */
-    private $event_manager;
-
     public function __construct(
-        ItemRepresentationBuilder $item_representation_builder,
-        \Docman_VersionFactory $docman_version_factory,
-        \Docman_LinkVersionFactory $docman_link_version_factory,
-        \Docman_ItemFactory $item_factory,
-        \EventManager $event_manager,
+        private ItemRepresentationBuilder $item_representation_builder,
+        private \Docman_VersionFactory $docman_version_factory,
+        private \Docman_LinkVersionFactory $docman_link_version_factory,
+        private \Docman_ItemFactory $item_factory,
+        private \EventManager $event_manager,
+        DocmanItemsEventAdder $event_adder,
     ) {
-        $this->item_representation_builder = $item_representation_builder;
-        $this->docman_version_factory      = $docman_version_factory;
-        $this->docman_link_version_factory = $docman_link_version_factory;
-        $this->item_factory                = $item_factory;
-        $this->event_manager               = $event_manager;
+        $event_adder->addLogEvents();
     }
 
     public function visitFolder(Docman_Folder $item, array $params = [])
@@ -101,6 +74,7 @@ class ItemRepresentationVisitor implements ItemVisitor
 
             $wiki_representation = WikiPropertiesRepresentation::build($item, $wiki_page_id);
         }
+
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
             $params['current_user'],
@@ -152,6 +126,7 @@ class ItemRepresentationVisitor implements ItemVisitor
             $download_href   = $this->buildFileDirectAccessURL($item);
             $file_properties = FilePropertiesRepresentation::build($item_version, $download_href);
         }
+
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
             $params['current_user'],
@@ -192,6 +167,7 @@ class ItemRepresentationVisitor implements ItemVisitor
                 $file_embedded_properties = EmbeddedFilePropertiesMinimalRepresentation::build($item_version);
             }
         }
+
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
             $params['current_user'],
@@ -264,6 +240,7 @@ class ItemRepresentationVisitor implements ItemVisitor
             false,
             true
         );
+
         return FolderPropertiesRepresentation::build($item);
     }
 }
