@@ -75,9 +75,9 @@ final class SiteDeployGitolite3
         return is_dir(__DIR__ . '/../../../../../plugins/git/');
     }
 
-    private function hasGit218(): bool
+    private static function hasTuleapGitBin(): bool
     {
-        return is_dir('/opt/rh/rh-git218/root');
+        return is_dir('/usr/lib/tuleap/git');
     }
 
     private function getExpectedGitolite3ConfigContent(): string
@@ -90,9 +90,10 @@ final class SiteDeployGitolite3
             $config
         );
 
-        $git_bin_path = '/opt/rh/sclo-git212/root/usr/bin';
-        if ($this->hasGit218()) {
-            $git_bin_path = '/opt/rh/rh-git218/root/usr/bin';
+
+        $git_bin_path = '/opt/rh/rh-git218/root/usr/bin';
+        if (self::hasTuleapGitBin()) {
+            $git_bin_path = '/usr/lib/tuleap/git/bin';
         }
 
         $config = preg_replace(
@@ -106,11 +107,10 @@ final class SiteDeployGitolite3
 
     private function getExpectedGitoliteProfileContent(): string
     {
-        if ($this->hasGit218()) {
-            return "source /opt/rh/rh-git218/enable\n";
+        if (self::hasTuleapGitBin()) {
+            return 'export PATH=/usr/lib/tuleap/git/bin${PATH:+:${PATH}}' . "\n";
         }
-
-        return "source /opt/rh/sclo-git212/enable\n";
+        return "source /opt/rh/rh-git218/enable\n";
     }
 
     private function writeFile(string $path, string $content): void

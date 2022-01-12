@@ -171,7 +171,7 @@
 # See http://gitolite.com/gitolite/git-config.html
 $UNSAFE_PATT = qr([\n]);
 
-$ENV{PATH} = "/opt/rh/rh-git218/root/usr/bin:$ENV{PATH}";
+$ENV{PATH} = "/usr/lib/tuleap/git/bin:$ENV{PATH}";
 
 # ------------------------------------------------------------------------------
 # per perl rules, this should be the last line in such a file:
