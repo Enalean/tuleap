@@ -75,21 +75,6 @@
                                 <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-link" aria-hidden="true"></i>
                                 <span translate>Link to an existing bug</span>
                             </button>
-                            <span
-                                    ng-if="execution.linked_bugs.length > 0"
-                                    class="tlp-dropdown-menu-title"
-                                    role="menuitem"
-                                    translate
-                            >Linked bugs</span>
-                            <a class="tlp-dropdown-menu-item"
-                            role="menuitem"
-                            href="/plugins/tracker/?aid={{ bug.id }}"
-                            ng-repeat="bug in execution.linked_bugs track by bug.id"
-                            >
-                                <span ng-class="['cross-ref-badge', 'cross-ref-badge-' + bug.tracker.color_name, 'linked-issues-dropdown-content-badge']">
-                                    {{ bug.xref }}
-                                </span> {{ bug.title }}
-                            </a>
                         </div>
                     </div>
 
