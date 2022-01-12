@@ -92,6 +92,10 @@ describe("getTraceabilityMatrix", () => {
                                             id: 1241,
                                             title: "Ipsum",
                                         },
+                                        {
+                                            id: 1251,
+                                            title: "Doloret",
+                                        },
                                     ],
                                 },
                                 previous_result: null,
@@ -106,7 +110,7 @@ describe("getTraceabilityMatrix", () => {
             }
         );
 
-        expect(matrix.length).toBe(2);
+        expect(matrix.length).toBe(3);
         expect(matrix[0].requirement).toStrictEqual({
             id: 1231,
             title: "Lorem",
@@ -128,6 +132,21 @@ describe("getTraceabilityMatrix", () => {
         });
         expect(matrix[1].tests.size).toBe(1);
         expect(matrix[1].tests.get(124)).toStrictEqual({
+            id: 124,
+            title: "Test B",
+            campaign: "Tuleap 13.4",
+            executed_by: null,
+            executed_on: null,
+            executed_on_date: null,
+            status: null,
+        });
+
+        expect(matrix[2].requirement).toStrictEqual({
+            id: 1251,
+            title: "Doloret",
+        });
+        expect(matrix[2].tests.size).toBe(1);
+        expect(matrix[2].tests.get(124)).toStrictEqual({
             id: 124,
             title: "Test B",
             campaign: "Tuleap 13.4",
