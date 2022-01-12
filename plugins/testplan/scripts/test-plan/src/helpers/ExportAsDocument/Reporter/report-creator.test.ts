@@ -110,10 +110,12 @@ describe("Create an export report", () => {
                 definition: {
                     id: 123,
                     summary: "Test A",
-                    requirement: {
-                        id: 1231,
-                        title: "Lorem",
-                    },
+                    all_requirements: [
+                        {
+                            id: 1231,
+                            title: "Lorem",
+                        },
+                    ],
                 },
                 previous_result: {
                     status: "passed",
@@ -122,7 +124,7 @@ describe("Create an export report", () => {
                         display_name: "John Doe",
                     },
                 },
-            } as TestExecutionResponse,
+            } as unknown as TestExecutionResponse,
         ]);
 
         const report = await createExportReport(

@@ -68,11 +68,13 @@ describe("step-test-definition-formatter", () => {
                                 rank: 3,
                             },
                         ],
-                        requirement: {
-                            id: 888,
-                            title: null,
-                            xref: "story #888",
-                        },
+                        all_requirements: [
+                            {
+                                id: 888,
+                                title: null,
+                                xref: "story #888",
+                            },
+                        ],
                     },
                     previous_result: null,
                     steps_results: {
@@ -87,6 +89,7 @@ describe("step-test-definition-formatter", () => {
                     },
                     status: "passed",
                     attachments: [],
+                    linked_bugs: [],
                 },
                 {
                     definition: {
@@ -120,11 +123,13 @@ describe("step-test-definition-formatter", () => {
                                 rank: 3,
                             },
                         ],
-                        requirement: {
-                            id: 888,
-                            title: null,
-                            xref: "story #888",
-                        },
+                        all_requirements: [
+                            {
+                                id: 888,
+                                title: null,
+                                xref: "story #888",
+                            },
+                        ],
                     },
                     previous_result: {
                         submitted_on: "2021-11-04T15:30:00+01:00",
@@ -146,6 +151,13 @@ describe("step-test-definition-formatter", () => {
                     },
                     status: "blocked",
                     attachments: [{ filename: "toto.png", html_url: "/path/to/file" }],
+                    linked_bugs: [
+                        {
+                            id: 1001,
+                            title: "It does not work",
+                            xref: "bug #1001",
+                        },
+                    ],
                 },
             ],
         });
@@ -222,6 +234,14 @@ describe("step-test-definition-formatter", () => {
             status: "blocked",
             result: "<b>it is blocked</b>",
             attachments: [{ filename: "toto.png", html_url: "https://example.com/path/to/file" }],
+            linked_bugs: [
+                {
+                    id: 1001,
+                    title: "It does not work",
+                    xref: "bug #1001",
+                    html_url: "https://example.com/plugins/tracker/?aid=1001",
+                },
+            ],
         });
     });
 
@@ -250,16 +270,19 @@ describe("step-test-definition-formatter", () => {
                                 rank: 1,
                             },
                         ],
-                        requirement: {
-                            id: 888,
-                            title: null,
-                            xref: "story #888",
-                        },
+                        all_requirements: [
+                            {
+                                id: 888,
+                                title: null,
+                                xref: "story #888",
+                            },
+                        ],
                     },
                     previous_result: null,
                     steps_results: {},
                     status: null,
                     attachments: [],
+                    linked_bugs: [],
                 },
             ],
         });
@@ -304,6 +327,7 @@ describe("step-test-definition-formatter", () => {
             status: "notrun",
             result: "",
             attachments: [],
+            linked_bugs: [],
         });
     });
 
@@ -377,6 +401,7 @@ describe("step-test-definition-formatter", () => {
             status: null,
             result: "",
             attachments: [],
+            linked_bugs: [],
         });
     });
 });

@@ -54,6 +54,7 @@ export function buildStepDefinitionFunction(): TransformStepDefFieldValue<Artifa
             status: null,
             result: "",
             attachments: [],
+            linked_bugs: [],
         };
     };
 }
@@ -100,6 +101,13 @@ export function buildStepDefinitionEnhancedWithResultsFunction(
                 html_url: new URL(base_url.replace(/\/$/, "") + attachment.html_url).href,
             };
         });
+        const linked_bugs = (execution_for_test?.linked_bugs ?? []).map((bug) => {
+            return {
+                ...bug,
+                html_url: new URL(base_url.replace(/\/$/, "") + "/plugins/tracker/?aid=" + bug.id)
+                    .href,
+            };
+        });
 
         return {
             field_name: value.label,
@@ -109,6 +117,7 @@ export function buildStepDefinitionEnhancedWithResultsFunction(
             status: test_status ?? "notrun",
             result: execution_for_test?.previous_result?.result ?? "",
             attachments,
+            linked_bugs,
         };
     };
 }

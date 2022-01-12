@@ -171,6 +171,9 @@ msgstr ""
 msgid "Link type"
 msgstr "Type de lien"
 
+msgid "Linked bugs"
+msgstr "Bugs liés"
+
 msgid "Milestone"
 msgstr "Jalon"
 

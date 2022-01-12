@@ -711,6 +711,35 @@ async function buildStepDefinitionTestResultParagraphs(
         );
     }
 
+    if (field.linked_bugs.length > 0) {
+        paragraphs.push(
+            new Paragraph({
+                heading: HeadingLevel.HEADING_6,
+                children: [new TextRun(gettext_provider.$gettext("Linked bugs"))],
+            })
+        );
+        for (const bug of field.linked_bugs) {
+            paragraphs.push(
+                new Paragraph({
+                    children: [
+                        new ExternalHyperlink({
+                            children: [
+                                new TextRun({
+                                    text: bug.title ?? bug.xref,
+                                    style: "Hyperlink",
+                                }),
+                            ],
+                            link: bug.html_url,
+                        }),
+                    ],
+                    bullet: {
+                        level: 0,
+                    },
+                })
+            );
+        }
+    }
+
     if (field.result.trim()) {
         paragraphs.push(
             new Paragraph({

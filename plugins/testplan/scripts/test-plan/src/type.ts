@@ -25,6 +25,7 @@ import type {
     TestExecutionResponse,
 } from "@tuleap/plugin-docgen-docx";
 import type { TestExecutionAttachment } from "@tuleap/plugin-docgen-docx";
+import type { TestExecutionLinkedBug } from "@tuleap/plugin-docgen-docx";
 
 export interface Campaign {
     readonly id: number;
@@ -127,6 +128,7 @@ export interface ArtifactFieldValueStepDefinitionEnhancedWithResults {
     readonly status: ArtifactFieldValueStatus;
     readonly result: string;
     readonly attachments: ReadonlyArray<TestExecutionAttachment>;
+    readonly linked_bugs: ReadonlyArray<TestExecutionLinkedBug & { readonly html_url: string }>;
 }
 
 export interface ExportDocument<StepDefFieldValue> {

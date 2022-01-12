@@ -305,11 +305,13 @@ describe("retrieveArtifactsStructure", () => {
                         rank: 3,
                     },
                 ],
-                requirement: {
-                    id: 888,
-                    title: null,
-                    xref: "story #888",
-                },
+                all_requirements: [
+                    {
+                        id: 888,
+                        title: null,
+                        xref: "story #888",
+                    },
+                ],
             },
             previous_result: null,
             steps_results: {
@@ -324,6 +326,7 @@ describe("retrieveArtifactsStructure", () => {
             },
             status: "blocked",
             attachments: [],
+            linked_bugs: [],
         };
         const get_test_exec = (): Promise<TestExecutionResponse> =>
             Promise.resolve(testmanagement_execution_response);
