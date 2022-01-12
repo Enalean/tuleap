@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021-Present Enalean
+ * Copyright (c) 2022-Present Enalean
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,4 +20,7 @@
  * SOFTWARE.
  */
 
-$font-awesome-font-family: "Font Awesome 5 Free Tuleap Project Sidebar";
+@use "../../../themes/tlp/src/fonts/tlp-font/font-face" with (
+    $tlp-font-basepath: "../../../themes/tlp/src/"
+);
+@use "@fortawesome/fontawesome-free/css/all.css";

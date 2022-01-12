@@ -20,9 +20,14 @@
  * SOFTWARE.
  */
 
+import "./dev-loader-style.scss";
 import "../../../themes/tlp/src/scss/tlp-vars-orange.scss";
-import "./src/main";
-import { example_config } from "@tuleap/project-sidebar-internal";
+import { installProjectSidebarElement } from "./src/main";
+import { example_config } from "./src/project-sidebar-example-config";
+
+installProjectSidebarElement(window, (): void => {
+    // Nothing to do
+});
 
 document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.createElement("tuleap-project-sidebar");

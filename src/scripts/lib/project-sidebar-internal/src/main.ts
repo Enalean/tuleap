@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021-Present Enalean
+ * Copyright (c) 2022-Present Enalean
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,17 +20,6 @@
  * SOFTWARE.
  */
 
-import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
-import * as path from "path";
-
-export default defineConfig(
-    {
-        build: {
-            lib: {
-                entry: path.resolve(__dirname, "src/main.ts"),
-                name: "TuleapProjectSidebar",
-            },
-        },
-    },
-    { vueTsc: true }
-);
+import "./default-fonts.scss";
+export * from "./load-custom-element";
+export * from "./project-sidebar-example-config";

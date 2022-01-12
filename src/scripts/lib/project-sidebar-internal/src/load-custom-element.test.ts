@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021-Present Enalean
+ * Copyright (c) 2022-Present Enalean
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,17 +20,16 @@
  * SOFTWARE.
  */
 
-import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
-import * as path from "path";
+import { installProjectSidebarElement } from "./load-custom-element";
 
-export default defineConfig(
-    {
-        build: {
-            lib: {
-                entry: path.resolve(__dirname, "src/main.ts"),
-                name: "TuleapProjectSidebar",
-            },
-        },
-    },
-    { vueTsc: true }
-);
+describe("LoadCustomElement", () => {
+    it("defines the custom element", () => {
+        const installation_hook_spy = jest.fn();
+
+        expect(window.customElements.get("tuleap-project-sidebar")).toBe(undefined);
+        installProjectSidebarElement(window, installation_hook_spy);
+        installProjectSidebarElement(window, installation_hook_spy);
+        expect(window.customElements.get("tuleap-project-sidebar")).not.toBe(undefined);
+        expect(installation_hook_spy).toHaveBeenCalledTimes(1);
+    });
+});

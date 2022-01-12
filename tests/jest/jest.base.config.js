@@ -51,7 +51,7 @@ module.exports = {
             __dirname,
             "../../src/scripts/lib/tlp-fetch/src/fetch-wrapper.ts"
         ),
-        "\\.(css)$": "identity-obj-proxy",
+        "\\.(css|scss)(\\?inline)?$": "identity-obj-proxy",
     },
     setupFiles: [path.resolve(__dirname, "./fail-unhandled-promise-rejection.js")],
     setupFilesAfterEnv: [path.resolve(__dirname, "./fail-console-error-warning.js")],
