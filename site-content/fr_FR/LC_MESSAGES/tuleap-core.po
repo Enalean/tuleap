@@ -38,7 +38,7 @@ msgid "\"%s\" label already exists. Please choose another one."
 msgstr "Le label \"%s\" label exist déjà. Merci de choisir un autre nom."
 
 msgid "## Some notes"
-msgstr "## Du contenu en markdown"
+msgstr "## Du contenu en Markdown"
 
 #, php-format
 msgid "%1$s Password Verification"
@@ -549,7 +549,10 @@ msgid "Allow for all projects"
 msgstr "Autoriser pour tous les projets"
 
 msgid "Allow to write informations for users on your dashboards using Markdown"
-msgstr "Permet d'écrire des informations en markdown sur les dashboards"
+msgstr "Permet d'écrire des informations en Markdown sur les dashboards"
+
+msgid "Allow to write notes on your dashboard using Markdown"
+msgstr "Permet d'écrire des informations en Markdown sur votre dashboard"
 
 msgid "Allowing for all projects"
 msgstr "Autorisation pour tous les projets"

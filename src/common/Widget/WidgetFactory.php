@@ -172,6 +172,14 @@ class WidgetFactory implements IBuildInstanceOfWidgets
                     )
                 );
                 break;
+            case Note\UserNote::NAME:
+                $widget = new Note\UserNote(
+                    new Note\NoteDao(),
+                    TemplateRendererFactory::build()->getRenderer(
+                        __DIR__ . '/../../templates/widgets'
+                    )
+                );
+                break;
             default:
                 $get_widget_event = $this->event_manager->dispatch(new GetWidget($widget_name));
                 $widget           = $get_widget_event->getWidget();

@@ -23,109 +23,21 @@ namespace Tuleap\Widget\Note;
 
 use Codendi_Request;
 use Project;
-use TemplateRenderer;
-use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Markdown\CodeBlockFeatures;
-use Tuleap\Markdown\CodeBlockFeaturesInterface;
-use Tuleap\Markdown\CommonMarkInterpreter;
-use Tuleap\Markdown\EnhancedCodeBlockExtension;
+use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Project\MappingRegistry;
 
-class ProjectNote extends \Widget
+class ProjectNote extends Note
 {
     public const NAME = 'projectnote';
 
-    private $content;
-    /**
-     * @var NoteDao
-     */
-    private $dao;
-    /**
-     * @var TemplateRenderer
-     */
-    private $renderer;
-    private $title;
-    /**
-     * @var CodeBlockFeaturesInterface
-     */
-    private $code_block_features;
-    /**
-     * @var string | null
-     */
-    private $interpreted_content = null;
-
-    public function __construct(NoteDao $dao, TemplateRenderer $renderer)
+    protected static function getName(): string
     {
-        parent::__construct(self::NAME);
-
-        $this->dao                 = $dao;
-        $this->renderer            = $renderer;
-        $this->code_block_features = new CodeBlockFeatures();
+        return self::NAME;
     }
 
-    public function getTitle()
-    {
-        if ($this->title !== null) {
-            return $this->title;
-        }
-
-        return _('Note');
-    }
-
-    public function getDescription()
+    public function getDescription(): string
     {
         return _('Allow to write informations for users on your dashboards using Markdown');
-    }
-
-    public function getIcon()
-    {
-        return "fa-sticky-note";
-    }
-
-    public function isUnique()
-    {
-        return false;
-    }
-
-    /**
-     * @param $id
-     */
-    public function loadContent($id)
-    {
-        $row           = $this->dao->get($id);
-        $this->title   = $row['title'];
-        $this->content = $row['content'];
-    }
-
-    public function hasPreferences($widget_id)
-    {
-        return true;
-    }
-
-    public function getPreferences($widget_id)
-    {
-        return $this->renderer->renderToString(
-            'note-preferences',
-            new NotePreferencesPresenter($widget_id, $this->title, $this->content)
-        );
-    }
-
-    public function getInstallPreferences()
-    {
-        return $this->renderer->renderToString(
-            'note-preferences',
-            new NotePreferencesPresenter(0, '', '')
-        );
-    }
-
-    public function updatePreferences(Codendi_Request $request)
-    {
-        $content_id = $request->getValidated('content_id', 'uint', 0);
-
-        $note = $request->get('note');
-
-        return $this->dao->update($content_id, $note['title'], $note['content']);
     }
 
     public function create(Codendi_Request $request)
@@ -133,15 +45,13 @@ class ProjectNote extends \Widget
         if ($this->owner_id === null) {
             $current_project = $request->getProject();
             if ($current_project && ! $current_project->isError()) {
-                $this->owner_id = $current_project->getID();
+                $this->setOwner($current_project->getID(), ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
             } else {
                 return false;
             }
         }
 
-        $note = $request->get('note');
-
-        return (int) $this->dao->create($this->owner_id, $note['title'], $note['content']);
+        return $this->createNote($request, $this->owner_id, $this->owner_type);
     }
 
     public function cloneContent(
@@ -153,69 +63,6 @@ class ProjectNote extends \Widget
         MappingRegistry $mapping_registry,
     ) {
         return $this->dao->duplicate($new_project->getID(), $id);
-    }
-
-    /** @return array */
-    public function getJavascriptDependencies()
-    {
-        $javascript_dependencies = [];
-
-        $this->interpretContent();
-        if ($this->code_block_features->isSyntaxHighlightNeeded()) {
-            $javascript_dependencies[] = [
-                'file' => $this->getAssets()->getFileURL('syntax-highlight.js'),
-            ];
-        }
-
-        if ($this->code_block_features->isMermaidNeeded()) {
-            $javascript_dependencies[] = [
-                'file' => $this->getAssets()->getFileURL('mermaid.js'),
-            ];
-        }
-
-        return $javascript_dependencies;
-    }
-
-    /**
-     * @return CssAssetCollection
-     */
-    public function getStylesheetDependencies()
-    {
-        $this->interpretContent();
-
-        if ($this->code_block_features->isSyntaxHighlightNeeded()) {
-            return new CssAssetCollection(
-                [
-                    new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'syntax-highlight'),
-                ]
-            );
-        }
-
-        return new CssAssetCollection([]);
-    }
-
-    public function getContent(): string
-    {
-        return $this->interpretContent();
-    }
-
-    public function interpretContent(): string
-    {
-        if ($this->interpreted_content === null) {
-            $interpreter = CommonMarkInterpreter::build(
-                \Codendi_HTMLPurifier::instance(),
-                new EnhancedCodeBlockExtension($this->code_block_features),
-            );
-
-            $this->interpreted_content = $interpreter->getInterpretedContentWithReferences($this->content, (int) $this->owner_id);
-        }
-
-        return $this->interpreted_content;
-    }
-
-    private function getAssets(): IncludeAssets
-    {
-        return new \Tuleap\Layout\IncludeCoreAssets();
     }
 
     public function exportAsXML(): \SimpleXMLElement
