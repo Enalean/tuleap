@@ -9,6 +9,7 @@ specifiers:
   '@tuleap/vue-breadcrumb-privacy': file:../../src/scripts/lib/vue-breadcrumb-privacy
   '@vue/test-utils': ^1.3.0
   fast-deep-equal: ^3.1.3
+  mitt: ^3.0.0
   moment: ^2.29.1
   moment-timezone: ^0.5.34
   moment-timezone-data-webpack-plugin: ^1.5.0
@@ -34,6 +35,7 @@ dependencies:
   '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
   '@tuleap/vue-breadcrumb-privacy': link:../../src/scripts/lib/vue-breadcrumb-privacy
   fast-deep-equal: 3.1.3
+  mitt: 3.0.0
   moment: 2.29.1
   moment-timezone: 0.5.34
   pretty-kibibytes: 4.0.4
@@ -324,6 +326,10 @@ packages:
     dependencies:
       brace-expansion: 1.1.11
     dev: true
+
+  /mitt/3.0.0:
+    resolution: {integrity: sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==}
+    dev: false
 
   /moment-timezone-data-webpack-plugin/1.5.0_moment-timezone@0.5.34:
     resolution: {integrity: sha512-eidUVGn6Fc8jR0tBf8xAhBR1C3jqknFJe0rfzThnglnJjmzqTXRYVTOeobUzWvlEfgTSu+b0W7GgOdqAWvGbYA==}

@@ -31,17 +31,20 @@
     </button>
 </template>
 
-<script>
-import EventBus from "../../../helpers/event-bus.js";
+<script lang="ts">
+import emitter from "../../../helpers/emitter";
+import Component from "vue-class-component";
+import { Prop } from "vue-property-decorator";
+import type { Item } from "../../../type";
+import Vue from "vue";
 
-export default {
-    props: {
-        item: Object,
-    },
-    methods: {
-        showNewDocumentModal() {
-            EventBus.$emit("show-new-document-modal", { detail: { parent: this.item } });
-        },
-    },
-};
+@Component
+export default class NewItemButton extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    showNewDocumentModal(): void {
+        emitter.emit("createItem", { item: this.item });
+    }
+}
 </script>

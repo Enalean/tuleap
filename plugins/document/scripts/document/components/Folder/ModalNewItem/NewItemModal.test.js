@@ -22,8 +22,7 @@ import localVue from "../../../helpers/local-vue";
 
 import NewItemModal from "./NewItemModal.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-
-import EventBus from "../../../helpers/event-bus.js";
+import mitt from "../../../helpers/emitter";
 import * as tlp from "tlp";
 
 jest.mock("tlp");
@@ -95,9 +94,6 @@ describe("NewItemModal", () => {
 
         const wrapper = factory();
 
-        EventBus.$emit("show-new-document-modal", {
-            detail: { parent: store.state.current_folder },
-        });
         await wrapper.vm.$nextTick().then(() => {});
 
         expect(store.dispatch).not.toHaveBeenCalledWith("metadata/loadProjectMetadata");
@@ -120,9 +116,8 @@ describe("NewItemModal", () => {
         };
 
         const wrapper = factory();
-
-        EventBus.$emit("show-new-document-modal", {
-            detail: { parent: store.state.current_folder },
+        mitt.emit("createItem", {
+            item: store.state.current_folder,
         });
         await wrapper.vm.$nextTick().then(() => {});
 

@@ -100,6 +100,7 @@ import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-meta
 import { handleErrors } from "../../../store/actions-helpers/handle-errors";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
 import { transformCustomMetadataForItemCreation } from "../../../helpers/metadata-helpers/creation-data-transformatter-helper";
+import emitter from "../../../helpers/emitter";
 
 export default {
     name: "NewItemModal",
@@ -147,12 +148,11 @@ export default {
     },
     mounted() {
         this.modal = createModal(this.$el);
-        EventBus.$on("show-new-document-modal", this.show);
+        emitter.on("createItem", this.show);
         EventBus.$on("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
     },
     beforeDestroy() {
-        EventBus.$off("show-new-document-modal", this.show);
         EventBus.$off("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
         this.modal.removeEventListener("tlp-modal-hidden", this.reset);
     },
@@ -185,7 +185,7 @@ export default {
         },
         async show(event) {
             this.item = this.getDefaultItem();
-            this.parent = event.detail.parent;
+            this.parent = event.item;
             this.addParentMetadataToDefaultItem();
             this.item.permissions_for_groups = JSON.parse(
                 JSON.stringify(this.parent.permissions_for_groups)

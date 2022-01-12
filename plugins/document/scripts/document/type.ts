@@ -20,7 +20,12 @@
 import type { ConfigurationState } from "./store/configuration";
 import type { ErrorState } from "./store/error/module";
 import type { PermissionsState } from "./store/permissions/permissions-default-state";
-import type { FolderMetadata, FolderStatus, Metadata } from "./store/metadata/module";
+import type {
+    FolderMetadata,
+    FolderStatus,
+    Metadata,
+    MetadataState,
+} from "./store/metadata/module";
 
 export interface State {
     is_loading_folder: boolean;
@@ -35,6 +40,7 @@ export interface RootState extends State {
     readonly configuration: ConfigurationState;
     error: ErrorState;
     permissions: PermissionsState;
+    metadata: MetadataState;
 }
 
 export type Direction = "BOTTOM" | "TOP" | "NEXT" | "PREVIOUS";

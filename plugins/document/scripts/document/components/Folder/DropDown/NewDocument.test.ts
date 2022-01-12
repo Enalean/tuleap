@@ -17,55 +17,50 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import NewDocument from "./NewDocument.vue";
 import { TYPE_FOLDER } from "../../../constants";
-import EventBus from "../../../helpers/event-bus.js";
+import type { Item } from "../../../type";
+import mitt from "../../../helpers/emitter";
+
+jest.mock("../../../helpers/emitter");
 
 describe("NewDocument", () => {
-    let new_item, store;
-    beforeEach(() => {
-        store = createStoreMock({});
-        new_item = (props = {}) => {
-            return shallowMount(NewDocument, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-    });
+    function createWrapper(item: Item): Wrapper<NewDocument> {
+        return shallowMount(NewDocument, {
+            localVue,
+            propsData: { item: item },
+        });
+    }
 
     it(`User can create add document to folder when he is docman writer`, () => {
         const item = {
             type: TYPE_FOLDER,
             user_can_write: true,
-        };
+        } as Item;
 
-        const wrapper = new_item({ item });
+        const wrapper = createWrapper(item);
         expect(wrapper.find("[data-test=document-new-item]").exists()).toBeTruthy();
     });
     it(`User can NOT add document to folder when he is docman reader`, () => {
         const item = {
             type: TYPE_FOLDER,
             user_can_write: false,
-        };
+        } as Item;
 
-        const wrapper = new_item({ item });
+        const wrapper = createWrapper(item);
         expect(wrapper.find("[data-test=document-new-item]").exists()).toBeFalsy();
     });
     it(`Click on new document open the corresponding modal`, () => {
         const item = {
             type: TYPE_FOLDER,
             user_can_write: true,
-        };
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
+        } as Item;
 
-        const wrapper = new_item({ item });
+        const wrapper = createWrapper(item);
         wrapper.get("[data-test=document-new-item]").trigger("click");
-        expect(event_bus_emit).toHaveBeenCalledWith("show-new-document-modal", {
-            detail: { parent: item },
-        });
+        expect(mitt.emit).toHaveBeenCalledWith("createItem", { item: item });
     });
 });
