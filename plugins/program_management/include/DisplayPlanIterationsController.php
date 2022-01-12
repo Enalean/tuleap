@@ -32,8 +32,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\DisplayPlanIterationsPresenter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\BuildProgramIncrementInfo;
@@ -42,6 +41,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIterationTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramFlags;
@@ -113,24 +113,27 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
                 (int) $variables['increment_id'],
                 $user_identifier
             );
-            $planned_iterations   = PlannedIterations::build(
+
+            $iteration_configuration = IterationTrackerConfiguration::fromProgram(
+                $this->retrieve_visible_iteration_tracker,
+                $this->retrieve_iteration_labels,
+                $program_identifier,
+                $user_identifier
+            );
+            if ($iteration_configuration === null) {
+                throw new ProgramIterationTrackerNotFoundException($program_identifier);
+            }
+
+            $planned_iterations = PlannedIterations::build(
                 $this->build_program_flags,
                 $this->build_program_privacy,
                 $this->build_program_base_info,
                 $this->build_program_increment_info,
                 $this->verify_user_is_program_admin,
-                $this->retrieve_visible_iteration_tracker,
                 $program_identifier,
                 $user_identifier,
                 $increment_identifier,
-                IterationLabels::fromIterationTracker(
-                    $this->retrieve_iteration_labels,
-                    IterationTrackerIdentifier::fromProgram(
-                        $this->retrieve_visible_iteration_tracker,
-                        $program_identifier,
-                        $user_identifier
-                    )
-                ),
+                $iteration_configuration,
                 UserPreference::fromUserIdentifierAndPreferenceName(
                     $this->retrieve_user_preference,
                     $user_identifier,

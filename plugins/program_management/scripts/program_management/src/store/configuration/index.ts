@@ -38,6 +38,7 @@ export interface ConfigurationState {
     readonly tracker_program_increment_sub_label: string;
     readonly is_program_admin: boolean;
     readonly is_configured: boolean;
+    readonly is_iteration_tracker_defined: boolean;
     readonly tracker_iteration_label: string;
 }
 

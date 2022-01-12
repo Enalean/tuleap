@@ -21,7 +21,7 @@
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlannedIterations;
-use Tuleap\ProgramManagement\Tests\Builder\IterationsLabelsBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\IterationTrackerConfigurationBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\UserPreferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramBaseInfoStub;
@@ -29,13 +29,15 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserIsProgramAdminStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 final class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const ITERATION_TRACKER_ID = 101;
+    private const ITERATION_LABEL      = 'Cycles';
+    private const ITERATION_SUB_LABEL  = 'cycle';
+
     public function testItBuilds(): void
     {
         $presenter = DisplayPlanIterationsPresenter::fromPlannedIterations(
@@ -45,26 +47,29 @@ final class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\Test
                 BuildProgramBaseInfoStub::withDefault(),
                 BuildProgramIncrementInfoStub::withId(1260),
                 VerifyUserIsProgramAdminStub::withProgramAdminUser(),
-                RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerReferenceStub::withId(101)),
                 ProgramIdentifierBuilder::build(),
                 UserIdentifierStub::withId(666),
                 ProgramIncrementIdentifierBuilder::buildWithId(1260),
-                IterationsLabelsBuilder::buildWithLabels('Cycles', 'cycle'),
+                IterationTrackerConfigurationBuilder::buildWithIdAndLabels(
+                    self::ITERATION_TRACKER_ID,
+                    self::ITERATION_LABEL,
+                    self::ITERATION_SUB_LABEL
+                ),
                 UserPreferenceBuilder::withPreference('accessibility_mode', '1')
             )
         );
 
-        self::assertEquals('[{"label":"Top Secret","description":"For authorized eyes only"}]', $presenter->program_flags);
-        self::assertEquals(
+        self::assertJsonStringEqualsJsonString('[{"label":"Top Secret","description":"For authorized eyes only"}]', $presenter->program_flags);
+        self::assertJsonStringEqualsJsonString(
             '{"are_restricted_users_allowed":false,"project_is_public_incl_restricted":false,"project_is_private":true,"project_is_public":false,"project_is_private_incl_restricted":false,"explanation_text":"It is private, please go away","privacy_title":"Private","project_name":"Guinea Pig"}',
             $presenter->program_privacy
         );
 
-        self::assertEquals('{"program_label":"Guinea Pig","program_shortname":"guinea-pig","program_icon":"\ud83d\udc39"}', $presenter->program);
-        self::assertEquals('{"id":1260,"title":"Program increment #1260","start_date":"Oct 01","end_date":"Oct 31"}', $presenter->program_increment);
-        self::assertEquals('{"label":"Cycles","sub_label":"cycle"}', $presenter->iterations_labels);
+        self::assertJsonStringEqualsJsonString('{"program_label":"Guinea Pig","program_shortname":"guinea-pig","program_icon":"\ud83d\udc39"}', $presenter->program);
+        self::assertJsonStringEqualsJsonString('{"id":1260,"title":"Program increment #1260","start_date":"Oct 01","end_date":"Oct 31"}', $presenter->program_increment);
+        self::assertJsonStringEqualsJsonString('{"label":"Cycles","sub_label":"cycle"}', $presenter->iterations_labels);
         self::assertTrue($presenter->is_user_admin);
-        self::assertEquals('101', $presenter->iteration_tracker_id);
+        self::assertSame(self::ITERATION_TRACKER_ID, $presenter->iteration_tracker_id);
         self::assertTrue($presenter->is_accessibility_mode_enabled);
     }
 }
