@@ -93,7 +93,7 @@
     "build": "turbo run build",
     "eslint": "eslint --config .eslintrc.js --no-eslintrc --ext .js,.ts,.vue",
     "stylelint": "stylelint --config .stylelintrc.js",
-    "test": "turbo run test --continue --concurrency=2 -- -- --verbose=false"
+    "test": "turbo run test --concurrency=2 -- -- --verbose=false"
   },
   "pnpm": {
     "overrides": {
