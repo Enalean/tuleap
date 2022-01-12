@@ -476,6 +476,12 @@ export interface TestExecutionAttachment {
     readonly html_url: string;
 }
 
+export interface TestExecutionLinkedBug {
+    readonly id: number;
+    readonly title: string;
+    readonly xref: string;
+}
+
 export interface TestExecutionResponse {
     definition: {
         id: number;
@@ -503,4 +509,5 @@ export interface TestExecutionResponse {
     } | null;
     status: TestExecStatus | null;
     attachments: ReadonlyArray<TestExecutionAttachment>;
+    linked_bugs: ReadonlyArray<TestExecutionLinkedBug>;
 }

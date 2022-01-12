@@ -35,10 +35,12 @@ describe("getExecutionsForCampaigns", () => {
                             definition: {
                                 id: 123,
                                 summary: "Test A",
-                                requirement: {
-                                    id: 1231,
-                                    title: "Lorem",
-                                },
+                                all_requirements: [
+                                    {
+                                        id: 1231,
+                                        title: "Lorem",
+                                    },
+                                ],
                             },
                             previous_result: {
                                 status: "passed",
@@ -47,7 +49,7 @@ describe("getExecutionsForCampaigns", () => {
                                     display_name: "John Doe",
                                 },
                             },
-                        } as TestExecutionResponse,
+                        } as unknown as TestExecutionResponse,
                     ]);
                 }
 
@@ -57,13 +59,15 @@ describe("getExecutionsForCampaigns", () => {
                             definition: {
                                 id: 124,
                                 summary: "Test B",
-                                requirement: {
-                                    id: 1231,
-                                    title: "Lorem",
-                                },
+                                all_requirements: [
+                                    {
+                                        id: 1231,
+                                        title: "Lorem",
+                                    },
+                                ],
                             },
                             previous_result: null,
-                        } as TestExecutionResponse,
+                        } as unknown as TestExecutionResponse,
                     ]);
                 }
 

@@ -59,11 +59,13 @@ describe("getTestManagementExecution", () => {
                         rank: 3,
                     },
                 ],
-                requirement: {
-                    id: 888,
-                    title: null,
-                    xref: "story #888",
-                },
+                all_requirements: [
+                    {
+                        id: 888,
+                        title: null,
+                        xref: "story #888",
+                    },
+                ],
             },
             steps_results: {
                 "13": {
@@ -85,6 +87,7 @@ describe("getTestManagementExecution", () => {
             },
             status: "blocked",
             attachments: [],
+            linked_bugs: [],
         };
         mockFetchSuccess(tlpGet, {
             return_json: {
