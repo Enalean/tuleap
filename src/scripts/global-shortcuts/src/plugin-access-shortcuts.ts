@@ -20,7 +20,6 @@
 import type { Shortcut, ShortcutsGroup } from "@tuleap/keyboard-shortcuts";
 import type { GettextProvider, ServiceID, ServiceShortcut } from "./type";
 import { AGILEDASHBOARD, DOCUMENTS, GIT, TESTMANAGEMENT, TRACKERS } from "./type";
-import { sprintf } from "sprintf-js";
 
 export function getServicesShortcutsGroup(
     doc: HTMLElement,
@@ -75,7 +74,7 @@ function getServicesShortcuts(doc: HTMLElement, gettext_provider: GettextProvide
 
         services_shortcuts.push({
             keyboard_inputs: service.keyboard_inputs,
-            description: sprintf(gettext_provider.gettext("Go to %s"), service_element.title),
+            description: gettext_provider.gettext("Go to %s").replace("%s", service_element.title),
             handle: (): void => service_element.click(),
         });
     });
