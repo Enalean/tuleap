@@ -675,11 +675,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             );
             array_unshift($criteria_options, $simple_columns_title);
 
-            $divider              = new Templating_Presenter_ButtonDropdownsOptionDivider();
             $custom_columns_title = new Templating_Presenter_ButtonDropdownsOptionTitle(
                 dgettext('tuleap-tracker', 'Custom columns based on...')
             );
-            array_unshift($criteria_advanced_options, $divider, $custom_columns_title);
+            array_unshift($criteria_advanced_options, $custom_columns_title);
         }
 
         return array_merge($criteria_options, $criteria_advanced_options);
