@@ -23,12 +23,12 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_FilterListAdvanced extends \Docman_FilterList
 {
-    public function __construct($md)
+    public function __construct(Docman_Metadata $md)
     {
         parent::__construct($md);
         $this->setValue([]);
     }
-    public function _urlValueIsValid($request)
+    public function _urlValueIsValid($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if ($request->exist($this->md->getLabel())) {
             $val = $request->get($this->md->getLabel());
@@ -46,7 +46,7 @@ class Docman_FilterListAdvanced extends \Docman_FilterList
         }
         return \false;
     }
-    public function _urlMatchUpdate($request)
+    public function _urlMatchUpdate($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (\Docman_Filter::_urlMatchUpdate($request)) {
             if (! \is_array($this->getValue())) {
@@ -67,7 +67,7 @@ class Docman_FilterListAdvanced extends \Docman_FilterList
         }
         return \false;
     }
-    public function _urlMatchAdd($request)
+    public function _urlMatchAdd($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (parent::_urlMatchAdd($request)) {
             $this->setValue([0]);

@@ -66,7 +66,7 @@ class Docman_ReportFactory
                 $report->initFromRow($row);
 
                 $filterFactory = new Docman_FilterFactory($this->groupId);
-                $fa            = $filterFactory->addFiltersToReport($report);
+                $filterFactory->addFiltersToReport($report);
 
                 $this->initColumns($report, $request);
             }

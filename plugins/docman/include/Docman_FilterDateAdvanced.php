@@ -27,7 +27,7 @@ class Docman_FilterDateAdvanced extends \Docman_FilterDate
     public $fieldNameEnd;
     public $valueStart;
     public $valueEnd;
-    public function __construct($md)
+    public function __construct(Docman_Metadata $md)
     {
         parent::__construct($md);
         $base                 = $md->getLabel() . '_value';
@@ -72,7 +72,7 @@ class Docman_FilterDateAdvanced extends \Docman_FilterDate
         $param[$this->fieldNameEnd]   = $this->valueEnd;
         return $param;
     }
-    public function _urlMatchUpdate($request)
+    public function _urlMatchUpdate($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $fieldExist = \false;
         $startValue = \false;

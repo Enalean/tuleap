@@ -23,7 +23,7 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_FilterList extends \Docman_Filter
 {
-    public function __construct($md)
+    public function __construct(Docman_Metadata $md)
     {
         $mdFactory = new \Docman_MetadataFactory($md->getGroupId());
         $mdFactory->appendMetadataValueList($md, \false);
@@ -44,7 +44,7 @@ class Docman_FilterList extends \Docman_Filter
         }
         return \false;
     }
-    public function _urlValueIsValid($request)
+    public function _urlValueIsValid($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (parent::_urlValueIsValid($request)) {
             if ($this->isValidListValue($request->get($this->md->getLabel()))) {
@@ -53,7 +53,7 @@ class Docman_FilterList extends \Docman_Filter
         }
         return \false;
     }
-    public function _urlMatchUpdate($request)
+    public function _urlMatchUpdate($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (parent::_urlMatchUpdate($request)) {
             $v = $this->getValue();

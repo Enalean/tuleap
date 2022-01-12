@@ -23,7 +23,7 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_FilterItemTypeAdvanced extends \Docman_FilterListAdvanced
 {
-    public function __construct($md)
+    public function __construct(Docman_Metadata $md)
     {
         \Docman_Filter::__construct($md);
         $this->setValue([]);

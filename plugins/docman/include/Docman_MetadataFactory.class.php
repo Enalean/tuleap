@@ -400,7 +400,7 @@ class Docman_MetadataFactory
         return in_array($label, self::HARDCODED_METADATA_LABELS);
     }
 
-    public static function isRealMetadata($label)
+    public static function isRealMetadata($label): bool
     {
         if (preg_match('/^field_([0-9]+)$/', $label)) {
             return true;

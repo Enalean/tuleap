@@ -181,7 +181,7 @@ class Docman_ItemDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    public function searchByGroupId($id, &$report, $params)
+    public function searchByGroupId($id, ?Docman_Report $report, $params)
     {
         // Where clause
         // Select on group_id

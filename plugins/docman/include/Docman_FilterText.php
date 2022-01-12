@@ -23,7 +23,7 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_FilterText extends \Docman_Filter
 {
-    public function __construct($md)
+    public function __construct(Docman_Metadata $md)
     {
         parent::__construct($md);
     }
