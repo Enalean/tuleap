@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 use EventManager;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollectionBuilder;
@@ -64,6 +65,8 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
@@ -188,6 +191,10 @@ class JiraXmlExporter
                         new FieldChangeFileBuilder(),
                         new FieldChangeArtifactLinksBuilder(
                             new XML_SimpleXMLCDATAFactory(),
+                        ),
+                        new TypePresenterFactory(
+                            new TypeDao(),
+                            new ArtifactLinksUsageDao()
                         ),
                     ),
                     new IssueSnapshotCollectionBuilder(

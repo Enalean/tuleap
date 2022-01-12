@@ -54,6 +54,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
@@ -118,6 +119,13 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $forge_user
         );
 
+        $all_types_retriever = new class implements AllTypesRetriever {
+            public function getAllTypes(): array
+            {
+                return [];
+            }
+        };
+
         $creation_state_list_value_formatter = new CreationStateListValueFormatter();
         $this->exporter                      = new ArtifactsXMLExporter(
             $this->wrapper,
@@ -145,7 +153,8 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     new FieldChangeFileBuilder(),
                     new FieldChangeArtifactLinksBuilder(
                         new XML_SimpleXMLCDATAFactory(),
-                    )
+                    ),
+                    $all_types_retriever,
                 ),
                 new IssueSnapshotCollectionBuilder(
                     new JiraCloudChangelogEntriesBuilder(

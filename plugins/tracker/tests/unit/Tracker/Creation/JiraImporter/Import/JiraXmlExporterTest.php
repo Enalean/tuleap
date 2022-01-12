@@ -70,6 +70,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClientReplay;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
@@ -219,6 +220,13 @@ class JiraXmlExporterTest extends TestCase
             }
         };
 
+        $all_types_retriever = new class implements AllTypesRetriever {
+            public function getAllTypes(): array
+            {
+                return [];
+            }
+        };
+
         $exporter = new JiraXmlExporter(
             $logger,
             $jira_client,
@@ -260,6 +268,7 @@ class JiraXmlExporterTest extends TestCase
                         new FieldChangeArtifactLinksBuilder(
                             new XML_SimpleXMLCDATAFactory(),
                         ),
+                        $all_types_retriever,
                     ),
                     new IssueSnapshotCollectionBuilder(
                         $changelog_entries_builder,

@@ -25,6 +25,8 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
 interface AllTypesRetriever
 {
-    /** @return TypePresenter[] */
+    /**
+     * @return TypePresenter[]
+     */
     public function getAllTypes(): array;
 }
