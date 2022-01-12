@@ -22,25 +22,42 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker;
 
-use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Tests\Builder\IterationTrackerIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 
 final class IterationLabelsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private ?TrackerReference $tracker;
+    private const LABEL     = 'Iterations';
+    private const SUB_LABEL = 'iteration';
+
+    private ?IterationTrackerIdentifier $iteration_tracker;
+    private RetrieveIterationLabelsStub $label_retriever;
 
     protected function setUp(): void
     {
-        $this->tracker = TrackerReferenceStub::withDefaults();
+        $this->iteration_tracker = IterationTrackerIdentifierBuilder::buildWithId(35);
+        $this->label_retriever   = RetrieveIterationLabelsStub::buildLabels(self::LABEL, self::SUB_LABEL);
     }
 
-    public function testLabelsAreNullWhenNoProgramTracker(): void
+    private function getLabelsFromIterationTracker(): IterationLabels
     {
-        $labels = IterationLabels::fromIterationTracker(
-            RetrieveIterationLabelsStub::buildLabels('Iterations', 'iteration'),
-            null
+        return IterationLabels::fromIterationTracker(
+            $this->label_retriever,
+            $this->iteration_tracker
         );
+    }
+
+    public function testItBuildsFromIterationTracker(): void
+    {
+        $labels = $this->getLabelsFromIterationTracker();
+        self::assertSame(self::LABEL, $labels->label);
+        self::assertSame(self::SUB_LABEL, $labels->sub_label);
+    }
+
+    public function testLabelsAreNullWhenNoIterationTracker(): void
+    {
+        $this->iteration_tracker = null;
+        $labels                  = $this->getLabelsFromIterationTracker();
 
         self::assertNull($labels->label);
         self::assertNull($labels->sub_label);
@@ -48,23 +65,10 @@ final class IterationLabelsTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testLabelsAreNullWhenNoSavedLabels(): void
     {
-        $labels = IterationLabels::fromIterationTracker(
-            RetrieveIterationLabelsStub::buildLabels(null, null),
-            $this->tracker
-        );
+        $this->label_retriever = RetrieveIterationLabelsStub::buildLabels(null, null);
+        $labels                = $this->getLabelsFromIterationTracker();
 
         self::assertNull($labels->label);
         self::assertNull($labels->sub_label);
-    }
-
-    public function testReturnLabelsWhenTheyExist(): void
-    {
-        $labels = IterationLabels::fromIterationTracker(
-            RetrieveIterationLabelsStub::buildLabels('Iterations', 'iteration'),
-            $this->tracker
-        );
-
-        self::assertSame('Iterations', $labels->label);
-        self::assertSame('iteration', $labels->sub_label);
     }
 }

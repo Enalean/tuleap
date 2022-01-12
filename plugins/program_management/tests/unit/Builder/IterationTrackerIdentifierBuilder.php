@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,16 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Builder;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationTrackerStub;
 
-final class IterationsLabelsBuilder
+final class IterationTrackerIdentifierBuilder
 {
-    public static function buildWithLabels(string $label, string $sub_label): IterationLabels
+    public static function buildWithId(int $tracker_id): IterationTrackerIdentifier
     {
-        return IterationLabels::fromIterationTracker(
-            RetrieveIterationLabelsStub::buildLabels($label, $sub_label),
-            IterationTrackerIdentifierBuilder::buildWithId(101)
+        $tracker = IterationTrackerIdentifier::fromTrackerIdentifier(
+            VerifyIsIterationTrackerStub::buildValidIteration(),
+            TrackerIdentifierStub::withId($tracker_id),
         );
+        assert($tracker !== null);
+        return $tracker;
     }
 }

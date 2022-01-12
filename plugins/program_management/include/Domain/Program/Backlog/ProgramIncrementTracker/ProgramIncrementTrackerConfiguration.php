@@ -23,14 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
-use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 
 /**
  * @psalm-immutable
@@ -75,7 +76,11 @@ final class ProgramIncrementTrackerConfiguration
 
         $iteration_labels = IterationLabels::fromIterationTracker(
             $label_retriever,
-            $retrieve_visible_iteration_tracker->retrieveVisibleIterationTracker($program, $user_identifier)
+            IterationTrackerIdentifier::fromProgram(
+                $retrieve_visible_iteration_tracker,
+                $program,
+                $user_identifier
+            )
         );
 
         return new self(

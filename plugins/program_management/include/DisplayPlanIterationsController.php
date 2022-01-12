@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever
 use Tuleap\ProgramManagement\Adapter\Program\DisplayPlanIterationsPresenter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\BuildProgramIncrementInfo;
@@ -124,7 +125,8 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
                 $increment_identifier,
                 IterationLabels::fromIterationTracker(
                     $this->retrieve_iteration_labels,
-                    $this->retrieve_visible_iteration_tracker->retrieveVisibleIterationTracker(
+                    IterationTrackerIdentifier::fromProgram(
+                        $this->retrieve_visible_iteration_tracker,
                         $program_identifier,
                         $user_identifier
                     )

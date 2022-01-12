@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker;
 
 use Tracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 /**
@@ -67,5 +68,12 @@ final class TrackerReferenceProxy implements TrackerReference
             (int) $tracker->getGroupId(),
             $tracker->getProject()->getPublicName()
         );
+    }
+
+    public static function fromIterationTracker(
+        RetrieveFullTracker $tracker_retriever,
+        IterationTrackerIdentifier $iteration_tracker,
+    ): self {
+        return self::fromTracker($tracker_retriever->getNonNullTracker($iteration_tracker));
     }
 }

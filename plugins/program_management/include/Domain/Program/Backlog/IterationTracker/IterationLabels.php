@@ -22,30 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker;
 
-use Tuleap\ProgramManagement\Domain\TrackerReference;
-
 /**
  * @psalm-immutable
  */
 final class IterationLabels
 {
-    public ?string $label;
-    public ?string $sub_label;
-
-    private function __construct(?string $label, ?string $sub_label)
-    {
-        $this->label     = $label;
-        $this->sub_label = $sub_label;
+    private function __construct(
+        public ?string $label,
+        public ?string $sub_label,
+    ) {
     }
 
     public static function fromIterationTracker(
         RetrieveIterationLabels $label_retriever,
-        ?TrackerReference $tracker,
+        ?IterationTrackerIdentifier $iteration_tracker,
     ): self {
-        if (! $tracker) {
+        if (! $iteration_tracker) {
             return new self(null, null);
         }
-        $labels = $label_retriever->getIterationLabels($tracker->getId());
+        $labels = $label_retriever->getIterationLabels($iteration_tracker->getId());
         if ($labels === null) {
             return new self(null, null);
         }

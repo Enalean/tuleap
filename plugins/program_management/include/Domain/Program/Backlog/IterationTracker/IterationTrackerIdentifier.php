@@ -24,7 +24,10 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIterationTracker;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * I am the id (identifier) of the Iteration Tracker
@@ -51,6 +54,22 @@ final class IterationTrackerIdentifier implements TrackerIdentifier
         IterationIdentifier $iteration,
     ): self {
         return new self($tracker_retriever->getIterationTrackerIdFromIteration($iteration));
+    }
+
+    public static function fromProgram(
+        RetrieveVisibleIterationTracker $tracker_retriever,
+        ProgramIdentifier $program,
+        UserIdentifier $user,
+    ): ?self {
+        try {
+            $tracker = $tracker_retriever->retrieveVisibleIterationTracker($program, $user);
+        } catch (ProgramTrackerNotFoundException) {
+            return null;
+        }
+        if ($tracker === null) {
+            return null;
+        }
+        return new self($tracker->getId());
     }
 
     public function getId(): int
