@@ -270,6 +270,40 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
             color: var(--tlp-white-color);
         }
     }
+
+    > .tlp-dropdown {
+        > .tlp-badge-success,
+        > .tlp-badge-danger,
+        > .tlp-badge-info,
+        > .tlp-badge-secondary {
+            border: 0;
+            background: linear-gradient(0deg, rgb(0 0 0 / 20%), rgb(0 0 0 / 20%)),
+                var(--badge-color);
+            background-blend-mode: overlay, normal;
+            mix-blend-mode: normal;
+            cursor: pointer;
+
+            &:first-child {
+                margin: 0 var(--tlp-small-spacing) 0 0;
+            }
+        }
+
+        > .tlp-badge-success {
+            --badge-color: var(--tlp-success-color);
+        }
+
+        > .tlp-badge-danger {
+            --badge-color: var(--tlp-danger-color);
+        }
+
+        > .tlp-badge-info {
+            --badge-color: var(--tlp-info-color);
+        }
+
+        > .tlp-badge-secondary {
+            --badge-color: var(--tlp-neutral-dark-color);
+        }
+    }
 }
 
 .current-test-latest-result {
