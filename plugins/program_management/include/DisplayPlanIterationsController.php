@@ -30,7 +30,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\DisplayPlanIterationsPresenter;
+use Tuleap\ProgramManagement\Adapter\Program\IterationView\DisplayPlanIterationsPresenter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;

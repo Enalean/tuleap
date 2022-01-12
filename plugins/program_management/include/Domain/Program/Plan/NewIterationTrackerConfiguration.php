@@ -45,10 +45,13 @@ final class NewIterationTrackerConfiguration
         ProgramForAdministrationIdentifier $program,
     ): self {
         $iteration_checker->checkIterationTrackerIsValid($iteration_change->tracker_id, $program);
+        $label     = ($iteration_change->label !== '') ? $iteration_change->label : null;
+        $sub_label = ($iteration_change->sub_label !== '') ? $iteration_change->sub_label : null;
+
         return new self(
             $iteration_change->tracker_id,
-            $iteration_change->label,
-            $iteration_change->sub_label
+            $label,
+            $sub_label
         );
     }
 }

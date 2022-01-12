@@ -23,7 +23,7 @@ namespace Tuleap\ProgramManagement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\DisplayPlanIterationsPresenter;
+use Tuleap\ProgramManagement\Adapter\Program\IterationView\DisplayPlanIterationsPresenter;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramBaseInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementInfoStub;

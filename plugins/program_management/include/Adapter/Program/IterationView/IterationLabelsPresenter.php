@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Builder;
+namespace Tuleap\ProgramManagement\Adapter\Program\IterationView;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
 
-final class IterationsLabelsBuilder
+/**
+ * @psalm-immutable
+ */
+final class IterationLabelsPresenter
 {
-    public static function buildWithLabels(string $label, string $sub_label): IterationLabels
+    private function __construct(public string $label, public string $sub_label)
     {
-        return IterationLabels::fromIterationTracker(
-            RetrieveIterationLabelsStub::buildLabels($label, $sub_label),
-            IterationTrackerIdentifierBuilder::buildWithId(101)
-        );
+    }
+
+    public static function fromLabels(IterationLabels $labels): self
+    {
+        $label     = $labels->label ?? dgettext('tuleap-program_management', 'Iterations');
+        $sub_label = $labels->sub_label ?? dgettext('tuleap-program_management', 'iteration');
+        return new self($label, $sub_label);
     }
 }

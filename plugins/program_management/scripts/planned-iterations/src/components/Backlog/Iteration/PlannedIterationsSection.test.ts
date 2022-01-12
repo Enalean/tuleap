@@ -73,20 +73,6 @@ describe("PlannedIterationsSection", () => {
             );
         });
 
-        it("should display Iterations/iteration by default", async () => {
-            const wrapper = await getWrapper({
-                label: "",
-                sub_label: "",
-            });
-
-            await Vue.nextTick();
-            await Vue.nextTick();
-
-            expect(wrapper.get("[data-test=planned-iterations-section-title]").text()).toEqual(
-                "Iterations"
-            );
-        });
-
         it.each([
             [
                 { label: "Guinea Pigs", sub_label: "g-pig" },
@@ -109,22 +95,16 @@ describe("PlannedIterationsSection", () => {
             }
         );
 
-        it.each([
-            [{ label: "Guinea Pigs", sub_label: "g-pig" }, "New g-pig"],
-            [{ label: "", sub_label: "" }, "New iteration"],
-        ])(
-            "should use the custom iteration sub_label in the [+ add iteration] button when it is defined",
-            async (iterations_labels: IterationLabels, expected_button_label: string) => {
-                const wrapper = await getWrapper(iterations_labels);
+        it("should use the custom iteration sub_label in the [+ add iteration] button when it is defined", async () => {
+            const wrapper = await getWrapper({ label: "Guinea Pigs", sub_label: "g-pig" });
 
-                await Vue.nextTick();
-                await Vue.nextTick();
+            await Vue.nextTick();
+            await Vue.nextTick();
 
-                expect(wrapper.find("[data-test=button-add-iteration-label]").text()).toEqual(
-                    expected_button_label
-                );
-            }
-        );
+            expect(wrapper.find("[data-test=button-add-iteration-label]").text()).toEqual(
+                "New g-pig"
+            );
+        });
     });
 
     describe("Iterations display", () => {

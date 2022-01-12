@@ -26,7 +26,7 @@
                     class="planned-iterations-section-title"
                     data-test="planned-iterations-section-title"
                 >
-                    {{ iterations_section_title }}
+                    {{ iterations_labels.label }}
                 </h2>
                 <button
                     type="submit"
@@ -36,7 +36,7 @@
                     <i aria-hidden="true" class="fas fa-plus tlp-button-icon"></i>
                     <span
                         data-test="button-add-iteration-label"
-                        v-translate="{ iteration_sub_label: iterations_sub_label }"
+                        v-translate="{ iteration_sub_label: iterations_labels.sub_label }"
                     >
                         New %{ iteration_sub_label }
                     </span>
@@ -124,18 +124,6 @@ export default class PlannedIterationsSection extends Vue {
             this.$gettext("The retrieval of %s has failed"),
             this.iterations_labels.label
         );
-    }
-
-    get iterations_section_title(): string {
-        return this.iterations_labels.label.length === 0
-            ? this.$gettext("Iterations")
-            : this.iterations_labels.label;
-    }
-
-    get iterations_sub_label(): string {
-        return this.iterations_labels.sub_label.length === 0
-            ? this.$gettext("iteration")
-            : this.iterations_labels.sub_label;
     }
 
     get has_iterations(): boolean {
