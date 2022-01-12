@@ -126,19 +126,19 @@ async function getMatrixElements(
                 submitted_on_date.toLocaleTimeString(locale, { timeZone: timezone });
         }
 
-        possible_elements.push({
-            requirement:
-                test_exec.definition.all_requirements[0].title ??
-                `#${test_exec.definition.all_requirements[0].id}`,
-            result: test_exec.previous_result?.status ?? null,
-            executed_by: test_exec.previous_result?.submitted_by.display_name ?? null,
-            executed_on: submitted_on,
-            test: {
-                id: artifact.id,
-                title: test_exec.definition.summary,
-            },
-            campaigns: campaigns.map((campaign) => campaign.id),
-        });
+        for (const { id, title } of test_exec.definition.all_requirements) {
+            possible_elements.push({
+                requirement: title ?? `#${id}`,
+                result: test_exec.previous_result?.status ?? null,
+                executed_by: test_exec.previous_result?.submitted_by.display_name ?? null,
+                executed_on: submitted_on,
+                test: {
+                    id: artifact.id,
+                    title: test_exec.definition.summary,
+                },
+                campaigns: campaigns.map((campaign) => campaign.id),
+            });
+        }
     }
 
     return possible_elements;

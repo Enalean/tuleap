@@ -48,43 +48,43 @@ export function getTraceabilityMatrix(
                     executed_on_date.toLocaleTimeString(locale, { timeZone: timezone });
             }
 
-            const requirement = {
-                id: execution.definition.all_requirements[0].id,
-                title:
-                    execution.definition.all_requirements[0].title ??
-                    execution.definition.all_requirements[0].xref,
-            };
+            for (const { id, title, xref } of execution.definition.all_requirements) {
+                const requirement = {
+                    id,
+                    title: title ?? xref,
+                };
 
-            const already_encountered_requirement = matrix_map.get(requirement.id);
-            const tests: Map<number, TraceabilityMatrixTest> =
-                already_encountered_requirement?.tests ?? new Map();
-            const already_encountered_test = tests.get(execution.definition.id);
+                const already_encountered_requirement = matrix_map.get(requirement.id);
+                const tests: Map<number, TraceabilityMatrixTest> =
+                    already_encountered_requirement?.tests ?? new Map();
+                const already_encountered_test = tests.get(execution.definition.id);
 
-            if (already_encountered_test) {
-                if (!executed_on_date) {
-                    continue;
+                if (already_encountered_test) {
+                    if (!executed_on_date) {
+                        continue;
+                    }
+
+                    if (
+                        already_encountered_test.executed_on_date &&
+                        executed_on_date <= already_encountered_test.executed_on_date
+                    ) {
+                        continue;
+                    }
                 }
-
-                if (
-                    already_encountered_test.executed_on_date &&
-                    executed_on_date <= already_encountered_test.executed_on_date
-                ) {
-                    continue;
-                }
+                tests.set(execution.definition.id, {
+                    id: execution.definition.id,
+                    title: execution.definition.summary,
+                    campaign: campaign.label,
+                    status: execution.previous_result?.status ?? null,
+                    executed_by: execution.previous_result?.submitted_by.display_name ?? null,
+                    executed_on,
+                    executed_on_date,
+                });
+                matrix_map.set(requirement.id, {
+                    requirement,
+                    tests,
+                });
             }
-            tests.set(execution.definition.id, {
-                id: execution.definition.id,
-                title: execution.definition.summary,
-                campaign: campaign.label,
-                status: execution.previous_result?.status ?? null,
-                executed_by: execution.previous_result?.submitted_by.display_name ?? null,
-                executed_on,
-                executed_on_date,
-            });
-            matrix_map.set(requirement.id, {
-                requirement,
-                tests,
-            });
         }
     }
 

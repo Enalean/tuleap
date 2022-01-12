@@ -29,7 +29,7 @@ import type {
 import type { getTestManagementExecution } from "@tuleap/plugin-docgen-docx";
 
 describe("create-traceability-matrix", () => {
-    it("creates a row in the matrix when a test execution with all the information is encountered", async () => {
+    it("creates rows in the matrix when a test execution with all the information is encountered", async () => {
         const get_test_exec = (): Promise<TestExecutionResponse> =>
             Promise.resolve({
                 previous_result: {
@@ -45,6 +45,10 @@ describe("create-traceability-matrix", () => {
                         {
                             id: 888,
                             title: "Requirement title",
+                        },
+                        {
+                            id: 999,
+                            title: "Another requirement title",
                         },
                     ],
                 },
@@ -98,6 +102,17 @@ describe("create-traceability-matrix", () => {
         expect(matrix).toStrictEqual([
             {
                 requirement: "Requirement title",
+                result: "passed",
+                executed_on: "6/30/2021 10:00:00 PM",
+                executed_by: "Realname (username)",
+                test: {
+                    id: 10,
+                    title: "Some definition summary",
+                },
+                campaign: "Campaign title",
+            },
+            {
+                requirement: "Another requirement title",
                 result: "passed",
                 executed_on: "6/30/2021 10:00:00 PM",
                 executed_by: "Realname (username)",
