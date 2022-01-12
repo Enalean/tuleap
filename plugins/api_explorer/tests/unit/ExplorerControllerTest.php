@@ -25,7 +25,7 @@ namespace Tuleap\APIExplorer;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Templating\TemplateCache;
 
 final class ExplorerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -34,7 +34,7 @@ final class ExplorerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCanProcessARequest(): void
     {
-        $include_assets = \Mockery::mock(IncludeAssets::class);
+        $include_assets = new IncludeViteAssets('/', '/');
 
         $template_cache = \Mockery::mock(TemplateCache::class);
         $template_cache->shouldReceive('getPath')->andReturnNull();
@@ -45,11 +45,8 @@ final class ExplorerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $include_assets
         );
 
-        $include_assets->shouldReceive('getFileURL')->andReturn('file_url');
-
         $layout = \Mockery::mock(BaseLayout::class);
-        $layout->shouldReceive('includeFooterJavascriptFile')->atLeast()->once();
-        $layout->shouldReceive('addCssAsset')->atLeast()->once();
+        $layout->shouldReceive('addJavascriptAsset')->atLeast()->once();
         $layout->shouldReceive('header')->once();
         $layout->shouldReceive('footer')->once();
 

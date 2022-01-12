@@ -22,11 +22,11 @@ namespace Tuleap\Layout;
 
 class CssAssetCollection
 {
-    /** @var CssAsset[] */
-    private $css_assets = [];
+    /** @var CssAssetGeneric[] */
+    private array $css_assets = [];
 
     /**
-     * @param CssAsset[] $css_assets
+     * @param CssAssetGeneric[] $css_assets
      */
     public function __construct(array $css_assets)
     {
@@ -35,10 +35,15 @@ class CssAssetCollection
         }
     }
 
-    private function addWithoutDuplicate(CssAsset $asset): void
+    public static function empty(): self
     {
-        if (! isset($this->css_assets[$asset->getPath()])) {
-            $this->css_assets[$asset->getPath()] = $asset;
+        return new self([]);
+    }
+
+    private function addWithoutDuplicate(CssAssetGeneric $asset): void
+    {
+        if (! isset($this->css_assets[$asset->getIdentifier()])) {
+            $this->css_assets[$asset->getIdentifier()] = $asset;
         }
     }
 
@@ -49,7 +54,7 @@ class CssAssetCollection
     }
 
     /**
-     * @return CssAsset[]
+     * @return CssAssetGeneric[]
      */
     public function getDeduplicatedAssets(): array
     {

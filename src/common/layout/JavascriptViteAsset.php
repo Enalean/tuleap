@@ -16,39 +16,26 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Layout;
 
-class CssAsset implements CssAssetGeneric
+final class JavascriptViteAsset extends JavascriptAssetGeneric
 {
-    /**
-     * @var IncludeAssets
-     * @psalm-readonly
-     */
-    protected $include_assets;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    protected $name;
-
-    public function __construct(IncludeAssets $include_assets, $name)
+    public function __construct(private IncludeViteAssets $assets, private string $script_name)
     {
-        $this->include_assets = $include_assets;
-        $this->name           = $name;
+        parent::__construct($assets, $script_name);
     }
 
-    public function getFileURL(ThemeVariation $variant): string
+    public function getType(): string
     {
-        return $this->include_assets->getFileURL($this->name . $variant->getFileColorSuffix() . '.css');
+        return 'module';
     }
 
-    public function getIdentifier(): string
+    public function getAssociatedCSSAssets(): CssAssetCollection
     {
-        return $this->include_assets->getPath($this->name);
+        return CssViteAsset::buildCollectionFromMainFileName($this->assets, $this->script_name);
     }
 }

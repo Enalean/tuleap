@@ -19,6 +19,7 @@
 
 import SwaggerUI from "swagger-ui";
 import React from "react"
+import "../themes/style.scss";
 
 interface TuleapLayoutProps {
     errSelectors: {

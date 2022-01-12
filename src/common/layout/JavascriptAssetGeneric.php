@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
+declare(strict_types=1);
 
-module.exports = webpack_configurator.extendDevConfiguration(common);
+namespace Tuleap\Layout;
+
+abstract class JavascriptAssetGeneric
+{
+    public function __construct(private IncludeAssetsGeneric $assets, private string $script_name)
+    {
+    }
+
+    final public function getFileURL(): string
+    {
+        return $this->assets->getFileURL($this->script_name);
+    }
+
+    abstract public function getType(): string;
+
+    abstract public function getAssociatedCSSAssets(): CssAssetCollection;
+}

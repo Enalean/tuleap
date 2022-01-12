@@ -15,8 +15,11 @@
                 </script>
             {{/ is_snippet }}
             {{^ is_snippet }}
-                <script type="text/javascript" src="{{ javascript }}" nonce="{{ csp_nonce }}"></script>
+                <script type="{{ type }}" src="{{ javascript }}" nonce="{{ csp_nonce }}"></script>
             {{/ is_snippet }}
         {{/ javascript_in_footer }}
+        {{# stylesheets }}
+            <link rel="stylesheet" href="{{ . }}">
+        {{/ stylesheets }}
     </body>
 </html>

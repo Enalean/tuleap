@@ -20,23 +20,13 @@
 
 namespace Tuleap\Layout;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class CssAssetCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CssAssetCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testGetDeduplicatedAssets()
+    public function testGetDeduplicatedAssets(): void
     {
-        $asset_one = Mockery::mock(CssAsset::class);
-        $asset_one->shouldReceive('getPath')->andReturns('assets/tuleap.css');
-        $asset_two = Mockery::mock(CssAsset::class);
-        $asset_two->shouldReceive('getPath')->andReturns('plugins/git/themes/BurningParrot/assets/git.css');
-        $asset_three = Mockery::mock(CssAsset::class);
-        $asset_three->shouldReceive('getPath')->andReturns('assets/tuleap.css');
+        $asset_one   = self::buildCSSAsset('assets/tuleap.css');
+        $asset_two   = self::buildCSSAsset('plugins/git/themes/BurningParrot/assets/git.css');
+        $asset_three = self::buildCSSAsset('assets/tuleap.css');
 
         $collection = new CssAssetCollection([$asset_one, $asset_two, $asset_three]);
 
@@ -44,16 +34,12 @@ class CssAssetCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected, $collection->getDeduplicatedAssets());
     }
 
-    public function testMerge()
+    public function testMerge(): void
     {
-        $asset_one = Mockery::mock(CssAsset::class);
-        $asset_one->shouldReceive('getPath')->andReturns('assets/tuleap.css');
-        $asset_two = Mockery::mock(CssAsset::class);
-        $asset_two->shouldReceive('getPath')->andReturns('plugins/git/themes/BurningParrot/assets/git.css');
-        $asset_three = Mockery::mock(CssAsset::class);
-        $asset_three->shouldReceive('getPath')->andReturns('assets/tuleap.css');
-        $asset_four = Mockery::mock(CssAsset::class);
-        $asset_four->shouldReceive('getPath')->andReturns('assets/widget/widget.css');
+        $asset_one   = self::buildCSSAsset('assets/tuleap.css');
+        $asset_two   = self::buildCSSAsset('plugins/git/themes/BurningParrot/assets/git.css');
+        $asset_three = self::buildCSSAsset('assets/tuleap.css');
+        $asset_four  = self::buildCSSAsset('assets/widget/widget.css');
 
         $collection       = new CssAssetCollection([$asset_one, $asset_two]);
         $other_collection = new CssAssetCollection([$asset_three, $asset_four]);
@@ -62,5 +48,25 @@ class CssAssetCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected = [$asset_one, $asset_two, $asset_four];
         $this->assertEquals($expected, $merged_collection->getDeduplicatedAssets());
+    }
+
+    private static function buildCSSAsset(string $identifier): CssAssetGeneric
+    {
+        return new class ($identifier) implements CssAssetGeneric
+        {
+            public function __construct(private string $identifier)
+            {
+            }
+
+            public function getFileURL(ThemeVariation $variant): string
+            {
+                return '/';
+            }
+
+            public function getIdentifier(): string
+            {
+                return $this->identifier;
+            }
+        };
     }
 }

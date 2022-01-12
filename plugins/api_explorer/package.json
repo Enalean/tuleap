@@ -5,8 +5,8 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
-    "watch": "webpack --config webpack.dev.js --watch"
+    "build": "vite build",
+    "watch": "vite build --watch"
   },
   "dependencies": {
     "react": "^17.0.2",

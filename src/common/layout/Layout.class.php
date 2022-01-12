@@ -459,7 +459,13 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
             }
         }
         foreach ($this->javascript_assets as $javascript_asset) {
-            echo sprintf('<script type="text/javascript" src="%s" nonce="%s"></script>%s', $javascript_asset->getFileURL(), $this->purifier->purify($this->getCSPNonce()), PHP_EOL);
+            echo sprintf(
+                '<script type="%s" src="%s" nonce="%s"></script>%s',
+                $this->purifier->purify($javascript_asset->getType()),
+                $this->purifier->purify($javascript_asset->getFileURL()),
+                $this->purifier->purify($this->getCSPNonce()),
+                PHP_EOL
+            );
         }
         echo '<script type="text/javascript" nonce="' . $this->purifier->purify($this->getCSPNonce()) . '">' . "\n";
         echo $this->getFooterSiteJs();
@@ -497,6 +503,14 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         return new \Tuleap\Layout\IncludeCoreAssets();
     }
 
+    private function getCurrentThemeVariation(): ThemeVariation
+    {
+        $current_user  = UserManager::instance()->getCurrentUser();
+        $theme_variant = new ThemeVariant();
+        $color         = ThemeVariantColor::buildFromVariant($theme_variant->getVariantForUser($current_user));
+        return new ThemeVariation($color, $current_user);
+    }
+
     /**
      * Display all the stylesheets for the current page
      */
@@ -516,12 +530,16 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
             echo '<link rel="stylesheet" type="text/css" href="' . $css . '" />';
         }
 
-        $current_user    = UserManager::instance()->getCurrentUser();
-        $theme_variant   = new ThemeVariant();
-        $color           = ThemeVariantColor::buildFromVariant($theme_variant->getVariantForUser($current_user));
-        $theme_variation = new ThemeVariation($color, $current_user);
+        $theme_variation = $this->getCurrentThemeVariation();
         foreach ($this->css_assets->getDeduplicatedAssets() as $css_asset) {
             echo '<link rel="stylesheet" type="text/css" href="' . $css_asset->getFileURL($theme_variation) . '" />';
+        }
+
+        $purifier = Codendi_HTMLPurifier::instance();
+        foreach ($this->javascript_assets as $javascript_asset) {
+            foreach ($javascript_asset->getAssociatedCSSAssets()->getDeduplicatedAssets() as $css_asset) {
+                echo '<link rel="stylesheet" type="text/css" href="' . $purifier->purify($css_asset->getFileURL($theme_variation)) . '" />';
+            }
         }
 
         // Plugins css

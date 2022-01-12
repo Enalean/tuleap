@@ -20,17 +20,12 @@
 
 namespace Tuleap\Theme\BurningParrot;
 
-class JavascriptPresenter
+/**
+ * @psalm-immutable
+ */
+final class JavascriptPresenter
 {
-    /** @var string */
-    public $javascript;
-
-    /** @var booean */
-    public $is_snippet;
-
-    public function __construct($javascript, $is_snippet)
+    public function __construct(public string $javascript, public bool $is_snippet, public string $type)
     {
-        $this->javascript = $javascript;
-        $this->is_snippet = $is_snippet;
     }
 }

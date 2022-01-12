@@ -37,6 +37,26 @@ final class IncludeViteAssets implements IncludeAssetsGeneric
         return $this->getBaseURLWithTrailingSlash() . $this->getHashedName($file_name);
     }
 
+    /**
+     * @return string[]
+     */
+    public function getStylesheetsURLs(string $file_name): array
+    {
+        $stylesheets = [];
+
+        if ($this->assets === null) {
+            $this->assets = $this->loadFromManifest();
+        }
+        $stylesheet_filename_hashes = $this->assets[$file_name]['css'] ?? [];
+        $base_url                   = $this->getBaseURLWithTrailingSlash();
+
+        foreach ($stylesheet_filename_hashes as $stylesheet_filename_hash) {
+            $stylesheets[] = $base_url . $stylesheet_filename_hash;
+        }
+
+        return $stylesheets;
+    }
+
     private function getBaseURLWithTrailingSlash(): string
     {
         return rtrim($this->base_url, '/') . '/';

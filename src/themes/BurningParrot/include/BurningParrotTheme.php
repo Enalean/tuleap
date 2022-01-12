@@ -25,6 +25,8 @@ use PFUser;
 use Project;
 use ProjectManager;
 use TemplateRendererFactory;
+use ThemeVariant;
+use ThemeVariantColor;
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
@@ -46,6 +48,7 @@ use Tuleap\Layout\Logo\FileContentComparator;
 use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
 use Tuleap\Layout\SearchFormPresenterBuilder;
 use Tuleap\Layout\SidebarPresenter;
+use Tuleap\Layout\ThemeVariation;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Admin\Access\ProjectAdministrationLinkPresenter;
 use Tuleap\Project\Admin\Access\UserCanAccessProjectAdministrationVerifier;
@@ -101,6 +104,9 @@ class BurningParrotTheme extends BaseLayout
      * @var ProjectFlagsBuilder
      */
     private $project_flags_builder;
+    private ThemeVariantColor $theme_variant_color;
+    private ThemeVariation $theme_variation;
+    private bool $header_has_been_written = false;
 
     public function __construct($root, PFUser $user)
     {
@@ -114,6 +120,9 @@ class BurningParrotTheme extends BaseLayout
         $this->detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($this->request);
 
         $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());
+
+        $this->theme_variant_color = ThemeVariantColor::buildFromVariant((new ThemeVariant())->getVariantForUser($user));
+        $this->theme_variation     = new ThemeVariation($this->theme_variant_color, $user);
 
         $this->includeFooterJavascriptFile(
             $this->include_asset->getFileURLWithFallback('tlp-' . $user->getLocale() . '.js', 'tlp-en_US.js')
@@ -135,10 +144,11 @@ class BurningParrotTheme extends BaseLayout
     {
     }
 
-    public function header(array $params)
+    public function header(array $params): void
     {
-        $project         = null;
-        $project_context = null;
+        $this->header_has_been_written = true;
+        $project                       = null;
+        $project_context               = null;
         if (! empty($params['group'])) {
             $project = $this->project_manager->getProject($params['group']);
 
@@ -245,10 +255,18 @@ class BurningParrotTheme extends BaseLayout
                 \BackendLogger::getDefaultLogger(),
             ),
             $this->getPlatformBannerWithScript($this->user, 'platform/platform-banner-bp.js'),
-            $this->detected_browser
+            $this->detected_browser,
+            $this->theme_variant_color,
+            $this->theme_variation,
+            $this->javascript_assets
         );
 
         $this->renderer->renderToPage('header', $header_presenter);
+    }
+
+    protected function hasHeaderBeenWritten(): bool
+    {
+        return $this->header_has_been_written;
     }
 
     public function displayContactPage()
@@ -341,7 +359,7 @@ class BurningParrotTheme extends BaseLayout
             $browser_deprecation_message,
             $this->canShowFooter($params),
             $this->version->getFullDescriptiveVersion(),
-            $this->getCSPNonce()
+            $this->getCSPNonce(),
         );
         $this->renderer->renderToPage('footer', $footer);
     }

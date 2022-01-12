@@ -21,7 +21,7 @@
 namespace Tuleap\Theme\BurningParrot;
 
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptAssetGeneric;
 
 class FooterPresenter
 {
@@ -40,7 +40,7 @@ class FooterPresenter
     public $csp_nonce;
 
     /**
-     * @param JavascriptAsset[] $javascript_assets
+     * @param JavascriptAssetGeneric[] $javascript_assets
      */
     public function __construct(
         array $javascript_in_footer,
@@ -68,10 +68,10 @@ class FooterPresenter
                 }
                 $is_snippet_already_included[$content] = true;
             }
-            $this->javascript_in_footer[] = new JavascriptPresenter($content, $is_snippet);
+            $this->javascript_in_footer[] = new JavascriptPresenter($content, $is_snippet, 'text/javascript');
         }
         foreach ($javascript_assets as $javascript_asset) {
-            $this->javascript_in_footer[] = new JavascriptPresenter($javascript_asset->getFileURL(), false);
+            $this->javascript_in_footer[] = new JavascriptPresenter($javascript_asset->getFileURL(), false, $javascript_asset->getType());
         }
 
         $this->tuleap_version              = $tuleap_version;

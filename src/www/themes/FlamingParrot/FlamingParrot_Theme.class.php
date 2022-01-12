@@ -83,6 +83,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
      */
     private $detected_browser;
 
+    private bool $header_has_been_written = false;
+
     public function __construct($root)
     {
         parent::__construct($root);
@@ -130,9 +132,10 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         return $array[$theme];
     }
 
-    public function header(array $params)
+    public function header(array $params): void
     {
-        $title = ForgeConfig::get('sys_name');
+        $this->header_has_been_written = true;
+        $title                         = ForgeConfig::get('sys_name');
         if (! empty($params['title'])) {
             $title = $params['title'] . ' - ' . $title;
         }
@@ -161,6 +164,11 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $this->displaySyndicationElements();
 
         $this->body($params);
+    }
+
+    protected function hasHeaderBeenWritten(): bool
+    {
+        return $this->header_has_been_written;
     }
 
     protected function includeSubsetOfCombined()

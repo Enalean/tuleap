@@ -23,32 +23,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout;
 
-class CssAsset implements CssAssetGeneric
+final class CssViteAsset implements CssAssetGeneric
 {
-    /**
-     * @var IncludeAssets
-     * @psalm-readonly
-     */
-    protected $include_assets;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    protected $name;
-
-    public function __construct(IncludeAssets $include_assets, $name)
+    private function __construct(private string $file_url)
     {
-        $this->include_assets = $include_assets;
-        $this->name           = $name;
+    }
+
+    public static function buildCollectionFromMainFileName(IncludeViteAssets $include_assets, string $file_name): CssAssetCollection
+    {
+        return new CssAssetCollection(
+            array_map(
+                static fn (string $file_url) => new self($file_url),
+                $include_assets->getStylesheetsURLs($file_name)
+            )
+        );
     }
 
     public function getFileURL(ThemeVariation $variant): string
     {
-        return $this->include_assets->getFileURL($this->name . $variant->getFileColorSuffix() . '.css');
+        return $this->file_url;
     }
 
     public function getIdentifier(): string
     {
-        return $this->include_assets->getPath($this->name);
+        return basename($this->file_url);
     }
 }
