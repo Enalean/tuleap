@@ -487,21 +487,10 @@ project_export_bug_export	depend_on_bugs_desc	List of bugs this bug depends on
 #-----------------------------------------------
 # Script: SF/www/project/export/index.php
 #
-project_export_index	export_to_csv_hdr	Text File Export $2
-project_export_index	export_to_csv_msg	Click on the links below to generate a text file export (CSV format).
 project_export_index	online_help	Online Help
-project_export_index	art_data	Data
-project_export_index	history	History
-project_export_index	dependencies	Dependencies
 project_export_index	legacy	Legacy
-project_export_index	bug_tracker	Bug Tracker
-project_export_index	tracker	Tracker
-project_export_index	export	Export
-project_export_index	show_format	Show Format
 project_export_index	export_x	Export $1
 project_export_index	support_request	Support Request
-project_export_index	access_logs	Project Access Logs
-project_export_index	user_groups	User groups definition
 project_export_index	direct_db_access	Direct Database Access
 project_export_index	generate_full_db	Generate Full Project Database</a> </b> (<- Click to generate)
 project_export_index	db_connection_params	Database connection parameters:
