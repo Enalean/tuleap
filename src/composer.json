@@ -97,7 +97,11 @@
     "laminas/laminas-cache-storage-adapter-zend-server": "*"
   },
   "config": {
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "composer/package-versions-deprecated": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   },
   "require-dev": {
     "mikey179/vfsstream": "^1.6",
