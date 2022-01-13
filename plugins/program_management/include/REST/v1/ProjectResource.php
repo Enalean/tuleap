@@ -78,7 +78,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CannotManipulateT
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\CannotPlanIntoItselfException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\CreatePlan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidProgramUserGroup;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanCreator;
@@ -110,7 +109,6 @@ final class ProjectResource extends AuthenticatedResource
     private const MAX_LIMIT = 50;
 
     private CreateTeam $team_creator;
-    private CreatePlan $plan_creator;
     private \UserManager $user_manager;
     private ProgramIncrementsSearcher $program_increments_builder;
     private BuildProgram $build_program;
@@ -121,7 +119,6 @@ final class ProjectResource extends AuthenticatedResource
     public function __construct()
     {
         $this->user_manager          = \UserManager::instance();
-        $plan_dao                    = new PlanDao();
         $team_dao                    = new TeamDao();
         $project_manager             = \ProjectManager::instance();
         $program_dao                 = new ProgramDao();
@@ -136,24 +133,12 @@ final class ProjectResource extends AuthenticatedResource
         $form_element_factory        = \Tracker_FormElementFactory::instance();
         $field_retriever             = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
         $project_manager_adapter     = new ProjectManagerAdapter($project_manager, $this->user_manager_adapter);
-        $tracker_checker             = new TrackerConfigurationChecker($tracker_retriever);
 
         $project_access_checker = new ProjectAccessChecker(
             new RestrictedUserCanAccessProjectVerifier(),
             \EventManager::instance()
         );
         $this->build_program    = ProgramAdapter::instance();
-
-        $this->plan_creator = new PlanCreator(
-            $tracker_checker,
-            $tracker_checker,
-            $tracker_retriever,
-            new ProgramUserGroupRetriever(new UserGroupRetriever(new \UGroupManager())),
-            $plan_dao,
-            $project_retriever,
-            $team_dao,
-            $project_permission_verifier
-        );
 
         $team_adapter       = new TeamAdapter(
             $project_manager_adapter,
@@ -284,6 +269,20 @@ final class ProjectResource extends AuthenticatedResource
         $user            = $this->user_manager->getCurrentUser();
         $user_identifier = UserProxy::buildFromPFUser($user);
 
+        $tracker_retriever = new TrackerFactoryAdapter(\TrackerFactory::instance());
+        $tracker_checker   = new TrackerConfigurationChecker($tracker_retriever);
+
+        $plan_creator = new PlanCreator(
+            $tracker_checker,
+            $tracker_checker,
+            $tracker_checker,
+            new ProgramUserGroupRetriever(new UserGroupRetriever(new \UGroupManager())),
+            new PlanDao(),
+            new ProjectManagerAdapter(\ProjectManager::instance(), $this->user_manager_adapter),
+            new TeamDao(),
+            new ProjectPermissionVerifier($this->user_manager_adapter)
+        );
+
         $plan_program_increment_change = new PlanProgramIncrementChange(
             $representation->program_increment_tracker_id,
             $representation->program_increment_label,
@@ -306,7 +305,7 @@ final class ProjectResource extends AuthenticatedResource
                 $representation->permissions->can_prioritize_features,
                 $plan_iteration_change
             );
-            $this->plan_creator->create($plan_change);
+            $plan_creator->create($plan_change);
         } catch (CannotPlanIntoItselfException | PlanTrackerException | ProgramTrackerException | InvalidProgramUserGroup | ProgramIncrementAndIterationCanNotBeTheSameTrackerException $e) {
             throw new I18NRestException(400, $e->getI18NExceptionMessage());
         } catch (ProgramCannotBeATeamException | ProgramAccessException $e) {

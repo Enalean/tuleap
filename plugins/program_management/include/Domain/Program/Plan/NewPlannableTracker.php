@@ -22,26 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Domain\Program\PlanTrackerDoesNotBelongToProjectException;
-use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTracker;
 
-final class TrackerIsValidChecker
+/**
+ * I hold the identifier of a Tracker that is going to be saved as a plannable Tracker.
+ * @psalm-immutable
+ */
+final class NewPlannableTracker
 {
+    private function __construct(private int $id)
+    {
+    }
+
     /**
      * @throws ProgramTrackerException
      */
-    public static function checkTrackerIsValid(RetrieveTracker $tracker_retriever, int $tracker_id, int $project_id): void
+    public static function fromId(
+        CheckNewPlannableTracker $tracker_checker,
+        int $tracker_id,
+        ProgramForAdministrationIdentifier $program,
+    ): self {
+        $tracker_checker->checkPlannableTrackerIsValid($tracker_id, $program);
+        return new self($tracker_id);
+    }
+
+    public function getId(): int
     {
-        $tracker = $tracker_retriever->getTrackerById($tracker_id);
-
-        if (! $tracker) {
-            throw new PlanTrackerNotFoundException($tracker_id);
-        }
-
-        if ($tracker->getProjectId() !== $project_id) {
-            throw new PlanTrackerDoesNotBelongToProjectException($tracker_id, $project_id);
-        }
+        return $this->id;
     }
 }

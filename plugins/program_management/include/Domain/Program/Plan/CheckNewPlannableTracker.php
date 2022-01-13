@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,43 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTracker;
+use Tuleap\ProgramManagement\Domain\Program\PlanTrackerDoesNotBelongToProjectException;
+use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
 
-/**
- * @psalm-immutable
- */
-final class ProgramPlannableTracker
+interface CheckNewPlannableTracker
 {
     /**
-     * @var int
+     * @throws PlanTrackerNotFoundException
+     * @throws PlanTrackerDoesNotBelongToProjectException
      */
-    private $id;
-
-    private function __construct(int $id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @throws ProgramTrackerException
-     */
-    public static function build(
-        RetrieveTracker $tracker_retriever,
-        int $tracker_id,
+    public function checkPlannableTrackerIsValid(
+        int $plannable_tracker_id,
         ProgramForAdministrationIdentifier $program,
-    ): self {
-        TrackerIsValidChecker::checkTrackerIsValid(
-            $tracker_retriever,
-            $tracker_id,
-            $program->id
-        );
-
-        return new self($tracker_id);
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
+    ): void;
 }

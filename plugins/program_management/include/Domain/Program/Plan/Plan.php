@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 final class Plan
 {
     /**
-     * @var ProgramPlannableTracker[]
+     * @var NewPlannableTracker[]
      */
     private $plannable_trackers;
     private ProgramUserGroupCollection $can_prioritize;
@@ -48,7 +48,7 @@ final class Plan
     private $project_id;
 
     /**
-     * @param ProgramPlannableTracker[] $plannable_trackers
+     * @param NewPlannableTracker[] $plannable_trackers
      */
     public function __construct(
         private NewProgramIncrementTracker $program_increment_tracker,
@@ -77,7 +77,7 @@ final class Plan
     public function getPlannableTrackerIds(): array
     {
         return array_map(
-            static function (ProgramPlannableTracker $tracker) {
+            static function (NewPlannableTracker $tracker) {
                 return $tracker->getId();
             },
             $this->plannable_trackers

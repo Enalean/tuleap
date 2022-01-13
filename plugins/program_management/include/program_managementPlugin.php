@@ -1363,7 +1363,7 @@ final class program_managementPlugin extends Plugin
             new PlanCreator(
                 $tracker_checker,
                 $tracker_checker,
-                $tracker_retriever,
+                $tracker_checker,
                 new ProgramUserGroupRetriever(new UserGroupRetriever($ugroup_manager)),
                 new PlanDao(),
                 $project_manager_adapter,

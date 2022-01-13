@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker;
 
 use Tuleap\ProgramManagement\Domain\TrackerNotFoundException;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -74,30 +73,10 @@ final class TrackerFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->tracker_factory->method('getTrackerById')->willReturn(null);
 
-        self::assertNull($this->getAdapter()->getTrackerById(404));
-    }
-
-    public function testItReturnsTracker(): void
-    {
-        $project = ProjectTestBuilder::aProject()->build();
-        $this->tracker_factory->method('getTrackerById')->willReturn(
-            TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->withProject($project)->build()
-        );
-
-        $tracker = $this->getAdapter()->getTrackerById(self::TRACKER_ID);
-
-        self::assertInstanceOf(TrackerReference::class, $tracker);
-        self::assertSame(self::TRACKER_ID, $tracker->getId());
-    }
-
-    public function testReturnNullWhenNoTrackerFromId(): void
-    {
-        $this->tracker_factory->method('getTrackerById')->willReturn(null);
-
         self::assertNull($this->getAdapter()->getTrackerFromId(404));
     }
 
-    public function testItReturnsTrackerFromId(): void
+    public function testItReturnsTracker(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
         $tracker = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->withProject($project)->build();
