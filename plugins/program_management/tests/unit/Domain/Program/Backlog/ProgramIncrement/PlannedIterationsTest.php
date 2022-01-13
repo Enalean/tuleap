@@ -23,21 +23,23 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramFlag;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramPrivacy;
-use Tuleap\ProgramManagement\Tests\Builder\IterationsLabelsBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\IterationTrackerConfigurationBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\UserPreferenceBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramBaseInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramFlagsStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramIncrementInfoStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramPrivacyStub;
-use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyUserIsProgramAdminStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyUserIsProgramAdminStub;
 
 final class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const ITERATION_TRACKER_ID = 101;
+    private const ITERATION_LABEL      = 'Cycles';
+    private const ITERATION_SUB_LABEL  = 'cycle';
+
     public function testItBuilds(): void
     {
         $planned_iterations = PlannedIterations::build(
@@ -46,11 +48,14 @@ final class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
             BuildProgramBaseInfoStub::withDefault(),
             BuildProgramIncrementInfoStub::withId(1260),
             VerifyUserIsProgramAdminStub::withProgramAdminUser(),
-            RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerReferenceStub::withId(101)),
             ProgramIdentifierBuilder::build(),
             UserIdentifierStub::withId(666),
             ProgramIncrementIdentifierBuilder::buildWithId(1260),
-            IterationsLabelsBuilder::buildWithLabels('Cycles', 'cycle'),
+            IterationTrackerConfigurationBuilder::buildWithIdAndLabels(
+                self::ITERATION_TRACKER_ID,
+                self::ITERATION_LABEL,
+                self::ITERATION_SUB_LABEL
+            ),
             UserPreferenceBuilder::withPreference('accessibility_mode', '1')
         );
 
@@ -89,9 +94,11 @@ final class PlannedIterationsTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
             $planned_iterations->getProgramIncrementInfo()
         );
-        self::assertEquals(IterationsLabelsBuilder::buildWithLabels("Cycles", "cycle"), $planned_iterations->getIterationLabels());
+        $labels = $planned_iterations->getIterationLabels();
+        self::assertSame(self::ITERATION_LABEL, $labels->label);
+        self::assertSame(self::ITERATION_SUB_LABEL, $labels->sub_label);
         self::assertTrue($planned_iterations->isUserAdmin());
-        self::assertEquals('101', $planned_iterations->getIterationTrackerId());
+        self::assertSame(self::ITERATION_TRACKER_ID, $planned_iterations->getIterationTrackerId());
         self::assertTrue($planned_iterations->isAccessibilityModeEnabled());
     }
 }

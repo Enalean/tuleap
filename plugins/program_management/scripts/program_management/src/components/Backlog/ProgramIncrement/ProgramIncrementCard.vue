@@ -61,6 +61,7 @@
                 <span v-translate>Edit</span>
             </a>
             <a
+                v-if="is_iteration_tracker_defined"
                 v-bind:href="`/program_management/${short_name}/increments/${increment.id}/plan`"
                 class="program-increment-info-link"
                 v-bind:title="planned_iteration_link"
@@ -110,6 +111,9 @@ export default class ProgramIncrementCard extends Vue {
 
     @configuration.State
     readonly tracker_iteration_label!: string;
+
+    @configuration.State
+    readonly is_iteration_tracker_defined!: boolean;
 
     private is_open = false;
 

@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramBacklogConfiguration;
+use Tuleap\Project\Flags\ProjectFlagPresenter;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 
@@ -48,13 +50,17 @@ final class ProgramBacklogPresenter
     public bool $is_configured;
     public bool $has_plan_permissions;
     public string $project_icon;
+    public bool $is_iteration_tracker_defined;
     public string $iteration_label;
 
+    /**
+     * @param ProjectFlagPresenter[] $project_flags
+     */
     public function __construct(
         \Project $project,
         array $project_flags,
         bool $user_has_accessibility_mode,
-        ProgramBacklogConfigurationPresenter $backlog_configuration,
+        ProgramBacklogConfiguration $backlog_configuration,
         bool $is_program_admin,
     ) {
         $this->project_name                 = $project->getPublicName();
@@ -80,7 +86,8 @@ final class ProgramBacklogPresenter
             $this->program_increment_sub_label = $backlog_configuration->program_increment_sublabel;
         }
 
-        $this->iteration_label = dgettext('tuleap-program_management', "Iterations");
+        $this->is_iteration_tracker_defined = $backlog_configuration->is_iteration_tracker_defined;
+        $this->iteration_label              = dgettext('tuleap-program_management', "Iterations");
 
         if ($backlog_configuration->iteration_label) {
             $this->iteration_label = $backlog_configuration->iteration_label;

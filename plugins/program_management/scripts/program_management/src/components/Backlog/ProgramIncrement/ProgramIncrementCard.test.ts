@@ -26,7 +26,19 @@ import type { Wrapper } from "@vue/test-utils";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 
 describe("ProgramIncrementCard", () => {
-    async function getWrapper(increment: ProgramIncrement): Promise<Wrapper<ProgramIncrementCard>> {
+    async function getWrapper(
+        user_can_update = true,
+        is_iteration_tracker_defined = true
+    ): Promise<Wrapper<ProgramIncrementCard>> {
+        const increment = {
+            id: 1,
+            title: "PI 1",
+            status: "To be Planned",
+            start_date: null,
+            end_date: null,
+            user_can_update,
+        } as ProgramIncrement;
+
         return shallowMount(ProgramIncrementCard, {
             localVue: await createProgramManagementLocalVue(),
             propsData: {
@@ -37,6 +49,7 @@ describe("ProgramIncrementCard", () => {
                     state: {
                         configuration: {
                             short_name: "guinea-pig",
+                            is_iteration_tracker_defined,
                             tracker_iteration_label: "stuff",
                         },
                     },
@@ -46,14 +59,7 @@ describe("ProgramIncrementCard", () => {
     }
 
     it("Display a card with closed state", async () => {
-        const wrapper = await getWrapper({
-            id: 1,
-            title: "PI 1",
-            status: '"To be Planned',
-            start_date: null,
-            end_date: null,
-            user_can_update: true,
-        } as ProgramIncrement);
+        const wrapper = await getWrapper();
 
         expect(
             wrapper.get("[data-test=program-increment-toggle-icon]").classes("fa-caret-right")
@@ -66,14 +72,7 @@ describe("ProgramIncrementCard", () => {
     });
 
     it("Don't display update button if user doesn't have the permission", async () => {
-        const wrapper = await getWrapper({
-            id: 1,
-            title: "PI 1",
-            status: '"To be Planned',
-            start_date: null,
-            end_date: null,
-            user_can_update: false,
-        } as ProgramIncrement);
+        const wrapper = await getWrapper(false);
 
         wrapper.get("[data-test=program-increment-toggle]").trigger("click");
 
@@ -83,15 +82,16 @@ describe("ProgramIncrementCard", () => {
         expect(wrapper.find("[data-test=program-increment-content]").exists()).toBe(true);
     });
 
+    it(`Does not show the link to iterations when there is no iteration tracker defined`, async () => {
+        const wrapper = await getWrapper(true, false);
+
+        expect(wrapper.find("[data-test=program-increment-plan-iterations-link]").exists()).toBe(
+            false
+        );
+    });
+
     it("Display a card and its content", async () => {
-        const wrapper = await getWrapper({
-            id: 1,
-            title: "PI 1",
-            status: '"To be Planned',
-            start_date: null,
-            end_date: null,
-            user_can_update: true,
-        } as ProgramIncrement);
+        const wrapper = await getWrapper();
 
         wrapper.get("[data-test=program-increment-toggle]").trigger("click");
 

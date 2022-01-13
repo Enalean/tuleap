@@ -29,11 +29,12 @@ use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramBacklogConfigurationPresenter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramBacklogPresenter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramBacklogConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
@@ -105,7 +106,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
         try {
             $configuration = $this->buildConfigurationForExistingProgram($project, $user_identifier);
         } catch (ProjectIsNotAProgramException | Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException $exception) {
-            $configuration = $this->buildConfigurationForPotentialProgram();
+            $configuration = ProgramBacklogConfiguration::buildForPotentialProgram();
         } catch (ProgramTrackerNotFoundException $e) {
             throw new NotFoundException();
         }
@@ -163,33 +164,27 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
     private function buildConfigurationForExistingProgram(
         Project $project,
         UserIdentifier $user,
-    ): ProgramBacklogConfigurationPresenter {
+    ): ProgramBacklogConfiguration {
         $program = ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), $user, null);
 
-        $plan_configuration = ProgramIncrementTrackerConfiguration::fromProgram(
+        $program_increment_configuration = ProgramIncrementTrackerConfiguration::fromProgram(
             $this->program_increment_tracker_retriever,
             $this->labels_retriever,
-            $program,
             $this->prioritize_features_permission,
-            $user,
             $this->user_can_submit_in_tracker_verifier,
+            $program,
+            $user
+        );
+
+        $iteration_configuration = IterationTrackerConfiguration::fromProgram(
+            $this->retrieve_visible_iteration_tracker,
             $this->label_retriever,
-            $this->retrieve_visible_iteration_tracker
+            $program,
+            $user
         );
-
-        return new ProgramBacklogConfigurationPresenter(
-            $plan_configuration->canCreateProgramIncrement(),
-            $plan_configuration->hasPlanPermissions(),
-            $plan_configuration->getProgramIncrementTrackerId(),
-            $plan_configuration->getProgramIncrementLabel(),
-            $plan_configuration->getProgramIncrementSubLabel(),
-            true,
-            $plan_configuration->getIterationLabel()
+        return ProgramBacklogConfiguration::fromProgramIncrementAndIterationConfiguration(
+            $program_increment_configuration,
+            $iteration_configuration
         );
-    }
-
-    private function buildConfigurationForPotentialProgram(): ProgramBacklogConfigurationPresenter
-    {
-        return new ProgramBacklogConfigurationPresenter(false, false, 0, "", "", false, "");
     }
 }

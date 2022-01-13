@@ -95,6 +95,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const accessibility = Boolean(vue_mount_point.dataset.userWithAccessibilityMode);
     const can_create_program_increment = Boolean(vue_mount_point.dataset.canCreateProgramIncrement);
     const has_plan_permissions = Boolean(vue_mount_point.dataset.hasPlanPermissions);
+    const is_iteration_tracker_defined = Boolean(vue_mount_point.dataset.isIterationTrackerDefined);
     const is_configured = Boolean(vue_mount_point.dataset.isConfigured);
     if (vue_mount_point.dataset.projectIcon === undefined) {
         throw new Error("Missing the project_icon dataset");
@@ -117,6 +118,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         tracker_program_increment_sub_label: program_increment_sub_label,
         is_program_admin,
         is_configured,
+        is_iteration_tracker_defined,
         tracker_iteration_label: iteration_label,
     };
 

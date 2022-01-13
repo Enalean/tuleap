@@ -23,20 +23,22 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIterationTrackerNotFoundException;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramFlags;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramPrivacy;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramBaseInfo;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramFlag;
-use Tuleap\ProgramManagement\Domain\Workspace\BuildProgramPrivacy;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramPrivacy;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserPreference;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserIsProgramAdmin;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
+/**
+ * @psalm-immutable
+ */
 final class PlannedIterations
 {
     /**
@@ -49,7 +51,7 @@ final class PlannedIterations
         private ProgramIncrementInfo $program_increment_info,
         private bool $is_user_admin,
         private IterationLabels $iteration_labels,
-        private TrackerReference $iteration_tracker_reference,
+        private IterationTrackerIdentifier $iteration_tracker,
         private bool $is_accessibility_mode_enabled,
     ) {
     }
@@ -57,7 +59,6 @@ final class PlannedIterations
     /**
      * @throws ProgramIncrementNotFoundException
      * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException
-     * @throws ProgramIterationTrackerNotFoundException
      */
     public static function build(
         BuildProgramFlags $build_program_flags,
@@ -65,11 +66,10 @@ final class PlannedIterations
         BuildProgramBaseInfo $build_program_base_info,
         BuildProgramIncrementInfo $build_program_increment_info,
         VerifyUserIsProgramAdmin $verify_user_is_program_admin,
-        RetrieveVisibleIterationTracker $retrieve_visible_iteration_tracker,
         ProgramIdentifier $program_identifier,
         UserIdentifier $user_identifier,
         ProgramIncrementIdentifier $increment_identifier,
-        IterationLabels $iterations_labels,
+        IterationTrackerConfiguration $iteration_configuration,
         UserPreference $user_preference_for_accessibility_mode,
     ): self {
         $program_flags     = $build_program_flags->build($program_identifier);
@@ -77,11 +77,6 @@ final class PlannedIterations
         $program_base_info = $build_program_base_info->build($program_identifier);
         $program_increment = $build_program_increment_info->build($user_identifier, $increment_identifier);
         $is_user_admin     = $verify_user_is_program_admin->isUserProgramAdmin($user_identifier, $program_identifier);
-        $iteration_tracker = $retrieve_visible_iteration_tracker->retrieveVisibleIterationTracker($program_identifier, $user_identifier);
-
-        if ($iteration_tracker === null) {
-            throw new ProgramIterationTrackerNotFoundException($program_identifier);
-        }
 
         return new self(
             $program_flags,
@@ -89,8 +84,8 @@ final class PlannedIterations
             $program_base_info,
             $program_increment,
             $is_user_admin,
-            $iterations_labels,
-            $iteration_tracker,
+            $iteration_configuration->labels,
+            $iteration_configuration->iteration_tracker,
             (bool) $user_preference_for_accessibility_mode->getPreferenceValue()
         );
     }
@@ -130,7 +125,7 @@ final class PlannedIterations
 
     public function getIterationTrackerId(): int
     {
-        return $this->iteration_tracker_reference->getId();
+        return $this->iteration_tracker->getId();
     }
 
     public function isAccessibilityModeEnabled(): bool

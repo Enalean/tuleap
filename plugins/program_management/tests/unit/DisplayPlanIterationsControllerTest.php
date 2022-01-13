@@ -48,6 +48,7 @@ final class DisplayPlanIterationsControllerTest extends TestCase
 {
     private const PROGRAM_ID           = 101;
     private const PROGRAM_INCREMENT_ID = 1260;
+    private const ITERATION_TRACKER_ID = 224;
 
     /**
      * @var Stub&\ProjectManager
@@ -57,104 +58,29 @@ final class DisplayPlanIterationsControllerTest extends TestCase
      * @var MockObject&\TemplateRenderer
      */
     private $template_renderer;
+    private BuildProgramStub $program_builder;
+    private string $variable_program_increment_id;
+    private string $variable_project_name;
+    private RetrieveVisibleIterationTrackerStub $iteration_tracker_retriever;
 
     protected function setUp(): void
     {
-        $this->project_manager   = $this->createStub(\ProjectManager::class);
-        $this->template_renderer = $this->createMock(\TemplateRenderer::class);
+        $this->project_manager               = $this->createStub(\ProjectManager::class);
+        $this->template_renderer             = $this->createMock(\TemplateRenderer::class);
+        $this->program_builder               = BuildProgramStub::stubValidProgram();
+        $this->variable_program_increment_id = (string) self::PROGRAM_INCREMENT_ID;
+        $this->variable_project_name         = 'test_project';
+        $this->iteration_tracker_retriever   = RetrieveVisibleIterationTrackerStub::withValidTracker(
+            TrackerReferenceStub::withId(self::ITERATION_TRACKER_ID)
+        );
     }
 
-    public function testItThrowsNotFoundExceptionWhenProjectIsNotFoundInVariables(): void
+    private function processController(): void
     {
-        $this->project_manager->method('getProjectByUnixName')->willReturn(null);
-
-        $variables = ['project_name' => 'unknown-project-unix-name'];
-
-        $this->expectException(NotFoundException::class);
-
-        $this->getController(BuildProgramStub::stubInvalidProgram())
-            ->process(
-                HTTPRequestBuilder::get()->build(),
-                LayoutBuilder::build(),
-                $variables
-            );
-    }
-
-    public function testItThrowsNotFoundWhenServiceIsNotAvailable(): void
-    {
-        $variables = ['project_name' => 'guinea-pig'];
-        $project   = $this->getProject(false);
-
-        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
-
-        $this->expectException(NotFoundException::class);
-        $this->getController(BuildProgramStub::stubInvalidProgram())->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), $variables);
-    }
-
-    public function testPreventsAccessWhenProjectIsATeam(): void
-    {
-        $request   = HTTPRequestBuilder::get()->withUser($this->getUser())->build();
-        $variables = ['project_name' => 'guinea-pig'];
-        $project   = $this->getProject();
-
-        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
-        $this->expectException(NotFoundException::class);
-
-        $this->getController(BuildProgramStub::stubInvalidProgram())->process($request, LayoutBuilder::build(), $variables);
-    }
-
-    public function testItThrowsAForbiddenExceptionWhenUserCannotAccessProgram(): void
-    {
-        $request   = HTTPRequestBuilder::get()->withUser($this->getUser())->build();
-        $variables = ['project_name' => 'test_project', 'increment_id' => '100'];
-        $project   = $this->getProject();
-
-        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
-        $this->expectException(ForbiddenException::class);
-
-        $this->getController(
-            BuildProgramStub::stubInvalidProgramAccess(),
-        )
-        ->process($request, LayoutBuilder::build(), $variables);
-    }
-
-    public function testItThrowsANotFoundExceptionWhenProgramIncrementNotFound(): void
-    {
-        $request   = HTTPRequestBuilder::get()->withUser($this->getUser())->build();
-        $variables = ['project_name' => 'test_project', 'increment_id' => '100'];
-        $project   = $this->getProject();
-
-        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
-        $this->expectException(NotFoundException::class);
-
-        $this->getController(
-            BuildProgramStub::stubValidProgram(),
-        )
-        ->process($request, LayoutBuilder::build(), $variables);
-    }
-
-    public function testItDisplaysIterationsPlanning(): void
-    {
-        $user      = $this->getUser();
-        $request   = HTTPRequestBuilder::get()->withUser($user)->build();
-        $variables = ['project_name' => 'test_project', 'increment_id' => self::PROGRAM_INCREMENT_ID];
-        $project   = $this->getProject();
-
-        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
-        $this->template_renderer->expects(self::once())
-            ->method('renderToPage')
-            ->with('plan-iterations', self::isInstanceOf(DisplayPlanIterationsPresenter::class));
-
-        $this->getController(BuildProgramStub::stubValidProgram())
-            ->process($request, LayoutBuilder::build(), $variables);
-    }
-
-    private function getController(BuildProgramStub $build_program_stub): DisplayPlanIterationsController
-    {
-        return new DisplayPlanIterationsController(
+        $controller = new DisplayPlanIterationsController(
             $this->project_manager,
             $this->template_renderer,
-            $build_program_stub,
+            $this->program_builder,
             BuildProgramFlagsStub::withDefaults(),
             BuildProgramPrivacyStub::withPrivateAccess(),
             BuildProgramBaseInfoStub::withDefault(),
@@ -162,17 +88,95 @@ final class DisplayPlanIterationsControllerTest extends TestCase
             VerifyIsProgramIncrementStub::withValidProgramIncrement(),
             VerifyIsVisibleArtifactStub::withVisibleIds(self::PROGRAM_INCREMENT_ID),
             VerifyUserIsProgramAdminStub::withProgramAdminUser(),
-            RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerReferenceStub::withId(224)),
+            $this->iteration_tracker_retriever,
             RetrieveIterationLabelsStub::buildLabels('Cycles', 'cycle'),
             RetrieveUserPreferenceStub::withNameAndValue('accessibility_mode', '1'),
             new TitleValueRetriever(
                 RetrieveFullArtifactStub::withArtifact(
                     ArtifactTestBuilder::anArtifact(1)
-                                       ->withTitle('Title')
-                                       ->build()
+                        ->withTitle('Title')
+                        ->build()
                 )
             )
         );
+
+        $user      = $this->getUser();
+        $request   = HTTPRequestBuilder::get()->withUser($user)->build();
+        $variables = [
+            'project_name' => $this->variable_project_name,
+            'increment_id' => $this->variable_program_increment_id,
+        ];
+
+        $controller->process($request, LayoutBuilder::build(), $variables);
+    }
+
+    public function testItThrowsNotFoundExceptionWhenProjectIsNotFoundInVariables(): void
+    {
+        $this->variable_project_name = 'unknown-project-unix-name';
+        $this->project_manager->method('getProjectByUnixName')->willReturn(null);
+
+        $this->expectException(NotFoundException::class);
+        $this->processController();
+    }
+
+    public function testItThrowsNotFoundWhenServiceIsNotAvailable(): void
+    {
+        $project = $this->getProject(false);
+        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
+
+        $this->expectException(NotFoundException::class);
+        $this->processController();
+    }
+
+    public function testPreventsAccessWhenProjectIsATeam(): void
+    {
+        $project = $this->getProject();
+        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
+        $this->program_builder = BuildProgramStub::stubInvalidProgram();
+
+        $this->expectException(NotFoundException::class);
+        $this->processController();
+    }
+
+    public function testItThrowsAForbiddenExceptionWhenUserCannotAccessProgram(): void
+    {
+        $project = $this->getProject();
+        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
+        $this->program_builder = BuildProgramStub::stubInvalidProgramAccess();
+
+        $this->expectException(ForbiddenException::class);
+        $this->processController();
+    }
+
+    public function testItThrowsANotFoundExceptionWhenProgramIncrementNotFound(): void
+    {
+        $project = $this->getProject();
+        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
+        $this->variable_program_increment_id = '100';
+
+        $this->expectException(NotFoundException::class);
+        $this->processController();
+    }
+
+    public function testItThrowsANotFoundExceptionWhenProgramHasNoIterationTrackerDefined(): void
+    {
+        $project = $this->getProject();
+        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
+        $this->iteration_tracker_retriever = RetrieveVisibleIterationTrackerStub::withNotVisibleIterationTracker();
+
+        $this->expectException(NotFoundException::class);
+        $this->processController();
+    }
+
+    public function testItDisplaysIterationsPlanning(): void
+    {
+        $project = $this->getProject();
+        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
+
+        $this->template_renderer->expects(self::once())
+            ->method('renderToPage')
+            ->with('plan-iterations', self::isInstanceOf(DisplayPlanIterationsPresenter::class));
+        $this->processController();
     }
 
     private function getProject(bool $is_program_management_used = true): \Project
