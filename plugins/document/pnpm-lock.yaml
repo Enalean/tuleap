@@ -19,7 +19,7 @@ specifiers:
   vue-dompurify-html: ^2.5.0
   vue-gettext: ^2.1.12
   vue-property-decorator: ^9.1.2
-  vue-router: ^3.5.1
+  vue-router: ^3.5.3
   vuex: ^3.6.2
   vuex-class: ^0.3.2
   vuex-persistedstate: ^3.1.0
@@ -40,7 +40,7 @@ dependencies:
   vue: 2.6.14
   vue-dompurify-html: 2.5.0_vue@2.6.14
   vue-gettext: 2.1.12
-  vue-router: 3.5.1
+  vue-router: 3.5.3
   vuex: 3.6.2_vue@2.6.14
   vuex-persistedstate: 3.1.0_vue@2.6.14+vuex@3.6.2
   vuex-shared-mutations: 1.0.2
@@ -505,8 +505,8 @@ packages:
       vue-class-component: 7.2.6_vue@2.6.14
     dev: true
 
-  /vue-router/3.5.1:
-    resolution: {integrity: sha512-RRQNLT8Mzr8z7eL4p7BtKvRaTSGdCbTy2+Mm5HTJvLGYSSeG9gDzNasJPP/yOYKLy+/cLG/ftrqq5fvkFwBJEw==}
+  /vue-router/3.5.3:
+    resolution: {integrity: sha512-FUlILrW3DGitS2h+Xaw8aRNvGTwtuaxrRkNSHWTizOfLUie7wuYwezeZ50iflRn8YPV5kxmU2LQuu3nM/b3Zsg==}
     dev: false
 
   /vue/2.6.14:
