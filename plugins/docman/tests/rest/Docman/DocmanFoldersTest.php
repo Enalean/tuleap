@@ -1028,4 +1028,48 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $this->checkItemHasBeenDeleted($file_to_delete_id);
     }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testSearchInFolder(int $root_id): void
+    {
+        $query = [
+            'limit'  => 50,
+            'offset' => 0,
+            'query'  => json_encode(['global_search' => '*item*']),
+        ];
+
+        $search_response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'docman_folders/' . $root_id . '/search?' . http_build_query($query))
+        );
+
+        $this->assertSame(200, $search_response->getStatusCode());
+        $found_items = json_decode($search_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertEquals(5, count($found_items));
+
+
+        $query = [
+            'limit'  => 50,
+            'offset' => 0,
+            'query'  => json_encode(['global_search' => '*link']),
+        ];
+
+        $search_response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'docman_folders/' . $root_id . '/search?' . http_build_query($query))
+        );
+
+        $this->assertSame(200, $search_response->getStatusCode());
+        $found_items = json_decode($search_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertCount(4, $found_items);
+
+        $item_titles = [];
+        foreach ($found_items as $item) {
+            $item_titles[] = $item['title'];
+        }
+        $this->assertContains("PUT HM Link", $item_titles);
+        $this->assertContains("LOCK Link", $item_titles);
+        $this->assertContains("DELETE Link", $item_titles);
+        $this->assertContains("Link", $item_titles);
+    }
 }

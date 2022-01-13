@@ -160,7 +160,7 @@ class Docman_Report
         return $this->image;
     }
 
-    public function initFromRow($row)
+    public function initFromRow(array $row): void
     {
         if (isset($row['report_id'])) {
             $this->id = $row['report_id'];

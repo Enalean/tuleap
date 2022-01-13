@@ -23,11 +23,11 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_SqlFilterListAdvanced extends \Docman_SqlFilter
 {
-    public function __construct($filter)
+    public function __construct(Docman_Filter $filter)
     {
         parent::__construct($filter);
     }
-    public function _getSpecificSearchChunk()
+    public function _getSpecificSearchChunk() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $stmt = [];
         $v    = $this->filter->getValue();

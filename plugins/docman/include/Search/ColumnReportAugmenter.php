@@ -31,30 +31,58 @@ final class ColumnReportAugmenter
     {
     }
 
-    /**
-     * @param string[] $columnsOnReport
-     */
-    public function addColumnsFromRequest(\Codendi_Request $request, array $columnsOnReport, \Docman_Report $report): void
+    public function addColumnsFromRequest(\Codendi_Request $request, array $report_columns, \Docman_Report $report): void
     {
-        $keepRefOnUpdateDate = null;
-        $thereIsAsort        = false;
+        $keep_ref_on_update_date = null;
+        $is_there_a_sort         = false;
 
-        foreach ($columnsOnReport as $colLabel) {
-            $column = $this->column_factory->getColumnFromLabel($colLabel);
+        foreach ($report_columns as $column_label) {
+            $column = $this->column_factory->getColumnFromLabel($column_label);
+            // set sort if provided by request parameters
             $column->initFromRequest($request);
 
-            // If no sort, sort on update_date in DESC by default
-            if ($colLabel === 'update_date') {
-                $keepRefOnUpdateDate = $column;
+            if ($column_label === 'update_date') {
+                $keep_ref_on_update_date = $column;
             }
             if ($column->getSort() !== null) {
-                $thereIsAsort = true;
+                $is_there_a_sort = true;
             }
 
             $report->addColumn($column);
         }
-        if (! $thereIsAsort && $keepRefOnUpdateDate !== null) {
-            $keepRefOnUpdateDate->setSort(PLUGIN_DOCMAN_SORT_DESC);
+
+        $this->setSortOnLastUpdateDateWhenNoSortIsDefined($is_there_a_sort, $keep_ref_on_update_date);
+    }
+
+    /**
+     * @param string[] $report_columns
+     */
+    public function addColumnsFromArray(array $report_columns, \Docman_Report $report): void
+    {
+        $keep_ref_on_update_date = null;
+        $is_there_a_sort         = false;
+
+        foreach ($report_columns as $column_label) {
+            $column = $this->column_factory->getColumnFromLabel($column_label);
+
+            if ($column_label === 'update_date') {
+                $keep_ref_on_update_date = $column;
+            }
+            if ($column->getSort() !== null) {
+                $is_there_a_sort = true;
+            }
+
+            $report->addColumn($column);
+        }
+        $this->setSortOnLastUpdateDateWhenNoSortIsDefined($is_there_a_sort, $keep_ref_on_update_date);
+    }
+
+    private function setSortOnLastUpdateDateWhenNoSortIsDefined(
+        bool $is_there_a_sort,
+        ?\Docman_ReportColumn $keep_ref_on_update_date,
+    ): void {
+        if (! $is_there_a_sort && $keep_ref_on_update_date !== null) {
+            $keep_ref_on_update_date->setSort(PLUGIN_DOCMAN_SORT_DESC);
         }
     }
 }
