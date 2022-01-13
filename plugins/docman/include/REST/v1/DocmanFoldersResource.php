@@ -971,7 +971,10 @@ class DocmanFoldersResource extends AuthenticatedResource
         $event_adder->addNotificationEvents($project);
     }
 
-    private function optionsSearch(int $id): void
+    /**
+     * @url OPTIONS {id}/search
+     */
+    public function optionsSearch(int $id): void
     {
         Header::allowOptionsGet();
     }

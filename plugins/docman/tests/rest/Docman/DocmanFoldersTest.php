@@ -1072,4 +1072,18 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertContains("DELETE Link", $item_titles);
         $this->assertContains("Link", $item_titles);
     }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testOptionsSearchId($id): void
+    {
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('OPTIONS', 'docman_folders/' . $id . "/search"),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 }
