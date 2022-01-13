@@ -405,7 +405,6 @@ final class program_managementPlugin extends Plugin
     {
         $project_manager               = ProjectManager::instance();
         $program_dao                   = new ProgramDao();
-        $event_manager                 = \EventManager::instance();
         $tracker_factory               = TrackerFactory::instance();
         $user_manager                  = UserManager::instance();
         $user_manager_adapter          = new UserManagerAdapter($user_manager);
@@ -491,7 +490,7 @@ final class program_managementPlugin extends Plugin
             ),
             new ProjectPermissionVerifier($user_manager_adapter),
             new ProgramIncrementsDAO(),
-            new TrackerFactoryAdapter($tracker_factory),
+            $tracker_retriever,
             new IterationsDAO(),
             $program_dao,
             new ConfigurationErrorPresenterBuilder(
@@ -518,7 +517,8 @@ final class program_managementPlugin extends Plugin
                 new TrackerSemantics($tracker_factory),
                 $tracker_factory
             ),
-            $project_manager
+            $project_manager,
+            $tracker_retriever
         );
     }
 

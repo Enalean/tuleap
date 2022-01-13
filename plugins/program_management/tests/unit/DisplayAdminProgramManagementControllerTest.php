@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildUGroupRepresentationStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
@@ -53,11 +54,14 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TEAM_ID = 150;
+    private const TEAM_ID              = 150;
+    private const ITERATION_TRACKER_ID = 96;
     private BuildProgramStub $build_program;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\TemplateRenderer
@@ -114,6 +118,17 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
         $teams_searcher = SearchTeamsOfProgramStub::withTeamIds(self::TEAM_ID);
 
+        $program_project = ProjectTestBuilder::aProject()
+            ->withId(127)
+            ->withPublicName('Program Bravo')
+            ->build();
+
+        $iteration_tracker = TrackerTestBuilder::aTracker()
+            ->withId(self::ITERATION_TRACKER_ID)
+            ->withName('Iterations')
+            ->withProject($program_project)
+            ->build();
+
         return new DisplayAdminProgramManagementController(
             SearchProjectsUserIsAdminStub::buildWithoutProject(),
             $this->template_renderer,
@@ -123,7 +138,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             $this->team_verifier,
             $this->build_program,
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($program_tracker),
-            RetrieveVisibleIterationTrackerStub::withValidTracker($program_tracker),
+            RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerReferenceStub::withId(self::ITERATION_TRACKER_ID)),
             $this->plannable_tracker_builder,
             $pproject_ugroups_can_prioritize,
             $this->permission_verifier,
@@ -148,7 +163,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
                 VerifyTrackerSemanticsStub::withAllSemantics(),
                 $this->tracker_factory
             ),
-            $this->project_manager
+            $this->project_manager,
+            RetrieveFullTrackerStub::withTracker($iteration_tracker)
         );
     }
 

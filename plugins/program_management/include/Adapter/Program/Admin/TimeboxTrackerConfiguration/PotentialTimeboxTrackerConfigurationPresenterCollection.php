@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Admin\TimeboxTrackerConfigura
 
 use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 
 /**
@@ -46,7 +47,7 @@ final class PotentialTimeboxTrackerConfigurationPresenterCollection
 
     public static function fromTimeboxTracker(
         PotentialTrackerCollection $all_potential_trackers,
-        ?TrackerReference $timebox_tracker,
+        TrackerReference|IterationTrackerIdentifier|null $timebox_tracker,
     ): self {
         $potential_tracker_presenters = [];
 

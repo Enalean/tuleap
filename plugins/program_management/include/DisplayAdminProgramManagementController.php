@@ -36,7 +36,11 @@ use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Team\TeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\TimeboxTrackerConfiguration\PotentialTimeboxTrackerConfigurationPresenterCollection;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\RetrieveFullTracker;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIterationTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsCollection;
@@ -89,6 +93,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         private AllProgramSearcher $all_program_searcher,
         private ConfigurationErrorPresenterBuilder $error_presenter_builder,
         private \ProjectManager $project_manager,
+        private RetrieveFullTracker $tracker_retriever,
     ) {
     }
 
@@ -145,10 +150,14 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                 $user_identifier
             );
 
-            $iteration_tracker = $this->iteration_tracker_retriever->retrieveVisibleIterationTracker(
+            $iteration_tracker = IterationTrackerIdentifier::fromProgram(
+                $this->iteration_tracker_retriever,
                 $program,
                 $user_identifier
             );
+            if (! $iteration_tracker) {
+                throw new ProgramIterationTrackerNotFoundException($program);
+            }
 
             $increment_error_presenter = $this->error_presenter_builder->buildProgramIncrementErrorPresenter(
                 $program_increment_tracker,
@@ -157,7 +166,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                 $program_increment_error_collector
             );
             $iteration_error_presenter = $this->error_presenter_builder->buildIterationErrorPresenter(
-                $iteration_tracker,
+                TrackerReferenceProxy::fromIterationTracker($this->tracker_retriever, $iteration_tracker),
                 $user_identifier,
                 $iteration_error_collector
             );
@@ -172,7 +181,12 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                     'You need to be project administrator to access to program administration.'
                 )
             );
-        } catch (ProjectIsNotAProgramException | ProgramHasNoProgramIncrementTrackerException | ProgramTrackerNotFoundException $e) {
+        } catch (
+            ProjectIsNotAProgramException
+            | ProgramHasNoProgramIncrementTrackerException
+            | ProgramTrackerNotFoundException
+            | ProgramIterationTrackerNotFoundException
+        ) {
             // ignore for not configured program
         }
 

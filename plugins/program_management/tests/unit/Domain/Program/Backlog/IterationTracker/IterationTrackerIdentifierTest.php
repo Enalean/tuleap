@@ -23,13 +23,27 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker;
 
 use Tuleap\ProgramManagement\Tests\Builder\IterationIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationTrackerStub;
 
 final class IterationTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ITERATION_TRACKER_ID = 99;
+    private VerifyIsIterationTrackerStub $iteration_verifier;
+    private RetrieveVisibleIterationTrackerStub $tracker_retriever;
+
+    protected function setUp(): void
+    {
+        $this->iteration_verifier = VerifyIsIterationTrackerStub::buildValidIteration();
+        $this->tracker_retriever  = RetrieveVisibleIterationTrackerStub::withValidTracker(
+            TrackerReferenceStub::withId(self::ITERATION_TRACKER_ID)
+        );
+    }
 
     public function testItBuildsFromIteration(): void
     {
@@ -41,30 +55,46 @@ final class IterationTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::ITERATION_TRACKER_ID, $iteration_tracker->getId());
     }
 
+    private function getIterationTrackerFromTrackerIdentifier(): ?IterationTrackerIdentifier
+    {
+        return IterationTrackerIdentifier::fromTrackerIdentifier(
+            $this->iteration_verifier,
+            TrackerIdentifierStub::withId(self::ITERATION_TRACKER_ID)
+        );
+    }
+
     public function testItReturnsNullIfTheGivenTrackerIsNotAnIterationTracker(): void
     {
-        $tracker                    = TrackerIdentifierStub::buildWithDefault();
-        $iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildNotIteration();
-
-        $iteration = IterationTrackerIdentifier::fromTrackerIdentifier(
-            $iteration_tracker_verifier,
-            $tracker
-        );
-
-        self::assertNull($iteration);
+        $this->iteration_verifier = VerifyIsIterationTrackerStub::buildNotIteration();
+        self::assertNull($this->getIterationTrackerFromTrackerIdentifier());
     }
 
     public function testItReturnsTheIdentifierIfTheGivenTrackerIsAnIterationTracker(): void
     {
-        $tracker                    = TrackerIdentifierStub::withId(self::ITERATION_TRACKER_ID);
-        $iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildValidIteration();
+        $iteration_tracker = $this->getIterationTrackerFromTrackerIdentifier();
+        self::assertNotNull($iteration_tracker);
+        self::assertSame(self::ITERATION_TRACKER_ID, $iteration_tracker->getId());
+    }
 
-        $iteration = IterationTrackerIdentifier::fromTrackerIdentifier(
-            $iteration_tracker_verifier,
-            $tracker
+    private function getIterationTrackerFromProgram(): ?IterationTrackerIdentifier
+    {
+        return IterationTrackerIdentifier::fromProgram(
+            $this->tracker_retriever,
+            ProgramIdentifierBuilder::build(),
+            UserIdentifierStub::buildGenericUser()
         );
+    }
 
-        self::assertNotNull($iteration);
-        self::assertSame(self::ITERATION_TRACKER_ID, $iteration->getId());
+    public function testItBuildsFromProgram(): void
+    {
+        $iteration_tracker = $this->getIterationTrackerFromProgram();
+        self::assertNotNull($iteration_tracker);
+        self::assertSame(self::ITERATION_TRACKER_ID, $iteration_tracker->getId());
+    }
+
+    public function testItReturnsNullWhenProgramHasNoIterationTrackerDefinedOrUserCantSeeIt(): void
+    {
+        $this->tracker_retriever = RetrieveVisibleIterationTrackerStub::withNotVisibleIterationTracker();
+        self::assertNull($this->getIterationTrackerFromProgram());
     }
 }
