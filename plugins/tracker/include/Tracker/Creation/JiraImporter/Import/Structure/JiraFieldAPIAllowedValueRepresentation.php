@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
+use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\XML\IDGenerator;
 
 /**
@@ -76,6 +77,15 @@ class JiraFieldAPIAllowedValueRepresentation
             $jira_id,
             $value->label,
             $value->id_for_field_change,
+        );
+    }
+
+    public static function buildFromIDAndName(int $id, string $name): self
+    {
+        return new self(
+            $id,
+            $name,
+            FieldNameFormatter::getFormattedName($name),
         );
     }
 

@@ -78,6 +78,19 @@
                 </items>
               </bind>
             </formElement>
+            <formElement type="sb" ID="bug_priority" rank="6">
+              <name><![CDATA[priority]]></name>
+              <label><![CDATA[Priority]]></label>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="Vbug_priority_highest" label="Highest"/>
+                  <item ID="Vbug_priority_high" label="High"/>
+                  <item ID="Vbug_priority_medium" label="Medium"/>
+                  <item ID="Vbug_priority_low" label="Low"/>
+                  <item ID="Vbug_priority_lowest" label="Lowest"/>
+                </items>
+              </bind>
+            </formElement>
           </formElements>
         </formElement>
       </formElements>
@@ -312,6 +325,9 @@
         <criteria rank="3">
           <field REF="bug_status"/>
         </criteria>
+        <criteria rank="4">
+          <field REF="bug_priority"/>
+        </criteria>
       </criterias>
       <renderers>
         <renderer rank="0" type="table" chunksz="15">
@@ -320,6 +336,7 @@
             <field REF="bug_summary"/>
             <field REF="bug_status"/>
             <field REF="bug_jira_issue_url"/>
+            <field REF="bug_priority"/>
           </columns>
         </renderer>
       </renderers>
@@ -355,6 +372,9 @@
         <criteria rank="2">
           <field REF="bug_description"/>
         </criteria>
+        <criteria rank="3">
+          <field REF="bug_priority"/>
+        </criteria>
       </criterias>
       <renderers>
         <renderer rank="0" type="table" chunksz="15">
@@ -363,6 +383,7 @@
             <field REF="bug_summary"/>
             <field REF="bug_status"/>
             <field REF="bug_jira_issue_url"/>
+            <field REF="bug_priority"/>
           </columns>
         </renderer>
       </renderers>
@@ -383,6 +404,9 @@
         <criteria rank="2">
           <field REF="bug_description"/>
         </criteria>
+        <criteria rank="3">
+          <field REF="bug_priority"/>
+        </criteria>
       </criterias>
       <renderers>
         <renderer rank="0" type="table" chunksz="15">
@@ -391,6 +415,7 @@
             <field REF="bug_summary"/>
             <field REF="bug_status"/>
             <field REF="bug_jira_issue_url"/>
+            <field REF="bug_priority"/>
           </columns>
         </renderer>
       </renderers>
@@ -406,6 +431,9 @@
           <field REF="bug_description"/>
         </criteria>
         <criteria rank="2">
+          <field REF="bug_priority"/>
+        </criteria>
+        <criteria rank="3">
           <field REF="bug_created"/>
         </criteria>
       </criterias>
@@ -416,6 +444,7 @@
             <field REF="bug_summary"/>
             <field REF="bug_status"/>
             <field REF="bug_jira_issue_url"/>
+            <field REF="bug_priority"/>
             <field REF="bug_created"/>
           </columns>
         </renderer>
@@ -432,6 +461,9 @@
           <field REF="bug_description"/>
         </criteria>
         <criteria rank="2">
+          <field REF="bug_priority"/>
+        </criteria>
+        <criteria rank="3">
           <field REF="bug_updated"/>
         </criteria>
       </criterias>
@@ -442,6 +474,7 @@
             <field REF="bug_summary"/>
             <field REF="bug_status"/>
             <field REF="bug_jira_issue_url"/>
+            <field REF="bug_priority"/>
             <field REF="bug_updated"/>
           </columns>
         </renderer>
@@ -472,6 +505,9 @@
     <permission scope="field" REF="bug_status" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="bug_status" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="bug_status" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_priority" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_priority" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_priority" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="bug_customfield_10202" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="bug_customfield_10202" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="bug_customfield_10202" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
@@ -545,6 +581,9 @@
         </field_change>
         <field_change type="text" field_name="customfield_10229">
           <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[bug_priority_low]]></value>
         </field_change>
         <field_change field_name="customfield_10215" type="list" bind="static">
           <value format="id"><![CDATA[bug_customfield_10215_composant_1]]></value>
@@ -679,6 +718,9 @@
         <field_change type="text" field_name="customfield_10229">
           <value format="html"><![CDATA[-]]></value>
         </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[bug_priority_low]]></value>
+        </field_change>
         <field_change field_name="customfield_10215" type="list" bind="static">
           <value format="id"><![CDATA[bug_customfield_10215_composant_1]]></value>
         </field_change>
@@ -811,6 +853,9 @@
         </field_change>
         <field_change type="text" field_name="customfield_10229">
           <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[bug_priority_low]]></value>
         </field_change>
         <field_change field_name="customfield_10215" type="list" bind="static">
           <value format="id"><![CDATA[bug_customfield_10215_composant_1]]></value>

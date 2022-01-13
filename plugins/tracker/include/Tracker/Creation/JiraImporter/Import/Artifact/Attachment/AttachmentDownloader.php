@@ -54,7 +54,7 @@ class AttachmentDownloader
                 $this->client->getAttachmentContents($attachment),
             ) === false
         ) {
-            $this->logger->debug(sprintf('Impossible to write content into %s' . $random_name));
+            $this->logger->debug(sprintf('Impossible to write content into %s', $random_name));
         }
 
         return $random_name;
