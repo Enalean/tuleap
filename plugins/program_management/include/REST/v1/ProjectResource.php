@@ -146,6 +146,7 @@ final class ProjectResource extends AuthenticatedResource
 
         $this->plan_creator = new PlanCreator(
             $tracker_checker,
+            $tracker_checker,
             $tracker_retriever,
             new ProgramUserGroupRetriever(new UserGroupRetriever(new \UGroupManager())),
             $plan_dao,

@@ -24,42 +24,31 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTracker;
 
 /**
+ * I hold the identifier of a Tracker that is going to be saved as the Iteration Tracker.
+ * I also hold its customized label and sub-label (if any).
  * @psalm-immutable
  */
-final class IterationTracker
+final class NewIterationTrackerConfiguration
 {
-    public int $id;
-    public ?string $label;
-    public ?string $sub_label;
-
-    private function __construct(int $id, ?string $label, ?string $sub_label)
+    private function __construct(public int $id, public ?string $label, public ?string $sub_label)
     {
-        $this->id        = $id;
-        $this->label     = $label;
-        $this->sub_label = $sub_label;
     }
 
     /**
      * @throws ProgramTrackerException
      */
     public static function fromPlanIterationChange(
-        RetrieveTracker $tracker_retriever,
-        PlanIterationChange $iteration_representation,
+        CheckNewIterationTracker $iteration_checker,
+        PlanIterationChange $iteration_change,
         ProgramForAdministrationIdentifier $program,
     ): self {
-        TrackerIsValidChecker::checkTrackerIsValid(
-            $tracker_retriever,
-            $iteration_representation->tracker_id,
-            $program->id
-        );
-
+        $iteration_checker->checkIterationTrackerIsValid($iteration_change->tracker_id, $program);
         return new self(
-            $iteration_representation->tracker_id,
-            $iteration_representation->label,
-            $iteration_representation->sub_label
+            $iteration_change->tracker_id,
+            $iteration_change->label,
+            $iteration_change->sub_label
         );
     }
 }

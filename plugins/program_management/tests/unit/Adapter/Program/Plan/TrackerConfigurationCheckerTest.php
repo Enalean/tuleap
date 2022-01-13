@@ -42,9 +42,23 @@ final class TrackerConfigurationCheckerTest extends \Tuleap\Test\PHPUnit\TestCas
         );
     }
 
+    /**
+     * @throws PlanTrackerDoesNotBelongToProjectException
+     * @throws PlanTrackerNotFoundException
+     */
+    private function checkIterationIsValid(RetrieveFullTrackerFromIdStub $tracker_retriever): void
+    {
+        $checker = new TrackerConfigurationChecker($tracker_retriever);
+        $checker->checkIterationTrackerIsValid(
+            62,
+            ProgramForAdministrationIdentifierBuilder::buildWithId(self::PROGRAM_ID)
+        );
+    }
+
     public function dataProviderMethodUnderTest(): array
     {
         return [
+            'Iteration'         => [[$this, 'checkIterationIsValid']],
             'Program Increment' => [[$this, 'checkProgramIncrementIsValid']],
         ];
     }

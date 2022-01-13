@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
+use Tuleap\ProgramManagement\Tests\Stub\CheckNewIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\CheckNewProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserGroupStub;
@@ -68,6 +69,7 @@ final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $creator     = new PlanCreator(
             CheckNewProgramIncrementTrackerStub::withValidTracker(),
+            CheckNewIterationTrackerStub::withValidTracker(),
             RetrieveTrackerStub::withTracker(TrackerReferenceStub::withProjectId(self::PROGRAM_ID)),
             RetrieveProgramUserGroupStub::withValidUserGroups(self::ADMINISTRATORS_USER_GROUP_ID),
             $this->plan_saver,
