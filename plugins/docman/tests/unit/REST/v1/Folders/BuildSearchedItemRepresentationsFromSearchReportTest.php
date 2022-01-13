@@ -66,10 +66,12 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
 
     public function testItBuildsItemRepresentations(): void
     {
+        $total = 3;
+
         $report = new \Docman_Report();
         $folder = new \Docman_Folder(["group_id" => 101]);
 
-        $item_one     = [
+        $item_one = [
             "item_id"     => 1,
             "title"       => "folder",
             "description" => "",
@@ -77,7 +79,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
             "status"      => PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
             "user_id"     => 101,
         ];
-        $item_two     = [
+        $item_two = [
             "item_id"     => 2,
             "title"       => "file",
             "description" => "",
@@ -85,6 +87,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
             "status"      => PLUGIN_DOCMAN_ITEM_STATUS_REJECTED,
             "user_id"     => 101,
         ];
+
         $private_item = [
             "item_id"     => 3,
             "title"       => "private",
@@ -93,17 +96,21 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
             "status"      => PLUGIN_DOCMAN_ITEM_STATUS_REJECTED,
             "user_id"     => 101,
         ];
-        $this->item_dao->method('searchByGroupId')->willReturn([$item_one, $item_two, $private_item]);
+        $this->item_dao->method('searchByGroupId')->willReturnOnConsecutiveCalls(
+            [$item_one, $item_two, $private_item],
+            \TestHelper::arrayToDar(["total" => $total])
+        );
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithId(101));
         $this->permissions_manager->method('userCanRead')->willReturnOnConsecutiveCalls(true, true, false);
 
-        $representations = $this->representation_builder->build($report, $folder, UserTestBuilder::aUser()->build());
-        self::assertCount(2, $representations);
-        $this->assertItemEqualsRepresentation($item_one, $representations[0]);
-        $this->assertItemEqualsRepresentation($item_two, $representations[1]);
+        $collection = $this->representation_builder->build($report, $folder, UserTestBuilder::aUser()->build(), 50, 0);
+        self::assertCount(2, $collection->search_representations);
+        self::assertSame($total, $collection->total);
+        $this->assertItemEqualsRepresentation($item_one, $collection->search_representations[0]);
+        $this->assertItemEqualsRepresentation($item_two, $collection->search_representations[1]);
     }
 
-    protected function assertItemEqualsRepresentation(array $item, SearchRepresentation $representation): void
+    private function assertItemEqualsRepresentation(array $item, SearchRepresentation $representation): void
     {
         self::assertSame($item['item_id'], $representation->id);
         self::assertSame($item['title'], $representation->title);
