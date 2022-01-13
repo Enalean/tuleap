@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021-Present Enalean
+ * Copyright (c) 2022-Present Enalean
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,17 +20,18 @@
  * SOFTWARE.
  */
 
-import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
-import * as path from "path";
+describe("Main instantiation of the Tuleap Project Sidebar element", () => {
+    it("instantiates the element", async () => {
+        expect(document.head.getElementsByTagName("style")).toHaveLength(0);
+        expect(window.customElements.get("tuleap-project-sidebar")).toBe(undefined);
 
-export default defineConfig(
-    {
-        build: {
-            lib: {
-                entry: path.resolve(__dirname, "src/main.ts"),
-                name: "TuleapProjectSidebar",
-            },
-        },
-    },
-    { vueTsc: true }
-);
+        await import("./main");
+
+        expect(document.head.getElementsByTagName("style")).toHaveLength(1);
+        expect(window.customElements.get("tuleap-project-sidebar")).not.toBe(undefined);
+    });
+});
+
+// Since we only do an async import we have to add an explicit empty export so the file can be considered as a module
+// eslint-disable-next-line jest/no-export
+export {};

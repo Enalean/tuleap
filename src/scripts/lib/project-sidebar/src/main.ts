@@ -20,44 +20,11 @@
  * SOFTWARE.
  */
 
-import { defineComponent, VueElement } from "vue";
-import ProjectSidebar from "./ProjectSidebar.vue";
 import fonts_style from "./font-faces.scss?inline";
+import { installProjectSidebarElement } from "@tuleap/project-sidebar-internal";
 
-function defineSidebarCustomElement(): CustomElementConstructor {
-    return class extends VueElement {
-        constructor() {
-            // See https://github.com/vuejs/vue-next/blob/eb721d49c004abf5eff0a4e7da71bad904aa6bac/packages/runtime-dom/src/apiCustomElement.ts#L127
-            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions,@typescript-eslint/no-explicit-any
-            super(defineComponent(ProjectSidebar as any));
-        }
-
-        override connectedCallback(): void {
-            super.connectedCallback();
-            this.addEventListener("sidebar-collapsed", this.sidebarCollapsedEvent);
-        }
-
-        override disconnectedCallback(): void {
-            super.disconnectedCallback();
-            this.removeEventListener("sidebar-collapsed", this.sidebarCollapsedEvent);
-        }
-
-        private sidebarCollapsedEvent(event: Event): void {
-            event.stopImmediatePropagation();
-            const is_collapsed = Boolean(this.hasAttribute("collapsed"));
-            if (is_collapsed) {
-                this.removeAttribute("collapsed");
-            } else {
-                this.setAttribute("collapsed", "");
-            }
-        }
-    };
-}
-
-if (!window.customElements.get("tuleap-project-sidebar")) {
+installProjectSidebarElement(window, (): void => {
     const font_face_styles = document.createElement("style");
     font_face_styles.textContent = fonts_style.toString();
     document.head.appendChild(font_face_styles);
-
-    window.customElements.define("tuleap-project-sidebar", defineSidebarCustomElement());
-}
+});

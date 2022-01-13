@@ -20,40 +20,12 @@
  * SOFTWARE.
  */
 
-@use "../../../themes/tlp/src/fonts/tlp-font/font-face" with (
-    $tlp-font-basepath: "../../../../themes/tlp/src/"
-);
-
-$-fa-font-path: "@fortawesome/fontawesome-free/webfonts/";
-$-fa-font-display: block;
-
-tuleap-project-sidebar {
-    --tuleap-project-sidebar-icon-font-family: "Font Awesome 5 Free Tuleap Project Sidebar";
-}
-
-// Solid
-@font-face {
-    font-family: "Font Awesome 5 Free Tuleap Project Sidebar";
-    font-style: normal;
-    font-weight: 900;
-    font-display: $-fa-font-display;
-    src: url("#{$-fa-font-path}/fa-solid-900.woff2") format("woff2");
-}
-
-// Regular
-@font-face {
-    font-family: "Font Awesome 5 Free Tuleap Project Sidebar";
-    font-style: normal;
-    font-weight: 400;
-    font-display: $-fa-font-display;
-    src: url("#{$-fa-font-path}/fa-regular-400.woff2") format("woff2");
-}
-
-// Brand
-@font-face {
-    font-family: "Font Awesome 5 Free Tuleap Project Sidebar";
-    font-style: normal;
-    font-weight: 400;
-    font-display: $-fa-font-display;
-    src: url("#{$-fa-font-path}/fa-brands-400.woff2") format("woff2");
-}
+const base_config = require("../../../../tests/jest/jest.base.config.js");
+module.exports = {
+    ...base_config,
+    displayName: "@tuleap/project-sidebar-internal",
+    transform: {
+        ...base_config.transform,
+        "^.+\\.vue$": "@vue/vue3-jest",
+    },
+};

@@ -38,7 +38,7 @@ import Tool from "./Tool.vue";
 import { strictInject } from "../strict-inject";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { nextTick, onMounted, onUpdated, ref, watch } from "vue";
-import { getServicesShortcutsGroup } from "@tuleap/core/scripts/global-shortcuts/src/plugin-access-shortcuts";
+import { getServicesShortcutsGroup } from "../../../../global-shortcuts/src/plugin-access-shortcuts";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
 

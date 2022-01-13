@@ -1,0 +1,12 @@
+{
+    "extends": "../../../../tools/utils/scripts/tsconfig-for-libraries.json",
+    "compilerOptions": {
+        "lib": ["ES2021", "DOM", "DOM.Iterable"],
+        "types": ["jest", "vite/client"],
+        "target": "ESNext",
+        "module": "ESNext",
+        "incremental": false
+    },
+    "include": ["src/**/*"],
+    "exclude": ["src/**/*.test.ts"]
+}

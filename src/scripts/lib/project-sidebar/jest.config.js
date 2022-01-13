@@ -24,8 +24,4 @@ const base_config = require("../../../../tests/jest/jest.base.config.js");
 module.exports = {
     ...base_config,
     displayName: "@tuleap/project-sidebar",
-    transform: {
-        ...base_config.transform,
-        "^.+\\.vue$": "@vue/vue3-jest",
-    },
 };
