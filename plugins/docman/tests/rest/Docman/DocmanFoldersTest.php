@@ -1063,14 +1063,19 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $found_items = json_decode($search_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(4, $found_items);
 
+        $parents = ["Project Documentation", "Link"];
+
+        foreach ($found_items[1]['parents'] as $parent) {
+            $parent_titles[] = $parent['title'];
+        }
+        $this->assertEqualsCanonicalizing($parents, $parent_titles);
+
         $item_titles = [];
         foreach ($found_items as $item) {
             $item_titles[] = $item['title'];
         }
-        $this->assertContains("PUT HM Link", $item_titles);
-        $this->assertContains("LOCK Link", $item_titles);
-        $this->assertContains("DELETE Link", $item_titles);
-        $this->assertContains("Link", $item_titles);
+
+        $this->assertEqualsCanonicalizing(["PUT HM Link", "LOCK Link", "DELETE Link", "Link"], $item_titles);
     }
 
     /**

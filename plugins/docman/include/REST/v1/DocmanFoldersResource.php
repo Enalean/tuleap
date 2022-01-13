@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Codendi_HTMLPurifier;
 use DateTimeImmutable;
 use Docman_EmbeddedFile;
 use Docman_Empty;
@@ -37,6 +38,7 @@ use Docman_MetadataListOfValuesElementDao;
 use Docman_PermissionsManager;
 use Docman_ReportColumnFactory;
 use Docman_SettingsBo;
+use Docman_VersionFactory;
 use Docman_Wiki;
 use DocmanPlugin;
 use EventManager;
@@ -45,6 +47,8 @@ use PermissionsManager;
 use PluginManager;
 use Project;
 use ProjectManager;
+use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
+use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Metadata\CustomMetadataException;
@@ -67,11 +71,13 @@ use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\CustomMetadataCollectionBuilder;
 use Tuleap\Docman\REST\v1\Metadata\CustomMetadataRepresentationRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
 use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
 use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
 use Tuleap\Docman\REST\v1\Permissions\DocmanFolderPermissionsForGroupsPUTRepresentation;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
 use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
@@ -86,6 +92,7 @@ use Tuleap\REST\I18NRestException;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterParser;
 use UGroupManager;
+use UserHelper;
 use UserManager;
 
 class DocmanFoldersResource extends AuthenticatedResource
@@ -878,20 +885,33 @@ class DocmanFoldersResource extends AuthenticatedResource
         $folder->accept($this->getValidator($project, $user, $folder), []);
         assert($folder instanceof Docman_Folder);
 
-        $project_id                     = $folder->getGroupId();
-        $docman_settings                = new Docman_SettingsBo($project_id);
-        $search_report_builder          = new SearchReportBuilder(
+        $project_id            = $folder->getGroupId();
+        $docman_settings       = new Docman_SettingsBo($project_id);
+        $search_report_builder = new SearchReportBuilder(
             new Docman_FilterFactory($project_id),
             new AlwaysThereColumnRetriever($docman_settings),
             new ColumnReportAugmenter(new Docman_ReportColumnFactory($project_id))
         );
-        $status_mapper                  = new ItemStatusMapper($docman_settings);
-        $item_dao                       = new \Docman_ItemDao();
+        $status_mapper         = new ItemStatusMapper($docman_settings);
+        $item_dao              = new \Docman_ItemDao();
+        $item_factory          = Docman_ItemFactory::instance($project_id);
+        $permissions_manager   = Docman_PermissionsManager::instance($project_id);
+
+        $event_adder = new DocmanItemsEventAdder($this->event_manager);
+        $event_adder->addLogEvents();
+
         $search_representations_builder = new BuildSearchedItemRepresentationsFromSearchReport(
             $item_dao,
             $status_mapper,
             $this->user_manager,
-            Docman_PermissionsManager::instance($project_id)
+            $permissions_manager,
+            new ItemRepresentationCollectionBuilder(
+                $item_factory,
+                $permissions_manager,
+                $this->getItemRepresentationVisitor($item_request),
+                $item_dao
+            ),
+            $item_factory
         );
         $query_parameter_parser         = new QueryParameterParser(new JsonDecoder());
         $global_search_parameters       = $query_parameter_parser->getString($query, "global_search");
@@ -977,5 +997,50 @@ class DocmanFoldersResource extends AuthenticatedResource
     public function optionsSearch(int $id): void
     {
         Header::allowOptionsGet();
+    }
+    private function getItemRepresentationVisitor(DocmanItemsRequest $items_request): ItemRepresentationVisitor
+    {
+        $event_adder = new DocmanItemsEventAdder($this->event_manager);
+
+        return new ItemRepresentationVisitor(
+            $this->getItemRepresentationBuilder($items_request->getItem(), $items_request->getProject()),
+            new \Docman_VersionFactory(),
+            new \Docman_LinkVersionFactory(),
+            Docman_ItemFactory::instance($items_request->getProject()->getGroupId()),
+            $this->event_manager,
+            $event_adder
+        );
+    }
+
+    private function getItemRepresentationBuilder(Docman_Item $item, Project $project): ItemRepresentationBuilder
+    {
+        $html_purifier = Codendi_HTMLPurifier::instance();
+
+        $permissions_manager = $this->getPermissionManager($project);
+
+        return new ItemRepresentationBuilder(
+            new \Docman_ItemDao(),
+            \UserManager::instance(),
+            Docman_ItemFactory::instance($item->getGroupId()),
+            $permissions_manager,
+            new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log()),
+            new ApprovalTableStateMapper(),
+            new MetadataRepresentationBuilder(
+                new \Docman_MetadataFactory($project->getID()),
+                $html_purifier,
+                UserHelper::instance()
+            ),
+            new ApprovalTableRetriever(
+                new \Docman_ApprovalTableFactoriesFactory(),
+                new Docman_VersionFactory()
+            ),
+            new DocmanItemPermissionsForGroupsBuilder(
+                $permissions_manager,
+                ProjectManager::instance(),
+                PermissionsManager::instance(),
+                new UGroupManager()
+            ),
+            $html_purifier
+        );
     }
 }

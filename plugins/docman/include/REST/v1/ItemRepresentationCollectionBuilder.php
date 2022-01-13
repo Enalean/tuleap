@@ -22,8 +22,9 @@
 
 namespace Tuleap\Docman\REST\v1;
 
-use Project;
 use Tuleap\Docman\Item\PaginatedDocmanItemCollection;
+use Tuleap\Docman\Item\PaginatedParentRowCollection;
+use Tuleap\Docman\REST\v1\Folders\ParentFolderRepresentation;
 
 class ItemRepresentationCollectionBuilder
 {
@@ -80,26 +81,55 @@ class ItemRepresentationCollectionBuilder
      * @return PaginatedDocmanItemCollection
      * @throws \Tuleap\Request\ForbiddenException
      */
-    public function buildParents(\Docman_Item $item, \PFUser $user, Project $project, $limit, $offset)
+    public function buildParentsItemRepresentation(\Docman_Item $item, \PFUser $user, $limit, $offset)
     {
         $parents = [];
 
-        $this->buildParentCollection($item, $user, $project, $parents, $limit, $offset);
+        $this->buildParentCollection($item, $user, $parents, $limit, $offset);
+        $representations = [];
+        foreach ($parents as $parent) {
+            $representations[] = $parent->accept($this->item_representation_visitor, ['current_user' => $user]);
+        }
 
-        return new PaginatedDocmanItemCollection(array_slice($parents, $offset, $limit), count($parents));
+        return new PaginatedDocmanItemCollection(array_slice($representations, $offset, $limit), count($representations));
     }
 
     /**
      * @throws \Tuleap\Request\ForbiddenException
      */
-    private function buildParentCollection(\Docman_Item $item, \PFUser $user, Project $project, array &$parents, $limit, $offset)
-    {
-        if (! $this->permission_manager->userCanRead($user, $item->getId())) {
-            throw new \Tuleap\Request\ForbiddenException();
+    public function buildParentRowCollection(
+        \Docman_Item $item,
+        \PFUser $user,
+        $limit,
+        $offset,
+    ): PaginatedParentRowCollection {
+        $parents = [];
+
+        $this->buildParentCollection($item, $user, $parents, $limit, $offset);
+
+        $representations = [];
+        foreach ($parents as $parent) {
+            $representations[] = ParentFolderRepresentation::build($parent);
         }
 
+        return new PaginatedParentRowCollection(array_slice($representations, $offset, $limit), count($representations));
+    }
+
+    /**
+     * @throws \Tuleap\Request\ForbiddenException
+     */
+    private function buildParentCollection(
+        \Docman_Item $item,
+        \PFUser $user,
+        array &$parents,
+        int $limit,
+        int $offset,
+    ): void {
         if ($item->getParentId() === 0) {
             return;
+        }
+        if (! $this->permission_manager->userCanRead($user, $item->getId())) {
+            throw new \Tuleap\Request\ForbiddenException();
         }
 
         $parent = $this->item_factory->getItemFromDb($item->getParentId());
@@ -107,7 +137,7 @@ class ItemRepresentationCollectionBuilder
             return;
         }
 
-        $this->buildParentCollection($parent, $user, $project, $parents, $limit, $offset);
-        $parents[] = $parent->accept($this->item_representation_visitor, ['current_user' => $user]);
+        $this->buildParentCollection($parent, $user, $parents, $limit, $offset);
+        $parents[] = $parent;
     }
 }

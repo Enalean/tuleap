@@ -29,12 +29,16 @@ use Docman_PermissionsManager;
 use Mockery;
 use PFUser;
 use Tuleap\Docman\Item\PaginatedDocmanItemCollection;
+use Tuleap\Docman\Item\PaginatedParentRowCollection;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Folders\FolderPropertiesRepresentation;
+use Tuleap\Docman\REST\v1\Folders\ParentFolderRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
+use Tuleap\Request\ForbiddenException;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
-class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -314,8 +318,6 @@ class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $html_purifier->shouldReceive('purifyTextWithReferences')->atLeast()->once()
             ->andReturn('description with processed ref');
 
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
         $representation1 = ItemRepresentation::build(
             $docman_folder1,
             $html_purifier,
@@ -386,16 +388,16 @@ class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             ->withArgs([$docman_folder2, $user, ItemRepresentation::TYPE_FOLDER, null, null, null, null, null])
                                           ->andReturns($representation2);
 
-        $representation = $this->item_representation_collection_builder->buildParents($item, $user, $project, 50, 0);
+        $representation = $this->item_representation_collection_builder->buildParentsItemRepresentation($item, $user, 50, 0);
 
         $expected_representation = new PaginatedDocmanItemCollection([$representation1, $representation2], 2);
 
         $this->assertEquals($expected_representation, $representation);
     }
 
-    public function testItReturnsAnEmptyCollectionForRootFolderParents()
+    public function testItReturnsAnEmptyCollectionForRootFolderParents(): void
     {
-        $user = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
         $dar_item = [
             'item_id'     => 4,
@@ -407,15 +409,65 @@ class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         ];
         $item     = new \Docman_File($dar_item);
 
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
-
         $this->permission_manager->shouldReceive('userCanRead')->andReturns(true);
         $this->permission_manager->shouldReceive('userCanManage')->andReturns(true);
 
-        $representation = $this->item_representation_collection_builder->buildParents($item, $user, $project, 50, 0);
+        $representation = $this->item_representation_collection_builder->buildParentsItemRepresentation($item, $user, 50, 0);
 
         $expected_representation = new PaginatedDocmanItemCollection([], 0);
+
+        $this->assertEquals($expected_representation, $representation);
+    }
+
+    public function testItThrowsAnExceptionWhenUserCanNotRead(): void
+    {
+        $user = UserTestBuilder::buildWithDefaults();
+
+        $dar_item = [
+            'item_id'     => 4,
+            'title'       => 'item',
+            'user_id'     => 101,
+            'update_date' => 1542099693,
+            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+            'parent_id'   => 200,
+        ];
+        $item     = new \Docman_File($dar_item);
+
+        $this->permission_manager->shouldReceive('userCanRead')->andReturns(false);
+
+        $this->expectException(ForbiddenException::class);
+        $this->item_representation_collection_builder->buildParentRowCollection($item, $user, 50, 0);
+    }
+
+    public function testItBuildAFolderRepresentation(): void
+    {
+        $user = UserTestBuilder::buildWithDefaults();
+
+        $dar_item = [
+            'item_id'     => 4,
+            'title'       => 'item',
+            'user_id'     => 101,
+            'update_date' => 1542099693,
+            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+            'parent_id'   => 100,
+        ];
+        $item     = new \Docman_File($dar_item);
+
+        $this->permission_manager->shouldReceive('userCanRead')->andReturns(true);
+        $dar_parent = [
+            'item_id'     => 100,
+            'title'       => 'folder',
+            'user_id'     => 101,
+            'update_date' => 1542099693,
+            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
+            'parent_id'   => 0,
+        ];
+        $parent     = new \Docman_Folder($dar_parent);
+        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($parent);
+
+        $representation = $this->item_representation_collection_builder->buildParentRowCollection($item, $user, 50, 0);
+
+        $expected_representation = new PaginatedParentRowCollection([ParentFolderRepresentation::build($parent)], 1);
 
         $this->assertEquals($expected_representation, $representation);
     }

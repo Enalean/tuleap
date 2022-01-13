@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Folders;
 
+use Tuleap\Docman\Item\PaginatedParentRowCollection;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 /**
@@ -54,8 +55,12 @@ final class SearchRepresentation
      * @var string | null {@type string}
      */
     public $last_update_date;
+    /**
+     * @var array {@type ParentFolderRepresentation}
+     */
+    public array $parents;
 
-    private function __construct(int $id, string $title, ?string $description, string $status, MinimalUserRepresentation $owner, ?string $update_date)
+    private function __construct(int $id, string $title, ?string $description, string $status, MinimalUserRepresentation $owner, ?string $update_date, PaginatedParentRowCollection $parents)
     {
         $this->id               = $id;
         $this->title            = $title;
@@ -63,17 +68,19 @@ final class SearchRepresentation
         $this->status           = $status;
         $this->owner            = $owner;
         $this->last_update_date = $update_date;
+        $this->parents          = $parents->getPaginatedElementCollection();
     }
 
-    public static function build(array $item, string $status, \PFUser $user): self
+    public static function build(\Docman_Item $item, string $status, \PFUser $user, PaginatedParentRowCollection $parents): self
     {
         return new self(
-            (int) $item["item_id"],
-            $item["title"],
-            $item["description"],
+            (int) $item->getId(),
+            (string) $item->getTitle(),
+            $item->getDescription(),
             $status,
             MinimalUserRepresentation::build($user),
-            $item["update_date"],
+            (string) $item->getUpdateDate(),
+            $parents
         );
     }
 }
