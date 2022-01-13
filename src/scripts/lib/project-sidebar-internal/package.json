@@ -29,6 +29,7 @@
     "@vue/test-utils": "^2.0.0-rc.17"
   },
   "scripts": {
+    "typecheck": "vue-tsc --noEmit",
     "build": "vite build",
     "dev": "vite",
     "test": "jest"

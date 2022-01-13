@@ -20,24 +20,21 @@
 import { defineConfig } from "../../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
 
-export default defineConfig(
-    {
-        build: {
-            lib: {
-                entry: path.resolve(__dirname, "src/index.js"),
-                name: "PluginAgileDashboardCardFields",
-            },
-            rollupOptions: {
-                external: ["angular", "angular-sanitize", "moment"],
-                output: {
-                    globals: {
-                        angular: "angular",
-                        "angular-sanitize": "angular-sanitize",
-                        moment: "moment",
-                    },
+export default defineConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.js"),
+            name: "PluginAgileDashboardCardFields",
+        },
+        rollupOptions: {
+            external: ["angular", "angular-sanitize", "moment"],
+            output: {
+                globals: {
+                    angular: "angular",
+                    "angular-sanitize": "angular-sanitize",
+                    moment: "moment",
                 },
             },
         },
     },
-    null
-);
+});

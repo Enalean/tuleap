@@ -20,22 +20,19 @@
 import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
 
-export default defineConfig(
-    {
-        build: {
-            lib: {
-                entry: path.resolve(__dirname, "src/tooltip.js"),
-                name: "codendi.Tooltip",
-            },
-            rollupOptions: {
-                external: ["jquery"],
-                output: {
-                    globals: {
-                        jquery: "jQuery",
-                    },
+export default defineConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/tooltip.js"),
+            name: "codendi.Tooltip",
+        },
+        rollupOptions: {
+            external: ["jquery"],
+            output: {
+                globals: {
+                    jquery: "jQuery",
                 },
             },
         },
     },
-    null
-);
+});

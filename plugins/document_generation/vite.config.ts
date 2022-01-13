@@ -23,23 +23,19 @@ import {
 } from "../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
 
-export default defineAppConfig(
-    "document_generation",
-    {
-        plugins: [createPOGettextPlugin()],
-        build: {
-            rollupOptions: {
-                input: {
-                    "tracker-report-action": path.resolve(
-                        __dirname,
-                        "scripts/tracker-report-action/src/index.ts"
-                    ),
-                },
+export default defineAppConfig("document_generation", {
+    plugins: [createPOGettextPlugin()],
+    build: {
+        rollupOptions: {
+            input: {
+                "tracker-report-action": path.resolve(
+                    __dirname,
+                    "scripts/tracker-report-action/src/index.ts"
+                ),
             },
         },
-        resolve: {
-            dedupe: ["@tuleap/gettext", "@tuleap/tlp-fetch", "docx", "sprintf-js"],
-        },
     },
-    { typescript: true }
-);
+    resolve: {
+        dedupe: ["@tuleap/gettext", "@tuleap/tlp-fetch", "docx", "sprintf-js"],
+    },
+});

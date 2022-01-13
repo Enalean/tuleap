@@ -19,15 +19,14 @@
 
 import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
+import dts from "vite-dts";
 
-export default defineConfig(
-    {
-        build: {
-            lib: {
-                entry: path.resolve(__dirname, "src/project-privacy-helper.ts"),
-                name: "ProjectPrivacyHelper",
-            },
+export default defineConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/project-privacy-helper.ts"),
+            name: "ProjectPrivacyHelper",
         },
     },
-    { typescript: true }
-);
+    plugins: [dts()],
+});

@@ -33,6 +33,7 @@
     "@tuleap/project-sidebar-internal": "link:../project-sidebar-internal"
   },
   "scripts": {
+    "typecheck": "vue-tsc --noEmit",
     "build": "vite build",
     "dev": "vite",
     "test": "jest"

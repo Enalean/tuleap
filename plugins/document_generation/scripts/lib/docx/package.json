@@ -8,6 +8,7 @@
   "module": "dist/plugin-docgen-docx.es.js",
   "main": "dist/plugin-docgen-docx.umd.js",
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
     "test": "jest"

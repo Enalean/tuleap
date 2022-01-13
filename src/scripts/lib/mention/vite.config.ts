@@ -20,22 +20,19 @@
 import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
 
-export default defineConfig(
-    {
-        build: {
-            lib: {
-                entry: path.resolve(__dirname, "src/mention.js"),
-                name: "Mention",
-            },
-            rollupOptions: {
-                external: ["jquery"],
-                output: {
-                    globals: {
-                        jquery: "jquery",
-                    },
+export default defineConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/mention.js"),
+            name: "Mention",
+        },
+        rollupOptions: {
+            external: ["jquery"],
+            output: {
+                globals: {
+                    jquery: "jquery",
                 },
             },
         },
     },
-    null
-);
+});

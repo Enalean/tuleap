@@ -19,26 +19,25 @@
 
 import { defineConfig } from "../../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
+import dts from "vite-dts";
 
-export default defineConfig(
-    {
-        build: {
-            lib: {
-                entry: path.resolve(__dirname, "src/index.ts"),
-                name: "DocGenDocx",
-            },
-            rollupOptions: {
-                external: ["@tuleap/tlp-fetch", "docx", "dompurify", "sprintf-js"],
-                output: {
-                    globals: {
-                        "@tuleap/tlp-fetch": "@tuleap/tlp-fetch",
-                        docx: "docx",
-                        dompurify: "dompurify",
-                        "sprintf-js": "sprintf-js",
-                    },
+export default defineConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "DocGenDocx",
+        },
+        rollupOptions: {
+            external: ["@tuleap/tlp-fetch", "docx", "dompurify", "sprintf-js"],
+            output: {
+                globals: {
+                    "@tuleap/tlp-fetch": "@tuleap/tlp-fetch",
+                    docx: "docx",
+                    dompurify: "dompurify",
+                    "sprintf-js": "sprintf-js",
                 },
             },
         },
     },
-    { typescript: true }
-);
+    plugins: [dts()],
+});

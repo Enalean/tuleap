@@ -19,15 +19,14 @@
 
 import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
+import dts from "vite-dts";
 
-export default defineConfig(
-    {
-        build: {
-            lib: {
-                entry: path.resolve(__dirname, "src/index.ts"),
-                name: "TuleapGettext",
-            },
+export default defineConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "TuleapGettext",
         },
     },
-    { typescript: true }
-);
+    plugins: [dts()],
+});
