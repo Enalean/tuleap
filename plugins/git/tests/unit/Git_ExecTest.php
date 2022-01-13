@@ -104,8 +104,19 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $file_orig_path = $this->symlink_repo . '/test';
         file_put_contents($file_orig_path, 'test');
         $this->git_exec->add($file_orig_path);
-        $this->git_exec->commit('test');
-        system("cd $this->fixture_dir && git branch test");
+        try {
+            putenv('GIT_AUTHOR_DATE=2000-01-01T00:00:01');
+            putenv('GIT_COMMITTER_DATE=2000-01-01T00:00:01');
+            $this->git_exec->commit('test');
+        } finally {
+            putenv('GIT_AUTHOR_DATE');
+            putenv('GIT_COMMITTER_DATE');
+        }
+        $git_cmd = Git_Exec::getGitCommand();
+        system("cd $this->fixture_dir && $git_cmd checkout -b test --quiet");
+        file_put_contents($file_orig_path, 'test2');
+        $this->git_exec->add($file_orig_path);
+        $this->git_exec->commit('test2');
 
         $this->assertEquals(["test", "main"], $this->git_exec->getAllBranchesSortedByCreationDate());
     }
