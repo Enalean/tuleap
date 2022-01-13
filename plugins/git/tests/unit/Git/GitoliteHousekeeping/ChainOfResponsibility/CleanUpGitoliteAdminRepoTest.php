@@ -58,7 +58,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTes
         $tar_command = new Process(['tar', '-xzf', "$this->fixtures/gitolite_admin.tgz", '--directory', $this->fixtures]);
         $tar_command->mustRun();
 
-        $clone_command = new Process(['git', 'clone', 'gitolite_admin', 'admin'], $this->fixtures);
+        $clone_command = new Process([Git_Exec::getGitCommand(), 'clone', 'gitolite_admin', 'admin'], $this->fixtures);
         $clone_command->mustRun();
 
         $this->expected_file_in_old_dir = bin2hex(random_bytes(16));

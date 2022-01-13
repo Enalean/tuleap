@@ -61,7 +61,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo ex
 
         $this->response->info("Moving $admin_dir to $backup_dir and cloning $this->remote_admin_repository");
         $cmd = '(cd ' . escapeshellarg($this->gitolite_var_path) . ' && mv ' . escapeshellarg($admin_dir) . ' ' .  escapeshellarg($backup_dir) .
-            ' && git clone ' . escapeshellarg($this->remote_admin_repository) . ' '  . escapeshellarg($admin_dir) . ')';
+            ' && ' . Git_Exec::getGitCommand() . '  clone ' . escapeshellarg($this->remote_admin_repository) . ' '  . escapeshellarg($admin_dir) . ')';
         $this->executeCmd($cmd);
 
         $this->executeNextCommand();

@@ -305,12 +305,12 @@ class ProjectCreatorCallToGerritTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
     }
 
-    private function assertAllGitBranchesPushedToTheServer()
+    private function assertAllGitBranchesPushedToTheServer(): void
     {
         $cwd = getcwd();
         chdir("$this->tmpdir/$this->gitolite_project");
 
-        exec("git show-ref --heads", $refs_cmd, $ret_val);
+        exec(Git_Exec::getGitCommand() . " show-ref --heads", $refs_cmd, $ret_val);
 
         $expected_result = ["To $this->gerrit_git_url"];
 
@@ -321,19 +321,19 @@ class ProjectCreatorCallToGerritTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_result[] = "Done";
 
-        exec("git push $this->gerrit_git_url refs/heads/*:refs/heads/* --porcelain", $output, $ret_val);
+        exec(Git_Exec::getGitCommand() . " push $this->gerrit_git_url refs/heads/*:refs/heads/* --porcelain", $output, $ret_val);
         chdir($cwd);
 
         $this->assertEquals($expected_result, $output);
         $this->assertEquals(0, $ret_val);
     }
 
-    private function assertAllGitTagsPushedToTheServer()
+    private function assertAllGitTagsPushedToTheServer(): void
     {
         $cwd = getcwd();
         chdir("$this->tmpdir/$this->gitolite_project");
 
-        exec("git show-ref --tags", $refs_cmd, $ret_val);
+        exec(Git_Exec::getGitCommand() . " show-ref --tags", $refs_cmd, $ret_val);
         $expected_result = ["To $this->gerrit_git_url"];
 
         foreach ($refs_cmd as $ref) {
@@ -343,7 +343,7 @@ class ProjectCreatorCallToGerritTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_result[] = "Done";
 
-        exec("git push $this->gerrit_git_url refs/tags/*:refs/tags/* --porcelain", $output, $ret_val);
+        exec(Git_Exec::getGitCommand() . " push $this->gerrit_git_url refs/tags/*:refs/tags/* --porcelain", $output, $ret_val);
         chdir($cwd);
 
         $this->assertEquals($expected_result, $output);

@@ -127,7 +127,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         file_put_contents($file_orig_path, 'test');
         $this->git_exec->add($file_orig_path);
         $this->git_exec->commit('test');
-        system("cd $this->fixture_dir && git tag -a test -m oui");
+        system("cd $this->fixture_dir && " . Git_Exec::getGitCommand() . " tag -a test -m oui");
 
         $this->assertEquals(["test"], $this->git_exec->getAllTagsSortedByCreationDate());
     }

@@ -495,15 +495,15 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends \Tuleap\T
 
     private function assertCommitterIsConfigured(): void
     {
-        $this->assertEquals(trim(`cd $this->gerrit_tmpdir; git config --get user.name`), $this->gerrit_admin_instance);
-        $this->assertEquals(trim(`cd $this->gerrit_tmpdir; git config --get user.email`), 'codendiadm@' . $this->tuleap_instance);
+        $this->assertEquals(trim(shell_exec("cd $this->gerrit_tmpdir; " . Git_Exec::getGitCommand() . " config --get user.name")), $this->gerrit_admin_instance);
+        $this->assertEquals(trim(shell_exec("cd $this->gerrit_tmpdir; " . Git_Exec::getGitCommand() . " config --get user.email")), 'codendiadm@' . $this->tuleap_instance);
     }
 
     private function assertTheRemoteOriginIsConfigured(): void
     {
         $cwd = getcwd();
         chdir("$this->gerrit_tmpdir");
-        exec('git remote -v', $output, $ret_val);
+        exec(Git_Exec::getGitCommand() . ' remote -v', $output, $ret_val);
         chdir($cwd);
 
         $this->assertEquals(
@@ -520,7 +520,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends \Tuleap\T
     {
         $cwd = getcwd();
         chdir("$this->gerrit_tmpdir");
-        exec('git push origin HEAD:refs/meta/config --porcelain', $output, $ret_val);
+        exec(Git_Exec::getGitCommand() . ' push origin HEAD:refs/meta/config --porcelain', $output, $ret_val);
         chdir($cwd);
         $this->assertEquals(
             [
@@ -537,7 +537,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends \Tuleap\T
     {
         $cwd = getcwd();
         chdir("$this->gerrit_tmpdir");
-        exec('git status --porcelain', $output, $ret_val);
+        exec(Git_Exec::getGitCommand() . ' status --porcelain', $output, $ret_val);
         chdir($cwd);
         $this->assertEquals([], $output);
         $this->assertEquals(0, $ret_val);
