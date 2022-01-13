@@ -32,9 +32,10 @@ use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 final class PlanCreator implements CreatePlan
 {
     public function __construct(
+        private CheckNewProgramIncrementTracker $program_increment_checker,
         private RetrieveTracker $tracker_retriever,
         private RetrieveProgramUserGroup $ugroup_retriever,
-        private PlanStore $plan_store,
+        private SavePlan $plan_store,
         private RetrieveProject $project_retriever,
         private VerifyIsTeam $team_verifier,
         private VerifyProjectPermission $permission_verifier,
@@ -50,8 +51,8 @@ final class PlanCreator implements CreatePlan
             $plan_change->user,
             $project
         );
-        $program_tracker   = ProgramIncrementTracker::buildProgramIncrementTracker(
-            $this->tracker_retriever,
+        $program_tracker   = NewProgramIncrementTracker::fromId(
+            $this->program_increment_checker,
             $plan_change->program_increment_change->tracker_id,
             $program
         );

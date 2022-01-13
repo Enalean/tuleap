@@ -51,6 +51,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\TrackerConfigurationChecker;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
@@ -135,6 +136,7 @@ final class ProjectResource extends AuthenticatedResource
         $form_element_factory        = \Tracker_FormElementFactory::instance();
         $field_retriever             = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
         $project_manager_adapter     = new ProjectManagerAdapter($project_manager, $this->user_manager_adapter);
+        $tracker_checker             = new TrackerConfigurationChecker($tracker_retriever);
 
         $project_access_checker = new ProjectAccessChecker(
             new RestrictedUserCanAccessProjectVerifier(),
@@ -143,6 +145,7 @@ final class ProjectResource extends AuthenticatedResource
         $this->build_program    = ProgramAdapter::instance();
 
         $this->plan_creator = new PlanCreator(
+            $tracker_checker,
             $tracker_retriever,
             new ProgramUserGroupRetriever(new UserGroupRetriever(new \UGroupManager())),
             $plan_dao,

@@ -30,13 +30,10 @@ use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\SearchTrackersOfProgram;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
-final class TrackerFactoryAdapter implements SearchTrackersOfProgram, RetrieveTracker, RetrieveFullTracker
+final class TrackerFactoryAdapter implements SearchTrackersOfProgram, RetrieveTracker, RetrieveFullTracker, RetrieveFullTrackerFromId
 {
-    private \TrackerFactory $tracker_factory;
-
-    public function __construct(\TrackerFactory $tracker_factory)
+    public function __construct(private \TrackerFactory $tracker_factory)
     {
-        $this->tracker_factory = $tracker_factory;
     }
 
     /**
@@ -61,6 +58,11 @@ final class TrackerFactoryAdapter implements SearchTrackersOfProgram, RetrieveTr
             return null;
         }
         return TrackerReferenceProxy::fromTracker($tracker);
+    }
+
+    public function getTrackerFromId(int $tracker_id): ?\Tracker
+    {
+        return $this->tracker_factory->getTrackerById($tracker_id);
     }
 
     public function getNonNullTracker(TrackerIdentifier $tracker_identifier): \Tracker
