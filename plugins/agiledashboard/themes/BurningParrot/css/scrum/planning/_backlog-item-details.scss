@@ -35,6 +35,8 @@ $accessibility-pattern-right-margin: 6px;
 
         &.tlp-swatch-#{$color-name} {
             --box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+            --accessibility-color: #{map.get($colors, "text")};
+            --accessibility-pattern: url("#{map.get($colors, 'pattern')}");
             --background-color-darker: #{color.adjust(
                     map.get($colors, "secondary"),
                     $lightness: - 7%
@@ -43,9 +45,7 @@ $accessibility-pattern-right-margin: 6px;
             --border-transparent-color: #{color.adjust(map.get($colors, "border"), $alpha: - 0.75)};
 
             &.closed {
-                --border-color: transparent;
-                --box-shadow: var(--tlp-card-shadow);
-                --secondary-color: var(--tlp-background-color);
+                --accessibility-color: var(--tlp-dimmed-color-transparent-50);
             }
 
             &.accessibility-displayed {
@@ -80,7 +80,13 @@ $accessibility-pattern-right-margin: 6px;
     cursor: move;
 
     &.closed {
-        background: var(--secondary-color, var(--tlp-background-color));
+        --project-color: var(--tlp-dimmed-color);
+        --project-color-background: var(--tlp-background-color-darker-05);
+        --border-transparent-color: var(--tlp-neutral-normal-color-transparent-50);
+
+        border-color: transparent;
+        background: var(--tlp-background-color);
+        box-shadow: var(--tlp-card-shadow);
 
         .backlog-item-details-shortname-content,
         .backlog-item-details-title,
@@ -96,7 +102,15 @@ $accessibility-pattern-right-margin: 6px;
             text-decoration-color: var(--tlp-dimmed-color-transparent-50);
         }
 
-        .card-accessibility,
+        .backlog-item-details-effort-container-content-initial-effort {
+            background: var(--tlp-background-color-darker-05);
+            color: var(--tlp-dimmed-color-transparent-50);
+        }
+
+        .item-progress {
+            border-bottom-color: var(--tlp-background-color-darker-10);
+        }
+
         .backlog-item-details-parent,
         .backlog-item-details-parent-link,
         .backlog-item-details-effort-container,
@@ -104,6 +118,10 @@ $accessibility-pattern-right-margin: 6px;
         .tlp-avatar-mini,
         .item-progress {
             opacity: 0.5;
+        }
+
+        + .backlog-item-show-children > .backlog-item-show-children-handle {
+            border-top-color: var(--tlp-neutral-normal-color);
         }
     }
 
@@ -312,6 +330,9 @@ card-parent-link {
     width: $accessibility-pattern-width;
     height: calc(100% - 32px);
     overflow: hidden;
+    opacity: 0.5;
+    background-color: var(--accessibility-color);
+    mask-image: var(--accessibility-pattern);
 
     &::after {
         content: "";
@@ -321,14 +342,6 @@ card-parent-link {
         width: 100%;
         height: 100%;
         opacity: 1;
-    }
-
-    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
-        &.#{$color-name} {
-            opacity: 0.5;
-            background-color: map.get($colors, "text");
-            mask-image: url("#{map.get($colors, 'pattern')}");
-        }
     }
 }
 

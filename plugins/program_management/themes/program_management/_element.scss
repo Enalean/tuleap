@@ -26,24 +26,23 @@ $accessibility-pattern-right-margin: 6px;
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .element-card-#{$color-name} {
         --card-color: #{map.get($colors, "primary")};
+        --text-color: #{map.get($colors, "text")};
 
         + .backlog-items-container > .backlog-items-children-container-handle:only-child {
             border-top: 0;
         }
     }
 
-    .element-card-xref-#{$color-name} {
-        color: #{map.get($colors, "text")};
-    }
-
-    .element-card-background-#{$color-name} {
+    .element-card.element-card-background-#{$color-name} {
         --secondary-color: #{map.get($colors, "secondary")};
         --border-color: #{map.get($colors, "border")};
         --text-color: #{map.get($colors, "text")};
         --accessibility-pattern: url("#{map.get($colors, 'pattern')}");
+        --accessibility-color: #{map.get($colors, "text")};
+        --box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
 
-        .element-card-xref {
-            color: var(--text-color);
+        &.element-card-user-story-closed {
+            --accessibility-color: var(--tlp-dimmed-color-transparent-50);
         }
     }
 }
@@ -56,11 +55,7 @@ $accessibility-pattern-right-margin: 6px;
     border: 1px solid var(--border-color, transparent);
     border-radius: var(--tlp-medium-radius);
     background: var(--secondary-color, var(--tlp-white-color));
-    box-shadow: var(--tlp-card-shadow);
-
-    &[class*="element-card-background-"] {
-        box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
-    }
+    box-shadow: var(--box-shadow, var(--tlp-card-shadow));
 
     &::before {
         content: "";
@@ -75,35 +70,15 @@ $accessibility-pattern-right-margin: 6px;
     }
 
     &.element-card-with-accessibility {
-        &[class*="element-card-background-"] {
-            padding: var(--tlp-small-spacing)
-                calc(
-                    var(--tlp-small-spacing) + #{$accessibility-pattern-width} + #{$accessibility-pattern-right-margin}
-                )
-                var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
-
-            > .element-card-accessibility {
-                opacity: 0.5;
-                background-color: var(--text-color);
-                mask-image: var(--accessibility-pattern);
-            }
-        }
-
-        &:not([class*="element-card-background-"]) > .element-card-accessibility {
-            display: none;
-        }
+        padding: var(--tlp-small-spacing)
+            calc(
+                var(--tlp-small-spacing) + #{$accessibility-pattern-width} + #{$accessibility-pattern-right-margin}
+            )
+            var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
 
         > .element-card-content > .element-card-info {
             margin: 0 5px 0 0;
         }
-    }
-
-    .element-card-accessibility {
-        position: absolute;
-        top: 0;
-        right: $accessibility-pattern-right-margin;
-        width: $accessibility-pattern-width;
-        height: 100%;
     }
 
     &.is-moving {
@@ -116,6 +91,28 @@ $accessibility-pattern-right-margin: 6px;
         animation: pulse-has-moved 500ms ease-in-out;
         border-color: var(--tlp-success-color);
         background: var(--tlp-success-color-transparent-90);
+    }
+}
+
+.element-card-accessibility {
+    position: absolute;
+    top: 0;
+    right: $accessibility-pattern-right-margin;
+    width: $accessibility-pattern-width;
+    height: 100%;
+    opacity: 0.5;
+    background-color: var(--accessibility-color);
+    mask-image: var(--accessibility-pattern);
+}
+
+.element-card-user-story-closed {
+    border-color: transparent;
+    background: var(--tlp-background-color);
+    box-shadow: var(--tlp-card-shadow);
+
+    .element-card-xref,
+    .element-card-label {
+        color: var(--tlp-dimmed-color-transparent-50);
     }
 }
 
@@ -153,6 +150,7 @@ $accessibility-pattern-right-margin: 6px;
 .element-card-xref {
     width: max-content;
     margin: 0 0 calc(var(--tlp-small-spacing) / 2);
+    color: var(--text-color);
     font-size: 0.625rem;
     line-height: 0.8125rem;
 
@@ -257,10 +255,4 @@ $accessibility-pattern-right-margin: 6px;
     color: var(--tlp-neutral-dark-color-darker-20);
     font-size: 8px;
     font-weight: 900;
-}
-
-.element-card-user-story-closed {
-    border-color: var(--tlp-neutral-normal-color-transparent-50);
-    opacity: 0.5;
-    background: transparent;
 }
