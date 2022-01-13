@@ -59,9 +59,9 @@ class FieldChangeXMLExporter
         private FieldChangeListBuilder $field_change_list_builder,
         private FieldChangeFileBuilder $field_change_file_builder,
         private FieldChangeArtifactLinksBuilder $field_change_artifact_links_builder,
-        private AllTypesRetriever $all_types_retriever,
+        AllTypesRetriever $all_types_retriever,
     ) {
-        foreach ($this->all_types_retriever->getAllTypes() as $type) {
+        foreach ($all_types_retriever->getAllTypes() as $type) {
             $this->supported_link_types[$type->shortname] = true;
         }
     }
