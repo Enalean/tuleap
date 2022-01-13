@@ -18,6 +18,7 @@
  */
 
 import type { Campaign } from "../../type";
+import type { CampaignInitialTests } from "../../helpers/Campaigns/campaign-initial-tests";
 
 export interface CampaignState {
     campaigns: Array<Campaign>;
