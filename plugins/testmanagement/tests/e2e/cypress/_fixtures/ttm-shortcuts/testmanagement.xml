@@ -20,6 +20,7 @@
 
 <testmanagement>
   <configuration>
+    <issues>T27</issues>
     <campaigns>T26</campaigns>
     <definitions>T24</definitions>
     <executions>T25</executions>
