@@ -30,10 +30,6 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 final class Plan
 {
     /**
-     * @var ProgramIncrementTracker
-     */
-    private $program_increment_tracker;
-    /**
      * @var ProgramPlannableTracker[]
      */
     private $plannable_trackers;
@@ -59,7 +55,7 @@ final class Plan
      * @param ProgramPlannableTracker[] $plannable_trackers
      */
     public function __construct(
-        ProgramIncrementTracker $program_increment_tracker,
+        private NewProgramIncrementTracker $program_increment_tracker,
         int $project_id,
         array $plannable_trackers,
         ProgramUserGroupCollection $can_prioritize,
@@ -67,16 +63,15 @@ final class Plan
         ?string $custom_sub_label,
         ?IterationTracker $iteration_tracker,
     ) {
-        $this->program_increment_tracker = $program_increment_tracker;
-        $this->project_id                = $project_id;
-        $this->plannable_trackers        = $plannable_trackers;
-        $this->can_prioritize            = $can_prioritize;
-        $this->custom_label              = $custom_label;
-        $this->custom_sub_label          = $custom_sub_label;
-        $this->iteration_tracker         = $iteration_tracker;
+        $this->project_id         = $project_id;
+        $this->plannable_trackers = $plannable_trackers;
+        $this->can_prioritize     = $can_prioritize;
+        $this->custom_label       = $custom_label;
+        $this->custom_sub_label   = $custom_sub_label;
+        $this->iteration_tracker  = $iteration_tracker;
     }
 
-    public function getProgramIncrementTracker(): ProgramIncrementTracker
+    public function getProgramIncrementTracker(): NewProgramIncrementTracker
     {
         return $this->program_increment_tracker;
     }

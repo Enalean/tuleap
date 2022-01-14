@@ -22,11 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 
-interface PlanStore
+/**
+ * I hold the identifier of a Tracker that is going to be saved as Program Increment Tracker
+ * @psalm-immutable
+ */
+final class NewProgramIncrementTracker
 {
-    public function save(Plan $plan): void;
+    private function __construct(private int $id)
+    {
+    }
 
-    public function isPartOfAPlan(TrackerReference $tracker): bool;
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @throws ProgramTrackerException
+     */
+    public static function fromId(
+        CheckNewProgramIncrementTracker $tracker_checker,
+        int $tracker_id,
+        ProgramForAdministrationIdentifier $program,
+    ): self {
+        $tracker_checker->checkProgramIncrementTrackerIsValid($tracker_id, $program);
+        return new self($tracker_id);
+    }
 }

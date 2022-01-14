@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
+use Tuleap\ProgramManagement\Tests\Stub\CheckNewProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserGroupStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\SavePlanStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
@@ -33,53 +35,53 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 
 final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private RetrieveTrackerStub $tracker_builder;
-    private RetrieveProgramUserGroupStub $ugroup_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&PlanStore
-     */
-    private $plan_store;
-    private RetrieveProjectStub $project_retriever;
-    private int $project_id;
+    private const PROGRAM_ID                   = 102;
+    private const ADMINISTRATORS_USER_GROUP_ID = 4;
+    private SavePlanStub $plan_saver;
 
     protected function setUp(): void
     {
-        $this->project_id        = 102;
-        $this->tracker_builder   = RetrieveTrackerStub::withTracker(TrackerReferenceStub::withProjectId($this->project_id));
-        $this->ugroup_retriever  = RetrieveProgramUserGroupStub::withValidUserGroups(4);
-        $this->plan_store        = $this->createMock(PlanStore::class);
-        $this->project_retriever = RetrieveProjectStub::withValidProjects(ProjectIdentifierStub::buildWithId(102));
+        $this->plan_saver = SavePlanStub::withCount();
     }
 
-    public function testItCreatesAPlan(): void
+    private function createPlan(): void
     {
-        $plannable_tracker_id = 2;
-
-        $this->plan_store = $this->createMock(PlanStore::class);
-        $this->plan_store->expects(self::once())->method('save')->with(self::isInstanceOf(Plan::class));
-        $plan_program_increment_change = new PlanProgramIncrementChange(1, 'Program Increments', 'program increment');
-        $iteration_representation      = new PlanIterationChange(150, null, null);
-        $plan_change                   = PlanChange::fromProgramIncrementAndRaw(
-            $plan_program_increment_change,
-            UserReferenceStub::withDefaults(),
-            $this->project_id,
-            [$plannable_tracker_id],
-            ['102_4'],
-            $iteration_representation
+        $program_increment_change = new PlanProgramIncrementChange(
+            30,
+            'Program Increments',
+            'program increment'
         );
 
-        $this->getCreator()->create($plan_change);
-    }
+        $iteration_change = new PlanIterationChange(
+            55,
+            'Iterations',
+            'iteration'
+        );
 
-    private function getCreator(): PlanCreator
-    {
-        return new PlanCreator(
-            $this->tracker_builder,
-            $this->ugroup_retriever,
-            $this->plan_store,
-            $this->project_retriever,
+        $plan_change = PlanChange::fromProgramIncrementAndRaw(
+            $program_increment_change,
+            UserReferenceStub::withDefaults(),
+            self::PROGRAM_ID,
+            [7, 44],
+            [self::PROGRAM_ID . '_' . self::ADMINISTRATORS_USER_GROUP_ID],
+            $iteration_change
+        );
+        $creator     = new PlanCreator(
+            CheckNewProgramIncrementTrackerStub::withValidTracker(),
+            RetrieveTrackerStub::withTracker(TrackerReferenceStub::withProjectId(self::PROGRAM_ID)),
+            RetrieveProgramUserGroupStub::withValidUserGroups(self::ADMINISTRATORS_USER_GROUP_ID),
+            $this->plan_saver,
+            RetrieveProjectStub::withValidProjects(ProjectIdentifierStub::buildWithId(self::PROGRAM_ID)),
             VerifyIsTeamStub::withNotValidTeam(),
             VerifyProjectPermissionStub::withAdministrator()
         );
+
+        $creator->create($plan_change);
+    }
+
+    public function testItCreatesAndSavedAPlan(): void
+    {
+        $this->createPlan();
+        self::assertSame(1, $this->plan_saver->getCallCount());
     }
 }

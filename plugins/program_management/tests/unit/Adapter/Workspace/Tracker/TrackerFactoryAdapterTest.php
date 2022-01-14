@@ -87,7 +87,25 @@ final class TrackerFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = $this->getAdapter()->getTrackerById(self::TRACKER_ID);
 
         self::assertInstanceOf(TrackerReference::class, $tracker);
-        self::assertSame(85, $tracker->getId());
+        self::assertSame(self::TRACKER_ID, $tracker->getId());
+    }
+
+    public function testReturnNullWhenNoTrackerFromId(): void
+    {
+        $this->tracker_factory->method('getTrackerById')->willReturn(null);
+
+        self::assertNull($this->getAdapter()->getTrackerFromId(404));
+    }
+
+    public function testItReturnsTrackerFromId(): void
+    {
+        $project = ProjectTestBuilder::aProject()->build();
+        $tracker = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->withProject($project)->build();
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
+
+        $result = $this->getAdapter()->getTrackerFromId(self::TRACKER_ID);
+
+        self::assertSame($tracker, $result);
     }
 
     public function testItReturnsTrackerFromIdentifier(): void
