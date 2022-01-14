@@ -35,6 +35,8 @@ if (process.env.COVERAGE_BASE_OUTPUT_DIR) {
     coverage_directory = process.env.COVERAGE_BASE_OUTPUT_DIR + "/" + path.basename(process.cwd());
 }
 
+const is_typechecking_enabled = process.env.DISABLE_TS_TYPECHECK !== "true";
+
 module.exports = {
     testEnvironment: "jsdom",
     transform: {
@@ -60,6 +62,10 @@ module.exports = {
             transform: {
                 "^js$": path.resolve(__dirname, "./babel-jest-process.js"),
             },
+        },
+        "ts-jest": {
+            diagnostics: is_typechecking_enabled,
+            isolatedModules: !is_typechecking_enabled,
         },
     },
     snapshotSerializers: ["jest-serializer-vue"],

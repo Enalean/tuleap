@@ -20,16 +20,12 @@
 import { defineAppConfig } from "../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
 
-export default defineAppConfig(
-    "api-explorer",
-    {
-        build: {
-            rollupOptions: {
-                input: {
-                    "api-explorer": path.resolve(__dirname, "scripts/index.tsx"),
-                },
+export default defineAppConfig("api-explorer", {
+    build: {
+        rollupOptions: {
+            input: {
+                "api-explorer": path.resolve(__dirname, "scripts/index.tsx"),
             },
         },
     },
-    { typescript: true }
-);
+});

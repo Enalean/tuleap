@@ -19,23 +19,22 @@
 
 import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
+import dts from "vite-dts";
 
-export default defineConfig(
-    {
-        build: {
-            lib: {
-                entry: path.resolve(__dirname, "src/fetch-wrapper.ts"),
-                name: "TlpFetch",
-            },
-            rollupOptions: {
-                external: ["@tuleap/concurrency-limit-pool"],
-                output: {
-                    globals: {
-                        "@tuleap/concurrency-limit-pool": "concurrency-limit-pool",
-                    },
+export default defineConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/fetch-wrapper.ts"),
+            name: "TlpFetch",
+        },
+        rollupOptions: {
+            external: ["@tuleap/concurrency-limit-pool"],
+            output: {
+                globals: {
+                    "@tuleap/concurrency-limit-pool": "concurrency-limit-pool",
                 },
             },
         },
     },
-    { typescript: true }
-);
+    plugins: [dts()],
+});

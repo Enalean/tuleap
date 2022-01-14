@@ -27,6 +27,7 @@
     "jquery": ">=1.7.0 <4.0.0"
   },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
     "test": "jest"

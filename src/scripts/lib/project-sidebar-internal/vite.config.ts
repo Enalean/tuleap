@@ -23,34 +23,32 @@
 import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
 import vue from "@vitejs/plugin-vue";
 import * as path from "path";
+import dts from "vite-dts";
 
-export default defineConfig(
-    {
-        build: {
-            lib: {
-                entry: path.resolve(__dirname, "src/main.ts"),
-                name: "TuleapProjectSidebarInternal",
-            },
-            rollupOptions: {
-                external: [
-                    "vue",
-                    "vue-dompurify-html",
-                    "@vueuse/core",
-                    "@tuleap/tlp-popovers",
-                    "@tuleap/project-privacy-helper",
-                ],
-                output: {
-                    globals: {
-                        vue: "Vue",
-                        "vue-dompurify-html": "VueDOMPurifyHTML",
-                        "@vueuse/core": "VueUse",
-                        "@tuleap/tlp-popovers": "TlpPopovers",
-                        "@tuleap/project-privacy-helper": "ProjectPrivacyHelper",
-                    },
+export default defineConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/main.ts"),
+            name: "TuleapProjectSidebarInternal",
+        },
+        rollupOptions: {
+            external: [
+                "vue",
+                "vue-dompurify-html",
+                "@vueuse/core",
+                "@tuleap/tlp-popovers",
+                "@tuleap/project-privacy-helper",
+            ],
+            output: {
+                globals: {
+                    vue: "Vue",
+                    "vue-dompurify-html": "VueDOMPurifyHTML",
+                    "@vueuse/core": "VueUse",
+                    "@tuleap/tlp-popovers": "TlpPopovers",
+                    "@tuleap/project-privacy-helper": "ProjectPrivacyHelper",
                 },
             },
         },
-        plugins: [vue({ customElement: true })],
     },
-    { vueTsc: true }
-);
+    plugins: [vue({ customElement: true }), dts()],
+});

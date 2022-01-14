@@ -22,32 +22,30 @@ import {
     createPOGettextPlugin,
 } from "../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
+import dts from "vite-dts";
 
-export default defineConfig(
-    {
-        plugins: [createPOGettextPlugin()],
-        build: {
-            lib: {
-                entry: path.resolve(__dirname, "src/index.ts"),
-                name: "ListPicker",
-            },
-            rollupOptions: {
-                external: [
-                    "lit/html.js",
-                    "lit/directives/style-map.js",
-                    "lit/directives/class-map.js",
-                    "@tuleap/gettext",
-                ],
-                output: {
-                    globals: {
-                        "lit/html.js": "lit/html.js",
-                        "lit/directives/style-map.js": "lit/directives/style-map.js",
-                        "lit/directives/class-map.js": "lit/directives/class-map.js",
-                        "@tuleap/gettext": "@tuleap/gettext",
-                    },
+export default defineConfig({
+    plugins: [createPOGettextPlugin(), dts()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "ListPicker",
+        },
+        rollupOptions: {
+            external: [
+                "lit/html.js",
+                "lit/directives/style-map.js",
+                "lit/directives/class-map.js",
+                "@tuleap/gettext",
+            ],
+            output: {
+                globals: {
+                    "lit/html.js": "lit/html.js",
+                    "lit/directives/style-map.js": "lit/directives/style-map.js",
+                    "lit/directives/class-map.js": "lit/directives/class-map.js",
+                    "@tuleap/gettext": "@tuleap/gettext",
                 },
             },
         },
     },
-    { typescript: true }
-);
+});

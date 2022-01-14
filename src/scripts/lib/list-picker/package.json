@@ -13,6 +13,7 @@
     "lit": "^2.0.2"
   },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
     "test": "jest"

@@ -20,22 +20,19 @@
 import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
 
-export default defineConfig(
-    {
-        build: {
-            lib: {
-                entry: path.resolve(__dirname, "src/index.js"),
-                name: "AngularAsync",
-            },
-            rollupOptions: {
-                external: ["angular"],
-                output: {
-                    globals: {
-                        angular: "angular",
-                    },
+export default defineConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.js"),
+            name: "AngularAsync",
+        },
+        rollupOptions: {
+            external: ["angular"],
+            output: {
+                globals: {
+                    angular: "angular",
                 },
             },
         },
     },
-    null
-);
+});

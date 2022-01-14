@@ -20,23 +20,20 @@
 import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
 
-export default defineConfig(
-    {
-        build: {
-            lib: {
-                entry: path.resolve(__dirname, "src/index.js"),
-                name: "AngularTlp",
-            },
-            rollupOptions: {
-                external: ["tlp", "angular"],
-                output: {
-                    globals: {
-                        tlp: "tlp",
-                        angular: "angular",
-                    },
+export default defineConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.js"),
+            name: "AngularTlp",
+        },
+        rollupOptions: {
+            external: ["tlp", "angular"],
+            output: {
+                globals: {
+                    tlp: "tlp",
+                    angular: "angular",
                 },
             },
         },
     },
-    null
-);
+});

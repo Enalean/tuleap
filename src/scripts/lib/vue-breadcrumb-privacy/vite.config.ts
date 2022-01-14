@@ -20,26 +20,24 @@
 import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
 import { createVuePlugin } from "vite-plugin-vue2";
 import * as path from "path";
+import dts from "vite-dts";
 
-export default defineConfig(
-    {
-        plugins: [createVuePlugin()],
-        build: {
-            lib: {
-                entry: path.resolve(__dirname, "src/index.ts"),
-                name: "BreadcrumbPrivacy",
-            },
-            rollupOptions: {
-                external: ["vue", "@tuleap/tlp-popovers", "@tuleap/project-privacy-helper"],
-                output: {
-                    globals: {
-                        vue: "Vue",
-                        "@tuleap/tlp-popovers": "tlp",
-                        "@tuleap/project-privacy-helper": "@tuleap/project-privacy-helper",
-                    },
+export default defineConfig({
+    plugins: [createVuePlugin(), dts()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "BreadcrumbPrivacy",
+        },
+        rollupOptions: {
+            external: ["vue", "@tuleap/tlp-popovers", "@tuleap/project-privacy-helper"],
+            output: {
+                globals: {
+                    vue: "Vue",
+                    "@tuleap/tlp-popovers": "tlp",
+                    "@tuleap/project-privacy-helper": "@tuleap/project-privacy-helper",
                 },
             },
         },
     },
-    { vueTsc: true }
-);
+});

@@ -22,25 +22,23 @@ import {
     createPOGettextPlugin,
 } from "../../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
+import dts from "vite-dts";
 
-export default defineConfig(
-    {
-        plugins: [createPOGettextPlugin()],
-        build: {
-            lib: {
-                entry: path.resolve(__dirname, "src/index.ts"),
-                name: "PluginTrackerRichTextEditor",
-            },
-            rollupOptions: {
-                external: ["ckeditor4", "jquery"],
-                output: {
-                    globals: {
-                        ckeditor4: "ckeditor4",
-                        jquery: "jquery",
-                    },
+export default defineConfig({
+    plugins: [createPOGettextPlugin(), dts()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "PluginTrackerRichTextEditor",
+        },
+        rollupOptions: {
+            external: ["ckeditor4", "jquery"],
+            output: {
+                globals: {
+                    ckeditor4: "ckeditor4",
+                    jquery: "jquery",
                 },
             },
         },
     },
-    { typescript: true }
-);
+});

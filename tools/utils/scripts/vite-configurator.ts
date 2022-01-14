@@ -21,9 +21,6 @@ import type { BuildOptions, CSSOptions, ServerOptions, UserConfig, UserConfigExp
 import { defineConfig as viteDefineConfig } from "vite";
 export { createPOGettextPlugin } from "./rollup-plugin-po-gettext";
 import { browserlist_config, esbuild_target } from "./browserslist_config";
-import type { UserPluginConfig as PluginCheckerConfig } from "vite-plugin-checker";
-import checker from "vite-plugin-checker";
-import dts from "vite-dts";
 import path from "path";
 import autoprefixer from "autoprefixer";
 
@@ -35,15 +32,8 @@ type OverloadedUserConfig = UserConfigWithoutBuildAndServer & { build?: Overload
     server?: OverloadedServerOptions;
 } & { css?: OverloadedCSSOptions };
 
-export function defineConfig(
-    config: OverloadedUserConfig,
-    typechecks: null | Pick<PluginCheckerConfig, "typescript" | "vls" | "vueTsc">
-): UserConfigExport {
-    const plugins = config.plugins ?? [];
-    if (typechecks !== null && config.build?.lib) {
-        plugins.push(dts());
-    }
-    return defineBaseConfig({ ...config, plugins }, typechecks);
+export function defineConfig(config: OverloadedUserConfig): UserConfigExport {
+    return defineBaseConfig(config);
 }
 
 type OverloadedBuildAppOptions = Omit<
@@ -58,37 +48,26 @@ type OverloadedAppUserConfig = Omit<UserConfigWithoutBuildAndServer, "base"> & {
 
 export function defineAppConfig(
     app_name: string,
-    config: OverloadedAppUserConfig,
-    typechecks: null | Pick<PluginCheckerConfig, "typescript" | "vls" | "vueTsc">
+    config: OverloadedAppUserConfig
 ): UserConfigExport {
     const overridable_build_default: BuildOptions = {
         chunkSizeWarningLimit: 3000,
     };
 
-    return defineBaseConfig(
-        {
-            ...config,
-            base: `/assets/${app_name}/`,
-            build: {
-                ...overridable_build_default,
-                ...config.build,
-                manifest: true,
-                emptyOutDir: true,
-                outDir: path.resolve(__dirname, `../../../src/www/assets/${app_name}/`),
-            },
+    return defineBaseConfig({
+        ...config,
+        base: `/assets/${app_name}/`,
+        build: {
+            ...overridable_build_default,
+            ...config.build,
+            manifest: true,
+            emptyOutDir: true,
+            outDir: path.resolve(__dirname, `../../../src/www/assets/${app_name}/`),
         },
-        typechecks
-    );
+    });
 }
 
-function defineBaseConfig(
-    config: UserConfig,
-    typechecks: null | Pick<PluginCheckerConfig, "typescript" | "vls" | "vueTsc">
-): UserConfigExport {
-    const plugins = config.plugins ?? [];
-    if (typechecks !== null) {
-        plugins.push(checker(typechecks));
-    }
+function defineBaseConfig(config: UserConfig): UserConfigExport {
     return viteDefineConfig({
         ...config,
         build: {
@@ -103,7 +82,6 @@ function defineBaseConfig(
                 plugins: [autoprefixer({ overrideBrowserslist: browserlist_config })],
             },
         },
-        plugins,
         server: {
             fs: {
                 allow: [__dirname + "/../../../"],

@@ -5,6 +5,5 @@
         "outDir": "types/",
         "types": ["jest"]
     },
-    "include": ["src/**/*"],
-    "exclude": ["src/**/*.test.ts"]
+    "include": ["src/**/*"]
 }
