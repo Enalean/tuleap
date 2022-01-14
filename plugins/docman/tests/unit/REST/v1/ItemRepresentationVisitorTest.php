@@ -29,6 +29,7 @@ use Docman_VersionFactory;
 use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 class ItemRepresentationVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -69,19 +70,22 @@ class ItemRepresentationVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->link_version_factory        = Mockery::mock(Docman_LinkVersionFactory::class);
         $this->docman_version_factory      = Mockery::mock(Docman_VersionFactory::class);
         $this->event_manager               = Mockery::mock(EventManager::class);
-        $this->item_visitor                = new ItemRepresentationVisitor(
+        $event_adder                       = $this->createMock(DocmanItemsEventAdder::class);
+        $event_adder->expects(self::once())->method('addLogEvents');
+        $this->item_visitor = new ItemRepresentationVisitor(
             $this->item_representation_builder,
             $this->docman_version_factory,
             $this->link_version_factory,
             $this->item_factory,
-            $this->event_manager
+            $this->event_manager,
+            $event_adder
         );
     }
 
     public function testItVisitAFolder(): void
     {
         $item   = Mockery::mock(\Docman_Folder::class);
-        $params = ['current_user' => Mockery::mock(\PFUser::class)];
+        $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')->withArgs(
             [
@@ -102,7 +106,7 @@ class ItemRepresentationVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItVisitAFolderAndReturnsItsSize(): void
     {
         $folder = Mockery::mock(\Docman_Folder::class);
-        $user   = Mockery::mock(\PFUser::class);
+        $user   = UserTestBuilder::buildWithDefaults();
         $params = [
             'current_user' => $user,
             'with_size' => true,
@@ -131,7 +135,7 @@ class ItemRepresentationVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->item_factory->shouldReceive('getIdInWikiOfWikiPageItem')->withArgs(['A wiki page', 102])->once(
         )->andReturn(10);
 
-        $params = ['current_user' => Mockery::mock(\PFUser::class)];
+        $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
 
@@ -141,7 +145,7 @@ class ItemRepresentationVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItVisitALink(): void
     {
         $item   = Mockery::mock(\Docman_Link::class);
-        $params = ['current_user' => Mockery::mock(\PFUser::class)];
+        $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
 
@@ -159,7 +163,7 @@ class ItemRepresentationVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $version->shouldReceive('getNumber')->andReturn(1);
 
         $item->shouldReceive('getCurrentVersion')->andReturn($version);
-        $params = ['current_user' => Mockery::mock(\PFUser::class), 'is_a_direct_access' => true];
+        $params = ['current_user' => UserTestBuilder::buildWithDefaults(), 'is_a_direct_access' => true];
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
 
@@ -173,7 +177,7 @@ class ItemRepresentationVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItVisitAFile(): void
     {
         $item   = Mockery::mock(\Docman_File::class);
-        $params = ['current_user' => Mockery::mock(\PFUser::class)];
+        $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
 
@@ -185,7 +189,7 @@ class ItemRepresentationVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItVisitAnEmbeddedFile(): void
     {
         $item   = Mockery::mock(\Docman_EmbeddedFile::class);
-        $params = ['current_user' => Mockery::mock(\PFUser::class)];
+        $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
 
@@ -205,7 +209,7 @@ class ItemRepresentationVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $version->shouldReceive('getNumber')->andReturn(1);
 
         $item->shouldReceive('getCurrentVersion')->andReturn($version);
-        $params = ['current_user' => Mockery::mock(\PFUser::class), 'is_a_direct_access' => true];
+        $params = ['current_user' => UserTestBuilder::buildWithDefaults(), 'is_a_direct_access' => true];
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
 
@@ -219,7 +223,7 @@ class ItemRepresentationVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItVisitAnEmpty(): void
     {
         $item   = Mockery::mock(\Docman_Empty::class);
-        $params = ['current_user' => Mockery::mock(\PFUser::class)];
+        $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
 

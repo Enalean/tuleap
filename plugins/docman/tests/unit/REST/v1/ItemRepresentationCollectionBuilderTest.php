@@ -80,18 +80,21 @@ class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestC
     protected function setUp(): void
     {
         parent::setUp();
-        $this->item_factory                           = Mockery::mock(Docman_ItemFactory::class);
-        $this->permission_manager                     = Mockery::mock(Docman_PermissionsManager::class);
-        $this->item_representation_builder            = Mockery::mock(ItemRepresentationBuilder::class);
-        $this->item_version_factory                   = Mockery::mock(\Docman_VersionFactory::class);
-        $this->link_version_factory                   = Mockery::mock(\Docman_LinkVersionFactory::class);
-        $this->event_manager                          = Mockery::mock(\EventManager::class);
+        $this->item_factory                = Mockery::mock(Docman_ItemFactory::class);
+        $this->permission_manager          = Mockery::mock(Docman_PermissionsManager::class);
+        $this->item_representation_builder = Mockery::mock(ItemRepresentationBuilder::class);
+        $this->item_version_factory        = Mockery::mock(\Docman_VersionFactory::class);
+        $this->link_version_factory        = Mockery::mock(\Docman_LinkVersionFactory::class);
+        $this->event_manager               = Mockery::mock(\EventManager::class);
+        $event_adder                       = $this->createMock(DocmanItemsEventAdder::class);
+        $event_adder->expects(self::once())->method('addLogEvents');
         $this->item_representation_visitor            = new ItemRepresentationVisitor(
             $this->item_representation_builder,
             $this->item_version_factory,
             $this->link_version_factory,
             $this->item_factory,
-            $this->event_manager
+            $this->event_manager,
+            $event_adder
         );
         $this->dao                                    = Mockery::mock(\Docman_ItemDao::class);
         $this->item_representation_collection_builder = new ItemRepresentationCollectionBuilder(
