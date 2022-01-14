@@ -31,25 +31,25 @@
         <translate>Lock</translate>
     </button>
 </template>
-<script>
-export default {
-    name: "LockItem",
-    props: {
-        item: Object,
-    },
-    computed: {
-        can_lock_document() {
-            if (this.item.lock_info !== null) {
-                return false;
-            }
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Item } from "../../../type";
 
-            return this.item.user_can_write;
-        },
-    },
-    methods: {
-        async lockDocument() {
-            await this.$store.dispatch("lock/lockDocument", this.item);
-        },
-    },
-};
+@Component
+export default class LockItem extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    get can_lock_document() {
+        if (this.item.lock_info !== null) {
+            return false;
+        }
+
+        return this.item.user_can_write;
+    }
+
+    async lockDocument(): Promise<void> {
+        await this.$store.dispatch("lock/lockDocument", this.item);
+    }
+}
 </script>

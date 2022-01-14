@@ -32,27 +32,28 @@
     </button>
 </template>
 
-<script>
-import { mapState } from "vuex";
-export default {
-    name: "UnlockItem",
-    props: {
-        item: Object,
-    },
-    computed: {
-        ...mapState("configuration", ["user_id"]),
-        can_unlock_document() {
-            if (this.item.lock_info === null) {
-                return false;
-            }
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Item } from "../../../type";
+import { State } from "vuex-class";
 
-            return this.item.user_can_write;
-        },
-    },
-    methods: {
-        async unlockDocument() {
-            await this.$store.dispatch("lock/unlockDocument", this.item);
-        },
-    },
-};
+@Component
+export default class UnlockItem extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    @State
+    private readonly user_id!: number;
+    get can_unlock_document(): boolean {
+        if (this.item.lock_info === null) {
+            return false;
+        }
+
+        return this.item.user_can_write;
+    }
+
+    async unlockDocument(): Promise<void> {
+        await this.$store.dispatch("lock/unlockDocument", this.item);
+    }
+}
 </script>
