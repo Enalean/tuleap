@@ -34,6 +34,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChan
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
 class InitialSnapshotBuilder
@@ -207,7 +208,12 @@ class InitialSnapshotBuilder
         array &$already_parsed_fields_keys,
     ): void {
         foreach ($changelog_entry->getItemRepresentations() as $changed_field) {
-            $changed_field_id       = $changed_field->getFieldId();
+            $changed_field_id = $changed_field->getFieldId();
+            if ($changed_field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_VERSIONS || $changed_field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_FIXEDVERSIONS) {
+                $this->logger->warning('Rebuild of ' . $changed_field_id . ' is not supported yet (weird history), only last value will be found');
+                continue;
+            }
+
             $current_snapshot_field = $current_snapshot->getFieldInSnapshot($changed_field_id);
             if ($this->mustFieldBeCheckedInChangelog($current_snapshot_field, $already_parsed_fields_keys)) {
                 $already_parsed_fields_keys[$changed_field_id] = true;

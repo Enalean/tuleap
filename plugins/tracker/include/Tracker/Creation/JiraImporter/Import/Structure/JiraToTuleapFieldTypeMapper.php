@@ -43,6 +43,9 @@ use Tuleap\Tracker\XML\XMLTracker;
 
 class JiraToTuleapFieldTypeMapper
 {
+    public const JIRA_FIELD_VERSIONS      = 'versions';
+    public const JIRA_FIELD_FIXEDVERSIONS = 'fixVersions';
+
     public function __construct(
         private ErrorCollector $error_collector,
         private LoggerInterface $logger,
@@ -267,6 +270,17 @@ class JiraToTuleapFieldTypeMapper
 
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
 
+                case self::JIRA_FIELD_FIXEDVERSIONS:
+                case self::JIRA_FIELD_VERSIONS:
+                    $field = XMLMultiSelectBoxField::fromTrackerAndName($xml_tracker, $jira_field->getId())
+                        ->withLabel($jira_field->getLabel())
+                        ->withRequired($jira_field->isRequired())
+                        ->withPermissions(... $permissions);
+                    $field = $this->addBoundStaticValues($field, $jira_field);
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
+
                 case 'attachment':
                 case 'status':
                 case 'creator':
@@ -298,11 +312,9 @@ class JiraToTuleapFieldTypeMapper
                 case 'com.pyxis.greenhopper.jira:jsw-story-points':
                 case 'timeoriginalestimate':
                 case 'com.atlassian.jira.plugins.jira-development-integration-plugin:devsummarycf':
-                case 'fixVersions':
                 case 'security':
                 case 'lastViewed':
                 case 'com.atlassian.jira.toolkit:LastCommentDate':
-                case 'versions':
                 case 'com.pyxis.greenhopper.jira:gh-lexo-rank':
                 case 'aggregatetimeestimate':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect':

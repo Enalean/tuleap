@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 use DateTimeImmutable;
 use Mockery;
 use PFUser;
-use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
@@ -43,15 +43,13 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsASnapshotFromChangelogEntry(): void
     {
-        $logger              = Mockery::mock(LoggerInterface::class);
+        $logger              = new NullLogger();
         $jira_user_retriever = Mockery::mock(JiraUserRetriever::class);
         $builder             = new ChangelogSnapshotBuilder(
             new CreationStateListValueFormatter(),
             $logger,
             $jira_user_retriever
         );
-
-        $logger->shouldReceive('debug');
 
         $user                          = Mockery::mock(PFUser::class);
         $john_doe                      = Mockery::mock(PFUser::class);
@@ -294,6 +292,20 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         "to"         => "[e8a7dbae5, a7e8b9c5]",
                         "toString"   => "[John Doe, Mysterio]",
                     ],
+                    9 => [
+                        "fieldId"    => "versions",
+                        "from"       => null,
+                        "fromString" => null,
+                        "to"         => "10003",
+                        "toString"   => "Release 1.0",
+                    ],
+                    10 => [
+                        "fieldId"    => "fixVersions",
+                        "from"       => null,
+                        "fromString" => null,
+                        "to"         => "10013",
+                        "toString"   => "Release 2.0",
+                    ],
                 ],
                 'author' => [
                     'accountId' => 'e8a7dbae5',
@@ -395,6 +407,28 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 "patepicker",
                 "date",
             ),
+        );
+        $collection->addMapping(
+            new ListFieldMapping(
+                'versions',
+                'Affected versions',
+                'Fversions',
+                'versions',
+                \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                [],
+            )
+        );
+        $collection->addMapping(
+            new ListFieldMapping(
+                'fixVersions',
+                'Fixed in version',
+                'Ffixversions',
+                'fixversions',
+                \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                [],
+            )
         );
 
         return $collection;

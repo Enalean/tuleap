@@ -27,7 +27,7 @@ use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
@@ -45,7 +45,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsSnapshotForInitialChangeset(): void
     {
-        $logger              = Mockery::mock(LoggerInterface::class);
+        $logger              = new NullLogger();
         $jira_user_retriever = Mockery::mock(JiraUserRetriever::class);
         $generator           = new InitialSnapshotBuilder(
             $logger,
@@ -54,8 +54,6 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 $jira_user_retriever
             )
         );
-
-        $logger->shouldReceive('debug');
 
         $user           = Mockery::mock(PFUser::class);
         $jira_issue_api = IssueAPIRepresentation::buildFromAPIResponse(
@@ -145,6 +143,22 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [10008],
             $initial_snapshot->getFieldInSnapshot('attachment')->getValue()
         );
+
+        self::assertEquals(
+            [
+                [ 'id' => '10003' ],
+                [ 'id' => '10004' ],
+            ],
+            $initial_snapshot->getFieldInSnapshot('versions')->getValue()
+        );
+
+        self::assertEquals(
+            [
+                [ 'id' => '10005' ],
+                [ 'id' => '10006' ],
+            ],
+            $initial_snapshot->getFieldInSnapshot('fixVersions')->getValue()
+        );
     }
 
     private function buildFieldMappingCollection(): FieldMappingCollection
@@ -230,6 +244,8 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 [],
             ),
         );
+        $collection->addMapping($this->getVersionMapping());
+        $collection->addMapping($this->getFixVersionsMapping());
 
         return $collection;
     }
@@ -406,7 +422,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
             JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
                 [
-                    "id" => "102",
+                    "id" => "108",
                     "created" => "2020-03-25T14:15:12.823+0100",
                     "items" => [
                         0 => [
@@ -415,6 +431,46 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             "fromString" => "01/Jan/21",
                             "to"         => "2021-02-02",
                             "toString"   => "02/Feb/21",
+                        ],
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
+                ]
+            ),
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
+                [
+                    "id" => "109",
+                    "created" => "2020-03-25T14:15:16.823+0100",
+                    "items" => [
+                        0 => [
+                            "fieldId"    => "versions",
+                            "from"       => null,
+                            "fromString" => null,
+                            "to"         => "10003",
+                            "toString"   => "Release 1.0",
+                        ],
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
+                ]
+            ),
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
+                [
+                    "id" => "110",
+                    "created" => "2020-03-25T14:15:17.823+0100",
+                    "items" => [
+                        0 => [
+                            "fieldId"    => "fixVersions",
+                            "from"       => null,
+                            "fromString" => null,
+                            "to"         => "10005",
+                            "toString"   => "Release 2.0",
                         ],
                     ],
                     'author' => [
@@ -529,8 +585,50 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ],
                     null
                 ),
+                new FieldSnapshot(
+                    $this->getVersionMapping(),
+                    [
+                        [ 'id' => '10003' ],
+                        [ 'id' => '10004' ],
+                    ],
+                    null,
+                ),
+                new FieldSnapshot(
+                    $this->getFixVersionsMapping(),
+                    [
+                        [ 'id' => '10005' ],
+                        [ 'id' => '10006' ],
+                    ],
+                    null,
+                ),
             ],
             null
+        );
+    }
+
+    private function getVersionMapping(): ListFieldMapping
+    {
+        return new ListFieldMapping(
+            'versions',
+            'Affected versions',
+            'Fversions',
+            'versions',
+            \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
+        );
+    }
+
+    private function getFixVersionsMapping(): ListFieldMapping
+    {
+        return new ListFieldMapping(
+            'fixVersions',
+            'Fixed in versions',
+            'Ffixversions',
+            'fixversions',
+            \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
         );
     }
 }

@@ -114,6 +114,15 @@
           <name><![CDATA[customfield_10204]]></name>
           <label><![CDATA[Comment reproduire]]></label>
         </formElement>
+        <formElement type="msb" ID="bug_versions" rank="1" required="1">
+          <name><![CDATA[versions]]></name>
+          <label><![CDATA[Affecte la/les version(s)]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="Vbug_versions_10" label="1.0"/>
+            </items>
+          </bind>
+        </formElement>
         <formElement type="sb" ID="bug_customfield_10215" rank="5" required="1">
           <name><![CDATA[customfield_10215]]></name>
           <label><![CDATA[Composants]]></label>
@@ -152,6 +161,15 @@
               <item ID="Vbug_customfield_10214_agv4_27_1" label="Agv4_27_1"/>
               <item ID="Vbug_customfield_10214_agv4_27_2" label="Agv4_27_2"/>
               <item ID="Vbug_customfield_10214_agv4_28" label="Agv4_28"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="msb" ID="bug_fixversions" rank="1">
+          <name><![CDATA[fixVersions]]></name>
+          <label><![CDATA[Version(s) corrigée(s)]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="Vbug_fixversions_10" label="1.0"/>
             </items>
           </bind>
         </formElement>
@@ -514,11 +532,16 @@
     <permission scope="field" REF="bug_customfield_10204" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="bug_customfield_10204" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="bug_customfield_10204" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_versions" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_versions" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_versions" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="bug_customfield_10215" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="bug_customfield_10215" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="bug_customfield_10215" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="bug_customfield_10214" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="bug_customfield_10214" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_fixversions" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_fixversions" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="bug_customfield_10401" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="bug_customfield_10401" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="bug_customfield_10290" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
@@ -564,6 +587,9 @@
         <field_change field_name="status" type="list" bind="static">
           <value format="id"><![CDATA[1]]></value>
         </field_change>
+        <field_change field_name="fixVersions" type="list" bind="static">
+          <value/>
+        </field_change>
         <field_change type="text" field_name="customfield_10231">
           <value format="html"><![CDATA[<p>-vcvd</p>]]></value>
         </field_change>
@@ -587,6 +613,9 @@
         </field_change>
         <field_change field_name="customfield_10215" type="list" bind="static">
           <value format="id"><![CDATA[bug_customfield_10215_composant_1]]></value>
+        </field_change>
+        <field_change field_name="versions" type="list" bind="static">
+          <value format="id"><![CDATA[bug_versions_10]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change type="text" field_name="description">
@@ -700,6 +729,9 @@
         <field_change field_name="status" type="list" bind="static">
           <value format="id"><![CDATA[1]]></value>
         </field_change>
+        <field_change field_name="fixVersions" type="list" bind="static">
+          <value/>
+        </field_change>
         <field_change type="text" field_name="customfield_10231">
           <value format="html"><![CDATA[<p>-</p>]]></value>
         </field_change>
@@ -723,6 +755,9 @@
         </field_change>
         <field_change field_name="customfield_10215" type="list" bind="static">
           <value format="id"><![CDATA[bug_customfield_10215_composant_1]]></value>
+        </field_change>
+        <field_change field_name="versions" type="list" bind="static">
+          <value format="id"><![CDATA[bug_versions_10]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change type="text" field_name="description">
@@ -836,6 +871,9 @@
         <field_change field_name="status" type="list" bind="static">
           <value format="id"><![CDATA[1]]></value>
         </field_change>
+        <field_change field_name="fixVersions" type="list" bind="static">
+          <value format="id"><![CDATA[bug_fixversions_10]]></value>
+        </field_change>
         <field_change type="text" field_name="customfield_10231">
           <value format="html"><![CDATA[<p>-</p>]]></value>
         </field_change>
@@ -859,6 +897,9 @@
         </field_change>
         <field_change field_name="customfield_10215" type="list" bind="static">
           <value format="id"><![CDATA[bug_customfield_10215_composant_1]]></value>
+        </field_change>
+        <field_change field_name="versions" type="list" bind="static">
+          <value format="id"><![CDATA[bug_versions_10]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks">
           <value nature="_is_child"><![CDATA[10750]]></value>
