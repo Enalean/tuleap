@@ -42,6 +42,22 @@ interface EventListener {
 export const createModal = (doc: Document, element: Element, options?: ModalOptions): Modal =>
     new Modal(doc, element, options);
 
+const getDropdownTrigger = (dropdown_menu: HTMLElement): HTMLElement => {
+    let dropdown_trigger = dropdown_menu.previousSibling;
+    while (
+        dropdown_trigger &&
+        (!(dropdown_trigger instanceof HTMLElement) ||
+            dropdown_trigger.getAttribute("data-dropdown") !== "trigger")
+    ) {
+        dropdown_trigger = dropdown_trigger.previousSibling;
+    }
+
+    if (!dropdown_trigger) {
+        throw new Error("Dropdown trigger should exist");
+    }
+    return dropdown_trigger;
+};
+
 export class Modal {
     private readonly doc: Document;
     private readonly element: Element;
@@ -207,37 +223,12 @@ export class Modal {
             return;
         }
 
-        if (!this.isElementInDropdown(active_element)) {
-            this.previous_active_element = active_element;
+        const dropdown_menu = active_element.closest("[data-dropdown=menu]");
+        if (dropdown_menu instanceof HTMLElement) {
+            this.previous_active_element = getDropdownTrigger(dropdown_menu);
             return;
         }
-
-        this.previous_active_element = this.getDropdownTrigger(active_element);
-    }
-
-    private isElementInDropdown(element: HTMLElement): boolean {
-        return element.classList.contains("tlp-dropdown-menu-item");
-    }
-
-    private getDropdownTrigger(dropdown_element: HTMLElement): HTMLElement {
-        const dropdown_menu = dropdown_element.closest("[data-dropdown=menu]");
-        if (!(dropdown_menu instanceof HTMLElement)) {
-            throw new Error("Dropdown element should be in a dropdown menu");
-        }
-
-        let dropdown_trigger = dropdown_menu.previousSibling;
-        while (
-            dropdown_trigger &&
-            (!(dropdown_trigger instanceof HTMLElement) ||
-                dropdown_trigger.getAttribute("data-dropdown") !== "trigger")
-        ) {
-            dropdown_trigger = dropdown_trigger.previousSibling;
-        }
-
-        if (!dropdown_trigger) {
-            throw new Error("Dropdown trigger should exist");
-        }
-        return dropdown_trigger;
+        this.previous_active_element = active_element;
     }
 }
 
