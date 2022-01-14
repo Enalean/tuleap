@@ -4,3 +4,4 @@
 node_modules/
 vendor/
 .turbo/
+tsconfig.tsbuildinfo
