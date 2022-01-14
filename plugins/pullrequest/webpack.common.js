@@ -42,11 +42,7 @@ const webpack_config_main_angular_app = {
             webpack_configurator.rule_angular_gettext_loader,
         ],
     },
-    plugins: [
-        manifest_plugin,
-        webpack_configurator.getMomentLocalePlugin(),
-        webpack_configurator.getTypescriptCheckerPlugin(false),
-    ],
+    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
     resolve: {
         extensions: [".ts", ".js"],
     },

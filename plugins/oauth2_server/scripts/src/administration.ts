@@ -17,21 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    getPOFileFromLocale,
-    initGettext,
-} from "../../../../src/scripts/tuleap/gettext/gettext-init";
+import { getPOFileFromLocale, initGettext } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
 import {
     openModalAndReplacePlaceholders,
     openTargetModalIdOnClick,
     openAllTargetModalsOnClick,
-} from "../../../../src/scripts/tuleap/modals/modal-opener";
+} from "@tuleap/core/scripts/tuleap/modals/modal-opener";
 import {
     buildDeletionReplaceCallback,
     buildRegenerationReplaceBallback,
     hiddenInputReplaceCallback,
 } from "./replacers";
-import "../../../../src/scripts/tuleap/custom-elements/copy-to-clipboard";
+import "@tuleap/core/scripts/tuleap/custom-elements/copy-to-clipboard";
 
 const ADD_BUTTON_ID = "oauth2-server-add-client-button";
 

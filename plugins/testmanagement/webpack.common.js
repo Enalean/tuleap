@@ -56,11 +56,7 @@ const webpack_config_for_angular = {
             webpack_configurator.rule_angular_gettext_loader,
         ],
     },
-    plugins: [
-        manifest_plugin,
-        webpack_configurator.getTypescriptCheckerPlugin(false),
-        webpack_configurator.getMomentLocalePlugin(),
-    ],
+    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
 };
 
 const webpack_config_for_vue_components = {

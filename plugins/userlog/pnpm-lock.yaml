@@ -1,0 +1,7 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@tuleap/tlp': link:../../src/themes/tlp
+
+dependencies:
+  '@tuleap/tlp': link:../../src/themes/tlp

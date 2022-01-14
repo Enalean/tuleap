@@ -25,6 +25,7 @@
     "@types/node-gettext": "^3.0.1"
   },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "rm -rf ../../src/www/assets/agiledashboard/ && webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
     "test": "jest --config=../../tests/jest/jest.projects-plugins.config.js \"$(pwd)\""

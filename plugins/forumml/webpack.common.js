@@ -52,7 +52,6 @@ module.exports = [
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getVueLoaderPlugin(),
-            webpack_configurator.getTypescriptCheckerPlugin(false),
             ...webpack_configurator.getCSSExtractionPlugins(),
             ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
                 "forumml.js": ["./scripts/forumml.js", "./scripts/cc_attach.js"],

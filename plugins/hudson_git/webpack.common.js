@@ -48,7 +48,6 @@ const webpack_config_for_themes = {
         webpack_configurator.getCleanWebpackPlugin(),
         manifest_plugin,
         ...webpack_configurator.getCSSExtractionPlugins(),
-        webpack_configurator.getTypescriptCheckerPlugin(false),
     ],
 };
 

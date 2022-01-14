@@ -21,10 +21,7 @@ import mustache from "mustache";
 import { sprintf } from "sprintf-js";
 import preview_template from "./preview.mustache";
 import { autocomplete_groups_for_select2 } from "../autocomplete-for-select2.js";
-import {
-    getPOFileFromLocale,
-    initGettext,
-} from "../../../../src/scripts/tuleap/gettext/gettext-init";
+import { getPOFileFromLocale, initGettext } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
 
 export async function initLdapBindingPreview(options, callback) {
     const { preserve, button, preview, display_name, select } = options;
