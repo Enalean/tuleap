@@ -1,0 +1,119 @@
+#!/usr/bin/env groovy
+
+def actions
+
+pipeline {
+    agent {
+        label 'docker-rpm'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Prepare') {
+            agent {
+                dockerfile {
+                    dir 'sources/tools/utils/nix/'
+                    filename 'build-tools.dockerfile'
+                    reuseNode true
+                    args '--tmpfs /tmp/tuleap_build:rw,noexec,nosuid --read-only'
+                }
+            }
+            steps {
+                dir ('sources') {
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'nexus.enalean.com_readonly',
+                            passwordVariable: 'NPM_PASSWORD',
+                            usernameVariable: 'NPM_USER'
+                        ),
+                        string(credentialsId: 'github-token-composer', variable: 'COMPOSER_GITHUB_AUTH')
+                    ]) {
+                        sh 'tools/utils/scripts/generated-files-builder.sh dev'
+                    }
+                }
+            }
+        }
+
+        stage('Check lockfiles') {
+            steps { script {
+                actions = load 'sources/tests/actions.groovy'
+                actions.runFilesStatusChangesDetection('.', 'lockfiles', 'composer.lock')
+            } }
+            post {
+                failure {
+                    dir ('sources') {
+                        sh 'git diff'
+                    }
+                }
+            }
+        }
+
+        stage('Tests') {
+            failFast false
+            parallel {
+                stage('Translations: check .po files') {
+                    steps { script {
+                        actions.runFilesStatusChangesDetection('.', 'translation files', '"*.po\$"')
+                    } }
+                }
+                stage('ESLint static analysis') {
+                    agent {
+                        dockerfile {
+                            dir 'sources/tools/utils/nix/'
+                            filename 'build-tools.dockerfile'
+                            reuseNode true
+                            args '--network none'
+                        }
+                    }
+                    steps { script { actions.runESLint() } }
+                }
+                stage('SCSS coding standards') {
+                    agent {
+                        dockerfile {
+                            dir 'sources/tools/utils/nix/'
+                            filename 'build-tools.dockerfile'
+                            reuseNode true
+                            args '--network none'
+                        }
+                    }
+                    steps { script { actions.runStylelint() } }
+                }
+                stage ('Jest') {
+                    agent {
+                        dockerfile {
+                            dir 'sources/tools/utils/nix/'
+                            filename 'build-tools.dockerfile'
+                            reuseNode true
+                            args '--network none --tmpfs /tmp/jest_cache:rw,noexec,nosuid -e TMPDIR=/tmp/jest_cache/'
+                        }
+                    }
+                    steps { script { actions.runJestTests('Tuleap', '.') } }
+                    post { always { junit 'results/jest/junit-*.xml' } }
+                }
+            }
+        }
+
+        stage('Publish') {
+            agent {
+                dockerfile {
+                    dir 'sources/tools/utils/nix/'
+                    filename 'build-tools.dockerfile'
+                    reuseNode true
+                    args '--tmpfs /tmp/tuleap_build:rw,noexec,nosuid --read-only'
+                }
+            }
+            steps {
+                dir ('sources') {
+                    withCredentials([string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
+                        sh 'HOME=/tmp/tuleap_build pnpm publish --filter "@tuleap/*" --no-git-checks'
+                    }
+                }
+            }
+        }
+    }
+}
