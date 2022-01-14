@@ -76,6 +76,7 @@ module.exports = {
         "!**/vite.config.ts",
         "!**/jest.config.js",
         "!**/*.d.ts",
+        "!**/scripts/lib/**",
     ],
     // Transpile ESModules because they are not supported by NodeJS (yet)
     // They are only used in some part of Tuleap but to avoid wasting more
