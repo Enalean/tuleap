@@ -62,7 +62,7 @@ export default class UserStoryDisplayer extends Vue {
         const classnames = getAccessibilityClasses(this.user_story, this.accessibility);
 
         if (!this.user_story.is_open) {
-            classnames.push("element-card-user-story-closed");
+            classnames.push("element-card-closed");
         }
 
         return classnames.join(" ");

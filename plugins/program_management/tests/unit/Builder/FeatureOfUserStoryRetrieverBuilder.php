@@ -31,30 +31,24 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFeatureTitleStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFeatureURIStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchParentFeatureOfAUserStoryStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsOpenStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 
 final class FeatureOfUserStoryRetrieverBuilder
 {
     public static function withSuccessiveFeatures(string $first_title, string $other_titles): FeatureOfUserStoryRetriever
     {
-        $title_retriever           = RetrieveFeatureTitleStub::withSuccessiveTitles($first_title, $other_titles);
-        $uri_retriever             = new RetrieveFeatureURIStub();
-        $cross_reference_retriever = RetrieveFeatureCrossReferenceStub::withSuccessiveShortNames('feature', 'feature');
-        $planned_verifier          = VerifyHasAtLeastOnePlannedUserStoryStub::withPlannedUserStory();
-        $check_is_valid_feature    = CheckIsValidFeatureStub::withAlwaysValidFeatures();
-        $background_retriever      = RetrieveBackgroundColorStub::withSuccessiveColors('fiesta-red', 'fiesta-red');
-        $tracker_retriever         = RetrieveTrackerOfFeatureStub::withSuccessiveIds(10, 10);
-
         return new FeatureOfUserStoryRetriever(
-            $title_retriever,
-            $uri_retriever,
-            $cross_reference_retriever,
-            $planned_verifier,
-            $check_is_valid_feature,
-            $background_retriever,
-            $tracker_retriever,
+            RetrieveFeatureTitleStub::withSuccessiveTitles($first_title, $other_titles),
+            new RetrieveFeatureURIStub(),
+            RetrieveFeatureCrossReferenceStub::withSuccessiveShortNames('feature', 'feature'),
+            VerifyHasAtLeastOnePlannedUserStoryStub::withPlannedUserStory(),
+            CheckIsValidFeatureStub::withAlwaysValidFeatures(),
+            RetrieveBackgroundColorStub::withSuccessiveColors('fiesta-red', 'fiesta-red'),
+            RetrieveTrackerOfFeatureStub::withSuccessiveIds(10, 10),
             SearchParentFeatureOfAUserStoryStub::withParentFeatureId(1),
-            FeatureHasUserStoriesVerifierBuilder::buildWithUserStories()
+            FeatureHasUserStoriesVerifierBuilder::buildWithUserStories(),
+            VerifyFeatureIsOpenStub::withOpen()
         );
     }
 }

@@ -62,6 +62,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\FormElementFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Semantics\IsOpenRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserIsProgramAdminVerifier;
@@ -387,7 +388,8 @@ final class ProjectResource extends AuthenticatedResource
                 new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
                 $artifacts_linked_to_parent_dao
             ),
-            new FeatureHasUserStoriesVerifier($artifacts_linked_to_parent_dao, $visibility_verifier)
+            new FeatureHasUserStoriesVerifier($artifacts_linked_to_parent_dao, $visibility_verifier),
+            new IsOpenRetriever($artifact_retriever)
         );
 
         $user = $user_manager->getCurrentUser();

@@ -21,13 +21,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory;
+namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Semantics;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyIsOpen;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsOpen;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\VerifyIsOpen;
 
-final class IsOpenRetriever implements VerifyIsOpen
+final class IsOpenRetriever implements VerifyIsOpen, VerifyFeatureIsOpen
 {
     public function __construct(private RetrieveFullArtifact $artifact_retriever)
     {
@@ -37,5 +39,10 @@ final class IsOpenRetriever implements VerifyIsOpen
     {
         $artifact = $this->artifact_retriever->getNonNullArtifact($user_story_identifier);
         return $artifact->isOpen();
+    }
+
+    public function isFeatureOpen(FeatureIdentifier $feature): bool
+    {
+        return $this->artifact_retriever->getNonNullArtifact($feature)->isOpen();
     }
 }

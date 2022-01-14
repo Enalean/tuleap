@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureHasUserStoriesVerifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Feature;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\FeatureOfUserStoryRetriever;
 use Tuleap\ProgramManagement\Tests\Builder\FeatureHasUserStoriesVerifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\UserStoryIdentifierBuilder;
@@ -35,69 +36,69 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFeatureURIStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchParentFeatureOfAUserStoryStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsOpenStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class FeatureOfUserStoryRetrieverTest extends TestCase
 {
-    private const FEATURE_ID = 1;
+    private const FEATURE_ID         = 44;
+    private const FEATURE_TITLE      = 'reamass';
+    private const FEATURE_SHORT_NAME = 'feature';
+    private const BASE_URI           = '/plugins/tracker/?aid=';
     private SearchParentFeatureOfAUserStoryStub $search_parent_feature_of_a_user_story;
     private FeatureHasUserStoriesVerifier $feature_has_user_stories_verifier;
-    private UserStoryIdentifier $story_identifier;
-    private UserIdentifierStub $user_identifier;
 
     protected function setUp(): void
     {
-        $this->story_identifier                      = UserStoryIdentifierBuilder::withId(1);
-        $this->user_identifier                       = UserIdentifierStub::buildGenericUser();
-        $this->search_parent_feature_of_a_user_story = SearchParentFeatureOfAUserStoryStub::withoutParentFeature();
-        $this->feature_has_user_stories_verifier     = FeatureHasUserStoriesVerifierBuilder::buildWithoutUserStories();
+        $this->search_parent_feature_of_a_user_story = SearchParentFeatureOfAUserStoryStub::withParentFeatureId(
+            self::FEATURE_ID
+        );
+        $this->feature_has_user_stories_verifier     = FeatureHasUserStoriesVerifierBuilder::buildWithUserStories();
     }
 
-    private function getRetriever(): FeatureOfUserStoryRetriever
+    private function getFeature(): ?Feature
     {
-        $title_retriever           = RetrieveFeatureTitleStub::withTitle('US 1');
-        $uri_retriever             = new RetrieveFeatureURIStub();
-        $cross_reference_retriever = RetrieveFeatureCrossReferenceStub::withShortname('feature');
-        $planned_verifier          = VerifyHasAtLeastOnePlannedUserStoryStub::withPlannedUserStory();
-        $check_is_valid_feature    = CheckIsValidFeatureStub::withAlwaysValidFeatures();
-        $background_retriever      = RetrieveBackgroundColorStub::withColor('fiesta-red');
-        $tracker_retriever         = RetrieveTrackerOfFeatureStub::withId(10);
-
-        return new FeatureOfUserStoryRetriever(
-            $title_retriever,
-            $uri_retriever,
-            $cross_reference_retriever,
-            $planned_verifier,
-            $check_is_valid_feature,
-            $background_retriever,
-            $tracker_retriever,
+        $retriever = new FeatureOfUserStoryRetriever(
+            RetrieveFeatureTitleStub::withTitle(self::FEATURE_TITLE),
+            new RetrieveFeatureURIStub(),
+            RetrieveFeatureCrossReferenceStub::withShortname(self::FEATURE_SHORT_NAME),
+            VerifyHasAtLeastOnePlannedUserStoryStub::withPlannedUserStory(),
+            CheckIsValidFeatureStub::withAlwaysValidFeatures(),
+            RetrieveBackgroundColorStub::withColor('fiesta-red'),
+            RetrieveTrackerOfFeatureStub::withId(10),
             $this->search_parent_feature_of_a_user_story,
-            $this->feature_has_user_stories_verifier
+            $this->feature_has_user_stories_verifier,
+            VerifyFeatureIsOpenStub::withOpen()
         );
+
+        return $retriever->retrieveFeature(
+            UserStoryIdentifierBuilder::withId(1),
+            UserIdentifierStub::buildGenericUser()
+        );
+    }
+
+    public function testItReturnsFeature(): void
+    {
+        $feature = $this->getFeature();
+        self::assertNotNull($feature);
+        self::assertSame(self::FEATURE_ID, $feature->feature_identifier->getId());
+        self::assertSame(self::FEATURE_TITLE, $feature->title);
+        self::assertSame(self::BASE_URI . self::FEATURE_ID, $feature->uri);
+        self::assertTrue($feature->is_open);
     }
 
     public function testItReturnsNullWhenFeatureHasNoParent(): void
     {
-        self::assertNull($this->getRetriever()->retrieveFeature($this->story_identifier, $this->user_identifier));
+        $this->search_parent_feature_of_a_user_story = SearchParentFeatureOfAUserStoryStub::withoutParentFeature();
+        $this->feature_has_user_stories_verifier     = FeatureHasUserStoriesVerifierBuilder::buildWithoutUserStories();
+        self::assertNull($this->getFeature());
     }
 
     public function testItReturnsNullWhenFeatureIsNotValid(): void
     {
         $this->search_parent_feature_of_a_user_story = SearchParentFeatureOfAUserStoryStub::withoutParentFeature();
         $this->feature_has_user_stories_verifier     = FeatureHasUserStoriesVerifierBuilder::buildWithUserStories();
-
-        self::assertNull($this->getRetriever()->retrieveFeature($this->story_identifier, $this->user_identifier));
-    }
-
-    public function testItReturnsFeature(): void
-    {
-        $this->search_parent_feature_of_a_user_story = SearchParentFeatureOfAUserStoryStub::withParentFeatureId(self::FEATURE_ID);
-        $this->feature_has_user_stories_verifier     = FeatureHasUserStoriesVerifierBuilder::buildWithUserStories();
-
-        self::assertEquals(
-            self::FEATURE_ID,
-            $this->getRetriever()->retrieveFeature($this->story_identifier, $this->user_identifier)?->feature_identifier->getId()
-        );
+        self::assertNull($this->getFeature());
     }
 }

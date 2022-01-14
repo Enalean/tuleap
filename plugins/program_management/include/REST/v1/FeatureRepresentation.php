@@ -32,6 +32,7 @@ use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
  */
 final class FeatureRepresentation extends ElementRepresentation
 {
+    public bool $is_open;
     /**
      * @var MinimalTrackerRepresentation
      */
@@ -54,12 +55,14 @@ final class FeatureRepresentation extends ElementRepresentation
         ?string $artifact_title,
         string $artifact_xref,
         string $artifact_url,
+        bool $is_open,
         MinimalTrackerRepresentation $minimal_tracker_representation,
         BackgroundColor $background_color,
         bool $has_user_story_planned,
         bool $has_user_story_linked,
     ) {
         parent::__construct($artifact_id, $artifact_url, $artifact_xref, $artifact_title);
+        $this->is_open                = $is_open;
         $this->tracker                = $minimal_tracker_representation;
         $this->background_color       = $background_color->getBackgroundColorName();
         $this->has_user_story_planned = $has_user_story_planned;
@@ -75,6 +78,7 @@ final class FeatureRepresentation extends ElementRepresentation
             $feature->title,
             $feature->cross_reference,
             $feature->uri,
+            $feature->is_open,
             MinimalTrackerRepresentation::build($tracker),
             $feature->background_color,
             $feature->is_linked_to_at_least_one_planned_user_story,
