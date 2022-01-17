@@ -54,3 +54,5 @@ export const getComputedValueLabel = (): string => gettextCatalog.getString("Com
 export const getEmptyLabel = (): string => gettextCatalog.getString("Empty");
 export const getLinkFieldUnderConstructionPlaceholder = (): string =>
     gettextCatalog.getString("Field under implementation, please come back later");
+export const getLinkFieldFetchErrorMessage = (): string =>
+    gettextCatalog.getString("Unable to retrieve the linked artifacts: %s");
