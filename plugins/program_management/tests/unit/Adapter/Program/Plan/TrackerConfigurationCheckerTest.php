@@ -55,11 +55,21 @@ final class TrackerConfigurationCheckerTest extends \Tuleap\Test\PHPUnit\TestCas
         );
     }
 
+    private function checkPlannableTrackerIsValid(RetrieveFullTrackerFromIdStub $tracker_retriever): void
+    {
+        $checker = new TrackerConfigurationChecker($tracker_retriever);
+        $checker->checkPlannableTrackerIsValid(
+            5,
+            ProgramForAdministrationIdentifierBuilder::buildWithId(self::PROGRAM_ID)
+        );
+    }
+
     public function dataProviderMethodUnderTest(): array
     {
         return [
             'Iteration'         => [[$this, 'checkIterationIsValid']],
             'Program Increment' => [[$this, 'checkProgramIncrementIsValid']],
+            'Plannable tracker' => [[$this, 'checkPlannableTrackerIsValid']],
         ];
     }
 

@@ -26,15 +26,14 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 
 final class PlanCreator implements CreatePlan
 {
     public function __construct(
         private CheckNewProgramIncrementTracker $program_increment_checker,
+        private CheckNewPlannableTracker $plannable_checker,
         private CheckNewIterationTracker $iteration_checker,
-        private RetrieveTracker $tracker_retriever,
         private RetrieveProgramUserGroup $ugroup_retriever,
         private SavePlan $plan_store,
         private RetrieveProject $project_retriever,
@@ -65,8 +64,8 @@ final class PlanCreator implements CreatePlan
                 $program
             );
         }
-        $plannable_tracker_collection = ProgramPlannableTrackerCollection::fromIds(
-            $this->tracker_retriever,
+        $plannable_tracker_collection = NewPlannableTrackerCollection::fromIds(
+            $this->plannable_checker,
             $plan_change->tracker_ids_that_can_be_planned,
             $program
         );

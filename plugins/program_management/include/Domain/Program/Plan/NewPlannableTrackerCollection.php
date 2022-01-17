@@ -24,45 +24,39 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTracker;
 
 /**
+ * I hold a collection of NewPlannableTracker
+ * @see NewPlannableTracker
  * @psalm-immutable
  */
-final class ProgramPlannableTrackerCollection
+final class NewPlannableTrackerCollection
 {
     /**
-     * @var ProgramPlannableTracker[]
+     * @param NewPlannableTracker[] $trackers
      */
-    public array $trackers;
-
-    /**
-     * @param ProgramPlannableTracker[] $trackers
-     */
-    private function __construct(array $trackers)
+    private function __construct(public array $trackers)
     {
-        $this->trackers = $trackers;
     }
 
     /**
-     * @param int[] $plannable_trackers_id
+     * @param int[] $plannable_trackers_ids
      * @throws PlannableTrackerCannotBeEmptyException
      * @throws ProgramTrackerException
      */
     public static function fromIds(
-        RetrieveTracker $tracker_retriever,
-        array $plannable_trackers_id,
+        CheckNewPlannableTracker $tracker_checker,
+        array $plannable_trackers_ids,
         ProgramForAdministrationIdentifier $program,
     ): self {
-        $trackers = [];
-        foreach ($plannable_trackers_id as $tracker_id) {
-            $trackers[] = ProgramPlannableTracker::build($tracker_retriever, $tracker_id, $program);
-        }
-
-        if (empty($trackers)) {
+        if (empty($plannable_trackers_ids)) {
             throw new PlannableTrackerCannotBeEmptyException();
         }
-
-        return new self($trackers);
+        return new self(
+            array_map(
+                static fn($tracker_id) => NewPlannableTracker::fromId($tracker_checker, $tracker_id, $program),
+                $plannable_trackers_ids
+            )
+        );
     }
 }
