@@ -43,10 +43,6 @@ final class Plan
      */
     private $custom_sub_label;
     /**
-     * @var ?IterationTracker
-     */
-    private $iteration_tracker;
-    /**
      * @var int
      */
     private $project_id;
@@ -61,14 +57,13 @@ final class Plan
         ProgramUserGroupCollection $can_prioritize,
         ?string $custom_label,
         ?string $custom_sub_label,
-        ?IterationTracker $iteration_tracker,
+        private ?NewIterationTrackerConfiguration $iteration_tracker,
     ) {
         $this->project_id         = $project_id;
         $this->plannable_trackers = $plannable_trackers;
         $this->can_prioritize     = $can_prioritize;
         $this->custom_label       = $custom_label;
         $this->custom_sub_label   = $custom_sub_label;
-        $this->iteration_tracker  = $iteration_tracker;
     }
 
     public function getProgramIncrementTracker(): NewProgramIncrementTracker
@@ -107,7 +102,7 @@ final class Plan
         return $this->custom_sub_label;
     }
 
-    public function getIterationTracker(): ?IterationTracker
+    public function getIterationTracker(): ?NewIterationTrackerConfiguration
     {
         return $this->iteration_tracker;
     }

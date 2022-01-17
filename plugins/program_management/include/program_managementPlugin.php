@@ -1362,6 +1362,7 @@ final class program_managementPlugin extends Plugin
         $importer = new ProgramManagementConfigXMLImporter(
             new PlanCreator(
                 $tracker_checker,
+                $tracker_checker,
                 $tracker_retriever,
                 new ProgramUserGroupRetriever(new UserGroupRetriever($ugroup_manager)),
                 new PlanDao(),

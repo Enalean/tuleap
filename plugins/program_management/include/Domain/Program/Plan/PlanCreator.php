@@ -33,6 +33,7 @@ final class PlanCreator implements CreatePlan
 {
     public function __construct(
         private CheckNewProgramIncrementTracker $program_increment_checker,
+        private CheckNewIterationTracker $iteration_checker,
         private RetrieveTracker $tracker_retriever,
         private RetrieveProgramUserGroup $ugroup_retriever,
         private SavePlan $plan_store,
@@ -58,8 +59,8 @@ final class PlanCreator implements CreatePlan
         );
         $iteration_tracker = null;
         if ($plan_change->iteration) {
-            $iteration_tracker = IterationTracker::fromPlanIterationChange(
-                $this->tracker_retriever,
+            $iteration_tracker = NewIterationTrackerConfiguration::fromPlanIterationChange(
+                $this->iteration_checker,
                 $plan_change->iteration,
                 $program
             );

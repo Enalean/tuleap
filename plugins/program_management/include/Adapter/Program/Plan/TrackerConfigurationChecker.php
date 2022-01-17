@@ -24,15 +24,23 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\RetrieveFullTrackerFromId;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Plan\CheckNewIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\CheckNewProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\PlanTrackerDoesNotBelongToProjectException;
 use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
 
-final class TrackerConfigurationChecker implements CheckNewProgramIncrementTracker
+final class TrackerConfigurationChecker implements CheckNewIterationTracker, CheckNewProgramIncrementTracker
 {
     public function __construct(
         private RetrieveFullTrackerFromId $tracker_retriever,
     ) {
+    }
+
+    public function checkIterationTrackerIsValid(
+        int $iteration_tracker_id,
+        ProgramForAdministrationIdentifier $program,
+    ): void {
+        $this->checkTrackerIsValid($iteration_tracker_id, $program);
     }
 
     public function checkProgramIncrementTrackerIsValid(
