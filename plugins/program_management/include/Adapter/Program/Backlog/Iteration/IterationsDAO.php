@@ -84,7 +84,18 @@ final class IterationsDAO extends DataAccessObject implements VerifyIsIterationT
      */
     public function getIterationLabels(int $iteration_tracker_id): ?array
     {
-        $sql = 'SELECT iteration_label, iteration_sub_label FROM plugin_program_management_program WHERE iteration_tracker_id = ?';
-        return $this->getDB()->row($sql, $iteration_tracker_id);
+        $sql       = 'SELECT iteration_label, iteration_sub_label FROM plugin_program_management_program WHERE iteration_tracker_id = ?';
+        $row       = $this->getDB()->row($sql, $iteration_tracker_id);
+        $label     = $this->emptyStringToNull($row['iteration_label']);
+        $sub_label = $this->emptyStringToNull($row['iteration_sub_label']);
+        return ['iteration_label' => $label, 'iteration_sub_label' => $sub_label];
+    }
+
+    private function emptyStringToNull(?string $result): ?string
+    {
+        if ($result === '') {
+            return null;
+        }
+        return $result;
     }
 }

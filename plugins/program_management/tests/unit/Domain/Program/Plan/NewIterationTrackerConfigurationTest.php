@@ -75,9 +75,18 @@ final class NewIterationTrackerConfigurationTest extends \Tuleap\Test\PHPUnit\Te
         $this->getNewIterationTrackerConfiguration();
     }
 
-    public function testItBuildsWithoutLabels(): void
+    public function testItBuildsWithNullLabels(): void
     {
         $this->iteration_change = new PlanIterationChange(self::ITERATION_TRACKER_ID, null, null);
+        $new_configuration      = $this->getNewIterationTrackerConfiguration();
+        self::assertSame(self::ITERATION_TRACKER_ID, $new_configuration->id);
+        self::assertNull($new_configuration->label);
+        self::assertNull($new_configuration->sub_label);
+    }
+
+    public function testItEnforcesNullLabelsWhenGivenEmptyStrings(): void
+    {
+        $this->iteration_change = new PlanIterationChange(self::ITERATION_TRACKER_ID, '', '');
         $new_configuration      = $this->getNewIterationTrackerConfiguration();
         self::assertSame(self::ITERATION_TRACKER_ID, $new_configuration->id);
         self::assertNull($new_configuration->label);

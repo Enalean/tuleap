@@ -19,7 +19,8 @@ msgid "An error has occurred loading content"
 msgstr "Une erreur s'est produite lors du chargement du contenu"
 
 msgid "An error occurred loading unplanned elements"
-msgstr "Une erreur s'est produite lors du chargement des éléments non plannifiés"
+msgstr ""
+"Une erreur s'est produite lors du chargement des éléments non plannifiés"
 
 msgid "Create the first %s"
 msgstr "Créer un(e) %s"
@@ -29,9 +30,6 @@ msgstr "Créer la première itération"
 
 msgid "Edit"
 msgstr "Modifier"
-
-msgid "Iterations"
-msgstr "Itérations"
 
 msgid "New %{ iteration_sub_label }"
 msgstr "Ajouter un(e) %{ iteration_sub_label }"
@@ -56,6 +54,3 @@ msgstr "Il n'y a aucun élément non plannifié"
 
 msgid "To be planned by the Teams"
 msgstr "À plannifier par les équipes"
-
-msgid "iteration"
-msgstr "itération"

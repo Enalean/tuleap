@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program;
+namespace Tuleap\ProgramManagement\Adapter\Program\IterationView;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlannedIterations;
 
@@ -48,7 +48,10 @@ final class DisplayPlanIterationsPresenter
             json_encode($planned_iterations->getProgramPrivacy(), JSON_THROW_ON_ERROR),
             json_encode($planned_iterations->getProgramBaseInfo(), JSON_THROW_ON_ERROR),
             json_encode($planned_iterations->getProgramIncrementInfo(), JSON_THROW_ON_ERROR),
-            json_encode($planned_iterations->getIterationLabels(), JSON_THROW_ON_ERROR),
+            json_encode(
+                IterationLabelsPresenter::fromLabels($planned_iterations->getIterationLabels()),
+                JSON_THROW_ON_ERROR
+            ),
             $planned_iterations->isUserAdmin(),
             $planned_iterations->isAccessibilityModeEnabled(),
             $planned_iterations->getIterationTrackerId()
