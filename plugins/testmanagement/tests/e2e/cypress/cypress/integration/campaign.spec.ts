@@ -137,19 +137,30 @@ describe("TTM campaign", () => {
             cy.projectMemberLogin();
         });
 
-        it("Creates a campaign", () => {
-            cy.visitProjectService(ttm_project_name, "Test Management");
-            cy.get("[data-test=new-campaign-button]").click();
-
-            cy.get("[data-test=campaign-label]").type("My first campaign");
-            cy.get("[data-test=choose-tests]").select("none");
-            cy.get("[data-test=create-new-campaign-button]").click();
-
-            cy.contains("My first campaign").click();
-            cy.contains("There are no tests you can see.");
+        context("On existing campaign", () => {
+            it("should display requirement", () => {
+                cy.visitProjectService("test-management-project", "Test Management");
+                cy.contains("A test campaign").click();
+                cy.contains("First test case").click();
+                cy.get("[data-test=current-test-requirement]").contains(
+                    "Iterate interactive web-readiness"
+                );
+            });
         });
 
-        context("Within the campaign", () => {
+        context("For new campaign", () => {
+            it("Creates a campaign", () => {
+                cy.visitProjectService(ttm_project_name, "Test Management");
+                cy.get("[data-test=new-campaign-button]").click();
+
+                cy.get("[data-test=campaign-label]").type("My first campaign");
+                cy.get("[data-test=choose-tests]").select("none");
+                cy.get("[data-test=create-new-campaign-button]").click();
+
+                cy.contains("My first campaign").click();
+                cy.contains("There are no tests you can see.");
+            });
+
             it("Updates campaign label", () => {
                 cy.get("[data-test=test-campaign-edit-menu-trigger]").click();
                 cy.get("[data-test=test-campaign-rename-campaign]").click();
@@ -334,6 +345,13 @@ describe("TTM campaign", () => {
                     cy.get("[data-test=remove-attachment-file-button]").click();
                     cy.get("[data-test=save-comment-button]").click();
                     cy.get("[data-test=comment-file-attachment]").should("not.exist");
+                });
+
+                it("should allow the user to log a bug for the test", () => {
+                    cy.get("[data-shortcut-new-bug]").click({ force: true });
+                    getStringFieldWithLabel("Summary").type("A bug for the test");
+                    cy.get("[data-test=artifact-modal-save-button]").click();
+                    cy.get("[data-test=current-test-bug]").contains("A bug for the test");
                 });
             });
         });
