@@ -10,8 +10,8 @@ specifiers:
   '@vue/test-utils': ^1.3.0
   fast-deep-equal: ^3.1.3
   moment: ^2.29.1
-  moment-timezone: ^0.5.33
-  moment-timezone-data-webpack-plugin: ^1.4.0
+  moment-timezone: ^0.5.34
+  moment-timezone-data-webpack-plugin: ^1.5.0
   pretty-kibibytes: ^4.0.4
   sprintf-js: ^1.1.2
   tus-js-client: ^2.3.0
@@ -23,7 +23,7 @@ specifiers:
   vue-router: ^3.5.3
   vuex: ^3.6.2
   vuex-class: ^0.3.2
-  vuex-persistedstate: ^3.1.0
+  vuex-persistedstate: ^4.1.0
   vuex-shared-mutations: ^1.0.2
 
 dependencies:
@@ -35,7 +35,7 @@ dependencies:
   '@tuleap/vue-breadcrumb-privacy': link:../../src/scripts/lib/vue-breadcrumb-privacy
   fast-deep-equal: 3.1.3
   moment: 2.29.1
-  moment-timezone: 0.5.33
+  moment-timezone: 0.5.34
   pretty-kibibytes: 4.0.4
   sprintf-js: 1.1.2
   tus-js-client: 2.3.0
@@ -44,12 +44,12 @@ dependencies:
   vue-gettext: 2.1.12
   vue-router: 3.5.3
   vuex: 3.6.2_vue@2.6.14
-  vuex-persistedstate: 3.1.0_vue@2.6.14+vuex@3.6.2
+  vuex-persistedstate: 4.1.0_vuex@3.6.2
   vuex-shared-mutations: 1.0.2
 
 devDependencies:
   '@vue/test-utils': 1.3.0_vue@2.6.14
-  moment-timezone-data-webpack-plugin: 1.4.0_moment-timezone@0.5.33
+  moment-timezone-data-webpack-plugin: 1.5.0_moment-timezone@0.5.34
   vue-class-component: 7.2.6_vue@2.6.14
   vue-property-decorator: 9.1.2_cc5a81cd4d75b7f9736a3e9b263f47e5
   vuex-class: 0.3.2_74f9cfd67148c622b48e1672fc254539
@@ -325,19 +325,19 @@ packages:
       brace-expansion: 1.1.11
     dev: true
 
-  /moment-timezone-data-webpack-plugin/1.4.0_moment-timezone@0.5.33:
-    resolution: {integrity: sha512-tBCIpTT0FARkMoNW+wT67r4d/Yavr3e3iyLsM+rGdYlrsp6LkCI0WoKLGtI4yoNWMBh3AATs+4fLnVyjx6/Afg==}
+  /moment-timezone-data-webpack-plugin/1.5.0_moment-timezone@0.5.34:
+    resolution: {integrity: sha512-eidUVGn6Fc8jR0tBf8xAhBR1C3jqknFJe0rfzThnglnJjmzqTXRYVTOeobUzWvlEfgTSu+b0W7GgOdqAWvGbYA==}
     peerDependencies:
       moment-timezone: '>= 0.1.0'
       webpack: 4.x.x || 5.x.x
     dependencies:
       find-cache-dir: 3.3.1
       make-dir: 3.1.0
-      moment-timezone: 0.5.33
+      moment-timezone: 0.5.34
     dev: true
 
-  /moment-timezone/0.5.33:
-    resolution: {integrity: sha512-PTc2vcT8K9J5/9rDEPe5czSIKgLoGsH8UNpA4qZTVw0Vd/Uz19geE9abbIOQKaAQFcnQ3v5YEXrbSc5BpshH+w==}
+  /moment-timezone/0.5.34:
+    resolution: {integrity: sha512-3zAEHh2hKUs3EXLESx/wsgw6IQdusOT8Bxm3D9UrHPQR7zlMmzwybC8zHEM1tQ4LJwP7fcxrWr8tuBg05fFCbg==}
     dependencies:
       moment: 2.29.1
     dev: false
@@ -448,8 +448,8 @@ packages:
     hasBin: true
     dev: true
 
-  /shvl/2.0.1:
-    resolution: {integrity: sha512-VU7R5Uxp38LKHooGuZe0TcX2EPK95nn8DvclAvTPyD9/qHmXvt3dR2pJ4JLZ8uLjxQNQ3zNLFJCreteIj3cvpw==}
+  /shvl/2.0.3:
+    resolution: {integrity: sha512-V7C6S9Hlol6SzOJPnQ7qzOVEWUQImt3BNmmzh40wObhla3XOYMe4gGiYzLrJd5TFa+cI2f9LKIRJTTKZSTbWgw==}
     dev: false
 
   /sigmund/1.0.1:
@@ -531,15 +531,13 @@ packages:
       vuex: 3.6.2_vue@2.6.14
     dev: true
 
-  /vuex-persistedstate/3.1.0_vue@2.6.14+vuex@3.6.2:
-    resolution: {integrity: sha512-nRiCe1qDdDrcveFQzTw0QGEj3dRpwN19BailSSwfhe4eUNNQ+9S/ApKnDEAuyw95cigOtSPciMEhdsC0qNUiKQ==}
+  /vuex-persistedstate/4.1.0_vuex@3.6.2:
+    resolution: {integrity: sha512-3SkEj4NqwM69ikJdFVw6gObeB0NHyspRYMYkR/EbhR0hbvAKyR5gksVhtAfY1UYuWUOCCA0QNGwv9pOwdj+XUQ==}
     peerDependencies:
-      vue: ^2.0.0
-      vuex: ^2.0.0 || ^3.0.0
+      vuex: ^3.0 || ^4.0.0-rc
     dependencies:
       deepmerge: 4.2.2
-      shvl: 2.0.1
-      vue: 2.6.14
+      shvl: 2.0.3
       vuex: 3.6.2_vue@2.6.14
     dev: false
 
