@@ -229,7 +229,7 @@ class DocmanItemsResource extends AuthenticatedResource
         $user          = $items_request->getUser();
 
         $item_representation_builder = $this->getRepresentationBuilder($items_request);
-        $items_representation        = $item_representation_builder->buildParents($item, $user, $project, $limit, $offset);
+        $items_representation        = $item_representation_builder->buildParentsItemRepresentation($item, $user, $limit, $offset);
 
         Header::sendPaginationHeaders($limit, $offset, $items_representation->getTotalSize(), self::MAX_LIMIT);
 

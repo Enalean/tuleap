@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Folders;
 
+use Docman_ItemFactory;
+use Tuleap\Docman\REST\v1\ItemRepresentationCollectionBuilder;
+use Tuleap\Docman\REST\v1\ItemRepresentationVisitor;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -44,6 +47,10 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
      * @var \Docman_PermissionsManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $permissions_manager;
+    /**
+     * @var Docman_ItemFactory&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $item_factory;
     private BuildSearchedItemRepresentationsFromSearchReport $representation_builder;
     private ItemStatusMapper $status_mapper;
 
@@ -56,11 +63,14 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
         $this->user_manager        = $this->createMock(\UserManager::class);
         $this->permissions_manager = $this->createMock(\Docman_PermissionsManager::class);
 
+        $this->item_factory           = $this->createMock(Docman_ItemFactory::class);
         $this->representation_builder = new BuildSearchedItemRepresentationsFromSearchReport(
             $this->item_dao,
             $this->status_mapper,
             $this->user_manager,
-            $this->permissions_manager
+            $this->permissions_manager,
+            new ItemRepresentationCollectionBuilder($this->item_factory, $this->permissions_manager, $this->createMock(ItemRepresentationVisitor::class), $this->item_dao),
+            $this->item_factory
         );
     }
 
@@ -78,6 +88,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
             "update_date" => "123456789",
             "status"      => PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
             "user_id"     => 101,
+            "parent_id"   => 0,
         ];
         $item_two = [
             "item_id"     => 2,
@@ -86,6 +97,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
             "update_date" => "987654321",
             "status"      => PLUGIN_DOCMAN_ITEM_STATUS_REJECTED,
             "user_id"     => 101,
+            "parent_id"   => 0,
         ];
 
         $private_item = [
@@ -102,6 +114,13 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
         );
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithId(101));
         $this->permissions_manager->method('userCanRead')->willReturnOnConsecutiveCalls(true, true, false);
+        $this->item_factory->method('getItemFromRow')->willReturnOnConsecutiveCalls(
+            new \Docman_Folder($item_one),
+            new \Docman_File($item_two),
+        );
+        $this->item_factory->method('getItemFromdb')->willReturn(
+            new \Docman_Folder($item_one),
+        );
 
         $collection = $this->representation_builder->build($report, $folder, UserTestBuilder::aUser()->build(), 50, 0);
         self::assertCount(2, $collection->search_representations);

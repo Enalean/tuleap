@@ -25,6 +25,7 @@ namespace Tuleap\Docman\REST\v1\Folders;
 
 use Docman_ItemDao;
 use Docman_PermissionsManager;
+use Tuleap\Docman\REST\v1\ItemRepresentationCollectionBuilder;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
 final class BuildSearchedItemRepresentationsFromSearchReport
@@ -34,6 +35,8 @@ final class BuildSearchedItemRepresentationsFromSearchReport
         private ItemStatusMapper $status_mapper,
         private \UserManager $user_manager,
         private Docman_PermissionsManager $permissions_manager,
+        private ItemRepresentationCollectionBuilder $item_representation_collection_builder,
+        private \Docman_ItemFactory $item_factory,
     ) {
     }
 
@@ -42,16 +45,21 @@ final class BuildSearchedItemRepresentationsFromSearchReport
         $results = $this->item_dao->searchByGroupId($folder->getGroupId(), $report, ['limit' => $limit, 'offset' => $offset]);
 
         $search_results = [];
-        foreach ($results as $item) {
-            if (! $this->permissions_manager->userCanRead($user, $item['item_id'])) {
+        foreach ($results as $row) {
+            if (! $this->permissions_manager->userCanRead($user, $row['item_id'])) {
                 continue;
             }
-            $owner = $this->user_manager->getUserById($item['user_id']);
+            $item = $this->item_factory->getItemFromRow($row);
+            if (! $item) {
+                continue;
+            }
+            $owner = $this->user_manager->getUserById($row['user_id']);
             assert($owner instanceof \PFUser);
             $search_results[] = SearchRepresentation::build(
                 $item,
-                $this->status_mapper->getItemStatusFromItemStatusNumber((int) $item['status']),
-                $owner
+                $this->status_mapper->getItemStatusFromItemStatusNumber((int) $item->getStatus()),
+                $owner,
+                $this->item_representation_collection_builder->buildParentRowCollection($item, $user, $limit, $offset)
             );
         }
 
