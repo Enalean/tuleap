@@ -896,11 +896,11 @@ class DocmanFoldersResource extends AuthenticatedResource
         $query_parameter_parser         = new QueryParameterParser(new JsonDecoder());
         $global_search_parameters       = $query_parameter_parser->getString($query, "global_search");
 
-        $report          = $search_report_builder->buildReport($folder, $global_search_parameters);
-        $representations = $search_representations_builder->build($report, $folder, $user);
-        Header::sendPaginationHeaders($limit, $offset, count($representations), self::MAX_LIMIT);
+        $report     = $search_report_builder->buildReport($folder, $global_search_parameters);
+        $collection = $search_representations_builder->build($report, $folder, $user, $limit, $offset);
+        Header::sendPaginationHeaders($limit, $offset, $collection->total, self::MAX_LIMIT);
 
-        return array_slice($representations, $offset, $limit);
+        return $collection->search_representations;
     }
 
     /**

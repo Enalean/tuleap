@@ -37,12 +37,9 @@ final class BuildSearchedItemRepresentationsFromSearchReport
     ) {
     }
 
-    /**
-     * @return SearchRepresentation[]
-     */
-    public function build(\Docman_Report $report, \Docman_Item $folder, \PFUser $user): array
+    public function build(\Docman_Report $report, \Docman_Item $folder, \PFUser $user, int $limit, int $offset): SearchRepresentationsCollection
     {
-        $results = $this->item_dao->searchByGroupId($folder->getGroupId(), $report, []);
+        $results = $this->item_dao->searchByGroupId($folder->getGroupId(), $report, ['limit' => $limit, 'offset' => $offset]);
 
         $search_results = [];
         foreach ($results as $item) {
@@ -58,6 +55,8 @@ final class BuildSearchedItemRepresentationsFromSearchReport
             );
         }
 
-        return $search_results;
+        $whole_collection = $this->item_dao->searchByGroupId($folder->getGroupId(), $report, ['only_count' => true]);
+
+        return new SearchRepresentationsCollection($search_results, (int) $whole_collection->getRow()["total"]);
     }
 }

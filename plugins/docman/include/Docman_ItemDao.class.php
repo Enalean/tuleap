@@ -299,8 +299,12 @@ class Docman_ItemDao extends DataAccessObject
      */
     public function _searchWithCurrentVersion($where, $group = '', $order = '', $from = [], $params = [])
     {
-        $sql  = '';
-        $sql .= $this->_getItemSearchSelectStmt();
+        $sql = '';
+        if (isset($params['only_count'])) {
+            $sql .= "SELECT count(*) AS total ";
+        } else {
+            $sql .= $this->_getItemSearchSelectStmt();
+        }
         $sql .= $this->_getItemSearchFromStmt();
         $sql .= (count($from) > 0 ? ' LEFT JOIN ' . implode(' LEFT JOIN ', $from) : '')
             . ' WHERE 1 AND ';
@@ -325,7 +329,7 @@ class Docman_ItemDao extends DataAccessObject
 
         $sql .= $where . $group . $order . $limit;
 
-        //print $sql."<br>";
+//        print $sql."<br>";
         return $this->retrieve($sql);
     }
 
