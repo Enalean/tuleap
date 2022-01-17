@@ -132,6 +132,18 @@ class IndexPresenter
      */
     public string $project_icon;
     public string $is_links_field_v2_enabled;
+    /**
+     * @psalm-readonly
+     */
+    public string $base_url;
+    /**
+     * @psalm-readonly
+     */
+    public string $platform_name;
+    /**
+     * @psalm-readonly
+     */
+    public string $platform_logo_url;
 
     /**
      * @param int|false                         $campaign_tracker_id
@@ -152,6 +164,9 @@ class IndexPresenter
         array $project_flags,
         bool $has_current_project_parents,
         CSRFSynchronizerToken $csrf_token,
+        string $platform_name,
+        string $base_url,
+        string $platform_logo_url,
     ) {
         $this->lang = $this->getLanguageAbbreviation($current_user);
 
@@ -159,6 +174,10 @@ class IndexPresenter
         $this->project_name = $project->getPublicName();
         $this->project_url  = $project->getUrl();
         $this->project_icon = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint());
+
+        $this->platform_name     = $platform_name;
+        $this->base_url          = $base_url;
+        $this->platform_logo_url = $platform_logo_url;
 
         $user_representation = UserRepresentation::build($current_user);
         $this->current_user  = json_encode($user_representation);

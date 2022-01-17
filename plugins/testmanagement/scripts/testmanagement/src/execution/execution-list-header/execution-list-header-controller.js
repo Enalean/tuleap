@@ -4,6 +4,9 @@ import CampaignEditCtrl from "../../campaign/campaign-edit-controller.js";
 import "../../campaign/campaign-edit-label.tpl.html";
 import CampaignEditLabelCtrl from "../../campaign/campaign-edit-label-controller.js";
 
+import "../../campaign/download/download-error.tpl.html";
+import DownloadErrorCtrl from "../../campaign/download/download-error-controller";
+
 import "../../campaign/campaign-edit-automated.tpl.html";
 import CampaignEditAutomatedCtrl from "../../campaign/campaign-edit-automated-controller.js";
 
@@ -12,6 +15,7 @@ import ExecutionPresencesCtrl from "../execution-presences-controller.js";
 
 import { setSuccess, setError, resetError } from "../../feedback-state.js";
 import { isDefined } from "angular";
+import { downloadCampaignAsDocx } from "../../campaign/download/download-campaign-as-docx";
 
 controller.$inject = [
     "gettextCatalog",
@@ -44,7 +48,46 @@ export default function controller(
         getCloseFormURL,
         getCSRFTokenCampaignStatus,
         getCurrentMilestone,
+        exportCampaignAsDocument,
+        isPreparingTheDownload,
     });
+
+    let is_preparing_the_download = false;
+
+    async function exportCampaignAsDocument() {
+        if (is_preparing_the_download) {
+            return;
+        }
+        is_preparing_the_download = true;
+
+        try {
+            await downloadCampaignAsDocx(
+                ExecutionService.campaign,
+                gettextCatalog,
+                SharedPropertiesService.getPlatformName(),
+                SharedPropertiesService.getPlatformLogoUrl(),
+                SharedPropertiesService.getProjectName(),
+                SharedPropertiesService.getCurrentUser().display_name,
+                SharedPropertiesService.getUserTimezone(),
+                SharedPropertiesService.getUserLocale(),
+                SharedPropertiesService.getBaseUrl(),
+                SharedPropertiesService.getProjectId()
+            );
+        } catch (e) {
+            TlpModalService.open({
+                templateUrl: "download-error.tpl.html",
+                controller: DownloadErrorCtrl,
+                controllerAs: "error_modal",
+            });
+            throw e;
+        } finally {
+            is_preparing_the_download = false;
+        }
+    }
+
+    function isPreparingTheDownload() {
+        return this.is_preparing_the_download;
+    }
 
     function openEditCampaignModal() {
         return TlpModalService.open({

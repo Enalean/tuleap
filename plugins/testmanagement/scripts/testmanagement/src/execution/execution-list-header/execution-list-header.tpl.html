@@ -65,6 +65,18 @@
                         <i class="fas fa-fw fa-tlp-robot tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
                         {{ ::'Configure automated tests' | translate }}
                     </button>
+                    <button
+                        type="button"
+                        ng-click="$ctrl.exportCampaignAsDocument()"
+                        ng-disabled="$ctrl.isPreparingTheDownload()"
+                        class="tlp-dropdown-menu-item"
+                        role="menuitem"
+                    >
+                        <i ng-if="$ctrl.isPreparingTheDownload()" class="fas fa-fw fa-spin fa-circle-notch tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+                        <i ng-if="! $ctrl.isPreparingTheDownload()" class="fas fa-fw fa-file-word tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+                        {{ ::'Export as document' | translate }}
+                    </button>
+                    <span class="tlp-dropdown-menu-separator" role="separator"></span>
                     <form method="post" action="{{ $ctrl.getCloseFormURL() }}">
                         <input type="hidden" name="challenge" value="{{ $ctrl.getCSRFTokenCampaignStatus() }}" />
                         <input type="hidden"

@@ -43,6 +43,7 @@ const webpack_config_for_angular = {
             // angular alias for the artifact modal (otherwise it is included twice)
             angular$: path.resolve(__dirname, "./node_modules/angular"),
             "angular-sanitize$": path.resolve(__dirname, "./node_modules/angular-sanitize"),
+            docx: path.resolve(__dirname, "node_modules", "docx"),
         },
         extensions: [".ts", ".js"],
         fallback: {

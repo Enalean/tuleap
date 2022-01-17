@@ -93,6 +93,9 @@ msgstr "Id bug"
 msgid "Campaign"
 msgstr "Campagne"
 
+msgid "Campaign URL"
+msgstr "URL de la campagne"
+
 msgid "Campaign label"
 msgstr "Label de la campagne"
 
@@ -184,6 +187,15 @@ msgstr "Agrandir"
 
 msgid "Expected results"
 msgstr "Résultats attendus"
+
+msgid "Export as document"
+msgstr "Exporter en tant que document"
+
+msgid "Exported by"
+msgstr "Exporté par"
+
+msgid "Exported on"
+msgstr "Exporté le"
 
 msgid "Failed"
 msgstr "Échoué"
@@ -286,6 +298,9 @@ msgstr ""
 "Seul le statut du test a changé, pas le commentaire. Vous devriez peut-être "
 "le vérifier."
 
+msgid "Oops, there's an issue"
+msgstr "Oups, il y a eu un problème"
+
 msgid "Open bug options dropdown"
 msgstr "Ouvrir les options de bugs"
 
@@ -295,6 +310,9 @@ msgstr "Ouvrir la campagne"
 msgid "Passed"
 msgstr "Succès"
 
+msgid "Platform"
+msgstr "Plateforme"
+
 msgid "Please come back later to see the result."
 msgstr "Revenez plus tard pour voir le résultat."
 
@@ -303,6 +321,9 @@ msgstr "Merci de sélectionner un test"
 
 msgid "Pre-select tests from a tracker report"
 msgstr "Pré-sélectionner les tests d'un rapport"
+
+msgid "Project"
+msgstr "Projet"
 
 msgid "Reload the test"
 msgstr "Recharger le test"
@@ -364,6 +385,9 @@ msgstr "Afficher les scores pour la campagne"
 msgid "Test campaign"
 msgstr "Campagne de tests"
 
+msgid "Test campaign {{ name }}"
+msgstr "Campagne de tests {{ name }}"
+
 msgid "Test campaigns"
 msgstr "Campagne de tests"
 
@@ -391,6 +415,9 @@ msgstr ""
 
 msgid "The entered id is incorrect."
 msgstr "L’id saisi est incorrect."
+
+msgid "The export did not succeed, please try again."
+msgstr "L'export n'a pas réussi, veuillez réessayer."
 
 msgid "The job at URL {{ job_url }} has been succesfully launched."
 msgstr "Le projet à l'URL {{ job_url }} a été lancé avec succès."

@@ -91,7 +91,10 @@ class IndexController extends TestManagementController
                 $milestone_representation,
                 $this->project_flags_builder->buildProjectFlags($this->project),
                 $event->hasProjectAtLeastOneParentProject(),
-                new CSRFSynchronizerToken("/plugins/testmanagement/?group_id=" . (int) $this->project->getID())
+                new CSRFSynchronizerToken("/plugins/testmanagement/?group_id=" . (int) $this->project->getID()),
+                \ForgeConfig::get('sys_name'),
+                \Tuleap\ServerHostname::HTTPSUrl(),
+                \Admin_Homepage_LogoFinder::getCurrentUrl(),
             )
         );
     }
