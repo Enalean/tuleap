@@ -3,7 +3,7 @@
   "name": "@tuleap/project-sidebar",
   "homepage": "https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=tree&hb=refs%2Fheads%2Fmaster&f=src%2Fscripts%2Flib%2Fproject-sidebar",
   "license": "MIT",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "types": "dist/index.d.ts",
   "module": "dist/project-sidebar.es.js",
   "main": "dist/project-sidebar.umd.js",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://tuleap.net/plugins/git/tuleap/tuleap/stable.git",
+    "url": "https://tuleap.net/plugins/git/tuleap/tuleap/stable",
     "directory": "src/scripts/project-sidebar/"
   },
   "bugs": {

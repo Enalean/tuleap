@@ -110,7 +110,11 @@ pipeline {
             steps {
                 dir ('sources') {
                     withCredentials([string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
-                        sh 'HOME=/tmp/tuleap_build pnpm publish --filter "@tuleap/*" --no-git-checks'
+                        sh '''
+                        export HOME=/tmp/tuleap_build
+                        pnpm config set "//registry.npmjs.org/:_authToken" "${NPM_TOKEN}"
+                        pnpm publish --access public --filter "@tuleap/*" --no-git-checks
+                        '''
                     }
                 }
             }
