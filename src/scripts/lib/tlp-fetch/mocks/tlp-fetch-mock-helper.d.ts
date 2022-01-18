@@ -28,11 +28,11 @@ interface MockFetchErrorOptions {
     error_json?: Record<string, unknown>;
 }
 
-export function mockFetchSuccess<T>(
-    mocked_function: jest.SpyInstance<Promise<Response | Array<T>>>,
+export function mockFetchSuccess<TypeOfArrayItem>(
+    mocked_function: jest.SpyInstance<Promise<Response | Array<TypeOfArrayItem>>>,
     options?: MockFetchSuccessOptions
 ): void;
-export function mockFetchError<T>(
-    mocked_function: jest.SpyInstance<Promise<Response | Array<T>>>,
+export function mockFetchError<TypeOfArrayItem>(
+    mocked_function: jest.SpyInstance<Promise<Response | Array<TypeOfArrayItem>>>,
     options?: MockFetchErrorOptions
 ): void;

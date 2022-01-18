@@ -72,26 +72,30 @@ interface RecursiveGetLimitParameters {
     offset?: number;
 }
 
-export type RecursiveGetCollectionCallback<Y, T> = (json: Y) => Array<T>;
+export type RecursiveGetCollectionCallback<TypeOfJSONPayload, TypeOfArrayItem> = (
+    json: TypeOfJSONPayload
+) => Array<TypeOfArrayItem>;
 
-export interface RecursiveGetInit<Y, T> {
+export interface RecursiveGetInit<TypeOfJSONPayload, TypeOfArrayItem> {
     method?: "GET";
     params?: AutoEncodedParameters & RecursiveGetLimitParameters;
-    getCollectionCallback?: RecursiveGetCollectionCallback<Y, T>;
+    getCollectionCallback?: RecursiveGetCollectionCallback<TypeOfJSONPayload, TypeOfArrayItem>;
 }
 
-function defaultGetCollectionCallback<Y>(json: Y): Array<Y> {
+function defaultGetCollectionCallback<TypeOfArrayItem>(
+    json: TypeOfArrayItem
+): Array<TypeOfArrayItem> {
     if (json instanceof Array) {
         return json;
     }
     return [json];
 }
 
-export async function recursiveGet<Y, T>(
+export async function recursiveGet<TypeOfJSONPayload, TypeOfArrayItem>(
     url: string,
-    init: RequestInit & RecursiveGetInit<Y, T> = {},
+    init: RequestInit & RecursiveGetInit<TypeOfJSONPayload, TypeOfArrayItem> = {},
     max_parallel_requests = 6
-): Promise<Array<T>> {
+): Promise<Array<TypeOfArrayItem>> {
     if (max_parallel_requests < 1) {
         throw new Error("At least one request needs to be sent to retrieve data");
     }
