@@ -14,15 +14,33 @@ function SharedPropertiesService() {
         has_current_project_parents: false,
         file_upload_max_size: 0,
         is_links_field_v2_enabled: false,
+        base_url: "",
+        platform_name: "",
+        platform_logo_url: "",
+        project_name: "",
+        user_timezone: "",
+        user_locale: "",
     };
 
     return {
+        getPlatformName,
+        setPlatformName,
+        getPlatformLogoUrl,
+        setPlatformLogoUrl,
+        getBaseUrl,
+        setBaseUrl,
+        getProjectName,
+        setProjectName,
         getProjectId,
         setProjectId,
         getCampaignId,
         setCampaignId,
         getCurrentUser,
         setCurrentUser,
+        getUserLocale,
+        setUserLocale,
+        getUserTimezone,
+        setUserTimezone,
         getNodeServerAddress,
         setNodeServerAddress,
         getUUID,
@@ -53,12 +71,60 @@ function SharedPropertiesService() {
         isLinksFieldV2Enabled,
     };
 
+    function getPlatformLogoUrl() {
+        return property.platform_logo_url;
+    }
+
+    function setPlatformLogoUrl(platform_logo_url) {
+        property.platform_logo_url = platform_logo_url;
+    }
+
+    function getPlatformName() {
+        return property.platform_name;
+    }
+
+    function setPlatformName(platform_name) {
+        property.platform_name = platform_name;
+    }
+
+    function getBaseUrl() {
+        return property.base_url;
+    }
+
+    function setBaseUrl(base_url) {
+        property.base_url = base_url;
+    }
+
+    function getProjectName() {
+        return property.project_name;
+    }
+
+    function setProjectName(project_name) {
+        property.project_name = project_name;
+    }
+
     function getProjectId() {
         return property.project_id;
     }
 
     function setProjectId(project_id) {
         property.project_id = project_id;
+    }
+
+    function getUserTimezone() {
+        return property.user_timezone;
+    }
+
+    function setUserTimezone(user_timezone) {
+        property.user_timezone = user_timezone;
+    }
+
+    function getUserLocale() {
+        return property.user_locale;
+    }
+
+    function setUserLocale(user_locale) {
+        property.user_locale = user_locale;
     }
 
     function getCampaignId() {
