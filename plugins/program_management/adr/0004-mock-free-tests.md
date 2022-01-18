@@ -68,25 +68,27 @@ final class SomeClassUsingOurStubTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->iteration_retriever = RetrieveIterationStub::withIterationId(125);
     }
 
-    private function getClassUsingOurStub(): SomeClassUsingOurStub
+    private function doStuff(): boolean
     {
-        return new SomeClassUsingOurStub(
+        $user          = UserIdentifierStub::buildGenericUser();
+        $stubbed_class = new SomeClassUsingOurStub(
             $this->iteration_verifier,
             $this->iteration_retriever,
         );
+        return $stubbed_class->doStuff($user);
     }
 
     public function testValid(): void
     {
         // Stubs are valid by default, there is nothing else to define
-        self::assertTrue($this->getClassUsingOurStub()->doStuff());
+        self::assertTrue($this->doStuff());
     }
 
     public function testInvalidIteration(): void
     {
         // Override the property with a stub that returns false
         $this->iteration_verifier = VerifyIsIterationStub::withNotIteration()
-        self::assertFalse($this->getClassUsingOurStub()->doStuff());
+        self::assertFalse($this->doStuff());
     }
 
     public function testNoIteration(): void
@@ -94,7 +96,7 @@ final class SomeClassUsingOurStubTest extends \Tuleap\Test\PHPUnit\TestCase
         // Only the stub that matches the test scenario changes from default values.
         // We don't copy and paste the same mock definitions over and over again.
         $this->iteration_retriever = RetrieveIterationStub::withError();
-        self::assertFalse($this->getClassUsingOurStub()->doStuff());
+        self::assertFalse($this->doStuff());
     }
 }
 ```
@@ -135,20 +137,22 @@ final class SomeClassUsingOurStubTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->changeset_adder = AddArtifactLinkChangesetStub::withCount();
     }
 
-    private function getClassUsingOurStub(): SomeOtherClassUsingOurStub
+    private function doStuff(): void
     {
-        return new SomeOtherClassUsingOurStub($this->changeset_adder);
+        $iteration     = IterationIdentifierBuilder::buildWithId(98);
+        $stubbed_class = new SomeOtherClassUsingOurStub($this->changeset_adder);
+        $stubbed_class->doStuff($iteration);
     }
 
     public function testHasBeenCalled(): void
     {
-        $this->getClassUsingOurStub()->doStuff();
+        $this->doStuff();
         self::assertSame(1, $this->changeset_adder->getCallCount());
     }
 
     public function testHasNeverBeenCalled(): void
     {
-        $this->getClassUsingOurStub()->doStuff();
+        $this->doStuff();
         self::assertSame(0, $this->changeset_adder->getCallCount());
     }
 }
