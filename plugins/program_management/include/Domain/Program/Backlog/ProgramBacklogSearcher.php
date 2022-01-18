@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureTitle
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureURI;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveTrackerOfFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchPlannableFeatures;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsOpen;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisible;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
@@ -52,6 +53,7 @@ final class ProgramBacklogSearcher
         private RetrieveBackgroundColor $background_retriever,
         private VerifyHasAtLeastOnePlannedUserStory $planned_verifier,
         private FeatureHasUserStoriesVerifier $story_verifier,
+        private VerifyFeatureIsOpen $open_verifier,
     ) {
     }
 
@@ -77,6 +79,7 @@ final class ProgramBacklogSearcher
                 $this->title_retriever,
                 $this->uri_retriever,
                 $this->cross_reference_retriever,
+                $this->open_verifier,
                 $this->planned_verifier,
                 $this->story_verifier,
                 $this->background_retriever,

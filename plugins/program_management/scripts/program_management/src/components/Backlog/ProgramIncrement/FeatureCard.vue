@@ -127,6 +127,10 @@ export default class FeatureCard extends Vue {
     get additional_classnames(): string {
         const classnames = getAccessibilityClasses(this.feature, this.accessibility);
 
+        if (!this.feature.is_open) {
+            classnames.push("element-card-closed");
+        }
+
         if (this.can_create_program_increment && this.is_draggable) {
             classnames.push("element-draggable-item");
         }

@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFeatureTitleStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFeatureURIStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsOpenStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 
 final class FeatureBuilder
@@ -42,6 +43,7 @@ final class FeatureBuilder
             RetrieveFeatureTitleStub::withTitle($title),
             new RetrieveFeatureURIStub(),
             RetrieveFeatureCrossReferenceStub::withShortname("feature"),
+            VerifyFeatureIsOpenStub::withOpen(),
             VerifyHasAtLeastOnePlannedUserStoryStub::withNothingPlanned(),
             FeatureHasUserStoriesVerifierBuilder::buildWithUserStories(),
             RetrieveBackgroundColorStub::withColor('fiesta-red'),

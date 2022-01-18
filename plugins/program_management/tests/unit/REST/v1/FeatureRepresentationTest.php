@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFeatureURIStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsOpenStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -60,6 +61,7 @@ final class FeatureRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
                 RetrieveFeatureTitleStub::withTitle(self::TITLE),
                 new RetrieveFeatureURIStub(),
                 RetrieveFeatureCrossReferenceStub::withShortname(self::TRACKER_SHORTNAME),
+                VerifyFeatureIsOpenStub::withClosed(),
                 VerifyHasAtLeastOnePlannedUserStoryStub::withNothingPlanned(),
                 FeatureHasUserStoriesVerifierBuilder::buildWithUserStories(),
                 RetrieveBackgroundColorStub::withColor(self::BACKGROUND_COLOR),
@@ -82,5 +84,6 @@ final class FeatureRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::BACKGROUND_COLOR, $representation->background_color);
         self::assertSame(self::TRACKER_ID, $representation->tracker->id);
         self::assertSame(self::PROJECT_ID, $representation->tracker->project->id);
+        self::assertFalse($representation->is_open);
     }
 }

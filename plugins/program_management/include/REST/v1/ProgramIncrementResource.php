@@ -45,7 +45,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\URIRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\UserCanUpdateTimeboxVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\FeaturesToReorderProxy;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\UserStory\IsOpenRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUserStoriesVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureChecker;
@@ -62,6 +61,7 @@ use Tuleap\ProgramManagement\Adapter\Team\VisibleTeamSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\FormElementFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Semantics\IsOpenRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerOfArtifactRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserIsProgramAdminVerifier;
@@ -147,7 +147,8 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
                 $artifacts_linked_to_parent_dao
             ),
-            new FeatureHasUserStoriesVerifier($artifacts_linked_to_parent_dao, $visibility_verifier)
+            new FeatureHasUserStoriesVerifier($artifacts_linked_to_parent_dao, $visibility_verifier),
+            new IsOpenRetriever($artifact_retriever)
         );
 
         $user = $user_manager->getCurrentUser();
@@ -417,6 +418,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
         );
         $cross_reference_retriever      = new CrossReferenceRetriever($artifact_retriever);
         $story_tracker_retriever        = new TrackerOfArtifactRetriever($artifact_retriever);
+        $open_verifier                  = new IsOpenRetriever($artifact_retriever);
         $backlog_searcher               = new BacklogSearcher(
             new ProgramIncrementsDAO(),
             $visibility_verifier,
@@ -430,7 +432,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             $title_retriever,
             $uri_retriever,
             $cross_reference_retriever,
-            new IsOpenRetriever($artifact_retriever),
+            $open_verifier,
             $background_color_retriever,
             $story_tracker_retriever,
             new FeatureOfUserStoryRetriever(
@@ -447,6 +449,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 $story_tracker_retriever,
                 $artifacts_linked_to_parent_dao,
                 new FeatureHasUserStoriesVerifier($artifacts_linked_to_parent_dao, $visibility_verifier),
+                $open_verifier
             )
         );
 

@@ -2,7 +2,7 @@
 
 exports[`UserStoryDisplayer Displays a closed user story with accessibility 1`] = `
 <div
-  class="element-card element-card-fiesta-red element-card-background-lake-placid-blue element-card-with-accessibility element-card-user-story-closed"
+  class="element-card element-card-fiesta-red element-card-background-lake-placid-blue element-card-with-accessibility element-card-closed"
 >
   <div
     class="element-card-content"

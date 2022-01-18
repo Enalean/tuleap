@@ -26,10 +26,11 @@ export interface Feature extends ElementWithAccessibility {
 }
 
 export interface Element {
-    id: number;
-    uri: string;
-    xref: string;
-    title: string;
+    readonly id: number;
+    readonly uri: string;
+    readonly xref: string;
+    readonly title: string;
+    readonly is_open: boolean;
 }
 
 export interface ElementWithAccessibility extends Element {

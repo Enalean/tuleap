@@ -18,7 +18,7 @@
  */
 
 import UserStoryDisplayer from "./UserStoryDisplayer.vue";
-import type { ShallowMountOptions } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import { createProgramManagementLocalVue } from "../../helpers/local-vue-for-test";
@@ -26,103 +26,57 @@ import type { UserStory } from "../../helpers/UserStories/user-stories-retriever
 import type { Project, TrackerMinimalRepresentation } from "../../type";
 
 describe("UserStoryDisplayer", () => {
-    let component_options: ShallowMountOptions<UserStoryDisplayer>;
+    const getWrapper = async (
+        user_story?: Partial<UserStory>,
+        accessibility = false
+    ): Promise<Wrapper<UserStoryDisplayer>> => {
+        const defaulted_user_story = {
+            id: 14,
+            title: "My US",
+            xref: "us #14",
+            background_color: "lake-placid-blue",
+            tracker: {
+                color_name: "fiesta-red",
+            } as TrackerMinimalRepresentation,
+            is_open: true,
+            uri: "tracker?aid=14",
+            project: {
+                label: "project",
+            } as Project,
+            ...user_story,
+        };
 
-    it("Displays user story with accessibility", async () => {
-        component_options = {
+        const component_options = {
             propsData: {
-                user_story: {
-                    id: 14,
-                    title: "My US",
-                    xref: "us #14",
-                    background_color: "lake-placid-blue",
-                    tracker: {
-                        color_name: "fiesta-red",
-                    } as TrackerMinimalRepresentation,
-                    is_open: true,
-                    uri: "tracker?aid=14",
-                    project: {
-                        label: "project",
-                    } as Project,
-                } as UserStory,
+                user_story: defaulted_user_story,
             },
             localVue: await createProgramManagementLocalVue(),
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        configuration: { accessibility: true },
+                        configuration: { accessibility },
                     },
                 }),
             },
         };
 
-        const wrapper = shallowMount(UserStoryDisplayer, component_options);
+        return shallowMount(UserStoryDisplayer, component_options);
+    };
+
+    it("Displays user story with accessibility", async () => {
+        const wrapper = await getWrapper({}, true);
 
         expect(wrapper.element).toMatchSnapshot();
     });
 
     it("Displays user story without accessibility", async () => {
-        component_options = {
-            propsData: {
-                user_story: {
-                    id: 14,
-                    title: "My US",
-                    xref: "us #14",
-                    background_color: "lake-placid-blue",
-                    tracker: {
-                        color_name: "fiesta-red",
-                    } as TrackerMinimalRepresentation,
-                    is_open: true,
-                    uri: "tracker?aid=14",
-                    project: {
-                        label: "project",
-                    },
-                } as UserStory,
-            },
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: { accessibility: false },
-                    },
-                }),
-            },
-        };
-
-        const wrapper = shallowMount(UserStoryDisplayer, component_options);
+        const wrapper = await getWrapper();
 
         expect(wrapper.element).toMatchSnapshot();
     });
 
     it("Displays a closed user story with accessibility", async () => {
-        component_options = {
-            propsData: {
-                user_story: {
-                    id: 14,
-                    title: "My US",
-                    xref: "us #14",
-                    background_color: "lake-placid-blue",
-                    tracker: {
-                        color_name: "fiesta-red",
-                    } as TrackerMinimalRepresentation,
-                    is_open: false,
-                    uri: "tracker?aid=14",
-                    project: {
-                        label: "project",
-                    },
-                } as UserStory,
-            },
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: { accessibility: true },
-                    },
-                }),
-            },
-        };
-
-        const wrapper = shallowMount(UserStoryDisplayer, component_options);
+        const wrapper = await getWrapper({ is_open: false }, true);
 
         expect(wrapper.element).toMatchSnapshot();
     });

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShallowMountOptions } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FeatureCard from "./FeatureCard.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
@@ -25,174 +25,97 @@ import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapp
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import FeatureCardBacklogItems from "./FeatureCardBacklogItems.vue";
 import type { Feature } from "../../../type";
+import type { ConfigurationState } from "../../../store/configuration";
 
 describe("FeatureCard", () => {
-    let component_options: ShallowMountOptions<FeatureCard>;
+    const getWrapper = async (
+        feature?: Partial<Feature>,
+        configuration?: Partial<ConfigurationState>,
+        user_can_plan = true,
+        ongoing_move_elements_id: number[] = []
+    ): Promise<Wrapper<FeatureCard>> => {
+        const defaulted_feature = {
+            id: 100,
+            title: "My artifact",
+            tracker: {
+                label: "bug",
+                color_name: "lake_placid_blue",
+            },
+            is_open: true,
+            background_color: "",
+            has_user_story_planned: false,
+            has_user_story_linked: false,
+            ...feature,
+        };
 
-    it("Displays a draggable card with accessibility pattern", async () => {
-        component_options = {
+        const defaulted_configuration = {
+            accessibility: false,
+            has_plan_permissions: true,
+            ...configuration,
+        };
+
+        const component_options = {
             propsData: {
-                feature: {
-                    id: 100,
-                    title: "My artifact",
-                    tracker: {
-                        label: "bug",
-                        color_name: "lake_placid_blue",
-                    },
-                    background_color: "peggy_pink_text",
-                    has_user_story_planned: false,
-                } as Feature,
+                feature: defaulted_feature,
                 program_increment: {
-                    user_can_plan: true,
+                    user_can_plan,
                 } as ProgramIncrement,
             },
             localVue: await createProgramManagementLocalVue(),
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        configuration: { accessibility: true, has_plan_permissions: true },
-                        ongoing_move_elements_id: [],
+                        configuration: defaulted_configuration,
+                        ongoing_move_elements_id,
                     },
                 }),
             },
         };
+        return shallowMount(FeatureCard, component_options);
+    };
 
-        const wrapper = shallowMount(FeatureCard, component_options);
+    it("Displays a draggable card with accessibility pattern", async () => {
+        const wrapper = await getWrapper(
+            { background_color: "peggy_pink_text" },
+            { accessibility: true }
+        );
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Displays a not draggable card without accessibility pattern", async () => {
-        component_options = {
-            propsData: {
-                feature: {
-                    id: 100,
-                    title: "My artifact",
-                    tracker: {
-                        label: "bug",
-                        color_name: "lake_placid_blue",
-                    },
-                    background_color: "",
-                    has_user_story_planned: false,
-                } as Feature,
-                program_increment: {
-                    user_can_plan: true,
-                } as ProgramIncrement,
-            },
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            accessibility: false,
-                            has_plan_permissions: false,
-                        },
-                        ongoing_move_elements_id: [],
-                    },
-                }),
-            },
-        };
+    it(`Adds a closed class to the card`, async () => {
+        const wrapper = await getWrapper({ is_open: false });
+        const card = wrapper.find("[data-test=feature-card]");
+        expect(card.classes()).toContain("element-card-closed");
+    });
 
-        const wrapper = shallowMount(FeatureCard, component_options);
+    it("Displays a not draggable card without accessibility pattern", async () => {
+        const wrapper = await getWrapper({}, { has_plan_permissions: false });
         expect(wrapper.element).toMatchSnapshot();
     });
 
     it("Displays a not draggable card when user can not plan/unplan features", async () => {
-        component_options = {
-            propsData: {
-                feature: {
-                    id: 100,
-                    title: "My artifact",
-                    tracker: {
-                        label: "bug",
-                        color_name: "lake_placid_blue",
-                    },
-                    background_color: "",
-                    has_user_story_planned: true,
-                } as Feature,
-                program_increment: {
-                    user_can_plan: false,
-                } as ProgramIncrement,
-            },
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: { accessibility: false, has_plan_permissions: true },
-                        ongoing_move_elements_id: [],
-                    },
-                }),
-            },
-        };
-
-        const wrapper = shallowMount(FeatureCard, component_options);
+        const wrapper = await getWrapper({ has_user_story_planned: true }, {}, false);
         expect(wrapper.element).toMatchSnapshot();
     });
 
     it("Displays a draggable card with items backlog container", async () => {
-        component_options = {
-            propsData: {
-                feature: {
-                    id: 100,
-                    title: "My artifact",
-                    tracker: {
-                        label: "bug",
-                        color_name: "lake_placid_blue",
-                    },
-                    background_color: "",
-                    has_user_story_planned: true,
-                    has_user_story_linked: true,
-                } as Feature,
-                program_increment: {
-                    user_can_plan: false,
-                } as ProgramIncrement,
-            },
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: { accessibility: false, has_plan_permissions: true },
-                        ongoing_move_elements_id: [],
-                    },
-                }),
-            },
-        };
-
-        const wrapper = shallowMount(FeatureCard, component_options);
+        const wrapper = await getWrapper(
+            { has_user_story_planned: true, has_user_story_linked: true },
+            {},
+            false
+        );
         expect(wrapper.findComponent(FeatureCardBacklogItems).exists()).toBeTruthy();
     });
 
     it("Displays a card when it is moving", async () => {
-        component_options = {
-            propsData: {
-                feature: {
-                    id: 100,
-                    title: "My artifact",
-                    tracker: {
-                        label: "bug",
-                        color_name: "lake_placid_blue",
-                    },
-                    background_color: "",
-                    has_user_story_planned: true,
-                    has_user_story_linked: true,
-                } as Feature,
-                program_increment: {
-                    user_can_plan: false,
-                } as ProgramIncrement,
-            },
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: { accessibility: false, has_plan_permissions: true },
-                        ongoing_move_elements_id: [100],
-                    },
-                }),
-            },
-        };
-
         jest.useFakeTimers();
 
-        const wrapper = shallowMount(FeatureCard, component_options);
+        const wrapper = await getWrapper(
+            { has_user_story_planned: true, has_user_story_linked: true },
+            {},
+            false,
+            [100]
+        );
 
         expect(wrapper.findComponent(FeatureCardBacklogItems).exists()).toBeTruthy();
         expect(wrapper.find("[data-test=feature-card]").classes()).toContain("is-moving");

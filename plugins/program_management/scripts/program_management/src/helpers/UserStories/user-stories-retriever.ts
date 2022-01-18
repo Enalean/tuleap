@@ -18,13 +18,10 @@
  */
 
 import { recursiveGet } from "@tuleap/tlp-fetch";
-import type { Project, ElementWithAccessibility, TrackerMinimalRepresentation } from "../../type";
+import type { Project, ElementWithAccessibility } from "../../type";
 
 export interface UserStory extends ElementWithAccessibility {
-    is_open: boolean;
     project: Project;
-    background_color: string;
-    tracker: TrackerMinimalRepresentation;
 }
 
 export function getLinkedUserStoriesToFeature(feature_id: number): Promise<UserStory[]> {

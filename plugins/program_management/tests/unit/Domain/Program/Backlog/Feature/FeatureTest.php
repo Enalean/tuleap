@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFeatureTitleStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFeatureURIStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsOpenStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 
 final class FeatureTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -55,6 +56,7 @@ final class FeatureTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->title_retriever,
             new RetrieveFeatureURIStub(),
             RetrieveFeatureCrossReferenceStub::withShortname(self::TRACKER_SHORT_NAME),
+            VerifyFeatureIsOpenStub::withOpen(),
             VerifyHasAtLeastOnePlannedUserStoryStub::withNothingPlanned(),
             FeatureHasUserStoriesVerifierBuilder::buildWithUserStories(),
             RetrieveBackgroundColorStub::withColor(self::BACKGROUND_COLOR),
@@ -71,6 +73,7 @@ final class FeatureTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::TITLE, $feature->title);
         self::assertSame(self::URI, $feature->uri);
         self::assertSame('feature #243', $feature->cross_reference);
+        self::assertTrue($feature->is_open);
         self::assertFalse($feature->is_linked_to_at_least_one_planned_user_story);
         self::assertTrue($feature->has_at_least_one_story);
         self::assertSame(self::BACKGROUND_COLOR, $feature->background_color->getBackgroundColorName());

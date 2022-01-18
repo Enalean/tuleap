@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureCross
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureTitle;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureURI;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveTrackerOfFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsOpen;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Feature\CheckIsValidFeature;
 use Tuleap\ProgramManagement\Domain\Program\Feature\RetrieveBackgroundColor;
@@ -51,9 +52,9 @@ final class FeatureOfUserStoryRetriever
         private RetrieveTrackerOfFeature $tracker_retriever,
         private SearchParentFeatureOfAUserStory $search_parent_feature_of_a_user_story,
         private FeatureHasUserStoriesVerifier $feature_has_user_stories_verifier,
+        private VerifyFeatureIsOpen $open_verifier,
     ) {
     }
-
 
     public function retrieveFeature(UserStoryIdentifier $story_identifier, UserIdentifier $user_identifier): ?Feature
     {
@@ -76,6 +77,7 @@ final class FeatureOfUserStoryRetriever
             $this->title_retriever,
             $this->uri_retriever,
             $this->cross_reference_retriever,
+            $this->open_verifier,
             $this->planned_verifier,
             $this->feature_has_user_stories_verifier,
             $this->background_retriever,

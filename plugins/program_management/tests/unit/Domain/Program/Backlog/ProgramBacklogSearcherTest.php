@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFeatureURIStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPlannableFeaturesStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsOpenStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 
@@ -74,7 +75,8 @@ final class ProgramBacklogSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveTrackerOfFeatureStub::withSuccessiveIds(self::BUG_TRACKER_ID, self::USER_STORY_TRACKER_ID),
             RetrieveBackgroundColorStub::withSuccessiveColors(self::BUG_COLOR, self::USER_STORY_COLOR),
             VerifyHasAtLeastOnePlannedUserStoryStub::withPlannedUserStory(),
-            FeatureHasUserStoriesVerifierBuilder::buildWithUserStories()
+            FeatureHasUserStoriesVerifierBuilder::buildWithUserStories(),
+            VerifyFeatureIsOpenStub::withOpen()
         );
 
         return $retriever->retrieveFeaturesToBePlanned(self::PROGRAM_ID, UserIdentifierStub::buildGenericUser());
@@ -92,6 +94,7 @@ final class ProgramBacklogSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::BUG_COLOR, $first_feature->background_color->getBackgroundColorName());
         self::assertTrue($first_feature->is_linked_to_at_least_one_planned_user_story);
         self::assertTrue($first_feature->has_at_least_one_story);
+        self::assertTrue($first_feature->is_open);
 
         self::assertSame(self::USER_STORY_ID, $second_feature->feature_identifier->getId());
         self::assertSame(self::USER_STORY_TITLE, $second_feature->title);
@@ -101,6 +104,7 @@ final class ProgramBacklogSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::USER_STORY_COLOR, $second_feature->background_color->getBackgroundColorName());
         self::assertTrue($second_feature->is_linked_to_at_least_one_planned_user_story);
         self::assertTrue($second_feature->has_at_least_one_story);
+        self::assertTrue($second_feature->is_open);
     }
 
     public function testItReturnsEmptyArrayWhenThereAreNoFeatures(): void
