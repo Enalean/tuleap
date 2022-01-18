@@ -18,8 +18,9 @@ In your HTML content, add the element:
 
 The `config` property is mandatory. It is a JSON encoded string that you can retrieve from the endpoint you use to
 communicate with Tuleap. For test purposes you can find the description of expected schema in
-[configuration.ts](./src/configuration.ts) and a complete example in
-[project-sidebar-example-config.ts](./src/project-sidebar-example-config.ts).
+[configuration.ts](https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=blob&hb=refs%2Fheads%2Fmaster&f=src%2Fscripts%2Flib%2Fproject-sidebar-internal%2Fsrc%2Fconfiguration.ts)
+and a complete example in
+[project-sidebar-example-config.ts](https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=blob&hb=refs%2Fheads%2Fmaster&f=src%2Fscripts%2Flib%2Fproject-sidebar-internal%2Fsrc%2Fproject-sidebar-example-config.ts).
 
 The sidebar also accepts an attribute `collapsed` to collapse it. You can watch this attribute with a
 [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to detect when the sidebar is
