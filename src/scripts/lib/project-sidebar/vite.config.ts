@@ -22,7 +22,7 @@
 
 import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
-import dts from "vite-dts";
+import dts from "vite-plugin-dts";
 
 export default defineConfig({
     build: {
@@ -31,5 +31,5 @@ export default defineConfig({
             name: "TuleapProjectSidebar",
         },
     },
-    plugins: [dts()],
+    plugins: [dts({ insertTypesEntry: true })],
 });

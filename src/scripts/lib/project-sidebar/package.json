@@ -3,8 +3,8 @@
   "name": "@tuleap/project-sidebar",
   "homepage": "https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=tree&hb=refs%2Fheads%2Fmaster&f=src%2Fscripts%2Flib%2Fproject-sidebar",
   "license": "MIT",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "types": "dist/index.d.ts",
   "module": "dist/project-sidebar.es.js",
   "main": "dist/project-sidebar.umd.js",
   "exports": {
@@ -26,14 +26,15 @@
   ],
   "files": [
     "dist/",
-    "src/"
+    "src/**/*.ts",
+    "!src/**/*.test.ts"
   ],
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.15.2",
     "@tuleap/project-sidebar-internal": "link:../project-sidebar-internal"
   },
   "scripts": {
-    "typecheck": "vue-tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "build": "vite build",
     "dev": "vite",
     "test": "jest"

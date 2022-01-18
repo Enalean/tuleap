@@ -76,6 +76,7 @@
     "typescript": "^4.5.2",
     "vite": "^2.7.2",
     "vite-dts": "^1.0.3",
+    "vite-plugin-dts": "^0.9.9",
     "vite-plugin-vue2": "^1.9.0",
     "vue-eslint-parser": "^8.0.1",
     "vue-loader": "^15.9.8",
@@ -110,7 +111,9 @@
     ],
     "pipeline": {
       "typecheck": {
-        "dependsOn": ["^build"],
+        "dependsOn": [
+          "^build"
+        ],
         "outputs": []
       },
       "build": {
