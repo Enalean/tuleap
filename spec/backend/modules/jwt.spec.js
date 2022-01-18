@@ -1,5 +1,7 @@
 'use strict';
 
+import { describe, it, expect } from 'vitest';
+
 var JWT = require('../../../backend/modules/jwt');
 var jwt = new JWT('private_key_to_change');
 
@@ -20,11 +22,13 @@ describe("Module JWT", function() {
                 exp: 1453288667
             };
 
+            let received_error = null;
             function errorToken(err) {
-                console.log(err);
+                received_error = err;
             }
 
             expect(jwt.isTokenValid(decoded, errorToken)).toEqual(true);
+            expect(received_error).toStrictEqual(null);
         });
     });
 
@@ -40,11 +44,13 @@ describe("Module JWT", function() {
                 }
             };
 
+            let received_error = null;
             function errorToken(err) {
-                console.log(err);
+                received_error = err;
             }
 
             expect(jwt_incorrect.decodeToken(encoded, errorToken)).not.toEqual(decoded);
+            expect(received_error).not.toStrictEqual(null);
         });
     });
 

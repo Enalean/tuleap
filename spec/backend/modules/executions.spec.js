@@ -1,5 +1,7 @@
 'use strict';
 
+import { describe, beforeEach, it, expect } from 'vitest';
+
 var Executions = require('../../../backend/modules/executions');
 var executions = new Executions();
 

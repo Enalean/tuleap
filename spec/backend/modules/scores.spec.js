@@ -1,5 +1,7 @@
 'use strict';
 
+import { describe, it, expect, beforeEach } from 'vitest';
+
 var Scores = require('../../../backend/modules/scores');
 var scores = new Scores();
 

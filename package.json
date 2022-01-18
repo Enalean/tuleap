@@ -18,11 +18,9 @@
     "socket.io": "1.7.4"
   },
   "devDependencies": {
-    "grunt": "1.0.1",
-    "grunt-jasmine-nodejs": "1.5.2",
-    "jasmine-console-reporter": "1.2.6"
+    "vitest": "^0.1.20"
   },
   "scripts": {
-    "test": "node_modules/.bin/grunt test"
+    "test": "vitest"
   }
 }

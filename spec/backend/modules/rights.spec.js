@@ -1,5 +1,7 @@
 'use strict';
 
+import { describe, it, expect, beforeEach } from 'vitest';
+
 var Rooms = require('../../../backend/modules/rooms');
 var rooms = new Rooms();
 

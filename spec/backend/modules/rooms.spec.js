@@ -1,4 +1,7 @@
 'use strict';
+
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
 var Rights = require('../../../backend/modules/rights');
 var rights = new Rights();
 
@@ -28,10 +31,10 @@ describe("Module Rooms", function() {
         socket = {
             id: 'socket_id',
             username: user_id,
-            on: function(){},
+            on: vi.fn(),
             to: function(){return socket_in_room;},
             leave: function(){},
-            emit: function(){},
+            emit: vi.fn(),
             disconnect: function(){}
         };
 
@@ -44,12 +47,7 @@ describe("Module Rooms", function() {
             disconnect: function(){}
         };
 
-        spyOn(socket, 'on');
-        spyOn(socket, 'to');
-        spyOn(socket, 'leave');
-        spyOn(socket, "emit");
-        spyOn(socket, 'disconnect');
-        spyOn(console, 'error');
+        vi.spyOn(console, "error").mockImplementation(() => {});
 
         rights.addRightsByUserId(user_id, groups);
 

@@ -27,7 +27,7 @@ pipeline {
                     sh '''
                     export HOME=/tmp/tuleap_realtime_build
                     pnpm install
-                    pnpm run test
+                    pnpm run test -- run
                     '''
                 }
             }
