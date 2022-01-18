@@ -2,7 +2,7 @@
 
 * Status: accepted
 * Deciders: Thomas Gerbet
-* Date: 2022-01-10
+* Date: 2022-01-18
 
 ## Context and Problem Statement
 
@@ -25,6 +25,8 @@ Tuleap versions has no impact on the version used for a JS package
 
 1. Increment/Set the new version of the JS package to release, follow [SemVer](https://semver.org/) rules
 2. Push to review this change like any other changes
-3. Once approved and submitted, tag the commit with `PACKAGE_NAME~PACKAGE_VERSION` e.g. for a package called
-`@tuleap/example` and a `1.0.1` your tag should be `@tuleap/example~1.0.1`
-4. Publish the tag, automation process should be triggered to build and publish the package
+3. Once approved and submitted, tag the commit with `PACKAGE_NAME_PACKAGE_VERSION` e.g. for a package called
+`@tuleap/example` and a `1.0.1` your tag should be `@tuleap/example_1.0.1`
+4. Publish the tag
+5. Trigger the [build pipeline](https://ci.tuleap.org/jenkins/job/Publish_JS_libraries/job/Main_Tuleap_repository/) with
+the tag
