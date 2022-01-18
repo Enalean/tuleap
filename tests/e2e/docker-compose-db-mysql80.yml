@@ -11,4 +11,6 @@ services:
     cap_add:
       - SYS_NICE
     networks:
-      - tuleap
+      tuleap:
+        aliases:
+          - db
