@@ -56,6 +56,12 @@ class ForgeConfig
         self::loadFromFile(self::get('redis_config_file'));
     }
 
+    public static function loadDatabaseConfig(): void
+    {
+        self::loadDatabaseInc();
+        self::loadDatabaseParametersFromEnvironment();
+    }
+
     private static function loadLocalInc(): void
     {
         self::loadFromFile(__DIR__ . '/../../etc/local.inc.dist');
@@ -66,10 +72,9 @@ class ForgeConfig
     private static function loadDatabaseInc(): void
     {
         $database_config_file = self::get('db_config_file');
-        if (! is_file($database_config_file)) {
-            throw new RuntimeException('Database configuration file cannot be read, did you loadLocalInc first ?');
+        if (is_file($database_config_file)) {
+            self::loadFromFile($database_config_file);
         }
-        self::loadFromFile($database_config_file);
     }
 
     private static function loadDatabaseParametersFromEnvironment(): void

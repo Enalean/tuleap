@@ -51,10 +51,11 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->db_wrapper = new TestDBWrapper();
 
+        $test_manager         = new TestConnectionManager($this->db_wrapper);
         $this->command_tester = new CommandTester(
             new SetupMysqlInitCommand(
-                new TestConnectionManager($this->db_wrapper),
-                new DatabaseConfigurator(\PasswordHandlerFactory::getPasswordHandler()),
+                $test_manager,
+                new DatabaseConfigurator(\PasswordHandlerFactory::getPasswordHandler(), $test_manager),
                 $this->base_dir
             )
         );

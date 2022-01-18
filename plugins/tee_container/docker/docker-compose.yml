@@ -9,6 +9,7 @@ services:
     image: docker.tuleap.org/tuleap-enterprise-edition:dev
     #entrypoint: ["/usr/share/tuleap/plugins/tee_container/bin/tee-container.php", "run"]
     #command: ["--no-supervisord", "--exec=sleep 62"]
+    #command: ["--debug"]
     hostname: ${TULEAP_FQDN}
     ports:
       - "443:443"
@@ -21,7 +22,9 @@ services:
       - mailhog
     environment:
       - TULEAP_FQDN=${TULEAP_FQDN}
-      - DB_HOST=db
+      - TULEAP_SYS_DBHOST=db
+      - TULEAP_SYS_DBPASSWD=${MYSQL_TULEAPADM_PASSWORD}
+      - SITE_ADMINISTRATOR_PASSWORD=${SITE_ADMINISTRATOR_PASSWORD}
       - DB_ADMIN_USER=root
       - DB_ADMIN_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - TULEAP_FPM_SESSION_MODE=redis

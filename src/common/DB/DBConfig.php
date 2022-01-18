@@ -66,7 +66,10 @@ final class DBConfig
     #[ConfigCannotBeModified]
     public const CONF_NB_MAX_JOIN = 'sys_server_join';
 
-    public const DEFAULT_MYSQL_PORT = 3306;
+    public const DEFAULT_MYSQL_PORT             = 3306;
+    public const DEFAULT_MYSQL_TULEAP_DB_NAME   = 'tuleap';
+    public const DEFAULT_MYSQL_TULEAP_USER_NAME = 'tuleapadm';
+    public const DEFAULT_MYSQL_CA_FILE_PATH     = '/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem';
 
     public static function isSSLEnabled(): bool
     {

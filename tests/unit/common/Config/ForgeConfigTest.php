@@ -31,6 +31,9 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 
+/**
+ * @covers \Tuleap\Config\ConfigValueEnvironmentProvider
+ */
 class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -93,6 +96,19 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::setDatabaseConfigDao($dao);
 
         ForgeConfig::loadInSequence();
+        self::assertEquals('localhost', ForgeConfig::get('sys_dbhost'));
+    }
+
+    public function testLoadDatabaseConfigFromEnvironmentWithEmptyEnv(): void
+    {
+        ForgeConfig::loadDatabaseConfig();
+        self::assertEquals(false, ForgeConfig::get('sys_dbhost'));
+    }
+
+    public function testLoadDatabaseConfigFromEnvironmentWithEnv(): void
+    {
+        putenv('TULEAP_SYS_DBHOST=localhost');
+        ForgeConfig::loadDatabaseConfig();
         self::assertEquals('localhost', ForgeConfig::get('sys_dbhost'));
     }
 

@@ -60,6 +60,9 @@ final class DataPersistence
             throw new \RuntimeException(sprintf('Directory "%s" was not created', self::BASEDIR));
         }
         foreach ($this->paths as $path) {
+            if (! is_file($path) && ! is_dir($path)) {
+                continue;
+            }
             $output->writeln("Move $path to persistent storage");
             $this->createBaseDir($path);
             $this->process_factory->getProcess(['/bin/mv', $path, self::BASEDIR . $path])->mustRun();
@@ -77,6 +80,9 @@ final class DataPersistence
     public function restore(OutputInterface $output): void
     {
         foreach ($this->paths as $path) {
+            if (! is_file(self::BASEDIR . $path) && ! is_dir(self::BASEDIR . $path)) {
+                continue;
+            }
             if (is_link($path)) {
                 continue;
             }

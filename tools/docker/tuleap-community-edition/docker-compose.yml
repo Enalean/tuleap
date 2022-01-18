@@ -5,6 +5,8 @@
 # You should have a .env file with 2 variables defined:
 # TULEAP_FQDN
 # MYSQL_ROOT_PASSWORD
+# MYSQL_TULEAPADM_PASSWORD
+# SITE_ADMINISTRATOR_PASSWORD
 # See https://docs.docker.com/compose/environment-variables/
 
 version: "2"
@@ -12,10 +14,13 @@ version: "2"
 services:
   web:
     image: tuleap/tuleap-community-edition
+    #command: ["--debug"]
     hostname: ${TULEAP_FQDN}
+    ports:
+      - "443:443"
     volumes:
       # For Tuleap devs, un-comment if you want to test stuff with your own code base
-      # - ../../../:/usr/share/tuleap:ro,cached
+      - ../../../:/usr/share/tuleap:ro,cached
       - tuleap-data:/data
     depends_on:
       - db
@@ -23,7 +28,9 @@ services:
       - mailhog
     environment:
       - TULEAP_FQDN=${TULEAP_FQDN}
-      - DB_HOST=db
+      - TULEAP_SYS_DBHOST=db
+      - TULEAP_SYS_DBPASSWD=${MYSQL_TULEAPADM_PASSWORD}
+      - SITE_ADMINISTRATOR_PASSWORD=${SITE_ADMINISTRATOR_PASSWORD}
       - DB_ADMIN_USER=root
       - DB_ADMIN_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - TULEAP_FPM_SESSION_MODE=redis
@@ -45,7 +52,7 @@ services:
     image: redis:6
     volumes:
       - redis-data:/data
-    command: redis-server --appendonly yes
+    command: redis-server --appendonly yes --auto-aof-rewrite-percentage 20 --auto-aof-rewrite-min-size 200kb
 
   # This is for test purpose only. Mailhog is there to capture email traffic
   mailhog:

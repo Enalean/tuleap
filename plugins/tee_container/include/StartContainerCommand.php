@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\TEEContainer;
 
+use PasswordHandlerFactory;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
@@ -31,6 +32,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
@@ -43,6 +45,8 @@ use TuleapCfg\Command\Docker\Supervisord;
 use TuleapCfg\Command\Docker\Tuleap;
 use TuleapCfg\Command\Docker\VariableProviderFromEnvironment;
 use TuleapCfg\Command\ProcessFactory;
+use TuleapCfg\Command\SetupMysql\ConnectionManager;
+use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 
 final class StartContainerCommand extends Command
 {
@@ -74,6 +78,7 @@ final class StartContainerCommand extends Command
 
     private const OPTION_NO_SUPERVISORD = 'no-supervisord';
     private const OPTION_EXEC           = 'exec';
+    private const OPTION_DEBUG          = 'debug';
 
     private ProcessFactory $process_factory;
     private DataPersistence $data_persistence;
@@ -92,7 +97,8 @@ final class StartContainerCommand extends Command
             ->setName('run')
             ->setDescription('Run Tuleap Enterprise Edition Docker container')
             ->addOption(self::OPTION_NO_SUPERVISORD, '', InputOption::VALUE_NONE, 'Do not run supervisord at the end of the setup')
-            ->addOption(self::OPTION_EXEC, '', InputOption::VALUE_REQUIRED, 'Select a command to run inside the container, before supervisord (if any)');
+            ->addOption(self::OPTION_EXEC, '', InputOption::VALUE_REQUIRED, 'Select a command to run inside the container, before supervisord (if any)')
+            ->addOption(self::OPTION_DEBUG, '', InputOption::VALUE_NONE, 'If something is failing, container will hang, available for debug');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -100,9 +106,9 @@ final class StartContainerCommand extends Command
         $version_presenter = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
         $output->writeln(sprintf('<info>Start init sequence for %s</info>', $version_presenter->getFullDescriptiveVersion()));
         try {
-            $tuleap      = new Tuleap($this->process_factory);
+            $tuleap      = new Tuleap($this->process_factory, new DatabaseConfigurator(PasswordHandlerFactory::getPasswordHandler(), new ConnectionManager()));
             $tuleap_fqdn = $tuleap->setupOrUpdate(
-                $output,
+                new SymfonyStyle($input, $output),
                 $this->data_persistence,
                 new VariableProviderFromEnvironment(),
             );
@@ -129,21 +135,21 @@ final class StartContainerCommand extends Command
             }
 
             if ($input->getOption(self::OPTION_NO_SUPERVISORD) !== true) {
-                $output->writeln(
-                    <<<EOT
-                    ***********************************************************************************************************
-                    * You can get `admin` password with following command: `docker-compose exec web cat /root/.tuleap_passwd` *
-                    ***********************************************************************************************************
-                    EOT
-                );
                 $supervisord->run($output);
             }
             return Command::SUCCESS;
         } catch (\Exception $exception) {
             $output->writeln(sprintf('<error>%s</error>', OutputFormatter::escape($exception->getMessage())));
-            $output->writeln('Something went wrong, here is a shell to debug: ');
-            pcntl_exec('/bin/bash');
-            $output->writeln('exec of bash failed');
+            if ($input->getOption(self::OPTION_DEBUG)) {
+                if (Process::isTtySupported()) {
+                    $output->writeln('Something went wrong, here is a shell to debug: ');
+                    pcntl_exec('/bin/bash');
+                    $output->writeln('exec of bash failed');
+                } else {
+                    $output->writeln('Something went wrong, lets keep the container hanging around for debug');
+                    pcntl_exec('/usr/bin/supervisord', ['--nodaemon', '--configuration', '/etc/supervisord.conf']);
+                }
+            }
         }
         return Command::FAILURE;
     }
