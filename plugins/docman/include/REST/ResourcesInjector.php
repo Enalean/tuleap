@@ -34,6 +34,7 @@ use Tuleap\Docman\REST\v1\DocmanItemsResource;
 use Tuleap\Docman\REST\v1\DocmanLinksResource;
 use Tuleap\Docman\REST\v1\DocmanWikiResource;
 use Tuleap\Docman\REST\v1\ProjectMetadataResource;
+use Tuleap\Docman\REST\v1\SearchResource;
 use Tuleap\Docman\REST\v1\Service\DocmanServiceResource;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\ProjectResourceReference;
@@ -47,6 +48,7 @@ class ResourcesInjector
     public const WIKI_NAME           = 'docman_wikis';
     public const LINK_NAME           = 'docman_links';
     public const EMPTY_DOCUMENT_NAME = 'docman_empty_documents';
+    public const SEARCH_NAME         = 'docman_search';
 
     public function populate(Restler $restler)
     {
@@ -92,6 +94,11 @@ class ResourcesInjector
         $restler->addAPIClass(
             DocmanServiceResource::class,
             ProjectRepresentation::ROUTE
+        );
+
+        $restler->addAPIClass(
+            SearchResource::class,
+            self::SEARCH_NAME
         );
     }
 

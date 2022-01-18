@@ -30,6 +30,7 @@ use Tuleap\Docman\Test\rest\Helper\DocmanEmptyDataBuild;
 use Tuleap\Docman\Test\rest\Helper\DocmanFileDataBuild;
 use Tuleap\Docman\Test\rest\Helper\DocmanFolderDataBuild;
 use Tuleap\Docman\Test\rest\Helper\DocmanLinkDataBuild;
+use Tuleap\Docman\Test\rest\Helper\DocmanSearchDataBuild;
 use Tuleap\Docman\Test\rest\Helper\DocmanWikiDataBuild;
 
 class DocmanDataBuilder extends DocmanDataBuildCommon
@@ -52,13 +53,13 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
      *         Root
      *          +
      *          |
-     *    +-----+-----+----------+--------+-------+-------+--------------+
-     *    |           |          |        |       |       |              |
-     *    +           +          +        +       +       +              +
-     *  Folder       File     Embedded   Link   Wiki     Empty  Download me as a zip
-     *    +           +          +        +       +       +              +
-     *    |           |          |        |       |       |              |
-     *   ...         ...        ...      ...     ...     ...            ...
+     *    +-----+-----+----------+--------+-------+-------+--------------+-------------------+
+     *    |           |          |        |       |       |              |                   |
+     *    +           +          +        +       +       +              +                   +
+     *  Folder       File     Embedded   Link   Wiki     Empty  Download me as a zip       Search
+     *    +           +          +        +       +       +              +                   +
+     *    |           |          |        |       |       |              |                   |
+     *   ...         ...        ...      ...     ...     ...            ...                 ...
      */
     private function addContent(): void
     {
@@ -86,5 +87,8 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
 
         $folder_to_download_builder = new DocmanFolderDataBuild($common_builder);
         $folder_to_download_builder->createFolderToDownload($docman_root);
+
+        $search_builder = new DocmanSearchDataBuild($common_builder);
+        $search_builder->createSearchContent($docman_root);
     }
 }

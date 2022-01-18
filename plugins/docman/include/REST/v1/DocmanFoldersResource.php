@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
 
-use Codendi_HTMLPurifier;
 use DateTimeImmutable;
 use Docman_EmbeddedFile;
 use Docman_Empty;
 use Docman_File;
-use Docman_FilterFactory;
 use Docman_Folder;
 use Docman_Item;
 use Docman_ItemFactory;
@@ -36,9 +34,6 @@ use Docman_LinkVersionFactory;
 use Docman_MetadataFactory;
 use Docman_MetadataListOfValuesElementDao;
 use Docman_PermissionsManager;
-use Docman_ReportColumnFactory;
-use Docman_SettingsBo;
-use Docman_VersionFactory;
 use Docman_Wiki;
 use DocmanPlugin;
 use EventManager;
@@ -47,8 +42,6 @@ use PermissionsManager;
 use PluginManager;
 use Project;
 use ProjectManager;
-use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
-use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Metadata\CustomMetadataException;
@@ -61,44 +54,31 @@ use Tuleap\Docman\REST\v1\CopyItem\DocmanValidateRepresentationForCopy;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Empties\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanPOSTFilesRepresentation;
-use Tuleap\Docman\REST\v1\Folders\BuildSearchedItemRepresentationsFromSearchReport;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
-use Tuleap\Docman\REST\v1\Folders\SearchReportBuilder;
-use Tuleap\Docman\REST\v1\Folders\SearchRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\CustomMetadataCollectionBuilder;
 use Tuleap\Docman\REST\v1\Metadata\CustomMetadataRepresentationRetriever;
-use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
-use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
 use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
 use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
 use Tuleap\Docman\REST\v1\Permissions\DocmanFolderPermissionsForGroupsPUTRepresentation;
-use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
 use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
-use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
-use Tuleap\Docman\Search\ColumnReportAugmenter;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
-use Tuleap\REST\JsonDecoder;
-use Tuleap\REST\QueryParameterParser;
 use UGroupManager;
-use UserHelper;
 use UserManager;
 
 class DocmanFoldersResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT = 50;
-
     /**
      * @var UserManager
      */
@@ -844,86 +824,6 @@ class DocmanFoldersResource extends AuthenticatedResource
     }
 
     /**
-     * Search elements in folder
-     * Global search will search in all text properties of document (but does look inside the document)
-     *
-     * <pre>
-     * Search allowed pattern <br>
-     * - lorem   => exactly "lorem"<br>
-     * - lorem*  => starting by "lorem"<br>
-     * - *lorem  => finishing by "lorem"<br>
-     * - *lorem* => containing "lorem"<br>
-     * <br>
-     * use example:<br>
-     * {global_search: "lorem*"}
-     * </pre>
-     *
-     * @url    GET {id}/search
-     * @access hybrid
-     *
-     * @param int $id       Id of the folder
-     * @param string $query with property "global_search" to search on all string properties{@from body}
-     * @param int $limit    Number of elements displayed {@from path}{@min 0}{@max 50}
-     * @param int $offset   Position of the first element to display {@from path}{@min 0}
-     *
-     * @status 200
-     *
-     * @return SearchRepresentation[]
-     *
-     * @throws RestException 400
-     */
-    public function search(int $id, string $query, $limit = self::MAX_LIMIT, $offset = 0): array
-    {
-        $this->checkAccess();
-        $this->optionsSearch($id);
-
-        $item_request = $this->request_builder->buildFromItemId($id);
-        $project      = $item_request->getProject();
-        $folder       = $item_request->getItem();
-        $user         = $item_request->getUser();
-
-        $folder->accept($this->getValidator($project, $user, $folder), []);
-        assert($folder instanceof Docman_Folder);
-
-        $project_id            = $folder->getGroupId();
-        $docman_settings       = new Docman_SettingsBo($project_id);
-        $search_report_builder = new SearchReportBuilder(
-            new Docman_FilterFactory($project_id),
-            new AlwaysThereColumnRetriever($docman_settings),
-            new ColumnReportAugmenter(new Docman_ReportColumnFactory($project_id))
-        );
-        $status_mapper         = new ItemStatusMapper($docman_settings);
-        $item_dao              = new \Docman_ItemDao();
-        $item_factory          = Docman_ItemFactory::instance($project_id);
-        $permissions_manager   = Docman_PermissionsManager::instance($project_id);
-
-        $event_adder = new DocmanItemsEventAdder($this->event_manager);
-        $event_adder->addLogEvents();
-
-        $search_representations_builder = new BuildSearchedItemRepresentationsFromSearchReport(
-            $item_dao,
-            $status_mapper,
-            $this->user_manager,
-            $permissions_manager,
-            new ItemRepresentationCollectionBuilder(
-                $item_factory,
-                $permissions_manager,
-                $this->getItemRepresentationVisitor($item_request),
-                $item_dao
-            ),
-            $item_factory
-        );
-        $query_parameter_parser         = new QueryParameterParser(new JsonDecoder());
-        $global_search_parameters       = $query_parameter_parser->getString($query, "global_search");
-
-        $report     = $search_report_builder->buildReport($folder, $global_search_parameters);
-        $collection = $search_representations_builder->build($report, $folder, $user, $limit, $offset);
-        Header::sendPaginationHeaders($limit, $offset, $collection->total, self::MAX_LIMIT);
-
-        return $collection->search_representations;
-    }
-
-    /**
      * @throws I18NRestException
      *
      * @psalm-assert \Docman_Folder $item
@@ -989,58 +889,5 @@ class DocmanFoldersResource extends AuthenticatedResource
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
-    }
-
-    /**
-     * @url OPTIONS {id}/search
-     */
-    public function optionsSearch(int $id): void
-    {
-        Header::allowOptionsGet();
-    }
-    private function getItemRepresentationVisitor(DocmanItemsRequest $items_request): ItemRepresentationVisitor
-    {
-        $event_adder = new DocmanItemsEventAdder($this->event_manager);
-
-        return new ItemRepresentationVisitor(
-            $this->getItemRepresentationBuilder($items_request->getItem(), $items_request->getProject()),
-            new \Docman_VersionFactory(),
-            new \Docman_LinkVersionFactory(),
-            Docman_ItemFactory::instance($items_request->getProject()->getGroupId()),
-            $this->event_manager,
-            $event_adder
-        );
-    }
-
-    private function getItemRepresentationBuilder(Docman_Item $item, Project $project): ItemRepresentationBuilder
-    {
-        $html_purifier = Codendi_HTMLPurifier::instance();
-
-        $permissions_manager = $this->getPermissionManager($project);
-
-        return new ItemRepresentationBuilder(
-            new \Docman_ItemDao(),
-            \UserManager::instance(),
-            Docman_ItemFactory::instance($item->getGroupId()),
-            $permissions_manager,
-            new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log()),
-            new ApprovalTableStateMapper(),
-            new MetadataRepresentationBuilder(
-                new \Docman_MetadataFactory($project->getID()),
-                $html_purifier,
-                UserHelper::instance()
-            ),
-            new ApprovalTableRetriever(
-                new \Docman_ApprovalTableFactoriesFactory(),
-                new Docman_VersionFactory()
-            ),
-            new DocmanItemPermissionsForGroupsBuilder(
-                $permissions_manager,
-                ProjectManager::instance(),
-                PermissionsManager::instance(),
-                new UGroupManager()
-            ),
-            $html_purifier
-        );
     }
 }
