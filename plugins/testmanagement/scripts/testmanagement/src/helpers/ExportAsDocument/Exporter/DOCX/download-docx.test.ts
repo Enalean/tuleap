@@ -18,36 +18,26 @@
  */
 
 import * as trigger_download from "./trigger-blob-download";
-import * as image_loader from "@tuleap/plugin-docgen-docx";
 import { downloadDocx } from "./download-docx";
-import { ImageRun } from "docx";
+import { createGettextProviderPassthrough } from "../../../create-gettext-provider-passthrough-for-tests";
 
 describe("download-docx", () => {
     it("generates a docx file from the exported document", async (): Promise<void> => {
-        const gettextCatalog = {
-            getString: jest.fn(),
-        };
-
+        const gettext_provider = createGettextProviderPassthrough();
         const trigger_download_spy = jest.spyOn(trigger_download, "triggerBlobDownload");
         trigger_download_spy.mockImplementation((filename: string, blob: Blob) => {
             expect(filename).toBe("Document Title.docx");
             expect(blob.size > 0).toBe(true);
         });
-        jest.spyOn(image_loader, "loadImage").mockResolvedValue(
-            new ImageRun({
-                data: "image_data",
-                transformation: {
-                    width: 100,
-                    height: 100,
-                },
-            })
-        );
 
         await downloadDocx(
             {
                 name: "Document Title",
+                backlog: [],
+                traceability_matrix: [],
+                tests: [],
             },
-            gettextCatalog,
+            gettext_provider,
             {
                 platform_name: "My Tuleap Platform",
                 platform_logo_url: "platform/logo/url",
@@ -55,14 +45,16 @@ describe("download-docx", () => {
                 user_display_name: "Jean Dupont",
                 user_timezone: "UTC",
                 user_locale: "en_US",
-                campaign_name: "Tuleap 13.3",
-                campaign_url: "/path/to/13.3",
+                title: "Tuleap 13.3",
                 base_url: "https://example.com",
+                artifact_links_types: [],
+                testdefinition_tracker_id: 10,
             },
             {
                 locale: "en-US",
                 timezone: "UTC",
-            }
+            },
+            () => Promise.resolve([])
         );
 
         expect(trigger_download_spy).toHaveBeenCalled();

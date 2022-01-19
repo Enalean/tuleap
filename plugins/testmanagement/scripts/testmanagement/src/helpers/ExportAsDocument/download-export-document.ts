@@ -21,19 +21,23 @@ import { createExportReport } from "./Reporter/report-creator";
 import type {
     Campaign,
     ExportDocument,
-    GettextProvider,
     GlobalExportProperties,
     DateTimeLocaleInformation,
+    ArtifactFieldValueStepDefinitionEnhancedWithResults,
 } from "../../type";
+import type { XmlComponent } from "docx";
+import { buildCoverPage } from "./Exporter/DOCX/cover-builder";
+import type { GettextProvider } from "@tuleap/gettext";
+import { initGettextForDocumentExport } from "./init-gettext-for-document-export";
 
 export async function downloadExportDocument(
     global_export_properties: GlobalExportProperties,
-    gettextCatalog: GettextProvider,
     download_document: (
-        document: ExportDocument,
-        gettextCatalog: GettextProvider,
+        document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
+        gettext_provider: GettextProvider,
         global_export_properties: GlobalExportProperties,
-        datetime_locale_information: DateTimeLocaleInformation
+        datetime_locale_information: DateTimeLocaleInformation,
+        buildCoverPage: (exported_formatted_date: string) => Promise<ReadonlyArray<XmlComponent>>
     ) => void,
     campaign: Campaign
 ): Promise<void> {
@@ -42,12 +46,20 @@ export async function downloadExportDocument(
         timezone: global_export_properties.user_timezone,
     };
 
-    const report = await createExportReport(gettextCatalog, campaign);
+    const gettext_provider = initGettextForDocumentExport(global_export_properties.user_locale);
+
+    const report = await createExportReport(
+        gettext_provider,
+        campaign,
+        datetime_locale_information
+    );
 
     download_document(
         report,
-        gettextCatalog,
+        gettext_provider,
         global_export_properties,
-        datetime_locale_information
+        datetime_locale_information,
+        (exported_formatted_date: string): Promise<ReadonlyArray<XmlComponent>> =>
+            buildCoverPage(gettext_provider, global_export_properties, exported_formatted_date)
     );
 }

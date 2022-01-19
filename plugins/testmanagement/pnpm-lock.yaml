@@ -3,8 +3,10 @@ lockfileVersion: 5.3
 specifiers:
   '@tuleap/angular-tlp': file:../../src/scripts/lib/angular-tlp
   '@tuleap/ckeditor-image-upload': file:../../src/scripts/lib/ckeditor-image-upload
+  '@tuleap/concurrency-limit-pool': file:../../src/scripts/lib/concurrency-limit-pool
   '@tuleap/core': file:../../src
   '@tuleap/filter-inline-table': file:../../src/scripts/lib/filter-table
+  '@tuleap/gettext': file:../../src/scripts/lib/gettext
   '@tuleap/keyboard-shortcuts': file:../../src/scripts/lib/keyboard-shortcuts
   '@tuleap/list-picker': file:../../src/scripts/lib/list-picker
   '@tuleap/plugin-docgen-docx': file:../document_generation/scripts/lib/docx
@@ -14,6 +16,7 @@ specifiers:
   '@tuleap/plugin-tracker-rich-text-editor': file:../tracker/scripts/lib/rich-text-editor
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
   '@types/node': ^14.14.31
+  '@types/sprintf-js': ^1.1.2
   '@uirouter/angularjs': ^1.0.29
   '@vue/test-utils': ^1.3.0
   angular: ^1.8.2
@@ -51,8 +54,10 @@ specifiers:
 dependencies:
   '@tuleap/angular-tlp': link:../../src/scripts/lib/angular-tlp
   '@tuleap/ckeditor-image-upload': link:../../src/scripts/lib/ckeditor-image-upload
+  '@tuleap/concurrency-limit-pool': link:../../src/scripts/lib/concurrency-limit-pool
   '@tuleap/core': link:../../src
   '@tuleap/filter-inline-table': link:../../src/scripts/lib/filter-table
+  '@tuleap/gettext': link:../../src/scripts/lib/gettext
   '@tuleap/keyboard-shortcuts': link:../../src/scripts/lib/keyboard-shortcuts
   '@tuleap/list-picker': link:../../src/scripts/lib/list-picker
   '@tuleap/plugin-docgen-docx': link:../document_generation/scripts/lib/docx
@@ -94,6 +99,7 @@ dependencies:
 
 devDependencies:
   '@types/node': 14.14.31
+  '@types/sprintf-js': 1.1.2
   '@vue/test-utils': 1.3.0_vue@2.6.14
   angular-mocks: 1.8.2
   jquery: 3.6.0
@@ -107,6 +113,10 @@ packages:
   /@types/node/17.0.9:
     resolution: {integrity: sha512-5dNBXu/FOER+EXnyah7rn8xlNrfMOQb/qXnw4NQgLkCygKBKhdmF/CA5oXVOKZLBEahw8s2WP9LxIcN/oDDRgQ==}
     dev: false
+
+  /@types/sprintf-js/1.1.2:
+    resolution: {integrity: sha512-hkgzYF+qnIl8uTO8rmUSVSfQ8BIfMXC4yJAF4n8BE758YsKBZvFC4NumnAegj7KmylP0liEZNpb9RRGFMbFejA==}
+    dev: true
 
   /@uirouter/angularjs/1.0.29_angular@1.8.2:
     resolution: {integrity: sha512-RImWnBarNixkMto0o8stEaGwZmvhv5cnuOLXyMU2pY8MP2rgEF74ZNJTLeJCW14LR7XDUxVH8Mk8bPI6lxedmQ==}

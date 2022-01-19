@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,13 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function triggerBlobDownload(filename: string, blob: Blob): void {
-    const download_link = document.createElement("a");
-    const object_url = URL.createObjectURL(blob);
-    download_link.href = object_url;
-    download_link.setAttribute("download", filename);
-    document.body.appendChild(download_link);
-    download_link.click();
-    download_link.remove();
-    URL.revokeObjectURL(object_url);
+declare module "*.po" {
+    import type { GettextParserPoFile } from "@tuleap/gettext";
+    const content: GettextParserPoFile;
+    export default content;
 }

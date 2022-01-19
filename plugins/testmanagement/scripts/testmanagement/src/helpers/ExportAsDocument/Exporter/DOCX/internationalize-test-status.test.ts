@@ -18,8 +18,8 @@
  */
 
 import { getInternationalizedTestStatus } from "./internationalize-test-status";
-import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import type { ArtifactFieldValueStatus } from "@tuleap/plugin-docgen-docx/src";
+import { createGettextProviderPassthrough } from "../../../create-gettext-provider-passthrough-for-tests";
 
 describe("Internationalize test status", () => {
     it.each([
@@ -31,9 +31,7 @@ describe("Internationalize test status", () => {
     ])("internationalizes %p", (status: string | null, expected: string) => {
         expect(
             getInternationalizedTestStatus(
-                {
-                    $gettext: (str: string) => str,
-                } as VueGettextProvider,
+                createGettextProviderPassthrough(),
                 status as ArtifactFieldValueStatus
             )
         ).toBe(expected);

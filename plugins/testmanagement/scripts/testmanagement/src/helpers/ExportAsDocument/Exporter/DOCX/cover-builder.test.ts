@@ -21,13 +21,15 @@ import { buildCoverPage } from "./cover-builder";
 import * as image_loader from "@tuleap/plugin-docgen-docx";
 import type { IContext } from "docx";
 import { File, ImageRun } from "docx";
-import type { GettextProvider, GlobalExportProperties } from "../../../../type";
+import type { GlobalExportProperties } from "../../../../type";
+import type { GettextProvider } from "@tuleap/gettext";
+import { createGettextProviderPassthrough } from "../../../create-gettext-provider-passthrough-for-tests";
 
 describe("cover-builder", () => {
     describe("buildCoverPage", () => {
         let context: IContext;
         let global_export_properties: GlobalExportProperties;
-        let gettextCatalog: GettextProvider;
+        let gettext_provider: GettextProvider;
 
         beforeEach(() => {
             context = {
@@ -41,14 +43,15 @@ describe("cover-builder", () => {
                 user_display_name: "Jean Dupont",
                 user_timezone: "UTC",
                 user_locale: "en_US",
+                title: "Tuleap 13.3",
                 campaign_name: "Tuleap 13.3",
                 campaign_url: "/path/to/13.3",
                 base_url: "https://example.com",
+                artifact_links_types: [],
+                testdefinition_tracker_id: null,
             };
 
-            gettextCatalog = {
-                getString: jest.fn(),
-            };
+            gettext_provider = createGettextProviderPassthrough();
         });
 
         it("builds a cover page with logo", async () => {
@@ -65,7 +68,7 @@ describe("cover-builder", () => {
             );
 
             const cover_page = await buildCoverPage(
-                gettextCatalog,
+                gettext_provider,
                 global_export_properties,
                 "25/11/2021"
             );
@@ -94,7 +97,7 @@ describe("cover-builder", () => {
             );
 
             const cover_page = await buildCoverPage(
-                gettextCatalog,
+                gettext_provider,
                 global_export_properties,
                 "25/11/2021"
             );

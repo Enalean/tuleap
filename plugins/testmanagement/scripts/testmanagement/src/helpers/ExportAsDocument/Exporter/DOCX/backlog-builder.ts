@@ -18,10 +18,9 @@
  */
 import type {
     ExportDocument,
-    GlobalExportProperties,
     ArtifactFieldValueStepDefinitionEnhancedWithResults,
+    GenericGlobalExportProperties,
 } from "../../../../type";
-import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import type { Table } from "docx";
 import { Bookmark, Paragraph, TextRun } from "docx";
 import {
@@ -33,24 +32,25 @@ import {
 } from "./document-properties";
 import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx";
 import { buildListOfArtifactsContent } from "./build-list-of-artifacts-content";
+import type { GettextProvider } from "@tuleap/gettext";
+import { sprintf } from "sprintf-js";
 
 export function getMilestoneBacklogTitle(
-    gettext_provider: VueGettextProvider,
-    global_export_properties: GlobalExportProperties
+    gettext_provider: GettextProvider,
+    global_export_properties: GenericGlobalExportProperties
 ): { id: string; text: string } {
     return {
         id: "backlog",
-        text: gettext_provider.$gettextInterpolate(
-            gettext_provider.$gettext("%{ milestone_title } backlog"),
-            { milestone_title: global_export_properties.milestone_name }
-        ),
+        text: sprintf(gettext_provider.gettext("%(title)s backlog"), {
+            title: global_export_properties.title,
+        }),
     };
 }
 
 export async function buildMilestoneBacklog(
     document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
-    gettext_provider: VueGettextProvider,
-    global_export_properties: GlobalExportProperties
+    gettext_provider: GettextProvider,
+    global_export_properties: GenericGlobalExportProperties
 ): Promise<(Paragraph | Table)[]> {
     const title = getMilestoneBacklogTitle(gettext_provider, global_export_properties);
 
@@ -70,10 +70,7 @@ export async function buildMilestoneBacklog(
     });
 
     if (document.backlog.length === 0) {
-        return [
-            section_title,
-            new Paragraph(gettext_provider.$gettext("There is no backlog item yet")),
-        ];
+        return [section_title, new Paragraph(gettext_provider.gettext("There are no items."))];
     }
 
     return [
@@ -88,8 +85,8 @@ export async function buildMilestoneBacklog(
 
 function buildBacklogSection(
     backlog: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionEnhancedWithResults>>,
-    global_export_properties: GlobalExportProperties,
-    gettext_provider: VueGettextProvider
+    global_export_properties: GenericGlobalExportProperties,
+    gettext_provider: GettextProvider
 ): Promise<(Paragraph | Table)[]> {
     return buildListOfArtifactsContent(
         gettext_provider,

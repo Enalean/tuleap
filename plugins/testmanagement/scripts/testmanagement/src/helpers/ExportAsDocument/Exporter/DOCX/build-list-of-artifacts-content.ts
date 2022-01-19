@@ -50,10 +50,10 @@ import {
     transformLargeContentIntoParagraphs,
 } from "@tuleap/plugin-docgen-docx";
 import { sprintf } from "sprintf-js";
-import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import { getInternationalizedTestStatus } from "./internationalize-test-status";
 import type { ArtifactFieldValueStepDefinitionEnhancedWithResults } from "../../../../type";
 import { buildCellContentResult } from "./Table/table-builder";
+import type { GettextProvider } from "@tuleap/gettext";
 
 const TABLE_LABEL_SHADING = {
     val: ShadingType.CLEAR,
@@ -100,7 +100,7 @@ const TABLE_BORDERS = {
 };
 
 export async function buildListOfArtifactsContent(
-    gettext_provider: VueGettextProvider,
+    gettext_provider: GettextProvider,
     artifacts: ReadonlyArray<
         FormattedArtifact<ArtifactFieldValueStepDefinitionEnhancedWithResults>
     >,
@@ -134,7 +134,7 @@ async function buildContainersDisplayZone(
     containers: ReadonlyArray<
         ArtifactContainer<ArtifactFieldValueStepDefinitionEnhancedWithResults>
     >,
-    gettext_provider: VueGettextProvider
+    gettext_provider: GettextProvider
 ): Promise<XmlComponent[]> {
     const xml_components_promises = containers.map(async (container): Promise<XmlComponent[]> => {
         const sub_containers_display_zones = await buildContainersDisplayZone(
@@ -174,7 +174,7 @@ async function buildFieldValuesDisplayZone(
     artifact_values: ReadonlyArray<
         ArtifactFieldValue<ArtifactFieldValueStepDefinitionEnhancedWithResults>
     >,
-    gettext_provider: VueGettextProvider
+    gettext_provider: GettextProvider
 ): Promise<XmlComponent[]> {
     const short_fields: ArtifactFieldShortValue[] = [];
     const display_zone_long_fields: XmlComponent[] = [];
@@ -209,7 +209,7 @@ async function buildFieldValuesDisplayZone(
                             heading: HeadingLevel.HEADING_5,
                             children: [
                                 new TextRun(
-                                    sprintf(gettext_provider.$gettext("Step %d"), step.rank)
+                                    sprintf(gettext_provider.gettext("Step %d"), step.rank)
                                 ),
                             ],
                         }),
@@ -230,7 +230,7 @@ async function buildFieldValuesDisplayZone(
                             heading: HeadingLevel.HEADING_5,
                             children: [
                                 new TextRun(
-                                    sprintf(gettext_provider.$gettext("Step %d"), step.rank)
+                                    sprintf(gettext_provider.gettext("Step %d"), step.rank)
                                 ),
                             ],
                         }),
@@ -257,8 +257,8 @@ async function buildFieldValuesDisplayZone(
                 step_exec_table_rows.push(
                     new TableRow({
                         children: [
-                            buildTableCellHeaderLabel(gettext_provider.$gettext("Step")),
-                            buildTableCellHeaderValue(gettext_provider.$gettext("Status")),
+                            buildTableCellHeaderLabel(gettext_provider.gettext("Step")),
+                            buildTableCellHeaderValue(gettext_provider.gettext("Status")),
                         ],
                         tableHeader: true,
                     })
@@ -269,7 +269,7 @@ async function buildFieldValuesDisplayZone(
                         new TableRow({
                             children: [
                                 buildTableCellLabel(
-                                    sprintf(gettext_provider.$gettext("Step %d"), step_number)
+                                    sprintf(gettext_provider.gettext("Step %d"), step_number)
                                 ),
                                 buildTableCellContent(
                                     new TextRun(
@@ -292,7 +292,7 @@ async function buildFieldValuesDisplayZone(
                             heading: HeadingLevel.HEADING_5,
                             children: [
                                 new TextRun(
-                                    sprintf(gettext_provider.$gettext("Step %d"), step.rank)
+                                    sprintf(gettext_provider.gettext("Step %d"), step.rank)
                                 ),
                             ],
                         }),
@@ -300,7 +300,7 @@ async function buildFieldValuesDisplayZone(
                             children: [
                                 new TextRun(
                                     sprintf(
-                                        gettext_provider.$gettext("Status: %s"),
+                                        gettext_provider.gettext("Status: %s"),
                                         getInternationalizedTestStatus(
                                             gettext_provider,
                                             step.status
@@ -329,7 +329,7 @@ async function buildFieldValuesDisplayZone(
                             children: [
                                 new TextRun(
                                     sprintf(
-                                        gettext_provider.$gettext("Artifacts referenced by “%s”"),
+                                        gettext_provider.gettext("Artifacts referenced by “%s”"),
                                         artifact.short_title
                                     )
                                 ),
@@ -339,9 +339,9 @@ async function buildFieldValuesDisplayZone(
                     const links_table_rows: TableRow[] = [
                         new TableRow({
                             children: [
-                                buildTableCellHeaderValue(gettext_provider.$gettext("Artifact ID")),
-                                buildTableCellHeaderValue(gettext_provider.$gettext("Title")),
-                                buildTableCellHeaderValue(gettext_provider.$gettext("Link type")),
+                                buildTableCellHeaderValue(gettext_provider.gettext("Artifact ID")),
+                                buildTableCellHeaderValue(gettext_provider.gettext("Title")),
+                                buildTableCellHeaderValue(gettext_provider.gettext("Link type")),
                             ],
                             tableHeader: true,
                         }),
@@ -390,7 +390,7 @@ async function buildFieldValuesDisplayZone(
                             children: [
                                 new TextRun(
                                     sprintf(
-                                        gettext_provider.$gettext("Artifacts that reference “%s”"),
+                                        gettext_provider.gettext("Artifacts that reference “%s”"),
                                         artifact.short_title
                                     )
                                 ),
@@ -400,9 +400,9 @@ async function buildFieldValuesDisplayZone(
                     const reverse_links_table_rows: TableRow[] = [
                         new TableRow({
                             children: [
-                                buildTableCellHeaderValue(gettext_provider.$gettext("Artifact ID")),
-                                buildTableCellHeaderValue(gettext_provider.$gettext("Title")),
-                                buildTableCellHeaderValue(gettext_provider.$gettext("Link type")),
+                                buildTableCellHeaderValue(gettext_provider.gettext("Artifact ID")),
+                                buildTableCellHeaderValue(gettext_provider.gettext("Title")),
+                                buildTableCellHeaderValue(gettext_provider.gettext("Link type")),
                             ],
                             tableHeader: true,
                         }),
@@ -600,7 +600,7 @@ function buildTableCellLinksContent(links: Array<ExternalHyperlink>): TableCell 
 
 async function buildStepDefinitionParagraphs(
     step: ArtifactFieldValueStepDefinitionEnhanced,
-    gettext_provider: VueGettextProvider,
+    gettext_provider: GettextProvider,
     must_display_enhanced_data: boolean
 ): Promise<(Table | Paragraph)[]> {
     const paragraphs: (Table | Paragraph)[] = [];
@@ -610,7 +610,7 @@ async function buildStepDefinitionParagraphs(
             buildTable([
                 new TableRow({
                     children: [
-                        buildTableCellLabel(gettext_provider.$gettext("Status")),
+                        buildTableCellLabel(gettext_provider.gettext("Status")),
                         buildCellContentResult(step.status, gettext_provider, 1),
                     ],
                 }),
@@ -621,14 +621,14 @@ async function buildStepDefinitionParagraphs(
     paragraphs.push(
         new Paragraph({
             heading: HeadingLevel.HEADING_6,
-            children: [new TextRun(gettext_provider.$gettext("Description"))],
+            children: [new TextRun(gettext_provider.gettext("Description"))],
         }),
         ...(await buildParagraphsFromContent(step.description, step.description_format, [
             HeadingLevel.HEADING_6,
         ])),
         new Paragraph({
             heading: HeadingLevel.HEADING_6,
-            children: [new TextRun(gettext_provider.$gettext("Expected results"))],
+            children: [new TextRun(gettext_provider.gettext("Expected results"))],
         }),
         ...(await buildParagraphsFromContent(step.expected_results, step.expected_results_format, [
             HeadingLevel.HEADING_6,
@@ -640,18 +640,18 @@ async function buildStepDefinitionParagraphs(
 
 async function buildStepDefinitionTestResultParagraphs(
     field: ArtifactFieldValueStepDefinitionEnhancedWithResults,
-    gettext_provider: VueGettextProvider
+    gettext_provider: GettextProvider
 ): Promise<(Table | Paragraph)[]> {
     const paragraphs: (Table | Paragraph)[] = [];
 
     paragraphs.push(
         new Paragraph({
             heading: HeadingLevel.HEADING_5,
-            children: [new TextRun(gettext_provider.$gettext("Test Results"))],
+            children: [new TextRun(gettext_provider.gettext("Test Results"))],
         }),
         new Paragraph({
             heading: HeadingLevel.HEADING_6,
-            children: [new TextRun(gettext_provider.$gettext("Status"))],
+            children: [new TextRun(gettext_provider.gettext("Status"))],
         }),
         buildTable([
             new TableRow({
@@ -664,8 +664,8 @@ async function buildStepDefinitionTestResultParagraphs(
                   buildTable([
                       new TableRow({
                           children: [
-                              buildTableCellHeaderLabel(gettext_provider.$gettext("Step")),
-                              buildTableCellHeaderValue(gettext_provider.$gettext("Status")),
+                              buildTableCellHeaderLabel(gettext_provider.gettext("Step")),
+                              buildTableCellHeaderValue(gettext_provider.gettext("Status")),
                           ],
                           tableHeader: true,
                       }),
@@ -674,7 +674,7 @@ async function buildStepDefinitionTestResultParagraphs(
                               new TableRow({
                                   children: [
                                       buildTableCellLabel(
-                                          sprintf(gettext_provider.$gettext("Step %d"), index + 1)
+                                          sprintf(gettext_provider.gettext("Step %d"), index + 1)
                                       ),
                                       buildCellContentResult(status, gettext_provider, 1),
                                   ],
@@ -703,7 +703,7 @@ async function buildStepDefinitionTestResultParagraphs(
         paragraphs.push(
             new Paragraph({
                 heading: HeadingLevel.HEADING_6,
-                children: [new TextRun(gettext_provider.$gettext("Attachments"))],
+                children: [new TextRun(gettext_provider.gettext("Attachments"))],
             }),
             new Paragraph({
                 children: links,
@@ -715,7 +715,7 @@ async function buildStepDefinitionTestResultParagraphs(
         paragraphs.push(
             new Paragraph({
                 heading: HeadingLevel.HEADING_6,
-                children: [new TextRun(gettext_provider.$gettext("Linked bugs"))],
+                children: [new TextRun(gettext_provider.gettext("Linked bugs"))],
             })
         );
         for (const bug of field.linked_bugs) {
@@ -744,7 +744,7 @@ async function buildStepDefinitionTestResultParagraphs(
         paragraphs.push(
             new Paragraph({
                 heading: HeadingLevel.HEADING_6,
-                children: [new TextRun(gettext_provider.$gettext("Comment"))],
+                children: [new TextRun(gettext_provider.gettext("Comment"))],
             })
         );
 

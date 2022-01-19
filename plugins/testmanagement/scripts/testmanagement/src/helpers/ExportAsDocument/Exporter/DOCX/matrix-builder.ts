@@ -17,12 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    ExportDocument,
-    TraceabilityMatrixElement,
-    ArtifactFieldValueStepDefinitionEnhancedWithResults,
-} from "../../../../type";
-import type { VueGettextProvider } from "../../../vue-gettext-provider";
+import type { ExportDocument, TraceabilityMatrixElement } from "../../../../type";
 import { InternalHyperlink, Table, TableCell } from "docx";
 import {
     HEADER_LEVEL_SECTION_TITLE,
@@ -37,20 +32,22 @@ import {
 } from "@tuleap/plugin-docgen-docx/src";
 import { buildCellContentResult, TABLE_BORDERS, TABLE_LABEL_SHADING } from "./Table/table-builder";
 import { computeRequirementStatus } from "./matrix-compute-requirement-status";
+import type { GettextProvider } from "@tuleap/gettext";
+import type { ArtifactFieldValueStepDefinitionEnhancedWithResults } from "../../../../type";
 
-export function getTraceabilityMatrixTitle(gettext_provider: VueGettextProvider): {
+export function getTraceabilityMatrixTitle(gettext_provider: GettextProvider): {
     id: string;
     text: string;
 } {
     return {
         id: "matrix",
-        text: gettext_provider.$gettext("Traceability matrix"),
+        text: gettext_provider.gettext("Traceability matrix"),
     };
 }
 
 export function buildTraceabilityMatrix(
     document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
-    gettext_provider: VueGettextProvider
+    gettext_provider: GettextProvider
 ): (Paragraph | Table)[] {
     const title = getTraceabilityMatrixTitle(gettext_provider);
 
@@ -73,7 +70,7 @@ export function buildTraceabilityMatrix(
         return [
             section_title,
             new Paragraph(
-                gettext_provider.$gettext(
+                gettext_provider.gettext(
                     "There isn't any requirements to put in the traceability matrix."
                 )
             ),
@@ -111,7 +108,7 @@ const buildCellContentWithRowspan = (
 
 function buildTraceabilityMatrixTable(
     elements: ReadonlyArray<TraceabilityMatrixElement>,
-    gettext_provider: VueGettextProvider
+    gettext_provider: GettextProvider
 ): Table {
     return new Table({
         width: {
@@ -123,13 +120,13 @@ function buildTraceabilityMatrixTable(
             new TableRow({
                 tableHeader: true,
                 children: [
-                    buildHeaderCell(gettext_provider.$gettext("Requirements")),
-                    buildHeaderCell(gettext_provider.$gettext("Status")),
-                    buildHeaderCell(gettext_provider.$gettext("Tests")),
-                    buildHeaderCell(gettext_provider.$gettext("Campaigns")),
-                    buildHeaderCell(gettext_provider.$gettext("Results")),
-                    buildHeaderCell(gettext_provider.$gettext("Executed By")),
-                    buildHeaderCell(gettext_provider.$gettext("Executed On")),
+                    buildHeaderCell(gettext_provider.gettext("Requirements")),
+                    buildHeaderCell(gettext_provider.gettext("Status")),
+                    buildHeaderCell(gettext_provider.gettext("Tests")),
+                    buildHeaderCell(gettext_provider.gettext("Campaigns")),
+                    buildHeaderCell(gettext_provider.gettext("Results")),
+                    buildHeaderCell(gettext_provider.gettext("Executed By")),
+                    buildHeaderCell(gettext_provider.gettext("Executed On")),
                 ],
             }),
             ...elements.reduce((acc: TableRow[], element) => {

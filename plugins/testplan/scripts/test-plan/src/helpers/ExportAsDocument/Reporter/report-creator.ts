@@ -18,13 +18,7 @@
  */
 
 import type { VueGettextProvider } from "../../vue-gettext-provider";
-import type {
-    BacklogItem,
-    Campaign,
-    ExportDocument,
-    GlobalExportProperties,
-    ArtifactFieldValueStepDefinitionEnhancedWithResults,
-} from "../../../type";
+import type { BacklogItem, Campaign, GlobalExportProperties } from "../../../type";
 import type {
     TrackerStructure,
     DateTimeLocaleInformation,
@@ -39,12 +33,16 @@ import {
 } from "@tuleap/plugin-docgen-docx";
 import { memoize } from "./memoize";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
-import { getTraceabilityMatrix } from "./traceability-matrix-creator";
-import { getExecutionsForCampaigns } from "./executions-for-campaigns-retriever";
+import { getTraceabilityMatrix } from "../../../../../../../testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/traceability-matrix-creator";
+import { getExecutionsForCampaigns } from "../../../../../../../testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/executions-for-campaigns-retriever";
 import {
     buildStepDefinitionEnhancedWithResultsFunction,
     buildStepDefinitionFunction,
 } from "./step-test-definition-formatter";
+import type {
+    ExportDocument,
+    ArtifactFieldValueStepDefinitionEnhancedWithResults,
+} from "../../../../../../../testmanagement/scripts/testmanagement/src/type";
 
 interface TrackerStructurePromiseTuple {
     readonly tracker_id: number;

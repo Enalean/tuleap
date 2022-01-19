@@ -17,13 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ExportDocument, Campaign, GettextProvider } from "../../../type";
+import type {
+    ExportDocument,
+    Campaign,
+    DateTimeLocaleInformation,
+    ArtifactFieldValueStepDefinitionEnhancedWithResults,
+} from "../../../type";
+import { getTraceabilityMatrix } from "./traceability-matrix-creator";
+import { getExecutionsForCampaigns } from "./executions-for-campaigns-retriever";
+import type { GettextProvider } from "@tuleap/gettext";
+import { sprintf } from "sprintf-js";
 
-export function createExportReport(
-    gettextCatalog: GettextProvider,
-    campaign: Campaign
-): ExportDocument {
+export async function createExportReport(
+    gettext_provider: GettextProvider,
+    campaign: Campaign,
+    datetime_locale_information: DateTimeLocaleInformation
+): Promise<ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>> {
+    const executions_map = await getExecutionsForCampaigns([campaign]);
+
     return {
-        name: gettextCatalog.getString("Test campaign {{ name }}", { name: campaign.label }),
+        name: sprintf(gettext_provider.gettext("Test campaign %(name)s"), { name: campaign.label }),
+        traceability_matrix: getTraceabilityMatrix(executions_map, datetime_locale_information),
+        backlog: [],
+        tests: [],
     };
 }

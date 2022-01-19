@@ -18,7 +18,7 @@
  */
 
 import { downloadCampaignAsDocx } from "./download-campaign-as-docx";
-import type { Campaign } from "../../type";
+import type { Campaign, GlobalExportProperties } from "../../type";
 
 const downloadExportDocumentMock = jest.fn();
 jest.mock("../../helpers/ExportAsDocument/download-export-document", () => {
@@ -35,15 +35,10 @@ jest.mock("../../helpers/ExportAsDocument/Exporter/DOCX/download-docx", () => {
 
 describe("downloadCampaignAsDocx", () => {
     it("should download a document", async () => {
-        const gettext_provider = {
-            getString: jest.fn(),
-        };
-
         const campaign: Campaign = { label: "Tuleap 13.5", id: 123 } as Campaign;
 
         await downloadCampaignAsDocx(
             campaign,
-            gettext_provider,
             "ACME",
             "https://example.com/logo.gif",
             "Gemini Croquette Contest",
@@ -62,12 +57,14 @@ describe("downloadCampaignAsDocx", () => {
                 user_display_name: "Korben Dallas",
                 user_timezone: "UTC",
                 user_locale: "en_US",
+                title: "Tuleap 13.5",
                 campaign_name: "Tuleap 13.5",
                 campaign_url:
                     "https://example.com/plugins/testmanagement/?group_id=101#!/campaigns/123",
                 base_url: "https://example.com/",
-            },
-            gettext_provider,
+                artifact_links_types: [],
+                testdefinition_tracker_id: null,
+            } as GlobalExportProperties,
             downloadDocxMock,
             campaign
         );

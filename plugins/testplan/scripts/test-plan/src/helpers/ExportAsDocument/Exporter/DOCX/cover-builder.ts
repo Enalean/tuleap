@@ -33,7 +33,11 @@ import {
     WidthType,
 } from "docx";
 import { loadImage } from "@tuleap/plugin-docgen-docx";
-import { buildTableCellContent, buildTableCellLabel, TABLE_BORDERS } from "./Table/table-builder";
+import {
+    buildTableCellContent,
+    buildTableCellLabel,
+    TABLE_BORDERS,
+} from "../../../../../../../../testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Exporter/DOCX/Table/table-builder";
 import { buildMilestoneTitle } from "./cover-milestone-title-builder";
 
 export async function buildCoverPage(
