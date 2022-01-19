@@ -29,7 +29,6 @@ import {
     formatArtifact,
     getArtifacts,
     getTestManagementExecution,
-    memoize,
     retrieveArtifactsStructure,
     retrieveTrackerStructure,
 } from "@tuleap/plugin-docgen-docx";
@@ -38,6 +37,7 @@ import { getTraceabilityMatrix } from "./traceability-matrix-creator";
 import { getExecutionsForCampaigns } from "./executions-for-campaigns-retriever";
 import type { GettextProvider } from "@tuleap/gettext";
 import { sprintf } from "sprintf-js";
+import { memoize } from "./memoize";
 import { buildStepDefinitionEnhancedWithResultsFunction } from "./step-test-definition-formatter";
 
 interface TrackerStructurePromiseTuple {

@@ -28,10 +28,10 @@ import {
     formatArtifact,
     getArtifacts,
     getTestManagementExecution,
-    memoize,
     retrieveArtifactsStructure,
     retrieveTrackerStructure,
 } from "@tuleap/plugin-docgen-docx";
+import { memoize } from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/memoize";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 import { getTraceabilityMatrix } from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/traceability-matrix-creator";
 import { getExecutionsForCampaigns } from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/executions-for-campaigns-retriever";
