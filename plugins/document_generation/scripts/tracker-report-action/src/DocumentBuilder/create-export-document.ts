@@ -26,11 +26,11 @@ import type {
     FormattedArtifact,
 } from "@tuleap/plugin-docgen-docx";
 import { createTraceabilityMatrix } from "./create-traceability-matrix";
+import { memoize } from "./memoize";
 import {
     formatArtifact,
     formatStepDefinitionField,
     getTestManagementExecution,
-    memoize,
 } from "@tuleap/plugin-docgen-docx";
 
 export async function createExportDocument(
