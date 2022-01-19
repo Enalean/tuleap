@@ -33,7 +33,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\HTMLOrTextCommentRepresentation;
-use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\TrackerColor;
 
@@ -41,6 +40,8 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
+
+    private const ARTIFACT_ID = 756;
 
     /** @var ArtifactRepresentationBuilder */
     private $builder;
@@ -63,65 +64,20 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         );
     }
 
+    /**
+     * @see ArtifactRepresentationTest
+     */
     public function testGetArtifactRepresentationReturnsArtifactRepresentationWithoutFields()
     {
-        $current_user = Mockery::mock(\PFUser::class);
-        $current_user->shouldReceive(
-            [
-                'getId'        => 153,
-                'getRealName'  => 'Ophelia Reckleben',
-                'getUserName'  => 'oreckleben',
-                'getName'      => 'Ophelia Reckleben',
-                'getLdapId'    => 10410,
-                'getAvatarUrl' => '',
-                'isAnonymous'  => false,
-                'isNone'       => false,
-                'hasAvatar'    => false,
-            ]
-        );
+        $current_user = UserTestBuilder::buildWithDefaults();
 
-        $tracker      = $this->buildTrackerMock();
-        $artifact     = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact     = $this->buildBasicArtifactMock();
         $submitted_by = UserTestBuilder::aUser()->withId(777)->build();
-        $artifact->shouldReceive(
-            [
-                'getId'              => 12,
-                'getTracker'         => $tracker,
-                'getSubmittedBy'     => 777,
-                'getSubmittedOn'     => 6546546554,
-                'getLastUpdateDate'  => 6546546554,
-                'getLastChangeset'   => Mockery::mock(\Tracker_Artifact_Changeset::class),
-                'getSubmittedByUser' => $submitted_by,
-                'getUri'             => '/plugins/tracker/?aid=12',
-                'getXRef'            => 'Tracker_Artifact #12',
-                'getAssignedTo'      => [$current_user],
-            ]
-        );
+        $artifact->shouldReceive('getSubmittedByUser')->andReturns($submitted_by);
 
         $representation = $this->builder->getArtifactRepresentation($current_user, $artifact);
 
-        $this->assertEquals(12, $representation->id);
-        $this->assertEquals(
-            ArtifactRepresentation::ROUTE . '/' . 12,
-            $representation->uri
-        );
-        $this->assertEquals(888, $representation->tracker->id);
-        $this->assertEquals(
-            CompleteTrackerRepresentation::ROUTE . '/' . 888,
-            $representation->tracker->uri
-        );
-        $this->assertEquals(1478, $representation->project->id);
-        $this->assertEquals('projects/1478', $representation->project->uri);
-        $this->assertEquals(777, $representation->submitted_by);
-        $this->assertEquals('2177-06-14T06:09:14+01:00', $representation->submitted_on);
-        $this->assertEquals('/plugins/tracker/?aid=12', $representation->html_url);
-        $this->assertEquals(
-            ArtifactRepresentation::ROUTE . '/' . 12 . '/' . ChangesetRepresentation::ROUTE,
-            $representation->changesets_uri
-        );
-        $this->assertEquals('Tracker_Artifact #12', $representation->xref);
-        $this->assertEquals(153, $representation->assignees[0]->id);
-        $this->assertEquals('oreckleben', $representation->assignees[0]->username);
+        $this->assertSame(self::ARTIFACT_ID, $representation->id);
     }
 
     public function testGetArtifactRepresentationWithFieldValuesWhenThereAreNoFields()
@@ -436,16 +392,17 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $artifact = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive(
             [
-                'getId'              => 756,
+                'getId'              => self::ARTIFACT_ID,
                 'getTracker'         => $tracker,
                 'getLastChangeset'   => Mockery::mock(\Tracker_Artifact_Changeset::class),
                 'getSubmittedByUser' => UserTestBuilder::aUser()->build(),
                 'getAssignedTo'      => [],
-                'getXRef'            => 'art #756',
+                'getXRef'            => 'art #' . self::ARTIFACT_ID,
                 'getSubmittedBy'     => 111,
-                'getSubmittedOn'     => 10,
-                'getUri'             => '/uri/artifact/756',
-                'getLastUpdateDate'  => 10,
+                'isOpen'             => true,
+                'getSubmittedOn'     => 6546546554,
+                'getLastUpdateDate'  => 6546546554,
+                'getUri'             => '/plugins/tracker/?aid=' . self::ARTIFACT_ID,
             ]
         );
         return $artifact;
