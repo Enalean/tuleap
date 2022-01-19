@@ -23,7 +23,7 @@ import * as report_creator from "./Reporter/report-creator";
 import type {
     ArtifactFieldValueStepDefinitionEnhancedWithResults,
     ExportDocument,
-} from "../../../../../../testmanagement/scripts/testmanagement/src/type";
+} from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/type";
 
 describe("Start download of export document", () => {
     it("generates the report and start the download of the document", async () => {
