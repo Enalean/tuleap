@@ -13,9 +13,6 @@ endif
 ifeq ($(OS),)
 	DIST=
 endif
-ifeq ($(OS),centos:6)
-	DIST=.el6
-endif
 ifeq ($(OS),centos:7)
 	DIST=.el7
 endif
@@ -38,26 +35,17 @@ build:
 	@[ -n "$(OS)" ] || (echo "*** ERROR: OS is missing" && false)
 	useradd -d /build -m builder_user
 	su --login --command "make -C /realtime/packaging rpm RELEASE=$(RELEASE) OS=$(OS)" builder_user
-	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/$(PACKAGE_NAME_VERSION)-$(RELEASE)$(DIST).noarch.rpm /output
+	find /build/rpmbuild/RPMS/ -name '*.rpm' -exec install -o $(UID) -g $(GID) -m 0644 {} /output \;
 
-rpm: clean $(RPM_TMP)/SOURCES/$(NAME).tar.gz $(RPM_TMP)/SOURCES/$(NAME).conf $(RPM_TMP)/SOURCES/$(NAME).service $(RPM_TMP)/SOURCES/$(NAME).systemd-service $(RPM_TMP)/SOURCES/logrotate.conf
+rpm: clean $(RPM_TMP)/SOURCES/$(NAME).tar.gz $(RPM_TMP)/SOURCES/$(NAME).systemd-service
 	cat $(NAME).spec | sed -e 's/@@VERSION@@/$(VERSION)/' -e 's/@@RELEASE@@/$(RELEASE)/' > $(RPM_TMP)/SPECS/$(NAME).spec
 	time rpmbuild $(RPMDEFINES) -bb $(RPM_TMP)/SPECS/$(NAME).spec
 
 $(RPM_TMP)/SOURCES/$(NAME).tar.gz: $(RPM_TMP)
-	cd $(SRCDIR) && find . \( -path '*/packaging' -o -path '*/node_modules' -o -path '*/ssl' -o -path '*/.git' -o -name '.gitignore' \) -prune -o -print | cpio -o -H ustar --quiet | gzip > $(RPM_TMP)/SOURCES/$(NAME).tar.gz
-
-$(RPM_TMP)/SOURCES/$(NAME).conf:
-	cp $(NAME).conf $@
-
-$(RPM_TMP)/SOURCES/$(NAME).service:
-	cp $(NAME).service $@
+	cd $(SRCDIR) && tar -zcvf $(RPM_TMP)/SOURCES/$(NAME).tar.gz ./config/*.json ./dist
 
 $(RPM_TMP)/SOURCES/$(NAME).systemd-service:
 	cp $(NAME).systemd-service $@
-
-$(RPM_TMP)/SOURCES/logrotate.conf:
-	cp logrotate.conf $@
 
 $(RPM_TMP):
 	@[ -d $@ ] || mkdir -p $@ $@/BUILD $@/RPMS $@/SOURCES $@/SPECS $@/SRPMS $@/TMP

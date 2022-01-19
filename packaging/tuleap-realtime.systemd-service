@@ -5,7 +5,7 @@ Description=Tuleap Realtime
 Type=simple
 Environment=NODE_ENV=production
 PIDFile=/var/run/tuleap-realtime.pid
-ExecStart=/usr/bin/node /usr/lib/node_modules/tuleap-realtime/server.js --config=/etc/tuleap-realtime/config.json
+ExecStart=/usr/lib/tuleap-realtime/tuleap-realtime --config=/etc/tuleap-realtime/config.json
 Restart=on-failure
 
 [Install]

@@ -1,11 +1,7 @@
 ARG OS
 FROM $OS
 
-RUN yum install -y epel-release && \
-    yum install -y nodejs npm make jq tar nodejs-packaging rpm-build && \
-    yum clean all && \
-    npm config --global set cafile /etc/pki/tls/certs/ca-bundle.crt && \
-    npm config --global set ca null
+RUN yum install -y epel-release && yum install -y make jq tar rpm-build
 
 VOLUME /realtime
 VOLUME /output

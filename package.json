@@ -3,6 +3,7 @@
   "name": "tuleap-realtime",
   "version": "1.9.0",
   "main": "server.js",
+  "bin": "server.js",
   "dependencies": {
     "body-parser": "1.14.1",
     "console-stamp": "0.2.6",
@@ -17,9 +18,11 @@
     "socket.io": "1.7.4"
   },
   "devDependencies": {
+    "pkg": "^5.5.2",
     "vitest": "^0.1.20"
   },
   "scripts": {
+    "build": "pkg --no-bytecode --public-packages '*' --public --output dist/tuleap-realtime --targets node16-linuxstatic-x64 package.json",
     "test": "vitest"
   }
 }

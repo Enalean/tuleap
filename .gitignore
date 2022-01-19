@@ -12,6 +12,7 @@ node_modules
 ### Tuleap realtime
 build/
 ssl/
+dist/
 
 # RPM stuff
 *.rpm

@@ -31,6 +31,7 @@ pkgs.buildEnv {
         nodeBaseBin
         pnpmCli
         pkgs.gnused
+        pkgs.glibc
     ];
 }
 
