@@ -78,7 +78,7 @@ class Docman_ItemDao extends DataAccessObject
         if (is_array($idList) && count($idList) > 0) {
             $sql_where = sprintf(' i.item_id IN (%s)', implode(', ', $idList));
         }
-        return $this->_searchWithCurrentVersion($sql_where, '', '');
+        return $this->_searchWithCurrentVersion($sql_where, '', '', [], []);
     }
 
     /**
@@ -103,7 +103,7 @@ class Docman_ItemDao extends DataAccessObject
         }
 
         $order = ' ORDER BY version_date DESC';
-        return $this->_searchWithCurrentVersion($where, '', $order);
+        return $this->_searchWithCurrentVersion($where, '', $order, [], []);
     }
 
     public function doesTitleCorrespondToExistingDocument($title, $parent_id)
@@ -156,7 +156,8 @@ class Docman_ItemDao extends DataAccessObject
     }
 
     /**
-     * Return the list of items for a given projet according to filters
+     *
+     * @psalm-param array{user?: PFUser, filter?: Docman_Report, ignore_obsolete?: bool, limit?: int, offset?: int, obsolete_only?: bool, getall?: bool, ignore_deleted?: bool, ignore_folders?: bool} $params
      *
      * @return DataAccessResult
      */
@@ -275,15 +276,12 @@ class Docman_ItemDao extends DataAccessObject
     /**
      * $params['ignore_deleted'] boolean By default the query *exclude* deleted items.
      * $params['ignore_obsolete'] boolean By default the query *include* obsolete items.
+     *
+     * @psalm-param array{user?: PFUser, filter?: Docman_Report, ignore_obsolete?: bool, limit?: int, offset?: int, obsolete_only?: bool, getall?: bool, ignore_deleted?: bool, ignore_folders?: bool} $params
      */
-    public function _searchWithCurrentVersion($where, $group = '', $order = '', $from = [], $params = [])
+    public function _searchWithCurrentVersion($where, $group, $order, $from, $params)
     {
-        $sql = '';
-        if (isset($params['only_count'])) {
-            $sql .= "SELECT count(*) AS total ";
-        } else {
-            $sql .= $this->_getItemSearchSelectStmt();
-        }
+        $sql  = $this->_getItemSearchSelectStmt();
         $sql .= $this->_getItemSearchFromStmt();
         $sql .= (count($from) > 0 ? ' LEFT JOIN ' . implode(' LEFT JOIN ', $from) : '')
             . ' WHERE 1 AND ';
@@ -742,6 +740,9 @@ class Docman_ItemDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    /**
+     * @return false|int
+     */
     public function searchRootIdForGroupId($group_id)
     {
         $sql = sprintf(
@@ -753,7 +754,7 @@ class Docman_ItemDao extends DataAccessObject
         $id  = false;
         if ($dar && $dar->valid()) {
             $row = $dar->current();
-            $id  = $row['item_id'];
+            $id  = (int) $row['item_id'];
         }
         return $id;
     }

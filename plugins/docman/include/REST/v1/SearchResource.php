@@ -152,10 +152,8 @@ final class SearchResource extends AuthenticatedResource
         );
 
         $search_representations_builder = new BuildSearchedItemRepresentationsFromSearchReport(
-            $item_dao,
             $status_mapper,
             $user_manager,
-            $permissions_manager,
             new ItemRepresentationCollectionBuilder(
                 $item_factory,
                 $permissions_manager,
