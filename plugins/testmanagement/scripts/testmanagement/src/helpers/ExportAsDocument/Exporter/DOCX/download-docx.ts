@@ -18,41 +18,111 @@
  */
 
 import { triggerBlobDownload } from "./trigger-blob-download";
-import { File, Packer } from "docx";
+import type { XmlComponent } from "docx";
+import { File, Packer, PageOrientation, Paragraph, StyleLevel } from "docx";
 import type {
     DateTimeLocaleInformation,
     ExportDocument,
-    GettextProvider,
-    GlobalExportProperties,
+    GenericGlobalExportProperties,
 } from "../../../../type";
-import { buildCoverPage } from "./cover-builder";
-import { properties } from "./document-properties";
+import {
+    HEADER_LEVEL_SECTION,
+    HEADER_STYLE_SECTION_TITLE,
+    MAIN_TITLES_NUMBERING_ID,
+    properties,
+} from "./document-properties";
+import { buildMilestoneBacklog } from "./backlog-builder";
+import { buildFooter, buildHeader } from "./header-footer";
+import { TableOfContentsPrefilled } from "./TableOfContents/table-of-contents";
+import type { ArtifactFieldValueStepDefinitionEnhancedWithResults } from "../../../../type";
+import { buildTraceabilityMatrix } from "./matrix-builder";
+import { buildMilestoneTestPlan } from "./testplan-builder";
+import type { GettextProvider } from "@tuleap/gettext";
 
 export async function downloadDocx(
-    document: ExportDocument,
-    gettextCatalog: GettextProvider,
-    global_export_properties: GlobalExportProperties,
-    datetime_locale_information: DateTimeLocaleInformation
+    document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
+    gettext_provider: GettextProvider,
+    global_export_properties: GenericGlobalExportProperties,
+    datetime_locale_information: DateTimeLocaleInformation,
+    buildCoverPage: (exported_formatted_date: string) => Promise<ReadonlyArray<XmlComponent>>
 ): Promise<void> {
     const exported_formatted_date = new Date().toLocaleDateString(
         datetime_locale_information.locale,
         { timeZone: datetime_locale_information.timezone }
     );
 
+    const footers = {
+        default: buildFooter(gettext_provider, global_export_properties, exported_formatted_date),
+    };
+
+    const headers = {
+        default: buildHeader(global_export_properties, document.name),
+    };
+
     const file = new File({
         ...properties,
         sections: [
             {
-                children: [
-                    ...(await buildCoverPage(
-                        gettextCatalog,
-                        global_export_properties,
-                        exported_formatted_date
-                    )),
-                ],
+                children: [...(await buildCoverPage(exported_formatted_date))],
                 properties: {
                     titlePage: true,
                 },
+            },
+            {
+                headers,
+                children: [
+                    new Paragraph({
+                        text: gettext_provider.gettext("Table of contents"),
+                        heading: HEADER_LEVEL_SECTION,
+                        numbering: {
+                            reference: MAIN_TITLES_NUMBERING_ID,
+                            level: 0,
+                        },
+                    }),
+                    new TableOfContentsPrefilled(gettext_provider, global_export_properties, {
+                        hyperlink: true,
+                        stylesWithLevels: [
+                            new StyleLevel(
+                                HEADER_STYLE_SECTION_TITLE,
+                                Number(HEADER_STYLE_SECTION_TITLE.substr(-1))
+                            ),
+                        ],
+                    }),
+                ],
+            },
+            {
+                headers,
+                children: [...buildTraceabilityMatrix(document, gettext_provider)],
+                footers,
+                properties: {
+                    page: {
+                        size: {
+                            orientation: PageOrientation.LANDSCAPE,
+                        },
+                    },
+                },
+            },
+            {
+                headers,
+                children: [
+                    ...(await buildMilestoneBacklog(
+                        document,
+                        gettext_provider,
+                        global_export_properties
+                    )),
+                ],
+                footers,
+            },
+            {
+                headers,
+                children: [
+                    ...(await buildMilestoneTestPlan(
+                        document,
+                        gettext_provider,
+                        global_export_properties
+                    )),
+                ],
+                footers,
             },
         ],
     });

@@ -25,9 +25,9 @@ import type {
     TestExecutionResponse,
 } from "@tuleap/plugin-docgen-docx";
 import type {
-    ArtifactFieldValueStepDefinitionEnhancedWithResults,
     ExecutionsForCampaignMap,
-} from "../../../type";
+    ArtifactFieldValueStepDefinitionEnhancedWithResults,
+} from "../../../../../../../testmanagement/scripts/testmanagement/src/type";
 
 export function buildStepDefinitionFunction(): TransformStepDefFieldValue<ArtifactFieldValueStepDefinitionEnhancedWithResults> {
     return (

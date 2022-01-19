@@ -205,7 +205,7 @@ export default class ExportButton extends Vue {
                 /* webpackChunkName: "testplan-download-export-doc" */ "../../helpers/ExportAsDocument/download-export-document"
             );
             const { downloadDocx } = await import(
-                /* webpackChunkName: "testplan-download-docx-export-doc" */ "../../helpers/ExportAsDocument/Exporter/DOCX/download-docx"
+                /* webpackChunkName: "testplan-download-docx-export-doc" */ "../../../../../../testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Exporter/DOCX/download-docx"
             );
             await downloadExportDocument(
                 {
@@ -215,6 +215,7 @@ export default class ExportButton extends Vue {
                     user_display_name: this.user_display_name,
                     user_timezone: this.user_timezone,
                     user_locale: this.user_locale,
+                    title: this.milestone_title,
                     milestone_name: this.milestone_title,
                     parent_milestone_name: this.parent_milestone_title,
                     milestone_url: this.milestone_url,

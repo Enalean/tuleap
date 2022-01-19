@@ -18,19 +18,19 @@
  */
 
 import { buildMilestoneBacklog } from "./backlog-builder";
-import type { VueGettextProvider } from "../../../vue-gettext-provider";
-import { createVueGettextProviderPassthrough } from "../../../vue-gettext-provider-for-test";
 import type { IContext } from "docx";
 import type {
     ExportDocument,
-    GlobalExportProperties,
+    GenericGlobalExportProperties,
     ArtifactFieldValueStepDefinitionEnhancedWithResults,
 } from "../../../../type";
 import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx";
+import type { GettextProvider } from "@tuleap/gettext";
+import { createGettextProviderPassthrough } from "../../../create-gettext-provider-passthrough-for-tests";
 
 describe("buildMilestoneBacklog", () => {
-    let global_export_properties: GlobalExportProperties;
-    let gettext_provider: VueGettextProvider;
+    let global_export_properties: GenericGlobalExportProperties;
+    let gettext_provider: GettextProvider;
 
     beforeEach(() => {
         global_export_properties = {
@@ -40,15 +40,13 @@ describe("buildMilestoneBacklog", () => {
             user_display_name: "Jean Dupont",
             user_timezone: "UTC",
             user_locale: "en_US",
-            milestone_name: "Tuleap 13.3",
-            parent_milestone_name: "",
-            milestone_url: "/path/to/13.3",
+            title: "Tuleap 13.3",
             base_url: "http://example.com",
             artifact_links_types: [],
             testdefinition_tracker_id: 10,
         };
 
-        gettext_provider = createVueGettextProviderPassthrough();
+        gettext_provider = createGettextProviderPassthrough();
     });
 
     it("should indicate that there is nothing in the backlog", async () => {
@@ -66,7 +64,7 @@ describe("buildMilestoneBacklog", () => {
         );
 
         const tree = backlog[1].prepForXml({} as IContext);
-        expect(JSON.stringify(tree)).toContain("There is no backlog item");
+        expect(JSON.stringify(tree)).toContain("There are no items.");
     });
 
     it("should display each backlog item", async () => {

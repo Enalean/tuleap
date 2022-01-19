@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { properties } from "./document-properties";
+import type { GettextProvider } from "@tuleap/gettext";
 
-describe("document-properties", () => {
-    it("Allows TOC to be refreshed", () => {
-        expect(properties.features?.updateFields).toBe(true);
-    });
-});
+export function createGettextProviderPassthrough(): GettextProvider {
+    return {
+        gettext: (str: string): string => str,
+    };
+}

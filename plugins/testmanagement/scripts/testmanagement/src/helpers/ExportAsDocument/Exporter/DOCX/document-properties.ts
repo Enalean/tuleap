@@ -17,10 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { IPropertiesOptions } from "docx/build/file/core-properties";
-import { AlignmentType, convertInchesToTwip, HeadingLevel } from "docx";
+import { AlignmentType, convertInchesToTwip, HeadingLevel, LevelFormat } from "docx";
+import { HTML_ORDERED_LIST_NUMBERING, HTML_UNORDERED_LIST_NUMBERING } from "./html-styles";
 
-const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
-const HEADER_LEVEL_ARTIFACT_TITLE = HeadingLevel.HEADING_2;
+export const MAIN_TITLES_NUMBERING_ID = "main-titles";
+export const HEADER_STYLE_SECTION_TITLE = "SectionTitle";
+export const HEADER_LEVEL_SECTION = HeadingLevel.HEADING_1;
+export const HEADER_LEVEL_SECTION_TITLE = HeadingLevel.HEADING_2;
+export const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
+export const HEADER_LEVEL_ARTIFACT_TITLE = HeadingLevel.HEADING_2;
 
 export const properties: Omit<IPropertiesOptions, "sections"> = {
     features: {
@@ -60,6 +65,13 @@ export const properties: Omit<IPropertiesOptions, "sections"> = {
                         after: convertInchesToTwip(0.75),
                     },
                 },
+            },
+            {
+                id: HEADER_STYLE_SECTION_TITLE,
+                name: HEADER_STYLE_SECTION_TITLE,
+                basedOn: HEADER_LEVEL_SECTION_TITLE,
+                next: HEADER_LEVEL_SECTION_TITLE,
+                quickFormat: true,
             },
             {
                 id: HEADER_STYLE_ARTIFACT_TITLE,
@@ -123,6 +135,23 @@ export const properties: Omit<IPropertiesOptions, "sections"> = {
                     alignment: AlignmentType.LEFT,
                 },
             },
+        ],
+    },
+    numbering: {
+        config: [
+            {
+                reference: MAIN_TITLES_NUMBERING_ID,
+                levels: [
+                    {
+                        level: 0,
+                        format: LevelFormat.DECIMAL,
+                        alignment: AlignmentType.START,
+                        text: "%1.",
+                    },
+                ],
+            },
+            HTML_UNORDERED_LIST_NUMBERING,
+            HTML_ORDERED_LIST_NUMBERING,
         ],
     },
 };

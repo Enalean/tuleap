@@ -12,12 +12,6 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "%{ milestone_title } backlog"
-msgstr "Backlog de %{ milestone_title }"
-
-msgid "%{ milestone_title } tests"
-msgstr "Tests de %{ milestone_title }"
-
 msgid "%{ nb } blocked"
 msgid_plural "%{ nb } blocked"
 msgstr[0] "%{ nb } bloqué"
@@ -71,18 +65,6 @@ msgstr ""
 "Une erreur est survenue lors de la récupération des informations de la "
 "nouvelle campagne."
 
-msgid "Artifact ID"
-msgstr "Artéfact ID"
-
-msgid "Artifacts referenced by “%s”"
-msgstr "Les artéfacts qui sont référencés par “%s”"
-
-msgid "Artifacts that reference “%s”"
-msgstr "Les artéfacts qui référencent “%s”"
-
-msgid "Attachments"
-msgstr "Attachements"
-
 msgid "Blocked"
 msgstr "Bloqué"
 
@@ -92,17 +74,11 @@ msgstr "ID de la campagne"
 msgid "Campaign Name"
 msgstr "Nom de la campagne"
 
-msgid "Campaigns"
-msgstr "Campagnes"
-
 msgid "Cancel"
 msgstr "Annuler"
 
 msgid "Close"
 msgstr "Fermer"
-
-msgid "Comment"
-msgstr "Commentaire"
 
 msgid "Create a new test"
 msgstr "Créer un nouveau test"
@@ -113,20 +89,8 @@ msgstr "Créer la campagne"
 msgid "Create new campaign"
 msgstr "Créer une nouvelle campagne"
 
-msgid "Description"
-msgstr "Description"
-
 msgid "Edit %{ item_type } #%{ item_id }"
 msgstr "Éditer %{ item_type } #%{ item_id }"
-
-msgid "Executed By"
-msgstr "Executé par"
-
-msgid "Executed On"
-msgstr "Executé le"
-
-msgid "Expected results"
-msgstr "Résultats attendus"
 
 msgid "Export"
 msgstr "Exporter"
@@ -142,9 +106,6 @@ msgstr "Exporté par"
 
 msgid "Exported on"
 msgstr "Exporté le"
-
-msgid "Exported on %{ date } by %{ user }"
-msgstr "Exporté le %{ date } par %{ user }"
 
 msgid "Failed"
 msgstr "Échoué"
@@ -167,12 +128,6 @@ msgid "Justifications (for planned tests that are not-run, failed, blocked)"
 msgstr ""
 "Justifications (pour les tests planifiés qui sont non exécutés, échoués ou "
 "bloqués)"
-
-msgid "Link type"
-msgstr "Type de lien"
-
-msgid "Linked bugs"
-msgstr "Bugs liés"
 
 msgid "Milestone"
 msgstr "Jalon"
@@ -216,29 +171,8 @@ msgstr "Rapport extrait le"
 msgid "Requirements"
 msgstr "Exigences"
 
-msgid "Results"
-msgstr "Résultats"
-
-msgid "Status"
-msgstr "Statut"
-
-msgid "Status: %s"
-msgstr "Statut : %s"
-
-msgid "Step"
-msgstr "Étape"
-
-msgid "Step %d"
-msgstr "Étape %d"
-
-msgid "Table of contents"
-msgstr "Table des matières"
-
 msgid "Test Report %{ milestone_title }"
 msgstr "Rapport de test %{ milestone_title }"
-
-msgid "Test Results"
-msgstr "Résultats des tests"
 
 msgid "Test Results (planned tests)"
 msgstr "Résultats des tests (tests planifiés)"
@@ -283,17 +217,11 @@ msgstr ""
 "La récupération des rapports de l'outil de suivi de définition de test a "
 "échoué, veuillez réessayer plus tard"
 
-msgid "There are no tests planned in the milestone."
-msgstr "Il n'y a aucun tests planifiés dans le jalon."
-
 msgid "There is no backlog item yet"
 msgstr "Il n'y a pas d'élément dans le backlog"
 
 msgid "There is no test campaign yet"
 msgstr "Il n'y a pas de campagne de test"
-
-msgid "There isn't any requirements to put in the traceability matrix."
-msgstr "Il n'y a aucune exigences pour la matrice de traçabilité."
 
 msgid "This item isn't covered yet"
 msgstr "Cet élément n'est pas encore couvert"
@@ -306,9 +234,6 @@ msgstr ""
 
 msgid "Title"
 msgstr "Titre"
-
-msgid "Traceability matrix"
-msgstr "Matrice de traçabilité"
 
 msgid "Type"
 msgstr "Type"

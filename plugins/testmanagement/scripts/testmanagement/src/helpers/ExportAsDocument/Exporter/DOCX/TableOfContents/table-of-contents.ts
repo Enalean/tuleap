@@ -35,12 +35,12 @@ import {
     XmlComponent,
 } from "docx";
 import { TOCFieldInstruction } from "./toc-field-instruction";
-import type { VueGettextProvider } from "../../../../vue-gettext-provider";
-import type { GlobalExportProperties } from "../../../../../type";
+import type { GenericGlobalExportProperties } from "../../../../../type";
 import { getMilestoneBacklogTitle } from "../backlog-builder";
 import { ComplexFieldCharacter } from "../base-elements";
 import { getTraceabilityMatrixTitle } from "../matrix-builder";
 import { getMilestoneTestPlanTitle } from "../testplan-builder";
+import type { GettextProvider } from "@tuleap/gettext";
 
 class AliasAttributes extends XmlAttributeComponent<{ readonly alias: string }> {
     protected override readonly xmlKeys = { alias: "w:val" };
@@ -55,8 +55,8 @@ class Alias extends XmlComponent {
 
 export class TableOfContentsPrefilled extends XmlComponent {
     public constructor(
-        gettext_provider: VueGettextProvider,
-        global_export_properties: GlobalExportProperties,
+        gettext_provider: GettextProvider,
+        global_export_properties: GenericGlobalExportProperties,
         properties?: ITableOfContentsOptions
     ) {
         super("w:sdt");
@@ -111,8 +111,8 @@ export class TableOfContentsPrefilled extends XmlComponent {
     }
 
     private buildPrefilledTOC(
-        gettext_provider: VueGettextProvider,
-        global_export_properties: GlobalExportProperties
+        gettext_provider: GettextProvider,
+        global_export_properties: GenericGlobalExportProperties
     ): ReadonlyArray<Paragraph> {
         const links_to_content = [];
 

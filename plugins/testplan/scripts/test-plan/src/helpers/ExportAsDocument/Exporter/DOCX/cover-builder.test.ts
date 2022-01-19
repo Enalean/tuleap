@@ -43,6 +43,7 @@ describe("cover-builder", () => {
                 user_display_name: "Jean Dupont",
                 user_timezone: "UTC",
                 user_locale: "en_US",
+                title: "Tuleap 13.3",
                 milestone_name: "Tuleap 13.3",
                 parent_milestone_name: "",
                 milestone_url: "/path/to/13.3",

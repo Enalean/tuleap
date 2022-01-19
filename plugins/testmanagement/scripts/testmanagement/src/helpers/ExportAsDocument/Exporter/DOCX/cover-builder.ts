@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GettextProvider, GlobalExportProperties } from "../../../../type";
+import type { GlobalExportProperties } from "../../../../type";
 import type { XmlComponent } from "docx";
 import {
     AlignmentType,
@@ -33,9 +33,10 @@ import {
 } from "docx";
 import { loadImage } from "@tuleap/plugin-docgen-docx";
 import { buildTableCellContent, buildTableCellLabel, TABLE_BORDERS } from "./Table/table-builder";
+import type { GettextProvider } from "@tuleap/gettext";
 
 export async function buildCoverPage(
-    gettextCatalog: GettextProvider,
+    gettext_provider: GettextProvider,
     global_export_properties: GlobalExportProperties,
     exported_formatted_date: string
 ): Promise<ReadonlyArray<XmlComponent>> {
@@ -62,7 +63,7 @@ export async function buildCoverPage(
             style: "title_separator",
         }),
         buildCoverTable(
-            gettextCatalog,
+            gettext_provider,
             platform_name,
             project_name,
             campaign_name,
@@ -75,7 +76,7 @@ export async function buildCoverPage(
 }
 
 function buildCoverTable(
-    gettextCatalog: GettextProvider,
+    gettext_provider: GettextProvider,
     platform_name: string,
     project_name: string,
     campaign_name: string,
@@ -92,16 +93,16 @@ function buildCoverTable(
         columnWidths: [2000, 7638],
         layout: TableLayoutType.FIXED,
         rows: [
-            buildCoverTableRow(gettextCatalog.getString("Platform"), new TextRun(platform_name)),
-            buildCoverTableRow(gettextCatalog.getString("Project"), new TextRun(project_name)),
-            buildCoverTableRow(gettextCatalog.getString("Campaign"), new TextRun(campaign_name)),
-            buildCoverTableRow(gettextCatalog.getString("Exported by"), new TextRun(user_name)),
+            buildCoverTableRow(gettext_provider.gettext("Platform"), new TextRun(platform_name)),
+            buildCoverTableRow(gettext_provider.gettext("Project"), new TextRun(project_name)),
+            buildCoverTableRow(gettext_provider.gettext("Campaign"), new TextRun(campaign_name)),
+            buildCoverTableRow(gettext_provider.gettext("Exported by"), new TextRun(user_name)),
             buildCoverTableRow(
-                gettextCatalog.getString("Exported on"),
+                gettext_provider.gettext("Exported on"),
                 new TextRun(exported_formatted_date)
             ),
             buildCoverTableRow(
-                gettextCatalog.getString("Campaign URL"),
+                gettext_provider.gettext("Campaign URL"),
                 new ExternalHyperlink({
                     children: [
                         new TextRun({

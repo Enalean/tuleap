@@ -19,7 +19,10 @@
 
 import type { ExternalHyperlink, InternalHyperlink, TextRun } from "docx";
 import { BorderStyle, Paragraph, ShadingType, TableCell } from "docx";
-import { TABLE_MARGINS } from "@tuleap/plugin-docgen-docx";
+import { getInternationalizedTestStatus } from "../internationalize-test-status";
+import type { ArtifactFieldValueStatus } from "@tuleap/plugin-docgen-docx";
+import { buildCellContentStatus, TABLE_MARGINS } from "@tuleap/plugin-docgen-docx";
+import type { GettextProvider } from "@tuleap/gettext";
 
 export const TABLE_BORDERS = {
     top: {
@@ -86,3 +89,15 @@ export function buildTableCellContent(
         margins: TABLE_MARGINS,
     });
 }
+
+export const buildCellContentResult = (
+    status: ArtifactFieldValueStatus,
+    gettext_provider: GettextProvider,
+    row_span: number
+): TableCell => {
+    return buildCellContentStatus(
+        status,
+        (status) => getInternationalizedTestStatus(gettext_provider, status),
+        row_span
+    );
+};

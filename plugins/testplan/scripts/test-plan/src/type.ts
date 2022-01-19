@@ -17,15 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    ArtifactFieldValueStatus,
-    ArtifactFieldValueStepDefinitionEnhanced,
-    ArtifactLinkType,
-    FormattedArtifact,
-    TestExecutionResponse,
-} from "@tuleap/plugin-docgen-docx";
-import type { TestExecutionAttachment } from "@tuleap/plugin-docgen-docx";
-import type { TestExecutionLinkedBug } from "@tuleap/plugin-docgen-docx";
+import type { GenericGlobalExportProperties } from "../../../../testmanagement/scripts/testmanagement/src/type";
 
 export interface Campaign {
     readonly id: number;
@@ -100,68 +92,8 @@ interface TestDefinitionRefreshInformation {
 
 export type TestDefinition = TestDefinitionFromREST & TestDefinitionRefreshInformation;
 
-export interface TraceabilityMatrixRequirement {
-    readonly id: number;
-    readonly title: string;
-}
-
-export interface TraceabilityMatrixTest {
-    readonly id: number;
-    readonly title: string;
-    readonly campaign: string;
-    readonly status: ArtifactFieldValueStatus;
-    readonly executed_by: string | null;
-    readonly executed_on: string | null;
-    readonly executed_on_date: Date | null;
-}
-
-export interface TraceabilityMatrixElement {
-    readonly requirement: TraceabilityMatrixRequirement;
-    readonly tests: Map<number, TraceabilityMatrixTest>;
-}
-
-export interface ArtifactFieldValueStepDefinitionEnhancedWithResults {
-    readonly field_name: string;
-    readonly content_length: "blockttmstepdef" | "blockttmstepdefenhanced";
-    readonly value_type: "string";
-    readonly steps: Array<ArtifactFieldValueStepDefinitionEnhanced>;
-    readonly status: ArtifactFieldValueStatus;
-    readonly result: string;
-    readonly attachments: ReadonlyArray<TestExecutionAttachment>;
-    readonly linked_bugs: ReadonlyArray<TestExecutionLinkedBug & { readonly html_url: string }>;
-}
-
-export interface ExportDocument<StepDefFieldValue> {
-    readonly name: string;
-    readonly backlog: ReadonlyArray<FormattedArtifact<StepDefFieldValue>>;
-    readonly tests: ReadonlyArray<FormattedArtifact<StepDefFieldValue>>;
-    readonly traceability_matrix: ReadonlyArray<TraceabilityMatrixElement>;
-}
-
-export interface GlobalExportProperties {
-    readonly platform_name: string;
-    readonly platform_logo_url: string;
-    readonly project_name: string;
-    readonly user_display_name: string;
-    readonly user_timezone: string;
-    readonly user_locale: string;
+export interface GlobalExportProperties extends GenericGlobalExportProperties {
     readonly milestone_name: string;
     readonly parent_milestone_name: string;
     readonly milestone_url: string;
-    readonly base_url: string;
-    readonly artifact_links_types: ReadonlyArray<ArtifactLinkType>;
-    readonly testdefinition_tracker_id: number | null;
 }
-
-export interface DateTimeLocaleInformation {
-    readonly locale: string;
-    readonly timezone: string;
-}
-
-export type ExecutionsForCampaignMap = Map<
-    number,
-    {
-        campaign: Campaign;
-        executions: ReadonlyArray<TestExecutionResponse>;
-    }
->;

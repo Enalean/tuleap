@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createVueGettextProviderPassthrough } from "../../../vue-gettext-provider-for-test";
 import { buildTraceabilityMatrix } from "./matrix-builder";
 import type { IContext } from "docx";
+import { createGettextProviderPassthrough } from "../../../create-gettext-provider-passthrough-for-tests";
 
 describe("matrix-builder", () => {
     describe("buildTraceabilityMatrix", () => {
         it("should display requirement in a table", () => {
-            const gettext_provider = createVueGettextProviderPassthrough();
+            const gettext_provider = createGettextProviderPassthrough();
 
             const section = buildTraceabilityMatrix(
                 {
@@ -83,7 +83,7 @@ describe("matrix-builder", () => {
         });
 
         it("should not display a table if there isn't any requirements", () => {
-            const gettext_provider = createVueGettextProviderPassthrough();
+            const gettext_provider = createGettextProviderPassthrough();
 
             const section = buildTraceabilityMatrix(
                 {

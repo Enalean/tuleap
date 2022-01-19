@@ -29,7 +29,7 @@ import type {
     FormattedArtifact,
     TestExecutionResponse,
 } from "@tuleap/plugin-docgen-docx";
-import * as querier from "./execution-querier";
+import * as querier from "../../../../../../../testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/execution-querier";
 import type { ArtifactFieldValueStepDefinitionContent } from "@tuleap/plugin-docgen-docx";
 
 describe("Create an export report", () => {
@@ -136,6 +136,7 @@ describe("Create an export report", () => {
                 user_display_name: "Jean Dupont",
                 user_timezone: "UTC",
                 user_locale: "en_US",
+                title: "Tuleap 13.3",
                 milestone_name: "Tuleap 13.3",
                 parent_milestone_name: "",
                 milestone_url: "/path/to/13.3",

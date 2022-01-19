@@ -21,9 +21,9 @@ import { createVueGettextProviderPassthrough } from "../vue-gettext-provider-for
 import { downloadExportDocument } from "./download-export-document";
 import * as report_creator from "./Reporter/report-creator";
 import type {
-    ExportDocument,
     ArtifactFieldValueStepDefinitionEnhancedWithResults,
-} from "../../type";
+    ExportDocument,
+} from "../../../../../../testmanagement/scripts/testmanagement/src/type";
 
 describe("Start download of export document", () => {
     it("generates the report and start the download of the document", async () => {
@@ -45,6 +45,7 @@ describe("Start download of export document", () => {
                 user_display_name: "Jean Dupont",
                 user_timezone: "UTC",
                 user_locale: "en_US",
+                title: "Tuleap 13.3",
                 milestone_name: "Tuleap 13.3",
                 parent_milestone_name: "",
                 milestone_url: "/path/to/13.3",

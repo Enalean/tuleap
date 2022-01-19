@@ -63,7 +63,6 @@ export default function controller(
         try {
             await downloadCampaignAsDocx(
                 ExecutionService.campaign,
-                gettextCatalog,
                 SharedPropertiesService.getPlatformName(),
                 SharedPropertiesService.getPlatformLogoUrl(),
                 SharedPropertiesService.getProjectName(),

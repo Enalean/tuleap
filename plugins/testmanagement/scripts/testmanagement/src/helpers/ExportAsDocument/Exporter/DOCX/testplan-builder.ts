@@ -17,10 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import type {
     ExportDocument,
-    GlobalExportProperties,
+    GenericGlobalExportProperties,
     ArtifactFieldValueStepDefinitionEnhancedWithResults,
 } from "../../../../type";
 import type { Table } from "docx";
@@ -34,24 +33,25 @@ import {
 } from "./document-properties";
 import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx/src";
 import { buildListOfArtifactsContent } from "./build-list-of-artifacts-content";
+import type { GettextProvider } from "@tuleap/gettext";
+import { sprintf } from "sprintf-js";
 
 export function getMilestoneTestPlanTitle(
-    gettext_provider: VueGettextProvider,
-    global_export_properties: GlobalExportProperties
+    gettext_provider: GettextProvider,
+    global_export_properties: GenericGlobalExportProperties
 ): { id: string; text: string } {
     return {
         id: "testplan",
-        text: gettext_provider.$gettextInterpolate(
-            gettext_provider.$gettext("%{ milestone_title } tests"),
-            { milestone_title: global_export_properties.milestone_name }
-        ),
+        text: sprintf(gettext_provider.gettext("%(title)s tests"), {
+            title: global_export_properties.title,
+        }),
     };
 }
 
 export async function buildMilestoneTestPlan(
     document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
-    gettext_provider: VueGettextProvider,
-    global_export_properties: GlobalExportProperties
+    gettext_provider: GettextProvider,
+    global_export_properties: GenericGlobalExportProperties
 ): Promise<(Paragraph | Table)[]> {
     const title = getMilestoneTestPlanTitle(gettext_provider, global_export_properties);
 
@@ -71,12 +71,7 @@ export async function buildMilestoneTestPlan(
     });
 
     if (document.tests.length === 0) {
-        return [
-            section_title,
-            new Paragraph(
-                gettext_provider.$gettext("There are no tests planned in the milestone.")
-            ),
-        ];
+        return [section_title, new Paragraph(gettext_provider.gettext("There are no tests."))];
     }
 
     return [section_title, ...(await buildTestPlanSection(document.tests, gettext_provider))];
@@ -84,7 +79,7 @@ export async function buildMilestoneTestPlan(
 
 function buildTestPlanSection(
     tests: ReadonlyArray<FormattedArtifact<ArtifactFieldValueStepDefinitionEnhancedWithResults>>,
-    gettext_provider: VueGettextProvider
+    gettext_provider: GettextProvider
 ): Promise<(Paragraph | Table)[]> {
     return buildListOfArtifactsContent(
         gettext_provider,

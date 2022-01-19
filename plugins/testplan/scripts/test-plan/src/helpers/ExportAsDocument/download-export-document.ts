@@ -18,19 +18,27 @@
  */
 
 import { createExportReport } from "./Reporter/report-creator";
-import type { Campaign, ExportDocument, GlobalExportProperties } from "../../type";
+import type { BacklogItem, Campaign, GlobalExportProperties } from "../../type";
 import type { VueGettextProvider } from "../vue-gettext-provider";
-import type { DateTimeLocaleInformation } from "../../type";
-import type { BacklogItem, ArtifactFieldValueStepDefinitionEnhancedWithResults } from "../../type";
+import type {
+    ArtifactFieldValueStepDefinitionEnhancedWithResults,
+    DateTimeLocaleInformation,
+    ExportDocument,
+} from "../../../../../../testmanagement/scripts/testmanagement/src/type";
+import { initGettextForDocumentExport } from "../../../../../../testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/init-gettext-for-document-export";
+import { buildCoverPage } from "./Exporter/DOCX/cover-builder";
+import type { XmlComponent } from "docx";
+import type { GettextProvider } from "@tuleap/gettext";
 
 export async function downloadExportDocument(
     global_export_properties: GlobalExportProperties,
     gettext_provider: VueGettextProvider,
     download_document: (
         document: ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>,
-        gettext_provider: VueGettextProvider,
+        gettext_provider: GettextProvider,
         global_export_properties: GlobalExportProperties,
-        datetime_locale_information: DateTimeLocaleInformation
+        datetime_locale_information: DateTimeLocaleInformation,
+        buildCoverPage: (exported_formatted_date: string) => Promise<ReadonlyArray<XmlComponent>>
     ) => void,
     backlog_items: ReadonlyArray<BacklogItem>,
     campaigns: ReadonlyArray<Campaign>
@@ -50,8 +58,10 @@ export async function downloadExportDocument(
 
     download_document(
         report,
-        gettext_provider,
+        initGettextForDocumentExport(global_export_properties.user_locale),
         global_export_properties,
-        datetime_locale_information
+        datetime_locale_information,
+        (exported_formatted_date: string): Promise<ReadonlyArray<XmlComponent>> =>
+            buildCoverPage(gettext_provider, global_export_properties, exported_formatted_date)
     );
 }

@@ -20,13 +20,13 @@
 import { TableOfContentsPrefilled } from "./table-of-contents";
 import type { IContext } from "docx";
 import { TOC_WITH_CONTENT } from "./table-of-contents-test-samples";
-import type { GlobalExportProperties } from "../../../../../type";
-import type { VueGettextProvider } from "../../../../vue-gettext-provider";
-import { createVueGettextProviderPassthrough } from "../../../../vue-gettext-provider-for-test";
+import type { GenericGlobalExportProperties } from "../../../../../type";
+import type { GettextProvider } from "@tuleap/gettext";
+import { createGettextProviderPassthrough } from "../../../../create-gettext-provider-passthrough-for-tests";
 
 describe("Table of contents", () => {
-    let global_export_properties: GlobalExportProperties;
-    let gettext_provider: VueGettextProvider;
+    let global_export_properties: GenericGlobalExportProperties;
+    let gettext_provider: GettextProvider;
 
     beforeEach(() => {
         global_export_properties = {
@@ -36,15 +36,13 @@ describe("Table of contents", () => {
             user_display_name: "Jean Dupont",
             user_timezone: "UTC",
             user_locale: "en_US",
-            milestone_name: "Tuleap 13.3",
-            parent_milestone_name: "",
-            milestone_url: "/path/to/13.3",
+            title: "Tuleap 13.3",
             base_url: "https://example.com",
             artifact_links_types: [],
             testdefinition_tracker_id: 10,
         };
 
-        gettext_provider = createVueGettextProviderPassthrough();
+        gettext_provider = createGettextProviderPassthrough();
     });
 
     it("builds a TOC prefilled with main sections", () => {

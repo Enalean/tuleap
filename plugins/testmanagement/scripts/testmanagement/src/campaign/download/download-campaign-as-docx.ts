@@ -17,11 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Campaign, GettextProvider } from "../../type";
+import type { Campaign } from "../../type";
 
 export async function downloadCampaignAsDocx(
     campaign: Campaign,
-    gettext_provider: GettextProvider,
     platform_name: string,
     platform_logo_url: string,
     project_name: string,
@@ -47,13 +46,15 @@ export async function downloadCampaignAsDocx(
             user_display_name,
             user_timezone,
             user_locale,
+            title: campaign.label,
             campaign_name: campaign.label,
             campaign_url:
                 base_url.replace(/\/$/, "") +
                 `/plugins/testmanagement/?group_id=${project_id}#!/campaigns/${campaign.id}`,
             base_url,
+            artifact_links_types: [],
+            testdefinition_tracker_id: null,
         },
-        gettext_provider,
         downloadDocx,
         campaign
     );

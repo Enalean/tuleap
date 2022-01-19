@@ -17,20 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createVueGettextProviderPassthrough } from "../../../vue-gettext-provider-for-test";
 import type { IContext } from "docx";
 import { buildMilestoneTestPlan } from "./testplan-builder";
 import type {
-    GlobalExportProperties,
+    GenericGlobalExportProperties,
     ArtifactFieldValueStepDefinitionEnhancedWithResults,
 } from "../../../../type";
-import type { VueGettextProvider } from "../../../vue-gettext-provider";
 import type { ExportDocument } from "../../../../type";
 import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx/src";
+import type { GettextProvider } from "@tuleap/gettext";
+import { createGettextProviderPassthrough } from "../../../create-gettext-provider-passthrough-for-tests";
 
 describe("buildMilestoneTestPlan", () => {
-    let global_export_properties: GlobalExportProperties;
-    let gettext_provider: VueGettextProvider;
+    let global_export_properties: GenericGlobalExportProperties;
+    let gettext_provider: GettextProvider;
 
     beforeEach(() => {
         global_export_properties = {
@@ -40,15 +40,13 @@ describe("buildMilestoneTestPlan", () => {
             user_display_name: "Jean Dupont",
             user_timezone: "UTC",
             user_locale: "en_US",
-            milestone_name: "Tuleap 13.3",
-            parent_milestone_name: "",
-            milestone_url: "/path/to/13.3",
+            title: "Tuleap 13.3",
             base_url: "http://example.com",
             artifact_links_types: [],
             testdefinition_tracker_id: 10,
         };
 
-        gettext_provider = createVueGettextProviderPassthrough();
+        gettext_provider = createGettextProviderPassthrough();
     });
 
     it("should display a message if there is no tests", async () => {
@@ -64,7 +62,7 @@ describe("buildMilestoneTestPlan", () => {
         );
 
         const tree = section[1].prepForXml({} as IContext);
-        expect(JSON.stringify(tree)).toContain("There are no tests planned in the milestone.");
+        expect(JSON.stringify(tree)).toContain("There are no tests.");
     });
 
     it("should display each test", async () => {

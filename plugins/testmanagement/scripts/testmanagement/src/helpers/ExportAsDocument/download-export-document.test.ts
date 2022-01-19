@@ -20,18 +20,17 @@
 import { downloadExportDocument } from "./download-export-document";
 import * as report_creator from "./Reporter/report-creator";
 import type { ExportDocument, Campaign } from "../../type";
+import type { ArtifactFieldValueStepDefinitionEnhancedWithResults } from "../../type";
 
 describe("Start download of export document", () => {
     it("generates the report and start the download of the document", async () => {
-        const gettextCatalog = {
-            getString: jest.fn(),
-        };
-
         const download_document = jest.fn();
 
         const create_export_report = jest
             .spyOn(report_creator, "createExportReport")
-            .mockReturnValue({} as ExportDocument);
+            .mockResolvedValue(
+                {} as ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>
+            );
 
         await downloadExportDocument(
             {
@@ -41,11 +40,13 @@ describe("Start download of export document", () => {
                 user_display_name: "Jean Dupont",
                 user_timezone: "UTC",
                 user_locale: "en_US",
-                campaign_name: "Tuleap 13.3",
-                campaign_url: "/path/to/13.3",
+                title: "Tuleap 13.5",
+                campaign_name: "Tuleap 13.5",
+                campaign_url: "/path/to/13.5",
                 base_url: "https://example.com",
+                artifact_links_types: [],
+                testdefinition_tracker_id: null,
             },
-            gettextCatalog,
             download_document,
             { label: "Tuleap 13.5" } as Campaign
         );

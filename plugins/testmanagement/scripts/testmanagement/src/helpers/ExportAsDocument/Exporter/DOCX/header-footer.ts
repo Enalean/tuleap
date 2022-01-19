@@ -17,11 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GlobalExportProperties } from "../../../../type";
+import type { GenericGlobalExportProperties } from "../../../../type";
 import { Footer, Header, PageNumber, Paragraph, TabStopPosition, TabStopType, TextRun } from "docx";
-import type { VueGettextProvider } from "../../../vue-gettext-provider";
+import { sprintf } from "sprintf-js";
+import type { GettextProvider } from "@tuleap/gettext";
 
-export function buildHeader(global_export_properties: GlobalExportProperties): Header {
+export function buildHeader(
+    global_export_properties: GenericGlobalExportProperties,
+    document_name: string
+): Header {
     return new Header({
         children: [
             new Paragraph({
@@ -34,7 +38,7 @@ export function buildHeader(global_export_properties: GlobalExportProperties): H
                         ],
                     }),
                     new TextRun({
-                        children: ["\t", global_export_properties.milestone_name],
+                        children: ["\t", document_name],
                     }),
                 ],
                 tabStops: [
@@ -49,8 +53,8 @@ export function buildHeader(global_export_properties: GlobalExportProperties): H
 }
 
 export function buildFooter(
-    gettext_provider: VueGettextProvider,
-    global_export_properties: GlobalExportProperties,
+    gettext_provider: GettextProvider,
+    global_export_properties: GenericGlobalExportProperties,
     exported_formatted_date: string
 ): Footer {
     return new Footer({
@@ -59,13 +63,10 @@ export function buildFooter(
                 children: [
                     new TextRun({
                         children: [
-                            gettext_provider.$gettextInterpolate(
-                                gettext_provider.$gettext("Exported on %{ date } by %{ user }"),
-                                {
-                                    date: exported_formatted_date,
-                                    user: global_export_properties.user_display_name,
-                                }
-                            ),
+                            sprintf(gettext_provider.gettext("Exported on %(date)s by %(user)s"), {
+                                date: exported_formatted_date,
+                                user: global_export_properties.user_display_name,
+                            }),
                         ],
                     }),
                     new TextRun({

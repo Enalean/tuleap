@@ -12,6 +12,12 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "%(title)s backlog"
+msgstr "Backlog de %(title)s"
+
+msgid "%(title)s tests"
+msgstr "Tests de %(title)s"
+
 msgid "1 bug linked"
 msgid_plural "{{ $count }} bugs linked"
 msgstr[0] "1 bug lié"
@@ -63,6 +69,15 @@ msgstr ""
 msgid "An error occurred while loading the tests. {{ error }}"
 msgstr "Une erreur est survenue pendant le chargement des tests. {{ error }}"
 
+msgid "Artifact ID"
+msgstr "Artéfact ID"
+
+msgid "Artifacts referenced by “%s”"
+msgstr "Les artéfacts qui sont référencés par “%s”"
+
+msgid "Artifacts that reference “%s”"
+msgstr "Les artéfacts qui référencent “%s”"
+
 msgid "Attach files..."
 msgstr "Joindre des fichiers..."
 
@@ -71,6 +86,9 @@ msgstr "Erreurs de création de fichier"
 
 msgid "Attachment upload error"
 msgstr "Erreur de téléversement de fichier"
+
+msgid "Attachments"
+msgstr "Attachements"
 
 msgid "Authentication Token"
 msgstr "Jeton d'authentification"
@@ -150,6 +168,9 @@ msgstr "Graphe de dépendances de &#34;{{ graph.title }}&#34;"
 msgid "Dependencies graph of &#34;{{ modal.title }}&#34;"
 msgstr "Graphe de dépendances de &#34;{{ modal.title }}&#34;"
 
+msgid "Description"
+msgstr "Description"
+
 msgid "Drop files here to attach them to your comment (max size is %ss)."
 msgstr ""
 "Glissez-déposez des fichiers ici pour les joindre à votre commentaire "
@@ -182,6 +203,12 @@ msgstr ""
 msgid "Error while refreshing the list of linked bugs"
 msgstr "Erreur pendant la récupération des bugs liés"
 
+msgid "Executed By"
+msgstr "Executé par"
+
+msgid "Executed On"
+msgstr "Executé le"
+
 msgid "Expand"
 msgstr "Agrandir"
 
@@ -196,6 +223,9 @@ msgstr "Exporté par"
 
 msgid "Exported on"
 msgstr "Exporté le"
+
+msgid "Exported on %(date)s by %(user)s"
+msgstr "Exporté le %(date)s par %(user)s"
 
 msgid "Failed"
 msgstr "Échoué"
@@ -254,6 +284,12 @@ msgstr "Lier \"{{ modal.test_summary }}\" à un bug existant"
 
 msgid "Link to an existing bug"
 msgstr "Lier à un bug existant"
+
+msgid "Link type"
+msgstr "Type de lien"
+
+msgid "Linked bugs"
+msgstr "Bugs liés"
 
 msgid "Load closed campaigns"
 msgstr "Charger les campagnes fermées"
@@ -334,6 +370,12 @@ msgstr "Supprimer le fichier"
 msgid "Rename campaign"
 msgstr "Renommer la campagne"
 
+msgid "Requirements"
+msgstr "Exigences"
+
+msgid "Results"
+msgstr "Résultats"
+
 msgid "Save changes"
 msgstr "Enregistrer les changements"
 
@@ -382,11 +424,29 @@ msgstr "N'afficher que les tests restants"
 msgid "Show test campaign scores"
 msgstr "Afficher les scores pour la campagne"
 
+msgid "Status"
+msgstr "Statut"
+
+msgid "Status: %s"
+msgstr "Statut : %s"
+
+msgid "Step"
+msgstr "Étape"
+
+msgid "Step %d"
+msgstr "Étape %d"
+
+msgid "Table of contents"
+msgstr "Table des matières"
+
+msgid "Test Results"
+msgstr "Résultats des tests"
+
 msgid "Test campaign"
 msgstr "Campagne de tests"
 
-msgid "Test campaign {{ name }}"
-msgstr "Campagne de tests {{ name }}"
+msgid "Test campaign %(name)s"
+msgstr "Campagne de tests %(name)s"
 
 msgid "Test campaigns"
 msgstr "Campagne de tests"
@@ -399,6 +459,9 @@ msgstr "Exécution d'un test"
 
 msgid "Test summary"
 msgstr "Résumé du test"
+
+msgid "Tests"
+msgstr "Tests"
 
 msgid "The URL to a Jenkins job that will execute automated tests"
 msgstr "L'URL vers un projet Jenkins qui exécutera les tests automatisés"
@@ -432,11 +495,20 @@ msgstr ""
 msgid "There are no campaigns"
 msgstr "Il n'existe pas de campagne"
 
+msgid "There are no items."
+msgstr "Il n'y a pas d'élément."
+
 msgid "There are no open campaigns"
 msgstr "Il n’existe pas de campagne ouverte"
 
 msgid "There are no tests you can see."
 msgstr "Il n'y a aucun test visible."
+
+msgid "There are no tests."
+msgstr "Il n'y a pas de test."
+
+msgid "There isn't any requirements to put in the traceability matrix."
+msgstr "Il n'y a aucune exigences pour la matrice de traçabilité."
 
 msgid "This artifact is already linked to this test."
 msgstr "Cet artéfact est déjà lié à ce test."
@@ -453,6 +525,9 @@ msgstr "Cet objet n'est pas un fichier"
 msgid "This test has no description. Please edit it."
 msgstr "Ce test n'a pas de description. Veuillez l'éditer."
 
+msgid "Title"
+msgstr "Titre"
+
 msgid "Toggle all tests in category"
 msgstr "Sélectionner ou déselectionner tous les tests de la catégorie"
 
@@ -464,6 +539,9 @@ msgstr "Montrer ou cacher les campagnes fermées"
 
 msgid "Toggle filters dropdown"
 msgstr "Ouvrir ou fermer la liste de filtres"
+
+msgid "Traceability matrix"
+msgstr "Matrice de traçabilité"
 
 msgid "Unable to upload the image"
 msgstr "Impossible d'inserer l'image"
