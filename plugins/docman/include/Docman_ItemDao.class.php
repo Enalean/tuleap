@@ -156,27 +156,6 @@ class Docman_ItemDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult
-     */
-    public function searchPaginatedWithVersionByGroupId($groupId, $limit, $offset)
-    {
-        $groupId = $this->da->escapeInt($groupId);
-        $limit   = $this->da->escapeInt($limit);
-        $offset  = $this->da->escapeInt($offset);
-
-        $params = [
-            'limit'           => $limit,
-            'offset'          => $offset,
-            'ignore_deleted'  => true,
-            'ignore_obselete' => true,
-        ];
-
-        $where = " i.group_id = $groupId AND i.delete_date IS NULL";
-
-        return $this->_searchWithCurrentVersion($where, '', '', [], $params);
-    }
-
-    /**
      * Return the list of items for a given projet according to filters
      *
      * @return DataAccessResult

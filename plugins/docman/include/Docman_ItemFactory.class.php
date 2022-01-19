@@ -683,28 +683,6 @@ class Docman_ItemFactory
         return $this->getItemSubTreeAsList($id, $nbItemsFound, $params);
     }
 
-    /**
-     * @param int $limit
-     * @param int $offset
-     * @return Docman_Item[]
-     */
-    public function searchPaginatedWithVersionByGroupId($limit, $offset)
-    {
-        $result = $this->_getItemDao()->searchPaginatedWithVersionByGroupId($this->groupId, $limit, $offset);
-
-        $items = [];
-        foreach ($result as $row) {
-            $item = $this->getItemFromRow($row);
-            if ($item !== null) {
-                $items[] = $item;
-            }
-        }
-
-        $result->freeMemory();
-
-        return $items;
-    }
-
     public function doesTitleCorrespondToExistingDocument(string $title, int $parent_id)
     {
         return $this->_getItemDao()->doesTitleCorrespondToExistingDocument($title, $parent_id);
