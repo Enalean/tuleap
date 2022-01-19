@@ -43,8 +43,12 @@ class Git_HTTP_CommandFactory
         return $command;
     }
 
-    private function getGitHttpBackendCommand()
+    private function getGitHttpBackendCommand(): Git_HTTP_Command
     {
+        if (Git_Exec::isGitTuleapInstalled()) {
+            return new \Tuleap\Git\HTTP\CommandGitTuleapHttpBackend();
+        }
+
         if (Git_Exec::isGit218Installed()) {
             return new \Tuleap\Git\HTTP\CommandSCL218GitHttpBackend();
         }
