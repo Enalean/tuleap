@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,78 +17,65 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
+const convict = require("convict");
+const optimist = require("optimist");
+const jsonfile = require("jsonfile");
 
-define([
-    'convict',
-    'optimist',
-    'jsonfile'
-], function (
-    convict,
-    optimist,
-    jsonfile
-) {
+module.exports = function () {
+    var self = this;
 
-    var config = function () {
-        var self = this;
+    self.conf = convict({});
+    self.argv = optimist.argv;
 
-        self.conf = convict({});
-        self.argv = optimist.argv;
+    /**
+     * @access public
+     *
+     * Function to merge default
+     * configurations and user config
+     * file
+     */
+    self.init = function() {
+        var defaultConfig = require('./config.json');
+        self.conf.load(defaultConfig);
 
-        /**
-         * @access public
-         *
-         * Function to merge default
-         * configurations and user config
-         * file
-         */
-        self.init = function() {
-            var defaultConfig = require('./config.json');
-            self.conf.load(defaultConfig);
-
-            if(self.argv.config) {
-                var config;
-                try {
-                    config = jsonfile.readFileSync(self.argv.config);
-                } catch (e) {
-                    console.log('The json config file isn\'t valid.');
-                }
-                if(config) {
-                    self.conf.load(config);
-                }
+        if(self.argv.config) {
+            var config;
+            try {
+                config = jsonfile.readFileSync(self.argv.config);
+            } catch (e) {
+                console.log('The json config file isn\'t valid.');
             }
-        };
-
-        /**
-         * @access public
-         *
-         * Function to drop the root
-         * privileges to not be run as root
-         */
-        self.dropRootPrivileges = function () {
-            if (process.setgid) {
-                try {
-                    process.setgid(self.conf.get('process_gid'));
-                    console.log('New gid: ' + process.getgid());
-                }
-                catch (err) {
-                    console.log('Failed to set gid: ' + err);
-                }
+            if(config) {
+                self.conf.load(config);
             }
-
-            if (process.setuid) {
-                try {
-                    process.setuid(self.conf.get('process_uid'));
-                    console.log('New uid: ' + process.getuid());
-                }
-                catch (err) {
-                    console.log('Failed to set uid: ' + err);
-                }
-            }
-        };
+        }
     };
 
-    return config;
-});
+    /**
+     * @access public
+     *
+     * Function to drop the root
+     * privileges to not be run as root
+     */
+    self.dropRootPrivileges = function () {
+        if (process.setgid) {
+            try {
+                process.setgid(self.conf.get('process_gid'));
+                console.log('New gid: ' + process.getgid());
+            }
+            catch (err) {
+                console.log('Failed to set gid: ' + err);
+            }
+        }
+
+        if (process.setuid) {
+            try {
+                process.setuid(self.conf.get('process_uid'));
+                console.log('New uid: ' + process.getuid());
+            }
+            catch (err) {
+                console.log('Failed to set uid: ' + err);
+            }
+        }
+    };
+};

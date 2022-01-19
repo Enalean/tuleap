@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,44 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
+const moment = require("moment");
 
-define([
-    'moment'
-], function (
-    moment
-) {
-    var ScoresService = function (scores) {
-        var self                  = this;
-        var clear_scores_interval = setScoresInterval();
+module.exports = function (scores) {
+    var self                  = this;
+    var clear_scores_interval = setScoresInterval();
 
-        self.scores = scores;
+    self.scores = scores;
 
-        /**
-         * @access public
-         *
-         * Function to clear scores for
-         * each room id
-         */
-        self.clearScoresInSeveralDays = function() {
-            clearInterval(clear_scores_interval);
-            clear_scores_interval = setScoresInterval();
-        };
-
-        /**
-         * Function to initialize interval to
-         * clear scores
-         *
-         * @returns {number}
-         */
-        function setScoresInterval() {
-            return setInterval(function () {
-                self.scores.removeAll();
-            }, moment.duration(2, 'days').valueOf());
-        }
+    /**
+     * @access public
+     *
+     * Function to clear scores for
+     * each room id
+     */
+    self.clearScoresInSeveralDays = function() {
+        clearInterval(clear_scores_interval);
+        clear_scores_interval = setScoresInterval();
     };
 
-    return ScoresService;
-});
+    /**
+     * Function to initialize interval to
+     * clear scores
+     *
+     * @returns {number}
+     */
+    function setScoresInterval() {
+        return setInterval(function () {
+            self.scores.removeAll();
+        }, moment.duration(2, 'days').valueOf());
+    }
+};

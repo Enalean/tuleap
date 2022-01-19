@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,58 +17,52 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
+const _ = require("lodash");
+const jwt = require("jsonwebtoken");
 
-define(['lodash', 'jsonwebtoken'], function (_, jwt) {
+module.exports = function (private_key) {
+    this.privateKey = private_key;
 
-    var jwtUtils = function (private_key) {
-        this.privateKey = private_key;
-
-        /**
-         * @access public
-         *
-         * Function to check the token send by
-         * a tuleap client
-         *
-         * @param decoded (Object)
-         */
-        this.isTokenValid = function(decoded) {
-            return _.has(decoded, 'exp')
-                && _.has(decoded, 'data.user_id')
-                && _.has(decoded, 'data.user_rights');
-        };
-
-        /**
-         * @access public
-         *
-         * Function to check the token date
-         * @param expiredDate (int): token expired date
-         * @returns {boolean}
-         */
-        this.isDateExpired = function(expired_date) {
-            return expired_date <= Math.floor(Date.now() /1000);
-        };
-
-        /**
-         * @access public
-         *
-         * Function to verify and decode the token
-         *
-         * @param token (String)
-         * @returns {*}
-         */
-        this.decodeToken = function(token, callback) {
-            var data;
-            try {
-                data = jwt.verify(token, this.privateKey);
-            } catch(err) {
-                callback(err);
-            }
-            return data;
-        };
+    /**
+     * @access public
+     *
+     * Function to check the token send by
+     * a tuleap client
+     *
+     * @param decoded (Object)
+     */
+    this.isTokenValid = function(decoded) {
+        return _.has(decoded, 'exp')
+            && _.has(decoded, 'data.user_id')
+            && _.has(decoded, 'data.user_rights');
     };
 
-    return jwtUtils;
-});
+    /**
+     * @access public
+     *
+     * Function to check the token date
+     * @param expiredDate (int): token expired date
+     * @returns {boolean}
+     */
+    this.isDateExpired = function(expired_date) {
+        return expired_date <= Math.floor(Date.now() /1000);
+    };
+
+    /**
+     * @access public
+     *
+     * Function to verify and decode the token
+     *
+     * @param token (String)
+     * @returns {*}
+     */
+    this.decodeToken = function(token, callback) {
+        var data;
+        try {
+            data = jwt.verify(token, this.privateKey);
+        } catch(err) {
+            callback(err);
+        }
+        return data;
+    };
+};
