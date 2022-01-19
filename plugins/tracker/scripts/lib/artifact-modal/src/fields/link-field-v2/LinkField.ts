@@ -35,39 +35,117 @@ export interface LinkField {
     readonly label: string;
     readonly artifactId: number;
     readonly content: () => HTMLElement;
+    linked_artifacts: Array<LinkedArtifact>;
+    has_loaded_content: boolean;
+    is_loading: boolean;
+    error_message: string;
 }
+
+type MapOfClasses = Record<string, boolean>;
 
 export type HostElement = LinkField & HTMLElement;
 
-export const getFormattedArtifacts = (artifacts: LinkedArtifact[]): UpdateFunction<unknown>[] =>
-    artifacts.map(
+export const getLinksTableClasses = (host: LinkField): MapOfClasses => {
+    return {
+        "tlp-table": true,
+        "tuleap-artifact-modal-link-field-empty":
+            host.has_loaded_content &&
+            (host.linked_artifacts.length === 0 || host.error_message !== ""),
+    };
+};
+
+export const getFormattedArtifacts = (host: LinkField): UpdateFunction<LinkField>[] =>
+    host.linked_artifacts.map(
         (artifact: LinkedArtifact) => html`
-            <div>
-                <a href="${artifact.html_url}" data-test="artifact-link">
-                    <span
-                        class="
-                            cross-ref-badge
-                            cross-ref-badge-${artifact.tracker.color_name}
-                            tuleap-artifact-modal-link-badge
-                        "
-                        data-test="artifact-xref"
-                    >
-                        ${artifact.xref}
-                    </span>
-                    <span data-test="artifact-title">${artifact.title}</span>
-                </a>
-            </div>
+            <tr class="link-field-table-row">
+                <td class="link-field-table-cell-nature">${artifact.link_type.label}</td>
+                <td class="link-field-table-cell-xref">
+                    <a href="${artifact.html_url}" data-test="artifact-link">
+                        <span
+                            class="
+                                cross-ref-badge
+                                cross-ref-badge-${artifact.tracker.color_name}
+                                link-field-xref-badge
+                            "
+                            data-test="artifact-xref"
+                        >
+                            ${artifact.xref}
+                        </span>
+                        <span class="link-field-artifact-title" data-test="artifact-title">
+                            ${artifact.title}
+                        </span>
+                    </a>
+                </td>
+                <td class="link-field-table-cell-status">
+                    ${artifact.status &&
+                    html`
+                        <span
+                            class="tlp-badge-success tlp-badge-outline"
+                            data-test="artifact-status"
+                        >
+                            ${artifact.status}
+                        </span>
+                    `}
+                </td>
+            </tr>
         `
     );
 
 const formatErrorMessage = (error: Error): string =>
     sprintf(getLinkFieldFetchErrorMessage(), error.message);
 
+export const retrieveLinkedArtifacts = (host: LinkField): Promise<void> => {
+    if (isInCreationMode()) {
+        return Promise.resolve();
+    }
+
+    host.is_loading = true;
+    return getLinkedArtifacts(host.artifactId)
+        .then((artifacts) => {
+            host.linked_artifacts = artifacts;
+        })
+        .catch((err: Error) => {
+            host.error_message = formatErrorMessage(err);
+        })
+        .finally(() => {
+            host.is_loading = false;
+            host.has_loaded_content = true;
+        });
+};
+
+const buildSkeleton = (): UpdateFunction<LinkField> => html`
+    <tr class="link-field-table-row link-field-skeleton-row">
+        <td class="link-field-table-cell-nature link-field-skeleton-cell">
+            <span class="tlp-skeleton-text"></span>
+        </td>
+        <td class="link-field-table-cell-xref link-field-skeleton-cell">
+            <i
+                class="fas fa-hashtag tlp-skeleton-text-icon tlp-skeleton-icon"
+                aria-hidden="true"
+            ></i>
+            <span class="tlp-skeleton-text"></span>
+        </td>
+        <td class="link-field-table-cell-status link-field-skeleton-cell">
+            <span class="tlp-skeleton-text"></span>
+        </td>
+    </tr>
+`;
+
 export const LinkField = define<LinkField>({
     tag: "tuleap-artifact-modal-link-field-v2",
     fieldId: 0,
     label: "",
-    artifactId: 0,
+    artifactId: {
+        value: 0,
+        observe: retrieveLinkedArtifacts,
+    },
+    has_loaded_content: false,
+    is_loading: false,
+    error_message: "",
+    linked_artifacts: {
+        get: (host, value = []) => value,
+        set: (host, value = []) => [...value],
+    },
     content: (host) => html`
         <div class="tlp-form-element">
             <label for="${"tracker_field_" + host.fieldId}" class="tlp-label">${host.label}</label>
@@ -81,19 +159,20 @@ export const LinkField = define<LinkField>({
         </div>
         ${!isInCreationMode() &&
         html`
-            <div class="tlp-property" data-test="linked-artifacts-list">
-                ${html.resolve(
-                    getLinkedArtifacts(host.artifactId)
-                        .then(getFormattedArtifacts)
-                        .catch(
-                            (err) => html`
-                                <div class="tlp-alert-danger">${formatErrorMessage(err)}</div>
-                            `
-                        ),
-                    html`
-                        <span class="tlp-skeleton-text"></span>
-                    `
-                )}
+            <table
+                id="tuleap-artifact-modal-link-table"
+                class="${getLinksTableClasses(host)}"
+                data-test="linked-artifacts-table"
+            >
+                <tbody class="link-field-table-body">
+                    ${getFormattedArtifacts(host)} ${host.is_loading && buildSkeleton()}
+                </tbody>
+            </table>
+        `}
+        ${host.error_message !== "" &&
+        html`
+            <div class="tlp-alert-danger" data-test="linked-artifacts-error">
+                ${host.error_message}
             </div>
         `}
     `,
