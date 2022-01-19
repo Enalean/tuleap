@@ -29,6 +29,11 @@ collapsed or opened.
 The custom element throws a [CustomEvent](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent)
 `show-project-announcement` when the user want to see the project announcement.
 
+You will also need to load the code defining the custom element (see below) and to load a stylesheet with the [CSS
+variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) used by Tuleap. Access to the
+[appropriate flavor of the stylesheet](https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=blob&hb=refs%2Fheads%2Fmaster&f=src%2Fthemes%2Ftlp%2Fsrc%2Fscss%2Fcomponents%2F_css-var-root.scss)
+will be provided through the communication channel you have with Tuleap.
+
 ### Loading the script when using a JS bundler (Webpack, Rollup, Vite…)
 
 Import the package in one of the script you load
