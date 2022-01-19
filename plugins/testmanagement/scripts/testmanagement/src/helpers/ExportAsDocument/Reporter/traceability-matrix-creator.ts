@@ -20,8 +20,9 @@ import type {
     DateTimeLocaleInformation,
     ExecutionsForCampaignMap,
     TraceabilityMatrixElement,
+    TraceabilityMatrixTest,
+    TraceabilityMatrixRequirement,
 } from "../../../type";
-import type { TraceabilityMatrixTest } from "../../../type";
 
 export function getTraceabilityMatrix(
     executions_map: ExecutionsForCampaignMap,
@@ -48,10 +49,11 @@ export function getTraceabilityMatrix(
                     executed_on_date.toLocaleTimeString(locale, { timeZone: timezone });
             }
 
-            for (const { id, title, xref } of execution.definition.all_requirements) {
-                const requirement = {
+            for (const { id, title, xref, tracker } of execution.definition.all_requirements) {
+                const requirement: TraceabilityMatrixRequirement = {
                     id,
                     title: title ?? xref,
+                    tracker_id: tracker.id,
                 };
 
                 const already_encountered_requirement = matrix_map.get(requirement.id);

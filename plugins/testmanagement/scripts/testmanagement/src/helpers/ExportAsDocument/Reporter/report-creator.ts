@@ -38,7 +38,10 @@ import { getTraceabilityMatrix } from "./traceability-matrix-creator";
 import { getExecutionsForCampaigns } from "./executions-for-campaigns-retriever";
 import type { GettextProvider } from "@tuleap/gettext";
 import { sprintf } from "sprintf-js";
-import { buildStepDefinitionEnhancedWithResultsFunction } from "./step-test-definition-formatter";
+import {
+    buildStepDefinitionEnhancedWithResultsFunction,
+    buildStepDefinitionFunction,
+} from "./step-test-definition-formatter";
 
 interface TrackerStructurePromiseTuple {
     readonly tracker_id: number;
@@ -53,6 +56,16 @@ export async function createExportReport(
 ): Promise<ExportDocument<ArtifactFieldValueStepDefinitionEnhancedWithResults>> {
     const get_test_execution = memoize(getTestManagementExecution);
 
+    const executions_map = await getExecutionsForCampaigns([campaign]);
+    const test_def_artifact_ids: Set<number> = new Set();
+    if (global_properties.testdefinition_tracker_id !== null) {
+        for (const { executions } of executions_map.values()) {
+            for (const exec of executions) {
+                test_def_artifact_ids.add(exec.definition.id);
+            }
+        }
+    }
+
     const tracker_structure_promises_map: Map<number, TrackerStructurePromiseTuple> = new Map();
     if (global_properties.testdefinition_tracker_id !== null) {
         tracker_structure_promises_map.set(global_properties.testdefinition_tracker_id, {
@@ -60,6 +73,21 @@ export async function createExportReport(
             tracker_structure_promise: retrieveTrackerStructure(
                 global_properties.testdefinition_tracker_id
             ),
+        });
+    }
+
+    const backlog_item_artifact_ids: Set<number> = new Set();
+    const traceability_matrix = getTraceabilityMatrix(executions_map, datetime_locale_information);
+    for (const { requirement } of traceability_matrix) {
+        backlog_item_artifact_ids.add(requirement.id);
+
+        const tracker_id = requirement.tracker_id;
+        if (tracker_structure_promises_map.has(tracker_id)) {
+            continue;
+        }
+        tracker_structure_promises_map.set(tracker_id, {
+            tracker_id,
+            tracker_structure_promise: retrieveTrackerStructure(tracker_id),
         });
     }
 
@@ -75,18 +103,10 @@ export async function createExportReport(
         }
     );
 
-    const executions_map = await getExecutionsForCampaigns([campaign]);
-    const test_def_artifact_ids: Set<number> = new Set();
-    if (global_properties.testdefinition_tracker_id !== null) {
-        for (const { executions } of executions_map.values()) {
-            for (const exec of executions) {
-                test_def_artifact_ids.add(exec.definition.id);
-            }
-        }
-    }
-
     const all_artifacts: ArtifactResponse[] = [
-        ...(await getArtifacts(new Set(test_def_artifact_ids))).values(),
+        ...(
+            await getArtifacts(new Set([...backlog_item_artifact_ids, ...test_def_artifact_ids]))
+        ).values(),
     ];
     const all_artifacts_structures = await retrieveArtifactsStructure(
         tracker_structure_map,
@@ -96,8 +116,18 @@ export async function createExportReport(
 
     return {
         name: sprintf(gettext_provider.gettext("Test campaign %(name)s"), { name: campaign.label }),
-        traceability_matrix: getTraceabilityMatrix(executions_map, datetime_locale_information),
-        backlog: [],
+        traceability_matrix,
+        backlog: all_artifacts_structures
+            .filter((artifact) => backlog_item_artifact_ids.has(artifact.id))
+            .map((artifact) =>
+                formatArtifact(
+                    artifact,
+                    datetime_locale_information,
+                    global_properties.base_url,
+                    global_properties.artifact_links_types,
+                    buildStepDefinitionFunction()
+                )
+            ),
         tests: all_artifacts_structures
             .filter((artifact) => test_def_artifact_ids.has(artifact.id))
             .map((artifact) =>

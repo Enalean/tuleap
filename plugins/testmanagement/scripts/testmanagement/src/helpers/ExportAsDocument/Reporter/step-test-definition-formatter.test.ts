@@ -22,10 +22,9 @@ import {
     buildStepDefinitionEnhancedWithResultsFunction,
     buildStepDefinitionFunction,
 } from "./step-test-definition-formatter";
-import type { Campaign } from "../../../type";
+import type { Campaign, ExecutionsForCampaignMap } from "../../../type";
 import type { ArtifactReportResponseStepDefinitionFieldValue } from "@tuleap/plugin-docgen-docx";
 import type { ArtifactReportResponseUserRepresentation } from "@tuleap/plugin-docgen-docx";
-import type { ExecutionsForCampaignMap } from "../../../../../../../testmanagement/scripts/testmanagement/src/type";
 
 describe("step-test-definition-formatter", () => {
     it("should build a function that enhance the step definition field with steps results", () => {
@@ -74,6 +73,9 @@ describe("step-test-definition-formatter", () => {
                                 id: 888,
                                 title: null,
                                 xref: "story #888",
+                                tracker: {
+                                    id: 111,
+                                },
                             },
                         ],
                     },
@@ -129,6 +131,9 @@ describe("step-test-definition-formatter", () => {
                                 id: 888,
                                 title: null,
                                 xref: "story #888",
+                                tracker: {
+                                    id: 111,
+                                },
                             },
                         ],
                     },
@@ -276,6 +281,9 @@ describe("step-test-definition-formatter", () => {
                                 id: 888,
                                 title: null,
                                 xref: "story #888",
+                                tracker: {
+                                    id: 111,
+                                },
                             },
                         ],
                     },

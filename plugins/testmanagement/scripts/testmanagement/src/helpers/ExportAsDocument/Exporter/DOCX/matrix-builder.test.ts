@@ -35,6 +35,7 @@ describe("matrix-builder", () => {
                             requirement: {
                                 id: 1,
                                 title: "Lorem",
+                                tracker_id: 111,
                             },
                             tests: new Map([
                                 [
@@ -55,6 +56,7 @@ describe("matrix-builder", () => {
                             requirement: {
                                 id: 2,
                                 title: "Ipsum",
+                                tracker_id: 111,
                             },
                             tests: new Map([
                                 [
