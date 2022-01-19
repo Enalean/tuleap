@@ -17,9 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createVueGettextProviderPassthrough } from "../../vue-gettext-provider-for-test";
 import { createExportReport } from "./report-creator";
-import type { BacklogItem, Campaign } from "../../../type";
+import type { Campaign } from "../../../type";
 import * as docgen_docx from "@tuleap/plugin-docgen-docx";
 import type {
     ArtifactResponse,
@@ -29,28 +28,17 @@ import type {
     FormattedArtifact,
     TestExecutionResponse,
 } from "@tuleap/plugin-docgen-docx";
-import * as querier from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/execution-querier";
+import * as querier from "../../../../../../../testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/execution-querier";
 import type { ArtifactFieldValueStepDefinitionContent } from "@tuleap/plugin-docgen-docx";
+import { createGettextProviderPassthrough } from "../../create-gettext-provider-passthrough-for-tests";
 
 describe("Create an export report", () => {
     it("generates the report", async () => {
-        const gettext_provider = createVueGettextProviderPassthrough();
+        const gettext_provider = createGettextProviderPassthrough();
 
         const retrieveTrackerStructureMock = jest.spyOn(docgen_docx, "retrieveTrackerStructure");
         retrieveTrackerStructureMock.mockImplementation(
             (tracker_id: number): Promise<TrackerStructure> => {
-                if (tracker_id === 101) {
-                    return Promise.resolve({
-                        fields: new Map([[1, { type: "sb" } as FieldsStructure]]),
-                        disposition: [],
-                    });
-                }
-                if (tracker_id === 102) {
-                    return Promise.resolve({
-                        fields: new Map([[2, { type: "msb" } as FieldsStructure]]),
-                        disposition: [],
-                    });
-                }
                 if (tracker_id === 10) {
                     return Promise.resolve({
                         fields: new Map([[3, { type: "sb" } as FieldsStructure]]),
@@ -62,40 +50,19 @@ describe("Create an export report", () => {
         );
 
         const getArtifactsMock = jest.spyOn(docgen_docx, "getArtifacts");
-        getArtifactsMock.mockResolvedValue(
-            new Map([
-                [1, { id: 1 } as ArtifactResponse],
-                [2, { id: 2 } as ArtifactResponse],
-                [3, { id: 3 } as ArtifactResponse],
-                [123, { id: 123 } as ArtifactResponse],
-            ])
-        );
+        getArtifactsMock.mockResolvedValue(new Map([[123, { id: 123 } as ArtifactResponse]]));
 
         const retrieveArtifactsStructureMock = jest.spyOn(
             docgen_docx,
             "retrieveArtifactsStructure"
         );
-        retrieveArtifactsStructureMock.mockResolvedValue([
-            { id: 1 } as ArtifactFromReport,
-            { id: 2 } as ArtifactFromReport,
-            { id: 3 } as ArtifactFromReport,
-            { id: 123 } as ArtifactFromReport,
-        ]);
+        retrieveArtifactsStructureMock.mockResolvedValue([{ id: 123 } as ArtifactFromReport]);
 
         const formatArtifactMock = jest.spyOn(docgen_docx, "formatArtifact");
         formatArtifactMock.mockImplementation(
             (
                 artifact: ArtifactFromReport
             ): FormattedArtifact<ArtifactFieldValueStepDefinitionContent> => {
-                if (artifact.id === 1) {
-                    return { id: 1 } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>;
-                }
-                if (artifact.id === 2) {
-                    return { id: 2 } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>;
-                }
-                if (artifact.id === 3) {
-                    return { id: 3 } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>;
-                }
                 if (artifact.id === 123) {
                     return {
                         id: 123,
@@ -136,46 +103,17 @@ describe("Create an export report", () => {
                 user_display_name: "Jean Dupont",
                 user_timezone: "UTC",
                 user_locale: "en_US",
-                title: "Tuleap 13.3",
-                milestone_name: "Tuleap 13.3",
-                parent_milestone_name: "",
-                milestone_url: "/path/to/13.3",
+                title: "Tuleap 13.5",
                 base_url: "https://example.com",
                 artifact_links_types: [],
                 testdefinition_tracker_id: 10,
             },
-            [
-                {
-                    artifact: {
-                        id: 1,
-                        tracker: {
-                            id: 101,
-                        },
-                    },
-                } as BacklogItem,
-                {
-                    artifact: {
-                        id: 2,
-                        tracker: {
-                            id: 102,
-                        },
-                    },
-                } as BacklogItem,
-                {
-                    artifact: {
-                        id: 3,
-                        tracker: {
-                            id: 101,
-                        },
-                    },
-                } as BacklogItem,
-            ],
-            [{ id: 101, label: "Tuleap 13.3" } as Campaign],
+            { id: 101, label: "Tuleap 13.5" } as Campaign,
             { locale: "en-US", timezone: "UTC" }
         );
 
-        expect(retrieveTrackerStructureMock).toHaveBeenCalledTimes(3);
-        expect(report.backlog.length).toBe(3);
+        expect(retrieveTrackerStructureMock).toHaveBeenCalledTimes(1);
         expect(report.tests.length).toBe(1);
+        expect(report.name).toBe("Test campaign Tuleap 13.5");
     });
 });

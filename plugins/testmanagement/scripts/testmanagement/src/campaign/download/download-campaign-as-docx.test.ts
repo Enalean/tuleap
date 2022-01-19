@@ -46,7 +46,8 @@ describe("downloadCampaignAsDocx", () => {
             "UTC",
             "en_US",
             "https://example.com/",
-            101
+            101,
+            10
         );
 
         expect(downloadExportDocumentMock).toHaveBeenCalledWith(
@@ -63,7 +64,7 @@ describe("downloadCampaignAsDocx", () => {
                     "https://example.com/plugins/testmanagement/?group_id=101#!/campaigns/123",
                 base_url: "https://example.com/",
                 artifact_links_types: [],
-                testdefinition_tracker_id: null,
+                testdefinition_tracker_id: 10,
             } as GlobalExportProperties,
             downloadDocxMock,
             campaign

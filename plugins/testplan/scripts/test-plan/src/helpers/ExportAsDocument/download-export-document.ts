@@ -24,8 +24,8 @@ import type {
     ArtifactFieldValueStepDefinitionEnhancedWithResults,
     DateTimeLocaleInformation,
     ExportDocument,
-} from "../../../../../../testmanagement/scripts/testmanagement/src/type";
-import { initGettextForDocumentExport } from "../../../../../../testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/init-gettext-for-document-export";
+} from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/type";
+import { initGettextForDocumentExport } from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/init-gettext-for-document-export";
 import { buildCoverPage } from "./Exporter/DOCX/cover-builder";
 import type { XmlComponent } from "docx";
 import type { GettextProvider } from "@tuleap/gettext";

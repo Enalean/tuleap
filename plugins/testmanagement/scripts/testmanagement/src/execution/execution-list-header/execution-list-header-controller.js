@@ -70,7 +70,8 @@ export default function controller(
                 SharedPropertiesService.getUserTimezone(),
                 SharedPropertiesService.getUserLocale(),
                 SharedPropertiesService.getBaseUrl(),
-                SharedPropertiesService.getProjectId()
+                SharedPropertiesService.getProjectId(),
+                SharedPropertiesService.getDefinitionTrackerId() || null
             );
         } catch (e) {
             TlpModalService.open({

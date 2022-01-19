@@ -31,18 +31,18 @@ import {
     retrieveArtifactsStructure,
     retrieveTrackerStructure,
 } from "@tuleap/plugin-docgen-docx";
-import { memoize } from "./memoize";
+import { memoize } from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/memoize";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
-import { getTraceabilityMatrix } from "../../../../../../../testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/traceability-matrix-creator";
-import { getExecutionsForCampaigns } from "../../../../../../../testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/executions-for-campaigns-retriever";
+import { getTraceabilityMatrix } from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/traceability-matrix-creator";
+import { getExecutionsForCampaigns } from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/executions-for-campaigns-retriever";
 import {
     buildStepDefinitionEnhancedWithResultsFunction,
     buildStepDefinitionFunction,
-} from "./step-test-definition-formatter";
+} from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/step-test-definition-formatter";
 import type {
     ExportDocument,
     ArtifactFieldValueStepDefinitionEnhancedWithResults,
-} from "../../../../../../../testmanagement/scripts/testmanagement/src/type";
+} from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/type";
 
 interface TrackerStructurePromiseTuple {
     readonly tracker_id: number;

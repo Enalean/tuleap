@@ -50,6 +50,7 @@ export async function downloadExportDocument(
 
     const report = await createExportReport(
         gettext_provider,
+        global_export_properties,
         campaign,
         datetime_locale_information
     );
