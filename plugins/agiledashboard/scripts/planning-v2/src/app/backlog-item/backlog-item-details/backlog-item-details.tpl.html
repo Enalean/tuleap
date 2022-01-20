@@ -14,7 +14,9 @@
                     <span class="backlog-item-details-shortname-content-text"
                         ng-bind-html="details.backlog_item.short_type + ' #' + details.backlog_item.id | tuleapHighlight:details.backlog_filter.terms"
                     ></span>
-                    <i class="fa fa-caret-down backlog-item-details-shortname-icon"></i>
+                    <i class="fas fa-caret-down backlog-item-details-shortname-icon"
+                        ng-class="{'fa-circle-notch fa-spin': details.backlog_item.updating}"
+                    ></i>
                 </a>
                 <div class="tlp-dropdown-menu" role="menu">
                     <a href="/plugins/tracker/?aid={{ details.backlog_item.id }}"
@@ -56,6 +58,10 @@
                 <span class="backlog-item-details-shortname-content-text"
                     ng-bind-html="details.backlog_item.short_type + ' #' + details.backlog_item.id | tuleapHighlight:details.backlog_filter.terms"
                 ></span>
+                <i ng-if="details.backlog_item.updating"
+                    class="fas fa-circle-notch fa-spin backlog-item-details-shortname-icon"
+                    aria-hidden="true"
+                ></i>
             </a>
         </div>
     </div>

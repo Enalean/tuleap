@@ -106,29 +106,4 @@ describe("FeatureCard", () => {
         );
         expect(wrapper.findComponent(FeatureCardBacklogItems).exists()).toBeTruthy();
     });
-
-    it("Displays a card when it is moving", async () => {
-        jest.useFakeTimers();
-
-        const wrapper = await getWrapper(
-            { has_user_story_planned: true, has_user_story_linked: true },
-            {},
-            false,
-            [100]
-        );
-
-        expect(wrapper.findComponent(FeatureCardBacklogItems).exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=feature-card]").classes()).toContain("is-moving");
-        expect(wrapper.find("[data-test=feature-card]").classes()).not.toContain("has-moved");
-
-        wrapper.vm.$store.state.ongoing_move_elements_id = [];
-        await wrapper.vm.$nextTick();
-        expect(wrapper.find("[data-test=feature-card]").classes()).toContain("has-moved");
-        expect(wrapper.find("[data-test=feature-card]").classes()).not.toContain("is-moving");
-
-        jest.advanceTimersByTime(1000);
-        await wrapper.vm.$nextTick();
-        expect(wrapper.find("[data-test=feature-card]").classes()).not.toContain("has-moved");
-        expect(wrapper.find("[data-test=feature-card]").classes()).not.toContain("is-moving");
-    });
 });

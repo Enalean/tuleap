@@ -660,8 +660,6 @@ function KanbanCtrl(
             destination_column = ColumnCollectionService.getColumn(column_id),
             compared_to = DroppedService.getComparedToBeLastItemOfColumn(destination_column);
 
-        item.updating = true;
-
         var promise = DroppedService.moveToColumn(
             kanban.id,
             column_id,
@@ -669,7 +667,6 @@ function KanbanCtrl(
             compared_to,
             item.in_column
         ).then(function () {
-            item.updating = false;
             KanbanColumnService.moveItem(item, source_column, destination_column, compared_to);
         });
 

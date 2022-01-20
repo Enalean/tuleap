@@ -15,6 +15,7 @@
                 data-test="edit-link"
             >
                 <span class="kanban-item-content-info-link-tracker-name">{{ item.item_name }}</span> #<span ng-bind-html="item.id | tuleapHighlight:$ctrl.kanban_filter.terms"></span>
+                <i ng-if="item.updating" class="kanban-item-content-info-link-icon fas fa-circle-notch fa-spin" aria-hidden="true"></i>
             </a>
             <time-info ng-if="! item.updating" item="item"></time-info>
         </div>

@@ -385,13 +385,13 @@ kanban-column {
 }
 
 .created-in-closed-column {
-    @keyframes blink {
+    @keyframes blink-column {
         0% {
             background: var(--tlp-white-color);
         }
 
         50% {
-            background: var(--tlp-main-color-transparent-90);
+            background: var(--tlp-main-color-lighter-90);
         }
 
         100% {
@@ -399,7 +399,7 @@ kanban-column {
         }
     }
 
-    animation: blink 1s ease-in-out alternate infinite;
+    animation: blink-column 1s ease-in-out alternate infinite;
 }
 
 .kustom-scroll,

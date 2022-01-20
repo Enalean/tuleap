@@ -117,18 +117,15 @@ function KanbanColumnController(
         var dropped_item = target_model_items[target_index];
         var compared_to = DroppedService.getComparedTo(target_model_items, target_index);
 
-        dropped_item.updating = true;
-
-        var promise;
         if (droppedToTheSameColumn(source_column, target_column)) {
-            promise = DroppedService.reorderColumn(
+            DroppedService.reorderColumn(
                 current_kanban.id,
                 target_column_id,
                 dropped_item.id,
                 compared_to
             );
         } else {
-            promise = DroppedService.moveToColumn(
+            DroppedService.moveToColumn(
                 current_kanban.id,
                 target_column_id,
                 dropped_item.id,
@@ -136,10 +133,6 @@ function KanbanColumnController(
                 dropped_item.in_column
             );
         }
-
-        promise.then(function () {
-            dropped_item.updating = false;
-        });
 
         KanbanColumnService.moveItem(dropped_item, source_column, target_column, compared_to);
 

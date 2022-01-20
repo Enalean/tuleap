@@ -139,11 +139,7 @@ describe("KanbanColumnController -", function () {
                 target_index
             );
 
-            expect(dropped_item.updating).toBe(true);
-
             $scope.$apply();
-
-            expect(dropped_item.updating).toBe(false);
 
             expect(DroppedService.reorderColumn).toHaveBeenCalledWith(
                 current_kanban.id,
@@ -190,11 +186,7 @@ describe("KanbanColumnController -", function () {
                 target_index
             );
 
-            expect(dropped_item.updating).toBe(true);
-
             $scope.$apply();
-
-            expect(dropped_item.updating).toBe(false);
 
             expect(DroppedService.moveToColumn).toHaveBeenCalledWith(
                 current_kanban.id,

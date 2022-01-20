@@ -880,12 +880,9 @@ describe("KanbanCtrl", function () {
 
             var promise = KanbanCtrl.moveItemAtTheEnd(item, destination_column.id, item.in_column);
 
-            expect(item.updating).toBeTruthy();
-
             move_request.resolve();
             $scope.$apply();
 
-            expect(item.updating).toBeFalsy();
             expect(DroppedService.moveToColumn).toHaveBeenCalledWith(
                 kanban.id,
                 6,

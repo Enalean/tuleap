@@ -42,6 +42,7 @@ $accessibility-pattern-right-margin: 6px;
                     $lightness: - 7%
                 )};
             --text-color-darker: #{color.adjust(map.get($colors, "text"), $lightness: - 7%)};
+            --border-color-darker: #{color.adjust(map.get($colors, "text"), $lightness: - 7%)};
             --border-transparent-color: #{color.adjust(map.get($colors, "border"), $alpha: - 0.75)};
 
             &.closed {
@@ -72,7 +73,7 @@ $accessibility-pattern-right-margin: 6px;
     position: relative;
     flex-direction: column;
     width: 100%;
-    transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
+    transition: border-color 150ms ease-in-out, background-color 150ms ease-in-out;
     border: 1px solid var(--border-color, transparent);
     border-radius: var(--tlp-medium-radius);
     background: var(--secondary-color, var(--tlp-white-color));
@@ -125,40 +126,47 @@ $accessibility-pattern-right-margin: 6px;
         }
     }
 
-    @keyframes blink {
+    @keyframes blink-backlog-item-card {
         0% {
-            border-color: var(--tlp-neutral-normal-color);
-            background: var(--tlp-white-color);
+            border-color: var(--border-color, transparent);
+            background: var(--secondary-color, var(--tlp-white-color));
         }
 
         50% {
-            border-color: var(--tlp-info-color);
-            background: var(--tlp-info-color-transparent-90);
+            border-color: var(--border-color-darker, var(--tlp-main-color-transparent-50));
+            background: var(--border-color, var(--tlp-main-color-lighter-90));
         }
 
         100% {
-            border-color: var(--tlp-neutral-normal-color);
-            background: var(--tlp-white-color);
+            border-color: var(--border-color, transparent);
+            background: var(--secondary-color, var(--tlp-white-color));
+        }
+    }
+
+    @keyframes pulse-backlog-item-card {
+        0% {
+            transform: scale3d(1, 1, 1);
+        }
+
+        50% {
+            transform: scale3d(1.02, 1.02, 1.02);
+        }
+
+        100% {
+            transform: scale3d(1, 1, 1);
         }
     }
 
     &.updating {
-        transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
-        animation: blink 1200ms ease-in-out alternate infinite;
-    }
-
-    &.updated {
-        transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
-        animation: pulse 500ms ease-in-out;
-        border-color: var(--tlp-success-color);
-        background: var(--tlp-success-color-transparent-90);
+        transition: border-color 150ms ease-in-out, background-color 150ms ease-in-out;
+        animation: blink-backlog-item-card 1200ms ease-in-out alternate infinite;
     }
 
     &.created {
-        transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
-        animation: pulse 500ms ease-in-out;
-        border-color: var(--tlp-success-color);
-        background: var(--tlp-success-color-transparent-90);
+        transition: border-color 150ms ease-in-out, background-color 150ms ease-in-out;
+        animation: pulse-backlog-item-card 500ms ease-in-out;
+        border-color: var(--tlp-success-color-transparent-50);
+        background: var(--tlp-success-color-lighter-90);
     }
 
     &::before {
