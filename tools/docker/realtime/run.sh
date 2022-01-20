@@ -16,5 +16,4 @@ else
     echo "Certificate is already generated. No need to recreate it."
 fi
 
-cd /usr/lib/node_modules/tuleap-realtime/
-exec node server.js --config=/etc/tuleap-realtime/config.json
+exec /usr/lib/tuleap-realtime/tuleap-realtime --config=/etc/tuleap-realtime/config.json
