@@ -19,7 +19,7 @@
 
 import { loadTooltips } from "@tuleap/tooltip";
 import { isInCreationMode } from "./modal-creation-mode-state.js";
-import { setError, hasError, getErrorMessage } from "./rest/rest-error-state";
+import { getErrorMessage, hasError, setError } from "./rest/rest-error-state";
 import { isDisabled } from "./fields/disabled-field-detector";
 import {
     createArtifact,
@@ -47,6 +47,10 @@ import {
     setUpFieldDependenciesActions,
 } from "./field-dependencies-helper.js";
 import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js";
+import { ParentRetriever } from "./domain/parent/ParentRetriever";
+import { TuleapAPIClient } from "./adapters/REST/TuleapAPIClient";
+import { CreationModeVerifier } from "./adapters/Memory/CreationModeVerifier";
+import { ParentFeedbackController } from "./domain/parent/ParentFeedbackController";
 
 export default ArtifactModalController;
 
@@ -99,6 +103,10 @@ function ArtifactModalController(
             body: "",
             format: modal_model.text_fields_format,
         },
+        parent_feedback_controller: ParentFeedbackController(
+            ParentRetriever(TuleapAPIClient(), CreationModeVerifier()),
+            modal_model.parent_artifact_id
+        ),
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
         formatColor,
         getDropdownAttribute,
@@ -106,7 +114,6 @@ function ArtifactModalController(
         hasRestError: hasError,
         isDisabled,
         isFollowupCommentFormDisplayed,
-        isNewParentAlertShown,
         isUploadingInCKEditor,
         isThereAtLeastOneFileField: () => isThereAtLeastOneFileField(Object.values(self.values)),
         setupTooltips,
@@ -382,10 +389,6 @@ function ArtifactModalController(
 
     function emptyArray(array) {
         array.length = 0;
-    }
-
-    function isNewParentAlertShown() {
-        return isInCreationMode() && self.parent;
     }
 
     function setFieldValueForCustomElement(event) {
