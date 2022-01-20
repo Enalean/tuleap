@@ -35,8 +35,10 @@ final class DocmanSearchDataBuild
     }
     /**
      * To help understand tests structure, below a representation of search hierarchy
-     *
-     *                Search
+     *                                  docman root
+     *                                      |
+     *                   |------------------|-----------|
+     *                Search              foo.txt      bar.txt
      *                  +
      *                  |
      *                  +
@@ -60,6 +62,21 @@ final class DocmanSearchDataBuild
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
         $this->common_builder->addWritePermissionOnItem($folder_id, ProjectUGroup::PROJECT_MEMBERS);
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            (int) $docman_root->getId(),
+            'foo.txt',
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+            "https://example.test"
+        );
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            (int) $docman_root->getId(),
+            'bar.txt',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
 
         $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
