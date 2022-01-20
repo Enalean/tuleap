@@ -1,4 +1,4 @@
 RUN_COMMAND="/opt/remi/php80/root/usr/bin/php /usr/share/tuleap/tools/distlp/backend-web/run.php test"
-MYSQL_ROOT_PASSWORD=DumpPass4Tests
+MYSQL_ROOT_PASSWORD=welcome0
 LDAP_MANAGER_PASSWORD=DumpPass4Tests
 VIRTUAL_HOST=reverse-proxy

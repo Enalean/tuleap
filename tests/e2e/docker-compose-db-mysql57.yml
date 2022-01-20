@@ -9,4 +9,6 @@ services:
       - ./tests/etc/DBConfig/mysql-server.cnf:/etc/mysql/mysql.conf.d/mysql-server.cnf:ro,cached
     tmpfs: /tmp
     networks:
-      - tuleap
+      tuleap:
+        aliases:
+          - db

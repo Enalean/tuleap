@@ -13,9 +13,13 @@ case "${1:-}" in
     "mysql57")
     export DB_HOST="mysql57"
     ;;
+    "mysql80")
+    export DB_HOST="mysql80"
+    ;;
     *)
     echo "A database type must be provided as parameter. Allowed values are:"
     echo "* mysql57"
+    echo "* mysql80"
     exit 1
 esac
 
@@ -24,7 +28,7 @@ if [ -n "$2" ]; then
     test_results_folder="$2"
 fi
 
-DOCKERCOMPOSE="docker-compose -f docker-compose-distlp-tests.yml -p distlp-tests-${BUILD_TAG:-dev}"
+DOCKERCOMPOSE="docker-compose -f docker-compose-distlp-tests.yml -f tests/e2e/docker-compose-db-${DB_HOST}.yml -p distlp-tests-${BUILD_TAG:-dev}"
 
 cypress_version="$(python3 -c 'import json,sys;print(json.load(sys.stdin)["version"], end="")' < ./node_modules/cypress/package.json)"
 

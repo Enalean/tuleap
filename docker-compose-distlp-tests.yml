@@ -58,7 +58,7 @@ services:
     tmpfs: /run
     depends_on:
       - ldap
-      - db
+      - ${DB_HOST}
       - redis
     networks:
       - tuleap
@@ -72,10 +72,10 @@ services:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     tmpfs: /run
     environment:
-      MYSQL_ROOT_PASSWORD: DumpPass4Tests
+      MYSQL_ROOT_PASSWORD: welcome0
     depends_on:
       - ldap
-      - db
+      - ${DB_HOST}
       - redis
     networks:
       - tuleap
@@ -87,16 +87,6 @@ services:
       LDAP_MANAGER_PASSWORD: DumpPass4Tests
     volumes:
       - tests-ldap-data:/data
-    networks:
-      - tuleap
-
-  db:
-    image: ${DOCKER_REGISTRY:-docker.io}/mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: DumpPass4Tests
-    volumes:
-      - tests-db-data:/var/lib/mysql
-      - ./src/etc/tuleap-mysql57-dev.cnf:/etc/mysql/mysql.conf.d/tuleap.cnf:ro,cached
     networks:
       - tuleap
 
