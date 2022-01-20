@@ -2,6 +2,7 @@
 %define _source_payload w9.xzdio
 %define _binary_payload w9.xzdio
 %define debug_package %{nil}
+%define __os_install_post %{nil}
 
 %define target_path /usr/lib/tuleap-realtime
 

@@ -34,5 +34,5 @@ docker run --rm -v "$mydir"/..:/realtime -w /realtime \
     "$DOCKERIMAGE_PREPARE" sh -c 'pnpm install --frozen-lockfile && pnpm run build'
 
 DOCKERIMAGE=build-rpm-tuleap-realtime-"$OS"-"${BUILD_NUMBER:-0}"
-docker build --build-arg OS="$OS" -t "$DOCKERIMAGE" "$mydir"/
+DOCKER_BUILDKIT=0 docker build --build-arg OS="$OS" -t "$DOCKERIMAGE" "$mydir"/
 docker run --rm -e UID=`id -u` -e GID=`id -g` -e RELEASE=$RELEASE -e OS="$OS" -v $mydir/..:/realtime -v "$OUTPUTDIR":/output "$DOCKERIMAGE"
