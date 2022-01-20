@@ -26,18 +26,37 @@
             class="tlp-search tlp-search-small document-search-box"
             v-bind:placeholder="`${$gettext('Name, description...')}`"
             v-model="search_query"
-            v-on:keyup.enter="searchUrl()"
             data-shortcut-search-document
+            v-on:keyup.enter="advancedSearch()"
+            v-if="search_for_document_with_criteria"
         />
-        <a
-            v-bind:title="`${$gettext('Advanced')}`"
-            class="document-advanced-link"
-            v-bind:href="advancedUrl()"
-            data-test="document-advanced-link"
-            v-translate
+        <router-link
+            v-bind:to="{ name: 'search' }"
+            v-bind:title="`${$gettext('Search')}`"
+            v-if="search_for_document_with_criteria"
         >
-            Advanced
-        </a>
+            <a class="document-advanced-link" data-test="document-advanced-link" v-translate>
+                Advanced
+            </a>
+        </router-link>
+        <div v-else>
+            <input
+                type="search"
+                class="tlp-search tlp-search-small document-search-box"
+                v-bind:placeholder="`${$gettext('Name, description...')}`"
+                v-model="search_query"
+                v-on:keyup.enter="searchUrl()"
+                data-shortcut-search-document
+            />
+            <a
+                class="document-advanced-link"
+                v-bind:href="advancedUrl()"
+                data-test="document-advanced-link"
+                v-translate
+            >
+                Advanced
+            </a>
+        </div>
     </div>
 </template>
 
@@ -45,6 +64,9 @@
 import { Component, Vue } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
 import type { Folder } from "../../type";
+// We need to manually import because router is still in JS
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type Router from "vue-router";
 
 const configuration = namespace("configuration");
 
@@ -54,6 +76,8 @@ export default class SearchBox extends Vue {
     readonly current_folder!: Folder;
     @configuration.State
     readonly project_id!: number;
+    @configuration.State
+    readonly search_for_document_with_criteria!: boolean;
 
     private search_query = "";
 
@@ -67,6 +91,13 @@ export default class SearchBox extends Vue {
             encodeURIComponent(this.search_query) +
             "&sort_update_date=0&add_filter=--&save_report=--&filtersubmit=Apply"
         );
+    }
+
+    advancedSearch(): void {
+        this.$router.push({
+            name: "search",
+            params: {},
+        });
     }
 
     searchUrl(): void {

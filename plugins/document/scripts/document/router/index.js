@@ -22,6 +22,7 @@ import VueRouter from "vue-router";
 import RootFolder from "../components/Folder/RootFolder.vue";
 import ChildFolder from "../components/Folder/ChildFolder.vue";
 import DisplayEmbedded from "../components/Folder/ItemDisplay/DisplayEmbedded.vue";
+import SearchContainer from "../components/AdvancedSearch/SearchContainer.vue";
 import { abortCurrentUploads } from "../helpers/abort-current-uploads.js";
 
 Vue.use(VueRouter);
@@ -50,6 +51,11 @@ export function createRouter(store, project_name) {
                 path: "/preview/:preview_item_id",
                 name: "preview",
                 component: ChildFolder,
+            },
+            {
+                path: "/search/",
+                name: "search",
+                component: SearchContainer,
             },
         ],
     });

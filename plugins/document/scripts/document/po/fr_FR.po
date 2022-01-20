@@ -485,6 +485,9 @@ msgstr "Recharger la page"
 msgid "Reset the approval cycle."
 msgstr "Recommencer le cycle d'approbation."
 
+msgid "Search"
+msgstr "Recherche"
+
 msgid "Select bottom item"
 msgstr "Sélectionner le dernier élément"
 
@@ -584,6 +587,9 @@ msgstr ""
 
 msgid "There is no upload in progress"
 msgstr "Il n'y a aucun téléversement en cours"
+
+msgid "There is nothing here"
+msgstr "Il n'y a rien ici"
 
 msgid "This document is currently locked by"
 msgstr "Ce document est actuellement verrouillé par"

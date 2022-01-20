@@ -46,6 +46,7 @@ export interface ConfigurationState {
     readonly user_locale: string;
     readonly relative_dates_display: string;
     readonly project_icon: string;
+    readonly search_for_document_with_criteria: boolean;
 }
 
 export function createConfigurationModule(
