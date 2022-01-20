@@ -20,6 +20,7 @@
 
 import Vue from "vue";
 import Vuex from "vuex";
+import VueCompositionAPI from "@vue/composition-api";
 import {
     getPOFileFromLocale,
     initVueGettext,
@@ -77,6 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             import(/* webpackChunkName: "testplan-po-" */ "./po/" + getPOFileFromLocale(locale))
     );
     Vue.use(Vuex);
+    Vue.use(VueCompositionAPI);
 
     const AppComponent = Vue.extend(App);
 

@@ -28,15 +28,18 @@
     </section>
 </template>
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { defineComponent } from "@vue/composition-api";
 
-@Component
-export default class CreateModalErrorFeedback extends Vue {
-    @Prop()
-    readonly error_message!: string;
-
-    @Prop()
-    readonly error_message_details!: string;
-}
+export default defineComponent({
+    props: {
+        error_message: {
+            type: String,
+            default: undefined,
+        },
+        error_message_details: {
+            type: String,
+            default: undefined,
+        },
+    },
+});
 </script>
