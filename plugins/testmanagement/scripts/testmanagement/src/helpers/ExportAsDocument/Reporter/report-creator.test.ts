@@ -33,12 +33,24 @@ import type { ArtifactFieldValueStepDefinitionContent } from "@tuleap/plugin-doc
 import { createGettextProviderPassthrough } from "../../create-gettext-provider-passthrough-for-tests";
 
 describe("Create an export report", () => {
-    it("generates the report", async () => {
+    it("generates the report with backlog coming from requirements", async () => {
         const gettext_provider = createGettextProviderPassthrough();
 
         const retrieveTrackerStructureMock = jest.spyOn(docgen_docx, "retrieveTrackerStructure");
         retrieveTrackerStructureMock.mockImplementation(
             (tracker_id: number): Promise<TrackerStructure> => {
+                if (tracker_id === 111) {
+                    return Promise.resolve({
+                        fields: new Map([[1, { type: "sb" } as FieldsStructure]]),
+                        disposition: [],
+                    });
+                }
+                if (tracker_id === 112) {
+                    return Promise.resolve({
+                        fields: new Map([[2, { type: "msb" } as FieldsStructure]]),
+                        disposition: [],
+                    });
+                }
                 if (tracker_id === 10) {
                     return Promise.resolve({
                         fields: new Map([[3, { type: "sb" } as FieldsStructure]]),
@@ -50,13 +62,23 @@ describe("Create an export report", () => {
         );
 
         const getArtifactsMock = jest.spyOn(docgen_docx, "getArtifacts");
-        getArtifactsMock.mockResolvedValue(new Map([[123, { id: 123 } as ArtifactResponse]]));
+        getArtifactsMock.mockResolvedValue(
+            new Map([
+                [123, { id: 123 } as ArtifactResponse],
+                [1231, { id: 1231 } as ArtifactResponse],
+                [1232, { id: 1232 } as ArtifactResponse],
+            ])
+        );
 
         const retrieveArtifactsStructureMock = jest.spyOn(
             docgen_docx,
             "retrieveArtifactsStructure"
         );
-        retrieveArtifactsStructureMock.mockResolvedValue([{ id: 123 } as ArtifactFromReport]);
+        retrieveArtifactsStructureMock.mockResolvedValue([
+            { id: 123 } as ArtifactFromReport,
+            { id: 1231 } as ArtifactFromReport,
+            { id: 1232 } as ArtifactFromReport,
+        ]);
 
         const formatArtifactMock = jest.spyOn(docgen_docx, "formatArtifact");
         formatArtifactMock.mockImplementation(
@@ -66,6 +88,16 @@ describe("Create an export report", () => {
                 if (artifact.id === 123) {
                     return {
                         id: 123,
+                    } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>;
+                }
+                if (artifact.id === 1231) {
+                    return {
+                        id: 1231,
+                    } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>;
+                }
+                if (artifact.id === 1232) {
+                    return {
+                        id: 1231,
                     } as FormattedArtifact<ArtifactFieldValueStepDefinitionContent>;
                 }
                 throw Error("Unknown artifact");
@@ -81,6 +113,16 @@ describe("Create an export report", () => {
                         {
                             id: 1231,
                             title: "Lorem",
+                            tracker: {
+                                id: 111,
+                            },
+                        },
+                        {
+                            id: 1232,
+                            title: "Ipsum",
+                            tracker: {
+                                id: 112,
+                            },
                         },
                     ],
                 },
@@ -112,8 +154,9 @@ describe("Create an export report", () => {
             { locale: "en-US", timezone: "UTC" }
         );
 
-        expect(retrieveTrackerStructureMock).toHaveBeenCalledTimes(1);
+        expect(retrieveTrackerStructureMock).toHaveBeenCalledTimes(3);
         expect(report.tests.length).toBe(1);
+        expect(report.backlog.length).toBe(2);
         expect(report.name).toBe("Test campaign Tuleap 13.5");
     });
 });

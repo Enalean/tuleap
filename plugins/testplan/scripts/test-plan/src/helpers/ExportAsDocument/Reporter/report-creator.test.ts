@@ -114,6 +114,9 @@ describe("Create an export report", () => {
                         {
                             id: 1231,
                             title: "Lorem",
+                            tracker: {
+                                id: 111,
+                            },
                         },
                     ],
                 },

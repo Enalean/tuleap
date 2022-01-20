@@ -68,12 +68,12 @@
                     <button
                         type="button"
                         ng-click="$ctrl.exportCampaignAsDocument()"
-                        ng-disabled="$ctrl.isPreparingTheDownload()"
+                        ng-disabled="$ctrl.is_preparing_the_download"
                         class="tlp-dropdown-menu-item"
                         role="menuitem"
                     >
-                        <i ng-if="$ctrl.isPreparingTheDownload()" class="fas fa-fw fa-spin fa-circle-notch tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
-                        <i ng-if="! $ctrl.isPreparingTheDownload()" class="fas fa-fw fa-file-word tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+                        <i ng-if="$ctrl.is_preparing_the_download" class="fas fa-fw fa-spin fa-circle-notch tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+                        <i ng-if="! $ctrl.is_preparing_the_download" class="fas fa-fw fa-file-word tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
                         {{ ::'Export as document' | translate }}
                     </button>
                     <span class="tlp-dropdown-menu-separator" role="separator"></span>

@@ -74,6 +74,7 @@ export interface ExportDocument<StepDefFieldValue> {
 export interface TraceabilityMatrixRequirement {
     readonly id: number;
     readonly title: string;
+    readonly tracker_id: number;
 }
 
 export interface TraceabilityMatrixTest {

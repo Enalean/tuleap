@@ -64,6 +64,9 @@ describe("getTestManagementExecution", () => {
                         id: 888,
                         title: null,
                         xref: "story #888",
+                        tracker: {
+                            id: 111,
+                        },
                     },
                 ],
             },

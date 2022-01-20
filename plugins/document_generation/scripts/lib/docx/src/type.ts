@@ -493,6 +493,7 @@ export interface TestExecutionResponse {
             id: number;
             title: string | null;
             xref: string;
+            tracker: { readonly id: number };
         }>;
     };
     steps_results: {

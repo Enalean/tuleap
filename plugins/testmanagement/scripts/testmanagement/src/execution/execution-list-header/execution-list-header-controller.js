@@ -49,16 +49,14 @@ export default function controller(
         getCSRFTokenCampaignStatus,
         getCurrentMilestone,
         exportCampaignAsDocument,
-        isPreparingTheDownload,
+        is_preparing_the_download: false,
     });
 
-    let is_preparing_the_download = false;
-
     async function exportCampaignAsDocument() {
-        if (is_preparing_the_download) {
+        if (self.is_preparing_the_download) {
             return;
         }
-        is_preparing_the_download = true;
+        self.is_preparing_the_download = true;
 
         try {
             await downloadCampaignAsDocx(
@@ -81,12 +79,8 @@ export default function controller(
             });
             throw e;
         } finally {
-            is_preparing_the_download = false;
+            self.is_preparing_the_download = false;
         }
-    }
-
-    function isPreparingTheDownload() {
-        return this.is_preparing_the_download;
     }
 
     function openEditCampaignModal() {
