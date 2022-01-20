@@ -1,0 +1,82 @@
+/**
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.link-field-xref-badge {
+    margin: 0 5px 0 0;
+}
+
+.tuleap-artifact-modal-link-field-empty {
+    display: none;
+}
+
+#tuleap-artifact-modal-link-table {
+    width: unset;
+    margin: 0 0 var(--tlp-medium-spacing);
+    border: 1px solid var(--tlp-background-color-darker-05);
+    border-bottom: 0;
+    border-radius: 5px;
+
+    > .link-field-table-body {
+        > .link-field-table-row {
+            > :is(.link-field-table-cell-nature, .link-field-table-cell-xref, .link-field-table-cell-status) {
+                padding: 8px;
+                border-bottom: 1px solid var(--tlp-background-color-darker-05);
+                background: transparent;
+            }
+
+            > .link-field-table-cell-nature {
+                padding-right: 0;
+            }
+        }
+    }
+}
+
+.link-field-table-row {
+    &:hover {
+        background: var(--tlp-main-color-lighter-90);
+    }
+
+    &.link-field-skeleton-row:hover {
+        background: unset;
+    }
+}
+
+.link-field-skeleton-cell {
+    min-width: 65px;
+}
+
+.link-field-table-cell-nature {
+    color: var(--tlp-dimmed-color);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.link-field-table-cell-xref {
+    width: 100%;
+}
+
+.link-field-table-cell-status {
+    text-align: right;
+}
+
+.link-field-artifact-title {
+    vertical-align: middle;
+}

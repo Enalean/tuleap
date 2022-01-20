@@ -20,9 +20,9 @@
 import * as tlp from "tlp";
 
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import type { RecursiveGetInit } from "tlp";
 import { getLinkedArtifacts } from "./links-retriever";
 
+import type { RecursiveGetInit } from "tlp";
 import type { LinkType, LinkedArtifact, LinkedArtifactCollection } from "./links-retriever";
 
 describe("links-retriever", () => {
@@ -34,15 +34,13 @@ describe("links-retriever", () => {
         const nature_is_child_reverse: LinkType = {
             shortname: "_is_child",
             direction: "reverse",
+            label: "Child",
         };
 
         const nature_is_child_forward: LinkType = {
             shortname: "_is_child",
             direction: "forward",
-        };
-
-        const natures = {
-            natures: [nature_is_child_reverse, nature_is_child_forward],
+            label: "Parent",
         };
 
         const parent: LinkedArtifact = {
@@ -52,6 +50,8 @@ describe("links-retriever", () => {
             tracker: {
                 color_name: "red-wine",
             },
+            link_type: nature_is_child_reverse,
+            status: "Open",
         };
 
         const child: LinkedArtifact = {
@@ -61,10 +61,14 @@ describe("links-retriever", () => {
             tracker: {
                 color_name: "surf-green",
             },
+            link_type: nature_is_child_forward,
+            status: "Open",
         };
 
         mockFetchSuccess(getSpy, {
-            return_json: natures,
+            return_json: {
+                natures: [nature_is_child_reverse, nature_is_child_forward],
+            },
         });
 
         getMockLinkedArtifactsRetrieval(recursiveGetSpy, { collection: [parent] });

@@ -22,13 +22,19 @@ import { get, recursiveGet } from "tlp";
 export interface LinkType {
     readonly shortname: string;
     readonly direction: string;
+    readonly label: string;
 }
 
-export interface LinkedArtifact {
+export interface LinkedArtifact extends APILinkedArtifact {
+    readonly link_type: LinkType;
+}
+
+interface APILinkedArtifact {
     readonly xref: string;
     readonly title: string;
     readonly html_url: string;
     readonly tracker: Tracker;
+    readonly status: string;
 }
 
 interface Tracker {
@@ -36,7 +42,7 @@ interface Tracker {
 }
 
 export interface LinkedArtifactCollection {
-    readonly collection: LinkedArtifact[];
+    readonly collection: APILinkedArtifact[];
 }
 
 export async function getLinkedArtifacts(current_artifact_id: number): Promise<LinkedArtifact[]> {
@@ -69,8 +75,14 @@ function getLinkedArtifactsByLinkType(
                 nature: link_type.shortname,
                 direction: link_type.direction,
             },
-            getCollectionCallback: (payload: LinkedArtifactCollection): LinkedArtifact[] =>
-                payload.collection,
+            getCollectionCallback: (payload: LinkedArtifactCollection): LinkedArtifact[] => {
+                return payload.collection.map((linked_artifact: APILinkedArtifact) => {
+                    return {
+                        ...linked_artifact,
+                        link_type,
+                    };
+                });
+            },
         }
     );
 }
