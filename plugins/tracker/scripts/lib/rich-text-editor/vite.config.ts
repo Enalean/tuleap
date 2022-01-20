@@ -22,10 +22,10 @@ import {
     createPOGettextPlugin,
 } from "../../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
-import dts from "vite-dts";
+import dts from "vite-plugin-dts";
 
 export default defineConfig({
-    plugins: [createPOGettextPlugin(), dts()],
+    plugins: [createPOGettextPlugin(), dts({ insertTypesEntry: true })],
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/index.ts"),
