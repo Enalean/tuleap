@@ -16,7 +16,7 @@ specifiers:
   vue-property-decorator: ^9.1.2
   vuex: ^3.6.2
   vuex-class: ^0.3.2
-  xlsx: ^0.17.0
+  xlsx: ^0.17.5
 
 dependencies:
   '@tuleap/concurrency-limit-pool': link:../../src/scripts/lib/concurrency-limit-pool
@@ -28,7 +28,7 @@ dependencies:
   vue-gettext: 2.1.12
   vuex: 3.6.2_vue@2.6.14
   vuex-class: 0.3.2_74f9cfd67148c622b48e1672fc254539
-  xlsx: 0.17.0
+  xlsx: 0.17.5
 
 devDependencies:
   '@tuleap/gettext': link:../../src/scripts/lib/gettext
@@ -93,21 +93,9 @@ packages:
       printj: 1.1.2
     dev: false
 
-  /codepage/1.14.0:
-    resolution: {integrity: sha1-jL4lSBMjVZ19MHVxsP/5HnodL5k=}
+  /codepage/1.15.0:
+    resolution: {integrity: sha512-3g6NUTPd/YtuuGrhMnOMRjFc+LJw/bnMp3+0r/Wcz3IXUuCosKRJvMphm5+Q+bvTVGcJJuRvVLuYba+WojaFaA==}
     engines: {node: '>=0.8'}
-    hasBin: true
-    dependencies:
-      commander: 2.14.1
-      exit-on-epipe: 1.0.1
-    dev: false
-
-  /commander/2.14.1:
-    resolution: {integrity: sha512-+YR16o3rK53SmWHU3rEM3tPAh2rwb1yPcQX5irVn7mb0gXbwuCCrnkbV5+PBfETdfg1vui07nM6PCG1zndcjQw==}
-    dev: false
-
-  /commander/2.17.1:
-    resolution: {integrity: sha512-wPMUt6FnH2yzG95SA6mzjQOEKUU3aLaDEmzs1ti+1E9h+CsrZghRlqEM/EJ4KscsQVG8uNN4uVreUeT8+drlgg==}
     dev: false
 
   /commander/2.20.3:
@@ -183,10 +171,6 @@ packages:
     dependencies:
       is-extendable: 0.1.1
     dev: true
-
-  /fflate/0.3.11:
-    resolution: {integrity: sha512-Rr5QlUeGN1mbOHlaqcSYMKVpPbgLy0AWT/W0EHxA6NGI12yO1jpoui2zBBvU2G824ltM6Ut8BFgfHSBGfkmS0A==}
-    dev: false
 
   /frac/1.1.2:
     resolution: {integrity: sha512-w/XBfkibaTl3YDqASwfDUqkna4Z2p9cFSr1aHDt0WoMTECnRfBOv2WArlZILlqgWlmdIlALXGpM2AOhEk5W3IA==}
@@ -466,18 +450,15 @@ packages:
     resolution: {integrity: sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=}
     dev: true
 
-  /xlsx/0.17.0:
-    resolution: {integrity: sha512-bZ36FSACiAyjoldey1+7it50PMlDp1pcAJrZKcVZHzKd8BC/z6TQ/QAN8onuqcepifqSznR6uKnjPhaGt6ig9A==}
+  /xlsx/0.17.5:
+    resolution: {integrity: sha512-lXNU0TuYsvElzvtI6O7WIVb9Zar1XYw7Xb3VAx2wn8N/n0whBYrCnHMxtFyIiUU1Wjf09WzmLALDfBO5PqTb1g==}
     engines: {node: '>=0.8'}
     hasBin: true
     dependencies:
       adler-32: 1.2.0
       cfb: 1.2.0
-      codepage: 1.14.0
-      commander: 2.17.1
+      codepage: 1.15.0
       crc-32: 1.2.0
-      exit-on-epipe: 1.0.1
-      fflate: 0.3.11
       ssf: 0.11.2
       wmf: 1.0.2
       word: 0.3.0
