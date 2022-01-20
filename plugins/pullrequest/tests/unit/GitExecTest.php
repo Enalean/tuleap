@@ -70,7 +70,7 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnArrayOfModifiedFiles(): void
     {
-        system("cd $this->fixture_dir && git checkout --quiet -b dev 2>&1 >/dev/null");
+        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . " checkout --quiet -b dev 2>&1 >/dev/null");
         file_put_contents("$this->fixture_dir/toto", "jackassness");
         $this->git_exec->add("$this->fixture_dir/toto");
         $this->git_exec->commit("modify toto");
@@ -86,13 +86,13 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUsesTheCommonAncestorToDoTheDiff(): void
     {
-        system("cd $this->fixture_dir && git checkout --quiet -b dev 2>&1 >/dev/null");
-        system("cd $this->fixture_dir && git checkout --quiet main 2>&1 >/dev/null");
+        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . " checkout --quiet -b dev 2>&1 >/dev/null");
+        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . " checkout --quiet main 2>&1 >/dev/null");
         file_put_contents("$this->fixture_dir/added-file-in-master", "whatever");
         $this->git_exec->add("$this->fixture_dir/added-file-in-master");
         $this->git_exec->commit("add file added-file-in-master");
 
-        system("cd $this->fixture_dir && git checkout --quiet dev 2>&1 >/dev/null");
+        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . " checkout --quiet dev 2>&1 >/dev/null");
         file_put_contents("$this->fixture_dir/added-file-in-dev", "jackassness");
         $this->git_exec->add("$this->fixture_dir/added-file-in-dev");
         $this->git_exec->commit("add file added-file-in-dev");
@@ -126,7 +126,7 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->add($file2_path);
         $this->git_exec->commit("add $file1_path & add $file2_path");
 
-        system("cd $this->fixture_dir && git checkout --quiet -b dev 2>&1 >/dev/null");
+        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . " checkout --quiet -b dev 2>&1 >/dev/null");
 
         $this->git_exec->rm($file2_path);
         file_put_contents($file1_path, "Contenu\nContenu2");
@@ -150,7 +150,7 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->add($file2_path);
         $this->git_exec->commit("add $file1_path & add $file2_path");
 
-        system("cd $this->fixture_dir && git checkout --quiet -b dev 2>&1 >/dev/null");
+        system("cd $this->fixture_dir && " . GitExec::getGitCommand() . " checkout --quiet -b dev 2>&1 >/dev/null");
 
         $this->git_exec->rm($file2_path);
         file_put_contents($file1_path, "Contenu\nContenu2");

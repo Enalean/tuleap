@@ -55,7 +55,7 @@ Requires: php80-php-intl, php80-php-process, php80-php-opcache, php80-php-fpm, p
 Requires: php80-php-pecl-zip
 Requires: rh-mysql57-mysql
 
-Requires: perl-DBI, perl-DBD-MySQL, perl-LDAP, perl-JSON, sudo
+Requires: perl-DBI, perl-DBD-MySQL, perl-LDAP, perl-JSON, sudo, openssh
 Requires: highlight, nginx, logrotate
 
 # Unit file
