@@ -23,18 +23,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Folders;
 
-use Docman_ItemDao;
-use Docman_PermissionsManager;
 use Tuleap\Docman\REST\v1\ItemRepresentationCollectionBuilder;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
 final class BuildSearchedItemRepresentationsFromSearchReport
 {
     public function __construct(
-        private Docman_ItemDao $item_dao,
         private ItemStatusMapper $status_mapper,
         private \UserManager $user_manager,
-        private Docman_PermissionsManager $permissions_manager,
         private ItemRepresentationCollectionBuilder $item_representation_collection_builder,
         private \Docman_ItemFactory $item_factory,
     ) {
@@ -42,18 +38,18 @@ final class BuildSearchedItemRepresentationsFromSearchReport
 
     public function build(\Docman_Report $report, \Docman_Item $folder, \PFUser $user, int $limit, int $offset): SearchRepresentationsCollection
     {
-        $results = $this->item_dao->searchByGroupId($folder->getGroupId(), $report, ['limit' => $limit, 'offset' => $offset]);
+        $nb_item_found = 0;
+        $results       = $this->item_factory->getItemList(
+            $folder->getId(),
+            $nb_item_found,
+            ['limit' => $limit, 'offset' => $offset, 'filter' => $report, 'start' => $offset, 'user' => $user, 'getall' => true]
+        );
 
         $search_results = [];
-        foreach ($results as $row) {
-            if (! $this->permissions_manager->userCanRead($user, $row['item_id'])) {
-                continue;
-            }
-            $item = $this->item_factory->getItemFromRow($row);
-            if (! $item) {
-                continue;
-            }
-            $owner = $this->user_manager->getUserById($row['user_id']);
+        foreach ($results as $item) {
+            assert($item instanceof \Docman_Item);
+
+            $owner = $this->user_manager->getUserById($item->getOwnerId());
             assert($owner instanceof \PFUser);
             $search_results[] = SearchRepresentation::build(
                 $item,
@@ -63,8 +59,6 @@ final class BuildSearchedItemRepresentationsFromSearchReport
             );
         }
 
-        $whole_collection = $this->item_dao->searchByGroupId($folder->getGroupId(), $report, ['only_count' => true]);
-
-        return new SearchRepresentationsCollection($search_results, (int) $whole_collection->getRow()["total"]);
+        return new SearchRepresentationsCollection($search_results, $nb_item_found);
     }
 }

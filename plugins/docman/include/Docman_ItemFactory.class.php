@@ -533,8 +533,10 @@ class Docman_ItemFactory
      * 3. Check that each document in list 1. is in a folder of list 2.
      * 5. Apply limits ($start, $offset) is only a subset of the list is required.
      * 6. If needed, add the metadata to the items.
+     *
+     * @psalm-param array{user: PFUser, filter?: Docman_Report, ignore_obsolete: bool, start?: int, offset?: int, obsolete_only?: bool, getall?: bool, ignore_deleted?: bool, ignore_folders?: bool} $params
      */
-    private function getItemSubTreeAsList($parentId, &$nbItemsFound, $params = null)
+    private function getItemSubTreeAsList($parentId, int &$nbItemsFound, array $params): ArrayIterator
     {
         $user = $params['user'];
 
@@ -570,10 +572,7 @@ class Docman_ItemFactory
         $pathIdArray    = [$parentId => []];
         $pathTitleArray = [$parentId => []];
         $parentIds      = [$parentId];
-        $folderIds      = [$parentId];
-        $i              = 0;
         do {
-            $i++;
             $dar       = $dao->searchSubFolders($parentIds);
             $parentIds = [];
             $itemIds   = [];
@@ -670,11 +669,10 @@ class Docman_ItemFactory
     }
 
     /**
-     * Build a list of items
+     * * @psalm-param array{user: PFUser, filter?: Docman_Report, ignore_obsolete: boolean, start?: int, offset?: int, obsolete_only?: bool, getall?: bool } $params
      *
-     * @return Iterator
      */
-    public function getItemList($id, &$nbItemsFound, $params = null)
+    public function getItemList($id, int &$nbItemsFound, array $params): ArrayIterator
     {
         if (! $id) {
             $dao = $this->_getItemDao();

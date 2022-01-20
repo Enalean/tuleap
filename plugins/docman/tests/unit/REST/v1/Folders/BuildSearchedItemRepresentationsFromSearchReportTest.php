@@ -36,17 +36,9 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
     use GlobalLanguageMock;
 
     /**
-     * @var \Docman_ItemDao&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $item_dao;
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\UserManager
      */
     private $user_manager;
-    /**
-     * @var \Docman_PermissionsManager&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $permissions_manager;
     /**
      * @var Docman_ItemFactory&\PHPUnit\Framework\MockObject\MockObject
      */
@@ -58,30 +50,26 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
     {
         $docman_settings = $this->createMock(\Docman_SettingsBo::class);
         $docman_settings->method('getMetadataUsage')->with('status')->willReturn("1");
-        $this->item_dao            = $this->createMock(\Docman_ItemDao::class);
-        $this->status_mapper       = new ItemStatusMapper($docman_settings);
-        $this->user_manager        = $this->createMock(\UserManager::class);
-        $this->permissions_manager = $this->createMock(\Docman_PermissionsManager::class);
+        $item_dao            = $this->createMock(\Docman_ItemDao::class);
+        $this->status_mapper = new ItemStatusMapper($docman_settings);
+        $this->user_manager  = $this->createMock(\UserManager::class);
+        $permissions_manager = $this->createMock(\Docman_PermissionsManager::class);
 
         $this->item_factory           = $this->createMock(Docman_ItemFactory::class);
         $this->representation_builder = new BuildSearchedItemRepresentationsFromSearchReport(
-            $this->item_dao,
             $this->status_mapper,
             $this->user_manager,
-            $this->permissions_manager,
-            new ItemRepresentationCollectionBuilder($this->item_factory, $this->permissions_manager, $this->createMock(ItemRepresentationVisitor::class), $this->item_dao),
+            new ItemRepresentationCollectionBuilder($this->item_factory, $permissions_manager, $this->createMock(ItemRepresentationVisitor::class), $item_dao),
             $this->item_factory
         );
     }
 
     public function testItBuildsItemRepresentations(): void
     {
-        $total = 3;
-
         $report = new \Docman_Report();
         $folder = new \Docman_Folder(["group_id" => 101]);
 
-        $item_one = [
+        $item_one_array = [
             "item_id"     => 1,
             "title"       => "folder",
             "description" => "",
@@ -90,7 +78,8 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
             "user_id"     => 101,
             "parent_id"   => 0,
         ];
-        $item_two = [
+        $item_one       = new \Docman_Folder($item_one_array);
+        $item_two_array = [
             "item_id"     => 2,
             "title"       => "file",
             "description" => "",
@@ -99,34 +88,19 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
             "user_id"     => 101,
             "parent_id"   => 0,
         ];
+        $item_two       = new \Docman_File($item_two_array);
 
-        $private_item = [
-            "item_id"     => 3,
-            "title"       => "private",
-            "description" => "",
-            "update_date" => "987654321",
-            "status"      => PLUGIN_DOCMAN_ITEM_STATUS_REJECTED,
-            "user_id"     => 101,
-        ];
-        $this->item_dao->method('searchByGroupId')->willReturnOnConsecutiveCalls(
-            [$item_one, $item_two, $private_item],
-            \TestHelper::arrayToDar(["total" => $total])
+        $this->item_factory->method('getItemList')->willReturn(
+            new \ArrayIterator([$item_one, $item_two])
         );
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithId(101));
-        $this->permissions_manager->method('userCanRead')->willReturnOnConsecutiveCalls(true, true, false);
-        $this->item_factory->method('getItemFromRow')->willReturnOnConsecutiveCalls(
-            new \Docman_Folder($item_one),
-            new \Docman_File($item_two),
-        );
-        $this->item_factory->method('getItemFromdb')->willReturn(
-            new \Docman_Folder($item_one),
-        );
 
         $collection = $this->representation_builder->build($report, $folder, UserTestBuilder::aUser()->build(), 50, 0);
+
+        $this->assertItemEqualsRepresentation($item_one_array, $collection->search_representations[0]);
+        $this->assertItemEqualsRepresentation($item_two_array, $collection->search_representations[1]);
+
         self::assertCount(2, $collection->search_representations);
-        self::assertSame($total, $collection->total);
-        $this->assertItemEqualsRepresentation($item_one, $collection->search_representations[0]);
-        $this->assertItemEqualsRepresentation($item_two, $collection->search_representations[1]);
     }
 
     private function assertItemEqualsRepresentation(array $item, SearchRepresentation $representation): void
