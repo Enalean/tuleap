@@ -58,6 +58,7 @@
     "jquery": "^3.6.0"
   },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "rm -rf ../../src/www/assets/testmanagement && webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
     "test": "jest"

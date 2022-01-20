@@ -5,12 +5,13 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/core": "link:../../src",
     "@tuleap/html-escaper": "file:../../src/scripts/lib/html-escaper",
     "mustache": "^4.2.0",
     "sprintf-js": "^1.1.2"
   },
-  "devDependencies": {},
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch"
   }

@@ -5,12 +5,14 @@
     "license": "GPL-2.0-or-later",
     "private": true,
     "dependencies": {
+        "@tuleap/core": "link:../../src",
         "sprintf-js": "^1.1.2"
     },
     "devDependencies": {
         "@types/sprintf-js": "^1.1.2"
     },
     "scripts": {
+        "typecheck": "tsc --noEmit",
         "build": "webpack --config webpack.prod.js",
         "watch": "webpack --config webpack.dev.js --watch",
         "test": "jest"

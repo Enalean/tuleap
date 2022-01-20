@@ -17,11 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    getPOFileFromLocale,
-    initGettext,
-} from "../../../../src/scripts/tuleap/gettext/gettext-init";
-import { openModalAndReplacePlaceholders } from "../../../../src/scripts/tuleap/modals/modal-opener";
+import { getPOFileFromLocale, initGettext } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
+import { openModalAndReplacePlaceholders } from "@tuleap/core/scripts/tuleap/modals/modal-opener";
 import { buildRevocationReplaceCallback, hiddenInputReplaceCallback } from "./replacers";
 
 const REVOKE_BUTTONS_SELECTOR = ".oauth2-server-revoke-authorization-button";

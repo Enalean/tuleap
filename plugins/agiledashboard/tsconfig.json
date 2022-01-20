@@ -4,5 +4,6 @@
         "module": "esNext",
         "types": ["jest", "node"]
     },
-    "include": ["scripts/**/*"]
+    "include": ["scripts/**/*"],
+    "exclude": ["scripts/lib/**"]
 }

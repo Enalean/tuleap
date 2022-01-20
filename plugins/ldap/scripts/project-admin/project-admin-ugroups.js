@@ -19,7 +19,7 @@
 
 import { get } from "tlp";
 import { initLdapBindingPreview } from "./preview-for-select2.js";
-import { openTargetModalIdOnClick } from "../../../../src/scripts/tuleap/modals/modal-opener.ts";
+import { openTargetModalIdOnClick } from "@tuleap/core/scripts/tuleap/modals/modal-opener.ts";
 
 const ADD_MODAL_BINDING_BUTTON_ID = "project-admin-ugroup-add-ldap-binding";
 

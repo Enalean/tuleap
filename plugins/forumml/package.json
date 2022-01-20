@@ -15,6 +15,7 @@
     "vuex-class": "^0.3.2"
   },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
     "test": "jest"

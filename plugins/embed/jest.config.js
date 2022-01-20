@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+process.env.DISABLE_TS_TYPECHECK = "true";
+
 const base_config = require("../../tests/jest/jest.base.config.js");
 
 module.exports = {

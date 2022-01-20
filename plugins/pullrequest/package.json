@@ -24,6 +24,7 @@
     "jquery": "^3.6.0"
   },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "rm -rf ../../src/www/assets/pullrequest/ && webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
     "test": "jest"

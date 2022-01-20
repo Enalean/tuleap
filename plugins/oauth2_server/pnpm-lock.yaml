@@ -1,10 +1,12 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/core': link:../../src
   '@types/sprintf-js': ^1.1.2
   sprintf-js: ^1.1.2
 
 dependencies:
+  '@tuleap/core': link:../../src
   sprintf-js: 1.1.2
 
 devDependencies:
