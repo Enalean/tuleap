@@ -56,6 +56,7 @@ export function createRouter(store, project_name) {
                 path: "/search/",
                 name: "search",
                 component: SearchContainer,
+                props: (route) => ({ query: route.query.q }),
             },
         ],
     });

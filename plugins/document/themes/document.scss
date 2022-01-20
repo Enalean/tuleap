@@ -18,24 +18,25 @@
  */
 
 @use "../../../src/themes/BurningParrot/css/includes/global-variables";
-@import "headers";
-@import "icons";
-@import "folder-content";
-@import "new-document";
-@import "upload";
-@import "notifications";
-@import "switch-to-docman";
-@import "quicklook";
-@import "update-document";
-@import "confirm-deletion-modal";
-@import "embedded-document";
-@import "metadata";
-@import "folder-properties-modal";
-@import "modal-common";
-@import "clipboard";
-@import "permissions-modal";
-@import "download-as-zip";
-@import "project_background_header";
+@use "headers";
+@use "icons";
+@use "folder-content";
+@use "new-document";
+@use "upload";
+@use "notifications";
+@use "switch-to-docman";
+@use "quicklook";
+@use "update-document";
+@use "confirm-deletion-modal";
+@use "embedded-document";
+@use "metadata";
+@use "folder-properties-modal";
+@use "modal-common";
+@use "clipboard";
+@use "permissions-modal";
+@use "download-as-zip";
+@use "project_background_header";
+@use "search";
 
 .document-app {
     display: flex;
