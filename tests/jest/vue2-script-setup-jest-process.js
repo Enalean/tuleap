@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const base_config = require("../../tests/jest/jest.base.config.js");
-const path = require("path");
+const { transform } = require("unplugin-vue2-script-setup");
 
 module.exports = {
-    ...base_config,
-    transform: {
-        ...base_config.transform,
-        "^.+\\.vue$": path.resolve(__dirname, "../../tests/jest/vue2-script-setup-jest-process.js"),
+    process(source, filename, ...args) {
+        const transformed = transform(source, filename);
+        const code = transformed ? transformed.code : source;
+        return require("@vue/vue2-jest").process.call(this, code, filename, ...args);
     },
-    displayName: "testplan",
 };
