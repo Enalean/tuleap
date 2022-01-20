@@ -107,6 +107,11 @@ class ArtifactRepresentation
     public $status;
 
     /**
+     * @var bool whether the current status semantic value is considered open or closed {@type bool}
+     */
+    public bool $is_open;
+
+    /**
      * @var string | null the semantic title value {@type string}
      */
     public $title;
@@ -131,6 +136,7 @@ class ArtifactRepresentation
         ?array $values_by_field,
         string $last_modified_date,
         ?string $status,
+        bool $is_open,
         ?string $title,
         array $assignees,
     ) {
@@ -148,6 +154,7 @@ class ArtifactRepresentation
         $this->values_by_field    = $values_by_field;
         $this->last_modified_date = $last_modified_date;
         $this->status             = $status;
+        $this->is_open            = $is_open;
         $this->title              = $title;
         $this->assignees          = $assignees;
     }
@@ -177,6 +184,7 @@ class ArtifactRepresentation
             $values_by_field,
             JsonCast::toDate($artifact->getLastUpdateDate()),
             $artifact->getStatus(),
+            $artifact->isOpen(),
             $artifact->getTitle(),
             $assignees
         );
