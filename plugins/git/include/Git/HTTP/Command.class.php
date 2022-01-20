@@ -20,7 +20,7 @@
 
 abstract class Git_HTTP_Command
 {
-    protected $env;
+    protected array $env;
 
     public function __construct()
     {
@@ -30,6 +30,9 @@ abstract class Git_HTTP_Command
             'QUERY_STRING'        => $_SERVER['QUERY_STRING'],
             'REQUEST_METHOD'      => $_SERVER['REQUEST_METHOD'],
         ];
+        if (isset($_SERVER['HTTP_GIT_PROTOCOL'])) {
+            $this->env['GIT_PROTOCOL'] = $_SERVER['HTTP_GIT_PROTOCOL'];
+        }
 
         $this->appendToEnv('PATH_INFO');
         $this->appendToEnv('CONTENT_TYPE');
