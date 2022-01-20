@@ -19,10 +19,7 @@
 
 import { Writable } from "readable-stream/readable-browser.js";
 import pump from "pump";
-import {
-    uploadTemporaryFile as uploadFile,
-    uploadAdditionalChunk,
-} from "../../rest/rest-service.js";
+import { uploadTemporaryFile as uploadFile, uploadAdditionalChunk } from "../../rest/rest-service";
 
 import { getFileReaderStream } from "./streaming-file-reader.js";
 import { getBase64Transform } from "./base64-transform.js";

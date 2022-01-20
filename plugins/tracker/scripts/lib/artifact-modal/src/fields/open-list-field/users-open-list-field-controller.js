@@ -21,7 +21,7 @@ import tpl from "./users-result-template.tpl.html";
 import { select2 } from "tlp";
 import { isDefined } from "angular";
 import { has, remove } from "lodash";
-import { searchUsers } from "../../rest/rest-service.js";
+import { searchUsers } from "../../rest/rest-service";
 import { initOpenListFieldLabelAndSelectIds } from "./open-list-field-ids-initializer";
 
 export default OpenListFieldController;

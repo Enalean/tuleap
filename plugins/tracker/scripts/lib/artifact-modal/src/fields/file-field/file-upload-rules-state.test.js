@@ -19,7 +19,7 @@
 
 import { updateFileUploadRulesWhenNeeded, file_upload_rules } from "./file-upload-rules-state.js";
 import * as file_field_detector from "./file-field-detector";
-import * as rest_service from "../../rest/rest-service.js";
+import * as rest_service from "../../rest/rest-service";
 
 describe("FileUploadRulesUpdater() -", () => {
     let isThereAtLeastOneFileField, getFileUploadRules;

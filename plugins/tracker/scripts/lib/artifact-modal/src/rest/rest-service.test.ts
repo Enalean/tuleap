@@ -17,13 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
-import * as RestService from "./rest-service.js";
-import * as rest_error_state from "./rest-error-state.js";
+import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import * as RestService from "./rest-service";
+import * as rest_error_state from "./rest-error-state";
 
 import * as tlp from "tlp";
+import { TEXT_FORMAT_TEXT } from "../../../../constants/fields-constants";
 
-jest.mock("tlp");
+const noop = (): void => {
+    //Do nothing
+};
 
 describe("rest-service", () => {
     it("getTracker() - Given a tracker id, when I get the tracker, then a promise will be resolved with the tracker", async () => {
@@ -85,20 +88,24 @@ describe("rest-service", () => {
             ],
             title: "coincoin",
         };
-        const headers = {
-            Etag: "etag",
-            "Last-Modified": 1629098386,
-        };
         mockFetchSuccess(jest.spyOn(tlp, "get"), {
             return_json,
             headers: {
-                get: (header) => headers[header],
+                get: (header) => {
+                    if (header === "Etag") {
+                        return "etag";
+                    }
+                    if (header === "Last-Modified") {
+                        return "1629098386";
+                    }
+                    return null;
+                },
             },
         });
 
         const values = await RestService.getArtifactWithCompleteTrackerStructure(40);
 
-        expect(values).toEqual({ ...return_json, ...headers });
+        expect(values).toEqual({ ...return_json, Etag: "etag", "Last-Modified": "1629098386" });
     });
 
     describe("getAllOpenParentArtifacts() -", () => {
@@ -110,7 +117,7 @@ describe("rest-service", () => {
                 { id: 21, title: "equationally" },
                 { id: 82, title: "brachiator" },
             ];
-            const tlpRecursiveGetSpy = jest.spyOn(tlp, "recursiveGet").mockReturnValue(artifacts);
+            const tlpRecursiveGetSpy = jest.spyOn(tlp, "recursiveGet").mockResolvedValue(artifacts);
 
             const values = await RestService.getAllOpenParentArtifacts(tracker_id, limit, offset);
 
@@ -136,9 +143,7 @@ describe("rest-service", () => {
                 },
             };
 
-            const setErrorSpy = jest
-                .spyOn(rest_error_state, "setError")
-                .mockImplementation(() => {});
+            const setErrorSpy = jest.spyOn(rest_error_state, "setError").mockImplementation(noop);
             mockFetchError(jest.spyOn(tlp, "recursiveGet"), { error_json });
 
             await RestService.getAllOpenParentArtifacts(tracker_id, limit, offset).then(
@@ -229,14 +234,14 @@ describe("rest-service", () => {
             mockFetchSuccess(tlpGetSpy, {
                 headers: {
                     /** 'X-PAGINATION-SIZE' */
-                    get: () => 74,
+                    get: () => "74",
                 },
                 return_json,
             });
 
             const followup_comments = await RestService.getFollowupsComments(148, 66, 23, "desc");
 
-            expect(followup_comments.total).toEqual(74);
+            expect(followup_comments.total).toEqual("74");
             expect(followup_comments.results[0]).toEqual(first_response);
             expect(followup_comments.results[1]).toEqual(second_response);
             expect(tlpGetSpy).toHaveBeenCalledWith("/api/v1/artifacts/148/changesets", {
@@ -328,8 +333,8 @@ describe("rest-service", () => {
     describe("editArtifact() -", () => {
         it("Given an artifact id and an array of fields containing their id and selected value, when I edit an artifact, then the field values will be sent using the edit REST route and a promise will be resolved with the edited artifact's id", async () => {
             const followup_comment = {
-                value: "",
-                format: "text",
+                body: "",
+                format: TEXT_FORMAT_TEXT,
             };
             const field_values = [
                 { field_id: 47, value: "unpensionableness" },
@@ -367,8 +372,8 @@ describe("rest-service", () => {
     describe("editArtifactWithConcurrencyChecking() -", () => {
         it("Given an artifact id and an array of fields, when I edit an artifact in concurrency mode, then the field values will be sent using the edit REST route and a promise will be resolved with the edited artifact's id", async () => {
             const followup_comment = {
-                value: "",
-                format: "text",
+                body: "",
+                format: TEXT_FORMAT_TEXT,
             };
             const field_values = [
                 { field_id: 47, value: "unpensionableness" },
@@ -387,7 +392,7 @@ describe("rest-service", () => {
                 field_values,
                 followup_comment,
                 "etag",
-                1629098047
+                "1629098047"
             );
 
             expect(artifact_edition).toEqual({
@@ -397,7 +402,7 @@ describe("rest-service", () => {
                 headers: {
                     "content-type": "application/json",
                     "If-match": "etag",
-                    "If-Unmodified-Since": 1629098047,
+                    "If-Unmodified-Since": "1629098047",
                 },
                 body: JSON.stringify({
                     values: field_values,
@@ -408,8 +413,8 @@ describe("rest-service", () => {
 
         it("Given an artifact id and and no etag, when I edit an artifact in concurrency mode, then the field values will be sent using the edit REST route and a promise will be resolved with the edited artifact's id", async () => {
             const followup_comment = {
-                value: "",
-                format: "text",
+                body: "",
+                format: TEXT_FORMAT_TEXT,
             };
             const tlpPutSpy = jest.spyOn(tlp, "put");
             mockFetchSuccess(tlpPutSpy, {
@@ -424,7 +429,7 @@ describe("rest-service", () => {
                 [],
                 followup_comment,
                 null,
-                1629098047
+                "1629098047"
             );
 
             expect(artifact_edition).toEqual({
@@ -433,7 +438,7 @@ describe("rest-service", () => {
             expect(tlpPutSpy).toHaveBeenCalledWith("/api/v1/artifacts/8354", {
                 headers: {
                     "content-type": "application/json",
-                    "If-Unmodified-Since": 1629098047,
+                    "If-Unmodified-Since": "1629098047",
                 },
                 body: JSON.stringify({
                     values: [],
@@ -445,16 +450,21 @@ describe("rest-service", () => {
 
     describe("getFileUploadRules() -", () => {
         it("When I get the file upload rules, then a promise will be resolved with an object containing the disk quota for the logged user, her disk usage and the max chunk size that can be sent when uploading a file", async () => {
-            const headers = {
-                "X-QUOTA": "2229535",
-                "X-DISK-USAGE": "596878",
-                "X-UPLOAD-MAX-FILE-CHUNKSIZE": "732798",
-            };
-
             const tlpOptionsSpy = jest.spyOn(tlp, "options");
             mockFetchSuccess(tlpOptionsSpy, {
                 headers: {
-                    get: (header) => headers[header],
+                    get: (header) => {
+                        if (header === "X-QUOTA") {
+                            return "2229535";
+                        }
+                        if (header === "X-DISK-USAGE") {
+                            return "596878";
+                        }
+                        if (header === "X-UPLOAD-MAX-FILE-CHUNKSIZE") {
+                            return "732798";
+                        }
+                        return null;
+                    },
                 },
             });
 
@@ -494,9 +504,8 @@ describe("rest-service", () => {
 
         it("Given an artifact id and given there weren't any linked _is_child artifacts, then an empty array will be returned", async () => {
             const artifact_id = 78;
-            const collection = [];
             mockFetchSuccess(jest.spyOn(tlp, "get"), {
-                return_json: { collection },
+                return_json: { collection: [] },
             });
 
             const result = await RestService.getFirstReverseIsChildLink(artifact_id);
@@ -511,9 +520,7 @@ describe("rest-service", () => {
                     message: "Invalid artifact id",
                 },
             };
-            const setErrorSpy = jest
-                .spyOn(rest_error_state, "setError")
-                .mockImplementation(() => {});
+            const setErrorSpy = jest.spyOn(rest_error_state, "setError").mockImplementation(noop);
             mockFetchError(jest.spyOn(tlp, "get"), { error_json });
 
             await RestService.getFirstReverseIsChildLink(artifact_id).then(

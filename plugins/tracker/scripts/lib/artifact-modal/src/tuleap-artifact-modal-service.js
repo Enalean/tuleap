@@ -26,7 +26,7 @@ import {
     getArtifactWithCompleteTrackerStructure,
     getTracker,
     getUserPreference,
-} from "./rest/rest-service.js";
+} from "./rest/rest-service";
 import { updateFileUploadRulesWhenNeeded } from "./fields/file-field/file-upload-rules-state.js";
 import { getArtifactFieldValues } from "./artifact-edition-initializer.js";
 import { buildFormTree } from "./model/form-tree-builder.js";

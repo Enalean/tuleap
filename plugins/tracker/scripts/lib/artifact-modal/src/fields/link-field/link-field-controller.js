@@ -5,7 +5,7 @@ import {
     getArtifact,
     getAllOpenParentArtifacts,
     getFirstReverseIsChildLink,
-} from "../../rest/rest-service.js";
+} from "../../rest/rest-service";
 
 export default LinkFieldController;
 
