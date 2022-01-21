@@ -15,7 +15,7 @@
     "moment": "2.22.2",
     "nconf": "0.8.5",
     "optimist": "0.6.1",
-    "socket.io": "1.7.4"
+    "socket.io": "^4.4.1"
   },
   "devDependencies": {
     "pkg": "^5.5.2",
