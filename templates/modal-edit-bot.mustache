@@ -7,9 +7,11 @@
 >
 
     <div class="modal-header">
-        <a role="button" class="close" data-dismiss="modal">×</a>
+        <a role="button" class="close" data-dismiss="modal">
+            <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
+        </a>
         <h3 id="configuration-edit-bot-title">
-            <i class="fa fa-pencil-square-o"></i> {{ modal_edit_title }}</h3>
+            {{ modal_edit_title }}</h3>
     </div>
 
     <form method="POST" action="/plugins/botmattermost_git/?action=edit_bot" >
