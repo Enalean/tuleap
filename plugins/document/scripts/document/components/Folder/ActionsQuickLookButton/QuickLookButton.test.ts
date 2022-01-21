@@ -17,33 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import QuickLookButton from "./QuickLookButton.vue";
 import { TYPE_FOLDER } from "../../../constants";
-import EventBus from "../../../helpers/event-bus.js";
+import type { Item } from "../../../type";
+import mitt from "../../../helpers/emitter";
+
+jest.mock("../../../helpers/emitter");
 
 describe("QuickLookButton", () => {
-    let factory, store;
-    beforeEach(() => {
-        store = createStoreMock({});
-        factory = (props = {}) => {
-            return shallowMount(QuickLookButton, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-    });
+    function createWrapper(item: Item): Wrapper<QuickLookButton> {
+        return shallowMount(QuickLookButton, {
+            localVue,
+            propsData: { item },
+        });
+    }
 
     it(`Emit displayQuickLook event with correct parameters when user click on button`, () => {
-        const item = { type: TYPE_FOLDER, user_can_write: true };
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
-        const wrapper = factory({ item });
+        const item = { type: TYPE_FOLDER, user_can_write: true } as Item;
+        const wrapper = createWrapper(item);
 
         wrapper.get("[data-test=document-quick-look-button]").trigger("click");
-        expect(event_bus_emit).toHaveBeenCalledWith("toggle-quick-look", {
+        expect(mitt.emit).toHaveBeenCalledWith("toggle-quick-look", {
             details: { item },
         });
     });

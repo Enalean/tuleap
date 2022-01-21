@@ -17,42 +17,64 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import CreateNewItemVersionButton from "./NewItemVersionButton.vue";
 
 import localVue from "../../../helpers/local-vue";
-import EventBus from "../../../helpers/event-bus.js";
+import type { Embedded, Empty, Item, ItemFile, Link, Wiki } from "../../../type";
+import mitt from "../../../helpers/emitter";
+
+jest.mock("../../../helpers/emitter");
 
 describe("CreateNewItemVersionButton", () => {
-    let create_new_item_version_button_factory, store;
-    beforeEach(() => {
-        store = createStoreMock({});
-        create_new_item_version_button_factory = (props = {}) => {
-            return shallowMount(CreateNewItemVersionButton, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
+    const store = {
+        dispatch: jest.fn(),
+    };
+
+    function createWrapper(item: Item): Wrapper<CreateNewItemVersionButton> {
+        return shallowMount(CreateNewItemVersionButton, {
+            localVue,
+            propsData: { item: item, buttonClasses: "", iconClasses: "" },
+            mocks: {
+                $store: store,
+            },
+        });
+    }
+
+    it(`Given item is a wiki with an approval table
+        When we click on [create new version]
+        Then no event should be dispatched`, () => {
+        const item = {
+            id: 1,
+            title: "my item title",
+            type: "wiki",
+            user_can_write: true,
+            approval_table: {
+                approval_state: "not yet",
+            },
+        } as Wiki;
+        const wrapper = createWrapper(item);
+
+        wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
+
+        expect(mitt.emit).not.toHaveBeenCalled();
     });
 
     it(`Given item is a file
         When we click on [create new version]
         Then create-new-item-version event should be dispatched`, () => {
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
-        const wrapper = create_new_item_version_button_factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "file",
-                user_can_write: true,
-            },
-        });
+        const item = {
+            id: 1,
+            title: "my item title",
+            type: "file",
+            user_can_write: true,
+        } as ItemFile;
+        const wrapper = createWrapper(item);
 
         wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
 
-        expect(event_bus_emit).toHaveBeenCalledWith(
+        expect(mitt.emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
             expect.any(Object)
         );
@@ -61,19 +83,17 @@ describe("CreateNewItemVersionButton", () => {
     it(`Given item is an embedded file
         When we click on [create new version]
         Then create-new-item-version event should be dispatched`, () => {
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
-        const wrapper = create_new_item_version_button_factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "embedded",
-                user_can_write: true,
-            },
-        });
+        const item = {
+            id: 1,
+            title: "my item title",
+            type: "embedded",
+            user_can_write: true,
+        } as Embedded;
+        const wrapper = createWrapper(item);
 
         wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
 
-        expect(event_bus_emit).toHaveBeenCalledWith(
+        expect(mitt.emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
             expect.any(Object)
         );
@@ -82,63 +102,37 @@ describe("CreateNewItemVersionButton", () => {
     it(`Given item is a wiki with no approval table
         When we click on [create new version]
         Then create-new-item-version event should be dispatched`, () => {
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
-        const wrapper = create_new_item_version_button_factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "wiki",
-                user_can_write: true,
-                approval_table: null,
-            },
-        });
+        const item = {
+            id: 1,
+            title: "my item title",
+            type: "wiki",
+            user_can_write: true,
+            approval_table: null,
+        } as Wiki;
+        const wrapper = createWrapper(item);
 
         wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
 
-        expect(event_bus_emit).toHaveBeenCalledWith(
+        expect(mitt.emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
             expect.any(Object)
         );
     });
 
-    it(`Given item is a wiki with an approval table
-        When we click on [create new version]
-        Then no event should be dispatched`, () => {
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
-        const wrapper = create_new_item_version_button_factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "wiki",
-                user_can_write: true,
-                approval_table: {
-                    approval_state: "not yet",
-                },
-            },
-        });
-
-        wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
-
-        expect(event_bus_emit).not.toHaveBeenCalled();
-    });
-
     it(`Given item is an empty document
         When we click on [create new version]
         Then create-new-item-version event should be dispatched`, () => {
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
-
-        const wrapper = create_new_item_version_button_factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "empty",
-                user_can_write: true,
-            },
-        });
+        const item = {
+            id: 1,
+            title: "my item title",
+            type: "empty",
+            user_can_write: true,
+        } as Empty;
+        const wrapper = createWrapper(item);
 
         wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
 
-        expect(event_bus_emit).toHaveBeenCalledWith(
+        expect(mitt.emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
             expect.any(Object)
         );
@@ -152,9 +146,9 @@ describe("CreateNewItemVersionButton", () => {
             title: "my item title",
             type: "link",
             user_can_write: true,
-        };
+        } as Link;
 
-        const wrapper = create_new_item_version_button_factory({ item });
+        const wrapper = createWrapper(item);
 
         wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
 
@@ -163,14 +157,13 @@ describe("CreateNewItemVersionButton", () => {
 
     it(`Given user can't write in folder
         Then update link is not available`, () => {
-        const wrapper = create_new_item_version_button_factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "file",
-                user_can_write: false,
-            },
-        });
+        const item = {
+            id: 1,
+            title: "my item title",
+            type: "file",
+            user_can_write: false,
+        } as ItemFile;
+        const wrapper = createWrapper(item);
 
         expect(wrapper.find("[data-test=document-new-item-version-button]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-folder-update-button]").exists()).toBeFalsy();

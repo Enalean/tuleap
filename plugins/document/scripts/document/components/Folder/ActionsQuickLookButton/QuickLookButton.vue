@@ -30,17 +30,18 @@
     </button>
 </template>
 
-<script>
-import EventBus from "../../../helpers/event-bus.js";
-export default {
-    name: "QuickLookButton",
-    props: {
-        item: Object,
-    },
-    methods: {
-        toggleQuickLook() {
-            EventBus.$emit("toggle-quick-look", { details: { item: this.item } });
-        },
-    },
-};
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Item } from "../../../type";
+import emitter from "../../../helpers/emitter";
+
+@Component
+export default class QuickLookDeleteButton extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    toggleQuickLook() {
+        emitter.emit("toggle-quick-look", { details: { item: this.item } });
+    }
+}
 </script>

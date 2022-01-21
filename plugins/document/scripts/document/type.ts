@@ -140,7 +140,7 @@ export interface Embedded extends Item, ApprovableDocument {
     status: string;
 }
 
-export interface Wiki extends Item {
+export interface Wiki extends Item, ApprovableDocument {
     parent_id: number;
     wiki_properties: WikiProperties;
     type: "wiki";
