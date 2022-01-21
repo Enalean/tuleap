@@ -16,47 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import NewItemButton from "./NewItemButton.vue";
-
+import type { Item } from "../../../type";
 import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-import EventBus from "../../../helpers/event-bus.js";
+import { TYPE_FOLDER } from "../../../constants";
+import mitt from "../../../helpers/emitter";
+
+jest.mock("../../../helpers/emitter");
 
 describe("NewItemButton", () => {
-    let factory;
-    beforeEach(() => {
-        const state = {};
-
-        const store_options = {
-            state,
-        };
-
-        const store = createStoreMock(store_options);
-
-        factory = (props = {}) => {
-            return shallowMount(NewItemButton, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-    });
+    function createWrapper(item: Item): Wrapper<NewItemButton> {
+        return shallowMount(NewItemButton, {
+            localVue,
+            propsData: { item: item },
+        });
+    }
 
     it(`When user clicks on New item button
         Then it should open a modal`, () => {
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
-        const wrapper = factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "file",
-                user_can_write: true,
-            },
-        });
+        const item = {
+            type: TYPE_FOLDER,
+            user_can_write: true,
+        } as Item;
+
+        const wrapper = createWrapper(item);
 
         wrapper.get("[data-test=docman-new-item-button]").trigger("click");
 
-        expect(event_bus_emit).toHaveBeenCalledWith("show-new-document-modal", expect.any(Object));
+        expect(mitt.emit).toHaveBeenCalledWith("createItem", { item: item });
     });
 });

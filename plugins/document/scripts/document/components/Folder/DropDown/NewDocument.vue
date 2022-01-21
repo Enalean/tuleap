@@ -23,7 +23,7 @@
         class="tlp-dropdown-menu-item"
         type="button"
         role="menuitem"
-        v-on:click.prevent="showNewDocumentModal"
+        v-on:click.prevent="showNewDocumentModal()"
         data-test="document-new-item"
         data-shortcut-create-document
     >
@@ -32,21 +32,22 @@
     </button>
 </template>
 
-<script>
-import EventBus from "../../../helpers/event-bus.js";
+<script lang="ts">
 import { isFolder } from "../../../helpers/type-check-helper";
-export default {
-    name: "NewDocument",
-    props: {
-        item: Object,
-    },
-    methods: {
-        showNewDocumentModal() {
-            EventBus.$emit("show-new-document-modal", { detail: { parent: this.item } });
-        },
-        is_item_a_folder(item) {
-            return isFolder(item);
-        },
-    },
-};
+import type { Item } from "../../../type";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import emitter from "../../../helpers/emitter";
+
+@Component
+export default class NewDocument extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    showNewDocumentModal(): void {
+        emitter.emit("createItem", { item: this.item });
+    }
+    is_item_a_folder(item: Item): boolean {
+        return isFolder(item);
+    }
+}
 </script>
