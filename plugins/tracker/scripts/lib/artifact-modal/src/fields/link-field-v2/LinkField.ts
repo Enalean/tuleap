@@ -171,7 +171,11 @@ export const LinkField = define<LinkField>({
         `}
         ${host.error_message !== "" &&
         html`
-            <div class="tlp-alert-danger" data-test="linked-artifacts-error">
+            <div
+                id="tuleap-artifact-modal-link-error"
+                class="tlp-alert-danger"
+                data-test="linked-artifacts-error"
+            >
                 ${host.error_message}
             </div>
         `}
