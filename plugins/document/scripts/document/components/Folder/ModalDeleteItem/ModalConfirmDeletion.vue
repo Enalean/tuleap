@@ -187,7 +187,7 @@ export default {
         },
         resetModal() {
             this.$store.commit("error/resetModalError");
-            this.$store.commit("modals/removeDeleteItem");
+            this.$emit("delete-modal-closed");
         },
         async redirectToParentFolderIfNeeded(deleted_item_parent_id) {
             const is_item_the_current_folder = this.item.id === this.current_folder.id;

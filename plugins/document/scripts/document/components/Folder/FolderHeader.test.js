@@ -24,6 +24,7 @@ import localVue from "../../helpers/local-vue";
 import FolderHeader from "./FolderHeader.vue";
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import { TYPE_EMPTY } from "../../constants";
+import mitt from "../../helpers/emitter";
 
 describe("FolderHeader", () => {
     let factory, store;
@@ -122,7 +123,9 @@ describe("FolderHeader", () => {
             const wrapper = factory();
             expect(wrapper.find("[data-test=document-delete-item-modal]").exists()).toBe(false);
 
-            store.state.modals.delete_item = { id: 20 };
+            mitt.emit("deleteItem", {
+                item: store.state.current_folder,
+            });
 
             await wrapper.vm.$nextTick();
             expect(wrapper.find("[data-test=document-delete-item-modal]").exists()).toBe(true);

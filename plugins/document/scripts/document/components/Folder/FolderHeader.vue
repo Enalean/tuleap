@@ -54,9 +54,10 @@
             />
         </div>
         <confirm-deletion-modal
-            v-if="delete_item"
-            v-bind:item="delete_item"
+            v-if="item_to_delete"
+            v-bind:item="item_to_delete"
             data-test="document-delete-item-modal"
+            v-on:delete-modal-closed="hideDeleteItemModal"
         />
         <permissions-update-modal
             v-bind:item="item_to_update_permissions"
@@ -97,6 +98,7 @@ import NewFolderModal from "./ModalNewItem/NewFolderModal.vue";
 import FolderHeaderAction from "./FolderHeaderAction.vue";
 import EventBus from "../../helpers/event-bus.js";
 import { isFolder } from "../../helpers/type-check-helper";
+import emitter from "../../helpers/emitter";
 
 export default {
     name: "FolderHeader",
@@ -164,6 +166,7 @@ export default {
         },
     },
     created() {
+        emitter.on("deleteItem", this.showDeleteItemModal);
         EventBus.$on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
         EventBus.$on("show-update-item-metadata-modal", this.showUpdateItemMetadataModal);
         EventBus.$on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
@@ -262,6 +265,12 @@ export default {
         },
         isItemAFolder(item) {
             return isFolder(item);
+        },
+        showDeleteItemModal(event) {
+            this.item_to_delete = event.item;
+        },
+        hideDeleteItemModal() {
+            this.item_to_delete = null;
         },
     },
 };
