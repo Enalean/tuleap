@@ -31,7 +31,7 @@ export function expiringLocalStorage(expirationTimeoutSeconds: number): localSto
         getItem(key: string): string | null {
             const item_expiration_key = window.localStorage.getItem(getExpirationKey(key));
             if (!item_expiration_key) {
-                throw new Error("Item does not have an expiration for key " + key);
+                return null;
             }
             if (String(Date.now()) > item_expiration_key) {
                 this.removeItem(key);
