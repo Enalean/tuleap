@@ -40,7 +40,7 @@ specifiers:
   dompurify: ^2.3.4
   dragula: ^3.7.2
   jquery: ^3.6.0
-  marked: ^4.0.0
+  marked: ^4.0.10
   mermaid: ^8.13.9
   moment: ^2.29.1
   mustache: ^4.2.0
@@ -86,7 +86,7 @@ dependencies:
   d3-transition: 3.0.1_d3-selection@3.0.0
   dompurify: 2.3.4
   dragula: 3.7.3
-  marked: 4.0.0
+  marked: 4.0.10
   mermaid: 8.13.9
   moment: 2.29.1
   mustache: 4.2.0
@@ -1340,6 +1340,7 @@ packages:
 
   /graceful-fs/4.2.9:
     resolution: {integrity: sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -1504,8 +1505,8 @@ packages:
       yallist: 2.1.2
     dev: true
 
-  /marked/4.0.0:
-    resolution: {integrity: sha512-K3C1JvtiXuXVLoxDQEJP4NMLBuThlTkthgUOCzqLghIpHfis1DIZZfPI3o4UgfFpQ0d+JvTql2h+szR9jQ1p1w==}
+  /marked/4.0.10:
+    resolution: {integrity: sha512-+QvuFj0nGgO970fySghXGmuw+Fd0gD2x3+MqCWLIPf5oxdv1Ka6b2q+z9RP01P/IaKPMEramy+7cNy/Lw8c3hw==}
     engines: {node: '>= 12'}
     hasBin: true
     dev: false

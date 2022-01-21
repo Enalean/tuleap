@@ -10,7 +10,7 @@ specifiers:
   '@types/turndown': ^5.0.0
   dompurify: ^2.3.4
   lit: ^2.0.2
-  marked: ^4.0.0
+  marked: ^4.0.10
   turndown: ^7.0.0
 
 dependencies:
@@ -18,7 +18,7 @@ dependencies:
   '@tuleap/tlp-fetch': link:../../../../../src/scripts/lib/tlp-fetch
   dompurify: 2.3.4
   lit: 2.0.2
-  marked: 4.0.0
+  marked: 4.0.10
   turndown: 7.1.1
 
 devDependencies:
@@ -105,8 +105,8 @@ packages:
       lit-html: 2.0.1
     dev: false
 
-  /marked/4.0.0:
-    resolution: {integrity: sha512-K3C1JvtiXuXVLoxDQEJP4NMLBuThlTkthgUOCzqLghIpHfis1DIZZfPI3o4UgfFpQ0d+JvTql2h+szR9jQ1p1w==}
+  /marked/4.0.10:
+    resolution: {integrity: sha512-+QvuFj0nGgO970fySghXGmuw+Fd0gD2x3+MqCWLIPf5oxdv1Ka6b2q+z9RP01P/IaKPMEramy+7cNy/Lw8c3hw==}
     engines: {node: '>= 12'}
     hasBin: true
     dev: false
