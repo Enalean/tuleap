@@ -41,7 +41,7 @@ specifiers:
   dragula: ^3.7.2
   jquery: ^3.6.0
   marked: ^4.0.0
-  mermaid: ^8.13.8
+  mermaid: ^8.13.9
   moment: ^2.29.1
   mustache: ^4.2.0
   node-fetch: ^3.0.0
@@ -87,7 +87,7 @@ dependencies:
   dompurify: 2.3.4
   dragula: 3.7.3
   marked: 4.0.0
-  mermaid: 8.13.8
+  mermaid: 8.13.9
   moment: 2.29.1
   mustache: 4.2.0
   node-gettext: 3.0.0
@@ -1510,8 +1510,8 @@ packages:
     hasBin: true
     dev: false
 
-  /mermaid/8.13.8:
-    resolution: {integrity: sha512-Z5v31rvo8P7BPTiGicdJl9BbzyUe9s5sXILK8sM1g7ijkagpfFjPtXZVsq5P1WlN8m/fUp2PPNXVF9SqeTM91w==}
+  /mermaid/8.13.9:
+    resolution: {integrity: sha512-kMH676xEomSe/gzxMpDx91L+z9L+9iB3lvtPFA8aeOPRNNrfd3ZDvDCGFnuqQaJvPRCxs3Me2JDaVVNOZjojrg==}
     dependencies:
       '@braintree/sanitize-url': 3.1.0
       d3: 7.1.1
