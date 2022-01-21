@@ -22,33 +22,62 @@
     <div>
         <search-header />
         <search-criteria-panel v-bind:query="query" v-on:advanced-search="advancedSearch" />
-        <search-result-table v-if="can_result_table_be_displayed" />
+        <search-result-table v-if="can_result_table_be_displayed" v-bind:is_loading="is_loading" />
     </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import SearchCriteriaPanel from "./SearchCriteriaPanel.vue";
-import SearchResultTable from "./SearchResultTable.vue";
+import SearchResultTable from "./SearchResult/SearchResultTable.vue";
 import type { AdvancedSearchParams } from "../../type";
 import deepEqual from "fast-deep-equal";
 import SearchHeader from "./SearchHeader.vue";
+import { searchInFolder } from "../../api/rest-querier";
+import { Action } from "vuex-class";
+import type { Dictionary } from "vue-router/types/router";
 
 @Component({
     components: { SearchHeader, SearchResultTable, SearchCriteriaPanel },
 })
 export default class SearchContainer extends Vue {
-    @Prop({ required: false, default: "" })
+    @Prop({ required: true })
     readonly query!: string;
+
+    @Prop({ required: true })
+    readonly folder_id!: number;
+
+    is_loading = false;
+
+    @Action
+    readonly loadFolder!: (item_id: number) => Promise<void>;
+
+    mounted(): void {
+        this.loadFolder(this.folder_id);
+    }
+
+    @Watch("query", { immediate: true })
+    search(query: string): void {
+        if (query.length === 0) {
+            return;
+        }
+
+        this.is_loading = true;
+
+        searchInFolder(this.folder_id, query).finally(() => {
+            this.is_loading = false;
+        });
+    }
 
     get can_result_table_be_displayed(): boolean {
         return this.query.length !== 0;
     }
 
     advancedSearch(params: AdvancedSearchParams): void {
-        const query = {
-            q: params.query,
-        };
+        const query: Dictionary<string> = {};
+        if (params.query.length > 0) {
+            query.q = params.query;
+        }
 
         if (deepEqual(this.$route.query, query)) {
             return;
@@ -56,9 +85,10 @@ export default class SearchContainer extends Vue {
 
         this.$router.push({
             name: "search",
-            query: {
-                q: params.query,
+            params: {
+                folder_id: String(this.folder_id),
             },
+            query,
         });
     }
 }

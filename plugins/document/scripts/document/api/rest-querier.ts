@@ -60,6 +60,7 @@ export {
     postNewEmbeddedFileVersionFromEmpty,
     postNewFileVersionFromEmpty,
     getItemWithSize,
+    searchInFolder,
 };
 
 export interface ProjectService {
@@ -96,6 +97,23 @@ async function addNewDocumentType(url: string, item: Item): Promise<Response> {
     const body = JSON.stringify(json_body);
 
     const response = await post(url, { headers, body });
+
+    return response.json();
+}
+
+async function searchInFolder(folder_id: number, query: string): Promise<Response> {
+    const headers = {
+        "content-type": "application/json",
+    };
+
+    const json_body = {
+        global_search: query,
+        offset: 0,
+        limit: 50,
+    };
+    const body = JSON.stringify(json_body);
+
+    const response = await post(`/api/v1/docman_search/${folder_id}`, { headers, body });
 
     return response.json();
 }
