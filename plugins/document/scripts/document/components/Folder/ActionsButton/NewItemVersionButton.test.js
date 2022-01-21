@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import CreateNewItemVersionButton from "./NewItemVersionButton.vue";
 
-import localVue from "../../../helpers/local-vue.js";
+import localVue from "../../../helpers/local-vue";
 import EventBus from "../../../helpers/event-bus.js";
 
 describe("CreateNewItemVersionButton", () => {

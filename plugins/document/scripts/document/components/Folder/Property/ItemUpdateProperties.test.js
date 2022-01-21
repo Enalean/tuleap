@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue.js";
+import localVue from "../../../helpers/local-vue";
 import ItemUpdateProperties from "./ItemUpdateProperties.vue";
 
 describe("ItemUpdateProperties", () => {

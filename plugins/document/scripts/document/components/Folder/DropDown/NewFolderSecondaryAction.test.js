@@ -18,7 +18,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue.js";
+import localVue from "../../../helpers/local-vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import NewFolderSecondaryAction from "./NewFolderSecondaryAction.vue";
 import { TYPE_FOLDER } from "../../../constants";

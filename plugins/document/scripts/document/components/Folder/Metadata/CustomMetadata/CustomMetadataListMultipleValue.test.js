@@ -18,7 +18,7 @@
  *
  */
 
-import localVue from "../../../../helpers/local-vue.js";
+import localVue from "../../../../helpers/local-vue";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import CustomMetadataListMultipleValue from "./CustomMetadataListMultipleValue.vue";

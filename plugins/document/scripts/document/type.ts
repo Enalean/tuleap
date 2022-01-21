@@ -210,3 +210,7 @@ export interface UserGroup {
     id: string;
     label: string;
 }
+
+export interface AdvancedSearchParams {
+    readonly query: string;
+}

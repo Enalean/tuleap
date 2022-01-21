@@ -20,12 +20,8 @@
 
 <template>
     <div>
-        <div class="document-header document-header-search">
-            <h1 class="document-header-title" v-translate>Search</h1>
-        </div>
-        <div class="tlp-framed-horizontally">
-            <search-criteria-panel v-bind:query="query" />
-        </div>
+        <search-header />
+        <search-criteria-panel v-bind:query="query" v-on:advanced-search="advancedSearch" />
         <search-result-table v-if="can_result_table_be_displayed" />
     </div>
 </template>
@@ -34,9 +30,12 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import SearchCriteriaPanel from "./SearchCriteriaPanel.vue";
 import SearchResultTable from "./SearchResultTable.vue";
+import type { AdvancedSearchParams } from "../../type";
+import deepEqual from "fast-deep-equal";
+import SearchHeader from "./SearchHeader.vue";
 
 @Component({
-    components: { SearchResultTable, SearchCriteriaPanel },
+    components: { SearchHeader, SearchResultTable, SearchCriteriaPanel },
 })
 export default class SearchContainer extends Vue {
     @Prop({ required: false, default: "" })
@@ -44,6 +43,23 @@ export default class SearchContainer extends Vue {
 
     get can_result_table_be_displayed(): boolean {
         return this.query.length !== 0;
+    }
+
+    advancedSearch(params: AdvancedSearchParams): void {
+        const query = {
+            q: params.query,
+        };
+
+        if (deepEqual(this.$route.query, query)) {
+            return;
+        }
+
+        this.$router.push({
+            name: "search",
+            query: {
+                q: params.query,
+            },
+        });
     }
 }
 </script>

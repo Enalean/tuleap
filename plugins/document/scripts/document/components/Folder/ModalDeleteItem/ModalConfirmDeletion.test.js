@@ -19,7 +19,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue.js";
+import localVue from "../../../helpers/local-vue";
 import { USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE } from "../../../constants";
 import ConfirmationModal from "./ModalConfirmDeletion.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";

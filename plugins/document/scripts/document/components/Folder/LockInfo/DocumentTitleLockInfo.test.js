@@ -20,7 +20,7 @@
 import Vuex from "vuex";
 import { shallowMount } from "@vue/test-utils";
 import DocumentTitleLockInfo from "./DocumentTitleLockInfo.vue";
-import localVue from "../../../helpers/local-vue.js";
+import localVue from "../../../helpers/local-vue";
 import { TYPE_EMBEDDED } from "../../../constants";
 
 describe("DocumentTitleLockInfo", () => {

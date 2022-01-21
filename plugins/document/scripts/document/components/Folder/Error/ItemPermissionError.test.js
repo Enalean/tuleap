@@ -21,7 +21,7 @@
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import ItemPermissionError from "./ItemPermissionError.vue";
-import localVue from "../../../helpers/local-vue.js";
+import localVue from "../../../helpers/local-vue";
 
 describe("ItemPermissionError", () => {
     it("displays the error with a for to send custom email", () => {

@@ -371,6 +371,9 @@ msgstr "Nouveau dossier"
 msgid "New version for \"%s\""
 msgstr "Nouvelle version de \"%s\""
 
+msgid "No matching results"
+msgstr "Il n'y a aucun résultat"
+
 msgid "None"
 msgstr "Aucun"
 
@@ -599,9 +602,6 @@ msgstr ""
 
 msgid "There is no upload in progress"
 msgstr "Il n'y a aucun téléversement en cours"
-
-msgid "There isn't any matching results"
-msgstr "Il n'y a aucun résultat"
 
 msgid "This document is currently locked by"
 msgstr "Ce document est actuellement verrouillé par"
