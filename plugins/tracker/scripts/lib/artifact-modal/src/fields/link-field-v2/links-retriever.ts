@@ -18,6 +18,7 @@
  */
 
 import { get, recursiveGet } from "tlp";
+import type { FetchWrapperError } from "tlp";
 
 export interface LinkType {
     readonly shortname: string;
@@ -51,15 +52,26 @@ export async function getLinkedArtifacts(current_artifact_id: number): Promise<L
         return getLinkedArtifactsByLinkType(current_artifact_id, type);
     });
 
-    return Promise.all(promises).then((collections) => collections.flat());
+    return Promise.all(promises)
+        .then((collections) => collections.flat())
+        .catch(async (error) => {
+            const message = await getExtractedErrorMessage(error);
+            throw new Error(message);
+        });
 }
 
-async function getAllLinkTypes(current_artifact_id: number): Promise<LinkType[]> {
-    const response = await get(`/api/v1/artifacts/${current_artifact_id}/links`);
+function getAllLinkTypes(current_artifact_id: number): Promise<LinkType[]> {
+    return get(`/api/v1/artifacts/${current_artifact_id}/links`)
+        .then(async (response) => {
+            const { natures } = await response.json();
 
-    const { natures } = await response.json();
+            return natures;
+        })
+        .catch(async (error: FetchWrapperError) => {
+            const message = await getExtractedErrorMessage(error);
 
-    return natures;
+            throw new Error(message);
+        });
 }
 
 function getLinkedArtifactsByLinkType(
@@ -85,4 +97,10 @@ function getLinkedArtifactsByLinkType(
             },
         }
     );
+}
+
+async function getExtractedErrorMessage(exception: FetchWrapperError): Promise<string> {
+    const { error } = await exception.response.json();
+
+    return `${error.code} ${error.message}`;
 }

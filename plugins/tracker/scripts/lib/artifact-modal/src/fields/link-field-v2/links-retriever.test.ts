@@ -19,31 +19,36 @@
 
 import * as tlp from "tlp";
 
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { getLinkedArtifacts } from "./links-retriever";
 
 import type { RecursiveGetInit } from "tlp";
 import type { LinkType, LinkedArtifact, LinkedArtifactCollection } from "./links-retriever";
 
 describe("links-retriever", () => {
-    it("Fetches the linked artifacts by type", async () => {
-        const getSpy = jest.spyOn(tlp, "get");
-        const recursiveGetSpy = jest.spyOn(tlp, "recursiveGet");
-        const current_artifact_id = 1601;
+    let current_artifact_id: number,
+        getSpy: jest.SpyInstance,
+        recursiveGetSpy: jest.SpyInstance,
+        nature_is_child_reverse: LinkType,
+        nature_is_child_forward: LinkType,
+        parent: LinkedArtifact,
+        child: LinkedArtifact;
 
-        const nature_is_child_reverse: LinkType = {
+    beforeEach(() => {
+        current_artifact_id = 1601;
+        nature_is_child_reverse = {
             shortname: "_is_child",
             direction: "reverse",
             label: "Child",
         };
 
-        const nature_is_child_forward: LinkType = {
+        nature_is_child_forward = {
             shortname: "_is_child",
             direction: "forward",
             label: "Parent",
         };
 
-        const parent: LinkedArtifact = {
+        parent = {
             xref: "art #123",
             title: "A parent",
             html_url: "/url/to/artifact/123",
@@ -54,7 +59,7 @@ describe("links-retriever", () => {
             status: "Open",
         };
 
-        const child: LinkedArtifact = {
+        child = {
             xref: "art #234",
             title: "A child",
             html_url: "/url/to/artifact/234",
@@ -65,6 +70,11 @@ describe("links-retriever", () => {
             status: "Open",
         };
 
+        getSpy = jest.spyOn(tlp, "get");
+        recursiveGetSpy = jest.spyOn(tlp, "recursiveGet");
+    });
+
+    it("Fetches the linked artifacts by type", async () => {
         mockFetchSuccess(getSpy, {
             return_json: {
                 natures: [nature_is_child_reverse, nature_is_child_forward],
@@ -103,6 +113,44 @@ describe("links-retriever", () => {
         ]);
 
         expect(artifacts).toEqual([parent, child]);
+    });
+
+    it("When the retrieval of link types fails, then it throws an Error containing the extracted error message", async () => {
+        mockFetchError(getSpy, {
+            error_json: {
+                error: {
+                    code: 403,
+                    message: "You cannot (links)",
+                },
+            },
+        });
+
+        getMockLinkedArtifactsRetrieval(recursiveGetSpy, { collection: [parent] });
+
+        await expect(() => getLinkedArtifacts(current_artifact_id)).rejects.toThrowError(
+            "403 You cannot (links)"
+        );
+    });
+
+    it("When the retrieval of artifacts by types of links fails, then it throws an Error containing the extracted error message", async () => {
+        mockFetchSuccess(getSpy, {
+            return_json: {
+                natures: [nature_is_child_reverse, nature_is_child_forward],
+            },
+        });
+
+        mockFetchError(recursiveGetSpy, {
+            error_json: {
+                error: {
+                    code: 403,
+                    message: "You cannot (linked artifacts)",
+                },
+            },
+        });
+
+        await expect(() => getLinkedArtifacts(current_artifact_id)).rejects.toThrowError(
+            "403 You cannot (linked artifacts)"
+        );
     });
 });
 
