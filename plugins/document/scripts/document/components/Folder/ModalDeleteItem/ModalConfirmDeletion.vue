@@ -33,7 +33,7 @@
                 data-dismiss="modal"
                 v-bind:aria-label="close"
             >
-                ×
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <modal-feedback />

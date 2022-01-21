@@ -1,7 +1,9 @@
 <div class="tlp-modal" role="dialog" aria-labelledby="custom-license-modal-label">
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title" id="custom-license-modal-label">{{ $ctrl.title }}</h1>
-        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">&times;</button>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
     </div>
     <div class="tlp-modal-body">
         <ng-bind-html ng-bind-html="$ctrl.content"></ng-bind-html>

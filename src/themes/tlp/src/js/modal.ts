@@ -23,7 +23,6 @@ type ModalEventType = "tlp-modal-shown" | "tlp-modal-hidden";
 
 export const BACKDROP_ID = "tlp-modal-backdrop";
 export const BACKDROP_SHOWN_CLASS_NAME = "tlp-modal-backdrop-shown";
-export const MODAL_DISPLAY_CLASS_NAME = "tlp-modal-display";
 export const MODAL_SHOWN_CLASS_NAME = "tlp-modal-shown";
 const DISMISS_SELECTOR = '[data-dismiss="modal"]';
 
@@ -94,11 +93,9 @@ export class Modal {
     }
 
     show(): void {
-        this.element.classList.add(MODAL_DISPLAY_CLASS_NAME);
-
         this.element.classList.add(MODAL_SHOWN_CLASS_NAME);
-        this.is_shown = true;
 
+        this.is_shown = true;
         this.setPreviousActiveElement();
         this.bringFocusInsideModal();
         this.addBackdrop();
@@ -133,13 +130,12 @@ export class Modal {
 
     hide(): void {
         this.element.classList.remove(MODAL_SHOWN_CLASS_NAME);
-
         this.removeBackdrop();
+
         if (this.options.destroy_on_hide) {
             this.destroy();
         }
 
-        this.element.classList.remove(MODAL_DISPLAY_CLASS_NAME);
         this.is_shown = false;
 
         this.dispatchEvent(this.hidden_event);

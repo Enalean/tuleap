@@ -27,7 +27,6 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="test-plan-create-campaign-modal-title">
-                <i class="fa fa-plus tlp-modal-title-icon" aria-hidden="true"></i>
                 <translate>Create new campaign</translate>
             </h1>
             <button
@@ -36,7 +35,7 @@
                 data-dismiss="modal"
                 v-bind:aria-label="$gettext('Close')"
             >
-                ×
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <create-modal-error-feedback

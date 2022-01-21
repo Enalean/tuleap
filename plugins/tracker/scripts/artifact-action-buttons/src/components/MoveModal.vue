@@ -28,7 +28,9 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <i class="tuleap-modal-close close" data-dismiss="modal">×</i>
+                    <a role="button" class="tuleap-modal-close close" data-dismiss="modal">
+                        <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
+                    </a>
                     <move-modal-title />
                 </div>
                 <div class="modal-body move-artifact-modal-body">

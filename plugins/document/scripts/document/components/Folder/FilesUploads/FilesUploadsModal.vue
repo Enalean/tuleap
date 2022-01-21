@@ -21,7 +21,6 @@
     <div class="tlp-modal" role="dialog" aria-labelledby="document-uploads-files-modal-title">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="document-uploads-files-modal-title">
-                <i class="fa fa-upload tlp-modal-title-icon"></i>
                 <translate>Uploading documents</translate>
             </h1>
             <button
@@ -30,7 +29,7 @@
                 data-dismiss="modal"
                 v-bind:aria-label="close"
             >
-                &times;
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <div class="tlp-modal-body document-uploads-files-list">

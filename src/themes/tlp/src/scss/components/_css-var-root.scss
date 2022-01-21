@@ -282,6 +282,8 @@ $fade-background-color: color.mix($tlp-background-color, $tlp-white-color, 50);
     --tlp-skeleton-highlight-color: #{color.adjust($tlp-dimmed-color, $alpha: - 0.97)};
 
     // shadows
+    --tlp-modal-shadow: 0 15px 35px 0 #{color.adjust($tlp-dark-color, $alpha: - 0.75)},
+        0 5px 15px 0 #{color.adjust($tlp-dark-color, $alpha: - 0.93)};
     --tlp-flyover-shadow: 0 0 0 1px #{color.adjust($tlp-dark-color, $alpha: - 0.93)},
         0 15px 35px 0 #{color.adjust($tlp-dark-color, $alpha: - 0.9)}, 0 5px 15px 0 rgb(0 0 0 / 8%);
     --tlp-flyover-shadow-above: 0 0 0 1px #{color.adjust($tlp-dark-color, $alpha: - 0.93)},

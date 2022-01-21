@@ -24,7 +24,6 @@ import {
     EVENT_TLP_MODAL_HIDDEN,
     BACKDROP_ID,
     BACKDROP_SHOWN_CLASS_NAME,
-    MODAL_DISPLAY_CLASS_NAME,
     MODAL_SHOWN_CLASS_NAME,
 } from "./modal";
 
@@ -49,7 +48,6 @@ describe(`Modal`, () => {
 
         it(`will add the "display" and "shown" CSS classes to the modal element`, () => {
             modal.show();
-            expect(modal_element.classList.contains(MODAL_DISPLAY_CLASS_NAME)).toBe(true);
             expectTheModalToBeShown(modal_element);
         });
 
@@ -115,13 +113,6 @@ describe(`Modal`, () => {
 
                 const backdrop = doc.querySelector("#" + BACKDROP_ID);
                 expect(backdrop).toBeNull();
-            });
-
-            it(`will remove the "display" CSS class`, () => {
-                modal.show();
-                modal.hide();
-
-                expect(modal_element.classList.contains(MODAL_DISPLAY_CLASS_NAME)).toBe(false);
             });
 
             it(`will dispatch the "hidden" event on modal`, () => {

@@ -21,11 +21,10 @@
     <div class="tlp-modal tlp-modal-danger" role="dialog">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title">
-                <i class="far fa-frown tlp-modal-title-icon"></i>
                 <translate>Oops</translate>
             </h1>
             <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
-                &times;
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <div class="tlp-modal-body">

@@ -1,7 +1,9 @@
 <div class="modal hide fade" role="dialog" aria-labelledby="browser-deprecation-modal-label" aria-hidden="true" id="browser-deprecation-modal"
     {{^ can_be_dismiss }}data-non-dismissible{{/ can_be_dismiss }}>
     <div class="modal-header">
-        {{# can_be_dismiss }}<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>{{/ can_be_dismiss }}
+        {{# can_be_dismiss }}<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
+        </button>{{/ can_be_dismiss }}
         <h2 id="browser-deprecation-modal-label">
             {{ title }}
         </h2>

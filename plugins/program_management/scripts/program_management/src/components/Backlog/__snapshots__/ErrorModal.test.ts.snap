@@ -3,7 +3,7 @@
 exports[`ErrorModal warns user that something is wrong with a button to show details 1`] = `
 <div
   aria-labelledby="program-management-error-modal-title"
-  class="tlp-modal tlp-modal-danger tlp-modal-display tlp-modal-shown"
+  class="tlp-modal tlp-modal-danger tlp-modal-shown"
   role="dialog"
 >
   <div
@@ -13,10 +13,6 @@ exports[`ErrorModal warns user that something is wrong with a button to show det
       class="tlp-modal-title"
       id="program-management-error-modal-title"
     >
-      <i
-        class="fas fa-exclamation-triangle tlp-modal-title-icon"
-      />
-       
       <translate-stub
         tag="span"
       >
@@ -30,9 +26,10 @@ exports[`ErrorModal warns user that something is wrong with a button to show det
       data-dismiss="modal"
       type="button"
     >
-      
-            ×
-        
+      <i
+        aria-hidden="true"
+        class="fas fa-times tlp-modal-close-icon"
+      />
     </button>
   </div>
    

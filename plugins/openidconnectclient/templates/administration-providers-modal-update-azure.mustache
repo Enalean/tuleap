@@ -11,14 +11,14 @@
             id="siteadmin-config-providers-modal-update-{{ getId }}-title"
             class="tlp-modal-title"
         >
-            <i class="fas fa-pencil-alt tlp-modal-title-icon"></i> {{ update_provider }}
+            {{ update_provider }}
         </h1>
         <button
             class="tlp-modal-close"
             type="button"
             data-dismiss="modal"
             aria-label="Close"
-        >&times;</button>
+        ><i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i></button>
     </div>
     <form method="post">
         {{# csrf_token }}

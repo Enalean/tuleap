@@ -8,7 +8,6 @@
         >
             <div class="tlp-modal-header">
                 <h1 class="tlp-modal-title" id="invite-buddies-modal-label">
-                    <i class="fa fa-paper-plane tlp-modal-title-icon" aria-hidden="true"></i>
                     {{# gettext }}Invite someone to join %s | {{ instance_name }}{{/ gettext }}
                 </h1>
                 <button
@@ -17,7 +16,7 @@
                     data-dismiss="modal"
                     aria-label="{{# gettext }}Close{{/ gettext }}"
                 >
-                    &times;
+                    <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
                 </button>
             </div>
             <div

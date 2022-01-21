@@ -25,7 +25,6 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="document-dragndrop-error-modal-title">
-                <i class="far fa-frown tlp-modal-title-icon"></i>
                 <slot name="modal-title">
                     <translate>Oops…</translate>
                 </slot>
@@ -36,7 +35,7 @@
                 data-dismiss="modal"
                 v-bind:aria-label="close"
             >
-                &times;
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <div class="tlp-modal-body" v-bind:class="body_class">

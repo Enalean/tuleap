@@ -27,7 +27,6 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="create-repository-modal-title">
-                <i class="fab fa-gitlab tlp-modal-title-icon" aria-hidden="true"></i>
                 <translate>Unlink GitLab repository?</translate>
             </h1>
             <button
@@ -36,7 +35,7 @@
                 data-dismiss="modal"
                 v-bind:aria-label="close_label"
             >
-                &times;
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <div class="tlp-modal-body">

@@ -7,10 +7,9 @@
 >
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title" id="project-admin-members-confirm-member-removal-modal-label">
-            <i class="far fa-trash-alt tlp-modal-title-icon"></i>
             {{# gettext }}Member removal{{/ gettext }}
         </h1>
-        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">×</button>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}"><i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i></button>
     </div>
     <div class="tlp-modal-body">
         {{# csrf_token }}

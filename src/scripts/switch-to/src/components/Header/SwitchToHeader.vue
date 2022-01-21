@@ -21,7 +21,6 @@
 <template>
     <form class="switch-to-modal-header" action="/search/" method="GET" v-on:submit="submit">
         <div class="switch-to-modal-header-filter-container">
-            <i class="fa fa-search tlp-modal-title-icon switch-to-modal-header-icon"></i>
             <switch-to-filter v-bind:modal="modal" />
         </div>
         <template v-if="should_button_be_displayed">
