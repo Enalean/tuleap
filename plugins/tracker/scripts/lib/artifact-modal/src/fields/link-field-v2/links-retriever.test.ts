@@ -57,6 +57,7 @@ describe("links-retriever", () => {
             },
             link_type: nature_is_child_reverse,
             status: "Open",
+            is_open: true,
         };
 
         child = {
@@ -68,6 +69,7 @@ describe("links-retriever", () => {
             },
             link_type: nature_is_child_forward,
             status: "Open",
+            is_open: true,
         };
 
         getSpy = jest.spyOn(tlp, "get");

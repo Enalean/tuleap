@@ -51,9 +51,21 @@
     &:hover {
         background: var(--tlp-main-color-lighter-90);
     }
+}
 
-    &.link-field-skeleton-row:hover {
-        background: unset;
+.link-field-skeleton-row:hover {
+    background: unset;
+}
+
+.link-field-table-row-muted {
+    background: var(--tlp-dimmed-color-lighter-95);
+
+    > .link-field-table-cell-xref > .link-field-artifact-link {
+        color: var(--tlp-dimmed-color);
+    }
+
+    &:hover {
+        background: var(--tlp-main-color-lighter-90);
     }
 }
 

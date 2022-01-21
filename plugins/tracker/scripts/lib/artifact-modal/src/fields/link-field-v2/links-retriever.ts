@@ -36,6 +36,7 @@ interface APILinkedArtifact {
     readonly html_url: string;
     readonly tracker: Tracker;
     readonly status: string;
+    readonly is_open: boolean;
 }
 
 interface Tracker {
