@@ -3,13 +3,13 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "\"%{ title }\" is being copied…"
@@ -85,6 +85,9 @@ msgstr ""
 
 msgid "An error has occurred, please contact your administrator"
 msgstr "Une erreur est servenue, merci de contacter votre administrateur"
+
+msgid "Apply"
+msgstr "Appliquer"
 
 msgid "Apply new values on this folder and all its content"
 msgstr "Appliquer les nouvelles valeurs sur ce dossier et son contenu"
@@ -256,6 +259,9 @@ msgstr "Date fixe"
 msgid "Focus the document search bar"
 msgstr "Se placer dans la barre de recherche"
 
+msgid "Global search"
+msgstr "Recherche globale"
+
 msgid "Go to Document manager home page"
 msgstr "Aller à la page d'accueil du service Gestion de documents"
 
@@ -304,6 +310,9 @@ msgstr "Mise à jour"
 
 msgid "Link"
 msgstr "Lien"
+
+msgid "Location"
+msgstr "Emplacement"
 
 msgid "Lock"
 msgstr "Verrouiller"
@@ -488,6 +497,9 @@ msgstr "Recommencer le cycle d'approbation."
 msgid "Search"
 msgstr "Recherche"
 
+msgid "Search criteria"
+msgstr "Critères de recherche"
+
 msgid "Select bottom item"
 msgstr "Sélectionner le dernier élément"
 
@@ -588,8 +600,8 @@ msgstr ""
 msgid "There is no upload in progress"
 msgstr "Il n'y a aucun téléversement en cours"
 
-msgid "There is nothing here"
-msgstr "Il n'y a rien ici"
+msgid "There isn't any matching results"
+msgstr "Il n'y a aucun résultat"
 
 msgid "This document is currently locked by"
 msgstr "Ce document est actuellement verrouillé par"
@@ -626,6 +638,9 @@ msgstr "URL"
 
 msgid "Unlock"
 msgstr "Déverrouiller"
+
+msgid "Update date"
+msgstr "Mise à jour"
 
 msgid "Update permissions"
 msgstr "Mettre à jour les permissions"

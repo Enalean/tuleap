@@ -19,16 +19,31 @@
   -->
 
 <template>
-    <section class="tlp-pane">
-        <div class="tlp-pane-container">
-            <section class="tlp-pane-section"><div v-translate>There is nothing here</div></section>
+    <div>
+        <div class="document-header document-header-search">
+            <h1 class="document-header-title" v-translate>Search</h1>
         </div>
-    </section>
+        <div class="tlp-framed-horizontally">
+            <search-criteria-panel v-bind:query="query" />
+        </div>
+        <search-result-table v-if="can_result_table_be_displayed" />
+    </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import SearchCriteriaPanel from "./SearchCriteriaPanel.vue";
+import SearchResultTable from "./SearchResultTable.vue";
 
-@Component
-export default class SearchContainer extends Vue {}
+@Component({
+    components: { SearchResultTable, SearchCriteriaPanel },
+})
+export default class SearchContainer extends Vue {
+    @Prop({ required: false, default: "" })
+    readonly query!: string;
+
+    get can_result_table_be_displayed(): boolean {
+        return this.query.length !== 0;
+    }
+}
 </script>

@@ -96,7 +96,9 @@ export default class SearchBox extends Vue {
     advancedSearch(): void {
         this.$router.push({
             name: "search",
-            params: {},
+            query: {
+                q: this.search_query,
+            },
         });
     }
 
