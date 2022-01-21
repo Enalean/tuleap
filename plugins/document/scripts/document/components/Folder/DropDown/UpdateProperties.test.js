@@ -18,7 +18,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue.js";
+import localVue from "../../../helpers/local-vue";
 import UpdateProperties from "./UpdateProperties.vue";
 import EventBus from "../../../helpers/event-bus.js";
 

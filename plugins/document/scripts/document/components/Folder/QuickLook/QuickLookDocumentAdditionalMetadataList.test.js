@@ -21,7 +21,7 @@
 import { shallowMount } from "@vue/test-utils";
 import QuickLookDocumentPreview from "./QuickLookDocumentAdditionalMetadataList.vue";
 
-import localVue from "../../../helpers/local-vue.js";
+import localVue from "../../../helpers/local-vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 
 describe("QuickLookDocumentAdditionalMetadataList", () => {

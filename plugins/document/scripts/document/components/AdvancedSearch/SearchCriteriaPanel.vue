@@ -19,46 +19,57 @@
   -->
 
 <template>
-    <section class="tlp-pane">
-        <form class="tlp-pane-container" v-on:submit.prevent="advancedSearch">
-            <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title" v-translate>Search criteria</h1>
-            </div>
-            <section class="tlp-pane-section">
-                <div class="tlp-form-element">
-                    <label class="tlp-label" for="document-global-search" v-translate>
-                        Global search
-                    </label>
-                    <input
-                        type="text"
-                        class="tlp-input"
-                        id="document-global-search"
-                        v-model="query"
-                    />
+    <div class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <form class="tlp-pane-container" data-test="form" v-on:submit.prevent="advancedSearch">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title" v-translate>Search criteria</h1>
                 </div>
-            </section>
-            <section class="tlp-pane-section tlp-pane-section-submit">
-                <button type="submit" class="tlp-button-primary" v-translate>Apply</button>
-            </section>
-        </form>
-    </section>
+                <section class="tlp-pane-section">
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="document-global-search" v-translate>
+                            Global search
+                        </label>
+                        <input
+                            type="text"
+                            class="tlp-input"
+                            id="document-global-search"
+                            v-model="new_query"
+                            data-test="global-search"
+                        />
+                    </div>
+                </section>
+                <section class="tlp-pane-section tlp-pane-section-submit">
+                    <button type="submit" class="tlp-button-primary" v-translate data-test="submit">
+                        Apply
+                    </button>
+                </section>
+            </form>
+        </section>
+    </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import type { AdvancedSearchParams } from "../../type";
 
 @Component
 export default class SearchCriteriaPanel extends Vue {
     @Prop({ required: true })
     readonly query!: string;
 
+    new_query = "";
+
+    mounted() {
+        this.new_query = this.query;
+    }
+
     advancedSearch(): void {
-        this.$router.push({
-            name: "search",
-            query: {
-                q: this.query,
-            },
-        });
+        const params: AdvancedSearchParams = {
+            query: this.new_query,
+        };
+
+        this.$emit("advanced-search", params);
     }
 }
 </script>

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import localVue from "../../../helpers/local-vue.js";
+import localVue from "../../../helpers/local-vue";
 import { shallowMount } from "@vue/test-utils";
 import OwnerMetadata from "./OwnerMetadata.vue";
 import { TYPE_FILE } from "../../../constants";

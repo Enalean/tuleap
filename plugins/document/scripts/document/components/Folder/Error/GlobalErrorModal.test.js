@@ -19,7 +19,7 @@
 
 import * as tlp from "tlp";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue.js";
+import localVue from "../../../helpers/local-vue";
 import GlobalErrorModal from "./GlobalErrorModal.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 

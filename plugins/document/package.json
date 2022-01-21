@@ -11,6 +11,7 @@
     "@tuleap/project-privacy-helper": "link:../../src/scripts/lib/project-privacy-helper",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "@tuleap/vue-breadcrumb-privacy": "file:../../src/scripts/lib/vue-breadcrumb-privacy",
+    "fast-deep-equal": "^3.1.3",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "pretty-kibibytes": "^4.0.4",
