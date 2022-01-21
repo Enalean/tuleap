@@ -20,19 +20,19 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ApprovalUpdateProperties from "./ApprovalUpdateProperties.vue";
-import { createDocumentLocalVue } from "../../../helpers/local-vue-for-test";
+import localVue from "../../../helpers/local-vue";
 
 describe("ApprovalUpdateProperties", () => {
-    async function instantiateComponent(): Promise<Wrapper<ApprovalUpdateProperties>> {
+    function instantiateComponent(): Wrapper<ApprovalUpdateProperties> {
         return shallowMount(ApprovalUpdateProperties, {
-            localVue: await createDocumentLocalVue(),
+            localVue,
         });
     }
 
     it(`Given the copy action of an approval table
         When the user updating an item
-        Then it raise the 'action' event with the value 'copy'`, async () => {
-        const wrapper = await instantiateComponent();
+        Then it raise the 'action' event with the value 'copy'`, () => {
+        const wrapper = instantiateComponent();
 
         const radio_input = wrapper.get(
             'input[id="document-new-file-upload-approval-table-action-copy"]'
@@ -48,8 +48,8 @@ describe("ApprovalUpdateProperties", () => {
     });
     it(`Given the reset action of an approval table
         When the user updating an item
-        Then it raise the 'action' event with the value 'reset'`, async () => {
-        const wrapper = await instantiateComponent();
+        Then it raise the 'action' event with the value 'reset'`, () => {
+        const wrapper = instantiateComponent();
 
         const radio_input = wrapper.get(
             'input[id="document-new-file-upload-approval-table-action-reset"]'
@@ -65,8 +65,8 @@ describe("ApprovalUpdateProperties", () => {
     });
     it(`Given the empty action of an approval table
         When the user updating an item
-        Then it raise the 'action' event with the value 'empty'`, async () => {
-        const wrapper = await instantiateComponent();
+        Then it raise the 'action' event with the value 'empty'`, () => {
+        const wrapper = instantiateComponent();
 
         const radio_input = wrapper.get(
             'input[id="document-new-file-upload-approval-table-action-empty"]'

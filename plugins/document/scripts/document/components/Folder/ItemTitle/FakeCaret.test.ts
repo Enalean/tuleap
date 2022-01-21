@@ -21,7 +21,7 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
-import { createDocumentLocalVue } from "../../../helpers/local-vue-for-test";
+import localVue from "../../../helpers/local-vue";
 import FakeCaret from "./FakeCaret.vue";
 import type { Empty, Folder, Item, ItemFile, Link, Wiki } from "../../../type";
 import type { RootState } from "../../../type";
@@ -33,10 +33,10 @@ describe("FakeCaret", () => {
         type: "wiki",
     } as Wiki;
 
-    async function getWrapper(state: RootState, item: Wiki): Promise<Wrapper<FakeCaret>> {
+    function getWrapper(state: RootState, item: Wiki): Wrapper<FakeCaret> {
         const store_options = { state };
         const component_options = {
-            localVue: await createDocumentLocalVue(),
+            localVue,
             propsData: {
                 item,
             },
@@ -46,19 +46,18 @@ describe("FakeCaret", () => {
         return shallowMount(FakeCaret, {
             mocks: { $store: store },
             ...component_options,
-            localVue: await createDocumentLocalVue(),
         });
     }
 
     it(`Given item has no siblings,
         when current folder is displayed,
-        then fake caret of item is not displayed so that there isn't any unneeded whitespace`, async () => {
+        then fake caret of item is not displayed so that there isn't any unneeded whitespace`, () => {
         const folder_content: Array<Item> = [item];
         const state = {
             current_folder: { id: 66 } as Folder,
             folder_content,
         } as RootState;
-        const wrapper = await getWrapper(state, item);
+        const wrapper = getWrapper(state, item);
 
         expect(wrapper.find(".fa-fw").exists()).toBeFalsy();
 
@@ -67,7 +66,7 @@ describe("FakeCaret", () => {
 
     it(`Given item has only documents as siblings,
         when current folder is displayed,
-        then fake caret of item is not displayed so that there isn't any unneeded whitespace`, async () => {
+        then fake caret of item is not displayed so that there isn't any unneeded whitespace`, () => {
         const folder_content: Array<Item> = [
             { id: 43, parent_id: 66, type: "file" } as ItemFile,
             { id: 44, parent_id: 66, type: "link" } as Link,
@@ -79,14 +78,14 @@ describe("FakeCaret", () => {
             current_folder: { id: 66 } as Folder,
             folder_content,
         } as RootState;
-        const wrapper = await getWrapper(state, item);
+        const wrapper = getWrapper(state, item);
 
         expect(wrapper.find(".fa-fw").exists()).toBeFalsy();
     });
 
     it(`Given item has at least one folder as sibling,
         when current folder is displayed,
-        then fake caret of item is displayed for better alignment of icons`, async () => {
+        then fake caret of item is displayed for better alignment of icons`, () => {
         const folder_content: Array<Item> = [
             { id: 43, parent_id: 66, type: "file" } as ItemFile,
             { id: 44, parent_id: 66, type: "link" } as Link,
@@ -98,7 +97,7 @@ describe("FakeCaret", () => {
             current_folder: { id: 66 } as Folder,
             folder_content,
         } as RootState;
-        const wrapper = await getWrapper(state, item);
+        const wrapper = getWrapper(state, item);
 
         expect(wrapper.find(".fa-fw").exists()).toBeTruthy();
     });
@@ -106,7 +105,7 @@ describe("FakeCaret", () => {
     it(`Given item has no siblings,
         And item is in a subfolder,
         when current folder is displayed,
-        then fake caret of item is displayed for better alignment of icons`, async () => {
+        then fake caret of item is displayed for better alignment of icons`, () => {
         const folder_content: Array<Item> = [
             { id: 43, parent_id: 111, type: "file" } as ItemFile,
             { id: 44, parent_id: 111, type: "link" } as Link,
@@ -118,7 +117,7 @@ describe("FakeCaret", () => {
             current_folder: { id: 111 } as Folder,
             folder_content,
         } as RootState;
-        const wrapper = await getWrapper(state, item);
+        const wrapper = getWrapper(state, item);
 
         expect(wrapper.find(".fa-fw").exists()).toBeTruthy();
     });
@@ -126,7 +125,7 @@ describe("FakeCaret", () => {
     it(`Given item has only documents as siblings,
         And item is in a subfolder,
         when current folder is displayed,
-        then fake caret of item is displayed for better alignment of icons`, async () => {
+        then fake caret of item is displayed for better alignment of icons`, () => {
         const folder_content: Array<Item> = [
             { id: 43, parent_id: 66, type: "file" } as ItemFile,
             { id: 44, parent_id: 66, type: "link" } as Link,
@@ -138,7 +137,7 @@ describe("FakeCaret", () => {
             current_folder: { id: 111 } as Folder,
             folder_content,
         } as RootState;
-        const wrapper = await getWrapper(state, item);
+        const wrapper = getWrapper(state, item);
 
         expect(wrapper.find(".fa-fw").exists()).toBeTruthy();
     });
@@ -146,7 +145,7 @@ describe("FakeCaret", () => {
     it(`Given item has at least one folder as siblings,
         And item is in a subfolder,
         when current folder is displayed,
-        then fake caret of item is displayed for better alignment of icons`, async () => {
+        then fake caret of item is displayed for better alignment of icons`, () => {
         const folder_content: Array<Item> = [
             { id: 43, parent_id: 66, type: "file" } as ItemFile,
             { id: 44, parent_id: 66, type: "link" } as Link,
@@ -158,7 +157,7 @@ describe("FakeCaret", () => {
             current_folder: { id: 111 } as Folder,
             folder_content,
         } as RootState;
-        const wrapper = await getWrapper(state, item);
+        const wrapper = getWrapper(state, item);
 
         expect(wrapper.find(".fa-fw").exists()).toBeTruthy();
     });

@@ -22,30 +22,30 @@ import type { Wrapper } from "@vue/test-utils";
 import ApprovalBadge from "./ApprovalBadge.vue";
 import { TYPE_EMBEDDED } from "../../../constants";
 import type { ApprovableDocument, Embedded } from "../../../type";
-import { createDocumentLocalVue } from "../../../helpers/local-vue-for-test";
+import localVue from "../../../helpers/local-vue";
 import Vue from "vue";
 
 describe("ApprovalBadge", () => {
-    async function createWrapper(
+    function createWrapper(
         item: ApprovableDocument,
         isInFolderContentRow: boolean
-    ): Promise<Wrapper<ApprovalBadge>> {
+    ): Wrapper<ApprovalBadge> {
         return shallowMount(ApprovalBadge, {
-            localVue: await createDocumentLocalVue(),
+            localVue,
             propsData: { item, isInFolderContentRow },
         });
     }
 
     it(`Given document has no approval status
         When we display approval badge
-        Then we should not display anything`, async () => {
+        Then we should not display anything`, () => {
         const item = {
             id: 42,
             title: "my unlocked document",
             type: TYPE_EMBEDDED,
         } as Embedded;
 
-        const wrapper = await createWrapper(item, false);
+        const wrapper = createWrapper(item, false);
 
         expect(wrapper.find(".document-approval-badge").exists()).toBeFalsy();
     });

@@ -21,17 +21,17 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookDeleteButton from "./QuickLookDeleteButton.vue";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
-import { createDocumentLocalVue } from "../../../helpers/local-vue-for-test";
+import localVue from "../../../helpers/local-vue";
 import type { Item } from "../../../type";
 
 describe("QuickLookDeleteButton", () => {
     let store = {
         commit: jest.fn(),
     };
-    async function createWrapper(
+    function createWrapper(
         user_can_write: boolean,
         is_deletion_allowed: boolean
-    ): Promise<Wrapper<QuickLookDeleteButton>> {
+    ): Wrapper<QuickLookDeleteButton> {
         store = createStoreMock({
             state: {
                 configuration: { is_deletion_allowed },
@@ -41,26 +41,26 @@ describe("QuickLookDeleteButton", () => {
             mocks: {
                 $store: store,
             },
-            localVue: await createDocumentLocalVue(),
+            localVue,
             propsData: { item: { id: 1, user_can_write: user_can_write } as Item },
         });
     }
 
-    it(`Displays the delete button because the user can write and has the right to delete items`, async () => {
-        const wrapper = await createWrapper(true, true);
+    it(`Displays the delete button because the user can write and has the right to delete items`, () => {
+        const wrapper = createWrapper(true, true);
         expect(wrapper.find("[data-test=document-quick-look-delete-button]").exists()).toBeTruthy();
     });
-    it(`Does not display the delete button if the user can't write but has the right to delete items`, async () => {
-        const wrapper = await createWrapper(false, true);
+    it(`Does not display the delete button if the user can't write but has the right to delete items`, () => {
+        const wrapper = createWrapper(false, true);
         expect(wrapper.find("[data-test=document-quick-look-delete-button]").exists()).toBeFalsy();
     });
-    it(`Does not display the delete button if the user can write but cannot to delete items`, async () => {
-        const wrapper = await createWrapper(true, false);
+    it(`Does not display the delete button if the user can write but cannot to delete items`, () => {
+        const wrapper = createWrapper(true, false);
         expect(wrapper.find("[data-test=quick-look-delete-button]").exists()).toBeFalsy();
     });
 
-    it(`When the user clicks the button, then it should trigger an event to open the confirmation modal`, async () => {
-        const wrapper = await createWrapper(true, true);
+    it(`When the user clicks the button, then it should trigger an event to open the confirmation modal`, () => {
+        const wrapper = createWrapper(true, true);
         wrapper.get("[data-test=document-quick-look-delete-button]").trigger("click");
 
         expect(store.commit).toHaveBeenCalledWith("modals/deleteItem", {

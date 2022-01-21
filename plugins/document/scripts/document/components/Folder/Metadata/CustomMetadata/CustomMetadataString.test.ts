@@ -17,28 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createDocumentLocalVue } from "../../../../helpers/local-vue-for-test";
+import localVue from "../../../../helpers/local-vue";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomMetadataString from "./CustomMetadataString.vue";
 import type { Metadata } from "../../../../store/metadata/module";
 
 describe("CustomMetadataString", () => {
-    async function createWrapper(metadata: Metadata): Promise<Wrapper<CustomMetadataString>> {
+    function createWrapper(metadata: Metadata): Wrapper<CustomMetadataString> {
         return shallowMount(CustomMetadataString, {
-            localVue: await createDocumentLocalVue(),
+            localVue,
             propsData: { currentlyUpdatedItemMetadata: metadata },
         });
     }
 
-    it(`renders an input with a required value`, async () => {
+    it(`renders an input with a required value`, () => {
         const currentlyUpdatedItemMetadata = {
             value: "string value",
             is_required: true,
             name: "field",
             type: "string",
         } as Metadata;
-        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        const wrapper = createWrapper(currentlyUpdatedItemMetadata);
         const string_input = wrapper.get("[data-test=document-string-input]");
 
         if (!(string_input.element instanceof HTMLInputElement)) {
@@ -51,14 +51,14 @@ describe("CustomMetadataString", () => {
         ).toBeTruthy();
     });
 
-    it(`renders an input with an empty value`, async () => {
+    it(`renders an input with an empty value`, () => {
         const currentlyUpdatedItemMetadata = {
             value: "",
             is_required: false,
             name: "field",
             type: "string",
         } as Metadata;
-        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        const wrapper = createWrapper(currentlyUpdatedItemMetadata);
         const string_input = wrapper.get("[data-test=document-string-input]");
 
         if (!(string_input.element instanceof HTMLInputElement)) {
@@ -71,7 +71,7 @@ describe("CustomMetadataString", () => {
         ).toBeFalsy();
     });
 
-    it(`does not render the component when type does not match`, async () => {
+    it(`does not render the component when type does not match`, () => {
         const currentlyUpdatedItemMetadata = {
             value: "",
             is_required: false,
@@ -79,7 +79,7 @@ describe("CustomMetadataString", () => {
             type: "text",
         } as Metadata;
 
-        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        const wrapper = createWrapper(currentlyUpdatedItemMetadata);
         expect(wrapper.find("[data-test=document-custom-metadata-string]").exists()).toBeFalsy();
     });
 });

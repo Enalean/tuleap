@@ -22,16 +22,16 @@ import { shallowMount } from "@vue/test-utils";
 import UnlockItem from "./UnlockItem.vue";
 import type { ItemFile } from "../../../type";
 import type { LockInfo } from "../../../type";
-import { createDocumentLocalVue } from "../../../helpers/local-vue-for-test";
+import localVue from "../../../helpers/local-vue";
 
 describe("UnlockItem", () => {
     const store = {
         dispatch: jest.fn(),
     };
 
-    async function createWrapper(item: ItemFile): Promise<Wrapper<UnlockItem>> {
+    function createWrapper(item: ItemFile): Wrapper<UnlockItem> {
         return shallowMount(UnlockItem, {
-            localVue: await createDocumentLocalVue(),
+            localVue,
             propsData: { item },
             mocks: {
                 $store: store,
@@ -41,20 +41,20 @@ describe("UnlockItem", () => {
 
     it(`Given document is not locked
         When we display the dropdown
-        Then I should not be able to unlock it`, async () => {
+        Then I should not be able to unlock it`, () => {
         const item = {
             id: 1,
             user_can_write: true,
             lock_info: null,
         } as ItemFile;
-        const wrapper = await createWrapper(item);
+        const wrapper = createWrapper(item);
 
         expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBeFalsy();
     });
 
     it(`Given an other user has locked a document, and given I don't have admin permission
         When we display the dropdown
-        Then I should not be able to unlock it`, async () => {
+        Then I should not be able to unlock it`, () => {
         const item = {
             id: 1,
             user_can_write: false,
@@ -62,14 +62,14 @@ describe("UnlockItem", () => {
                 lock_by: {},
             } as LockInfo,
         } as ItemFile;
-        const wrapper = await createWrapper(item);
+        const wrapper = createWrapper(item);
 
         expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBeFalsy();
     });
 
     it(`Given user can write
         When we display the dropdown
-        Then I should able to unlock any item locked`, async () => {
+        Then I should able to unlock any item locked`, () => {
         const item = {
             id: 1,
             user_can_write: true,
@@ -77,7 +77,7 @@ describe("UnlockItem", () => {
                 lock_by: {},
             } as LockInfo,
         } as ItemFile;
-        const wrapper = await createWrapper(item);
+        const wrapper = createWrapper(item);
 
         expect(
             wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()
@@ -85,7 +85,7 @@ describe("UnlockItem", () => {
     });
 
     it(`Given item is a file and given user can write
-        Then unlock option should be displayed`, async () => {
+        Then unlock option should be displayed`, () => {
         const item = {
             id: 1,
             user_can_write: true,
@@ -93,14 +93,14 @@ describe("UnlockItem", () => {
                 lock_by: {},
             } as LockInfo,
         } as ItemFile;
-        const wrapper = await createWrapper(item);
+        const wrapper = createWrapper(item);
 
         expect(
             wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()
         ).toBeTruthy();
     });
 
-    it(`unlock document on click`, async () => {
+    it(`unlock document on click`, () => {
         const item = {
             id: 1,
             user_can_write: true,
@@ -108,7 +108,7 @@ describe("UnlockItem", () => {
                 lock_by: {},
             } as LockInfo,
         } as ItemFile;
-        const wrapper = await createWrapper(item);
+        const wrapper = createWrapper(item);
 
         wrapper.get("[data-test=document-dropdown-menu-unlock-item]").trigger("click");
 

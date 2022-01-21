@@ -19,14 +19,14 @@
 
 import { shallowMount } from "@vue/test-utils";
 import UserBadge from "./UserBadge.vue";
-import { createDocumentLocalVue } from "../../helpers/local-vue-for-test";
+import localVue from "../../helpers/local-vue";
 
 describe("UserBadge", () => {
     it(`Given user has avatar
         When we display the user badge
-        Then its avatar is displayed`, async () => {
+        Then its avatar is displayed`, () => {
         const wrapper = shallowMount(UserBadge, {
-            localVue: await createDocumentLocalVue(),
+            localVue,
             propsData: {
                 user: {
                     id: 1,
@@ -42,9 +42,9 @@ describe("UserBadge", () => {
 
     it(`Given user hasn't an avatar
         When we display the user badge
-        Then whe should not display it`, async () => {
+        Then whe should not display it`, () => {
         const wrapper = shallowMount(UserBadge, {
-            localVue: await createDocumentLocalVue(),
+            localVue,
             propsData: {
                 user: {
                     id: 1,

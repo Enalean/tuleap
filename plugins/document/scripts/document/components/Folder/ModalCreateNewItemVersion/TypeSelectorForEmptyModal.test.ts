@@ -22,12 +22,10 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import TypeSelectorForEmptyModal from "./TypeSelectorForEmptyModal.vue";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
-import { createDocumentLocalVue } from "../../../helpers/local-vue-for-test";
+import localVue from "../../../helpers/local-vue";
 
 describe("TypeSelectorForEmptyModal", () => {
-    async function createWrapper(
-        embedded_are_allowed: boolean
-    ): Promise<Wrapper<TypeSelectorForEmptyModal>> {
+    function createWrapper(embedded_are_allowed: boolean): Wrapper<TypeSelectorForEmptyModal> {
         return shallowMount(TypeSelectorForEmptyModal, {
             mocks: {
                 $store: createStoreMock({
@@ -39,21 +37,21 @@ describe("TypeSelectorForEmptyModal", () => {
                 }),
             },
             propsData: { value: "My empty name" },
-            localVue: await createDocumentLocalVue(),
+            localVue,
         });
     }
 
     it(`Given embedded files are not enabled in project
-        Then the type selector does not display embedded box to user`, async () => {
-        const wrapper = await createWrapper(false);
+        Then the type selector does not display embedded box to user`, () => {
+        const wrapper = createWrapper(false);
         expect(wrapper.find("[data-test=document-type-selector-file]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-type-selector-link]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-type-selector-embedded]").exists()).toBeFalsy();
     });
 
     it(`Given embedded files are available in project
-        Then the type selector display embedded box to user`, async () => {
-        const wrapper = await createWrapper(true);
+        Then the type selector display embedded box to user`, () => {
+        const wrapper = createWrapper(true);
         expect(wrapper.find("[data-test=document-type-selector-file]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-type-selector-link]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-type-selector-embedded]").exists()).toBeTruthy();
