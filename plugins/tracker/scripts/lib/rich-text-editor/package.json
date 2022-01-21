@@ -14,7 +14,7 @@
     "@tuleap/tlp-fetch": "file:../../../../../src/scripts/lib/tlp-fetch",
     "dompurify": "^2.3.4",
     "lit": "^2.0.2",
-    "marked": "^4.0.0",
+    "marked": "^4.0.10",
     "turndown": "^7.0.0"
   },
   "devDependencies": {
