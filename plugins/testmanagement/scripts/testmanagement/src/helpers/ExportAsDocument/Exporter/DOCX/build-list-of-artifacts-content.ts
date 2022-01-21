@@ -725,7 +725,7 @@ async function buildStepDefinitionTestResultParagraphs(
                         new ExternalHyperlink({
                             children: [
                                 new TextRun({
-                                    text: bug.title ?? bug.xref,
+                                    text: bug.xref + (bug.title ? ": " + bug.title : ""),
                                     style: "Hyperlink",
                                 }),
                             ],
