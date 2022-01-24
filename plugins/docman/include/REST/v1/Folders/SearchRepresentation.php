@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1\Folders;
 
 use Tuleap\Docman\Item\PaginatedParentRowCollection;
+use Tuleap\REST\JsonCast;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 /**
@@ -60,14 +61,21 @@ final class SearchRepresentation
      */
     public array $parents;
 
-    private function __construct(int $id, string $title, ?string $description, string $status, MinimalUserRepresentation $owner, ?string $update_date, PaginatedParentRowCollection $parents)
-    {
+    private function __construct(
+        int $id,
+        string $title,
+        ?string $description,
+        string $status,
+        MinimalUserRepresentation $owner,
+        ?string $update_date,
+        PaginatedParentRowCollection $parents,
+    ) {
         $this->id               = $id;
         $this->title            = $title;
         $this->description      = $description;
         $this->status           = $status;
         $this->owner            = $owner;
-        $this->last_update_date = $update_date;
+        $this->last_update_date = JsonCast::toDate($update_date);
         $this->parents          = $parents->getPaginatedElementCollection();
     }
 

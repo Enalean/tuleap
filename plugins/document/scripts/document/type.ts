@@ -54,6 +54,14 @@ export interface GettextProvider {
     $pgettext: (context: string, msgid: string) => string;
 }
 
+export interface ItemSearchResult {
+    readonly id: number;
+    readonly title: string;
+    readonly description: string;
+    readonly owner: User;
+    readonly last_update_date: string;
+}
+
 export interface Item {
     id: number;
     title: string;
