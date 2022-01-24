@@ -19,9 +19,10 @@
   -->
 
 <template>
-    <div>
+    <div class="document-search-container">
         <search-header />
         <search-criteria-panel v-bind:query="query" v-on:advanced-search="advancedSearch" />
+        <search-result-error v-if="error" v-bind:error="error" />
         <search-result-table v-if="can_result_table_be_displayed" v-bind:is_loading="is_loading" />
     </div>
 </template>
@@ -36,9 +37,10 @@ import SearchHeader from "./SearchHeader.vue";
 import { searchInFolder } from "../../api/rest-querier";
 import { Action } from "vuex-class";
 import type { Dictionary } from "vue-router/types/router";
+import SearchResultError from "./SearchResult/SearchResultError.vue";
 
 @Component({
-    components: { SearchHeader, SearchResultTable, SearchCriteriaPanel },
+    components: { SearchResultError, SearchHeader, SearchResultTable, SearchCriteriaPanel },
 })
 export default class SearchContainer extends Vue {
     @Prop({ required: true })
@@ -48,6 +50,7 @@ export default class SearchContainer extends Vue {
     readonly folder_id!: number;
 
     is_loading = false;
+    error: Error | null = null;
 
     @Action
     readonly loadFolder!: (item_id: number) => Promise<void>;
@@ -63,14 +66,24 @@ export default class SearchContainer extends Vue {
         }
 
         this.is_loading = true;
+        this.error = null;
 
-        searchInFolder(this.folder_id, query).finally(() => {
-            this.is_loading = false;
-        });
+        searchInFolder(this.folder_id, query)
+            .catch((error) => {
+                this.error = error;
+                throw error;
+            })
+            .finally(() => {
+                this.is_loading = false;
+            });
     }
 
     get can_result_table_be_displayed(): boolean {
-        return this.query.length !== 0;
+        return this.error === null && !this.is_query_empty;
+    }
+
+    get is_query_empty(): boolean {
+        return this.query.length === 0;
     }
 
     advancedSearch(params: AdvancedSearchParams): void {
@@ -80,6 +93,7 @@ export default class SearchContainer extends Vue {
         }
 
         if (deepEqual(this.$route.query, query)) {
+            this.search(params.query);
             return;
         }
 
