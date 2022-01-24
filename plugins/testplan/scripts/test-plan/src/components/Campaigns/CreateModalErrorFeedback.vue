@@ -27,19 +27,14 @@
         </div>
     </section>
 </template>
+<script setup lang="ts">
+defineProps<{
+    error_message?: string | undefined;
+    error_message_details?: string | undefined;
+}>();
+</script>
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";
 
-export default defineComponent({
-    props: {
-        error_message: {
-            type: String,
-            default: undefined,
-        },
-        error_message_details: {
-            type: String,
-            default: undefined,
-        },
-    },
-});
+export default defineComponent({});
 </script>

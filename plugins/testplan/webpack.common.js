@@ -55,6 +55,7 @@ module.exports = [
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
+            require("unplugin-vue2-script-setup/webpack")(),
             webpack_configurator.getVueLoaderPlugin(),
             webpack_configurator.getTypescriptCheckerPlugin(true),
             ...webpack_configurator.getCSSExtractionPlugins(),
