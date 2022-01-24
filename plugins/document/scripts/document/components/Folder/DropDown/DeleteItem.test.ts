@@ -23,11 +23,12 @@ import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import type { Item } from "../../../type";
 import localVue from "../../../helpers/local-vue";
+import mitt from "../../../helpers/emitter";
+
+jest.mock("../../../helpers/emitter");
 
 describe("DeleteItem", () => {
-    let store = {
-        commit: jest.fn(),
-    };
+    let store = {};
     function createWrapper(
         user_can_write: boolean,
         is_deletion_allowed: boolean
@@ -62,9 +63,11 @@ describe("DeleteItem", () => {
         const wrapper = createWrapper(true, true);
         wrapper.get("[data-test=document-delete-item]").trigger("click");
 
-        expect(store.commit).toHaveBeenCalledWith("modals/deleteItem", {
-            id: 1,
-            user_can_write: true,
+        expect(mitt.emit).toHaveBeenCalledWith("deleteItem", {
+            item: {
+                id: 1,
+                user_can_write: true,
+            },
         });
     });
 });

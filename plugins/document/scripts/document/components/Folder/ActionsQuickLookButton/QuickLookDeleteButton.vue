@@ -34,6 +34,7 @@
 import { namespace } from "vuex-class";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import type { Item } from "../../../type";
+import emitter from "../../../helpers/emitter";
 
 const configuration = namespace("configuration");
 
@@ -46,7 +47,7 @@ export default class QuickLookDeleteButton extends Vue {
     readonly is_deletion_allowed!: boolean;
 
     processDeletion(): void {
-        this.$store.commit("modals/deleteItem", this.item);
+        emitter.emit("deleteItem", { item: this.item });
     }
 }
 </script>

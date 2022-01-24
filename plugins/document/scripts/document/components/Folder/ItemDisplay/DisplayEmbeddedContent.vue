@@ -53,9 +53,10 @@
             v-on:hidden="hideModal()"
         />
         <confirm-deletion-modal
-            v-if="delete_item"
-            v-bind:item="delete_item"
+            v-if="show_confirm_deletion_modal"
+            v-bind:item="currently_previewed_item"
             v-bind:should-redirect-to-parent-after-deletion="true"
+            v-on:delete-modal-closed="hideDeleteItemModal"
         />
 
         <update-metadata-modal
@@ -78,6 +79,7 @@ import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
 import UpdateMetadataModal from "../ModalUpdateMetadata/UpdateMetadataModal.vue";
 import { mapState } from "vuex";
 import EventBus from "../../../helpers/event-bus.js";
+import emitter from "../../../helpers/emitter";
 
 export default {
     name: "DisplayEmbeddedContent",
@@ -107,6 +109,7 @@ export default {
     data() {
         return {
             is_modal_shown: false,
+            show_confirm_deletion_modal: false,
             show_update_metadata_modal: false,
             show_update_permissions_modal: false,
             is_in_large_view: false,
@@ -115,7 +118,6 @@ export default {
     computed: {
         ...mapState(["currently_previewed_item"]),
         ...mapState("preferencies", ["is_embedded_in_large_view"]),
-        ...mapState("modals", ["delete_item"]),
         embedded_content() {
             if (!this.currently_previewed_item.embedded_file_properties) {
                 return "";
@@ -125,6 +127,7 @@ export default {
         },
     },
     created() {
+        emitter.on("deleteItem", this.showDeleteItemModal);
         EventBus.$on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
         EventBus.$on("show-update-item-metadata-modal", this.showUpdateMetadataModal);
         EventBus.$on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
@@ -149,6 +152,12 @@ export default {
         },
         showUpdateItemPermissionsModal() {
             this.show_update_permissions_modal = true;
+        },
+        showDeleteItemModal() {
+            this.show_confirm_deletion_modal = true;
+        },
+        hideDeleteItemModal() {
+            this.show_confirm_deletion_modal = false;
         },
     },
 };
