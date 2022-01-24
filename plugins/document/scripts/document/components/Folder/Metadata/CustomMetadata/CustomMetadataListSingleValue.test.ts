@@ -22,14 +22,14 @@ import { shallowMount } from "@vue/test-utils";
 import CustomMetadataList from "./CustomMetadataListSingleValue.vue";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import type { ListValue, Metadata } from "../../../../store/metadata/module";
-import { createDocumentLocalVue } from "../../../../helpers/local-vue-for-test";
+import localVue from "../../../../helpers/local-vue";
 
 describe("CustomMetadataListSingleValue", () => {
     const store_options = { state: { metadata: {} } };
-    async function createWrapper(metadata: Metadata): Promise<Wrapper<CustomMetadataList>> {
+    function createWrapper(metadata: Metadata): Wrapper<CustomMetadataList> {
         const store = createStoreMock(store_options);
         return shallowMount(CustomMetadataList, {
-            localVue: await createDocumentLocalVue(),
+            localVue,
             propsData: { currentlyUpdatedItemMetadata: metadata },
             mocks: {
                 $store: store,
@@ -64,7 +64,7 @@ describe("CustomMetadataListSingleValue", () => {
             type: "list",
             is_multiple_value_allowed: false,
         } as Metadata;
-        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        const wrapper = createWrapper(currentlyUpdatedItemMetadata);
 
         await wrapper.vm.$nextTick();
 
@@ -79,7 +79,7 @@ describe("CustomMetadataListSingleValue", () => {
     });
 
     it(`Given a list metadata is required
-        Then the input is required`, async () => {
+        Then the input is required`, () => {
         store_options.state.metadata = {
             project_metadata_list: [
                 {
@@ -97,7 +97,7 @@ describe("CustomMetadataListSingleValue", () => {
             type: "list",
             is_multiple_value_allowed: false,
         } as Metadata;
-        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        const wrapper = createWrapper(currentlyUpdatedItemMetadata);
 
         expect(wrapper.find("[data-test=document-custom-list-select]").exists()).toBeTruthy();
 
@@ -108,7 +108,7 @@ describe("CustomMetadataListSingleValue", () => {
         expect(input.element.required).toBe(true);
     });
 
-    it(`does not render the component when type does not match`, async () => {
+    it(`does not render the component when type does not match`, () => {
         store_options.state.metadata = {
             project_metadata_list: [
                 {
@@ -126,11 +126,11 @@ describe("CustomMetadataListSingleValue", () => {
             type: "text",
         } as Metadata;
 
-        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        const wrapper = createWrapper(currentlyUpdatedItemMetadata);
         expect(wrapper.find("[data-test=document-custom-metadata-list]").exists()).toBeFalsy();
     });
 
-    it(`does not render the component when list is multiple`, async () => {
+    it(`does not render the component when list is multiple`, () => {
         store_options.state.metadata = {
             project_metadata_list: [
                 {
@@ -151,7 +151,7 @@ describe("CustomMetadataListSingleValue", () => {
             is_multiple_value_allowed: true,
         } as Metadata;
 
-        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        const wrapper = createWrapper(currentlyUpdatedItemMetadata);
         expect(wrapper.find("[data-test=document-custom-metadata-list]").exists()).toBeFalsy();
     });
 });

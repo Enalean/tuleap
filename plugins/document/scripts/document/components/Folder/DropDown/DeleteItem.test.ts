@@ -22,16 +22,16 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import type { Item } from "../../../type";
-import { createDocumentLocalVue } from "../../../helpers/local-vue-for-test";
+import localVue from "../../../helpers/local-vue";
 
 describe("DeleteItem", () => {
     let store = {
         commit: jest.fn(),
     };
-    async function createWrapper(
+    function createWrapper(
         user_can_write: boolean,
         is_deletion_allowed: boolean
-    ): Promise<Wrapper<DeleteItem>> {
+    ): Wrapper<DeleteItem> {
         store = createStoreMock({
             state: {
                 configuration: { is_deletion_allowed },
@@ -41,25 +41,25 @@ describe("DeleteItem", () => {
             mocks: {
                 $store: store,
             },
-            localVue: await createDocumentLocalVue(),
+            localVue: localVue,
             propsData: { item: { id: 1, user_can_write } as Item },
         });
     }
 
-    it(`Displays the delete button because the user can write and deletion is allowed`, async () => {
-        const wrapper = await createWrapper(true, true);
+    it(`Displays the delete button because the user can write and deletion is allowed`, () => {
+        const wrapper = createWrapper(true, true);
         expect(wrapper.find("[data-test=document-delete-item]").exists()).toBeTruthy();
     });
-    it(`Does not display the delete button if the user can't write but deletion is allowed`, async () => {
-        const wrapper = await createWrapper(false, true);
+    it(`Does not display the delete button if the user can't write but deletion is allowed`, () => {
+        const wrapper = createWrapper(false, true);
         expect(wrapper.find("[data-test=document-delete-item]").exists()).toBeFalsy();
     });
-    it(`Does not display the delete button if the user can write but deletion is  not allowed`, async () => {
-        const wrapper = await createWrapper(true, false);
+    it(`Does not display the delete button if the user can write but deletion is  not allowed`, () => {
+        const wrapper = createWrapper(true, false);
         expect(wrapper.find("[data-test=document-delete-item]").exists()).toBeFalsy();
     });
-    it(`When the user clicks the button, then it should trigger an event to open the confirmation modal`, async () => {
-        const wrapper = await createWrapper(true, true);
+    it(`When the user clicks the button, then it should trigger an event to open the confirmation modal`, () => {
+        const wrapper = createWrapper(true, true);
         wrapper.get("[data-test=document-delete-item]").trigger("click");
 
         expect(store.commit).toHaveBeenCalledWith("modals/deleteItem", {

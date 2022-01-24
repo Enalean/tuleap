@@ -22,18 +22,18 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomMetadataDate from "./CustomMetadataDate.vue";
 import type { Metadata } from "../../../../store/metadata/module";
-import { createDocumentLocalVue } from "../../../../helpers/local-vue-for-test";
+import localVue from "../../../../helpers/local-vue";
 import DateFlatPicker from "../DateFlatPicker.vue";
 
 describe("CustomMetadataDate", () => {
-    async function createWrapper(metadata: Metadata): Promise<Wrapper<CustomMetadataDate>> {
+    function createWrapper(metadata: Metadata): Wrapper<CustomMetadataDate> {
         return shallowMount(CustomMetadataDate, {
-            localVue: await createDocumentLocalVue(),
+            localVue,
             propsData: { currentlyUpdatedItemMetadata: metadata },
         });
     }
 
-    it(`does not render the component when type does not match`, async () => {
+    it(`does not render the component when type does not match`, () => {
         const currentlyUpdatedItemMetadata = {
             value: "2019-06-30T00:00:00+03:00",
             is_required: true,
@@ -41,11 +41,11 @@ describe("CustomMetadataDate", () => {
             type: "text",
         } as Metadata;
 
-        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        const wrapper = createWrapper(currentlyUpdatedItemMetadata);
         expect(wrapper.find("[data-test=document-custom-metadata-date]").exists()).toBeFalsy();
     });
 
-    it(`User can choose a date value`, async () => {
+    it(`User can choose a date value`, () => {
         const currentlyUpdatedItemMetadata = {
             value: "2019-06-30T00:00:00+03:00",
             is_required: true,
@@ -53,7 +53,7 @@ describe("CustomMetadataDate", () => {
             type: "date",
         } as Metadata;
 
-        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        const wrapper = createWrapper(currentlyUpdatedItemMetadata);
         wrapper.findComponent(DateFlatPicker).vm.$emit("input", "2019-06-30");
 
         expect(wrapper.emitted().input).toEqual([["2019-06-30"]]);

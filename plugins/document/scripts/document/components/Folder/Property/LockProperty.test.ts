@@ -22,12 +22,12 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import LockProperty from "./LockProperty.vue";
 import type { Item, LockInfo, User } from "../../../type";
-import { createDocumentLocalVue } from "../../../helpers/local-vue-for-test";
+import localVue from "../../../helpers/local-vue";
 
 describe("LockProperty", () => {
-    async function instantiateComponent(item: Item): Promise<Wrapper<LockProperty>> {
+    function instantiateComponent(item: Item): Wrapper<LockProperty> {
         return shallowMount(LockProperty, {
-            localVue: await createDocumentLocalVue(),
+            localVue,
             propsData: {
                 item: { ...item },
             },
@@ -35,16 +35,16 @@ describe("LockProperty", () => {
     }
 
     describe("The displayed label", () => {
-        it("displays the 'Lock new version' label on update if the document does not have lock", async () => {
+        it("displays the 'Lock new version' label on update if the document does not have lock", () => {
             const item = { id: 1, title: "Item", lock_info: null } as Item;
-            const wrapper = await instantiateComponent(item);
+            const wrapper = instantiateComponent(item);
 
             const label_element = wrapper.get("[data-test='lock-property-label']");
 
             expect(label_element.element.textContent).toMatch("Lock new version");
         });
 
-        it("displays the 'Keep lock?' label on update if the document does have a lock", async () => {
+        it("displays the 'Keep lock?' label on update if the document does have a lock", () => {
             const item = {
                 id: 1,
                 title: "Item",
@@ -53,7 +53,7 @@ describe("LockProperty", () => {
                     lock_date: "2019-04-25T16:32:59+02:00",
                 } as LockInfo,
             } as Item;
-            const wrapper = await instantiateComponent(item);
+            const wrapper = instantiateComponent(item);
 
             const label_element = wrapper.get("[data-test='lock-property-label']");
 

@@ -20,12 +20,12 @@
 
 import { shallowMount } from "@vue/test-utils";
 import FolderLoadingScreen from "./FolderLoadingScreen.vue";
-import { createDocumentLocalVue } from "../../helpers/local-vue-for-test";
+import localVue from "../../helpers/local-vue";
 
 describe("FolderLoadingScreen", () => {
-    it("displays the folder loading screen", async () => {
+    it("displays the folder loading screen", () => {
         const wrapper = shallowMount(FolderLoadingScreen, {
-            localVue: await createDocumentLocalVue(),
+            localVue,
         });
 
         expect(wrapper.element).toMatchSnapshot();

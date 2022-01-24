@@ -20,13 +20,13 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DetailsItemButton from "./DetailsItemButton.vue";
-import { createDocumentLocalVue } from "../../../helpers/local-vue-for-test";
+import localVue from "../../../helpers/local-vue";
 import * as location_helper from "../../../helpers/location-helper";
 import type { Empty } from "../../../type";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
 describe("DetailsItemButton", () => {
-    async function createWrapper(): Promise<Wrapper<DetailsItemButton>> {
+    function createWrapper(): Wrapper<DetailsItemButton> {
         const item: Empty = {
             id: 1,
             title: "my item title",
@@ -42,15 +42,15 @@ describe("DetailsItemButton", () => {
                     },
                 }),
             },
-            localVue: await createDocumentLocalVue(),
+            localVue,
             propsData: { item, buttonClass: "" },
         });
     }
 
     it(`Given user click on details,
-        Then he should be redirected to the legacy page`, async () => {
+        Then he should be redirected to the legacy page`, () => {
         const redirect_to_url = jest.spyOn(location_helper, "redirectToUrl").mockImplementation();
-        const wrapper = await createWrapper();
+        const wrapper = createWrapper();
 
         wrapper.get("[data-test=docman-go-to-details]").trigger("click");
 

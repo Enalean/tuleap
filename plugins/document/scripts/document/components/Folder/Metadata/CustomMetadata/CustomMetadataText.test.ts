@@ -21,17 +21,17 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomMetadataText from "./CustomMetadataText.vue";
 import type { Metadata } from "../../../../store/metadata/module";
-import { createDocumentLocalVue } from "../../../../helpers/local-vue-for-test";
+import localVue from "../../../../helpers/local-vue";
 
 describe("CustomMetadataText", () => {
-    async function createWrapper(metadata: Metadata): Promise<Wrapper<CustomMetadataText>> {
+    function createWrapper(metadata: Metadata): Wrapper<CustomMetadataText> {
         return shallowMount(CustomMetadataText, {
-            localVue: await createDocumentLocalVue(),
+            localVue,
             propsData: { currentlyUpdatedItemMetadata: metadata },
         });
     }
 
-    it(`renders an input with a required value`, async () => {
+    it(`renders an input with a required value`, () => {
         const currentlyUpdatedItemMetadata = {
             value: "text value",
             is_required: true,
@@ -39,7 +39,7 @@ describe("CustomMetadataText", () => {
             type: "text",
             short_name: "short_name",
         } as Metadata;
-        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        const wrapper = createWrapper(currentlyUpdatedItemMetadata);
         const text_input = wrapper.get("[data-test=document-text-input]");
 
         if (!(text_input.element instanceof HTMLTextAreaElement)) {
@@ -52,7 +52,7 @@ describe("CustomMetadataText", () => {
         ).toBeTruthy();
     });
 
-    it(`renders an input with an empty value`, async () => {
+    it(`renders an input with an empty value`, () => {
         const currentlyUpdatedItemMetadata = {
             value: "",
             is_required: false,
@@ -60,7 +60,7 @@ describe("CustomMetadataText", () => {
             type: "text",
             short_name: "short_name",
         } as Metadata;
-        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        const wrapper = createWrapper(currentlyUpdatedItemMetadata);
         const text_input = wrapper.get("[data-test=document-text-input]");
 
         if (!(text_input.element instanceof HTMLTextAreaElement)) {
@@ -74,7 +74,7 @@ describe("CustomMetadataText", () => {
     });
 
     it(`Given custom text metadata
-        Then it renders the corresponding component`, async () => {
+        Then it renders the corresponding component`, () => {
         const currentlyUpdatedItemMetadata = {
             value: "",
             is_required: false,
@@ -82,7 +82,7 @@ describe("CustomMetadataText", () => {
             short_name: "text",
             type: "text",
         } as Metadata;
-        const wrapper = await createWrapper(currentlyUpdatedItemMetadata);
+        const wrapper = createWrapper(currentlyUpdatedItemMetadata);
 
         expect(wrapper.find("[data-test=document-custom-metadata-text]").exists()).toBeTruthy();
     });

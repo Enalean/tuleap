@@ -20,14 +20,14 @@
 
 import { shallowMount } from "@vue/test-utils";
 import UserName from "./UserName.vue";
-import { createDocumentLocalVue } from "../../helpers/local-vue-for-test";
+import localVue from "../../helpers/local-vue";
 
 describe("UserName", () => {
     it(`Given user is connected
         When we display the user name
-        Then we should be able to click on its name`, async () => {
+        Then we should be able to click on its name`, () => {
         const wrapper = shallowMount(UserName, {
-            localVue: await createDocumentLocalVue(),
+            localVue,
             context: {
                 props: {
                     user: {
@@ -43,9 +43,9 @@ describe("UserName", () => {
 
     it(`Given user is anonymous
         When we display the user name
-        Then we should not be able to click on its name`, async () => {
+        Then we should not be able to click on its name`, () => {
         const wrapper = shallowMount(UserName, {
-            localVue: await createDocumentLocalVue(),
+            localVue,
             context: {
                 props: {
                     user: {
