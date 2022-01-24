@@ -17,6 +17,7 @@ specifiers:
   vue-property-decorator: ^9.1.2
   vuex: ^3.6.2
   vuex-class: ^0.3.2
+  vuex-composition-helpers: ^1.1.0
   xlsx: ^0.17.5
 
 dependencies:
@@ -30,6 +31,7 @@ dependencies:
   vue-gettext: 2.1.12
   vuex: 3.6.2_vue@2.6.14
   vuex-class: 0.3.2_74f9cfd67148c622b48e1672fc254539
+  vuex-composition-helpers: 1.1.0
   xlsx: 0.17.5
 
 devDependencies:
@@ -441,6 +443,10 @@ packages:
       vue: 2.6.14
       vue-class-component: 7.2.6_vue@2.6.14
       vuex: 3.6.2_vue@2.6.14
+    dev: false
+
+  /vuex-composition-helpers/1.1.0:
+    resolution: {integrity: sha512-36f3MWRCW6QqtP3NLyLbtTPv8qWwbac7gAK9fM4ZtDWTCWuAeBoZEiM+bmPQweAQoMM7GRSXmw/90Egiqg0DCA==}
     dev: false
 
   /vuex/3.6.2_vue@2.6.14:
