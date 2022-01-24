@@ -33,8 +33,33 @@ final class DatabaseConfigurator
     private const DB_ALREADY_INIT                 = 1;
     private const DB_FRESH                        = 2;
 
-    public function __construct(private \PasswordHandler $password_handler)
+    public function __construct(private \PasswordHandler $password_handler, private ConnectionManagerInterface $connection_manager)
     {
+    }
+
+    public function setupDatabase(SymfonyStyle $output, DBSetupParameters $db_params, string $base_directory = '/'): void
+    {
+        $db = $this->connection_manager->getDBWithoutDBName(
+            $output,
+            $db_params->host,
+            $db_params->port,
+            $db_params->ssl_mode,
+            $db_params->ca_path,
+            $db_params->admin_user,
+            $db_params->admin_password,
+        );
+
+        $this->connection_manager->checkSQLModes($db);
+
+        $this->initializeDatabaseAndLoadValues(
+            $output,
+            $db,
+            $db_params,
+        );
+
+        $db->run('FLUSH PRIVILEGES');
+
+        $this->writeDatabaseIncFile($db_params, $base_directory);
     }
 
     /**
@@ -43,46 +68,47 @@ final class DatabaseConfigurator
     public function initializeDatabase(
         SymfonyStyle $output,
         DBWrapperInterface $db,
-        string $app_dbname,
-        string $app_user,
-        string $grant_hostname,
-        string $app_password,
+        DBSetupParameters $db_params,
     ): int {
-        $existing_db = $db->single(sprintf('SHOW DATABASES LIKE "%s"', $db->escapeIdentifier($app_dbname, false)));
+        if (! $db_params->hasTuleapCredentials()) {
+            throw new \Exception('Tuleap credentials are missing, cannot initialize database');
+        }
+        $existing_db = $db->single(sprintf('SHOW DATABASES LIKE "%s"', $db->escapeIdentifier($db_params->dbname, false)));
         if ($existing_db) {
-            $output->writeln(sprintf('<info>Database %s already exists</info>', $app_dbname));
+            $output->writeln(sprintf('<info>Database %s already exists</info>', $db_params->dbname));
             return self::DB_ALREADY_INIT;
         } else {
-            $output->writeln(sprintf('<info>Create database %s</info>', $app_dbname));
-            $db->run(sprintf('CREATE DATABASE %s DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci', $db->escapeIdentifier($app_dbname)));
+            $output->writeln(sprintf('<info>Create database %s</info>', $db_params->dbname));
+            $db->run(sprintf('CREATE DATABASE %s DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci', $db->escapeIdentifier($db_params->dbname)));
         }
 
-        $output->writeln(sprintf('<info>Grant privileges on %s to %s</info>', $app_dbname, $app_user));
-        $this->createUser($db, $app_user, $app_password, $grant_hostname);
+        $output->writeln(sprintf('<info>Grant privileges on %s to %s</info>', $db_params->dbname, $db_params->tuleap_user));
+        $this->createUser($db, $db_params->tuleap_user, $db_params->tuleap_password, $db_params->grant_hostname);
         $db->run(sprintf(
             'GRANT ALL PRIVILEGES ON %s.* TO %s',
-            $db->escapeIdentifier($app_dbname),
-            $this->quoteDbUser($app_user, $grant_hostname),
+            $db->escapeIdentifier($db_params->dbname),
+            $this->quoteDbUser($db_params->tuleap_user, $db_params->grant_hostname),
         ));
         return self::DB_FRESH;
     }
 
-    public function initializeDatabaseAndLoadValues(
+    private function initializeDatabaseAndLoadValues(
         SymfonyStyle $output,
         DBWrapperInterface $db,
-        string $app_dbname,
-        string $app_user,
-        string $grant_hostname,
-        string $app_password,
-        ConcealedString $site_admin_password,
-        string $domain_name,
+        DBSetupParameters $db_params,
     ): void {
-        $db_status = $this->initializeDatabase($output, $db, $app_dbname, $app_user, $grant_hostname, $app_password);
+        if (! $db_params->hasTuleapCredentials()) {
+            return;
+        }
+        $db_status = $this->initializeDatabase($output, $db, $db_params);
         if ($db_status === self::DB_ALREADY_INIT) {
             return;
         }
-        $db->run('USE ' . $app_dbname);
-        $this->loadInitValues($db, $site_admin_password, $domain_name);
+        if (! $db_params->canSetup()) {
+            return;
+        }
+        $db->run('USE ' . $db_params->dbname);
+        $this->loadInitValues($db, $db_params->site_admin_password, $db_params->tuleap_fqdn);
     }
 
     public function loadInitValues(DBWrapperInterface $db, ConcealedString $admin_password, string $domain_name): void
@@ -161,6 +187,69 @@ final class DatabaseConfigurator
                 )
             );
         }
+    }
+
+    public function writeDatabaseIncFile(
+        DBSetupParameters $db_params,
+        string $base_directory = '/',
+    ): int {
+        if (! $db_params->hasTuleapCredentials()) {
+            return 0;
+        }
+        $template = file_get_contents(__DIR__ . '/../../../etc/database.inc.dist');
+
+        $user = $db_params->tuleap_user;
+        if ($db_params->azure_prefix !== '') {
+            $user = sprintf('%s@%s', $db_params->tuleap_user, $db_params->azure_prefix);
+        }
+
+        $conf_string = str_replace(
+            [
+                'localhost',
+                '%sys_dbname%',
+                '%sys_dbuser%',
+                '%sys_dbpasswd%',
+            ],
+            [
+                $db_params->host,
+                $db_params->dbname,
+                $user,
+                $db_params->tuleap_password,
+            ],
+            $template,
+        );
+
+        $conf_string = preg_replace('/\$sys_dbport.*/', '$sys_dbport = ' . $db_params->port . ';', $conf_string);
+
+        if ($db_params->ssl_mode !== ConnectionManagerInterface::SSL_NO_SSL) {
+            $verify_cert = $db_params->ssl_mode === ConnectionManagerInterface::SSL_VERIFY_CA ? 1 : 0;
+            $conf_string = preg_replace(
+                [
+                    '/\$sys_enablessl.*/',
+                    '/\$sys_db_ssl_ca.*/',
+                    '/\$sys_db_ssl_verify_cert.*/',
+                ],
+                [
+                    '$sys_enablessl = \'1\';',
+                    sprintf('$sys_db_ssl_ca = \'%s\';', $db_params->ca_path),
+                    sprintf('$sys_db_ssl_verify_cert = \'%d\';', $verify_cert),
+                ],
+                $conf_string,
+            );
+        }
+
+        $target_file = $base_directory . '/etc/tuleap/conf/database.inc';
+        if (! file_exists($target_file)) {
+            touch($target_file);
+        }
+        chmod($target_file, 0640);
+        chown($target_file, 'root');
+        chgrp($target_file, 'codendiadm');
+
+        if (file_put_contents($target_file, $conf_string) === strlen($conf_string)) {
+            return 0;
+        }
+        return 1;
     }
 
     private function createUser(DBWrapperInterface $db, string $user, string $password, string $grant_hostname): void

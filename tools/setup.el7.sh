@@ -58,9 +58,10 @@ if [ ${tuleap_installed:-false} = "false" ] || \
     _optionMessages "${@}"
     _checkFilePassword
 
-    admin_password="$(_setupRandomPassword)"
-    sys_db_password="$(_setupRandomPassword)"
     if [ "${TULEAP_INSTALL_SKIP_DB:-false}" = "false" ]; then
+        admin_password="$(_setupRandomPassword)"
+        sys_db_password="$(_setupRandomPassword)"
+
         if [ "${mysql_password:-NULL}" = "NULL" -a "${mysql_server,,}" = "localhost" ] || \
             [ "${mysql_password:-NULL}" = "NULL" -a "${mysql_server}" = "127.0.0.1" ]; then
 

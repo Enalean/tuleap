@@ -23,10 +23,14 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command;
 
+use PasswordHandlerFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Process\Process;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
 use TuleapCfg\Command\Docker\DataPersistence;
@@ -35,9 +39,13 @@ use TuleapCfg\Command\Docker\Rsyslog;
 use TuleapCfg\Command\Docker\Supervisord;
 use TuleapCfg\Command\Docker\Tuleap;
 use TuleapCfg\Command\Docker\VariableProviderFromEnvironment;
+use TuleapCfg\Command\SetupMysql\ConnectionManager;
+use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 
 final class StartCommunityEditionContainerCommand extends Command
 {
+    private const OPTION_DEBUG = 'debug';
+
     private const PERSISTENT_DATA = [
         '/etc/pki/tls/private/localhost.key.pem',
         '/etc/pki/tls/certs/localhost.cert.pem',
@@ -64,12 +72,10 @@ final class StartCommunityEditionContainerCommand extends Command
         Supervisord::UNIT_BACKEND_WORKERS,
     ];
 
-    private ProcessFactory $process_factory;
     private DataPersistence $data_persistence;
 
-    public function __construct(ProcessFactory $process_factory)
+    public function __construct(private ProcessFactory $process_factory)
     {
-        $this->process_factory  = $process_factory;
         $this->data_persistence = new DataPersistence($this->process_factory, ...self::PERSISTENT_DATA);
 
         parent::__construct();
@@ -79,7 +85,8 @@ final class StartCommunityEditionContainerCommand extends Command
     {
         $this
             ->setName('docker:tuleap-run')
-            ->setDescription('Run Tuleap in the context of `tuleap/tuleap-community-edition` image');
+            ->setDescription('Run Tuleap in the context of `tuleap/tuleap-community-edition` image')
+            ->addOption(self::OPTION_DEBUG, '', InputOption::VALUE_NONE, 'If something is failing, container will hang, available for debug');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -88,9 +95,9 @@ final class StartCommunityEditionContainerCommand extends Command
             $version_presenter = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
             $output->writeln(sprintf('<info>Start init sequence for %s</info>', $version_presenter->getFullDescriptiveVersion()));
 
-            $tuleap      = new Tuleap($this->process_factory);
+            $tuleap      = new Tuleap($this->process_factory, new DatabaseConfigurator(PasswordHandlerFactory::getPasswordHandler(), new ConnectionManager()));
             $tuleap_fqdn = $tuleap->setupOrUpdate(
-                $output,
+                new SymfonyStyle($input, $output),
                 $this->data_persistence,
                 new VariableProviderFromEnvironment(),
                 fn () => $this->process_factory->getProcessWithoutTimeout(['sudo', '-u', 'codendiadm', '/usr/bin/tuleap', 'plugin:install', '--all'])->mustRun()
@@ -102,26 +109,20 @@ final class StartCommunityEditionContainerCommand extends Command
             $postfix = new Postfix($this->process_factory);
             $postfix->setup($output, $tuleap_fqdn);
 
-            $host_ip = gethostbyname($tuleap_fqdn);
-
-            $output->writeln(
-                <<<EOT
-                ***********************************************************************************************************
-                * You can get `admin` password with following command: `docker-compose exec web cat /root/.tuleap_passwd` *
-                * Your Tuleap fully qualified domain name is $tuleap_fqdn and it's IP address is $host_ip                 *
-                ***********************************************************************************************************
-                EOT
-            );
-
             $supervisord = new Supervisord(...self::SUPERVISORD_UNITS);
             $supervisord->run($output);
             return Command::SUCCESS;
         } catch (\Exception $exception) {
             $output->writeln(sprintf('<error>%s</error>', OutputFormatter::escape($exception->getMessage())));
-            $output->writeln('Something went wrong, here is a shell to debug: ');
-            $return = pcntl_exec('/bin/bash');
-            if ($return !== null) {
-                throw new \RuntimeException('Exec of /usr/bin/supervisord failed');
+            if ($input->getOption(self::OPTION_DEBUG)) {
+                if (Process::isTtySupported()) {
+                    $output->writeln('Something went wrong, here is a shell to debug: ');
+                    pcntl_exec('/bin/bash');
+                    $output->writeln('exec of bash failed');
+                } else {
+                    $output->writeln('Something went wrong, lets keep the container hanging around for debug');
+                    pcntl_exec('/usr/bin/supervisord', ['--nodaemon', '--configuration', '/etc/supervisord.conf']);
+                }
             }
         }
         return Command::FAILURE;

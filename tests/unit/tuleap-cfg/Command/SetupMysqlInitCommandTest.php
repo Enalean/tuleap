@@ -44,10 +44,11 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->db_wrapper = new TestDBWrapper();
 
+        $connection_manager   = new TestConnectionManager($this->db_wrapper);
         $this->command_tester = new CommandTester(
             new SetupMysqlInitCommand(
-                new TestConnectionManager($this->db_wrapper),
-                new DatabaseConfigurator(\PasswordHandlerFactory::getPasswordHandler()),
+                $connection_manager,
+                new DatabaseConfigurator(\PasswordHandlerFactory::getPasswordHandler(), $connection_manager),
                 $this->base_dir
             )
         );

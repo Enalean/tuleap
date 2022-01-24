@@ -29,9 +29,11 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DB\DBConfig;
 use TuleapCfg\Command\SetupMysql\ConnectionManager;
 use TuleapCfg\Command\SetupMysql\ConnectionManagerInterface;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
+use TuleapCfg\Command\SetupMysql\DBSetupParameters;
 use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
 use TuleapCfg\Command\SetupMysql\InvalidSSLConfigurationException;
 use TuleapCfg\Command\SetupMysql\MysqlCommandHelper;
@@ -54,14 +56,8 @@ final class SetupMysqlInitCommand extends Command
     private const OPT_TULEAP_FQDN         = 'tuleap-fqdn';
     private const OPT_SITE_ADMIN_PASSWORD = 'site-admin-password';
 
-    /**
-     * @var MysqlCommandHelper
-     */
-    private $command_helper;
-    /**
-     * @var string
-     */
-    private $base_directory;
+    private MysqlCommandHelper $command_helper;
+    private string $base_directory;
 
     public function __construct(private ConnectionManagerInterface $connection_manager, private DatabaseConfigurator $database_configurator, ?string $base_directory = null)
     {
@@ -111,8 +107,8 @@ final class SetupMysqlInitCommand extends Command
             ->addOption(self::OPT_SKIP_DATABASE, '', InputOption::VALUE_NONE, 'Will skip database initialization (when you only want to re-write database.inc)')
             ->addOption(self::OPT_ADMIN_USER, '', InputOption::VALUE_REQUIRED, 'MySQL admin user', 'root')
             ->addOption(self::OPT_ADMIN_PASSWORD, '', InputOption::VALUE_REQUIRED, 'MySQL admin password')
-            ->addOption(self::OPT_APP_DBNAME, '', InputOption::VALUE_REQUIRED, 'Name of the DB name to host Tuleap tables (`tuleap` by default)', 'tuleap')
-            ->addOption(self::OPT_APP_USER, '', InputOption::VALUE_REQUIRED, 'Name of the DB user to be used for Tuleap (`tuleapadm`) by default', 'tuleapadm')
+            ->addOption(self::OPT_APP_DBNAME, '', InputOption::VALUE_REQUIRED, 'Name of the DB name to host Tuleap tables (`tuleap` by default)', DBConfig::DEFAULT_MYSQL_TULEAP_DB_NAME)
+            ->addOption(self::OPT_APP_USER, '', InputOption::VALUE_REQUIRED, 'Name of the DB user to be used for Tuleap (`tuleapadm`) by default', DBConfig::DEFAULT_MYSQL_TULEAP_USER_NAME)
             ->addOption(self::OPT_GRANT_HOSTNAME, '', InputOption::VALUE_REQUIRED, 'Hostname value for mysql grant. This is the right hand side of `user`@`hostname`. Default is `%`', '%')
             ->addOption(self::OPT_APP_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Password for the application dbuser (typically tuleapadm)')
             ->addOption(self::OPT_NSS_USER, '', InputOption::VALUE_REQUIRED, 'Name of the DB user that will be used for libnss-mysql or http authentication', 'dbauthuser')
@@ -128,18 +124,6 @@ final class SetupMysqlInitCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        try {
-            $host        = $this->command_helper->getHost($input);
-            $port        = $this->command_helper->getPort($input);
-            $ssl_mode    = $this->command_helper->getSSLMode($input);
-            $ssl_ca_file = $this->command_helper->getSSLCAFile($input, $ssl_mode);
-        } catch (InvalidSSLConfigurationException $exception) {
-            $io->getErrorStyle()->writeln(sprintf('<error>%s</error>', $exception->getMessage()));
-            return 1;
-        }
-
-        $initialize_db = ! (bool) $input->getOption(self::OPT_SKIP_DATABASE);
-
         $user = $input->getOption(self::OPT_ADMIN_USER);
         assert(is_string($user));
 
@@ -149,6 +133,18 @@ final class SetupMysqlInitCommand extends Command
             return 1;
         }
         assert(is_string($password));
+
+        $db_params = new DBSetupParameters($this->command_helper->getHost($input), $user, $password);
+        try {
+            $db_params = $db_params->withPort($this->command_helper->getPort($input));
+            $db_params = $db_params->withSSLMode($this->command_helper->getSSLMode($input));
+            $db_params = $db_params->withSSLCaFile($this->command_helper->getSSLCAFile($input, $db_params->ssl_mode));
+        } catch (InvalidSSLConfigurationException $exception) {
+            $io->getErrorStyle()->writeln(sprintf('<error>%s</error>', $exception->getMessage()));
+            return 1;
+        }
+
+        $initialize_db = ! (bool) $input->getOption(self::OPT_SKIP_DATABASE);
 
         $app_dbname = $input->getOption(self::OPT_APP_DBNAME);
         assert(is_string($app_dbname));
@@ -165,6 +161,9 @@ final class SetupMysqlInitCommand extends Command
             $io->getErrorStyle()->writeln(sprintf('<error>%s must be a string</error>', self::OPT_APP_USER));
         }
         assert(is_string($app_user));
+        if ($app_password !== null) {
+            $db_params = $db_params->withTuleapCredentials($app_dbname, $app_user, $app_password);
+        }
 
         if (getenv(self::ENV_AZURE_SUFFIX) !== false) {
             $azure_suffix = getenv(self::ENV_AZURE_SUFFIX);
@@ -175,9 +174,11 @@ final class SetupMysqlInitCommand extends Command
             }
         }
         assert(is_string($azure_suffix));
+        $db_params = $db_params->withAzurePrefix($azure_suffix);
 
         $grant_hostname = $input->getOption(self::OPT_GRANT_HOSTNAME);
         assert(is_string($grant_hostname));
+        $db_params = $db_params->withGrantHostname($grant_hostname);
 
         $nss_user = $input->getOption(self::OPT_NSS_USER);
         assert(is_string($nss_user));
@@ -191,24 +192,40 @@ final class SetupMysqlInitCommand extends Command
         }
 
         if ($initialize_db) {
-            $db = $this->connection_manager->getDBWithoutDBName($io, $host, $port, $ssl_mode, $ssl_ca_file, $user, $password);
+            $db = $this->connection_manager->getDBWithoutDBName(
+                $io,
+                $db_params->host,
+                $db_params->port,
+                $db_params->ssl_mode,
+                $db_params->ca_path,
+                $db_params->admin_user,
+                $db_params->admin_password
+            );
             $output->writeln('<info>Successfully connected to the server !</info>');
 
             $this->connection_manager->checkSQLModes($db);
 
-            $this->initializeDatabase($input, $io, $db, $app_dbname, $app_user, $grant_hostname, $app_password);
-            $this->initializeNss($input, $io, $db, $app_dbname, $grant_hostname, $nss_user, $nss_password);
-            $this->initializeMediawiki($input, $io, $db, $app_user, $grant_hostname);
+            $this->initializeDatabase($input, $io, $db, $db_params);
+            $this->initializeNss(
+                $input,
+                $io,
+                $db,
+                $db_params->dbname,
+                $db_params->grant_hostname,
+                $nss_user,
+                $nss_password
+            );
+            $this->initializeMediawiki($input, $io, $db, $db_params->tuleap_user, $db_params->grant_hostname);
 
             $db->run('FLUSH PRIVILEGES');
         }
 
-        $return_value = $this->writeDatabaseIncFile($host, $port, $ssl_mode, $ssl_ca_file, $app_dbname, $app_user, $azure_suffix, $app_password);
+        $return_value = $this->database_configurator->writeDatabaseIncFile($db_params, $this->base_directory);
         if ($return_value !== 0) {
             return $return_value;
         }
 
-        return $this->writeLocalIncFile($local_inc_file, $nss_user, $azure_suffix, $nss_password);
+        return $this->writeLocalIncFile($local_inc_file, $nss_user, $db_params->azure_prefix, $nss_password);
     }
 
     private function getSiteAdminPassword(InputInterface $input): ?ConcealedString
@@ -230,27 +247,24 @@ final class SetupMysqlInitCommand extends Command
         InputInterface $input,
         SymfonyStyle $output,
         DBWrapperInterface $db,
-        string $app_dbname,
-        string $app_user,
-        string $grant_hostname,
-        ?string $app_password,
+        DBSetupParameters $db_params,
     ): void {
-        if (! $app_password || ! $app_user) {
+        if (! $db_params->hasTuleapCredentials()) {
             return;
         }
 
-        $tuleap_fqdn         = $input->getOption(self::OPT_TULEAP_FQDN);
-        $site_admin_password = $this->getSiteAdminPassword($input);
+        $db_params = $db_params->withTuleapFQDN($input->getOption(self::OPT_TULEAP_FQDN));
+        $db_params = $db_params->withSiteAdminPassword($this->getSiteAdminPassword($input));
 
-        if ($tuleap_fqdn && $site_admin_password) {
-            $this->database_configurator->initializeDatabaseAndLoadValues($output, $db, $app_dbname, $app_user, $grant_hostname, $app_password, $site_admin_password, $tuleap_fqdn);
+        if ($db_params->canSetup()) {
+            $this->database_configurator->setupDatabase($output, $db_params, $this->base_directory);
         } else {
-            $this->database_configurator->initializeDatabase($output, $db, $app_dbname, $app_user, $grant_hostname, $app_password);
+            $this->database_configurator->initializeDatabase($output, $db, $db_params);
         }
 
         $log_password = $input->getOption(self::OPT_LOG_PASSWORD);
-        if (is_string($log_password)) {
-            file_put_contents($log_password, sprintf("MySQL application user (%s): %s\n", $app_user, $app_password), FILE_APPEND);
+        if (is_string($log_password) && $db_params->hasTuleapCredentials()) {
+            file_put_contents($log_password, sprintf("MySQL application user (%s): %s\n", $db_params->tuleap_user, $db_params->tuleap_password), FILE_APPEND);
         }
     }
 
@@ -298,74 +312,6 @@ final class SetupMysqlInitCommand extends Command
             assert(is_string($mediawiki));
             $this->database_configurator->setUpMediawiki($output, $db, $mediawiki, $app_user, $grant_hostname);
         }
-    }
-
-    private function writeDatabaseIncFile(
-        string $host,
-        int $port,
-        string $ssl_mode,
-        string $ssl_ca_file,
-        string $dbname,
-        string $user,
-        string $azure_suffix,
-        ?string $password,
-    ): int {
-        if ($password === null) {
-            return 0;
-        }
-        $template = file_get_contents(__DIR__ . '/../../etc/database.inc.dist');
-
-        if ($azure_suffix !== '') {
-            $user = sprintf('%s@%s', $user, $azure_suffix);
-        }
-
-        $conf_string = str_replace(
-            [
-                'localhost',
-                '%sys_dbname%',
-                '%sys_dbuser%',
-                '%sys_dbpasswd%',
-            ],
-            [
-                $host,
-                $dbname,
-                $user,
-                $password,
-            ],
-            $template,
-        );
-
-        $conf_string = preg_replace('/\$sys_dbport.*/', '$sys_dbport = ' . $port . ';', $conf_string);
-
-        if ($ssl_mode !== ConnectionManagerInterface::SSL_NO_SSL) {
-            $verify_cert = $ssl_mode === ConnectionManagerInterface::SSL_VERIFY_CA ? 1 : 0;
-            $conf_string = preg_replace(
-                [
-                    '/\$sys_enablessl.*/',
-                    '/\$sys_db_ssl_ca.*/',
-                    '/\$sys_db_ssl_verify_cert.*/',
-                ],
-                [
-                    '$sys_enablessl = \'1\';',
-                    sprintf('$sys_db_ssl_ca = \'%s\';', $ssl_ca_file),
-                    sprintf('$sys_db_ssl_verify_cert = \'%d\';', $verify_cert),
-                ],
-                $conf_string,
-            );
-        }
-
-        $target_file = $this->base_directory . '/etc/tuleap/conf/database.inc';
-        if (! file_exists($target_file)) {
-            touch($target_file);
-        }
-        chmod($target_file, 0640);
-        chown($target_file, 'root');
-        chgrp($target_file, 'codendiadm');
-
-        if (file_put_contents($target_file, $conf_string) === strlen($conf_string)) {
-            return 0;
-        }
-        return 1;
     }
 
     private function writeLocalIncFile(string $local_inc_file, string $user, string $azure_suffix, ?string $password): int

@@ -27,30 +27,32 @@ use ForgeConfig;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DB\DBConfig;
 use Tuleap\DB\DBFactory;
 use Tuleap\ForgeUpgrade\ForgeUpgrade;
 use Tuleap\System\ServiceControl;
 use TuleapCfg\Command\Configure\ConfigureApache;
 use TuleapCfg\Command\ProcessFactory;
+use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
+use TuleapCfg\Command\SetupMysql\DBSetupParameters;
 use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPM;
 use TuleapCfg\Command\SiteDeploy\Gitolite3\SiteDeployGitolite3;
 use TuleapCfg\Command\SiteDeploy\Nginx\SiteDeployNginx;
 
 final class Tuleap
 {
-    private const TULEAP_FQDN       = 'TULEAP_FQDN';
-    private const DB_HOST           = 'DB_HOST';
-    private const DB_ADMIN_USER     = 'DB_ADMIN_USER';
-    private const DB_ADMIN_PASSWORD = 'DB_ADMIN_PASSWORD';
+    private const TULEAP_FQDN         = 'TULEAP_FQDN';
+    private const DB_ADMIN_USER       = 'DB_ADMIN_USER';
+    private const DB_ADMIN_PASSWORD   = 'DB_ADMIN_PASSWORD';
+    private const SITE_ADMIN_PASSWORD = 'SITE_ADMINISTRATOR_PASSWORD';
 
-    private ProcessFactory $process_factory;
-
-    public function __construct(ProcessFactory $process_factory)
+    public function __construct(private ProcessFactory $process_factory, private DatabaseConfigurator $database_configurator)
     {
-        $this->process_factory = $process_factory;
     }
 
-    public function setupOrUpdate(OutputInterface $output, DataPersistence $data_persistence, VariableProviderInterface $variable_provider, ?\Closure $post_install = null): string
+    public function setupOrUpdate(SymfonyStyle $output, DataPersistence $data_persistence, VariableProviderInterface $variable_provider, ?\Closure $post_install = null): string
     {
         if (! $data_persistence->isThereAnyData()) {
             $tuleap_fqdn = $this->installTuleap($output, $variable_provider, $post_install);
@@ -63,17 +65,29 @@ final class Tuleap
         }
     }
 
-    private function installTuleap(OutputInterface $output, VariableProviderInterface $variable_provider, ?\Closure $post_install = null): string
+    private function installTuleap(SymfonyStyle $output, VariableProviderInterface $variable_provider, ?\Closure $post_install = null): string
     {
         $ssh_daemon = new SSHDaemon($this->process_factory);
 
         $fqdn = $variable_provider->get(self::TULEAP_FQDN);
 
+        ForgeConfig::loadDatabaseConfig();
+
+        $this->database_configurator->setupDatabase(
+            $output,
+            DBSetupParameters::fromForgeConfig(
+                $variable_provider->get(self::DB_ADMIN_USER),
+                $variable_provider->get(self::DB_ADMIN_PASSWORD),
+                new ConcealedString($variable_provider->get(self::SITE_ADMIN_PASSWORD)),
+                $fqdn,
+            )
+        );
+
         $ssh_daemon->startDaemon($output);
         $this->setup(
             $output,
             $fqdn,
-            $variable_provider->get(self::DB_HOST),
+            ForgeConfig::get(DBConfig::CONF_HOST),
             $variable_provider->get(self::DB_ADMIN_USER),
             $variable_provider->get(self::DB_ADMIN_PASSWORD),
         );
@@ -102,7 +116,7 @@ final class Tuleap
                 '--mysql-user=' . $db_admin_user,
                 '--mysql-password=' . $db_admin_password,
             ]
-        )->mustRun();
+        )->mustRun(null, ['TULEAP_INSTALL_SKIP_DB' => 'true']);
         $this->regenerateConfigurations($output);
     }
 
