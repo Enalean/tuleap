@@ -36,6 +36,13 @@ $tlp-form-element-border-transition-duration: 150ms;
 $tlp-form-element-placeholder-color: var(--tlp-neutral-dark-color-darker-10);
 $tlp-form-element-select-background-size: 8px;
 $tlp-form-element-select-small-background-size: 6px;
+$tlp-form-element-select-background-url: url("../images/field-double-arrows.svg");
+$tlp-form-element-select-small-background-url: url("../images/field-double-arrows-small.svg");
+$tlp-form-element-select-multiple-background-url: url("../images/field-ellipsis.svg");
+$tlp-form-element-select-multiple-small-background-url: url("../images/field-ellipsis-small.svg");
+$tlp-form-element-search-background: url("../images/field-magnifier.svg");
+$tlp-form-element-search-small-background: url("../images/field-magnifier-small.svg");
+$tlp-form-element-search-large-background: url("../images/field-magnifier-large.svg");
 
 .tlp-form-element {
     margin: 0 0 var(--tlp-medium-spacing);
@@ -223,7 +230,7 @@ $tlp-form-element-select-small-background-size: 6px;
     height: $tlp-form-element-height;
     padding: 0 15px 0 33px;
     border-radius: $tlp-form-element-height / 2;
-    background: $tlp-form-element-background url("../images/tlp-search-background.png") no-repeat;
+    background: $tlp-form-element-background $tlp-form-element-search-background no-repeat;
     background-position: 13px center;
 
     &::-webkit-search-decoration {
@@ -238,8 +245,7 @@ $tlp-form-element-select-small-background-size: 6px;
         height: $tlp-form-element-small-height;
         padding: 0 10px 0 26px;
         border-radius: $tlp-form-element-small-height / 2;
-        background: $tlp-form-element-background url("../images/tlp-search-small-background.png")
-            no-repeat;
+        background: $tlp-form-element-background $tlp-form-element-search-small-background no-repeat;
         background-position: 10px center;
         font-size: $tlp-form-element-small-font-size;
     }
@@ -248,7 +254,8 @@ $tlp-form-element-select-small-background-size: 6px;
         height: $tlp-form-element-large-height;
         padding: 0 22px 0 40px;
         border-radius: $tlp-form-element-large-height / 2;
-        background-position: 20px center;
+        background: $tlp-form-element-background $tlp-form-element-search-large-background no-repeat;
+        background-position: 18px center;
         font-size: $tlp-form-element-large-font-size;
     }
 }
@@ -280,7 +287,7 @@ $tlp-form-element-select-small-background-size: 6px;
     height: $tlp-form-element-height;
     padding: 0 ($tlp-form-element-padding-horizontal * 2 + $tlp-form-element-select-background-size)
         0 $tlp-form-element-padding-horizontal;
-    background: $tlp-form-element-background url("../images/tlp-select-background.png") no-repeat;
+    background: $tlp-form-element-background $tlp-form-element-select-background-url no-repeat;
     background-position: right $tlp-form-element-padding-horizontal center;
     -moz-appearance: none; // stylelint-disable-line property-no-vendor-prefix
     -webkit-appearance: none; // stylelint-disable-line property-no-vendor-prefix
@@ -293,7 +300,7 @@ $tlp-form-element-select-small-background-size: 6px;
                 #{$tlp-form-element-small-padding-horizontal} * 2 + #{$tlp-form-element-select-small-background-size}
             )
             0 $tlp-form-element-small-padding-horizontal;
-        background: $tlp-form-element-background url("../images/tlp-select-small-background.png")
+        background: $tlp-form-element-background $tlp-form-element-select-small-background-url
             no-repeat;
         background-position: right $tlp-form-element-small-padding-horizontal center;
         font-size: $tlp-form-element-small-font-size;
@@ -397,7 +404,7 @@ $tlp-form-element-select-small-background-size: 6px;
                         $tlp-form-element-select-background-size
                 )
                 0 $tlp-form-element-padding-horizontal;
-            background: $tlp-form-element-background url("../images/tlp-select-background.png")
+            background: $tlp-form-element-background $tlp-form-element-select-background-url
                 no-repeat;
             background-position: right $tlp-form-element-padding-horizontal center;
         }
@@ -407,9 +414,8 @@ $tlp-form-element-select-small-background-size: 6px;
             min-height: $tlp-form-element-height;
             padding: 0 52px 5px 6px;
             background: $tlp-form-element-background
-                url("../images/tlp-select-multi-background.svg") no-repeat;
-            background-position: right 10px top 17px;
-            background-size: 15px 5px;
+                $tlp-form-element-select-multiple-background-url no-repeat;
+            background-position: right $tlp-form-element-padding-horizontal top 17px;
         }
     }
 
@@ -528,9 +534,15 @@ $tlp-form-element-select-small-background-size: 6px;
     z-index: 2003;
 
     /* stylelint-disable selector-class-pattern */
-    &.select2-container--disabled .select2-selection--single:focus,
-    &.select2-container--disabled .select2-selection--multiple:focus {
-        border-color: $tlp-form-element-border-color;
+    &.select2-container--disabled {
+        .select2-selection__clear {
+            display: none;
+        }
+
+        .select2-selection--single:focus,
+        .select2-selection--multiple:focus {
+            border-color: $tlp-form-element-border-color;
+        }
     }
     /* stylelint-enable */
 
@@ -573,8 +585,7 @@ $tlp-form-element-select-small-background-size: 6px;
         padding: 0
             ($tlp-form-element-padding-horizontal * 2 + $tlp-form-element-select-background-size) 0
             $tlp-form-element-padding-horizontal;
-        background: $tlp-form-element-background url("../images/tlp-select-background.png")
-            no-repeat;
+        background: $tlp-form-element-background $tlp-form-element-select-background-url no-repeat;
         background-position: right $tlp-form-element-padding-horizontal center;
         cursor: default;
 
@@ -596,7 +607,10 @@ $tlp-form-element-select-small-background-size: 6px;
         @extend %tlp-form-element;
 
         min-height: $tlp-form-element-height;
-        padding: 0 $tlp-form-element-padding-horizontal 5px 6px;
+        padding: 0 34px 5px 6px;
+        background: $tlp-form-element-background $tlp-form-element-select-multiple-background-url
+            no-repeat;
+        background-position: right $tlp-form-element-padding-horizontal top 17px;
 
         // stylelint-disable-next-line selector-class-pattern
         .select2-selection__rendered {
@@ -660,9 +674,10 @@ $tlp-form-element-select-small-background-size: 6px;
 
             // stylelint-disable-next-line selector-class-pattern
             .select2-selection__clear {
+                position: absolute;
+                top: 10px;
+                right: 34px;
                 flex: 0 0 auto;
-                order: 3;
-                margin: 4px 0 0;
             }
         }
     }
@@ -673,6 +688,10 @@ $tlp-form-element-select-small-background-size: 6px;
         font-size: 18px;
         line-height: 17px;
         cursor: pointer;
+
+        &:hover {
+            opacity: 0.5;
+        }
     }
 
     .select2-dropdown {
@@ -805,7 +824,7 @@ span.select2-container--tlp-select2-small {
                 #{$tlp-form-element-small-padding-horizontal} * 2 + #{$tlp-form-element-select-small-background-size}
             )
             0 $tlp-form-element-small-padding-horizontal;
-        background: $tlp-form-element-background url("../images/tlp-select-small-background.png")
+        background: $tlp-form-element-background $tlp-form-element-select-small-background-url
             no-repeat;
         background-position: right $tlp-form-element-small-padding-horizontal center;
         font-size: $tlp-form-element-small-font-size;
@@ -814,7 +833,10 @@ span.select2-container--tlp-select2-small {
     /* stylelint-disable-next-line selector-class-pattern */
     .select2-selection--multiple {
         min-height: $tlp-form-element-small-height;
-        padding: 0 $tlp-form-element-small-padding-horizontal;
+        padding: 0 26px 0 $tlp-form-element-small-padding-horizontal;
+        background: $tlp-form-element-background
+            $tlp-form-element-select-multiple-small-background-url no-repeat;
+        background-position: right $tlp-form-element-small-padding-horizontal top 14px;
 
         // stylelint-disable-next-line selector-class-pattern
         .select2-selection__rendered {
@@ -826,7 +848,8 @@ span.select2-container--tlp-select2-small {
 
             // stylelint-disable-next-line selector-class-pattern
             .select2-selection__clear {
-                margin: 0;
+                top: 6px;
+                right: 26px;
             }
 
             // stylelint-disable-next-line selector-class-pattern
@@ -862,7 +885,7 @@ span.select2-container--tlp-select2-large {
     /* stylelint-disable-next-line selector-class-pattern */
     .select2-selection--multiple {
         min-height: $tlp-form-element-large-height;
-        padding: 0 $tlp-form-element-large-padding-horizontal;
+        padding: 0 34px 0 $tlp-form-element-large-padding-horizontal;
 
         // stylelint-disable-next-line selector-class-pattern
         .select2-selection__rendered {
