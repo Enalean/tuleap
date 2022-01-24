@@ -22,6 +22,10 @@
     padding: 0 var(--tlp-medium-spacing) calc(var(--tlp-title-spacing) - var(--tlp-medium-spacing));
 }
 
-.document-search-result {
+.document-search-container {
     margin: 0 0 var(--tlp-medium-spacing);
+}
+
+.document-search-error-quote {
+    margin: var(--tlp-small-spacing) 0 0;
 }

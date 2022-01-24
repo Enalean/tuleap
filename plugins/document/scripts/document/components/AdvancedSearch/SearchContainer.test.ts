@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import SearchResultError from "./SearchResult/SearchResultError.vue";
 
 const searchInFolderMock = jest.fn();
 jest.mock("../../api/rest-querier", () => {
@@ -51,6 +52,7 @@ describe("SearchContainer", () => {
         });
 
         expect(wrapper.findComponent(SearchResultTable).exists()).toBe(false);
+        expect(wrapper.findComponent(SearchResultError).exists()).toBe(false);
     });
 
     it("should automatically load the current folder so that breadcrumb is accurate when user refresh the page", () => {
@@ -108,7 +110,7 @@ describe("SearchContainer", () => {
         });
     });
 
-    it("should not route to a new search if user didn't change the criteria", () => {
+    it("should not route to a new search if user didn't change the criteria but still perform the search to make sure that results are accurate", () => {
         searchInFolderMock.mockResolvedValue([]);
 
         const router = new VueRouter();
@@ -139,12 +141,13 @@ describe("SearchContainer", () => {
         criteria.vm.$emit("advanced-search", params);
 
         expect(router.push).not.toHaveBeenCalled();
+        expect(searchInFolderMock).toHaveBeenCalledTimes(2);
     });
 
     it("should search for items based on criteria", () => {
         searchInFolderMock.mockResolvedValue([]);
 
-        shallowMount(SearchContainer, {
+        const wrapper = shallowMount(SearchContainer, {
             localVue: createLocalVue().use(VueRouter),
             propsData: {
                 query: "Lorem ipsum",
@@ -158,6 +161,8 @@ describe("SearchContainer", () => {
         });
 
         expect(searchInFolderMock).toHaveBeenCalledWith(101, "Lorem ipsum");
+        expect(wrapper.findComponent(SearchResultTable).exists()).toBe(true);
+        expect(wrapper.findComponent(SearchResultError).exists()).toBe(false);
     });
 
     it("should not search for items if query is empty", () => {
@@ -177,5 +182,33 @@ describe("SearchContainer", () => {
         });
 
         expect(searchInFolderMock).not.toHaveBeenCalled();
+    });
+
+    it("should display an error state if the query failed", async () => {
+        const wrapper = shallowMount(SearchContainer, {
+            localVue: createLocalVue().use(VueRouter),
+            propsData: {
+                query: "",
+                folder_id: 101,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {},
+                }),
+            },
+        });
+
+        // Due to an obscure combination of async events, and rethrow of error,
+        // it is pretty difficult to assert that our Error component is displayed
+        // in case of REST error (we didn't manage to catch the rethrow in the middle
+        // $nextTick() call). Therefore we bypass the REST call to set manually
+        // the error.
+        wrapper.setData({
+            error: new Error("Oups"),
+        });
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(SearchResultTable).exists()).toBe(false);
+        expect(wrapper.findComponent(SearchResultError).exists()).toBe(true);
     });
 });

@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <table class="tlp-table document-search-result">
+    <table class="tlp-table">
         <thead>
             <tr>
                 <th class="tlp-table-cell-numeric" v-translate>Id</th>
