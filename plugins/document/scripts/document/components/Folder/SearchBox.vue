@@ -31,7 +31,7 @@
             v-if="search_for_document_with_criteria"
         />
         <router-link
-            v-bind:to="{ name: 'search' }"
+            v-bind:to="{ name: 'search', params: { folder_id: current_folder.id } }"
             v-bind:title="`${$gettext('Search')}`"
             v-if="search_for_document_with_criteria"
         >
@@ -98,6 +98,9 @@ export default class SearchBox extends Vue {
             name: "search",
             query: {
                 q: this.search_query,
+            },
+            params: {
+                folder_id: String(this.current_folder.id),
             },
         });
     }

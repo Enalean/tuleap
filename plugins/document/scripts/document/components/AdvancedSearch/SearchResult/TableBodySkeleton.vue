@@ -19,27 +19,20 @@
   -->
 
 <template>
-    <table class="tlp-table document-search-result">
-        <thead>
-            <tr>
-                <th class="tlp-table-cell-numeric" v-translate>Id</th>
-                <th v-translate>Title</th>
-                <th v-translate>Description</th>
-                <th v-translate>Owner</th>
-                <th v-translate>Update date</th>
-                <th v-translate>Location</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td colspan="6" class="tlp-table-cell-empty" v-translate>No matching results</td>
-            </tr>
-        </tbody>
-    </table>
+    <tbody>
+        <tr v-for="i in 3" v-bind:key="i">
+            <td class="tlp-table-cell-numeric"><span class="tlp-skeleton-text"></span></td>
+            <td><span class="tlp-skeleton-text"></span></td>
+            <td><span class="tlp-skeleton-text"></span></td>
+            <td><span class="tlp-skeleton-text"></span></td>
+            <td><span class="tlp-skeleton-text"></span></td>
+            <td><span class="tlp-skeleton-text"></span></td>
+        </tr>
+    </tbody>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
-export default class SearchResultTable extends Vue {}
+export default class TableBodySkeleton extends Vue {}
 </script>
