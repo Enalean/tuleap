@@ -27,20 +27,12 @@ use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
-use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Artifact\Artifact;
-use XML_SimpleXMLCDATAFactory;
 
 class TrackerXMLExporterChangesetValueStepDefinitionXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter
 {
-    /**
-     * @var XML_SimpleXMLCDATAFactory
-     */
-    private $simple_XMLCDATA_factory;
-
-    public function __construct(XML_SimpleXMLCDATAFactory $simple_XMLCDATA_factory)
+    public function __construct(private StepXMLExporter $step_xml_exporter)
     {
-        $this->simple_XMLCDATA_factory = $simple_XMLCDATA_factory;
     }
 
     protected function getFieldChangeType(): string
@@ -63,26 +55,7 @@ class TrackerXMLExporterChangesetValueStepDefinitionXMLExporter extends Tracker_
         $field_change->addAttribute('field_name', $field->getName());
         $field_change->addAttribute('type', $this->getFieldChangeType());
         foreach ($values as $value) {
-            $this->exportValues($value, $field_change);
+            $this->step_xml_exporter->exportStepInFieldChange($value, $field_change);
         }
-    }
-
-    private function exportValues(Step $value, SimpleXMLElement $field_change): void
-    {
-        $step = $field_change->addChild('step');
-
-        $this->simple_XMLCDATA_factory->insertWithAttributes(
-            $step,
-            'description',
-            (string) $value->getDescription(),
-            ['format' => $value->getDescriptionFormat()]
-        );
-
-        $this->simple_XMLCDATA_factory->insertWithAttributes(
-            $step,
-            'expected_results',
-            (string) $value->getExpectedResults(),
-            ['format' => $value->getExpectedResultsFormat()]
-        );
     }
 }

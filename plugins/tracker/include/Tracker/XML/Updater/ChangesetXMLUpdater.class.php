@@ -49,16 +49,39 @@ class Tracker_XML_Updater_ChangesetXMLUpdater
         $this->addSubmittedInformation($artifact_xml->changeset, $user, $submitted_on);
 
         foreach ($artifact_xml->changeset->field_change as $field_change) {
-            $field_name = (string) $field_change['field_name'];
-            $field      = $this->formelement_factory->getUsedFieldByNameForUser(
-                $tracker->getId(),
-                $field_name,
+            $this->updateField(
+                $tracker,
+                $field_change,
+                $submitted_values,
                 $user
             );
-            if ($field && isset($submitted_values[$field->getId()])) {
-                $submitted_value = $submitted_values[$field->getId()];
-                $this->visitor->update($field_change, $field, $submitted_value);
-            }
+        }
+
+        foreach ($artifact_xml->changeset->external_field_change as $external_field_change) {
+            $this->updateField(
+                $tracker,
+                $external_field_change,
+                $submitted_values,
+                $user
+            );
+        }
+    }
+
+    private function updateField(
+        Tracker $tracker,
+        SimpleXMLElement $field_change,
+        array $submitted_values,
+        PFUser $user,
+    ): void {
+        $field_name = (string) $field_change['field_name'];
+        $field      = $this->formelement_factory->getUsedFieldByNameForUser(
+            $tracker->getId(),
+            $field_name,
+            $user
+        );
+        if ($field && isset($submitted_values[$field->getId()])) {
+            $submitted_value = $submitted_values[$field->getId()];
+            $this->visitor->update($field_change, $field, $submitted_value);
         }
     }
 

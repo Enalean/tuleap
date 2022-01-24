@@ -37,7 +37,9 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
 
     public function testItExportsTheExternalChangeset(): void
     {
-        $exporter     = new TrackerXMLExporterChangesetValueStepDefinitionXMLExporter(new XML_SimpleXMLCDATAFactory());
+        $exporter     = new TrackerXMLExporterChangesetValueStepDefinitionXMLExporter(
+            new StepXMLExporter(new XML_SimpleXMLCDATAFactory())
+        );
         $artifact_xml = new SimpleXMLElement('<artifact></artifact>');
 
         $xml_data = '<changeset>
@@ -80,7 +82,9 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
 
     public function testItDoesntExportsTheExternalChangesetIfTheirIsNotStepOnChangeset(): void
     {
-        $exporter     = new TrackerXMLExporterChangesetValueStepDefinitionXMLExporter(new XML_SimpleXMLCDATAFactory());
+        $exporter     = new TrackerXMLExporterChangesetValueStepDefinitionXMLExporter(
+            new StepXMLExporter(new XML_SimpleXMLCDATAFactory())
+        );
         $artifact_xml = new SimpleXMLElement('<artifact></artifact>');
 
         $xml_data = '<changeset>

@@ -49,11 +49,11 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     public const TYPE       = 'ttmstepdef';
 
     /**
-     * @return void
+     * @return mixed
      */
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
-        $visitor->visitExternalField($this);
+        return $visitor->visitExternalField($this);
     }
 
     public static function getFactoryLabel()
