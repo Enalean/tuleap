@@ -45,22 +45,38 @@ type MapOfClasses = Record<string, boolean>;
 
 export type HostElement = LinkField & HTMLElement;
 
-export const getLinksTableClasses = (host: LinkField): MapOfClasses => {
-    return {
-        "tlp-table": true,
-        "tuleap-artifact-modal-link-field-empty":
-            host.has_loaded_content &&
-            (host.linked_artifacts.length === 0 || host.error_message !== ""),
-    };
-};
+export const getLinksTableClasses = (host: LinkField): MapOfClasses => ({
+    "tlp-table": true,
+    "tuleap-artifact-modal-link-field-empty":
+        host.has_loaded_content &&
+        (host.linked_artifacts.length === 0 || host.error_message !== ""),
+});
+
+export const getArtifactsStatusBadgeClasses = (artifact: LinkedArtifact): MapOfClasses => ({
+    "tlp-badge-outline": true,
+    "tlp-badge-success": artifact.is_open,
+    "tlp-badge-secondary": !artifact.is_open,
+});
+
+export const getArtifactTableRowClasses = (artifact: LinkedArtifact): MapOfClasses => ({
+    "link-field-table-row": true,
+    "link-field-table-row-muted": artifact.status !== "" && !artifact.is_open,
+});
+
+const formatErrorMessage = (error: Error): string =>
+    sprintf(getLinkFieldFetchErrorMessage(), error.message);
 
 export const getFormattedArtifacts = (host: LinkField): UpdateFunction<LinkField>[] =>
     host.linked_artifacts.map(
         (artifact: LinkedArtifact) => html`
-            <tr class="link-field-table-row">
+            <tr class="${getArtifactTableRowClasses(artifact)}" data-test="artifact-row">
                 <td class="link-field-table-cell-nature">${artifact.link_type.label}</td>
                 <td class="link-field-table-cell-xref">
-                    <a href="${artifact.html_url}" data-test="artifact-link">
+                    <a
+                        href="${artifact.html_url}"
+                        class="link-field-artifact-link"
+                        data-test="artifact-link"
+                    >
                         <span
                             class="
                                 cross-ref-badge
@@ -80,7 +96,7 @@ export const getFormattedArtifacts = (host: LinkField): UpdateFunction<LinkField
                     ${artifact.status &&
                     html`
                         <span
-                            class="tlp-badge-success tlp-badge-outline"
+                            class="${getArtifactsStatusBadgeClasses(artifact)}"
                             data-test="artifact-status"
                         >
                             ${artifact.status}
@@ -90,9 +106,6 @@ export const getFormattedArtifacts = (host: LinkField): UpdateFunction<LinkField
             </tr>
         `
     );
-
-const formatErrorMessage = (error: Error): string =>
-    sprintf(getLinkFieldFetchErrorMessage(), error.message);
 
 export const retrieveLinkedArtifacts = (host: LinkField): Promise<void> => {
     if (isInCreationMode()) {

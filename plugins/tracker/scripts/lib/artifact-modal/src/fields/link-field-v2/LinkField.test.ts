@@ -63,6 +63,7 @@ describe("LinkField", () => {
                 label: "Parent",
             },
             status: "Open",
+            is_open: true,
         };
 
         setCatalog({ getString: (msgid) => msgid });
@@ -137,6 +138,7 @@ describe("LinkField", () => {
                         label: "Parent",
                     },
                     status: "Open",
+                    is_open: true,
                 },
                 {
                     xref: "art #234",
@@ -150,7 +152,8 @@ describe("LinkField", () => {
                         direction: "forward",
                         label: "Child",
                     },
-                    status: "Open",
+                    status: "Closed",
+                    is_open: false,
                 },
             ];
             host.linked_artifacts = linked_artifacts;
@@ -162,12 +165,14 @@ describe("LinkField", () => {
 
                 renderArtifact(host, target);
 
+                const row = target.querySelector("[data-test=artifact-row]");
                 const link = target.querySelector("[data-test=artifact-link]");
                 const xref = target.querySelector("[data-test=artifact-xref]");
                 const title = target.querySelector("[data-test=artifact-title]");
                 const status = target.querySelector("[data-test=artifact-status]");
 
                 if (
+                    !(row instanceof HTMLElement) ||
                     !(link instanceof HTMLAnchorElement) ||
                     !(xref instanceof HTMLElement) ||
                     !(title instanceof HTMLElement) ||
@@ -185,6 +190,16 @@ describe("LinkField", () => {
                 expect(xref.textContent?.trim()).toEqual(artifact_to_render.xref);
                 expect(title.textContent?.trim()).toEqual(artifact_to_render.title);
                 expect(status.textContent?.trim()).toEqual(artifact_to_render.status);
+
+                expect(row.classList.contains("link-field-table-row-muted")).toBe(
+                    !artifact_to_render.is_open
+                );
+                expect(status.classList.contains("tlp-badge-secondary")).toBe(
+                    !artifact_to_render.is_open
+                );
+                expect(status.classList.contains("tlp-badge-success")).toBe(
+                    artifact_to_render.is_open
+                );
             });
         });
     });
