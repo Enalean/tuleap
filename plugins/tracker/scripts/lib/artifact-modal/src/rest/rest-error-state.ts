@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,24 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isThereAtLeastOneFileField } from "./file-field-detector";
-import { getFileUploadRules } from "../../rest/rest-service";
+let error_message: string | null = null;
 
-const file_upload_rules = {
-    // All units are in bytes
-    disk_quota: 0,
-    disk_usage: 0,
-    max_chunk_size: 0,
+export const getErrorMessage = (): string | null => error_message;
+export const hasError = (): boolean => error_message !== null;
+export const setError = (error: string): void => {
+    error_message = error;
 };
-
-export { updateFileUploadRulesWhenNeeded, file_upload_rules };
-
-function updateFileUploadRulesWhenNeeded(field_values) {
-    if (isThereAtLeastOneFileField(field_values)) {
-        return getFileUploadRules().then((data) => {
-            Object.assign(file_upload_rules, data);
-        });
-    }
-
-    return Promise.resolve();
-}
+export const resetError = (): void => {
+    error_message = null;
+};

@@ -4,7 +4,7 @@ import "angular-mocks";
 import BaseController from "./link-field-controller.js";
 import * as link_field_service from "./link-field-service.js";
 import * as modal_creation_mode_state from "../../modal-creation-mode-state.js";
-import * as rest_service from "../../rest/rest-service.js";
+import * as rest_service from "../../rest/rest-service";
 import { createAngularPromiseWrapper } from "../../../../../../../../tests/jest/angular-promise-wrapper.js";
 import * as list_picker_lib from "@tuleap/list-picker";
 
@@ -198,6 +198,7 @@ describe("LinkFieldController -", () => {
 
             it("should init list-picker when it is enabled and target select has been rendered", () => {
                 LinkFieldController.is_list_picker_enabled = true;
+                jest.spyOn(rest_service, "getAllOpenParentArtifacts").mockResolvedValue([]);
 
                 jest.spyOn(list_picker_lib, "createListPicker");
 

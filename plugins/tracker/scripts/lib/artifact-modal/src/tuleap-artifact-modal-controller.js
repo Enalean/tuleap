@@ -19,14 +19,14 @@
 
 import { loadTooltips } from "@tuleap/tooltip";
 import { isInCreationMode } from "./modal-creation-mode-state.js";
-import { setError, hasError, getErrorMessage } from "./rest/rest-error-state.js";
+import { setError, hasError, getErrorMessage } from "./rest/rest-error-state";
 import { isDisabled } from "./fields/disabled-field-detector";
 import {
     createArtifact,
     editArtifact,
     editArtifactWithConcurrencyChecking,
     getFollowupsComments,
-} from "./rest/rest-service.js";
+} from "./rest/rest-service";
 import {
     getAllFileFields,
     isThereAtLeastOneFileField,

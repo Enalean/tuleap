@@ -24,7 +24,7 @@ import "angular-mocks";
 import BaseModalController from "./tuleap-artifact-modal-controller.js";
 
 import * as modal_create_mode_state from "./modal-creation-mode-state";
-import * as rest_service from "./rest/rest-service.js";
+import * as rest_service from "./rest/rest-service";
 import * as file_field_detector from "./fields/file-field/file-field-detector";
 import * as file_uploader from "./fields/file-field/file-uploader.js";
 import * as is_uploading_in_ckeditor_state from "./fields/file-field/is-uploading-in-ckeditor-state";
@@ -591,6 +591,7 @@ describe("TuleapArtifactModalController", () => {
 
             it("Given the modal is not in creation mode, when I open it then there are hidden fieldsets defined", () => {
                 isInCreationMode.mockReturnValue(false);
+                jest.spyOn(rest_service, "getFollowupsComments").mockResolvedValue([]);
                 ArtifactModalController = $controller(BaseModalController, controller_params);
                 ArtifactModalController.$onInit();
 
