@@ -20,10 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OpenIDConnectClient\Scope;
+namespace Tuleap\OAuth2ServerCore\OpenIDConnect\Scope;
 
 use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
-use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectEmailScope;
 
 final class OpenIDConnectEmailScopeTest extends AuthenticationScopeTestCase
 {

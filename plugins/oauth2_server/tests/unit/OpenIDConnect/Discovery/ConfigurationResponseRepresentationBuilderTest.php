@@ -24,9 +24,9 @@ namespace Tuleap\OAuth2Server\OpenIDConnect\Discovery;
 
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\OAuth2Server\OpenIDConnect\Scope\OAuth2SignInScope;
-use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectEmailScope;
-use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectProfileScope;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OAuth2SignInScope;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectEmailScope;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 
 final class ConfigurationResponseRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {

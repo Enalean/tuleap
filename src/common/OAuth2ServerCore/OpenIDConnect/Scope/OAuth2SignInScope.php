@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\OpenIDConnect\Scope;
+namespace Tuleap\OAuth2ServerCore\OpenIDConnect\Scope;
 
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
@@ -32,10 +32,10 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
  *
  * @implements AuthenticationScope<OAuth2ScopeIdentifier>
  */
-class OpenIDConnectProfileScope implements AuthenticationScope
+final class OAuth2SignInScope implements AuthenticationScope
 {
-    // See https://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims
-    private const IDENTIFIER_KEY = 'profile';
+    // See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
+    private const IDENTIFIER_KEY = 'openid';
 
     /**
      * @var OAuth2ScopeIdentifier
@@ -49,17 +49,18 @@ class OpenIDConnectProfileScope implements AuthenticationScope
     private function __construct(OAuth2ScopeIdentifier $identifier)
     {
         $this->identifier = $identifier;
-        $this->definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition {
+        $this->definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition
+        {
             public function getName(): string
             {
-                return dgettext('tuleap-oauth2_server', 'User profile');
+                return dgettext('tuleap-oauth2_server', 'Sign you in');
             }
 
             public function getDescription(): string
             {
                 return dgettext(
                     'tuleap-oauth2_server',
-                    'Access to your user profile. Includes access to your real name, avatar picture, language and timezone.'
+                    'Allow to connect to apps and services using your account'
                 );
             }
         };

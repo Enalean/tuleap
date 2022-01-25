@@ -24,7 +24,7 @@ namespace Tuleap\OAuth2Server\REST\Specification\Swagger;
 
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Language\LocaleSwitcher;
-use Tuleap\OAuth2Server\OpenIDConnect\Issuer;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Issuer;
 use Tuleap\REST\Specification\Swagger\SwaggerJsonSecurityDefinition;
 
 /**

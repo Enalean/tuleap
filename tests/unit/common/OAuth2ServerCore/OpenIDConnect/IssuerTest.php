@@ -20,14 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\OpenIDConnect;
+namespace Tuleap\OAuth2ServerCore\OpenIDConnect;
 
-use Tuleap\ServerHostname;
+use Tuleap\ForgeConfigSandbox;
 
-final class Issuer
+final class IssuerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public static function toString(): string
+    use ForgeConfigSandbox;
+
+    public function testItReturnsTheHTTPSHostPrefixedByHTTPSScheme(): void
     {
-        return ServerHostname::HTTPSUrl();
+        \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
+
+        $this->assertEquals('https://tuleap.example.com', Issuer::toString());
     }
 }

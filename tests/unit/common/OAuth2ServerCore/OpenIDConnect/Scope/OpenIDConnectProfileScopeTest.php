@@ -20,18 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\OpenIDConnect;
+namespace Tuleap\OAuth2ServerCore\OpenIDConnect\Scope;
 
-use Tuleap\ForgeConfigSandbox;
+use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 
-final class IssuerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class OpenIDConnectProfileScopeTest extends AuthenticationScopeTestCase
 {
-    use ForgeConfigSandbox;
-
-    public function testItReturnsTheHTTPSHostPrefixedByHTTPSScheme(): void
+    public function getAuthenticationScopeClassname(): string
     {
-        \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');
-
-        $this->assertEquals('https://tuleap.example.com', Issuer::toString());
+        return OpenIDConnectProfileScope::class;
     }
 }
