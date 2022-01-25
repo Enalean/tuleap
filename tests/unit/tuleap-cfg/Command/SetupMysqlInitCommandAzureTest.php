@@ -28,6 +28,9 @@ use Symfony\Component\Console\Tester\CommandTester;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
 
+/**
+ * @covers \TuleapCfg\Command\SetupMysql\DatabaseConfigurator
+ */
 final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**

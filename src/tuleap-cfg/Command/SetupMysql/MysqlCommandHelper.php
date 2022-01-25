@@ -109,6 +109,6 @@ final class MysqlCommandHelper
             }
             return $ssl_ca_file;
         }
-        return '';
+        return DBConfig::DEFAULT_MYSQL_CA_FILE_PATH;
     }
 }

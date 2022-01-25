@@ -26,24 +26,32 @@ namespace Tuleap\DB;
 use Tuleap\Config\ConfigCannotBeModified;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyInt;
+use Tuleap\Config\ConfigKeyLegacyBool;
+use Tuleap\Config\ConfigKeyString;
+use Tuleap\Config\ConfigKeyHelp;
 
 #[ConfigKeyCategory('Database')]
 final class DBConfig
 {
     #[ConfigKey('Database server hostname or IP address')]
     #[ConfigCannotBeModified]
+    #[ConfigKeyString('localhost')]
     public const CONF_HOST = 'sys_dbhost';
 
     #[ConfigKey('Database server port')]
     #[ConfigCannotBeModified]
+    #[ConfigKeyInt(self::DEFAULT_MYSQL_PORT)]
     public const CONF_PORT = 'sys_dbport';
 
     #[ConfigKey('Database name')]
     #[ConfigCannotBeModified]
+    #[ConfigKeyString(self::DEFAULT_MYSQL_TULEAP_DB_NAME)]
     public const CONF_DBNAME = 'sys_dbname';
 
     #[ConfigKey('Database application user')]
     #[ConfigCannotBeModified]
+    #[ConfigKeyString(self::DEFAULT_MYSQL_TULEAP_USER_NAME)]
     public const CONF_DBUSER = 'sys_dbuser';
 
     #[ConfigKey('Database application user password')]
@@ -52,18 +60,28 @@ final class DBConfig
 
     #[ConfigKey('Database is accessed with TLS')]
     #[ConfigCannotBeModified]
+    #[ConfigKeyLegacyBool(false)]
+    #[ConfigKeyHelp(<<<EOT
+    If set to '1' (one) connexions to DB are made through SSL.
+    Note: Mysql server must be properly configured to accept SSL
+    connection. Either with a grant for user or by forcing all
+    connections to be in SSL with `require_secure_transport=ON`
+    EOT)]
     public const CONF_ENABLE_SSL = 'sys_enablessl';
 
     #[ConfigKey('Database TLS CA')]
     #[ConfigCannotBeModified]
+    #[ConfigKeyString(self::DEFAULT_MYSQL_CA_FILE_PATH)]
     public const CONF_SSL_CA = 'sys_db_ssl_ca';
 
     #[ConfigKey('Toggle verification of database certificate')]
     #[ConfigCannotBeModified]
+    #[ConfigKeyLegacyBool(false)]
     public const CONF_SSL_VERIFY_CERT = 'sys_db_ssl_verify_cert';
 
     #[ConfigKey('Adjust the maximum number of JOIN the mysql server can accept')]
     #[ConfigCannotBeModified]
+    #[ConfigKeyInt(20)]
     public const CONF_NB_MAX_JOIN = 'sys_server_join';
 
     public const DEFAULT_MYSQL_PORT             = 3306;
