@@ -30,8 +30,9 @@ import type {
     Wiki,
     ItemFileUploader,
     UserGroup,
-    ItemSearchResult,
+    SearchResult,
 } from "../type";
+import { SEARCH_LIMIT } from "../type";
 
 export {
     getDocumentManagerServiceInformation,
@@ -104,22 +105,35 @@ async function addNewDocumentType(url: string, item: Item): Promise<Response> {
 
 async function searchInFolder(
     folder_id: number,
-    query: string
-): Promise<ReadonlyArray<ItemSearchResult>> {
+    query: string,
+    offset: number
+): Promise<SearchResult> {
     const headers = {
         "content-type": "application/json",
     };
 
     const json_body = {
         global_search: query,
-        offset: 0,
-        limit: 50,
+        offset: offset,
+        limit: SEARCH_LIMIT,
     };
     const body = JSON.stringify(json_body);
 
     const response = await post(`/api/v1/docman_search/${folder_id}`, { headers, body });
 
-    return response.json();
+    const pagination_size = response.headers.get("X-PAGINATION-SIZE");
+    if (pagination_size === null) {
+        throw new Error("No X-PAGINATION-SIZE field in the header.");
+    }
+
+    const total = Number(pagination_size);
+    const to = Math.min(total, offset + SEARCH_LIMIT) - 1;
+    return {
+        from: offset,
+        to,
+        total,
+        items: await response.json(),
+    };
 }
 
 function addNewFile(item: ItemFile, parent_id: number): Promise<Response> {

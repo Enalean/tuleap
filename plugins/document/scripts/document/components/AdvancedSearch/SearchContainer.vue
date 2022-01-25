@@ -35,14 +35,13 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import SearchCriteriaPanel from "./SearchCriteriaPanel.vue";
 import SearchResultTable from "./SearchResult/SearchResultTable.vue";
-import type { AdvancedSearchParams } from "../../type";
+import type { AdvancedSearchParams, SearchResult } from "../../type";
 import deepEqual from "fast-deep-equal";
 import SearchHeader from "./SearchHeader.vue";
 import { searchInFolder } from "../../api/rest-querier";
 import { Action } from "vuex-class";
 import type { Dictionary } from "vue-router/types/router";
 import SearchResultError from "./SearchResult/SearchResultError.vue";
-import type { ItemSearchResult } from "../../type";
 
 @Component({
     components: { SearchResultError, SearchHeader, SearchResultTable, SearchCriteriaPanel },
@@ -52,11 +51,14 @@ export default class SearchContainer extends Vue {
     readonly query!: string;
 
     @Prop({ required: true })
+    readonly offset!: number;
+
+    @Prop({ required: true })
     readonly folder_id!: number;
 
     is_loading = false;
     error: Error | null = null;
-    results: ReadonlyArray<ItemSearchResult> = [];
+    results: SearchResult | null = null;
 
     @Action
     readonly loadFolder!: (item_id: number) => Promise<void>;
@@ -66,17 +68,26 @@ export default class SearchContainer extends Vue {
     }
 
     @Watch("query", { immediate: true })
-    search(query: string): void {
+    searchQuery(query: string): void {
+        this.search(query, this.offset);
+    }
+
+    @Watch("offset")
+    searchOffset(offset: number): void {
+        this.search(this.query, offset);
+    }
+
+    search(query: string, offset: number): void {
         if (query.length === 0) {
             return;
         }
 
         this.is_loading = true;
         this.error = null;
-        this.results = [];
+        this.results = null;
 
-        searchInFolder(this.folder_id, query)
-            .then((results: ReadonlyArray<ItemSearchResult>) => {
+        searchInFolder(this.folder_id, query, offset)
+            .then((results: SearchResult) => {
                 this.results = results;
             })
             .catch((error) => {
@@ -103,7 +114,7 @@ export default class SearchContainer extends Vue {
         }
 
         if (deepEqual(this.$route.query, query)) {
-            this.search(params.query);
+            this.searchQuery(params.query);
             return;
         }
 

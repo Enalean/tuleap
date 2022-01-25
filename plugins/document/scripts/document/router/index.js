@@ -59,6 +59,7 @@ export function createRouter(store, project_name) {
                 props: (route) => ({
                     folder_id: Number(route.params.folder_id),
                     query: route.query.q || "",
+                    offset: Number(route.query.offset || "0"),
                 }),
             },
         ],

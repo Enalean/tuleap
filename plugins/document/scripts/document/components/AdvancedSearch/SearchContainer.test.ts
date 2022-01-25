@@ -43,6 +43,7 @@ describe("SearchContainer", () => {
             propsData: {
                 query: "",
                 folder_id: 101,
+                offset: 0,
             },
             mocks: {
                 $store: createStoreMock({
@@ -60,6 +61,7 @@ describe("SearchContainer", () => {
             propsData: {
                 query: "",
                 folder_id: 101,
+                offset: 0,
             },
             mocks: {
                 $store: createStoreMock({
@@ -80,6 +82,7 @@ describe("SearchContainer", () => {
             propsData: {
                 query: "",
                 folder_id: 101,
+                offset: 0,
             },
             mocks: {
                 $store: createStoreMock({
@@ -121,6 +124,7 @@ describe("SearchContainer", () => {
             propsData: {
                 query: "Lorem ipsum",
                 folder_id: 101,
+                offset: 0,
             },
             mocks: {
                 $store: createStoreMock({
@@ -144,6 +148,40 @@ describe("SearchContainer", () => {
         expect(searchInFolderMock).toHaveBeenCalledTimes(2);
     });
 
+    it("should perform a new search if user paginates through results", async () => {
+        searchInFolderMock.mockResolvedValue([]);
+
+        const router = new VueRouter();
+        jest.spyOn(router, "push").mockImplementation();
+
+        const wrapper = shallowMount(SearchContainer, {
+            localVue: createLocalVue().use(VueRouter),
+            propsData: {
+                query: "Lorem ipsum",
+                folder_id: 101,
+                offset: 0,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {},
+                }),
+                $route: {
+                    query: { q: "" },
+                    params: { folder_id: "101" },
+                },
+                $router: router,
+            },
+        });
+
+        expect(searchInFolderMock).toHaveBeenCalledWith(101, "Lorem ipsum", 0);
+
+        wrapper.setProps({ offset: 10 });
+        await wrapper.vm.$nextTick();
+
+        expect(router.push).not.toHaveBeenCalled();
+        expect(searchInFolderMock).toHaveBeenCalledWith(101, "Lorem ipsum", 10);
+    });
+
     it("should search for items based on criteria", () => {
         searchInFolderMock.mockResolvedValue([]);
 
@@ -152,6 +190,7 @@ describe("SearchContainer", () => {
             propsData: {
                 query: "Lorem ipsum",
                 folder_id: 101,
+                offset: 0,
             },
             mocks: {
                 $store: createStoreMock({
@@ -160,7 +199,7 @@ describe("SearchContainer", () => {
             },
         });
 
-        expect(searchInFolderMock).toHaveBeenCalledWith(101, "Lorem ipsum");
+        expect(searchInFolderMock).toHaveBeenCalledWith(101, "Lorem ipsum", 0);
         expect(wrapper.findComponent(SearchResultTable).exists()).toBe(true);
         expect(wrapper.findComponent(SearchResultError).exists()).toBe(false);
     });
@@ -173,6 +212,7 @@ describe("SearchContainer", () => {
             propsData: {
                 query: "",
                 folder_id: 101,
+                offset: 0,
             },
             mocks: {
                 $store: createStoreMock({
@@ -190,6 +230,7 @@ describe("SearchContainer", () => {
             propsData: {
                 query: "",
                 folder_id: 101,
+                offset: 0,
             },
             mocks: {
                 $store: createStoreMock({

@@ -23,7 +23,8 @@ import localVue from "../../../helpers/local-vue";
 import TableBodySkeleton from "./TableBodySkeleton.vue";
 import TableBodyEmpty from "./TableBodyEmpty.vue";
 import TableBodyResults from "./TableBodyResults.vue";
-import type { ItemSearchResult } from "../../../type";
+import type { ItemSearchResult, SearchResult } from "../../../type";
+import SearchResultPagination from "./SearchResultPagination.vue";
 
 describe("SearchResultTable", () => {
     it("should display skeleton while loading", () => {
@@ -31,13 +32,14 @@ describe("SearchResultTable", () => {
             localVue,
             propsData: {
                 is_loading: true,
-                results: [],
+                results: null,
             },
         });
 
         expect(wrapper.findComponent(TableBodySkeleton).exists()).toBe(true);
         expect(wrapper.findComponent(TableBodyEmpty).exists()).toBe(false);
         expect(wrapper.findComponent(TableBodyResults).exists()).toBe(false);
+        expect(wrapper.findComponent(SearchResultPagination).exists()).toBe(false);
     });
 
     it("should display empty state when no results to display", () => {
@@ -45,13 +47,19 @@ describe("SearchResultTable", () => {
             localVue,
             propsData: {
                 is_loading: false,
-                results: [],
+                results: {
+                    from: 0,
+                    to: 0,
+                    total: 0,
+                    items: [],
+                } as SearchResult,
             },
         });
 
         expect(wrapper.findComponent(TableBodySkeleton).exists()).toBe(false);
         expect(wrapper.findComponent(TableBodyEmpty).exists()).toBe(true);
         expect(wrapper.findComponent(TableBodyResults).exists()).toBe(false);
+        expect(wrapper.findComponent(SearchResultPagination).exists()).toBe(false);
     });
 
     it("should display results", () => {
@@ -59,12 +67,18 @@ describe("SearchResultTable", () => {
             localVue,
             propsData: {
                 is_loading: false,
-                results: [{} as ItemSearchResult],
+                results: {
+                    from: 0,
+                    to: 1,
+                    total: 172,
+                    items: [{} as ItemSearchResult],
+                } as SearchResult,
             },
         });
 
         expect(wrapper.findComponent(TableBodySkeleton).exists()).toBe(false);
         expect(wrapper.findComponent(TableBodyEmpty).exists()).toBe(false);
         expect(wrapper.findComponent(TableBodyResults).exists()).toBe(true);
+        expect(wrapper.findComponent(SearchResultPagination).exists()).toBe(true);
     });
 });

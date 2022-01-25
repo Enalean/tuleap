@@ -19,37 +19,56 @@
   -->
 
 <template>
-    <table class="tlp-table">
-        <thead>
-            <tr>
-                <th class="tlp-table-cell-numeric" v-translate>Id</th>
-                <th v-translate>Title</th>
-                <th v-translate>Description</th>
-                <th v-translate>Owner</th>
-                <th v-translate>Update date</th>
-                <th v-translate>Location</th>
-            </tr>
-        </thead>
-        <table-body-skeleton v-if="is_loading" />
-        <table-body-results v-else-if="results.length > 0" v-bind:results="results" />
-        <table-body-empty v-else />
-    </table>
+    <div>
+        <table class="tlp-table">
+            <thead>
+                <tr>
+                    <th class="tlp-table-cell-numeric" v-translate>Id</th>
+                    <th v-translate>Title</th>
+                    <th v-translate>Description</th>
+                    <th v-translate>Owner</th>
+                    <th v-translate>Update date</th>
+                    <th v-translate>Location</th>
+                </tr>
+            </thead>
+            <table-body-skeleton v-if="is_loading" />
+            <table-body-results v-else-if="items.length > 0" v-bind:results="items" />
+            <table-body-empty v-else />
+        </table>
+        <search-result-pagination
+            v-if="items.length > 0"
+            v-bind:from="results.from"
+            v-bind:to="results.to"
+            v-bind:total="results.total"
+            v-bind:limit="limit"
+        />
+    </div>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import TableBodySkeleton from "./TableBodySkeleton.vue";
 import TableBodyEmpty from "./TableBodyEmpty.vue";
-import type { ItemSearchResult } from "../../../type";
+import type { ItemSearchResult, SearchResult } from "../../../type";
+import { SEARCH_LIMIT } from "../../../type";
 import TableBodyResults from "./TableBodyResults.vue";
+import SearchResultPagination from "./SearchResultPagination.vue";
 
 @Component({
-    components: { TableBodyResults, TableBodyEmpty, TableBodySkeleton },
+    components: { SearchResultPagination, TableBodyResults, TableBodyEmpty, TableBodySkeleton },
 })
 export default class SearchResultTable extends Vue {
     @Prop({ required: true })
     readonly is_loading!: boolean;
 
     @Prop({ required: true })
-    readonly results!: ReadonlyArray<ItemSearchResult>;
+    readonly results!: SearchResult | null;
+
+    get limit(): number {
+        return SEARCH_LIMIT;
+    }
+
+    get items(): ReadonlyArray<ItemSearchResult> {
+        return this.results?.items || [];
+    }
 }
 </script>

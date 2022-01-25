@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ProjectService } from "./rest-querier";
 import {
     addNewEmpty,
+    addNewFile,
     addNewFolder,
     addNewLink,
     addNewWiki,
-    addNewFile,
     createNewVersion,
     getDocumentManagerServiceInformation,
     getFolderContent,
@@ -32,21 +33,22 @@ import {
     postEmbeddedFile,
     postLinkVersion,
     postWiki,
+    searchInFolder,
 } from "./rest-querier";
-import type { ProjectService } from "./rest-querier";
 
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import * as tlp from "tlp";
 import type {
+    Embedded,
     Empty,
     FileProperties,
     Folder,
     Item,
     ItemFile,
-    Wiki,
-    User,
+    ItemSearchResult,
     Link,
-    Embedded,
+    User,
+    Wiki,
 } from "../type";
 
 jest.mock("tlp");
@@ -408,6 +410,42 @@ describe("rest-querier", () => {
                 "/api/projects/102/user_groups?query=%7B%22with_system_user_groups%22%3Atrue%7D"
             );
             expect(result).toEqual([]);
+        });
+    });
+
+    describe("searchInFolder", () => {
+        it("should return the results with pagination information", async () => {
+            const tlpPost = jest.spyOn(tlp, "post");
+            const items = [{ id: 1 } as ItemSearchResult, { id: 2 } as ItemSearchResult];
+            mockFetchSuccess(tlpPost, {
+                return_json: items,
+                headers: {
+                    get(name): string | null {
+                        if (name === "X-PAGINATION-SIZE") {
+                            return "172";
+                        }
+
+                        return null;
+                    },
+                },
+            });
+
+            const results = await searchInFolder(101, "Lorem ipsum", 170);
+
+            expect(tlpPost).toHaveBeenCalledWith(`/api/v1/docman_search/101`, {
+                headers: {
+                    "content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    global_search: "Lorem ipsum",
+                    offset: 170,
+                    limit: 50,
+                }),
+            });
+            expect(results.items).toStrictEqual(items);
+            expect(results.from).toBe(170);
+            expect(results.to).toBe(171);
+            expect(results.total).toBe(172);
         });
     });
 });
