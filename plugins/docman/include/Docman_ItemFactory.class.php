@@ -534,7 +534,7 @@ class Docman_ItemFactory
      * 5. Apply limits ($start, $offset) is only a subset of the list is required.
      * 6. If needed, add the metadata to the items.
      *
-     * @psalm-param array{user: PFUser, filter?: Docman_Report, ignore_obsolete: bool, start?: int, offset?: int, obsolete_only?: bool, getall?: bool, ignore_deleted?: bool, ignore_folders?: bool} $params
+     * @psalm-param array{user: PFUser, filter?: Docman_Report, ignore_obsolete: bool, start?: int, offset?: int, obsolete_only?: bool, getall?: bool, ignore_deleted?: bool, ignore_folders?: bool, api_offset?: int, api_limit?: int} $params
      */
     private function getItemSubTreeAsList($parentId, int &$nbItemsFound, array $params): ArrayIterator
     {
@@ -557,10 +557,14 @@ class Docman_ItemFactory
         $start = 0;
         if (isset($params['start'])) {
             $start = $params['start'];
+        } elseif (isset($params['api_offset'])) {
+            $start = $params['api_offset'];
         }
         $end = 25;
         if (isset($params['offset'])) {
             $end = $start + $params['offset'];
+        } elseif (isset($params['api_limit'])) {
+            $end = $start + $params['api_limit'];
         }
 
         $dao = $this->_getItemDao();
