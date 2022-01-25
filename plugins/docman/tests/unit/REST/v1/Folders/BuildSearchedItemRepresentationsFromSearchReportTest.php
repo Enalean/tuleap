@@ -107,7 +107,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
     {
         self::assertSame($item['item_id'], $representation->id);
         self::assertSame($item['title'], $representation->title);
-        self::assertSame($item['description'], $representation->description);
+        self::assertSame($item['description'], $representation->post_processed_description);
         self::assertSame($this->status_mapper->getItemStatusFromItemStatusNumber($item['status']), $representation->status);
         self::assertSame($item['user_id'], $representation->owner->id);
     }

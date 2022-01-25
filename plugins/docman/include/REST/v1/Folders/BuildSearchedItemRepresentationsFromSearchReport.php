@@ -53,6 +53,7 @@ final class BuildSearchedItemRepresentationsFromSearchReport
             assert($owner instanceof \PFUser);
             $search_results[] = SearchRepresentation::build(
                 $item,
+                \Codendi_HTMLPurifier::instance(),
                 $this->status_mapper->getItemStatusFromItemStatusNumber((int) $item->getStatus()),
                 $owner,
                 $this->item_representation_collection_builder->buildParentRowCollection($item, $user, $limit, $offset)

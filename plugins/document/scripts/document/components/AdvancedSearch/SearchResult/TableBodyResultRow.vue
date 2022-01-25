@@ -22,7 +22,7 @@
     <tr>
         <td class="tlp-table-cell-numeric">{{ item.id }}</td>
         <td>{{ item.title }}</td>
-        <td>{{ item.description }}</td>
+        <td v-dompurify-html="item.post_processed_description"></td>
         <td>
             <user-badge v-bind:user="item.owner" />
         </td>

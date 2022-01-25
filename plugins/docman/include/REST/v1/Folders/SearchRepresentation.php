@@ -43,9 +43,9 @@ final class SearchRepresentation
     public $title;
 
     /**
-     * @var string | null {@type string}
+     * @var string {@type string}
      */
-    public $description;
+    public $post_processed_description;
     public string $status;
     /**
      * @var MinimalUserRepresentation {@type MinimalUserRepresentation}
@@ -64,27 +64,32 @@ final class SearchRepresentation
     private function __construct(
         int $id,
         string $title,
-        ?string $description,
+        string $post_processed_description,
         string $status,
         MinimalUserRepresentation $owner,
         ?string $update_date,
         PaginatedParentRowCollection $parents,
     ) {
-        $this->id               = $id;
-        $this->title            = $title;
-        $this->description      = $description;
-        $this->status           = $status;
-        $this->owner            = $owner;
-        $this->last_update_date = JsonCast::toDate($update_date);
-        $this->parents          = $parents->getPaginatedElementCollection();
+        $this->id                         = $id;
+        $this->title                      = $title;
+        $this->post_processed_description = $post_processed_description;
+        $this->status                     = $status;
+        $this->owner                      = $owner;
+        $this->last_update_date           = JsonCast::toDate($update_date);
+        $this->parents                    = $parents->getPaginatedElementCollection();
     }
 
-    public static function build(\Docman_Item $item, string $status, \PFUser $user, PaginatedParentRowCollection $parents): self
-    {
+    public static function build(
+        \Docman_Item $item,
+        \Codendi_HTMLPurifier $purifier,
+        string $status,
+        \PFUser $user,
+        PaginatedParentRowCollection $parents,
+    ): self {
         return new self(
             (int) $item->getId(),
             (string) $item->getTitle(),
-            $item->getDescription(),
+            $purifier->purifyTextWithReferences($item->getDescription(), $item->getGroupId()),
             $status,
             MinimalUserRepresentation::build($user),
             (string) $item->getUpdateDate(),
