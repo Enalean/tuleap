@@ -148,7 +148,6 @@ export default {
     },
     computed: {
         ...mapState(["is_loading_ascendant_hierarchy", "current_folder"]),
-        ...mapState("modals", ["delete_item"]),
         ...mapGetters(["current_folder_title", "is_folder_empty"]),
         title_class() {
             return this.is_loading_ascendant_hierarchy
@@ -178,6 +177,7 @@ export default {
         EventBus.$on("show-changelog-modal", this.showChangelogModal);
     },
     beforeDestroy() {
+        emitter.off("deleteItem", this.showDeleteItemModal);
         EventBus.$off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
         EventBus.$off("show-update-item-metadata-modal", this.showUpdateItemMetadataModal);
         EventBus.$off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);

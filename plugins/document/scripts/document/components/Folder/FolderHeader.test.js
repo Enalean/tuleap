@@ -33,7 +33,6 @@ describe("FolderHeader", () => {
         const general_store = {
             state: {
                 is_loading_ascendant_hierarchy: false,
-                modals: { delete_item: null },
             },
             getters: {
                 current_folder_title: "My folder title",

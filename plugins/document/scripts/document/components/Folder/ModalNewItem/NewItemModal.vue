@@ -153,6 +153,7 @@ export default {
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
     },
     beforeDestroy() {
+        emitter.off("createItem", this.show);
         EventBus.$off("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
         this.modal.removeEventListener("tlp-modal-hidden", this.reset);
     },

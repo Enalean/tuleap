@@ -27,9 +27,7 @@ describe("DisplayEmbeddedContent", () => {
 
     beforeEach(() => {
         const store_options = {
-            state: {
-                modals: { delete_item: null },
-            },
+            state: {},
         };
 
         store = createStoreMock(store_options);

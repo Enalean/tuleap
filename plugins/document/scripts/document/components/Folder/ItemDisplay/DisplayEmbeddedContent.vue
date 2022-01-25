@@ -133,6 +133,7 @@ export default {
         EventBus.$on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
     },
     beforeDestroy() {
+        emitter.off("deleteItem", this.showDeleteItemModal);
         EventBus.$off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
         EventBus.$off("show-update-item-metadata-modal", this.showUpdateMetadataModal);
         EventBus.$off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
