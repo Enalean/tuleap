@@ -27,9 +27,13 @@
                 </div>
                 <section class="tlp-pane-section">
                     <div class="tlp-form-element">
-                        <label class="tlp-label" for="document-global-search" v-translate>
-                            Global search
-                        </label>
+                        <div class="global-search-label">
+                            <label class="tlp-label" for="document-global-search" v-translate>
+                                Global search
+                            </label>
+                            <search-information-popover />
+                        </div>
+
                         <input
                             type="text"
                             class="tlp-input"
@@ -52,8 +56,10 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import type { AdvancedSearchParams } from "../../type";
-
-@Component
+import SearchInformationPopover from "./SearchInformationPopover.vue";
+@Component({
+    components: { SearchInformationPopover },
+})
 export default class SearchCriteriaPanel extends Vue {
     @Prop({ required: true })
     readonly query!: string;
