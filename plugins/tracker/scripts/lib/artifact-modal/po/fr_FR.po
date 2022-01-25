@@ -25,6 +25,9 @@ msgstr "...pour voir"
 msgid "Add another file"
 msgstr "Ajouter un autre fichier"
 
+msgid "Add link"
+msgstr "Ajouter le lien"
+
 msgid "An error occurred while saving the artifact."
 msgstr "Une erreur s'est produite pendant la sauvegarde de cet artéfact."
 
@@ -166,6 +169,9 @@ msgstr "Texte"
 
 msgid "The artifact will be linked to %s"
 msgstr "L'artefact sera lié à %s"
+
+msgid "There is no link yet"
+msgstr "Il n'y a pas encore de liens"
 
 msgid "There was an error in the Markdown preview:"
 msgstr "Il y a eu une erreur dans l'aperçu Markdown :"

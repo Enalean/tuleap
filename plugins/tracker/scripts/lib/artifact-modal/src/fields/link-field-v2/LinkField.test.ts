@@ -18,7 +18,13 @@
  */
 
 import { setCatalog } from "../../gettext-catalog";
-import { getFormattedArtifacts, LinkField, retrieveLinkedArtifacts } from "./LinkField";
+import {
+    getEmptyStateIfNeeded,
+    getFormattedArtifacts,
+    getSkeletonIfNeeded,
+    LinkField,
+    retrieveLinkedArtifacts,
+} from "./LinkField";
 
 import * as linked_artifacts_retriever from "./links-retriever";
 import * as modal_creation_mode_state from "../../modal-creation-mode-state";
@@ -79,7 +85,7 @@ describe("LinkField", () => {
 
             expect(getLinkedArtifacts).not.toHaveBeenCalled();
             expect(host.linked_artifacts).toEqual([]);
-            expect(host.has_loaded_content).toBe(false);
+            expect(host.has_loaded_content).toBe(true);
             expect(host.is_loading).toBe(false);
             expect(host.error_message).toEqual("");
         });
@@ -209,25 +215,6 @@ describe("LinkField", () => {
             setCreationMode(false);
         });
 
-        it("should hide the table when content has loaded and there are no links to display", () => {
-            const host = getHost();
-
-            host.has_loaded_content = true;
-
-            const update = LinkField.content(host);
-            const doc = getDocument();
-            const target = doc.createElement("div") as unknown as ShadowRoot;
-
-            update(host, target);
-
-            const table = target.querySelector("#tuleap-artifact-modal-link-table");
-            if (!(table instanceof HTMLElement)) {
-                throw new Error("Unable to find #tuleap-artifact-modal-link-table");
-            }
-
-            expect(table.classList.contains("tuleap-artifact-modal-link-field-empty")).toBe(true);
-        });
-
         it("should hide the table and show an alert when an error occurred during the retrieval of the linked artifacts", () => {
             const host = getHost();
 
@@ -249,6 +236,32 @@ describe("LinkField", () => {
 
             expect(table.classList.contains("tuleap-artifact-modal-link-field-empty")).toBe(true);
             expect(error.textContent?.trim()).toBe(host.error_message);
+        });
+
+        it("should render a skeleton row when the links are being loaded", () => {
+            const host = getHost();
+
+            host.is_loading = true;
+
+            const renderSkeleton = getSkeletonIfNeeded(host);
+            const target = getDocument().createElement("div") as unknown as ShadowRoot;
+
+            renderSkeleton(host, target);
+
+            expect(target.querySelector("[data-test=link-field-table-skeleton]")).not.toBe(null);
+        });
+
+        it("should render an empty state row when content has been loaded and there is no link to display", () => {
+            const host = getHost();
+
+            host.has_loaded_content = true;
+            host.linked_artifacts = [];
+
+            const renderSkeleton = getEmptyStateIfNeeded(host);
+            const target = getDocument().createElement("div") as unknown as ShadowRoot;
+
+            renderSkeleton(host, target);
+            expect(target.querySelector("[data-test=link-table-empty-state]")).not.toBe(null);
         });
     });
 });
