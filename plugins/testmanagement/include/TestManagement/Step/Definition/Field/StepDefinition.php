@@ -39,6 +39,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 
@@ -397,51 +398,8 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         array $submitted_values,
         CreatedFileURLMapping $url_mapping,
     ): array {
-        if ($this->doesUserWantToRemoveAllSteps($submitted_values) || ! isset($submitted_values['description'])) {
-            return [];
-        }
-
-        $steps = [];
-        $rank  = self::START_RANK;
-        foreach ($submitted_values['description'] as $key => $description) {
-            $description = trim($description);
-            if (! $description) {
-                continue;
-            }
-            if (! isset($submitted_values['description_format'][$key])) {
-                continue;
-            }
-            $description_format = $submitted_values['description_format'][$key];
-
-            $expected_results = '';
-            if (isset($submitted_values['expected_results'][$key])) {
-                $expected_results = trim($submitted_values['expected_results'][$key]);
-            }
-            $expected_results_format = '';
-            if (isset($submitted_values['expected_results_format'][$key])) {
-                $expected_results_format = $submitted_values['expected_results_format'][$key];
-            }
-
-            $substitutor = new \Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor();
-            if ($description_format === Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
-                $description = $substitutor->substituteURLsInHTML($description, $url_mapping);
-            }
-
-            if ($expected_results_format === Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
-                $expected_results = $substitutor->substituteURLsInHTML($expected_results, $url_mapping);
-            }
-
-            $steps[] = new Step(
-                0,
-                $description,
-                $description_format,
-                $expected_results,
-                $expected_results_format,
-                $rank
-            );
-        }
-
-        return $steps;
+        return (new StepDefinitionSubmittedValuesTransformator(new FileURLSubstitutor()))
+            ->transformSubmittedValuesIntoArrayOfStructuredSteps($submitted_values, $url_mapping);
     }
 
     private function extractCrossRefs(Artifact $artifact, array $submitted_steps): bool
