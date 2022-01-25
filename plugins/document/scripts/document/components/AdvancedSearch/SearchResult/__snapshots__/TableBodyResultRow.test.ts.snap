@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TableBodyResultRow should display an item as a table row 1`] = `
+<tr>
+  <td class="tlp-table-cell-numeric">123</td>
+  <td>Lorem</td>
+  <td>ipsum doloret</td>
+  <td>
+    <user-badge-stub user="[object Object]"></user-badge-stub>
+  </td>
+  <td>
+    <tlp-relative-date-stub date="2021-10-06" absolute-date="2021-10-06 00:00" placement="top" preference="relative" locale="en_US">
+      2021-10-06 00:00
+    </tlp-relative-date-stub>
+  </td>
+  <td><span class="tlp-skeleton-text"></span></td>
+</tr>
+`;

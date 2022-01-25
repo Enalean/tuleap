@@ -107,6 +107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         relative_dates_display,
         project_icon,
         search_for_document_with_criteria,
+        user_locale,
     };
 
     const AppComponent = Vue.extend(App);

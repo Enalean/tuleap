@@ -19,36 +19,19 @@
   -->
 
 <template>
-    <table class="tlp-table">
-        <thead>
-            <tr>
-                <th class="tlp-table-cell-numeric" v-translate>Id</th>
-                <th v-translate>Title</th>
-                <th v-translate>Description</th>
-                <th v-translate>Owner</th>
-                <th v-translate>Update date</th>
-                <th v-translate>Location</th>
-            </tr>
-        </thead>
-        <table-body-skeleton v-if="is_loading" />
-        <table-body-results v-else-if="results.length > 0" v-bind:results="results" />
-        <table-body-empty v-else />
-    </table>
+    <tbody>
+        <table-body-result-row v-for="item in results" v-bind:key="item.id" v-bind:item="item" />
+    </tbody>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import TableBodySkeleton from "./TableBodySkeleton.vue";
-import TableBodyEmpty from "./TableBodyEmpty.vue";
 import type { ItemSearchResult } from "../../../type";
-import TableBodyResults from "./TableBodyResults.vue";
+import TableBodyResultRow from "./TableBodyResultRow.vue";
 
 @Component({
-    components: { TableBodyResults, TableBodyEmpty, TableBodySkeleton },
+    components: { TableBodyResultRow },
 })
-export default class SearchResultTable extends Vue {
-    @Prop({ required: true })
-    readonly is_loading!: boolean;
-
+export default class TableBodyResults extends Vue {
     @Prop({ required: true })
     readonly results!: ReadonlyArray<ItemSearchResult>;
 }

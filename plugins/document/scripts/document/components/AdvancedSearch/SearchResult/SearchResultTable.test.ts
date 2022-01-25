@@ -22,6 +22,8 @@ import SearchResultTable from "./SearchResultTable.vue";
 import localVue from "../../../helpers/local-vue";
 import TableBodySkeleton from "./TableBodySkeleton.vue";
 import TableBodyEmpty from "./TableBodyEmpty.vue";
+import TableBodyResults from "./TableBodyResults.vue";
+import type { ItemSearchResult } from "../../../type";
 
 describe("SearchResultTable", () => {
     it("should display skeleton while loading", () => {
@@ -29,11 +31,13 @@ describe("SearchResultTable", () => {
             localVue,
             propsData: {
                 is_loading: true,
+                results: [],
             },
         });
 
         expect(wrapper.findComponent(TableBodySkeleton).exists()).toBe(true);
         expect(wrapper.findComponent(TableBodyEmpty).exists()).toBe(false);
+        expect(wrapper.findComponent(TableBodyResults).exists()).toBe(false);
     });
 
     it("should display empty state when no results to display", () => {
@@ -41,10 +45,26 @@ describe("SearchResultTable", () => {
             localVue,
             propsData: {
                 is_loading: false,
+                results: [],
             },
         });
 
         expect(wrapper.findComponent(TableBodySkeleton).exists()).toBe(false);
         expect(wrapper.findComponent(TableBodyEmpty).exists()).toBe(true);
+        expect(wrapper.findComponent(TableBodyResults).exists()).toBe(false);
+    });
+
+    it("should display results", () => {
+        const wrapper = shallowMount(SearchResultTable, {
+            localVue,
+            propsData: {
+                is_loading: false,
+                results: [{} as ItemSearchResult],
+            },
+        });
+
+        expect(wrapper.findComponent(TableBodySkeleton).exists()).toBe(false);
+        expect(wrapper.findComponent(TableBodyEmpty).exists()).toBe(false);
+        expect(wrapper.findComponent(TableBodyResults).exists()).toBe(true);
     });
 });

@@ -23,7 +23,11 @@
         <search-header />
         <search-criteria-panel v-bind:query="query" v-on:advanced-search="advancedSearch" />
         <search-result-error v-if="error" v-bind:error="error" />
-        <search-result-table v-if="can_result_table_be_displayed" v-bind:is_loading="is_loading" />
+        <search-result-table
+            v-if="can_result_table_be_displayed"
+            v-bind:is_loading="is_loading"
+            v-bind:results="results"
+        />
     </div>
 </template>
 
@@ -38,6 +42,7 @@ import { searchInFolder } from "../../api/rest-querier";
 import { Action } from "vuex-class";
 import type { Dictionary } from "vue-router/types/router";
 import SearchResultError from "./SearchResult/SearchResultError.vue";
+import type { ItemSearchResult } from "../../type";
 
 @Component({
     components: { SearchResultError, SearchHeader, SearchResultTable, SearchCriteriaPanel },
@@ -51,6 +56,7 @@ export default class SearchContainer extends Vue {
 
     is_loading = false;
     error: Error | null = null;
+    results: ReadonlyArray<ItemSearchResult> = [];
 
     @Action
     readonly loadFolder!: (item_id: number) => Promise<void>;
@@ -67,8 +73,12 @@ export default class SearchContainer extends Vue {
 
         this.is_loading = true;
         this.error = null;
+        this.results = [];
 
         searchInFolder(this.folder_id, query)
+            .then((results: ReadonlyArray<ItemSearchResult>) => {
+                this.results = results;
+            })
             .catch((error) => {
                 this.error = error;
                 throw error;

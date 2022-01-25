@@ -30,6 +30,7 @@ import type {
     Wiki,
     ItemFileUploader,
     UserGroup,
+    ItemSearchResult,
 } from "../type";
 
 export {
@@ -101,7 +102,10 @@ async function addNewDocumentType(url: string, item: Item): Promise<Response> {
     return response.json();
 }
 
-async function searchInFolder(folder_id: number, query: string): Promise<Response> {
+async function searchInFolder(
+    folder_id: number,
+    query: string
+): Promise<ReadonlyArray<ItemSearchResult>> {
     const headers = {
         "content-type": "application/json",
     };
