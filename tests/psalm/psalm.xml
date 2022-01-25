@@ -43,6 +43,7 @@
     <stubs>
         <file name="tests/psalm/stubs/Psr/EventDispatcher/EventDispatcherInterface.phpstub"/>
         <file name="tests/psalm/stubs/ParagonIE/EasyDB/EasyDB.phpstub"/>
+        <file name="tests/psalm/stubs/FastRoute/RouteCollector.phpstub"/>
     </stubs>
 
     <plugins>
