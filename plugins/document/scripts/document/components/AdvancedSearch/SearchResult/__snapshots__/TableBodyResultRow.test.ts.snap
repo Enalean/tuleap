@@ -13,6 +13,6 @@ exports[`TableBodyResultRow should display an item as a table row 1`] = `
       2021-10-06 00:00
     </tlp-relative-date-stub>
   </td>
-  <td><span class="tlp-skeleton-text"></span></td>
+  <td data-test="location">Path/To/Folder</td>
 </tr>
 `;
