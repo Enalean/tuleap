@@ -2,7 +2,10 @@
 
 exports[`TableBodyResultRow should display an item as a table row 1`] = `
 <tr>
-  <td class="tlp-table-cell-numeric">123</td>
+  <td class="tlp-table-cell-numeric">
+    123
+  </td>
+  <td class="document-search-result-icon"><i aria-hidden="true" class="fa fa-fw fa-folder-open-o document-folder-icon"></i></td>
   <td>Lorem</td>
   <td>ipsum doloret</td>
   <td>

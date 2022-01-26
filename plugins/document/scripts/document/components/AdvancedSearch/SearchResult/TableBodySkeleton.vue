@@ -22,9 +22,15 @@
     <tbody>
         <tr v-for="i in 3" v-bind:key="i">
             <td class="tlp-table-cell-numeric"><span class="tlp-skeleton-text"></span></td>
+            <td class="document-search-result-icon">
+                <i class="fas fa-file-alt tlp-skeleton-icon" aria-hidden="true"></i>
+            </td>
             <td><span class="tlp-skeleton-text"></span></td>
             <td><span class="tlp-skeleton-text"></span></td>
-            <td><span class="tlp-skeleton-text"></span></td>
+            <td>
+                <i class="fas fa-user tlp-skeleton-icon" aria-hidden="true"></i>
+                <span class="tlp-skeleton-text"></span>
+            </td>
             <td><span class="tlp-skeleton-text"></span></td>
             <td><span class="tlp-skeleton-text"></span></td>
         </tr>

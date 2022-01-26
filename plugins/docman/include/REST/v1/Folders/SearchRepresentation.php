@@ -60,6 +60,10 @@ final class SearchRepresentation
      * @var array {@type ParentFolderRepresentation}
      */
     public array $parents;
+    /**
+     * @var string | null {@type string}
+     */
+    public $type;
 
     private function __construct(
         int $id,
@@ -69,6 +73,7 @@ final class SearchRepresentation
         MinimalUserRepresentation $owner,
         ?string $update_date,
         PaginatedParentRowCollection $parents,
+        ?string $type,
     ) {
         $this->id                         = $id;
         $this->title                      = $title;
@@ -77,6 +82,7 @@ final class SearchRepresentation
         $this->owner                      = $owner;
         $this->last_update_date           = JsonCast::toDate($update_date);
         $this->parents                    = $parents->getPaginatedElementCollection();
+        $this->type                       = $type;
     }
 
     public static function build(
@@ -85,6 +91,7 @@ final class SearchRepresentation
         string $status,
         \PFUser $user,
         PaginatedParentRowCollection $parents,
+        ?string $type,
     ): self {
         return new self(
             (int) $item->getId(),
@@ -93,7 +100,8 @@ final class SearchRepresentation
             $status,
             MinimalUserRepresentation::build($user),
             (string) $item->getUpdateDate(),
-            $parents
+            $parents,
+            $type
         );
     }
 }

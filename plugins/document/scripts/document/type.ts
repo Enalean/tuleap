@@ -63,6 +63,7 @@ export interface SearchResult {
 
 export interface ItemSearchResult {
     readonly id: number;
+    readonly type: string;
     readonly title: string;
     readonly post_processed_description: string;
     readonly owner: User;
