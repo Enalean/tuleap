@@ -22,6 +22,7 @@ import TableBodyResultRow from "./TableBodyResultRow.vue";
 import type { ConfigurationState } from "../../../store/configuration";
 import type { ItemSearchResult, User } from "../../../type";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import localVue from "../../../helpers/local-vue";
 
 describe("TableBodyResultRow", () => {
     it("should display an item as a table row", () => {
@@ -31,11 +32,12 @@ describe("TableBodyResultRow", () => {
         } as unknown as User;
 
         const wrapper = shallowMount(TableBodyResultRow, {
+            localVue,
             propsData: {
                 item: {
                     id: 123,
                     title: "Lorem",
-                    description: "ipsum doloret",
+                    post_processed_description: "ipsum doloret",
                     owner,
                     last_update_date: "2021-10-06",
                 } as ItemSearchResult,

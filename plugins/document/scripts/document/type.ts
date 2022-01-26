@@ -57,7 +57,7 @@ export interface GettextProvider {
 export interface ItemSearchResult {
     readonly id: number;
     readonly title: string;
-    readonly description: string;
+    readonly post_processed_description: string;
     readonly owner: User;
     readonly last_update_date: string;
 }
