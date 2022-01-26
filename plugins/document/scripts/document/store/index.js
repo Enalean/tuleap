@@ -30,7 +30,7 @@ import * as getters from "./getters";
 import * as actions from "./actions.js";
 import state from "./state.js";
 import error from "./error/module";
-import clipboard from "./clipboard/module.js";
+import clipboard from "./clipboard/module";
 import metadata from "./metadata/module";
 import lock from "./lock/module";
 import preferencies from "./preferencies/module";

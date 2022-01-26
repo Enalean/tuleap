@@ -17,8 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import defaultState from "./clipboard-default-state.js";
+import defaultState from "./clipboard-default-state";
 import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../constants";
+import type { ClipboardState } from "./module";
+import type { Item } from "../../type";
 
 export {
     cutItem,
@@ -29,15 +31,19 @@ export {
     pastingHasFailed,
 };
 
-function cutItem(state, item) {
+function cutItem(state: ClipboardState, item: Item): void {
     startNewClipboardOperation(state, item, CLIPBOARD_OPERATION_CUT);
 }
 
-function copyItem(state, item) {
+function copyItem(state: ClipboardState, item: Item): void {
     startNewClipboardOperation(state, item, CLIPBOARD_OPERATION_COPY);
 }
 
-function startNewClipboardOperation(state, item, operationType) {
+function startNewClipboardOperation(
+    state: ClipboardState,
+    item: Item,
+    operationType: string
+): void {
     if (state.pasting_in_progress) {
         return;
     }
@@ -47,20 +53,20 @@ function startNewClipboardOperation(state, item, operationType) {
     state.operation_type = operationType;
 }
 
-function emptyClipboardAfterItemDeletion(state, deleted_item) {
+function emptyClipboardAfterItemDeletion(state: ClipboardState, deleted_item: Item): void {
     if (state.item_id === deleted_item.id) {
         emptyClipboard(state);
     }
 }
 
-function emptyClipboard(state) {
+function emptyClipboard(state: ClipboardState): void {
     Object.assign(state, defaultState());
 }
 
-function startPasting(state) {
+function startPasting(state: ClipboardState): void {
     state.pasting_in_progress = true;
 }
 
-function pastingHasFailed(state) {
+function pastingHasFailed(state: ClipboardState): void {
     state.pasting_in_progress = false;
 }

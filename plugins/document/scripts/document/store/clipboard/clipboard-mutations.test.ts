@@ -24,9 +24,11 @@ import {
     emptyClipboard,
     startPasting,
     pastingHasFailed,
-} from "./clipboard-mutations.js";
+} from "./clipboard-mutations";
 import { TYPE_EMPTY, CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../constants";
-import defaultState from "./clipboard-default-state.js";
+import defaultState from "./clipboard-default-state";
+import type { Empty } from "../../type";
+import type { ClipboardState } from "./module";
 
 describe("Clipboard mutations", () => {
     it("Cut item when no item is being pasted", () => {
@@ -34,9 +36,9 @@ describe("Clipboard mutations", () => {
             id: 3,
             title: "My doc",
             type: TYPE_EMPTY,
-        };
+        } as Empty;
 
-        const state = { pasting_in_progress: false, operation_type: null };
+        const state = { pasting_in_progress: false, operation_type: null } as ClipboardState;
         cutItem(state, item);
         expect(state.item_id).toBe(item.id);
         expect(state.item_title).toBe(item.title);
@@ -49,9 +51,9 @@ describe("Clipboard mutations", () => {
             id: 3,
             title: "My doc",
             type: TYPE_EMPTY,
-        };
+        } as Empty;
 
-        const state = { pasting_in_progress: true, item_id: null };
+        const state = { pasting_in_progress: true, item_id: null } as ClipboardState;
         cutItem(state, item);
         expect(state.item_id).toBe(null);
     });
@@ -61,9 +63,9 @@ describe("Clipboard mutations", () => {
             id: 3,
             title: "My doc",
             type: TYPE_EMPTY,
-        };
+        } as Empty;
 
-        const state = { pasting_in_progress: false, operation_type: null };
+        const state = { pasting_in_progress: false, operation_type: null } as ClipboardState;
         copyItem(state, item);
         expect(state.item_id).toBe(item.id);
         expect(state.item_title).toBe(item.title);
@@ -76,9 +78,9 @@ describe("Clipboard mutations", () => {
             id: 3,
             title: "My doc",
             type: TYPE_EMPTY,
-        };
+        } as Empty;
 
-        const state = { pasting_in_progress: true, item_id: null };
+        const state = { pasting_in_progress: true, item_id: null } as ClipboardState;
         copyItem(state, item);
         expect(state.item_id).toBe(null);
     });
@@ -88,7 +90,7 @@ describe("Clipboard mutations", () => {
             item_id: 147,
             item_title: "My title",
             item_type: TYPE_EMPTY,
-        };
+        } as ClipboardState;
         emptyClipboard(state);
         expect(state).toEqual(defaultState());
     });
@@ -96,7 +98,7 @@ describe("Clipboard mutations", () => {
     it("Mark paste in progress", () => {
         const state = {
             pasting_in_progress: false,
-        };
+        } as ClipboardState;
 
         startPasting(state);
         expect(state.pasting_in_progress).toBe(true);
@@ -105,7 +107,7 @@ describe("Clipboard mutations", () => {
     it("Unmark paste in progress when pasting has failed", () => {
         const state = {
             pasting_in_progress: true,
-        };
+        } as ClipboardState;
 
         pastingHasFailed(state);
         expect(state.pasting_in_progress).toBe(false);
@@ -114,18 +116,18 @@ describe("Clipboard mutations", () => {
     it("Clears the clipboard when the item in it is deleted", () => {
         const state = {
             item_id: 741,
-        };
+        } as ClipboardState;
 
-        emptyClipboardAfterItemDeletion(state, { id: 741 });
+        emptyClipboardAfterItemDeletion(state, { id: 741 } as Empty);
         expect(state.item_id).toBe(null);
     });
 
     it("Keeps the clipboard intact when another item is deleted", () => {
         const state = {
             item_id: 741,
-        };
+        } as ClipboardState;
 
-        emptyClipboardAfterItemDeletion(state, { id: 999 });
+        emptyClipboardAfterItemDeletion(state, { id: 999 } as Empty);
         expect(state.item_id).toBe(741);
     });
 });
