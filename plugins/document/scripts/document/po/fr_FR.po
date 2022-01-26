@@ -48,15 +48,6 @@ msgstr "3 mois"
 msgid "6 months"
 msgstr "6 mois"
 
-msgid ""
-"<a href=\"%{ table_owner_url }\">%{ table_owner_name }</a> has created an <a "
-"href=\"%{ approval_table_url }\">approval table</a> for the last version of "
-"%{ filename }."
-msgstr ""
-"<a href=\"%{ table_owner_url }\">%{ table_owner_name }</a> a créé une <a "
-"href=\"%{ approval_table_url }\">table d'approbation</a> pour la dernière "
-"version de %{ filename }."
-
 msgid "A document already exists with the same title."
 msgstr "Un document existe déjà avec le même titre."
 
@@ -179,9 +170,6 @@ msgstr "Créer une nouvelle version"
 
 msgid "Creation"
 msgstr "Création"
-
-msgid "Current approval table state: %{ table_state }."
-msgstr "État de la table d’approbation actuel: %{ table_state }."
 
 msgid "Cut"
 msgstr "Couper"
@@ -768,13 +756,6 @@ msgstr ""
 msgid "You are not allowed to write in this folder"
 msgstr "Vous n'êtes pas autorisé à écrire dans ce dossier"
 
-msgid ""
-"You can't upload a new version of this file until the approval table is "
-"closed."
-msgstr ""
-"Vous ne pouvez pas téléverser de nouvelle version tant que la table "
-"d'approbation n'a pas été close."
-
 msgid "You don't have read permission for this item"
 msgstr "Vous n'avez pas le droit de lecture sur cet élément"
 
@@ -797,6 +778,3 @@ msgstr "lorem => exactement \"lorem\""
 
 msgid "lorem* => starting by \"lorem\""
 msgstr "lorem* => commençant par \"lorem\""
-
-#~ msgid "*lorem* => containing \"lorem\""
-#~ msgstr "*lorem* => contenant \"lorem\""

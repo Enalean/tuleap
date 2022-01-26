@@ -216,36 +216,6 @@ describe("DragNDropHandler", () => {
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.EDITION_LOCKED);
             });
 
-            it("Shows an error modal if a document is requested to be approved", async () => {
-                const wrapper = getWrapper();
-                drop_event.dataTransfer.files.push(file1);
-
-                const target_file = {
-                    id: 123,
-                    title: "file.txt",
-                    type: TYPE_FILE,
-                    user_can_write: true,
-                    lock_info: null,
-                    approval_table: {
-                        has_been_approved: false,
-                        approval_state: "Not yet",
-                        table_owner: {
-                            display_name: "Some Dude",
-                            user_url: "https://example.com",
-                        },
-                    },
-                };
-
-                store.state.folder_content.push(target_file);
-                wrapper.setData({ highlighted_item_id: target_file.id });
-
-                await wrapper.vm.ondrop(drop_event);
-                await wrapper.vm.$nextTick();
-
-                expect(store.dispatch).not.toHaveBeenCalledWith("createNewFileVersion");
-                expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.DOCUMENT_NEEDS_APPROVAL);
-            });
-
             it("Shows an error modal if the new version is too big", async () => {
                 const wrapper = getWrapper();
                 drop_event.dataTransfer.files.push(file1);
@@ -372,7 +342,44 @@ describe("DragNDropHandler", () => {
             ]);
         });
 
-        it("Should upload a new version if it is dropped on a file", async () => {
+        it("Should open the changelog modal when user uploads a new version item with approval table", async () => {
+            const wrapper = getWrapper();
+            drop_event.dataTransfer.files.push(file1);
+            const event_bus_emit = jest.spyOn(EventBus, "$emit");
+
+            const target_file = {
+                id: 123,
+                title: "file.txt",
+                type: TYPE_FILE,
+                user_can_write: true,
+                lock_info: {
+                    locked_by: {
+                        id: store.state.configuration.user_id,
+                        name: "current_user",
+                    },
+                },
+                approval_table: {
+                    has_been_approved: false,
+                },
+            };
+
+            store.state.folder_content.push(target_file);
+            wrapper.setData({ highlighted_item_id: target_file.id });
+
+            await wrapper.vm.ondrop(drop_event);
+
+            expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile");
+            expect(store.dispatch).not.toHaveBeenCalledWith("createNewFileVersion");
+
+            expect(event_bus_emit).toHaveBeenCalledWith("show-changelog-modal", {
+                detail: {
+                    updated_file: target_file,
+                    dropped_file: file1,
+                },
+            });
+        });
+
+        it("Should upload a new version if it is dropped on a file without approval table and option disabled", async () => {
             const wrapper = getWrapper();
             drop_event.dataTransfer.files.push(file1);
 
@@ -387,9 +394,7 @@ describe("DragNDropHandler", () => {
                         name: "current_user",
                     },
                 },
-                approval_table: {
-                    has_been_approved: true,
-                },
+                approval_table: null,
             };
 
             store.state.folder_content.push(target_file);
