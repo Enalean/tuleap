@@ -36,12 +36,12 @@ final class PostSearchRepresentation
     public string $global_search = '';
 
     /**
-     * @var int limit {@from body} {@required false}
+     * @var int limit {@from body} {@required false} {@min 0} {@max 50}
      */
     public int $limit = SearchResource::MAX_LIMIT;
 
     /**
-     * @var int offset {@from body} {@required false}
+     * @var int offset {@from body} {@required false} {@min 0}
      */
     public int $offset = 0;
 }
