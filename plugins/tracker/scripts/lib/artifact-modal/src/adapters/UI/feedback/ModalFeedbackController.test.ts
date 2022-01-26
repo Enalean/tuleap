@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ParentFeedbackController } from "./ParentFeedbackController";
-import { StubWithParent } from "../../../tests/stubs/RetrieveParentStub";
+import { ModalFeedbackController } from "./ModalFeedbackController";
+import { StubWithParent } from "../../../../tests/stubs/RetrieveParentStub";
 import type { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
 
 const PARENT_ARTIFACT_ID = 78;
 
-describe(`ParentFeedbackController`, () => {
+describe(`ModalFeedbackController`, () => {
     let parent_artifact_id: number | null;
     beforeEach(() => {
         parent_artifact_id = PARENT_ARTIFACT_ID;
@@ -31,7 +31,7 @@ describe(`ParentFeedbackController`, () => {
 
     const displayParentFeedback = (): Promise<ParentFeedbackPresenter> => {
         const parent_artifact = { id: PARENT_ARTIFACT_ID, title: "nonhereditary" };
-        const controller = ParentFeedbackController(
+        const controller = ModalFeedbackController(
             StubWithParent(parent_artifact),
             parent_artifact_id
         );

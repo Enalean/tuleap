@@ -55,7 +55,7 @@ import "./fields/string-field/StringField";
 import "./fields/text-field/TextField";
 import "./fields/link-field-v2/LinkField";
 import "./followups/FollowupEditor";
-import "./adapters/UI/ModalFeedback";
+import "./adapters/UI/feedback/ModalFeedback";
 
 export default angular
     .module("tuleap.artifact-modal", [

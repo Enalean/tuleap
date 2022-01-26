@@ -50,7 +50,7 @@ import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js
 import { ParentRetriever } from "./domain/parent/ParentRetriever";
 import { TuleapAPIClient } from "./adapters/REST/TuleapAPIClient";
 import { CreationModeVerifier } from "./adapters/Memory/CreationModeVerifier";
-import { ParentFeedbackController } from "./domain/parent/ParentFeedbackController";
+import { ModalFeedbackController } from "./adapters/UI/feedback/ModalFeedbackController";
 
 export default ArtifactModalController;
 
@@ -103,7 +103,7 @@ function ArtifactModalController(
             body: "",
             format: modal_model.text_fields_format,
         },
-        parent_feedback_controller: ParentFeedbackController(
+        feedback_controller: ModalFeedbackController(
             ParentRetriever(TuleapAPIClient(), CreationModeVerifier()),
             modal_model.parent_artifact_id
         ),
