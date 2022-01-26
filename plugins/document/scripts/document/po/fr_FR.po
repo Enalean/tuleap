@@ -28,6 +28,9 @@ msgstr ""
 "%{ lock_owner_name }</a>. Vous ne pouvez pas téléverser de nouvelle version "
 "tant que le verrou n'a pas été levé."
 
+msgid "*lorem => finishing by \"lorem\""
+msgstr "*lorem => finissant par \"lorem\""
+
 msgid "1 warning"
 msgid_plural "%{ nb_warnings } warnings"
 msgstr[0] "1 avertissement"
@@ -264,6 +267,17 @@ msgstr "Se placer dans la barre de recherche"
 
 msgid "Global search"
 msgstr "Recherche globale"
+
+msgid "Global search information"
+msgstr "Information sur la recherche globale"
+
+msgid ""
+"Global search will search in all text properties of document (but does not "
+"look\n"
+"                inside the document)."
+msgstr ""
+"La recherche globale va chercher dans toutes les propriétés textes d'un "
+"document (mais ne va pas chercher à l'intérieur du document)."
 
 msgid "Go to Document manager home page"
 msgstr "Aller à la page d'accueil du service Gestion de documents"
@@ -502,6 +516,9 @@ msgstr "Recommencer le cycle d'approbation."
 
 msgid "Search"
 msgstr "Recherche"
+
+msgid "Search allowed pattern:"
+msgstr "Modèles de recherche authorisés :"
 
 msgid "Search criteria"
 msgstr "Critères de recherche"
@@ -759,3 +776,12 @@ msgstr ""
 "Vous devez également être conscient que les documents wiki suivants "
 "référençant la page \"%s\" ne seront plus valides si vous choisissez de "
 "propager la suppression au service wiki :"
+
+msgid "lorem => exactly \"lorem\""
+msgstr "lorem => exactement \"lorem\""
+
+msgid "lorem* => starting by \"lorem\""
+msgstr "lorem* => commençant par \"lorem\""
+
+#~ msgid "*lorem* => containing \"lorem\""
+#~ msgstr "*lorem* => contenant \"lorem\""
