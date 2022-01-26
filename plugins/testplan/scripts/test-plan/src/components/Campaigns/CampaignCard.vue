@@ -41,68 +41,63 @@
         </div>
     </a>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "@vue/composition-api";
 import type { Campaign } from "../../type";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useState } from "vuex-composition-helpers";
 import CampaignProgression from "./CampaignProgression.vue";
-import { State } from "vuex-class";
 
-@Component({
-    components: { CampaignProgression },
-})
-export default class CampaignCard extends Vue {
-    @Prop({ required: true })
-    readonly campaign!: Campaign;
+const props = defineProps<{
+    campaign: Campaign;
+}>();
 
-    @State
-    readonly project_id!: number;
+const { project_id, milestone_id } = useState<{ project_id: number; milestone_id: number }>([
+    "project_id",
+    "milestone_id",
+]);
 
-    @State
-    readonly milestone_id!: number;
+const { interpolate, $ngettext } = useGettext();
 
-    get nb_tests(): number {
-        return (
-            this.campaign.nb_of_blocked +
-            this.campaign.nb_of_failed +
-            this.campaign.nb_of_notrun +
-            this.campaign.nb_of_passed
-        );
+const nb_tests_title = computed((): string => {
+    const nb_tests =
+        props.campaign.nb_of_blocked +
+        props.campaign.nb_of_failed +
+        props.campaign.nb_of_notrun +
+        props.campaign.nb_of_passed;
+
+    return interpolate($ngettext("%{ nb } test", "%{ nb } tests", nb_tests), {
+        nb: nb_tests,
+    });
+});
+
+const route_to_campaign_execution = computed((): string => {
+    const url = new URL("/plugins/testmanagement/", window.location.href);
+    url.searchParams.set("group_id", String(project_id.value));
+    url.searchParams.set("milestone_id", String(milestone_id.value));
+    url.hash = "#!/campaigns/" + props.campaign.id;
+
+    return url.toString();
+});
+
+const classname = computed((): string => {
+    if (props.campaign.is_error) {
+        return "test-plan-campaign-is-error";
     }
 
-    get nb_tests_title(): string {
-        return this.$gettextInterpolate(
-            this.$ngettext("%{ nb } test", "%{ nb } tests", this.nb_tests),
-            {
-                nb: this.nb_tests,
-            }
-        );
+    if (props.campaign.is_being_refreshed) {
+        return "test-plan-campaign-is-being-refreshed";
     }
 
-    get route_to_campaign_execution(): string {
-        const url = new URL("/plugins/testmanagement/", window.location.href);
-        url.searchParams.set("group_id", String(this.project_id));
-        url.searchParams.set("milestone_id", String(this.milestone_id));
-        url.hash = "#!/campaigns/" + this.campaign.id;
-
-        return url.toString();
+    if (props.campaign.is_just_refreshed) {
+        return "test-plan-campaign-is-just-refreshed";
     }
 
-    get classname(): string {
-        if (this.campaign.is_error) {
-            return "test-plan-campaign-is-error";
-        }
+    return "";
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
 
-        if (this.campaign.is_being_refreshed) {
-            return "test-plan-campaign-is-being-refreshed";
-        }
-
-        if (this.campaign.is_just_refreshed) {
-            return "test-plan-campaign-is-just-refreshed";
-        }
-
-        return "";
-    }
-}
+export default defineComponent({});
 </script>
