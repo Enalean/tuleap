@@ -587,27 +587,27 @@ class Docman_Controller extends Controler
                 break;
             case 'admin_change_view':
                 $this->action                            = $view;
-                $this->_viewParams['default_url_params'] = ['action'  => 'admin_view',
+                $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_View::IDENTIFIER,
                                                              'id'      => $item->getParentId()];
                 $this->view                              = 'RedirectAfterCrud';
                 break;
-            case 'admin':
             case 'details':
                 $this->view = ucfirst($view);
                 break;
-            case 'admin_view':
+            case \Docman_View_Admin_View::IDENTIFIER:
                 $this->view = 'Admin_View';
                 break;
-            case 'admin_permissions':
+            case 'admin':
+            case \Docman_View_Admin_Permissions::IDENTIFIER:
                 $this->view = 'Admin_Permissions';
                 break;
-            case 'admin_metadata':
+            case \Docman_View_Admin_Metadata::IDENTIFIER:
                 $this->view                  = 'Admin_Metadata';
                 $mdFactory                   = new Docman_MetadataFactory($this->_viewParams['group_id']);
                 $mdIter                      = $mdFactory->getMetadataForGroup();
                 $this->_viewParams['mdIter'] = $mdIter;
                 break;
-            case 'admin_md_details':
+            case \Docman_View_Admin_MetadataDetails::IDENTIFIER:
                 // Sanitize
                 $_mdLabel = $this->request->get('md');
 
@@ -618,7 +618,7 @@ class Docman_Controller extends Controler
                 if (! $valid) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'Invalid property'));
                     $this->view                              = 'RedirectAfterCrud';
-                    $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
+                    $this->_viewParams['default_url_params'] = ['action' => \Docman_View_Admin_Metadata::IDENTIFIER];
                 } else {
                     $this->view = 'Admin_MetadataDetails';
                     $mdFactory->appendMetadataValueList($md, false);
@@ -631,12 +631,12 @@ class Docman_Controller extends Controler
 
                 $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
                 if ($mdFactory->isValidLabel($_label)) {
-                    $this->_viewParams['default_url_params'] = ['action'  => 'admin_md_details', 'md' => $_label];
+                    $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_MetadataDetails::IDENTIFIER, 'md' => $_label];
                     if (Docman_MetadataFactory::isHardCodedMetadata($_label) || $this->validateUpdateMetadata($_name, $_label)) {
                         $this->action = $view;
                     }
                 } else {
-                    $this->_viewParams['default_url_params'] = ['action'  => 'admin_metadata'];
+                    $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_Metadata::IDENTIFIER];
                 }
                 $this->view = 'RedirectAfterCrud';
                 break;
@@ -648,7 +648,7 @@ class Docman_Controller extends Controler
                     $this->action = $view;
                 }
 
-                $this->_viewParams['default_url_params'] = ['action'  => 'admin_metadata'];
+                $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_Metadata::IDENTIFIER];
                 $this->view                              = 'RedirectAfterCrud';
                 break;
             case 'admin_delete_metadata':
@@ -676,7 +676,7 @@ class Docman_Controller extends Controler
                         $this->feedback->log('error', $logmsg);
                     }
                     $this->view                              = 'RedirectAfterCrud';
-                    $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
+                    $this->_viewParams['default_url_params'] = ['action' => \Docman_View_Admin_Metadata::IDENTIFIER];
                 } else {
                     $this->action              = $view;
                     $this->_actionParams['md'] = $md;
@@ -687,10 +687,10 @@ class Docman_Controller extends Controler
                 $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
                 if ($mdFactory->isValidLabel($this->request->get('md'))) {
                     $this->action                            = $view;
-                    $this->_viewParams['default_url_params'] = ['action'  => 'admin_md_details',
+                    $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_MetadataDetails::IDENTIFIER,
                                                                  'md' => $this->request->get('md')];
                 } else {
-                    $this->_viewParams['default_url_params'] = ['action'  => 'admin_metadata'];
+                    $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_Metadata::IDENTIFIER];
                 }
                 $this->view = 'RedirectAfterCrud';
                 break;
@@ -698,14 +698,14 @@ class Docman_Controller extends Controler
                 $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
                 if ($mdFactory->isValidLabel($this->request->get('md'))) {
                     $this->action                            = $view;
-                    $this->_viewParams['default_url_params'] = ['action'  => 'admin_md_details',
+                    $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_MetadataDetails::IDENTIFIER,
                                                                  'md' => $this->request->get('md')];
                 } else {
-                    $this->_viewParams['default_url_params'] = ['action'  => 'admin_metadata'];
+                    $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_Metadata::IDENTIFIER];
                 }
                 $this->view = 'RedirectAfterCrud';
                 break;
-            case 'admin_display_love':
+            case \Docman_View_Admin_MetadataDetailsUpdateLove::IDENTIFIER:
                 $valid = false;
                 // Required params:
                 // md (string [a-z_]+)
@@ -725,7 +725,7 @@ class Docman_Controller extends Controler
 
                 if (! $valid) {
                     $this->view                              = 'RedirectAfterCrud';
-                    $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
+                    $this->_viewParams['default_url_params'] = ['action' => \Docman_View_Admin_Metadata::IDENTIFIER];
                 } else {
                     $mdFactory = new Docman_MetadataFactory($this->groupId);
                     $mdFactory->appendMetadataValueList($md, false);
@@ -764,7 +764,7 @@ class Docman_Controller extends Controler
                 if (! $valid) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'There is an error in parameters. Back to previous screen.'));
                     $this->view                              = 'RedirectAfterCrud';
-                    $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
+                    $this->_viewParams['default_url_params'] = ['action' => \Docman_View_Admin_Metadata::IDENTIFIER];
                 } else {
                     // Set parameters
                     $love->setRank($_rank);
@@ -778,7 +778,7 @@ class Docman_Controller extends Controler
                 }
                 break;
 
-            case 'admin_import_metadata_check':
+            case \Docman_View_Admin_MetadataImport::IDENTIFIER:
                 $ok = false;
                 if ($this->request->existAndNonEmpty('plugin_docman_metadata_import_group')) {
                     $pm       = ProjectManager::instance();
@@ -791,7 +791,7 @@ class Docman_Controller extends Controler
                 }
                 if (! $ok) {
                     $this->view                              = 'RedirectAfterCrud';
-                    $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
+                    $this->_viewParams['default_url_params'] = ['action' => \Docman_View_Admin_Metadata::IDENTIFIER];
                 }
                 break;
 
@@ -813,14 +813,14 @@ class Docman_Controller extends Controler
                     $this->feedback->log('info', dgettext('tuleap-docman', 'Operation Canceled'));
                 }
                 $this->view                              = 'RedirectAfterCrud';
-                $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
+                $this->_viewParams['default_url_params'] = ['action' => \Docman_View_Admin_Metadata::IDENTIFIER];
                 break;
 
-            case 'admin_obsolete':
+            case \Docman_View_Admin_Obsolete::IDENTIFIER:
                 $this->view = 'Admin_Obsolete';
                 break;
 
-            case 'admin_lock_infos':
+            case \Docman_View_Admin_LockInfos::IDENTIFIER:
                 $this->view = 'Admin_LockInfos';
                 break;
 

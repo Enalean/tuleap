@@ -1370,7 +1370,7 @@ class Docman_Actions extends Actions
             $this->_controler->feedback->log('error', sprintf(dgettext('tuleap-docman', 'An error occurred on "%1$s" deletion'), $name));
         }
         $this->_controler->view                              = 'RedirectAfterCrud';
-        $this->_controler->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
+        $this->_controler->_viewParams['default_url_params'] = ['action' => \Docman_View_Admin_Metadata::IDENTIFIER];
     }
 
     public function admin_create_love()
@@ -1450,13 +1450,13 @@ class Docman_Actions extends Actions
             $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Element successfully updated.'));
 
             $this->_controler->view                              = 'RedirectAfterCrud';
-            $this->_controler->_viewParams['default_url_params'] = ['action' => 'admin_md_details',
+            $this->_controler->_viewParams['default_url_params'] = ['action' => \Docman_View_Admin_MetadataDetails::IDENTIFIER,
                                                                           'md'     => $md->getLabel()];
         } else {
             $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Unable to update element.'));
 
             $this->_controler->view                              = 'RedirectAfterCrud';
-            $this->_controler->_viewParams['default_url_params'] = ['action' => 'admin_display_love',
+            $this->_controler->_viewParams['default_url_params'] = ['action' => \Docman_View_Admin_MetadataDetailsUpdateLove::IDENTIFIER,
                                                                           'md'     => $md->getLabel(),
                                                                           'loveid' => $love->getId()];
         }

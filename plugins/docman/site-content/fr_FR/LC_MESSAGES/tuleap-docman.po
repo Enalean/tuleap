@@ -696,7 +696,7 @@ msgstr "Copie de %s"
 
 #, php-format
 msgid "Copy of %s in %s at version %d."
-msgstr "Copie de %s dans %s à la version %d"
+msgstr "Copie de %s dans %s à la version %d."
 
 msgid "Copy the previous approval table (e.g. for small / typo updates)."
 msgstr "Copier la table précédente (ex. corrections, mise à jour mineure)."
@@ -992,6 +992,9 @@ msgstr "Version du document :"
 
 msgid "Documents"
 msgstr "Documents"
+
+msgid "Documents administration"
+msgstr "Administration des documents"
 
 msgid "Documents found"
 msgstr "Documents trouvés"
@@ -1420,9 +1423,6 @@ msgstr "Gérer les permissions"
 msgid "Manage Properties"
 msgstr "Gérer les propriétés"
 
-msgid "Manage Search Report"
-msgstr "Gérer les rapports de recherche"
-
 msgid "Maximum files size (in Bytes)"
 msgstr "Taille maximum des fichiers  (en Octets)"
 
@@ -1452,9 +1452,6 @@ msgstr "La metadonnée a été mise à jour."
 
 msgid "Modify"
 msgstr "Modifier"
-
-msgid "Modify the scope of the reports."
-msgstr "Modifier la portée des rapports."
 
 msgid "Monitored document"
 msgstr "Document monitoré"

@@ -24,14 +24,25 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_Admin_MetadataDetailsUpdateLove extends Docman_View_Extra
+class Docman_View_Admin_MetadataDetailsUpdateLove extends \Tuleap\Docman\View\Admin\AdminView
 {
-    public function _title($params)
+    public const IDENTIFIER = 'admin_display_love';
+
+    protected function getIdentifier(): string
     {
-        echo '<h2 class="project-header-title">' . $this->_getTitle($params) . ' - ' . sprintf(dgettext('tuleap-docman', 'Update value "%2$s" in "%1$s" property'), $params['md']->getName(), Docman_MetadataHtmlList::_getElementName($params['love'])) . '</h2>';
+        return self::IDENTIFIER;
     }
 
-    public function _content($params)
+    protected function getTitle(array $params): string
+    {
+        return sprintf(
+            dgettext('tuleap-docman', 'Update value "%2$s" in "%1$s" property'),
+            $params['md']->getName(),
+            Docman_MetadataHtmlList::_getElementName($params['love'])
+        );
+    }
+
+    protected function displayContent(array $params): void
     {
         $md   = $params['md'];
         $love = $params['love'];
@@ -56,7 +67,7 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends Docman_View_Extra
 
         $backUrl = DocmanViewURLBuilder::buildUrl(
             $params['default_url'],
-            ['action' => 'admin_md_details',
+            ['action' => \Docman_View_Admin_MetadataDetails::IDENTIFIER,
             'md' => $md->getLabel()]
         );
         $html   .= '<p><a href="' . $backUrl . '">' . dgettext('tuleap-docman', 'Back to property details') . '</a></p>';

@@ -21,16 +21,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_View_Admin_LockInfos extends Docman_View_Extra
+class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView
 {
+    public const IDENTIFIER = 'admin_lock_infos';
     public $defaultUrl;
 
-    public function _title($params)
+    protected function getIdentifier(): string
     {
-        echo '<h2 class="project-header-title">' . $this->_getTitle($params) . ' - ' . dgettext('tuleap-docman', 'Locked Documents') . '</h2>';
+        return self::IDENTIFIER;
     }
 
-    public function _content($params)
+    protected function getTitle(array $params): string
+    {
+        return self::getTabTitle();
+    }
+
+    public static function getTabTitle(): string
+    {
+        return dgettext('tuleap-docman', 'Locked Documents');
+    }
+
+    public static function getTabDescription(): string
+    {
+        return dgettext('tuleap-docman', 'List of locked documents.');
+    }
+
+    protected function displayContent(array $params): void
     {
         $html = '';
 
@@ -44,7 +60,7 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra
         print($html);
     }
 
-    public function getTable($params)
+    private function getTable($params)
     {
         $this->defaultUrl = $params['default_url'];
         $content          = '';

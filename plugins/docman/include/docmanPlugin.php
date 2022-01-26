@@ -1317,7 +1317,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 $this->getPluginPath() . '/?' . http_build_query(
                     [
                         'group_id' => $project->getID(),
-                        'action'   => 'admin_permissions',
+                        'action'   => \Docman_View_Admin_Permissions::IDENTIFIER,
                     ]
                 )
             )

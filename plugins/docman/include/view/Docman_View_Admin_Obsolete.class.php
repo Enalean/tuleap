@@ -24,14 +24,44 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_Admin_Obsolete extends Docman_View_Extra
+class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView
 {
-    public function _title($params)
+    public const IDENTIFIER = 'admin_obsolete';
+
+    protected function getIdentifier(): string
     {
-        echo '<h2 class="project-header-title">' . $this->_getTitle($params) . ' - ' . dgettext('tuleap-docman', 'Manage Obsolete Documents') . '</h2>';
+        return self::IDENTIFIER;
     }
 
-    public function getTable($params)
+    protected function getTitle(array $params): string
+    {
+        return self::getTabTitle();
+    }
+
+    public static function getTabTitle(): string
+    {
+        return dgettext('tuleap-docman', 'Manage Obsolete Documents');
+    }
+
+    public static function getTabDescription(): string
+    {
+        return dgettext('tuleap-docman', 'View and update obsolete documents.');
+    }
+
+    protected function displayContent(array $params): void
+    {
+        $html = '';
+
+        $html .= '<p>';
+        $html .= dgettext('tuleap-docman', 'This is the list of all documents obsolete today. If you click on document title you will be redirected to the document properties and you will be able to make it available again.');
+        $html .= '</p>';
+
+        $html .= $this->getTable($params);
+
+        print $html;
+    }
+
+    private function getTable($params)
     {
         $html = '';
 
@@ -67,7 +97,7 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra
                 $table  .= "<tr class=\"" . $trclass . "\">\n";
 
                 // Name
-                $docmanIcons = $this->_getDocmanIcons($params);
+                $docmanIcons = new Docman_Icons($params['theme_path'] . '/images/ic/');
                 $icon_src    = $docmanIcons->getIconForItem($item, $params);
                 $icon        = '<img src="' . $icon_src . '" class="docman_item_icon" />';
                 $table      .= "<td>";
@@ -101,18 +131,5 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra
         $html = $table;
 
         return $html;
-    }
-
-    public function _content($params)
-    {
-        $html = '';
-
-        $html .= '<p>';
-        $html .= dgettext('tuleap-docman', 'This is the list of all documents obsolete today. If you click on document title you will be redirected to the document properties and you will be able to make it available again.');
-        $html .= '</p>';
-
-        $html .= $this->getTable($params);
-
-        print $html;
     }
 }

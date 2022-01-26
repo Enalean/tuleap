@@ -136,7 +136,7 @@ class PermissionPerGroupDocmanServicePaneBuilder
         return DOCMAN_BASE_URL . "/?" . http_build_query(
             [
                 "group_id" => $event->getProject()->getID(),
-                "action"   => "admin_permissions",
+                "action"   => \Docman_View_Admin_Permissions::IDENTIFIER,
             ]
         );
     }
