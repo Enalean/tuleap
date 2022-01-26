@@ -25,6 +25,7 @@ namespace Tuleap\Docman\REST\v1\Folders;
 
 use Tuleap\Docman\REST\v1\ItemRepresentationCollectionBuilder;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Search\FilePropertiesVisitor;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationTypeVisitor;
 
 final class BuildSearchedItemRepresentationsFromSearchReport
@@ -34,6 +35,8 @@ final class BuildSearchedItemRepresentationsFromSearchReport
         private \UserManager $user_manager,
         private ItemRepresentationCollectionBuilder $item_representation_collection_builder,
         private \Docman_ItemFactory $item_factory,
+        private SearchRepresentationTypeVisitor $type_visitor,
+        private FilePropertiesVisitor $file_properties_visitor,
     ) {
     }
 
@@ -45,8 +48,6 @@ final class BuildSearchedItemRepresentationsFromSearchReport
             $nb_item_found,
             ['api_limit' => $limit, 'api_offset' => $offset, 'filter' => $report, 'user' => $user]
         );
-
-        $type_visitor = new SearchRepresentationTypeVisitor();
 
         $search_results = [];
         foreach ($results as $item) {
@@ -60,7 +61,8 @@ final class BuildSearchedItemRepresentationsFromSearchReport
                 $this->status_mapper->getItemStatusFromItemStatusNumber((int) $item->getStatus()),
                 $owner,
                 $this->item_representation_collection_builder->buildParentRowCollection($item, $user, $limit, $offset),
-                $item->accept($type_visitor)
+                $item->accept($this->type_visitor),
+                $item->accept($this->file_properties_visitor),
             );
         }
 

@@ -27,6 +27,8 @@ use Docman_ItemFactory;
 use Tuleap\Docman\REST\v1\ItemRepresentationCollectionBuilder;
 use Tuleap\Docman\REST\v1\ItemRepresentationVisitor;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Search\FilePropertiesVisitor;
+use Tuleap\Docman\REST\v1\Search\SearchRepresentationTypeVisitor;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -45,6 +47,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
     private $item_factory;
     private BuildSearchedItemRepresentationsFromSearchReport $representation_builder;
     private ItemStatusMapper $status_mapper;
+    private \PHPUnit\Framework\MockObject\MockObject|\Docman_VersionFactory $version_factory;
 
     protected function setUp(): void
     {
@@ -56,11 +59,14 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
         $permissions_manager = $this->createMock(\Docman_PermissionsManager::class);
 
         $this->item_factory           = $this->createMock(Docman_ItemFactory::class);
+        $this->version_factory        = $this->createMock(\Docman_VersionFactory::class);
         $this->representation_builder = new BuildSearchedItemRepresentationsFromSearchReport(
             $this->status_mapper,
             $this->user_manager,
             new ItemRepresentationCollectionBuilder($this->item_factory, $permissions_manager, $this->createMock(ItemRepresentationVisitor::class), $item_dao),
-            $this->item_factory
+            $this->item_factory,
+            new SearchRepresentationTypeVisitor(),
+            new FilePropertiesVisitor($this->version_factory),
         );
     }
 
@@ -90,6 +96,14 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
         ];
         $item_two       = new \Docman_File($item_two_array);
 
+        $this->version_factory
+            ->method('getCurrentVersionForItem')
+            ->willReturn(new \Docman_Version([
+                'number' => 12,
+                'filetype' => 'text/html',
+                'filesize' => 12345,
+            ]));
+
         $this->item_factory->method('getItemList')->willReturn(
             new \ArrayIterator([$item_one, $item_two])
         );
@@ -100,7 +114,9 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
         $this->assertItemEqualsRepresentation($item_one_array, $collection->search_representations[0]);
         $this->assertItemEqualsRepresentation($item_two_array, $collection->search_representations[1]);
         $this->assertEquals("folder", $collection->search_representations[0]->type);
+
         $this->assertEquals("file", $collection->search_representations[1]->type);
+        $this->assertEquals('text/html', $collection->search_representations[1]->file_properties->file_type);
 
         self::assertCount(2, $collection->search_representations);
     }

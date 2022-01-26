@@ -55,6 +55,7 @@ describe("TableBodyResultRow", () => {
                             title: "Folder",
                         },
                     ],
+                    file_properties: null,
                 } as ItemSearchResult,
             },
             mocks: {

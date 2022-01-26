@@ -72,6 +72,7 @@ export interface ItemSearchResult {
         readonly id: number;
         readonly title: string;
     }>;
+    readonly file_properties: FileProperties | null;
 }
 
 export const SEARCH_LIMIT = 50;
