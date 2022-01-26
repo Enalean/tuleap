@@ -58,3 +58,6 @@ export const getLinkFieldFetchErrorMessage = (): string =>
     gettextCatalog.getString("Unable to retrieve the linked artifacts: %s");
 export const getLinkedParentFeedback = (): string =>
     gettextCatalog.getString("The artifact will be linked to %s");
+export const getAddLinkButtonLabel = (): string => gettextCatalog.getString("Add link");
+export const getLinkFieldTableEmptyStateText = (): string =>
+    gettextCatalog.getString("There is no link yet");

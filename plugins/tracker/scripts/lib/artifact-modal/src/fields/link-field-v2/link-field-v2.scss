@@ -17,6 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+$link-table-cell-padding: 8px;
+$link-table-cell-border-bottom: 1px solid var(--tlp-background-color-darker-05);
+$link-table-cell-background: transparent;
+
 .link-field-xref-badge {
     margin: 0 5px 0 0;
 }
@@ -34,17 +38,46 @@
 
     > .link-field-table-body {
         > .link-field-table-row {
-            > :is(.link-field-table-cell-nature, .link-field-table-cell-xref, .link-field-table-cell-status) {
-                padding: 8px;
-                border-bottom: 1px solid var(--tlp-background-color-darker-05);
-                background: transparent;
+            > :is(.link-field-table-cell-type, .link-field-table-cell-xref, .link-field-table-cell-status, .link-field-table-cell-action, .link-field-table-cell-no-links) {
+                padding: $link-table-cell-padding;
+                border-bottom: $link-table-cell-border-bottom;
+                background: $link-table-cell-background;
             }
 
-            > .link-field-table-cell-nature {
+            > .link-field-table-cell-type {
                 padding-right: 0;
+            }
+
+            > .link-field-table-cell-no-links {
+                height: 75px;
+                padding: 0;
             }
         }
     }
+}
+
+.link-field-table-footer-input,
+.link-field-table-footer-add-link,
+.link-field-table-footer-type {
+    padding: $link-table-cell-padding;
+    border-bottom: $link-table-cell-border-bottom;
+    background: $link-table-cell-background;
+}
+
+.link-field-table-footer-input {
+    width: 100%;
+}
+
+.link-field-table-footer-type {
+    padding: $link-table-cell-padding 0 $link-table-cell-padding $link-table-cell-padding;
+
+    &.link-field-table-footer-type-no-padding {
+        padding: 0;
+    }
+}
+
+.link-field-table-footer-add-link {
+    vertical-align: middle;
 }
 
 .link-field-table-row {
@@ -55,6 +88,14 @@
 
 .link-field-skeleton-row:hover {
     background: unset;
+}
+
+.link-field-no-links-row {
+    background: var(--tlp-fade-background-color);
+
+    &:hover {
+        background: var(--tlp-fade-background-color);
+    }
 }
 
 .link-field-table-row-muted {
@@ -73,7 +114,7 @@
     min-width: 65px;
 }
 
-.link-field-table-cell-nature {
+.link-field-table-cell-type {
     color: var(--tlp-dimmed-color);
     font-size: 0.8125rem;
     font-weight: 500;
@@ -89,6 +130,7 @@
     text-align: right;
 }
 
+.link-field-table-cell-action,
 .link-field-artifact-title {
     vertical-align: middle;
 }

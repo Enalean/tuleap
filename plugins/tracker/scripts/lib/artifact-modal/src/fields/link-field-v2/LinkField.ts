@@ -23,6 +23,8 @@ import { sprintf } from "sprintf-js";
 import {
     getLinkFieldUnderConstructionPlaceholder,
     getLinkFieldFetchErrorMessage,
+    getAddLinkButtonLabel,
+    getLinkFieldTableEmptyStateText,
 } from "../../gettext-catalog";
 import { isInCreationMode } from "../../modal-creation-mode-state";
 import { getLinkedArtifacts } from "./links-retriever";
@@ -47,9 +49,7 @@ export type HostElement = LinkField & HTMLElement;
 
 export const getLinksTableClasses = (host: LinkField): MapOfClasses => ({
     "tlp-table": true,
-    "tuleap-artifact-modal-link-field-empty":
-        host.has_loaded_content &&
-        (host.linked_artifacts.length === 0 || host.error_message !== ""),
+    "tuleap-artifact-modal-link-field-empty": host.has_loaded_content && host.error_message !== "",
 });
 
 export const getArtifactsStatusBadgeClasses = (artifact: LinkedArtifact): MapOfClasses => ({
@@ -63,14 +63,33 @@ export const getArtifactTableRowClasses = (artifact: LinkedArtifact): MapOfClass
     "link-field-table-row-muted": artifact.status !== "" && !artifact.is_open,
 });
 
+export const getInputRowNatureCellClasses = (host: LinkField): MapOfClasses => ({
+    "link-field-table-footer-type": true,
+    "link-field-table-footer-type-no-padding": host.linked_artifacts.length === 0,
+});
+
 const formatErrorMessage = (error: Error): string =>
     sprintf(getLinkFieldFetchErrorMessage(), error.message);
+
+export const getEmptyStateIfNeeded = (host: LinkField): UpdateFunction<LinkField> => {
+    if (host.linked_artifacts.length > 0 || !host.has_loaded_content) {
+        return html``;
+    }
+
+    return html`
+        <tr class="link-field-table-row link-field-no-links-row" data-test="link-table-empty-state">
+            <td class="link-field-table-cell-no-links tlp-table-cell-empty" colspan="4">
+                ${getLinkFieldTableEmptyStateText()}
+            </td>
+        </tr>
+    `;
+};
 
 export const getFormattedArtifacts = (host: LinkField): UpdateFunction<LinkField>[] =>
     host.linked_artifacts.map(
         (artifact: LinkedArtifact) => html`
             <tr class="${getArtifactTableRowClasses(artifact)}" data-test="artifact-row">
-                <td class="link-field-table-cell-nature">${artifact.link_type.label}</td>
+                <td class="link-field-table-cell-type">${artifact.link_type.label}</td>
                 <td class="link-field-table-cell-xref">
                     <a
                         href="${artifact.html_url}"
@@ -103,12 +122,15 @@ export const getFormattedArtifacts = (host: LinkField): UpdateFunction<LinkField
                         </span>
                     `}
                 </td>
+                <td class="link-field-table-cell-action"></td>
             </tr>
         `
     );
 
 export const retrieveLinkedArtifacts = (host: LinkField): Promise<void> => {
     if (isInCreationMode()) {
+        host.has_loaded_content = true;
+
         return Promise.resolve();
     }
 
@@ -126,23 +148,35 @@ export const retrieveLinkedArtifacts = (host: LinkField): Promise<void> => {
         });
 };
 
-const buildSkeleton = (): UpdateFunction<LinkField> => html`
-    <tr class="link-field-table-row link-field-skeleton-row">
-        <td class="link-field-table-cell-nature link-field-skeleton-cell">
-            <span class="tlp-skeleton-text"></span>
-        </td>
-        <td class="link-field-table-cell-xref link-field-skeleton-cell">
-            <i
-                class="fas fa-hashtag tlp-skeleton-text-icon tlp-skeleton-icon"
-                aria-hidden="true"
-            ></i>
-            <span class="tlp-skeleton-text"></span>
-        </td>
-        <td class="link-field-table-cell-status link-field-skeleton-cell">
-            <span class="tlp-skeleton-text"></span>
-        </td>
-    </tr>
-`;
+export const getSkeletonIfNeeded = (host: LinkField): UpdateFunction<LinkField> => {
+    if (!host.is_loading) {
+        return html``;
+    }
+
+    return html`
+        <tr
+            class="link-field-table-row link-field-skeleton-row"
+            data-test="link-field-table-skeleton"
+        >
+            <td class="link-field-table-cell-type link-field-skeleton-cell">
+                <span class="tlp-skeleton-text"></span>
+            </td>
+            <td class="link-field-table-cell-xref link-field-skeleton-cell">
+                <i
+                    class="fas fa-hashtag tlp-skeleton-text-icon tlp-skeleton-icon"
+                    aria-hidden="true"
+                ></i>
+                <span class="tlp-skeleton-text"></span>
+            </td>
+            <td class="link-field-table-cell-status link-field-skeleton-cell">
+                <span class="tlp-skeleton-text"></span>
+            </td>
+            <td class="link-field-table-cell-status link-field-table-cell-action">
+                <span class="tlp-skeleton-text"></span>
+            </td>
+        </tr>
+    `;
+};
 
 export const LinkField = define<LinkField>({
     tag: "tuleap-artifact-modal-link-field-v2",
@@ -160,28 +194,7 @@ export const LinkField = define<LinkField>({
         set: (host, value = []) => [...value],
     },
     content: (host) => html`
-        <div class="tlp-form-element">
-            <label for="${"tracker_field_" + host.fieldId}" class="tlp-label">${host.label}</label>
-            <input
-                id="${"tracker_field_" + host.fieldId}"
-                type="text"
-                class="tlp-input"
-                placeholder="${getLinkFieldUnderConstructionPlaceholder()}"
-                disabled
-            />
-        </div>
-        ${!isInCreationMode() &&
-        html`
-            <table
-                id="tuleap-artifact-modal-link-table"
-                class="${getLinksTableClasses(host)}"
-                data-test="linked-artifacts-table"
-            >
-                <tbody class="link-field-table-body">
-                    ${getFormattedArtifacts(host)} ${host.is_loading && buildSkeleton()}
-                </tbody>
-            </table>
-        `}
+        <label for="${"tracker_field_" + host.fieldId}" class="tlp-label">${host.label}</label>
         ${host.error_message !== "" &&
         html`
             <div
@@ -192,5 +205,33 @@ export const LinkField = define<LinkField>({
                 ${host.error_message}
             </div>
         `}
+        <table
+            id="tuleap-artifact-modal-link-table"
+            class="${getLinksTableClasses(host)}"
+            data-test="linked-artifacts-table"
+        >
+            <tbody class="link-field-table-body">
+                ${getFormattedArtifacts(host)} ${getSkeletonIfNeeded(host)}
+                ${getEmptyStateIfNeeded(host)}
+            </tbody>
+            <tfoot class="link-field-table-footer">
+                <tr class="link-field-table-row">
+                    <td class="${getInputRowNatureCellClasses(host)}"></td>
+                    <td class="link-field-table-footer-input" colspan="2">
+                        <input
+                            id="${"tracker_field_" + host.fieldId}"
+                            type="text"
+                            class="tlp-input tlp-input-small"
+                            placeholder="${getLinkFieldUnderConstructionPlaceholder()}"
+                        />
+                    </td>
+                    <td class="link-field-table-footer-add-link">
+                        <button type="button" class="tlp-button-small tlp-button-primary" disabled>
+                            ${getAddLinkButtonLabel()}
+                        </button>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
     `,
 });
