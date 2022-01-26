@@ -6,19 +6,6 @@
 let
   tuleapVersion = builtins.readFile ../../../VERSION;
   tuleapGitBinBasePath = "/usr/lib/tuleap/git";
-  # We wrap the git binary to override some default absolute paths set at build time
-  # You can find details about those environment variables here:
-  # * https://git-scm.com/book/en/v2/Git-Internals-Environment-Variables
-  # * https://git-scm.com/docs/git-init#_template_directory
-  wrapperGitWithTuleapOptions = pkgs.writeTextFile {
-    name = "git";
-    executable = true;
-    text = ''#! /usr/bin/bash -e
-    export GIT_EXEC_PATH='${tuleapGitBinBasePath}/libexec/git-core'
-    export GIT_TEMPLATE_DIR='${tuleapGitBinBasePath}/share/git-core/templates/'
-    exec -a "$0" "${tuleapGitBinBasePath}/bin/.git-base" "$@"
-    '';
-  };
   gitStatic = (pkgs.pkgsStatic.gitMinimal.overrideAttrs (oldAttrs: rec {
     version = "2.34.1";
     src = pkgs.fetchurl {
@@ -28,10 +15,16 @@ let
 
     dontPatchShebangs = true;
 
-    postInstall = oldAttrs.postInstall or "" + ''
-      mv $out/bin/{git,.git-base}
-      cp ${wrapperGitWithTuleapOptions} $out/bin/git
-    '';
+    makeFlags = oldAttrs.makeFlags or [] ++ [ "prefix=${tuleapGitBinBasePath}" ];
+
+    installFlags = oldAttrs.installFlags or [] ++ [ "DESTDIR=$(out)" ];
+
+    # Disable the postInstall of the nixpkgs Git package
+    # https://github.com/NixOS/nixpkgs/blob/555ff75b3e2ec8cff0598baa6def6cd88f380a8e/pkgs/applications/version-management/git-and-tools/git/default.nix#L154-L270
+    # Its role is to rewrite the installed scripts so they can find utilities like grep/cut/wc in the Nix store and to
+    # deploy additional helpers like shell completions files. It is not something we need for our context and it cannot
+    # work without modification because it expects to find files under $out and not under $out/$tuleapGitBinBasePath.
+    postInstall = "";
   })).override { openssh = "/usr"; };
 in pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-git-bin";

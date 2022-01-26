@@ -20,9 +20,9 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %install
 mkdir -p %{buildroot}%{tuleap_git_base_path}/share/
-cp -a %{git_static_path}/bin %{buildroot}%{tuleap_git_base_path}/
-cp -a %{git_static_path}/libexec %{buildroot}%{tuleap_git_base_path}/
-cp -a %{git_static_path}/share/git-core %{buildroot}%{tuleap_git_base_path}/share/
+cp -a %{git_static_path}/%{tuleap_git_base_path}/bin %{buildroot}%{tuleap_git_base_path}/
+cp -a %{git_static_path}/%{tuleap_git_base_path}/libexec %{buildroot}%{tuleap_git_base_path}/
+cp -a %{git_static_path}/%{tuleap_git_base_path}/share/git-core %{buildroot}%{tuleap_git_base_path}/share/
 
 %clean
 
