@@ -51,6 +51,8 @@ import { ParentRetriever } from "./domain/parent/ParentRetriever";
 import { TuleapAPIClient } from "./adapters/REST/TuleapAPIClient";
 import { CreationModeVerifier } from "./adapters/Memory/CreationModeVerifier";
 import { ModalFeedbackController } from "./adapters/UI/feedback/ModalFeedbackController";
+import { LinkFieldController } from "./adapters/UI/fields/link-field-v2/LinkFieldController";
+import { LinksRetriever } from "./domain/fields/link-field-v2/LinksRetriever";
 
 export default ArtifactModalController;
 
@@ -80,6 +82,9 @@ function ArtifactModalController(
     let confirm_action_to_edit = false;
     const concurrency_error_code = 412;
 
+    const api_client = TuleapAPIClient();
+    const mode_verifier = CreationModeVerifier();
+
     Object.assign(self, {
         $onInit: init,
         artifact_id: modal_model.artifact_id,
@@ -103,8 +108,13 @@ function ArtifactModalController(
             body: "",
             format: modal_model.text_fields_format,
         },
+        link_field_controller: LinkFieldController(
+            LinksRetriever(api_client, api_client),
+            mode_verifier,
+            modal_model.artifact_id
+        ),
         feedback_controller: ModalFeedbackController(
-            ParentRetriever(TuleapAPIClient(), CreationModeVerifier()),
+            ParentRetriever(api_client, mode_verifier),
             modal_model.parent_artifact_id
         ),
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
