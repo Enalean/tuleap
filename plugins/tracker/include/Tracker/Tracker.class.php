@@ -3261,7 +3261,10 @@ class Tracker implements Tracker_Dispatchable_Interface
             new Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater(),
             new Tracker_XML_Updater_FieldChange_FieldChangeOpenListXMLUpdater(),
             new FieldChangeComputedXMLUpdater(),
-            new Tracker_XML_Updater_FieldChange_FieldChangeUnknownXMLUpdater()
+            new Tracker_XML_Updater_FieldChange_FieldChangeUnknownXMLUpdater(),
+            new \Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeExternalFieldXMLUpdater(
+                EventManager::instance()
+            )
         );
 
         return new Tracker_XML_Updater_ChangesetXMLUpdater(

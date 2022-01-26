@@ -48,6 +48,7 @@ use Tuleap\TestManagement\FirstConfigCreator;
 use Tuleap\TestManagement\Heartbeat\HeartbeatArtifactTrackerExcluder;
 use Tuleap\TestManagement\Heartbeat\LatestHeartbeatsCollector;
 use Tuleap\TestManagement\LegacyRoutingController;
+use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionSubmittedValuesTransformator;
 use Tuleap\TestManagement\Type\TypeCoveredByOverrider;
 use Tuleap\TestManagement\Type\TypeCoveredByPresenter;
 use Tuleap\TestManagement\REST\ResourcesInjector;
@@ -62,6 +63,7 @@ use Tuleap\TestManagement\TrackerComesFromLegacyEngineException;
 use Tuleap\TestManagement\TrackerNotCreatedException;
 use Tuleap\TestManagement\XML\Exporter;
 use Tuleap\TestManagement\XML\ImportXMLFromTracker;
+use Tuleap\TestManagement\XML\StepXMLExporter;
 use Tuleap\TestManagement\XML\TrackerArtifactXMLImportXMLImportFieldStrategySteps;
 use Tuleap\TestManagement\XML\TrackerXMLExporterChangesetValueStepDefinitionXMLExporter;
 use Tuleap\TestManagement\XML\XMLImport;
@@ -80,6 +82,8 @@ use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
@@ -89,6 +93,7 @@ use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\GetExternalExporter;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
+use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeExternalFieldXMLUpdateEvent;
 use Tuleap\User\History\HistoryQuickLink;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -136,7 +141,6 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
             $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_TYPES);
 
-
             $this->addHook(ImportXMLProjectTrackerDone::NAME);
             $this->addHook(GetEditableTypesInProject::NAME);
             $this->addHook(ArtifactLinkTypeCanBeUnused::NAME);
@@ -152,6 +156,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $this->addHook(ExcludeTrackersFromArtifactHeartbeats::NAME);
             $this->addHook(HeartbeatsEntryCollection::NAME);
             $this->addHook(DisplayingTrackerEvent::NAME);
+            $this->addHook(FieldChangeExternalFieldXMLUpdateEvent::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -591,7 +596,9 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     {
         $changeset_value = $get_external_exporter->getChangesetValue();
         if ($changeset_value instanceof StepDefinitionChangesetValue) {
-            $get_external_exporter->addExporter(new TrackerXMLExporterChangesetValueStepDefinitionXMLExporter(new XML_SimpleXMLCDATAFactory()));
+            $get_external_exporter->addExporter(
+                $this->getTrackerXMLExporterChangesetValueStepDefinitionXMLExporter()
+            );
         }
     }
 
@@ -952,6 +959,37 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $GLOBALS['HTML']->addFeedback(
             Feedback::WARN,
             dgettext('tuleap-testmanagement', 'This tracker is a technical base for Test Management. Changing configuration (fields, workflow, ...) should be avoided because it may leads to inconsistencies.'),
+        );
+    }
+
+    public function fieldChangeExternalFieldXMLUpdateEvent(FieldChangeExternalFieldXMLUpdateEvent $event): void
+    {
+        $xml_element = $event->getFieldChangeXML();
+        if ((string) $xml_element['type'] !== StepDefinition::TYPE) {
+            return;
+        }
+
+        $steps = (new StepDefinitionSubmittedValuesTransformator(new FileURLSubstitutor()))
+            ->transformSubmittedValuesIntoArrayOfStructuredSteps($event->getSubmittedValue(), new CreatedFileURLMapping());
+
+        //We will rebuild all the <step> children, so we have to remove the existing ones.
+        unset($xml_element->step);
+        foreach ($steps as $step) {
+            $this->getStepXMLExporter()->exportStepInFieldChange($step, $xml_element);
+        }
+    }
+
+    private function getTrackerXMLExporterChangesetValueStepDefinitionXMLExporter(): TrackerXMLExporterChangesetValueStepDefinitionXMLExporter
+    {
+        return new TrackerXMLExporterChangesetValueStepDefinitionXMLExporter(
+            $this->getStepXMLExporter()
+        );
+    }
+
+    private function getStepXMLExporter(): StepXMLExporter
+    {
+        return new StepXMLExporter(
+            new XML_SimpleXMLCDATAFactory()
         );
     }
 }
