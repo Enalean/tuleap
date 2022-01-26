@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import EventBus from "../../../helpers/event-bus.js";
+import emitter from "../../../helpers/emitter";
 export default {
     name: "UpdateProperties",
     props: {
@@ -40,7 +40,7 @@ export default {
     },
     methods: {
         showUpdateModal() {
-            EventBus.$emit("show-update-item-metadata-modal", {
+            emitter.emit("show-update-item-metadata-modal", {
                 detail: { current_item: this.item },
             });
         },

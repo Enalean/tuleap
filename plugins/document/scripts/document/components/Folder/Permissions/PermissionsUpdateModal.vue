@@ -64,10 +64,10 @@ import { sprintf } from "sprintf-js";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
-import EventBus from "../../../helpers/event-bus.js";
 import PermissionsForGroupsSelector from "./PermissionsForGroupsSelector.vue";
 import { handleErrors } from "../../../store/actions-helpers/handle-errors";
 import PermissionsUpdateFolderSubItems from "./PermissionsUpdateFolderSubItems.vue";
+import emitter from "../../../helpers/emitter";
 
 export default {
     name: "PermissionsUpdateModal",
@@ -118,12 +118,12 @@ export default {
     },
     mounted() {
         this.modal = createModal(this.$el);
-        EventBus.$on("show-update-permissions-modal", this.show);
+        emitter.on("show-update-permissions-modal", this.show);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
         this.show();
     },
     beforeDestroy() {
-        EventBus.$off("show-update-permissions-modal", this.show);
+        emitter.off("show-update-permissions-modal", this.show);
         this.modal.removeEventListener("tlp-modal-hidden", this.reset);
     },
     methods: {

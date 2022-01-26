@@ -40,7 +40,7 @@
 <script>
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
 import DropDownQuickLook from "../DropDown/DropDownQuickLook.vue";
-import EventBus from "../../../helpers/event-bus.js";
+import emitter from "../../../helpers/emitter";
 
 export default {
     components: { QuickLookDeleteButton, DropDownQuickLook },
@@ -54,7 +54,7 @@ export default {
     },
     methods: {
         showNewFolderModal() {
-            EventBus.$emit("show-new-folder-modal", { detail: { parent: this.item } });
+            emitter.emit("show-new-folder-modal", { detail: { parent: this.item } });
         },
     },
 };

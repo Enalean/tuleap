@@ -22,7 +22,9 @@ import localVue from "../../../helpers/local-vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import NewFolderSecondaryAction from "./NewFolderSecondaryAction.vue";
 import { TYPE_FOLDER } from "../../../constants";
-import EventBus from "../../../helpers/event-bus.js";
+import emitter from "../../../helpers/emitter";
+
+jest.mock("../../../helpers/emitter");
 
 describe("NewFolderSecondaryAction", () => {
     let document_action_button_factory, store;
@@ -55,11 +57,10 @@ describe("NewFolderSecondaryAction", () => {
     });
     it(`Click on folder open the corresponding modal`, () => {
         const item = { type: TYPE_FOLDER, user_can_write: true };
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = document_action_button_factory({ item });
 
         wrapper.get("[data-test=document-new-folder-creation-button]").trigger("click");
-        expect(event_bus_emit).toHaveBeenCalledWith("show-new-folder-modal", {
+        expect(emitter.emit).toHaveBeenCalledWith("show-new-folder-modal", {
             detail: { parent: item },
         });
     });

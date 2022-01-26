@@ -24,8 +24,8 @@ import localVue from "../../../helpers/local-vue";
 import NewFolderModal from "./NewFolderModal.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 
-import EventBus from "../../../helpers/event-bus.js";
 import * as tlp from "tlp";
+import emitter from "../../../helpers/emitter";
 
 jest.mock("tlp");
 
@@ -94,7 +94,7 @@ describe("NewFolderModal", () => {
 
         const wrapper = factory();
 
-        EventBus.$emit("show-new-document-modal", {
+        emitter.emit("show-new-document-modal", {
             detail: { parent: store.state.current_folder },
         });
         await wrapper.vm.$nextTick().then(() => {});
@@ -120,7 +120,7 @@ describe("NewFolderModal", () => {
 
         const wrapper = factory();
 
-        EventBus.$emit("show-new-folder-modal", {
+        emitter.emit("show-new-folder-modal", {
             detail: { parent: store.state.current_folder },
         });
         expect(wrapper.vm.item.metadata).toEqual(folder_to_create.metadata);

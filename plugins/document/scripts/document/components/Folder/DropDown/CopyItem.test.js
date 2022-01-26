@@ -21,7 +21,9 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import CopyItem from "./CopyItem.vue";
-import EventBus from "../../../helpers/event-bus.js";
+import emitter from "../../../helpers/emitter";
+
+jest.mock("../../../helpers/emitter");
 
 describe("CopyItem", () => {
     let store, copy_item_factory;
@@ -35,19 +37,20 @@ describe("CopyItem", () => {
                 mocks: { $store: store },
             });
         };
+
+        emitter.emit.mockClear();
     });
 
     it(`Given item is copied
         Then the store is updated accordingly
         And the menu closed`, () => {
         const item = { id: 147, type: "item_type", title: "My item" };
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = copy_item_factory({ item });
 
         wrapper.trigger("click");
 
         expect(store.commit).toHaveBeenCalledWith("clipboard/copyItem", item);
-        expect(event_bus_emit).toHaveBeenCalledWith("hide-action-menu");
+        expect(emitter.emit).toHaveBeenCalledWith("hide-action-menu");
     });
 
     it(`Given an item is being pasted
@@ -55,7 +58,6 @@ describe("CopyItem", () => {
         And the menu is not closed if the user tries to click on it`, () => {
         const item = { id: 147, type: "item_type", title: "My item" };
         store.state.clipboard.pasting_in_progress = true;
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = copy_item_factory({ item });
 
         expect(wrapper.attributes().disabled).toBeTruthy();
@@ -63,6 +65,6 @@ describe("CopyItem", () => {
 
         wrapper.trigger("click");
 
-        expect(event_bus_emit).not.toHaveBeenCalled();
+        expect(emitter.emit).not.toHaveBeenCalled();
     });
 });

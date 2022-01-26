@@ -59,8 +59,8 @@ import {
     transformCustomMetadataForItemUpdate,
     transformFolderMetadataForRecursionAtUpdate,
 } from "../../../helpers/metadata-helpers/update-data-transformatter-helper";
-import EventBus from "../../../helpers/event-bus.js";
 import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper";
+import emitter from "../../../helpers/emitter";
 
 export default {
     name: "UpdateFolderMetadataModal",
@@ -110,14 +110,14 @@ export default {
         this.show();
     },
     created() {
-        EventBus.$on("metadata-recursion-metadata-list", this.setMetadataListUpdate);
-        EventBus.$on("metadata-recursion-option", this.setRecursionOption);
-        EventBus.$on("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
+        emitter.on("metadata-recursion-metadata-list", this.setMetadataListUpdate);
+        emitter.on("metadata-recursion-option", this.setRecursionOption);
+        emitter.on("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
     },
     beforeDestroy() {
-        EventBus.$off("metadata-recursion-metadata-list", this.show);
-        EventBus.$off("metadata-recursion-option", this.show);
-        EventBus.$off("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
+        emitter.off("metadata-recursion-metadata-list", this.show);
+        emitter.off("metadata-recursion-option", this.show);
+        emitter.off("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
     },
     methods: {
         show() {

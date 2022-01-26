@@ -33,7 +33,8 @@
 </template>
 
 <script>
-import EventBus from "../../../helpers/event-bus.js";
+import emitter from "../../../helpers/emitter";
+
 export default {
     name: "UpdatePermissions",
     props: {
@@ -41,7 +42,7 @@ export default {
     },
     methods: {
         showUpdateModal() {
-            EventBus.$emit("show-update-permissions-modal", {
+            emitter.emit("show-update-permissions-modal", {
                 detail: { current_item: this.item },
             });
         },

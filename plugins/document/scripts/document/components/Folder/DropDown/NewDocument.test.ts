@@ -23,7 +23,7 @@ import localVue from "../../../helpers/local-vue";
 import NewDocument from "./NewDocument.vue";
 import { TYPE_FOLDER } from "../../../constants";
 import type { Item } from "../../../type";
-import mitt from "../../../helpers/emitter";
+import emitter from "../../../helpers/emitter";
 
 jest.mock("../../../helpers/emitter");
 
@@ -61,6 +61,6 @@ describe("NewDocument", () => {
 
         const wrapper = createWrapper(item);
         wrapper.get("[data-test=document-new-item]").trigger("click");
-        expect(mitt.emit).toHaveBeenCalledWith("createItem", { item: item });
+        expect(emitter.emit).toHaveBeenCalledWith("createItem", { item: item });
     });
 });

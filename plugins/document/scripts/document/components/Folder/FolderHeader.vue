@@ -96,7 +96,6 @@ import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
 import NewItemModal from "./ModalNewItem/NewItemModal.vue";
 import NewFolderModal from "./ModalNewItem/NewFolderModal.vue";
 import FolderHeaderAction from "./FolderHeaderAction.vue";
-import EventBus from "../../helpers/event-bus.js";
 import { isFolder } from "../../helpers/type-check-helper";
 import emitter from "../../helpers/emitter";
 
@@ -167,26 +166,26 @@ export default {
     created() {
         emitter.on("deleteItem", this.showDeleteItemModal);
         emitter.on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
-        EventBus.$on("show-update-item-metadata-modal", this.showUpdateItemMetadataModal);
-        EventBus.$on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
-        EventBus.$on(
+        emitter.on("show-update-item-metadata-modal", this.showUpdateItemMetadataModal);
+        emitter.on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
+        emitter.on(
             "show-max-archive-size-threshold-exceeded-modal",
             this.showMaxArchiveSizeThresholdExceededErrorModal
         );
-        EventBus.$on("show-archive-size-warning-modal", this.showArchiveSizeWarningModal);
-        EventBus.$on("show-changelog-modal", this.showChangelogModal);
+        emitter.on("show-archive-size-warning-modal", this.showArchiveSizeWarningModal);
+        emitter.on("show-changelog-modal", this.showChangelogModal);
     },
     beforeDestroy() {
         emitter.off("deleteItem", this.showDeleteItemModal);
         emitter.off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
-        EventBus.$off("show-update-item-metadata-modal", this.showUpdateItemMetadataModal);
-        EventBus.$off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
-        EventBus.$off(
+        emitter.off("show-update-item-metadata-modal", this.showUpdateItemMetadataModal);
+        emitter.off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
+        emitter.off(
             "show-max-archive-size-threshold-exceeded-modal",
             this.showMaxArchiveSizeThresholdExceededErrorModal
         );
-        EventBus.$off("show-archive-size-warning-modal", this.showArchiveSizeWarningModal);
-        EventBus.$off("show-changelog-modal", this.showChangelogModal);
+        emitter.off("show-archive-size-warning-modal", this.showArchiveSizeWarningModal);
+        emitter.off("show-changelog-modal", this.showChangelogModal);
     },
     methods: {
         showCreateNewItemVersionModal(event) {

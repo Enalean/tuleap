@@ -23,7 +23,7 @@ import CreateNewItemVersionButton from "./NewItemVersionButton.vue";
 
 import localVue from "../../../helpers/local-vue";
 import type { Embedded, Empty, Item, ItemFile, Link, Wiki } from "../../../type";
-import mitt from "../../../helpers/emitter";
+import emitter from "../../../helpers/emitter";
 
 jest.mock("../../../helpers/emitter");
 
@@ -58,7 +58,7 @@ describe("CreateNewItemVersionButton", () => {
 
         wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
 
-        expect(mitt.emit).not.toHaveBeenCalled();
+        expect(emitter.emit).not.toHaveBeenCalled();
     });
 
     it(`Given item is a file
@@ -74,7 +74,7 @@ describe("CreateNewItemVersionButton", () => {
 
         wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
 
-        expect(mitt.emit).toHaveBeenCalledWith(
+        expect(emitter.emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
             expect.any(Object)
         );
@@ -93,7 +93,7 @@ describe("CreateNewItemVersionButton", () => {
 
         wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
 
-        expect(mitt.emit).toHaveBeenCalledWith(
+        expect(emitter.emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
             expect.any(Object)
         );
@@ -113,7 +113,7 @@ describe("CreateNewItemVersionButton", () => {
 
         wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
 
-        expect(mitt.emit).toHaveBeenCalledWith(
+        expect(emitter.emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
             expect.any(Object)
         );
@@ -132,7 +132,7 @@ describe("CreateNewItemVersionButton", () => {
 
         wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
 
-        expect(mitt.emit).toHaveBeenCalledWith(
+        expect(emitter.emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
             expect.any(Object)
         );

@@ -36,8 +36,8 @@
 import { mapGetters, mapState } from "vuex";
 import CurrentFolderDropZone from "./CurrentFolderDropZone.vue";
 import { highlightItem } from "../../../helpers/highlight-items-helper";
-import EventBus from "./../../../helpers/event-bus.js";
 import { isFile, isFolder } from "../../../helpers/type-check-helper";
+import emitter from "../../../helpers/emitter";
 
 export default {
     components: { CurrentFolderDropZone },
@@ -338,7 +338,7 @@ export default {
 
             try {
                 if (this.is_changelog_proposed_after_dnd || approval_table !== null) {
-                    EventBus.$emit("show-changelog-modal", {
+                    emitter.emit("show-changelog-modal", {
                         detail: {
                             updated_file: dropzone_item,
                             dropped_file: file,

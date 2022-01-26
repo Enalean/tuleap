@@ -58,7 +58,7 @@
 
 <script>
 import { mapState } from "vuex";
-import EventBus from "../../../../helpers/event-bus.js";
+import emitter from "../../../../helpers/emitter";
 
 export default {
     name: "CustomMetadataListMultipleValue",
@@ -86,7 +86,7 @@ export default {
     },
     methods: {
         updateMultipleMetadataListValue() {
-            EventBus.$emit("update-multiple-metadata-list-value", {
+            emitter.emit("update-multiple-metadata-list-value", {
                 detail: {
                     value: this.multiple_list_values,
                     id: this.currentlyUpdatedItemMetadata.short_name,

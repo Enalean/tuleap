@@ -25,7 +25,7 @@ import { createStoreMock } from "../../../../../../../src/scripts/vue-components
 
 import * as tlp from "tlp";
 import * as handle_errors from "../../../store/actions-helpers/handle-errors";
-import EventBus from "../../../helpers/event-bus.js";
+import emitter from "../../../helpers/emitter";
 
 jest.mock("tlp");
 
@@ -121,7 +121,7 @@ describe("PermissionsUpdateModal", () => {
         const wrapper = factory({ item: item_to_update });
         await wrapper.vm.$nextTick();
         wrapper.vm.reset();
-        EventBus.$emit("show-update-permissions-modal");
+        emitter.emit("show-update-permissions-modal");
 
         expect(store.dispatch).toHaveBeenCalledTimes(2);
     });

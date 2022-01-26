@@ -21,12 +21,18 @@ import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import localVue from "../../../../helpers/local-vue";
 import DownloadFolderAsZip from "./DownloadFolderAsZip.vue";
-import EventBus from "../../../../helpers/event-bus.js";
 import * as location_helper from "../../../../helpers/location-helper";
 import Vue from "vue";
+import emitter from "../../../../helpers/emitter";
+
+jest.mock("../../../../helpers/emitter");
 
 describe("DownloadFolderAsZip", () => {
     let store;
+
+    beforeEach(() => {
+        emitter.emit.mockClear();
+    });
 
     function getWrapper(max_archive_size = 1) {
         const state = {
@@ -53,7 +59,6 @@ describe("DownloadFolderAsZip", () => {
 
     it("Opens the modal when the folder size exceeds the max_archive_size threshold", async () => {
         const wrapper = getWrapper();
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
         jest.spyOn(store, "dispatch").mockReturnValue(
             Promise.resolve({
@@ -69,7 +74,7 @@ describe("DownloadFolderAsZip", () => {
             id: 10,
             type: "folder",
         });
-        expect(event_bus_emit).toHaveBeenCalledWith(
+        expect(emitter.emit).toHaveBeenCalledWith(
             "show-max-archive-size-threshold-exceeded-modal",
             {
                 detail: { current_folder_size: 2000000 },
@@ -79,7 +84,6 @@ describe("DownloadFolderAsZip", () => {
 
     it("Opens the warning modal when the size exceeds the warning_threshold", async () => {
         const wrapper = getWrapper();
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
         jest.spyOn(store, "dispatch").mockReturnValue(
             Promise.resolve({
@@ -96,7 +100,7 @@ describe("DownloadFolderAsZip", () => {
             id: 10,
             type: "folder",
         });
-        expect(event_bus_emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
+        expect(emitter.emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
             detail: {
                 current_folder_size: 600000,
                 should_warn_osx_user: false,
@@ -109,7 +113,6 @@ describe("DownloadFolderAsZip", () => {
     it("Opens the warning modal when user is on OSX and archive size exceeds or equals 4GB", async () => {
         const four_GB = 4 * Math.pow(10, 9);
         const wrapper = getWrapper(2 * four_GB);
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const navigator = window.navigator;
 
         delete window.navigator;
@@ -133,7 +136,7 @@ describe("DownloadFolderAsZip", () => {
             id: 10,
             type: "folder",
         });
-        expect(event_bus_emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
+        expect(emitter.emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
             detail: {
                 current_folder_size: four_GB,
                 should_warn_osx_user: true,
@@ -147,7 +150,6 @@ describe("DownloadFolderAsZip", () => {
 
     it("Opens the warning modal when user is on OSX and archive size contains more than 64k files", async () => {
         const wrapper = getWrapper();
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const navigator = window.navigator;
 
         delete window.navigator;
@@ -171,7 +173,7 @@ describe("DownloadFolderAsZip", () => {
             id: 10,
             type: "folder",
         });
-        expect(event_bus_emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
+        expect(emitter.emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
             detail: {
                 current_folder_size: 600000,
                 should_warn_osx_user: true,
@@ -186,7 +188,6 @@ describe("DownloadFolderAsZip", () => {
         so that people can't just skip the max threshold modal`, async () => {
         const redirect = jest.spyOn(location_helper, "redirectToUrl").mockImplementation(() => {});
         const wrapper = getWrapper();
-        const eventBusEmit = jest.spyOn(EventBus, "$emit");
         jest.spyOn(store, "dispatch").mockResolvedValue({
             total_size: 10000,
         });
@@ -197,7 +198,7 @@ describe("DownloadFolderAsZip", () => {
             id: 10,
             type: "folder",
         });
-        expect(eventBusEmit).not.toHaveBeenCalled();
+        expect(emitter.emit).not.toHaveBeenCalled();
         expect(redirect).toHaveBeenCalledWith(
             "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip"
         );

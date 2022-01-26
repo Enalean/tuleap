@@ -23,7 +23,9 @@ import { createStoreMock } from "../../../../../../../src/scripts/vue-components
 import { TYPE_FILE, TYPE_FOLDER } from "../../../constants";
 
 import Handler from "./DragNDropHandler.vue";
-import EventBus from "../../../helpers/event-bus.js";
+import emitter from "../../../helpers/emitter";
+
+jest.mock("../../../helpers/emitter");
 
 describe("DragNDropHandler", () => {
     let main, store, component_options, store_options, drop_event;
@@ -345,7 +347,6 @@ describe("DragNDropHandler", () => {
         it("Should open the changelog modal when user uploads a new version item with approval table", async () => {
             const wrapper = getWrapper();
             drop_event.dataTransfer.files.push(file1);
-            const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
             const target_file = {
                 id: 123,
@@ -371,7 +372,7 @@ describe("DragNDropHandler", () => {
             expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile");
             expect(store.dispatch).not.toHaveBeenCalledWith("createNewFileVersion");
 
-            expect(event_bus_emit).toHaveBeenCalledWith("show-changelog-modal", {
+            expect(emitter.emit).toHaveBeenCalledWith("show-changelog-modal", {
                 detail: {
                     updated_file: target_file,
                     dropped_file: file1,
@@ -411,7 +412,6 @@ describe("DragNDropHandler", () => {
 
         it("Should open the changelog modal when user uploads a new version and option is enabled", async () => {
             const wrapper = getWrapper(true);
-            const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
             drop_event.dataTransfer.files.push(file1);
 
@@ -442,7 +442,7 @@ describe("DragNDropHandler", () => {
                 file1,
             ]);
 
-            expect(event_bus_emit).toHaveBeenCalledWith("show-changelog-modal", {
+            expect(emitter.emit).toHaveBeenCalledWith("show-changelog-modal", {
                 detail: {
                     updated_file: target_file,
                     dropped_file: file1,

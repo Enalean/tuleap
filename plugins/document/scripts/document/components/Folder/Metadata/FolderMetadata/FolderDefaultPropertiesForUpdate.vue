@@ -88,9 +88,9 @@
 <script>
 import { mapState } from "vuex";
 import StatusMetadataWithCustomBindingForFolderUpdate from "./StatusMetadataWithCustomBindingForFolderUpdate.vue";
-import EventBus from "../../../../helpers/event-bus.js";
 import CustomMetadataComponentTypeRenderer from "../CustomMetadata/CustomMetadataComponentTypeRenderer.vue";
 import RecursionOptions from "./RecursionOptions.vue";
+import emitter from "../../../../helpers/emitter";
 
 export default {
     name: "FolderDefaultPropertiesForUpdate",
@@ -132,7 +132,7 @@ export default {
     },
     methods: {
         updateMetadataListWithRecursion() {
-            EventBus.$emit("metadata-recursion-metadata-list", {
+            emitter.emit("metadata-recursion-metadata-list", {
                 detail: { metadata_list: this.metadata_list_to_update },
             });
         },
@@ -150,7 +150,7 @@ export default {
                 this.$refs.status_input.checked = false;
             }
             this.updateMetadataListWithRecursion();
-            EventBus.$emit("metadata-recursion-option", {
+            emitter.emit("metadata-recursion-option", {
                 detail: { recursion_option: this.recursion },
             });
         },

@@ -112,7 +112,6 @@ import {
     isItemUploadingInTreeView,
     isItemInTreeViewWithoutUpload,
 } from "../../helpers/uploading-status-helper";
-import EventBus from "../../helpers/event-bus.js";
 import UserBadge from "../User/UserBadge.vue";
 import QuickLookButton from "./ActionsQuickLookButton/QuickLookButton.vue";
 import UploadProgressBar from "./ProgressBar/UploadProgressBar.vue";
@@ -243,7 +242,7 @@ export default {
         },
     },
     mounted() {
-        EventBus.$on("set-dropdown-shown", this.setIsDropdownDisplayed);
+        emitter.on("set-dropdown-shown", this.setIsDropdownDisplayed);
         if (!(this.item.created || this.item.is_uploading)) {
             return;
         }
@@ -256,7 +255,7 @@ export default {
         const is_under_the_fold = position_from_top > viewport_height;
 
         if (is_under_the_fold) {
-            EventBus.$emit("item-has-been-created-under-the-fold", {
+            emitter.emit("item-has-been-created-under-the-fold", {
                 detail: { item: this.item },
             });
         }

@@ -23,7 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import type { Item } from "../../../type";
 import localVue from "../../../helpers/local-vue";
-import mitt from "../../../helpers/emitter";
+import emitter from "../../../helpers/emitter";
 
 jest.mock("../../../helpers/emitter");
 
@@ -63,7 +63,7 @@ describe("DeleteItem", () => {
         const wrapper = createWrapper(true, true);
         wrapper.get("[data-test=document-delete-item]").trigger("click");
 
-        expect(mitt.emit).toHaveBeenCalledWith("deleteItem", {
+        expect(emitter.emit).toHaveBeenCalledWith("deleteItem", {
             item: {
                 id: 1,
                 user_can_write: true,

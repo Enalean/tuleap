@@ -20,9 +20,10 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import DropDownButton from "./DropDownButton.vue";
-import EventBus from "../../../helpers/event-bus.js";
 import * as tlp from "tlp";
+import emitter from "../../../helpers/emitter";
 
+jest.mock("../../../helpers/emitter");
 jest.mock("tlp");
 
 describe("DropDownButton", () => {
@@ -104,8 +105,6 @@ describe("DropDownButton", () => {
             isInLargeMode: true,
         });
 
-        const event_bus_off = jest.spyOn(EventBus, "$off");
-
         wrapper.destroy();
 
         expect(fake_dropdown_object.addEventListener).toHaveBeenCalledTimes(2);
@@ -114,6 +113,6 @@ describe("DropDownButton", () => {
         expect(fake_dropdown_object.removeEventListener).toHaveBeenCalledTimes(2);
         expect(document.removeEventListener).toHaveBeenCalledTimes(1);
 
-        expect(event_bus_off).toHaveBeenCalledWith("hide-action-menu", expect.any(Function));
+        expect(emitter.off).toHaveBeenCalledWith("hide-action-menu", expect.any(Function));
     });
 });

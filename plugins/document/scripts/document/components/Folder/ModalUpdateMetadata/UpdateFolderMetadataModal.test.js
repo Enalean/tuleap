@@ -23,8 +23,8 @@ import localVue from "../../../helpers/local-vue";
 
 import UpdateFolderMetadataModal from "./UpdateFolderMetadataModal.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-import EventBus from "../../../helpers/event-bus.js";
 import * as tlp from "tlp";
+import emitter from "../../../helpers/emitter";
 
 jest.mock("tlp");
 
@@ -95,7 +95,7 @@ describe("UpdateFolderMetadataModal", () => {
             };
 
             const wrapper = factory({ item });
-            EventBus.$emit("metadata-recursion-metadata-list", {
+            emitter.emit("metadata-recursion-metadata-list", {
                 detail: { metadata_list: ["field_1"] },
             });
 
@@ -119,7 +119,7 @@ describe("UpdateFolderMetadataModal", () => {
             };
 
             const wrapper = factory({ item });
-            EventBus.$emit("metadata-recursion-option", {
+            emitter.emit("metadata-recursion-option", {
                 detail: { recursion_option: "all_items" },
             });
 
