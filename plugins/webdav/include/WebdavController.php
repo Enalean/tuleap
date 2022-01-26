@@ -41,13 +41,13 @@ final class WebdavController implements DispatchableWithRequestNoAuthz
         'TRACE',
         'OPTIONS',
         'CONNECT',
-        'PATH',
+        'PATCH',
         'COPY',
         'LOCK',
         'MKCOL',
         'MOVE',
         'PROPFIND',
-        'PROPATCH',
+        'PROPPATCH',
         'UNLOCK',
     ];
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,29 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace Tuleap\Request;
+namespace FastRoute;
 
-use FastRoute;
-
-class CollectRoutesEvent
+/**
+ * @psalm-type HTTPMethod = 'GET'|'HEAD'|'POST'|'PUT'|'DELETE'|'CONNECT'|'OPTIONS'|'TRACE'|'PATCH'|'COPY'|'LOCK'|'UNLOCK'|'MKCOL'|'MOVE'|'PROPFIND'|'PROPPATCH'
+ */
+class RouteCollector
 {
-    public const NAME = 'collectRoutesEvent';
-
     /**
-     * @var FastRoute\RouteCollector
+     * @param HTTPMethod|HTTPMethod[] $httpMethod
      */
-    private $route_collector;
-
-    public function __construct(FastRoute\RouteCollector $route_collector)
+    public function addRoute($httpMethod, string $route, mixed $handler): void
     {
-        $this->route_collector = $route_collector;
-    }
-
-    public function getRouteCollector(): FastRoute\RouteCollector
-    {
-        return $this->route_collector;
     }
 }
