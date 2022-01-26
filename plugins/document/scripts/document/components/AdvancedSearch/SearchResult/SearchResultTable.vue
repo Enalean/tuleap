@@ -24,6 +24,7 @@
             <thead>
                 <tr>
                     <th class="tlp-table-cell-numeric" v-translate>Id</th>
+                    <th class="document-search-result-icon"></th>
                     <th v-translate>Title</th>
                     <th v-translate>Description</th>
                     <th v-translate>Owner</th>

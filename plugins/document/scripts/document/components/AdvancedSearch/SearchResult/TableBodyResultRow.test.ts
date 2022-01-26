@@ -36,6 +36,7 @@ describe("TableBodyResultRow", () => {
             propsData: {
                 item: {
                     id: 123,
+                    type: "folder",
                     title: "Lorem",
                     post_processed_description: "ipsum doloret",
                     owner,

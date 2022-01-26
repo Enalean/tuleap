@@ -20,7 +20,12 @@
 
 <template>
     <tr>
-        <td class="tlp-table-cell-numeric">{{ item.id }}</td>
+        <td class="tlp-table-cell-numeric">
+            {{ item.id }}
+        </td>
+        <td class="document-search-result-icon">
+            <i class="fa fa-fw" v-bind:class="icon_classes" aria-hidden="true"></i>
+        </td>
         <td>{{ item.title }}</td>
         <td v-dompurify-html="item.post_processed_description"></td>
         <td>
@@ -50,6 +55,18 @@ import {
     relativeDatePlacement,
     relativeDatePreference,
 } from "@tuleap/core/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
+import {
+    ICON_EMBEDDED,
+    ICON_EMPTY,
+    ICON_FOLDER_ICON,
+    ICON_LINK,
+    ICON_WIKI,
+    TYPE_EMBEDDED,
+    TYPE_FILE,
+    TYPE_FOLDER,
+    TYPE_LINK,
+    TYPE_WIKI,
+} from "../../../constants";
 
 const configuration = namespace("configuration");
 
@@ -86,6 +103,22 @@ export default class TableBodyResultRow extends Vue {
 
     get location(): string {
         return this.item.parents.map((parent) => parent.title).join("/");
+    }
+
+    get icon_classes(): string {
+        switch (this.item.type) {
+            case TYPE_FILE:
+            case TYPE_EMBEDDED:
+                return ICON_EMBEDDED;
+            case TYPE_FOLDER:
+                return ICON_FOLDER_ICON;
+            case TYPE_LINK:
+                return ICON_LINK;
+            case TYPE_WIKI:
+                return ICON_WIKI;
+            default:
+                return ICON_EMPTY;
+        }
     }
 }
 </script>

@@ -99,6 +99,8 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
 
         $this->assertItemEqualsRepresentation($item_one_array, $collection->search_representations[0]);
         $this->assertItemEqualsRepresentation($item_two_array, $collection->search_representations[1]);
+        $this->assertEquals("folder", $collection->search_representations[0]->type);
+        $this->assertEquals("file", $collection->search_representations[1]->type);
 
         self::assertCount(2, $collection->search_representations);
     }

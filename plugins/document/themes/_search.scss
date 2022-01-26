@@ -30,6 +30,14 @@
     margin: var(--tlp-small-spacing) 0 0;
 }
 
+/* stylelint-disable selector-no-qualifying-type */
+.tlp-table > tbody > tr > th.document-search-result-icon,
+.tlp-table > tbody > tr > td.document-search-result-icon {
+    width: 1px;
+    padding-right: 0;
+}
+/* stylelint-enable selector-no-qualifying-type */
+
 .global-search-label {
     display: flex;
 }

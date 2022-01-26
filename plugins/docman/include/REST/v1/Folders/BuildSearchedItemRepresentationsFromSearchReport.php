@@ -25,6 +25,7 @@ namespace Tuleap\Docman\REST\v1\Folders;
 
 use Tuleap\Docman\REST\v1\ItemRepresentationCollectionBuilder;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Search\SearchRepresentationTypeVisitor;
 
 final class BuildSearchedItemRepresentationsFromSearchReport
 {
@@ -45,6 +46,8 @@ final class BuildSearchedItemRepresentationsFromSearchReport
             ['api_limit' => $limit, 'api_offset' => $offset, 'filter' => $report, 'user' => $user]
         );
 
+        $type_visitor = new SearchRepresentationTypeVisitor();
+
         $search_results = [];
         foreach ($results as $item) {
             assert($item instanceof \Docman_Item);
@@ -56,7 +59,8 @@ final class BuildSearchedItemRepresentationsFromSearchReport
                 \Codendi_HTMLPurifier::instance(),
                 $this->status_mapper->getItemStatusFromItemStatusNumber((int) $item->getStatus()),
                 $owner,
-                $this->item_representation_collection_builder->buildParentRowCollection($item, $user, $limit, $offset)
+                $this->item_representation_collection_builder->buildParentRowCollection($item, $user, $limit, $offset),
+                $item->accept($type_visitor)
             );
         }
 

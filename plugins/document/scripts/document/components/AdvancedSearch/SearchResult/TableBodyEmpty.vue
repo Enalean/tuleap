@@ -21,7 +21,7 @@
 <template>
     <tbody>
         <tr>
-            <td colspan="6" class="tlp-table-cell-empty" v-translate>No matching results</td>
+            <td colspan="7" class="tlp-table-cell-empty" v-translate>No matching results</td>
         </tr>
     </tbody>
 </template>
