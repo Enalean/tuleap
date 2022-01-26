@@ -17,23 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { buildEmpty, buildFromArtifact } from "./ParentFeedbackPresenter";
-import type { Artifact } from "../Artifact";
+import type { Artifact } from "../../../domain/Artifact";
 
-describe(`ParentFeedbackPresenter`, () => {
-    it(`builds an empty Presenter`, () => {
-        const presenter = buildEmpty();
-        expect(presenter.parent_artifact).toBeNull();
-    });
+export interface ParentFeedbackPresenter {
+    readonly parent_artifact: Artifact | null;
+}
 
-    it(`builds a presenter from a parent artifact`, () => {
-        const parent_artifact = { id: 50 } as Artifact;
-        const presenter = buildFromArtifact(parent_artifact);
-        expect(presenter.parent_artifact).toBe(parent_artifact);
-    });
+export const buildEmpty = (): ParentFeedbackPresenter => ({ parent_artifact: null });
 
-    it(`builds a presenter without parent artifact`, () => {
-        const presenter = buildFromArtifact(null);
-        expect(presenter.parent_artifact).toBeNull();
-    });
+export const buildFromArtifact = (parent_artifact: Artifact | null): ParentFeedbackPresenter => ({
+    parent_artifact,
 });

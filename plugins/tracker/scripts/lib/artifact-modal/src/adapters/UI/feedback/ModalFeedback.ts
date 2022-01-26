@@ -18,15 +18,15 @@
  */
 
 import { define, html } from "hybrids";
-import { getLinkedParentFeedback } from "../../gettext-catalog";
+import { getLinkedParentFeedback } from "../../../gettext-catalog";
 import { sprintf } from "sprintf-js";
-import type { ParentFeedbackPresenter } from "../../domain/parent/ParentFeedbackPresenter";
-import type { ControlParentFeedback } from "../../domain/parent/ControlParentFeedback";
-import { buildEmpty } from "../../domain/parent/ParentFeedbackPresenter";
+import type { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
+import type { ModalFeedbackController } from "./ModalFeedbackController";
+import { buildEmpty } from "./ParentFeedbackPresenter";
 
 export interface ModalFeedback {
     presenter: ParentFeedbackPresenter;
-    readonly controller: ControlParentFeedback | undefined;
+    readonly controller: ModalFeedbackController | undefined;
     content(): HTMLElement;
 }
 export type HostElement = ModalFeedback & HTMLElement;
@@ -34,7 +34,7 @@ export type HostElement = ModalFeedback & HTMLElement;
 export const ModalFeedback = define<ModalFeedback>({
     tag: "modal-feedback",
     controller: {
-        set(host, controller: ControlParentFeedback) {
+        set(host, controller: ModalFeedbackController) {
             controller.displayParentFeedback().then((presenter) => (host.presenter = presenter));
         },
     },

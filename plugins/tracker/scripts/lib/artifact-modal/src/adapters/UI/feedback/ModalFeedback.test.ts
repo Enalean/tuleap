@@ -19,9 +19,9 @@
 
 import type { HostElement } from "./ModalFeedback";
 import { ModalFeedback } from "./ModalFeedback";
-import { setCatalog } from "../../gettext-catalog";
-import type { ParentFeedbackPresenter } from "../../domain/parent/ParentFeedbackPresenter";
-import { buildEmpty, buildFromArtifact } from "../../domain/parent/ParentFeedbackPresenter";
+import { setCatalog } from "../../../gettext-catalog";
+import type { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
+import { buildEmpty, buildFromArtifact } from "./ParentFeedbackPresenter";
 
 const PARENT_ID = 86;
 const PARENT_TITLE = "foreclaw";
