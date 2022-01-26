@@ -33,35 +33,30 @@
         </button>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { namespace, State } from "vuex-class";
+<script setup lang="ts">
+import { useState } from "vuex-composition-helpers";
 import type { Campaign } from "../../type";
+import { computed } from "@vue/composition-api";
 
-const campaign = namespace("campaign");
+defineProps<{
+    showCreateModal: () => void;
+}>();
 
-@Component
-export default class ListOfCampaignsHeader extends Vue {
-    @State
-    readonly user_can_create_campaign!: boolean;
+const { user_can_create_campaign } = useState<{ user_can_create_campaign: boolean }>([
+    "user_can_create_campaign",
+]);
+const { has_loading_error, campaigns } = useState<{
+    has_loading_error: boolean;
+    campaigns: Campaign[];
+}>("campaign", ["has_loading_error", "campaigns"]);
 
-    @campaign.State
-    readonly is_loading!: boolean;
+const should_button_be_displayed = computed(
+    (): boolean =>
+        !has_loading_error.value && campaigns.value.length > 0 && user_can_create_campaign.value
+);
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
 
-    @campaign.State
-    readonly has_loading_error!: boolean;
-
-    @campaign.State
-    readonly campaigns!: Campaign[];
-
-    @Prop({ required: true })
-    readonly showCreateModal!: () => void;
-
-    get should_button_be_displayed(): boolean {
-        return (
-            !this.has_loading_error && this.campaigns.length > 0 && this.user_can_create_campaign
-        );
-    }
-}
+export default defineComponent({});
 </script>

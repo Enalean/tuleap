@@ -22,9 +22,11 @@ import type { Vue } from "vue/types/vue";
 import Vuex from "vuex";
 import { createLocalVue } from "@vue/test-utils";
 import { initVueGettext } from "../../../../../../src/scripts/tuleap/gettext/vue-gettext-init";
+import VueCompositionAPI from "@vue/composition-api";
 
 export async function createTestPlanLocalVue(): Promise<typeof Vue> {
     const local_vue = createLocalVue();
+    local_vue.use(VueCompositionAPI);
     await initVueGettext(local_vue, () => {
         throw new Error("Fallback to default");
     });
