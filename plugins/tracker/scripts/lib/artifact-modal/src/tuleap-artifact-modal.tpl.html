@@ -358,6 +358,11 @@
         <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{ Close | translate }}">&times;</button>
     </div>
 
+    <modal-feedback
+        controller="modal.parent_feedback_controller"
+        ce-one-way
+    ></modal-feedback>
+
     <div class="tlp-modal-body tuleap-artifact-modal-body">
         <div class="tuleap-artifact-modal-artifact">
             <div class="tuleap-artifact-modal-show-hide-fieldsets" ng-if="modal.hasHiddenFieldsets()">
@@ -379,9 +384,6 @@
             </div>
             <div class="tlp-alert-danger" ng-if="modal.hasRestError()">
                 {{ 'Error:' | translate }} {{ modal.getRestErrorMessage() }}
-            </div>
-            <div class="tlp-alert-info" ng-if="modal.isNewParentAlertShown()" translate>
-                The artifact will be linked to {{ modal.parent.title }}.
             </div>
             <ng-include src="field.template_url" ng-repeat="field in modal.ordered_fields"></ng-include>
         </div>

@@ -258,5 +258,24 @@ module.exports = {
                 "vue/prop-name-casing": ["error", "snake_case"],
             },
         },
+        {
+            // Prevent imports from Domain to the outside world
+            files: ["plugins/tracker/scripts/lib/artifact-modal/src/**/*.ts"],
+            rules: {
+                "import/no-restricted-paths": [
+                    "error",
+                    {
+                        zones: [
+                            {
+                                target: "plugins/tracker/scripts/lib/artifact-modal/src/domain/",
+                                from: "plugins/tracker/scripts/lib/artifact-modal/src/",
+                                except: ["domain"],
+                                message: "Domain should not depend on the outside world",
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
     ],
 };

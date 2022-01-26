@@ -56,3 +56,5 @@ export const getLinkFieldUnderConstructionPlaceholder = (): string =>
     gettextCatalog.getString("Field under implementation, please come back later");
 export const getLinkFieldFetchErrorMessage = (): string =>
     gettextCatalog.getString("Unable to retrieve the linked artifacts: %s");
+export const getLinkedParentFeedback = (): string =>
+    gettextCatalog.getString("The artifact will be linked to %s");
