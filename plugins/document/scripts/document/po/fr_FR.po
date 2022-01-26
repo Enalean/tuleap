@@ -28,6 +28,9 @@ msgstr ""
 "%{ lock_owner_name }</a>. Vous ne pouvez pas téléverser de nouvelle version "
 "tant que le verrou n'a pas été levé."
 
+msgid "%{ from } – %{ to } of %{ total }"
+msgstr "%{ from } – %{ to } sur %{ total }"
+
 msgid "*lorem => finishing by \"lorem\""
 msgstr "*lorem => finissant par \"lorem\""
 
@@ -119,6 +122,9 @@ msgstr "Approuvé"
 
 msgid "Archive size warning threshold reached"
 msgstr "Seuil d'avertissement de taille d'archive atteint"
+
+msgid "Begin"
+msgstr "Début"
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -252,6 +258,9 @@ msgstr "Embarqué"
 
 msgid "Empty"
 msgstr "Vide"
+
+msgid "End"
+msgstr "Fin"
 
 msgid "File"
 msgstr "Fichier"
@@ -388,6 +397,9 @@ msgstr "Nouveau dossier"
 msgid "New version for \"%s\""
 msgstr "Nouvelle version de \"%s\""
 
+msgid "Next"
+msgstr "Suivant"
+
 msgid "No matching results"
 msgstr "Il n'y a aucun résultat"
 
@@ -489,6 +501,9 @@ msgstr "Merci de bien vouloir recommencer."
 
 msgid "Please write something meaningful for the admin."
 msgstr "Veuillez soumettre un message pertinent afin d'aider l'administrateur."
+
+msgid "Previous"
+msgstr "Précédent"
 
 msgid "Project documentation"
 msgstr "Documentation du projet"

@@ -54,6 +54,13 @@ export interface GettextProvider {
     $pgettext: (context: string, msgid: string) => string;
 }
 
+export interface SearchResult {
+    readonly from: number;
+    readonly to: number;
+    readonly total: number;
+    readonly items: ReadonlyArray<ItemSearchResult>;
+}
+
 export interface ItemSearchResult {
     readonly id: number;
     readonly title: string;
@@ -65,6 +72,8 @@ export interface ItemSearchResult {
         readonly title: string;
     }>;
 }
+
+export const SEARCH_LIMIT = 50;
 
 export interface Item {
     id: number;
