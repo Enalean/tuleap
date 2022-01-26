@@ -37,7 +37,7 @@
                 {{ formatted_full_date }}
             </tlp-relative-date>
         </td>
-        <td><span class="tlp-skeleton-text"></span></td>
+        <td data-test="location">{{ location }}</td>
     </tr>
 </template>
 <script lang="ts">
@@ -82,6 +82,10 @@ export default class TableBodyResultRow extends Vue {
 
     get relative_date_placement(): string {
         return relativeDatePlacement(this.relative_dates_display, "top");
+    }
+
+    get location(): string {
+        return this.item.parents.map((parent) => parent.title).join("/");
     }
 }
 </script>

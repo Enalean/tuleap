@@ -60,6 +60,10 @@ export interface ItemSearchResult {
     readonly post_processed_description: string;
     readonly owner: User;
     readonly last_update_date: string;
+    readonly parents: ReadonlyArray<{
+        readonly id: number;
+        readonly title: string;
+    }>;
 }
 
 export interface Item {
