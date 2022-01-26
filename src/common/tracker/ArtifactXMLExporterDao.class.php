@@ -44,7 +44,7 @@ class ArtifactXMLExporterDao extends DataAccessObject
 
         $sql = "SELECT
                     h.artifact_history_id AS id,
-                    f.data_type, 
+                    f.data_type,
                     f.display_type,
                     f.value_function,
                     h.field_name,
@@ -164,11 +164,15 @@ class ArtifactXMLExporterDao extends DataAccessObject
 
     public function searchFieldValues($artifact_id)
     {
+        $standard_field_names = $this->da->quoteSmartImplode(',', ArtifactField::STANDARD_FIELD_NAME);
+
         $sql = "SELECT f.display_type, f.data_type, f.field_name, f.value_function, fv.*
                 FROM artifact_field_value fv
                     JOIN artifact         a  ON (a.artifact_id = fv.artifact_id)
                     JOIN artifact_field   f  ON (f.field_id = fv.field_id AND f.group_artifact_id = a.group_artifact_id)
-                WHERE fv.artifact_id = $artifact_id";
+                WHERE fv.artifact_id = $artifact_id
+                    AND f.field_name NOT IN ($standard_field_names)
+                ";
         return $this->retrieve($sql);
     }
 

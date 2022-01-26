@@ -22,6 +22,17 @@
 // The artifact field object
 class ArtifactField
 {
+    public const STANDARD_FIELD_NAME = [
+        "artifact_id",
+        "status_id",
+        "submitted_by",
+        "open_date",
+        "close_date",
+        "summary",
+        "details",
+        "severity",
+        "last_update_date",
+    ];
 
     // The field id
     public $field_id;
@@ -548,20 +559,11 @@ class ArtifactField
      */
     public function isStandardField()
     {
-        switch ($this->field_name) {
-            case "artifact_id":
-            case "status_id":
-            case "submitted_by":
-            case "open_date":
-            case "close_date":
-            case "summary":
-            case "details":
-            case "severity":
-            case "last_update_date":
-                return true;
-            default:
-                return false;
-        }
+        return in_array(
+            $this->field_name,
+            self::STANDARD_FIELD_NAME,
+            true
+        );
     }
 
      /**
