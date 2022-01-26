@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\User;
+namespace Tuleap\OAuth2ServerCore\User;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Tuleap\ForgeConfigSandbox;
@@ -28,8 +28,8 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\OAuth2Server\OAuth2TestScope;
-use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectEmailScope;
-use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectProfileScope;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectEmailScope;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\OAuth2\ResourceServer\GrantedAuthorization;
 use Tuleap\User\OAuth2\ResourceServer\OAuth2ResourceServerMiddleware;

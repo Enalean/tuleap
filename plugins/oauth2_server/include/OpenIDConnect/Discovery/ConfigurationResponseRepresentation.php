@@ -24,7 +24,7 @@ namespace Tuleap\OAuth2Server\OpenIDConnect\Discovery;
 
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointController;
-use Tuleap\OAuth2Server\OpenIDConnect\Issuer;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Issuer;
 
 /**
  * @see https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfigurationResponse

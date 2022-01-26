@@ -58,6 +58,7 @@ use Tuleap\Admin\ProjectWidgetsConfigurationDisplayController;
 use Tuleap\Admin\ProjectWidgetsConfigurationPOSTDisableController;
 use Tuleap\Admin\ProjectWidgetsConfigurationPOSTEnableController;
 use Tuleap\admin\SiteContentCustomisationController;
+use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Config\ConfigDao;
 use Tuleap\ContentSecurityPolicy\CSPViolationReportToController;
 use Tuleap\Core\RSS\News\LatestNewsController;
@@ -82,6 +83,8 @@ use Tuleap\HelpDropdown\HelpMenuOpenedController;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
+use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
+use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminController;
@@ -103,6 +106,7 @@ use Tuleap\Markdown\CommonMarkInterpreterController;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\News\NewsDao;
 use Tuleap\News\PermissionsPerGroup;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OAuth2SignInScope;
 use Tuleap\Password\Administration\PasswordPolicyDisplayController;
 use Tuleap\Password\Administration\PasswordPolicyUpdateController;
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
@@ -169,6 +173,8 @@ use Tuleap\User\Account\UpdatePasswordController;
 use Tuleap\User\Account\UpdateSessionPreferencesController;
 use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Account\UserWellKnownChangePasswordController;
+use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
+use Tuleap\User\OAuth2\BearerTokenHeaderParser;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\AvatarGenerator;
 use Tuleap\User\Profile\ProfileAsJSONForTooltipController;
@@ -183,6 +189,8 @@ use UGroupManager;
 use URLVerification;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
+use User_LoginManager;
+use User_PasswordExpirationChecker;
 
 class RouteCollector
 {
@@ -905,6 +913,35 @@ class RouteCollector
         );
     }
 
+    public static function routeOAuth2UserInfoEndpoint(): \Tuleap\OAuth2ServerCore\User\UserInfoController
+    {
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        $stream_factory   = HTTPFactoryBuilder::streamFactory();
+        $password_handler = \PasswordHandlerFactory::getPasswordHandler();
+        $event_manager    = EventManager::instance();
+
+        return new \Tuleap\OAuth2ServerCore\User\UserInfoController(
+            new JSONResponseBuilder($response_factory, $stream_factory),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware('oauth2_server_core'),
+            new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
+            new \Tuleap\User\OAuth2\ResourceServer\OAuth2ResourceServerMiddleware(
+                $response_factory,
+                new BearerTokenHeaderParser(),
+                new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
+                $event_manager,
+                OAuth2SignInScope::fromItself(),
+                new User_LoginManager(
+                    $event_manager,
+                    \UserManager::instance(),
+                    new \Tuleap\User\PasswordVerifier($password_handler),
+                    new User_PasswordExpirationChecker(),
+                    $password_handler
+                )
+            )
+        );
+    }
+
     public function collect(FastRoute\RouteCollector $r)
     {
         $r->get('/', [self::class, 'getSlash']);
@@ -1058,6 +1095,13 @@ class RouteCollector
             $r->get('/approval', [self::class, 'getProjectRegistrationController']);
             $r->post('/{project_id:\d+}/interpret-commonmark', [self::class, 'getInterpretedCommonmark']);
         });
+
+        $r->addGroup(
+            '/oauth2',
+            function (FastRoute\RouteCollector $r): void {
+                $r->addRoute(['GET', 'POST'], '/userinfo', [self::class, 'routeOAuth2UserInfoEndpoint']);
+            }
+        );
 
         $collect_routes = new CollectRoutesEvent($r);
         $this->event_manager->processEvent($collect_routes);

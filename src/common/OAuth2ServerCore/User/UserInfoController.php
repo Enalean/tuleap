@@ -20,15 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\User;
+namespace Tuleap\OAuth2ServerCore\User;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\JSONResponseBuilder;
-use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectEmailScope;
-use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectProfileScope;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectEmailScope;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\User\OAuth2\ResourceServer\GrantedAuthorization;

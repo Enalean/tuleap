@@ -402,6 +402,16 @@ msgstr "Journal des accès"
 msgid "Access to the REST API"
 msgstr "Accès à l'API REST"
 
+msgid "Access to your email address"
+msgstr "Accès à votre adresse e-mail"
+
+msgid ""
+"Access to your user profile. Includes access to your real name, avatar "
+"picture, language and timezone."
+msgstr ""
+"Accès à votre profil utilisateur. Inclus l'accès à votre nom complet, "
+"image d'avatar, langue et fuseau horaire."
+
 msgid "Accesses from less than %s might not be visible"
 msgstr "Les accès d'il y a moins de %s peuvent ne pas apparaître"
 
@@ -550,6 +560,11 @@ msgstr ""
 
 msgid "Allow for all projects"
 msgstr "Autoriser pour tous les projets"
+
+msgid "Allow to connect to apps and services using your account"
+msgstr ""
+"Autoriser à se connecter à des applications et services à l'aide de votre "
+"compte"
 
 msgid "Allow to write informations for users on your dashboards using Markdown"
 msgstr "Permet d'écrire des informations en Markdown sur les dashboards"
@@ -1350,6 +1365,9 @@ msgstr "E-mail"
 #, php-format
 msgid "Email %s is not valid"
 msgstr "L'email %s n'est valide"
+
+msgid "Email address"
+msgstr "Adresse e-mail"
 
 msgid "Email format preference successfully updated"
 msgstr "La préférence de format de courriel a été mise à jour"
@@ -3259,6 +3277,9 @@ msgstr "Voir le format"
 msgid "Show project announcement"
 msgstr "Afficher l'annonce du projet"
 
+msgid "Sign you in"
+msgstr "Se connecter"
+
 msgid "Site administration"
 msgstr "Administration du site"
 
@@ -4179,6 +4200,9 @@ msgstr "Nom d'utilisateur"
 
 msgid "User preferences successfully updated"
 msgstr "Les préférences utilisateur ont été mises à jour"
+
+msgid "User profile"
+msgstr "Profil utilisateur"
 
 msgid "User status"
 msgstr "Statut de l'utilisateur"

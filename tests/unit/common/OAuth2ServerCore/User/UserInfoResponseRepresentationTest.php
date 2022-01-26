@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\User;
+namespace Tuleap\OAuth2ServerCore\User;
 
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;

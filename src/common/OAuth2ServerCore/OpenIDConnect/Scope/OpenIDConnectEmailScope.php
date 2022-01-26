@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\OpenIDConnect\Scope;
+namespace Tuleap\OAuth2ServerCore\OpenIDConnect\Scope;
 
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
@@ -32,7 +32,7 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
  *
  * @implements AuthenticationScope<OAuth2ScopeIdentifier>
  */
-class OpenIDConnectEmailScope implements AuthenticationScope
+final class OpenIDConnectEmailScope implements AuthenticationScope
 {
     // See https://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims
     private const IDENTIFIER_KEY = 'email';

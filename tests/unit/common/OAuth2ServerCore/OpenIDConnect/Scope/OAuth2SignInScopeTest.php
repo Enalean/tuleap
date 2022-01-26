@@ -20,15 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OpenIDConnectClient\Scope;
+namespace Tuleap\OAuth2ServerCore\OpenIDConnect\Scope;
 
 use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
-use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 
-final class OpenIDConnectProfileScopeTest extends AuthenticationScopeTestCase
+final class OAuth2SignInScopeTest extends AuthenticationScopeTestCase
 {
     public function getAuthenticationScopeClassname(): string
     {
-        return OpenIDConnectProfileScope::class;
+        return OAuth2SignInScope::class;
     }
 }

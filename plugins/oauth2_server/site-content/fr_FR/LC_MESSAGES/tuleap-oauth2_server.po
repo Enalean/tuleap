@@ -21,16 +21,6 @@ msgstr "%s souhaite se connecter à votre compte Tuleap."
 msgid "Access has been revoked."
 msgstr "L'accès a été révoqué."
 
-msgid "Access to your email address"
-msgstr "Accès à votre adresse e-mail"
-
-msgid ""
-"Access to your user profile. Includes access to your real name, avatar "
-"picture, language and timezone."
-msgstr ""
-"Accès à votre profil utilisateur. Inclus l'accès à votre nom complet, image "
-"d'avatar, langue et fuseau horaire."
-
 msgid "Add an App"
 msgstr "Ajouter une App"
 
@@ -40,11 +30,6 @@ msgid ""
 msgstr ""
 "Autoriser l'application à accéder aux ressources en votre nom pendant une "
 "période prolongée même lorsque vous êtes déconnecté"
-
-msgid "Allow to connect to apps and services using your account"
-msgstr ""
-"Autoriser à se connecter à des applications et services à l'aide de votre "
-"compte"
 
 msgid "App"
 msgstr "App"
@@ -94,9 +79,6 @@ msgstr "Éditer"
 
 msgid "Edit an App"
 msgstr "Éditer une App"
-
-msgid "Email address"
-msgstr "Adresse e-mail"
 
 msgid "Force PKCE usage?"
 msgstr "Force l'utilisation de PKCE ?"
@@ -161,9 +143,6 @@ msgstr "Révoquer l'autorisation"
 msgid "Scopes"
 msgstr "Portées"
 
-msgid "Sign you in"
-msgstr "Se connecter"
-
 msgid "The App has been successfully deleted."
 msgstr "L'App a correctement été supprimée."
 
@@ -179,9 +158,6 @@ msgid ""
 msgstr ""
 "Voici une liste des apps OAuth2 auxquelles vous avez autorisé l'accès à "
 "Tuleap en votre nom."
-
-msgid "User profile"
-msgstr "Profil utilisateur"
 
 msgid "You did not authorize any OAuth2 App yet."
 msgstr "Vous n'avez pas encore autorisé d'app OAuth2."

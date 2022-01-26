@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2\ResourceServer;
 
-use Tuleap\OAuth2Server\OpenIDConnect\Scope\OAuth2SignInScope;
-use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectEmailScope;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OAuth2SignInScope;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectEmailScope;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class GrantedAuthorizationTest extends \Tuleap\Test\PHPUnit\TestCase

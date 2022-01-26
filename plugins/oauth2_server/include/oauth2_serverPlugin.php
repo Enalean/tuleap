@@ -77,9 +77,9 @@ use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectIDTokenCreator;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectSigningKeyDAO;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectSigningKeyFactory;
 use Tuleap\OAuth2Server\OpenIDConnect\JWK\JWKSDocumentEndpointController;
-use Tuleap\OAuth2Server\OpenIDConnect\Scope\OAuth2SignInScope;
-use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectEmailScope;
-use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectProfileScope;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OAuth2SignInScope;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectEmailScope;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2OfflineAccessScope;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenCreator;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenDAO;
@@ -104,7 +104,6 @@ use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Account\PasswordUserPostUpdateEvent;
 use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
 use Tuleap\User\OAuth2\AccessToken\VerifyOAuth2AccessTokenEvent;
-use Tuleap\User\OAuth2\BearerTokenHeaderParser;
 use Tuleap\User\OAuth2\Scope\CoreOAuth2ScopeBuilderFactory;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
 
@@ -235,7 +234,6 @@ final class oauth2_serverPlugin extends Plugin
                 );
                 $r->post('/token', $this->getRouteHandler('routeAccessTokenCreation'));
                 $r->post('/token/revoke', $this->getRouteHandler('routeTokenRevocation'));
-                $r->addRoute(['GET', 'POST'], '/userinfo', $this->getRouteHandler('routeUserInfoEndpoint'));
                 $r->get('/jwks', $this->getRouteHandler('routeJWKSDocument'));
             }
         );
@@ -702,34 +700,6 @@ final class oauth2_serverPlugin extends Plugin
             ),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION)
-        );
-    }
-
-    public function routeUserInfoEndpoint(): DispatchableWithRequest
-    {
-        $response_factory = HTTPFactoryBuilder::responseFactory();
-        $stream_factory   = HTTPFactoryBuilder::streamFactory();
-        $password_handler = \PasswordHandlerFactory::getPasswordHandler();
-        $event_manager    = EventManager::instance();
-        return new Tuleap\OAuth2Server\User\UserInfoController(
-            new JSONResponseBuilder($response_factory, $stream_factory),
-            new SapiEmitter(),
-            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
-            new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
-            new \Tuleap\User\OAuth2\ResourceServer\OAuth2ResourceServerMiddleware(
-                $response_factory,
-                new BearerTokenHeaderParser(),
-                new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
-                $event_manager,
-                OAuth2SignInScope::fromItself(),
-                new User_LoginManager(
-                    $event_manager,
-                    UserManager::instance(),
-                    new \Tuleap\User\PasswordVerifier($password_handler),
-                    new User_PasswordExpirationChecker(),
-                    $password_handler
-                )
-            )
         );
     }
 

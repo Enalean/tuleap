@@ -20,10 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\User;
+namespace Tuleap\OAuth2ServerCore\User;
 
 use Tuleap\language\LanguageTagFormatter;
-use Tuleap\OAuth2Server\OpenIDConnect\Issuer;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Issuer;
 
 /**
  * @see https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse
