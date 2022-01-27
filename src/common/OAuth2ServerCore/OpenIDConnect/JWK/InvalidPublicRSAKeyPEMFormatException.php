@@ -20,24 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\OpenIDConnect\JWK;
+namespace Tuleap\OAuth2ServerCore\OpenIDConnect\JWK;
 
-/**
- * @psalm-immutable
- *
- * @see https://tools.ietf.org/html/rfc7517#section-5
- */
-final class JSONWebKeySet
+final class InvalidPublicRSAKeyPEMFormatException extends \RuntimeException
 {
-    /**
-     * @var JSONWebKey[]
-     *
-     * @psalm-var list<JSONWebKey>
-     */
-    public $keys;
-
-    public function __construct(JSONWebKey ...$keys)
+    public function __construct(string $not_valid_public_key)
     {
-        $this->keys = $keys;
+        parent::__construct("The provided value does not seem to be a valid RSA public key: $not_valid_public_key");
     }
 }

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\OpenIDConnect\IDToken;
+namespace Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken;
 
 
 final class SigningPublicKeyTest extends \Tuleap\Test\PHPUnit\TestCase

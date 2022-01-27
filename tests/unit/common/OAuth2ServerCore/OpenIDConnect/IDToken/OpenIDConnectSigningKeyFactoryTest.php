@@ -20,14 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\OpenIDConnect\IDToken;
+namespace Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken;
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\KeyFactory;
+use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 
-final class SigningPrivateKeyTest extends \Tuleap\Test\PHPUnit\TestCase
+final class OpenIDConnectSigningKeyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const SIGNING_PUBLIC_KEY_FINGERPRINT = '13e908c0c14b52fa364f6573cda85971d16de83b17d6ef8793447724c464c01c';
-    private const SIGNING_PUBLIC_KEY             = <<<EOT
+    private const SIGNING_PUBLIC_KEY = <<<EOT
         -----BEGIN PUBLIC KEY-----
         MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApVp45DC1lniS5l9yiR81
         OM3BCESDLyZYX3pXS32oJz0eOIqgA4mnqGNvupo/ARJnu1W/KVNNqxBNGno1oNLg
@@ -70,14 +72,73 @@ final class SigningPrivateKeyTest extends \Tuleap\Test\PHPUnit\TestCase
         -----END PRIVATE KEY-----
         EOT;
 
-    public function testHoldsValues(): void
+    /**
+     * @var EncryptionKey
+     */
+    private $encryption_key;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&OpenIDConnectSigningKeyDAO
+     */
+    private $dao;
+    /**
+     * @var OpenIDConnectSigningKeyFactory
+     */
+    private $signing_key_factory;
+
+    protected function setUp(): void
     {
-        $private_key = new SigningPrivateKey(
-            SigningPublicKey::fromPEMFormat(self::SIGNING_PUBLIC_KEY),
-            new ConcealedString(self::SIGNING_PRIVATE_KEY)
+        $encryption_key_factory = $this->createMock(KeyFactory::class);
+        $this->encryption_key   = new EncryptionKey(new ConcealedString(\random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
+        $encryption_key_factory->method('getEncryptionKey')->willReturn($this->encryption_key);
+
+        $this->dao                 = $this->createMock(OpenIDConnectSigningKeyDAO::class);
+        $this->signing_key_factory = new OpenIDConnectSigningKeyFactory(
+            $encryption_key_factory,
+            $this->dao,
+            new \DateInterval('PT60S'),
+            new \DateInterval('PT10S'),
+        );
+    }
+
+    public function testGetExistingSigningPrivateKeyFromTheDB(): void
+    {
+        $this->dao->expects(self::once())->method('searchMostRecentNonExpiredEncryptedPrivateKey')->willReturn(
+            [
+                'public_key'  => self::SIGNING_PUBLIC_KEY,
+                'private_key' => SymmetricCrypto::encrypt(new ConcealedString(self::SIGNING_PRIVATE_KEY), $this->encryption_key),
+            ]
         );
 
-        $this->assertEquals(self::SIGNING_PUBLIC_KEY_FINGERPRINT, $private_key->getFingerprintPublicKey());
-        $this->assertEquals(self::SIGNING_PRIVATE_KEY, $private_key->getPrivateKey()->contents());
+        $key = $this->signing_key_factory->getKey(new \DateTimeImmutable('@100'));
+
+        $this->assertEquals(self::SIGNING_PRIVATE_KEY, $key->getPrivateKey()->contents());
+    }
+
+    public function testGetExistingSigningPublicKeyFromTheDB(): void
+    {
+        $this->dao->expects(self::once())->method('searchPublicKeys')->willReturn([self::SIGNING_PUBLIC_KEY]);
+
+        $public_keys = $this->signing_key_factory->getPublicKeys(new \DateTimeImmutable('@100'));
+
+        $this->assertCount(1, $public_keys);
+        $this->assertEquals(self::SIGNING_PUBLIC_KEY, $public_keys[0]->getPEMPublicKey());
+    }
+
+    public function testCreateNewSigningKeyWhenNoneAlreadyExistBeforeReturningPrivateKey(): void
+    {
+        $this->dao->expects(self::once())->method('searchMostRecentNonExpiredEncryptedPrivateKey')->willReturn(null);
+        $this->dao->expects(self::once())->method('save')->with(self::anything(), self::anything(), 160, 90);
+
+        $key = $this->signing_key_factory->getKey(new \DateTimeImmutable('@100'));
+        $this->assertNotEmpty($key->getPrivateKey()->contents());
+    }
+
+    public function testCreateNewSigningKeyWhenNoneAlreadyExistBeforeReturningPublicKey(): void
+    {
+        $this->dao->expects(self::once())->method('searchPublicKeys')->willReturn([]);
+        $this->dao->expects(self::once())->method('save')->with(self::anything(), self::anything(), 160, 90);
+
+        $public_key = $this->signing_key_factory->getPublicKeys(new \DateTimeImmutable('@100'));
+        $this->assertNotEmpty($public_key);
     }
 }

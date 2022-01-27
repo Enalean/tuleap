@@ -1705,6 +1705,13 @@ CREATE TABLE project_background(
     background VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB;
 
+CREATE TABLE oauth2_server_oidc_signing_key (
+    public_key TEXT NOT NULL,
+    private_key BLOB NOT NULL,
+    expiration_date INT(11) UNSIGNED NOT NULL,
+    INDEX idx_expiration_date (expiration_date)
+) ENGINE=InnoDB;
+
 #
 # EOF
 #
