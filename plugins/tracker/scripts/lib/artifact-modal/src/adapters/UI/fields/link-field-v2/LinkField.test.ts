@@ -17,119 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { setCatalog } from "../../gettext-catalog";
+import { setCatalog } from "../../../../gettext-catalog";
+import type { HostElement } from "./LinkField";
 import {
     getEmptyStateIfNeeded,
     getFormattedArtifacts,
     getSkeletonIfNeeded,
     LinkField,
-    retrieveLinkedArtifacts,
 } from "./LinkField";
-
-import * as linked_artifacts_retriever from "./links-retriever";
-import * as modal_creation_mode_state from "../../modal-creation-mode-state";
-
-import type { HostElement } from "./LinkField";
-import type { LinkedArtifact } from "./links-retriever";
+import {
+    buildForCreationMode,
+    buildFromArtifacts,
+    buildFromError,
+    buildLoadingState,
+} from "./LinkFieldPresenter";
 
 const getDocument = (): Document => document.implementation.createHTMLDocument();
 
-jest.mock("./links-retriever");
-
-function getHost(): HostElement {
+function getHost(data?: Partial<LinkField>): HostElement {
     return {
         fieldId: 60,
         label: "Links overview",
-        artifactId: 1601,
-        linked_artifacts: [],
-        has_loaded_content: false,
-        is_loading: false,
-        error_message: "",
+        ...data,
     } as unknown as HostElement;
 }
 
-function setCreationMode(is_in_creation_mode: boolean): void {
-    jest.spyOn(modal_creation_mode_state, "isInCreationMode").mockReturnValue(is_in_creation_mode);
-}
-
 describe("LinkField", () => {
-    let parent_artifact: LinkedArtifact;
-
     beforeEach(() => {
-        parent_artifact = {
-            xref: "art #123",
-            title: "A parent",
-            html_url: "/url/to/artifact/123",
-            tracker: {
-                color_name: "red-wine",
-            },
-            link_type: {
-                shortname: "_is_child",
-                direction: "reverse",
-                label: "Parent",
-            },
-            status: "Open",
-            is_open: true,
-        };
-
         setCatalog({ getString: (msgid) => msgid });
     });
 
-    describe("retrieveLinkedArtifacts", () => {
-        it("When the modal is in creation mode, Then it will not try fetch the linked artifacts", async () => {
-            const getLinkedArtifacts = jest.spyOn(linked_artifacts_retriever, "getLinkedArtifacts");
-            const host = getHost();
-
-            setCreationMode(true);
-            await retrieveLinkedArtifacts(host);
-
-            expect(getLinkedArtifacts).not.toHaveBeenCalled();
-            expect(host.linked_artifacts).toEqual([]);
-            expect(host.has_loaded_content).toBe(true);
-            expect(host.is_loading).toBe(false);
-            expect(host.error_message).toEqual("");
-        });
-
-        it("When the modal is in edition mode, Then it fetches the linked artifacts and display them", async () => {
-            const getLinkedArtifacts = jest.spyOn(linked_artifacts_retriever, "getLinkedArtifacts");
-            getLinkedArtifacts.mockResolvedValue([parent_artifact]);
-
-            const host = getHost();
-
-            host.is_loading = true;
-
-            setCreationMode(false);
-            await retrieveLinkedArtifacts(host);
-
-            expect(getLinkedArtifacts).toHaveBeenCalledWith(host.artifactId);
-            expect(host.linked_artifacts).toEqual([parent_artifact]);
-            expect(host.has_loaded_content).toBe(true);
-            expect(host.is_loading).toBe(false);
-            expect(host.error_message).toEqual("");
-        });
-
-        it("When an error occurres, Then it formats the error message and stores it", async () => {
-            const getLinkedArtifacts = jest.spyOn(linked_artifacts_retriever, "getLinkedArtifacts");
-            getLinkedArtifacts.mockRejectedValue(new Error("Nope"));
-
-            const host = getHost();
-
-            host.is_loading = true;
-
-            setCreationMode(false);
-            await retrieveLinkedArtifacts(host);
-
-            expect(getLinkedArtifacts).toHaveBeenCalledWith(host.artifactId);
-            expect(host.linked_artifacts).toEqual([]);
-            expect(host.has_loaded_content).toBe(true);
-            expect(host.is_loading).toBe(false);
-            expect(host.error_message).toEqual("Unable to retrieve the linked artifacts: Nope");
-        });
-    });
-
     describe("getFormattedArtifacts", () => {
-        it("Given a collection of artifact, Then it should return render functions to display them", () => {
-            const host = getHost();
+        it("Given a collection of artifacts, Then it should return render functions to display them", () => {
             const linked_artifacts = [
                 {
                     xref: "art #123",
@@ -162,10 +81,11 @@ describe("LinkField", () => {
                     is_open: false,
                 },
             ];
-            host.linked_artifacts = linked_artifacts;
+            const presenter = buildFromArtifacts(linked_artifacts);
+            const host = getHost();
+            const doc = getDocument();
 
-            getFormattedArtifacts(host).forEach((renderArtifact, index) => {
-                const doc = getDocument();
+            getFormattedArtifacts(presenter).forEach((renderArtifact, index) => {
                 const target = doc.createElement("div") as unknown as ShadowRoot;
                 const artifact_to_render = linked_artifacts[index];
 
@@ -211,20 +131,16 @@ describe("LinkField", () => {
     });
 
     describe("Display", () => {
+        let target: ShadowRoot;
         beforeEach(() => {
-            setCreationMode(false);
+            target = getDocument().createElement("div") as unknown as ShadowRoot;
         });
 
         it("should hide the table and show an alert when an error occurred during the retrieval of the linked artifacts", () => {
-            const host = getHost();
-
-            host.has_loaded_content = true;
-            host.error_message = "Unable to retrieve the linked artifacts because reasons";
-
+            const error_message = "Unable to retrieve the linked artifacts because reasons";
+            const presenter = buildFromError(new Error(error_message));
+            const host = getHost({ presenter });
             const update = LinkField.content(host);
-            const doc = getDocument();
-            const target = doc.createElement("div") as unknown as ShadowRoot;
-
             update(host, target);
 
             const table = target.querySelector("[data-test=linked-artifacts-table]");
@@ -235,32 +151,20 @@ describe("LinkField", () => {
             }
 
             expect(table.classList.contains("tuleap-artifact-modal-link-field-empty")).toBe(true);
-            expect(error.textContent?.trim()).toBe(host.error_message);
+            expect(error.textContent?.trim()).toContain(error_message);
         });
 
         it("should render a skeleton row when the links are being loaded", () => {
-            const host = getHost();
+            const render = getSkeletonIfNeeded(buildLoadingState());
 
-            host.is_loading = true;
-
-            const renderSkeleton = getSkeletonIfNeeded(host);
-            const target = getDocument().createElement("div") as unknown as ShadowRoot;
-
-            renderSkeleton(host, target);
-
+            render(getHost(), target);
             expect(target.querySelector("[data-test=link-field-table-skeleton]")).not.toBe(null);
         });
 
         it("should render an empty state row when content has been loaded and there is no link to display", () => {
-            const host = getHost();
+            const render = getEmptyStateIfNeeded(buildForCreationMode());
 
-            host.has_loaded_content = true;
-            host.linked_artifacts = [];
-
-            const renderSkeleton = getEmptyStateIfNeeded(host);
-            const target = getDocument().createElement("div") as unknown as ShadowRoot;
-
-            renderSkeleton(host, target);
+            render(getHost(), target);
             expect(target.querySelector("[data-test=link-table-empty-state]")).not.toBe(null);
         });
     });

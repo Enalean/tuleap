@@ -25,54 +25,52 @@ import {
     getLinkFieldFetchErrorMessage,
     getAddLinkButtonLabel,
     getLinkFieldTableEmptyStateText,
-} from "../../gettext-catalog";
-import { isInCreationMode } from "../../modal-creation-mode-state";
-import { getLinkedArtifacts } from "./links-retriever";
+} from "../../../../gettext-catalog";
 
 import type { UpdateFunction } from "hybrids";
-import type { LinkedArtifact } from "./links-retriever";
+import type { LinkFieldControllerType } from "./LinkFieldController";
+import type { LinkFieldPresenter } from "./LinkFieldPresenter";
+import { buildLoadingState } from "./LinkFieldPresenter";
+import type { LinkedArtifact } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
 
 export interface LinkField {
     readonly fieldId: number;
     readonly label: string;
-    readonly artifactId: number;
     readonly content: () => HTMLElement;
-    linked_artifacts: Array<LinkedArtifact>;
-    has_loaded_content: boolean;
-    is_loading: boolean;
-    error_message: string;
+    readonly controller: LinkFieldControllerType;
+    presenter: LinkFieldPresenter;
 }
+export type HostElement = LinkField & HTMLElement;
 
 type MapOfClasses = Record<string, boolean>;
 
-export type HostElement = LinkField & HTMLElement;
-
-export const getLinksTableClasses = (host: LinkField): MapOfClasses => ({
+const getLinksTableClasses = (presenter: LinkFieldPresenter): MapOfClasses => ({
     "tlp-table": true,
-    "tuleap-artifact-modal-link-field-empty": host.has_loaded_content && host.error_message !== "",
+    "tuleap-artifact-modal-link-field-empty":
+        presenter.has_loaded_content && presenter.error_message !== "",
 });
 
-export const getArtifactsStatusBadgeClasses = (artifact: LinkedArtifact): MapOfClasses => ({
+const getArtifactsStatusBadgeClasses = (artifact: LinkedArtifact): MapOfClasses => ({
     "tlp-badge-outline": true,
     "tlp-badge-success": artifact.is_open,
     "tlp-badge-secondary": !artifact.is_open,
 });
 
-export const getArtifactTableRowClasses = (artifact: LinkedArtifact): MapOfClasses => ({
+const getArtifactTableRowClasses = (artifact: LinkedArtifact): MapOfClasses => ({
     "link-field-table-row": true,
     "link-field-table-row-muted": artifact.status !== "" && !artifact.is_open,
 });
 
-export const getInputRowNatureCellClasses = (host: LinkField): MapOfClasses => ({
+const getInputRowNatureCellClasses = (presenter: LinkFieldPresenter): MapOfClasses => ({
     "link-field-table-footer-type": true,
-    "link-field-table-footer-type-no-padding": host.linked_artifacts.length === 0,
+    "link-field-table-footer-type-no-padding": presenter.linked_artifacts.length === 0,
 });
 
-const formatErrorMessage = (error: Error): string =>
-    sprintf(getLinkFieldFetchErrorMessage(), error.message);
+const formatErrorMessage = (error_message: string): string =>
+    sprintf(getLinkFieldFetchErrorMessage(), error_message);
 
-export const getEmptyStateIfNeeded = (host: LinkField): UpdateFunction<LinkField> => {
-    if (host.linked_artifacts.length > 0 || !host.has_loaded_content) {
+export const getEmptyStateIfNeeded = (presenter: LinkFieldPresenter): UpdateFunction<LinkField> => {
+    if (presenter.linked_artifacts.length > 0 || !presenter.has_loaded_content) {
         return html``;
     }
 
@@ -85,8 +83,8 @@ export const getEmptyStateIfNeeded = (host: LinkField): UpdateFunction<LinkField
     `;
 };
 
-export const getFormattedArtifacts = (host: LinkField): UpdateFunction<LinkField>[] =>
-    host.linked_artifacts.map(
+export const getFormattedArtifacts = (presenter: LinkFieldPresenter): UpdateFunction<LinkField>[] =>
+    presenter.linked_artifacts.map(
         (artifact: LinkedArtifact) => html`
             <tr class="${getArtifactTableRowClasses(artifact)}" data-test="artifact-row">
                 <td class="link-field-table-cell-type">${artifact.link_type.label}</td>
@@ -127,29 +125,8 @@ export const getFormattedArtifacts = (host: LinkField): UpdateFunction<LinkField
         `
     );
 
-export const retrieveLinkedArtifacts = (host: LinkField): Promise<void> => {
-    if (isInCreationMode()) {
-        host.has_loaded_content = true;
-
-        return Promise.resolve();
-    }
-
-    host.is_loading = true;
-    return getLinkedArtifacts(host.artifactId)
-        .then((artifacts) => {
-            host.linked_artifacts = artifacts;
-        })
-        .catch((err: Error) => {
-            host.error_message = formatErrorMessage(err);
-        })
-        .finally(() => {
-            host.is_loading = false;
-            host.has_loaded_content = true;
-        });
-};
-
-export const getSkeletonIfNeeded = (host: LinkField): UpdateFunction<LinkField> => {
-    if (!host.is_loading) {
+export const getSkeletonIfNeeded = (presenter: LinkFieldPresenter): UpdateFunction<LinkField> => {
+    if (!presenter.is_loading) {
         return html``;
     }
 
@@ -182,41 +159,39 @@ export const LinkField = define<LinkField>({
     tag: "tuleap-artifact-modal-link-field-v2",
     fieldId: 0,
     label: "",
-    artifactId: {
-        value: 0,
-        observe: retrieveLinkedArtifacts,
+    controller: {
+        set(host, controller: LinkFieldControllerType) {
+            controller.displayLinkedArtifacts().then((presenter) => (host.presenter = presenter));
+        },
     },
-    has_loaded_content: false,
-    is_loading: false,
-    error_message: "",
-    linked_artifacts: {
-        get: (host, value = []) => value,
-        set: (host, value = []) => [...value],
+    presenter: {
+        get: (host, last_value) => last_value ?? buildLoadingState(),
+        set: (host, presenter) => presenter,
     },
     content: (host) => html`
         <label for="${"tracker_field_" + host.fieldId}" class="tlp-label">${host.label}</label>
-        ${host.error_message !== "" &&
+        ${host.presenter.error_message !== "" &&
         html`
             <div
                 id="tuleap-artifact-modal-link-error"
                 class="tlp-alert-danger"
                 data-test="linked-artifacts-error"
             >
-                ${host.error_message}
+                ${formatErrorMessage(host.presenter.error_message)}
             </div>
         `}
         <table
             id="tuleap-artifact-modal-link-table"
-            class="${getLinksTableClasses(host)}"
+            class="${getLinksTableClasses(host.presenter)}"
             data-test="linked-artifacts-table"
         >
             <tbody class="link-field-table-body">
-                ${getFormattedArtifacts(host)} ${getSkeletonIfNeeded(host)}
-                ${getEmptyStateIfNeeded(host)}
+                ${getFormattedArtifacts(host.presenter)} ${getSkeletonIfNeeded(host.presenter)}
+                ${getEmptyStateIfNeeded(host.presenter)}
             </tbody>
             <tfoot class="link-field-table-footer">
                 <tr class="link-field-table-row">
-                    <td class="${getInputRowNatureCellClasses(host)}"></td>
+                    <td class="${getInputRowNatureCellClasses(host.presenter)}"></td>
                     <td class="link-field-table-footer-input" colspan="2">
                         <input
                             id="${"tracker_field_" + host.fieldId}"
