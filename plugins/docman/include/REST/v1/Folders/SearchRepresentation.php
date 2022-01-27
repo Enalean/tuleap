@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1\Folders;
 
 use Tuleap\Docman\Item\PaginatedParentRowCollection;
+use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
@@ -65,6 +66,11 @@ final class SearchRepresentation
      */
     public $type;
 
+    /**
+     * @var FilePropertiesRepresentation | null
+     */
+    public $file_properties;
+
     private function __construct(
         int $id,
         string $title,
@@ -74,6 +80,7 @@ final class SearchRepresentation
         ?string $update_date,
         PaginatedParentRowCollection $parents,
         ?string $type,
+        ?FilePropertiesRepresentation $file_properties,
     ) {
         $this->id                         = $id;
         $this->title                      = $title;
@@ -83,6 +90,7 @@ final class SearchRepresentation
         $this->last_update_date           = JsonCast::toDate($update_date);
         $this->parents                    = $parents->getPaginatedElementCollection();
         $this->type                       = $type;
+        $this->file_properties            = $file_properties;
     }
 
     public static function build(
@@ -92,6 +100,7 @@ final class SearchRepresentation
         \PFUser $user,
         PaginatedParentRowCollection $parents,
         ?string $type,
+        ?FilePropertiesRepresentation $file_properties,
     ): self {
         return new self(
             (int) $item->getId(),
@@ -101,7 +110,8 @@ final class SearchRepresentation
             MinimalUserRepresentation::build($user),
             (string) $item->getUpdateDate(),
             $parents,
-            $type
+            $type,
+            $file_properties,
         );
     }
 }

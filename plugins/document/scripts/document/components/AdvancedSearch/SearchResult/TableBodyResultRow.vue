@@ -67,6 +67,7 @@ import {
     TYPE_LINK,
     TYPE_WIKI,
 } from "../../../constants";
+import { iconForMimeType } from "../../../helpers/icon-for-mime-type";
 
 const configuration = namespace("configuration");
 
@@ -108,6 +109,11 @@ export default class TableBodyResultRow extends Vue {
     get icon_classes(): string {
         switch (this.item.type) {
             case TYPE_FILE:
+                if (!this.item.file_properties) {
+                    return ICON_EMPTY;
+                }
+
+                return iconForMimeType(this.item.file_properties.file_type);
             case TYPE_EMBEDDED:
                 return ICON_EMBEDDED;
             case TYPE_FOLDER:

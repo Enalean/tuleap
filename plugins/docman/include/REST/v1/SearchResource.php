@@ -43,7 +43,9 @@ use Tuleap\Docman\REST\v1\Folders\SearchRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
+use Tuleap\Docman\REST\v1\Search\FilePropertiesVisitor;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
+use Tuleap\Docman\REST\v1\Search\SearchRepresentationTypeVisitor;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
 use Tuleap\REST\AuthenticatedResource;
@@ -160,7 +162,9 @@ final class SearchResource extends AuthenticatedResource
                 $visitor,
                 $item_dao
             ),
-            $item_factory
+            $item_factory,
+            new SearchRepresentationTypeVisitor(),
+            new FilePropertiesVisitor($version_factory),
         );
 
         $report     = $search_report_builder->buildReport($folder, $search_representation->global_search);
