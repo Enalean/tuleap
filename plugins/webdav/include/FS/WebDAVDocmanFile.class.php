@@ -19,41 +19,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Sabre\DAV\IFile;
 use Tuleap\WebDAV\Docman\DocumentDownloader;
 
 /**
  * This class Represents Docman files & embedded files in WebDAV
  */
-class WebDAVDocmanFile extends \Sabre\DAV\File
+class WebDAVDocmanFile implements IFile
 {
-    /**
-     * @var PFUser
-     */
-    private $user;
-    /**
-     * @var Project
-     */
-    private $project;
-    /**
-     * @var Docman_File
-     */
-    private $item;
-    /**
-     * @var DocumentDownloader
-     */
-    private $document_downloader;
-    /**
-     * @var WebDAVUtils
-     */
-    private $utils;
-
-    public function __construct(PFUser $user, Project $project, Docman_File $item, DocumentDownloader $document_downloader, WebDAVUtils $utils)
-    {
-        $this->user                = $user;
-        $this->project             = $project;
-        $this->item                = $item;
-        $this->document_downloader = $document_downloader;
-        $this->utils               = $utils;
+    public function __construct(
+        private PFUser $user,
+        private Project $project,
+        private Docman_File $item,
+        private DocumentDownloader $document_downloader,
+        private WebDAVUtils $utils,
+    ) {
     }
 
     /**

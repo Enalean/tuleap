@@ -19,38 +19,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Sabre\DAV\ICollection;
+
 /**
  * This class lists the services of a given project that can be accessed using WebDAV
  */
-class WebDAVProject extends \Sabre\DAV\FS\Directory
+class WebDAVProject implements ICollection
 {
-    /**
-     * @var PFUser
-     */
-    private $user;
-    /**
-     * @var Project
-     */
-    private $project;
-    /**
-     * @var int
-     */
-    private $maxFileSize;
-    /**
-     * @var WebDAVUtils
-     */
-    private $utils;
-
     public function __construct(
-        PFUser $user,
-        Project $project,
-        int $maxFileSize,
-        WebDAVUtils $utils,
+        private PFUser $user,
+        private Project $project,
+        private int $maxFileSize,
+        private WebDAVUtils $utils,
     ) {
-        $this->user        = $user;
-        $this->project     = $project;
-        $this->maxFileSize = $maxFileSize;
-        $this->utils       = $utils;
     }
 
     /**
@@ -103,5 +84,35 @@ class WebDAVProject extends \Sabre\DAV\FS\Directory
     public function getLastModified(): int
     {
         return 0;
+    }
+
+    public function delete(): void
+    {
+        throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
+    }
+
+    public function setName($name): void
+    {
+        throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
+    }
+
+    public function createFile($name, $data = null): void
+    {
+        throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
+    }
+
+    public function createDirectory($name): void
+    {
+        throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
+    }
+
+    public function childExists($name): bool
+    {
+        try {
+            $this->getChild($name);
+            return true;
+        } catch (\Sabre\DAV\Exception) {
+        }
+        return false;
     }
 }

@@ -19,11 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Sabre\DAV\ICollection;
+
 /**
  * This class is used to mount the releases of a given
  * package into the WebDAV virtual file system.
  */
-class WebDAVFRSPackage extends \Sabre\DAV\FS\Directory
+class WebDAVFRSPackage implements ICollection
 {
 
     private $user;
@@ -366,5 +368,20 @@ class WebDAVFRSPackage extends \Sabre\DAV\FS\Directory
         } else {
             throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'release_denied_create'));
         }
+    }
+
+    public function createFile($name, $data = null): void
+    {
+        throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
+    }
+
+    public function childExists($name): bool
+    {
+        try {
+            $this->getChild($name);
+            return true;
+        } catch (\Sabre\DAV\Exception) {
+        }
+        return false;
     }
 }

@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Sabre\DAV\ICollection;
 use Tuleap\Project\ProjectAccessChecker;
 
 /**
@@ -26,53 +27,17 @@ use Tuleap\Project\ProjectAccessChecker;
  *
  * this class lists projects that the user is member of
  */
-class WebDAVRoot extends \Sabre\DAV\FS\Directory
+class WebDAVRoot implements ICollection
 {
-    /**
-     * @var PFUser
-     */
-    private $user;
-    /**
-     * @var WebDAVPlugin
-     */
-    private $plugin;
-    /**
-     * @var int
-     */
-    private $maxFileSize;
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var WebDAVUtils
-     */
-    private $utils;
-    /**
-     * @var PluginManager
-     */
-    private $plugin_manager;
-    /**
-     * @var ProjectAccessChecker
-     */
-    private $project_access_checker;
-
     public function __construct(
-        WebDAVPlugin $plugin,
-        PFUser $user,
-        int $maxFileSize,
-        ProjectManager $project_manager,
-        WebDAVUtils $utils,
-        PluginManager $plugin_manager,
-        ProjectAccessChecker $project_access_checker,
+        private WebDAVPlugin $plugin,
+        private PFUser $user,
+        private int $maxFileSize,
+        private ProjectManager $project_manager,
+        private WebDAVUtils $utils,
+        private PluginManager $plugin_manager,
+        private ProjectAccessChecker $project_access_checker,
     ) {
-        $this->user                   = $user;
-        $this->plugin                 = $plugin;
-        $this->maxFileSize            = $maxFileSize;
-        $this->project_manager        = $project_manager;
-        $this->utils                  = $utils;
-        $this->plugin_manager         = $plugin_manager;
-        $this->project_access_checker = $project_access_checker;
     }
 
     /**
@@ -190,5 +155,35 @@ class WebDAVRoot extends \Sabre\DAV\FS\Directory
         } catch (\Exception $exception) {
             return false;
         }
+    }
+
+    public function delete(): void
+    {
+        throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
+    }
+
+    public function setName($name): void
+    {
+        throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
+    }
+
+    public function createFile($name, $data = null): void
+    {
+        throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
+    }
+
+    public function createDirectory($name): void
+    {
+        throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
+    }
+
+    public function childExists($name): bool
+    {
+        try {
+            $this->getChild($name);
+            return true;
+        } catch (\Sabre\DAV\Exception) {
+        }
+        return false;
     }
 }

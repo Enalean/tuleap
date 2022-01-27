@@ -20,35 +20,15 @@
  */
 
 use GuzzleHttp\Psr7\ServerRequest;
+use Sabre\DAV\IFile;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
-class WebDAVFRSFile extends \Sabre\DAV\File
+class WebDAVFRSFile implements IFile
 {
-    /**
-     * @var PFUser
-     */
-    private $user;
-    /**
-     * @var Project
-     */
-    private $project;
-    /**
-     * @var FRSFile
-     */
-    private $file;
-    /**
-     * @var WebDAVUtils
-     */
-    private $utils;
-
-    public function __construct(PFUser $user, Project $project, FRSFile $file, WebDAVUtils $utils)
+    public function __construct(private PFUser $user, private Project $project, private FRSFile $file, private WebDAVUtils $utils)
     {
-        $this->user    = $user;
-        $this->project = $project;
-        $this->file    = $file;
-        $this->utils   = $utils;
     }
 
     /**
@@ -144,5 +124,10 @@ class WebDAVFRSFile extends \Sabre\DAV\File
         } else {
             throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }
+    }
+
+    public function setName($name): void
+    {
+        throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
     }
 }

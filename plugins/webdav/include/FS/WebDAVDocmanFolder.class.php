@@ -19,36 +19,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Sabre\DAV\ICollection;
 use Tuleap\WebDAV\Docman\DocumentDownloader;
 
-class WebDAVDocmanFolder extends \Sabre\DAV\FS\Directory
+class WebDAVDocmanFolder implements ICollection
 {
     private const DUPLICATE                                 = 'duplicate';
     private const ITEM_EXISTS_BUT_NOT_DISPLAYABLE_IN_WEBDAV = 'exists-not-displayed';
 
-    /**
-     * @var PFUser
-     */
-    private $user;
-    /**
-     * @var Project
-     */
-    private $project;
-    /**
-     * @var Docman_Folder
-     */
-    private $item;
-    /**
-     * @var WebDAVUtils
-     */
-    private $utils;
-
-    public function __construct(PFUser $user, Project $project, Docman_Folder $item, WebDAVUtils $utils)
-    {
-        $this->user    = $user;
-        $this->project = $project;
-        $this->item    = $item;
-        $this->utils   = $utils;
+    public function __construct(
+        private PFUser $user,
+        private Project $project,
+        private Docman_Folder $item,
+        private WebDAVUtils $utils,
+    ) {
     }
 
     private function getMaxFileSize(): int
