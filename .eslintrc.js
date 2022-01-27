@@ -259,18 +259,33 @@ module.exports = {
             },
         },
         {
-            // Prevent imports from Domain to the outside world
+            // Enforce Hexagonal Architecture
             files: ["plugins/tracker/scripts/lib/artifact-modal/src/**/*.ts"],
             rules: {
                 "import/no-restricted-paths": [
                     "error",
                     {
+                        basePath: "plugins/tracker/scripts/lib/artifact-modal/",
                         zones: [
                             {
-                                target: "plugins/tracker/scripts/lib/artifact-modal/src/domain/",
-                                from: "plugins/tracker/scripts/lib/artifact-modal/src/",
+                                target: "src/domain/",
+                                from: "src/",
                                 except: ["domain"],
                                 message: "Domain should not depend on the outside world",
+                            },
+                            {
+                                target: "src/adapters/REST/",
+                                from: "src/adapters/",
+                                except: ["REST"],
+                                message:
+                                    "Adapters should not depend on other adapter without going through the Domain",
+                            },
+                            {
+                                target: "src/adapters/UI/",
+                                from: "src/adapters/",
+                                except: ["UI"],
+                                message:
+                                    "Adapters should not depend on other adapter without going through the Domain",
                             },
                         ],
                     },

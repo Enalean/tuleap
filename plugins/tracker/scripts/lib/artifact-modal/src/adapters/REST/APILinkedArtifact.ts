@@ -27,6 +27,6 @@ export interface APILinkedArtifact {
     readonly is_open: boolean;
 }
 
-interface APITracker {
+export interface APITracker {
     readonly color_name: string;
 }

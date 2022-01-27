@@ -17,17 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { RetrieveArtifact } from "../RetrieveArtifact";
-import type { Artifact } from "../Artifact";
-import type { VerifyIsInCreationMode } from "../VerifyIsInCreationMode";
-import type { RetrieveParent } from "./RetrieveParent";
+import type { Identifier } from "../Identifier";
 
-export const ParentRetriever = (
-    retriever: RetrieveArtifact,
-    mode_verifier: VerifyIsInCreationMode
-): RetrieveParent => ({
-    retrieveFutureParent: (parent_artifact_id: number): Promise<Artifact | null> =>
-        mode_verifier.isInCreationMode()
-            ? retriever.getArtifact(parent_artifact_id)
-            : Promise.resolve(null),
-});
+// I identify the Artifact that will be linked as a parent of the artifact under creation
+export type ParentArtifactIdentifier = Identifier<"ParentArtifactIdentifier">;

@@ -23,20 +23,21 @@ import type { RecursiveGetInit } from "tlp";
 import * as tlp from "tlp";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { LinkedArtifact, LinkType } from "../../domain/fields/link-field-v2/LinkedArtifact";
-import type { Artifact } from "../../domain/Artifact";
 import type { APILinkedArtifact } from "./APILinkedArtifact";
+import type { Artifact } from "../../domain/Artifact";
+import { CurrentArtifactIdentifierStub } from "../../../tests/stubs/CurrentArtifactIdentifierStub";
 
 const FORWARD_DIRECTION = "forward";
 const IS_CHILD_SHORTNAME = "_is_child";
 const ARTIFACT_ID = 90;
-const FIRST_ARTIFACT_ID = 40;
-const SECOND_ARTIFACT_ID = 60;
+const FIRST_LINKED_ARTIFACT_ID = 40;
+const SECOND_LINKED_ARTIFACT_ID = 60;
 
 describe(`TuleapAPIClient`, () => {
     describe(`getArtifact()`, () => {
         const getArtifact = (): Promise<Artifact> => {
             const client = TuleapAPIClient();
-            return client.getArtifact(ARTIFACT_ID);
+            return client.getArtifact(CurrentArtifactIdentifierStub.withId(ARTIFACT_ID));
         };
 
         it(`will return the artifact matching the given id`, () => {
@@ -53,7 +54,7 @@ describe(`TuleapAPIClient`, () => {
     describe(`getAllLinkTypes()`, () => {
         const getAllLinkTypes = (): Promise<LinkType[]> => {
             const client = TuleapAPIClient();
-            return client.getAllLinkTypes(95);
+            return client.getAllLinkTypes(CurrentArtifactIdentifierStub.withId(ARTIFACT_ID));
         };
 
         it(`will return an array of link types`, async () => {
@@ -103,12 +104,15 @@ describe(`TuleapAPIClient`, () => {
 
         const getLinkedArtifactsByLinkType = (): Promise<LinkedArtifact[]> => {
             const client = TuleapAPIClient();
-            return client.getLinkedArtifactsByLinkType(ARTIFACT_ID, link_type);
+            return client.getLinkedArtifactsByLinkType(
+                CurrentArtifactIdentifierStub.withId(ARTIFACT_ID),
+                link_type
+            );
         };
 
         it(`will return an array of linked artifacts`, async () => {
-            const first_artifact = { id: FIRST_ARTIFACT_ID } as APILinkedArtifact;
-            const second_artifact = { id: SECOND_ARTIFACT_ID } as APILinkedArtifact;
+            const first_artifact = { id: FIRST_LINKED_ARTIFACT_ID } as APILinkedArtifact;
+            const second_artifact = { id: SECOND_LINKED_ARTIFACT_ID } as APILinkedArtifact;
 
             const recursiveGetSpy = jest.spyOn(tlp, "recursiveGet");
 
@@ -120,7 +124,9 @@ describe(`TuleapAPIClient`, () => {
 
             expect(artifacts).toHaveLength(2);
             const [first_returned_artifact, second_returned_artifact] = artifacts;
+            expect(first_returned_artifact.identifier.id).toBe(FIRST_LINKED_ARTIFACT_ID);
             expect(first_returned_artifact.link_type).toBe(link_type);
+            expect(second_returned_artifact.identifier.id).toBe(SECOND_LINKED_ARTIFACT_ID);
             expect(second_returned_artifact.link_type).toBe(link_type);
             expect(recursiveGetSpy.mock.calls[0]).toEqual([
                 `/api/v1/artifacts/${ARTIFACT_ID}/linked_artifacts`,

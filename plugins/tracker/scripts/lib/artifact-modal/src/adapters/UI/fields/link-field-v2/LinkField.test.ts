@@ -26,6 +26,7 @@ import {
     LinkField,
 } from "./LinkField";
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
+import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 
 const getDocument = (): Document => document.implementation.createHTMLDocument();
 
@@ -46,6 +47,7 @@ describe("LinkField", () => {
         it("Given a collection of artifacts, Then it should return render functions to display them", () => {
             const linked_artifacts = [
                 {
+                    identifier: LinkedArtifactIdentifierStub.withId(123),
                     xref: "art #123",
                     title: "A parent",
                     html_url: "/url/to/artifact/123",
@@ -61,6 +63,7 @@ describe("LinkField", () => {
                     is_open: true,
                 },
                 {
+                    identifier: LinkedArtifactIdentifierStub.withId(234),
                     xref: "art #234",
                     title: "A child",
                     html_url: "/url/to/artifact/234",

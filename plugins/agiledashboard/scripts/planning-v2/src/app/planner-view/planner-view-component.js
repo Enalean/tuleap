@@ -254,9 +254,11 @@ function controller(
             return addSubmilestoneToSubmilestone(submilestone_id);
         }
 
+        const parent_artifact_id = self.isMilestoneContext() ? self.milestone_id : null;
+
         NewTuleapArtifactModalService.showCreation(
             submilestone_type.id,
-            self.milestone_id,
+            parent_artifact_id,
             callback,
             SharedPropertiesService.isListPickerEnabledForTracker(submilestone_type.id),
             SharedPropertiesService.hasCurrentProjectParents(),

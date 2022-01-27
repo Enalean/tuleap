@@ -19,29 +19,30 @@
 
 import type { LinkFieldPresenter } from "./LinkFieldPresenter";
 import { LinkFieldController } from "./LinkFieldController";
-import type { VerifyIsInCreationMode } from "../../../../domain/VerifyIsInCreationMode";
-import { VerifyIsInCreationModeStub } from "../../../../../tests/stubs/VerifyIsInCreationModeStub";
 import type { LinkedArtifact } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
 import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
 import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
+import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
+import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 
 describe(`LinkFieldController`, () => {
     describe(`displayLinkedArtifacts()`, () => {
-        let mode_verifier: VerifyIsInCreationMode, links_retriever: RetrieveAllLinkedArtifacts;
+        let artifact_id: CurrentArtifactIdentifier | null,
+            links_retriever: RetrieveAllLinkedArtifacts;
 
         beforeEach(() => {
-            mode_verifier = VerifyIsInCreationModeStub.withEditionMode();
+            artifact_id = CurrentArtifactIdentifierStub.withId(18);
             const linked_artifact = { title: "Child" } as LinkedArtifact;
             links_retriever = RetrieveAllLinkedArtifactsStub.withLinkedArtifacts(linked_artifact);
         });
 
         const displayLinkedArtifacts = (): Promise<LinkFieldPresenter> => {
-            const controller = LinkFieldController(links_retriever, mode_verifier, 18);
+            const controller = LinkFieldController(links_retriever, artifact_id);
             return controller.displayLinkedArtifacts();
         };
 
         it(`when the modal is in creation mode, it will return a dedicated empty presenter`, async () => {
-            mode_verifier = VerifyIsInCreationModeStub.withCreationMode();
+            artifact_id = null;
             const presenter = await displayLinkedArtifacts();
 
             expect(presenter.has_loaded_content).toBe(true);

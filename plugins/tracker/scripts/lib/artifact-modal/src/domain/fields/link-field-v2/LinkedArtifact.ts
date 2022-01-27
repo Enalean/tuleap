@@ -17,6 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Identifier } from "../../Identifier";
+
+// I identify an artifact linked to the current artifact under edition
+export type LinkedArtifactIdentifier = Identifier<"LinkedArtifactIdentifier">;
+
 export interface LinkType {
     readonly shortname: string;
     readonly direction: string;
@@ -28,6 +33,7 @@ interface Tracker {
 }
 
 export interface LinkedArtifact {
+    readonly identifier: LinkedArtifactIdentifier;
     readonly xref: string;
     readonly title: string;
     readonly html_url: string;

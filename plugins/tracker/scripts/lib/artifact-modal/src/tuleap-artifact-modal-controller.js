@@ -47,12 +47,12 @@ import {
     setUpFieldDependenciesActions,
 } from "./field-dependencies-helper.js";
 import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js";
-import { ParentRetriever } from "./domain/parent/ParentRetriever";
 import { TuleapAPIClient } from "./adapters/REST/TuleapAPIClient";
-import { CreationModeVerifier } from "./adapters/Memory/CreationModeVerifier";
 import { ModalFeedbackController } from "./adapters/UI/feedback/ModalFeedbackController";
 import { LinkFieldController } from "./adapters/UI/fields/link-field-v2/LinkFieldController";
 import { LinksRetriever } from "./domain/fields/link-field-v2/LinksRetriever";
+import { CurrentArtifactIdentifierProxy } from "./adapters/Caller/CurrentArtifactIdentifierProxy";
+import { ParentArtifactIdentifierProxy } from "./adapters/Caller/ParentArtifactIdentifierProxy";
 
 export default ArtifactModalController;
 
@@ -83,7 +83,6 @@ function ArtifactModalController(
     const concurrency_error_code = 412;
 
     const api_client = TuleapAPIClient();
-    const mode_verifier = CreationModeVerifier();
 
     Object.assign(self, {
         $onInit: init,
@@ -110,12 +109,11 @@ function ArtifactModalController(
         },
         link_field_controller: LinkFieldController(
             LinksRetriever(api_client, api_client),
-            mode_verifier,
-            modal_model.artifact_id
+            CurrentArtifactIdentifierProxy.fromModalArtifactId(modal_model.artifact_id)
         ),
         feedback_controller: ModalFeedbackController(
-            ParentRetriever(api_client, mode_verifier),
-            modal_model.parent_artifact_id
+            api_client,
+            ParentArtifactIdentifierProxy.fromCallerArgument(modal_model.parent_artifact_id)
         ),
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
         formatColor,

@@ -18,7 +18,11 @@
  */
 
 import type { Artifact } from "./Artifact";
+import type { CurrentArtifactIdentifier } from "./CurrentArtifactIdentifier";
+import type { ParentArtifactIdentifier } from "./parent/ParentArtifactIdentifier";
 
 export interface RetrieveArtifact {
-    getArtifact(artifact_id: number): Promise<Artifact>;
+    getArtifact(
+        artifact_identifier: CurrentArtifactIdentifier | ParentArtifactIdentifier
+    ): Promise<Artifact>;
 }
