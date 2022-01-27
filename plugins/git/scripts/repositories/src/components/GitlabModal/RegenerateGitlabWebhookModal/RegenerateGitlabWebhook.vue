@@ -21,7 +21,6 @@
     <div role="dialog" aria-labelledby="regenerate-gitlab-webhook" class="tlp-modal">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title">
-                <i class="fas fa-tlp-webhooks fa-fw tlp-modal-title-icon" aria-hidden="true"></i>
                 <translate id="regenerate-gitlab-webhook">Regenerate the GitLab webhook</translate>
             </h1>
             <button
@@ -30,7 +29,7 @@
                 data-dismiss="modal"
                 v-bind:aria-label="close_label"
             >
-                &times;
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <div

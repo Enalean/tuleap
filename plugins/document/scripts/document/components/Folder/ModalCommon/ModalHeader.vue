@@ -25,7 +25,6 @@
             v-bind:id="ariaLabelledBy"
             v-bind:title="`${$gettext('Close')}`"
         >
-            <i class="fa tlp-modal-title-icon" v-bind:class="iconHeaderClass"></i>
             {{ modalTitle }}
         </h1>
         <button
@@ -34,7 +33,7 @@
             data-dismiss="modal"
             v-bind:aria-label="`${$gettext('Close')}`"
         >
-            &times;
+            <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
         </button>
     </div>
 </template>

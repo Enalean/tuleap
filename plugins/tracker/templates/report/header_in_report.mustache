@@ -34,7 +34,9 @@
         <div class="modal hide fade" id="tracker_report_updater_saveas-modal" role="dialog" aria-labelledby="tracker_report_updater_saveas-modal-label" aria-hidden="true" tabindex="-1">
             <form id="tracker_report_form_modal" action="{{ saveas_url }}" method="POST">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
+                    </button>
                     <h3 id="tracker_report_updater_saveas-modal-label">{{ save_report_as }}</h3>
                 </div>
                 <div class="modal-body">

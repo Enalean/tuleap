@@ -21,11 +21,10 @@
     <div class="tlp-modal" role="dialog">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title">
-                <i class="fas fa-code-branch fa-rotate-270 tlp-modal-title-icon"></i>
                 <translate>Create a pull request</translate>
             </h1>
             <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
-                &times;
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <div class="tlp-modal-body">

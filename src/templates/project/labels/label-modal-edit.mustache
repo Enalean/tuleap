@@ -11,9 +11,9 @@
     <input type="hidden" name="id" value="{{ id }}">
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title">
-            <i class="fas fa-pencil-alt tlp-modal-title-icon"></i> {{ edit_title }}
+            {{ edit_title }}
         </h1>
-        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{ cancel }}">×</button>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{ cancel }}"><i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i></button>
     </div>
     {{> label-modal-form }}
 </form>

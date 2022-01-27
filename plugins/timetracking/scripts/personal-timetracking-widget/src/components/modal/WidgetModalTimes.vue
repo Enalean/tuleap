@@ -21,11 +21,10 @@
     <div class="tlp-modal" role="dialog">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title">
-                <i class="fas fa-pencil-alt tlp-modal-title-icon"></i>
                 <translate>Detailed times</translate>
             </h1>
             <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
-                &times;
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <widget-modal-content v-if="current_artifact" data-test="modal-content" />

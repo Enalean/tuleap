@@ -512,7 +512,8 @@ select.input-small {
     z-index: 2006;
     overflow: hidden;
     border: 1px solid transparent;
-    box-shadow: var(--tlp-flyover-shadow);
+    border-radius: var(--tlp-x-large-radius);
+    box-shadow: var(--tlp-modal-shadow);
     font-size: 14px;
 
     form {
@@ -522,33 +523,29 @@ select.input-small {
 
 .modal-header {
     display: flex;
+    box-sizing: border-box;
     flex: 1 1 auto;
-    align-items: center;
-    height: 1px; // Fix IE11 sorcery
-    min-height: 64px;
-    padding-top: 0;
-    padding-bottom: 0;
-    border-bottom: 0;
+    align-items: baseline;
+    padding: var(--tlp-medium-spacing);
+    border-bottom: 1px solid var(--tlp-neutral-light-color);
     border-top-left-radius: var(--tlp-x-large-radius);
     border-top-right-radius: var(--tlp-x-large-radius);
-    background: var(--tlp-main-color);
-    color: var(--tlp-white-color);
+    color: var(--tlp-dark-color);
 
     &.modal-header-error {
         background: var(--tlp-danger-color);
     }
 
-    i {
-        padding: 0 5px;
-    }
-
+    h1,
     h2,
     h3 {
         flex: 1;
         order: 1;
         border: 0;
-        font-size: 24px;
-        font-weight: 400;
+        color: var(--tlp-dark-color);
+        font-size: 1.375rem;
+        font-weight: 500;
+        line-height: 1.75rem;
     }
 
     p {
@@ -557,23 +554,34 @@ select.input-small {
     }
 
     > .close {
-        position: relative;
-        top: 0;
         order: 3;
-        margin-top: 0;
+        width: 1rem;
+        height: 1rem;
+        margin: 0;
+        border-radius: 50%;
         opacity: 1;
-        color: var(--tlp-white-color);
+        color: var(--tlp-dimmed-color);
         font-family: inherit;
-        font-size: 24px;
         font-style: normal;
-        font-weight: 600;
+        line-height: 0;
         text-shadow: none;
+
+        &:hover {
+            transition: border-color 100ms linear, box-shadow 350ms, opacity 100ms ease-in-out;
+            opacity: 0.5;
+        }
+
+        > .modal-close-icon {
+            font-size: 0.85rem;
+            line-height: 0;
+        }
     }
 }
 
 .modal-footer {
-    padding: 20px;
-    border-top: 1px solid #f3f3f3;
+    box-sizing: border-box;
+    padding: var(--tlp-medium-spacing);
+    border-top: 1px solid var(--tlp-neutral-light-color);
     border-radius: 0 0 var(--tlp-x-large-radius) var(--tlp-x-large-radius);
     background-color: var(--tlp-white-color);
     text-align: right;

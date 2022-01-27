@@ -12,14 +12,14 @@
     {{/ csrf_token }}
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title" id="oauth2-server-add-modal-label">
-            <i class="fa fa-plus tlp-modal-title-icon"></i> {{# dgettext }}tuleap-oauth2_server | Add an App{{/ dgettext }}
+            {{# dgettext }}tuleap-oauth2_server | Add an App{{/ dgettext }}
         </h1>
         <button
             class="tlp-modal-close"
             type="button"
             data-dismiss="modal"
             aria-label="{{# dgettext }}tuleap-oauth2_server | Close{{/dgettext}}"
-        >&times;</button>
+        ><i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i></button>
     </div>
     <div class="tlp-modal-body">
         <div class="tlp-form-element">

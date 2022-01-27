@@ -9,11 +9,10 @@
     {{/ csrf_token }}
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title">
-            <i class="fa fa-{{# is_new }}plus{{/ is_new }}{{^ is_new }}pencil{{/ is_new }} tlp-modal-title-icon"></i>
             {{ group_title }}
         </h1>
         <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
-            &times;
+            <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
         </button>
     </div>
     <div class="tlp-modal-body">

@@ -28,7 +28,6 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="project-admin-services-edit-modal-title">
-                <i class="fas fa-pencil-alt tlp-modal-title-icon"></i>
                 <translate>Edit service</translate>
             </h1>
             <button
@@ -37,7 +36,7 @@
                 data-dismiss="modal"
                 v-bind:aria-label="close_label"
             >
-                ×
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <slot name="content" />

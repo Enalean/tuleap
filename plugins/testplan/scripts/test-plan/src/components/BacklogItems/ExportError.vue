@@ -26,7 +26,6 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="testplan-export-error-modal-title">
-                <i class="fas fa-exclamation-triangle tlp-modal-title-icon"></i>
                 <translate>Oops, there's an issue</translate>
             </h1>
             <button
@@ -35,7 +34,7 @@
                 data-dismiss="modal"
                 v-bind:aria-label="$gettext('Close')"
             >
-                ×
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <div class="tlp-modal-body">

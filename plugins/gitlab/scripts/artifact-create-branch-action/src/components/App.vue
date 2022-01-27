@@ -28,12 +28,13 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <i class="tuleap-modal-close close" data-dismiss="modal">×</i>
+                    <i class="tuleap-modal-close close" data-dismiss="modal">
+                        <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
+                    </i>
                     <h3
                         class="modal-title"
                         id="modal-artifact-create-gitlab-branch-choose-integrations"
                     >
-                        <i class="fas fa-code-branch" aria-hidden="true"></i>
                         <translate class="modal-move-artifact-icon-title">
                             Create branch on a GitLab repository
                         </translate>

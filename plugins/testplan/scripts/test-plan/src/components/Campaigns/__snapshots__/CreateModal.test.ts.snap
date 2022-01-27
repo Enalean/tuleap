@@ -13,11 +13,6 @@ exports[`CreateModal Display the modal when mounted 1`] = `
       class="tlp-modal-title"
       id="test-plan-create-campaign-modal-title"
     >
-      <i
-        aria-hidden="true"
-        class="fa fa-plus tlp-modal-title-icon"
-      />
-       
       <translate-stub
         tag="span"
       >
@@ -31,9 +26,10 @@ exports[`CreateModal Display the modal when mounted 1`] = `
       data-dismiss="modal"
       type="button"
     >
-      
-            ×
-        
+      <i
+        aria-hidden="true"
+        class="fas fa-times tlp-modal-close-icon"
+      />
     </button>
   </div>
    

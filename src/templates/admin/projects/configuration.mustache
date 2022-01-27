@@ -52,8 +52,8 @@
                                             </button>
                                             <div id="logs-modal-{{ id }}" class="tlp-modal" role="dialog" aria-labelledby="logs-modal-{{ id }}-label">
                                                 <div class="tlp-modal-header">
-                                                    <h1 id="logs-modal-{{ id }}-label" class="tlp-modal-title"><i class="fa fa-list tlp-modal-title-icon"></i> {{ show_logs_title }}</h1>
-                                                    <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{ close_modal }}">&times;</button>
+                                                    <h1 id="logs-modal-{{ id }}-label" class="tlp-modal-title">{{ show_logs_title }}</h1>
+                                                    <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{ close_modal }}"><i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i></button>
                                                 </div>
                                                 <div class="tlp-modal-body">
                                                     <table class="tlp-table">
@@ -85,8 +85,8 @@
                                         </button>
                                         <form id="edit-modal-{{ id }}" class="tlp-modal" role="dialog" aria-labelledby="edit-modal-label-{{ id }}" method="post">
                                             <div class="tlp-modal-header">
-                                                <h1 class="tlp-modal-title" id="edit-modal-label-{{ id }}"><i class="fas fa-pencil-alt tlp-modal-title-icon"></i> {{ update_title }}</h1>
-                                                <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</button>
+                                                <h1 class="tlp-modal-title" id="edit-modal-label-{{ id }}">{{ update_title }}</h1>
+                                                <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{ cancel_modal }}"><i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i></button>
                                             </div>
                                             <div class="tlp-modal-body">
                                                 <div class="tlp-form-element">
@@ -115,8 +115,8 @@
                                         </button>
                                         <form id="delete-modal-{{ id }}" class="tlp-modal tlp-modal-danger" role="dialog" aria-labelledby="delete-modal-label-{{ id }}" method="post">
                                             <div class="tlp-modal-header">
-                                                <h1 class="tlp-modal-title" id="delete-modal-label-{{ id }}"><i class="far fa-trash-alt tlp-modal-title-icon"></i> {{ delete_title }}</h1>
-                                                <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</button>
+                                                <h1 class="tlp-modal-title" id="delete-modal-label-{{ id }}">{{ delete_title }}</h1>
+                                                <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{ cancel_modal }}"><i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i></button>
                                             </div>
                                             <div class="tlp-modal-body">
                                                 <p>{{ delete_warning }}</p>
@@ -150,8 +150,8 @@
 
     <form id="add-project-webhook" class="tlp-modal" role="dialog" aria-labelledby="add-modal-label" method="post">
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="add-modal-label"><i class="fa fa-plus tlp-modal-title-icon"></i> {{ add_webhook }}</h1>
-            <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</button>
+            <h1 class="tlp-modal-title" id="add-modal-label">{{ add_webhook }}</h1>
+            <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{ cancel_modal }}"><i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i></button>
         </div>
         <div class="tlp-modal-body">
             <p>{{ add_webhook_description_modal }}</p>

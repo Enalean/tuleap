@@ -28,7 +28,6 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="create-repository-modal-title">
-                <i class="fa fa-plus tlp-modal-title-icon"></i>
                 <translate>Add project repository</translate>
             </h1>
             <button
@@ -37,7 +36,7 @@
                 data-dismiss="modal"
                 v-bind:aria-label="$gettext('Close')"
             >
-                &times;
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <div class="tlp-modal-body git-repository-create-modal-body">

@@ -10,9 +10,9 @@
     <input type="hidden" name="action" value="add">
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title">
-            <i class="fa fa-plus tlp-modal-title-icon"></i> {{ add_label }}
+            {{ add_label }}
         </h1>
-        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{ cancel }}">×</button>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{ cancel }}"><i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i></button>
     </div>
     {{> label-modal-form }}
 </form>

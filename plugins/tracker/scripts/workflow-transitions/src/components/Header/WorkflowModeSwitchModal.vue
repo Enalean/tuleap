@@ -29,7 +29,7 @@
                 Wait a minute...
             </h1>
             <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
-                &times;
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <div class="tlp-modal-body">
