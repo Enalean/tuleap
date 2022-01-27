@@ -20,18 +20,20 @@
 import type { LinkedArtifact } from "../../src/domain/fields/link-field-v2/LinkedArtifact";
 import type { RetrieveLinkedArtifactsByType } from "../../src/domain/fields/link-field-v2/RetrieveLinkedArtifactsByType";
 
-export const StubWithSuccessiveLinkedArtifacts = (
-    first_batch: LinkedArtifact[],
-    ...other_batches: LinkedArtifact[][]
-): RetrieveLinkedArtifactsByType => {
-    const all_batches = [first_batch, ...other_batches];
-    return {
-        getLinkedArtifactsByLinkType: (): Promise<LinkedArtifact[]> => {
-            const batch = all_batches.shift();
-            if (batch !== undefined) {
-                return Promise.resolve(batch);
-            }
-            throw new Error("No linked artifacts configured");
-        },
-    };
+export const RetrieveLinkedArtifactsByTypeStub = {
+    withSuccessiveLinkedArtifacts: (
+        first_batch: LinkedArtifact[],
+        ...other_batches: LinkedArtifact[][]
+    ): RetrieveLinkedArtifactsByType => {
+        const all_batches = [first_batch, ...other_batches];
+        return {
+            getLinkedArtifactsByLinkType: (): Promise<LinkedArtifact[]> => {
+                const batch = all_batches.shift();
+                if (batch !== undefined) {
+                    return Promise.resolve(batch);
+                }
+                throw new Error("No linked artifacts configured");
+            },
+        };
+    },
 };

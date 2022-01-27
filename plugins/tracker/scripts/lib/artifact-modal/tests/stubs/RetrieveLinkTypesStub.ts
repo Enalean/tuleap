@@ -20,12 +20,11 @@
 import type { RetrieveLinkTypes } from "../../src/domain/fields/link-field-v2/RetrieveLinkTypes";
 import type { LinkType } from "../../src/domain/fields/link-field-v2/LinkedArtifact";
 
-export const StubWithTypes = (
-    link_type: LinkType,
-    ...other_link_types: LinkType[]
-): RetrieveLinkTypes => {
-    const types = [link_type, ...other_link_types];
-    return {
-        getAllLinkTypes: (): Promise<LinkType[]> => Promise.resolve(types),
-    };
+export const RetrieveLinkTypesStub = {
+    withTypes: (link_type: LinkType, ...other_link_types: LinkType[]): RetrieveLinkTypes => {
+        const types = [link_type, ...other_link_types];
+        return {
+            getAllLinkTypes: (): Promise<LinkType[]> => Promise.resolve(types),
+        };
+    },
 };

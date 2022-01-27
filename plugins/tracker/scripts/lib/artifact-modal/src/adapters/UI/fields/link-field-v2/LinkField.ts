@@ -29,8 +29,7 @@ import {
 
 import type { UpdateFunction } from "hybrids";
 import type { LinkFieldControllerType } from "./LinkFieldController";
-import type { LinkFieldPresenter } from "./LinkFieldPresenter";
-import { buildLoadingState } from "./LinkFieldPresenter";
+import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { LinkedArtifact } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
 
 export interface LinkField {
@@ -165,7 +164,7 @@ export const LinkField = define<LinkField>({
         },
     },
     presenter: {
-        get: (host, last_value) => last_value ?? buildLoadingState(),
+        get: (host, last_value) => last_value ?? LinkFieldPresenter.buildLoadingState(),
         set: (host, presenter) => presenter,
     },
     content: (host) => html`

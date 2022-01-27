@@ -20,8 +20,7 @@
 import type { HostElement } from "./ModalFeedback";
 import { ModalFeedback } from "./ModalFeedback";
 import { setCatalog } from "../../../gettext-catalog";
-import type { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
-import { buildEmpty, buildFromArtifact } from "./ParentFeedbackPresenter";
+import { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
 
 const PARENT_ID = 86;
 const PARENT_TITLE = "foreclaw";
@@ -35,7 +34,7 @@ describe(`ModalFeedback`, () => {
         target = document.implementation
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
-        presenter = buildFromArtifact({ id: PARENT_ID, title: PARENT_TITLE });
+        presenter = ParentFeedbackPresenter.fromArtifact({ id: PARENT_ID, title: PARENT_TITLE });
     });
 
     const renderTemplate = (): void => {
@@ -50,7 +49,7 @@ describe(`ModalFeedback`, () => {
     });
 
     it(`when there is no parent, it will show nothing`, () => {
-        presenter = buildEmpty();
+        presenter = ParentFeedbackPresenter.buildEmpty();
         renderTemplate();
         expect(target.querySelector("[data-test=parent-feedback]")).toBeNull();
     });

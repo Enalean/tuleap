@@ -17,11 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Artifact } from "../../src/domain/Artifact";
-import type { RetrieveArtifact } from "../../src/domain/RetrieveArtifact";
+export interface APILinkedArtifact {
+    readonly id: number;
+    readonly xref: string;
+    readonly title: string;
+    readonly html_url: string;
+    readonly tracker: APITracker;
+    readonly status: string;
+    readonly is_open: boolean;
+}
 
-export const RetrieveArtifactStub = {
-    withArtifact: (artifact: Artifact): RetrieveArtifact => ({
-        getArtifact: (): Promise<Artifact> => Promise.resolve(artifact),
-    }),
-};
+interface APITracker {
+    readonly color_name: string;
+}

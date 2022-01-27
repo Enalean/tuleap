@@ -20,6 +20,8 @@
 import type { Artifact } from "../../src/domain/Artifact";
 import type { RetrieveParent } from "../../src/domain/parent/RetrieveParent";
 
-export const StubWithParent = (artifact: Artifact): RetrieveParent => ({
-    retrieveFutureParent: (): Promise<Artifact | null> => Promise.resolve(artifact),
-});
+export const RetrieveParentStub = {
+    withParent: (artifact: Artifact): RetrieveParent => ({
+        retrieveFutureParent: (): Promise<Artifact | null> => Promise.resolve(artifact),
+    }),
+};

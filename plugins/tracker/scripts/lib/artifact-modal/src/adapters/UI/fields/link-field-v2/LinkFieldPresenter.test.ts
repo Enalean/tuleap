@@ -17,17 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    buildForCreationMode,
-    buildFromArtifacts,
-    buildFromError,
-    buildLoadingState,
-} from "./LinkFieldPresenter";
+import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { LinkedArtifact } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
 
 describe(`LinkFieldPresenter`, () => {
     it(`builds a loading state`, () => {
-        const presenter = buildLoadingState();
+        const presenter = LinkFieldPresenter.buildLoadingState();
         expect(presenter.linked_artifacts).toHaveLength(0);
         expect(presenter.error_message).toBe("");
         expect(presenter.is_loading).toBe(true);
@@ -35,7 +30,7 @@ describe(`LinkFieldPresenter`, () => {
     });
 
     it(`builds for creation mode`, () => {
-        const presenter = buildForCreationMode();
+        const presenter = LinkFieldPresenter.forCreationMode();
         expect(presenter.linked_artifacts).toHaveLength(0);
         expect(presenter.error_message).toBe("");
         expect(presenter.is_loading).toBe(false);
@@ -46,7 +41,7 @@ describe(`LinkFieldPresenter`, () => {
         const first_artifact = { title: "bribery" } as unknown as LinkedArtifact;
         const second_artifact = { title: "versicolorate" } as unknown as LinkedArtifact;
 
-        const presenter = buildFromArtifacts([first_artifact, second_artifact]);
+        const presenter = LinkFieldPresenter.fromArtifacts([first_artifact, second_artifact]);
         expect(presenter.linked_artifacts).toContain(first_artifact);
         expect(presenter.linked_artifacts).toContain(second_artifact);
         expect(presenter.error_message).toBe("");
@@ -57,7 +52,7 @@ describe(`LinkFieldPresenter`, () => {
     it(`builds from error`, () => {
         const error_message = "Ooops";
 
-        const presenter = buildFromError(new Error(error_message));
+        const presenter = LinkFieldPresenter.fromError(new Error(error_message));
         expect(presenter.linked_artifacts).toHaveLength(0);
         expect(presenter.error_message).toBe(error_message);
         expect(presenter.is_loading).toBe(false);

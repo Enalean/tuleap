@@ -25,12 +25,7 @@ import {
     getSkeletonIfNeeded,
     LinkField,
 } from "./LinkField";
-import {
-    buildForCreationMode,
-    buildFromArtifacts,
-    buildFromError,
-    buildLoadingState,
-} from "./LinkFieldPresenter";
+import { LinkFieldPresenter } from "./LinkFieldPresenter";
 
 const getDocument = (): Document => document.implementation.createHTMLDocument();
 
@@ -81,7 +76,7 @@ describe("LinkField", () => {
                     is_open: false,
                 },
             ];
-            const presenter = buildFromArtifacts(linked_artifacts);
+            const presenter = LinkFieldPresenter.fromArtifacts(linked_artifacts);
             const host = getHost();
             const doc = getDocument();
 
@@ -138,7 +133,7 @@ describe("LinkField", () => {
 
         it("should hide the table and show an alert when an error occurred during the retrieval of the linked artifacts", () => {
             const error_message = "Unable to retrieve the linked artifacts because reasons";
-            const presenter = buildFromError(new Error(error_message));
+            const presenter = LinkFieldPresenter.fromError(new Error(error_message));
             const host = getHost({ presenter });
             const update = LinkField.content(host);
             update(host, target);
@@ -155,14 +150,14 @@ describe("LinkField", () => {
         });
 
         it("should render a skeleton row when the links are being loaded", () => {
-            const render = getSkeletonIfNeeded(buildLoadingState());
+            const render = getSkeletonIfNeeded(LinkFieldPresenter.buildLoadingState());
 
             render(getHost(), target);
             expect(target.querySelector("[data-test=link-field-table-skeleton]")).not.toBe(null);
         });
 
         it("should render an empty state row when content has been loaded and there is no link to display", () => {
-            const render = getEmptyStateIfNeeded(buildForCreationMode());
+            const render = getEmptyStateIfNeeded(LinkFieldPresenter.forCreationMode());
 
             render(getHost(), target);
             expect(target.querySelector("[data-test=link-table-empty-state]")).not.toBe(null);

@@ -20,15 +20,9 @@
 import type { LinkFieldPresenter } from "./LinkFieldPresenter";
 import { LinkFieldController } from "./LinkFieldController";
 import type { VerifyIsInCreationMode } from "../../../../domain/VerifyIsInCreationMode";
-import {
-    StubWithCreationMode,
-    StubWithEditionMode,
-} from "../../../../../tests/stubs/VerifyIsInCreationModeStub";
+import { VerifyIsInCreationModeStub } from "../../../../../tests/stubs/VerifyIsInCreationModeStub";
 import type { LinkedArtifact } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
-import {
-    StubWithError,
-    StubWithLinkedArtifacts,
-} from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
+import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
 import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
 
 describe(`LinkFieldController`, () => {
@@ -36,9 +30,9 @@ describe(`LinkFieldController`, () => {
         let mode_verifier: VerifyIsInCreationMode, links_retriever: RetrieveAllLinkedArtifacts;
 
         beforeEach(() => {
-            mode_verifier = StubWithEditionMode();
+            mode_verifier = VerifyIsInCreationModeStub.withEditionMode();
             const linked_artifact = { title: "Child" } as LinkedArtifact;
-            links_retriever = StubWithLinkedArtifacts(linked_artifact);
+            links_retriever = RetrieveAllLinkedArtifactsStub.withLinkedArtifacts(linked_artifact);
         });
 
         const displayLinkedArtifacts = (): Promise<LinkFieldPresenter> => {
@@ -47,7 +41,7 @@ describe(`LinkFieldController`, () => {
         };
 
         it(`when the modal is in creation mode, it will return a dedicated empty presenter`, async () => {
-            mode_verifier = StubWithCreationMode();
+            mode_verifier = VerifyIsInCreationModeStub.withCreationMode();
             const presenter = await displayLinkedArtifacts();
 
             expect(presenter.has_loaded_content).toBe(true);
@@ -64,7 +58,7 @@ describe(`LinkFieldController`, () => {
         it(`when the modal is in edition mode and it fails loading,
             it will return a presenter with an error message`, async () => {
             const error_message = "Ooops";
-            links_retriever = StubWithError(error_message);
+            links_retriever = RetrieveAllLinkedArtifactsStub.withError(error_message);
             const presenter = await displayLinkedArtifacts();
 
             expect(presenter.has_loaded_content).toBe(true);

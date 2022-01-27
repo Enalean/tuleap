@@ -18,23 +18,24 @@
  */
 
 import type { RetrieveParent } from "../../../domain/parent/RetrieveParent";
-import type { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
-import { buildEmpty, buildFromArtifact } from "./ParentFeedbackPresenter";
+import { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
 
-export interface ModalFeedbackController {
+export interface ModalFeedbackControllerType {
     displayParentFeedback(): Promise<ParentFeedbackPresenter>;
 }
 
 export const ModalFeedbackController = (
     retriever: RetrieveParent,
     parent_artifact_id: number | null
-): ModalFeedbackController => {
+): ModalFeedbackControllerType => {
     return {
         displayParentFeedback: (): Promise<ParentFeedbackPresenter> => {
             if (parent_artifact_id === null) {
-                return Promise.resolve(buildEmpty());
+                return Promise.resolve(ParentFeedbackPresenter.buildEmpty());
             }
-            return retriever.retrieveFutureParent(parent_artifact_id).then(buildFromArtifact);
+            return retriever
+                .retrieveFutureParent(parent_artifact_id)
+                .then(ParentFeedbackPresenter.fromArtifact);
         },
     };
 };

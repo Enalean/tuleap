@@ -19,10 +19,12 @@
 
 import type { VerifyIsInCreationMode } from "../../src/domain/VerifyIsInCreationMode";
 
-export const StubWithCreationMode = (): VerifyIsInCreationMode => ({
-    isInCreationMode: (): boolean => true,
-});
+export const VerifyIsInCreationModeStub = {
+    withCreationMode: (): VerifyIsInCreationMode => ({
+        isInCreationMode: (): boolean => true,
+    }),
 
-export const StubWithEditionMode = (): VerifyIsInCreationMode => ({
-    isInCreationMode: (): boolean => false,
-});
+    withEditionMode: (): VerifyIsInCreationMode => ({
+        isInCreationMode: (): boolean => false,
+    }),
+};
