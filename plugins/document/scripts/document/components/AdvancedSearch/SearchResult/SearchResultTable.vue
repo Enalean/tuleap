@@ -19,23 +19,25 @@
   -->
 
 <template>
-    <div>
-        <table class="tlp-table">
-            <thead>
-                <tr>
-                    <th class="tlp-table-cell-numeric" v-translate>Id</th>
-                    <th class="document-search-result-icon"></th>
-                    <th v-translate>Title</th>
-                    <th v-translate>Description</th>
-                    <th v-translate>Owner</th>
-                    <th v-translate>Update date</th>
-                    <th v-translate>Location</th>
-                </tr>
-            </thead>
-            <table-body-skeleton v-if="is_loading" />
-            <table-body-results v-else-if="items.length > 0" v-bind:results="items" />
-            <table-body-empty v-else />
-        </table>
+    <fragment>
+        <div class="document-search-table-container">
+            <table class="tlp-table document-search-table">
+                <thead>
+                    <tr>
+                        <th class="tlp-table-cell-numeric" v-translate>Id</th>
+                        <th class="document-search-result-icon"></th>
+                        <th v-translate>Title</th>
+                        <th v-translate>Description</th>
+                        <th v-translate>Owner</th>
+                        <th v-translate>Update date</th>
+                        <th v-translate>Location</th>
+                    </tr>
+                </thead>
+                <table-body-skeleton v-if="is_loading" />
+                <table-body-results v-else-if="items.length > 0" v-bind:results="items" />
+                <table-body-empty v-else />
+            </table>
+        </div>
         <search-result-pagination
             v-if="items.length > 0"
             v-bind:from="results.from"
@@ -43,7 +45,7 @@
             v-bind:total="results.total"
             v-bind:limit="limit"
         />
-    </div>
+    </fragment>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -53,9 +55,16 @@ import type { ItemSearchResult, SearchResult } from "../../../type";
 import { SEARCH_LIMIT } from "../../../type";
 import TableBodyResults from "./TableBodyResults.vue";
 import SearchResultPagination from "./SearchResultPagination.vue";
+import { Fragment } from "vue-frag";
 
 @Component({
-    components: { SearchResultPagination, TableBodyResults, TableBodyEmpty, TableBodySkeleton },
+    components: {
+        SearchResultPagination,
+        TableBodyResults,
+        TableBodyEmpty,
+        TableBodySkeleton,
+        Fragment,
+    },
 })
 export default class SearchResultTable extends Vue {
     @Prop({ required: true })
