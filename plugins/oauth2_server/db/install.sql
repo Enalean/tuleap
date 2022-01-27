@@ -91,10 +91,3 @@ CREATE TABLE plugin_oauth2_refresh_token_scope (
     scope_key VARCHAR(255) NOT NULL,
     PRIMARY KEY (refresh_token_id, scope_key)
 ) ENGINE=InnoDB;
-
-CREATE TABLE plugin_oauth2_oidc_signing_key (
-    public_key TEXT NOT NULL,
-    private_key BLOB NOT NULL,
-    expiration_date INT(11) UNSIGNED NOT NULL,
-    INDEX idx_expiration_date (expiration_date)
-) ENGINE=InnoDB;

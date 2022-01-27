@@ -26,4 +26,3 @@ DROP TABLE IF EXISTS plugin_oauth2_access_token;
 DROP TABLE IF EXISTS plugin_oauth2_access_token_scope;
 DROP TABLE IF EXISTS plugin_oauth2_refresh_token;
 DROP TABLE IF EXISTS plugin_oauth2_refresh_token_scope;
-DROP TABLE IF EXISTS plugin_oauth2_oidc_signing_key;

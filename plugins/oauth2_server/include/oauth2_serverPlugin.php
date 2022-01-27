@@ -74,9 +74,9 @@ use Tuleap\OAuth2Server\Grant\OAuth2ClientAuthenticationMiddleware;
 use Tuleap\OAuth2Server\Grant\RefreshToken\OAuth2GrantAccessTokenFromRefreshToken;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\JWTBuilderFactory;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectIDTokenCreator;
-use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectSigningKeyDAO;
-use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectSigningKeyFactory;
-use Tuleap\OAuth2Server\OpenIDConnect\JWK\JWKSDocumentEndpointController;
+use Tuleap\OAuth2ServerCore\OAuth2ServerRoutes;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\OpenIDConnectSigningKeyDAO;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\OpenIDConnectSigningKeyFactory;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OAuth2SignInScope;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectEmailScope;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectProfileScope;
@@ -112,10 +112,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class oauth2_serverPlugin extends Plugin
 {
-    public const SERVICE_NAME_INSTRUMENTATION  = 'oauth2_server';
-    public const CSRF_TOKEN_APP_EDITION        = 'oauth2_server_app_edition';
-    private const ID_TOKEN_EXPIRATION_DELAY    = 'PT2M';
-    private const SIGNING_KEY_EXPIRATION_DELAY = 'PT1H';
+    public const SERVICE_NAME_INSTRUMENTATION = 'oauth2_server';
+    public const CSRF_TOKEN_APP_EDITION       = 'oauth2_server_app_edition';
 
     public function __construct(?int $id)
     {
@@ -234,7 +232,6 @@ final class oauth2_serverPlugin extends Plugin
                 );
                 $r->post('/token', $this->getRouteHandler('routeAccessTokenCreation'));
                 $r->post('/token/revoke', $this->getRouteHandler('routeTokenRevocation'));
-                $r->get('/jwks', $this->getRouteHandler('routeJWKSDocument'));
             }
         );
         $route_collector->addRoute('GET', '/.well-known/openid-configuration', $this->getRouteHandler('routeDiscovery'));
@@ -557,12 +554,12 @@ final class oauth2_serverPlugin extends Plugin
             new OpenIDConnectIDTokenCreator(
                 OAuth2SignInScope::fromItself(),
                 new JWTBuilderFactory(),
-                new DateInterval(self::ID_TOKEN_EXPIRATION_DELAY),
+                new DateInterval(OAuth2ServerRoutes::ID_TOKEN_EXPIRATION_DELAY),
                 new OpenIDConnectSigningKeyFactory(
                     new KeyFactory(),
                     new OpenIDConnectSigningKeyDAO(),
-                    new DateInterval(self::SIGNING_KEY_EXPIRATION_DELAY),
-                    new DateInterval(self::ID_TOKEN_EXPIRATION_DELAY),
+                    new DateInterval(OAuth2ServerRoutes::SIGNING_KEY_EXPIRATION_DELAY),
+                    new DateInterval(OAuth2ServerRoutes::ID_TOKEN_EXPIRATION_DELAY),
                 ),
                 new Sha256(),
                 UserManager::instance()
@@ -700,25 +697,6 @@ final class oauth2_serverPlugin extends Plugin
             ),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION)
-        );
-    }
-
-    public function routeJWKSDocument(): DispatchableWithRequest
-    {
-        $response_factory = HTTPFactoryBuilder::responseFactory();
-        $stream_factory   = HTTPFactoryBuilder::streamFactory();
-        return new JWKSDocumentEndpointController(
-            new OpenIDConnectSigningKeyFactory(
-                new KeyFactory(),
-                new OpenIDConnectSigningKeyDAO(),
-                new DateInterval(self::SIGNING_KEY_EXPIRATION_DELAY),
-                new DateInterval(self::ID_TOKEN_EXPIRATION_DELAY),
-            ),
-            new DateInterval(self::ID_TOKEN_EXPIRATION_DELAY),
-            new JSONResponseBuilder($response_factory, $stream_factory),
-            new SapiEmitter(),
-            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
-            new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
         );
     }
 

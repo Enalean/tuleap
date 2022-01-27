@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\OpenIDConnect\IDToken;
+namespace Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken;
 
 use Tuleap\DB\DBFactory;
 
@@ -38,7 +38,7 @@ final class OpenIDConnectSigningKeyDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function tearDown(): void
     {
-        DBFactory::getMainTuleapDBConnection()->getDB()->run('DELETE FROM plugin_oauth2_oidc_signing_key');
+        DBFactory::getMainTuleapDBConnection()->getDB()->run('DELETE FROM oauth2_server_oidc_signing_key');
     }
 
     public function testCanSaveAndRetrieveKeys(): void

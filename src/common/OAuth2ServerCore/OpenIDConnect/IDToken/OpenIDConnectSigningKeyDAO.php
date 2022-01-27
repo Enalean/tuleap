@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\OpenIDConnect\IDToken;
+namespace Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken;
 
 use Tuleap\DB\DataAccessObject;
 
@@ -29,10 +29,10 @@ class OpenIDConnectSigningKeyDAO extends DataAccessObject
     public function save(string $public_key, string $encrypted_private_key, int $expiration_date, int $cleanup_keys_date): void
     {
         $this->getDB()->insert(
-            'plugin_oauth2_oidc_signing_key',
+            'oauth2_server_oidc_signing_key',
             ['public_key' => $public_key, 'private_key' => $encrypted_private_key, 'expiration_date' => $expiration_date]
         );
-        $this->getDB()->run('DELETE FROM plugin_oauth2_oidc_signing_key WHERE ? > expiration_date', $cleanup_keys_date);
+        $this->getDB()->run('DELETE FROM oauth2_server_oidc_signing_key WHERE ? > expiration_date', $cleanup_keys_date);
     }
 
     /**
@@ -40,7 +40,7 @@ class OpenIDConnectSigningKeyDAO extends DataAccessObject
      */
     public function searchPublicKeys(): array
     {
-        return $this->getDB()->column('SELECT public_key FROM plugin_oauth2_oidc_signing_key');
+        return $this->getDB()->column('SELECT public_key FROM oauth2_server_oidc_signing_key');
     }
 
     /**
@@ -51,7 +51,7 @@ class OpenIDConnectSigningKeyDAO extends DataAccessObject
     {
         $row = $this->getDB()->row(
             'SELECT public_key, private_key
-                       FROM plugin_oauth2_oidc_signing_key
+                       FROM oauth2_server_oidc_signing_key
                        WHERE expiration_date >= ?
                        ORDER BY expiration_date DESC
                        LIMIT 1',
