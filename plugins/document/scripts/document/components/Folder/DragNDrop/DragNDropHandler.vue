@@ -52,7 +52,6 @@ export default {
             MAX_SIZE_ERROR: "max_size",
             ALREADY_EXISTS_ERROR: "already_exists",
             EDITION_LOCKED: "edition_locked",
-            DOCUMENT_NEEDS_APPROVAL: "document_needs_approval",
             DROPPED_ITEM_IS_NOT_A_FILE: "dropped_item_is_not_a_file",
             highlighted_item_id: null,
         };
@@ -101,12 +100,6 @@ export default {
                 return () =>
                     import(
                         /* webpackChunkName: "document-edition-locked-error-modal" */ "./DocumentLockedForEditionErrorModal.vue"
-                    );
-            }
-            if (this.error_modal_shown === this.DOCUMENT_NEEDS_APPROVAL) {
-                return () =>
-                    import(
-                        /* webpackChunkName: "document-needs-approval-error-modal" */ "./DocumentNeedsApprovalErrorModal.vue"
                     );
             }
 
@@ -327,21 +320,6 @@ export default {
                 return;
             }
 
-            const is_an_approval_table_blocking_update =
-                approval_table !== null && !approval_table.has_been_approved;
-
-            if (is_an_approval_table_blocking_update) {
-                this.error_modal_shown = this.DOCUMENT_NEEDS_APPROVAL;
-                this.error_modal_reasons.push({
-                    filename: dropzone_item.title,
-                    approval_table_owner: approval_table.table_owner,
-                    approval_table_state: approval_table.approval_state,
-                    item_id: dropzone_item.id,
-                });
-
-                return;
-            }
-
             const files = event.dataTransfer.files;
             const file = files[0];
 
@@ -359,7 +337,7 @@ export default {
             }
 
             try {
-                if (this.is_changelog_proposed_after_dnd) {
+                if (this.is_changelog_proposed_after_dnd || approval_table !== null) {
                     EventBus.$emit("show-changelog-modal", {
                         detail: {
                             updated_file: dropzone_item,
