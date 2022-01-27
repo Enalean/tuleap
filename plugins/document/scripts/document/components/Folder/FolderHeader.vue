@@ -166,7 +166,7 @@ export default {
     },
     created() {
         emitter.on("deleteItem", this.showDeleteItemModal);
-        EventBus.$on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
+        emitter.on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
         EventBus.$on("show-update-item-metadata-modal", this.showUpdateItemMetadataModal);
         EventBus.$on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
         EventBus.$on(
@@ -178,7 +178,7 @@ export default {
     },
     beforeDestroy() {
         emitter.off("deleteItem", this.showDeleteItemModal);
-        EventBus.$off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
+        emitter.off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
         EventBus.$off("show-update-item-metadata-modal", this.showUpdateItemMetadataModal);
         EventBus.$off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
         EventBus.$off(

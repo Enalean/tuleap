@@ -71,8 +71,8 @@
 import { mapState } from "vuex";
 import FolderContentRow from "./FolderContentRow.vue";
 import QuicklookGlobal from "./QuickLook/QuickLookGlobal.vue";
-import EventBus from "../../helpers/event-bus.js";
 import { isFile, isFolder } from "../../helpers/type-check-helper";
+import emitter from "../../helpers/emitter";
 
 export default {
     name: "FolderContent",
@@ -106,10 +106,10 @@ export default {
         },
     },
     created() {
-        EventBus.$on("toggle-quick-look", this.toggleQuickLook);
+        emitter.on("toggle-quick-look", this.toggleQuickLook);
     },
     beforeDestroy() {
-        EventBus.$off("toggle-quick-look", this.toggleQuickLook);
+        emitter.off("toggle-quick-look", this.toggleQuickLook);
     },
     methods: {
         async toggleQuickLook(event) {

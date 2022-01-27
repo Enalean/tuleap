@@ -37,66 +37,67 @@
         <translate>Create new version</translate>
     </button>
 </template>
-<script>
-import EventBus from "../../../helpers/event-bus.js";
+<script lang="ts">
 import { isLink, isWiki } from "../../../helpers/type-check-helper";
+import Component from "vue-class-component";
+import Vue from "vue";
+import { Prop } from "vue-property-decorator";
+import type { Item } from "../../../type";
+import emitter from "../../../helpers/emitter";
 
-export default {
-    name: "NewItemVersionButton",
-    props: {
-        item: Object,
-        buttonClasses: String,
-        iconClasses: String,
-    },
-    data() {
-        return {
-            is_loading_item: false,
-        };
-    },
-    computed: {
-        is_item_a_wiki_with_approval_table() {
-            return isWiki(this.item) && this.item.approval_table !== null;
-        },
-        cannot_create_new_wiki_version_because_approval_table() {
-            return this.$gettext("This wiki has a approval table, you can't update it.");
-        },
-        button_classes() {
-            let classes = this.buttonClasses;
+@Component
+export default class NewItemVersionButton extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
 
-            if (this.is_item_a_wiki_with_approval_table) {
-                classes +=
-                    " document-new-item-version-button-disabled tlp-tooltip tlp-tooltip-left";
-            }
+    @Prop({ required: true })
+    readonly buttonClasses!: string;
 
-            return classes;
-        },
-    },
-    methods: {
-        async goToUpdate() {
-            if (this.is_item_a_wiki_with_approval_table) {
-                return;
-            }
+    @Prop({ required: true })
+    readonly iconClasses!: string;
 
-            if (isLink(this.item)) {
-                this.is_loading_item = true;
+    private is_loading_item = false;
 
-                const link_with_all_properties = await this.$store.dispatch(
-                    "loadDocument",
-                    this.item.id
-                );
+    get is_item_a_wiki_with_approval_table(): boolean {
+        return isWiki(this.item) && this.item.approval_table !== null;
+    }
+    get cannot_create_new_wiki_version_because_approval_table(): string {
+        return this.$gettext("This wiki has a approval table, you can't update it.");
+    }
+    get button_classes(): string {
+        let classes = this.buttonClasses;
 
-                EventBus.$emit("show-create-new-item-version-modal", {
-                    detail: { current_item: link_with_all_properties },
-                });
+        if (this.is_item_a_wiki_with_approval_table) {
+            classes += " document-new-item-version-button-disabled tlp-tooltip tlp-tooltip-left";
+        }
 
-                this.is_loading_item = false;
-                return;
-            }
+        return classes;
+    }
 
-            EventBus.$emit("show-create-new-item-version-modal", {
-                detail: { current_item: this.item },
+    async goToUpdate(): Promise<void> {
+        if (this.is_item_a_wiki_with_approval_table) {
+            return;
+        }
+
+        if (isLink(this.item)) {
+            this.is_loading_item = true;
+
+            const link_with_all_properties = await this.$store.dispatch(
+                "loadDocument",
+                this.item.id
+            );
+
+            emitter.emit("show-create-new-item-version-modal", {
+                detail: { current_item: link_with_all_properties },
             });
-        },
-    },
-};
+
+            this.is_loading_item = false;
+            return;
+        }
+
+        emitter.emit("show-create-new-item-version-modal", {
+            detail: { current_item: this.item },
+        });
+    }
+}
 </script>
