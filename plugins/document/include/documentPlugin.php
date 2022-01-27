@@ -19,8 +19,6 @@
  */
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Tuleap\CLI\Events\GetWhitelistedKeys;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsTabsPresenterCollection;
 use Tuleap\Docman\ExternalLinks\DocmanLinkProvider;
 use Tuleap\Docman\ExternalLinks\ExternalLinkRedirector;
@@ -59,9 +57,6 @@ class documentPlugin extends Plugin // phpcs:ignore
      */
     private $old_docman_plugin_info;
 
-    #[FeatureFlagConfigKey("Feature flag for story #24197 add a dedicated search screen into Document app")]
-    public const SEARCH_FOR_DOCUMENTS_WITH_CRITERIA = 'search_for_documents_with_criteria';
-
     public function __construct($id)
     {
         parent::__construct($id);
@@ -78,7 +73,6 @@ class documentPlugin extends Plugin // phpcs:ignore
         $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(DocmanLinkProvider::NAME);
         $this->addHook(DocmanSettingsTabsPresenterCollection::NAME);
-        $this->addHook(GetWhitelistedKeys::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -268,10 +262,5 @@ class documentPlugin extends Plugin // phpcs:ignore
         $collection->add(
             new \Tuleap\Document\Config\Admin\HistoryEnforcementTabPresenter()
         );
-    }
-
-    public function getWhitelistedKeys(GetWhitelistedKeys $event): void
-    {
-        $event->addConfigClass(self::class);
     }
 }

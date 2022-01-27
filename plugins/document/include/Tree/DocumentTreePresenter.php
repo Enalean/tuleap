@@ -119,7 +119,6 @@ class DocumentTreePresenter
     public $project_flags;
 
     public string $project_icon;
-    public bool $search_for_document_with_criteria;
 
     public function __construct(
         \Project $project,
@@ -157,7 +156,5 @@ class DocumentTreePresenter
         $this->privacy       = json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR);
         $this->project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
         $this->project_icon  = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint());
-
-        $this->search_for_document_with_criteria = \ForgeConfig::getFeatureFlag(\documentPlugin::SEARCH_FOR_DOCUMENTS_WITH_CRITERIA) === "1";
     }
 }
