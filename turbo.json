@@ -1,0 +1,28 @@
+{
+  "baseBranch": "origin/master",
+  "npmClient": "pnpm",
+  "globalDependencies": [
+    "tsconfig.json",
+    "tools/utils/scripts/**",
+    "tools/utils/nix/**"
+  ],
+  "pipeline": {
+    "typecheck": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": []
+    },
+    "build": {
+      "dependsOn": [
+        "typecheck",
+        "^build"
+      ],
+      "outputs": [],
+      "cache": false
+    },
+    "test": {
+      "outputs": []
+    }
+  }
+}
