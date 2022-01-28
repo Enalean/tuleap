@@ -18,6 +18,7 @@
  */
 
 @use "adapters/UI/fields/link-field-v2/link-field-v2";
+@use "adapters/UI/fields/burndown-field/bundown-field";
 @import "tuleap-highlight/highlight";
 @import "quota-display/quota-display";
 @import "fields/file-field/file-field";
@@ -90,10 +91,6 @@
             text-decoration: underline;
         }
     }
-}
-
-.tuleap-artifact-modal-artifact-field-burndown-image {
-    max-width: 100%;
 }
 
 fieldset {

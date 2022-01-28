@@ -88,6 +88,9 @@ function ArtifactModalController(
     Object.assign(self, {
         $onInit: init,
         artifact_id: modal_model.artifact_id,
+        current_artifact_identifier: CurrentArtifactIdentifierProxy.fromModalArtifactId(
+            modal_model.artifact_id
+        ),
         color: formatColor(modal_model.color),
         creation_mode: isInCreationMode(),
         ordered_fields: modal_model.ordered_fields,
