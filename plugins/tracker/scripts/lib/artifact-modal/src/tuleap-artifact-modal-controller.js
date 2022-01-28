@@ -50,6 +50,7 @@ import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js
 import { TuleapAPIClient } from "./adapters/REST/TuleapAPIClient";
 import { ModalFeedbackController } from "./adapters/UI/feedback/ModalFeedbackController";
 import { LinkFieldController } from "./adapters/UI/fields/link-field-v2/LinkFieldController";
+import { DatePickerInitializer } from "./adapters/UI/fields/date-field/DatePickerInitializer";
 import { LinksRetriever } from "./domain/fields/link-field-v2/LinksRetriever";
 import { CurrentArtifactIdentifierProxy } from "./adapters/Caller/CurrentArtifactIdentifierProxy";
 import { ParentArtifactIdentifierProxy } from "./adapters/Caller/ParentArtifactIdentifierProxy";
@@ -111,6 +112,7 @@ function ArtifactModalController(
             LinksRetriever(api_client, api_client),
             CurrentArtifactIdentifierProxy.fromModalArtifactId(modal_model.artifact_id)
         ),
+        date_picker_initializer: DatePickerInitializer(),
         feedback_controller: ModalFeedbackController(
             api_client,
             ParentArtifactIdentifierProxy.fromCallerArgument(modal_model.parent_artifact_id)

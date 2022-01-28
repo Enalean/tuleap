@@ -303,12 +303,15 @@
 </script>
 
 <script type="text/ng-template" id="field-date.tpl.html">
-<div
-    class="field"
-    tuleap-artifact-modal-date-field="field"
+<tuleap-artifact-modal-date-field
+    field="field"
     is-disabled="modal.isDisabled(field)"
-    value-model="modal.values[field.field_id]"
-></div>
+    value="modal.values[field.field_id].value"
+    on-value-changed="modal.setFieldValueForCustomElement($event)"
+    date-picker-initializer="modal.date_picker_initializer"
+    ce-one-way
+></tuleap-artifact-modal-date-field>
+
 </script>
 
 <script type="text/ng-template" id="field-tbl.tpl.html">

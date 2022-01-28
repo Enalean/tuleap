@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const noop = () => {
-    //Do nothing
-};
+import { datePicker } from "tlp";
 
-export const get = noop;
-export const recursiveGet = noop;
-export const options = noop;
-export const put = noop;
-export const post = noop;
-export const select2 = noop;
-export const createPopover = noop;
-export const datePicker = noop;
+export interface DatePickerInitializerType {
+    initDatePicker: (input_element: HTMLInputElement) => void;
+}
+
+export const DatePickerInitializer = (): DatePickerInitializerType => ({
+    initDatePicker: (input_element: HTMLInputElement): void => {
+        datePicker(input_element);
+    },
+});
