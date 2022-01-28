@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const noop = () => {
-    //Do nothing
-};
+import * as tlp from "tlp";
+import { DatePickerInitializer } from "./DatePickerInitializer";
 
-export const get = noop;
-export const recursiveGet = noop;
-export const options = noop;
-export const put = noop;
-export const post = noop;
-export const select2 = noop;
-export const createPopover = noop;
-export const datePicker = noop;
+describe("DatePickerInitializer", () => {
+    it("Given an input element, Then it should init a TLP datePicker on it", () => {
+        const datePickerSpy = jest.spyOn(tlp, "datePicker");
+        const input = document.implementation.createHTMLDocument().createElement("input");
+        const initializer = DatePickerInitializer();
+
+        initializer.initDatePicker(input);
+
+        expect(datePickerSpy).toHaveBeenCalledWith(input);
+    });
+});

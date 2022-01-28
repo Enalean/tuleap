@@ -52,6 +52,7 @@ import { TuleapAPIClient } from "./adapters/REST/TuleapAPIClient";
 import { CreationModeVerifier } from "./adapters/Memory/CreationModeVerifier";
 import { ModalFeedbackController } from "./adapters/UI/feedback/ModalFeedbackController";
 import { LinkFieldController } from "./adapters/UI/fields/link-field-v2/LinkFieldController";
+import { DatePickerInitializer } from "./adapters/UI/fields/date-field/DatePickerInitializer";
 import { LinksRetriever } from "./domain/fields/link-field-v2/LinksRetriever";
 
 export default ArtifactModalController;
@@ -113,6 +114,7 @@ function ArtifactModalController(
             mode_verifier,
             modal_model.artifact_id
         ),
+        date_picker_initializer: DatePickerInitializer(),
         feedback_controller: ModalFeedbackController(
             ParentRetriever(api_client, mode_verifier),
             modal_model.parent_artifact_id

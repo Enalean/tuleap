@@ -33,7 +33,6 @@ import { setCatalog } from "./gettext-catalog";
 
 import ArtifactModalService from "./tuleap-artifact-modal-service.js";
 import ArtifactModalController from "./tuleap-artifact-modal-controller.js";
-import DateFieldDirective from "./fields/date-field/date-field-directive.js";
 import FileFieldDirective from "./fields/file-field/file-field-directive.js";
 import FileInputDirective from "./fields/file-field/file-input-directive.js";
 import LinkFieldDirective from "./fields/link-field/link-field-directive.js";
@@ -54,6 +53,7 @@ import "./fields/radio-buttons-field/RadioButtonsField";
 import "./fields/string-field/StringField";
 import "./fields/text-field/TextField";
 import "./adapters/UI/fields/link-field-v2/LinkField";
+import "./adapters/UI/fields/date-field/DateField";
 import "./followups/FollowupEditor";
 import "./adapters/UI/feedback/ModalFeedback";
 
@@ -79,7 +79,6 @@ export default angular
     .constant("TuleapArtifactModalAwkwardCreationFields", AwkwardCreationFields)
     .constant("TuleapArtifactModalStructuralFields", STRUCTURAL_FIELDS)
     .controller("TuleapArtifactModalController", ArtifactModalController)
-    .directive("tuleapArtifactModalDateField", DateFieldDirective)
     .directive("tuleapArtifactModalFileField", FileFieldDirective)
     .directive("tuleapArtifactModalFileInput", FileInputDirective)
     .directive("tuleapArtifactModalLinkField", LinkFieldDirective)

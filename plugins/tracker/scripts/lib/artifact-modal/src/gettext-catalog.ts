@@ -61,3 +61,5 @@ export const getLinkedParentFeedback = (): string =>
 export const getAddLinkButtonLabel = (): string => gettextCatalog.getString("Add link");
 export const getLinkFieldTableEmptyStateText = (): string =>
     gettextCatalog.getString("There is no link yet");
+export const getFieldDateRequiredAndEmptyMessage = (): string =>
+    gettextCatalog.getString("Please select a date");
