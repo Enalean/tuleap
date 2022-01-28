@@ -19,11 +19,8 @@
 
 import type { Artifact } from "../Artifact";
 import { ParentRetriever } from "./ParentRetriever";
-import { StubWithArtifact } from "../../../tests/stubs/RetrieveArtifactStub";
-import {
-    StubWithCreationMode,
-    StubWithEditionMode,
-} from "../../../tests/stubs/VerifyIsInCreationModeStub";
+import { RetrieveArtifactStub } from "../../../tests/stubs/RetrieveArtifactStub";
+import { VerifyIsInCreationModeStub } from "../../../tests/stubs/VerifyIsInCreationModeStub";
 import type { VerifyIsInCreationMode } from "../VerifyIsInCreationMode";
 
 const PARENT_ARTIFACT_ID = 5;
@@ -34,11 +31,14 @@ describe(`parent-retriever`, () => {
 
     beforeEach(() => {
         parent_artifact = { id: PARENT_ARTIFACT_ID, title: "mobship" };
-        mode_verifier = StubWithCreationMode();
+        mode_verifier = VerifyIsInCreationModeStub.withCreationMode();
     });
 
     const retrieveFutureParent = (): Promise<Artifact | null> => {
-        const retriever = ParentRetriever(StubWithArtifact(parent_artifact), mode_verifier);
+        const retriever = ParentRetriever(
+            RetrieveArtifactStub.withArtifact(parent_artifact),
+            mode_verifier
+        );
 
         return retriever.retrieveFutureParent(PARENT_ARTIFACT_ID);
     };
@@ -49,7 +49,7 @@ describe(`parent-retriever`, () => {
         });
 
         it(`when the modal is in edition mode, it will return null`, () => {
-            mode_verifier = StubWithEditionMode();
+            mode_verifier = VerifyIsInCreationModeStub.withEditionMode();
             return expect(retrieveFutureParent()).resolves.toBeNull();
         });
     });

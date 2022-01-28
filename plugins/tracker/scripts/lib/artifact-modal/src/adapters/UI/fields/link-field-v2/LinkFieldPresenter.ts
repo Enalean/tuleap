@@ -26,30 +26,32 @@ export interface LinkFieldPresenter {
     readonly is_loading: boolean;
 }
 
-export const buildLoadingState = (): LinkFieldPresenter => ({
-    linked_artifacts: [],
-    error_message: "",
-    is_loading: true,
-    has_loaded_content: false,
-});
+export const LinkFieldPresenter = {
+    buildLoadingState: (): LinkFieldPresenter => ({
+        linked_artifacts: [],
+        error_message: "",
+        is_loading: true,
+        has_loaded_content: false,
+    }),
 
-export const buildForCreationMode = (): LinkFieldPresenter => ({
-    linked_artifacts: [],
-    error_message: "",
-    is_loading: false,
-    has_loaded_content: true,
-});
+    forCreationMode: (): LinkFieldPresenter => ({
+        linked_artifacts: [],
+        error_message: "",
+        is_loading: false,
+        has_loaded_content: true,
+    }),
 
-export const buildFromArtifacts = (artifacts: LinkedArtifact[]): LinkFieldPresenter => ({
-    linked_artifacts: artifacts,
-    error_message: "",
-    is_loading: false,
-    has_loaded_content: true,
-});
+    fromArtifacts: (artifacts: LinkedArtifact[]): LinkFieldPresenter => ({
+        linked_artifacts: artifacts,
+        error_message: "",
+        is_loading: false,
+        has_loaded_content: true,
+    }),
 
-export const buildFromError = (error: Error): LinkFieldPresenter => ({
-    linked_artifacts: [],
-    error_message: error.message,
-    is_loading: false,
-    has_loaded_content: true,
-});
+    fromError: (error: Error): LinkFieldPresenter => ({
+        linked_artifacts: [],
+        error_message: error.message,
+        is_loading: false,
+        has_loaded_content: true,
+    }),
+};

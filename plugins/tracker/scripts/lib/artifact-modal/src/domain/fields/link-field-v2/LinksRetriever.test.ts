@@ -18,8 +18,8 @@
  */
 
 import { LinksRetriever } from "./LinksRetriever";
-import { StubWithTypes } from "../../../../tests/stubs/RetrieveLinkTypesStub";
-import { StubWithSuccessiveLinkedArtifacts } from "../../../../tests/stubs/RetrieveLinkedArtifactsByTypeStub";
+import { RetrieveLinkTypesStub } from "../../../../tests/stubs/RetrieveLinkTypesStub";
+import { RetrieveLinkedArtifactsByTypeStub } from "../../../../tests/stubs/RetrieveLinkedArtifactsByTypeStub";
 import type { LinkedArtifact, LinkType } from "./LinkedArtifact";
 
 describe(`LinksRetriever`, () => {
@@ -59,8 +59,8 @@ describe(`LinksRetriever`, () => {
         } as LinkedArtifact;
 
         const retriever = LinksRetriever(
-            StubWithTypes(parent_type, child_type),
-            StubWithSuccessiveLinkedArtifacts(
+            RetrieveLinkTypesStub.withTypes(parent_type, child_type),
+            RetrieveLinkedArtifactsByTypeStub.withSuccessiveLinkedArtifacts(
                 [first_child, second_child],
                 [first_parent, second_parent]
             )

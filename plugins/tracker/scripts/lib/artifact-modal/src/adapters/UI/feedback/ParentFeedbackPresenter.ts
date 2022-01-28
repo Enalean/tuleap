@@ -23,8 +23,9 @@ export interface ParentFeedbackPresenter {
     readonly parent_artifact: Artifact | null;
 }
 
-export const buildEmpty = (): ParentFeedbackPresenter => ({ parent_artifact: null });
-
-export const buildFromArtifact = (parent_artifact: Artifact | null): ParentFeedbackPresenter => ({
-    parent_artifact,
-});
+export const ParentFeedbackPresenter = {
+    buildEmpty: (): ParentFeedbackPresenter => ({ parent_artifact: null }),
+    fromArtifact: (parent_artifact: Artifact | null): ParentFeedbackPresenter => ({
+        parent_artifact,
+    }),
+};

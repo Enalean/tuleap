@@ -20,16 +20,19 @@
 import type { LinkedArtifact } from "../../src/domain/fields/link-field-v2/LinkedArtifact";
 import type { RetrieveAllLinkedArtifacts } from "../../src/domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
 
-export const StubWithLinkedArtifacts = (
-    artifact: LinkedArtifact,
-    ...other_artifacts: LinkedArtifact[]
-): RetrieveAllLinkedArtifacts => {
-    const artifacts = [artifact, ...other_artifacts];
-    return {
-        getLinkedArtifacts: (): Promise<LinkedArtifact[]> => Promise.resolve(artifacts),
-    };
-};
+export const RetrieveAllLinkedArtifactsStub = {
+    withLinkedArtifacts: (
+        artifact: LinkedArtifact,
+        ...other_artifacts: LinkedArtifact[]
+    ): RetrieveAllLinkedArtifacts => {
+        const artifacts = [artifact, ...other_artifacts];
+        return {
+            getLinkedArtifacts: (): Promise<LinkedArtifact[]> => Promise.resolve(artifacts),
+        };
+    },
 
-export const StubWithError = (error_message: string): RetrieveAllLinkedArtifacts => ({
-    getLinkedArtifacts: (): Promise<LinkedArtifact[]> => Promise.reject(new Error(error_message)),
-});
+    withError: (error_message: string): RetrieveAllLinkedArtifacts => ({
+        getLinkedArtifacts: (): Promise<LinkedArtifact[]> =>
+            Promise.reject(new Error(error_message)),
+    }),
+};

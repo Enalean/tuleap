@@ -18,7 +18,7 @@
  */
 
 import { ModalFeedbackController } from "./ModalFeedbackController";
-import { StubWithParent } from "../../../../tests/stubs/RetrieveParentStub";
+import { RetrieveParentStub } from "../../../../tests/stubs/RetrieveParentStub";
 import type { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
 
 const PARENT_ARTIFACT_ID = 78;
@@ -32,7 +32,7 @@ describe(`ModalFeedbackController`, () => {
     const displayParentFeedback = (): Promise<ParentFeedbackPresenter> => {
         const parent_artifact = { id: PARENT_ARTIFACT_ID, title: "nonhereditary" };
         const controller = ModalFeedbackController(
-            StubWithParent(parent_artifact),
+            RetrieveParentStub.withParent(parent_artifact),
             parent_artifact_id
         );
         return controller.displayParentFeedback();

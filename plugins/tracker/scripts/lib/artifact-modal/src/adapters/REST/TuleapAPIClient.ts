@@ -24,19 +24,7 @@ import { get, recursiveGet } from "tlp";
 import type { RetrieveLinkTypes } from "../../domain/fields/link-field-v2/RetrieveLinkTypes";
 import type { RetrieveLinkedArtifactsByType } from "../../domain/fields/link-field-v2/RetrieveLinkedArtifactsByType";
 import type { LinkedArtifact, LinkType } from "../../domain/fields/link-field-v2/LinkedArtifact";
-
-interface APILinkedArtifact {
-    readonly xref: string;
-    readonly title: string;
-    readonly html_url: string;
-    readonly tracker: Tracker;
-    readonly status: string;
-    readonly is_open: boolean;
-}
-
-interface Tracker {
-    readonly color_name: string;
-}
+import type { APILinkedArtifact } from "./APILinkedArtifact";
 
 export interface LinkedArtifactCollection {
     readonly collection: APILinkedArtifact[];
