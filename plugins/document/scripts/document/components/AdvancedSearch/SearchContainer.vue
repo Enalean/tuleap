@@ -77,6 +77,12 @@ export default class SearchContainer extends Vue {
         this.search(this.query, offset);
     }
 
+    @Watch("folder_id")
+    searchFolder(folder_id: number): void {
+        this.loadFolder(folder_id);
+        this.search(this.query, this.offset);
+    }
+
     search(query: string, offset: number): void {
         if (query.length === 0) {
             return;
