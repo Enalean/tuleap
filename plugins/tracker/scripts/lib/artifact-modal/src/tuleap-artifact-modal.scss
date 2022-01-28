@@ -273,3 +273,8 @@ fieldset {
 .tuleap-artifact-modal-hidden {
     display: none;
 }
+
+.tuleap-artifact-modal-field-empty-value {
+    color: var(--tlp-dimmed-color);
+    font-style: italic;
+}
