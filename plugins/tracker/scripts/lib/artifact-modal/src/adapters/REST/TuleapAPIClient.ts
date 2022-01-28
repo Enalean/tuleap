@@ -25,6 +25,10 @@ import type { RetrieveLinkTypes } from "../../domain/fields/link-field-v2/Retrie
 import type { RetrieveLinkedArtifactsByType } from "../../domain/fields/link-field-v2/RetrieveLinkedArtifactsByType";
 import type { LinkedArtifact, LinkType } from "../../domain/fields/link-field-v2/LinkedArtifact";
 import type { APILinkedArtifact } from "./APILinkedArtifact";
+import { LinkedArtifactProxy } from "./LinkedArtifactProxy";
+import type { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIdentifier";
+import type { Artifact } from "../../domain/Artifact";
+import type { ParentArtifactIdentifier } from "../../domain/parent/ParentArtifactIdentifier";
 
 export interface LinkedArtifactCollection {
     readonly collection: APILinkedArtifact[];
@@ -33,10 +37,13 @@ export interface LinkedArtifactCollection {
 type TuleapAPIClientType = RetrieveArtifact & RetrieveLinkTypes & RetrieveLinkedArtifactsByType;
 
 export const TuleapAPIClient = (): TuleapAPIClientType => ({
-    getArtifact,
+    getArtifact: (
+        artifact_id: CurrentArtifactIdentifier | ParentArtifactIdentifier
+    ): Promise<Artifact> => getArtifact(artifact_id.id),
 
-    getAllLinkTypes(artifact_id: number): Promise<LinkType[]> {
-        return get(`/api/v1/artifacts/${artifact_id}/links`).then(
+    getAllLinkTypes(artifact_id: CurrentArtifactIdentifier): Promise<LinkType[]> {
+        const id = artifact_id.id;
+        return get(`/api/v1/artifacts/${id}/links`).then(
             async (response) => {
                 const { natures } = await response.json();
 
@@ -51,11 +58,12 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
     },
 
     getLinkedArtifactsByLinkType(
-        artifact_id: number,
+        artifact_id: CurrentArtifactIdentifier,
         link_type: LinkType
     ): Promise<LinkedArtifact[]> {
+        const id = artifact_id.id;
         return recursiveGet<LinkedArtifactCollection, LinkedArtifact>(
-            `/api/v1/artifacts/${artifact_id}/linked_artifacts`,
+            `/api/v1/artifacts/${id}/linked_artifacts`,
             {
                 params: {
                     limit: 50,
@@ -63,14 +71,10 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
                     nature: link_type.shortname,
                     direction: link_type.direction,
                 },
-                getCollectionCallback: (payload: LinkedArtifactCollection): LinkedArtifact[] => {
-                    return payload.collection.map((linked_artifact: APILinkedArtifact) => {
-                        return {
-                            ...linked_artifact,
-                            link_type,
-                        };
-                    });
-                },
+                getCollectionCallback: (payload: LinkedArtifactCollection): LinkedArtifact[] =>
+                    payload.collection.map((artifact) =>
+                        LinkedArtifactProxy.fromAPILinkedArtifactAndType(artifact, link_type)
+                    ),
             }
         ).catch(async (error) => {
             const message = await getExtractedErrorMessage(error);

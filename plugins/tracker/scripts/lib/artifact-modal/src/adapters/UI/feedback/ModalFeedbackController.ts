@@ -17,24 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { RetrieveParent } from "../../../domain/parent/RetrieveParent";
 import { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
+import type { ParentArtifactIdentifier } from "../../../domain/parent/ParentArtifactIdentifier";
+import type { RetrieveArtifact } from "../../../domain/RetrieveArtifact";
 
 export interface ModalFeedbackControllerType {
     displayParentFeedback(): Promise<ParentFeedbackPresenter>;
 }
 
 export const ModalFeedbackController = (
-    retriever: RetrieveParent,
-    parent_artifact_id: number | null
+    retriever: RetrieveArtifact,
+    parent_identifier: ParentArtifactIdentifier | null
 ): ModalFeedbackControllerType => {
     return {
         displayParentFeedback: (): Promise<ParentFeedbackPresenter> => {
-            if (parent_artifact_id === null) {
+            if (parent_identifier === null) {
                 return Promise.resolve(ParentFeedbackPresenter.buildEmpty());
             }
             return retriever
-                .retrieveFutureParent(parent_artifact_id)
+                .getArtifact(parent_identifier)
                 .then(ParentFeedbackPresenter.fromArtifact);
         },
     };

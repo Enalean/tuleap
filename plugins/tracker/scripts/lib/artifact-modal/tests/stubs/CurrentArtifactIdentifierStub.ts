@@ -17,12 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkType, LinkedArtifact } from "./LinkedArtifact";
-import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
+import type { CurrentArtifactIdentifier } from "../../src/domain/CurrentArtifactIdentifier";
 
-export interface RetrieveLinkedArtifactsByType {
-    getLinkedArtifactsByLinkType(
-        current_artifact_identifier: CurrentArtifactIdentifier,
-        link_type: LinkType
-    ): Promise<LinkedArtifact[]>;
-}
+export const CurrentArtifactIdentifierStub = {
+    withId: (id: number): CurrentArtifactIdentifier => ({ _type: "CurrentArtifactIdentifier", id }),
+};

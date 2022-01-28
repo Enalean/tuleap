@@ -19,7 +19,7 @@
 
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
-import type { VerifyIsInCreationMode } from "../../../../domain/VerifyIsInCreationMode";
+import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 
 export interface LinkFieldControllerType {
     displayLinkedArtifacts(): Promise<LinkFieldPresenter>;
@@ -27,16 +27,15 @@ export interface LinkFieldControllerType {
 
 export const LinkFieldController = (
     links_retriever: RetrieveAllLinkedArtifacts,
-    mode_verifier: VerifyIsInCreationMode,
-    artifact_id: number
+    current_artifact_identifier: CurrentArtifactIdentifier | null
 ): LinkFieldControllerType => {
     return {
         displayLinkedArtifacts: (): Promise<LinkFieldPresenter> => {
-            if (mode_verifier.isInCreationMode()) {
+            if (!current_artifact_identifier) {
                 return Promise.resolve(LinkFieldPresenter.forCreationMode());
             }
             return links_retriever
-                .getLinkedArtifacts(artifact_id)
+                .getLinkedArtifacts(current_artifact_identifier)
                 .then(LinkFieldPresenter.fromArtifacts, LinkFieldPresenter.fromError);
         },
     };

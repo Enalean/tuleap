@@ -17,14 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { VerifyIsInCreationMode } from "../../src/domain/VerifyIsInCreationMode";
+import type { ParentArtifactIdentifier } from "../../domain/parent/ParentArtifactIdentifier";
 
-export const VerifyIsInCreationModeStub = {
-    withCreationMode: (): VerifyIsInCreationMode => ({
-        isInCreationMode: (): boolean => true,
-    }),
-
-    withEditionMode: (): VerifyIsInCreationMode => ({
-        isInCreationMode: (): boolean => false,
-    }),
+export const ParentArtifactIdentifierProxy = {
+    fromCallerArgument: (id: number | null | undefined): ParentArtifactIdentifier | null => {
+        if (id !== null && id !== undefined) {
+            return {
+                _type: "ParentArtifactIdentifier",
+                id,
+            };
+        }
+        return null;
+    },
 };

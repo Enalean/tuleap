@@ -21,15 +21,21 @@ import type { RetrieveLinkTypes } from "./RetrieveLinkTypes";
 import type { RetrieveLinkedArtifactsByType } from "./RetrieveLinkedArtifactsByType";
 import type { LinkedArtifact, LinkType } from "./LinkedArtifact";
 import type { RetrieveAllLinkedArtifacts } from "./RetrieveAllLinkedArtifacts";
+import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
 
 export const LinksRetriever = (
     types_retriever: RetrieveLinkTypes,
     artifacts_retriever: RetrieveLinkedArtifactsByType
 ): RetrieveAllLinkedArtifacts => ({
-    async getLinkedArtifacts(current_artifact_id: number): Promise<LinkedArtifact[]> {
-        const link_types = await types_retriever.getAllLinkTypes(current_artifact_id);
+    async getLinkedArtifacts(
+        current_artifact_identifier: CurrentArtifactIdentifier
+    ): Promise<LinkedArtifact[]> {
+        const link_types = await types_retriever.getAllLinkTypes(current_artifact_identifier);
         const promises = link_types.map((type: LinkType) => {
-            return artifacts_retriever.getLinkedArtifactsByLinkType(current_artifact_id, type);
+            return artifacts_retriever.getLinkedArtifactsByLinkType(
+                current_artifact_identifier,
+                type
+            );
         });
 
         return Promise.all(promises).then((collections) => collections.flat());

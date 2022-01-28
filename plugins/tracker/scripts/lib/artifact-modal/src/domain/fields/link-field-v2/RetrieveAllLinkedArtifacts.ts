@@ -18,7 +18,10 @@
  */
 
 import type { LinkedArtifact } from "./LinkedArtifact";
+import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
 
 export interface RetrieveAllLinkedArtifacts {
-    getLinkedArtifacts(current_artifact_id: number): Promise<LinkedArtifact[]>;
+    getLinkedArtifacts(
+        current_artifact_identifier: CurrentArtifactIdentifier
+    ): Promise<LinkedArtifact[]>;
 }

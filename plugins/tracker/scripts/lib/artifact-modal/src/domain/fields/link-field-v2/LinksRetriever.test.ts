@@ -21,6 +21,7 @@ import { LinksRetriever } from "./LinksRetriever";
 import { RetrieveLinkTypesStub } from "../../../../tests/stubs/RetrieveLinkTypesStub";
 import { RetrieveLinkedArtifactsByTypeStub } from "../../../../tests/stubs/RetrieveLinkedArtifactsByTypeStub";
 import type { LinkedArtifact, LinkType } from "./LinkedArtifact";
+import { CurrentArtifactIdentifierStub } from "../../../../tests/stubs/CurrentArtifactIdentifierStub";
 
 describe(`LinksRetriever`, () => {
     let parent_type: LinkType,
@@ -65,7 +66,7 @@ describe(`LinksRetriever`, () => {
                 [first_parent, second_parent]
             )
         );
-        return retriever.getLinkedArtifacts(64);
+        return retriever.getLinkedArtifacts(CurrentArtifactIdentifierStub.withId(64));
     };
 
     it(`fetches all types of links from the given artifact id

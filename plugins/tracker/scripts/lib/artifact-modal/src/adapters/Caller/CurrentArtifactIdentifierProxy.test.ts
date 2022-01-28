@@ -17,8 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Artifact } from "../Artifact";
+import { CurrentArtifactIdentifierProxy } from "./CurrentArtifactIdentifierProxy";
 
-export interface RetrieveParent {
-    retrieveFutureParent(parent_artifact_id: number): Promise<Artifact | null>;
-}
+const ARTIFACT_ID = 17;
+
+describe(`CurrentArtifactIdentifierProxy`, () => {
+    it(`builds an identifier from the Modal's artifact id when it is in edition mode`, () => {
+        const identifier = CurrentArtifactIdentifierProxy.fromModalArtifactId(ARTIFACT_ID);
+        if (identifier === null) {
+            throw new Error("Identifier should not be null");
+        }
+        expect(identifier.id).toBe(ARTIFACT_ID);
+    });
+
+    it(`returns null when Modal is in creation mode and its artifact id is undefined`, () => {
+        expect(CurrentArtifactIdentifierProxy.fromModalArtifactId(undefined)).toBeNull();
+    });
+});

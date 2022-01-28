@@ -18,7 +18,8 @@
  */
 
 import type { LinkType } from "./LinkedArtifact";
+import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
 
 export interface RetrieveLinkTypes {
-    getAllLinkTypes(artifact_id: number): Promise<LinkType[]>;
+    getAllLinkTypes(current_artifact_identifier: CurrentArtifactIdentifier): Promise<LinkType[]>;
 }

@@ -17,12 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkType, LinkedArtifact } from "./LinkedArtifact";
-import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
+import type { Identifier } from "./Identifier";
 
-export interface RetrieveLinkedArtifactsByType {
-    getLinkedArtifactsByLinkType(
-        current_artifact_identifier: CurrentArtifactIdentifier,
-        link_type: LinkType
-    ): Promise<LinkedArtifact[]>;
-}
+// I identify the artifact currently under edition
+export type CurrentArtifactIdentifier = Identifier<"CurrentArtifactIdentifier">;
