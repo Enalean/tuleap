@@ -26,7 +26,20 @@
         <td class="document-search-result-icon">
             <i class="fa fa-fw" v-bind:class="icon_classes" aria-hidden="true"></i>
         </td>
-        <td>{{ item.title }}</td>
+        <td>
+            <a v-if="href" v-bind:href="href" class="document-folder-subitem-link" data-test="link">
+                {{ item.title }}
+            </a>
+            <router-link
+                v-else-if="in_app_link"
+                v-bind:to="in_app_link"
+                class="document-folder-subitem-link"
+                data-test="router-link"
+            >
+                {{ item.title }}
+            </router-link>
+            <template v-else>{{ item.title }}</template>
+        </td>
         <td v-dompurify-html="item.post_processed_description"></td>
         <td>
             <user-badge v-bind:user="item.owner" />
@@ -47,10 +60,10 @@
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import type { ItemSearchResult } from "../../../type";
+import type { Folder, ItemSearchResult } from "../../../type";
 import UserBadge from "../../User/UserBadge.vue";
 import { formatDateUsingPreferredUserFormat } from "../../../helpers/date-formatter";
-import { namespace } from "vuex-class";
+import { namespace, State } from "vuex-class";
 import {
     relativeDatePlacement,
     relativeDatePreference,
@@ -68,6 +81,7 @@ import {
     TYPE_WIKI,
 } from "../../../constants";
 import { iconForMimeType } from "../../../helpers/icon-for-mime-type";
+import type { Route } from "vue-router/types/router";
 
 const configuration = namespace("configuration");
 
@@ -86,6 +100,12 @@ export default class TableBodyResultRow extends Vue {
 
     @configuration.State
     readonly user_locale!: string;
+
+    @configuration.State
+    readonly project_id!: number;
+
+    @State
+    readonly current_folder!: Folder;
 
     get formatted_full_date(): string {
         return formatDateUsingPreferredUserFormat(
@@ -125,6 +145,47 @@ export default class TableBodyResultRow extends Vue {
             default:
                 return ICON_EMPTY;
         }
+    }
+
+    get href(): string | null {
+        if (this.item.type === TYPE_FILE && this.item.file_properties) {
+            return this.item.file_properties.download_href;
+        }
+
+        if (this.item.type === TYPE_LINK || this.item.type === TYPE_WIKI) {
+            return `/plugins/docman/?group_id=${this.project_id}&action=show&id=${this.item.id}`;
+        }
+
+        return null;
+    }
+
+    get in_app_link(): Partial<Route> | null {
+        if (this.item.type === TYPE_EMBEDDED) {
+            const item_id = String(this.item.id);
+            const folder_id =
+                this.item.parents.length > 0
+                    ? String(this.item.parents[0].id)
+                    : String(this.current_folder.id);
+
+            return {
+                name: "item",
+                params: {
+                    folder_id,
+                    item_id,
+                },
+            };
+        }
+
+        if (this.item.type === TYPE_FOLDER) {
+            return {
+                name: "folder",
+                params: {
+                    item_id: String(this.item.id),
+                },
+            };
+        }
+
+        return null;
     }
 }
 </script>
