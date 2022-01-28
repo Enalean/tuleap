@@ -184,15 +184,11 @@
 ></div>
 </script>
 <script type="text/ng-template" id="field-burndown.tpl.html">
-<div class="tlp-property">
-    <label class="tlp-label">
-        {{ field.label }}
-    </label>
-    <img ng-src="{{ '/plugins/tracker/?formElement='+ field.field_id +'&func=show_burndown&src_aid='+ modal.artifact_id }}"
-        alt="{{ field.label }}"
-        class="tuleap-artifact-modal-artifact-field-burndown-image"
-    >
-</div>
+<tuleap-artifact-modal-burndown-field
+    field="field"
+    current-artifact-identifier="modal.current_artifact_identifier"
+    ce-one-way
+></tuleap-artifact-modal-burndown-field>
 </script>
 
 <script type="text/ng-template" id="field-cross.tpl.html">
