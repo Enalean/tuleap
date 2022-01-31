@@ -21,7 +21,6 @@ import type { BuildOptions, CSSOptions, ServerOptions, UserConfig, UserConfigExp
 import { defineConfig as viteDefineConfig } from "vite";
 export { createPOGettextPlugin } from "./rollup-plugin-po-gettext";
 import { browserlist_config, esbuild_target } from "./browserslist_config";
-import path from "path";
 import autoprefixer from "autoprefixer";
 
 type OverloadedBuildOptions = Omit<BuildOptions, "brotliSize" | "minify" | "target">;
@@ -62,7 +61,7 @@ export function defineAppConfig(
             ...config.build,
             manifest: true,
             emptyOutDir: true,
-            outDir: path.resolve(__dirname, `../../../src/www/assets/${app_name}/`),
+            outDir: "./frontend-assets/",
         },
     });
 }
