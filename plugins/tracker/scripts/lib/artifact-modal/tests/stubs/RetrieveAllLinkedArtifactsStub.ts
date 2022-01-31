@@ -19,6 +19,7 @@
 
 import type { LinkedArtifact } from "../../src/domain/fields/link-field-v2/LinkedArtifact";
 import type { RetrieveAllLinkedArtifacts } from "../../src/domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
+import type { Fault } from "@tuleap/fault";
 
 export const RetrieveAllLinkedArtifactsStub = {
     withLinkedArtifacts: (
@@ -31,8 +32,7 @@ export const RetrieveAllLinkedArtifactsStub = {
         };
     },
 
-    withError: (error_message: string): RetrieveAllLinkedArtifacts => ({
-        getLinkedArtifacts: (): Promise<LinkedArtifact[]> =>
-            Promise.reject(new Error(error_message)),
+    withFault: (fault: Fault): RetrieveAllLinkedArtifacts => ({
+        getLinkedArtifacts: (): Promise<Fault | LinkedArtifact[]> => Promise.resolve(fault),
     }),
 };

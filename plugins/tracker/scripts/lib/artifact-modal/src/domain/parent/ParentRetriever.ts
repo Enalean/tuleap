@@ -17,18 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
-import type { Artifact } from "../../../domain/Artifact";
+import type { RetrieveParent } from "./RetrieveParent";
+import type { ParentArtifactIdentifier } from "./ParentArtifactIdentifier";
+import { Fault } from "@tuleap/fault";
+import type { Artifact } from "../Artifact";
+import type { RetrieveArtifact } from "../RetrieveArtifact";
 
-describe(`ParentFeedbackPresenter`, () => {
-    it(`builds an empty Presenter`, () => {
-        const presenter = ParentFeedbackPresenter.buildEmpty();
-        expect(presenter.parent_artifact).toBeNull();
-    });
-
-    it(`builds a presenter from a parent artifact`, () => {
-        const parent_artifact = { id: 50 } as Artifact;
-        const presenter = ParentFeedbackPresenter.fromArtifact(parent_artifact);
-        expect(presenter.parent_artifact).toBe(parent_artifact);
-    });
+export const ParentRetriever = (retriever: RetrieveArtifact): RetrieveParent => ({
+    getParent: (parent_identifier: ParentArtifactIdentifier | null): Promise<Artifact | Fault> => {
+        if (parent_identifier === null) {
+            return Promise.resolve(Fault.fromMessage("Current artifact has no parent"));
+        }
+        return retriever.getArtifact(parent_identifier);
+    },
 });

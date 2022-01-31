@@ -19,9 +19,10 @@
 
 import type { LinkedArtifact } from "./LinkedArtifact";
 import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
+import type { Fault } from "@tuleap/fault";
 
 export interface RetrieveAllLinkedArtifacts {
     getLinkedArtifacts(
-        current_artifact_identifier: CurrentArtifactIdentifier
-    ): Promise<LinkedArtifact[]>;
+        current_artifact_identifier: CurrentArtifactIdentifier | null
+    ): Promise<Fault | LinkedArtifact[]>;
 }

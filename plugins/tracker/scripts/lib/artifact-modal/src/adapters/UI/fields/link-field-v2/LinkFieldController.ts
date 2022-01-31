@@ -20,10 +20,16 @@
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
+import type { Fault } from "@tuleap/fault";
+import { isFault } from "@tuleap/fault";
 
 export interface LinkFieldControllerType {
     displayLinkedArtifacts(): Promise<LinkFieldPresenter>;
 }
+
+const isCreationModeFault = (fault: Fault): boolean => {
+    return typeof fault.isCreationMode === "function" && fault.isCreationMode();
+};
 
 export const LinkFieldController = (
     links_retriever: RetrieveAllLinkedArtifacts,
@@ -31,12 +37,17 @@ export const LinkFieldController = (
 ): LinkFieldControllerType => {
     return {
         displayLinkedArtifacts: (): Promise<LinkFieldPresenter> => {
-            if (!current_artifact_identifier) {
-                return Promise.resolve(LinkFieldPresenter.forCreationMode());
-            }
             return links_retriever
                 .getLinkedArtifacts(current_artifact_identifier)
-                .then(LinkFieldPresenter.fromArtifacts, LinkFieldPresenter.fromError);
+                .then((result) => {
+                    if (!isFault(result)) {
+                        return LinkFieldPresenter.fromArtifacts(result);
+                    }
+                    if (isCreationModeFault(result)) {
+                        return LinkFieldPresenter.forCreationMode();
+                    }
+                    return LinkFieldPresenter.fromFault(result);
+                });
         },
     };
 };

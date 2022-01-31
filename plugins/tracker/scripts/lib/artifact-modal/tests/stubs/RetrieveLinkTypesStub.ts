@@ -27,4 +27,8 @@ export const RetrieveLinkTypesStub = {
             getAllLinkTypes: (): Promise<LinkType[]> => Promise.resolve(types),
         };
     },
+
+    withError: (error_message: string): RetrieveLinkTypes => ({
+        getAllLinkTypes: (): Promise<never> => Promise.reject(new Error(error_message)),
+    }),
 };

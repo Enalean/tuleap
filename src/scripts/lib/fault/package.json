@@ -1,0 +1,22 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/fault",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/fault.es.js",
+  "main": "dist/fault.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/fault.es.js",
+      "require": "./dist/fault.umd.js"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "jest"
+  }
+}

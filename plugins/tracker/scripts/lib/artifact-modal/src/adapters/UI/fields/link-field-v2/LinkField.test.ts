@@ -27,6 +27,7 @@ import {
 } from "./LinkField";
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
+import { Fault } from "@tuleap/fault";
 
 const getDocument = (): Document => document.implementation.createHTMLDocument();
 
@@ -136,7 +137,7 @@ describe("LinkField", () => {
 
         it("should hide the table and show an alert when an error occurred during the retrieval of the linked artifacts", () => {
             const error_message = "Unable to retrieve the linked artifacts because reasons";
-            const presenter = LinkFieldPresenter.fromError(new Error(error_message));
+            const presenter = LinkFieldPresenter.fromFault(Fault.fromMessage(error_message));
             const host = getHost({ presenter });
             const update = LinkField.content(host);
             update(host, target);

@@ -25,7 +25,7 @@ export interface ParentFeedbackPresenter {
 
 export const ParentFeedbackPresenter = {
     buildEmpty: (): ParentFeedbackPresenter => ({ parent_artifact: null }),
-    fromArtifact: (parent_artifact: Artifact | null): ParentFeedbackPresenter => ({
+    fromArtifact: (parent_artifact: Artifact): ParentFeedbackPresenter => ({
         parent_artifact,
     }),
 };
