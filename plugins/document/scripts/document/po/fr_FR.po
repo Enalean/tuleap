@@ -526,6 +526,9 @@ msgstr "Modèles de recherche authorisés :"
 msgid "Search criteria"
 msgstr "Critères de recherche"
 
+msgid "Searching in:"
+msgstr "Recherche dans :"
+
 msgid "Select bottom item"
 msgstr "Sélectionner le dernier élément"
 

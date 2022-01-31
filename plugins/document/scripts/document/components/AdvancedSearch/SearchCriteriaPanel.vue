@@ -26,6 +26,7 @@
                     <h1 class="tlp-pane-title" v-translate>Search criteria</h1>
                 </div>
                 <section class="tlp-pane-section">
+                    <search-criteria-breadcrumb />
                     <div class="tlp-form-element">
                         <div class="global-search-label">
                             <label class="tlp-label" for="document-global-search" v-translate>
@@ -57,8 +58,10 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import type { AdvancedSearchParams } from "../../type";
 import SearchInformationPopover from "./SearchInformationPopover.vue";
+import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
+
 @Component({
-    components: { SearchInformationPopover },
+    components: { SearchCriteriaBreadcrumb, SearchInformationPopover },
 })
 export default class SearchCriteriaPanel extends Vue {
     @Prop({ required: true })

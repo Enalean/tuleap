@@ -132,3 +132,17 @@
     margin: 0 0 0 var(--tlp-small-spacing);
     color: var(--tlp-dimmed-color);
 }
+
+.document-search-breadcrumbs {
+    display: flex;
+    align-items: baseline;
+}
+
+.document-search-breadcrumbs-label {
+    margin: 0 var(--tlp-small-spacing) 0 0;
+}
+
+.document-search-breadcrumbs-separator {
+    padding: 0 var(--tlp-small-spacing);
+    font-size: 0.75rem;
+}

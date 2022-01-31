@@ -182,6 +182,41 @@ describe("SearchContainer", () => {
         expect(searchInFolderMock).toHaveBeenCalledWith(101, "Lorem ipsum", 10);
     });
 
+    it("should perform a new search if user select another folder in the breadcrumb", async () => {
+        searchInFolderMock.mockResolvedValue([]);
+
+        const router = new VueRouter();
+        jest.spyOn(router, "push").mockImplementation();
+
+        const wrapper = shallowMount(SearchContainer, {
+            localVue: createLocalVue().use(VueRouter),
+            propsData: {
+                query: "Lorem ipsum",
+                folder_id: 101,
+                offset: 0,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {},
+                }),
+                $route: {
+                    query: { q: "" },
+                    params: { folder_id: "101" },
+                },
+                $router: router,
+            },
+        });
+
+        expect(searchInFolderMock).toHaveBeenCalledWith(101, "Lorem ipsum", 0);
+
+        wrapper.setProps({ folder_id: 102 });
+        await wrapper.vm.$nextTick();
+
+        expect(router.push).not.toHaveBeenCalled();
+        expect(searchInFolderMock).toHaveBeenCalledWith(102, "Lorem ipsum", 0);
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("loadFolder", 102);
+    });
+
     it("should search for items based on criteria", () => {
         searchInFolderMock.mockResolvedValue([]);
 
