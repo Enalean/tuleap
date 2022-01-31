@@ -1,12 +1,73 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SearchCriteriaBreadcrumb should display a link to each ascendant folder 1`] = `
-<p class="document-search-breadcrumbs"><span class="document-search-breadcrumbs-label" data-msgid="Searching in:" data-current-language="en_US">Searching in:</span>
-  <!----> <a class="tlp-badge-secondary">
-    Foo
-  </a><i aria-hidden="true" class="fas fa-chevron-right document-search-breadcrumbs-separator"></i> <a class="tlp-badge-secondary">
-    Bar
-  </a></p>
+exports[`SearchCriteriaBreadcrumb should display a link to each ascendant folder plus a link to search in root folder 1`] = `
+<p
+  class="document-search-breadcrumbs"
+>
+  <span
+    class="document-search-breadcrumbs-label"
+    data-current-language="en_US"
+    data-msgid="Searching in:"
+  >
+    Searching in:
+  </span>
+   
+  <!---->
+   
+  <a
+    class="tlp-badge-secondary"
+  >
+    
+                Foo
+            
+  </a>
+  <i
+    aria-hidden="true"
+    class="fas fa-chevron-right document-search-breadcrumbs-separator"
+  />
+   
+  <a
+    class="tlp-badge-secondary"
+  >
+    
+                Bar
+            
+  </a>
+   
+  <span
+    class="document-search-breadcrumbs-separator"
+  >
+    .
+  </span>
+   
+  <a
+    data-current-language="en_US"
+    data-msgid="
+            Search in whole project documentation
+        "
+  >
+    
+            Search in whole project documentation
+        
+  </a>
+</p>
 `;
 
-exports[`SearchCriteriaBreadcrumb should display a spinner while ascendant hierarchy is loading 1`] = `<p class="document-search-breadcrumbs"><span class="document-search-breadcrumbs-label" data-msgid="Searching in:" data-current-language="en_US">Searching in:</span> <i aria-hidden="true" class="fas fa-circle-notch fa-spin"></i></p>`;
+exports[`SearchCriteriaBreadcrumb should display a spinner while ascendant hierarchy is loading 1`] = `
+<p
+  class="document-search-breadcrumbs"
+>
+  <span
+    class="document-search-breadcrumbs-label"
+    data-current-language="en_US"
+    data-msgid="Searching in:"
+  >
+    Searching in:
+  </span>
+   
+  <i
+    aria-hidden="true"
+    class="fas fa-circle-notch fa-spin"
+  />
+</p>
+`;

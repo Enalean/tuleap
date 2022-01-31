@@ -110,6 +110,7 @@ class documentPlugin extends Plugin // phpcs:ignore
             new FileDownloadLimitsBuilder(),
             new HistoryEnforcementSettingsBuilder(),
             new ProjectFlagsBuilder(new ProjectFlagsDao()),
+            new \Docman_ItemDao(),
         );
     }
 

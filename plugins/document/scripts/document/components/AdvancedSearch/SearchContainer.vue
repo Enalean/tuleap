@@ -21,7 +21,11 @@
 <template>
     <div class="document-search-container">
         <search-header />
-        <search-criteria-panel v-bind:query="query" v-on:advanced-search="advancedSearch" />
+        <search-criteria-panel
+            v-bind:query="query"
+            v-bind:folder_id="folder_id"
+            v-on:advanced-search="advancedSearch"
+        />
         <search-result-error v-if="error" v-bind:error="error" />
         <search-result-table
             v-if="can_result_table_be_displayed"

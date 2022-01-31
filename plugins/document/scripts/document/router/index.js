@@ -53,11 +53,13 @@ export function createRouter(store, project_name) {
                 component: ChildFolder,
             },
             {
-                path: "/search/:folder_id",
+                path: "/search/:folder_id?",
                 name: "search",
                 component: SearchContainer,
                 props: (route) => ({
-                    folder_id: Number(route.params.folder_id),
+                    folder_id: route.params.folder_id
+                        ? Number(route.params.folder_id)
+                        : store.state.configuration.root_id,
                     query: route.query.q || "",
                     offset: Number(route.query.offset || "0"),
                 }),

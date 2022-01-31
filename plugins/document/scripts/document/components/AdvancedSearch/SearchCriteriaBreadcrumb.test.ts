@@ -58,10 +58,10 @@ describe("SearchCriteriaBreadcrumb", () => {
             },
         });
 
-        expect(wrapper).toMatchSnapshot();
+        expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("should display a link to each ascendant folder", () => {
+    it("should display a link to each ascendant folder plus a link to search in root folder", () => {
         // We don't use localVue from helpers since the inclusion of VueRouter via localVue.use()
         // prevents us to properly test and mock stuff here.
         const localVue = createLocalVue();
@@ -97,6 +97,6 @@ describe("SearchCriteriaBreadcrumb", () => {
             },
         });
 
-        expect(wrapper).toMatchSnapshot();
+        expect(wrapper.element).toMatchSnapshot();
     });
 });

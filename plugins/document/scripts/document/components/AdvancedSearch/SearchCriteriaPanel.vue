@@ -26,7 +26,7 @@
                     <h1 class="tlp-pane-title" v-translate>Search criteria</h1>
                 </div>
                 <section class="tlp-pane-section">
-                    <search-criteria-breadcrumb />
+                    <search-criteria-breadcrumb v-if="!is_in_root_folder" />
                     <div class="tlp-form-element">
                         <div class="global-search-label">
                             <label class="tlp-label" for="document-global-search" v-translate>
@@ -59,6 +59,9 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import type { AdvancedSearchParams } from "../../type";
 import SearchInformationPopover from "./SearchInformationPopover.vue";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
+import { namespace } from "vuex-class";
+
+const configuration = namespace("configuration");
 
 @Component({
     components: { SearchCriteriaBreadcrumb, SearchInformationPopover },
@@ -66,6 +69,12 @@ import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
 export default class SearchCriteriaPanel extends Vue {
     @Prop({ required: true })
     readonly query!: string;
+
+    @Prop({ required: true })
+    readonly folder_id!: number;
+
+    @configuration.State
+    readonly root_id!: number;
 
     new_query = "";
 
@@ -79,6 +88,10 @@ export default class SearchCriteriaPanel extends Vue {
         };
 
         this.$emit("advanced-search", params);
+    }
+
+    get is_in_root_folder(): boolean {
+        return this.folder_id === this.root_id;
     }
 }
 </script>

@@ -40,40 +40,14 @@ use Tuleap\Request\NotFoundException;
 
 class DocumentTreeController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
-    /**
-     * @var DocumentTreeProjectExtractor
-     */
-    private $project_extractor;
-    /**
-     * @var \DocmanPluginInfo
-     */
-    private $docman_plugin_info;
-    /**
-     * @var FileDownloadLimitsBuilder
-     */
-    private $file_download_limits_builder;
-
-    /**
-     * @var HistoryEnforcementSettingsBuilder
-     */
-    private $history_enforcement_settings_builder;
-    /**
-     * @var ProjectFlagsBuilder
-     */
-    private $project_flags_builder;
-
     public function __construct(
-        DocumentTreeProjectExtractor $project_extractor,
-        \DocmanPluginInfo $docman_plugin_info,
-        FileDownloadLimitsBuilder $file_download_limits_builder,
-        HistoryEnforcementSettingsBuilder $history_enforcement_settings_builder,
-        ProjectFlagsBuilder $project_flags_builder,
+        private DocumentTreeProjectExtractor $project_extractor,
+        private \DocmanPluginInfo $docman_plugin_info,
+        private FileDownloadLimitsBuilder $file_download_limits_builder,
+        private HistoryEnforcementSettingsBuilder $history_enforcement_settings_builder,
+        private ProjectFlagsBuilder $project_flags_builder,
+        private \Docman_ItemDao $dao,
     ) {
-        $this->project_extractor                    = $project_extractor;
-        $this->docman_plugin_info                   = $docman_plugin_info;
-        $this->file_download_limits_builder         = $file_download_limits_builder;
-        $this->history_enforcement_settings_builder = $history_enforcement_settings_builder;
-        $this->project_flags_builder                = $project_flags_builder;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -92,11 +66,17 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         $this->includeHeaderAndNavigationBar($layout, $project);
         $this->includeJavascriptFiles($layout, $request);
 
+        $root_id = (int) $this->dao->searchRootIdForGroupId($project->getID());
+        if (! $root_id) {
+            throw new NotFoundException(dgettext('tuleap-document', 'Unable to find the root folder of project'));
+        }
+
         $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
         $renderer->renderToPage(
             'document-tree',
             new DocumentTreePresenter(
                 $project,
+                $root_id,
                 $request->getCurrentUser(),
                 (bool) $this->docman_plugin_info->getPropertyValueForName('embedded_are_allowed'),
                 $is_item_status_used,

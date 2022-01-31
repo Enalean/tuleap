@@ -20,6 +20,9 @@
 import { shallowMount } from "@vue/test-utils";
 import SearchCriteriaPanel from "./SearchCriteriaPanel.vue";
 import localVue from "../../helpers/local-vue";
+import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { ConfigurationState } from "../../store/configuration";
 
 describe("SearchCriteriaPanel", () => {
     it("should allow user to search for new terms", () => {
@@ -36,6 +39,16 @@ describe("SearchCriteriaPanel", () => {
             attachTo: parent_node,
             propsData: {
                 query: "Lorem",
+                folder_id: 101,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: {
+                            root_id: 101,
+                        } as ConfigurationState,
+                    },
+                }),
             },
         });
 
@@ -47,5 +60,30 @@ describe("SearchCriteriaPanel", () => {
         // Avoid memory leaks when attaching to a parent node.
         // See https://vue-test-utils.vuejs.org/api/options.html#attachto
         wrapper.destroy();
+    });
+
+    it("should not display the breadcrumbs if we are searching in root folder", async () => {
+        const wrapper = shallowMount(SearchCriteriaPanel, {
+            localVue,
+            propsData: {
+                query: "Lorem",
+                folder_id: 101,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: {
+                            root_id: 101,
+                        } as ConfigurationState,
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.findComponent(SearchCriteriaBreadcrumb).exists()).toBe(false);
+
+        await wrapper.setProps({ folder_id: 102 });
+
+        expect(wrapper.findComponent(SearchCriteriaBreadcrumb).exists()).toBe(true);
     });
 });

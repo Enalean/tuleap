@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const project_id = Number.parseInt(vue_mount_point.dataset.projectId, 10);
+    const root_id = Number.parseInt(vue_mount_point.dataset.rootId, 10);
     const project_name = vue_mount_point.dataset.projectName;
     const project_public_name = vue_mount_point.dataset.projectPublicName;
     const project_url = vue_mount_point.dataset.projectUrl;
@@ -87,6 +88,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const configuration_state = {
         user_id,
         project_id,
+        root_id,
         project_name,
         project_public_name,
         user_is_admin,
