@@ -2,11 +2,11 @@
 
 exports[`TableBodyResultRow should display an item as a table row 1`] = `
 <tr>
-  <td class="tlp-table-cell-numeric">
+  <td class="tlp-table-cell-numeric document-search-result-id">
     123
   </td>
   <td class="document-search-result-icon"><i aria-hidden="true" class="fa fa-fw fa-folder-open-o document-folder-icon"></i></td>
-  <td>
+  <td class="document-search-result-title">
     <router-link-stub to="[object Object]" tag="a" ariacurrentvalue="page" event="click" data-test="router-link" class="document-folder-subitem-link">
       Lorem
     </router-link-stub>

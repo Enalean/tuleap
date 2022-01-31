@@ -27,7 +27,7 @@
                 </div>
                 <section class="tlp-pane-section">
                     <search-criteria-breadcrumb v-if="!is_in_root_folder" />
-                    <div class="tlp-form-element">
+                    <div class="tlp-form-element document-search-criteria">
                         <div class="global-search-label">
                             <label class="tlp-label" for="document-global-search" v-translate>
                                 Global search
@@ -45,7 +45,12 @@
                     </div>
                 </section>
                 <section class="tlp-pane-section tlp-pane-section-submit">
-                    <button type="submit" class="tlp-button-primary" v-translate data-test="submit">
+                    <button
+                        type="submit"
+                        class="tlp-button-primary document-search-submit"
+                        v-translate
+                        data-test="submit"
+                    >
                         Apply
                     </button>
                 </section>

@@ -22,14 +22,14 @@
     <div class="tlp-pagination">
         <template v-if="from <= 0">
             <span
-                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button disabled"
+                class="tlp-button-primary tlp-button-outline tlp-pagination-button disabled"
                 data-test="begin-disabled"
                 v-bind:title="begin_title"
             >
                 <i class="fas fa-angle-double-left" aria-hidden="true"></i>
             </span>
             <span
-                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button disabled"
+                class="tlp-button-primary tlp-button-outline tlp-pagination-button disabled"
                 data-test="previous-disabled"
                 v-bind:title="previous_title"
             >
@@ -39,7 +39,7 @@
         <template v-else>
             <router-link
                 v-bind:to="begin_to"
-                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
+                class="tlp-button-primary tlp-button-outline tlp-pagination-button"
                 role="button"
                 data-test="begin"
                 v-bind:title="begin_title"
@@ -48,7 +48,7 @@
             </router-link>
             <router-link
                 v-bind:to="to_previous"
-                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
+                class="tlp-button-primary tlp-button-outline tlp-pagination-button"
                 role="button"
                 data-test="previous"
                 v-bind:title="previous_title"
@@ -61,14 +61,14 @@
 
         <template v-if="to >= total - 1">
             <span
-                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button disabled"
+                class="tlp-button-primary tlp-button-outline tlp-pagination-button disabled"
                 data-test="next-disabled"
                 v-bind:title="next_title"
             >
                 <i class="fas fa-angle-right" aria-hidden="true"></i>
             </span>
             <span
-                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button disabled"
+                class="tlp-button-primary tlp-button-outline tlp-pagination-button disabled"
                 data-test="end-disabled"
                 v-bind:title="end_title"
             >
@@ -78,7 +78,7 @@
         <template v-else>
             <router-link
                 v-bind:to="to_next"
-                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
+                class="tlp-button-primary tlp-button-outline tlp-pagination-button"
                 role="button"
                 data-test="next"
                 v-bind:title="next_title"
@@ -87,7 +87,7 @@
             </router-link>
             <router-link
                 v-bind:to="to_end"
-                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
+                class="tlp-button-primary tlp-button-outline tlp-pagination-button"
                 role="button"
                 data-test="end"
                 v-bind:title="end_title"
