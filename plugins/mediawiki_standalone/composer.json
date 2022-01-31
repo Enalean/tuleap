@@ -1,0 +1,11 @@
+{
+  "name": "tuleap/plugin-mediawiki_standalone",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\MediawikiStandalone\\": ["include/"]
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
