@@ -19,7 +19,6 @@
 
 import angular from "angular";
 import ngSanitize from "angular-sanitize";
-import angular_moment from "angular-moment";
 import filter from "angular-filter";
 import "angular-gettext";
 import angular_tlp from "@tuleap/angular-tlp";
@@ -58,12 +57,13 @@ import "./adapters/UI/fields/burndown-field/BurndownField";
 import "./adapters/UI/fields/artifact-id-field/ArtifactIdField";
 import "./adapters/UI/fields/priority-field/PriorityField";
 import "./adapters/UI/fields/cross-references-field/CrossReferencesField";
+import "./adapters/UI/fields/user-avatar-field/UserAvatarField";
+import "./adapters/UI/fields/date-readonly-field/DateReadonlyField";
 import "./followups/FollowupEditor";
 import "./adapters/UI/feedback/ModalFeedback";
 
 export default angular
     .module("tuleap.artifact-modal", [
-        angular_moment,
         "gettext",
         angular_tlp,
         angular_custom_elements_module,

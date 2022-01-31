@@ -237,41 +237,33 @@
 </script>
 
 <script type="text/ng-template" id="field-subby.tpl.html">
-<div class="tlp-property">
-    <label class="tlp-label">{{ field.label }}</label>
-    <div class="tuleap-artifact-modal-artifact-field-user">
-        <div class="tlp-avatar">
-            <img ng-src="{{ field.value.avatar_url }}" alt="avatar">
-        </div>
-        <a href="{{ field.value.user_url }}">{{ field.value.display_name }}</a>
-    </div>
-</div>
+<tuleap-artifact-modal-user-avatar-field
+    field="field"
+    ce-one-way
+></tuleap-artifact-modal-user-avatar-field>
 </script>
 
 <script type="text/ng-template" id="field-luby.tpl.html">
-<div class="tlp-property">
-    <label class="tlp-label">{{ field.label }}</label>
-    <div class="tuleap-artifact-modal-artifact-field-user">
-        <div class="tlp-avatar">
-            <img ng-if="field.value.avatar_url" ng-src="{{ field.value.avatar_url }}" alt="avatar">
-        </div>
-        <a href="{{ field.value.user_url }}">{{ field.value.display_name }}</a>
-    </div>
-</div>
+<tuleap-artifact-modal-user-avatar-field
+    field="field"
+    ce-one-way
+></tuleap-artifact-modal-user-avatar-field>
 </script>
 
 <script type="text/ng-template" id="field-subon.tpl.html">
-<div class="tlp-property">
-    <label class="tlp-label">{{ field.label }}</label>
-    <span>{{ field.value | amDateFormat:'YYYY-MM-DD HH:mm' }}</span>
-</div>
+<tuleap-artifact-modal-date-readonly-field
+    field="field"
+    formatter="modal.readonly_date_field_formatter"
+    ce-one-way
+></tuleap-artifact-modal-date-readonly-field>
 </script>
 
 <script type="text/ng-template" id="field-lud.tpl.html">
-<div class="tlp-property">
-    <label class="tlp-label">{{ field.label }}</label>
-    <span>{{ field.value | amDateFormat:'YYYY-MM-DD HH:mm' }}</span>
-</div>
+<tuleap-artifact-modal-date-readonly-field
+    field="field"
+    formatter="modal.readonly_date_field_formatter"
+    ce-one-way
+></tuleap-artifact-modal-date-readonly-field>
 </script>
 
 <script type="text/ng-template" id="field-file.tpl.html">

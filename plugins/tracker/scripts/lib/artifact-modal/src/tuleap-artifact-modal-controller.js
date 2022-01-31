@@ -55,6 +55,7 @@ import { LinksRetriever } from "./domain/fields/link-field-v2/LinksRetriever";
 import { CurrentArtifactIdentifierProxy } from "./adapters/Caller/CurrentArtifactIdentifierProxy";
 import { ParentArtifactIdentifierProxy } from "./adapters/Caller/ParentArtifactIdentifierProxy";
 import { ParentRetriever } from "./domain/parent/ParentRetriever";
+import { ReadonlyDateFieldFormatter } from "./adapters/UI/fields/date-readonly-field/readonly-date-field-formatter";
 
 export default ArtifactModalController;
 
@@ -117,6 +118,9 @@ function ArtifactModalController(
             CurrentArtifactIdentifierProxy.fromModalArtifactId(modal_model.artifact_id)
         ),
         date_picker_initializer: DatePickerInitializer(),
+        readonly_date_field_formatter: ReadonlyDateFieldFormatter(
+            document.body.dataset.userLocale ?? "en_US"
+        ),
         feedback_controller: ModalFeedbackController(
             ParentRetriever(api_client),
             ParentArtifactIdentifierProxy.fromCallerArgument(modal_model.parent_artifact_id)
