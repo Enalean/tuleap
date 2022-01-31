@@ -103,11 +103,11 @@ export default {
             if (!this.pasting_in_progress) {
                 EventBus.$emit("hide-action-menu");
             }
-            await this.$store.dispatch("clipboard/pasteItem", [
-                this.destination,
-                this.$store.state.current_folder,
-                this.$store,
-            ]);
+            await this.$store.dispatch("clipboard/pasteItem", {
+                destination_folder: this.destination,
+                current_folder: this.$store.state.current_folder,
+                global_context: this.$store,
+            });
         },
         is_item_a_folder(item) {
             return isFolder(item);

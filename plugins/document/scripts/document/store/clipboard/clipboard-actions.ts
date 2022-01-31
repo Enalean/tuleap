@@ -42,9 +42,19 @@ import {
     CLIPBOARD_OPERATION_COPY,
 } from "../../constants";
 import { adjustItemToContentAfterItemCreationInAFolder } from "../actions-helpers/adjust-item-to-content-after-item-creation-in-folder";
-import { handleErrors } from "../actions-helpers/handle-errors";
+import type { Folder, Item, State } from "../../type";
+import type { ActionContext } from "vuex";
+import type { ClipboardState } from "./module";
 
-export const pasteItem = async (context, [destination_folder, current_folder, global_context]) => {
+export interface PastePayload {
+    destination_folder: Folder;
+    current_folder: Folder;
+    global_context: ActionContext<State, State>;
+}
+export const pasteItem = async (
+    context: ActionContext<ClipboardState, State>,
+    payload: PastePayload
+): Promise<void> => {
     if (context.state.pasting_in_progress) {
         return;
     }
@@ -53,11 +63,12 @@ export const pasteItem = async (context, [destination_folder, current_folder, gl
         let pasted_item_id;
         switch (context.state.operation_type) {
             case CLIPBOARD_OPERATION_CUT:
-                await pasteItemBeingMoved(context, destination_folder);
+                await pasteItemBeingMoved(context, payload.destination_folder);
                 pasted_item_id = context.state.item_id;
                 break;
             case CLIPBOARD_OPERATION_COPY:
-                pasted_item_id = (await pasteItemBeingCopied(context, destination_folder)).id;
+                pasted_item_id = (await pasteItemBeingCopied(context, payload.destination_folder))
+                    .id;
                 break;
             default:
                 context.commit("emptyClipboard");
@@ -66,19 +77,28 @@ export const pasteItem = async (context, [destination_folder, current_folder, gl
                 );
         }
         context.commit("emptyClipboard");
+        if (!pasted_item_id) {
+            throw new Error("Paste item id is unknown");
+        }
         adjustItemToContentAfterItemCreationInAFolder(
-            global_context,
-            destination_folder,
-            current_folder,
+            payload.global_context,
+            payload.destination_folder,
+            payload.current_folder,
             pasted_item_id
         );
     } catch (exception) {
         context.commit("pastingHasFailed");
-        await handleErrors(global_context, exception);
+        await context.dispatch("error/handleGlobalModalError", exception, { root: true });
     }
 };
 
-function pasteItemBeingMoved(context, destination_folder) {
+function pasteItemBeingMoved(
+    context: ActionContext<ClipboardState, State>,
+    destination_folder: Folder
+): Promise<void> {
+    if (!context.state.item_id) {
+        throw new Error("Cannot copy unknown item");
+    }
     switch (context.state.item_type) {
         case TYPE_FILE:
             return moveFile(context.state.item_id, destination_folder.id);
@@ -98,7 +118,13 @@ function pasteItemBeingMoved(context, destination_folder) {
     }
 }
 
-function pasteItemBeingCopied(context, destination_folder) {
+function pasteItemBeingCopied(
+    context: ActionContext<ClipboardState, State>,
+    destination_folder: Folder
+): Promise<Item> {
+    if (!context.state.item_id) {
+        throw new Error("Cannot copy unknown item");
+    }
     switch (context.state.item_type) {
         case TYPE_FILE:
             return copyFile(context.state.item_id, destination_folder.id);

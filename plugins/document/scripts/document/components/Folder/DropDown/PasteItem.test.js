@@ -63,11 +63,11 @@ describe("PasteItem", () => {
 
         wrapper.trigger("click");
 
-        expect(store.dispatch).toHaveBeenCalledWith("clipboard/pasteItem", [
-            destination,
+        expect(store.dispatch).toHaveBeenCalledWith("clipboard/pasteItem", {
+            destination_folder: destination,
             current_folder,
-            store,
-        ]);
+            global_context: store,
+        });
         expect(event_bus_emit).toHaveBeenCalledWith("hide-action-menu");
     });
 

@@ -17,13 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as mutations from "./clipboard-mutations.js";
-import * as actions from "./clipboard-actions.js";
-import defaultState from "./clipboard-default-state.js";
+import type { ClipboardState } from "./module";
 
-export default {
-    namespaced: true,
-    state: defaultState(),
-    mutations,
-    actions,
+export default (): ClipboardState => {
+    return {
+        item_id: null,
+        item_title: null,
+        item_type: null,
+        operation_type: null,
+        pasting_in_progress: false,
+    };
 };
