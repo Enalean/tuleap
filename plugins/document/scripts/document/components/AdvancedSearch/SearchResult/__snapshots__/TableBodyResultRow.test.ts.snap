@@ -11,7 +11,9 @@ exports[`TableBodyResultRow should display an item as a table row 1`] = `
       Lorem
     </router-link-stub>
   </td>
-  <td>ipsum doloret</td>
+  <td>
+    <div class="document-search-result-html-content">ipsum doloret</div>
+  </td>
   <td>
     <user-badge-stub user="[object Object]"></user-badge-stub>
   </td>
