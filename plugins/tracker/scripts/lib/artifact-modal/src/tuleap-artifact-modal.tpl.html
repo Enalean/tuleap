@@ -192,37 +192,33 @@
 </script>
 
 <script type="text/ng-template" id="field-cross.tpl.html">
-<div class="tlp-property">
-    <label class="tlp-label">{{ field.label }}</label>
-    <p ng-if="field.value.length === 0" class="empty_value" translate>References list is empty.</p>
-    <ul ng-if="field.value.length > 0">
-        <li ng-repeat="value in field.value">
-            <a class="cross-reference" ng-href="{{ value.url }}">{{ value.ref }}</a><br>
-        </li>
-    </ul>
-</div>
+<tuleap-artifact-modal-cross-references-field
+    field="field"
+    ce-one-way
+></tuleap-artifact-modal-cross-references-field>
 </script>
 
 <script type="text/ng-template" id="field-aid.tpl.html">
-<div class="tlp-property">
-    <label class="tlp-label">{{ field.label }}</label>
-    <a ng-href="/plugins/tracker/?aid={{ field.value }}">#{{ field.value }}</a>
-</div>
+<tuleap-artifact-modal-artifact-id-field
+    field="field"
+    current-artifact-identifier="modal.current_artifact_identifier"
+    ce-one-way
+></tuleap-artifact-modal-artifact-id-field>
 </script>
 
 <script type="text/ng-template" id="field-atid.tpl.html">
-<div class="tlp-property">
-    <label class="tlp-label">{{ field.label }}</label>
-    <a ng-href="/plugins/tracker/?aid={{ modal.artifact_id }}">{{ field.value }}</a>
-</div>
+<tuleap-artifact-modal-artifact-id-field
+    field="field"
+    current-artifact-identifier="modal.current_artifact_identifier"
+    ce-one-way
+></tuleap-artifact-modal-artifact-id-field>
 </script>
 
 <script type="text/ng-template" id="field-priority.tpl.html">
-<div class="tlp-property">
-    <label class="tlp-label">{{ field.label }}</label>
-    <p ng-if="! field.value" class="empty_value" translate>Empty</p>
-    <p ng-if="field.value" >{{ field.value }}</p>
-</div>
+<tuleap-artifact-modal-priority-field
+    field="field"
+    ce-one-way
+></tuleap-artifact-modal-priority-field>
 </script>
 
 <script type="text/ng-template" id="field-computed.tpl.html">

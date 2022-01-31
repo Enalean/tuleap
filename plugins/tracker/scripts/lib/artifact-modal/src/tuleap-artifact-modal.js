@@ -55,6 +55,9 @@ import "./fields/text-field/TextField";
 import "./adapters/UI/fields/link-field-v2/LinkField";
 import "./adapters/UI/fields/date-field/DateField";
 import "./adapters/UI/fields/burndown-field/BurndownField";
+import "./adapters/UI/fields/artifact-id-field/ArtifactIdField";
+import "./adapters/UI/fields/priority-field/PriorityField";
+import "./adapters/UI/fields/cross-references-field/CrossReferencesField";
 import "./followups/FollowupEditor";
 import "./adapters/UI/feedback/ModalFeedback";
 

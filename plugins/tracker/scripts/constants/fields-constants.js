@@ -27,9 +27,17 @@ export const STRUCTURAL_FIELDS = [
     "staticrichtext",
 ];
 
+export const COMPUTED_FIELD = "computed";
+export const SELECTBOX_FIELD = "sb";
+export const DATE_FIELD = "date";
+export const INT_FIELD = "int";
+export const FLOAT_FIELD = "float";
+export const ARTIFACT_ID_FIELD = "aid";
+export const ARTIFACT_ID_IN_TRACKER_FIELD = "atid";
+
 export const READ_ONLY_FIELDS = [
-    "aid",
-    "atid",
+    ARTIFACT_ID_FIELD,
+    ARTIFACT_ID_IN_TRACKER_FIELD,
     "burndown",
     "cross",
     "luby",
@@ -38,12 +46,6 @@ export const READ_ONLY_FIELDS = [
     "subby",
     "subon",
 ];
-
-export const COMPUTED_FIELD = "computed";
-export const SELECTBOX_FIELD = "sb";
-export const DATE_FIELD = "date";
-export const INT_FIELD = "int";
-export const FLOAT_FIELD = "float";
 
 export const LIST_BIND_STATIC = "static";
 export const LIST_BIND_UGROUPS = "ugroups";

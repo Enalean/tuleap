@@ -31,8 +31,8 @@ export type StructuralFieldIdentifier =
 export const STRUCTURAL_FIELDS: StructuralFieldIdentifier[];
 
 export type ReadOnlyFieldIdentifier =
-    | "aid"
-    | "atid"
+    | ArtifactIdFieldIdentifier
+    | ArtifactIdInTrackerFieldIdentifier
     | "burndown"
     | "cross"
     | "luby"
@@ -50,6 +50,8 @@ export type IntFieldIdentifier = "int";
 export type FloatFieldIdentifier = "float";
 export type TextFieldIdentifier = "text";
 export type FileFieldIdentifier = "file";
+export type ArtifactIdFieldIdentifier = "aid";
+export type ArtifactIdInTrackerFieldIdentifier = "atid";
 
 export type FieldTypeIdentifier =
     | StructuralFieldIdentifier
@@ -67,6 +69,8 @@ export const SELECTBOX_FIELD: SelectBoxFieldIdentifier;
 export const DATE_FIELD: DateFieldIdentifier;
 export const INT_FIELD: IntFieldIdentifier;
 export const FLOAT_FIELD: FloatFieldIdentifier;
+export const ARTIFACT_ID_FIELD: ArtifactIdFieldIdentifier;
+export const ARTIFACT_ID_IN_TRACKER_FIELD: ArtifactIdInTrackerFieldIdentifier;
 
 export type StaticBindIdentifier = "static";
 export type UserGroupsBindIdentifier = "ugroups";
