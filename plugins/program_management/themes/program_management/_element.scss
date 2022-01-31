@@ -80,18 +80,6 @@ $accessibility-pattern-right-margin: 6px;
             margin: 0 5px 0 0;
         }
     }
-
-    &.is-moving {
-        transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
-        animation: blinking 1200ms ease-in-out alternate infinite;
-    }
-
-    &.has-moved {
-        transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
-        animation: pulse-has-moved 500ms ease-in-out;
-        border-color: var(--tlp-success-color);
-        background: var(--tlp-success-color-transparent-90);
-    }
 }
 
 .element-card-accessibility {
@@ -113,37 +101,6 @@ $accessibility-pattern-right-margin: 6px;
     .element-card-xref,
     .element-card-label {
         color: var(--tlp-dimmed-color-transparent-50);
-    }
-}
-
-@keyframes pulse-has-moved {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.05);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-}
-
-@keyframes blinking {
-    0% {
-        border-color: var(--tlp-neutral-normal-color);
-        background: var(--tlp-white-color);
-    }
-
-    50% {
-        border-color: var(--tlp-info-color);
-        background: var(--tlp-info-color-transparent-90);
-    }
-
-    100% {
-        border-color: var(--tlp-neutral-normal-color);
-        background: var(--tlp-white-color);
     }
 }
 
