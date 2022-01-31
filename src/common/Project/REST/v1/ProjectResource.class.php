@@ -1237,6 +1237,43 @@ class ProjectResource extends AuthenticatedResource
         Header::allowOptionsGet();
     }
 
+    /**
+     * @url OPTIONS {id}/3rd_party_integration_data
+     *
+     * @param int $id ID of the project
+     */
+    public function optionsThirdPartyIntegrationData(int $id): void
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get data needed for third party integration
+     *
+     * @url GET {id}/3rd_party_integration_data
+     * @access hybrid
+     * @oauth2-scope read:project
+     *
+     * @param int $id ID of the project
+     *
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function getThirdPartyIntegrationData(int $id): ThirdPartyIntegrationDataRepresentation
+    {
+        $this->optionsThirdPartyIntegrationData($id);
+        $this->checkAccess();
+        $project = $this->getProjectForUser($id);
+
+        $current_user = $this->user_manager->getCurrentUser();
+
+        return new ThirdPartyIntegrationDataRepresentation(
+            ProjectSidebarDataRepresentation::fromProjectAndUser($project, $current_user),
+            ThirdPartyIntegrationStylesRepresentation::fromUser($current_user)
+        );
+    }
+
 
     private function userCanAccessPhpWikiService(PFUser $user, $project_id)
     {

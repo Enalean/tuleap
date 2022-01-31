@@ -1748,4 +1748,20 @@ class ProjectTest extends ProjectBase
 
         self::assertEquals(200, $response->getStatusCode());
     }
+
+    public function testGETThirdPartiesIntegrationData(): void
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->request_factory->createRequest(
+                'GET',
+                'projects/' . $this->project_public_member_id . '/3rd_party_integration_data'
+            )
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+
+        $response_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertNotEmpty($response_json['styles']['content']);
+    }
 }
