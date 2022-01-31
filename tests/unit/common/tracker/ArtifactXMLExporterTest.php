@@ -883,7 +883,7 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertCount(2, $this->xml->artifact->changeset);
 
         $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'assigned_to');
-        $this->assertEquals('', (string) $initial_change->value);
+        $this->assertEquals('None', (string) $initial_change->value);
         $this->assertEquals('assigned_to', (string) $initial_change['field_name']);
         $this->assertEquals('list', (string) $initial_change['type']);
         $this->assertEquals('users', (string) $initial_change['bind']);
