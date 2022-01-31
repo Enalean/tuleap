@@ -126,11 +126,24 @@
 
 .global-search-label {
     display: flex;
+    align-items: center;
+    margin: 0 0 var(--tlp-small-spacing);
+
+    > .tlp-label {
+        margin: 0;
+    }
+}
+
+.tlp-popover.popover-search.tlp-popover-shown {
+    transform: translate(-10px, 5px);
 }
 
 .popover-search-icon {
-    margin: 0 0 0 var(--tlp-small-spacing);
+    position: relative;
+    top: -1px;
+    margin: 0 0 0 calc(var(--tlp-small-spacing) / 2);
     color: var(--tlp-dimmed-color);
+    font-size: 0.75rem;
 }
 
 .document-search-breadcrumbs {

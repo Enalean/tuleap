@@ -128,7 +128,7 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 .tlp-label {
     display: block;
     position: relative;
-    margin: 0 0 8px;
+    margin: 0 0 var(--tlp-small-spacing);
     color: var(--tlp-dimmed-color);
     font-size: 0.8125rem;
     font-weight: 500;

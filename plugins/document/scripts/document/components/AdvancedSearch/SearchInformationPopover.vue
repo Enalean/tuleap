@@ -23,7 +23,7 @@
         <span ref="popover_icon">
             <i class="fas fa-question-circle popover-search-icon"></i>
         </span>
-        <section class="tlp-popover" ref="popover_content">
+        <section class="tlp-popover popover-search" ref="popover_content">
             <div class="tlp-popover-arrow"></div>
             <div class="tlp-popover-header">
                 <h1 class="tlp-popover-title" v-translate>Global search information</h1>
