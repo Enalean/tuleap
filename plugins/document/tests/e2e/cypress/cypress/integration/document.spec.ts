@@ -336,8 +336,8 @@ describe("Document new UI", () => {
                 cy.get("[data-test=document-tree-content]").contains("tr", `private${now}`).click();
                 cy.get("[data-test=document-history]").last().click({ force: true });
 
-                cy.get("[data-test=table-test").contains("Wiki page content change");
-                cy.get("[data-test=table-test").contains("Create");
+                cy.get("[data-test=table-test]").contains("Wiki page content change");
+                cy.get("[data-test=table-test]").contains("Create");
 
                 cy.log("project member can not see document when lack of permissions");
                 cy.visitProjectService("document-project", "Documents");
@@ -351,6 +351,8 @@ describe("Document new UI", () => {
                 cy.get("[data-test=document-modal-submit-button]").last().click();
 
                 cy.log("wiki page have their permissions in wiki service");
+
+                cy.get("[data-test=quick-look-button]").last().click({ force: true });
 
                 let current_url;
                 cy.url().then((url) => {
@@ -372,7 +374,9 @@ describe("Document new UI", () => {
                 cy.log("Delete wiki page");
                 cy.visitProjectService("document-project", "Documents");
                 cy.get("[data-test=document-tree-content]").contains("tr", `private${now}`).click();
-                cy.get("[data-test=document-quick-look-delete-button]").click();
+                cy.get("[data-test=quick-look-button]").last().click({ force: true });
+                cy.get("[data-test=document-quick-look]");
+                cy.get("[data-test=document-quick-look-delete-button]").click({ force: true });
                 cy.get("[data-test=delete-associated-wiki-page-checkbox]").click();
                 cy.get("[data-test=document-confirm-deletion-button]").click();
             });
