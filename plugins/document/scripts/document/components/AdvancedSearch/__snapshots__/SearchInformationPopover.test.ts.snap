@@ -2,7 +2,7 @@
 
 exports[`SearchInformationPopover should display a popover content 1`] = `
 <div class="popover-information"><span><i class="fas fa-question-circle popover-search-icon"></i></span>
-  <section class="tlp-popover" style="position: absolute; left: 0px; top: 0px; margin: 0px;">
+  <section class="tlp-popover popover-search" style="position: absolute; left: 0px; top: 0px; margin: 0px;">
     <div class="tlp-popover-arrow" style="position: absolute;"></div>
     <div class="tlp-popover-header">
       <h1 class="tlp-popover-title" data-msgid="Global search information" data-current-language="en_US">Global search information</h1>
