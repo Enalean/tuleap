@@ -42,6 +42,10 @@
                     {{ folder.title }}
                 </router-link>
             </template>
+            <span class="document-search-breadcrumbs-separator">.</span>
+            <router-link v-bind:to="getSearchInRootFolderRoute()" v-translate>
+                Search in whole project documentation
+            </router-link>
         </template>
     </p>
 </template>
@@ -71,6 +75,13 @@ export default class SearchCriteriaBreadcrumb extends Vue {
                 ...this.$route.query,
                 offset: "0",
             },
+        };
+    }
+
+    getSearchInRootFolderRoute(): Route {
+        return {
+            ...this.$route,
+            params: {},
         };
     }
 }

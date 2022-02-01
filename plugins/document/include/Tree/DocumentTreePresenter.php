@@ -37,6 +37,10 @@ class DocumentTreePresenter
      */
     public $project_id;
     /**
+     * @var int
+     */
+    public $root_id;
+    /**
      * @var string
      */
     public $project_name;
@@ -122,6 +126,7 @@ class DocumentTreePresenter
 
     public function __construct(
         \Project $project,
+        int $root_id,
         \PFUser $user,
         bool $embedded_are_allowed,
         bool $is_item_status_metadata_used,
@@ -133,6 +138,7 @@ class DocumentTreePresenter
         array $project_flags,
     ) {
         $this->project_id                         = $project->getID();
+        $this->root_id                            = $root_id;
         $this->project_name                       = $project->getUnixNameLowerCase();
         $this->project_public_name                = $project->getPublicName();
         $this->project_url                        = $project->getUrl();

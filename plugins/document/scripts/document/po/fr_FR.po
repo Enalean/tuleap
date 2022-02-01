@@ -526,6 +526,9 @@ msgstr "Modèles de recherche authorisés :"
 msgid "Search criteria"
 msgstr "Critères de recherche"
 
+msgid "Search in whole project documentation"
+msgstr "Chercher dans toute la documentation du projet"
+
 msgid "Searching in:"
 msgstr "Recherche dans :"
 
