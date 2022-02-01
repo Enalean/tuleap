@@ -75,6 +75,11 @@
 
 # ---------------------------- Functions
 
+GIT_TULEAP_DIR="/usr/lib/tuleap/git/bin"
+if [[ -d "$GIT_TULEAP_DIR" ]]; then
+  export PATH="$GIT_TULEAP_DIR:$PATH"
+fi
+
 #
 # Function to prepare for email generation. This decides what type
 # of update this is and whether an email should even be generated.
@@ -185,7 +190,7 @@ generate_email()
 	if [ -z "$describe" ]; then
 		describe=$rev
 	fi
-        
+
 	# Author list (unique, separted by comma)
 	authors=""
 	if [ ${change_type} = "update" ]; then
