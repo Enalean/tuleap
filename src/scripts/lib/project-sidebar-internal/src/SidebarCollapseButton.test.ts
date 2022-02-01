@@ -36,6 +36,7 @@ describe("SidebarCollapseButton", () => {
             },
             props: {
                 is_sidebar_collapsed: false,
+                can_sidebar_be_collapsed: true,
             },
         });
 
@@ -50,7 +51,7 @@ describe("SidebarCollapseButton", () => {
         expect((click_events ?? [])[0]).toStrictEqual([true]);
     });
 
-    it("does display a button when the user is not logged in", () => {
+    it("does not display a button when the user is not logged in", () => {
         const config = example_config;
         config.user.is_logged_in = false;
         const wrapper = shallowMount(SidebarCollapseButton, {
@@ -61,6 +62,23 @@ describe("SidebarCollapseButton", () => {
             },
             props: {
                 is_sidebar_collapsed: false,
+                can_sidebar_be_collapsed: true,
+            },
+        });
+
+        expect(wrapper.find("button").exists()).toBe(false);
+    });
+
+    it("does not display the collapse button when sidebar collapse behavior is disabled", () => {
+        const wrapper = shallowMount(SidebarCollapseButton, {
+            global: {
+                provide: {
+                    [SIDEBAR_CONFIGURATION.valueOf()]: ref(example_config),
+                },
+            },
+            props: {
+                is_sidebar_collapsed: false,
+                can_sidebar_be_collapsed: false,
             },
         });
 

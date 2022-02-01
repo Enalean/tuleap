@@ -26,6 +26,11 @@ The sidebar also accepts an attribute `collapsed` to collapse it. You can watch 
 [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to detect when the sidebar is
 collapsed or opened.
 
+The collapse behavior can be removed by adding an attribute `no-collapse-button` to the element, for example:
+```html
+<tuleap-project-sidebar config="..." no-collapse-button></tuleap-project-sidebar>
+```
+
 The custom element throws a [CustomEvent](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent)
 `show-project-announcement` when the user want to see the project announcement.
 

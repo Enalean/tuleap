@@ -22,7 +22,7 @@
 
 <template>
     <button
-        v-if="config.user.is_logged_in"
+        v-if="can_sidebar_be_collapsed && config.user.is_logged_in"
         type="button"
         v-bind:title="
             props.is_sidebar_collapsed
@@ -39,7 +39,7 @@
 import { strictInject } from "./strict-inject";
 import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
 
-const props = defineProps<{ is_sidebar_collapsed: boolean }>();
+const props = defineProps<{ is_sidebar_collapsed: boolean; can_sidebar_be_collapsed: boolean }>();
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
 
