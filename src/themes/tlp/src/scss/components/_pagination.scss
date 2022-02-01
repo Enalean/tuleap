@@ -17,20 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "buttons";
+
 $tlp-pagination-margin: 2px;
 
 .tlp-pagination {
     text-align: center;
 }
 
-.tlp-pagination-button {
-    width: 40px;
-    min-height: 40px;
+.tlp-pagination-button[class*="tlp-button"] {
+    width: $tlp-button-normal-height;
+    height: $tlp-button-normal-height;
     margin: 0 $tlp-pagination-margin;
     border-radius: 50%;
 
-    > .fa {
-        font-size: 1.2rem;
+    > .fas {
+        line-height: 38px;
     }
 }
 

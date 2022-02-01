@@ -20,13 +20,13 @@
 
 <template>
     <tr>
-        <td class="tlp-table-cell-numeric">
+        <td class="tlp-table-cell-numeric document-search-result-id">
             {{ item.id }}
         </td>
         <td class="document-search-result-icon">
             <i class="fa fa-fw" v-bind:class="icon_classes" aria-hidden="true"></i>
         </td>
-        <td>
+        <td class="document-search-result-title">
             <a v-if="href" v-bind:href="href" class="document-folder-subitem-link" data-test="link">
                 {{ item.title }}
             </a>

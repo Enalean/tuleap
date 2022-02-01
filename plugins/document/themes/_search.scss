@@ -20,7 +20,6 @@
 @use "../../../src/themes/BurningParrot/css/includes/global-variables";
 
 .document-header.document-header-search {
-    margin: 0 0 var(--tlp-medium-spacing);
     padding: var(--tlp-large-spacing) var(--tlp-medium-spacing)
         calc(var(--tlp-title-spacing) - var(--tlp-medium-spacing));
 }
@@ -85,10 +84,19 @@
     margin: var(--tlp-small-spacing) 0 0;
 }
 
+.document-search-criteria {
+    max-width: 300px;
+}
+
+.document-search-submit {
+    min-width: 120px;
+}
+
 .document-search-table-container {
     flex: 0 1 auto;
     overflow: auto;
-    border-top: 1px solid var(--tlp-ui-border-normal);
+    border-top: 1px solid var(--tlp-neutral-normal-color);
+    border-bottom: 1px solid var(--tlp-neutral-normal-color);
 
     + .tlp-pagination {
         margin: var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing);
@@ -112,6 +120,23 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+
+            &:first-child {
+                padding-left: var(--tlp-medium-spacing);
+            }
+
+            &:last-child {
+                padding-right: var(--tlp-medium-spacing);
+            }
+        }
+
+        > td {
+            color: var(--tlp-dimmed-color);
+        }
+
+        > .document-search-result-id,
+        > .document-search-result-title {
+            color: var(--tlp-dark-color);
         }
     }
 }
@@ -157,13 +182,24 @@
 .document-search-breadcrumbs {
     display: flex;
     align-items: baseline;
+    font-size: 0.875rem;
+    line-height: 1.125rem;
 }
 
 .document-search-breadcrumbs-label {
-    margin: 0 var(--tlp-small-spacing) 0 0;
+    margin: 0 calc(var(--tlp-small-spacing) / 2) 0 0;
+}
+
+.document-search-breadcrumbs-crumb:hover {
+    background: var(--tlp-main-color-transparent-90);
+    color: var(--tlp-main-color);
 }
 
 .document-search-breadcrumbs-separator {
-    padding: 0 var(--tlp-small-spacing);
-    font-size: 0.75rem;
+    padding: 0 calc(var(--tlp-small-spacing) / 2);
+    font-size: 0.5rem;
+}
+
+.document-search-breadcrumbs-final-separator {
+    padding: 0 calc(var(--tlp-small-spacing) / 2) 0 2px;
 }

@@ -20,7 +20,7 @@
 
 <template>
     <p class="document-search-breadcrumbs">
-        <span class="document-search-breadcrumbs-label" v-translate>Searching in:</span>
+        <span class="document-search-breadcrumbs-label" v-translate>Searching in</span>
         <i
             class="fas fa-circle-notch fa-spin"
             aria-hidden="true"
@@ -36,16 +36,17 @@
                 ></i>
                 <router-link
                     v-bind:to="getSearchInFolderRoute(folder)"
-                    class="tlp-badge-secondary"
+                    class="document-search-breadcrumbs-crumb tlp-badge-secondary tlp-badge-outline"
                     v-bind:key="'folder-' + folder.id"
                 >
                     {{ folder.title }}
                 </router-link>
             </template>
-            <span class="document-search-breadcrumbs-separator">.</span>
+            <span class="document-search-breadcrumbs-final-separator">.</span>
             <router-link v-bind:to="getSearchInRootFolderRoute()" v-translate>
                 Search in whole project documentation
             </router-link>
+            .
         </template>
     </p>
 </template>

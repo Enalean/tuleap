@@ -24,6 +24,10 @@
     .document-header-title {
         @include background.project-background-title-header-typography;
     }
+
+    .document-header-search {
+        margin: 0 0 var(--tlp-medium-spacing);
+    }
 }
 
 body {

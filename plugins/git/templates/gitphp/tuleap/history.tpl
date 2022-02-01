@@ -38,14 +38,14 @@
                     <div class="tlp-pagination git-repository-shortlog-pagination">
                         {if $page > 0}
                             <a href="?a=history&amp;hb={$hashbase|urlencode}&amp;pg={$page-1|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
-                               class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
+                               class="tlp-button-primary tlp-button-outline tlp-pagination-button"
                                title="{t domain="gitphp"}Previous{/t}"
                             >
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         {else}
                             <button type="button"
-                                    class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
+                                    class="tlp-button-primary tlp-button-outline tlp-pagination-button"
                                     title="{t domain="gitphp"}Previous{/t}"
                                     disabled
                             >
@@ -54,14 +54,14 @@
                         {/if}
                         {if (isset($hasmorerevs) && $hasmorerevs) }
                             <a href="?a=history&amp;hb={$hashbase|urlencode}&amp;pg={$page+1|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
-                               class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
+                               class="tlp-button-primary tlp-button-outline tlp-pagination-button"
                                title="{t domain="gitphp"}Next{/t}"
                             >
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         {else}
                             <button type="button"
-                                    class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
+                                    class="tlp-button-primary tlp-button-outline tlp-pagination-button"
                                     title="{t domain="gitphp"}Next{/t}"
                                     disabled
                             >
