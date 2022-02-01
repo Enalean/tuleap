@@ -185,7 +185,7 @@ class Tag extends Ref
             if ($this->object instanceof Commit) {
                 $this->commit = $this->object;
             } elseif ($this->object instanceof Tag) {
-                $this->commit = $this->GetProject()->GetCommit($this->GetHash());
+                $this->commit = $this->GetProject()->GetCommit($this->object->GetName());
             }
         }
 
@@ -379,6 +379,7 @@ class Tag extends Ref
      */
     private function ReadDataRaw() // @codingStandardsIgnoreLine
     {
+        $type = 0;
         $data = $this->GetProject()->GetObject($this->GetHash(), $type);
 
         if ($type == Pack::OBJ_COMMIT) {
