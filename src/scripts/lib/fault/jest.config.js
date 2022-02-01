@@ -17,18 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
-import type { Artifact } from "../../../domain/Artifact";
+process.env.DISABLE_TS_TYPECHECK = "true";
 
-describe(`ParentFeedbackPresenter`, () => {
-    it(`builds an empty Presenter`, () => {
-        const presenter = ParentFeedbackPresenter.buildEmpty();
-        expect(presenter.parent_artifact).toBeNull();
-    });
-
-    it(`builds a presenter from a parent artifact`, () => {
-        const parent_artifact = { id: 50 } as Artifact;
-        const presenter = ParentFeedbackPresenter.fromArtifact(parent_artifact);
-        expect(presenter.parent_artifact).toBe(parent_artifact);
-    });
-});
+module.exports = {
+    ...require("../../../../tests/jest/jest.base.config.js"),
+    displayName: "fault",
+};

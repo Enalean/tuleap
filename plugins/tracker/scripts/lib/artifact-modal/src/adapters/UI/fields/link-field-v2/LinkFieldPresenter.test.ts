@@ -19,6 +19,7 @@
 
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { LinkedArtifact } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
+import { Fault } from "@tuleap/fault";
 
 describe(`LinkFieldPresenter`, () => {
     it(`builds a loading state`, () => {
@@ -52,7 +53,7 @@ describe(`LinkFieldPresenter`, () => {
     it(`builds from error`, () => {
         const error_message = "Ooops";
 
-        const presenter = LinkFieldPresenter.fromError(new Error(error_message));
+        const presenter = LinkFieldPresenter.fromFault(Fault.fromMessage(error_message));
         expect(presenter.linked_artifacts).toHaveLength(0);
         expect(presenter.error_message).toBe(error_message);
         expect(presenter.is_loading).toBe(false);

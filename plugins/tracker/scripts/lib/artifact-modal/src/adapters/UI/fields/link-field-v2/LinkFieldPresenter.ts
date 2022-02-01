@@ -18,6 +18,7 @@
  */
 
 import type { LinkedArtifact } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
+import type { Fault } from "@tuleap/fault";
 
 export interface LinkFieldPresenter {
     readonly linked_artifacts: LinkedArtifact[];
@@ -48,9 +49,9 @@ export const LinkFieldPresenter = {
         has_loaded_content: true,
     }),
 
-    fromError: (error: Error): LinkFieldPresenter => ({
+    fromFault: (fault: Fault): LinkFieldPresenter => ({
         linked_artifacts: [],
-        error_message: error.message,
+        error_message: String(fault),
         is_loading: false,
         has_loaded_content: true,
     }),

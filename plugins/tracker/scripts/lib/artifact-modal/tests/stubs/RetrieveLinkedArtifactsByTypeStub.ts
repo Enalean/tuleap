@@ -36,4 +36,9 @@ export const RetrieveLinkedArtifactsByTypeStub = {
             },
         };
     },
+
+    withError: (error_message: string): RetrieveLinkedArtifactsByType => ({
+        getLinkedArtifactsByLinkType: (): Promise<never> =>
+            Promise.reject(new Error(error_message)),
+    }),
 };

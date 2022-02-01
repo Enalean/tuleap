@@ -22,15 +22,25 @@ import type { RetrieveLinkedArtifactsByType } from "./RetrieveLinkedArtifactsByT
 import type { LinkedArtifact, LinkType } from "./LinkedArtifact";
 import type { RetrieveAllLinkedArtifacts } from "./RetrieveAllLinkedArtifacts";
 import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
+import { Fault, isFault } from "@tuleap/fault";
+import { NoLinksInCreationModeFault } from "./NoLinksInCreationModeFault";
 
 export const LinksRetriever = (
     types_retriever: RetrieveLinkTypes,
     artifacts_retriever: RetrieveLinkedArtifactsByType
 ): RetrieveAllLinkedArtifacts => ({
     async getLinkedArtifacts(
-        current_artifact_identifier: CurrentArtifactIdentifier
-    ): Promise<LinkedArtifact[]> {
-        const link_types = await types_retriever.getAllLinkTypes(current_artifact_identifier);
+        current_artifact_identifier: CurrentArtifactIdentifier | null
+    ): Promise<Fault | LinkedArtifact[]> {
+        if (current_artifact_identifier === null) {
+            return Promise.resolve(NoLinksInCreationModeFault());
+        }
+        const link_types = await types_retriever
+            .getAllLinkTypes(current_artifact_identifier)
+            .catch(Fault.fromError);
+        if (isFault(link_types)) {
+            return Promise.resolve(link_types);
+        }
         const promises = link_types.map((type: LinkType) => {
             return artifacts_retriever.getLinkedArtifactsByLinkType(
                 current_artifact_identifier,
@@ -38,6 +48,6 @@ export const LinksRetriever = (
             );
         });
 
-        return Promise.all(promises).then((collections) => collections.flat());
+        return Promise.all(promises).then((collections) => collections.flat(), Fault.fromError);
     },
 });

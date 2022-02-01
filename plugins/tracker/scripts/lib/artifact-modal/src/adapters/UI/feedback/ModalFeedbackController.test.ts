@@ -23,20 +23,21 @@ import type { ParentArtifactIdentifier } from "../../../domain/parent/ParentArti
 import { ParentArtifactIdentifierStub } from "../../../../tests/stubs/ParentArtifactIdentifierStub";
 import { RetrieveArtifactStub } from "../../../../tests/stubs/RetrieveArtifactStub";
 import type { Artifact } from "../../../domain/Artifact";
+import { ParentRetriever } from "../../../domain/parent/ParentRetriever";
 
 const PARENT_ARTIFACT_ID = 78;
 
 describe(`ModalFeedbackController`, () => {
-    let parent_id: ParentArtifactIdentifier | null;
+    let parent_identifier: ParentArtifactIdentifier | null;
     beforeEach(() => {
-        parent_id = ParentArtifactIdentifierStub.withId(PARENT_ARTIFACT_ID);
+        parent_identifier = ParentArtifactIdentifierStub.withId(PARENT_ARTIFACT_ID);
     });
 
     const displayParentFeedback = (): Promise<ParentFeedbackPresenter> => {
         const parent_artifact: Artifact = { id: PARENT_ARTIFACT_ID, title: "nonhereditary" };
         const controller = ModalFeedbackController(
-            RetrieveArtifactStub.withArtifact(parent_artifact),
-            parent_id
+            ParentRetriever(RetrieveArtifactStub.withArtifact(parent_artifact)),
+            parent_identifier
         );
         return controller.displayParentFeedback();
     };
@@ -52,7 +53,7 @@ describe(`ModalFeedbackController`, () => {
         });
 
         it(`when there is no parent artifact, it will return a presenter without parent`, async () => {
-            parent_id = null;
+            parent_identifier = null;
             const presenter = await displayParentFeedback();
             expect(presenter.parent_artifact).toBeNull();
         });

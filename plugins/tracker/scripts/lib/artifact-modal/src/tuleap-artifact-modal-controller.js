@@ -54,6 +54,7 @@ import { DatePickerInitializer } from "./adapters/UI/fields/date-field/DatePicke
 import { LinksRetriever } from "./domain/fields/link-field-v2/LinksRetriever";
 import { CurrentArtifactIdentifierProxy } from "./adapters/Caller/CurrentArtifactIdentifierProxy";
 import { ParentArtifactIdentifierProxy } from "./adapters/Caller/ParentArtifactIdentifierProxy";
+import { ParentRetriever } from "./domain/parent/ParentRetriever";
 
 export default ArtifactModalController;
 
@@ -117,7 +118,7 @@ function ArtifactModalController(
         ),
         date_picker_initializer: DatePickerInitializer(),
         feedback_controller: ModalFeedbackController(
-            api_client,
+            ParentRetriever(api_client),
             ParentArtifactIdentifierProxy.fromCallerArgument(modal_model.parent_artifact_id)
         ),
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),

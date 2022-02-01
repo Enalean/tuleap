@@ -19,24 +19,24 @@
 
 import { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
 import type { ParentArtifactIdentifier } from "../../../domain/parent/ParentArtifactIdentifier";
-import type { RetrieveArtifact } from "../../../domain/RetrieveArtifact";
+import type { RetrieveParent } from "../../../domain/parent/RetrieveParent";
+import { isFault } from "@tuleap/fault";
 
 export interface ModalFeedbackControllerType {
     displayParentFeedback(): Promise<ParentFeedbackPresenter>;
 }
 
 export const ModalFeedbackController = (
-    retriever: RetrieveArtifact,
+    retriever: RetrieveParent,
     parent_identifier: ParentArtifactIdentifier | null
 ): ModalFeedbackControllerType => {
     return {
-        displayParentFeedback: (): Promise<ParentFeedbackPresenter> => {
-            if (parent_identifier === null) {
-                return Promise.resolve(ParentFeedbackPresenter.buildEmpty());
+        displayParentFeedback: async (): Promise<ParentFeedbackPresenter> => {
+            const result = await retriever.getParent(parent_identifier);
+            if (isFault(result)) {
+                return ParentFeedbackPresenter.buildEmpty();
             }
-            return retriever
-                .getArtifact(parent_identifier)
-                .then(ParentFeedbackPresenter.fromArtifact);
+            return ParentFeedbackPresenter.fromArtifact(result);
         },
     };
 };
