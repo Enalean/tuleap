@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="v4.14.0@14dcbc908ab2625cd7a74258ee6c740cbecc6140">
+<files psalm-version="4.19.0@a2ad69ae4f5ab1f7d225a8dc4e2ec2d9415ed599">
   <file src="plugins/agiledashboard/include/AgileDashboard/AdminChartsPresenter.php">
     <PossiblyInvalidPropertyAssignmentValue occurrences="1">
       <code>$project-&gt;getID()</code>
@@ -5716,11 +5716,6 @@
       <code>accept</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/PaginatedCollectionOfCSVRepresentations.php">
-    <MissingClosureParamType occurrences="1">
-      <code>$accumulator</code>
-    </MissingClosureParamType>
-  </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/SimilarFieldsFormatter.php">
     <MissingReturnType occurrences="1">
       <code>getFieldValue</code>
@@ -6148,9 +6143,6 @@
       <code>$this-&gt;candidates_sorted_by_identifier_and_tracker_id</code>
       <code>$this-&gt;candidates_sorted_by_identifier_and_tracker_id</code>
     </InvalidPropertyAssignmentValue>
-    <MissingClosureParamType occurrences="1">
-      <code>$accumulator</code>
-    </MissingClosureParamType>
     <MissingClosureReturnType occurrences="2">
       <code>function ($identifier_string) {</code>
       <code>function ($identifier_string) {</code>
@@ -6479,10 +6471,6 @@
     <InvalidScalarArgument occurrences="1">
       <code>600</code>
     </InvalidScalarArgument>
-    <MissingClosureParamType occurrences="2">
-      <code>$node1</code>
-      <code>$node2</code>
-    </MissingClosureParamType>
     <MissingClosureReturnType occurrences="1">
       <code>static function ($node1, $node2) {</code>
     </MissingClosureReturnType>
@@ -8143,8 +8131,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_Filter.php">
-    <MissingParamType occurrences="8">
-      <code>$md</code>
+    <MissingParamType occurrences="7">
       <code>$request</code>
       <code>$request</code>
       <code>$request</code>
@@ -8153,8 +8140,7 @@
       <code>$row</code>
       <code>$v</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="2">
-      <code>$md</code>
+    <MissingPropertyType occurrences="1">
       <code>$value</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="9">
@@ -8198,8 +8184,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_FilterDate.php">
-    <MissingParamType occurrences="6">
-      <code>$md</code>
+    <MissingParamType occurrences="5">
       <code>$op</code>
       <code>$request</code>
       <code>$row</code>
@@ -8224,8 +8209,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_FilterDateAdvanced.php">
-    <MissingParamType occurrences="5">
-      <code>$md</code>
+    <MissingParamType occurrences="4">
       <code>$request</code>
       <code>$row</code>
       <code>$v</code>
@@ -8250,7 +8234,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_FilterFactory.class.php">
-    <MissingParamType occurrences="31">
+    <MissingParamType occurrences="29">
       <code>$advSearch</code>
       <code>$advSearch</code>
       <code>$advSearch</code>
@@ -8264,12 +8248,10 @@
       <code>$groupId</code>
       <code>$md</code>
       <code>$md</code>
-      <code>$md</code>
       <code>$metadataMapping</code>
       <code>$metadataMapping</code>
       <code>$metadataMapping</code>
       <code>$metadataMapping</code>
-      <code>$report</code>
       <code>$report</code>
       <code>$report</code>
       <code>$reportId</code>
@@ -8283,30 +8265,22 @@
       <code>$srcReport</code>
       <code>$value</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="6">
-      <code>$dynTextFields</code>
-      <code>$filter-&gt;md</code>
-      <code>$filter-&gt;md</code>
-      <code>$filter-&gt;md</code>
-      <code>$filter-&gt;md</code>
+    <MissingPropertyType occurrences="1">
       <code>$groupId</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="19">
+    <MissingReturnType occurrences="16">
       <code>_initFilter</code>
-      <code>addFiltersToReport</code>
       <code>cloneFilter</code>
       <code>cloneFilterValues</code>
       <code>copy</code>
       <code>createFilter</code>
       <code>createFilterOnMatch</code>
       <code>createFiltersFromReport</code>
-      <code>createFromMetadata</code>
       <code>createItemTypeFilter</code>
       <code>getDao</code>
       <code>getFakeGlobalSearchFilter</code>
       <code>getFilterFactory</code>
       <code>getGlobalSearchFilter</code>
-      <code>getGlobalSearchMetadata</code>
       <code>getItemTypeSearchFilter</code>
       <code>getItemTypeSearchMetadata</code>
       <code>getLoveClonedValue</code>
@@ -8314,31 +8288,15 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_FilterGlobalText.php">
-    <MissingParamType occurrences="3">
-      <code>$dynTextFields</code>
-      <code>$md</code>
+    <MissingParamType occurrences="1">
       <code>$row</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="1">
-      <code>$dynTextFields</code>
-    </MissingPropertyType>
     <MissingReturnType occurrences="1">
       <code>initFromRow</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/Docman_FilterItemType.php">
-    <MissingParamType occurrences="1">
-      <code>$md</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/docman/include/Docman_FilterItemTypeAdvanced.php">
-    <MissingParamType occurrences="1">
-      <code>$md</code>
-    </MissingParamType>
-  </file>
   <file src="plugins/docman/include/Docman_FilterList.php">
-    <MissingParamType occurrences="5">
-      <code>$md</code>
+    <MissingParamType occurrences="4">
       <code>$request</code>
       <code>$request</code>
       <code>$row</code>
@@ -8352,8 +8310,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_FilterListAdvanced.php">
-    <MissingParamType occurrences="6">
-      <code>$md</code>
+    <MissingParamType occurrences="5">
       <code>$request</code>
       <code>$request</code>
       <code>$request</code>
@@ -8369,8 +8326,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_FilterOwner.php">
-    <MissingParamType occurrences="3">
-      <code>$md</code>
+    <MissingParamType occurrences="2">
       <code>$request</code>
       <code>$row</code>
     </MissingParamType>
@@ -8380,8 +8336,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_FilterText.php">
-    <MissingParamType occurrences="2">
-      <code>$md</code>
+    <MissingParamType occurrences="1">
       <code>$row</code>
     </MissingParamType>
     <MissingReturnType occurrences="2">
@@ -8814,13 +8769,12 @@
     <InvalidReturnType occurrences="1">
       <code>true</code>
     </InvalidReturnType>
-    <MissingParamType occurrences="63">
+    <MissingParamType occurrences="57">
       <code>$create_date</code>
       <code>$description</code>
       <code>$file_is_embedded</code>
       <code>$from</code>
       <code>$group</code>
-      <code>$groupId</code>
       <code>$groupId</code>
       <code>$groupId</code>
       <code>$groupId</code>
@@ -8841,18 +8795,14 @@
       <code>$item_id_quoted</code>
       <code>$item_type</code>
       <code>$limit</code>
-      <code>$limit</code>
       <code>$link_url</code>
       <code>$mdLabel</code>
       <code>$new_parent_id</code>
-      <code>$offset</code>
       <code>$offset</code>
       <code>$op</code>
       <code>$order</code>
       <code>$ordering</code>
       <code>$ordering</code>
-      <code>$params</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$parentId</code>
       <code>$parentId</code>
@@ -8862,7 +8812,6 @@
       <code>$parent_id</code>
       <code>$parents</code>
       <code>$rank</code>
-      <code>$report</code>
       <code>$srcItemId</code>
       <code>$stmtArray</code>
       <code>$table</code>
@@ -8879,7 +8828,7 @@
       <code>$where</code>
       <code>$wiki_page</code>
     </MissingParamType>
-    <MissingReturnType occurrences="21">
+    <MissingReturnType occurrences="20">
       <code>_changeSiblingRanking</code>
       <code>_getItemSearchFromStmt</code>
       <code>_getItemSearchSelectStmt</code>
@@ -8897,7 +8846,6 @@
       <code>searchByTitle</code>
       <code>searchObsoleteAcrossProjects</code>
       <code>searchObsoleteByGroupId</code>
-      <code>searchRootIdForGroupId</code>
       <code>searchRootItemForGroupId</code>
       <code>setNewParent</code>
       <code>updateFromRow</code>
@@ -8927,7 +8875,7 @@
       <code>$group_id</code>
       <code>$user-&gt;getId()</code>
     </InvalidScalarArgument>
-    <MissingParamType occurrences="73">
+    <MissingParamType occurrences="69">
       <code>$dar</code>
       <code>$dataRoot</code>
       <code>$description</code>
@@ -8965,8 +8913,6 @@
       <code>$link_url</code>
       <code>$mdLabel</code>
       <code>$metadataMapping</code>
-      <code>$nbItemsFound</code>
-      <code>$nbItemsFound</code>
       <code>$new_parent_id</code>
       <code>$ordering</code>
       <code>$ordering</code>
@@ -8975,8 +8921,6 @@
       <code>$orphans</code>
       <code>$pagename</code>
       <code>$pagename</code>
-      <code>$params</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$parentId</code>
       <code>$parentId</code>
@@ -9011,7 +8955,7 @@
       <code>$onlyOneChildForRoot</code>
       <code>$rootItems</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="42">
+    <MissingReturnType occurrences="41">
       <code>_getEventManager</code>
       <code>_getUserManager</code>
       <code>_getVersionFactory</code>
@@ -9034,7 +8978,6 @@
       <code>getFolderTreeStats</code>
       <code>getGroupId</code>
       <code>getItemMapping</code>
-      <code>getItemSubTreeAsList</code>
       <code>getItemTypeAsText</code>
       <code>getItemTypeForItem</code>
       <code>getLockFactory</code>
@@ -9565,7 +9508,7 @@
       <code>$groupId</code>
       <code>$modifiableMetadata</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="38">
+    <MissingReturnType occurrences="37">
       <code>_cloneOneMetadata</code>
       <code>_cloneRealMetadata</code>
       <code>_createFromRow</code>
@@ -9599,7 +9542,6 @@
       <code>getRealMetadataIterator</code>
       <code>getRealMetadataList</code>
       <code>isHardCodedMetadata</code>
-      <code>isRealMetadata</code>
       <code>isValidLabel</code>
       <code>update</code>
       <code>updateHardCodedMetadata</code>
@@ -9814,9 +9756,8 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_MetadataSqlQueryChunk.class.php">
-    <MissingParamType occurrences="2">
+    <MissingParamType occurrences="1">
       <code>$label</code>
-      <code>$md</code>
     </MissingParamType>
     <MissingPropertyType occurrences="4">
       <code>$field</code>
@@ -10343,22 +10284,10 @@
       <code>$row</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/docman/include/Docman_ProjectItemsBatchIterator.class.php">
-    <MissingPropertyType occurrences="1">
-      <code>$batches_processed</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="1">
-      <code>rewind</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/Docman_Report.class.php">
-    <MissingParamType occurrences="15">
-      <code>$a</code>
-      <code>$c</code>
-      <code>$f</code>
+    <MissingParamType occurrences="11">
       <code>$g</code>
       <code>$i</code>
-      <code>$row</code>
       <code>$v</code>
       <code>$v</code>
       <code>$v</code>
@@ -10369,11 +10298,9 @@
       <code>$v</code>
       <code>$v</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="13">
+    <MissingPropertyType occurrences="11">
       <code>$advancedSearch</code>
-      <code>$columns</code>
       <code>$description</code>
-      <code>$filters</code>
       <code>$groupId</code>
       <code>$id</code>
       <code>$image</code>
@@ -10384,30 +10311,21 @@
       <code>$title</code>
       <code>$userId</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="32">
-      <code>addColumn</code>
-      <code>addFilter</code>
+    <MissingReturnType occurrences="23">
       <code>getAdvancedSearch</code>
-      <code>getColumnIterator</code>
       <code>getDescription</code>
-      <code>getFilterIterator</code>
-      <code>getFiltersArray</code>
-      <code>getGlobalSearchMetadata</code>
       <code>getGroupId</code>
       <code>getId</code>
       <code>getImage</code>
       <code>getIsDefault</code>
       <code>getItemId</code>
-      <code>getItemTypeSearchMetadata</code>
       <code>getName</code>
       <code>getScope</code>
       <code>getTitle</code>
       <code>getUrlParameters</code>
       <code>getUserId</code>
-      <code>initFromRow</code>
       <code>setAdvancedSearch</code>
       <code>setDescription</code>
-      <code>setFiltersArray</code>
       <code>setGroupId</code>
       <code>setId</code>
       <code>setImage</code>
@@ -10420,11 +10338,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_ReportColumn.php">
-    <MissingParamType occurrences="11">
+    <MissingParamType occurrences="10">
       <code>$item</code>
       <code>$item</code>
       <code>$item</code>
-      <code>$md</code>
       <code>$params</code>
       <code>$request</code>
       <code>$s</code>
@@ -10450,22 +10367,19 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_ReportColumnFactory.class.php">
-    <MissingParamType occurrences="2">
-      <code>$colLabel</code>
+    <MissingParamType occurrences="1">
       <code>$groupId</code>
     </MissingParamType>
     <MissingPropertyType occurrences="1">
       <code>$groupId</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="2">
+    <MissingReturnType occurrences="1">
       <code>_getMetadataFactory</code>
-      <code>getColumnFromLabel</code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_ReportColumnList.php">
-    <MissingParamType occurrences="4">
+    <MissingParamType occurrences="3">
       <code>$item</code>
-      <code>$md</code>
       <code>$params</code>
       <code>$view</code>
     </MissingParamType>
@@ -10492,10 +10406,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_ReportColumnTitle.php">
-    <MissingParamType occurrences="6">
+    <MissingParamType occurrences="5">
       <code>$item</code>
       <code>$item</code>
-      <code>$md</code>
       <code>$params</code>
       <code>$view</code>
       <code>$view</code>
@@ -10560,7 +10473,7 @@
     </PossiblyFalseReference>
   </file>
   <file src="plugins/docman/include/Docman_ReportFactory.class.php">
-    <MissingParamType occurrences="35">
+    <MissingParamType occurrences="33">
       <code>$dstGroupId</code>
       <code>$dstGroupId</code>
       <code>$feedback</code>
@@ -10585,10 +10498,8 @@
       <code>$report</code>
       <code>$report</code>
       <code>$report</code>
-      <code>$report</code>
       <code>$reportId</code>
       <code>$reportId</code>
-      <code>$request</code>
       <code>$request</code>
       <code>$request</code>
       <code>$request</code>
@@ -10600,7 +10511,7 @@
     <MissingPropertyType occurrences="1">
       <code>$groupId</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="16">
+    <MissingReturnType occurrences="15">
       <code>_validateFilterAndCreate</code>
       <code>cloneReport</code>
       <code>copy</code>
@@ -10611,7 +10522,6 @@
       <code>getPersonalReportsForUser</code>
       <code>getProjectReportsForGroup</code>
       <code>getReportById</code>
-      <code>initColumns</code>
       <code>initFilters</code>
       <code>initReport</code>
       <code>saveReport</code>
@@ -10787,8 +10697,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_SqlFilter.php">
-    <MissingParamType occurrences="2">
-      <code>$filter</code>
+    <MissingParamType occurrences="1">
       <code>$qv</code>
     </MissingParamType>
     <MissingPropertyType occurrences="3">
@@ -10804,8 +10713,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_SqlFilterDate.php">
-    <MissingParamType occurrences="4">
-      <code>$filter</code>
+    <MissingParamType occurrences="3">
       <code>$value</code>
       <code>$value</code>
       <code>$value</code>
@@ -10818,9 +10726,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_SqlFilterDateAdvanced.php">
-    <MissingParamType occurrences="1">
-      <code>$filter</code>
-    </MissingParamType>
     <MissingReturnType occurrences="1">
       <code>_getSpecificSearchChunk</code>
     </MissingReturnType>
@@ -10852,9 +10757,6 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="plugins/docman/include/Docman_SqlFilterListAdvanced.php">
-    <MissingParamType occurrences="1">
-      <code>$filter</code>
-    </MissingParamType>
     <MissingReturnType occurrences="1">
       <code>_getSpecificSearchChunk</code>
     </MissingReturnType>
@@ -10871,9 +10773,6 @@
     <DeprecatedFunction occurrences="1">
       <code>\db_es($qv)</code>
     </DeprecatedFunction>
-    <MissingParamType occurrences="1">
-      <code>$filter</code>
-    </MissingParamType>
     <MissingReturnType occurrences="1">
       <code>_getSpecificSearchChunk</code>
     </MissingReturnType>
@@ -11834,9 +11733,6 @@
       <code>$offset</code>
       <code>$offset</code>
     </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>buildParentCollection</code>
-    </MissingReturnType>
     <PossiblyNullReference occurrences="1">
       <code>accept</code>
     </PossiblyNullReference>
@@ -12519,9 +12415,6 @@
       <code>updateDocmanLink</code>
       <code>updateDocmanWikiPage</code>
     </MissingReturnType>
-    <NullArgument occurrences="1">
-      <code>null</code>
-    </NullArgument>
     <PossiblyUndefinedGlobalVariable occurrences="1">
       <code>$soapFunctions</code>
     </PossiblyUndefinedGlobalVariable>
@@ -16444,10 +16337,6 @@
       <code>$query_string</code>
       <code>$variable_name</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="2">
-      <code>$env</code>
-      <code>$this-&gt;env</code>
-    </MissingPropertyType>
     <MissingReturnType occurrences="5">
       <code>appendToEnv</code>
       <code>getCommand</code>
@@ -16457,9 +16346,8 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/HTTP/CommandFactory.class.php">
-    <MissingReturnType occurrences="3">
+    <MissingReturnType occurrences="2">
       <code>getCommandForUser</code>
-      <code>getGitHttpBackendCommand</code>
       <code>getGitoliteCommand</code>
     </MissingReturnType>
   </file>
@@ -16773,10 +16661,6 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="plugins/git/include/Git/Mirror/MirrorPresenter.php">
-    <MissingClosureParamType occurrences="2">
-      <code>$nb</code>
-      <code>$repositories_for_one_project</code>
-    </MissingClosureParamType>
     <MissingClosureReturnType occurrences="1">
       <code>function ($nb, $repositories_for_one_project) {</code>
     </MissingClosureReturnType>
@@ -17235,10 +17119,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Permissions/FineGrainedPermissionSorter.php">
-    <MissingClosureParamType occurrences="2">
-      <code>$permission_01</code>
-      <code>$permission_02</code>
-    </MissingClosureParamType>
     <MissingReturnType occurrences="1">
       <code>sort</code>
     </MissingReturnType>
@@ -18078,10 +17958,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/git/include/Git/RepositoryList/DaoByRepositoryPathSorter.php">
-    <MissingClosureParamType occurrences="2">
-      <code>$a</code>
-      <code>$b</code>
-    </MissingClosureParamType>
     <MissingParamType occurrences="2">
       <code>$repository_name_a</code>
       <code>$repository_name_b</code>
@@ -19653,10 +19529,8 @@
       <code>git_admins_selectbox_name</code>
       <code>git_admins_submit_button</code>
     </MissingReturnType>
-    <RedundantPropertyInitializationCheck occurrences="4">
+    <RedundantPropertyInitializationCheck occurrences="2">
       <code>false</code>
-      <code>false</code>
-      <code>isset($this-&gt;selected_ugroups)</code>
       <code>isset($this-&gt;selected_ugroups)</code>
     </RedundantPropertyInitializationCheck>
   </file>
@@ -21462,11 +21336,6 @@
       <code>buildDownloadURL</code>
       <code>getOidSha256</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/gitlfs/include/LFSJSONHTTPDispatchable.php">
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$status_code</code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="plugins/gitlfs/include/LFSObject/LFSObject.php">
     <MissingParamType occurrences="1">
@@ -26050,10 +25919,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pluginsadministration/include/AvailablePluginsPresenter.php">
-    <MissingClosureParamType occurrences="2">
-      <code>$a</code>
-      <code>$b</code>
-    </MissingClosureParamType>
     <MissingPropertyType occurrences="13">
       <code>$description_table_head</code>
       <code>$filter_empty_state</code>
@@ -26210,10 +26075,6 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="plugins/pluginsadministration/include/PluginsAdministrationViews.class.php">
-    <MissingClosureParamType occurrences="2">
-      <code>$a</code>
-      <code>$b</code>
-    </MissingClosureParamType>
     <MissingParamType occurrences="4">
       <code>$controler</code>
       <code>$name</code>
@@ -26890,9 +26751,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/projectlinks/include/form_utils.php">
-    <DeprecatedFunction occurrences="3">
-      <code>db_fetch_array($db_res)</code>
-      <code>db_query($SQLstr)</code>
+    <DeprecatedFunction occurrences="1">
       <code>db_query($sql)</code>
     </DeprecatedFunction>
     <InvalidIterator occurrences="1">
@@ -26901,7 +26760,7 @@
     <InvalidOperand occurrences="1">
       <code>$gFormID</code>
     </InvalidOperand>
-    <MissingParamType occurrences="71">
+    <MissingParamType occurrences="60">
       <code>$AcceptableMimeTypes</code>
       <code>$BorderWidth</code>
       <code>$Caption</code>
@@ -26911,12 +26770,8 @@
       <code>$Caption</code>
       <code>$Caption</code>
       <code>$Caption</code>
-      <code>$Caption</code>
-      <code>$Caption</code>
       <code>$ColSpan</code>
       <code>$Cols</code>
-      <code>$DefaultValue</code>
-      <code>$DefaultValue</code>
       <code>$DefaultValue</code>
       <code>$DefaultValue</code>
       <code>$DefaultValue</code>
@@ -26940,15 +26795,9 @@
       <code>$ParamName</code>
       <code>$ParamName</code>
       <code>$ParamName</code>
-      <code>$ParamName</code>
-      <code>$ParamName</code>
-      <code>$PrefixWithBlankItem</code>
-      <code>$SQLstr</code>
       <code>$SectionSpan</code>
       <code>$SubmitLegend</code>
       <code>$SubmitLegend</code>
-      <code>$SubmitOnChange</code>
-      <code>$SubmitOnChange</code>
       <code>$SubmitOnChange</code>
       <code>$Tests</code>
       <code>$Text</code>
@@ -26965,7 +26814,6 @@
       <code>$item</code>
       <code>$items</code>
       <code>$options</code>
-      <code>$optionsList</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -26979,7 +26827,7 @@
       <code>$ParamName</code>
       <code>$Test</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="34">
+    <MissingReturnType occurrences="32">
       <code>form_End</code>
       <code>form_FocusFirstTextBox</code>
       <code>form_GroupEnd</code>
@@ -27002,8 +26850,6 @@
       <code>form_genFileBox</code>
       <code>form_genJSButton</code>
       <code>form_genRadioButton</code>
-      <code>form_genSelectBox</code>
-      <code>form_genSelectBoxFromSQL</code>
       <code>form_genShowBox</code>
       <code>form_genSubmit</code>
       <code>form_genSubmitImg</code>
@@ -27015,7 +26861,9 @@
       <code>parseAdditionalParams</code>
       <code>update_database</code>
     </MissingReturnType>
-    <TypeDoesNotContainType occurrences="3">
+    <TypeDoesNotContainType occurrences="5">
+      <code>$gFormGroupLevel &lt; 0</code>
+      <code>$gFormSectionLevel &lt; 0</code>
       <code>$gInForm</code>
       <code>$gInForm</code>
       <code>$gInForm</code>
@@ -31998,21 +31846,20 @@
       <code>$project-&gt;getID()</code>
     </InvalidScalarArgument>
   </file>
-  <file src="plugins/testmanagement/include/TestManagement/XML/TrackerXMLExporterChangesetValueStepDefinitionXMLExporter.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(string) $value-&gt;getDescription()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/testmanagement/include/TestManagement/XML/XMLImport.php">
-    <RedundantCast occurrences="1">
+    <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $issue_tracker_id</code>
-    </RedundantCast>
+    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/testmanagement/include/testmanagementPlugin.php">
     <RedundantCast occurrences="2">
       <code>(int) $tracker-&gt;getId()</code>
       <code>(int) $tracker-&gt;getId()</code>
     </RedundantCast>
+    <TypeDoesNotContainType occurrences="2">
+      <code>! $dom</code>
+      <code>$dom</code>
+    </TypeDoesNotContainType>
   </file>
   <file src="plugins/testplan/include/TestDefinition/RedirectParameterInjector.php">
     <RedundantCastGivenDocblockType occurrences="1">
@@ -32045,43 +31892,6 @@
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $milestone_artifact-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/textualreport/include/TextualReport/ArtifactsPresentersBuilder.php">
-    <MissingReturnType occurrences="1">
-      <code>getPurifiedDescription</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/textualreport/include/TextualReport/DocumentCanBeDownloadedChecker.php">
-    <MissingReturnType occurrences="2">
-      <code>hasMatchingArtifacts</code>
-      <code>hasNeededSemantics</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/textualreport/include/TextualReport/ExportOptionsMenuItemsAppender.php">
-    <MissingReturnType occurrences="1">
-      <code>appendTextualReportDownloadLink</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/textualreport/include/TextualReport/SinglePageExporter.php">
-    <MissingParamType occurrences="2">
-      <code>$file_name</code>
-      <code>$str</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>exportAsSinglePage</code>
-      <code>sendFileDownloadHeaders</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/textualreport/include/textualreportPlugin.php">
-    <MissingParamType occurrences="1">
-      <code>$id</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="4">
-      <code>getExportOptionsMenuItems</code>
-      <code>getHooksAndCallbacks</code>
-      <code>getPluginInfo</code>
-      <code>processExport</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/timetracking/include/Timetracking/Admin/AdminController.php">
     <InvalidScalarArgument occurrences="3">
@@ -36170,6 +35980,18 @@
       <code>$selected_users_ids</code>
     </InvalidScalarArgument>
   </file>
+  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/JiraXmlExporter.php">
+    <TypeDoesNotContainType occurrences="8">
+      <code>! $dom_node</code>
+      <code>! $dom_tracker</code>
+      <code>! $dom_tracker</code>
+      <code>! $dom_trackers</code>
+      <code>$dom_node</code>
+      <code>$dom_tracker</code>
+      <code>$dom_tracker</code>
+      <code>$dom_trackers</code>
+    </TypeDoesNotContainType>
+  </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Semantic/SemanticsXMLExporter.php">
     <RedundantCast occurrences="1">
       <code>(string) $status_field-&gt;getXMLId()</code>
@@ -39612,7 +39434,7 @@
       <code>getUser</code>
       <code>getUsername</code>
       <code>isMultiple</code>
-      <code>parent::testImport()</code>
+      <code>testImport</code>
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_UsersValue.php">
@@ -40480,10 +40302,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Hierarchy/Hierarchy.class.php">
-    <MissingClosureParamType occurrences="2">
-      <code>$tracker1_id</code>
-      <code>$tracker2_id</code>
-    </MissingClosureParamType>
     <MissingClosureReturnType occurrences="1">
       <code>function ($tracker1_id, $tracker2_id) {</code>
     </MissingClosureReturnType>
@@ -40625,6 +40443,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Migration/MigrationManager.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>file_get_contents(__DIR__ . '/../../../../../src/utils/xml/indent.xsl')</code>
+    </ArgumentTypeCoercion>
     <MissingParamType occurrences="19">
       <code>$description</code>
       <code>$name</code>
@@ -41784,10 +41605,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/ExpertModePresenter.class.php">
-    <MissingClosureParamType occurrences="2">
-      <code>$field_a</code>
-      <code>$field_b</code>
-    </MissingClosureParamType>
     <MissingParamType occurrences="6">
       <code>$class_toggler</code>
       <code>$expert_query</code>
@@ -42183,7 +42000,7 @@
     <InvalidArgument occurrences="1">
       <code>$element</code>
     </InvalidArgument>
-    <MissingReturnType occurrences="25">
+    <MissingReturnType occurrences="24">
       <code>visitArtifactId</code>
       <code>visitArtifactLink</code>
       <code>visitBurndown</code>
@@ -42206,7 +42023,6 @@
       <code>visitRadiobutton</code>
       <code>visitSelectbox</code>
       <code>visitString</code>
-      <code>visitSubmittedBy</code>
       <code>visitSubmittedOn</code>
       <code>visitText</code>
     </MissingReturnType>
@@ -45299,18 +45115,9 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/Rule/List/View.class.php">
-    <InvalidArgument occurrences="1">
-      <code>$this-&gt;fetch()</code>
-    </InvalidArgument>
     <InvalidDocblockParamName occurrences="1">
       <code>$artifact_rule</code>
     </InvalidDocblockParamName>
-    <InvalidReturnStatement occurrences="1">
-      <code>$output</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>a</code>
-    </InvalidReturnType>
     <MissingParamType occurrences="1">
       <code>$rule</code>
     </MissingParamType>
@@ -45333,9 +45140,6 @@
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $this-&gt;rule-&gt;id</code>
     </RedundantCastGivenDocblockType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>a</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Rule/TrackerRulesDateValidator.php">
     <MissingParamType occurrences="1">
@@ -47477,6 +47281,10 @@
       <code>(string) $itemname</code>
       <code>(string) $name</code>
     </RedundantCast>
+    <TypeDoesNotContainType occurrences="2">
+      <code>$use_natures == 'false'</code>
+      <code>$use_natures == 'true'</code>
+    </TypeDoesNotContainType>
     <UndefinedPropertyAssignment occurrences="1">
       <code>$tracker-&gt;rules</code>
     </UndefinedPropertyAssignment>
@@ -50278,6 +50086,12 @@
       <code>$url</code>
     </MissingPropertyType>
   </file>
+  <file src="src/common/Dashboard/Project/DashboardXMLExporter.php">
+    <TypeDoesNotContainType occurrences="2">
+      <code>! $dom</code>
+      <code>$dom</code>
+    </TypeDoesNotContainType>
+  </file>
   <file src="src/common/Dashboard/Project/ProjectDashboard.php">
     <MissingParamType occurrences="3">
       <code>$id</code>
@@ -52463,6 +52277,26 @@
       <code>$data</code>
     </MissingParamType>
   </file>
+  <file src="src/common/Http/Server/NullServerRequest.php">
+    <InvalidReturnType occurrences="9">
+      <code>ServerRequestInterface</code>
+      <code>ServerRequestInterface</code>
+      <code>ServerRequestInterface</code>
+      <code>withAttribute</code>
+      <code>withMethod</code>
+      <code>withRequestTarget</code>
+      <code>withUploadedFiles</code>
+      <code>withUri</code>
+      <code>withoutAttribute</code>
+    </InvalidReturnType>
+    <MoreSpecificReturnType occurrences="5">
+      <code>withAddedHeader</code>
+      <code>withBody</code>
+      <code>withHeader</code>
+      <code>withProtocolVersion</code>
+      <code>withoutHeader</code>
+    </MoreSpecificReturnType>
+  </file>
   <file src="src/common/Httpd/PostRotateEvent.php">
     <MissingReturnType occurrences="1">
       <code>getLogger</code>
@@ -52598,9 +52432,6 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Label/REST/LabelsUpdater.php">
-    <MissingClosureParamType occurrences="1">
-      <code>$has_empty_label</code>
-    </MissingClosureParamType>
     <MissingClosureReturnType occurrences="1">
       <code>function (LabelRepresentation $label_representation, $project_id) {</code>
     </MissingClosureReturnType>
@@ -53522,10 +53353,6 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Project/Admin/Navigation/NavigationPermissionsDropdownPresenterBuilder.php">
-    <MissingClosureParamType occurrences="2">
-      <code>$current_link</code>
-      <code>$previous_link</code>
-    </MissingClosureParamType>
     <MissingParamType occurrences="1">
       <code>$current_pane_shortname</code>
     </MissingParamType>
@@ -56351,12 +56178,6 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Queue/Worker.php">
-    <MissingClosureParamType occurrences="4">
-      <code>$errfile</code>
-      <code>$errline</code>
-      <code>$errno</code>
-      <code>$errstr</code>
-    </MissingClosureParamType>
     <MissingParamType occurrences="2">
       <code>$error_msg</code>
       <code>$options</code>
@@ -56669,10 +56490,6 @@
   </file>
   <file src="src/common/Redis/RedisInitializer.php">
     <InvalidArgument occurrences="1"/>
-    <MissingClosureParamType occurrences="2">
-      <code>$code</code>
-      <code>$message</code>
-    </MissingClosureParamType>
   </file>
   <file src="src/common/Reference/CrossReference.php">
     <MissingParamType occurrences="9">
@@ -56846,11 +56663,6 @@
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
     </DeprecatedFunction>
-    <MissingClosureParamType occurrences="3">
-      <code>$m</code>
-      <code>$match</code>
-      <code>$match</code>
-    </MissingClosureParamType>
     <MissingClosureReturnType occurrences="2">
       <code>function ($m) use ($self, $group_id, $reftype) {</code>
       <code>function ($match) {</code>
@@ -56991,11 +56803,6 @@
     <RedundantPropertyInitializationCheck occurrences="1">
       <code>isset(self::$instance)</code>
     </RedundantPropertyInitializationCheck>
-  </file>
-  <file src="src/common/Request/CollectRoutesEvent.php">
-    <MissingReturnType occurrences="1">
-      <code>getRouteCollector</code>
-    </MissingReturnType>
   </file>
   <file src="src/common/Request/CurrentPage.php">
     <MissingReturnType occurrences="3">
@@ -57302,9 +57109,6 @@
     <ImpureByReferenceAssignment occurrences="1">
       <code>$uri_part</code>
     </ImpureByReferenceAssignment>
-    <MissingClosureParamType occurrences="1">
-      <code>$path_segment</code>
-    </MissingClosureParamType>
     <MissingParamType occurrences="3">
       <code>$uri</code>
       <code>$uri</code>
@@ -58154,10 +57958,6 @@
       <code>$user-&gt;getAddDate()</code>
       <code>$user-&gt;getAddDate()</code>
     </InvalidScalarArgument>
-    <MissingClosureParamType occurrences="2">
-      <code>$a</code>
-      <code>$b</code>
-    </MissingClosureParamType>
     <MissingPropertyType occurrences="12">
       <code>$additional_entries</code>
       <code>$avatar_url</code>
@@ -58940,9 +58740,6 @@
       <code>exportUserByMail</code>
       <code>exportUserByUserId</code>
     </MissingReturnType>
-    <PossiblyNullArgument occurrences="1">
-      <code>$user</code>
-    </PossiblyNullArgument>
   </file>
   <file src="src/common/Webhook/Emitter.php">
     <MissingReturnType occurrences="1">
@@ -59048,16 +58845,13 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Widget/Note/NoteDao.php">
-    <MissingParamType occurrences="10">
-      <code>$content</code>
+    <MissingParamType occurrences="7">
       <code>$content</code>
       <code>$id</code>
       <code>$id</code>
       <code>$id</code>
       <code>$id</code>
       <code>$new_project_id</code>
-      <code>$project_id</code>
-      <code>$title</code>
       <code>$title</code>
     </MissingParamType>
     <MissingReturnType occurrences="4">
@@ -59080,28 +58874,13 @@
     </MissingPropertyType>
   </file>
   <file src="src/common/Widget/Note/ProjectNote.php">
-    <MissingParamType occurrences="6">
-      <code>$id</code>
+    <MissingParamType occurrences="3">
       <code>$id</code>
       <code>$owner_id</code>
       <code>$owner_type</code>
-      <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="2">
-      <code>$content</code>
-      <code>$title</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="9">
+    <MissingReturnType occurrences="1">
       <code>cloneContent</code>
-      <code>getDescription</code>
-      <code>getInstallPreferences</code>
-      <code>getPreferences</code>
-      <code>getTitle</code>
-      <code>hasPreferences</code>
-      <code>isUnique</code>
-      <code>loadContent</code>
-      <code>updatePreferences</code>
     </MissingReturnType>
   </file>
   <file src="src/common/Widget/ProjectHeartbeat.php">
@@ -62921,10 +62700,6 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$_SESSION</code>
     </InvalidPropertyAssignmentValue>
-    <MissingClosureParamType occurrences="2">
-      <code>$token_1</code>
-      <code>$token_2</code>
-    </MissingClosureParamType>
     <MissingClosureReturnType occurrences="1">
       <code>function ($token_1, $token_2) {</code>
     </MissingClosureReturnType>
@@ -63854,9 +63629,8 @@
       <code>$imgroot</code>
       <code>$root</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="15">
+    <MissingReturnType occurrences="14">
       <code>addBreadcrumbs</code>
-      <code>addCssAsset</code>
       <code>addCssAssetCollection</code>
       <code>displayStaticWidget</code>
       <code>feedback</code>
@@ -65423,6 +65197,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/soap/SOAP_WSDLRenderer.class.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>\file_get_contents(__DIR__ . '/../../www/soap/wsdl-viewer.xsl')</code>
+    </ArgumentTypeCoercion>
     <MissingParamType occurrences="1">
       <code>$wsdl_uri</code>
     </MissingParamType>
@@ -70488,7 +70265,7 @@
       <code>saveRule</code>
     </MissingReturnType>
     <UndefinedMethod occurrences="1">
-      <code>parent::saveRule($this-&gt;artifact_type-&gt;getId(), $source, $source_value, $target, $target_values)</code>
+      <code>saveRule</code>
     </UndefinedMethod>
   </file>
   <file src="src/common/tracker/HTML/ArtifactTypeHtml.class.php">
@@ -71046,10 +70823,9 @@
     </MissingPropertyType>
   </file>
   <file src="src/common/valid/Rule_UserName.php">
-    <MissingParamType occurrences="3">
+    <MissingParamType occurrences="2">
       <code>$key</code>
       <code>$type</code>
-      <code>$val</code>
     </MissingParamType>
     <MissingReturnType occurrences="1">
       <code>getPendingUserRename</code>
@@ -71140,9 +70916,6 @@
     <MissingReturnType occurrences="1">
       <code>isEmptyValue</code>
     </MissingReturnType>
-    <UndefinedMethod occurrences="1">
-      <code>parent::isEmptyValue($file['name'])</code>
-    </UndefinedMethod>
   </file>
   <file src="src/common/valid/Valid_GenericUserNameSuffix.php">
     <MissingParamType occurrences="1">
@@ -72147,9 +71920,6 @@
       <code>wikiPages</code>
       <code>wikiPerms</code>
     </MissingReturnType>
-    <UndefinedVariable occurrences="1">
-      <code>$html</code>
-    </UndefinedVariable>
   </file>
   <file src="src/common/wiki/views/WikiServiceViews.class.php">
     <MissingParamType occurrences="4">
@@ -72291,6 +72061,11 @@
       <code>(string) $out</code>
       <code>(string) $out</code>
     </RedundantCast>
+  </file>
+  <file src="src/utils/TrackerV3-data-exporter.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>\file_get_contents(__DIR__ . '/xml/indent.xsl')</code>
+    </ArgumentTypeCoercion>
   </file>
   <file src="src/utils/check_user_mapping_for_project_import.php">
     <PossiblyInvalidArgument occurrences="1">
@@ -75308,6 +75083,9 @@
     <PossiblyUndefinedGlobalVariable occurrences="1">
       <code>$row_dev</code>
     </PossiblyUndefinedGlobalVariable>
+    <TypeDoesNotContainType occurrences="1">
+      <code>$number_per_page &lt; 1</code>
+    </TypeDoesNotContainType>
   </file>
   <file src="src/www/project/export/access_logs_export.php">
     <DeprecatedFunction occurrences="22">
@@ -75443,12 +75221,6 @@
     <InvalidScalarArgument occurrences="1">
       <code>3600</code>
     </InvalidScalarArgument>
-    <MissingParamType occurrences="1">
-      <code>$key</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>key_exists_and_value_not_null</code>
-    </MissingReturnType>
     <ParadoxicalCondition occurrences="1">
       <code>! $group || ! is_object($group) || $group-&gt;isError()</code>
     </ParadoxicalCondition>
@@ -77113,6 +76885,9 @@
     <TypeDoesNotContainNull occurrences="1">
       <code>! isset($mdir)</code>
     </TypeDoesNotContainNull>
+    <TypeDoesNotContainType occurrences="1">
+      <code>$SVNACCESS == "None"</code>
+    </TypeDoesNotContainType>
     <UndefinedVariable occurrences="1">
       <code>$pref_stg</code>
     </UndefinedVariable>
@@ -77130,7 +76905,7 @@
     <MissingPropertyType occurrences="1">
       <code>$show_sidebar</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="15">
+    <MissingReturnType occurrences="14">
       <code>addBodyClassDependingThemeVariant</code>
       <code>addBodyClassDependingUserPreference</code>
       <code>body</code>
@@ -77141,7 +76916,6 @@
       <code>getProjectLink</code>
       <code>getTemplateDir</code>
       <code>getVariants</code>
-      <code>header</code>
       <code>includeJavascriptPolyfills</code>
       <code>includeSubsetOfCombined</code>
       <code>navbar</code>

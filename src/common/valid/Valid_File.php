@@ -35,11 +35,8 @@ class Valid_File extends \Valid // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     {
         if (! \is_array($file)) {
             return \false;
-        } elseif (parent::isEmptyValue($file['name'])) {
-            return \false;
-        } else {
-            return \true;
         }
+        return \true;
     }
     /**
      * Check rules on given file.
