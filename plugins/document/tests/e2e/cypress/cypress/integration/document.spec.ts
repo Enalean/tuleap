@@ -105,6 +105,41 @@ describe("Document new UI", () => {
             cy.get("[data-test=document-tree-content]").should("not.exist");
         });
 
+        it("user can search", () => {
+            const title = `Lorem ipsum doloret`;
+
+            cy.get("[data-test=document-header-actions]").within(() => {
+                cy.get("[data-test=document-item-action-new-button]").click();
+            });
+
+            cy.get("[data-test=document-new-item-modal]").within(() => {
+                cy.get("[data-test=empty]").click();
+
+                cy.get("[data-test=document-new-item-title]").type(title);
+
+                cy.get("[data-test=document-modal-submit-button]").click();
+            });
+
+            activateFeatureFlag();
+
+            cy.log(`Searching for "ipsum"`);
+            cy.get("[data-test=document-search-box]").clear().type(`ipsum{enter}`);
+            cy.get("[data-test=search-results-table-body]").contains("tr", title);
+
+            for (const term of ["ips*", "*psu*", "*loret"]) {
+                cy.log(`Searching for "${term}"`);
+                cy.get("[data-test=global-search]").clear().type(`${term}`);
+                cy.get("[data-test=submit]").click();
+                cy.get("[data-test=search-results-table-body]").contains("tr", title);
+            }
+
+            const term_without_wildcards = "psu";
+            cy.log(`Searching for term without wildcard "${term_without_wildcards}"`);
+            cy.get("[data-test=global-search]").clear().type(`${term_without_wildcards}`);
+            cy.get("[data-test=submit]").click();
+            cy.get("[data-test=search-results-table-body-empty]");
+        });
+
         it("user can manipulate empty document", () => {
             cy.get("[data-test=document-header-actions]").within(() => {
                 cy.get("[data-test=document-item-action-new-button]").click();
@@ -469,4 +504,13 @@ function typeShortcut(...inputs: string[]): void {
         // eslint-disable-next-line cypress/require-data-selectors
         cy.get("body").type(input);
     }
+}
+
+function activateFeatureFlag(): void {
+    cy.url().then((url) => {
+        if (url.indexOf("feature-flag-new-search") === -1) {
+            cy.visit(`${url}#feature-flag-new-search`);
+            cy.reload();
+        }
+    });
 }
