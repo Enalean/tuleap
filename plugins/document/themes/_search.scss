@@ -116,6 +116,14 @@
     }
 }
 
+.document-search-result-html-content {
+    max-width: 400px;
+    max-height: 1.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 /* stylelint-disable selector-no-qualifying-type */
 .tlp-table > tbody > tr > th.document-search-result-icon,
 .tlp-table > tbody > tr > td.document-search-result-icon {

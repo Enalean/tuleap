@@ -40,7 +40,12 @@
             </router-link>
             <template v-else>{{ item.title }}</template>
         </td>
-        <td v-dompurify-html="item.post_processed_description"></td>
+        <td>
+            <div
+                class="document-search-result-html-content"
+                v-dompurify-html="item.post_processed_description"
+            ></div>
+        </td>
         <td>
             <user-badge v-bind:user="item.owner" />
         </td>
