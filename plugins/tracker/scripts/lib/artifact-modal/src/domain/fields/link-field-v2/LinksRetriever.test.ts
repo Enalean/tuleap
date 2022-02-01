@@ -27,6 +27,7 @@ import type { Fault } from "@tuleap/fault";
 import { isFault } from "@tuleap/fault";
 import type { RetrieveLinkTypes } from "./RetrieveLinkTypes";
 import type { RetrieveLinkedArtifactsByType } from "./RetrieveLinkedArtifactsByType";
+import { AddLinkedArtifactCollectionStub } from "../../../../tests/stubs/AddLinkedArtifactCollectionStub";
 
 describe(`LinksRetriever`, () => {
     let parent_type: LinkType,
@@ -37,7 +38,8 @@ describe(`LinksRetriever`, () => {
         second_child: LinkedArtifact,
         artifact_identifier: CurrentArtifactIdentifier | null,
         types_retriever: RetrieveLinkTypes,
-        linked_artifacts_retriever: RetrieveLinkedArtifactsByType;
+        linked_artifacts_retriever: RetrieveLinkedArtifactsByType,
+        links_adder: AddLinkedArtifactCollectionStub;
 
     beforeEach(() => {
         artifact_identifier = CurrentArtifactIdentifierStub.withId(64);
@@ -75,10 +77,12 @@ describe(`LinksRetriever`, () => {
                 [first_child, second_child],
                 [first_parent, second_parent]
             );
+
+        links_adder = AddLinkedArtifactCollectionStub.withCount();
     });
 
     const getLinkedArtifacts = (): Promise<Fault | LinkedArtifact[]> => {
-        const retriever = LinksRetriever(types_retriever, linked_artifacts_retriever);
+        const retriever = LinksRetriever(types_retriever, linked_artifacts_retriever, links_adder);
         return retriever.getLinkedArtifacts(artifact_identifier);
     };
 
@@ -93,6 +97,7 @@ describe(`LinksRetriever`, () => {
         expect(artifacts).toContain(second_child);
         expect(artifacts).toContain(first_parent);
         expect(artifacts).toContain(second_parent);
+        expect(links_adder.getCallCount()).toBe(1);
     });
 
     it(`when the modal is in creation mode, it will return a Fault`, async () => {

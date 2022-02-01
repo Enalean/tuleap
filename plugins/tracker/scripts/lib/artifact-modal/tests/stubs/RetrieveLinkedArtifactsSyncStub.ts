@@ -18,23 +18,17 @@
  */
 
 import type { LinkedArtifact } from "../../src/domain/fields/link-field-v2/LinkedArtifact";
-import type { RetrieveAllLinkedArtifacts } from "../../src/domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
-import type { Fault } from "@tuleap/fault";
+import type { RetrieveLinkedArtifactsSync } from "../../src/domain/fields/link-field-v2/RetrieveLinkedArtifactsSync";
 
-export const RetrieveAllLinkedArtifactsStub = {
+export const RetrieveLinkedArtifactsSyncStub = {
     withLinkedArtifacts: (
-        artifact: LinkedArtifact,
-        ...other_artifacts: LinkedArtifact[]
-    ): RetrieveAllLinkedArtifacts => ({
-        getLinkedArtifacts: (): Promise<LinkedArtifact[]> =>
-            Promise.resolve([artifact, ...other_artifacts]),
+        linked_artifact: LinkedArtifact,
+        ...other_links: LinkedArtifact[]
+    ): RetrieveLinkedArtifactsSync => ({
+        getLinkedArtifacts: (): LinkedArtifact[] => [linked_artifact, ...other_links],
     }),
 
-    withoutLink: (): RetrieveAllLinkedArtifacts => ({
-        getLinkedArtifacts: (): Promise<LinkedArtifact[]> => Promise.resolve([]),
-    }),
-
-    withFault: (fault: Fault): RetrieveAllLinkedArtifacts => ({
-        getLinkedArtifacts: (): Promise<Fault | LinkedArtifact[]> => Promise.resolve(fault),
+    withoutLink: (): RetrieveLinkedArtifactsSync => ({
+        getLinkedArtifacts: (): LinkedArtifact[] => [],
     }),
 };

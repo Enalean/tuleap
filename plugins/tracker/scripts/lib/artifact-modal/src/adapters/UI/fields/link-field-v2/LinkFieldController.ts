@@ -22,32 +22,68 @@ import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import type { Fault } from "@tuleap/fault";
 import { isFault } from "@tuleap/fault";
+import type { LinkedArtifactIdentifier } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
+import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
+import type { AddLinkMarkedForRemoval } from "../../../../domain/fields/link-field-v2/AddLinkMarkedForRemoval";
+import type { DeleteLinkMarkedForRemoval } from "../../../../domain/fields/link-field-v2/DeleteLinkMarkedForRemoval";
+import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field-v2/VerifyLinkIsMarkedForRemoval";
+import type { RetrieveLinkedArtifactsSync } from "../../../../domain/fields/link-field-v2/RetrieveLinkedArtifactsSync";
 
 export interface LinkFieldControllerType {
     displayLinkedArtifacts(): Promise<LinkFieldPresenter>;
+    markForRemoval(artifact_id: LinkedArtifactIdentifier): LinkFieldPresenter;
+    unmarkForRemoval(artifact_id: LinkedArtifactIdentifier): LinkFieldPresenter;
 }
 
 const isCreationModeFault = (fault: Fault): boolean => {
     return typeof fault.isCreationMode === "function" && fault.isCreationMode();
 };
 
+const buildPresenter = (
+    links_store: RetrieveLinkedArtifactsSync,
+    deleted_link_verifier: VerifyLinkIsMarkedForRemoval
+): LinkFieldPresenter => {
+    const presenters = links_store
+        .getLinkedArtifacts()
+        .map((linked_artifact) =>
+            LinkedArtifactPresenter.fromLinkedArtifact(
+                linked_artifact,
+                deleted_link_verifier.isMarkedForRemoval(linked_artifact)
+            )
+        );
+    return LinkFieldPresenter.fromArtifacts(presenters);
+};
+
 export const LinkFieldController = (
     links_retriever: RetrieveAllLinkedArtifacts,
+    links_store: RetrieveLinkedArtifactsSync,
+    deleted_link_adder: AddLinkMarkedForRemoval,
+    deleted_link_remover: DeleteLinkMarkedForRemoval,
+    deleted_link_verifier: VerifyLinkIsMarkedForRemoval,
     current_artifact_identifier: CurrentArtifactIdentifier | null
-): LinkFieldControllerType => {
-    return {
-        displayLinkedArtifacts: (): Promise<LinkFieldPresenter> => {
-            return links_retriever
-                .getLinkedArtifacts(current_artifact_identifier)
-                .then((result) => {
-                    if (!isFault(result)) {
-                        return LinkFieldPresenter.fromArtifacts(result);
-                    }
-                    if (isCreationModeFault(result)) {
-                        return LinkFieldPresenter.forCreationMode();
-                    }
-                    return LinkFieldPresenter.fromFault(result);
-                });
-        },
-    };
-};
+): LinkFieldControllerType => ({
+    displayLinkedArtifacts: (): Promise<LinkFieldPresenter> => {
+        return links_retriever.getLinkedArtifacts(current_artifact_identifier).then((result) => {
+            if (!isFault(result)) {
+                const presenters = result.map((linked_artifact) =>
+                    LinkedArtifactPresenter.fromLinkedArtifact(linked_artifact, false)
+                );
+                return LinkFieldPresenter.fromArtifacts(presenters);
+            }
+            if (isCreationModeFault(result)) {
+                return LinkFieldPresenter.forCreationMode();
+            }
+            return LinkFieldPresenter.fromFault(result);
+        });
+    },
+
+    markForRemoval(artifact_identifier: LinkedArtifactIdentifier): LinkFieldPresenter {
+        deleted_link_adder.addLinkMarkedForRemoval(artifact_identifier);
+        return buildPresenter(links_store, deleted_link_verifier);
+    },
+
+    unmarkForRemoval(artifact_identifier: LinkedArtifactIdentifier): LinkFieldPresenter {
+        deleted_link_remover.deleteLinkMarkedForRemoval(artifact_identifier);
+        return buildPresenter(links_store, deleted_link_verifier);
+    },
+});

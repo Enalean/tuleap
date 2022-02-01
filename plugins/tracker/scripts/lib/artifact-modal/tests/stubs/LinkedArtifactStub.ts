@@ -18,23 +18,22 @@
  */
 
 import type { LinkedArtifact } from "../../src/domain/fields/link-field-v2/LinkedArtifact";
-import type { RetrieveAllLinkedArtifacts } from "../../src/domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
-import type { Fault } from "@tuleap/fault";
+import { LinkedArtifactIdentifierStub } from "./LinkedArtifactIdentifierStub";
 
-export const RetrieveAllLinkedArtifactsStub = {
-    withLinkedArtifacts: (
-        artifact: LinkedArtifact,
-        ...other_artifacts: LinkedArtifact[]
-    ): RetrieveAllLinkedArtifacts => ({
-        getLinkedArtifacts: (): Promise<LinkedArtifact[]> =>
-            Promise.resolve([artifact, ...other_artifacts]),
-    }),
-
-    withoutLink: (): RetrieveAllLinkedArtifacts => ({
-        getLinkedArtifacts: (): Promise<LinkedArtifact[]> => Promise.resolve([]),
-    }),
-
-    withFault: (fault: Fault): RetrieveAllLinkedArtifacts => ({
-        getLinkedArtifacts: (): Promise<Fault | LinkedArtifact[]> => Promise.resolve(fault),
+export const LinkedArtifactStub = {
+    withDefaults: (data?: Partial<LinkedArtifact>): LinkedArtifact => ({
+        identifier: LinkedArtifactIdentifierStub.withId(8),
+        title: "precool",
+        status: "Todo",
+        is_open: true,
+        uri: "/plugins/tracker/?aid=8",
+        xref: "tasks #8",
+        link_type: {
+            shortname: "_is_child",
+            direction: "foward",
+            label: "Parent",
+        },
+        tracker: { color_name: "clockwork-orange" },
+        ...data,
     }),
 };

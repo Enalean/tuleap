@@ -19,25 +19,36 @@
 
 import type { LinkFieldPresenter } from "./LinkFieldPresenter";
 import { LinkFieldController } from "./LinkFieldController";
-import type { LinkedArtifact } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
 import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
 import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
 import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
 import { Fault } from "@tuleap/fault";
 import { NoLinksInCreationModeFault } from "../../../../domain/fields/link-field-v2/NoLinksInCreationModeFault";
+import { RetrieveLinkedArtifactsSyncStub } from "../../../../../tests/stubs/RetrieveLinkedArtifactsSyncStub";
+import { AddLinkMarkedForRemovalStub } from "../../../../../tests/stubs/AddLinkMarkedForRemovalStub";
+import { DeleteLinkMarkedForRemovalStub } from "../../../../../tests/stubs/DeleteLinkMarkedForRemovalStub";
+import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
+import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
+import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
+
+const ARTIFACT_ID = 60;
 
 describe(`LinkFieldController`, () => {
     describe(`displayLinkedArtifacts()`, () => {
         let links_retriever: RetrieveAllLinkedArtifacts;
 
         beforeEach(() => {
-            const linked_artifact = { title: "Child" } as LinkedArtifact;
+            const linked_artifact = LinkedArtifactStub.withDefaults();
             links_retriever = RetrieveAllLinkedArtifactsStub.withLinkedArtifacts(linked_artifact);
         });
 
         const displayLinkedArtifacts = (): Promise<LinkFieldPresenter> => {
             const controller = LinkFieldController(
                 links_retriever,
+                RetrieveLinkedArtifactsSyncStub.withoutLink(),
+                AddLinkMarkedForRemovalStub.withCount(),
+                DeleteLinkMarkedForRemovalStub.withCount(),
+                VerifyLinkIsMarkedForRemovalStub.withLinked(),
                 CurrentArtifactIdentifierStub.withId(18)
             );
             return controller.displayLinkedArtifacts();
@@ -71,6 +82,71 @@ describe(`LinkFieldController`, () => {
 
             expect(presenter.has_loaded_content).toBe(true);
             expect(presenter.error_message).toBe(error_message);
+        });
+    });
+
+    describe(`markForRemoval`, () => {
+        let deleted_link_adder: AddLinkMarkedForRemovalStub;
+
+        beforeEach(() => {
+            deleted_link_adder = AddLinkMarkedForRemovalStub.withCount();
+        });
+
+        const markForRemoval = (): LinkFieldPresenter => {
+            const identifier = LinkedArtifactIdentifierStub.withId(ARTIFACT_ID);
+            const linked_artifact = LinkedArtifactStub.withDefaults({ identifier });
+            const controller = LinkFieldController(
+                RetrieveAllLinkedArtifactsStub.withoutLink(),
+                RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(linked_artifact),
+                deleted_link_adder,
+                DeleteLinkMarkedForRemovalStub.withCount(),
+                VerifyLinkIsMarkedForRemovalStub.withLinked(),
+                CurrentArtifactIdentifierStub.withId(40)
+            );
+            return controller.markForRemoval(identifier);
+        };
+
+        it(`stores the given identifier as a link marked for removal and returns an updated presenter`, () => {
+            const presenter = markForRemoval();
+
+            expect(deleted_link_adder.getCallCount()).toBe(1);
+            const is_marked = presenter.linked_artifacts.some(
+                (linked_artifact) => linked_artifact.is_marked_for_removal
+            );
+            expect(is_marked).toBe(true);
+        });
+    });
+
+    describe(`unmarkForRemoval`, () => {
+        let deleted_link_remover: DeleteLinkMarkedForRemovalStub;
+
+        beforeEach(() => {
+            deleted_link_remover = DeleteLinkMarkedForRemovalStub.withCount();
+        });
+
+        const unmarkForRemoval = (): LinkFieldPresenter => {
+            const identifier = LinkedArtifactIdentifierStub.withId(ARTIFACT_ID);
+            const linked_artifact = LinkedArtifactStub.withDefaults({ identifier });
+            const controller = LinkFieldController(
+                RetrieveAllLinkedArtifactsStub.withoutLink(),
+                RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(linked_artifact),
+                AddLinkMarkedForRemovalStub.withCount(),
+                deleted_link_remover,
+                VerifyLinkIsMarkedForRemovalStub.withNoLink(),
+                CurrentArtifactIdentifierStub.withId(80)
+            );
+            return controller.unmarkForRemoval(identifier);
+        };
+
+        it(`deletes the given identifier in the stored links marked for removal,
+            and returns an updated presenter`, () => {
+            const presenter = unmarkForRemoval();
+
+            expect(deleted_link_remover.getCallCount()).toBe(1);
+            const is_marked = presenter.linked_artifacts.some(
+                (linked_artifact) => linked_artifact.is_marked_for_removal
+            );
+            expect(is_marked).toBe(false);
         });
     });
 });

@@ -19,14 +19,8 @@
 
 import { setCatalog } from "../../../../gettext-catalog";
 import type { HostElement } from "./LinkField";
-import {
-    getEmptyStateIfNeeded,
-    getFormattedArtifacts,
-    getSkeletonIfNeeded,
-    LinkField,
-} from "./LinkField";
+import { getEmptyStateIfNeeded, getSkeletonIfNeeded, LinkField } from "./LinkField";
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
-import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 import { Fault } from "@tuleap/fault";
 
 const getDocument = (): Document => document.implementation.createHTMLDocument();
@@ -42,91 +36,6 @@ function getHost(data?: Partial<LinkField>): HostElement {
 describe("LinkField", () => {
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
-    });
-
-    describe("getFormattedArtifacts", () => {
-        it("Given a collection of artifacts, Then it should return render functions to display them", () => {
-            const linked_artifacts = [
-                {
-                    identifier: LinkedArtifactIdentifierStub.withId(123),
-                    xref: "art #123",
-                    title: "A parent",
-                    html_url: "/url/to/artifact/123",
-                    tracker: {
-                        color_name: "red-wine",
-                    },
-                    link_type: {
-                        shortname: "_is_child",
-                        direction: "reverse",
-                        label: "Parent",
-                    },
-                    status: "Open",
-                    is_open: true,
-                },
-                {
-                    identifier: LinkedArtifactIdentifierStub.withId(234),
-                    xref: "art #234",
-                    title: "A child",
-                    html_url: "/url/to/artifact/234",
-                    tracker: {
-                        color_name: "surf-green",
-                    },
-                    link_type: {
-                        shortname: "_is_child",
-                        direction: "forward",
-                        label: "Child",
-                    },
-                    status: "Closed",
-                    is_open: false,
-                },
-            ];
-            const presenter = LinkFieldPresenter.fromArtifacts(linked_artifacts);
-            const host = getHost();
-            const doc = getDocument();
-
-            getFormattedArtifacts(presenter).forEach((renderArtifact, index) => {
-                const target = doc.createElement("div") as unknown as ShadowRoot;
-                const artifact_to_render = linked_artifacts[index];
-
-                renderArtifact(host, target);
-
-                const row = target.querySelector("[data-test=artifact-row]");
-                const link = target.querySelector("[data-test=artifact-link]");
-                const xref = target.querySelector("[data-test=artifact-xref]");
-                const title = target.querySelector("[data-test=artifact-title]");
-                const status = target.querySelector("[data-test=artifact-status]");
-
-                if (
-                    !(row instanceof HTMLElement) ||
-                    !(link instanceof HTMLAnchorElement) ||
-                    !(xref instanceof HTMLElement) ||
-                    !(title instanceof HTMLElement) ||
-                    !(status instanceof HTMLElement)
-                ) {
-                    throw new Error("An expected element has not been found in template");
-                }
-
-                expect(link.href).toEqual(artifact_to_render.html_url);
-                expect(
-                    xref.classList.contains(
-                        `cross-ref-badge-${artifact_to_render.tracker.color_name}`
-                    )
-                ).toBe(true);
-                expect(xref.textContent?.trim()).toEqual(artifact_to_render.xref);
-                expect(title.textContent?.trim()).toEqual(artifact_to_render.title);
-                expect(status.textContent?.trim()).toEqual(artifact_to_render.status);
-
-                expect(row.classList.contains("link-field-table-row-muted")).toBe(
-                    !artifact_to_render.is_open
-                );
-                expect(status.classList.contains("tlp-badge-secondary")).toBe(
-                    !artifact_to_render.is_open
-                );
-                expect(status.classList.contains("tlp-badge-success")).toBe(
-                    artifact_to_render.is_open
-                );
-            });
-        });
     });
 
     describe("Display", () => {

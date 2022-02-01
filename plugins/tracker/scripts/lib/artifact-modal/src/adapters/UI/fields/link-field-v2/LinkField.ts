@@ -17,20 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { UpdateFunction } from "hybrids";
 import { define, html } from "hybrids";
 import { sprintf } from "sprintf-js";
 
 import {
-    getLinkFieldUnderConstructionPlaceholder,
-    getLinkFieldFetchErrorMessage,
     getAddLinkButtonLabel,
+    getLinkFieldFetchErrorMessage,
     getLinkFieldTableEmptyStateText,
+    getLinkFieldUnderConstructionPlaceholder,
 } from "../../../../gettext-catalog";
-
-import type { UpdateFunction } from "hybrids";
 import type { LinkFieldControllerType } from "./LinkFieldController";
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
-import type { LinkedArtifact } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
+import { getLinkedArtifactTemplate } from "./LinkedArtifactTemplate";
 
 export interface LinkField {
     readonly fieldId: number;
@@ -47,17 +46,6 @@ const getLinksTableClasses = (presenter: LinkFieldPresenter): MapOfClasses => ({
     "tlp-table": true,
     "tuleap-artifact-modal-link-field-empty":
         presenter.has_loaded_content && presenter.error_message !== "",
-});
-
-const getArtifactsStatusBadgeClasses = (artifact: LinkedArtifact): MapOfClasses => ({
-    "tlp-badge-outline": true,
-    "tlp-badge-success": artifact.is_open,
-    "tlp-badge-secondary": !artifact.is_open,
-});
-
-const getArtifactTableRowClasses = (artifact: LinkedArtifact): MapOfClasses => ({
-    "link-field-table-row": true,
-    "link-field-table-row-muted": artifact.status !== "" && !artifact.is_open,
 });
 
 const getInputRowNatureCellClasses = (presenter: LinkFieldPresenter): MapOfClasses => ({
@@ -82,47 +70,8 @@ export const getEmptyStateIfNeeded = (presenter: LinkFieldPresenter): UpdateFunc
     `;
 };
 
-export const getFormattedArtifacts = (presenter: LinkFieldPresenter): UpdateFunction<LinkField>[] =>
-    presenter.linked_artifacts.map(
-        (artifact: LinkedArtifact) => html`
-            <tr class="${getArtifactTableRowClasses(artifact)}" data-test="artifact-row">
-                <td class="link-field-table-cell-type">${artifact.link_type.label}</td>
-                <td class="link-field-table-cell-xref">
-                    <a
-                        href="${artifact.html_url}"
-                        class="link-field-artifact-link"
-                        data-test="artifact-link"
-                    >
-                        <span
-                            class="
-                                cross-ref-badge
-                                cross-ref-badge-${artifact.tracker.color_name}
-                                link-field-xref-badge
-                            "
-                            data-test="artifact-xref"
-                        >
-                            ${artifact.xref}
-                        </span>
-                        <span class="link-field-artifact-title" data-test="artifact-title">
-                            ${artifact.title}
-                        </span>
-                    </a>
-                </td>
-                <td class="link-field-table-cell-status">
-                    ${artifact.status &&
-                    html`
-                        <span
-                            class="${getArtifactsStatusBadgeClasses(artifact)}"
-                            data-test="artifact-status"
-                        >
-                            ${artifact.status}
-                        </span>
-                    `}
-                </td>
-                <td class="link-field-table-cell-action"></td>
-            </tr>
-        `
-    );
+const getFormattedArtifacts = (presenter: LinkFieldPresenter): UpdateFunction<LinkField>[] =>
+    presenter.linked_artifacts.map(getLinkedArtifactTemplate);
 
 export const getSkeletonIfNeeded = (presenter: LinkFieldPresenter): UpdateFunction<LinkField> => {
     if (!presenter.is_loading) {
@@ -161,6 +110,7 @@ export const LinkField = define<LinkField>({
     controller: {
         set(host, controller: LinkFieldControllerType) {
             controller.displayLinkedArtifacts().then((presenter) => (host.presenter = presenter));
+            return controller;
         },
     },
     presenter: {

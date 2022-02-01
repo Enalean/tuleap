@@ -287,6 +287,13 @@ module.exports = {
                                 message:
                                     "Adapters should not depend on other adapter without going through the Domain",
                             },
+                            {
+                                target: "src/adapters/Memory/",
+                                from: "src/adapters/",
+                                except: ["Memory"],
+                                message:
+                                    "Adapters should not depend on other adapter without going through the Domain",
+                            },
                         ],
                     },
                 ],

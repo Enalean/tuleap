@@ -24,10 +24,12 @@ import type { RetrieveAllLinkedArtifacts } from "./RetrieveAllLinkedArtifacts";
 import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
 import { Fault, isFault } from "@tuleap/fault";
 import { NoLinksInCreationModeFault } from "./NoLinksInCreationModeFault";
+import type { AddLinkedArtifactCollection } from "./AddLinkedArtifactCollection";
 
 export const LinksRetriever = (
     types_retriever: RetrieveLinkTypes,
-    artifacts_retriever: RetrieveLinkedArtifactsByType
+    artifacts_retriever: RetrieveLinkedArtifactsByType,
+    links_adder: AddLinkedArtifactCollection
 ): RetrieveAllLinkedArtifacts => ({
     async getLinkedArtifacts(
         current_artifact_identifier: CurrentArtifactIdentifier | null
@@ -48,6 +50,10 @@ export const LinksRetriever = (
             );
         });
 
-        return Promise.all(promises).then((collections) => collections.flat(), Fault.fromError);
+        return Promise.all(promises).then((collections) => {
+            const all_links = collections.flat();
+            links_adder.addLinkedArtifacts(all_links);
+            return all_links;
+        }, Fault.fromError);
     },
 });

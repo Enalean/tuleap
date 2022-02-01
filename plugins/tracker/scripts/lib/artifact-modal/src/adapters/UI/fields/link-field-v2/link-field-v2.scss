@@ -110,6 +110,10 @@ $link-table-cell-background: transparent;
     }
 }
 
+.link-field-link-to-remove {
+    text-decoration: line-through;
+}
+
 .link-field-skeleton-cell {
     min-width: 65px;
 }
