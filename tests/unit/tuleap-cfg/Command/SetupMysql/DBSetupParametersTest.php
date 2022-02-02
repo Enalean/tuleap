@@ -50,6 +50,7 @@ final class DBSetupParametersTest extends TestCase
     {
         yield 'no dbname defined falls back to `tuleap`' => [
             'parameters' => function () {
+                \ForgeConfig::loadDatabaseConfig();
                 \ForgeConfig::set(DBConfig::CONF_HOST, 'db');
                 \ForgeConfig::set(DBConfig::CONF_DBPASSWORD, 'welcome0');
                 return DBSetupParameters::fromForgeConfig('root', 'foo', new ConcealedString('bar'), 'tuleap.example.com');
@@ -59,8 +60,22 @@ final class DBSetupParametersTest extends TestCase
             },
         ];
 
+        yield 'configure a specific dbname' => [
+            'parameters' => function () {
+                \ForgeConfig::loadDatabaseConfig();
+                \ForgeConfig::set(DBConfig::CONF_HOST, 'db');
+                \ForgeConfig::set(DBConfig::CONF_DBPASSWORD, 'welcome0');
+                \ForgeConfig::set(DBConfig::CONF_DBNAME, 'tlp');
+                return DBSetupParameters::fromForgeConfig('root', 'foo', new ConcealedString('bar'), 'tuleap.example.com');
+            },
+            'tests' => function (DBSetupParameters $params) {
+                assertEquals('tlp', $params->dbname);
+            },
+        ];
+
         yield 'no tuleap_username defined falls back to `tuleapadm`' => [
             'parameters' => function () {
+                \ForgeConfig::loadDatabaseConfig();
                 \ForgeConfig::set(DBConfig::CONF_HOST, 'db');
                 \ForgeConfig::set(DBConfig::CONF_DBPASSWORD, 'welcome0');
                 return DBSetupParameters::fromForgeConfig('root', 'foo', new ConcealedString('bar'), 'tuleap.example.com');
@@ -70,14 +85,41 @@ final class DBSetupParametersTest extends TestCase
             },
         ];
 
+        yield 'configure a specific tuleap admin user' => [
+            'parameters' => function () {
+                \ForgeConfig::loadDatabaseConfig();
+                \ForgeConfig::set(DBConfig::CONF_HOST, 'db');
+                \ForgeConfig::set(DBConfig::CONF_DBPASSWORD, 'welcome0');
+                \ForgeConfig::set(DBConfig::CONF_DBUSER, 'admin');
+                return DBSetupParameters::fromForgeConfig('root', 'foo', new ConcealedString('bar'), 'tuleap.example.com');
+            },
+            'tests' => function (DBSetupParameters $params) {
+                assertEquals('admin', $params->tuleap_user);
+            },
+        ];
+
         yield 'no port defined falls back to default' => [
             'parameters' => function () {
+                \ForgeConfig::loadDatabaseConfig();
                 \ForgeConfig::set(DBConfig::CONF_HOST, 'db');
                 \ForgeConfig::set(DBConfig::CONF_DBPASSWORD, 'welcome0');
                 return DBSetupParameters::fromForgeConfig('root', 'foo', new ConcealedString('bar'), 'tuleap.example.com');
             },
             'tests' => function (DBSetupParameters $params) {
                 assertEquals(DBConfig::DEFAULT_MYSQL_PORT, $params->port);
+            },
+        ];
+
+        yield 'configure specific port' => [
+            'parameters' => function () {
+                \ForgeConfig::loadDatabaseConfig();
+                \ForgeConfig::set(DBConfig::CONF_HOST, 'db');
+                \ForgeConfig::set(DBConfig::CONF_DBPASSWORD, 'welcome0');
+                \ForgeConfig::set(DBConfig::CONF_PORT, 3307);
+                return DBSetupParameters::fromForgeConfig('root', 'foo', new ConcealedString('bar'), 'tuleap.example.com');
+            },
+            'tests' => function (DBSetupParameters $params) {
+                assertEquals(3307, $params->port);
             },
         ];
     }

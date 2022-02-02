@@ -28,6 +28,7 @@ use ConfigValueProvider;
 use ForgeAccess;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\DB\DBConfig;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 
@@ -90,26 +91,29 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testEnvironmentTakesPrecedenceForDatabaseParameters(): void
     {
         putenv('TULEAP_LOCAL_INC=' . __DIR__ . '/_fixtures/sequence/local.inc');
-        putenv('TULEAP_SYS_DBHOST=localhost');
+        putenv('TULEAP_SYS_DBHOST=db.example.com');
         $dao = $this->createMock(ConfigDao::class);
         $dao->method('searchAll')->willReturn([]);
         ForgeConfig::setDatabaseConfigDao($dao);
 
         ForgeConfig::loadInSequence();
-        self::assertEquals('localhost', ForgeConfig::get('sys_dbhost'));
-    }
-
-    public function testLoadDatabaseConfigFromEnvironmentWithEmptyEnv(): void
-    {
-        ForgeConfig::loadDatabaseConfig();
-        self::assertEquals(false, ForgeConfig::get('sys_dbhost'));
+        self::assertEquals('db.example.com', ForgeConfig::get('sys_dbhost'));
     }
 
     public function testLoadDatabaseConfigFromEnvironmentWithEnv(): void
     {
-        putenv('TULEAP_SYS_DBHOST=localhost');
+        putenv('TULEAP_SYS_DBHOST=db.example.com');
+        ForgeConfig::loadDatabaseConfig();
+        self::assertEquals('db.example.com', ForgeConfig::get('sys_dbhost'));
+    }
+
+    public function testLoadDatabaseConfigDefaultValues(): void
+    {
         ForgeConfig::loadDatabaseConfig();
         self::assertEquals('localhost', ForgeConfig::get('sys_dbhost'));
+        self::assertEquals('tuleap', ForgeConfig::get(DBConfig::CONF_DBNAME));
+        self::assertSame(3306, ForgeConfig::get(DBConfig::CONF_PORT));
+        self::assertSame('0', ForgeConfig::get(DBConfig::CONF_ENABLE_SSL));
     }
 
     public function testUsage(): void

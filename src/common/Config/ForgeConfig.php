@@ -22,6 +22,7 @@
  */
 
 use Tuleap\Config\ConfigDao;
+use Tuleap\Config\ConfigValueDefaultValueAttributeProvider;
 use Tuleap\Config\ConfigValueEnvironmentProvider;
 
 class ForgeConfig
@@ -50,14 +51,14 @@ class ForgeConfig
     public static function loadInSequence(): void
     {
         self::loadLocalInc();
-        self::loadDatabaseInc();
-        self::loadDatabaseParametersFromEnvironment();
+        self::loadDatabaseConfig();
         self::loadFromDatabase();
         self::loadFromFile(self::get('redis_config_file'));
     }
 
     public static function loadDatabaseConfig(): void
     {
+        self::loadDatabaseDefaultValues();
         self::loadDatabaseInc();
         self::loadDatabaseParametersFromEnvironment();
     }
@@ -67,6 +68,11 @@ class ForgeConfig
         self::loadFromFile(__DIR__ . '/../../etc/local.inc.dist');
         $local_inc_file_path = (new Config_LocalIncFinder())->getLocalIncPath();
         self::loadFromFile($local_inc_file_path);
+    }
+
+    private static function loadDatabaseDefaultValues(): void
+    {
+        self::load(new ConfigValueDefaultValueAttributeProvider(\Tuleap\DB\DBConfig::class));
     }
 
     private static function loadDatabaseInc(): void

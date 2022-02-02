@@ -51,6 +51,9 @@ final class DBSetupParameters
     {
     }
 
+    /**
+     * @throws MissingMandatoryParameterException
+     */
     public static function fromForgeConfig(string $admin_user, string $admin_password, ConcealedString $site_admin_password, string $tuleap_fqdn): self
     {
         $host = ForgeConfig::get(DBConfig::CONF_HOST);
@@ -58,10 +61,6 @@ final class DBSetupParameters
             throw new MissingMandatoryParameterException(DBConfig::CONF_HOST);
         }
         $params = new self(ForgeConfig::get(DBConfig::CONF_HOST), $admin_user, $admin_password);
-        $port   = ForgeConfig::getInt(DBConfig::CONF_PORT, DBConfig::DEFAULT_MYSQL_PORT);
-        if ($port !== $params->port) {
-            $params = $params->withPort($port);
-        }
         if (ForgeConfig::get(DBConfig::CONF_ENABLE_SSL)) {
             $params = $params->withSSL(
                 (bool) ForgeConfig::get(DBConfig::CONF_SSL_VERIFY_CERT),
@@ -75,9 +74,10 @@ final class DBSetupParameters
         }
 
         return $params
+            ->withPort(ForgeConfig::getInt(DBConfig::CONF_PORT))
             ->withTuleapCredentials(
-                ForgeConfig::get(DBConfig::CONF_DBNAME, 'tuleap'),
-                ForgeConfig::get(DBConfig::CONF_DBUSER, 'tuleapadm'),
+                ForgeConfig::get(DBConfig::CONF_DBNAME),
+                ForgeConfig::get(DBConfig::CONF_DBUSER),
                 ForgeConfig::get(DBConfig::CONF_DBPASSWORD),
             )
             ->withSiteAdminPassword($site_admin_password)

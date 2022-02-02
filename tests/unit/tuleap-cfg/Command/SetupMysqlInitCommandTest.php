@@ -28,6 +28,9 @@ use Symfony\Component\Console\Tester\CommandTester;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use function PHPUnit\Framework\assertStringContainsString;
 
+/**
+ * @covers \TuleapCfg\Command\SetupMysql\DatabaseConfigurator
+ */
 final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private string $base_dir;
@@ -75,7 +78,7 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFileExists($this->base_dir . '/etc/tuleap/conf/database.inc');
         require($this->base_dir . '/etc/tuleap/conf/database.inc');
         $this->assertEquals('192.0.2.1', $sys_dbhost);
-        $this->assertEquals(3306, $sys_dbport);
+        self::assertSame(3306, $sys_dbport);
         $this->assertEquals('tuleap', $sys_dbname);
         $this->assertEquals('tuleapadm', $sys_dbuser);
         $this->assertEquals('a complex password', $sys_dbpasswd);

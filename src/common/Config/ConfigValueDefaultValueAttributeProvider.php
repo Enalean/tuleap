@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,21 +23,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Config;
 
-final class ConfigValueEnvironmentProvider implements \ConfigValueProvider
-{
-    private const ENV_VARIABLE_PREFIX = 'TULEAP_';
 
+final class ConfigValueDefaultValueAttributeProvider implements \ConfigValueProvider
+{
     /**
      * @var class-string[]
      */
     private array $classes;
 
     /**
-     * @param class-string ...$class_name
+     * @param class-string ...$class_names
      */
-    public function __construct(string ...$class_name)
+    public function __construct(string ...$class_names)
     {
-        $this->classes = $class_name;
+        $this->classes = $class_names;
     }
 
     /**
@@ -47,15 +46,15 @@ final class ConfigValueEnvironmentProvider implements \ConfigValueProvider
     {
         $variables = [];
         foreach (ConstantWithConfigAttributesBuilder::get(...$this->classes) as $constant) {
-            $constant_value = $constant->getValue();
-            assert(is_string($constant_value));
-
-            $env_value = getenv(self::ENV_VARIABLE_PREFIX . strtoupper($constant_value));
-            if ($env_value === false) {
-                continue;
+            $default_values_attributes = $constant->getAttributes();
+            foreach ($default_values_attributes as $attribute) {
+                $attribute_object = $attribute->newInstance();
+                if ($attribute_object instanceof ConfigKeyType && $attribute_object->hasDefaultValue()) {
+                    $constant_value = $constant->getValue();
+                    assert(is_string($constant_value));
+                    $variables[$constant_value] = $attribute_object->default_value;
+                }
             }
-
-            $variables[$constant_value] = $env_value;
         }
         return $variables;
     }
