@@ -1,12 +1,14 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
   '@types/bootstrap': ^4.5.0
   '@types/dompurify': ^2.3.2
   dompurify: ^2.3.4
 
 dependencies:
+  '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
   dompurify: 2.3.4
 
