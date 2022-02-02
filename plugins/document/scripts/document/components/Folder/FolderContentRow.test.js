@@ -22,7 +22,7 @@ import localVue from "../../helpers/local-vue";
 import { shallowMount } from "@vue/test-utils";
 import FolderContentRow from "./FolderContentRow.vue";
 import { TYPE_FILE } from "../../constants";
-import EventBus from "../../helpers/event-bus";
+import emitter from "../../helpers/emitter";
 
 function getFolderContentRowInstance(store, props, data = {}) {
     return shallowMount(FolderContentRow, {
@@ -209,7 +209,7 @@ describe("FolderContentRow", () => {
 
     describe("test toggle-quick-look event emission", () => {
         it("Should emit toggle-quick-look event if no dropdown is displayed", () => {
-            const event_bus_emit = jest.spyOn(EventBus, "$emit");
+            const emitter_emit = jest.spyOn(emitter, "emit");
 
             wrapper = getFolderContentRowInstance(
                 store,
@@ -221,13 +221,13 @@ describe("FolderContentRow", () => {
 
             wrapper.find("[data-test=document-folder-content-row]").trigger("click");
 
-            expect(event_bus_emit).toHaveBeenCalledWith("toggle-quick-look", {
+            expect(emitter_emit).toHaveBeenCalledWith("toggle-quick-look", {
                 details: { item },
             });
         });
 
         it("Should not emit toggle-quick-look event if a dropdown is displayed", () => {
-            const event_bus_emit = jest.spyOn(EventBus, "$emit");
+            const emitter_emit = jest.spyOn(emitter, "emit");
 
             wrapper = getFolderContentRowInstance(
                 store,
@@ -239,7 +239,7 @@ describe("FolderContentRow", () => {
 
             wrapper.find("[data-test=document-folder-content-row]").trigger("click");
 
-            expect(event_bus_emit).not.toHaveBeenCalledWith("toggle-quick-look", {
+            expect(emitter_emit).not.toHaveBeenCalledWith("toggle-quick-look", {
                 details: { item },
             });
         });

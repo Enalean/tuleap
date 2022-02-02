@@ -126,6 +126,7 @@ import {
     relativeDatePreference,
 } from "../../../../../../src/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
 import { isFile, isFolder } from "../../helpers/type-check-helper";
+import emitter from "../../helpers/emitter";
 
 export default {
     name: "FolderContentRow",
@@ -267,7 +268,7 @@ export default {
                 (event.target.id === `document-folder-content-row-${this.item.id}` ||
                     event.target.id === `document-folder-content-row-div-${this.item.id}`)
             ) {
-                EventBus.$emit("toggle-quick-look", { details: { item: this.item } });
+                emitter.emit("toggle-quick-look", { details: { item: this.item } });
             }
         },
         setIsDropdownDisplayed(event) {
