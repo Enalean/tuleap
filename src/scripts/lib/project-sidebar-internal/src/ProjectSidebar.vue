@@ -30,7 +30,10 @@
             <div class="sidebar-content-vertical-scroll">
                 <sidebar-header />
                 <tools />
-                <sidebar-collapse-button v-model:is_sidebar_collapsed="is_sidebar_collapsed" />
+                <sidebar-collapse-button
+                    v-model:is_sidebar_collapsed="is_sidebar_collapsed"
+                    v-bind:can_sidebar_be_collapsed="can_sidebar_be_collapsed"
+                />
             </div>
             <div class="sidebar-spacer"></div>
             <sidebar-footer />
@@ -47,10 +50,16 @@ import Tools from "./Tools/Tools.vue";
 import SidebarLogo from "./SidebarLogo.vue";
 import SidebarCollapseButton from "./SidebarCollapseButton.vue";
 
-const props = defineProps<{ config: string | undefined; collapsed?: boolean | undefined }>();
+const props = defineProps<{
+    config: string | undefined;
+    collapsed?: boolean | undefined;
+    // eslint-disable-next-line vue/prop-name-casing -- Vue transforms properties with dashes in camelCase
+    noCollapseButton?: boolean | undefined;
+}>();
 const sidebar_configuration = readonly(computed(() => unserializeConfiguration(props.config)));
 
 const is_sidebar_collapsed = ref(props.collapsed ?? false);
+const can_sidebar_be_collapsed = readonly(computed(() => !props.noCollapseButton));
 
 provide(SIDEBAR_CONFIGURATION, sidebar_configuration);
 const emit = defineEmits<{

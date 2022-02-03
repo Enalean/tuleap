@@ -14,6 +14,7 @@ exports[`ProjectSidebar displays sidebar 1`] = `
       <sidebar-header-stub />
       <tools-stub />
       <sidebar-collapse-button-stub
+        can_sidebar_be_collapsed="true"
         is_sidebar_collapsed="false"
       />
     </div>
