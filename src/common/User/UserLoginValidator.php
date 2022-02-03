@@ -54,7 +54,7 @@ class UserLoginValidator
                     sprintf(
                         dgettext(
                             'tuleap-core',
-                            'Your old Tuleap login was not was not valid against the configuration of your platform. It will be changed to "%s". If you use Ldap, it will not change your ldap login.',
+                            'Your old Tuleap login was not valid against the configuration of your platform. It will be changed to "%s". If you use Ldap, it will not change your ldap login.',
                         ),
                         $new_username
                     )
