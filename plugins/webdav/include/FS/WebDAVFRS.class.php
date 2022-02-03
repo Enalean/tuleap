@@ -19,13 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Sabre\DAV\ICollection;
 use Tuleap\FRS\FRSPermissionManager;
 
 /**
  * This class lists the packages of a given project
- *
  */
-class WebDAVFRS extends \Sabre\DAV\FS\Directory
+class WebDAVFRS implements ICollection
 {
 
     private $user;
@@ -46,8 +46,6 @@ class WebDAVFRS extends \Sabre\DAV\FS\Directory
         $this->user        = $user;
         $this->project     = $project;
         $this->maxFileSize = $maxFileSize;
-
-        parent::__construct('');
     }
 
     /**
@@ -259,5 +257,30 @@ class WebDAVFRS extends \Sabre\DAV\FS\Directory
         } else {
             throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_denied_create'));
         }
+    }
+
+    public function delete(): void
+    {
+        throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
+    }
+
+    public function setName($name): void
+    {
+        throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
+    }
+
+    public function createFile($name, $data = null): void
+    {
+        throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
+    }
+
+    public function childExists($name): bool
+    {
+        try {
+            $this->getChild($name);
+            return true;
+        } catch (\Sabre\DAV\Exception) {
+        }
+        return false;
     }
 }
