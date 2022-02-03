@@ -29,6 +29,7 @@
             data-shortcut-search-document
             v-on:keyup.enter="advancedSearch()"
             v-if="search_for_document_with_criteria"
+            data-test="document-search-box"
         />
         <router-link
             v-bind:to="{ name: 'search', params: { folder_id: current_folder.id } }"

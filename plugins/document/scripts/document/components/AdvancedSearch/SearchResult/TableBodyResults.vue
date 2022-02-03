@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <tbody>
+    <tbody data-test="search-results-table-body">
         <table-body-result-row v-for="item in results" v-bind:key="item.id" v-bind:item="item" />
     </tbody>
 </template>
