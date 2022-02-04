@@ -28,6 +28,7 @@ use Webimpress\SafeWriter\FileWriter;
 
 final class SiteDeployGitolite3
 {
+    private const GITOLITE_BASE_DIR                    = '/var/lib/gitolite';
     private const GITOLITE_RC_CONFIG                   = '/var/lib/gitolite/.gitolite.rc';
     private const GITOLITE_PROFILE                     = '/var/lib/gitolite/.profile';
     private const MARKER_ONLY_PRESENT_GITOLITE3_CONFIG = '%RC =';
@@ -39,17 +40,16 @@ final class SiteDeployGitolite3
             return;
         }
 
-        if (! $this->hasAGitolite3Config()) {
-            $logger->debug('Gitolite3 not detected');
+        $this->updateGitoliteShellProfile($logger);
+
+        $this->updateGitoliteConfig($logger);
+    }
+
+    private function updateGitoliteShellProfile(LoggerInterface $logger): void
+    {
+        if (! file_exists(self::GITOLITE_BASE_DIR)) {
+            $logger->warning('No ' . self::GITOLITE_BASE_DIR . '. Skipping update of ' . self::GITOLITE_PROFILE);
             return;
-        }
-
-        $expected_gitolite_config = $this->getExpectedGitolite3ConfigContent();
-        $current_gitolite_config  = file_get_contents(self::GITOLITE_RC_CONFIG);
-
-        if ($expected_gitolite_config !== $current_gitolite_config) {
-            $logger->info('Updating ' . self::GITOLITE_RC_CONFIG);
-            $this->writeFile(self::GITOLITE_RC_CONFIG, $expected_gitolite_config);
         }
 
         $expected_gitolite_profile = $this->getExpectedGitoliteProfileContent();
@@ -61,6 +61,26 @@ final class SiteDeployGitolite3
         if ($expected_gitolite_profile !== $current_gitolite_profile) {
             $logger->info('Updating ' . self::GITOLITE_PROFILE);
             $this->writeFile(self::GITOLITE_PROFILE, $expected_gitolite_profile);
+        }
+
+        if (file_exists(self::GITOLITE_BASE_DIR . '/.bash_profile')) {
+            unlink(self::GITOLITE_BASE_DIR . '/.bash_profile');
+        }
+    }
+
+    private function updateGitoliteConfig(LoggerInterface $logger): void
+    {
+        if (! $this->hasAGitolite3Config()) {
+            $logger->debug('Gitolite3 not detected');
+            return;
+        }
+
+        $expected_gitolite_config = $this->getExpectedGitolite3ConfigContent();
+        $current_gitolite_config  = file_get_contents(self::GITOLITE_RC_CONFIG);
+
+        if ($expected_gitolite_config !== $current_gitolite_config) {
+            $logger->info('Updating ' . self::GITOLITE_RC_CONFIG);
+            $this->writeFile(self::GITOLITE_RC_CONFIG, $expected_gitolite_config);
         }
     }
 
