@@ -8,7 +8,6 @@
 %define _binary_payload w9.xzdio
 
 Name:           tuleap-gitolite3
-Epoch:          1
 Version:        %{tuleap_version}
 Release:        1.%{gitolite_version}%{?nixpkgs_epoch}%{?dist}
 Summary:        Highly flexible server for git directory version tracker
