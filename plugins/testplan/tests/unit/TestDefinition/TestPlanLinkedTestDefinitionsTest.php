@@ -22,43 +22,39 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan\TestDefinition;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 final class TestPlanLinkedTestDefinitionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testCreateEmptySetOfLinkedTestDefinitions(): void
     {
         $linked_test_definitions = TestPlanLinkedTestDefinitions::empty();
 
         $this->assertEmpty($linked_test_definitions->getRequestedLinkedTestDefinitions());
-        $this->assertEquals(0, $linked_test_definitions->getTotalNumberOfLinkedTestDefinitions());
+        self::assertEquals(0, $linked_test_definitions->getTotalNumberOfLinkedTestDefinitions());
     }
 
     public function testStoreASubsetOfLinkedTestDefinitions(): void
     {
         $artifacts               = [
-            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(
+            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition($this->createMock(
                 \Tuleap\Tracker\Artifact\Artifact::class
             )),
-            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(
+            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition($this->createMock(
                 \Tuleap\Tracker\Artifact\Artifact::class
             )),
         ];
         $linked_test_definitions = TestPlanLinkedTestDefinitions::subset($artifacts, 512);
 
-        $this->assertEquals($artifacts, $linked_test_definitions->getRequestedLinkedTestDefinitions());
-        $this->assertEquals(512, $linked_test_definitions->getTotalNumberOfLinkedTestDefinitions());
+        self::assertEquals($artifacts, $linked_test_definitions->getRequestedLinkedTestDefinitions());
+        self::assertEquals(512, $linked_test_definitions->getTotalNumberOfLinkedTestDefinitions());
     }
 
     public function testCannotGiveASubsetBiggerThanTheTotalNumberOfTestDefinitions(): void
     {
         $artifacts = [
-            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(
+            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition($this->createMock(
                 \Tuleap\Tracker\Artifact\Artifact::class
             )),
-            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(
+            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition($this->createMock(
                 \Tuleap\Tracker\Artifact\Artifact::class
             )),
         ];

@@ -23,6 +23,8 @@
         <directory name="plugins/jira_import/tests/unit/" />
         <directory name="plugins/document_generation/tests/unit/" />
         <directory name="plugins/program_management/tests/unit/" />
+        <directory name="plugins/userlog/tests/unit/" />
+        <directory name="plugins/testplan/tests/unit/" />
         <ignoreFiles>
             <directory name="src/common/wiki/phpwiki/"/>
             <directory name="src/www/assets/"/>

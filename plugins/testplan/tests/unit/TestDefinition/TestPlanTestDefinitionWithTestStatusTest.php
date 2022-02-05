@@ -22,39 +22,36 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan\TestDefinition;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TestPlanTestDefinitionWithTestStatusTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testBuildWhenTestStatusIsNotKnown(): void
     {
-        $test_def = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $test_def = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $test_def_with_status = TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition($test_def);
 
-        $this->assertEquals($test_def, $test_def_with_status->getTestDefinition());
-        $this->assertEquals(null, $test_def_with_status->getStatus());
-        $this->assertEquals(null, $test_def_with_status->getTestExecutionIdUsedToDefineStatus());
-        $this->assertEquals(null, $test_def_with_status->getTestExecutionDate());
-        $this->assertEquals(null, $test_def_with_status->getTestExecutionSubmittedBy());
-        $this->assertEquals(null, $test_def_with_status->getTestCampaignIdDefiningTheStatus());
+        self::assertEquals($test_def, $test_def_with_status->getTestDefinition());
+        self::assertEquals(null, $test_def_with_status->getStatus());
+        self::assertEquals(null, $test_def_with_status->getTestExecutionIdUsedToDefineStatus());
+        self::assertEquals(null, $test_def_with_status->getTestExecutionDate());
+        self::assertEquals(null, $test_def_with_status->getTestExecutionSubmittedBy());
+        self::assertEquals(null, $test_def_with_status->getTestCampaignIdDefiningTheStatus());
     }
 
     public function testBuildWhenTestStatusIsKnown(): void
     {
-        $test_def     = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $test_def     = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $submitted_by = UserTestBuilder::aUser()->build();
 
         $test_def_with_status = TestPlanTestDefinitionWithTestStatus::knownTestStatusForTheDefinition($test_def, 'passed', 852, 10, $submitted_by, 14);
 
-        $this->assertEquals($test_def, $test_def_with_status->getTestDefinition());
-        $this->assertEquals("passed", $test_def_with_status->getStatus());
-        $this->assertEquals(852, $test_def_with_status->getTestExecutionIdUsedToDefineStatus());
-        $this->assertEquals(10, $test_def_with_status->getTestExecutionDate());
-        $this->assertEquals($submitted_by, $test_def_with_status->getTestExecutionSubmittedBy());
-        $this->assertEquals(14, $test_def_with_status->getTestCampaignIdDefiningTheStatus());
+        self::assertEquals($test_def, $test_def_with_status->getTestDefinition());
+        self::assertEquals("passed", $test_def_with_status->getStatus());
+        self::assertEquals(852, $test_def_with_status->getTestExecutionIdUsedToDefineStatus());
+        self::assertEquals(10, $test_def_with_status->getTestExecutionDate());
+        self::assertEquals($submitted_by, $test_def_with_status->getTestExecutionSubmittedBy());
+        self::assertEquals(14, $test_def_with_status->getTestCampaignIdDefiningTheStatus());
     }
 }

@@ -22,36 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan\TestDefinition;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TestPlanTestDefinitionsTestStatusDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&TestPlanTestDefinitionsTestStatusDAO
      */
     private $dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TestStatusPerTestDefinitionsInformationForUserRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&TestStatusPerTestDefinitionsInformationForUserRetriever
      */
     private $information_retriever;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
+     * @var \UserManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $user_manager;
 
-    /**
-     * @var TestPlanTestDefinitionWithTestStatusRetriever
-     */
-    private $retriever;
+    private TestPlanTestDefinitionWithTestStatusRetriever $retriever;
 
     protected function setUp(): void
     {
-        $this->dao                   = \Mockery::mock(TestPlanTestDefinitionsTestStatusDAO::class);
-        $this->information_retriever = \Mockery::mock(TestStatusPerTestDefinitionsInformationForUserRetriever::class);
-        $this->user_manager          = \Mockery::mock(\UserManager::class);
+        $this->dao                   = $this->createMock(TestPlanTestDefinitionsTestStatusDAO::class);
+        $this->information_retriever = $this->createMock(TestStatusPerTestDefinitionsInformationForUserRetriever::class);
+        $this->user_manager          = $this->createMock(\UserManager::class);
 
         $this->retriever = new TestPlanTestDefinitionWithTestStatusRetriever(
             $this->dao,
@@ -62,10 +56,16 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends \Tuleap\Te
 
     public function testRetrieveTestDefinitionWithTestStatusAndAllTestsWithUnknownStatusAtTheEnd(): void
     {
-        $milestone         = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturn('132')->getMock();
-        $test_definition_1 = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturn('456')->getMock();
-        $test_definition_2 = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturn('457')->getMock();
-        $test_definitions  = [$test_definition_1, $test_definition_2];
+        $milestone = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $milestone->method('getId')->willReturn('132');
+
+        $test_definition_1 = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $test_definition_1->method('getId')->willReturn('456');
+
+        $test_definition_2 = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $test_definition_2->method('getId')->willReturn('457');
+
+        $test_definitions = [$test_definition_1, $test_definition_2];
 
         $information = new TestPlanMilestoneInformationNeededToRetrieveTestStatusPerTestDefinition(
             $milestone,
@@ -75,16 +75,16 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends \Tuleap\Te
             444,
             555
         );
-        $this->information_retriever->shouldReceive('getInformationNeededToRetrieveTestStatusPerTestDefinition')
-            ->andReturn($information);
+        $this->information_retriever->method('getInformationNeededToRetrieveTestStatusPerTestDefinition')
+            ->willReturn($information);
 
-        $this->dao->shouldReceive('searchTestStatusPerTestDefinitionInAMilestone')
-            ->andReturn([457 => ['test_status' => 'passed', 'test_exec_id' => 95147, 'test_exec_submitted_on' => 10, 'test_exec_submitted_by' => 404, 'test_campaign_id' => 23]]);
+        $this->dao->method('searchTestStatusPerTestDefinitionInAMilestone')
+            ->willReturn([457 => ['test_status' => 'passed', 'test_exec_id' => 95147, 'test_exec_submitted_on' => 10, 'test_exec_submitted_by' => 404, 'test_campaign_id' => 23]]);
 
-        $milestone = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $milestone = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $user      = UserTestBuilder::aUser()->build();
-        $this->user_manager->shouldReceive('getUserById')->with(404)->andReturn(null);
-        $this->user_manager->shouldReceive('getUserAnonymous')->andReturn(UserTestBuilder::anAnonymousUser()->build());
+        $this->user_manager->method('getUserById')->with(404)->willReturn(null);
+        $this->user_manager->method('getUserAnonymous')->willReturn(UserTestBuilder::anAnonymousUser()->build());
 
         $test_definitions_with_test_status = $this->retriever->retrieveTestDefinitionWithTestStatus(
             $milestone,
@@ -92,7 +92,7 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends \Tuleap\Te
             $test_definitions
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 TestPlanTestDefinitionWithTestStatus::knownTestStatusForTheDefinition($test_definition_2, 'passed', 95147, 10, UserTestBuilder::anAnonymousUser()->build(), 23),
                 TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition($test_definition_1),
@@ -103,20 +103,24 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends \Tuleap\Te
 
     public function testTestDefinitionsHaveAnUnknownStatusWhenInformationNeededToAccessTheInformationCannotBeRetrievedForTheUser(): void
     {
-        $this->information_retriever->shouldReceive('getInformationNeededToRetrieveTestStatusPerTestDefinition')
-            ->andReturn(null);
+        $this->information_retriever->method('getInformationNeededToRetrieveTestStatusPerTestDefinition')
+            ->willReturn(null);
 
-        $test_definition_1 = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturn('456')->getMock();
-        $test_definition_2 = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturn('457')->getMock();
-        $test_definitions  = [$test_definition_1, $test_definition_2];
+        $test_definition_1 = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $test_definition_1->method('getId')->willReturn('456');
+
+        $test_definition_2 = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $test_definition_2->method('getId')->willReturn('457');
+
+        $test_definitions = [$test_definition_1, $test_definition_2];
 
         $test_definitions_with_test_status = $this->retriever->retrieveTestDefinitionWithTestStatus(
-            \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class),
+            $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class),
             UserTestBuilder::aUser()->build(),
             $test_definitions
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition($test_definition_1),
                 TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition($test_definition_2),

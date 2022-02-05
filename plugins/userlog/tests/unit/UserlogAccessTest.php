@@ -25,38 +25,38 @@ declare(strict_types=1);
 namespace Tuleap\Userlog;
 
 use HTTPRequest;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
 
 final class UserlogAccessTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItBuildsAUserlogAccessObjectFromRequest()
+    public function testItBuildsAUserlogAccessObjectFromRequest(): void
     {
-        $project = Mockery::mock(Project::class);
-        $user    = Mockery::mock(PFUser::class);
+        $project = $this->createMock(Project::class);
+        $user    = $this->createMock(PFUser::class);
 
-        $request = Mockery::mock(HTTPRequest::class);
+        $request = $this->createMock(HTTPRequest::class);
 
-        $request->shouldReceive('getProject')->andReturn($project);
-        $request->shouldReceive('getCurrentUser')->andReturn($user);
-        $request->shouldReceive('getFromServer')->with('HTTP_USER_AGENT')->andReturn('user_agent');
-        $request->shouldReceive('getFromServer')->with('REQUEST_METHOD')->andReturn('GET');
-        $request->shouldReceive('getFromServer')->with('REQUEST_URI')->andReturn('/projects/');
-        $request->shouldReceive('getIPAddress')->andReturn('127.0.0.1');
-        $request->shouldReceive('getFromServer')->with('HTTP_REFERER')->andReturn('referer');
+        $request->method('getProject')->willReturn($project);
+        $request->method('getCurrentUser')->willReturn($user);
+        $request->method('getFromServer')->with()->willReturnMap(
+            [
+                ['HTTP_USER_AGENT', 'user_agent'],
+                ['REQUEST_METHOD', 'GET'],
+                ['REQUEST_URI', '/projects/'],
+                ['HTTP_REFERER', 'referer'],
+            ],
+        );
+        $request->method('getIPAddress')->willReturn('127.0.0.1');
 
         $userlog_access = UserlogAccess::buildFromRequest($request);
 
-        $this->assertEquals($project, $userlog_access->getProject());
-        $this->assertEquals($user, $userlog_access->getUser());
-        $this->assertEquals('user_agent', $userlog_access->getUserAgent());
-        $this->assertEquals('GET', $userlog_access->getRequestMethod());
-        $this->assertEquals('/projects/', $userlog_access->getRequestUri());
-        $this->assertEquals('127.0.0.1', $userlog_access->getIpAddress());
-        $this->assertEquals('referer', $userlog_access->getHttpReferer());
+        self::assertEquals($project, $userlog_access->getProject());
+        self::assertEquals($user, $userlog_access->getUser());
+        self::assertEquals('user_agent', $userlog_access->getUserAgent());
+        self::assertEquals('GET', $userlog_access->getRequestMethod());
+        self::assertEquals('/projects/', $userlog_access->getRequestUri());
+        self::assertEquals('127.0.0.1', $userlog_access->getIpAddress());
+        self::assertEquals('referer', $userlog_access->getHttpReferer());
     }
 }

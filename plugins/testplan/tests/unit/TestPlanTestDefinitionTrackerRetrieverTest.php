@@ -22,78 +22,72 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use TrackerFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\Config;
 
 final class TestPlanTestDefinitionTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    private TestPlanTestDefinitionTrackerRetriever $retriever;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Config
+     * @var \PHPUnit\Framework\MockObject\MockObject&Config
      */
     private $testmanagement_config;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerFactory
      */
     private $tracker_factory;
-    /**
-     * @var TestPlanTestDefinitionTrackerRetriever
-     */
-    private $retriever;
 
     protected function setUp(): void
     {
-        $this->testmanagement_config = \Mockery::mock(Config::class);
-        $this->tracker_factory       = \Mockery::mock(TrackerFactory::class);
+        $this->testmanagement_config = $this->createMock(Config::class);
+        $this->tracker_factory       = $this->createMock(TrackerFactory::class);
 
         $this->retriever = new TestPlanTestDefinitionTrackerRetriever($this->testmanagement_config, $this->tracker_factory);
     }
 
     public function testCanRetrievesTestDefinitionsTracker(): void
     {
-        $this->testmanagement_config->shouldReceive('getTestDefinitionTrackerId')->andReturn(146);
-        $expected_tracker = \Mockery::mock(\Tracker::class);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($expected_tracker);
+        $this->testmanagement_config->method('getTestDefinitionTrackerId')->willReturn(146);
+        $expected_tracker = $this->createMock(\Tracker::class);
+        $this->tracker_factory->method('getTrackerById')->willReturn($expected_tracker);
 
-        $expected_tracker->shouldReceive('userCanView')->andReturn(true);
+        $expected_tracker->method('userCanView')->willReturn(true);
 
-        $tracker = $this->retriever->getTestDefinitionTracker(\Mockery::mock(\Project::class), UserTestBuilder::aUser()->build());
+        $tracker = $this->retriever->getTestDefinitionTracker($this->createMock(\Project::class), UserTestBuilder::aUser()->build());
 
-        $this->assertSame($expected_tracker, $tracker);
+        self::assertSame($expected_tracker, $tracker);
     }
 
     public function testTestDefTrackerCannotBeRetrievedWhenTheUserCannotAccessIt(): void
     {
-        $this->testmanagement_config->shouldReceive('getTestDefinitionTrackerId')->andReturn(146);
-        $tracker = \Mockery::mock(\Tracker::class);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
+        $this->testmanagement_config->method('getTestDefinitionTrackerId')->willReturn(146);
+        $tracker = $this->createMock(\Tracker::class);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
 
-        $tracker->shouldReceive('userCanView')->andReturn(false);
+        $tracker->method('userCanView')->willReturn(false);
 
-        $this->assertNull(
-            $this->retriever->getTestDefinitionTracker(\Mockery::mock(\Project::class), UserTestBuilder::aUser()->build())
+        self::assertNull(
+            $this->retriever->getTestDefinitionTracker($this->createMock(\Project::class), UserTestBuilder::aUser()->build())
         );
     }
 
     public function testTestDefTrackerCannotBeRetrievedNotSetInTheTestManagementConfig(): void
     {
-        $this->testmanagement_config->shouldReceive('getTestDefinitionTrackerId')->andReturn(false);
+        $this->testmanagement_config->method('getTestDefinitionTrackerId')->willReturn(false);
 
-        $this->assertNull(
-            $this->retriever->getTestDefinitionTracker(\Mockery::mock(\Project::class), UserTestBuilder::aUser()->build())
+        self::assertNull(
+            $this->retriever->getTestDefinitionTracker($this->createMock(\Project::class), UserTestBuilder::aUser()->build())
         );
     }
 
     public function testTestDefTrackerCannotBeRetrievedWhenItDoesNotExist(): void
     {
-        $this->testmanagement_config->shouldReceive('getTestDefinitionTrackerId')->andReturn(404);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn(null);
+        $this->testmanagement_config->method('getTestDefinitionTrackerId')->willReturn(404);
+        $this->tracker_factory->method('getTrackerById')->willReturn(null);
 
-        $this->assertNull(
-            $this->retriever->getTestDefinitionTracker(\Mockery::mock(\Project::class), UserTestBuilder::aUser()->build())
+        self::assertNull(
+            $this->retriever->getTestDefinitionTracker($this->createMock(\Project::class), UserTestBuilder::aUser()->build())
         );
     }
 }

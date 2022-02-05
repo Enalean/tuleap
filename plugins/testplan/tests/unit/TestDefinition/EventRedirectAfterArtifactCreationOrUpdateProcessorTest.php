@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan\TestDefinition;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Artifact_Redirect;
 use Tracker_ArtifactFactory;
 use Tuleap\GlobalResponseMock;
@@ -31,37 +29,34 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactLinkUpdater
-     */
-    private $artifact_link_updater;
-    /**
-     * @var EventRedirectAfterArtifactCreationOrUpdateProcessor
-     */
-    private $processor;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
+     * @var \PHPUnit\Framework\MockObject\MockObject&\PFUser
      */
     private $user;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|RedirectParameterInjector
+     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    /**
+     * @var ArtifactLinkUpdater&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $artifact_link_updater;
+    /**
+     * @var RedirectParameterInjector&\PHPUnit\Framework\MockObject\MockObject
      */
     private $redirect_parameter_injector;
 
+    private EventRedirectAfterArtifactCreationOrUpdateProcessor $processor;
+
     public function setUp(): void
     {
-        $this->user = Mockery::mock(\PFUser::class);
+        $this->user = $this->createMock(\PFUser::class);
 
-        $this->artifact_factory            = Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->artifact_link_updater       = Mockery::mock(ArtifactLinkUpdater::class);
-        $this->redirect_parameter_injector = Mockery::mock(RedirectParameterInjector::class);
+        $this->artifact_factory            = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->artifact_link_updater       = $this->createMock(ArtifactLinkUpdater::class);
+        $this->redirect_parameter_injector = $this->createMock(RedirectParameterInjector::class);
 
         $this->processor = new EventRedirectAfterArtifactCreationOrUpdateProcessor(
             $this->artifact_factory,
@@ -74,12 +69,12 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
     {
         $request  = $this->aRequest([]);
         $redirect = new Tracker_Artifact_Redirect();
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->processor->process($request, $redirect, $artifact);
 
-        $this->assertEquals('', $redirect->base_url);
-        $this->assertEquals([], $redirect->query_parameters);
+        self::assertEquals('', $redirect->base_url);
+        self::assertEquals([], $redirect->query_parameters);
     }
 
     public function testItDoesNotDoAnythingIfThereIsNoMilestoneIdInTheRequest(): void
@@ -90,12 +85,12 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
             ]
         );
         $redirect = new Tracker_Artifact_Redirect();
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->processor->process($request, $redirect, $artifact);
 
-        $this->assertEquals('', $redirect->base_url);
-        $this->assertEquals([], $redirect->query_parameters);
+        self::assertEquals('', $redirect->base_url);
+        self::assertEquals([], $redirect->query_parameters);
     }
 
     public function testItDoesNothingIfBacklogItemCannotBeInstanciated(): void
@@ -108,18 +103,18 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         );
         $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $artifact       = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact       = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->artifact_factory
-            ->shouldReceive('getArtifactById')
+            ->expects(self::once())
+            ->method('getArtifactById')
             ->with("123")
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->processor->process($request, $redirect, $artifact);
 
-        $this->assertEquals('', $redirect->base_url);
-        $this->assertEquals([], $redirect->query_parameters);
+        self::assertEquals('', $redirect->base_url);
+        self::assertEquals([], $redirect->query_parameters);
     }
 
     public function testItDoesNothingIfBacklogItemDoesNotHaveAnArtifactLinkField(): void
@@ -132,32 +127,33 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         );
         $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $artifact       = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive(['getId' => 1001]);
+        $artifact       = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->method('getId')->willReturn(1001);
 
-        $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $backlog_item->shouldReceive('getId')->andReturn(123);
+        $backlog_item = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $backlog_item->method('getId')->willReturn(123);
         $this->artifact_factory
-            ->shouldReceive('getArtifactById')
+            ->expects(self::once())
+            ->method('getArtifactById')
             ->with("123")
-            ->once()
-            ->andReturn($backlog_item);
+            ->willReturn($backlog_item);
 
         $this->artifact_link_updater
-            ->shouldReceive('updateArtifactLinks')
+            ->expects(self::once())
+            ->method('updateArtifactLinks')
             ->with(
                 $this->user,
                 $backlog_item,
                 [1001],
                 [],
                 '_covered_by'
-            )->once()
-            ->andThrow(\Tracker_NoArtifactLinkFieldException::class);
+            )
+            ->willThrowException(new \Tracker_NoArtifactLinkFieldException());
 
         $this->processor->process($request, $redirect, $artifact);
 
-        $this->assertEquals('', $redirect->base_url);
-        $this->assertEquals([], $redirect->query_parameters);
+        self::assertEquals('', $redirect->base_url);
+        self::assertEquals([], $redirect->query_parameters);
     }
 
     public function testItDoesNothingIfBacklogItemCanotBeLinkedToNewArtifact(): void
@@ -170,27 +166,28 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         );
         $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $artifact       = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive(['getId' => 1001]);
+        $artifact       = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->method('getId')->willReturn(1001);
 
-        $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $backlog_item->shouldReceive('getId')->andReturn(123);
+        $backlog_item = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $backlog_item->method('getId')->willReturn(123);
         $this->artifact_factory
-            ->shouldReceive('getArtifactById')
+            ->expects(self::once())
+            ->method('getArtifactById')
             ->with("123")
-            ->once()
-            ->andReturn($backlog_item);
+            ->willReturn($backlog_item);
 
         $this->artifact_link_updater
-            ->shouldReceive('updateArtifactLinks')
+            ->expects(self::once())
+            ->method('updateArtifactLinks')
             ->with(
                 $this->user,
                 $backlog_item,
                 [1001],
                 [],
                 '_covered_by'
-            )->once()
-            ->andThrow(\Tracker_Exception::class);
+            )
+            ->willThrowException(new \Tracker_Exception());
         $GLOBALS['Response']
             ->expects(self::once())
             ->method('addFeedback')
@@ -198,8 +195,8 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
 
         $this->processor->process($request, $redirect, $artifact);
 
-        $this->assertEquals('', $redirect->base_url);
-        $this->assertEquals([], $redirect->query_parameters);
+        self::assertEquals('', $redirect->base_url);
+        self::assertEquals([], $redirect->query_parameters);
     }
 
     public function testItRedirectsToTestPlanOfTheMilestone(): void
@@ -212,39 +209,39 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         );
         $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $artifact       = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive([
-            'getId' => 1001,
-            'getTracker' => Mockery::mock(\Tracker::class)
-                ->shouldReceive([
-                    'getProject' => Mockery::mock(\Project::class)
-                        ->shouldReceive(['getUnixNameMixedCase' => 'my-project'])
-                        ->getMock(),
-                ])->getMock(),
-        ]);
+        $artifact       = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->method('getId')->willReturn(1001);
 
-        $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $backlog_item->shouldReceive('getId')->andReturn(123);
+        $tracker = $this->createMock(\Tracker::class);
+        $project = $this->createMock(\Project::class);
+
+        $project->method('getUnixNameMixedCase')->willReturn('my-project');
+        $tracker->method('getProject')->willReturn($project);
+        $artifact->method('getTracker')->willReturn($tracker);
+
+        $backlog_item = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $backlog_item->method('getId')->willReturn(123);
         $this->artifact_factory
-            ->shouldReceive('getArtifactById')
+            ->expects(self::once())
+            ->method('getArtifactById')
             ->with("123")
-            ->once()
-            ->andReturn($backlog_item);
+            ->willReturn($backlog_item);
 
         $this->artifact_link_updater
-            ->shouldReceive('updateArtifactLinks')
+            ->expects(self::once())
+            ->method('updateArtifactLinks')
             ->with(
                 $this->user,
                 $backlog_item,
                 [1001],
                 [],
                 '_covered_by'
-            )->once();
+            );
 
         $this->processor->process($request, $redirect, $artifact);
 
-        $this->assertEquals('/testplan/my-project/42/backlog_item/123/test/1001', $redirect->base_url);
-        $this->assertEquals([], $redirect->query_parameters);
+        self::assertEquals('/testplan/my-project/42/backlog_item/123/test/1001', $redirect->base_url);
+        self::assertEquals([], $redirect->query_parameters);
     }
 
     public function testItRedirectsToTestPlanOfTheMilestoneWhenABacklogItemIsEdited(): void
@@ -257,35 +254,30 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         );
         $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $artifact       = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive(
-            [
-                'getId'      => 123,
-                'getTracker' => Mockery::mock(\Tracker::class)
-                    ->shouldReceive(
-                        [
-                            'getProject' => Mockery::mock(\Project::class)
-                                ->shouldReceive(['getUnixNameMixedCase' => 'my-project'])
-                                ->getMock(),
-                        ]
-                    )->getMock(),
-            ]
-        );
+        $artifact       = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->method('getId')->willReturn(123);
 
-        $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $backlog_item->shouldReceive('getId')->andReturn(123);
+        $tracker = $this->createMock(\Tracker::class);
+        $project = $this->createMock(\Project::class);
+
+        $project->method('getUnixNameMixedCase')->willReturn('my-project');
+        $tracker->method('getProject')->willReturn($project);
+        $artifact->method('getTracker')->willReturn($tracker);
+
+        $backlog_item = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $backlog_item->method('getId')->willReturn(123);
         $this->artifact_factory
-            ->shouldReceive('getArtifactById')
+            ->expects(self::once())
+            ->method('getArtifactById')
             ->with("123")
-            ->once()
-            ->andReturn($backlog_item);
+            ->willReturn($backlog_item);
 
-        $this->artifact_link_updater->shouldNotReceive('updateArtifactLinks');
+        $this->artifact_link_updater->expects(self::never())->method('updateArtifactLinks');
 
         $this->processor->process($request, $redirect, $artifact);
 
-        $this->assertEquals('/testplan/my-project/42/backlog_item/123', $redirect->base_url);
-        $this->assertEquals([], $redirect->query_parameters);
+        self::assertEquals('/testplan/my-project/42/backlog_item/123', $redirect->base_url);
+        self::assertEquals([], $redirect->query_parameters);
     }
 
     public function testItInjectsRedirectParametersIfWeChooseToContinue(): void
@@ -298,36 +290,36 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         );
         $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_CONTINUE;
-        $artifact       = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive([
-            'getId' => 1001,
-            'getTracker' => Mockery::mock(\Tracker::class)
-                ->shouldReceive([
-                    'getProject' => Mockery::mock(\Project::class)
-                        ->shouldReceive(['getUnixNameMixedCase' => 'my-project'])
-                        ->getMock(),
-                ])->getMock(),
-        ]);
+        $artifact       = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->method('getId')->willReturn(1001);
 
-        $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $backlog_item->shouldReceive('getId')->andReturn(123);
+        $tracker = $this->createMock(\Tracker::class);
+        $project = $this->createMock(\Project::class);
+
+        $project->method('getUnixNameMixedCase')->willReturn('my-project');
+        $tracker->method('getProject')->willReturn($project);
+        $artifact->method('getTracker')->willReturn($tracker);
+
+        $backlog_item = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $backlog_item->method('getId')->willReturn(123);
         $this->artifact_factory
-            ->shouldReceive('getArtifactById')
+            ->expects(self::once())
+            ->method('getArtifactById')
             ->with("123")
-            ->once()
-            ->andReturn($backlog_item);
+            ->willReturn($backlog_item);
 
         $this->artifact_link_updater
-            ->shouldReceive('updateArtifactLinks')
+            ->expects(self::once())
+            ->method('updateArtifactLinks')
             ->with(
                 $this->user,
                 $backlog_item,
                 [1001],
                 [],
                 '_covered_by'
-            )->once();
+            );
 
-        $this->redirect_parameter_injector->shouldReceive('injectParameters')->with($redirect, "123", "42");
+        $this->redirect_parameter_injector->method('injectParameters')->with($redirect, "123", "42");
 
         $this->processor->process($request, $redirect, $artifact);
     }
@@ -342,44 +334,44 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         );
         $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY;
-        $artifact       = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive([
-            'getId' => 1001,
-            'getTracker' => Mockery::mock(\Tracker::class)
-                ->shouldReceive([
-                    'getProject' => Mockery::mock(\Project::class)
-                        ->shouldReceive(['getUnixNameMixedCase' => 'my-project'])
-                        ->getMock(),
-                ])->getMock(),
-        ]);
+        $artifact       = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->method('getId')->willReturn(1001);
 
-        $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $backlog_item->shouldReceive('getId')->andReturn(123);
+        $tracker = $this->createMock(\Tracker::class);
+        $project = $this->createMock(\Project::class);
+
+        $project->method('getUnixNameMixedCase')->willReturn('my-project');
+        $tracker->method('getProject')->willReturn($project);
+        $artifact->method('getTracker')->willReturn($tracker);
+
+        $backlog_item = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $backlog_item->method('getId')->willReturn(123);
         $this->artifact_factory
-            ->shouldReceive('getArtifactById')
+            ->expects(self::once())
+            ->method('getArtifactById')
             ->with("123")
-            ->once()
-            ->andReturn($backlog_item);
+            ->willReturn($backlog_item);
 
         $this->artifact_link_updater
-            ->shouldReceive('updateArtifactLinks')
+            ->expects(self::once())
+            ->method('updateArtifactLinks')
             ->with(
                 $this->user,
                 $backlog_item,
                 [1001],
                 [],
                 '_covered_by'
-            )->once();
+            );
 
         $this->processor->process($request, $redirect, $artifact);
 
-        $this->assertEquals('', $redirect->base_url);
-        $this->assertEquals([], $redirect->query_parameters);
+        self::assertEquals('', $redirect->base_url);
+        self::assertEquals([], $redirect->query_parameters);
     }
 
     private function aRequest(array $params): \Codendi_Request
     {
-        $request = new \Codendi_Request($params, \Mockery::spy(\ProjectManager::class));
+        $request = new \Codendi_Request($params, $this->createMock(\ProjectManager::class));
         $request->setCurrentUser($this->user);
 
         return $request;

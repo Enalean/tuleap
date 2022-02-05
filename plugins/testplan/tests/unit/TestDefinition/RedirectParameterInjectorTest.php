@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan\TestDefinition;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use TemplateRendererFactory;
 use Tracker;
 use Tuleap\GlobalLanguageMock;
@@ -33,42 +31,36 @@ use Tuleap\Tracker\TrackerColor;
 
 final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use GlobalResponseMock;
 
     /**
-     * @var RedirectParameterInjector
-     */
-    private $injector;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_ArtifactFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
      */
     private $artifact_factory;
     /**
-     * @var mixed
-     */
-    private $response;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tuleap\Tracker\Artifact\Artifact
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\Tracker\Artifact\Artifact
      */
     private $backlog_item;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\PFUser
+     */
+    private $user;
+
+    private mixed $response;
+    private RedirectParameterInjector $injector;
 
     protected function setUp(): void
     {
-        $this->artifact_factory = Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);
         $this->response         = $GLOBALS['Response'];
 
-        $this->backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->backlog_item->shouldReceive('getId')->andReturn(123);
-        $this->user = Mockery::mock(\PFUser::class);
+        $this->backlog_item = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->backlog_item->method('getId')->willReturn(123);
+        $this->user = $this->createMock(\PFUser::class);
 
-        $template_cache = \Mockery::mock(TemplateCache::class);
-        $template_cache->shouldReceive('getPath')->andReturnNull();
+        $template_cache = $this->createMock(TemplateCache::class);
+        $template_cache->method('getPath')->willReturn(null);
         $template_renderer_factory = new TemplateRendererFactory($template_cache);
 
         $this->injector = new RedirectParameterInjector(
@@ -80,12 +72,12 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotInjectAnythingIfThereIsNoBacklogItemIdInTheRequest(): void
     {
-        $request  = new \Codendi_Request([], \Mockery::spy(\ProjectManager::class));
+        $request  = new \Codendi_Request([], $this->createMock(\ProjectManager::class));
         $redirect = new \Tracker_Artifact_Redirect();
 
         $this->injector->injectAndInformUserAboutBacklogItemBeingCovered($request, $redirect);
 
-        $this->assertEquals([], $redirect->query_parameters);
+        self::assertEquals([], $redirect->query_parameters);
     }
 
     public function testItDoesNotInjectAnythingIfThereIsNoMilestoneIdInTheRequest(): void
@@ -94,13 +86,13 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'ttm_backlog_item_id' => "123",
             ],
-            \Mockery::spy(\ProjectManager::class)
+            $this->createMock(\ProjectManager::class)
         );
         $redirect = new \Tracker_Artifact_Redirect();
 
         $this->injector->injectAndInformUserAboutBacklogItemBeingCovered($request, $redirect);
 
-        $this->assertEquals([], $redirect->query_parameters);
+        self::assertEquals([], $redirect->query_parameters);
     }
 
     public function testItDoesNotInjectAnythingIfTheBacklogItemIsNotReadableByUser(): void
@@ -110,26 +102,24 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'ttm_backlog_item_id' => "123",
                 'ttm_milestone_id'    => "42",
             ],
-            \Mockery::spy(\ProjectManager::class)
+            $this->createMock(\ProjectManager::class)
         );
         $request->setCurrentUser($this->user);
 
         $redirect = new \Tracker_Artifact_Redirect();
 
         $this->artifact_factory
-            ->shouldReceive('getArtifactByIdUserCanView')
-            ->with($this->user, "123")
-            ->once()
-            ->andReturnNull();
-        $this->artifact_factory
-            ->shouldReceive('getArtifactByIdUserCanView')
-            ->with($this->user, '42')
-            ->once()
-            ->andReturn(Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class));
+            ->method('getArtifactByIdUserCanView')
+            ->willReturnMap(
+                [
+                    [$this->user, "123", null],
+                    [$this->user, "42", $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class)],
+                ],
+            );
 
         $this->injector->injectAndInformUserAboutBacklogItemBeingCovered($request, $redirect);
 
-        $this->assertEquals([], $redirect->query_parameters);
+        self::assertEquals([], $redirect->query_parameters);
     }
 
     public function testItDoesNotInjectAnythingIfTheMilestoneIsNotReadableByUser(): void
@@ -139,26 +129,24 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'ttm_backlog_item_id' => "123",
                 'ttm_milestone_id'    => "42",
             ],
-            \Mockery::spy(\ProjectManager::class)
+            $this->createMock(\ProjectManager::class)
         );
         $request->setCurrentUser($this->user);
 
         $redirect = new \Tracker_Artifact_Redirect();
 
         $this->artifact_factory
-            ->shouldReceive('getArtifactByIdUserCanView')
-            ->with($this->user, "123")
-            ->once()
-            ->andReturn(Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class));
-        $this->artifact_factory
-            ->shouldReceive('getArtifactByIdUserCanView')
-            ->with($this->user, '42')
-            ->once()
-            ->andReturnNull();
+            ->method('getArtifactByIdUserCanView')
+            ->willReturnMap(
+                [
+                    [$this->user, "42", null],
+                    [$this->user, "123", $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class)],
+                ],
+            );
 
         $this->injector->injectAndInformUserAboutBacklogItemBeingCovered($request, $redirect);
 
-        $this->assertEquals([], $redirect->query_parameters);
+        self::assertEquals([], $redirect->query_parameters);
     }
 
     /**
@@ -176,36 +164,35 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
                 ],
                 $request_parameters
             ),
-            \Mockery::spy(\ProjectManager::class)
+            $this->createMock(\ProjectManager::class)
         );
         $request->setCurrentUser($this->user);
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $milestone = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $milestone = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->artifact_factory
-            ->shouldReceive('getArtifactByIdUserCanView')
-            ->with($this->user, "123")
-            ->once()
-            ->andReturn($this->backlog_item);
-        $this->artifact_factory
-            ->shouldReceive('getArtifactByIdUserCanView')
-            ->with($this->user, '42')
-            ->once()
-            ->andReturn($milestone);
-        $this->backlog_item->shouldReceive('getUri')->andReturn('/plugins/tracker/?aid=123');
-        $this->backlog_item->shouldReceive('getTitle')->andReturn('My story');
-        $this->backlog_item->shouldReceive('getXref')->andReturn('story #123');
-        $backlog_item_tracker = Mockery::mock(Tracker::class);
-        $backlog_item_tracker->shouldReceive('getColor')->andReturn(TrackerColor::default());
-        $this->backlog_item->shouldReceive('getTracker')->andReturn($backlog_item_tracker);
-        $milestone->shouldReceive('getUri')->andReturn('/plugins/tracker/?aid=42');
-        $milestone->shouldReceive('getTitle')->andReturn('Some milestone');
-        $milestone->shouldReceive('getXref')->andReturn('rel #42');
-        $milestone_tracker = Mockery::mock(Tracker::class);
-        $milestone_tracker->shouldReceive('getColor')->andReturn(TrackerColor::default());
-        $milestone->shouldReceive('getTracker')->andReturn($milestone_tracker);
+            ->method('getArtifactByIdUserCanView')
+            ->willReturnMap(
+                [
+                    [$this->user, "123", $this->backlog_item],
+                    [$this->user, "42", $milestone],
+                ],
+            );
+
+        $this->backlog_item->method('getUri')->willReturn('/plugins/tracker/?aid=123');
+        $this->backlog_item->method('getTitle')->willReturn('My story');
+        $this->backlog_item->method('getXref')->willReturn('story #123');
+        $backlog_item_tracker = $this->createMock(Tracker::class);
+        $backlog_item_tracker->method('getColor')->willReturn(TrackerColor::default());
+        $this->backlog_item->method('getTracker')->willReturn($backlog_item_tracker);
+        $milestone->method('getUri')->willReturn('/plugins/tracker/?aid=42');
+        $milestone->method('getTitle')->willReturn('Some milestone');
+        $milestone->method('getXref')->willReturn('rel #42');
+        $milestone_tracker = $this->createMock(Tracker::class);
+        $milestone_tracker->method('getColor')->willReturn(TrackerColor::default());
+        $milestone->method('getTracker')->willReturn($milestone_tracker);
 
         $this->response
             ->expects(self::once())
@@ -218,7 +205,7 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->injector->injectAndInformUserAboutBacklogItemBeingCovered($request, $redirect);
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'ttm_backlog_item_id' => "123",
                 'ttm_milestone_id'    => "42",

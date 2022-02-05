@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Planning_ArtifactMilestone;
 use Planning_Milestone;
 use Planning_MilestonePaneFactory;
@@ -36,55 +35,53 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 
 final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
+    private TestPlanPresenterBuilder $builder;
+
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Planning_ArtifactMilestone
+     * @var \PHPUnit\Framework\MockObject\MockObject&Planning_ArtifactMilestone
      */
     private $milestone;
+
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Config
+     * @var \PHPUnit\Framework\MockObject\MockObject&Config
      */
     private $testmanagement_config;
+
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerFactory
      */
     private $tracker_factory;
-    /**
-     * @var TestPlanPresenterBuilder
-     */
-    private $builder;
 
     protected function setUp(): void
     {
         \ForgeConfig::set('sys_name', 'Tuleap');
-        $pane_factory = \Mockery::mock(Planning_MilestonePaneFactory::class);
-        $pane_factory->shouldReceive('getPanePresenterData')->andReturn(\Mockery::mock(PanePresenterData::class));
+        $pane_factory = $this->createMock(Planning_MilestonePaneFactory::class);
+        $pane_factory->method('getPanePresenterData')->willReturn($this->createMock(PanePresenterData::class));
 
-        $this->milestone = \Mockery::mock(Planning_ArtifactMilestone::class);
-        $artifact        = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn('999');
-        $artifact->shouldReceive('getTitle')->andReturn('Milestone title');
-        $this->milestone->shouldReceive('getArtifact')->andReturn($artifact);
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn('102');
-        $project->shouldReceive('getPublicName')->andReturn('Project public name');
-        $this->milestone->shouldReceive('getProject')->andReturn($project);
-        $this->milestone->shouldReceive('getGroupId')->andReturn(102);
-        $this->milestone->shouldReceive('getPlanningId')->andReturn(111);
-        $this->milestone->shouldReceive('getArtifactId')->andReturn(999);
-        $this->milestone->shouldReceive('getParent')->andReturnNull()->byDefault();
+        $this->milestone = $this->createMock(Planning_ArtifactMilestone::class);
+        $artifact        = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->method('getId')->willReturn('999');
+        $artifact->method('getTitle')->willReturn('Milestone title');
+        $this->milestone->method('getArtifact')->willReturn($artifact);
+        $project = $this->createMock(\Project::class);
+        $project->method('getID')->willReturn('102');
+        $project->method('getPublicName')->willReturn('Project public name');
+        $this->milestone->method('getProject')->willReturn($project);
+        $this->milestone->method('getGroupId')->willReturn(102);
+        $this->milestone->method('getPlanningId')->willReturn(111);
+        $this->milestone->method('getArtifactId')->willReturn(999);
 
-        $this->testmanagement_config       = \Mockery::mock(Config::class);
-        $this->tracker_factory             = \Mockery::mock(TrackerFactory::class);
-        $test_definition_tracker_retriever = \Mockery::mock(TestPlanTestDefinitionTrackerRetriever::class);
-        $test_def_tracker                  = \Mockery::mock(\Tracker::class);
-        $test_def_tracker->shouldReceive('getId')->andReturn(146);
-        $test_def_tracker->shouldReceive('getName')->andReturn('Test Def');
-        $test_definition_tracker_retriever->shouldReceive('getTestDefinitionTracker')->andReturn($test_def_tracker);
-        $user_helper = \Mockery::mock(\UserHelper::class);
-        $user_helper->shouldReceive('getDisplayNameFromUser')->andReturn('User Name');
+        $this->testmanagement_config       = $this->createMock(Config::class);
+        $this->tracker_factory             = $this->createMock(TrackerFactory::class);
+        $test_definition_tracker_retriever = $this->createMock(TestPlanTestDefinitionTrackerRetriever::class);
+        $test_def_tracker                  = $this->createMock(\Tracker::class);
+        $test_def_tracker->method('getId')->willReturn(146);
+        $test_def_tracker->method('getName')->willReturn('Test Def');
+        $test_definition_tracker_retriever->method('getTestDefinitionTracker')->willReturn($test_def_tracker);
+        $user_helper = $this->createMock(\UserHelper::class);
+        $user_helper->method('getDisplayNameFromUser')->willReturn('User Name');
 
         $type_presenter_factory = new class implements IRetrieveAllUsableTypesInProject {
             public function getAllUsableTypesInProject(\Project $project): array
@@ -107,10 +104,11 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testBuildsPresenterWithAUserAbleToCreateACampaign(): void
     {
-        $this->testmanagement_config->shouldReceive('getCampaignTrackerId')->andReturn(145);
-        $tracker = \Mockery::mock(\Tracker::class);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
-        $tracker->shouldReceive('userCanSubmitArtifact')->andReturn(true);
+        $this->milestone->method('getParent')->willReturn(null);
+        $this->testmanagement_config->method('getCampaignTrackerId')->willReturn(145);
+        $tracker = $this->createMock(\Tracker::class);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
+        $tracker->method('userCanSubmitArtifact')->willReturn(true);
 
         $presenter = $this->builder->getPresenter(
             $this->milestone,
@@ -127,12 +125,12 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $parent_artifact = $this->createMock(Planning_Milestone::class);
         $parent_artifact->method('getArtifactTitle')->willReturn("Parent 01");
 
-        $this->milestone->shouldReceive('getParent')->andReturn($parent_artifact);
+        $this->milestone->method('getParent')->willReturn($parent_artifact);
 
-        $this->testmanagement_config->shouldReceive('getCampaignTrackerId')->andReturn(145);
-        $tracker = \Mockery::mock(\Tracker::class);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
-        $tracker->shouldReceive('userCanSubmitArtifact')->andReturn(true);
+        $this->testmanagement_config->method('getCampaignTrackerId')->willReturn(145);
+        $tracker = $this->createMock(\Tracker::class);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
+        $tracker->method('userCanSubmitArtifact')->willReturn(true);
 
         $presenter = $this->builder->getPresenter(
             $this->milestone,
@@ -146,10 +144,11 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testBuildsPresenterWithAUserThatDoesNotHaveEnoughPermissionsToCreateACampaign(): void
     {
-        $this->testmanagement_config->shouldReceive('getCampaignTrackerId')->andReturn(145);
-        $tracker = \Mockery::mock(\Tracker::class);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
-        $tracker->shouldReceive('userCanSubmitArtifact')->andReturn(false);
+        $this->milestone->method('getParent')->willReturn(null);
+        $this->testmanagement_config->method('getCampaignTrackerId')->willReturn(145);
+        $tracker = $this->createMock(\Tracker::class);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
+        $tracker->method('userCanSubmitArtifact')->willReturn(false);
 
         $presenter = $this->builder->getPresenter(
             $this->milestone,
@@ -158,12 +157,13 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             101,
         );
 
-        $this->assertFalse($presenter->user_can_create_campaign);
+        self::assertFalse($presenter->user_can_create_campaign);
     }
 
     public function testBuildsPresenterWithATestManagementConfigWithoutACampaignTrackerID(): void
     {
-        $this->testmanagement_config->shouldReceive('getCampaignTrackerId')->andReturn(false);
+        $this->milestone->method('getParent')->willReturn(null);
+        $this->testmanagement_config->method('getCampaignTrackerId')->willReturn(false);
 
         $presenter = $this->builder->getPresenter(
             $this->milestone,
@@ -172,13 +172,14 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             101,
         );
 
-        $this->assertFalse($presenter->user_can_create_campaign);
+        self::assertFalse($presenter->user_can_create_campaign);
     }
 
     public function testBuildsPresenterWhenTheCampaignTrackerCannotBeInstantiated(): void
     {
-        $this->testmanagement_config->shouldReceive('getCampaignTrackerId')->andReturn(145);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn(null);
+        $this->milestone->method('getParent')->willReturn(null);
+        $this->testmanagement_config->method('getCampaignTrackerId')->willReturn(145);
+        $this->tracker_factory->method('getTrackerById')->willReturn(null);
 
         $presenter = $this->builder->getPresenter(
             $this->milestone,
@@ -187,12 +188,13 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             101,
         );
 
-        $this->assertFalse($presenter->user_can_create_campaign);
+        self::assertFalse($presenter->user_can_create_campaign);
     }
 
     public function testItExportsArtifactLinkTypesJsonEncoded(): void
     {
-        $this->testmanagement_config->shouldReceive('getCampaignTrackerId')->andReturn(false);
+        $this->milestone->method('getParent')->willReturn(null);
+        $this->testmanagement_config->method('getCampaignTrackerId')->willReturn(false);
         $presenter = $this->builder->getPresenter(
             $this->milestone,
             UserTestBuilder::aUser()->build(),
@@ -200,7 +202,7 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             101,
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             '[{"reverse_label":"Parent","forward_label":"Child","shortname":"_is_child","is_system":true,"is_visible":true}]',
             $presenter->artifact_links_types
         );
