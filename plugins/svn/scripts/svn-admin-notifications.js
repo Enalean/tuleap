@@ -98,7 +98,8 @@ import {
             add_button.classList.remove("svn-notifications-add-hidden");
         }
 
-        function showEditMode() {
+        function showEditMode(event) {
+            event.preventDefault();
             hideEditMode();
 
             var tr = this.parentNode.parentNode.parentNode,
