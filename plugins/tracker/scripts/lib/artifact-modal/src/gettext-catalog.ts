@@ -67,3 +67,4 @@ export const getFieldDateRequiredAndEmptyMessage = (): string =>
     gettextCatalog.getString("Please select a date");
 export const getEmptyCrossReferencesCollectionText = (): string =>
     gettextCatalog.getString("References list is empty.");
+export const getDefaultLinkTypeLabel = (): string => gettextCatalog.getString("Linked to");

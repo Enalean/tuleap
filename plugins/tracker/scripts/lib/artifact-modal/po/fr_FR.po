@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-01-25 18:02+0100\n"
+"PO-Revision-Date: 2022-02-07 10:52+0100\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -98,6 +98,9 @@ msgstr "Groupes de champs cachés :"
 
 msgid "Keep the file"
 msgstr "Garder le fichier"
+
+msgid "Linked to"
+msgstr "Lié à"
 
 msgid "Mark for removal"
 msgstr "Marquer pour suppression"

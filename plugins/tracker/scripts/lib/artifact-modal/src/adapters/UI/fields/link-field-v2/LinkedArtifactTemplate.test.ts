@@ -60,6 +60,11 @@ describe(`LinkedArtifactTemplate`, () => {
                     status: "Open",
                     is_open: true,
                     tracker: { color_name: "red-wine" },
+                    link_type: {
+                        shortname: "_is_child",
+                        direction: "reverse",
+                        label: "Parent",
+                    },
                 }),
                 false
             ),
@@ -74,6 +79,11 @@ describe(`LinkedArtifactTemplate`, () => {
                     status: "Closed",
                     is_open: false,
                     tracker: { color_name: "surf-green" },
+                    link_type: {
+                        shortname: "",
+                        direction: "forward",
+                        label: "",
+                    },
                 }),
                 true
             ),
@@ -86,13 +96,17 @@ describe(`LinkedArtifactTemplate`, () => {
         const xref = target.querySelector("[data-test=artifact-xref]");
         const title = target.querySelector("[data-test=artifact-title]");
         const status = target.querySelector("[data-test=artifact-status]");
+        const type = target.querySelector("[data-test=artifact-link-type]");
+        const expected_type =
+            presenter.link_type.shortname === "" ? "Linked to" : presenter.link_type.label;
 
         if (
             !(row instanceof HTMLElement) ||
             !(link instanceof HTMLAnchorElement) ||
             !(xref instanceof HTMLElement) ||
             !(title instanceof HTMLElement) ||
-            !(status instanceof HTMLElement)
+            !(status instanceof HTMLElement) ||
+            !(type instanceof HTMLElement)
         ) {
             throw new Error("An expected element has not been found in template");
         }
@@ -104,6 +118,7 @@ describe(`LinkedArtifactTemplate`, () => {
         expect(xref.textContent?.trim()).toBe(presenter.xref);
         expect(title.textContent?.trim()).toBe(presenter.title);
         expect(status.textContent?.trim()).toBe(presenter.status);
+        expect(type.textContent?.trim()).toBe(expected_type);
 
         expect(row.classList.contains("link-field-table-row-muted")).toBe(!presenter.is_open);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(!presenter.is_open);
