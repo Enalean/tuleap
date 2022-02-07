@@ -24,6 +24,7 @@ CREATE TABLE plugin_oauth2_server_app(
     redirect_endpoint TEXT NOT NULL,
     verifier VARCHAR(255) NOT NULL,
     use_pkce BOOLEAN NOT NULL,
+    app_type VARCHAR(255) NOT NULL DEFAULT 'plugin_oauth2',
     INDEX idx_project_id(project_id)
 ) ENGINE=InnoDB;
 

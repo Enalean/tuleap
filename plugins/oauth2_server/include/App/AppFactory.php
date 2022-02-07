@@ -65,9 +65,15 @@ class AppFactory
     public function getAppsForProject(\Project $project): array
     {
         $apps = [];
-        $rows = $this->app_dao->searchByProject($project);
+        $rows = $this->app_dao->searchByProject($project, OAuth2App::PLUGIN_APP);
         foreach ($rows as $row) {
-            $apps[] = new OAuth2App($row['id'], $row['name'], $row['redirect_endpoint'], (bool) $row['use_pkce'], $project);
+            $apps[] = new OAuth2App(
+                $row['id'],
+                $row['name'],
+                $row['redirect_endpoint'],
+                (bool) $row['use_pkce'],
+                $project
+            );
         }
         return $apps;
     }
@@ -78,9 +84,15 @@ class AppFactory
     public function getSiteLevelApps(): array
     {
         $apps = [];
-        $rows = $this->app_dao->searchSiteLevelApps();
+        $rows = $this->app_dao->searchSiteLevelApps(OAuth2App::PLUGIN_APP);
         foreach ($rows as $row) {
-            $apps[] = new OAuth2App($row['id'], $row['name'], $row['redirect_endpoint'], (bool) $row['use_pkce'], null);
+            $apps[] = new OAuth2App(
+                $row['id'],
+                $row['name'],
+                $row['redirect_endpoint'],
+                (bool) $row['use_pkce'],
+                null,
+            );
         }
         return $apps;
     }
@@ -91,7 +103,7 @@ class AppFactory
     public function getAppsAuthorizedByUser(\PFUser $user): array
     {
         $apps = [];
-        $rows = $this->app_dao->searchAuthorizedAppsByUser($user);
+        $rows = $this->app_dao->searchAuthorizedAppsByUser($user, OAuth2App::PLUGIN_APP);
         foreach ($rows as $row) {
             $project = null;
             if ($row['project_id'] !== null) {

@@ -57,6 +57,10 @@ final class NewOAuth2App
      * @psalm-readonly
      */
     private $use_pkce;
+    /**
+     * @psalm-readonly
+     */
+    private string $app_type;
 
     private function __construct(
         string $name,
@@ -65,6 +69,7 @@ final class NewOAuth2App
         string $hashed_secret,
         ?\Project $project,
         bool $use_pkce,
+        string $app_type,
     ) {
         $this->name              = $name;
         $this->redirect_endpoint = $redirect_endpoint;
@@ -72,6 +77,7 @@ final class NewOAuth2App
         $this->hashed_secret     = $hashed_secret;
         $this->project           = $project;
         $this->use_pkce          = $use_pkce;
+        $this->app_type          = $app_type;
     }
 
     /**
@@ -83,8 +89,9 @@ final class NewOAuth2App
         bool $use_pkce,
         \Project $project,
         SplitTokenVerificationStringHasher $hasher,
+        string $app_type,
     ): self {
-        return self::fromAppData($name, $redirect_endpoint, $use_pkce, $project, $hasher);
+        return self::fromAppData($name, $redirect_endpoint, $use_pkce, $project, $hasher, $app_type);
     }
 
     /**
@@ -95,8 +102,9 @@ final class NewOAuth2App
         string $redirect_endpoint,
         bool $use_pkce,
         SplitTokenVerificationStringHasher $hasher,
+        string $app_type,
     ): self {
-        return self::fromAppData($name, $redirect_endpoint, $use_pkce, null, $hasher);
+        return self::fromAppData($name, $redirect_endpoint, $use_pkce, null, $hasher, $app_type);
     }
 
     /**
@@ -108,6 +116,7 @@ final class NewOAuth2App
         bool $use_pkce,
         ?\Project $project,
         SplitTokenVerificationStringHasher $hasher,
+        string $app_type,
     ): self {
         $is_data_valid = self::isAppDataValid($name, $redirect_endpoint);
 
@@ -123,7 +132,8 @@ final class NewOAuth2App
             $secret,
             $hasher->computeHash($secret),
             $project,
-            $use_pkce
+            $use_pkce,
+            $app_type
         );
     }
 
@@ -182,5 +192,10 @@ final class NewOAuth2App
     public function isUsingPKCE(): bool
     {
         return $this->use_pkce;
+    }
+
+    public function getAppType(): string
+    {
+        return $this->app_type;
     }
 }
