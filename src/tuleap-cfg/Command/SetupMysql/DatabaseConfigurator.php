@@ -45,10 +45,11 @@ final class DatabaseConfigurator
     {
         $db = $this->connection_manager->getDBWithoutDBName(
             $output,
-            $db_params->host,
-            $db_params->port,
-            $db_params->ssl_mode,
-            $db_params->ca_path,
+            \ForgeConfig::get(DBConfig::CONF_HOST),
+            \ForgeConfig::get(DBConfig::CONF_PORT),
+            \ForgeConfig::getStringAsBool(DBConfig::CONF_ENABLE_SSL),
+            \ForgeConfig::getStringAsBool(DBConfig::CONF_SSL_VERIFY_CERT),
+            \ForgeConfig::get(DBConfig::CONF_SSL_CA),
             $db_params->admin_user,
             $db_params->admin_password,
         );
@@ -63,35 +64,37 @@ final class DatabaseConfigurator
 
         $db->run('FLUSH PRIVILEGES');
 
-        $this->writeDatabaseIncFile($db_params, $base_directory);
+        $this->writeDatabaseIncFile($db_params->azure_prefix, $base_directory);
     }
 
-    /**
-     * @psalm-param value-of<ConnectionManagerInterface::ALLOWED_SSL_MODES> $ssl_mode
-     */
     public function initializeDatabase(
         SymfonyStyle $output,
         DBWrapperInterface $db,
-        DBSetupParameters $db_params,
+        string $dbname,
+        string $grant_hostname,
     ): int {
-        if (! $db_params->hasTuleapCredentials()) {
+        $dbuser = \ForgeConfig::get(DBConfig::CONF_DBUSER);
+        $dbpwd  = \ForgeConfig::get(DBConfig::CONF_DBPASSWORD);
+
+        if (! $dbuser || ! $dbpwd) {
             throw new \Exception('Tuleap credentials are missing, cannot initialize database');
         }
-        $existing_db = $db->single(sprintf('SHOW DATABASES LIKE "%s"', $db->escapeIdentifier($db_params->dbname, false)));
+
+        $existing_db = $db->single(sprintf('SHOW DATABASES LIKE "%s"', $db->escapeIdentifier($dbname, false)));
         if ($existing_db) {
-            $output->writeln(sprintf('<info>Database %s already exists</info>', $db_params->dbname));
+            $output->writeln(sprintf('<info>Database %s already exists</info>', $dbname));
             return self::DB_ALREADY_INIT;
         } else {
-            $output->writeln(sprintf('<info>Create database %s</info>', $db_params->dbname));
-            $db->run(sprintf('CREATE DATABASE %s DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci', $db->escapeIdentifier($db_params->dbname)));
+            $output->writeln(sprintf('<info>Create database %s</info>', $dbname));
+            $db->run(sprintf('CREATE DATABASE %s DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci', $db->escapeIdentifier($dbname)));
         }
 
-        $output->writeln(sprintf('<info>Grant privileges on %s to %s</info>', $db_params->dbname, $db_params->tuleap_user));
-        $this->createUser($db, $db_params->tuleap_user, $db_params->tuleap_password, $db_params->grant_hostname);
+        $output->writeln(sprintf('<info>Grant privileges on %s to %s</info>', $dbname, $dbuser));
+        $this->createUser($db, $dbuser, $dbpwd, $grant_hostname);
         $db->run(sprintf(
             'GRANT ALL PRIVILEGES ON %s.* TO %s',
-            $db->escapeIdentifier($db_params->dbname),
-            $this->quoteDbUser($db_params->tuleap_user, $db_params->grant_hostname),
+            $db->escapeIdentifier($dbname),
+            $this->quoteDbUser($dbuser, $grant_hostname),
         ));
         return self::DB_FRESH;
     }
@@ -101,17 +104,18 @@ final class DatabaseConfigurator
         DBWrapperInterface $db,
         DBSetupParameters $db_params,
     ): void {
-        if (! $db_params->hasTuleapCredentials()) {
+        $dbname = \ForgeConfig::get(DBConfig::CONF_DBNAME);
+        if (! $dbname || ! \ForgeConfig::get(DBConfig::CONF_DBPASSWORD)) {
             return;
         }
-        $db_status = $this->initializeDatabase($output, $db, $db_params);
+        $db_status = $this->initializeDatabase($output, $db, $dbname, $db_params->grant_hostname);
         if ($db_status === self::DB_ALREADY_INIT) {
             return;
         }
         if (! $db_params->canSetup()) {
             return;
         }
-        $db->run('USE ' . $db_params->dbname);
+        $db->run('USE ' . $dbname);
         $this->loadInitValues($db, $db_params->site_admin_password, $db_params->tuleap_fqdn);
     }
 
@@ -194,16 +198,16 @@ final class DatabaseConfigurator
     }
 
     public function writeDatabaseIncFile(
-        DBSetupParameters $db_params,
+        string $azure_prefix,
         string $base_directory = '/',
     ): int {
-        if (! $db_params->hasTuleapCredentials()) {
+        if (! \ForgeConfig::get(DBConfig::CONF_DBPASSWORD)) {
             return 0;
         }
 
-        $user = $db_params->tuleap_user;
-        if ($db_params->azure_prefix !== '') {
-            $user = sprintf('%s@%s', $db_params->tuleap_user, $db_params->azure_prefix);
+        $user = \ForgeConfig::get(DBConfig::CONF_DBUSER);
+        if ($azure_prefix !== '') {
+            $user = sprintf('%s@%s', \ForgeConfig::get(DBConfig::CONF_DBUSER), $azure_prefix);
         }
 
         $conf_string = '<?php ' . PHP_EOL;
@@ -211,23 +215,14 @@ final class DatabaseConfigurator
         $reflected_class = new ReflectionClass(DBConfig::class);
         $constants       = $reflected_class->getReflectionConstants();
 
-        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_HOST, $db_params->host);
-        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_PORT, $db_params->port);
-        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_DBNAME, $db_params->dbname);
+        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_HOST);
+        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_PORT);
+        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_DBNAME);
         $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_DBUSER, $user);
-        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_DBPASSWORD, $db_params->tuleap_password);
-        if ($db_params->ssl_mode === ConnectionManagerInterface::SSL_NO_SSL) {
-            $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_ENABLE_SSL, '0');
-            $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_SSL_VERIFY_CERT, '0');
-        } else {
-            $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_ENABLE_SSL, '1');
-            if ($db_params->ssl_mode === ConnectionManagerInterface::SSL_VERIFY_CA) {
-                $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_SSL_VERIFY_CERT, '1');
-            } else {
-                $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_SSL_VERIFY_CERT, '0');
-            }
-        }
-        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_SSL_CA, $db_params->ca_path);
+        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_DBPASSWORD);
+        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_ENABLE_SSL);
+        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_SSL_VERIFY_CERT);
+        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_SSL_CA);
 
         $target_file = $base_directory . '/etc/tuleap/conf/database.inc';
         if (! file_exists($target_file)) {
@@ -246,10 +241,11 @@ final class DatabaseConfigurator
     /**
      * @param \ReflectionClassConstant[]  $constants
      */
-    private function getVariableForConfigFile(array $constants, string $constant_value, mixed $value): string
+    private function getVariableForConfigFile(array $constants, string $constant_value, mixed $override_value = null): string
     {
         $var     = '';
         $comment = '';
+        $value   = $override_value ?? \ForgeConfig::get($constant_value);
         foreach ($constants as $constant) {
             if ($constant->getValue() === $constant_value) {
                 foreach ($constant->getAttributes() as $attribute) {

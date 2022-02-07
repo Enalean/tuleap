@@ -141,7 +141,12 @@ class ForgeConfig
         return $default;
     }
 
-    public static function exists($name)
+    public static function getStringAsBool(string $name): bool
+    {
+        return self::$conf_stack[0][$name] === \Tuleap\Config\ConfigKeyLegacyBool::TRUE;
+    }
+
+    public static function exists($name): bool
     {
         return isset(self::$conf_stack[0][$name]);
     }

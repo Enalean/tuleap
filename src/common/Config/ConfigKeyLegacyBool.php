@@ -34,15 +34,18 @@ namespace Tuleap\Config;
 #[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
 final class ConfigKeyLegacyBool implements ConfigKeyType
 {
+    public const TRUE  = '1';
+    public const FALSE = '0';
+
     public ?string $default_value = null;
 
     public function __construct(?bool $value)
     {
         if ($value !== null) {
             if ($value === true) {
-                $this->default_value = '1';
+                $this->default_value = self::TRUE;
             } else {
-                $this->default_value = '0';
+                $this->default_value = self::FALSE;
             }
         }
     }
@@ -57,7 +60,7 @@ final class ConfigKeyLegacyBool implements ConfigKeyType
 
     public function getSerializedRepresentation(string $name, string|int|bool $value): string
     {
-        if (! is_string($value) && ! in_array($value, ['1', '0'], true)) {
+        if (! is_string($value) && ! in_array($value, [self::TRUE, self::FALSE], true)) {
             throw new \LogicException('Cannot accept non strinb/bool values');
         }
         return sprintf('$%s = \'%s\';%s', $name, $value, PHP_EOL);
