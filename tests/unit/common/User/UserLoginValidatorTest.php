@@ -87,7 +87,7 @@ class UserLoginValidatorTest extends TestCase
 
         $GLOBALS['Response']->method("addFeedback")->with(
             "warning",
-            'Your old Tuleap login was not was not valid against the configuration of your platform. It will be changed to "tlp-666". If you use Ldap, it will not change your ldap login.'
+            $this->stringContains('tlp-666')
         );
         $this->user_login_validator->validateUserLogin($user);
     }
