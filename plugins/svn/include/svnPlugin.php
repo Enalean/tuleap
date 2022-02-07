@@ -242,7 +242,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function exportXmlProject(ExportXmlProject $event): void
     {
-        if (! isset($event->getOptions()['all']) || $event->getOptions()['all'] === false) {
+        if (! $event->shouldExportAllData()) {
             return;
         }
 

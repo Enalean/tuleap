@@ -114,6 +114,7 @@ use Tuleap\Platform\Banner\BannerRetriever;
 use Tuleap\Platform\Banner\PlatformBannerAdministrationController;
 use Tuleap\Project\Admin\Categories;
 use Tuleap\Project\Admin\Export\ProjectExportController;
+use Tuleap\Project\Admin\Export\ProjectXmlExportController;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
 use Tuleap\Project\Admin\ProjectUGroup\MemberAdditionController;
@@ -906,6 +907,26 @@ class RouteCollector
         );
     }
 
+    public static function getProjectXmlExportController(): ProjectXmlExportController
+    {
+        return new ProjectXmlExportController(
+            new BinaryFileResponseBuilder(
+                HTTPFactoryBuilder::responseFactory(),
+                HTTPFactoryBuilder::streamFactory()
+            ),
+            ProjectRetriever::buildSelf(),
+            new ProjectAdministratorChecker(),
+            new ProjectAccessChecker(
+                new RestrictedUserCanAccessProjectVerifier(),
+                EventManager::instance()
+            ),
+            \UserManager::instance(),
+            new SapiEmitter(),
+            new \Tuleap\Http\Server\SessionWriteCloseMiddleware(),
+            new \Tuleap\Http\Server\ServiceInstrumentationMiddleware('xml-export')
+        );
+    }
+
     public function collect(FastRoute\RouteCollector $r)
     {
         $r->get('/', [self::class, 'getSlash']);
@@ -944,6 +965,7 @@ class RouteCollector
 
             $r->get('/references', [self::class, 'getReferencesController']);
 
+            $r->get('/export/xml', [self::class, 'getProjectXmlExportController']);
             $r->get('/export', [self::class, 'getProjectExportController']);
         });
 

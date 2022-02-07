@@ -108,19 +108,20 @@ if (isset($arguments['x'])) {
     $display_xml = true;
 }
 
-$options = [];
+$extra_options = [];
 if (isset($arguments['t'])) {
-    $options['tracker_id'] = (int) $arguments['t'];
+    $extra_options['tracker_id'] = (int) $arguments['t'];
 }
 
-$options['force'] = isset($arguments['f']);
-$options['all']   = false;
-if (isset($arguments['all'])) {
-    $options['all'] = true;
-}
+$bypass_threshold = isset($arguments['f']);
+$options          = new Export\ExportOptions(
+    isset($arguments['all']) ? Export\ExportOptions::MODE_ALL : "",
+    $bypass_threshold,
+    $extra_options,
+);
 
 try {
-    $project =  ProjectManager::instance()->getValidProjectByShortNameOrId($project_id);
+    $project = ProjectManager::instance()->getValidProjectByShortNameOrId($project_id);
 
     $rng_validator    = new XML_RNGValidator();
     $users_collection = new UserXMLExportedCollection($rng_validator, new XML_SimpleXMLCDATAFactory());

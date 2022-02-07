@@ -32,6 +32,7 @@ use ProjectXMLExporter;
 use Psr\Log\LoggerInterface;
 use Tuleap\Dashboard\Project\DashboardXMLExporter;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
+use Tuleap\Project\XML\Export\ExportOptions;
 use Tuleap\Test\Builders as B;
 use UGroupManager;
 use UserManager;
@@ -65,7 +66,13 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends \Tuleap\Test\PHPUnit
         $this->ugroup_manager = M::spy(UGroupManager::class);
         $xml_validator        = new XML_RNGValidator();
         $user_xml_exporter    = new UserXMLExporter(M::spy(UserManager::class), M::spy(UserXMLExportedCollection::class));
-        $this->project        = M::spy(Project::class, ['getPublicName' => 'Project01', 'isActive' => true]);
+        $this->project        = M::spy(Project::class, [
+            'getPublicName'  => 'Project01',
+            'isActive'       => true,
+            'getUnixName'    => 'project01',
+            'getDescription' => 'Project 01',
+            'getAccess'      => Project::ACCESS_PRIVATE,
+        ]);
         $this->synch_detector = M::mock(SynchronizedProjectMembershipDetector::class);
 
         $this->xml_exporter = new ProjectXMLExporter(
@@ -78,9 +85,7 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends \Tuleap\Test\PHPUnit
             M::spy(LoggerInterface::class)
         );
 
-        $this->options    = [
-            'tracker_id' => 10,
-        ];
+        $this->options    = new ExportOptions("", false, ['tracker_id' => 10]);
         $this->export_dir = "__fixtures";
 
         $this->archive = M::spy(\Tuleap\Project\XML\Export\ArchiveInterface::class);
@@ -96,16 +101,18 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends \Tuleap\Test\PHPUnit
         $project_ugroup_project_admins = M::spy(
             ProjectUGroup::class,
             [
-                'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_ADMIN],
-                'getMembers' => [$user_1],
+                'getNormalizedName'        => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_ADMIN],
+                'getMembers'               => [$user_1],
+                'getTranslatedDescription' => 'Project admin',
             ]
         );
 
         $project_ugroup_project_members = M::spy(
             ProjectUGroup::class,
             [
-                'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
-                'getMembers' => [$user_1],
+                'getNormalizedName'        => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
+                'getMembers'               => [$user_1],
+                'getTranslatedDescription' => 'Project members',
             ]
         );
 
@@ -134,16 +141,18 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends \Tuleap\Test\PHPUnit
         $project_ugroup_project_admins = M::spy(
             ProjectUGroup::class,
             [
-                'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_ADMIN],
-                'getMembers' => [$user_1],
+                'getNormalizedName'        => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_ADMIN],
+                'getMembers'               => [$user_1],
+                'getTranslatedDescription' => 'Project admin',
             ]
         );
 
         $project_ugroup_project_members = M::spy(
             ProjectUGroup::class,
             [
-                'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
-                'getMembers' => [$user_1],
+                'getNormalizedName'        => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
+                'getMembers'               => [$user_1],
+                'getTranslatedDescription' => 'Project members',
             ]
         );
 

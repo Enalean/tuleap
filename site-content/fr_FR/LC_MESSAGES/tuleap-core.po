@@ -366,9 +366,6 @@ msgstr "Accès"
 msgid "Access Denied"
 msgstr "Accès refusé"
 
-msgid "Access Logs"
-msgstr "Journal des accès"
-
 msgid "Access control"
 msgstr "Droits d'accès"
 
@@ -409,8 +406,8 @@ msgid ""
 "Access to your user profile. Includes access to your real name, avatar "
 "picture, language and timezone."
 msgstr ""
-"Accès à votre profil utilisateur. Inclus l'accès à votre nom complet, "
-"image d'avatar, langue et fuseau horaire."
+"Accès à votre profil utilisateur. Inclus l'accès à votre nom complet, image "
+"d'avatar, langue et fuseau horaire."
 
 msgid "Accesses from less than %s might not be visible"
 msgstr "Les accès d'il y a moins de %s peuvent ne pas apparaître"
@@ -1122,6 +1119,10 @@ msgstr "Nom du tableau de bord"
 msgid "Data"
 msgstr "Données"
 
+msgid "Data (like artifacts or users) won't be included."
+msgstr ""
+"Les données (comme les artéfacts ou les utilisateurs) ne seront pas inclus."
+
 msgid "Date"
 msgstr "Date"
 
@@ -1483,6 +1484,9 @@ msgstr "Expire le"
 
 msgid "Export"
 msgstr "Exporter"
+
+msgid "Export project structure"
+msgstr "Exporter la structure du projet"
 
 msgid "External system references"
 msgstr "Références systèmes externes"
@@ -2663,9 +2667,6 @@ msgstr "Projet (lecture seule)"
 msgid "Project Data Export"
 msgstr "Export des données"
 
-msgid "Project History"
-msgstr "Historique du projet"
-
 msgid "Project Latest News"
 msgstr "Dernières annonces du projet"
 
@@ -2680,6 +2681,9 @@ msgstr "Équipe du projet"
 
 msgid "Project Type"
 msgstr "Type de projet"
+
+msgid "Project XML export"
+msgstr "Export XML du projet"
 
 msgid "Project access error"
 msgstr "Erreur d'accès au projet"
@@ -2726,6 +2730,9 @@ msgstr "Développeurs des projets (%1$s utilisateurs)"
 msgid "Project does not exist"
 msgstr "Le projet n'existe pas"
 
+msgid "Project export"
+msgstr "Export projet"
+
 msgid "Project field has been successfully updated."
 msgstr "Le champ de projet a correctement été modifié."
 
@@ -2749,6 +2756,9 @@ msgstr "Le nom complet de project n'est pas valide. La raison est : %s"
 
 msgid "Project hierarchy"
 msgstr "Hierarchie de projets"
+
+msgid "Project history"
+msgstr "Historique du projet"
 
 msgid ""
 "Project members and group members are synchronized. Whenever you add someone "
@@ -3751,6 +3761,9 @@ msgstr "Ce projet a désactivé CVS"
 msgid "This Project Has Turned Off Mailing Lists"
 msgstr "Ce projet a désactivé les listes de diffusion"
 
+msgid "This archive is ready to be imported in a Tuleap instance."
+msgstr "Cette archive est prête à être importé dans une instance de Tuleap."
+
 msgid "This description will be displayed in a tooltip above reference."
 msgstr ""
 "La description sera affichée dans une bulle lorsque le pointeur est au "
@@ -3932,6 +3945,13 @@ msgstr[1] ""
 
 msgid "This widget is deprecated, you should remove it."
 msgstr "Ce widget est déprécié, vous devriez le supprimer."
+
+msgid ""
+"This will generate a zip archive with a project.xml file that contains "
+"project structure."
+msgstr ""
+"Ceci générera une archive zip avec un fichier project.xml qui contient la "
+"structure du projet."
 
 msgid "This will remove this service from all projects."
 msgstr "Ceci supprimera ce service de tous les projets."

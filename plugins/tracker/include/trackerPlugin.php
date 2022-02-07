@@ -1370,21 +1370,29 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function exportXmlProject(ExportXmlProject $event): void
     {
-        if (! isset($event->getOptions()['tracker_id']) && ! isset($event->getOptions()['all'])) {
+        $tracker_id = $event->getExtraOptions('tracker_id');
+        if (
+            ! $tracker_id
+            && ! $event->shouldExportAllData()
+            && ! $event->shouldExportStructureOnly()
+        ) {
             return;
         }
 
         $project              = $event->getProject();
-        $can_bypass_threshold = $event->getOptions()['force'] === true;
+        $can_bypass_threshold = $event->canBypassThreshold();
         $user_xml_exporter    = $event->getUserXMLExporter();
         $user                 = $event->getUser();
 
-        if ($event->getOptions()['all'] === true) {
+        if ($event->shouldExportAllData()) {
             $this->getTrackerXmlExport($user_xml_exporter, $can_bypass_threshold)
-            ->exportToXmlFull($project, $event->getIntoXml(), $user, $event->getArchive());
-        } elseif (isset($event->getOptions()['tracker_id'])) {
+                ->exportToXmlFull($project, $event->getIntoXml(), $user, $event->getArchive());
+        } elseif ($event->shouldExportStructureOnly()) {
+            $this->getTrackerXmlExport($user_xml_exporter, $can_bypass_threshold)
+                ->exportToXml($project, $event->getIntoXml(), $user);
+        } elseif ($tracker_id) {
             $this->exportSingleTracker(
-                $event->getOptions(),
+                $tracker_id,
                 $project,
                 $user_xml_exporter,
                 $user,
@@ -1396,7 +1404,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     }
 
     private function exportSingleTracker(
-        array $options,
+        int $tracker_id,
         Project $project,
         UserXMLExporter $user_xml_exporter,
         PFUser $user,
@@ -1404,8 +1412,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         ArchiveInterface $archive,
         SimpleXMLElement $into_xml,
     ) {
-        $tracker_id = $options['tracker_id'];
-        $tracker    = $this->getTrackerFactory()->getTrackerById($tracker_id);
+        $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
 
         if (! $tracker) {
             throw new Exception('Tracker ID does not exist');

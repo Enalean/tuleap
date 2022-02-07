@@ -155,7 +155,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function exportXmlProject(ExportXmlProject $event): void
     {
-        if (! isset($event->getOptions()['all']) || $event->getOptions()['all'] === false) {
+        if (! $event->shouldExportAllData()) {
             return;
         }
 

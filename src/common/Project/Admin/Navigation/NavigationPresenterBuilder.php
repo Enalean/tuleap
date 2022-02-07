@@ -138,16 +138,16 @@ class NavigationPresenterBuilder
             $current_pane_shortname,
             [
                 new NavigationDropdownItemPresenter(
-                    _('Project Data Export'),
+                    _('Project export'),
                     '/project/' . urlencode((string) $project_id) . '/admin/export'
                 ),
                 new NavigationDropdownItemPresenter(
-                    _('Project History'),
+                    _('Project history'),
                     '/project/admin/history.php?' . http_build_query(['group_id' => $project_id]),
                     'project-history'
                 ),
                 new NavigationDropdownItemPresenter(
-                    _('Access Logs'),
+                    _('Access logs'),
                     '/project/stats/source_code_access.php?' . http_build_query(['group_id' => $project_id])
                 ),
             ]

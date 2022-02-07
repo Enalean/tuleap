@@ -358,6 +358,10 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function exportXmlProject(ExportXmlProject $event): void
     {
+        if (! $event->shouldExportAllData()) {
+            return;
+        }
+
         $this->getGitExporter($event->getProject())->exportToXml(
             $event->getIntoXml(),
             $event->getArchive(),
