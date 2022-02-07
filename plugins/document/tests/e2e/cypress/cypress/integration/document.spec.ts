@@ -27,26 +27,6 @@ function disableSpecificErrorThrownByCkeditor(): void {
     });
 }
 
-function createAWikiDocument(document_title: string, page_name: string): void {
-    cy.get("[data-test=document-header-actions]").within(() => {
-        cy.get("[data-test=document-item-action-new-button]").click();
-    });
-
-    cy.get("[data-test=document-new-item-modal]").within(() => {
-        cy.get("[data-test=wiki]").click();
-
-        cy.get("[data-test=document-new-item-title]").type(document_title);
-        cy.get("[data-test=document-new-item-wiki-page-name]").type(page_name);
-        cy.get("[data-test=document-modal-submit-button]").click();
-    });
-}
-
-function updateWikiPage(page_content: string): void {
-    cy.get("[data-test=php-wiki-edit-page]").contains("Edit").click();
-    cy.get("[data-test=textarea-wiki-content]").clear().type(page_content);
-    cy.get("[data-test=edit-page-action-buttons]").contains("Save").click();
-}
-
 describe("Document new UI", () => {
     before(() => {
         cy.clearSessionCookie();
@@ -103,41 +83,6 @@ describe("Document new UI", () => {
             cy.get("[data-test=document-confirm-deletion-button]").click();
 
             cy.get("[data-test=document-tree-content]").should("not.exist");
-        });
-
-        it("user can search", () => {
-            const title = `Lorem ipsum doloret`;
-
-            cy.get("[data-test=document-header-actions]").within(() => {
-                cy.get("[data-test=document-item-action-new-button]").click();
-            });
-
-            cy.get("[data-test=document-new-item-modal]").within(() => {
-                cy.get("[data-test=empty]").click();
-
-                cy.get("[data-test=document-new-item-title]").type(title);
-
-                cy.get("[data-test=document-modal-submit-button]").click();
-            });
-
-            activateFeatureFlag();
-
-            cy.log(`Searching for "ipsum"`);
-            cy.get("[data-test=document-search-box]").clear().type(`ipsum{enter}`);
-            cy.get("[data-test=search-results-table-body]").contains("tr", title);
-
-            for (const term of ["ips*", "*psu*", "*loret"]) {
-                cy.log(`Searching for "${term}"`);
-                cy.get("[data-test=global-search]").clear().type(`${term}`);
-                cy.get("[data-test=submit]").click();
-                cy.get("[data-test=search-results-table-body]").contains("tr", title);
-            }
-
-            const term_without_wildcards = "psu";
-            cy.log(`Searching for term without wildcard "${term_without_wildcards}"`);
-            cy.get("[data-test=global-search]").clear().type(`${term_without_wildcards}`);
-            cy.get("[data-test=submit]").click();
-            cy.get("[data-test=search-results-table-body-empty]");
         });
 
         it("user can manipulate empty document", () => {
@@ -326,127 +271,6 @@ describe("Document new UI", () => {
             testNavigationShortcuts();
             deleteItems();
         });
-
-        context("phpwiki integration", function () {
-            it("permissions", function () {
-                cy.userLogout();
-                cy.projectAdministratorLogin();
-
-                cy.visitProjectService("document-project", "Wiki");
-                cy.log("Create wiki service only when it's needed");
-                // eslint-disable-next-line cypress/require-data-selectors
-                cy.get("body").then((body) => {
-                    if (body.find("[data-test=create-wiki]").length > 0) {
-                        cy.get("[data-test=create-wiki]").click();
-                    }
-                });
-
-                const now = Date.now();
-
-                cy.log("wiki document have their permissions in document service");
-
-                cy.visitProjectService("document-project", "Documents");
-                createAWikiDocument(`private${now}`, "My Wiki & Page document");
-                cy.get("[data-test=wiki-document-link]").last().click();
-
-                // ignore rule for phpwiki generated content
-                updateWikiPage("My wiki content");
-                updateWikiPage("My wiki content updated");
-                cy.get("[data-test=main-content]").contains("My Wiki & Page document");
-
-                cy.visitProjectService("document-project", "Wiki");
-                cy.get("[data-test=wiki-admin]").click();
-                cy.get("[data-test=manage-wiki-page]").click();
-
-                cy.log("Document delegated permissions");
-                cy.get("[data-test=table-test]")
-                    .first()
-                    .contains("Permissions controlled by documents manager");
-
-                cy.log("Wiki permissions");
-                cy.get("[data-test=table-test]").last().contains("[Define Permissions]");
-
-                cy.log("Document events");
-                cy.visitProjectService("document-project", "Documents");
-                cy.get("[data-test=document-tree-content]").contains("tr", `private${now}`).click();
-                cy.get("[data-test=document-history]").last().click({ force: true });
-
-                cy.get("[data-test=table-test]").contains("Wiki page content change");
-                cy.get("[data-test=table-test]").contains("Create");
-
-                cy.log("project member can not see document when lack of permissions");
-                cy.visitProjectService("document-project", "Documents");
-                cy.get("[data-test=document-tree-content]").contains("tr", `private${now}`).click();
-
-                cy.get("[data-test=document-permissions]").last().click({ force: true });
-
-                cy.get("[data-test=document-permission-Reader]").select("Project administrators");
-                cy.get("[data-test=document-permission-Writer]").select("Project administrators");
-                cy.get("[data-test=document-permission-Manager]").select("Project administrators");
-                cy.get("[data-test=document-modal-submit-button]").last().click();
-
-                cy.log("wiki page have their permissions in wiki service");
-
-                cy.get("[data-test=quick-look-button]").last().click({ force: true });
-
-                let current_url;
-                cy.url().then((url) => {
-                    current_url = url;
-
-                    cy.userLogout();
-                    cy.projectMemberLogin();
-
-                    cy.visit(current_url);
-                });
-
-                cy.get("[data-test=document-user-can-not-read-document]").contains(
-                    "granted read permission"
-                );
-
-                cy.userLogout();
-                cy.projectAdministratorLogin();
-
-                cy.log("Delete wiki page");
-                cy.visitProjectService("document-project", "Documents");
-                cy.get("[data-test=document-tree-content]").contains("tr", `private${now}`).click();
-                cy.get("[data-test=quick-look-button]").last().click({ force: true });
-                cy.get("[data-test=document-quick-look]");
-                cy.get("[data-test=document-quick-look-delete-button]").click({ force: true });
-                cy.get("[data-test=delete-associated-wiki-page-checkbox]").click();
-                cy.get("[data-test=document-confirm-deletion-button]").click();
-            });
-
-            it("document", function () {
-                cy.userLogout();
-                cy.projectAdministratorLogin();
-
-                cy.log("Create the wiki service");
-
-                cy.userLogout();
-                cy.projectMemberLogin();
-
-                cy.visitProjectService("document-project", "Documents");
-
-                cy.log("multiple document can references the same wiki page");
-
-                const now = Date.now();
-
-                createAWikiDocument(`A wiki document${now}`, "Wiki page");
-                createAWikiDocument(`An other wiki document${now}`, "Wiki page");
-                createAWikiDocument(`A third wiki document${now}`, "Wiki page");
-
-                cy.get("[data-test=wiki-document-link]").first().click();
-
-                cy.get("[data-test=wiki-document-location-toggle]").click();
-                cy.get("[data-test=wiki-document-location]").contains(`A wiki document${now}`);
-                cy.get("[data-test=wiki-document-location]").contains(
-                    `An other wiki document${now}`
-                );
-                cy.get("[data-test=wiki-document-location]").contains(
-                    `A third wiki document${now}`
-                );
-            });
-        });
     });
 });
 
@@ -504,13 +328,4 @@ function typeShortcut(...inputs: string[]): void {
         // eslint-disable-next-line cypress/require-data-selectors
         cy.get("body").type(input);
     }
-}
-
-function activateFeatureFlag(): void {
-    cy.url().then((url) => {
-        if (url.indexOf("feature-flag-new-search") === -1) {
-            cy.visit(`${url}#feature-flag-new-search`);
-            cy.reload();
-        }
-    });
 }
