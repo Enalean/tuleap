@@ -61,15 +61,22 @@ final class SearchResource extends AuthenticatedResource
      * Search elements in folder
      * Global search will search in all text properties of document (but does not look inside the document)
      *
-     * <pre>
      * Search allowed pattern <br>
-     * - lorem   => exactly "lorem"<br>
-     * - lorem*  => starting by "lorem"<br>
-     * - *lorem  => finishing by "lorem"<br>
-     * - *lorem* => containing "lorem"<br>
+     * <ul>
+     * <li> `lorem`   => exactly "lorem"</li>
+     * <li> `lorem*`  => starting by "lorem"</li>
+     * <li> `*lorem`  => finishing by "lorem"</li>
+     * <li> `*lorem*` => containing "lorem"</li>
+     * </ul>
      * <br>
      * usage example:<br>
-     * {"global_search": "lorem*"}
+     * <pre>
+     * {"global_search": "lorem\*"}
+     * </pre>
+     * <br>
+     * You can search on type also. For example to restrict previous example to empty items:
+     * <pre>
+     * {"global_search": "lorem\*", "type": "empty"}
      * </pre>
      *
      * @url    POST {id}
@@ -167,7 +174,7 @@ final class SearchResource extends AuthenticatedResource
             new FilePropertiesVisitor($version_factory),
         );
 
-        $report     = $search_report_builder->buildReport($folder, $search_representation->global_search);
+        $report     = $search_report_builder->buildReport($folder, $search_representation);
         $collection = $search_representations_builder->build(
             $report,
             $folder,

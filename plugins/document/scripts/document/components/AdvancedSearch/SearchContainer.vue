@@ -52,7 +52,7 @@ import SearchResultError from "./SearchResult/SearchResultError.vue";
 })
 export default class SearchContainer extends Vue {
     @Prop({ required: true })
-    readonly query!: string;
+    readonly query!: AdvancedSearchParams;
 
     @Prop({ required: true })
     readonly offset!: number;
@@ -71,8 +71,8 @@ export default class SearchContainer extends Vue {
         this.loadFolder(this.folder_id);
     }
 
-    @Watch("query", { immediate: true })
-    searchQuery(query: string): void {
+    @Watch("query", { immediate: true, deep: true })
+    searchQuery(query: AdvancedSearchParams): void {
         this.search(query, this.offset);
     }
 
@@ -87,8 +87,8 @@ export default class SearchContainer extends Vue {
         this.search(this.query, this.offset);
     }
 
-    search(query: string, offset: number): void {
-        if (query.length === 0) {
+    search(new_query: AdvancedSearchParams, offset: number): void {
+        if (this.isQueryEmpty(new_query)) {
             return;
         }
 
@@ -96,7 +96,7 @@ export default class SearchContainer extends Vue {
         this.error = null;
         this.results = null;
 
-        searchInFolder(this.folder_id, query, offset)
+        searchInFolder(this.folder_id, new_query, offset)
             .then((results: SearchResult) => {
                 this.results = results;
             })
@@ -114,7 +114,11 @@ export default class SearchContainer extends Vue {
     }
 
     get is_query_empty(): boolean {
-        return this.query.length === 0;
+        return this.isQueryEmpty(this.query);
+    }
+
+    isQueryEmpty(new_query: AdvancedSearchParams): boolean {
+        return new_query.query.length === 0 && new_query.type.length === 0;
     }
 
     advancedSearch(params: AdvancedSearchParams): void {
@@ -122,9 +126,12 @@ export default class SearchContainer extends Vue {
         if (params.query.length > 0) {
             query.q = params.query;
         }
+        if (params.type.length > 0) {
+            query.type = params.type;
+        }
 
         if (deepEqual(this.$route.query, query)) {
-            this.searchQuery(params.query);
+            this.searchQuery(params);
             return;
         }
 

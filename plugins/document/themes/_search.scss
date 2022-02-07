@@ -85,7 +85,17 @@
 }
 
 .document-search-criteria {
-    max-width: 300px;
+    display: flex;
+    gap: var(--tlp-medium-spacing);
+    flex-wrap: wrap;
+}
+
+.document-search-criterion {
+    margin: 0;
+}
+
+.document-search-criterion-text {
+    min-width: 300px;
 }
 
 .document-search-submit {

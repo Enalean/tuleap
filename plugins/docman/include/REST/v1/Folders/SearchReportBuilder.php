@@ -25,6 +25,7 @@ namespace Tuleap\Docman\REST\v1\Folders;
 
 use Docman_FilterGlobalText;
 use Docman_Report;
+use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
 
@@ -37,7 +38,7 @@ class SearchReportBuilder
     ) {
     }
 
-    public function buildReport(\Docman_Folder $item, string $global_search_parameters): Docman_Report
+    public function buildReport(\Docman_Folder $item, PostSearchRepresentation $search): Docman_Report
     {
         $report = new Docman_Report();
         $report->initFromRow(
@@ -49,12 +50,27 @@ class SearchReportBuilder
 
         $global_search_metadata = $this->filter_factory->getGlobalSearchMetadata();
         $filter                 = new Docman_FilterGlobalText($global_search_metadata, []);
-        $filter->setValue($global_search_parameters);
+        $filter->setValue($search->global_search);
+        $report->addFilter($filter);
+
+        if ($search->type) {
+            $type_filter = new \Docman_FilterItemType($this->filter_factory->getItemTypeSearchMetadata());
+
+            $human_readable_value_to_internal_value = [
+                'file'     => PLUGIN_DOCMAN_ITEM_TYPE_FILE,
+                'wiki'     => PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+                'embedded' => PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
+                'empty'    => PLUGIN_DOCMAN_ITEM_TYPE_EMPTY,
+                'link'     => PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+                'folder'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
+            ];
+            $type_filter->setValue($human_readable_value_to_internal_value[$search->type]);
+            $report->addFilter($type_filter);
+        }
 
         $columns = $this->always_there_column_retriever->getColumns();
         $this->column_report_builder->addColumnsFromArray($columns, $report);
 
-        $report->addFilter($filter);
 
         return $report;
     }
