@@ -185,6 +185,9 @@ msgstr "Impossible de récupérer les artéfacts liés: %s"
 msgid "Unable to upload the file"
 msgstr "Impossible de téléverser le fichier"
 
+msgid "Undo removal"
+msgstr "Annuler la suppression"
+
 msgid "You are not allowed to paste images here"
 msgstr "Vous n'êtes pas autorisé à coller des images ici"
 

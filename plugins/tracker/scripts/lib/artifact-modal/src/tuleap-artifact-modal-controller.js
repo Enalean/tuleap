@@ -55,6 +55,8 @@ import { LinksRetriever } from "./domain/fields/link-field-v2/LinksRetriever";
 import { CurrentArtifactIdentifierProxy } from "./adapters/Caller/CurrentArtifactIdentifierProxy";
 import { ParentArtifactIdentifierProxy } from "./adapters/Caller/ParentArtifactIdentifierProxy";
 import { ParentRetriever } from "./domain/parent/ParentRetriever";
+import { LinksMarkedForRemovalStore } from "./adapters/Memory/LinksMarkedForRemovalStore";
+import { LinksStore } from "./adapters/Memory/LinksStore";
 import { ReadonlyDateFieldFormatter } from "./adapters/UI/fields/date-readonly-field/readonly-date-field-formatter";
 
 export default ArtifactModalController;
@@ -86,6 +88,8 @@ function ArtifactModalController(
     const concurrency_error_code = 412;
 
     const api_client = TuleapAPIClient();
+    const links_store = LinksStore();
+    const links_marked_for_removal_store = LinksMarkedForRemovalStore();
 
     Object.assign(self, {
         $onInit: init,
@@ -114,7 +118,11 @@ function ArtifactModalController(
             format: modal_model.text_fields_format,
         },
         link_field_controller: LinkFieldController(
-            LinksRetriever(api_client, api_client),
+            LinksRetriever(api_client, api_client, links_store),
+            links_store,
+            links_marked_for_removal_store,
+            links_marked_for_removal_store,
+            links_marked_for_removal_store,
             CurrentArtifactIdentifierProxy.fromModalArtifactId(modal_model.artifact_id)
         ),
         date_picker_initializer: DatePickerInitializer(),

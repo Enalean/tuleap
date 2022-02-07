@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkedArtifact } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
 import type { Fault } from "@tuleap/fault";
+import type { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 
 export interface LinkFieldPresenter {
-    readonly linked_artifacts: LinkedArtifact[];
+    readonly linked_artifacts: LinkedArtifactPresenter[];
     readonly error_message: string;
     readonly has_loaded_content: boolean;
     readonly is_loading: boolean;
@@ -42,8 +42,8 @@ export const LinkFieldPresenter = {
         has_loaded_content: true,
     }),
 
-    fromArtifacts: (artifacts: LinkedArtifact[]): LinkFieldPresenter => ({
-        linked_artifacts: artifacts,
+    fromArtifacts: (artifact_presenters: LinkedArtifactPresenter[]): LinkFieldPresenter => ({
+        linked_artifacts: artifact_presenters,
         error_message: "",
         is_loading: false,
         has_loaded_content: true,

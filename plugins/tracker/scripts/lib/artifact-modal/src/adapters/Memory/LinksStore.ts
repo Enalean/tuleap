@@ -17,28 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Identifier } from "../../Identifier";
+import type { AddLinkedArtifactCollection } from "../../domain/fields/link-field-v2/AddLinkedArtifactCollection";
+import type { RetrieveLinkedArtifactsSync } from "../../domain/fields/link-field-v2/RetrieveLinkedArtifactsSync";
+import type { LinkedArtifact } from "../../domain/fields/link-field-v2/LinkedArtifact";
 
-// I identify an artifact linked to the current artifact under edition
-export type LinkedArtifactIdentifier = Identifier<"LinkedArtifactIdentifier">;
+type LinksStoreType = AddLinkedArtifactCollection & RetrieveLinkedArtifactsSync;
 
-export interface LinkType {
-    readonly shortname: string;
-    readonly direction: string;
-    readonly label: string;
-}
+export const LinksStore = (): LinksStoreType => {
+    let links: LinkedArtifact[] = [];
 
-export interface Tracker {
-    readonly color_name: string;
-}
+    return {
+        getLinkedArtifacts(): LinkedArtifact[] {
+            return links;
+        },
 
-export interface LinkedArtifact {
-    readonly identifier: LinkedArtifactIdentifier;
-    readonly xref: string;
-    readonly title: string;
-    readonly uri: string;
-    readonly tracker: Tracker;
-    readonly status: string;
-    readonly is_open: boolean;
-    readonly link_type: LinkType;
-}
+        addLinkedArtifacts(new_links: LinkedArtifact[]): void {
+            links = new_links;
+        },
+    };
+};

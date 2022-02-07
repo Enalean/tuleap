@@ -18,8 +18,9 @@
  */
 
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
-import type { LinkedArtifact } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
 import { Fault } from "@tuleap/fault";
+import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
+import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 
 describe(`LinkFieldPresenter`, () => {
     it(`builds a loading state`, () => {
@@ -39,8 +40,14 @@ describe(`LinkFieldPresenter`, () => {
     });
 
     it(`builds from linked artifacts`, () => {
-        const first_artifact = { title: "bribery" } as unknown as LinkedArtifact;
-        const second_artifact = { title: "versicolorate" } as unknown as LinkedArtifact;
+        const first_artifact = LinkedArtifactPresenter.fromLinkedArtifact(
+            LinkedArtifactStub.withDefaults({ title: "bribery" }),
+            false
+        );
+        const second_artifact = LinkedArtifactPresenter.fromLinkedArtifact(
+            LinkedArtifactStub.withDefaults({ title: "versicolorate" }),
+            false
+        );
 
         const presenter = LinkFieldPresenter.fromArtifacts([first_artifact, second_artifact]);
         expect(presenter.linked_artifacts).toContain(first_artifact);

@@ -56,7 +56,7 @@ describe(`LinkedArtifactProxy`, () => {
         expect(linked_artifact.title).toBe(TITLE);
         expect(linked_artifact.status).toBe(STATUS);
         expect(linked_artifact.is_open).toBe(true);
-        expect(linked_artifact.html_url).toBe(HTML_URI);
+        expect(linked_artifact.uri).toBe(HTML_URI);
         expect(linked_artifact.xref).toBe(CROSS_REFERENCE);
         expect(linked_artifact.link_type).toEqual(link_type);
         expect(linked_artifact.tracker).toEqual(tracker);

@@ -17,25 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { APILinkedArtifact } from "./APILinkedArtifact";
-import type { LinkedArtifact, LinkType } from "../../domain/fields/link-field-v2/LinkedArtifact";
-import { LinkedArtifactIdentifierProxy } from "./LinkedArtifactIdentifierProxy";
+import type { DeleteLinkMarkedForRemoval } from "../../src/domain/fields/link-field-v2/DeleteLinkMarkedForRemoval";
 
-export const LinkedArtifactProxy = {
-    fromAPILinkedArtifactAndType: (
-        artifact: APILinkedArtifact,
-        link_type: LinkType
-    ): LinkedArtifact => {
-        const identifier = LinkedArtifactIdentifierProxy.fromAPILinkedArtifact(artifact);
+export interface DeleteLinkMarkedForRemovalStub extends DeleteLinkMarkedForRemoval {
+    getCallCount(): number;
+}
+
+export const DeleteLinkMarkedForRemovalStub = {
+    withCount: (): DeleteLinkMarkedForRemovalStub => {
+        let call_count = 0;
         return {
-            identifier,
-            title: artifact.title,
-            status: artifact.status,
-            xref: artifact.xref,
-            uri: artifact.html_url,
-            is_open: artifact.is_open,
-            tracker: artifact.tracker,
-            link_type,
+            deleteLinkMarkedForRemoval(): void {
+                call_count++;
+            },
+            getCallCount: (): number => call_count,
         };
     },
 };
