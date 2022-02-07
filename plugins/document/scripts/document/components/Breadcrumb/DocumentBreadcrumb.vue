@@ -38,6 +38,7 @@
                     v-bind:to="{ name: 'root_folder' }"
                     class="breadcrumb-link"
                     v-bind:title="`${$gettext('Project documentation')}`"
+                    data-test="breadcrumb-project-documentation"
                 >
                     <i class="breadcrumb-link-icon far fa-folderpen"></i>
                     <translate>Documents</translate>
