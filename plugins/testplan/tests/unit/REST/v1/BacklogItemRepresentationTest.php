@@ -22,91 +22,117 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan\REST\v1;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tracker;
 use Tracker_FormElement_Field_ArtifactLink;
 
-class BacklogItemRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BacklogItemRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItCannotAddATestIfThereIsNoArtifactLinkField()
+    public function testItCannotAddATestIfThereIsNoArtifactLinkField(): void
     {
-        $artifact = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $tracker  = Mockery::spy(Tracker::class);
-        $tracker->shouldReceive('getName')->andReturn('tracker_name');
-        $tracker->shouldReceive('getProject')->andReturn(Mockery::spy(\Project::class));
-        $artifact->shouldReceive(
-            [
-                'getAnArtifactLinkField' => null,
-                'getTracker'             => $tracker,
-            ]
-        );
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $tracker  = $this->createMock(Tracker::class);
+        $project  = $this->createMock(\Project::class);
 
-        $backlog_item = Mockery::spy(
+        $project->method('getID')->willReturn(101);
+        $project->method('getPublicName')->willReturn('project01');
+        $project->method('getIconUnicodeCodepoint')->willReturn('');
+
+        $tracker->method('getName')->willReturn('tracker_name');
+        $tracker->method('getProject')->willReturn($project);
+        $tracker->method('getId')->willReturn(1);
+
+        $artifact->method('getAnArtifactLinkField')->willReturn(null);
+        $artifact->method('getTracker')->willReturn($tracker);
+        $artifact->method('getId')->willReturn(1);
+
+        $backlog_item = $this->createMock(
             \AgileDashboard_Milestone_Backlog_IBacklogItem::class
         );
-        $backlog_item->shouldReceive('getArtifact')->andReturn($artifact);
-        $user = Mockery::mock(PFUser::class);
+        $backlog_item->method('getArtifact')->willReturn($artifact);
+        $backlog_item->method('id')->willReturn(1);
+        $backlog_item->method('title')->willReturn('title');
+        $backlog_item->method('getShortType')->willReturn('short_type');
+        $backlog_item->method('color')->willReturn('color');
+
+        $user = $this->createMock(PFUser::class);
 
         $representation = new BacklogItemRepresentation($backlog_item, $user);
 
-        $this->assertFalse($representation->can_add_a_test);
+        self::assertFalse($representation->can_add_a_test);
     }
 
-    public function testItCannotAddATestIfThereIsAnArtifactLinkFieldButItCannotBeUpdated()
+    public function testItCannotAddATestIfThereIsAnArtifactLinkFieldButItCannotBeUpdated(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
-        $field->shouldReceive('userCanUpdate')->andReturnFalse();
+        $field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $field->method('userCanUpdate')->willReturn(false);
 
-        $artifact = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $tracker  = Mockery::spy(Tracker::class);
-        $tracker->shouldReceive('getName')->andReturn('tracker_name');
-        $tracker->shouldReceive('getProject')->andReturn(Mockery::spy(\Project::class));
-        $artifact->shouldReceive(
-            [
-                'getAnArtifactLinkField' => null,
-                'getTracker'             => $tracker,
-            ]
-        );
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $tracker  = $this->createMock(Tracker::class);
+        $project  = $this->createMock(\Project::class);
 
-        $backlog_item = Mockery::spy(
+        $project->method('getID')->willReturn(101);
+        $project->method('getPublicName')->willReturn('project01');
+        $project->method('getIconUnicodeCodepoint')->willReturn('');
+
+        $tracker->method('getName')->willReturn('tracker_name');
+        $tracker->method('getProject')->willReturn($project);
+        $tracker->method('getId')->willReturn(1);
+
+        $artifact->method('getAnArtifactLinkField')->willReturn($field);
+        $artifact->method('getTracker')->willReturn($tracker);
+        $artifact->method('getId')->willReturn(1);
+
+        $backlog_item = $this->createMock(
             \AgileDashboard_Milestone_Backlog_IBacklogItem::class
         );
-        $backlog_item->shouldReceive('getArtifact')->andReturn($artifact);
-        $user = Mockery::mock(PFUser::class);
+        $backlog_item->method('getArtifact')->willReturn($artifact);
+        $backlog_item->method('id')->willReturn(1);
+        $backlog_item->method('title')->willReturn('title');
+        $backlog_item->method('getShortType')->willReturn('short_type');
+        $backlog_item->method('color')->willReturn('color');
+
+        $user = $this->createMock(PFUser::class);
 
         $representation = new BacklogItemRepresentation($backlog_item, $user);
 
-        $this->assertFalse($representation->can_add_a_test);
+        self::assertFalse($representation->can_add_a_test);
     }
 
-    public function testItCanAddATestIfThereIsAnArtifactLinkFieldAndItCanBeUpdated()
+    public function testItCanAddATestIfThereIsAnArtifactLinkFieldAndItCanBeUpdated(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
-        $field->shouldReceive('userCanUpdate')->andReturnTrue();
+        $field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $field->method('userCanUpdate')->willReturn(true);
 
-        $artifact = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $tracker  = Mockery::spy(Tracker::class);
-        $tracker->shouldReceive('getName')->andReturn('tracker_name');
-        $tracker->shouldReceive('getProject')->andReturn(Mockery::spy(\Project::class));
-        $artifact->shouldReceive(
-            [
-                'getAnArtifactLinkField' => null,
-                'getTracker'             => $tracker,
-            ]
-        );
+        $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $tracker  = $this->createMock(Tracker::class);
+        $project  = $this->createMock(\Project::class);
 
-        $backlog_item = Mockery::spy(
+        $project->method('getID')->willReturn(101);
+        $project->method('getPublicName')->willReturn('project01');
+        $project->method('getIconUnicodeCodepoint')->willReturn('');
+
+        $tracker->method('getName')->willReturn('tracker_name');
+        $tracker->method('getProject')->willReturn($project);
+        $tracker->method('getId')->willReturn(1);
+
+        $artifact->method('getAnArtifactLinkField')->willReturn($field);
+        $artifact->method('getTracker')->willReturn($tracker);
+        $artifact->method('getId')->willReturn(1);
+
+        $backlog_item = $this->createMock(
             \AgileDashboard_Milestone_Backlog_IBacklogItem::class
         );
-        $backlog_item->shouldReceive('getArtifact')->andReturn($artifact);
-        $user = Mockery::mock(PFUser::class);
+        $backlog_item->method('getArtifact')->willReturn($artifact);
+        $backlog_item->method('id')->willReturn(1);
+        $backlog_item->method('title')->willReturn('title');
+        $backlog_item->method('getShortType')->willReturn('short_type');
+        $backlog_item->method('color')->willReturn('color');
+
+        $user = $this->createMock(PFUser::class);
 
         $representation = new BacklogItemRepresentation($backlog_item, $user);
 
-        $this->assertFalse($representation->can_add_a_test);
+        self::assertTrue($representation->can_add_a_test);
     }
 }

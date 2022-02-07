@@ -74,6 +74,8 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private mixed $testplan_asset;
 
+    private TestPlanController $controller;
+
     protected function setUp(): void
     {
         $this->milestone_factory         = $this->createMock(\Planning_MilestoneFactory::class);
