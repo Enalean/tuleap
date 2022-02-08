@@ -38,14 +38,18 @@ final class MysqlCommandHelper
     private const ENV_SSL_MODE = 'TULEAP_DB_SSL_MODE';
     private const ENV_SSL_CA   = 'TULEAP_DB_SSL_CA';
 
-    /**
-     * @var string
-     */
-    private $base_directory;
+    public const SSL_NO_VERIFY = 'no-verify';
+    public const SSL_NO_SSL    = 'disabled';
+    public const SSL_VERIFY_CA = 'verify-ca';
 
-    public function __construct(string $base_directory)
+    private const ALLOWED_SSL_MODES = [
+        self::SSL_NO_SSL,
+        self::SSL_NO_VERIFY,
+        self::SSL_VERIFY_CA,
+    ];
+
+    public function __construct(private string $base_directory)
     {
-        $this->base_directory = $base_directory;
     }
 
     public function addOptions(Command $command): Command
@@ -53,8 +57,24 @@ final class MysqlCommandHelper
         $command
             ->addOption(self::OPT_HOST, '', InputOption::VALUE_REQUIRED, 'MySQL server host', 'localhost')
             ->addOption(self::OPT_PORT, '', InputOption::VALUE_REQUIRED, 'MySQL server port', (string) DBConfig::DEFAULT_MYSQL_PORT)
-            ->addOption(self::OPT_SSL, '', InputOption::VALUE_REQUIRED, sprintf('Use an encrypted connection. Possible values: `%s` (default), `%s` or `%s`', ConnectionManager::SSL_NO_SSL, ConnectionManager::SSL_NO_VERIFY, ConnectionManager::SSL_VERIFY_CA), ConnectionManager::SSL_NO_SSL)
-            ->addOption(self::OPT_SSL_CA, '', InputOption::VALUE_REQUIRED, sprintf('When %s is set to %s or %s you should provide the path to CA file', self::OPT_SSL, ConnectionManager::SSL_NO_VERIFY, ConnectionManager::SSL_VERIFY_CA), ConnectionManager::DEFAULT_CA_FILE_PATH);
+            ->addOption(
+                self::OPT_SSL,
+                '',
+                InputOption::VALUE_REQUIRED,
+                sprintf(
+                    'Use an encrypted connection. Possible values: `%s` (default), `%s` or `%s`',
+                    self::SSL_NO_SSL,
+                    self::SSL_NO_VERIFY,
+                    self::SSL_VERIFY_CA
+                ),
+                self::SSL_NO_SSL
+            )
+            ->addOption(self::OPT_SSL_CA, '', InputOption::VALUE_REQUIRED, sprintf(
+                'When %s is set to %s or %s you should provide the path to CA file',
+                self::OPT_SSL,
+                self::SSL_NO_VERIFY,
+                self::SSL_VERIFY_CA
+            ), DBConfig::DEFAULT_MYSQL_CA_FILE_PATH);
         return $command;
     }
 
@@ -71,24 +91,24 @@ final class MysqlCommandHelper
     }
 
     /**
-     * @psalm-return value-of<ConnectionManagerInterface::ALLOWED_SSL_MODES>
+     * @psalm-return value-of<self::ALLOWED_SSL_MODES>
      */
-    public function getSSLMode(InputInterface $input)
+    public function getSSLMode(InputInterface $input): string
     {
         $ssl_mode = getenv(self::ENV_SSL_MODE);
-        if (in_array($ssl_mode, ConnectionManagerInterface::ALLOWED_SSL_MODES, true)) {
+        if (in_array($ssl_mode, self::ALLOWED_SSL_MODES, true)) {
             return $ssl_mode;
         }
         $ssl_mode = $input->getOption(self::OPT_SSL);
         assert(is_string($ssl_mode));
-        if (! in_array($ssl_mode, ConnectionManagerInterface::ALLOWED_SSL_MODES, true)) {
+        if (! in_array($ssl_mode, self::ALLOWED_SSL_MODES, true)) {
             throw new InvalidSSLConfigurationException(sprintf('Invalid `%s` value: %s', self::OPT_SSL, $ssl_mode));
         }
         return $ssl_mode;
     }
 
     /**
-     * @psalm-param value-of<ConnectionManagerInterface::ALLOWED_SSL_MODES> $ssl_mode
+     * @psalm-param value-of<self::ALLOWED_SSL_MODES> $ssl_mode
      */
     public function getSSLCAFile(InputInterface $input, string $ssl_mode): string
     {
@@ -100,7 +120,7 @@ final class MysqlCommandHelper
             }
             throw new InvalidSSLConfigurationException(sprintf('Invalid `%s` value: %s no such file', self::OPT_SSL_CA, $ca_file_path));
         }
-        if ($ssl_mode !== ConnectionManager::SSL_NO_SSL) {
+        if ($ssl_mode !== self::SSL_NO_SSL) {
             $ssl_ca_file = $input->getOption(self::OPT_SSL_CA);
             assert(is_string($ssl_ca_file));
             $ca_file_path = $this->base_directory . '/' . $ssl_ca_file;

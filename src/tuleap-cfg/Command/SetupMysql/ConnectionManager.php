@@ -31,8 +31,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ConnectionManager implements ConnectionManagerInterface
 {
-    public const DEFAULT_CA_FILE_PATH = '/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem';
-
     private const MAX_DB_WAIT_LOOPS = 60;
 
     private const AUTHORISED_SQL_MODES = [
@@ -40,18 +38,23 @@ class ConnectionManager implements ConnectionManagerInterface
         'NO_ENGINE_SUBSTITUTION' => true,
     ];
 
-    /**
-     * @psalm-param value-of<ConnectionManagerInterface::ALLOWED_SSL_MODES> $ssl_mode
-     */
-    public function getDBWithoutDBName(SymfonyStyle $io, string $host, int $port, string $ssl_mode, string $ssl_ca_file, string $user, string $password): DBWrapperInterface
-    {
+    public function getDBWithoutDBName(
+        SymfonyStyle $io,
+        string $host,
+        int $port,
+        bool $ssl_enabled,
+        bool $verify_certificate,
+        string $ssl_ca_file,
+        string $user,
+        string $password,
+    ): DBWrapperInterface {
         $easydb = $this->loopToConnect(
             $io,
             [
                 sprintf('mysql:host=%s;port=%d', $host, $port),
                 $user,
                 $password,
-                $this->getOptions($ssl_mode, $ssl_ca_file),
+                $this->getOptions($ssl_enabled, $verify_certificate, $ssl_ca_file),
             ]
         );
         if ($easydb === null) {
@@ -60,10 +63,7 @@ class ConnectionManager implements ConnectionManagerInterface
         return new EasyDBWrapper($easydb);
     }
 
-    /**
-     * @psalm-param value-of<ConnectionManagerInterface::ALLOWED_SSL_MODES> $ssl_mode
-     */
-    public function getDBWithDBName(SymfonyStyle $io, string $host, int $port, string $ssl_mode, string $ssl_ca_file, string $user, string $password, string $dbname): DBWrapperInterface
+    public function getDBWithDBName(SymfonyStyle $io, string $host, int $port, bool $ssl_enabled, bool $verify_certificate, string $ssl_ca_file, string $user, string $password, string $dbname): DBWrapperInterface
     {
         $easydb = $this->loopToConnect(
             $io,
@@ -71,7 +71,7 @@ class ConnectionManager implements ConnectionManagerInterface
                 sprintf('mysql:host=%s;port=%d;dbname=%s', $host, $port, $dbname),
                 $user,
                 $password,
-                $this->getOptions($ssl_mode, $ssl_ca_file),
+                $this->getOptions($ssl_enabled, $verify_certificate, $ssl_ca_file),
             ]
         );
         if ($easydb === null) {
@@ -80,17 +80,14 @@ class ConnectionManager implements ConnectionManagerInterface
         return new EasyDBWrapper($easydb);
     }
 
-    /**
-     * @psalm-param value-of<ConnectionManagerInterface::ALLOWED_SSL_MODES> $ssl_mode
-     */
-    private function getOptions(string $ssl_mode, string $ssl_ca_file): array
+    private function getOptions(bool $ssl_enabled, bool $verify_certificate, string $ssl_ca_file): array
     {
-        if ($ssl_mode === self::SSL_NO_SSL) {
+        if (! $ssl_enabled) {
             return [];
         }
         return [
             PDO::MYSQL_ATTR_SSL_CA => $ssl_ca_file,
-            PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => ($ssl_mode === self::SSL_VERIFY_CA),
+            PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => $verify_certificate,
         ];
     }
 

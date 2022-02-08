@@ -72,15 +72,15 @@ final class Tuleap
         $fqdn = $variable_provider->get(self::TULEAP_FQDN);
 
         ForgeConfig::loadDatabaseConfig();
+        if (ForgeConfig::get(DBConfig::CONF_DBPASSWORD) === false) {
+            throw new \RuntimeException(sprintf('No variable named `%s` found in environment', DBConfig::CONF_DBPASSWORD));
+        }
 
         $this->database_configurator->setupDatabase(
             $output,
-            DBSetupParameters::fromForgeConfig(
-                $variable_provider->get(self::DB_ADMIN_USER),
-                $variable_provider->get(self::DB_ADMIN_PASSWORD),
-                new ConcealedString($variable_provider->get(self::SITE_ADMIN_PASSWORD)),
-                $fqdn,
-            )
+            DBSetupParameters::fromAdminCredentials($variable_provider->get(self::DB_ADMIN_USER), $variable_provider->get(self::DB_ADMIN_PASSWORD))
+                ->withSiteAdminPassword(new ConcealedString($variable_provider->get(self::SITE_ADMIN_PASSWORD)))
+                ->withTuleapFQDN($fqdn)
         );
 
         $ssh_daemon->startDaemon($output);

@@ -28,9 +28,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Tuleap\Config\ConfigKeyLegacyBool;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBConfig;
-use TuleapCfg\Command\SetupMysql\ConnectionManager;
 use TuleapCfg\Command\SetupMysql\ConnectionManagerInterface;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use TuleapCfg\Command\SetupMysql\DBSetupParameters;
@@ -70,9 +70,9 @@ final class SetupMysqlInitCommand extends Command
     public function getHelp(): string
     {
         $ssl_opt       = MysqlCommandHelper::OPT_SSL;
-        $ssl_disabled  = ConnectionManager::SSL_NO_SSL;
-        $ssl_no_verify = ConnectionManager::SSL_NO_VERIFY;
-        $ssl_verify_ca = ConnectionManager::SSL_VERIFY_CA;
+        $ssl_disabled  = MysqlCommandHelper::SSL_NO_SSL;
+        $ssl_no_verify = MysqlCommandHelper::SSL_NO_VERIFY;
+        $ssl_verify_ca = MysqlCommandHelper::SSL_VERIFY_CA;
         $ssl_ca_file   = MysqlCommandHelper::OPT_SSL_CA;
         return <<<EOT
         Initialize the database (MySQL > 5.7 or MariaDB 10.3) for use with Tuleap
@@ -124,21 +124,37 @@ final class SetupMysqlInitCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $user = $input->getOption(self::OPT_ADMIN_USER);
-        assert(is_string($user));
+        $admin_user = $input->getOption(self::OPT_ADMIN_USER);
+        assert(is_string($admin_user));
 
-        $password = $input->getOption(self::OPT_ADMIN_PASSWORD);
-        if (! $password) {
-            $io->getErrorStyle()->writeln(sprintf('<error>Missing mysql password for admin user `%s`</error>', $user));
+        $admin_password = $input->getOption(self::OPT_ADMIN_PASSWORD);
+        if (! $admin_password) {
+            $io->getErrorStyle()->writeln(sprintf('<error>Missing mysql password for admin user `%s`</error>', $admin_user));
             return 1;
         }
-        assert(is_string($password));
+        assert(is_string($admin_password));
 
-        $db_params = new DBSetupParameters($this->command_helper->getHost($input), $user, $password);
+        \ForgeConfig::loadDatabaseConfig();
+        \ForgeConfig::set(DBConfig::CONF_HOST, $this->command_helper->getHost($input));
         try {
-            $db_params = $db_params->withPort($this->command_helper->getPort($input));
-            $db_params = $db_params->withSSLMode($this->command_helper->getSSLMode($input));
-            $db_params = $db_params->withSSLCaFile($this->command_helper->getSSLCAFile($input, $db_params->ssl_mode));
+            \ForgeConfig::set(DBConfig::CONF_PORT, $this->command_helper->getPort($input));
+
+            $ssl_mode = $this->command_helper->getSSLMode($input);
+            switch ($ssl_mode) {
+                case MysqlCommandHelper::SSL_NO_SSL:
+                    \ForgeConfig::set(DBConfig::CONF_ENABLE_SSL, ConfigKeyLegacyBool::FALSE);
+                    \ForgeConfig::set(DBConfig::CONF_SSL_VERIFY_CERT, ConfigKeyLegacyBool::FALSE);
+                    break;
+                case MysqlCommandHelper::SSL_NO_VERIFY:
+                    \ForgeConfig::set(DBConfig::CONF_ENABLE_SSL, ConfigKeyLegacyBool::TRUE);
+                    \ForgeConfig::set(DBConfig::CONF_SSL_VERIFY_CERT, ConfigKeyLegacyBool::FALSE);
+                    break;
+                case MysqlCommandHelper::SSL_VERIFY_CA:
+                    \ForgeConfig::set(DBConfig::CONF_ENABLE_SSL, ConfigKeyLegacyBool::TRUE);
+                    \ForgeConfig::set(DBConfig::CONF_SSL_VERIFY_CERT, ConfigKeyLegacyBool::TRUE);
+                    break;
+            }
+            \ForgeConfig::set(DBConfig::CONF_SSL_CA, $this->command_helper->getSSLCAFile($input, $ssl_mode));
         } catch (InvalidSSLConfigurationException $exception) {
             $io->getErrorStyle()->writeln(sprintf('<error>%s</error>', $exception->getMessage()));
             return 1;
@@ -148,6 +164,7 @@ final class SetupMysqlInitCommand extends Command
 
         $app_dbname = $input->getOption(self::OPT_APP_DBNAME);
         assert(is_string($app_dbname));
+        \ForgeConfig::set(DBConfig::CONF_DBNAME, $app_dbname);
 
         $app_password = $input->getOption(self::OPT_APP_PASSWORD);
         if ($app_password && ! is_string($app_password)) {
@@ -155,15 +172,16 @@ final class SetupMysqlInitCommand extends Command
             return 1;
         }
         assert($app_password === null || is_string($app_password));
+        \ForgeConfig::set(DBConfig::CONF_DBPASSWORD, $app_password);
 
-        $app_user = $input->getOption(self::OPT_APP_USER);
-        if (! is_string($app_user)) {
+        $tuleap_user = $input->getOption(self::OPT_APP_USER);
+        if (! is_string($tuleap_user)) {
             $io->getErrorStyle()->writeln(sprintf('<error>%s must be a string</error>', self::OPT_APP_USER));
         }
-        assert(is_string($app_user));
-        if ($app_password !== null) {
-            $db_params = $db_params->withTuleapCredentials($app_dbname, $app_user, $app_password);
-        }
+        assert(is_string($tuleap_user));
+        \ForgeConfig::set(DBConfig::CONF_DBUSER, $tuleap_user);
+
+        $db_params = DBSetupParameters::fromAdminCredentials($admin_user, $admin_password);
 
         if (getenv(self::ENV_AZURE_SUFFIX) !== false) {
             $azure_suffix = getenv(self::ENV_AZURE_SUFFIX);
@@ -194,10 +212,11 @@ final class SetupMysqlInitCommand extends Command
         if ($initialize_db) {
             $db = $this->connection_manager->getDBWithoutDBName(
                 $io,
-                $db_params->host,
-                $db_params->port,
-                $db_params->ssl_mode,
-                $db_params->ca_path,
+                \ForgeConfig::get(DBConfig::CONF_HOST),
+                \ForgeConfig::get(DBConfig::CONF_PORT),
+                \ForgeConfig::getStringAsBool(DBConfig::CONF_ENABLE_SSL),
+                \ForgeConfig::getStringAsBool(DBConfig::CONF_SSL_VERIFY_CERT),
+                \ForgeConfig::get(DBConfig::CONF_SSL_CA),
                 $db_params->admin_user,
                 $db_params->admin_password
             );
@@ -210,17 +229,17 @@ final class SetupMysqlInitCommand extends Command
                 $input,
                 $io,
                 $db,
-                $db_params->dbname,
+                \ForgeConfig::get(DBConfig::CONF_DBNAME),
                 $db_params->grant_hostname,
                 $nss_user,
                 $nss_password
             );
-            $this->initializeMediawiki($input, $io, $db, $db_params->tuleap_user, $db_params->grant_hostname);
+            $this->initializeMediawiki($input, $io, $db, $tuleap_user, $db_params->grant_hostname);
 
             $db->run('FLUSH PRIVILEGES');
         }
 
-        $return_value = $this->database_configurator->writeDatabaseIncFile($db_params, $this->base_directory);
+        $return_value = $this->database_configurator->writeDatabaseIncFile($db_params->azure_prefix, $this->base_directory);
         if ($return_value !== 0) {
             return $return_value;
         }
@@ -240,16 +259,14 @@ final class SetupMysqlInitCommand extends Command
         return $password;
     }
 
-    /**
-     * @psalm-param value-of<ConnectionManagerInterface::ALLOWED_SSL_MODES> $ssl_mode
-     */
     private function initializeDatabase(
         InputInterface $input,
         SymfonyStyle $output,
         DBWrapperInterface $db,
         DBSetupParameters $db_params,
     ): void {
-        if (! $db_params->hasTuleapCredentials()) {
+        $dbname = \ForgeConfig::get(DBConfig::CONF_DBNAME);
+        if (! $dbname || ! \ForgeConfig::get(DBConfig::CONF_DBPASSWORD)) {
             return;
         }
 
@@ -259,12 +276,12 @@ final class SetupMysqlInitCommand extends Command
         if ($db_params->canSetup()) {
             $this->database_configurator->setupDatabase($output, $db_params, $this->base_directory);
         } else {
-            $this->database_configurator->initializeDatabase($output, $db, $db_params);
+            $this->database_configurator->initializeDatabase($output, $db, $dbname, $db_params->grant_hostname);
         }
 
         $log_password = $input->getOption(self::OPT_LOG_PASSWORD);
-        if (is_string($log_password) && $db_params->hasTuleapCredentials()) {
-            file_put_contents($log_password, sprintf("MySQL application user (%s): %s\n", $db_params->tuleap_user, $db_params->tuleap_password), FILE_APPEND);
+        if (is_string($log_password)) {
+            file_put_contents($log_password, sprintf("MySQL application user (%s): %s\n", \ForgeConfig::get(DBConfig::CONF_DBUSER), \ForgeConfig::get(DBConfig::CONF_DBPASSWORD)), FILE_APPEND);
         }
     }
 

@@ -27,20 +27,16 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 interface ConnectionManagerInterface
 {
-    public const SSL_NO_SSL    = 'disabled';
-    public const SSL_NO_VERIFY = 'no-verify';
-    public const SSL_VERIFY_CA = 'verify-ca';
-
-    public const ALLOWED_SSL_MODES = [
-        self::SSL_NO_SSL,
-        self::SSL_NO_VERIFY,
-        self::SSL_VERIFY_CA,
-    ];
-
-    /**
-     * @psalm-param value-of<self::ALLOWED_SSL_MODES> $ssl_mode
-     */
-    public function getDBWithoutDBName(SymfonyStyle $io, string $host, int $port, string $ssl_mode, string $ssl_ca_file, string $user, string $password): DBWrapperInterface;
+    public function getDBWithoutDBName(
+        SymfonyStyle $io,
+        string $host,
+        int $port,
+        bool $ssl_enabled,
+        bool $verify_certificate,
+        string $ssl_ca_file,
+        string $user,
+        string $password,
+    ): DBWrapperInterface;
 
     public function checkSQLModes(DBWrapperInterface $db): void;
 }
