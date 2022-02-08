@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\App;
+namespace Tuleap\OAuth2ServerCore\App;
 
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Test\Builders\ProjectTestBuilder;

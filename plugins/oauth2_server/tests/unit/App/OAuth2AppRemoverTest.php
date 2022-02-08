@@ -24,6 +24,7 @@ namespace Tuleap\OAuth2Server\App;
 
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use Tuleap\OAuth2Server\User\AuthorizationDao;
+use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class OAuth2AppRemoverTest extends \Tuleap\Test\PHPUnit\TestCase

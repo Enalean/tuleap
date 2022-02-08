@@ -26,7 +26,7 @@ use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 use Tuleap\Authentication\Scope\AuthenticationTestCoveringScope;
-use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase

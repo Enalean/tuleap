@@ -25,8 +25,8 @@ namespace Tuleap\OAuth2Server\AccessToken;
 use Project;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBFactory;
-use Tuleap\OAuth2Server\App\AppDao;
-use Tuleap\OAuth2Server\App\NewOAuth2App;
+use Tuleap\OAuth2ServerCore\App\AppDao;
+use Tuleap\OAuth2ServerCore\App\NewOAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 
 final class OAuth2AccessTokenDAOTest extends \Tuleap\Test\PHPUnit\TestCase

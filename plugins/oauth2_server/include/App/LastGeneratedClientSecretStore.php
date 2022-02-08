@@ -27,6 +27,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\OAuth2ServerCore\App\LastGeneratedClientSecret;
 
 class LastGeneratedClientSecretStore
 {

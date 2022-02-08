@@ -31,8 +31,8 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
-use Tuleap\OAuth2Server\App\ClientIdentifier;
-use Tuleap\OAuth2Server\App\InvalidClientIdentifierKey;
+use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
+use Tuleap\OAuth2ServerCore\App\InvalidClientIdentifierKey;
 use Tuleap\OAuth2Server\App\OAuth2AppCredentialVerifier;
 use Tuleap\OAuth2Server\OAuth2ServerException;
 

@@ -24,6 +24,7 @@ namespace Tuleap\OAuth2Server\App;
 
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\OAuth2ServerCore\App\AppDao;
 
 class ClientSecretUpdater
 {

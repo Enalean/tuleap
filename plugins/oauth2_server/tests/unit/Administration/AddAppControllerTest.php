@@ -30,9 +30,9 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\Feedback\NewFeedback;
-use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
-use Tuleap\OAuth2Server\App\NewOAuth2App;
+use Tuleap\OAuth2ServerCore\App\NewOAuth2App;
+use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 

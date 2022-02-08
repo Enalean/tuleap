@@ -32,11 +32,11 @@ use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\OAuth2Server\Administration\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\Administration\SiteAdmin\SiteAdminListAppsController;
-use Tuleap\OAuth2Server\App\AppDao;
-use Tuleap\OAuth2Server\App\InvalidAppDataException;
+use Tuleap\OAuth2ServerCore\App\AppDao;
+use Tuleap\OAuth2Server\App\AppFactory;
+use Tuleap\OAuth2ServerCore\App\InvalidAppDataException;
 use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
-use Tuleap\OAuth2Server\App\NewOAuth2App;
-use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2ServerCore\App\NewOAuth2App;
 use Tuleap\Request\DispatchablePSR15Compatible;
 
 final class AddAppController extends DispatchablePSR15Compatible
@@ -122,7 +122,7 @@ final class AddAppController extends DispatchablePSR15Compatible
                     $raw_redirect_endpoint,
                     $use_pkce,
                     $this->hasher,
-                    OAuth2App::PLUGIN_APP
+                    AppFactory::PLUGIN_APP
                 );
             } else {
                 $app_to_be_saved = NewOAuth2App::fromProjectAdministrationAppData(
@@ -131,7 +131,7 @@ final class AddAppController extends DispatchablePSR15Compatible
                     $use_pkce,
                     $project,
                     $this->hasher,
-                    OAuth2App::PLUGIN_APP
+                    AppFactory::PLUGIN_APP
                 );
             }
         } catch (InvalidAppDataException $e) {

@@ -22,8 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\App;
 
+use Tuleap\OAuth2ServerCore\App\AppDao;
+use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
+
 class AppFactory
 {
+    public const PLUGIN_APP = 'plugin_oauth2';
+
     /**
      * @var AppDao
      */
@@ -65,7 +71,7 @@ class AppFactory
     public function getAppsForProject(\Project $project): array
     {
         $apps = [];
-        $rows = $this->app_dao->searchByProject($project, OAuth2App::PLUGIN_APP);
+        $rows = $this->app_dao->searchByProject($project, self::PLUGIN_APP);
         foreach ($rows as $row) {
             $apps[] = new OAuth2App(
                 $row['id'],
@@ -84,7 +90,7 @@ class AppFactory
     public function getSiteLevelApps(): array
     {
         $apps = [];
-        $rows = $this->app_dao->searchSiteLevelApps(OAuth2App::PLUGIN_APP);
+        $rows = $this->app_dao->searchSiteLevelApps(self::PLUGIN_APP);
         foreach ($rows as $row) {
             $apps[] = new OAuth2App(
                 $row['id'],
@@ -103,7 +109,7 @@ class AppFactory
     public function getAppsAuthorizedByUser(\PFUser $user): array
     {
         $apps = [];
-        $rows = $this->app_dao->searchAuthorizedAppsByUser($user, OAuth2App::PLUGIN_APP);
+        $rows = $this->app_dao->searchAuthorizedAppsByUser($user, self::PLUGIN_APP);
         foreach ($rows as $row) {
             $project = null;
             if ($row['project_id'] !== null) {

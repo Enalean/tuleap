@@ -25,7 +25,7 @@ namespace Tuleap\OAuth2Server\User\Account;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\OAuth2Server\App\AppFactory;
-use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2Server\AuthorizationServer\OAuth2ScopeDefinitionPresenter;
 use Tuleap\OAuth2Server\User\AuthorizedScopeFactory;
 use Tuleap\User\Account\AccountTabPresenterCollection;

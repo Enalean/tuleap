@@ -26,7 +26,7 @@ use GuzzleHttp\Psr7\Uri;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;

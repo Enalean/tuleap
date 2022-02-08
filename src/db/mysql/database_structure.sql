@@ -1712,6 +1712,17 @@ CREATE TABLE oauth2_server_oidc_signing_key (
     INDEX idx_expiration_date (expiration_date)
 ) ENGINE=InnoDB;
 
+CREATE TABLE oauth2_server_app(
+     id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+     project_id INT(11),
+     name VARCHAR(255) NOT NULL,
+     redirect_endpoint TEXT NOT NULL,
+     verifier VARCHAR(255) NOT NULL,
+     use_pkce BOOLEAN NOT NULL,
+     app_type VARCHAR(255) NOT NULL,
+     INDEX idx_project_id(project_id)
+) ENGINE=InnoDB;
+
 #
 # EOF
 #

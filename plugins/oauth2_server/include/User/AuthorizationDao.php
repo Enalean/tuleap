@@ -71,8 +71,8 @@ class AuthorizationDao extends DataAccessObject
             "DELETE plugin_oauth2_authorization.*, plugin_oauth2_authorization_scope.*
                        FROM plugin_oauth2_authorization
                        LEFT JOIN plugin_oauth2_authorization_scope ON plugin_oauth2_authorization.id = plugin_oauth2_authorization_scope.authorization_id
-                       LEFT JOIN plugin_oauth2_server_app on plugin_oauth2_authorization.app_id = plugin_oauth2_server_app.id
-                       LEFT JOIN `groups` ON plugin_oauth2_server_app.project_id = `groups`.group_id
+                       LEFT JOIN oauth2_server_app on plugin_oauth2_authorization.app_id = oauth2_server_app.id
+                       LEFT JOIN `groups` ON oauth2_server_app.project_id = `groups`.group_id
                        WHERE $filter_statement",
             $filter_statement->values()
         );

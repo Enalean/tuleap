@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\OAuth2Server\App;
+namespace Tuleap\OAuth2ServerCore\App;
 
 use Tuleap\Test\Builders\ProjectTestBuilder;
 

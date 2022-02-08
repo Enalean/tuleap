@@ -28,7 +28,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenRevoker;
-use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2Server\OAuth2ServerException;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenRevoker;
 use Tuleap\User\OAuth2\OAuth2Exception;

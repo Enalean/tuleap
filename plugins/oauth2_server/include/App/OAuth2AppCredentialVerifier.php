@@ -24,6 +24,9 @@ namespace Tuleap\OAuth2Server\App;
 
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\OAuth2ServerCore\App\AppDao;
+use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
 
 class OAuth2AppCredentialVerifier
 {
