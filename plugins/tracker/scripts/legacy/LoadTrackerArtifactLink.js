@@ -324,19 +324,17 @@ document.observe("dom:loaded", function () {
                         }).toString()
                 );
 
-                const body = new URLSearchParams({
-                    aid: 0,
-                    "only-renderer": 1,
-                    "link-artifact-id": document.getElementById("link-artifact-id").value,
-                    ...$("tracker_report_query_form").serialize(true),
-                }).toString();
+                const body = new URLSearchParams($("tracker_report_query_form").serialize());
+                body.set("aid", "0");
+                body.set("only-renderer", "1");
+                body.set("link-artifact-id", document.getElementById("link-artifact-id").value);
 
                 const response = await fetch(url, {
                     method: "POST",
                     headers: {
                         "Content-type": "application/x-www-form-urlencoded",
                     },
-                    body,
+                    body: body.toString(),
                 });
 
                 const text = await response.text();
