@@ -38,7 +38,8 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
             $redirect_uri,
             true,
             ProjectTestBuilder::aProject()->build(),
-            new SplitTokenVerificationStringHasher()
+            new SplitTokenVerificationStringHasher(),
+            'plugin_oauth2'
         );
     }
 
@@ -66,7 +67,8 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
             $redirect_uri,
             $use_pkce,
             $project,
-            new SplitTokenVerificationStringHasher()
+            new SplitTokenVerificationStringHasher(),
+            'plugin_oauth2'
         );
         $this->assertSame($app_name, $new_app->getName());
         $this->assertSame($redirect_uri, $new_app->getRedirectEndpoint());
@@ -86,7 +88,8 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
             $app_name,
             $redirect_uri,
             $use_pkce,
-            new SplitTokenVerificationStringHasher()
+            new SplitTokenVerificationStringHasher(),
+            'plugin_oauth2'
         );
         $this->assertSame($app_name, $new_app->getName());
         $this->assertSame($redirect_uri, $new_app->getRedirectEndpoint());
@@ -105,7 +108,7 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNewAppSecretCanBeHashed(): void
     {
         $hasher  = new SplitTokenVerificationStringHasher();
-        $new_app = NewOAuth2App::fromProjectAdministrationAppData('App', 'https://example.com', true, ProjectTestBuilder::aProject()->build(), $hasher);
+        $new_app = NewOAuth2App::fromProjectAdministrationAppData('App', 'https://example.com', true, ProjectTestBuilder::aProject()->build(), $hasher, 'plugin_oauth2');
 
         $this->assertEquals($hasher->computeHash($new_app->getSecret()), $new_app->getHashedSecret());
     }
@@ -113,8 +116,8 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testEachNewAppIsAssignedADifferentSecret(): void
     {
         $hasher    = new SplitTokenVerificationStringHasher();
-        $new_app_1 = NewOAuth2App::fromProjectAdministrationAppData('App1', 'https://example.com', true, ProjectTestBuilder::aProject()->build(), $hasher);
-        $new_app_2 = NewOAuth2App::fromProjectAdministrationAppData('App2', 'https://example.com', true, ProjectTestBuilder::aProject()->build(), $hasher);
+        $new_app_1 = NewOAuth2App::fromProjectAdministrationAppData('App1', 'https://example.com', true, ProjectTestBuilder::aProject()->build(), $hasher, 'plugin_oauth2');
+        $new_app_2 = NewOAuth2App::fromProjectAdministrationAppData('App2', 'https://example.com', true, ProjectTestBuilder::aProject()->build(), $hasher, 'plugin_oauth2');
 
         $this->assertNotEquals($new_app_1->getSecret(), $new_app_2->getSecret());
         $this->assertNotEquals($new_app_1->getHashedSecret(), $new_app_2->getHashedSecret());

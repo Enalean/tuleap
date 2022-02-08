@@ -59,33 +59,41 @@ class AppDao extends DataAccessObject
     /**
      * @psalm-return array<array{id:int, project_id:int, name:string, redirect_endpoint: string, use_pkce:0|1}>
      */
-    public function searchByProject(\Project $project): array
+    public function searchByProject(\Project $project, string $app_type): array
     {
-        $sql = "SELECT id, project_id, name, redirect_endpoint, use_pkce FROM plugin_oauth2_server_app
-            WHERE project_id = ?";
-        return $this->getDB()->run($sql, $project->getID());
+        $sql = "SELECT id, project_id, name, redirect_endpoint, use_pkce
+                FROM plugin_oauth2_server_app
+                WHERE project_id = ?
+                    AND app_type = ?";
+
+        return $this->getDB()->run($sql, $project->getID(), $app_type);
     }
 
     /**
      * @psalm-return array<array{id:int, name:string, redirect_endpoint: string, use_pkce:0|1}>
      */
-    public function searchSiteLevelApps(): array
+    public function searchSiteLevelApps(string $app_type): array
     {
         return $this->getDB()->run(
-            'SELECT id, name, redirect_endpoint, use_pkce FROM plugin_oauth2_server_app WHERE project_id IS NULL'
+            'SELECT id, name, redirect_endpoint, use_pkce FROM plugin_oauth2_server_app
+             WHERE project_id IS NULL
+                AND app_type = ?',
+            $app_type
         );
     }
 
     /**
      * @psalm-return array<array{id:int, project_id:int|null, name:string, redirect_endpoint:string, use_pkce:0|1}>
      */
-    public function searchAuthorizedAppsByUser(\PFUser $user): array
+    public function searchAuthorizedAppsByUser(\PFUser $user, string $app_type): array
     {
         $sql = 'SELECT app.id, project_id, name, redirect_endpoint, use_pkce
                 FROM plugin_oauth2_server_app AS app
                 JOIN plugin_oauth2_authorization AS authorization ON app.id = authorization.app_id
-                WHERE authorization.user_id = ?';
-        return $this->getDB()->run($sql, $user->getId());
+                WHERE authorization.user_id = ?
+                    AND app_type = ?';
+
+        return $this->getDB()->run($sql, $user->getId(), $app_type);
     }
 
     public function create(NewOAuth2App $app): int
@@ -99,6 +107,7 @@ class AppDao extends DataAccessObject
                 'redirect_endpoint' => $app->getRedirectEndpoint(),
                 'verifier'          => $app->getHashedSecret(),
                 'use_pkce'          => $app->isUsingPKCE(),
+                'app_type'          => $app->getAppType(),
             ]
         );
         return (int) $this->getDB()->lastInsertId();

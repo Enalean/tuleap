@@ -74,7 +74,8 @@ final class OAuth2AuthorizationCodeDAOTest extends \Tuleap\Test\PHPUnit\TestCase
                 'https://example.com',
                 true,
                 new \Project(['group_id' => self::$active_project_id]),
-                new SplitTokenVerificationStringHasher()
+                new SplitTokenVerificationStringHasher(),
+                'plugin_oauth2'
             )
         );
         self::$deleted_project_app_id = $app_dao->create(
@@ -83,7 +84,8 @@ final class OAuth2AuthorizationCodeDAOTest extends \Tuleap\Test\PHPUnit\TestCase
                 'https://example.com',
                 true,
                 new \Project(['group_id' => self::$deleted_project_id]),
-                new SplitTokenVerificationStringHasher()
+                new SplitTokenVerificationStringHasher(),
+                'plugin_oauth2'
             )
         );
     }
