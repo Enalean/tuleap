@@ -1763,5 +1763,6 @@ class ProjectTest extends ProjectBase
 
         $response_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertNotEmpty($response_json['styles']['content']);
+        self::assertJson($response_json['project_sidebar']['config']);
     }
 }

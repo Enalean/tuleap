@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\REST\v1;
 
-use Project;
+use Tuleap\Layout\ProjectSidebar\ProjectSidebarConfigRepresentation;
 
 /**
  * @psalm-immutable
@@ -33,11 +33,11 @@ final class ProjectSidebarDataRepresentation
     {
     }
 
-    public static function fromProjectAndUser(Project $project, \PFUser $user): self
+    public static function fromConfigRepresentationAndUser(ProjectSidebarConfigRepresentation $config_representation, \PFUser $user): self
     {
         return new self(
             $user->getPreference('sidebar_state') !== 'sidebar-expanded',
-            "to_be_done: " . $project->getID()
+            json_encode($config_representation, JSON_THROW_ON_ERROR)
         );
     }
 }
