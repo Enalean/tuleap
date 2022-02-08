@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { disableSpecificErrorThrownByCkeditor } from "../support/disable-specific-error-thrown-by-ckeditor";
+
 describe("Document PhpWiki integration", () => {
     let project_unixname: string, public_name: string, now: number;
 
@@ -149,16 +151,6 @@ describe("Document PhpWiki integration", () => {
         cy.get("[data-test=document-confirm-deletion-button]").click();
     });
 });
-
-function disableSpecificErrorThrownByCkeditor(): void {
-    cy.on("uncaught:exception", (err) => {
-        // the message bellow is only thrown by ckeditor, if any other js exception is thrown
-        // the test will fail
-        if (err.message.includes("Cannot read properties of undefined (reading 'compatMode')")) {
-            return false;
-        }
-    });
-}
 
 function createAWikiDocument(document_title: string, page_name: string): void {
     cy.get("[data-test=document-header-actions]").within(() => {

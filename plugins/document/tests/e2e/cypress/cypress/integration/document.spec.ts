@@ -17,15 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function disableSpecificErrorThrownByCkeditor(): void {
-    cy.on("uncaught:exception", (err) => {
-        // the message bellow is only thrown by ckeditor, if any other js exception is thrown
-        // the test will fail
-        if (err.message.includes("Cannot read properties of undefined (reading 'compatMode')")) {
-            return false;
-        }
-    });
-}
+import { disableSpecificErrorThrownByCkeditor } from "../support/disable-specific-error-thrown-by-ckeditor";
 
 describe("Document new UI", () => {
     before(() => {
