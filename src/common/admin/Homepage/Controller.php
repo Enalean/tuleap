@@ -20,8 +20,8 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Config\ConfigDao;
-use Tuleap\layout\HomePage\NewsCollectionBuilder;
-use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
+use Tuleap\Layout\HomePage\NewsCollectionBuilder;
+use Tuleap\Layout\HomePage\StatisticsCollectionBuilder;
 
 class Admin_Homepage_Controller
 {

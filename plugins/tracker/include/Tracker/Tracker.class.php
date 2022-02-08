@@ -26,7 +26,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupRetrieverWithLegacy;

@@ -19,7 +19,7 @@
  */
 
 use Tuleap\InviteBuddy\InviteBuddiesPresenter;
-use Tuleap\layout\NewDropdown\NewDropdownPresenter;
+use Tuleap\Layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\Platform\Banner\Banner;
 
 class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps

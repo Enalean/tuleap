@@ -32,7 +32,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
-use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Banner\BannerRetriever;

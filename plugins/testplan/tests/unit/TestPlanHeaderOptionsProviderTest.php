@@ -26,9 +26,9 @@ use Project;
 use Tracker;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
-use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
-use Tuleap\layout\NewDropdown\NewDropdownLinkPresenter;
-use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
+use Tuleap\Layout\NewDropdown\NewDropdownLinkPresenter;
+use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 

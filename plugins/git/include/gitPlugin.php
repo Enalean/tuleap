@@ -150,7 +150,7 @@ use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\GitBundle;
 use Tuleap\Http\HttpClientFactory;
-use Tuleap\layout\HomePage\StatisticsCollectionCollector;
+use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Mail\MailFilter;

@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\NewDropdown;
 
-use Tuleap\layout\NewDropdown\NewDropdownLinkPresenter;
-use Tuleap\layout\NewDropdown\NewDropdownProjectLinksCollector;
+use Tuleap\Layout\NewDropdown\NewDropdownLinkPresenter;
+use Tuleap\Layout\NewDropdown\NewDropdownProjectLinksCollector;
 
 class TrackerLinksInNewDropdownCollector
 {

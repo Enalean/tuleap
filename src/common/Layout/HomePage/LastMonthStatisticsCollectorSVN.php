@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,39 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\layout\NewDropdown;
+namespace Tuleap\Layout\HomePage;
 
-/**
- * @psalm-immutable
- */
-class DataAttributePresenter
+use Tuleap\Event\Dispatchable;
+
+class LastMonthStatisticsCollectorSVN implements Dispatchable
 {
+    public const NAME = 'lastMonthStatisticsCollectorSVN';
     /**
-     * @var string
+     * @var int
      */
-    public $name;
+    public $svn_commits = 0;
     /**
-     * @var string
+     * @var int
      */
-    public $value;
+    private $timestamp;
 
-    public function __construct(string $name, string $value)
+    public function __construct(int $timestamp)
     {
-        $this->name  = $name;
-        $this->value = $value;
+        $this->timestamp = $timestamp;
+    }
+
+    public function getTimestamp(): int
+    {
+        return $this->timestamp;
+    }
+
+    public function getSVNPluginCommitsCount(): int
+    {
+        return $this->svn_commits;
+    }
+
+    public function setSvnCommits(int $svn_commits)
+    {
+        $this->svn_commits = $svn_commits;
     }
 }

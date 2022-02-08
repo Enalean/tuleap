@@ -26,7 +26,7 @@ use AgileDashboard_KanbanActionsChecker;
 use AgileDashboard_KanbanCannotAccessException;
 use AgileDashboard_KanbanNotFoundException;
 use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
-use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
 class NewDropdownCurrentContextSectionForKanbanProvider

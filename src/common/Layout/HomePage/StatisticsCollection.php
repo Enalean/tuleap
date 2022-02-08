@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,30 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Layout\HomePage;
 
-namespace Tuleap\layout\NewDropdown;
-
-/**
- * @psalm-immutable
- */
-class NewDropdownLinkSectionPresenter
+class StatisticsCollection
 {
     /**
-     * @var string
+     * @var HomePageStatistic[]
      */
-    public $label;
-    /**
-     * @var NewDropdownLinkPresenter[]
-     */
-    public $links;
+    private $statistics = [];
+
+    public function hasStatistics()
+    {
+        return count($this->statistics) > 0;
+    }
+
+    public function addStatistic($label, $total, $last_month_growth)
+    {
+        $this->statistics[] = new HomePageStatistic($label, $total, $last_month_growth);
+    }
 
     /**
-     * @param NewDropdownLinkPresenter[] $links
+     * @return HomePageStatistic[]
      */
-    public function __construct(string $label, array $links)
+    public function getStatistics()
     {
-        $this->label = $label;
-        $this->links = $links;
+        return $this->statistics;
     }
 }

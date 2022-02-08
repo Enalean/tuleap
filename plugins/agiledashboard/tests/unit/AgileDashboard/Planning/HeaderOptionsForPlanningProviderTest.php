@@ -31,9 +31,9 @@ use Planning_ArtifactMilestone;
 use Planning_Milestone;
 use Planning_VirtualTopMilestone;
 use Tracker;
-use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
-use Tuleap\layout\NewDropdown\NewDropdownLinkPresenter;
-use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
+use Tuleap\Layout\NewDropdown\NewDropdownLinkPresenter;
+use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
 class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\TestCase

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\layout\NewDropdown;
+namespace Tuleap\Layout\NewDropdown;
 
 use PFUser;
 use Project;

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\layout\HomePage;
+namespace Tuleap\Layout\HomePage;
 
 use EventManager;
 use Project;

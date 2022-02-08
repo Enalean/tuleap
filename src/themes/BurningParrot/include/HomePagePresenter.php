@@ -23,8 +23,8 @@ namespace Tuleap\Theme\BurningParrot;
 use Admin_Homepage_LogoFinder;
 use Codendi_HTMLPurifier;
 use PFUser;
-use Tuleap\layout\HomePage\NewsCollection;
-use Tuleap\layout\HomePage\StatisticsCollection;
+use Tuleap\Layout\HomePage\NewsCollection;
+use Tuleap\Layout\HomePage\StatisticsCollection;
 use User_LoginPresenter;
 
 class HomePagePresenter

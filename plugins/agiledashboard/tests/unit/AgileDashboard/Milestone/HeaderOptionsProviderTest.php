@@ -30,7 +30,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
-use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
+use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
 class HeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
