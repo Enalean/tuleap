@@ -26,7 +26,6 @@
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Rule_StringTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testCr(): void
     {
         $r = new Rule_NoCr();

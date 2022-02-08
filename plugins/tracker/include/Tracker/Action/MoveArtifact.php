@@ -37,7 +37,6 @@ use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 
 class MoveArtifact
 {
-
     /**
      * @var ArtifactsDeletionManager
      */

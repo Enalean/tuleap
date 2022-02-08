@@ -34,7 +34,6 @@ use Tuleap\Tracker\Webhook\WebhookFactory;
 
 class WebhookEditController implements DispatchableWithRequest
 {
-
     /**
      * @var WebhookFactory
      */

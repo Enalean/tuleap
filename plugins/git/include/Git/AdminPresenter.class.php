@@ -20,7 +20,6 @@
 
 class Git_AdminPresenter
 {
-
     public $title;
 
     public $csrf_token;

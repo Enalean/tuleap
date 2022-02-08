@@ -21,7 +21,6 @@
 
 class Git_Driver_Gerrit_ProjectCreator
 {
-
     public const GROUP_REPLICATION      = 'replication';
     public const GROUP_REGISTERED_USERS = 'Registered Users';
 

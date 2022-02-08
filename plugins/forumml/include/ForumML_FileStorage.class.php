@@ -29,7 +29,6 @@
  */
 class ForumML_FileStorage
 {
-
     // Root directory to host mails attachments
     public $root;
 

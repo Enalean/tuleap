@@ -23,7 +23,6 @@
  */
 class Rest_TokenFactory
 {
-
     private $token_dao;
 
     public function __construct(Rest_TokenDao $token_dao)

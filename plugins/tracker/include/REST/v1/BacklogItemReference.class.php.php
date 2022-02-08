@@ -23,7 +23,6 @@
  */
 class BacklogItemReference
 {
-
     /**
      * @var object Identification of the backlog item {@required true} {@type array}
      * @psalm-var array

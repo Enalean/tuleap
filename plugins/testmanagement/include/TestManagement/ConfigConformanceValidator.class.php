@@ -24,7 +24,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ConfigConformanceValidator
 {
-
     /**
      * @var Config
      */

@@ -23,7 +23,6 @@
 
 class MediaWikiInstantiater
 {
-
     public const MW_123_PATH = '/usr/share/mediawiki-tuleap-123';
 
     /** @var \Psr\Log\LoggerInterface */

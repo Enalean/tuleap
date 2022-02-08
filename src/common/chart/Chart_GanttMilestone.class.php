@@ -30,7 +30,6 @@ use Tuleap\Chart\ColorsForCharts;
 */
 class Chart_GanttMileStone
 {
-
     protected $jpgraph_instance;
 
     /**

@@ -36,7 +36,6 @@ use Tuleap\Request\CodeIsAValidHTTPStatus;
  */
 class MessageException extends Exception implements CodeIsAValidHTTPStatus
 {
-
     public $Error;
 
     public $StatusCode;

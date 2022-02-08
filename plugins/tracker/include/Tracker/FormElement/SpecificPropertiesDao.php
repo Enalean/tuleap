@@ -26,7 +26,6 @@ use DataAccessObject;
 
 abstract class SpecificPropertiesDao extends DataAccessObject
 {
-
     public function searchByFieldId($field_id)
     {
         $field_id = $this->da->escapeInt($field_id);

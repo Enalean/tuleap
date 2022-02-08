@@ -21,7 +21,6 @@
 
 class CrossReferenceDao extends DataAccessObject
 {
-
     public function __construct($da = null)
     {
         parent::__construct($da);

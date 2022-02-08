@@ -27,7 +27,6 @@ use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
  */
 class Tracker_Workflow_Trigger_RulesProcessor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
     /** @var Tracker_Workflow_WorkflowUser */
     private $workflow_user;
 

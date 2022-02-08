@@ -21,7 +21,6 @@
 
 class Templating_Presenter_ButtonDropdownsOptionDivider extends Templating_Presenter_ButtonDropdownsOption
 {
-
     public function __construct()
     {
     }

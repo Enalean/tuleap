@@ -18,7 +18,6 @@
 
 class b201612201031_add_expert_query_column extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add column expert_query in tracker_report table';

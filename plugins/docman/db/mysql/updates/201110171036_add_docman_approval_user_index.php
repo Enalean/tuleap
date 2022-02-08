@@ -20,7 +20,6 @@
 
 class b201110171036_add_docman_approval_user_index extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

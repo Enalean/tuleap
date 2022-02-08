@@ -21,7 +21,6 @@
 
 class GitDriver
 {
-
     protected function execGitAction($cmd, $action_name)
     {
         $out = [];

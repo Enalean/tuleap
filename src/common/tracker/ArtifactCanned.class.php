@@ -13,7 +13,6 @@
 
 class ArtifactCanned
 {
-
     /**
      * The artifact type object.
      *

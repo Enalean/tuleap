@@ -26,7 +26,6 @@ namespace Tuleap\ProFTPd\Directory;
  */
 class DirectoryPathCollection
 {
-
     private $collection = [];
 
     public function add(DirectoryPathPart $path_part)

@@ -21,7 +21,6 @@
 
 class AgileDashboard_KanbanColumn
 {
-
     /**
      * @var int
      */

@@ -26,7 +26,6 @@ use Tuleap\Tracker\FormElement\SpecificPropertiesDao;
 
 class FloatFieldDao extends SpecificPropertiesDao
 {
-
     public function __construct()
     {
         parent::__construct();

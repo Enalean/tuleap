@@ -38,7 +38,6 @@
  */
 class LDAP_UserWrite
 {
-
     /**
      * @var \Psr\Log\LoggerInterface
      */

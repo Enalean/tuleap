@@ -19,7 +19,6 @@
  */
 class SystemEvent_EDIT_SSH_KEYS extends SystemEvent
 {
-
     /**
      * Verbalize the parameters so they are readable and much user friendly in
      * notifications

@@ -25,7 +25,6 @@ use Tuleap\DB\DataAccessObject;
 
 class Dao extends DataAccessObject
 {
-
     public function startTransaction()
     {
         $this->getDB()->beginTransaction();

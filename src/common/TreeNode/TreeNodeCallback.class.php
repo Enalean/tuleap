@@ -25,7 +25,6 @@ require_once 'TreeNode.class.php';
  */
 interface TreeNodeCallback
 {
-
     /**
      * Returns a new TreeNode based on the given one. This function should return a perfectly new node
      *

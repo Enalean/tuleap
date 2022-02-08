@@ -23,7 +23,6 @@
 
 class BackendMailingList extends Backend
 {
-
     protected $_mailinglistdao = null;
 
     /**

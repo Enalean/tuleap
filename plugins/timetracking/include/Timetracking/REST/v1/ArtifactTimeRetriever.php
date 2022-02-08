@@ -39,7 +39,6 @@ use UGroupManager;
 
 class ArtifactTimeRetriever
 {
-
     /**
      * @var Tracker_ArtifactFactory
      */

@@ -22,7 +22,6 @@ require_once 'TreeNode.class.php';
 
 class TreeNode_GetStateVisitor
 {
-
     public const STATE_NODE  = 0;
     public const STATE_LAST  = 1;
     public const STATE_BLANK = 2;

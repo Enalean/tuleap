@@ -23,7 +23,6 @@
 
 interface Tracker_Semantic_IRetrieveSemanticDARByTracker
 {
-
     /**
      * Return the dar of semantics for a given tracker
      *

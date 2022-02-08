@@ -20,7 +20,6 @@
 
 class ForumMLPluginDescriptor extends PluginDescriptor
 {
-
     public function __construct()
     {
         parent::__construct('ForumML', false, dgettext('tuleap-forumml', 'ForumML provide a nice view of GNU Mailman archives.'));

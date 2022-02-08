@@ -24,7 +24,6 @@ use HTTPRequest;
 
 class ProftpdRouter
 {
-
     public const DEFAULT_CONTROLLER = 'explorer';
     public const DEFAULT_ACTION     = 'index';
 

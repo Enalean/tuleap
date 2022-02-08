@@ -20,7 +20,6 @@
 
 class Git_GitoliteHousekeeping_GitoliteHousekeepingResponse
 {
-
     public const ANSI_NOCOLOR = "\033[0m";
     public const ANSI_GREEN   = "\033[32m";
     public const ANSI_YELLOW  = "\033[35m";

@@ -21,7 +21,6 @@
 
 class b201202031104_add_shared_field_columns extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

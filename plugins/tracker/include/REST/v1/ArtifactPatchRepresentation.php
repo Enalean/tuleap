@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\REST\v1;
  */
 class ArtifactPatchRepresentation
 {
-
     /**
      * @var MoveRepresentation {@type \Tuleap\Tracker\REST\v1\MoveRepresentation} {@required true}
      */

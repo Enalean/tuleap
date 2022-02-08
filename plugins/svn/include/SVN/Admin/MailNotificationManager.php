@@ -33,7 +33,6 @@ use UGroupManager;
 
 class MailNotificationManager
 {
-
     private $dao;
     /**
      * @var UsersToNotifyDao

@@ -23,7 +23,6 @@ namespace Tuleap\Git\Permissions;
 
 class FineGrainedPatternValidator
 {
-
     public function isPatternValid($pattern)
     {
         return $this->hasOnlyAuthorizedCharacters($pattern) && ! $this->hasALineBreak($pattern);

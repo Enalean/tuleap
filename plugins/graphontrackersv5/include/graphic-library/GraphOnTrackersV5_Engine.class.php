@@ -25,7 +25,6 @@
  */
 abstract class GraphOnTrackersV5_Engine
 {
-
     public $graph;
     public $data;
     /** @var array */

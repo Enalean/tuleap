@@ -21,7 +21,6 @@
 
 class b201107071731_add_permission_type extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

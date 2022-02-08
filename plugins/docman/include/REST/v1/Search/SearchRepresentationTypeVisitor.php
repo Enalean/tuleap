@@ -30,7 +30,6 @@ use Tuleap\Docman\REST\v1\ItemRepresentation;
  */
 final class SearchRepresentationTypeVisitor implements ItemVisitor
 {
-
     public function visitFolder(\Docman_Folder $item, array $params = [])
     {
         return ItemRepresentation::TYPE_FOLDER;

@@ -20,7 +20,6 @@
 
 class Admin_PermissionDelegationPermissionsModalPresenter
 {
-
     /**
      * @var int
      */

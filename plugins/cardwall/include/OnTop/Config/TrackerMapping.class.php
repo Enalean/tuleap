@@ -21,7 +21,6 @@
 
 abstract class Cardwall_OnTop_Config_TrackerMapping
 {
-
     /**
      * @var Tracker
      */

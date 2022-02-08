@@ -23,7 +23,6 @@ use Project;
 
 class ProjectResourceReference
 {
-
     /**
      * @var string The type of the resource
      */

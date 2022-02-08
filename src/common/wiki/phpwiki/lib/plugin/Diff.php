@@ -32,7 +32,6 @@ require_once('lib/difflib.php');
 
 class WikiPlugin_Diff extends WikiPlugin
 {
-
     public function getName()
     {
         return _("Diff");

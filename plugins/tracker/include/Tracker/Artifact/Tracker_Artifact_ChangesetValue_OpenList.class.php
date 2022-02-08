@@ -26,7 +26,6 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueOpenListFullRepresentation;
  */
 class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_ChangesetValue_List
 {
-
     /**
      * @return mixed
      */

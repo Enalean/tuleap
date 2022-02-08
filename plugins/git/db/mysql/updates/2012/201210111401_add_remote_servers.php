@@ -18,7 +18,6 @@
 
 class b201210111401_add_remote_servers extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

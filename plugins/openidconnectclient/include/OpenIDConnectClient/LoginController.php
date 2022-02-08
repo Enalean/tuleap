@@ -34,7 +34,6 @@ use Tuleap\Request\NotFoundException;
 
 class LoginController implements DispatchableWithRequestNoAuthz
 {
-
     /**
      * @var ConnectorPresenterBuilder
      */

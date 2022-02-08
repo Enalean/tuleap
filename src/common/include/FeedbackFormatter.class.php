@@ -20,7 +20,6 @@
 
 class FeedbackFormatter
 {
-
     /**
      * @return string html
      */

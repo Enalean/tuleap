@@ -26,7 +26,6 @@ use UnexpectedValueException;
 
 class DirectoryParser
 {
-
     private $base_dir;
 
     public function __construct($base_dir)

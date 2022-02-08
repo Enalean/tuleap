@@ -31,7 +31,6 @@ use Tuleap\Tracker\REST\TrackerReference;
  */
 class BacklogItemRepresentation
 {
-
     /**
      * @var Int
      */

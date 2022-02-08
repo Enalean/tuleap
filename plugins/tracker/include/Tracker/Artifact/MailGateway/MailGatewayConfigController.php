@@ -32,7 +32,6 @@ use Tuleap\Admin\AdminPageRenderer;
 
 class MailGatewayConfigController
 {
-
     private static $TEMPLATE = 'siteadmin-config/emailgateway';
 
     /** @var MailGatewayConfig */

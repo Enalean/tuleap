@@ -20,7 +20,6 @@
 
 class GitPresenters_MirrorPresenter
 {
-
     /**
      * @var int
      */

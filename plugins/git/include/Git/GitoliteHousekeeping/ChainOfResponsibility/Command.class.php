@@ -25,7 +25,6 @@
  */
 abstract class Git_GitoliteHousekeeping_ChainOfResponsibility_Command
 {
-
     /** @var Git_GitoliteHousekeeping_ChainOfResponsibility_Command */
     private $next_command;
 

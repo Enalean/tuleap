@@ -27,7 +27,6 @@ use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
 
 class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbstractRenderer
 {
-
     /**
      * @var Artifact
      */

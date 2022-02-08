@@ -21,7 +21,6 @@
 
 class b201508141600_remove_people_skills extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Remove people skills feature';

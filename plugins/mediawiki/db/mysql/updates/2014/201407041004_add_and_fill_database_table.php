@@ -18,7 +18,6 @@
 
 class b201407041004_add_and_fill_database_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

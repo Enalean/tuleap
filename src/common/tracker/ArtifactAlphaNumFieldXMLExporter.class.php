@@ -20,7 +20,6 @@
 
 abstract class ArtifactAlphaNumFieldXMLExporter extends ArtifactFieldXMLExporter
 {
-
     protected function appendStringNode(DOMElement $changeset_node, $type, array $row)
     {
         $field_node = $this->getNode($type, $row);

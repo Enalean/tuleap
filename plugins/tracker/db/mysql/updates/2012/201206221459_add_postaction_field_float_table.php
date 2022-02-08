@@ -20,7 +20,6 @@
 
 class b201206221459_add_postaction_field_float_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add post actions field float table.';

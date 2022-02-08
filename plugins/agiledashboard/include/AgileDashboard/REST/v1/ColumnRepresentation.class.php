@@ -22,7 +22,6 @@ use Tuleap\REST\JsonCast;
 
 class AgileDashboard_ColumnRepresentation
 {
-
     /** @var int */
     public $id;
 

@@ -20,7 +20,6 @@
 
 class b201211121137_add_transition_condition_field_notempty_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add a table not empty field condition on transitions';

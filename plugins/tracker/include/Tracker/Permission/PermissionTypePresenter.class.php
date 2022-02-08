@@ -20,7 +20,6 @@
 
 class Tracker_Permission_PermissionTypePresenter
 {
-
     private $value;
     private $label;
     private $selected;

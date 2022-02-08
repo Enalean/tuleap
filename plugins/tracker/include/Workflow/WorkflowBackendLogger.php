@@ -27,7 +27,6 @@ use TruncateLevelLogger;
  */
 final class WorkflowBackendLogger extends TruncateLevelLogger
 {
-
     /** @var string */
     private const WF_PREFIX = '[WF] ';
 

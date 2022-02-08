@@ -36,7 +36,6 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeFromXMLBuilder;
 
 class Tracker_SemanticFactory
 {
-
     /**
      * Hold an instance of the class
      * @var self|null

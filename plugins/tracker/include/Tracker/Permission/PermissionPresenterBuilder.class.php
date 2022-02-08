@@ -20,7 +20,6 @@
 
 class Tracker_Permission_PermissionPresenterBuilder
 {
-
     public function getPresenter(Tracker $tracker)
     {
         return new Tracker_Permission_PermissionPresenter($tracker, $this->getUGroupList($tracker));

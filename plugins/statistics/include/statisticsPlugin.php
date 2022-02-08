@@ -49,7 +49,6 @@ require_once 'constants.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class StatisticsPlugin extends Plugin
 {
-
     public function __construct($id)
     {
         parent::__construct($id);

@@ -30,7 +30,6 @@ use PFUser;
 
 class CardValidator
 {
-
     public function getFieldsDataFromREST(PFUser $user, Cardwall_SingleCard $single_card, $label, array $values, $column_id = null)
     {
         $fields_data  = $this->getLabelFieldData($single_card, $label);

@@ -23,7 +23,6 @@
  */
 class Tracker_FormElement_View_Admin_UpdateSharedVisitor extends Tracker_FormElement_View_Admin_UpdateVisitor
 {
-
     /**
      * Return html corresponding to FormElement update
      *

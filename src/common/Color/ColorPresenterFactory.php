@@ -22,7 +22,6 @@ namespace Tuleap\Color;
 
 class ColorPresenterFactory
 {
-
     /**
      * @var AllowedColorsCollection
      */

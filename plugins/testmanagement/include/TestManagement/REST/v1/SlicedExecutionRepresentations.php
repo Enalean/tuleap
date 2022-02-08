@@ -22,7 +22,6 @@ namespace Tuleap\TestManagement\REST\v1;
 
 class SlicedExecutionRepresentations
 {
-
     /**
      * @var ExecutionRepresentation[]
      */

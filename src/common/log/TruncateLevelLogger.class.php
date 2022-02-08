@@ -20,7 +20,6 @@
 
 class TruncateLevelLogger implements \Psr\Log\LoggerInterface
 {
-
     /**
      * @var \Psr\Log\LoggerInterface
      */

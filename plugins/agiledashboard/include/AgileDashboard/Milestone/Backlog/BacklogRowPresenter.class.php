@@ -24,7 +24,6 @@
 
 interface AgileDashboard_Milestone_Backlog_BacklogRowPresenter
 {
-
     public function title();
 
     public function url();

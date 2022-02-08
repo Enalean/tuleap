@@ -18,7 +18,6 @@
 
 class b201509020939_drop_priority_plugin_hook extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Drop priority_plugin_hook table";

@@ -27,7 +27,6 @@ use Tuleap\DB\DataAccessObject;
  * */
 class ConfigNotificationEmailCustomSenderDao extends DataAccessObject
 {
-
     /**
      * @return array array(array(format, enabled),...)
      * */

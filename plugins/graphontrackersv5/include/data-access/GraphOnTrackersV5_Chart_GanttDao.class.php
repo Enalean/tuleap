@@ -22,7 +22,6 @@
 
 class GraphOnTrackersV5_Chart_GanttDao extends DataAccessObject
 {
-
     public function __construct($da = null)
     {
         parent::__construct($da);

@@ -21,7 +21,6 @@
 
 class b201505302300_remove_twitter_widgets extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Remove all Twitter widgets';

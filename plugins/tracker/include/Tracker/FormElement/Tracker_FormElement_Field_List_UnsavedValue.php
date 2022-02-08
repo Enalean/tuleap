@@ -21,7 +21,6 @@
 
 class Tracker_FormElement_Field_List_UnsavedValue extends Tracker_FormElement_Field_List_Value
 {
-
     protected $label;
 
     public function __construct($id)

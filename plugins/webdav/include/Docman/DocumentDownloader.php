@@ -29,7 +29,6 @@ use Tuleap\Http\Response\BinaryFileResponseBuilder;
 
 class DocumentDownloader
 {
-
     public function downloadDocument(string $document_name, string $fileType, $fileSize, string $path): void
     {
         $response_builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());

@@ -30,7 +30,6 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 
 class TrackerReportDao extends DataAccessObject
 {
-
     public function __construct(?LegacyDataAccessInterface $da = null)
     {
         parent::__construct($da);

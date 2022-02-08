@@ -20,5 +20,4 @@
  */
 class ProjectDeletionException extends Git_Driver_Gerrit_Exception
 {
-
 }

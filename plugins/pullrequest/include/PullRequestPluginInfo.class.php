@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest;
 
 class PluginInfo extends \PluginInfo
 {
-
     public function __construct($plugin)
     {
         parent::__construct($plugin);

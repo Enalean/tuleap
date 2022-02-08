@@ -27,7 +27,6 @@ use JsonException;
 
 final class EmojiCodepointConverter
 {
-
     /**
      * @throws JsonException
      */

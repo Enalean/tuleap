@@ -33,7 +33,6 @@ use Tuleap\Request;
 
 class GitRepositoryListController implements Request\DispatchableWithRequest, Request\DispatchableWithProject, Request\DispatchableWithBurningParrot
 {
-
     /**
      * @var \ProjectManager
      */

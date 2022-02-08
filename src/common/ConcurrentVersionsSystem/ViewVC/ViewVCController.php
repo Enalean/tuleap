@@ -32,7 +32,6 @@ use Tuleap\Request\NotFoundException;
 
 class ViewVCController implements DispatchableWithRequest
 {
-
     /**
      * Is able to process a request routed by FrontRouter
      *

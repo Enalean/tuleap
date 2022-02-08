@@ -37,7 +37,6 @@ use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
 class MoveChangesetXMLUpdater
 {
-
     /**
      * @var EventManager
      */

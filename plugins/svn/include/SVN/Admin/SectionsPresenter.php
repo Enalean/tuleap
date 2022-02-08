@@ -24,7 +24,6 @@ use Tuleap\SVN\Repository\Repository;
 
 final class SectionsPresenter
 {
-
     public $notifications;
     public $access_control;
     public $immutable_tag;

@@ -29,7 +29,6 @@ use Tuleap\SVN\ServiceSvn;
 
 class ServiceActivator
 {
-
     /**
      * @var ServiceManager
      */

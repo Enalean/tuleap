@@ -20,7 +20,6 @@
  */
 class PluginsAdministration_Presenter_InstalledPluginsPresenter
 {
-
     /** @var array */
     public $plugins;
 

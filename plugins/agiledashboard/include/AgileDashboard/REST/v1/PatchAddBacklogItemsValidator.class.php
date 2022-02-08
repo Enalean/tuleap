@@ -25,7 +25,6 @@ use Tracker_ArtifactFactory;
 
 class PatchAddBacklogItemsValidator implements IValidateElementsToAdd
 {
-
     private $backlog_item_artifact_id;
 
     /**

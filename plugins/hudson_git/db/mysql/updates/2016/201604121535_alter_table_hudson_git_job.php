@@ -20,7 +20,6 @@
 
 class b201604121535_alter_table_hudson_git_job extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Alter table plugin_hudson_git_job for hudson_git_plugin, change job_url into text';

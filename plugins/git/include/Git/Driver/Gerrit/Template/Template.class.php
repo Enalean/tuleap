@@ -27,7 +27,6 @@
  */
 class Git_Driver_Gerrit_Template_Template
 {
-
     /** @var int */
     private $id;
 

@@ -35,7 +35,6 @@ use Tuleap\Trove\TroveCatListPresenter;
 
 class ProjectCategoriesDisplayController implements DispatchableWithRequest
 {
-
     /**
      * Is able to process a request routed by FrontRouter
      *

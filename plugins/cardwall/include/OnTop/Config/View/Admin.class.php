@@ -24,7 +24,6 @@
  */
 class Cardwall_OnTop_Config_View_Admin
 {
-
     public function displayAdminOnTop(Cardwall_OnTop_Config $config)
     {
         return $this->generateAdminForm($config);

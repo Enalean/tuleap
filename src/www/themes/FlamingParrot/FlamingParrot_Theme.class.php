@@ -63,7 +63,6 @@ require_once __DIR__ . '/../../../themes/FlamingParrot/vendor/autoload.php';
 
 class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
     /**
      * @var TemplateRenderer
      */

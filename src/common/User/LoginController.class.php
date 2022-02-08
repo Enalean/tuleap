@@ -21,7 +21,6 @@
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class User_LoginController extends MVC2_Controller
 {
-
     public function __construct(Codendi_Request $request)
     {
         parent::__construct('user', $request);

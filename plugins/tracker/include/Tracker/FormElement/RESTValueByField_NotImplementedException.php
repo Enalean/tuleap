@@ -20,5 +20,4 @@
 
 class Tracker_FormElement_RESTValueByField_NotImplementedException extends Exception
 {
-
 }

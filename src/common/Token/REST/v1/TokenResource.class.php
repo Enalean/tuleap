@@ -40,7 +40,6 @@ use PasswordHandlerFactory;
  */
 class TokenResource
 {
-
     /** @var UserManager */
     private $user_manager;
 

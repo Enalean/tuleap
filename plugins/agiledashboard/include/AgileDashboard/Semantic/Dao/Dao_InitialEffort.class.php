@@ -23,7 +23,6 @@
 
 class AgileDashboard_Semantic_Dao_InitialEffort extends DataAccessObject
 {
-
     public function __construct()
     {
         parent::__construct();

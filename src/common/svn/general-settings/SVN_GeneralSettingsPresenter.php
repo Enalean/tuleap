@@ -21,7 +21,6 @@
 
 class SVN_GeneralSettingsPresenter
 {
-
     /** @var Project */
     private $project;
 

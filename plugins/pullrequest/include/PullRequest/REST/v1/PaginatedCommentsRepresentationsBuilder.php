@@ -26,7 +26,6 @@ use UserManager;
 
 class PaginatedCommentsRepresentationsBuilder
 {
-
     /** @var Tuleap\PullRequest\Comment\Factory */
     private $comment_factory;
 

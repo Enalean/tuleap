@@ -22,7 +22,6 @@ use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 
 class Cardwall_OnTop_Config_View_ColumnDefinition
 {
-
     /**
      * @var array of Cardwall_OnTop_Config
      */

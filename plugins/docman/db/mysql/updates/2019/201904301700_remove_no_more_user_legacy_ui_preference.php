@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 class b201904301700_remove_no_more_user_legacy_ui_preference extends ForgeUpgrade_Bucket  // phpcs:ignore
 {
-
     public function description()
     {
         return 'Remove no more used user preferences for the display of the legacy UI';

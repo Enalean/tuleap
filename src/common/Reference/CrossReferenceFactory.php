@@ -27,7 +27,6 @@ use Tuleap\Reference\CrossReferenceByNatureCollection;
 
 class CrossReferenceFactory
 {
-
     public $entity_id;
     public $entity_gid;
     public $entity_type;

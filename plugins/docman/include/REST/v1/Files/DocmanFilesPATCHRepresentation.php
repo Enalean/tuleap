@@ -30,7 +30,6 @@ use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
  */
 class DocmanFilesPATCHRepresentation extends DocmanFileVersionPOSTRepresentation
 {
-
     /**
      * @var string Item title {@from body} {@required true}
      */

@@ -26,7 +26,6 @@ namespace Tuleap\ProFTPd\Directory;
  */
 class DirectoryItem
 {
-
     /** @var String */
     private $name;
 

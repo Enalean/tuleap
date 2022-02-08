@@ -335,7 +335,6 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->pkce_information_extractor->method('extractCodeChallenge')->willThrowException(
             new class extends \RuntimeException implements OAuth2PKCEInformationExtractionException
             {
-
             }
         );
 

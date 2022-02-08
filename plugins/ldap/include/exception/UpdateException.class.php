@@ -20,7 +20,6 @@
 
 class LDAP_Exception_UpdateException extends RuntimeException
 {
-
     public function __construct($message, $dn)
     {
         parent::__construct("An error occured while modifying LDAP entry for $dn: $message");

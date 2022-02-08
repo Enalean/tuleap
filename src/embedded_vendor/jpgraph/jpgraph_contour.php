@@ -21,7 +21,6 @@ define('VERT_EDGE', 1);
  */
 class Contour
 {
-
     private $dataPoints     = [];
     private $nbrCols        = 0;
     private $nbrRows        = 0;
@@ -400,7 +399,6 @@ class Contour
  */
 class ContourPlot extends Plot
 {
-
     private $contour;
     private $contourCoord;
     private $contourVal;

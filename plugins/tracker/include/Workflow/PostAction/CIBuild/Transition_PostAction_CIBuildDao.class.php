@@ -25,7 +25,6 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Transition_PostAction_CIBuildDao extends DataAccessObject
 {
-
     /**
      * Create a new postaction entry
      *

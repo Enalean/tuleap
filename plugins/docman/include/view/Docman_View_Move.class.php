@@ -21,7 +21,6 @@
 
 class Docman_View_Move extends Docman_View_Details
 {
-
     public function _getTitle($params)
     {
         $hp = Codendi_HTMLPurifier::instance();

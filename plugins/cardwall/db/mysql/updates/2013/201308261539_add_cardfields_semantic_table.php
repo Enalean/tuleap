@@ -20,7 +20,6 @@
 
 class b201308261539_add_cardfields_semantic_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

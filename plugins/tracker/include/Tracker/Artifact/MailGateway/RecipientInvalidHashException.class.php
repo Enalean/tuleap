@@ -20,7 +20,6 @@
 
 class Tracker_Artifact_MailGateway_RecipientInvalidHashException extends Tracker_Exception
 {
-
     public function __construct()
     {
         parent::__construct("Hash is not valid, could not authenticate the user");

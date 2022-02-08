@@ -24,7 +24,6 @@
  */
 class WebDAVExceptionServerError extends \Sabre\DAV\Exception
 {
-
     /**
      * getHTTPCode
      *

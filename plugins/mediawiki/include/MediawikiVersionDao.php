@@ -21,7 +21,6 @@
 
 class MediawikiVersionDao extends DataAccessObject
 {
-
     public function saveMediawikiVersionForProject($project_id, $version)
     {
         $project_id = $this->da->escapeInt($project_id);

@@ -18,7 +18,6 @@
 
 class b201601271554_add_nature_in_artifactlink extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add nature column in artifact link';

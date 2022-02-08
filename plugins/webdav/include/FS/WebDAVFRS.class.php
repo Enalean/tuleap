@@ -27,7 +27,6 @@ use Tuleap\FRS\FRSPermissionManager;
  */
 class WebDAVFRS implements ICollection
 {
-
     private $user;
     private $project;
     private $maxFileSize;

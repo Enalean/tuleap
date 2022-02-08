@@ -24,7 +24,6 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 
 class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List implements Tracker_FormElement_IComputeValues // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Selectbox');

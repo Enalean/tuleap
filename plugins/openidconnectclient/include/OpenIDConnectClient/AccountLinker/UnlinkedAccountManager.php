@@ -24,7 +24,6 @@ use RandomNumberGenerator;
 
 class UnlinkedAccountManager
 {
-
     /**
      * @var UnlinkedAccountDao
      */

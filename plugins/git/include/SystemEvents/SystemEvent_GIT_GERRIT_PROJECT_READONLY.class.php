@@ -24,7 +24,6 @@
 
 class SystemEvent_GIT_GERRIT_PROJECT_READONLY extends SystemEvent
 {
-
     public const NAME = 'GIT_GERRIT_PROJECT_READONLY';
 
     /**

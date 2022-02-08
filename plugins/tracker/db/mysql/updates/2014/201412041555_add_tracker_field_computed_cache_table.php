@@ -18,7 +18,6 @@
 
 class b201412041555_add_tracker_field_computed_cache_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add table for caching computed values of computed fields';

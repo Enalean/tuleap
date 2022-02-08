@@ -10,7 +10,6 @@
 
 class Docman_View_ToolbarNewDocumentVisitor /* implements Visitor*/
 {
-
     public function visitFolder(&$item, $params = [])
     {
         return $item->getId();

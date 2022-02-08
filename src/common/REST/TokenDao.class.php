@@ -19,7 +19,6 @@
 
 class Rest_TokenDao extends DataAccessObject
 {
-
     public function addTokenForUserId($user_id, $token, $current_timestamp)
     {
         $current_timestamp = $this->da->escapeInt($current_timestamp);

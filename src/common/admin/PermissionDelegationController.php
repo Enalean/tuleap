@@ -29,7 +29,6 @@ use Tuleap\User\UserCannotRemoveLastAdministrationPermission;
 
 class Admin_PermissionDelegationController
 {
-
     public const REDIRECT_URL = '/admin/permission_delegation.php';
 
     /**

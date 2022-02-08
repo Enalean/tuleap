@@ -21,7 +21,6 @@
 
 class b201110051717_add_postaction_field_date_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

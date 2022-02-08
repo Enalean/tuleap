@@ -29,7 +29,6 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
 class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetailsSectionApproval
 {
-
     public function __construct($item, $url, $themePath)
     {
         parent::__construct($item, $url, $themePath, null);

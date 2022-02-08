@@ -20,7 +20,6 @@
 
 class Tracker_XML_Exporter_InArchiveFilePathXMLExporter implements Tracker_XML_Exporter_FilePathXMLExporter
 {
-
     /**
      *
      * @return string

@@ -20,7 +20,6 @@
 
 class b201606131815_add_ci_token_to_git_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

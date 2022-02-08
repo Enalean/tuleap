@@ -18,7 +18,6 @@
 
 class b201501221126_rename_show_priority_changes_column_in_tracker_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Rename show_priority_changes to log_priority_changes column in tracker table';

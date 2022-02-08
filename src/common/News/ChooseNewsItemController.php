@@ -30,7 +30,6 @@ require_once __DIR__ . '/../../www/project/admin/ugroup_utils.php';
 
 class ChooseNewsItemController
 {
-
     /**
      * @var HTTPRequest
      */

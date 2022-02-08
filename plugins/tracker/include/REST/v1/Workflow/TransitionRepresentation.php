@@ -26,7 +26,6 @@ namespace Tuleap\Tracker\REST\v1\Workflow;
  */
 class TransitionRepresentation
 {
-
     /**
      * @var int
      */

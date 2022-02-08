@@ -24,7 +24,6 @@
  */
 class Response
 {
-
     /**
      *
      * @var Feedback

@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter
 {
-
     /** @var Tracker */
     private $tracker;
 

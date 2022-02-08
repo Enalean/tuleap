@@ -18,7 +18,6 @@
 
 class b201603231523_hook_commit_message_can_change extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add hook configuration commit_message_can_change in plugin_svn_hook_config table';

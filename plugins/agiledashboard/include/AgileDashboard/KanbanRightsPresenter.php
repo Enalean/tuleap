@@ -24,7 +24,6 @@ use Tracker_Permission_PermissionsSerializer;
 
 class KanbanRightsPresenter implements MessageRightsPresenter
 {
-
     public $submitter_id;
     public $submitter_can_view;
     public $submitter_only;

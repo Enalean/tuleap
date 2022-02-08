@@ -27,7 +27,6 @@ use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 
 class DocmanEmptyDataBuild
 {
-
     /**
      * @var int
      */

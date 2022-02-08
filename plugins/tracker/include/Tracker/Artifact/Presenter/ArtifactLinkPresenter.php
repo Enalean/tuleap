@@ -19,7 +19,6 @@
  */
 class Tracker_Artifact_Presenter_ArtifactLinkPresenter
 {
-
     public $tracker_name;
 
     public $group_id;

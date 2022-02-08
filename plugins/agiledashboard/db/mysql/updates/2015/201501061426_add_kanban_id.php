@@ -24,7 +24,6 @@
 
 class b201501061426_add_kanban_id extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

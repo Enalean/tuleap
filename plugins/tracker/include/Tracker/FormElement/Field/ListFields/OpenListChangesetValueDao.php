@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields;
 
 class OpenListChangesetValueDao extends ListValueDao
 {
-
     public function __construct()
     {
         parent::__construct();

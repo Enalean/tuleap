@@ -20,7 +20,6 @@
  */
 class Tracker_CommentNotStoredException extends Tracker_Exception
 {
-
     public function __construct()
     {
         parent::__construct(

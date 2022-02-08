@@ -26,7 +26,6 @@ use Tuleap\DB\DBFactory;
 
 final class DBTablesDaoLoadKnowDataUTF8Test extends DBTablesDaoLoadKnowDataTest
 {
-
     protected function createDatabase(string $db_name): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();

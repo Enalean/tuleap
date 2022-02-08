@@ -26,7 +26,6 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class Planning_ArtifactMilestone implements Planning_Milestone
 {
-
     /**
      * The project where the milestone is defined
      *

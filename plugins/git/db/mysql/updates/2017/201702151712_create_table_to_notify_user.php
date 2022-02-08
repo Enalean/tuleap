@@ -20,7 +20,6 @@
 
 class b201702151712_create_table_to_notify_user extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Add table to store the user to notify after a post receive event";

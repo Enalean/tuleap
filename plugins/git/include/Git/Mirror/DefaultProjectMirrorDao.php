@@ -23,7 +23,6 @@ use ParagonIE\EasyDB\EasyStatement;
 
 class DefaultProjectMirrorDao extends DataAccessObject
 {
-
     public function removeAllToProject($project_id)
     {
         $sql = 'DELETE FROM plugin_git_default_project_mirrors

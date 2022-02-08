@@ -15,7 +15,6 @@
 //=============================================================================
 class MGraph
 {
-
     public $title       = null;
     public $subtitle    = null;
     public $subsubtitle = null;

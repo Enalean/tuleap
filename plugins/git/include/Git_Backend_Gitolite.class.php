@@ -25,7 +25,6 @@ use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 
 class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backend_Interface
 {
-
     /**
      * @var \Psr\Log\LoggerInterface
      */

@@ -25,7 +25,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Retriever
 {
-
     /**
      * @var Dao
      */

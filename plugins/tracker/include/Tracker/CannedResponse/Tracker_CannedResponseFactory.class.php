@@ -21,7 +21,6 @@
 
 class Tracker_CannedResponseFactory
 {
-
     /**
      * Constructor
      */

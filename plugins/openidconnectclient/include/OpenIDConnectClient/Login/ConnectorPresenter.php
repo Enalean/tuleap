@@ -22,7 +22,6 @@ namespace Tuleap\OpenIDConnectClient\Login;
 
 class ConnectorPresenter
 {
-
     private $providers_login_request_uri;
 
     public function __construct(array $providers_login_request_uri)

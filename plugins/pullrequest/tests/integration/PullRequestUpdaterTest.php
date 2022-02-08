@@ -34,7 +34,6 @@ use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 
 class PullRequestUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     /**
      * @var PullRequestUpdater
      */

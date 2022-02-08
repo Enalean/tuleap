@@ -24,7 +24,6 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Transition_PostAction_FieldDao extends DataAccessObject
 {
-
     /**
      * @var string The table column where the post-transition value is stored.
      */

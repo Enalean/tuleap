@@ -27,7 +27,6 @@ use Sabre\DAV\ICollection;
  */
 class WebDAVFRSRelease implements ICollection
 {
-
     private $user;
     private $project;
     private $package;

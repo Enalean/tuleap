@@ -21,7 +21,6 @@
 
 class Docman_NotificationsManager_Add extends Docman_NotificationsManager
 {
-
     public const MESSAGE_ADDED = 'added'; // X has been added
 
     public function _getListeningUsersItemId($params)

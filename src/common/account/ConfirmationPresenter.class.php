@@ -19,7 +19,6 @@
 
 class Account_ConfirmationPresenter
 {
-
     public $title;
     public $content;
     public $thanks;

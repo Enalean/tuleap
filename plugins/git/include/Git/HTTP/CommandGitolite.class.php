@@ -20,7 +20,6 @@
 
 class Git_HTTP_CommandGitolite extends Git_HTTP_Command
 {
-
     protected $gitolite_home = '/usr/com/gitolite';
 
     public function __construct(PFO_User $user, Git_HTTP_Command $command)

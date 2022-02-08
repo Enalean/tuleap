@@ -20,7 +20,6 @@
 
 class Tracker_XML_Updater_TemporaryFileCreator
 {
-
     /** @var string */
     private $copy_directory;
 

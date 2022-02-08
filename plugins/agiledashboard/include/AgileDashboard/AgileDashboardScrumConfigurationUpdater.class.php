@@ -26,7 +26,6 @@ use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 
 class AgileDashboardScrumConfigurationUpdater
 {
-
     /** @var int */
     private $project_id;
 

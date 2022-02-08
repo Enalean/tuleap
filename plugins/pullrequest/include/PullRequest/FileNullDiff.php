@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest;
 
 class FileNullDiff extends FileUniDiff
 {
-
     public function __construct()
     {
     }

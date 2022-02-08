@@ -20,7 +20,6 @@
 
 class TuleapSOAPServer extends SoapServer
 {
-
     public function __construct($wsdl, ?array $options = null)
     {
         if (ForgeConfig::get('sys_use_unsecure_ssl_certificate') === true) {

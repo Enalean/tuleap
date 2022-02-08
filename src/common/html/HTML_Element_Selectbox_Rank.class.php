@@ -25,7 +25,6 @@ require_once('HTML_Element_Selectbox.class.php');
  */
 class HTML_Element_Selectbox_Rank extends HTML_Element_Selectbox
 {
-
     /**
      * @param $label String the label of the field
      * @param $name String  the name of the input

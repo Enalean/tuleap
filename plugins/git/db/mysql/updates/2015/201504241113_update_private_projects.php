@@ -20,7 +20,6 @@
 
 class b201504241113_update_private_projects extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

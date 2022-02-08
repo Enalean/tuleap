@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest\Criterion;
 
 class StatusOpen implements ISearchOnStatus
 {
-
     public function shouldRetrieveOpenPullRequests()
     {
         return true;

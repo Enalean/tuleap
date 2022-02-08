@@ -23,7 +23,6 @@
  */
 class Planning_Presenter_LastLevelMilestone
 {
-
      /** @var Planning_Presenter_MilestoneSummaryPresenter[] */
     public $milestone_summary_presenters;
 

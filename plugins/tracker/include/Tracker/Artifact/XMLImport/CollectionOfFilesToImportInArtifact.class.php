@@ -20,7 +20,6 @@
 
 class Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact
 {
-
     /** @var array */
     private $history;
 

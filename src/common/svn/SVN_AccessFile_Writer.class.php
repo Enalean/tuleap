@@ -21,7 +21,6 @@
 
 class SVN_AccessFile_Writer
 {
-
     private $accessfile;
     private $err;
 

@@ -28,7 +28,6 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Transition_PostAction
 {
-
     /**
      * @var Transition the transition
      */

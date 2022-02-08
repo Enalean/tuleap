@@ -29,7 +29,6 @@ require_once(__DIR__ . '/../../../../bin/DocmanImport/Trees.class.php');
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class TreesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testNodeListToTree(): void
     {
         $nodes = [];

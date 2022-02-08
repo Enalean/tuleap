@@ -21,7 +21,6 @@
 
 class Cardwall_OnTop_Config_TrackerMappingStatus extends Cardwall_OnTop_Config_TrackerMappingField
 {
-
     /**
      * @pattern Visitor
      */

@@ -36,7 +36,6 @@
  */
 class TrackerIdSharingDao extends DataAccessObject
 {
-
     /**
      * Get a good tracker id.
      *

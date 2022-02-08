@@ -20,7 +20,6 @@
 
 class b201512091121_update_default_svn_paths extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

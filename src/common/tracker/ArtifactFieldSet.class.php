@@ -21,7 +21,6 @@
 
 class ArtifactFieldSet
 {
-
     /**
      * The ArtifactType Object
      *

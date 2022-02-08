@@ -39,7 +39,6 @@ use Tuleap\Git\PathJoinUtil;
  */
 class Git_GitoliteDriver
 {
-
     /**
      * @var \Psr\Log\LoggerInterface
      */

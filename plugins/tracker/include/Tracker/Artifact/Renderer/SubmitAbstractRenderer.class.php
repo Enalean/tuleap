@@ -24,7 +24,6 @@
 
 abstract class Tracker_Artifact_SubmitAbstractRenderer extends Tracker_Artifact_ArtifactRenderer
 {
-
     public function __construct(Tracker $tracker, EventManager $event_manager)
     {
         parent::__construct($tracker, $event_manager);

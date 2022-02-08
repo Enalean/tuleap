@@ -24,7 +24,6 @@ use Psr\Http\Message\RequestFactoryInterface;
 
 class HudsonBuild
 {
-
     protected $hudson_build_url;
 
     /**

@@ -25,7 +25,6 @@
 
 class Tracker_Exception_Migration_StructureCreationException extends Exception
 {
-
     public function __construct($tracker_name, $tv3_id)
     {
         $message = "Error when trying to create " . $tracker_name . " from tracker v3 " . $tv3_id;

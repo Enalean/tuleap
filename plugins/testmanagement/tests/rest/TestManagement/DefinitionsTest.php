@@ -29,7 +29,6 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
  */
 final class DefinitionsTest extends BaseTest
 {
-
     public function testGetDefinition(): void
     {
         $first_definition = $this->getFirstDefinition(TestManagementDataBuilder::USER_TESTER_NAME);

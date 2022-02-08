@@ -31,7 +31,6 @@ use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 class PermissionsForGroupsBuilder
 {
-
     /**
      * @var \UGroupManager
      */

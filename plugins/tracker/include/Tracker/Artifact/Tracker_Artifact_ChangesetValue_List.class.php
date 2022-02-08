@@ -26,7 +26,6 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueListFullRepresentation;
  */
 class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetValue implements Countable, ArrayAccess, Iterator
 {
-
     /**
      * @var array (of ListValue) the list of list values
      */

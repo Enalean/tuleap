@@ -23,7 +23,6 @@ use ParagonIE\EasyDB\EasyStatement;
 
 class Git_PermissionsDao extends \Tuleap\DB\DataAccessObject
 {
-
     public function disableAnonymousRegisteredAuthenticated($project_id)
     {
         $this->getDB()->beginTransaction();

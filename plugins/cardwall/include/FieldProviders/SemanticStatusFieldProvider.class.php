@@ -23,7 +23,6 @@
  */
 class Cardwall_FieldProviders_SemanticStatusFieldRetriever implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
 {
-
     /**
      * Retrieves the semantic status field of the given artifact
      *

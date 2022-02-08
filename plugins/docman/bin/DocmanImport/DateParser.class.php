@@ -21,7 +21,6 @@
 
 class DateParser
 {
-
     /**
      * Parse an ISO8601 calendar date
      *

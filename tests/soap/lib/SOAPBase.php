@@ -20,7 +20,6 @@
 
 class SOAPBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     protected $server_base_url;
     protected $base_wsdl;
     protected $project_wsdl;

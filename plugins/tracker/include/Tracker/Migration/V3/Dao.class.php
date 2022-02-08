@@ -20,7 +20,6 @@
 
 class Tracker_Migration_V3_Dao extends DataAccessObject
 {
-
     public function create($project_id, $name, $description, $itemname, $tv3_id)
     {
         $id_sharing = new TrackerIdSharingDao();

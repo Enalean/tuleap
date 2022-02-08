@@ -21,7 +21,6 @@
 
 class b201809171653_clean_up_broken_triggers extends ForgeUpgrade_Bucket // phpcs:ignore
 {
-
     public function description()
     {
         return 'Remove all broken triggers from database.';

@@ -22,7 +22,6 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 
 class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field_List_Bind
 {
-
     public const TYPE = 'null';
 
     public function __construct($field)

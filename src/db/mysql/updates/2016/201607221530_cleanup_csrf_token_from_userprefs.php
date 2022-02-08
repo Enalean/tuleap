@@ -18,7 +18,6 @@
 
 class b201607221530_cleanup_csrf_token_from_userprefs extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Cleanup the CSRF tokens stored in the user preferences";

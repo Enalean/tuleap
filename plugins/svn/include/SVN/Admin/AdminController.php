@@ -46,7 +46,6 @@ use Valid_String;
 
 class AdminController
 {
-
     private $repository_manager;
     private $mail_header_manager;
     private $mail_notification_manager;

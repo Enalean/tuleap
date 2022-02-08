@@ -22,7 +22,6 @@ use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
 
 class AgileDashboard_KanbanActionsChecker
 {
-
     /**
      * @var Tracker_FormElementFactory
      */

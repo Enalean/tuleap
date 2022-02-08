@@ -26,7 +26,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
  */
 class Tracker_ArtifactChildPresenter
 {
-
     /** @var string */
     public $xref;
 

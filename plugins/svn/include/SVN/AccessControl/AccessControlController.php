@@ -29,7 +29,6 @@ use CSRFSynchronizerToken;
 
 class AccessControlController
 {
-
     /** @var AccessFileHistoryCreator */
     private $access_file_creator;
 

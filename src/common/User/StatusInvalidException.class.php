@@ -19,5 +19,4 @@
 
 class User_StatusInvalidException extends User_LoginException
 {
-
 }

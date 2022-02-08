@@ -26,7 +26,6 @@ use UserManager;
 
 class FileImporter
 {
-
     /** @var Dao */
     private $dao;
 

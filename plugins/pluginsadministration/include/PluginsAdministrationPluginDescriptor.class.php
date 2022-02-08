@@ -27,7 +27,6 @@
  */
 class PluginsAdministrationPluginDescriptor extends PluginDescriptor
 {
-
     public function __construct()
     {
         $name        = dgettext('tuleap-pluginsadministration', 'Plugins Administration');

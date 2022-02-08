@@ -20,7 +20,6 @@
 
 class CardwallConfigXmlImport
 {
-
     /**
      * @var Cardwall_OnTop_ColumnMappingFieldValueDao
      */

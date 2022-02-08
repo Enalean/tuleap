@@ -33,7 +33,6 @@ namespace Tuleap\Git\GitPHP;
  */
 class Controller
 {
-
     /**
      * GetController
      *

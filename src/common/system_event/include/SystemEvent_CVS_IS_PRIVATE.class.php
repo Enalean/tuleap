@@ -27,7 +27,6 @@
 */
 class SystemEvent_CVS_IS_PRIVATE extends SystemEvent
 {
-
     /**
      * Verbalize the parameters so they are readable and much user friendly in
      * notifications

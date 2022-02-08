@@ -21,7 +21,6 @@
 
 class WebDAVPluginDescriptor extends PluginDescriptor
 {
-
     /**
      * Constructor of the class
      *

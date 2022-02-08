@@ -25,7 +25,6 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
 {
-
     public function getTracker()
     {
         return null;

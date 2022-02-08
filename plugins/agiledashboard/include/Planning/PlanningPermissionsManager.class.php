@@ -20,7 +20,6 @@
 
 class PlanningPermissionsManager
 {
-
     public const PERM_PRIORITY_CHANGE = 'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE';
 
     public function getPlanningPermissionForm($planning_id, $group_id, $permission, $html_element_name)

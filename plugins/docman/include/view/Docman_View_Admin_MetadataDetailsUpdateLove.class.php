@@ -26,7 +26,6 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_Admin_MetadataDetailsUpdateLove extends Docman_View_Extra
 {
-
     public function _title($params)
     {
         echo '<h2 class="project-header-title">' . $this->_getTitle($params) . ' - ' . sprintf(dgettext('tuleap-docman', 'Update value "%2$s" in "%1$s" property'), $params['md']->getName(), Docman_MetadataHtmlList::_getElementName($params['love'])) . '</h2>';

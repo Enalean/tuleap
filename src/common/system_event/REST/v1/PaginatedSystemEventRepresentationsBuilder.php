@@ -25,7 +25,6 @@ use SystemEventManager;
 
 class PaginatedSystemEventRepresentationsBuilder
 {
-
     public function __construct(SystemEventDao $dao, SystemEventManager $manager)
     {
         $this->dao     = $dao;

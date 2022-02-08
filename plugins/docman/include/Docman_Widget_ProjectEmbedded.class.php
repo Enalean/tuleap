@@ -25,7 +25,6 @@ use Tuleap\Dashboard\Project\ProjectDashboardController;
 
 class Docman_Widget_ProjectEmbedded extends Docman_Widget_Embedded
 {
-
     public function __construct($plugin_path)
     {
         parent::__construct(

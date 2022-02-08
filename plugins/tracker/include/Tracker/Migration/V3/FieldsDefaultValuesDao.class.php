@@ -20,7 +20,6 @@
 
 class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject
 {
-
     public function create($tv3_id, $tv5_id)
     {
         $this->insertDefaultValuesForMsb($tv3_id, $tv5_id);

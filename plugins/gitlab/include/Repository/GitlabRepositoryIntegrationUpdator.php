@@ -30,7 +30,6 @@ use Tuleap\DB\DBTransactionExecutor;
 
 class GitlabRepositoryIntegrationUpdator
 {
-
     /**
      * @var GitlabRepositoryIntegrationDao
      */

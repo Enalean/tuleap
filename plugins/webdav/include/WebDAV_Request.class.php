@@ -25,5 +25,4 @@
  */
 class WebDAV_Request extends Codendi_Request
 {
-
 }

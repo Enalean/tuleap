@@ -23,7 +23,6 @@
 
 class Docman_View_Paste extends Docman_View_Details
 {
-
     public function _getTitle($params)
     {
         $hp = Codendi_HTMLPurifier::instance();

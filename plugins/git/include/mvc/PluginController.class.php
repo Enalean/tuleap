@@ -27,7 +27,6 @@
 
 abstract class PluginController
 {
-
     /**
      * List of PluginViews method name to execute
      * @var Array

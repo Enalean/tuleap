@@ -37,7 +37,6 @@ use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements Tracker_Report_Renderer_ArtifactLinkable
 {
-
     public const EXPORT_LIGHT = 1;
     public const EXPORT_FULL  = 0;
 

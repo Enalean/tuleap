@@ -20,7 +20,6 @@
 
 final class ACLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     private $backend;
 
     private $acl_updater;

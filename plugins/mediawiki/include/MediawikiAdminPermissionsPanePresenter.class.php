@@ -20,7 +20,6 @@
 
 class MediawikiAdminPermissionsPanePresenter extends MediawikiAdminPanePresenter
 {
-
     public $groups_permissions;
     public $read_ugroups;
     public $write_ugroups;

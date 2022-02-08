@@ -23,7 +23,6 @@
  */
 class Git_Widget_ProjectPushes extends Widget
 {
-
     public $pluginPath;
 
     /**

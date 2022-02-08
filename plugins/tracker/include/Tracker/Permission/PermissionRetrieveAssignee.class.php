@@ -20,7 +20,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Permission_PermissionRetrieveAssignee
 {
-
     /**
      * @var UserManager
      */

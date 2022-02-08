@@ -21,7 +21,6 @@
 
 class Tracker_PermDao extends DataAccessObject
 {
-
     public function searchAccessPermissionsByTrackerId($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);

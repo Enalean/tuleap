@@ -21,7 +21,6 @@
 
 class FileModuleMonitorDao extends DataAccessObject
 {
-
     public function whoIsMonitoringPackageByID($group_id, $package_id)
     {
         $_package_id = (int) $package_id;

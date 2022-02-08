@@ -32,7 +32,6 @@ use Tuleap\Reference\NatureCollection;
  */
 class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     /**
      * array of active Reference objects arrays of arrays, indexed by group_id, keyword, and num args.
      * Example: $activeReferencesByProject[101]['art'][1] return the reference object for project 101, keyword 'art' and one argument.

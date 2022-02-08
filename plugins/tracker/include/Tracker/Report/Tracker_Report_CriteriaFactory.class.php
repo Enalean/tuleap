@@ -22,7 +22,6 @@ use Tuleap\Tracker\Report\dao\ReportCriteriaDao;
 
 class Tracker_Report_CriteriaFactory
 {
-
     /**
      * A protected constructor; prevents direct creation of object
      */

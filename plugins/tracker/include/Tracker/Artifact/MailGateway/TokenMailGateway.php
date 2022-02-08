@@ -20,7 +20,6 @@
 
 class Tracker_Artifact_MailGateway_TokenMailGateway extends Tracker_Artifact_MailGateway_MailGateway
 {
-
     protected function canCreateArtifact(Tracker $tracker)
     {
         return false;

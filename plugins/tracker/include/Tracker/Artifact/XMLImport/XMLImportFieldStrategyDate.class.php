@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate extends Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric
 {
-
     /**
      * Extract Field data from XML input
      *

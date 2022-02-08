@@ -24,7 +24,6 @@ use DataAccessObject;
 
 class MailHeaderDao extends DataAccessObject
 {
-
     public function searchByRepositoryId($repository_id)
     {
         $repository_id = $this->da->escapeInt($repository_id);

@@ -23,7 +23,6 @@
 
 class b201307101021_add_agiledashborad_semantic_initial_effort_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

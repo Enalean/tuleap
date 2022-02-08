@@ -21,7 +21,6 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class b201704031442_create_table_plugin_git_full_history_checkpoint extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Create table plugin_git_full_history_checkpoint";

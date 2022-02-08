@@ -20,7 +20,6 @@
 
 class Tracker_Artifact_Attachment_TemporaryFileManagerDao extends DataAccessObject
 {
-
     public function create($user_id, $name, $description, $mimetype, $timestamp, $tempname)
     {
         $user_id     = $this->da->escapeInt($user_id);

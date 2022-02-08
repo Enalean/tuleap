@@ -33,7 +33,6 @@ use Tuleap\User\UserGroup\NameTranslator;
  */
 class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     public const NONE               = 100;
     public const ANONYMOUS          = 1;
     public const REGISTERED         = 2;

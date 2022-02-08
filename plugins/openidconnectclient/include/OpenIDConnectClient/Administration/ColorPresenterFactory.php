@@ -24,7 +24,6 @@ use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 class ColorPresenterFactory
 {
-
     private $available_colors = [
         'inca_silver',
         'chrome_silver',

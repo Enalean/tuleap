@@ -24,7 +24,6 @@
  */
 class Docman_LinkVersionFactory
 {
-
     /**
      * @var Docman_LinkVersionDao
      */

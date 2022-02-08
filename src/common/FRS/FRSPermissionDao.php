@@ -27,7 +27,6 @@ use ProjectUGroup;
 
 class FRSPermissionDao extends DataAccessObject
 {
-
     public function savePermission($project_id, $permission_type, $ugroup_id)
     {
         $project_id      = $this->da->escapeInt($project_id);

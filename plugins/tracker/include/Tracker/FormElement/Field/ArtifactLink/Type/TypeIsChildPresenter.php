@@ -25,7 +25,6 @@ use Tracker_FormElement_Field_ArtifactLink;
 
 class TypeIsChildPresenter extends TypePresenter
 {
-
     public function __construct()
     {
         parent::__construct(

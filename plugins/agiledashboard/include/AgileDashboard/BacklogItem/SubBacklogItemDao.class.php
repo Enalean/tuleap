@@ -21,7 +21,6 @@
 
 class AgileDashboard_BacklogItem_SubBacklogItemDao extends DataAccessObject
 {
-
     public function getAllBacklogItemIdInMilestone($milestone_id, array $parent_backlog_tracker_ids)
     {
         $select_fragments = $this->getSelectFragments($parent_backlog_tracker_ids);

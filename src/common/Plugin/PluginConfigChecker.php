@@ -20,7 +20,6 @@
 
 class PluginConfigChecker
 {
-
     /**
      * @var \Psr\Log\LoggerInterface
      */

@@ -18,7 +18,6 @@
 
 class b201312250950_add_reminder_roles_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add tracker reminder roles table and update the index';

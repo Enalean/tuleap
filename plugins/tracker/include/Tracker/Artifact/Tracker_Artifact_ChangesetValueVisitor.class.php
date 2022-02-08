@@ -27,7 +27,6 @@ use Tuleap\Tracker\Artifact\ChangesetValueComputed;
  */
 interface Tracker_Artifact_ChangesetValueVisitor
 {
-
     public function visitArtifactLink(Tracker_Artifact_ChangesetValue_ArtifactLink $changeset_value);
     public function visitDate(Tracker_Artifact_ChangesetValue_Date $changeset_value);
     public function visitFile(Tracker_Artifact_ChangesetValue_File $changeset_value);

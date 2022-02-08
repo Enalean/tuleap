@@ -20,7 +20,6 @@
 
 abstract class Cardwall_OnTop_Config_Command
 {
-
     /**
      * @var Tracker
      */

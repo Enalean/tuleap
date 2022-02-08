@@ -28,7 +28,6 @@ use UserManager;
 
 class AssignedToRepresentationBuilder
 {
-
     /**
      * @var UserManager
      */

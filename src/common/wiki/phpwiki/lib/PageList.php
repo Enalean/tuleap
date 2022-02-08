@@ -1720,7 +1720,6 @@ function flipAll(formObj) {
 
 class PageList_Selectable extends PageList
 {
-
     public function __construct($columns = false, $exclude = false, $options = false)
     {
         if ($columns) {

@@ -26,7 +26,6 @@ use Tuleap\DB\DataAccessObject;
 
 class DBWriterCoreDao extends DataAccessObject
 {
-
     public function updateAccess($project_id, $user_id, $day, $nb_access)
     {
         $sql = 'UPDATE group_svn_full_history

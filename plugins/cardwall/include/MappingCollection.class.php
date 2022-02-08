@@ -23,7 +23,6 @@
  */
 class Cardwall_MappingCollection implements IteratorAggregate
 {
-
     /**
      * @var array of Cardwall_Mapping
      */

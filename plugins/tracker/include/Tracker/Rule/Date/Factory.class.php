@@ -23,7 +23,6 @@
  */
 class Tracker_Rule_Date_Factory
 {
-
     /**
      *
      * @var Tracker_Rule_Date_Dao

@@ -25,7 +25,6 @@ use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 
 class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
 {
-
     /** @var BacklogItemRepresentationFactory */
     private $backlog_item_representation_factory;
 

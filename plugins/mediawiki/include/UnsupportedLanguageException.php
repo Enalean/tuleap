@@ -20,7 +20,6 @@
 
 class Mediawiki_UnsupportedLanguageException extends Exception
 {
-
     private $language;
 
     public function __construct($language)

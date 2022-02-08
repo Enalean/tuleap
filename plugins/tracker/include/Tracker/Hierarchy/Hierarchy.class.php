@@ -26,7 +26,6 @@
  */
 class Tracker_Hierarchy
 {
-
     private $parents = [];
 
     /**

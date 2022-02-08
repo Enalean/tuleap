@@ -27,7 +27,6 @@ use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 
 class SystemEventProcessor_Factory
 {
-
     /** @var EventManager */
     private $event_manager;
 

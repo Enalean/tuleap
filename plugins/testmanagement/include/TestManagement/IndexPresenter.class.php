@@ -32,7 +32,6 @@ use Tuleap\User\REST\UserRepresentation;
 
 class IndexPresenter
 {
-
     /** @var int */
     public $project_id;
 

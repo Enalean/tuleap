@@ -21,7 +21,6 @@
 
 class b201203021527_add_tracker_hierarchy extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

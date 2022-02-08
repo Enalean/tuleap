@@ -20,7 +20,6 @@
 
 class b201611291315_switch_float_to_double extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Convert float columns to double';

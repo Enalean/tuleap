@@ -21,7 +21,6 @@
 
 class b201112160838_delete_user_id extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

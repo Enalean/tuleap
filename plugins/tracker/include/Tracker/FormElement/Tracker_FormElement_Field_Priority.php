@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly
 {
-
     /**
      * @psalm-mutation-free
      */

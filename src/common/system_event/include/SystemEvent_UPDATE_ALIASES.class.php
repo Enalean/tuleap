@@ -20,7 +20,6 @@
 
 class SystemEvent_UPDATE_ALIASES extends SystemEvent
 {
-
     public function verbalizeParameters($with_link)
     {
         return '';

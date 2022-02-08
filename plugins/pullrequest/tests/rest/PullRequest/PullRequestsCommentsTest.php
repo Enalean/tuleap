@@ -30,7 +30,6 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
  */
 final class PullRequestsCommentsTest extends RestBase
 {
-
     protected function getResponseForNonMember($request)
     {
         return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);

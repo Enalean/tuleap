@@ -23,7 +23,6 @@ namespace Tuleap\SVN\Logs;
 
 class DBWriterPluginDao extends \DataAccessObject
 {
-
     public function searchRepositoriesForProjects(array $project_names)
     {
         $project_names = $this->da->quoteSmartImplode(',', $project_names);

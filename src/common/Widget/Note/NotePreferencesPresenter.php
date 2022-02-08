@@ -23,7 +23,6 @@ namespace Tuleap\Widget\Note;
 
 class NotePreferencesPresenter
 {
-
     public $widget_id;
     public $title;
     public $content;

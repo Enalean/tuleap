@@ -25,7 +25,6 @@
  */
 class Docman_SystemCheck
 {
-
     /** @var Plugin */
     private $docman_plugin;
 

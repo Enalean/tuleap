@@ -18,7 +18,6 @@
 
 class b201611031112_add_svn_cache_parameter_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add table svn_cache_parameter to store SVN cache configuration parameter';

@@ -41,7 +41,6 @@
  */
 abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTableFactory
 {
-
     /**
      * Create $dstTable based on $srcTable.
      *

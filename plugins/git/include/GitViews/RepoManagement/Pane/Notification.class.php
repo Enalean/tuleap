@@ -32,7 +32,6 @@ use Tuleap\Layout\IncludeAssets;
 
 class Notification extends Pane
 {
-
     public const ID = 'mail';
 
     /**

@@ -21,7 +21,6 @@ require_once 'XMLDocmanImport.class.php';
 
 class Docman_ImportFromDocmanV1
 {
-
     private $temporary_directory;
     private $wsdl_url;
     private $user_login;

@@ -25,7 +25,6 @@ use Exception;
 
 class TypeDeletor
 {
-
     /** @var TypeDao */
     private $dao;
 

@@ -29,7 +29,6 @@ use Tuleap\Request\DispatchableWithRequest;
 
 class GitPluginDefaultController implements DispatchableWithRequest
 {
-
     /**
      * @var \Tuleap\Git\RouterLink
      */

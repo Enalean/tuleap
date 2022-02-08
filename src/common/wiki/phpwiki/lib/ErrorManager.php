@@ -613,7 +613,6 @@ class PhpWikiError extends PhpError
  */
 class PhpErrorOnce extends PhpError
 {
-
     public function __construct($errno, $errstr, $errfile, $errline)
     {
         $this->_count = 1;

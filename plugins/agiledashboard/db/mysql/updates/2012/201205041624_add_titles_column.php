@@ -21,7 +21,6 @@
 
 class b201205041624_add_titles_column extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

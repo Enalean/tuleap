@@ -28,7 +28,6 @@ use Tuleap\User\REST\UserRepresentation;
  */
 class PreviousResultRepresentation
 {
-
     /**
      * @var string
      */

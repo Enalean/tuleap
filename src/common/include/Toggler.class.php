@@ -69,7 +69,6 @@
  */
 class Toggler
 {
-
     /**
      *
      * @param string $id the id of the toggler

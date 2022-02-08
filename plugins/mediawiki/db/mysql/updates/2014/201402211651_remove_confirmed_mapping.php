@@ -18,7 +18,6 @@
 
 class b201402211651_remove_confirmed_mapping extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

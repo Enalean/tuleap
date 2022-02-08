@@ -31,7 +31,6 @@ use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
  */
 class PlanningRepresentation extends PlanningRepresentationBase
 {
-
     public function build(Planning $planning)
     {
         $this->id             = JsonCast::toInt($planning->getId());

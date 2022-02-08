@@ -32,7 +32,6 @@ use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
 class ServiceProFTPd extends Service
 {
-
     public function getIconName(): string
     {
         return 'fas fa-tlp-folder-globe';

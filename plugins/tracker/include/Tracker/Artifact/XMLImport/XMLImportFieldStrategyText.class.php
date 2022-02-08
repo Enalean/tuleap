@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyText implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
 {
-
     /**
      * Extract Field data from XML input
      *

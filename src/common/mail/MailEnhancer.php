@@ -21,7 +21,6 @@
 // I am responsible for additional decorations to add to a mail
 class MailEnhancer
 {
-
     /** @var Array */
     private $additional_headers = [];
 

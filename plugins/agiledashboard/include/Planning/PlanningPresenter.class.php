@@ -20,7 +20,6 @@
 
 class PlanningPresenter
 {
-
     /**
      * @var Planning
      */

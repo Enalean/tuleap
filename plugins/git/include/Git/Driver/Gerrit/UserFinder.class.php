@@ -24,7 +24,6 @@
  */
 class Git_Driver_Gerrit_UserFinder
 {
-
     /** @var PermissionsManager */
     private $permissions_manager;
 

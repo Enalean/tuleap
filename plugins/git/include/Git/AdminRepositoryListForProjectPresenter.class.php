@@ -20,7 +20,6 @@
 
 class Git_AdminRepositoryListForProjectPresenter
 {
-
     /** @var int */
     public $project_id;
 

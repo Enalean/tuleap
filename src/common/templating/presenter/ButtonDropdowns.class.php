@@ -21,7 +21,6 @@
 
 class Templating_Presenter_ButtonDropdowns
 {
-
     private $id;
     private $label;
     /**

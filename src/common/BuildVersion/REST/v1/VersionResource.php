@@ -29,7 +29,6 @@ use Tuleap\REST\Header;
 
 class VersionResource
 {
-
     public const ROUTE = 'version';
 
     /**

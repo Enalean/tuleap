@@ -30,7 +30,6 @@ use Valid_HTTPURI;
 
 class HookController
 {
-
     /**
      * @var CSRFSynchronizerToken
      */

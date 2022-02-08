@@ -25,7 +25,6 @@ namespace Tuleap\REST\v1\TrackerFieldRepresentations;
  */
 class TrackerFieldPatchRepresentation
 {
-
     /**
      * @var array | null {@type string}
      */

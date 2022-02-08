@@ -42,7 +42,6 @@ use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
  */
 class GitActions extends PluginActions
 {
-
     /**
      * @var PermissionChangesDetector
      */

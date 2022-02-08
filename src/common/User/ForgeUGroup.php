@@ -22,7 +22,6 @@ use Tuleap\User\UserGroup\NameTranslator;
 
 class User_ForgeUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
     private $id;
 
     private $name;

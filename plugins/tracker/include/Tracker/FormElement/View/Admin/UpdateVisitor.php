@@ -23,7 +23,6 @@
  */
 class Tracker_FormElement_View_Admin_UpdateVisitor extends Tracker_FormElement_View_Admin_Visitor
 {
-
     protected function fetchForm()
     {
         $html = '';

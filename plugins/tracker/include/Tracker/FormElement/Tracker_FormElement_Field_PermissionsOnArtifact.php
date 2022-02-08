@@ -33,7 +33,6 @@ use Tuleap\User\UserGroup\NameTranslator;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElement_Field
 {
-
     public const GRANTED_GROUPS     = 'granted_groups';
     public const USE_IT             = 'use_artifact_permissions';
     public const IS_USED_BY_DEFAULT = false;

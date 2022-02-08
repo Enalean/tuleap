@@ -24,7 +24,6 @@
  */
 class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositoriesTraversalStrategy
 {
-
     /**
      * @var GitViews
      */

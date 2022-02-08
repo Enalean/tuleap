@@ -25,7 +25,6 @@
  */
 class Docman_Document extends Docman_Item
 {
-
     public function __construct($data = null)
     {
         parent::__construct($data);

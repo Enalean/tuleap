@@ -24,7 +24,6 @@
 
 class SystemEvent_SVN_AUTH_CACHE_CHANGE extends SystemEvent
 {
-
     /** @var BackendSVN */
     private $backend_svn;
 

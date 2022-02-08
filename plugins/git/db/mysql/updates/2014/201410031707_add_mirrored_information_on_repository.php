@@ -20,7 +20,6 @@
 
 class b201410031707_add_mirrored_information_on_repository extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

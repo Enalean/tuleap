@@ -25,7 +25,6 @@ require_once 'TreeNodeCallback.class.php';
  */
 class TreeNodeMapper
 {
-
     /** @var TreeNodeCallback */
     private $function;
 

@@ -23,7 +23,6 @@ namespace Tuleap\Git\Webhook;
 
 class Webhook implements \Tuleap\Webhook\Webhook
 {
-
     private $url;
     private $repository_id;
     private $id;

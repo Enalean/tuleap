@@ -18,7 +18,6 @@
 
 class b201512091100_create_tracker_notification_assigned_to_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add plugin_tracker_notification_assigned_to table';

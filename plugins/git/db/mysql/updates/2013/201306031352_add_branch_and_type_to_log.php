@@ -18,7 +18,6 @@
 
 class b201306031352_add_branch_and_type_to_log extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

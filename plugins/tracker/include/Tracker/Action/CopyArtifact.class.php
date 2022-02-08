@@ -24,7 +24,6 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 class Tracker_Action_CopyArtifact
 {
-
     /**
      * @var Tracker_XML_Importer_ArtifactImportedMapping
      */

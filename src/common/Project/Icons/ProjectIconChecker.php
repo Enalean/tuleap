@@ -26,7 +26,6 @@ namespace Tuleap\Project\Icons;
 
 final class ProjectIconChecker
 {
-
     /**
      * @throws InvalidProjectIconException
      */

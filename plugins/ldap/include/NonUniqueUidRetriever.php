@@ -25,7 +25,6 @@ use LDAP_UserDao;
 
 class NonUniqueUidRetriever
 {
-
     /**
      * @var LDAP_UserDao
      */

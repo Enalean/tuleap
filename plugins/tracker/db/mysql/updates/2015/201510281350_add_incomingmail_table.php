@@ -18,7 +18,6 @@
 
 class b201510281350_add_incomingmail_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Add table to store incoming mail for artifact emailgateway";

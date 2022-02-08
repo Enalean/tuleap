@@ -27,7 +27,6 @@
  */
 class ProjectLinksDao extends DataAccessObject
 {
-
     /**
      * Search all links of a given type
      *

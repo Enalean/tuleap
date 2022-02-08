@@ -18,7 +18,6 @@
 
 class b201506301700_convert_possible_old_text_format_tracker extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Convert field that could contains &lt; and &rt; instead of < and >';

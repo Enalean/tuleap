@@ -24,7 +24,6 @@ use PluginDescriptor;
 
 class ProftpdPluginDescriptor extends PluginDescriptor
 {
-
     public function __construct()
     {
         parent::__construct(

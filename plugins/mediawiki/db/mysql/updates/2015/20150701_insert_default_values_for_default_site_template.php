@@ -18,7 +18,6 @@
 
 class b20150701_insert_default_values_for_default_site_template extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

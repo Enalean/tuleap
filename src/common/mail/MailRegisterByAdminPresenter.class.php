@@ -20,7 +20,6 @@
 
 class MailRegisterByAdminPresenter extends MailRegisterPresenter
 {
-
     public $section_three;
     public $password;
 

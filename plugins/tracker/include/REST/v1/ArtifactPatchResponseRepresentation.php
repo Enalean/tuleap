@@ -27,7 +27,6 @@ use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
  */
 class ArtifactPatchResponseRepresentation
 {
-
     /**
      * @var ArtifactPatchDryRunResponseRepresentation | null {@type ArtifactPatchDryRunResponseRepresentation}
      */

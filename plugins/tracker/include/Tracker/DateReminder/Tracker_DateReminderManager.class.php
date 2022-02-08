@@ -25,7 +25,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_DateReminderManager
 {
-
     protected $tracker;
 
     /**

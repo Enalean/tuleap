@@ -18,7 +18,6 @@
 
 class b201304031715_add_gerrit_ugroup_tracking extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

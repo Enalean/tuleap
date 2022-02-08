@@ -26,7 +26,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Artifact_ReadOnlyRenderer extends Tracker_Artifact_EditRenderer
 {
-
     /**
      * @return string The HTML code for artifact fields
      */

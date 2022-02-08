@@ -20,7 +20,6 @@
 
 class Tracker_XML_Updater_ChangesetXMLUpdater
 {
-
     /**
      * @var Tracker_FormElementFactory
      */

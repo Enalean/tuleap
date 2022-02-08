@@ -23,7 +23,6 @@
 
 class Docman_ApprovalTableItemDao extends DataAccessObject
 {
-
     public function getTableByItemId($item_id, $fields = '*')
     {
         $sql = 'SELECT ' . $fields .

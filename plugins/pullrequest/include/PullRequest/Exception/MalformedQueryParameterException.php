@@ -24,7 +24,6 @@ use Exception;
 
 class MalformedQueryParameterException extends Exception
 {
-
     public function __construct()
     {
         parent::__construct('Query is malformed. Expecting {"status":"open"} or {"status":"closed"}.');

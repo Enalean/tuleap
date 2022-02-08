@@ -25,7 +25,6 @@ use Tracker_FormElement_Field_PermissionsOnArtifact;
 
 class ChangesChecker
 {
-
     public function hasChanges(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $old_value, $new_value): bool
     {
         if ((bool) $old_value->getUsed() !== (bool) $new_value[Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT]) {

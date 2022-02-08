@@ -27,7 +27,6 @@ use Tuleap\Project\UGroupLiteralizer;
 
 class Git_Gitolite_ConfigPermissionsSerializer
 {
-
     /**
      * @var FineGrainedPermissionFactory
      */

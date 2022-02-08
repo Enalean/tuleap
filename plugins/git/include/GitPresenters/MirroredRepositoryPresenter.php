@@ -20,7 +20,6 @@
 
 class GitPresenters_MirroredRepositoryPresenter
 {
-
     /**
      * @var int
      */

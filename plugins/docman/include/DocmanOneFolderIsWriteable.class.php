@@ -22,7 +22,6 @@
 
 class DocmanOneFolderIsWriteable /* implements Visitor */
 {
-
     public $docman;
     public function __construct(&$docman)
     {

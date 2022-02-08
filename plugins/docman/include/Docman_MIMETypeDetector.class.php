@@ -20,7 +20,6 @@
 
 class Docman_MIMETypeDetector
 {
-
     private $office_types = [
         '.doc'  => 'application/msword',
         '.dot'  => 'application/msword',

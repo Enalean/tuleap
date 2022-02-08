@@ -20,7 +20,6 @@
 
 class b201403181036_add_tracker_fileinfo_temporary_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add tracker_fileinfo_temporary table';

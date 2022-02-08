@@ -20,7 +20,6 @@
 
 class b201603171433_add_icon_color_columns extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add icon and color columns to plugin_openidconnectclient_provider table';

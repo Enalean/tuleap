@@ -20,7 +20,6 @@
 
 class Tracker_Workflow_Action_Triggers_DeleteTrigger
 {
-
     /**
      * @var Tracker
      */

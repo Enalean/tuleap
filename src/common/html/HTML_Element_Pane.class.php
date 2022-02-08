@@ -25,7 +25,6 @@ require_once('HTML_Element.class.php');
  */
 class HTML_Element_Pane extends HTML_Element
 {
-
     /**
      * Constructor of the class
      *

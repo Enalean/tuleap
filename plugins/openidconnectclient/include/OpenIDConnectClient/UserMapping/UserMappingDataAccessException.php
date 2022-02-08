@@ -22,5 +22,4 @@ namespace Tuleap\OpenIDConnectClient\UserMapping;
 
 class UserMappingDataAccessException extends \Exception
 {
-
 }

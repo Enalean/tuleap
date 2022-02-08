@@ -15,7 +15,6 @@ namespace Tuleap\Git\GitPHP;
  */
 abstract class ControllerBase
 {
-
     /**
      * tpl
      *

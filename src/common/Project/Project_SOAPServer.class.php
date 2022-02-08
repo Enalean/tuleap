@@ -28,7 +28,6 @@ use Tuleap\Project\UserRemoverDao;
  */
 class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
     /**
      * @var ProjectManager
      */

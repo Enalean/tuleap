@@ -28,7 +28,6 @@
 
 class Git_Driver_Gerrit_UmbrellaProjectManager
 {
-
     /** @var UGroupManager */
     private $ugroup_manager;
 

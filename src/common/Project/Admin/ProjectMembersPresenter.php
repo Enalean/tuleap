@@ -26,7 +26,6 @@ use Tuleap\User\Admin\UserListResultsPresenter;
 
 class ProjectMembersPresenter
 {
-
     /**
      * @var UserListResultsPresenter
      */

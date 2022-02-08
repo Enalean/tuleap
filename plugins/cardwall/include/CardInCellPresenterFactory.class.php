@@ -24,7 +24,6 @@
 
 class Cardwall_CardInCellPresenterFactory
 {
-
     /**
      * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
      */

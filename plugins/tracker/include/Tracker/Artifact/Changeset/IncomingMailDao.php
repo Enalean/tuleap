@@ -20,7 +20,6 @@
 
 class Tracker_Artifact_Changeset_IncomingMailDao extends DataAccessObject
 {
-
     public function save($changeset_id, $raw_mail)
     {
         $changeset_id = $this->da->escapeInt($changeset_id);

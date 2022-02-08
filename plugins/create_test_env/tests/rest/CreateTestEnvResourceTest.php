@@ -23,7 +23,6 @@ namespace Tuleap\CreateTestEnv\REST;
 
 class CreateTestEnvResourceTest extends \RestBase
 {
-
     public function testOptions()
     {
         $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('OPTIONS', 'create_test_env/'));

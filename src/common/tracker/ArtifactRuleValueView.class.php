@@ -25,7 +25,6 @@
 */
 class ArtifactRuleValueView
 {
-
     public $rule;
 
     /**

@@ -24,7 +24,6 @@
 
 class b201504081124_create_plugin_statistics_configuration_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

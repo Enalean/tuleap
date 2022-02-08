@@ -23,7 +23,6 @@ use Tuleap\Tracker\REST\SemanticRepresentation;
 
 abstract class Tracker_Semantic
 {
-
     /**
      * @var Tracker
      */

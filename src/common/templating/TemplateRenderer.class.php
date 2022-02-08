@@ -38,7 +38,6 @@
  */
 abstract class TemplateRenderer
 {
-
     /**
      * Renders a template, given its name and a presenter (providing the
      * template logic), and returns the result as a string.

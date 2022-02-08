@@ -27,7 +27,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue
 {
-
     /** @var Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand[] */
     private $queue = [];
 

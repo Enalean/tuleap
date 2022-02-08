@@ -28,7 +28,6 @@ require_once __DIR__ . '/../../../src/www/include/help.php';
 
 class hudsonViews extends Views
 {
-
     public function __construct(&$controler, $view = null)
     {
         $this->View($controler, $view);

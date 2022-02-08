@@ -23,7 +23,6 @@
  */
 class Git_Driver_Gerrit_UserAccountManager
 {
-
     /**
      * @var Git_Driver_Gerrit_GerritDriverFactory
      */

@@ -21,7 +21,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_DateReminder
 {
-
     public const BEFORE = 0;
     public const AFTER  = 1;
 

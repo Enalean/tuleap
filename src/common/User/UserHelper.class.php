@@ -24,7 +24,6 @@
  */
 class UserHelper
 {
-
     public const PREFERENCES_NAME_AND_LOGIN = 0;
     public const PREFERENCES_LOGIN_AND_NAME = 1;
     public const PREFERENCES_LOGIN          = 2;

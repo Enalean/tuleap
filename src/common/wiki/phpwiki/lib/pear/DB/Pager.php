@@ -64,7 +64,6 @@ require_once 'DB.php';
 
 class DB_Pager extends PEAR
 {
-
     /**
     * Constructor
     *

@@ -23,7 +23,6 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 /* abstract */ class Docman_View_Browse extends Docman_View_Display
 {
-
     /**
      * @access: protected
      */

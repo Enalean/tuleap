@@ -27,7 +27,6 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class TrackerWorkflowTransitionsTest extends TrackerBase
 {
-
     private function getAllTransitionCombinations(): array
     {
         $tracker = $this->tracker_representations[$this->tracker_workflow_transitions_tracker_id];

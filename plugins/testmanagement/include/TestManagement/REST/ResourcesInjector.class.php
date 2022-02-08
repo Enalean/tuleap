@@ -33,7 +33,6 @@ use Tuleap\TestManagement\REST\v1\ProjectResource;
 
 class ResourcesInjector
 {
-
     public function populate(\Luracast\Restler\Restler $restler): void
     {
         $restler->addAPIClass(ProjectResource::class, 'projects');

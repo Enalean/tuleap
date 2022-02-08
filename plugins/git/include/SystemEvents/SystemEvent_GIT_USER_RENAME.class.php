@@ -23,7 +23,6 @@ use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
 class SystemEvent_GIT_USER_RENAME extends SystemEvent
 {
-
     public const NAME = "GIT_USER_RENAME";
 
     /** @var Git_Gitolite_SSHKeyDumper*/

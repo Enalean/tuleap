@@ -20,7 +20,6 @@
 
 class XMLImportHelper implements User\XML\Import\IFindUserFromXMLReference
 {
-
     /** @var UserManager */
     private $user_manager;
 

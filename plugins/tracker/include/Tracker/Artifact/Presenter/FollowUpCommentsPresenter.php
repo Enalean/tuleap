@@ -19,7 +19,6 @@
  */
 class Tracker_Artifact_Presenter_FollowUpCommentsPresenter
 {
-
     /** @var PFUser */
     protected $user;
 

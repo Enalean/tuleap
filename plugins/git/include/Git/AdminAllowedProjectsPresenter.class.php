@@ -20,7 +20,6 @@
 
 class Git_AdminMAllowedProjectsPresenter
 {
-
     public const TEMPLATE = 'manage-allowed-projects';
 
     /**

@@ -20,7 +20,6 @@
 
 class b201603231358_add_nature_index_for_artifact_link_changeset extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add index on nature into tracker_changeset_value_artifactlink';

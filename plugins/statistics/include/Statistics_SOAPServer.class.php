@@ -25,7 +25,6 @@ use Tuleap\SOAP\SOAPRequestValidator;
  */
 class Statistics_SOAPServer
 {
-
     /**
      * @var SOAPRequestValidator
      */

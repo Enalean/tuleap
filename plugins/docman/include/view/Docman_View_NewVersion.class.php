@@ -23,8 +23,6 @@
 
 class Docman_View_NewVersion extends Docman_View_Details
 {
-
-
     /* protected */ public function _getTitle($params)
     {
         $hp = Codendi_HTMLPurifier::instance();

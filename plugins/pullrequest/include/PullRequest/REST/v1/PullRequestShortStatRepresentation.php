@@ -26,7 +26,6 @@ use Tuleap\PullRequest\ShortStat;
  */
 class PullRequestShortStatRepresentation
 {
-
     /** @var int */
     public $files_changed;
 

@@ -18,7 +18,6 @@
 
 class b201603080951_create_tracker_artifactlink_natures_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add plugin_tracker_artifactlink_natures table';

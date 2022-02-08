@@ -23,7 +23,6 @@ use Exception;
 
 class OrderIdOutOfBoundException extends Exception
 {
-
     public function __construct($wrong_id)
     {
         parent::__construct('Submitted id ' . $wrong_id . ' is not part of the set to order');

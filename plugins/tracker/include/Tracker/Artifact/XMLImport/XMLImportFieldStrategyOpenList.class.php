@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
 {
-
     public const FORMAT_ID       = 'id';
     public const FORMAT_LDAP     = 'ldap';
     public const FORMAT_USERNAME = 'username';

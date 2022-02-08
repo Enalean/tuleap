@@ -22,7 +22,6 @@ use Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter;
 
 class Admin_PermissionDelegationDeleteGroupModalPresenter
 {
-
     /**
      * @var int
      */

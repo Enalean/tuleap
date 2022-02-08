@@ -20,7 +20,6 @@
 
 class MailProjectOneStepRegisterPresenter extends MailOutlinePresenter
 {
-
     /**
      * @var Project
      */

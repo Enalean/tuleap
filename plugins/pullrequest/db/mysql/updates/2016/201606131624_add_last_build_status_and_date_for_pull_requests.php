@@ -20,7 +20,6 @@
 
 class b201606131624_add_last_build_status_and_date_for_pull_requests extends ForgeUpgrade_Bucket // phpcs:ignore
 {
-
     public function description()
     {
         return <<<EOT

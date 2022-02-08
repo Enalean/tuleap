@@ -25,7 +25,6 @@
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface, Tracker_FormElement_IHaveAnId, Tracker_FormElement_Usable
 {
-
     /**
      * get the permissions for this tracker
      *

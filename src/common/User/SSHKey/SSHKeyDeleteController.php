@@ -33,7 +33,6 @@ use UserManager;
 
 final class SSHKeyDeleteController implements DispatchableWithRequest
 {
-
     /**
      * @var UserManager
      */

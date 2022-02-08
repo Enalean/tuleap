@@ -22,7 +22,6 @@ use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
 
 abstract class GitPresenters_AdminPresenter
 {
-
     public $project_id;
 
     /** @var bool */

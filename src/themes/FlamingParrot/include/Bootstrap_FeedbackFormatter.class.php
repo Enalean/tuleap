@@ -20,7 +20,6 @@
 
 class Bootstrap_FeedbackFormatter extends FeedbackFormatter
 {
-
     /**
      * @return string html
      */

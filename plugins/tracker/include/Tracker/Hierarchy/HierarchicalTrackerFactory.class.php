@@ -22,7 +22,6 @@ use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 class Tracker_Hierarchy_HierarchicalTrackerFactory
 {
-
     /**
      * @var TrackerFactory
      */

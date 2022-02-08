@@ -23,5 +23,4 @@ namespace Tuleap\CreateTestEnv\Exception;
 
 class InvalidProjectUnixNameException extends InvalidInputException
 {
-
 }

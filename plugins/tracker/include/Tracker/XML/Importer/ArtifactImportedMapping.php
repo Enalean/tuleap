@@ -20,7 +20,6 @@
 
 class Tracker_XML_Importer_ArtifactImportedMapping
 {
-
     private $mapping = [];
 
     public function add($source_id, $target_id)

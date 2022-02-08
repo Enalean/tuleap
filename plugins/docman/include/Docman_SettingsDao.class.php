@@ -20,7 +20,6 @@
 
 class Docman_SettingsDao extends DataAccessObject
 {
-
     public function searchByGroupId($group_id)
     {
         $sql = sprintf('SELECT * FROM plugin_docman_project_settings WHERE group_id = %d', $group_id);

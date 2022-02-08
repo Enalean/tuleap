@@ -27,7 +27,6 @@
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Rule_IntTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testIsInteger(): void
     {
         $r = new Rule_Int();

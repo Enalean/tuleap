@@ -22,5 +22,4 @@
  */
 class Docman_CoreActions extends Docman_HTTPActions
 {
-
 }

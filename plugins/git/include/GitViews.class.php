@@ -36,7 +36,6 @@ include_once __DIR__ . '/../../../src/www/project/admin/permissions.php';
  */
 class GitViews extends PluginViews
 {
-
     /** @var Project */
     private $project;
 

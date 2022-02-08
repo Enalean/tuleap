@@ -30,7 +30,6 @@ use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPresenterBuilder;
  */
 class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory
 {
-
     /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
     private $backlog_factory;
 

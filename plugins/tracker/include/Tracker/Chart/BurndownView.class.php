@@ -28,7 +28,6 @@ use Tuleap\TimezoneRetriever;
  */
 class Tracker_Chart_BurndownView extends Tracker_Chart_Burndown
 {
-
     /**
      * @var Tracker_Chart_Data_Burndown
      */

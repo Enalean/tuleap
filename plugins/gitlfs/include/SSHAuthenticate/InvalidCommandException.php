@@ -23,5 +23,4 @@ namespace Tuleap\GitLFS\SSHAuthenticate;
 
 final class InvalidCommandException extends \RuntimeException
 {
-
 }

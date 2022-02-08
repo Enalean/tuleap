@@ -22,7 +22,6 @@
 
 class Collection
 {
-
     public $elements;
 
     public function __construct($initial_array = '')

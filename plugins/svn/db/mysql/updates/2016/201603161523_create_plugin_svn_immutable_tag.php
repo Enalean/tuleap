@@ -18,7 +18,6 @@
 
 class b201603161523_create_plugin_svn_immutable_tag extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Create table plugin_svn_immutable_tag for SVN plugin';

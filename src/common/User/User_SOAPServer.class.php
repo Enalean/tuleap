@@ -23,7 +23,6 @@ require_once 'UserManager.class.php';
 
 class User_SOAPServer
 {
-
     /**
      * @var UserManager
      */

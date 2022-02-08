@@ -26,7 +26,6 @@ use Tuleap\Tracker\FormElement\Field\Integer\IntegerValueDao;
 
 class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeric
 {
-
     public function getCriteriaFrom($criteria)
     {
         //Only filter query if field is used

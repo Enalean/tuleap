@@ -28,7 +28,6 @@ require_once dirname(__FILE__) . '/bootstrap.php';
  */
 final class KanbanTest extends TestBase
 {
-
     public function testOPTIONSKanban(): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'kanban'));

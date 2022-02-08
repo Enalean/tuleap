@@ -28,7 +28,6 @@ require_once __DIR__ . '/../../www/my/my_utils.php';
 */
 class Widget_MyMonitoredFp extends Widget
 {
-
     public function __construct()
     {
         parent::__construct('mymonitoredfp');

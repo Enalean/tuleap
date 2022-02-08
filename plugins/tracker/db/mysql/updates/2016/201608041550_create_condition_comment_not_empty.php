@@ -18,7 +18,6 @@
 
 class b201608041550_create_condition_comment_not_empty extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Create table tracker_workflow_transition_condition_comment_notempty';

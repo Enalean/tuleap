@@ -25,7 +25,6 @@ use System_Command_CommandException;
 
 class FineGrainedRegexpValidator
 {
-
     public function isPatternValid($pattern)
     {
         return ! $this->isEmpty($pattern) && ! $this->hasALineBreak($pattern) && $this->hasOnlyAuthorizedCharacters($pattern);

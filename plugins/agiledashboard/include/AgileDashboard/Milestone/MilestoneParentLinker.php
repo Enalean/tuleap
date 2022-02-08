@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class MilestoneParentLinker
 {
-
     /**
      * @var AgileDashboard_Milestone_Backlog_BacklogFactory
      */

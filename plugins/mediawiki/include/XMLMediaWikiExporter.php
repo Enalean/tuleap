@@ -34,7 +34,6 @@ use XML_SimpleXMLCDATAFactory;
 
 class XMLMediaWikiExporter
 {
-
     /**
      * @var Project
      */

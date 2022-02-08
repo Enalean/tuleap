@@ -22,7 +22,6 @@ namespace Tuleap\CreateTestEnv\Plugin;
 
 class PluginInfo extends \PluginFileInfo
 {
-
     public function __construct(\Plugin $plugin)
     {
         parent::__construct($plugin, 'config');

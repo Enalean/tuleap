@@ -30,7 +30,6 @@ use Tuleap\Chart\Chart;
 */
 class Chart_Gantt extends Chart
 {
-
     /**
     * Constructor
     *

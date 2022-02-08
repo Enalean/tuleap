@@ -24,7 +24,6 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Transition_PostAction_FieldFactory implements Transition_PostActionSubFactory
 {
-
     /** @psalm-var array<string, class-string<Transition_PostAction_Field>> available post actions classes */
     protected $post_actions_classes = [
         Transition_PostAction_Field_Date::SHORT_NAME  => Transition_PostAction_Field_Date::class,

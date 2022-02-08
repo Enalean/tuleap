@@ -25,7 +25,6 @@ use Tuleap\FRS\FRSPermissionManager;
  */
 class WebDAVUtils
 {
-
     protected static $instance;
 
     /**

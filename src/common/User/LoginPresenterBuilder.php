@@ -23,7 +23,6 @@ use Tuleap\User\Account\RegistrationGuardEvent;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class User_LoginPresenterBuilder
 {
-
     /** @return User_LoginPresenter */
     public function build($return_to, $printer_version, $form_loginname, CSRFSynchronizerToken $login_csrf, string $prompt_param)
     {

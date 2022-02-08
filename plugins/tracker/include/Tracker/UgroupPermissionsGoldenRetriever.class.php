@@ -27,7 +27,6 @@
  */
 class Tracker_UgroupPermissionsGoldenRetriever
 {
-
     /** @var Tracker_PermissionsDao */
     private $permissions_dao;
 

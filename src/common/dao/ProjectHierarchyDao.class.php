@@ -22,7 +22,6 @@ require_once('include/DataAccessObject.class.php');
 
 class ProjectHierarchyDao extends DataAccessObject
 {
-
     /**
      * @param int $group_id
      * @param int $parent_group_id

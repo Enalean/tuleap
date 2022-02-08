@@ -22,7 +22,6 @@ namespace Tuleap\Color;
 
 class ColorPresenter
 {
-
     /**
      * @var string
      */

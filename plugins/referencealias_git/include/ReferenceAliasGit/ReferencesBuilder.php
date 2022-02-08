@@ -25,7 +25,6 @@ use ReferenceInstance;
 
 class ReferencesBuilder
 {
-
     /**
      * @var GitRepositoryFactory
      */

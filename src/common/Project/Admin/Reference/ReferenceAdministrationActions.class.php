@@ -31,7 +31,6 @@ use ReferenceManager;
 
 class ReferenceAdministrationActions extends Actions
 {
-
     public function __construct($controler)
     {
         parent::__construct($controler);

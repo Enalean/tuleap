@@ -24,7 +24,6 @@ use DataAccessObject;
 
 class UnlinkedAccountDao extends DataAccessObject
 {
-
     public function searchById($id)
     {
         $id  = $this->getDa()->quoteSmart($id);

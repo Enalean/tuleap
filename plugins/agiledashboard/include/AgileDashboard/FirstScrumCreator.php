@@ -23,7 +23,6 @@ use Tuleap\Tracker\XML\Importer\TrackerExtraConfiguration;
 
 class AgileDashboard_FirstScrumCreator
 {
-
     /** @var Project */
     private $project;
 

@@ -29,7 +29,6 @@ use Tuleap\Request\NotFoundException;
 
 class ProjectCreationModerationUpdateController implements DispatchableWithRequest
 {
-
     /**
      * Is able to process a request routed by FrontRouter
      *

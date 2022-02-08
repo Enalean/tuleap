@@ -20,7 +20,6 @@
 
 class Git_RemoteServer_Dao extends \Tuleap\DB\DataAccessObject
 {
-
     /**
      * @var StandardPasswordHandler
      */

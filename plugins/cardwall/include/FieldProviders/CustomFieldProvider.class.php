@@ -25,7 +25,6 @@
  */
 class Cardwall_FieldProviders_CustomFieldRetriever implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
 {
-
     /**
      * @var Tracker_FormElement_Field_Selectbox
      */

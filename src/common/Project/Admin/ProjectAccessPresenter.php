@@ -25,7 +25,6 @@ use Project;
 
 class ProjectAccessPresenter
 {
-
     public $incl_restricted_label;
     public $is_incl_restricted;
     public $is_wide_open;

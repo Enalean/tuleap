@@ -26,7 +26,6 @@ use PFUser;
  */
 class UserRepresentation extends MinimalUserRepresentation
 {
-
     /**
      * @var string | null {@type string}
      */

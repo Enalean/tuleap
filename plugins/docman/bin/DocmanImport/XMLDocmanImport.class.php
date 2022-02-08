@@ -26,7 +26,6 @@ use Psr\Log\LoggerInterface;
 
 class XMLDocmanImport
 {
-
     // Directory where content files are located
     protected $dataBaseDir;
 

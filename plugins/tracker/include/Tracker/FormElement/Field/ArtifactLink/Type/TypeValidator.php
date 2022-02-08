@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
 class TypeValidator
 {
-
     public const SHORTNAME_PATTERN = '[a-zA-Z][a-zA-Z_]*';
 
     /** @var TypeDao */

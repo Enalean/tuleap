@@ -24,7 +24,6 @@ use Tuleap\Reference\CrossReferenceCollection;
 
 class CrossReferenceByNaturePresenterBuilder
 {
-
     /**
      * @var CrossReferenceLinkListPresenterBuilder
      */

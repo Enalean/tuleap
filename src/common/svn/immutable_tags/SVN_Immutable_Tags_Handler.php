@@ -20,7 +20,6 @@
 
 class SVN_Immutable_Tags_Handler
 {
-
     /** @var SVN_Immutable_Tags_DAO */
     private $dao;
 

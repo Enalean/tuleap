@@ -22,5 +22,4 @@ namespace Tuleap\OpenIDConnectClient\Provider;
 
 class ProviderNotFoundException extends \Exception
 {
-
 }

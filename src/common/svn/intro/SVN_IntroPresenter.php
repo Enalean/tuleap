@@ -20,7 +20,6 @@
 
 class SVN_IntroPresenter
 {
-
     /**
      * @var bool
      */

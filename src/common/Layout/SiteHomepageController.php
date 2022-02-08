@@ -44,7 +44,6 @@ use UserManager;
 
 class SiteHomepageController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-
     /**
      * @var Admin_Homepage_Dao
      */

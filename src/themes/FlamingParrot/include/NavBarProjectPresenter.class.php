@@ -20,7 +20,6 @@
 
 class FlamingParrot_NavBarProjectPresenter
 {
-
     /** @var  string */
     public $project_name;
 

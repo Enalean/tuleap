@@ -33,7 +33,6 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class GitTreeRepresentationFactoryTest extends TestCase
 {
-
     private GitTreeRepresentationFactory $git_tree_representation_factory;
 
     protected function setUp(): void

@@ -21,7 +21,6 @@
 
 class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5
 {
-
     /**
      * build Gantt chart properties
      *

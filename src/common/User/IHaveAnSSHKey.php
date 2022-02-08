@@ -27,7 +27,6 @@
  */
 interface IHaveAnSSHKey
 {
-
     /**
      * Identifier associated to the key
      */

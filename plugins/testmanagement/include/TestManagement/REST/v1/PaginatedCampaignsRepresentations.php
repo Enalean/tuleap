@@ -22,7 +22,6 @@ namespace Tuleap\TestManagement;
 
 class PaginatedCampaignsRepresentations
 {
-
     /** @var array */
     public $campaign_representations;
 

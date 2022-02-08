@@ -21,7 +21,6 @@
 
 class b201312171433_remove_git_foreign_keys extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

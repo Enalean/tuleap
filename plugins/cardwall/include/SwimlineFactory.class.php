@@ -27,7 +27,6 @@ require_once 'FieldProviders/IProvideFieldGivenAnArtifact.class.php';
  */
 class Cardwall_SwimlineFactory
 {
-
     /** @var Cardwall_OnTop_Config */
     private $config;
 

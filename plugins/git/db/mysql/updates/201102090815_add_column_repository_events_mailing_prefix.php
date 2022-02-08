@@ -20,7 +20,6 @@
 
 class b201102090815_add_column_repository_events_mailing_prefix extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

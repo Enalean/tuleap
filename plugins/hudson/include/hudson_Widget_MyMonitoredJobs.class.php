@@ -24,7 +24,6 @@ use Tuleap\Hudson\HudsonJobBuilder;
 
 class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
 {
-
     public $plugin;
 
     public $_not_monitored_jobs;

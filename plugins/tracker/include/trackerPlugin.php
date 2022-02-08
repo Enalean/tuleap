@@ -230,7 +230,6 @@ require_once __DIR__ . '/../include/manual_autoload.php';
  */
 class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
     public const EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE      = 'forge__artifacts';
     public const EMAILGATEWAY_INSECURE_ARTIFACT_CREATION = 'forge__tracker';
     public const EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE   = 'forge__artifact';

@@ -24,7 +24,6 @@
  */
 class TokenTest extends RestBase
 {
-
     public function testPostThrowExceptionIfUsernameDoesNotExist()
     {
         $response = $this->getResponseWithoutAuth($this->request_factory->createRequest(

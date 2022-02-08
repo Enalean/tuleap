@@ -994,7 +994,6 @@ class soap_fault extends nusoap_base
 */
 class XMLSchema extends nusoap_base
 {
-
     // files
     public $schema = '';
     public $xml    = '';
@@ -2014,7 +2013,6 @@ class soapval extends nusoap_base
 */
 class soap_transport_http extends nusoap_base
 {
-
     public $url                  = '';
     public $uri                  = '';
     public $digest_uri           = '';
@@ -5760,7 +5758,6 @@ class wsdl extends nusoap_base
 */
 class soap_parser extends nusoap_base
 {
-
     public $xml                   = '';
     public $xml_encoding          = '';
     public $method                = '';
@@ -6377,7 +6374,6 @@ class soap_parser extends nusoap_base
 */
 class soap_client extends nusoap_base
 {
-
     public $username        = '';
     public $password        = '';
     public $authtype        = '';

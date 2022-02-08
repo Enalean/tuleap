@@ -38,7 +38,6 @@ use UserManager;
 
 class IterationsRetriever
 {
-
     /**
      * @var RoadmapWidgetDao
      */

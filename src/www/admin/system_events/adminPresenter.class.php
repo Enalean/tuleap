@@ -20,7 +20,6 @@
 
 class SystemEvents_adminPresenter
 {
-
     /**
      * @var Tuleap\Layout\PaginationPresenter
      */

@@ -23,7 +23,6 @@
  */
 interface Tracker_IDisplayTrackerLayout
 {
-
     /**
      * Display header for the current service
      *

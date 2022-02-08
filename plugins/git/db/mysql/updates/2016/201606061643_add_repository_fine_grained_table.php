@@ -20,7 +20,6 @@
 
 class b201606061643_add_repository_fine_grained_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

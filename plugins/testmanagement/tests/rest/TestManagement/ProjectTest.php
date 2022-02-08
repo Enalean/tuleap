@@ -27,7 +27,6 @@ use REST_TestDataBuilder;
  */
 final class ProjectTest extends BaseTest
 {
-
     public function testGetCampaigns(): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('GET', "projects/$this->project_id/testmanagement_campaigns"));

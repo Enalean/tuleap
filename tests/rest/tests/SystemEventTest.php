@@ -30,7 +30,6 @@ use REST_TestDataBuilder;
  */
 final class SystemEventTest extends RestBase
 {
-
     public function testGET(): void
     {
         $response = $this->getResponse(

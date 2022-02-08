@@ -25,5 +25,4 @@ namespace Tuleap\User\Account;
 
 final class UpdatePasswordException extends \RuntimeException
 {
-
 }

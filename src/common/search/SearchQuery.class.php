@@ -20,7 +20,6 @@
 
 class Search_SearchQuery
 {
-
     private $project;
     private $type_of_search;
     private $words;

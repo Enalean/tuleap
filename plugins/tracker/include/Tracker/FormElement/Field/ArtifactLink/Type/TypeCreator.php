@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
 class TypeCreator implements TypeCreatorInterface
 {
-
     /** @var TypeDao */
     private $dao;
 

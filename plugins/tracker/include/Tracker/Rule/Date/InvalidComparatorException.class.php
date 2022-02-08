@@ -20,5 +20,4 @@
 
 class Tracker_Rule_Date_InvalidComparatorException extends Exception
 {
-
 }

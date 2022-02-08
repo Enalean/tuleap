@@ -31,7 +31,6 @@ use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Artifact_Changeset_Comment
 {
-
     /**
      * @const Changeset comment format is text.
      */

@@ -38,7 +38,6 @@ use Tuleap\Widget\WidgetFactory;
 
 class UserManager implements \Tuleap\User\ProvideCurrentUser // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     /**
      * User with id lower than 100 are considered specials (siteadmin, null,
      * etc).

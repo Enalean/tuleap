@@ -20,7 +20,6 @@
 
 class Tracker_Workflow_GlobalRulesViolationException extends Tracker_Exception
 {
-
     public function __construct()
     {
         parent::__construct(dgettext('tuleap-tracker', 'Global rules are not respected'));

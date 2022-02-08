@@ -72,7 +72,6 @@ final class AddToTopBacklogPostActionValueUpdaterTest extends \Tuleap\Test\PHPUn
     private static function buildOtherPostAction(): PostAction
     {
         return new class implements PostAction {
-
             public function accept(PostActionVisitor $visitor): void
             {
             }

@@ -21,7 +21,6 @@
 
 class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations
 {
-
     /** @var array */
     public $backlog_items_representations;
 

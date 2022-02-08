@@ -20,7 +20,6 @@
 
 class b201009280731_add_table_groups_notif_delegation_message extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

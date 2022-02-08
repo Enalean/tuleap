@@ -212,7 +212,6 @@ final class GraphOnTrackersV5ChartBarDataBuilderTest extends TestCase
             null,
             null
 ) extends Tracker_FormElement_Field_Selectbox {
-
             public function accept(Tracker_FormElement_FieldVisitor $visitor)
             {
                 throw new \LogicException('This method is not supposed to be called in the test');

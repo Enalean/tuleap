@@ -21,7 +21,6 @@
 
 class PermissionsNormalizer
 {
-
     public function getNormalizedUGroupIds(Project $project, array $ugroup_ids, PermissionsNormalizerOverrideCollection $override_collection)
     {
         $ugroup_mapper         = new PermissionsUGroupMapper($project);

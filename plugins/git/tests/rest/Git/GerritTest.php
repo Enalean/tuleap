@@ -30,7 +30,6 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
  */
 class GerritTest extends TestBase
 {
-
     protected function getResponseForNonMember($request)
     {
         return $this->getResponse(

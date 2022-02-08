@@ -20,7 +20,6 @@
 
 class TrackerXmlFieldsMapping_FromAnotherPlatform implements TrackerXmlFieldsMapping
 {
-
     /**
      * @var array
      */

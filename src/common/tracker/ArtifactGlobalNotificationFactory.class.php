@@ -25,7 +25,6 @@
 */
 class ArtifactGlobalNotificationFactory
 {
-
     public function getGlobalNotificationsForTracker($tracker_id)
     {
         $notifs = [];

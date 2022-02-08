@@ -26,5 +26,4 @@ namespace Tuleap\Config;
 #[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
 final class ConfigCannotBeModified
 {
-
 }

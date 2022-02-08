@@ -20,7 +20,6 @@
 
 class b201303200939_add_per_tracker_artifact_id extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'add per tracker artifact id.';

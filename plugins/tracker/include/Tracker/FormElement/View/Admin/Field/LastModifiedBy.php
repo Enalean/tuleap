@@ -19,7 +19,6 @@
 
 class Tracker_FormElement_View_Admin_Field_LastModifiedBy extends Tracker_FormElement_View_Admin_Field_List
 {
-
     protected function fetchCustomHelp()
     {
         $html  = '';

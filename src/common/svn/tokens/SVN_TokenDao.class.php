@@ -21,7 +21,6 @@
 
 class SVN_TokenDao extends DataAccessObject
 {
-
     public function getSVNTokensForUser($user_id)
     {
         $user_id = $this->da->escapeInt($user_id);

@@ -24,7 +24,6 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter;
 
 abstract class Tracker_Artifact_MailGateway_MailGateway
 {
-
     /**
      * @var Tracker_Artifact_MailGateway_CitationStripper
      */

@@ -12,7 +12,6 @@
 
 class ArtifactCannedHtml extends ArtifactCanned
 {
-
     /**
      *  ArtifactCannedHtml() - constructor
      *

@@ -24,7 +24,6 @@
 
 class SystemEventProcessApplicationOwnerDefaultQueue implements SystemEventProcess
 {
-
     /**
      * @see SystemEventProcess::getLockName()
      */

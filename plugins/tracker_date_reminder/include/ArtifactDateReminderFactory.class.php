@@ -24,7 +24,6 @@
 // The artifact date reminder object
 class ArtifactDateReminderFactory
 {
-
     // The notification id
     public $notification_id;
 

@@ -25,7 +25,6 @@ require_once('PropertyDescriptor.class.php');
  */
 class PropertyDescriptor
 {
-
     public $name;
     public $value;
 

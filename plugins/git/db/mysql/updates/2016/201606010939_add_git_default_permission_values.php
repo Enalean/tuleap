@@ -20,7 +20,6 @@
 
 class b201606010939_add_git_default_permission_values extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

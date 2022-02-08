@@ -65,7 +65,6 @@ function cmp_place_result($field1, $field2)
 // Classe to manage the artifact report
 class ArtifactReport
 {
-
     // The report id
     public $report_id;
 

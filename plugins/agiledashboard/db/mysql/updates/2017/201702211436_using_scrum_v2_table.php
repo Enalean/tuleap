@@ -24,7 +24,6 @@
 
 class b201702211436_using_scrum_v2_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add plugin_agiledashboard_scrum_mono_milestones table';

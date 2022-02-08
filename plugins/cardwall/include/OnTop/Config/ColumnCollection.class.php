@@ -23,7 +23,6 @@
  */
 class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAggregate, Countable
 {
-
     /**
      * @var array
      */

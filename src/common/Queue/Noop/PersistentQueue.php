@@ -25,7 +25,6 @@ use Tuleap\Queue\PersistentQueueStatistics;
 
 class PersistentQueue implements \Tuleap\Queue\PersistentQueue
 {
-
     public function pushSinglePersistentMessage(string $topic, $content): void
     {
     }

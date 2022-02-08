@@ -20,7 +20,6 @@
 
 class b201307311726_add_workflow_trigger_tables extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add tables for workflow trigger';

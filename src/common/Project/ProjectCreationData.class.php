@@ -26,7 +26,6 @@ use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 
 class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     /**
      * @var bool
      */

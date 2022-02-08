@@ -20,7 +20,6 @@
 
 class b201403211644_update_default_acl extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public const TULEAP_SECURE_FTP_CONFIG_FILE_CENTOS5  = '/etc/codendi/plugins/proftpd/etc/config.inc';
     public const TULEAP_SECURE_FTP_CONFIG_FILE_OTHER_OS = '/etc/tuleap/plugins/proftpd/etc/config.inc';
 

@@ -89,7 +89,6 @@ final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit
         $this->template_factory->method('getCategorisedExternalTemplates')->willReturn(
             [
                 new class implements CategorisedTemplate {
-
                     public function getTemplateCategory(): TemplateCategory
                     {
                         return new class implements TemplateCategory {

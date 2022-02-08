@@ -20,7 +20,6 @@
 
 class Git_Mirror_ManifestFileGenerator
 {
-
     /** @var \Psr\Log\LoggerInterface */
     private $logger;
 

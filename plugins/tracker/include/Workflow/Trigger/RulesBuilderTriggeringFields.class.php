@@ -20,7 +20,6 @@
 
 class Tracker_Workflow_Trigger_RulesBuilderTriggeringFields
 {
-
     /**
      * @var Tracker
      */

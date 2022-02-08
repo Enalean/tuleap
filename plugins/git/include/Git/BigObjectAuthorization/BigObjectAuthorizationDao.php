@@ -24,7 +24,6 @@ use ParagonIE\EasyDB\EasyStatement;
 
 class BigObjectAuthorizationDao extends \Tuleap\DB\DataAccessObject
 {
-
     public function authorizeProject($project_id)
     {
         $this->getDB()->run(

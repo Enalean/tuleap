@@ -28,7 +28,6 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class Cardwall_SingleCard
 {
-
     /** @var Cardwall_CardInCellPresenter */
     private $card_in_cell_presenter;
 

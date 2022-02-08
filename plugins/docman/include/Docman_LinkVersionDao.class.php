@@ -20,7 +20,6 @@
 
 class Docman_LinkVersionDao extends DataAccessObject
 {
-
     /**
      * @return DataAccessResult
      */

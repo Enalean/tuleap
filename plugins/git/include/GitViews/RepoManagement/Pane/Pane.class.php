@@ -29,7 +29,6 @@ use Codendi_HTMLPurifier;
  */
 abstract class Pane
 {
-
     /**
      * @var GitRepository
      */

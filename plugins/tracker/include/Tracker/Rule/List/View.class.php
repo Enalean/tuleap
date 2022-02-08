@@ -23,7 +23,6 @@
 */
 class Tracker_Rule_List_View
 {
-
     /**
      *
      * @var Tracker_Rule_List

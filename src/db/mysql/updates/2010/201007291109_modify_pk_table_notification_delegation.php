@@ -20,7 +20,6 @@
 
 class b201007291109_modify_pk_table_notification_delegation extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

@@ -18,7 +18,6 @@
 
 class b201411051547_add_fast_compute_option extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add "Fast compute" option to tracker_field_computed table';

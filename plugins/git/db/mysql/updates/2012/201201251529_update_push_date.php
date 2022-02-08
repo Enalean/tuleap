@@ -18,7 +18,6 @@
 
 class b201201251529_update_push_date extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

@@ -23,7 +23,6 @@ use PFUser;
 
 class ToBeActivatedUser extends ActionToBeTakenForUser
 {
-
     private static $ALLOWED_ACTIONS = [self::ACTION, ToBeMappedUser::ACTION];
 
     public const ACTION = 'noop';

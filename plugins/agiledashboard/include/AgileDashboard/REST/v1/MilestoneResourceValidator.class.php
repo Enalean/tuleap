@@ -39,7 +39,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class MilestoneResourceValidator
 {
-
     /** @var \Planning_MilestoneFactory */
     private $milestone_factory;
 

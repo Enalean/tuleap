@@ -19,7 +19,6 @@
 
 class SVN_PermissionsManager
 {
-
     public function userCanRead(PFUser $user, Project $project, $svnpath)
     {
         include_once __DIR__ . '/../../www/svn/svn_utils.php';

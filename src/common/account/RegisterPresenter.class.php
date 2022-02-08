@@ -22,7 +22,6 @@ use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 
 class Account_RegisterPresenter
 {
-
     public $prefill_values;
     public $login;
     public $email;

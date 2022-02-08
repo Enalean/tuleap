@@ -32,7 +32,6 @@ use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 
 class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&WebhookDao
      */

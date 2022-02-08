@@ -21,7 +21,6 @@
 
 class b201109151443_reactivate_plugin_in_templates extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

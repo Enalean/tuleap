@@ -24,7 +24,6 @@
  */
 class PluginDescriptor
 {
-
     public $name;
     public $version;
     public $description;

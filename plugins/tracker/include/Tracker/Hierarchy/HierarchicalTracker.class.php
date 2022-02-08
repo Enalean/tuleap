@@ -28,7 +28,6 @@
  */
 class Tracker_Hierarchy_HierarchicalTracker
 {
-
     /**
      * @var Tracker
      */

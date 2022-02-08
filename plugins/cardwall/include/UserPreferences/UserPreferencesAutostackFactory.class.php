@@ -24,7 +24,6 @@
 
 class Cardwall_UserPreferences_UserPreferencesAutostackFactory
 {
-
     public function setAutostack(Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_UserPreferences_UserPreferencesAutostack $autostack_preferences)
     {
         $cardwall_has_preferences = false;

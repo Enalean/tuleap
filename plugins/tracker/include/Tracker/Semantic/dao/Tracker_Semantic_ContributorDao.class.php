@@ -21,7 +21,6 @@
 
 class Tracker_Semantic_ContributorDao extends DataAccessObject
 {
-
     public function __construct()
     {
         parent::__construct();

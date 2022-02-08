@@ -29,7 +29,6 @@ use Codendi_HTMLPurifier;
  */
 class TimelineInlineCommentRepresentation
 {
-
     public const TYPE = 'inline-comment';
 
     /**

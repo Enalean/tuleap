@@ -22,8 +22,6 @@
 
 class Docman_ApprovalTableItemFactory extends Docman_ApprovalTableFactory
 {
-
-
     public function newTable()
     {
         return new Docman_ApprovalTableItem();

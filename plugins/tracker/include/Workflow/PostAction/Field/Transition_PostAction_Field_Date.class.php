@@ -27,7 +27,6 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Transition_PostAction_Field_Date extends Transition_PostAction_Field
 {
-
     /**
      * @const Clear the date.
      */

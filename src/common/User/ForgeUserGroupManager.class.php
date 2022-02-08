@@ -23,7 +23,6 @@ use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
 
 class User_ForgeUserGroupManager
 {
-
     /**
      * @var UserGroupDao
      */

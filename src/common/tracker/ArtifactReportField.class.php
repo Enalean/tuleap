@@ -21,7 +21,6 @@
 // This class inherits from ArtifactField
 class ArtifactReportField extends ArtifactField
 {
-
     // Show this field for the query
     public $show_on_query;
 

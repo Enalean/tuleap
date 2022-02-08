@@ -32,7 +32,6 @@ use Tuleap\Request\NotFoundException;
 
 class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWithProject
 {
-
     /**
      * @var \GitRepositoryFactory
      */

@@ -22,7 +22,6 @@ namespace Tuleap\Project\XML\Import;
 
 class DirectoryArchive implements ArchiveInterface
 {
-
     private $archive_path;
 
     public function __construct($archive_path)

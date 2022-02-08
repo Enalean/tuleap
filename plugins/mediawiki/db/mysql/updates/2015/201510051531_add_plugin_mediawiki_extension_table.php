@@ -18,7 +18,6 @@
 
 class b201510051531_add_plugin_mediawiki_extension_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

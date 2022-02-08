@@ -20,7 +20,6 @@
 
 class PaginatedUserCollection implements Countable
 {
-
     /** @var PFUser[] */
     private $users;
 

@@ -21,7 +21,6 @@
 
 class Templating_Presenter_ButtonDropdownsOptionWithModal extends Templating_Presenter_ButtonDropdownsOption
 {
-
     public function data_toggle()
     {
         return "modal";

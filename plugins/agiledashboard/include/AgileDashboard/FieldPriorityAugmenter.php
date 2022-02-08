@@ -20,7 +20,6 @@
 
 class AgileDashboard_FieldPriorityAugmenter
 {
-
     /** @var AgileDashboard_SequenceIdManager */
     private $sequence_id_manager;
 

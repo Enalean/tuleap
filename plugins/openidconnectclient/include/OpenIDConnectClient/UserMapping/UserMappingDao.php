@@ -24,7 +24,6 @@ use DataAccessObject;
 
 class UserMappingDao extends DataAccessObject
 {
-
     public function save($user_id, $provider_id, $identifier, $last_used)
     {
         $user_id     = $this->getDa()->escapeInt($user_id);

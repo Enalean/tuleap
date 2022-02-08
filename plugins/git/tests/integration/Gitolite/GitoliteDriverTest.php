@@ -39,7 +39,6 @@ use ProjectManager;
 
 final class GitoliteDriverTest extends GitoliteTestCase
 {
-
     /** @var Git_Gitolite_GitoliteRCReader */
     private $gitoliterc_reader;
 

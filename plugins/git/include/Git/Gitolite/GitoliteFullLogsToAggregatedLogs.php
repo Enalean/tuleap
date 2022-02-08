@@ -27,7 +27,6 @@ use Exception;
 
 class GitoliteFullLogsToAggregatedLogs extends \DataAccessObject
 {
-
     /**
      * @var LoggerInterface
      */

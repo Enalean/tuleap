@@ -22,7 +22,6 @@
 
 class Docman_View_SOAP_List
 {
-
     public function display($params)
     {
         $result      = [];

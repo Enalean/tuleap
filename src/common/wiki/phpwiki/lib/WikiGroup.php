@@ -441,7 +441,6 @@ class WikiGroup
  */
 class GroupNone extends WikiGroup
 {
-
     /**
      * Constructor
      *

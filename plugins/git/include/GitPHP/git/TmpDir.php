@@ -36,7 +36,6 @@ namespace Tuleap\Git\GitPHP;
  */
 class TmpDir
 {
-
     /**
      * instance
      *

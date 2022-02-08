@@ -29,7 +29,6 @@ use function PHPUnit\Framework\assertTrue;
 
 final class XMLStepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testItsExportedAsAnExternalField(): void
     {
         $field = new StepDefinition(

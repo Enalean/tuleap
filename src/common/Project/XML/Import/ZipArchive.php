@@ -24,7 +24,6 @@ use Tuleap\Project\XML\ArchiveException;
 
 class ZipArchive implements ArchiveInterface
 {
-
     /** @var \ZipArchive */
     private $archive;
     private $extraction_path;

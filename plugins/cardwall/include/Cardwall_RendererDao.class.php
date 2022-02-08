@@ -20,7 +20,6 @@
 
 class Cardwall_RendererDao extends DataAccessObject
 {
-
     public function __construct()
     {
         parent::__construct();

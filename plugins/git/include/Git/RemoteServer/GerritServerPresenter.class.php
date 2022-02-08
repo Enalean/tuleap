@@ -20,7 +20,6 @@
 
 class Git_RemoteServer_GerritServerPresenter
 {
-
     public $id;
     public $host;
     public $http_port;

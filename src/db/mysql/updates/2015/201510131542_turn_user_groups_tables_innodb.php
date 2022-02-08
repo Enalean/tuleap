@@ -20,7 +20,6 @@
 
 class b201510131542_turn_user_groups_tables_innodb extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Turn user groups tables to innodb';

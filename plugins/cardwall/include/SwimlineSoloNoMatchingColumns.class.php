@@ -25,7 +25,6 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class Cardwall_SwimlineSoloNoMatchingColumns extends Cardwall_Swimline
 {
-
     /**
      * @var Artifact
      */

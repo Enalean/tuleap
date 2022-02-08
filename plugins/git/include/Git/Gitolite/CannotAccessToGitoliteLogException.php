@@ -24,5 +24,4 @@ use Exception;
 
 class CannotAccessToGitoliteLogException extends Exception
 {
-
 }

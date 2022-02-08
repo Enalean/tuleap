@@ -67,7 +67,6 @@ use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
 final class IterationUpdateProcessorBuilder implements BuildIterationUpdateProcessor
 {
-
     public function getProcessor(): ProcessIterationUpdate
     {
         $logger                   = \BackendLogger::getDefaultLogger('program_management_syslog');

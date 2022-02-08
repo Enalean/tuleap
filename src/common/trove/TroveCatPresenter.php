@@ -23,7 +23,6 @@ namespace Tuleap\Trove;
 
 class TroveCatPresenter
 {
-
     public $id;
     public $name;
     public $is_last = false;

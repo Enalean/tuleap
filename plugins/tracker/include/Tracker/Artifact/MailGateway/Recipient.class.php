@@ -25,7 +25,6 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class Tracker_Artifact_MailGateway_Recipient
 {
-
     /** @var string */
     private $email;
 

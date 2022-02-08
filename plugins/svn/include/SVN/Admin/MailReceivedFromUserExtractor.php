@@ -24,7 +24,6 @@ use Rule_Email;
 
 class MailReceivedFromUserExtractor
 {
-
     private $valid_adresses   = [];
     private $invalid_adresses = [];
 

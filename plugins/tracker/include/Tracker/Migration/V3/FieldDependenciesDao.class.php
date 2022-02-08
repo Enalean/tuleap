@@ -20,7 +20,6 @@
 
 class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject
 {
-
     public function addDependencies($tv3_id, $tv5_id)
     {
         $this->startTransaction();

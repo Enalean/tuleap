@@ -23,7 +23,6 @@
 
 class Docman_View_ItemDetails
 {
-
     public $sections;
     public $item;
     public $current_section;

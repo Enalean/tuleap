@@ -20,7 +20,6 @@
 
 class StatisticsAggregatorDao extends DataAccessObject
 {
-
     public function addStatistic($project_id, $statistic_name)
     {
         $project_id     = $this->getDa()->escapeInt($project_id);

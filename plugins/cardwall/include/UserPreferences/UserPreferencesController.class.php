@@ -21,7 +21,6 @@
 
 class Cardwall_UserPreferences_UserPreferencesController extends MVC2_PluginController
 {
-
     public function __construct($request)
     {
         parent::__construct('agiledashboard', $request);

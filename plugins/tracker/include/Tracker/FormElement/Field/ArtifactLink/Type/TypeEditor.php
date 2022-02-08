@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
 class TypeEditor
 {
-
     /** @var TypeDao */
     private $dao;
 

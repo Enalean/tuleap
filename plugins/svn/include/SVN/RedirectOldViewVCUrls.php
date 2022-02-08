@@ -31,7 +31,6 @@ use Tuleap\Request\NotFoundException;
 
 class RedirectOldViewVCUrls implements DispatchableWithRequest
 {
-
     /**
      * @var string
      */

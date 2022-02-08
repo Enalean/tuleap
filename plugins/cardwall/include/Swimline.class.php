@@ -23,7 +23,6 @@
  */
 class Cardwall_Swimline
 {
-
     /**
      * @var Cardwall_CardInCellPresenter
      */

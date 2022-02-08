@@ -20,7 +20,6 @@
 
 class AdminKanbanPresenter
 {
-
     /** @var int */
     public $group_id;
 

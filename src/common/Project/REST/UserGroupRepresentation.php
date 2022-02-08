@@ -30,7 +30,6 @@ use Exception;
  */
 class UserGroupRepresentation
 {
-
     public const ROUTE = 'user_groups';
 
     public const SIMPLE_REST_ID_PATTERN  = '/^\d+$/';

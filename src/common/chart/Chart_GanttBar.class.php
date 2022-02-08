@@ -33,7 +33,6 @@ require_once __DIR__ . '/../../embedded_vendor/jpgraph/jpgraph_ttf.inc.php';
 */
 class Chart_GanttBar
 {
-
     protected $jpgraph_instance;
 
     /**

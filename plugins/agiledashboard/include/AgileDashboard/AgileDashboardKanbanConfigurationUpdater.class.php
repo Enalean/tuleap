@@ -20,7 +20,6 @@
 
 class AgileDashboardKanbanConfigurationUpdater
 {
-
     /** @var int */
     private $project_id;
 

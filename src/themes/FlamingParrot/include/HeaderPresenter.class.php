@@ -22,7 +22,6 @@ use Tuleap\OpenGraph\OpenGraphPresenter;
 
 class FlamingParrot_HeaderPresenter
 {
-
     /** @var string */
     private $title;
 

@@ -20,7 +20,6 @@
 
 class MediawikiAdminLanguagePanePresenter extends MediawikiAdminPanePresenter
 {
-
     /** @var array */
     private $supported_languages;
 

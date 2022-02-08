@@ -25,7 +25,6 @@ use Tuleap\Chart\Chart;
  */
 class ErrorChart extends Chart
 {
-
     /**
      * @var int the width of the chart
      */

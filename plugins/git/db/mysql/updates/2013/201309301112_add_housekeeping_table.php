@@ -18,7 +18,6 @@
 
 class b201309301112_add_housekeeping_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

@@ -24,7 +24,6 @@ require_once 'Trees.class.php';
 
 class XMLDocmanUpdate extends XMLDocmanImport
 {
-
     private $remoteItems = [];
     private $continue    = false;
 

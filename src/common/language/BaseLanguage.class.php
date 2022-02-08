@@ -27,7 +27,6 @@ use Webimpress\SafeWriter\FileWriter;
 
 class BaseLanguage
 {
-
     public const DEFAULT_LANG = 'en_US';
 
     //array to hold the string values

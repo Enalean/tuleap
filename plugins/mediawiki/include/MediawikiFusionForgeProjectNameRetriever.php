@@ -20,7 +20,6 @@
 
 class MediawikiFusionForgeProjectNameRetriever
 {
-
     public function getFusionForgeProjectName($fusionforgeprojectname)
     {
         if ($fusionforgeprojectname !== null) {

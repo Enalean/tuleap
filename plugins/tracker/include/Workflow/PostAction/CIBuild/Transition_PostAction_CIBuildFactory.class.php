@@ -27,7 +27,6 @@ use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MissingNamespace
 class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFactory
 {
-
     /**
      * @var array<string, class-string> of available post actions classes run after fields validation
      */

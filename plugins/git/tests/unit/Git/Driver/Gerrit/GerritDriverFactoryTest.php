@@ -28,7 +28,6 @@ require_once __DIR__ . '/../../../bootstrap.php';
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class GerritDriverFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     /**
      * @var Git_Driver_Gerrit_GerritDriverFactory
      */

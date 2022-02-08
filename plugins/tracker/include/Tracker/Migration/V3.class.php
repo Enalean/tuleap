@@ -24,7 +24,6 @@
  */
 class Tracker_Migration_V3
 {
-
     /** @var TrackerFactory */
     private $tracker_factory;
 

@@ -25,7 +25,6 @@ use Tuleap\GraphOnTrackersV5\DataTransformation\CumulativeFlowColumnBuilder;
 
 class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
 {
-
     public const MAX_STEPS = 75;
     protected $timeFiller;
     /**

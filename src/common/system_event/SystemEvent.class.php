@@ -25,7 +25,6 @@
  */
 abstract class SystemEvent
 {
-
     protected $id;
     protected $type;
     protected $owner;

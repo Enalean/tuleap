@@ -30,7 +30,6 @@ use Tuleap\ProgramManagement\Domain\Redirections\IterationRedirectionParameters;
  */
 final class IterationRedirectionParametersStub implements IterationRedirectionParameters
 {
-
     private function __construct(private string $redirect_value, private string $increment_id)
     {
     }

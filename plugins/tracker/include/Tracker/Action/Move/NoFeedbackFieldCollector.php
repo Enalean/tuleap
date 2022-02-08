@@ -25,7 +25,6 @@ use Tracker_FormElement_Field;
 
 final class NoFeedbackFieldCollector implements FeedbackFieldCollectorInterface
 {
-
     public function initAllTrackerFieldAsNotMigrated(Tracker $tracker)
     {
         return;

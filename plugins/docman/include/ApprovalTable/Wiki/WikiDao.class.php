@@ -22,7 +22,6 @@
 
 class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
 {
-
     public function getTableById($itemId, $wikiVersionId, $fields = '*')
     {
         $sql = 'SELECT ' . $fields .

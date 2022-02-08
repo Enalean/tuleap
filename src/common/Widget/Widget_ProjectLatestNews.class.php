@@ -32,7 +32,6 @@ use Widget;
  */
 class Widget_ProjectLatestNews extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
     public $content;
 
     /**

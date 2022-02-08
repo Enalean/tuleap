@@ -21,7 +21,6 @@
 
 class Tracker_Report_Criteria
 {
-
     public $id;
     public $report;
     public $field;

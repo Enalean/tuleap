@@ -27,7 +27,6 @@ use RuntimeException;
 
 class Mapping implements IFindUserFromXMLReference
 {
-
     private static $NONE_USERNAME = 'None';
 
     /** @var UserManager */

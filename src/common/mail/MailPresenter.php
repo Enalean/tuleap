@@ -20,7 +20,6 @@
 
 class MailPresenter
 {
-
     /** @var string */
     public $platform_name;
 

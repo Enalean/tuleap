@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_CardFields
 {
-
     /**
      * @var Array
      */

@@ -21,7 +21,6 @@
 
 class MediawikiVersionManager
 {
-
     public const MEDIAWIKI_120_VERSION = "1.20";
     public const MEDIAWIKI_123_VERSION = "1.23";
 

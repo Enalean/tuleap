@@ -27,7 +27,6 @@ use Tuleap\Project\Icons\EmojiCodepointConverter;
 
 final class EmojiCodepointConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testItReturnsEmptyCharacterIfThereIsNothing(): void
     {
         self::assertEquals('', EmojiCodepointConverter::convertEmojiToStoreFormat(null));

@@ -25,7 +25,6 @@ use PFUser;
 
 class ServerPermissionManager
 {
-
     private $dao;
 
     public function __construct(ServerPermissionDao $dao)

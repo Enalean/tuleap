@@ -20,7 +20,6 @@
 
 class Tracker_NotificationDao extends DataAccessObject
 {
-
     public function __construct()
     {
         parent::__construct();

@@ -23,7 +23,6 @@
  */
 class Planning_MilestoneRedirectParameter
 {
-
     /** @return string */
     public function getPlanningRedirectToSelf(Planning_Milestone $milestone, $pane_identifier)
     {

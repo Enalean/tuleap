@@ -20,7 +20,6 @@
 
 class b201108241423_remove_slmbug_and_story extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

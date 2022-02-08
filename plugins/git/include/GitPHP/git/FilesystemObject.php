@@ -28,7 +28,6 @@ namespace Tuleap\Git\GitPHP;
  */
 abstract class FilesystemObject extends GitObject implements GitObjectType
 {
-
     /**
      * path
      *

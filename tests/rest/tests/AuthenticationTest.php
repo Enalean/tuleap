@@ -24,7 +24,6 @@
  */
 class AuthenticationTest extends RestBase
 {
-
     public function testOPTIONSIsReadableByAnonymous()
     {
         $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('OPTIONS', 'projects'));

@@ -28,7 +28,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\IFilterValidElementsToUnkink;
 
 class FilterValidSubmilestones implements IFilterValidElementsToUnkink
 {
-
     /**
      * @var Planning_MilestoneFactory
      */

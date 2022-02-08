@@ -29,7 +29,6 @@ use Tuleap\ReferenceAliasTracker\OriginalReferencesBuilder;
 
 class referencealias_trackerPlugin extends Plugin //phpcs:ignore
 {
-
     /**
      * @var Dao
      */

@@ -20,7 +20,6 @@
 
 class Tracker_XML_Updater_FieldChange_FieldChangeDateXMLUpdater implements Tracker_XML_Updater_FieldChange_FieldChangeXMLUpdater
 {
-
     /**
      * @param mixed            $submitted_value
      */

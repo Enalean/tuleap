@@ -28,7 +28,6 @@ use Tuleap\Project\MappingRegistry;
 */
 /* abstract */ class Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     public $content_id;
     public $id;
     public $owner_id;

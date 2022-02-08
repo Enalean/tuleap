@@ -23,7 +23,6 @@
  */
 class Cardwall_CardInCellPresenterNode extends TreeNode
 {
-
     /** @var Cardwall_CardInCellPresenter */
     private $presenter;
 

@@ -20,7 +20,6 @@
 
 class Workflow_Transition_Condition_CommentNotEmpty_Dao extends \Tuleap\DB\DataAccessObject // phpcs:ignore
 {
-
     public function create($transition_id, $is_comment_required)
     {
         $is_comment_required = $is_comment_required ? 1 : 0;

@@ -25,7 +25,6 @@ use Tracker;
 
 class WebhookFactory
 {
-
     /**
      * @var WebhookDao
      */

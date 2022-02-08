@@ -20,7 +20,6 @@
 
 class Search_SearchProjectResultPresenter
 {
-
     /** @var  string */
     private $project_name;
 

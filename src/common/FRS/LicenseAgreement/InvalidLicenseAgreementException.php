@@ -25,5 +25,4 @@ namespace Tuleap\FRS\LicenseAgreement;
 
 class InvalidLicenseAgreementException extends \RuntimeException
 {
-
 }

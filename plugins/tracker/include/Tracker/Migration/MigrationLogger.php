@@ -26,7 +26,6 @@ use Psr\Log\LoggerInterface;
 
 class Tracker_Migration_MigrationLogger extends BrokerLogger
 {
-
     public function __construct(LoggerInterface $backend_logger, LoggerInterface $mail_logger)
     {
         parent::__construct(

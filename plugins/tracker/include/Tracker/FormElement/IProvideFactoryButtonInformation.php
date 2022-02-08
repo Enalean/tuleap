@@ -20,7 +20,6 @@
 
 interface Tracker_FormElement_IProvideFactoryButtonInformation
 {
-
     /**
      * @return string the label of the formElement (mainly used in admin part)
      */

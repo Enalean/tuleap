@@ -26,7 +26,6 @@
  */
 class Tracker_Report_AdditionalCriterion
 {
-
     private $key;
     private $value;
 

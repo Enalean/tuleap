@@ -28,7 +28,6 @@ use Tuleap\LDAP\ProjectGroupManagerRestrictedUserFilter;
  */
 class LDAP_ProjectGroupManager extends LDAP_GroupManager
 {
-
     /**
      * @var LDAP_ProjectGroupDao
      */

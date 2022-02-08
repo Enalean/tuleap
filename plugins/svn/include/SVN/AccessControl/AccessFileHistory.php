@@ -29,7 +29,6 @@ use Tuleap\SVN\Repository\Repository;
  */
 class AccessFileHistory
 {
-
     protected $id;
     private $version_number;
     private $content;

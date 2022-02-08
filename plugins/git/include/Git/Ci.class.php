@@ -23,7 +23,6 @@
  */
 class Git_Ci
 {
-
     private $_dao;
 
     /**

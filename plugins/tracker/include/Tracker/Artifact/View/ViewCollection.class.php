@@ -23,7 +23,6 @@
  */
 class Tracker_Artifact_View_ViewCollection
 {
-
     /** @var Tracker_Artifact_View_View[] */
     private $views = [];
 

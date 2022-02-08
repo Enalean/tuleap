@@ -21,7 +21,6 @@
 
 class b201201231552_add_table_soap_limits extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

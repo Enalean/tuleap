@@ -26,7 +26,6 @@ use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
  */
 class Tracker_FormElement_View_Admin
 {
-
     /**
      * @var Tracker_FormElement
      */

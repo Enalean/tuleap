@@ -18,7 +18,6 @@
 
 class b201601081758_create_plugin_svn_repositories_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Create table plugin_svn_repositories for SVN plugin';

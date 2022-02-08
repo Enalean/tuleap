@@ -31,7 +31,6 @@ use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
 class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     /** @var TransitionFactory */
     private $transition_factory;
 

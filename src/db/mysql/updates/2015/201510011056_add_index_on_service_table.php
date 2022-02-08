@@ -18,7 +18,6 @@
 
 class b201510011056_add_index_on_service_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Add index on service table in order to speed-up queries on this table.";

@@ -21,7 +21,6 @@
 
 class AgileDashboard_KanbanFactory
 {
-
     /** @var TrackerFactory */
     private $tracker_factory;
 

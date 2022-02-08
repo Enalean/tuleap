@@ -26,7 +26,6 @@ use Tuleap\Widget\Event\GetPublicAreas;
 */
 class Widget_ProjectPublicAreas extends Widget
 {
-
     public function __construct()
     {
         parent::__construct('projectpublicareas');

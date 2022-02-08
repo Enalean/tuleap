@@ -20,7 +20,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_Item
 {
-
     public const NO_CONTEXT = '-1';
 
     /**

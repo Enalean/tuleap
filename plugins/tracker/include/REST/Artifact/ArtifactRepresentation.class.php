@@ -33,7 +33,6 @@ use Tuleap\User\REST\MinimalUserRepresentation;
  */
 class ArtifactRepresentation
 {
-
     public const ROUTE = 'artifacts';
 
     /**

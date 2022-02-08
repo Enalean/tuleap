@@ -22,7 +22,6 @@ use Tuleap\ProFTPd\Xferlog\Dao;
 
 final class FileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|UserDao
      */

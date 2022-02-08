@@ -20,7 +20,6 @@
 
 interface PFO_Plugin
 {
-
     /**
      * Listen to an event and associate a callback
      *

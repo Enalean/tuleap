@@ -26,7 +26,6 @@
  */
 interface Tracker_Dispatchable_Interface
 {
-
     /**
      * Return the tracker the object belongs to
      *

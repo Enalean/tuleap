@@ -20,7 +20,6 @@
 
 class b201309191741_remove_burndown_field_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'remove burndown table.';

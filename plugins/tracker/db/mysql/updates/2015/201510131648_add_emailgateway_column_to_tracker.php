@@ -20,7 +20,6 @@
 
 class b201510131648_add_emailgateway_column_to_tracker extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add enable_emailgateway column to tracker table';

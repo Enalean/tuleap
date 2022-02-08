@@ -22,7 +22,6 @@
  */
 class ProjectHistoryDao extends DataAccessObject
 {
-
     /**
      * Constructor of the class
      *

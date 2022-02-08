@@ -24,7 +24,6 @@ use Tracker;
 
 class ConfigNotificationEmailCustomSender
 {
-
     /**
      * @var ConfigNotificationAssignedToDao
      */

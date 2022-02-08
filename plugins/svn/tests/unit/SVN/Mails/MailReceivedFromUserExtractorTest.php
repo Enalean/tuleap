@@ -25,7 +25,6 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 class MailReceivedFromUserExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testItVerifyThatMailListIsValid(): void
     {
         $list_mails = 'validmail@example.com;avalid+&mail1@example.com,mail_with-authorised.values@example.com';

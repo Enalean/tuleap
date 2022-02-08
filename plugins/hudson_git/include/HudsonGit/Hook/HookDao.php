@@ -24,7 +24,6 @@ use DataAccessObject;
 
 class HookDao extends DataAccessObject
 {
-
     public function delete($repository_id)
     {
         $repository_id = $this->da->escapeInt($repository_id);

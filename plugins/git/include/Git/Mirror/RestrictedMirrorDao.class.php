@@ -20,7 +20,6 @@
 
 class Git_RestrictedMirrorDao extends RestrictedResourceDao
 {
-
     public function getResourceAllowedProjectsTableName()
     {
         return 'plugin_git_restricted_mirrors_allowed_projects';

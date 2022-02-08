@@ -22,7 +22,6 @@ namespace Tuleap\Label\Widget;
 
 class ProjectLabelBuilder
 {
-
     public function build(array $project_labels, array $config_label)
     {
         $labels = [];

@@ -25,7 +25,6 @@ require_once __DIR__ . '/../../../src/common/wiki/phpwiki/lib/HtmlElement.php';
 
 class Docman_WikiController extends Docman_Controller
 {
-
     public $params;
 
     public function __construct(&$plugin, $pluginPath, $themePath, $request)

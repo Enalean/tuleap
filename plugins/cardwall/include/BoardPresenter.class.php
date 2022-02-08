@@ -23,7 +23,6 @@
  */
 abstract class Cardwall_BoardPresenter
 {
-
     /**
      * @var Cardwall_Board
      */

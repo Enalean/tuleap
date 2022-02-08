@@ -20,7 +20,6 @@
 
 class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject
 {
-
     public function searchForTargetByRuleId($rule_id)
     {
         $rule_id = $this->da->escapeInt($rule_id);

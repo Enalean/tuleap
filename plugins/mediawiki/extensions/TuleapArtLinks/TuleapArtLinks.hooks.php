@@ -20,7 +20,6 @@
 
 class TuleapArtLinksHooks
 {
-
     public static function onOutputPageBeforeHTML(OutputPage $out, &$text)
     {
         global $wgTuleapArtLinksGroupId;

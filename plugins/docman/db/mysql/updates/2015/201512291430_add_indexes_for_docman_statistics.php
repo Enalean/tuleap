@@ -18,7 +18,6 @@
 
 class b201512291430_add_indexes_for_docman_statistics extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add missing indexes to speed up statistics generation';

@@ -9,5 +9,4 @@
 
 class Docman_View_ProjectError extends Docman_View_ProjectHeader
 {
-
 }

@@ -25,7 +25,6 @@
  */
 class Mail_RecipientListBuilder
 {
-
     /**
      * @var UserManager
      */

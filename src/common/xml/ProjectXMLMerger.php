@@ -22,7 +22,6 @@ namespace Tuleap\XML;
 
 class ProjectXMLMerger
 {
-
     public function merge($source1_filename, $source2_filename, $destination_filename)
     {
         $source1 = simplexml_load_string(file_get_contents($source1_filename));

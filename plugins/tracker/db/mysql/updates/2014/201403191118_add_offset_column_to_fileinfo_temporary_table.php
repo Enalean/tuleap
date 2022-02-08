@@ -20,7 +20,6 @@
 
 class b201403191118_add_offset_column_to_fileinfo_temporary_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add offset column to tracker_fileinfo_temporary table';

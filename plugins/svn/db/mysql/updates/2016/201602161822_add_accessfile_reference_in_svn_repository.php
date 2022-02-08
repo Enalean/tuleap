@@ -18,7 +18,6 @@
 
 class b201602161822_add_accessfile_reference_in_svn_repository extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add accessfile reference to svn repository';

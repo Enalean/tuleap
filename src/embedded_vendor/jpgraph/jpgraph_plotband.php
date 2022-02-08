@@ -119,7 +119,6 @@ class RectPattern
 //=====================================================================
 class RectPatternSolid extends RectPattern
 {
-
     public function __construct($aColor = "black", $aWeight = 1)
     {
         parent::__construct($aColor, $aWeight);
@@ -143,7 +142,6 @@ class RectPatternSolid extends RectPattern
 //=====================================================================
 class RectPatternHor extends RectPattern
 {
-
     public function __construct($aColor = "black", $aWeight = 1, $aLineSpacing = 7)
     {
         parent::__construct($aColor, $aWeight);
@@ -168,7 +166,6 @@ class RectPatternHor extends RectPattern
 //=====================================================================
 class RectPatternVert extends RectPattern
 {
-
     public function __construct($aColor = "black", $aWeight = 1, $aLineSpacing = 7)
     {
         parent::__construct($aColor, $aWeight);
@@ -196,7 +193,6 @@ class RectPatternVert extends RectPattern
 //=====================================================================
 class RectPatternRDiag extends RectPattern
 {
-
     public function __construct($aColor = "black", $aWeight = 1, $aLineSpacing = 12)
     {
         parent::__construct($aColor, $aWeight);
@@ -267,7 +263,6 @@ class RectPatternRDiag extends RectPattern
 //=====================================================================
 class RectPatternLDiag extends RectPattern
 {
-
     public function __construct($aColor = "black", $aWeight = 1, $aLineSpacing = 12)
     {
         $this->linespacing = $aLineSpacing;

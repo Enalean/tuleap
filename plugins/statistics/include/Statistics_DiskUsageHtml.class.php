@@ -25,7 +25,6 @@ use Tuleap\Chart\ColorsForCharts;
 
 class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput
 {
-
     protected function _displayEvolutionData($row)
     {
         echo '<td>' . $this->sizeReadable($row['start_size']) . '</td>';

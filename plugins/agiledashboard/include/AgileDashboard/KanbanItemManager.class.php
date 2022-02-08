@@ -21,7 +21,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class AgileDashboard_KanbanItemManager
 {
-
     /**
      * @var AgileDashboard_KanbanItemDao
      */

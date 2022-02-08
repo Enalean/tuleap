@@ -23,5 +23,4 @@ namespace Tuleap\System\Exception;
 
 class DaemonLockerException extends \Exception
 {
-
 }

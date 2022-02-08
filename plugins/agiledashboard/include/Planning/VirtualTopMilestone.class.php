@@ -42,7 +42,6 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class Planning_VirtualTopMilestone implements Planning_Milestone
 {
-
     /**
      * The project where the milestone is defined
      *

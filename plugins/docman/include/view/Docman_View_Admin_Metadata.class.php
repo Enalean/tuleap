@@ -26,7 +26,6 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_Admin_Metadata extends Docman_View_Extra
 {
-
     public function _title($params)
     {
         echo '<h2 class="project-header-title">' . $this->_getTitle($params) . ' - ' . dgettext('tuleap-docman', 'Manage Properties') . '</h2>';

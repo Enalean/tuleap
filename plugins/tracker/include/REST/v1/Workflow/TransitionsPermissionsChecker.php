@@ -33,7 +33,6 @@ use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
  */
 class TransitionsPermissionsChecker
 {
-
     /**
      * @var TrackerPermissionsChecker
      */

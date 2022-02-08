@@ -23,7 +23,6 @@
  */
 class GitBackend extends Backend implements Git_Backend_Interface, GitRepositoryCreator
 {
-
     private $driver;
     //path MUST end with a '/'
     private $gitRootPath;

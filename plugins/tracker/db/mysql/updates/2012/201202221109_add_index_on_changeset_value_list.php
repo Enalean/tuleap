@@ -21,7 +21,6 @@
 
 class b201202221109_add_index_on_changeset_value_list extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

@@ -25,5 +25,4 @@ namespace Tuleap\Tracker\FormElement\Field\XML;
 
 final class XMLFieldWithoutPermissionsException extends \Exception
 {
-
 }

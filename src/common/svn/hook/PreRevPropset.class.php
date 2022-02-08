@@ -27,7 +27,6 @@
  */
 class SVN_Hook_PreRevPropset extends SVN_Hook
 {
-
     /**
      * Check if the property can be modified
      *

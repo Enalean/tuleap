@@ -23,7 +23,6 @@
 
 class b201309251016_add_agiledashboard_criteria_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

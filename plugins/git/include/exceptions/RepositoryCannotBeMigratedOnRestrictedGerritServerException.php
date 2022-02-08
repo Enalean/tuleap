@@ -24,7 +24,6 @@ use Exception;
 
 class RepositoryCannotBeMigratedOnRestrictedGerritServerException extends Exception
 {
-
     public function __construct()
     {
         parent::__construct("The repository cannot be migrated on this Gerrit server, because the project is not able to use this one.");

@@ -26,7 +26,6 @@ use Project;
 
 class FineGrainedPermissionReplicator
 {
-
     /**
      * @var FineGrainedPermissionFactory
      */

@@ -20,7 +20,6 @@
 
 class SvnNotification
 {
-
     /**
      * Obtain an instance of SvnNotificationDao
      *

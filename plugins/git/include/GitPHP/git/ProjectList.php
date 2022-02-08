@@ -34,7 +34,6 @@ namespace Tuleap\Git\GitPHP;
  */
 class ProjectList
 {
-
     /**
      * instance
      *

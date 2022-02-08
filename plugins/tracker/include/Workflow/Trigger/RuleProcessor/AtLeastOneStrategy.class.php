@@ -26,7 +26,6 @@
  */
 class Tracker_Workflow_Trigger_RulesProcessor_AtLeastOneStrategy implements Tracker_Workflow_Trigger_RulesProcessor_Strategy
 {
-
     /**
      * @see Tracker_Workflow_Trigger_RulesProcessor_Strategy::allPrecondtionsAreMet
      * @return bool

@@ -27,5 +27,4 @@ use Exception;
 
 final class InvalidProjectIconException extends Exception
 {
-
 }

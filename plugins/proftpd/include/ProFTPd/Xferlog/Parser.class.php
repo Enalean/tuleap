@@ -22,7 +22,6 @@ namespace Tuleap\ProFTPd\Xferlog;
 
 class Parser
 {
-
     /**
      *
      * @param string $line

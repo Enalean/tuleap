@@ -121,7 +121,6 @@ use UserManager;
 
 class PullRequestsResource extends AuthenticatedResource
 {
-
     public const MAX_LIMIT = 50;
 
     /** @var PullRequestPermissionChecker */

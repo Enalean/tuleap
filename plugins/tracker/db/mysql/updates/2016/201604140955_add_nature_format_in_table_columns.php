@@ -18,7 +18,6 @@
 
 class b201604140955_add_nature_format_in_table_columns extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add artlink_nature_format column in table columns';

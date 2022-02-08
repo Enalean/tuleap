@@ -20,7 +20,6 @@
 
 class Git_Mirror_ManifestManager
 {
-
     /**
      * @var Git_Mirror_ManifestFileGenerator
      */

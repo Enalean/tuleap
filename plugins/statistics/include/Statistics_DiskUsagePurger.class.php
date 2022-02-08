@@ -24,7 +24,6 @@
 
 class Statistics_DiskUsagePurger
 {
-
     /**
      * @var \Psr\Log\LoggerInterface
      */

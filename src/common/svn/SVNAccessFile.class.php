@@ -27,7 +27,6 @@ require_once __DIR__ . '/../../www/svn/svn_utils.php';
  */
 class SVNAccessFile
 {
-
     /**
      * Value in $groups when the group is (re)defined by user
      */

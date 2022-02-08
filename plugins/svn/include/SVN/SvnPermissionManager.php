@@ -28,7 +28,6 @@ use PermissionsManager;
 
 class SvnPermissionManager
 {
-
     public const PERMISSION_ADMIN = 'PLUGIN_SVN_ADMIN';
 
     /**

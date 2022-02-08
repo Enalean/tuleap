@@ -20,7 +20,6 @@
 
 class b201903051612_create_plugin_frs_file_upload extends ForgeUpgrade_Bucket //phpcs:ignore
 {
-
     public function description()
     {
         return 'Create table plugin_frs_file_upload for frs plugin';

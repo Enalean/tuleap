@@ -27,7 +27,6 @@ use Tuleap\SVN\Repository\Repository;
  */
 class AccessFileHistoryFactory
 {
-
     private $dao;
 
     public function __construct(AccessFileHistoryDao $dao)

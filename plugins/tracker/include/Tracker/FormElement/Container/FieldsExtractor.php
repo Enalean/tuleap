@@ -28,7 +28,6 @@ use Tracker_FormElement_Field;
 
 class FieldsExtractor
 {
-
     /**
      * This methids returns all the fields in a given container
      * Fields that are directly in the container and fields inside a container in this container ...

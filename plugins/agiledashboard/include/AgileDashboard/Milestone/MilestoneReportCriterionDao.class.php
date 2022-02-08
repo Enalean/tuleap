@@ -21,7 +21,6 @@
 
 class MilestoneReportCriterionDao extends DataAccessObject
 {
-
     public function save($report_id, $milestone_id)
     {
         $report_id    = $this->da->escapeInt($report_id);

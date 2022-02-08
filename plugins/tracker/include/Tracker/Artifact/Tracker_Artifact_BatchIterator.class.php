@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Artifact_BatchIterator
 {
-
     public const ITEMS_PER_BATCH = 100;
 
     private $batches_processed;

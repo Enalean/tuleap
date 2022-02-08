@@ -24,7 +24,6 @@
  */
 class Docman_TokenDao extends DataAccessObject
 {
-
     /**
     * Searches Docman_Token by Url
     * @return DataAccessResult

@@ -23,7 +23,6 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 interface IValidateElementsToAdd
 {
-
     /**
      * Will throw exceptions if on of the element in $to_add is not valid
      *

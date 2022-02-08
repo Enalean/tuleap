@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\REST;
  */
 class WorkflowRulesRepresentation
 {
-
     /**
      * @var array {@type Tuleap\Tracker\REST\WorkflowRuleDateRepresentation}
      */

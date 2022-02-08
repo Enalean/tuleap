@@ -20,7 +20,6 @@
 
 class MediawikiSiteAdminResourceRestrictorDao extends RestrictedResourceDao
 {
-
     public function getResourceAllowedProjectsTableName()
     {
         return 'plugin_mediawiki_site_restricted_features';

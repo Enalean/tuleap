@@ -27,7 +27,6 @@ use Tracker_Artifact_Changeset_ValueDao;
 
 abstract class FieldValueDao extends DataAccessObject
 {
-
     public function searchById($changeset_value_id)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);

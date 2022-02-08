@@ -22,7 +22,6 @@ require_once __DIR__ . '/DatabaseInitialization.class.php';
 
 class PullRequestDataBuilder extends REST_TestDataBuilder
 {
-
     public function setUp()
     {
         PluginManager::instance()->installAndActivate('pullrequest');

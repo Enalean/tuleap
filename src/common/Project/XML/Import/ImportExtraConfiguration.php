@@ -22,7 +22,6 @@ namespace Tuleap\Project\XML\Import;
 
 interface ImportExtraConfiguration
 {
-
     public function getServiceName();
 
     public function getValue();

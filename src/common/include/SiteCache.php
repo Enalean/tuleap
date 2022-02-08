@@ -22,7 +22,6 @@ use Tuleap\Plugin\PluginLoader;
 
 class SiteCache
 {
-
     private $logger;
 
     public function __construct(?\Psr\Log\LoggerInterface $logger = null)

@@ -29,7 +29,6 @@ use Tuleap\TestManagement\Config;
 
 class AdminTrackersRetriever
 {
-
     /**
      * @var TrackerFactory
      */

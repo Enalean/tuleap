@@ -20,7 +20,6 @@
 
 class Cardwall_RendererBoardBuilder
 {
-
     /** @var Cardwall_CardInCellPresenterBuilder */
     private $presenter_builder;
 

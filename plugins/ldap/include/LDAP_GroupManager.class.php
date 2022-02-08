@@ -41,7 +41,6 @@ use Tuleap\LDAP\GroupSyncNotificationsManager;
  */
 abstract class LDAP_GroupManager
 {
-
     public const NO_SYNCHRONIZATION      = 'never';
     public const AUTO_SYNCHRONIZATION    = 'auto';
     public const BIND_OPTION             = 'bind';

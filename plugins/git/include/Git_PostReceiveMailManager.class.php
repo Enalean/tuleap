@@ -22,7 +22,6 @@
 
 class Git_PostReceiveMailManager
 {
-
     public $dao;
 
     /**

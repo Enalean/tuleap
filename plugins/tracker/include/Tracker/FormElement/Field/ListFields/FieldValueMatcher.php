@@ -26,7 +26,6 @@ use User\XML\Import\IFindUserFromXMLReference;
 
 class FieldValueMatcher
 {
-
     /**
      * @var IFindUserFromXMLReference
      */

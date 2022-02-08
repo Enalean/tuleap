@@ -28,7 +28,6 @@
 */
 class SystemEvent_USER_DELETE extends SystemEvent
 {
-
     /**
      * Verbalize the parameters so they are readable and much user friendly in
      * notifications

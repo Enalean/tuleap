@@ -25,7 +25,6 @@ use Project;
 
 class GerritServerResourceRestrictor
 {
-
     /**
      * @var RestrictedGerritServerDao
      */

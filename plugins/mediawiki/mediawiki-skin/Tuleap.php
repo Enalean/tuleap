@@ -21,7 +21,6 @@ if (! defined('MEDIAWIKI')) {
  */
 class SkinTuleap extends SkinTemplate
 {
-
     public const MEDIAWIKI_URL = '/\/plugins\/mediawiki\/wiki\/(.*)\/index.php\//';
 
     /** Using fusionforge. */
@@ -85,7 +84,6 @@ class SkinTuleap extends SkinTemplate
  */
 class TuleapTemplate extends BaseTemplate
 {
-
         public $project = false;
 
     /**

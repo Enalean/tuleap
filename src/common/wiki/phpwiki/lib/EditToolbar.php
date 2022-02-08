@@ -12,7 +12,6 @@
 
 class EditToolbar
 {
-
     public function __construct()
     {
         global $WikiTheme;

@@ -19,7 +19,6 @@
  */
 class b201610171725_create_plugin_git_repository_fine_grained_regexp extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

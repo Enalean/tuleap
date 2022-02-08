@@ -23,7 +23,6 @@ use Exception;
 
 class ArtifactIsNotInMilestoneContentException extends Exception
 {
-
     public function __construct($milestone_id, $item_id)
     {
         parent::__construct('Artifact ' . $item_id . ' is not linked to milestone ' . $milestone_id . ', hence cannot remove it from content');

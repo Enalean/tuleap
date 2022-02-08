@@ -31,7 +31,6 @@ use function PHPUnit\Framework\assertEquals;
 
 class XMLSelectBoxFieldTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testItMustHaveABindTypeAtExportType(): void
     {
         $this->expectException(\LogicException::class);

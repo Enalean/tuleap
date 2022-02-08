@@ -40,7 +40,6 @@
  */
 interface Tracker_IProvideJsonFormatOfMyself
 {
-
     /**
      * Return a JSon representation of self meant to be passed as is to json_encode
      *

@@ -23,7 +23,6 @@ namespace Tuleap\Trove;
 
 class TroveCatCategoryPresenter
 {
-
     public $id;
     public $count;
     public $name;

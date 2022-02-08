@@ -20,7 +20,6 @@
 
 class b201012140821_improve_frs_file extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

@@ -18,7 +18,6 @@
 
 class b201204021720_create_ci_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

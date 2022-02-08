@@ -20,7 +20,6 @@
 
 class Git_HTTP_Wrapper
 {
-
     /**
      * @var \Psr\Log\LoggerInterface
      */

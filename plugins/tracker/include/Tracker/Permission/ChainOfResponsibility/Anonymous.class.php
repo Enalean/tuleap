@@ -25,7 +25,6 @@
  */
 class Tracker_Permission_ChainOfResponsibility_PermissionsOfAnonymous extends Tracker_Permission_Command
 {
-
     public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter)
     {
         switch ($request->getPermissionType(ProjectUGroup::ANONYMOUS)) {

@@ -33,7 +33,6 @@ use Tuleap\SVN\Repository\Repository;
 
 class ViewVCProxy
 {
-
     /**
      * @var AccessHistorySaver
      */

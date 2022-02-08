@@ -20,7 +20,6 @@
 
 class Tracker_Migration_V3_AttachmentFieldDao extends DataAccessObject
 {
-
     public function addAttachmentField($tv5_id)
     {
         $tv5_id = $this->da->escapeInt($tv5_id);

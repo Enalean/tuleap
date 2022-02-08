@@ -43,7 +43,6 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 
 class CardwallLegacyController implements DispatchableWithRequest
 {
-
     /**
      * @var Cardwall_OnTop_ConfigFactory
      */

@@ -25,7 +25,6 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class Cardwall_PaneBoardBuilder
 {
-
     private $artifact_factory;
     private $presenter_builder;
     private $dao;

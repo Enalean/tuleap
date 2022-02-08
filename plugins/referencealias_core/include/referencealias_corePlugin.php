@@ -29,7 +29,6 @@ use Tuleap\ReferenceAliasCore\ReferencesBuilder;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class referencealias_corePlugin extends Plugin
 {
-
     /**
      * @var Dao
      */

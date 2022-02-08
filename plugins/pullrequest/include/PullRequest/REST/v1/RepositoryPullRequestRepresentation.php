@@ -25,7 +25,6 @@ namespace Tuleap\PullRequest\REST\v1;
  */
 class RepositoryPullRequestRepresentation
 {
-
     /** @var array */
     public $collection;
 

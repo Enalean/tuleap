@@ -23,7 +23,6 @@ use Tuleap\PluginsAdministration\PluginDisablerVerifier;
 
 class PluginsAdministrationActions extends Actions
 {
-
     /** @var PluginManager */
     private $plugin_manager;
 

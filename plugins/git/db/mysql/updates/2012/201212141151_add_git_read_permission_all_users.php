@@ -20,7 +20,6 @@
 
 class b201212141151_add_git_read_permission_all_users extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

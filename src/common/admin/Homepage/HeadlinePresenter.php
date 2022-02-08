@@ -20,7 +20,6 @@
 
 class Admin_Homepage_HeadlinePresenter
 {
-
     public $headline;
     public $language_id;
 

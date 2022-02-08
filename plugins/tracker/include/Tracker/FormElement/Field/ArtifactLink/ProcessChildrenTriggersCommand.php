@@ -29,7 +29,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand implements
     Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand
 {
-
     /** @var Tracker_FormElement_Field_ArtifactLink */
     private $field;
 

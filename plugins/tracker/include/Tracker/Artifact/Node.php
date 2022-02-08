@@ -25,7 +25,6 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class ArtifactNode extends TreeNode
 {
-
     public function __construct(Artifact $artifact, ?array $data = null)
     {
         parent::__construct($data, $artifact->getId());

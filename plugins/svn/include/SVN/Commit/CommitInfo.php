@@ -26,7 +26,6 @@ namespace Tuleap\SVN\Commit;
 
 class CommitInfo
 {
-
     private $commit_message;
     private $user;
     private $date;

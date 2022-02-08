@@ -20,7 +20,6 @@
 
 class GitPresenters_AdminMassUdpdateMirroringPresenter
 {
-
     /**
      * @var GitPresenters_MirrorPresenter[]
      */

@@ -29,7 +29,6 @@ use WikiPageVersion;
  */
 class PhpWikiPageVersionFullRepresentation extends PhpWikiPageVersionRepresentation
 {
-
     /**
      * @var string {@type string}
      */

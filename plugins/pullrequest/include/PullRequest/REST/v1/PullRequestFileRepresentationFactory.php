@@ -26,7 +26,6 @@ use Tuleap\PullRequest\PullRequest;
 
 class PullRequestFileRepresentationFactory
 {
-
     /**
      * @var GitExec
      */

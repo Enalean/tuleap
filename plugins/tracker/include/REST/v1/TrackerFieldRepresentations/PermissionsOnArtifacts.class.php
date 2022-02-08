@@ -24,7 +24,6 @@ use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 
 class PermissionsOnArtifacts
 {
-
     public $is_used_by_default;
 
     /**

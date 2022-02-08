@@ -30,7 +30,6 @@ use SOAPBase;
  */
 class ProjectTest extends SOAPBase
 {
-
     public function setUp(): void
     {
         parent::setUp();

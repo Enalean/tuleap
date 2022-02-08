@@ -20,6 +20,5 @@
 
 interface Tracker_FormElement_IAcceptFieldVisitor
 {
-
     public function accept(Tracker_FormElement_FieldVisitor $visitor);
 }

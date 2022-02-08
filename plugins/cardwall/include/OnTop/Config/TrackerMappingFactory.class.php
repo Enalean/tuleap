@@ -21,7 +21,6 @@
 
 class Cardwall_OnTop_Config_TrackerMappingFactory
 {
-
     /**
      * @var TrackerFactory
      */

@@ -20,7 +20,6 @@
 
 class Tracker_Migration_V3_CcFieldDao extends DataAccessObject
 {
-
     public function addCCField($tv5_id)
     {
         $tv5_id   = $this->da->escapeInt($tv5_id);

@@ -26,7 +26,6 @@ use Project;
 
 class FineGrainedRepresentationBuilder
 {
-
     /**
      * @var AccessRightsPresenterOptionsBuilder
      */

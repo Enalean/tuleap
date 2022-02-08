@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\Artifact\MailGateway;
 
 class MailGatewayConfig
 {
-
     private static $DISABLED = 'disabled';
     private static $TOKEN    = 'token';
     private static $INSECURE = 'insecure';

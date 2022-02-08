@@ -23,7 +23,6 @@
 
 class Docman_Empty extends Docman_Document
 {
-
     public function __construct($data = null)
     {
         parent::__construct($data);

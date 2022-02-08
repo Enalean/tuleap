@@ -20,7 +20,6 @@
 
 class b201702071518_add_gerrit_servers_project_restriction_tables extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Add new project restriction tables for Gerrit servers.";

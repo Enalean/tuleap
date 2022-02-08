@@ -20,7 +20,6 @@
 
 class b201206211032_add_postaction_field_int_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add post actions field int table.';

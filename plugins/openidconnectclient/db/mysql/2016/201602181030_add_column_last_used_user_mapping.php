@@ -20,7 +20,6 @@
 
 class b201602181030_add_column_last_used_user_mapping extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add last used in OpenID Connect user mapping';

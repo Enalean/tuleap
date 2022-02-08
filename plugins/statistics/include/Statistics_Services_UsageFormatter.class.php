@@ -22,7 +22,6 @@ require_once 'Statistics_Formatter.class.php';
 
 class Statistics_Services_UsageFormatter
 {
-
     /** @const number of bytes in a MegaByte */
     public const BYTES_NUMBER_IN_MB = 1000;
 

@@ -21,7 +21,6 @@ namespace Tuleap\RealTime;
 
 interface Client
 {
-
     /**
      * Method to send an Https request when
      * want to broadcast a message

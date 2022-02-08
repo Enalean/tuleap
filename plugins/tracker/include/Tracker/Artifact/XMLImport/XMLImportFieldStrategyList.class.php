@@ -25,7 +25,6 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric
 {
-
     public const BIND_STATIC  = 'static';
     public const BIND_UGROUPS = 'ugroups';
     public const FORMAT_ID    = 'id';

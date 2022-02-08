@@ -39,7 +39,6 @@ use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
 class TrackerFactory
 {
-
     public const LEGACY_SUFFIX       = '_from_tv3';
     public const TRACKER_MAPPING_KEY = 'plugin_tracker_tracker';
 

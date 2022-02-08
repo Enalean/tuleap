@@ -18,7 +18,6 @@
 
 class b201208241122_remove_wrong_crossref extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

@@ -27,7 +27,6 @@ use Exception;
  */
 class GateKeeper
 {
-
     public function assertAccess(PFUser $user)
     {
         if ($this->isTokenBasedAuthentication($user)) {

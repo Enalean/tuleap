@@ -18,7 +18,6 @@
 
 class b201501191123_create_tracker_artifact_priority_history_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add tracker_artifact_priority_history table';

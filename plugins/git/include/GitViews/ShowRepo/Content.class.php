@@ -22,7 +22,6 @@ use Tuleap\Git\History\GitPhpAccessLogger;
 
 class GitViews_ShowRepo_Content
 {
-
     /**
      * @var HTTPRequest
      */

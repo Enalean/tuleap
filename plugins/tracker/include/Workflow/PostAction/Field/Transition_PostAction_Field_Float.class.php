@@ -27,7 +27,6 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Numeric
 {
-
     public const XML_TAG_NAME = 'postaction_field_float';
     public const SHORT_NAME   = 'field_float';
 

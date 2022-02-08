@@ -20,7 +20,6 @@
 
 class MediawikiGroupPresenter
 {
-
     /** @var ProjectUGroup[] */
     private $available_ugroups;
 

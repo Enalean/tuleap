@@ -20,7 +20,6 @@
 
 class b201606081712_add_project_fine_grained_enable_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

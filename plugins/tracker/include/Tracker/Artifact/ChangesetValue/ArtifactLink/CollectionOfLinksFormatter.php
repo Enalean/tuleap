@@ -23,7 +23,6 @@ use PFUser;
 
 class CollectionOfLinksFormatter
 {
-
     /**
      * @param Tracker_ArtifactLinkInfo[] $list_of_artifactlinkinfo
      * @param string $format

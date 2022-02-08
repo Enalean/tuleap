@@ -21,7 +21,6 @@
 
 class Templating_Presenter_ButtonDropdownsOption
 {
-
     private $url;
     private $selected;
     protected $label;

@@ -23,7 +23,6 @@ require_once __DIR__ . '/../../../bootstrap.php';
 
 class CitationStripperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     private $fixtures_dir;
     /** @var Tracker_Artifact_MailGateway_CitationStripper */
     private $citation_stripper;

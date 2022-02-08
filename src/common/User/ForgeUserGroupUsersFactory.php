@@ -20,7 +20,6 @@
 
 class User_ForgeUserGroupUsersFactory
 {
-
     /** @var User_ForgeUserGroupUsersDao */
     private $users_dao;
 

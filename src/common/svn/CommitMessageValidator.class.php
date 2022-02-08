@@ -27,7 +27,6 @@
  */
 class SVN_CommitMessageValidator
 {
-
     /** @var ReferenceManager */
     private $reference_manager;
 

@@ -18,7 +18,6 @@
 
 class b201310111459_drop_remote_server_deleted_column extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

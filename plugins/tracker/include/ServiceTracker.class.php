@@ -21,7 +21,6 @@ use Tuleap\Project\MappingRegistry;
 
 class ServiceTracker extends Service
 {
-
     public const NAME = 'tracker';
 
     public function getIconName(): string

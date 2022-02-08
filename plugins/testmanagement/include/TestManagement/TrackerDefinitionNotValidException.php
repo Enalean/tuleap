@@ -25,5 +25,4 @@ use Exception;
 
 class TrackerDefinitionNotValidException extends Exception
 {
-
 }

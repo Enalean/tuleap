@@ -33,7 +33,6 @@ use GitRepositoryFactory;
 
 class PullRequestUpdater
 {
-
     /**
      * @var Factory
      */

@@ -33,7 +33,6 @@
 
 class WikiPlugin_HtmlConverter extends WikiPlugin
 {
-
     public function getName()
     {
         return "HtmlConverter";

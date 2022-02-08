@@ -24,7 +24,6 @@
 
 class Docman_View_Table extends Docman_View_Browse
 {
-
     /**
      * @access: protected
      */

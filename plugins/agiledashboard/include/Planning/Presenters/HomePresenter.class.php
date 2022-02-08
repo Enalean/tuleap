@@ -20,7 +20,6 @@
 
 class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresenter
 {
-
     /** @var array */
     public $kanban_summary_presenters;
 

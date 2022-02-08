@@ -23,7 +23,6 @@ use Tuleap\Dashboard\User\UserDashboardController;
 
 class GraphOnTrackersV5_Widget_MyChart extends GraphOnTrackersV5_Widget_Chart
 {
-
     public function __construct()
     {
         parent::__construct(

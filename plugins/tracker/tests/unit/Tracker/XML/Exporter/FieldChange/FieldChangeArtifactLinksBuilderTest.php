@@ -26,7 +26,6 @@ namespace Tuleap\Tracker\XML\Exporter\FieldChange;
 
 final class FieldChangeArtifactLinksBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     /**
      * @var FieldChangeArtifactLinksBuilder
      */

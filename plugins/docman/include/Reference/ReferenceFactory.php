@@ -21,7 +21,6 @@
 
 class Docman_ReferenceFactory
 {
-
     /**
      * @return Docman_Reference
      */

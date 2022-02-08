@@ -21,7 +21,6 @@
 
 class b201108311118_add_widget_renderer extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

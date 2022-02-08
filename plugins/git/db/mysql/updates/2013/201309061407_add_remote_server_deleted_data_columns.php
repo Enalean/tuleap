@@ -18,7 +18,6 @@
 
 class b201309061407_add_remote_server_deleted_data_columns extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

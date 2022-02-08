@@ -22,7 +22,6 @@ namespace Tuleap\TestManagement\Criterion;
 
 class MilestoneFilter implements ISearchOnMilestone
 {
-
     /** @var int */
     private $milestone_id;
 

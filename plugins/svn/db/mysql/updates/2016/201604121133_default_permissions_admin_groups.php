@@ -18,7 +18,6 @@
 
 class b201604121133_default_permissions_admin_groups extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add default ugroup permissions for admin groups';

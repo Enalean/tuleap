@@ -20,7 +20,6 @@
 
 class User_ForgeUserGroupPermissionsManager
 {
-
     /**
      * @var User_ForgeUserGroupPermissionsDao
      */

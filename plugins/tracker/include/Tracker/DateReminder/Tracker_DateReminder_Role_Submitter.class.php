@@ -20,7 +20,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_DateReminder_Role_Submitter implements Tracker_DateReminder_Role
 {
-
     public const IDENTIFIER = "1";
     /**
      * Get the Role

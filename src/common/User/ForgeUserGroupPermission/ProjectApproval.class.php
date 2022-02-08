@@ -20,7 +20,6 @@
 
 class User_ForgeUserGroupPermission_ProjectApproval extends User_ForgeUserGroupPermission
 {
-
     public const ID = 1;
 
     public function getId()

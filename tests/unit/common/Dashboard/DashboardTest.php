@@ -24,7 +24,6 @@ namespace Tuleap\Dashboard;
 
 class DashboardTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function dashboardLayoutProvider()
     {
         $dashboard = new Dashboard(1, 'foo');

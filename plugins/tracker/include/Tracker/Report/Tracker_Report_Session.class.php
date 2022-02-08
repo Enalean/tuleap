@@ -20,7 +20,6 @@
 
 class Tracker_Report_Session extends Codendi_Session
 {
-
     protected $report_id;
     protected $report_namespace;
 

@@ -28,7 +28,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationUpdate;
 
 final class DispatchIterationUpdateStub implements DispatchIterationUpdate
 {
-
     private function __construct(private int $dispatch_update_call_count)
     {
     }

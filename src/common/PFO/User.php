@@ -23,7 +23,6 @@
  */
 interface PFO_User
 {
-
     /**
      * User login on underlying unix system
      *

@@ -26,7 +26,6 @@
  */
 class Actions
 {
-
     /**
      * @var Controler
      * @psalm-var ActionsController

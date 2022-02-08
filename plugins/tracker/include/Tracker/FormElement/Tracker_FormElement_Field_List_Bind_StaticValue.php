@@ -21,7 +21,6 @@
 
 class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElement_Field_List_BindValue
 {
-
     /**
      *
      * @var string

@@ -20,7 +20,6 @@
 
 class b201211211457_refactor_tracker_rule_tables extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Refactor the tracker_rule tables';

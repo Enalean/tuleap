@@ -20,7 +20,6 @@
 
 class Workflow_Transition_Condition_Permissions_Factory
 {
-
     /**
      * @var UGroupManager
      */

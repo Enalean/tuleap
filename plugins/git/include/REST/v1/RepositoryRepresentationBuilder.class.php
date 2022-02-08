@@ -34,7 +34,6 @@ use Tuleap\Git\Repository\AdditionalInformationRepresentationRetriever;
 
 class RepositoryRepresentationBuilder
 {
-
     /**
      * @var Git_RemoteServer_GerritServerFactory
      */

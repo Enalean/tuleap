@@ -48,7 +48,6 @@ require_once __DIR__ . '/../../../www/project/admin/permissions.php';
  */
 class WikiServiceAdminViews extends WikiViews
 {
-
   /**
    * WikiServiceAdminViews - Constructor
    */

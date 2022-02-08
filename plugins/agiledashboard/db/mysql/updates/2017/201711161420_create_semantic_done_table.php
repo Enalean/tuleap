@@ -24,7 +24,6 @@
 
 class b201711161420_create_semantic_done_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Create plugin_agiledashboard_semantic_done table';

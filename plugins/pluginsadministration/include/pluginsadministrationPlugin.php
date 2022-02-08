@@ -28,7 +28,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
 {
-
     public function __construct($id)
     {
         parent::__construct($id);

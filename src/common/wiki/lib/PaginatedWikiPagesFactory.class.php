@@ -23,7 +23,6 @@ use Tuleap\PHPWiki\WikiPage;
 
 class PaginatedWikiPagesFactory
 {
-
     /** @var WikiDao */
     private $dao;
 

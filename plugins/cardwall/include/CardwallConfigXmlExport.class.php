@@ -26,7 +26,6 @@ use Tuleap\Cardwall\XML\XMLCardwallTracker;
 
 class CardwallConfigXmlExport
 {
-
     /** @var Project */
     private $project;
 

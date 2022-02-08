@@ -26,7 +26,6 @@ use Tuleap\DB\DataAccessObject;
 
 class HiddenFieldsetsDao extends DataAccessObject
 {
-
     public function isFieldsetUsedInPostAction(int $fieldset_id): bool
     {
         $sql = 'SELECT NULL

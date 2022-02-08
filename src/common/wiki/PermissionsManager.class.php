@@ -59,7 +59,6 @@ use Tuleap\Project\UGroupLiteralizer;
 
 class Wiki_PermissionsManager
 {
-
     public const WIKI_PERMISSION_READ         = 'WIKIPAGE_READ';
     public const SERVICE_WIKI_PERMISSION_READ = 'WIKI_READ';
 

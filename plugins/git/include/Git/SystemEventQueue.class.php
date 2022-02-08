@@ -20,7 +20,6 @@
 
 class Git_SystemEventQueue extends SystemEventQueue
 {
-
     /**
      * @var \Psr\Log\LoggerInterface
      */

@@ -22,7 +22,6 @@
  */
 class MediaWikiPluginInfo extends PluginFileInfo
 {
-
     public function __construct(&$plugin)
     {
         parent::__construct($plugin, 'mediawiki');

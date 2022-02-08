@@ -23,7 +23,6 @@ use Tuleap\Tracker\Workflow\Action\Triggers\TriggersPresenter;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Action
 {
-
     private $template_renderer;
     private $token;
     private $rule_manager;

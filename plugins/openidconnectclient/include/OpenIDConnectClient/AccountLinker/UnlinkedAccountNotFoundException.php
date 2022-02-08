@@ -22,5 +22,4 @@ namespace Tuleap\OpenIDConnectClient\AccountLinker;
 
 class UnlinkedAccountNotFoundException extends \Exception
 {
-
 }

@@ -566,7 +566,6 @@ $_gFlagCache = [
 // Only supposed to b called as statics
 class FlagCache
 {
-
     public static function GetFlagImgByName($aSize, $aName)
     {
         global $_gFlagCache;

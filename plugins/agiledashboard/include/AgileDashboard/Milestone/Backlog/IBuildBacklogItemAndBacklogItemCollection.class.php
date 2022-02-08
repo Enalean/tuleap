@@ -29,7 +29,6 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 interface AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection
 {
-
     /**
      * @return AgileDashboard_Milestone_Backlog_IBacklogItemCollection
      */

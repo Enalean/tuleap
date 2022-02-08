@@ -25,7 +25,6 @@ use CSRFSynchronizerToken;
 
 class AdminAllowedProjectsGerritPresenter
 {
-
     public const TEMPLATE = 'manage-allowed-projects';
 
     /**

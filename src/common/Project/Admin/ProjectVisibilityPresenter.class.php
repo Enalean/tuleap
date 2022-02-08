@@ -24,7 +24,6 @@ use Codendi_HTMLPurifier;
 
 class ProjectVisibilityPresenter
 {
-
     /**
      * @var array
      */

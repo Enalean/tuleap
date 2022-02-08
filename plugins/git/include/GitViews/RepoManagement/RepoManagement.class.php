@@ -39,7 +39,6 @@ use Tuleap\Git\Webhook\WebhookFactory;
  */
 class GitViews_RepoManagement
 {
-
     /**
      * @var GitPermissionsManager
      */

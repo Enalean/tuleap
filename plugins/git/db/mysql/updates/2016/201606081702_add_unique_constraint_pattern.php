@@ -20,7 +20,6 @@
 
 class b201606081702_add_unique_constraint_pattern extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

@@ -24,7 +24,6 @@
  */
 final class UserMembershipTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     protected function getResponse($request, $user_name = REST_TestDataBuilder::TEST_USER_1_NAME)
     {
         return parent::getResponse($request, $user_name);

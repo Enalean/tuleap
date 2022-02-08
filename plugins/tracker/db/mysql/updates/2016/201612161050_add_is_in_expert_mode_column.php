@@ -18,7 +18,6 @@
 
 class b201612161050_add_is_in_expert_mode_column extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add column is_in_expert_mode in tracker_report table';

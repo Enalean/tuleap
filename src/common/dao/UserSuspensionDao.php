@@ -27,7 +27,6 @@ use Tuleap\DB\DataAccessObject;
 
 class UserSuspensionDao extends DataAccessObject
 {
-
     /**
      * Gets the user_id and last_access_date of idle users
      */

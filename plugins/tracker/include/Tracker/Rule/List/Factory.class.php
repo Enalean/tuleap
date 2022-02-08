@@ -25,7 +25,6 @@
 */
 class Tracker_Rule_List_Factory
 {
-
     /**
      *
      * @var Tracker_Rule_List_Dao

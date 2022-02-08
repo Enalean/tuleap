@@ -24,7 +24,6 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_List implements Tracker_FormElement_Field_ReadOnly
 {
-
     public $default_properties = [];
 
     /**

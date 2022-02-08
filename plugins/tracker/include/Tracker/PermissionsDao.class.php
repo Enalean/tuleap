@@ -24,7 +24,6 @@
 
 class Tracker_PermissionsDao extends DataAccessObject
 {
-
     /**
      * @return Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|int[]
      */

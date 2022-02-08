@@ -24,7 +24,6 @@
 
 class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
     // A day spreads From 00:00:00 ---> 23:59:59
     private function returnDateStatement(?string $date): string
     {

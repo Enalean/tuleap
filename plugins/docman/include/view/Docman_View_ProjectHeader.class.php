@@ -21,7 +21,6 @@
 
 /* abstract */ class Docman_View_ProjectHeader extends Docman_View_Header
 {
-
     /* protected */ public function _scripts($params)
     {
         echo '<script type="text/javascript"> var docman = new com.xerox.codendi.Docman(' . $params['group_id'] . ', ';

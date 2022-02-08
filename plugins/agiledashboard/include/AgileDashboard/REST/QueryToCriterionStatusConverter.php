@@ -33,7 +33,6 @@ use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;
  */
 class QueryToCriterionStatusConverter
 {
-
     public function convert($query)
     {
         if ($query === '') {

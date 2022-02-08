@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter
 {
-
     /**
      * @var UserXMLExporter
      */

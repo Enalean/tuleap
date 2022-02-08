@@ -1527,7 +1527,6 @@ class SubmitImageButton extends SubmitButton
  */
 class SidebarBox
 {
-
     public function __construct($title, $body)
     {
         require_once('lib/WikiPlugin.php');
@@ -1547,7 +1546,6 @@ class SidebarBox
  */
 class PluginSidebarBox extends SidebarBox
 {
-
     public $_plugin;
     public $_args     = false;
     public $_basepage = false;

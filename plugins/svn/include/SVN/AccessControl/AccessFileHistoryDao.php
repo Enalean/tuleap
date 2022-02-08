@@ -24,7 +24,6 @@ use DataAccessObject;
 
 class AccessFileHistoryDao extends DataAccessObject
 {
-
     /**
      * @return false|int
      */

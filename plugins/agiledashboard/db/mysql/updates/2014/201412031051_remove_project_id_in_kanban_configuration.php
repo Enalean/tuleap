@@ -24,7 +24,6 @@
 
 class b201412031051_remove_project_id_in_kanban_configuration extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

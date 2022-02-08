@@ -28,7 +28,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationUpdate;
 
 final class ProcessIterationUpdateStub implements ProcessIterationUpdate
 {
-
     private function __construct(private int $call_count)
     {
     }

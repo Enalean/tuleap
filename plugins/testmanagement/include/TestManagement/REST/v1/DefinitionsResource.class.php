@@ -38,7 +38,6 @@ use Tuleap\TestManagement\Dao;
 
 class DefinitionsResource
 {
-
     /** @var UserManager */
     private $user_manager;
 

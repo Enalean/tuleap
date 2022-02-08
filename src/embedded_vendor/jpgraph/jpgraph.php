@@ -278,7 +278,6 @@ class JpgTimer
 //===================================================
 class DateLocale
 {
-
     public $iLocale      = 'C'; // environmental locale be used by default
     private $iDayAbb     = null;
     private $iShortDay   = null;
@@ -4122,7 +4121,6 @@ class AxisPrototype
 //===================================================
 class Axis extends AxisPrototype
 {
-
     public function __construct($img, $aScale, $color = 'black')
     {
         parent::__construct($img, $aScale, $color);
@@ -5864,7 +5862,6 @@ class Plot
 // is called. Used to automatically set colors of plots.
 class ColorFactory
 {
-
     private static $iIdx       = 0;
     private static $iColorList = [
         'black',

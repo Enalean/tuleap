@@ -22,7 +22,6 @@
  */
 class AgileDashboard_MilestonesCardwallRepresentation
 {
-
     public const ROUTE = 'cardwall';
 
     /** @var array */

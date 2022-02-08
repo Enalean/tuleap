@@ -24,7 +24,6 @@
  */
 class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetValue_Numeric
 {
-
     /**
      * @return mixed
      */

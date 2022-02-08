@@ -25,7 +25,6 @@
  */
 class Git_SystemCheck
 {
-
     /**
      * @var Plugin
      */

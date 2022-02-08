@@ -21,7 +21,6 @@
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class UserXMLExporter
 {
-
     /**
      * @var UserManager
      */

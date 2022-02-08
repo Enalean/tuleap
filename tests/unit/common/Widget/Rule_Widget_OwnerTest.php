@@ -26,7 +26,6 @@
 
 class Rule_Widget_OwnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testOk(): void
     {
         $r = new Rule_Widget_Owner();

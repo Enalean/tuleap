@@ -18,7 +18,6 @@
 
 class b201501211009_add_raised_context_project_columns_in_priority_history_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add has_been_raised, context and project_id columns in tracker_artifact_priority_history table';

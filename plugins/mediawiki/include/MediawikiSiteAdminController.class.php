@@ -22,7 +22,6 @@ use Tuleap\Admin\AdminPageRenderer;
 
 class MediawikiSiteAdminController
 {
-
     private $project_manager;
     private $resource_restrictor;
     private $system_event_manager;

@@ -31,7 +31,6 @@ use URLVerification;
 
 class PlanningResource extends AuthenticatedResource
 {
-
     public const MAX_LIMIT = 100;
 
     private $milestone_factory;

@@ -20,7 +20,6 @@
 
 interface PFO_Project
 {
-
     /**
      * Returns project numeric id (aka group_id)
      *

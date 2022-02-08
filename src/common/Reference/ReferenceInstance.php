@@ -26,7 +26,6 @@
  */
 class ReferenceInstance
 {
-
     public $match;
     public $gotoLink;
     public $reference;

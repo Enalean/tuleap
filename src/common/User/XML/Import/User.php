@@ -21,6 +21,5 @@ namespace User\XML\Import;
 
 interface User
 {
-
     public function getUserName();
 }

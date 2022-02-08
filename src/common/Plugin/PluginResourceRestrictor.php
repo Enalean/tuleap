@@ -20,7 +20,6 @@
 
 class PluginResourceRestrictor
 {
-
     /**
      * @var RestrictedPluginDao
      */

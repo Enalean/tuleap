@@ -28,7 +28,6 @@ use Workflow;
  */
 class WorkflowRepresentation
 {
-
     /**
      * @var int
      */

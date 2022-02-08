@@ -24,7 +24,6 @@
 
 class Docman_View_PasteInProgress extends Docman_View_ProjectHeader
 {
-
     public function _getTitle($params)
     {
         $hp = Codendi_HTMLPurifier::instance();

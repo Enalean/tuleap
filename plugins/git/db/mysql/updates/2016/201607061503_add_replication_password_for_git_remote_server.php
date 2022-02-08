@@ -20,7 +20,6 @@
 
 class b201607061503_add_replication_password_for_git_remote_server extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

@@ -27,7 +27,6 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class ParentArtifactReference extends ArtifactReference
 {
-
     /**
      * @var string
      */

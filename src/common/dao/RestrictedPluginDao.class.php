@@ -20,7 +20,6 @@
 
 class RestrictedPluginDao extends RestrictedResourceDao
 {
-
     public function getResourceAllowedProjectsTableName()
     {
         return 'project_plugin';

@@ -20,7 +20,6 @@
 
 class BackendCVS extends Backend
 {
-
     protected $CVSRootListNeedUpdate;
     protected $UseCVSNT;
 

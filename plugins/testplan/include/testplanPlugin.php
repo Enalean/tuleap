@@ -63,7 +63,6 @@ require_once __DIR__ . '/../../testmanagement/include/testmanagementPlugin.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class testplanPlugin extends Plugin
 {
-
     public function __construct(?int $id)
     {
         parent::__construct($id);

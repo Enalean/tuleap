@@ -30,7 +30,6 @@ use Tuleap\Request\NotFoundException;
 
 class GitLegacyURLRedirectController implements DispatchableWithRequest
 {
-
     /**
      * @var \GitRepositoryFactory
      */

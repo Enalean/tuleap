@@ -24,7 +24,6 @@ require_once('include/DataAccessObject.class.php');
 
 class SvnCommitsDao extends DataAccessObject
 {
-
     public function __construct()
     {
         parent::__construct();

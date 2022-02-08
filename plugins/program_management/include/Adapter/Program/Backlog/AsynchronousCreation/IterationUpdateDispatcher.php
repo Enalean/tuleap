@@ -36,7 +36,6 @@ use Tuleap\Queue\Worker;
 
 final class IterationUpdateDispatcher implements DispatchIterationUpdate
 {
-
     public function __construct(
         private LoggerInterface $logger,
         private BuildIterationUpdateProcessor $processor_builder,

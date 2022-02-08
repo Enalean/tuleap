@@ -25,7 +25,6 @@ require_once('include/DataAccessObject.class.php');
  */
 class MailingListDao extends DataAccessObject
 {
-
     /**
      * Search active (=not deteted) mailing lists
      * return all active lists

@@ -22,7 +22,6 @@
  */
 class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
 {
-
     public const DEFAULT_HTTP_PORT       = 80;
     public const DEFAULT_GERRIT_USERNAME = 'gerrit_username';
     public const GERRIT_VERSION_2_5      = '2.5';

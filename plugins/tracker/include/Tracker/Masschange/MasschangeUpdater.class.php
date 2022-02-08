@@ -40,7 +40,6 @@ use Tracker_RuleFactory;
 
 class MasschangeUpdater
 {
-
     /** @var Tracker */
     private $tracker;
 

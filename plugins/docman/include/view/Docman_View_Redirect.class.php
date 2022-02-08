@@ -21,7 +21,6 @@
 
 class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
 {
-
     /* protected */ public function _content($params)
     {
         if (isset($params['redirect_to'])) {

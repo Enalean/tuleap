@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
 class UnsupportedDateValueExceptionTestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testConstructor()
     {
         $exception = new UnsupportedDateValueException(1, [2, 3]);

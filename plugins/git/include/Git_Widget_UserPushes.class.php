@@ -26,7 +26,6 @@ use Tuleap\date\RelativeDatesAssetsRetriever;
  */
 class Git_Widget_UserPushes extends Widget
 {
-
     public $offset   = 5;
     public $pastDays = 30;
     public $pluginPath;

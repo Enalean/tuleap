@@ -27,7 +27,6 @@ namespace Tuleap\Git\GitPHP;
  */
 class Tag extends Ref
 {
-
     /**
      * dataRead
      *

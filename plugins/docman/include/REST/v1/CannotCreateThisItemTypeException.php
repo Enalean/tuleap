@@ -23,5 +23,4 @@ namespace Tuleap\Docman\REST\v1;
 
 class CannotCreateThisItemTypeException extends \Exception
 {
-
 }

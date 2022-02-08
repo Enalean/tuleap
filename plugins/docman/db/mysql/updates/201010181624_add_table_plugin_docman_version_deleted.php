@@ -20,7 +20,6 @@
 
 class b201010181624_add_table_plugin_docman_version_deleted extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

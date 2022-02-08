@@ -32,7 +32,6 @@ use User\XML\Import\IFindUserFromXMLReference;
 
 class GitXmlImporter
 {
-
     public const READ_TAG         = 'read';
     public const WRITE_TAG        = 'write';
     public const WPLUS_TAG        = 'wplus';

@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 abstract class Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter
 {
-
     abstract protected function getFieldChangeType();
 
     abstract public function export(

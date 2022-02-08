@@ -21,7 +21,6 @@
 
 class SVN_TokenPresenter
 {
-
     public $id;
 
     public $generated_date;

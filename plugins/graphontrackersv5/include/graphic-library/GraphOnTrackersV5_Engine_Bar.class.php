@@ -26,7 +26,6 @@ use Tuleap\GraphOnTrackersV5\GraphicLibrary\BarChartDataBuilder;
 
 class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
 {
-
     public $title;
     public $description;
     public $field_base;

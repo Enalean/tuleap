@@ -26,7 +26,6 @@ use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 
 class ReferenceFactory
 {
-
     /**
      * @var ProjectReferenceRetriever
      */

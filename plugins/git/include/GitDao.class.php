@@ -23,7 +23,6 @@ use ParagonIE\EasyDB\EasyStatement;
 
 class GitDao extends \Tuleap\DB\DataAccessObject
 {
-
     public const REPOSITORY_ID               = 'repository_id'; //PK
     public const REPOSITORY_NAME             = 'repository_name';
     public const REPOSITORY_PATH             = 'repository_path';

@@ -28,7 +28,6 @@ namespace Tuleap\Project\REST\v1;
  */
 class CategoryPostRepresentation
 {
-
     /**
      * @var int ID of the root category
      */

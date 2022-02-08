@@ -22,7 +22,6 @@ namespace Tuleap\FRS\REST\v1;
 
 final class FilePOSTRepresentation
 {
-
     /**
      * @var int The id of the release {@from body} {@required true}
      */

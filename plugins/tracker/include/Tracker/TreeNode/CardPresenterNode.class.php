@@ -23,7 +23,6 @@
  */
 class Tracker_TreeNode_CardPresenterNode extends NodeDuplicator
 {
-
     /**
      * @var Tracker_CardPresenter
      */

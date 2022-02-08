@@ -54,7 +54,6 @@ class Tracker_FormElement_Field_CriteriaTest extends \Tuleap\Test\PHPUnit\TestCa
         parent::setUp();
 
         $this->field = new class extends Tracker_FormElement_Field {
-
             public function __construct()
             {
                 parent::__construct(

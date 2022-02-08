@@ -22,7 +22,6 @@
 
 class b201302271529_add_cumulative_flow_chart_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

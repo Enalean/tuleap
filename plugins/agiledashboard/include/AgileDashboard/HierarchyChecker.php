@@ -20,7 +20,6 @@
  */
 class AgileDashboard_HierarchyChecker
 {
-
     /**
      * @var PlanningFactory
      */

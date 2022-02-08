@@ -23,7 +23,6 @@
  * hudson */
 class hudson extends Controler
 {
-
     public function request()
     {
         $request = HTTPRequest::instance();

@@ -18,7 +18,6 @@
 
 class b201201181909_add_index_on_svn_commits_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

@@ -24,7 +24,6 @@
 
 class b201501201118_add_titles extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

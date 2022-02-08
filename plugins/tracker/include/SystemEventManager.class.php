@@ -24,7 +24,6 @@
 
 class Tracker_SystemEventManager extends SystemEventManager
 {
-
     /** @var  SystemEventManager */
     private $system_event_manager;
 

@@ -20,7 +20,6 @@
 
 class MailConfirmationCodeGenerator
 {
-
     /** @var UserManager */
     private $user_manager;
     /** @var RandomNumberGenerator */

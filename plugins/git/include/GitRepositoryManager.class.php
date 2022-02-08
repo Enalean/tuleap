@@ -33,7 +33,6 @@ use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
  */
 class GitRepositoryManager
 {
-
     /**
      * @var HistoryValueFormatter
      */

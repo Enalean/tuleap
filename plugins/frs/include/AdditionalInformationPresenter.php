@@ -23,7 +23,6 @@ namespace Tuleap\FRS;
 
 class AdditionalInformationPresenter
 {
-
     public $linked_artifact_id;
     /**
      * @var bool

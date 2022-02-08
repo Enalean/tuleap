@@ -30,7 +30,6 @@ use Tuleap\Tracker\REST\Tracker\PermissionsRepresentation;
  */
 class CompleteTrackerRepresentation implements TrackerRepresentation
 {
-
     public const ROUTE = 'trackers';
 
     /**

@@ -35,7 +35,6 @@ use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
 final class CommonMarkInterpreterController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
-
     /**
      * @var ContentInterpretor
      */

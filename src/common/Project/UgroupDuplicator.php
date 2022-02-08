@@ -32,7 +32,6 @@ use Event;
 
 class UgroupDuplicator
 {
-
     /**
      * @var EventManager
      */

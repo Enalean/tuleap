@@ -20,7 +20,6 @@
 
 class b201207171819_add_freestyle_on_top_field extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

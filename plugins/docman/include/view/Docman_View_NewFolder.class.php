@@ -9,7 +9,6 @@
 
 class Docman_View_NewFolder extends Docman_View_New
 {
-
     public function _getTitle($params)
     {
         return dgettext('tuleap-docman', 'New folder');

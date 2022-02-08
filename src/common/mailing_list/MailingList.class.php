@@ -25,7 +25,6 @@
  */
 class MailingList
 {
-
     protected $id;
     protected $group_id;
     protected $list_name;

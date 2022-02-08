@@ -31,7 +31,6 @@ use Tuleap\ProjectOwnership\Exceptions\FailedToNotifyProjectMemberException;
 
 class Sender
 {
-
     /**
      * @var ProjectManager
      */

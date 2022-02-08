@@ -37,7 +37,6 @@ use GitPermissionsManager;
 
 class AccessControl extends Pane
 {
-
     /**
      * @var GitPermissionsManager
      */

@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter
 {
-
     protected function getFieldChangeType()
     {
         return 'int';

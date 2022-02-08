@@ -31,7 +31,6 @@ use Valid_LocalURI;
 
 class ClientWrapperBuilder
 {
-
     /**
      * @param Closure(JiraCredentials, LoggerInterface):JiraClient $build_wrapper
      */

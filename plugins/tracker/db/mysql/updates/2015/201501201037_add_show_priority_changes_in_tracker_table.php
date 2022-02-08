@@ -18,7 +18,6 @@
 
 class b201501201037_add_show_priority_changes_in_tracker_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add show_priority_changes column in tracker table';

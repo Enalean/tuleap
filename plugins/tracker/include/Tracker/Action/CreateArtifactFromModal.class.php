@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Action_CreateArtifactFromModal
 {
-
     /** @var Codendi_Request */
     private $request;
 

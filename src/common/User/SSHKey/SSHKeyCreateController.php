@@ -33,7 +33,6 @@ use UserManager;
 
 final class SSHKeyCreateController implements DispatchableWithRequest
 {
-
     /**
      * @var UserManager
      */

@@ -18,7 +18,6 @@
 
 class b201604171720_add_remote_servers_auth_type extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

@@ -25,7 +25,6 @@ require_once __DIR__ . '/../lib/WikiPageWrapper.class.php';
 
 class WikiActions extends Actions
 {
-
     public function __construct($controler)
     {
         parent::__construct($controler);

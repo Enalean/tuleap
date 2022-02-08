@@ -21,7 +21,6 @@
 
 class HTTPRequest extends Codendi_Request
 {
-
     public const HEADER_X_FORWARDED_FOR = 'HTTP_X_FORWARDED_FOR';
     public const HEADER_REMOTE_ADDR     = 'REMOTE_ADDR';
 

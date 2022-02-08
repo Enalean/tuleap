@@ -27,7 +27,6 @@ use Tuleap\Project\UGroups\Binding\RecursiveBoundUGroupsRefresher;
  */
 class UGroupBinding //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     private $ugroupUserDao;
     private $ugroupManager;
 

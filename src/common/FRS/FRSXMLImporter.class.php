@@ -26,7 +26,6 @@ use Tuleap\Project\XML\Import\ImportConfig;
 
 class FRSXMLImporter
 {
-
     public const MAPPING_KEY = 'frs_release_mapping';
 
     /** @var \Psr\Log\LoggerInterface */

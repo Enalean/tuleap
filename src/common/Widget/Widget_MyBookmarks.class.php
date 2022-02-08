@@ -28,7 +28,6 @@ require_once('Widget.class.php');
 */
 class Widget_MyBookmarks extends Widget
 {
-
     public function __construct()
     {
         parent::__construct('mybookmarks');

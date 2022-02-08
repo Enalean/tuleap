@@ -20,7 +20,6 @@
 
 class b201103081738_add_column_filepath_to_frs_file extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

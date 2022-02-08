@@ -25,7 +25,6 @@ use TroveCatDao;
 
 class TroveCatCollectionRetriever
 {
-
     /**
      * @var TroveCatDao
      */

@@ -27,7 +27,6 @@
 */
 class SystemEvent_SERVICE_USAGE_SWITCH extends SystemEvent
 {
-
     /**
      * Verbalize the parameters so they are readable and much user friendly in
      * notifications

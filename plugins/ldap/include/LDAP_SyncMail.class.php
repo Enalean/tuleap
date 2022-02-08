@@ -22,7 +22,6 @@
 
 class LDAP_SyncMail
 {
-
     private $projectManager;
     private $logger;
 

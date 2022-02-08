@@ -27,7 +27,6 @@ use ReferenceInstance;
 
 class OriginalReferencesBuilder
 {
-
     /**
      * @var Dao
      */

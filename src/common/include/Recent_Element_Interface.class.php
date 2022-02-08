@@ -21,7 +21,6 @@
 
 interface Recent_Element_Interface
 {
-
     public function getId();
 
     public function fetchXRefLink();

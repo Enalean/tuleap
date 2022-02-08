@@ -20,7 +20,6 @@
 
 class b201210300845_add_from_tv3_id_column extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add a column to tracker table to know from which tracker v3 a tracker has been created';

@@ -21,7 +21,6 @@
 
 class Tracker_Report_HeaderInArtifactLinkModalPresenter
 {
-
     private $tracker_switcher;
     private $reports_selector;
     private $select_report_url;

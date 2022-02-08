@@ -21,7 +21,6 @@
 
 class AgileDashboard_KanbanUserPreferences
 {
-
     public const COLLAPSE_COLUMN_PREFERENCE_PREFIX  = 'kanban_collapse_column_';
     public const COLLAPSE_BACKLOG_PREFERENCE_PREFIX = 'kanban_collapse_backlog_';
     public const COLLAPSE_ARCHIVE_PREFERENCE_PREFIX = 'kanban_collapse_archive_';

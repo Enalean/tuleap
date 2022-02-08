@@ -29,7 +29,6 @@ use Tuleap\User\REST\MinimalUserRepresentation;
  */
 class CommentRepresentation
 {
-
     /** @var int */
     public $id;
 

@@ -20,7 +20,6 @@
 
 class Docman_Reference extends Reference
 {
-
     /**
      * @return Reference
      */

@@ -20,7 +20,6 @@
 
 class b201207070819_add_cardwall_on_top_mappings_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

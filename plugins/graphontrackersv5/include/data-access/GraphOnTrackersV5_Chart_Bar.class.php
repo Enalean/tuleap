@@ -25,7 +25,6 @@ use Tuleap\GraphOnTrackersV5\Chart\Visitor;
 
 class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
 {
-
     protected $field_base;
     protected $field_group;
 

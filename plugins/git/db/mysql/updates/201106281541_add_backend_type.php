@@ -21,7 +21,6 @@
 
 class b201106281541_add_backend_type extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

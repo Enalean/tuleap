@@ -24,7 +24,6 @@
  */
 class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_ChangesetValue_Numeric
 {
-
     /**
      * @return mixed
      */

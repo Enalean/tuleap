@@ -9,7 +9,6 @@
 
 class Docman_View_RawTree extends Docman_View_View
 {
-
     /* protected */ public function _content($params)
     {
         $itemFactory = new Docman_ItemFactory($params['group_id']);

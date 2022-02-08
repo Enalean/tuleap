@@ -22,7 +22,6 @@ namespace Tuleap\Project\XML\Import;
 
 interface ArchiveInterface extends \Tuleap\Project\XML\ArchiveInterface
 {
-
     /**
      * Returns project.xml content
      */

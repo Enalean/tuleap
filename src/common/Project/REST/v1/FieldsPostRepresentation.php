@@ -25,7 +25,6 @@ namespace Tuleap\Project\REST\v1;
 
 class FieldsPostRepresentation
 {
-
     /**
      * @var int ID of the field
      */

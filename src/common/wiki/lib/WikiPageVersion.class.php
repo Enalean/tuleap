@@ -23,7 +23,6 @@ use Tuleap\PHPWiki\WikiPage;
 
 class WikiPageVersion
 {
-
     /** @var int */
     private $page_id;
 

@@ -24,7 +24,6 @@
 
 class b20170731211_add_kanban_widget_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add plugin_agiledashboard_kanban_widget table';

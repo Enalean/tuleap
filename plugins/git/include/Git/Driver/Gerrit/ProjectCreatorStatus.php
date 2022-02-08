@@ -20,7 +20,6 @@
 
 class Git_Driver_Gerrit_ProjectCreatorStatus
 {
-
     /** @var Git_Driver_Gerrit_ProjectCreatorStatusDao */
     private $dao;
 

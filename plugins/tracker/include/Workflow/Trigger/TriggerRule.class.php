@@ -23,7 +23,6 @@
  */
 class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormatOfMyself
 {
-
     /** @var int */
     private $id;
 

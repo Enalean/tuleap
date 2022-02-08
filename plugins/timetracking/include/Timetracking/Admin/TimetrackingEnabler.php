@@ -24,7 +24,6 @@ use Tracker;
 
 class TimetrackingEnabler
 {
-
     public function __construct(AdminDao $dao)
     {
         $this->dao = $dao;

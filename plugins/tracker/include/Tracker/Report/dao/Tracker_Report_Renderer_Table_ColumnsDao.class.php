@@ -20,7 +20,6 @@
 
 class Tracker_Report_Renderer_Table_ColumnsDao extends DataAccessObject
 {
-
     public function searchByRendererId($renderer_id)
     {
         $renderer_id = $this->da->escapeInt($renderer_id);

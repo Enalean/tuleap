@@ -20,7 +20,6 @@
 
 class Search_SearchResults
 {
-
     private $results_html;
     private $has_more;
     private $results_count;

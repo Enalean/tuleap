@@ -25,7 +25,6 @@ use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 
 class GitRepositoryPermissionRepresentationBase
 {
-
     /**
      * @var MinimalUserGroupRepresentation[]
      */

@@ -27,7 +27,6 @@ use Reference;
 
 class ReferenceOpenGraph
 {
-
     /**
      * @var Codendi_HTMLPurifier
      */

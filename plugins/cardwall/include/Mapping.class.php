@@ -26,7 +26,6 @@
  */
 class Cardwall_Mapping
 {
-
     /**
      * @var int
      */

@@ -23,7 +23,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Workflow_Transition_ConditionsCollection implements ArrayAccess
 {
-
     /** @var array of Workflow_Transition_Condition */
     private $conditions = [];
 

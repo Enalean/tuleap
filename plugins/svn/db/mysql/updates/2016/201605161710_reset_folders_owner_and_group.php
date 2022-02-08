@@ -18,7 +18,6 @@
 
 class b201605161710_reset_folders_owner_and_group extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Reset HTTPUser as owner of svn_plugins folders';

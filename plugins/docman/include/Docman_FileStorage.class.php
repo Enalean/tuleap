@@ -24,7 +24,6 @@
  */
 class Docman_FileStorage
 {
-
     public $root;
     public function __construct($root)
     {

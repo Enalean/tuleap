@@ -23,7 +23,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Planning_Presenter_MilestoneSummaryPresenter extends Planning_Presenter_MilestoneSummaryPresenterAbstract
 {
-
     /**
      * A status array. E.g.
      *  array(

@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_XML_Exporter_ChangesetValuesXMLExporter
 {
-
     public const ARTIFACT_XML_KEY  = 'artifact_xml';
     public const CHANGESET_XML_KEY = 'changeset_xml';
     public const ARTIFACT_KEY      = 'artifact';

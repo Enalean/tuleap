@@ -23,7 +23,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class AgileDashboard_Milestone_MilestoneStatusCounter
 {
-
     private $backlog_item_dao;
     private $artifact_dao;
     private $artifact_factory;

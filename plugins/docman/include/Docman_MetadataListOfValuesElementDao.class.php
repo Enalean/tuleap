@@ -23,7 +23,6 @@
 
 class Docman_MetadataListOfValuesElementDao extends DataAccessObject
 {
-
     public function serachByValueId($id)
     {
         $sql = sprintf(

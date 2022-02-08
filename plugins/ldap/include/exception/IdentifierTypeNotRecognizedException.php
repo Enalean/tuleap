@@ -24,5 +24,4 @@ use Exception;
 
 class IdentifierTypeNotRecognizedException extends Exception
 {
-
 }

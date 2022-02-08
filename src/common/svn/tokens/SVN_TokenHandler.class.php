@@ -23,7 +23,6 @@ use Tuleap\Cryptography\ConcealedString;
 
 class SVN_TokenHandler
 {
-
     /** @var SVN_TokenDao */
     private $token_dao;
 

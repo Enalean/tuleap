@@ -25,7 +25,6 @@ use Tracker_FormElement_Field;
 
 interface FeedbackFieldCollectorInterface
 {
-
     public function initAllTrackerFieldAsNotMigrated(Tracker $tracker);
 
     public function addFieldInNotMigrated(Tracker_FormElement_Field $field);

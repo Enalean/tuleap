@@ -20,7 +20,6 @@
 
 class b201405191003_add_ldap_suspended_user_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

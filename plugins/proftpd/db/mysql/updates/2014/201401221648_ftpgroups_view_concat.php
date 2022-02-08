@@ -21,7 +21,6 @@
 
 class b201401221648_ftpgroups_view_concat extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

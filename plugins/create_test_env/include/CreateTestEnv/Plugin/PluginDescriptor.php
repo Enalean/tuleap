@@ -22,7 +22,6 @@ namespace Tuleap\CreateTestEnv\Plugin;
 
 class PluginDescriptor extends \PluginDescriptor
 {
-
     public function __construct()
     {
         parent::__construct(

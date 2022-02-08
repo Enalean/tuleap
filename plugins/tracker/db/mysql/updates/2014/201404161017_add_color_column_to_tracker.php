@@ -20,7 +20,6 @@
 
 class b201404161017_add_color_column_to_tracker extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add color column to tracker table';

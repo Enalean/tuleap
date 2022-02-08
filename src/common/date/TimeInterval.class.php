@@ -23,7 +23,6 @@
  */
 class TimeInterval
 {
-
     /**
      * Creates a new time interval from UNIX timestamps.
      *

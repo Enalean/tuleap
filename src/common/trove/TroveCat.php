@@ -20,7 +20,6 @@
 
 class TroveCat implements JsonSerializable
 {
-
     public const ROOT_ID = 0;
 
     /**

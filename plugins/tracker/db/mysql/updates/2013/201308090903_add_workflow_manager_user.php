@@ -20,7 +20,6 @@
 
 class b201308090903_add_workflow_manager_user extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add Workflow User Manager';

@@ -24,7 +24,6 @@ use Tuleap\DB\DataAccessObject;
 
 class Dao extends DataAccessObject
 {
-
     public function save($pull_request_id, $user_id, $post_date, $content): int
     {
         $sql = 'INSERT INTO plugin_pullrequest_comments (pull_request_id, user_id, post_date, content)

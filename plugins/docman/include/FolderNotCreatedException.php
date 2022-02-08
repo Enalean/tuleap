@@ -20,7 +20,6 @@
 
 class Docman_FolderNotCreatedException extends Exception
 {
-
     public function __construct($folder_path)
     {
         parent::__construct("Folder $folder_path not created");

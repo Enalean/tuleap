@@ -20,7 +20,6 @@
 
 class Git_Gitolite_GitModifications
 {
-
     private $files_to_add;
 
     private $files_to_move;

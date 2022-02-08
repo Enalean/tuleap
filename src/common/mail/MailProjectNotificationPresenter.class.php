@@ -20,7 +20,6 @@
 
 class MailProjectNotificationPresenter extends MailOutlinePresenter
 {
-
     /**
      * @var string
      */

@@ -18,7 +18,6 @@
 
 class b201506031610_add_svn_immutable_tags_whitelist_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Add table to store SVN immutable tags whitelist";

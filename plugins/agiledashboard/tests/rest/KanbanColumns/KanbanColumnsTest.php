@@ -27,7 +27,6 @@ use Tuleap\AgileDashboard\REST\TestBase;
  */
 class KanbanColumnsTest extends TestBase
 {
-
     public function testOPTIONSKanbanColumns()
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'kanban_columns'));

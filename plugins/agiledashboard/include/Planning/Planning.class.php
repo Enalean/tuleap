@@ -25,7 +25,6 @@
  */
 class Planning
 {
-
     /**
      * @var int
      */

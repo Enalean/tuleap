@@ -20,7 +20,6 @@
 
 class b201704031421_create_autoincrement_key_in_notif extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Create autoincrement key in plugin_svn_notification table';

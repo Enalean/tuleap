@@ -20,7 +20,6 @@
 
 class b201709081330_rename_translation_strings_to_test_management extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Rename translation strings to Test Management';
