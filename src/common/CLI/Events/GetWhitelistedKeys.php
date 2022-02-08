@@ -26,7 +26,7 @@ use ForgeAccess;
 use ProjectManager;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
-use Tuleap\Config\ConfigCannotBeModified;
+use Tuleap\Config\ConfigCannotBeModifiedInterface;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\ConfigKeyMetadata;
@@ -175,7 +175,7 @@ final class GetWhitelistedKeys implements Dispatchable
                         $summary = $attribute_object->summary;
                     }
                 }
-                if ($attribute_object instanceof ConfigCannotBeModified) {
+                if ($attribute_object instanceof ConfigCannotBeModifiedInterface) {
                     $can_be_modified = false;
                 }
                 if ($attribute_object instanceof ConfigKeySecret) {

@@ -23,10 +23,8 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\SetupMysql;
 
-use ReflectionClass;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Tuleap\Config\ConfigKeyHelp;
-use Tuleap\Config\ConfigKeyType;
+use Tuleap\Config\ConfigSerializer;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBConfig;
 
@@ -200,73 +198,31 @@ final class DatabaseConfigurator
     public function writeDatabaseIncFile(
         string $azure_prefix,
         string $base_directory = '/',
-    ): int {
+    ): bool {
         if (! \ForgeConfig::get(DBConfig::CONF_DBPASSWORD)) {
-            return 0;
+            return true;
         }
 
-        $user = \ForgeConfig::get(DBConfig::CONF_DBUSER);
+        // When there is an azure prefix, the user must be serialized with the prefix. It's not really great to change
+        // the value of the user inside ForgeConfig singleton but alternatives makes ConfigSerializer too clumsy
+        $original_user = \ForgeConfig::get(DBConfig::CONF_DBUSER);
         if ($azure_prefix !== '') {
-            $user = sprintf('%s@%s', \ForgeConfig::get(DBConfig::CONF_DBUSER), $azure_prefix);
+            \ForgeConfig::set(DBConfig::CONF_DBUSER, sprintf('%s@%s', $original_user, $azure_prefix));
         }
 
-        $conf_string = '<?php ' . PHP_EOL;
+        $save_status = (new ConfigSerializer())->save(
+            $base_directory . '/etc/tuleap/conf/database.inc',
+            0640,
+            'root',
+            'codendiadm',
+            DBConfig::class,
+        );
 
-        $reflected_class = new ReflectionClass(DBConfig::class);
-        $constants       = $reflected_class->getReflectionConstants();
-
-        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_HOST);
-        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_PORT);
-        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_DBNAME);
-        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_DBUSER, $user);
-        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_DBPASSWORD);
-        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_ENABLE_SSL);
-        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_SSL_VERIFY_CERT);
-        $conf_string .= $this->getVariableForConfigFile($constants, DBConfig::CONF_SSL_CA);
-
-        $target_file = $base_directory . '/etc/tuleap/conf/database.inc';
-        if (! file_exists($target_file)) {
-            touch($target_file);
+        if ($azure_prefix !== '') {
+            \ForgeConfig::set(DBConfig::CONF_DBUSER, $original_user);
         }
-        chmod($target_file, 0640);
-        chown($target_file, 'root');
-        chgrp($target_file, 'codendiadm');
 
-        if (file_put_contents($target_file, $conf_string) === strlen($conf_string)) {
-            return 0;
-        }
-        return 1;
-    }
-
-    /**
-     * @param \ReflectionClassConstant[]  $constants
-     */
-    private function getVariableForConfigFile(array $constants, string $constant_value, mixed $override_value = null): string
-    {
-        $var     = '';
-        $comment = '';
-        $value   = $override_value ?? \ForgeConfig::get($constant_value);
-        foreach ($constants as $constant) {
-            if ($constant->getValue() === $constant_value) {
-                foreach ($constant->getAttributes() as $attribute) {
-                    $attribute_object = $attribute->newInstance();
-                    if ($attribute_object instanceof ConfigKeyHelp) {
-                        $comment = implode(PHP_EOL, array_map(static fn (string $line): string => '// ' . $line, explode(PHP_EOL, $attribute_object->text))) . PHP_EOL;
-                    }
-                    if ($attribute_object instanceof ConfigKeyType) {
-                        $var = $attribute_object->getSerializedRepresentation($constant_value, $value);
-                    }
-                }
-
-                if ($var === '') {
-                    $var = sprintf('$%s = \'%s\';%s', $constant_value, $value, PHP_EOL);
-                }
-            }
-        }
-        if ($var === '') {
-            throw new \LogicException('Constant ' . $constant_value . ' not found in class');
-        }
-        return $comment . $var;
+        return $save_status;
     }
 
     private function createUser(DBWrapperInterface $db, string $user, string $password, string $grant_hostname): void

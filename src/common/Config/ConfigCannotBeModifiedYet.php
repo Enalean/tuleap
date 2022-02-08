@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,12 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\Config;
 
 /**
- * @psalm-immutable
+ * Temporary attribute for ConfigKey that will be modifiable via config-set in the future but that cannot be today
+ * because config-set only supports pure database backed config variables.
  */
 #[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
-final class ConfigKeyHelp
+final class ConfigCannotBeModifiedYet implements ConfigCannotBeModifiedInterface
 {
-    public function __construct(public string $text)
-    {
-    }
 }

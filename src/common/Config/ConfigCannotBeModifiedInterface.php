@@ -23,13 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Config;
 
-/**
- * @psalm-immutable
- */
-#[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
-final class ConfigKeyHelp
+interface ConfigCannotBeModifiedInterface
 {
-    public function __construct(public string $text)
-    {
-    }
 }

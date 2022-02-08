@@ -81,12 +81,6 @@ if [ ${tuleap_installed:-false} = "false" ] || \
 
         _logPassword "Site admin password (${project_admin}): ${admin_password}"
 
-        # Only needed for short term tests as futur test containers will have this created out of rpms
-        if [ ! -d ${tuleap_conf} ]; then
-            install -d -m 0750 -o root -g ${tuleap_unix_user} ${tuleap_dir}
-            install -d -m 0750 -o ${tuleap_unix_user} -g ${tuleap_unix_user} ${tuleap_conf}
-        fi
-
         ${tuleapcfg} setup:mysql-init \
             --host="${mysql_server}" \
             --admin-user="${mysql_user}" \
@@ -98,14 +92,7 @@ if [ ${tuleap_installed:-false} = "false" ] || \
             --log-password=${password_file}
     fi
 
-    if [ -f "${tuleap_conf}/${local_inc}" ]; then
-        _infoMessage "Saving ${local_inc} file"
-        ${mv} "${tuleap_conf}/${local_inc}" \
-            "${tuleap_conf}/${local_inc}.$(date +%Y-%m-%d_%H-%M-%S)"
-    fi
-    _setupLocalInc
-    chown root:codendiadm "${tuleap_conf}/${local_inc}"
-    chmod 00640 "${tuleap_conf}/${local_inc}"
+    ${tuleapcfg} setup:tuleap --force --tuleap-fqdn="${server_name}"
 
     _infoMessage "Register buckets in forgeupgrade"
     ${tuleapcfg} setup:forgeupgrade 2> >(_logCatcher)

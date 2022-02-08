@@ -26,6 +26,7 @@ namespace TuleapCfg\Command;
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\DB\DBAuthUserConfig;
+use Tuleap\ForgeConfigSandbox;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use function PHPUnit\Framework\assertStringContainsString;
 
@@ -34,6 +35,8 @@ use function PHPUnit\Framework\assertStringContainsString;
  */
 final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use ForgeConfigSandbox;
+
     private string $base_dir;
     private CommandTester $command_tester;
     private TestDBWrapper $db_wrapper;
