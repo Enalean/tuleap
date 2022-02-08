@@ -30,7 +30,7 @@ class XML_ParseException extends Exception
         $this->rng_path     = $rng_path;
         $this->errors       = $errors;
         $this->indented_xml = $indented_xml;
-        parent::__construct('XML parse errors');
+        parent::__construct(sprintf('XML parse errors. %d errors found by jing', count($errors)));
     }
 
     public function getRngPath()
