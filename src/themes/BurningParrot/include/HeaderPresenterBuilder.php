@@ -32,7 +32,7 @@ use Tuleap\Layout\CssAssetWithDensityVariants;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
-use Tuleap\layout\NewDropdown\NewDropdownPresenter;
+use Tuleap\Layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Layout\ThemeVariation;
 use Tuleap\OpenGraph\OpenGraphPresenter;

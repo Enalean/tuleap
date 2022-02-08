@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan;
 
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
-use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
-use Tuleap\layout\NewDropdown\DataAttributePresenter;
+use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
+use Tuleap\Layout\NewDropdown\DataAttributePresenter;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 

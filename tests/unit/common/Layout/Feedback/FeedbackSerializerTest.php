@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\layout\Feedback;
+namespace Tuleap\Layout\Feedback;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

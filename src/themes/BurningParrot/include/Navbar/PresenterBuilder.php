@@ -26,7 +26,7 @@ use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
-use Tuleap\layout\NewDropdown\NewDropdownPresenter;
+use Tuleap\Layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\Widget\WidgetFactory;
 use URLRedirect;

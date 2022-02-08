@@ -36,7 +36,7 @@ use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\CardwallIsAllowedEvent;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
+use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Taskboard\Admin\ScrumBoardTypeSelectorController;

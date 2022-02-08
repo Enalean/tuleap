@@ -29,7 +29,7 @@ use PFUser;
 use Planning_Milestone;
 use Planning_VirtualTopMilestone;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
-use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
+use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
 class HeaderOptionsProvider

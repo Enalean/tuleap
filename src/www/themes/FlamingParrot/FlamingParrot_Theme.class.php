@@ -39,7 +39,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
-use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
+use Tuleap\Layout\NewDropdown\NewDropdownPresenterBuilder;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Admin\Access\ProjectAdministrationLinkPresenter;
 use Tuleap\Project\Admin\Access\UserCanAccessProjectAdministrationVerifier;

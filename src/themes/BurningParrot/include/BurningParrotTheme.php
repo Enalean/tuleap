@@ -45,7 +45,7 @@ use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\Logo\CachedCustomizedLogoDetector;
 use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
-use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
+use Tuleap\Layout\NewDropdown\NewDropdownPresenterBuilder;
 use Tuleap\Layout\SearchFormPresenterBuilder;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Layout\ThemeVariation;

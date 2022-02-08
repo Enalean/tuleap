@@ -63616,7 +63616,7 @@
       <code>escape</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/BaseLayout.php">
+  <file src="src/common/Layout/BaseLayout.php">
     <MissingParamType occurrences="6">
       <code>$breadcrumbs</code>
       <code>$feedback</code>
@@ -63646,18 +63646,18 @@
       <code>setRenderedThroughservice</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/BreadCrumbDropdown/BreadCrumb.php">
+  <file src="src/common/Layout/BreadCrumbDropdown/BreadCrumb.php">
     <MissingReturnType occurrences="1">
       <code>setSubItems</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/BreadCrumbDropdown/BreadCrumbCollection.php">
+  <file src="src/common/Layout/BreadCrumbDropdown/BreadCrumbCollection.php">
     <MissingReturnType occurrences="2">
       <code>addBreadCrumb</code>
       <code>getBreadcrumbs</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/BreadCrumbDropdown/BreadCrumbLink.php">
+  <file src="src/common/Layout/BreadCrumbDropdown/BreadCrumbLink.php">
     <MissingParamType occurrences="2">
       <code>$label</code>
       <code>$url</code>
@@ -63666,35 +63666,35 @@
       <code>setIconName</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/BreadCrumbDropdown/BreadCrumbLinkCollection.php">
+  <file src="src/common/Layout/BreadCrumbDropdown/BreadCrumbLinkCollection.php">
     <MissingReturnType occurrences="1">
       <code>add</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/BreadCrumbDropdown/BreadCrumbLinkWithIcon.php">
+  <file src="src/common/Layout/BreadCrumbDropdown/BreadCrumbLinkWithIcon.php">
     <MissingParamType occurrences="3">
       <code>$icon_name</code>
       <code>$label</code>
       <code>$url</code>
     </MissingParamType>
   </file>
-  <file src="src/common/layout/BreadCrumbDropdown/BreadCrumbPresenterBuilder.php">
+  <file src="src/common/Layout/BreadCrumbDropdown/BreadCrumbPresenterBuilder.php">
     <MissingReturnType occurrences="2">
       <code>getLinksPresenters</code>
       <code>getSectionsPresenters</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/BreadCrumbDropdown/BreadCrumbSubItems.php">
+  <file src="src/common/Layout/BreadCrumbDropdown/BreadCrumbSubItems.php">
     <MissingReturnType occurrences="1">
       <code>addSection</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/BreadCrumbDropdown/SubItemsSection.php">
+  <file src="src/common/Layout/BreadCrumbDropdown/SubItemsSection.php">
     <MissingParamType occurrences="1">
       <code>$label</code>
     </MissingParamType>
   </file>
-  <file src="src/common/layout/ColorHelper.class.php">
+  <file src="src/common/Layout/ColorHelper.class.php">
     <MissingParamType occurrences="5">
       <code>$b</code>
       <code>$g</code>
@@ -63703,12 +63703,12 @@
       <code>$rgb</code>
     </MissingParamType>
   </file>
-  <file src="src/common/layout/CssAsset.php">
+  <file src="src/common/Layout/CssAsset.php">
     <MissingParamType occurrences="1">
       <code>$name</code>
     </MissingParamType>
   </file>
-  <file src="src/common/layout/ErrorRendering.php">
+  <file src="src/common/Layout/ErrorRendering.php">
     <MissingParamType occurrences="6">
       <code>$http_code</code>
       <code>$http_code</code>
@@ -63725,28 +63725,28 @@
       <code>rendersErrorWithException</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/Feedback/FeedbackSerializer.php">
+  <file src="src/common/Layout/Feedback/FeedbackSerializer.php">
     <MissingReturnType occurrences="1">
       <code>serialize</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/HomePage/HomePageNews.php">
+  <file src="src/common/Layout/HomePage/HomePageNews.php">
     <MissingReturnType occurrences="1">
       <code>details</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/HomePage/LastMonthStatisticsCollectorSVN.php">
+  <file src="src/common/Layout/HomePage/LastMonthStatisticsCollectorSVN.php">
     <MissingReturnType occurrences="1">
       <code>setSvnCommits</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/HomePage/NewsCollection.php">
+  <file src="src/common/Layout/HomePage/NewsCollection.php">
     <MissingPropertyType occurrences="2">
       <code>$has_news</code>
       <code>$news</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/layout/HomePage/NewsCollectionBuilder.php">
+  <file src="src/common/Layout/HomePage/NewsCollectionBuilder.php">
     <MissingReturnType occurrences="1">
       <code>build</code>
     </MissingReturnType>
@@ -63754,7 +63754,7 @@
       <code>$this-&gt;user_manager-&gt;getUserById($news['submitted_by'])</code>
     </PossiblyNullArgument>
   </file>
-  <file src="src/common/layout/HomePage/StatisticsCollection.php">
+  <file src="src/common/Layout/HomePage/StatisticsCollection.php">
     <MissingParamType occurrences="3">
       <code>$label</code>
       <code>$last_month_growth</code>
@@ -63765,7 +63765,7 @@
       <code>hasStatistics</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/HomePage/StatisticsCollectionBuilder.php">
+  <file src="src/common/Layout/HomePage/StatisticsCollectionBuilder.php">
     <MissingReturnType occurrences="4">
       <code>countAllProjects</code>
       <code>countAllUsers</code>
@@ -63773,7 +63773,7 @@
       <code>countUsersRegisteredLastMonth</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/HomePage/StatisticsCollectionCollector.php">
+  <file src="src/common/Layout/HomePage/StatisticsCollectionCollector.php">
     <MissingParamType occurrences="4">
       <code>$label</code>
       <code>$last_month_growth</code>
@@ -63784,19 +63784,19 @@
       <code>addStatistics</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/HomePage/StatisticsCollectorSVN.php">
+  <file src="src/common/Layout/HomePage/StatisticsCollectorSVN.php">
     <MissingReturnType occurrences="1">
       <code>setSvnCommits</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/IncludeAssets.php">
+  <file src="src/common/Layout/IncludeAssets.php">
     <MissingPropertyType occurrences="3">
       <code>$assets</code>
       <code>$base_url</code>
       <code>$manifest_file</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/layout/Layout.class.php">
+  <file src="src/common/Layout/Layout.class.php">
     <InvalidParamDefault occurrences="2">
       <code>string</code>
       <code>string</code>
@@ -63894,7 +63894,7 @@
       <code>null</code>
     </NullArgument>
   </file>
-  <file src="src/common/layout/PaginationPresenter.php">
+  <file src="src/common/Layout/PaginationPresenter.php">
     <MissingParamType occurrences="6">
       <code>$base_url</code>
       <code>$default_params</code>
@@ -63926,7 +63926,7 @@
       <code>$previous_url</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/layout/ProjectSidebarBuilder.php">
+  <file src="src/common/Layout/ProjectSidebarBuilder.php">
     <InvalidScalarArgument occurrences="1">
       <code>$project_id</code>
     </InvalidScalarArgument>
@@ -63939,7 +63939,7 @@
       <code>restrictedMemberIsNotProjectMember</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/ServiceUrlCollector.php">
+  <file src="src/common/Layout/ServiceUrlCollector.php">
     <MissingParamType occurrences="1">
       <code>$shortname</code>
     </MissingParamType>
@@ -63948,7 +63948,7 @@
       <code>setUrl</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/SidebarPresenter.php">
+  <file src="src/common/Layout/SidebarPresenter.php">
     <MissingPropertyType occurrences="4">
       <code>$classname</code>
       <code>$content</code>
@@ -63956,17 +63956,17 @@
       <code>$has_copyright</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/layout/SidebarProjectDefinedServicePresenter.php">
+  <file src="src/common/Layout/SidebarProjectDefinedServicePresenter.php">
     <MissingPropertyType occurrences="1">
       <code>$is_project_defined</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/layout/SidebarServicePresenter.php">
+  <file src="src/common/Layout/SidebarServicePresenter.php">
     <MissingPropertyType occurrences="1">
       <code>$is_project_defined</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/layout/ThemeManager.class.php">
+  <file src="src/common/Layout/ThemeManager.class.php">
     <MissingParamType occurrences="12">
       <code>$base_dir</code>
       <code>$base_dir</code>
@@ -63996,7 +63996,7 @@
       <code>themeExists</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/ThemeVariant.class.php">
+  <file src="src/common/Layout/ThemeVariant.class.php">
     <MissingParamType occurrences="1">
       <code>$variant</code>
     </MissingParamType>
@@ -64010,7 +64010,7 @@
       <code>unsetInvalidThemes</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/layout/ThemeVariantColor.php">
+  <file src="src/common/Layout/ThemeVariantColor.php">
     <MissingReturnType occurrences="1">
       <code>buildFromDefaultVariant</code>
     </MissingReturnType>

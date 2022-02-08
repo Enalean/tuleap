@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,35 +16,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace Tuleap\layout\HomePage;
+declare(strict_types=1);
 
-class NewsCollection
+namespace Tuleap\Layout\NewDropdown;
+
+/**
+ * @psalm-immutable
+ */
+class NewDropdownPresenter
 {
-    private $news = [];
-    private $has_news;
-
-    public function __construct(array $news)
-    {
-        $this->news     = $news;
-        $this->has_news = count($news) > 0;
-    }
+    /**
+     * @var NewDropdownLinkSectionPresenter[]
+     */
+    public $sections;
+    /**
+     * @var bool
+     */
+    public $has_sections;
 
     /**
-     * @return array
+     * @param NewDropdownLinkSectionPresenter[] $sections
      */
-    public function getNews()
+    public function __construct(array $sections)
     {
-        return $this->news;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasNews()
-    {
-        return $this->has_news;
+        $this->sections     = $sections;
+        $this->has_sections = count($sections) > 0;
     }
 }

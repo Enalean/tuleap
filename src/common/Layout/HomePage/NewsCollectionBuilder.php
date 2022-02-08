@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\layout\HomePage;
+namespace Tuleap\Layout\HomePage;
 
 use ForgeConfig;
 use Tuleap\Config\ConfigKey;

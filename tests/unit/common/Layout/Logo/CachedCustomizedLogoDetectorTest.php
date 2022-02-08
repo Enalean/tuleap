@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\layout\Logo;
+namespace Tuleap\Layout\Logo;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\LoggerInterface;

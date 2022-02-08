@@ -18,49 +18,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Layout\HomePage;
 
-namespace Tuleap\layout\HomePage;
+use Tuleap\Event\Dispatchable;
 
-class HomePageStatistic
+class StatisticsCollectionCollector implements Dispatchable
 {
+    public const NAME = 'statisticsCollectionCollector';
     /**
-     * @var string
+     * @var StatisticsCollection
      */
-    private $label;
-    /**
-     * @var int
-     */
-    private $total;
+    private $collection;
     /**
      * @var int
      */
-    private $last_month_growth;
+    private $timestamp;
 
-    public function __construct(string $label, int $total, int $last_month_growth)
+    public function __construct(StatisticsCollection $collection, $timestamp)
     {
-        $this->label             = $label;
-        $this->total             = $total;
-        $this->last_month_growth = $last_month_growth;
+        $this->collection = $collection;
+        $this->timestamp  = $timestamp;
     }
 
-    public function getLabel(): string
+    public function addStatistics($label, $total, $last_month_growth)
     {
-        return $this->label;
+        if ($total > 0) {
+            $this->collection->addStatistic($label, $total, $last_month_growth);
+        }
     }
 
-    public function getTotal(): int
+    /**
+     * @return int
+     */
+    public function getTimestamp()
     {
-        return $this->total;
-    }
-
-    public function getLastMonthGrowth(): int
-    {
-        return $this->last_month_growth;
-    }
-
-    public function hasGrowth(): bool
-    {
-        return $this->last_month_growth > 0;
+        return $this->timestamp;
     }
 }

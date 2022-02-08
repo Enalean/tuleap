@@ -91,7 +91,7 @@ use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
-use Tuleap\layout\HomePage\StatisticsCollectionCollector;
+use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Layout\ServiceUrlCollector;

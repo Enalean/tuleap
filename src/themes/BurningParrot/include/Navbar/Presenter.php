@@ -20,7 +20,7 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar;
 
-use Tuleap\layout\NewDropdown\NewDropdownPresenter;
+use Tuleap\Layout\NewDropdown\NewDropdownPresenter;
 
 class Presenter
 {

@@ -24,7 +24,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Event\Events\ImportValidateChangesetExternalField;
 use Tuleap\Event\Events\ImportValidateExternalFields;
-use Tuleap\layout\HomePage\StatisticsCollectionCollector;
+use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;

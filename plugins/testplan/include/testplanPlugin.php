@@ -31,7 +31,7 @@ use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
+use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\TestManagement\GetURIForMilestoneFromTTM;
 use Tuleap\TestPlan\REST\ResourcesInjector;
