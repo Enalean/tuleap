@@ -20,7 +20,11 @@
 import type { UpdateFunction } from "hybrids";
 import { html } from "hybrids";
 import type { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
-import { getUndoRemovalLabel, getMarkForRemovalLabel } from "../../../../gettext-catalog";
+import {
+    getUndoRemovalLabel,
+    getMarkForRemovalLabel,
+    getDefaultLinkTypeLabel,
+} from "../../../../gettext-catalog";
 import type { LinkField } from "./LinkField";
 
 type MapOfClasses = Record<string, boolean>;
@@ -85,12 +89,23 @@ export const getActionButton = (artifact: LinkedArtifactPresenter): UpdateFuncti
     `;
 };
 
+const getArtifactLinkTypeLabel = (artifact: LinkedArtifactPresenter): string => {
+    if (artifact.link_type.shortname !== "") {
+        return artifact.link_type.label;
+    }
+
+    return getDefaultLinkTypeLabel();
+};
+
 export const getLinkedArtifactTemplate = (
     artifact: LinkedArtifactPresenter
 ): UpdateFunction<LinkField> => html`
     <tr class="${getArtifactTableRowClasses(artifact)}" data-test="artifact-row">
-        <td class="link-field-table-cell-type ${getRemoveClass(artifact)}">
-            ${artifact.link_type.label}
+        <td
+            class="link-field-table-cell-type ${getRemoveClass(artifact)}"
+            data-test="artifact-link-type"
+        >
+            ${getArtifactLinkTypeLabel(artifact)}
         </td>
         <td class="link-field-table-cell-xref ${getRemoveClass(artifact)}">
             <a href="${artifact.uri}" class="link-field-artifact-link" data-test="artifact-link">
