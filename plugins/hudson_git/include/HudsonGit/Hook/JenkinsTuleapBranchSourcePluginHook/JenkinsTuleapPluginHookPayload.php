@@ -28,7 +28,6 @@ use Tuleap\Webhook\Payload;
 
 class JenkinsTuleapPluginHookPayload implements Payload
 {
-
     /**
      * @var array
      */

@@ -26,7 +26,6 @@
 
 class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     /**
      * The project is active
      */

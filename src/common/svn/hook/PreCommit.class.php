@@ -30,7 +30,6 @@ use Tuleap\Svn\SHA1CollisionException;
  */
 class SVN_Hook_PreCommit extends SVN_Hook
 {
-
     /**
      * @var SVN_Immutable_Tags_Handler
      */

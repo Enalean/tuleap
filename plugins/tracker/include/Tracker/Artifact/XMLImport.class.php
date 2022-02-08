@@ -35,7 +35,6 @@ use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
 
 class Tracker_Artifact_XMLImport
 {
-
     /** @var bool */
     private $send_notifications;
 

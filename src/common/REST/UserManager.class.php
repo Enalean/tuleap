@@ -54,7 +54,6 @@ use PasswordHandlerFactory;
 
 class UserManager
 {
-
     /** @var \UserManager */
     private $user_manager;
 

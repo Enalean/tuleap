@@ -21,7 +21,6 @@
 
 class b201203191812_add_planning_tables extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

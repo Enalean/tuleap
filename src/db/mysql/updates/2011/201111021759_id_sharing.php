@@ -20,7 +20,6 @@
 
 class b201111021759_id_sharing extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

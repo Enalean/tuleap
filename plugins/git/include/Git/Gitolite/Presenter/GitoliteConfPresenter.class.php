@@ -20,7 +20,6 @@
 
 class Git_Gitolite_Presenter_GitoliteConfPresenter
 {
-
     /**
      * @var array
      */

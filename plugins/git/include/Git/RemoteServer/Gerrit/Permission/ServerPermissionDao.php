@@ -28,7 +28,6 @@ use Tuleap\DB\DataAccessObject;
 
 class ServerPermissionDao extends DataAccessObject
 {
-
     public function searchProjectIdsUserIsGitAdmin($user_id)
     {
         $sql = "SELECT `groups`.group_id AS project_id

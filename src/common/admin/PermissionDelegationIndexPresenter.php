@@ -19,7 +19,6 @@
  */
 class Admin_PermissionDelegationIndexPresenter
 {
-
     /**
      * @var CSRFSynchronizerToken
      */

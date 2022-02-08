@@ -26,7 +26,6 @@ use Tuleap\Tracker\FormElement\Field\NumericField\NumericFieldValueDao;
 
 class IntegerValueDao extends NumericFieldValueDao
 {
-
     public function __construct()
     {
         parent::__construct();

@@ -23,7 +23,6 @@
  */
 class Project_Service_ServiceUsage
 {
-
     private $id;
     private $short_name;
     private $is_used;

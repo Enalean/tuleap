@@ -20,7 +20,6 @@
 
 class b201309201623_add_cross_references_indexes extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'add cross references indexes.';

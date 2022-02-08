@@ -27,7 +27,6 @@ use Tuleap\Markdown\ContentInterpretor;
 
 class ReleasePresenter
 {
-
     /**
      * @var \Tuleap\FRS\REST\v1\ReleaseRepresentation
      */

@@ -20,7 +20,6 @@
 
 class b201606031138_add_plugin_git_repository_fine_grained_permissions_enabled_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

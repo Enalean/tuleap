@@ -25,7 +25,6 @@ use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
  */
 class Cardwall_RendererPresenter extends Cardwall_BoardPresenter
 {
-
     /**
      * @var Tracker_FormElement_Field_Selectbox
      */

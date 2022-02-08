@@ -20,7 +20,6 @@
 
 class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
 {
-
     public const NAME = "GIT_GERRIT_MIGRATION";
 
     /** @var GitDao */

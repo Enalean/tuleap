@@ -24,7 +24,6 @@ use DataAccessObject;
 
 class FRSFileDownloadDao extends DataAccessObject
 {
-
     public function searchByFile($file_id)
     {
         $file_id = $this->da->escapeInt($file_id);

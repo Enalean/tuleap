@@ -21,7 +21,6 @@
  */
 class Tracker_Artifact_PriorityHistoryDao extends DataAccessObject
 {
-
     public function logPriorityChange($moved_artifact_id, $artifact_higher_id, $artifact_lower_id, $context_id, $project_id, $priority_updated_by, $priority_updated_on, $old_global_rank)
     {
         $moved_artifact_id   = $this->da->escapeInt($moved_artifact_id);

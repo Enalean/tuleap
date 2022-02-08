@@ -25,7 +25,6 @@ use Tuleap\PullRequest\UniDiffLine;
 
 class InlineCommentUpdater
 {
-
     /**
      * @param array       $comments      The comments to update
      * @param FileUniDiff $original_diff The unidiff that the inline comments were referring to

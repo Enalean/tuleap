@@ -24,7 +24,6 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class RepositoryTestNonRegressionTest extends TestBase
 {
-
     public const TULEAP_MAGIC_GROUP_ID_ANONYMOUS = 1;
     public const TULEAP_MAGIC_GROUP_ID_MEMBERS   = 3;
 

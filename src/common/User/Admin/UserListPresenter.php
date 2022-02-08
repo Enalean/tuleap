@@ -24,7 +24,6 @@ use Codendi_HTMLPurifier;
 
 class UserListPresenter
 {
-
     public $title;
     public $search_fields;
     public $results;

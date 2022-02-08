@@ -21,7 +21,6 @@
 
 class Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyExistsException extends Exception
 {
-
     public function __construct($project_name, $server_name)
     {
         parent::__construct('Gerrit Project ' . $project_name . ' already exists on ' . $server_name);

@@ -31,7 +31,6 @@ use Project;
 
 class HistoryValueFormatter
 {
-
     /**
      * @var FineGrainedPermissionFactory
      */

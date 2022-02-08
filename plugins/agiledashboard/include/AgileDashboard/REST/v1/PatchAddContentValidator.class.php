@@ -26,7 +26,6 @@ use PFUser;
 
 class PatchAddContentValidator implements IValidateElementsToAdd
 {
-
     /**
      * @var PFUser
      */

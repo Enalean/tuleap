@@ -27,7 +27,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactReference extends Reference
 {
-
     /**
      * @return Reference
      */

@@ -29,7 +29,6 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class Tracker_ReferenceManager
 {
-
     /** @var ReferenceManager */
     private $reference_manager;
 

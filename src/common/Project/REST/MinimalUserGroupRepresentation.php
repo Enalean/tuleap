@@ -27,7 +27,6 @@ use Tuleap\User\UserGroup\NameTranslator;
  */
 class MinimalUserGroupRepresentation
 {
-
     public const ROUTE = 'user_groups';
 
     /**

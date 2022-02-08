@@ -18,7 +18,6 @@
 
 class b201607181149_add_deletetion_date_in_svn_repository extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add deletion date to svn repository';

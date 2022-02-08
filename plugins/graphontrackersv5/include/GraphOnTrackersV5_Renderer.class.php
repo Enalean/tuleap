@@ -28,7 +28,6 @@ use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
 {
-
     protected $charts;
     protected $chart_to_edit;
     protected $plugin;

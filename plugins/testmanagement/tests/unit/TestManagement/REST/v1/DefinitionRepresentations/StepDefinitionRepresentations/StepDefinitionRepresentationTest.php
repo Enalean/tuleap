@@ -26,7 +26,6 @@ namespace Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinition
 
 class StepDefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testAddTheCommonmarkDescriptionInRepresentationIfNotNull(): void
     {
         $representation = new StepDefinitionRepresentation(

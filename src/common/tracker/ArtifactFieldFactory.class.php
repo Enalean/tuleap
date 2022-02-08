@@ -32,7 +32,6 @@ function art_field_factory_cmp_place($field1, $field2)
 
 class ArtifactFieldFactory
 {
-
     // The artifact type object
     public $ArtifactType;
 

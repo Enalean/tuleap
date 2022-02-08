@@ -27,5 +27,4 @@ use Tuleap\Project\Registration\RegistrationErrorException;
 
 interface InvalidTemplateException extends Throwable, RegistrationErrorException
 {
-
 }

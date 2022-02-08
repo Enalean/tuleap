@@ -18,7 +18,6 @@
 
 class b20150922_alter_mediawiki_admin_options_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

@@ -23,7 +23,6 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Transition_PostAction_CIBuild extends Transition_PostAction
 {
-
     public const SHORT_NAME                          = 'ci_build';
     public const XML_TAG_NAME                        = 'postaction_ci_build';
     public const BUILD_PARAMETER_USER                = 'userId';

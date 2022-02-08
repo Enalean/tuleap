@@ -20,7 +20,6 @@
 
 class ForumML_MessageDao extends DataAccessObject
 {
-
     public function __construct($da)
     {
         parent::__construct($da);

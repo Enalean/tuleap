@@ -23,7 +23,6 @@
  */
 class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     private $artifact_resource;
 
     public function setUp(): void

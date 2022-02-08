@@ -21,7 +21,6 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 
 class AgileDashboard_KanbanColumnManager
 {
-
     /** @var AgileDashboard_KanbanColumnDao */
     private $column_dao;
 

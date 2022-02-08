@@ -26,7 +26,6 @@ require_once __DIR__ . '/../../bootstrap.php';
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Rule_FRSFileNameTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testNameValid(): void
     {
         $r = new Rule_FRSFileName();

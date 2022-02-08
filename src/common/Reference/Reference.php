@@ -26,7 +26,6 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class Reference
 {
-
     /**
      * @var int the ID as stored in the 'Reference' DB table.
      */

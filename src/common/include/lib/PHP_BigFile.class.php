@@ -21,7 +21,6 @@
 
 class PHP_BigFile
 {
-
     /**
      * @var resource The current context, or NULL if no context was passed to the caller function
      */

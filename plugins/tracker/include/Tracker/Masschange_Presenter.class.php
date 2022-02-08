@@ -21,7 +21,6 @@
 
 class Tracker_Masschange_Presenter
 {
-
     /** @var array */
     public $masschange_aids;
 

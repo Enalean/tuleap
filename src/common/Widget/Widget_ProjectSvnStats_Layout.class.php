@@ -23,7 +23,6 @@
  */
 class Widget_ProjectSvnStats_Layout
 {
-
     /**
      * The number of lgend plots
      *

@@ -20,7 +20,6 @@
 
 class b201211221712_create_tracker_rule_date_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add tracker_rule_date table';

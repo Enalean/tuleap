@@ -24,7 +24,6 @@
 
 class SystemEventProcessRootDefaultQueue implements SystemEventProcess
 {
-
     /**
      * @see SystemEventProcess::getLockName()
      */

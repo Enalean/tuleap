@@ -47,7 +47,6 @@ use Tuleap\Reference\ByNature\FRS\CrossReferenceFRSOrganizer;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
 {
-
     public const REST_REF_INDEX          = 'ref';
     public const REST_REF_URL            = 'url';
     public const REST_REF_DIRECTION      = 'direction';

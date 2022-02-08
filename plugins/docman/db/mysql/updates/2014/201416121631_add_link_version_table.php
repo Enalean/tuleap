@@ -20,7 +20,6 @@
 
 class b201416121631_add_link_version_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

@@ -34,7 +34,6 @@ namespace Tuleap\Git\GitPHP;
  */
 class Head extends Ref
 {
-
     /**
      * commit
      *

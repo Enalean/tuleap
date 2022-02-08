@@ -23,7 +23,6 @@
 
 class Docman_LockDao extends DataAccessObject
 {
-
     public function searchLockForItem($itemId)
     {
         $sql = 'SELECT *' .

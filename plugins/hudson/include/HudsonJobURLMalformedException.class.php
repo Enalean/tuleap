@@ -19,5 +19,4 @@
  */
 class HudsonJobURLMalformedException extends Exception
 {
-
 }

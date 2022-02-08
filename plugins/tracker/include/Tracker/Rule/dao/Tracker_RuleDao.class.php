@@ -23,7 +23,6 @@
  */
 class Tracker_RuleDao extends DataAccessObject
 {
-
     public function __construct()
     {
         parent::__construct();

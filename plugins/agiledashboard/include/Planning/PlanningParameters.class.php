@@ -23,7 +23,6 @@
  */
 class PlanningParameters
 {
-
     public const NAME                = 'name';
     public const BACKLOG_TITLE       = 'backlog_title';
     public const PLANNING_TITLE      = 'plan_title';

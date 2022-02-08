@@ -20,7 +20,6 @@
 
 class WrapperLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerInterface
 {
-
     /**
      * @var \Psr\Log\LoggerInterface
      */

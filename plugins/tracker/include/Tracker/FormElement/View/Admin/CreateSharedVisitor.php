@@ -23,7 +23,6 @@
  */
 class Tracker_FormElement_View_Admin_CreateSharedVisitor extends Tracker_FormElement_View_Admin_CreateVisitor
 {
-
     protected function fetchForm()
     {
         $html  = '';

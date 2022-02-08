@@ -26,7 +26,6 @@ require_once __DIR__ . '/../../www/svn/svn_utils.php';
 */
 class Widget_MyLatestSvnCommits extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
     /**
      * Default number of SVN commits to display (if user did not change/set preferences)
      */

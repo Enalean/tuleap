@@ -21,7 +21,6 @@
 
 class Tracker_URL extends URL
 {
-
     /**
      * Return the Tracker object that correspond to the given request
      *

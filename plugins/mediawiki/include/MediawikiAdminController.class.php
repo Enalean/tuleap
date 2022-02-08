@@ -20,7 +20,6 @@
 
 class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     /** @var MediawikiUserGroupsMapper */
     private $mapper;
 

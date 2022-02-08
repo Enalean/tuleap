@@ -20,7 +20,6 @@
 
 class b201604181056_add_title_and_description_for_pull_requests extends ForgeUpgrade_Bucket // phpcs:ignore
 {
-
     public function description()
     {
         return <<<EOT

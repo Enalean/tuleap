@@ -19,7 +19,6 @@
 
 class Account_RegisterByAdminPresenter extends Account_RegisterPresenter
 {
-
     public $title;
     public $submit;
     public $purpose_directions;

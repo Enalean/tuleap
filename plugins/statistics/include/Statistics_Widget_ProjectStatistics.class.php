@@ -30,7 +30,6 @@ use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
  */
 class Statistics_Widget_ProjectStatistics extends Widget
 {
-
     /**
      * Constructor
      *

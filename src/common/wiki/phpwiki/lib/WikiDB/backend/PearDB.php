@@ -1307,7 +1307,6 @@ class WikiDB_backend_PearDB_generic_iter extends WikiDB_backend_iterator
 
 class WikiDB_backend_PearDB_iter extends WikiDB_backend_PearDB_generic_iter
 {
-
     public function next()
     {
         $backend = &$this->_backend;

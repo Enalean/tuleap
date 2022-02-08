@@ -37,7 +37,6 @@ use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class CampaignCreator
 {
-
     /** @var Config */
     private $config;
 

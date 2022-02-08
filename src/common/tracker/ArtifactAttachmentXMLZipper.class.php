@@ -20,7 +20,6 @@
 
 class ArtifactAttachmentXMLZipper implements ArtifactAttachmentXMLExporter
 {
-
     /** @var ArtifactXMLNodeHelper */
     private $node_helper;
 

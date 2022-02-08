@@ -21,7 +21,6 @@
 
 class b201112150858_add_repository_scope extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

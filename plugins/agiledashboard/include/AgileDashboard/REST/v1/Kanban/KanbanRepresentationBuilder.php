@@ -29,7 +29,6 @@ use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
 
 class KanbanRepresentationBuilder
 {
-
     /**
      * @var AgileDashboard_KanbanUserPreferences
      */

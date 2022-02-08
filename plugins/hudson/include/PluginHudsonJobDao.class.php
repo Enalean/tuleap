@@ -24,7 +24,6 @@
  */
 class PluginHudsonJobDao extends DataAccessObject
 {
-
     /**
     * Gets all jobs in the db
     * @return DataAccessResult

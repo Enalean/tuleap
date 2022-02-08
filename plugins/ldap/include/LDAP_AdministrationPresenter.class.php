@@ -20,7 +20,6 @@
 
 class LDAP_AdministrationPresenter
 {
-
     public $plugin_id;
 
     public function __construct($plugin_id)

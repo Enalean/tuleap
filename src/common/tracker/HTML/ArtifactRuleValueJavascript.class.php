@@ -29,7 +29,6 @@
 */
 class ArtifactRuleValueJavascript extends ArtifactRuleValueView
 {
-
     /**
      *  ArtifactRuleHtml() - constructor
      *

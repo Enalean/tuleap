@@ -23,7 +23,6 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 
 class Tracker_MasschangeDataValueExtractor
 {
-
     /**
      * @var Tracker_FormElementFactory
      */

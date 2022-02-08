@@ -22,7 +22,6 @@
  */
 class Statistics_ScmSvnDao extends DataAccessObject
 {
-
     public $groupFilter = '';
 
     /**

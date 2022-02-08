@@ -27,7 +27,6 @@
  */
 class Git_Driver_Gerrit_Template_TemplateFactory
 {
-
     /** @var Git_Driver_Gerrit_Template_TemplateDao */
     private $dao;
 

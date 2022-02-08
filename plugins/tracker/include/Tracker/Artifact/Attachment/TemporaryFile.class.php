@@ -20,7 +20,6 @@
 
 class Tracker_Artifact_Attachment_TemporaryFile
 {
-
     private $id;
     private $name;
     private $tempname;

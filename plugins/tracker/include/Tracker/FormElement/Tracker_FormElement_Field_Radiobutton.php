@@ -23,9 +23,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Selectbox
 {
-
-
-
     protected function fetchFieldContainerStart(string $id, string $name, string $data_target_fields_ids): string
     {
         return '';

@@ -20,7 +20,6 @@
 
 class AgileDashboard_XMLFullStructureExporter
 {
-
     /** @var EventManager */
     private $event_manager;
 

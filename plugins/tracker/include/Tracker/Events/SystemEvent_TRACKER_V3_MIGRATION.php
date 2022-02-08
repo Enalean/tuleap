@@ -24,7 +24,6 @@
 
 class SystemEvent_TRACKER_V3_MIGRATION extends SystemEvent
 {
-
     public const NAME = 'TRACKER_V3_MIGRATION';
 
     /** @var  Tracker_Migration_MigrationManager */

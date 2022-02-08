@@ -44,7 +44,6 @@ use UserManager;
 
 class CardsResource
 {
-
     /** @var UserManager */
     private $user_manager;
 

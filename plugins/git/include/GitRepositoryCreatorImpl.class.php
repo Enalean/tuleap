@@ -21,7 +21,6 @@
 
 abstract class GitRepositoryCreatorImpl implements GitRepositoryCreator
 {
-
     public function isNameValid($name)
     {
         $len = strlen($name);

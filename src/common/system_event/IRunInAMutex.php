@@ -27,7 +27,6 @@
  */
 interface IRunInAMutex
 {
-
     /**
      * The method to be executed by the mutex
      *

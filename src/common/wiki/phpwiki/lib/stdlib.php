@@ -553,7 +553,6 @@ function ImgObject($img, $url)
 
 class Stack
 {
-
     // var in php5 deprecated
     public function __construct()
     {

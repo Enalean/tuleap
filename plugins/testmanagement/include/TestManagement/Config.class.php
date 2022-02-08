@@ -25,7 +25,6 @@ use TrackerFactory;
 
 class Config implements IRetrieveTestExecutionTrackerIdFromConfig
 {
-
     /** @var Dao */
     private $dao;
 

@@ -28,7 +28,6 @@ use SVNPathsUpdater;
 
 class Manager
 {
-
     /**
      * @var SVNPathsUpdater
      */

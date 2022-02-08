@@ -106,7 +106,6 @@ use XMLImportHelper;
  */
 class ProjectResource extends AuthenticatedResource
 {
-
     public const MAX_LIMIT = 50;
 
     /** @var LabelsCurlyCoatedRetriever */

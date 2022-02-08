@@ -22,7 +22,6 @@ require_once dirname(__FILE__) . '/../../../tracker/include/Tracker/Tracker.clas
 
 class Planning_TrackerPresenter
 {
-
     /**
      * @var Planning
      */

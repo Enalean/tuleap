@@ -23,7 +23,6 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_Icons extends Docman_View_Browse
 {
-
     /* protected */ public function _content($params)
     {
         $html = '';

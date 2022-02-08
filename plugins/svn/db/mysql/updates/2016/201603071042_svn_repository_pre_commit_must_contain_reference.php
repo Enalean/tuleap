@@ -18,7 +18,6 @@
 
 class b201603071042_svn_repository_pre_commit_must_contain_reference extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add pre_commit_must_contain_reference column to svn repository';

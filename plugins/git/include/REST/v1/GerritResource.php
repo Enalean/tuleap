@@ -39,7 +39,6 @@ use PFUser;
 
 class GerritResource extends AuthenticatedResource
 {
-
     /**
      * @var Git_RemoteServer_GerritServerFactory
      */

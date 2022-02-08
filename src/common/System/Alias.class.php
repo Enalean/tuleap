@@ -25,7 +25,6 @@
  */
 class System_Alias
 {
-
     private $value;
     private $name;
 

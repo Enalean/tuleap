@@ -20,7 +20,6 @@
 
 class MailRegisterByUserPresenter extends MailRegisterPresenter
 {
-
     public $redirect_url;
     public $redirect_button;
     public $color_button;

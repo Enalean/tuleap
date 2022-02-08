@@ -29,7 +29,6 @@ use ReferenceManager;
 
 class Factory
 {
-
     /**
      * @var Dao
      */

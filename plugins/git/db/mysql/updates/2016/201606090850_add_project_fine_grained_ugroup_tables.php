@@ -20,7 +20,6 @@
 
 class b201606090850_add_project_fine_grained_ugroup_tables extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

@@ -26,7 +26,6 @@ use Tuleap\Tracker\FormElement\Field\FieldValueDao;
 
 class FileFieldValueDao extends FieldValueDao
 {
-
     public function __construct()
     {
         parent::__construct();

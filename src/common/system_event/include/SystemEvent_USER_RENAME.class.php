@@ -24,7 +24,6 @@
  */
 class SystemEvent_USER_RENAME extends SystemEvent
 {
-
     /**
      * Set multiple logs
      *

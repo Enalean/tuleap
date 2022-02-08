@@ -23,7 +23,6 @@
 
 class StatisticsPluginInfo extends PluginFileInfo
 {
-
     public function __construct($plugin)
     {
         parent::__construct($plugin, 'statistics');

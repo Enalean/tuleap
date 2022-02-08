@@ -24,7 +24,6 @@ use Tuleap\CreateTestEnv\XMLDateUpdater\DateUpdater;
 
 class DateUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testItUpdatesTheDatesInTheXMLFileWithDateInArtifacts()
     {
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/project.xml'));

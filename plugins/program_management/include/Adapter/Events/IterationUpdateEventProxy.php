@@ -41,7 +41,6 @@ use Tuleap\Queue\WorkerEvent;
  */
 final class IterationUpdateEventProxy implements IterationUpdateEvent
 {
-
     private function __construct(
         private IterationIdentifier $iteration,
         private UserIdentifier $user,

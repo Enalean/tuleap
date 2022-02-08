@@ -35,7 +35,6 @@ use Tuleap\User\REST\UserRepresentation;
   */
 class ResourcesInjector
 {
-
     public function populate(\Luracast\Restler\Restler $restler): void
     {
         $restler->addAPIClass(

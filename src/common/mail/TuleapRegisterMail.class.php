@@ -20,7 +20,6 @@
 
 class TuleapRegisterMail
 {
-
     /** @var MailPresenterFactory */
     private $mail_presenter_factory;
 

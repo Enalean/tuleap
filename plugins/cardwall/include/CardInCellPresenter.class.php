@@ -19,7 +19,6 @@
  */
 class Cardwall_CardInCellPresenter
 {
-
     private $swimline_id;
     private $swimline_field_values;
     private $card_field_id;

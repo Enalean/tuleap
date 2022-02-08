@@ -21,7 +21,6 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class b202006011445_add_tracker_importer_user extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add Tracker Importer User';

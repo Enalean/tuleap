@@ -18,7 +18,6 @@
 
 class b20150408_add_site_restricted_features_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

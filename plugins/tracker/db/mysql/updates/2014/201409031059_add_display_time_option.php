@@ -18,7 +18,6 @@
 
 class b201409031059_add_display_time_option extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add display time option in date form element';

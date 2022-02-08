@@ -22,7 +22,6 @@
 
 class Docman_FolderFactory extends Docman_ItemFactory
 {
-
     public function __construct($groupId = null)
     {
         parent::__construct($groupId);

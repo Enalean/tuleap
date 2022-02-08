@@ -35,7 +35,6 @@ use Tuleap\Tracker\Report\TrackerReportConfigController;
 
 class ConfigController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
 {
-
     /** @var TypeConfigController */
     private $type_controller;
 

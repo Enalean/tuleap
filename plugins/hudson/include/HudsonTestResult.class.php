@@ -24,7 +24,6 @@ use Psr\Http\Message\RequestFactoryInterface;
 
 class HudsonTestResult
 {
-
     protected $hudson_test_result_url;
     protected $dom_job;
     /**

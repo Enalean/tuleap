@@ -18,7 +18,6 @@
 
 class b201610041409_create_plugin_git_full_history_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Create table plugin_git_full_history for Git plugin';

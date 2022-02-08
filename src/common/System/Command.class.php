@@ -20,7 +20,6 @@
 
 class System_Command
 {
-
     /**
      * @throws System_Command_CommandException
      * @param string $cmd

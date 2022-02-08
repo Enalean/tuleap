@@ -20,7 +20,6 @@
 
 class MailRegisterPresenter extends MailOutlinePresenter
 {
-
     public $section_one;
     public $section_two;
     public $section_after_login;

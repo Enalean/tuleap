@@ -18,7 +18,6 @@
 
 class b201606021408_create_tracker_changeset_value_computed_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Create table tracker_changeset_value_computedfield_manual_value';

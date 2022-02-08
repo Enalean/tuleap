@@ -24,7 +24,6 @@ use Tuleap\DB\DataAccessObject;
 
 class WebhookDao extends DataAccessObject
 {
-
     public function searchWebhooksForTracker($tracker_id)
     {
         $sql = 'SELECT *

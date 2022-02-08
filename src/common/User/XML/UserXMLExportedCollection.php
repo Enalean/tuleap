@@ -20,7 +20,6 @@
 
 class UserXMLExportedCollection
 {
-
     /**
      * @var PFUser[]
      */

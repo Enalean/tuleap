@@ -20,7 +20,6 @@
 
 class b201401240954_add_git_perms_admin_values extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

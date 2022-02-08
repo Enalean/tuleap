@@ -24,7 +24,6 @@ namespace Tuleap\Reference\Presenters;
 
 class CrossReferenceLinkListPresenterBuilder
 {
-
     /**
      * @param CrossReferenceLinkPresenter[] $cross_ref_link_collection
      */

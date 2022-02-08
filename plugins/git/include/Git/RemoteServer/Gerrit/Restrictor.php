@@ -32,7 +32,6 @@ use Git_RemoteServer_NotFoundException;
 
 class Restrictor
 {
-
     /**
      * @var Git_RemoteServer_GerritServerFactory
      */

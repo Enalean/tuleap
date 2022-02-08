@@ -23,7 +23,6 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSection
 {
-
     public $logger;
 
     public $display_access_logs;

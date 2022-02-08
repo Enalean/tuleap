@@ -24,7 +24,6 @@ namespace Tuleap\AgileDashboard\REST\v1\Kanban;
  */
 class KanbanItemPOSTRepresentation
 {
-
     public const ROUTE = 'kanban_items';
 
     /**

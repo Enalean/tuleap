@@ -21,7 +21,6 @@
 
 class SVN_Token
 {
-
     /**
      * @var PFUser
      */

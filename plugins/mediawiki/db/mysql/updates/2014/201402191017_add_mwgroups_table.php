@@ -18,7 +18,6 @@
 
 class b201402191017_add_mwgroups_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

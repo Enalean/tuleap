@@ -26,7 +26,6 @@ require_once __DIR__ . '/../../../www/project/export/project_export_utils.php';
 
 class ArtifactImportHtml extends ArtifactImport
 {
-
   /**
    *
    *

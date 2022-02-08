@@ -36,7 +36,6 @@ use WikiPageVersionFactory;
 
 class PhpWikiResource extends AuthenticatedResource
 {
-
     /** @var WikiDao */
     private $wiki_dao;
 

@@ -24,5 +24,4 @@ namespace Tuleap\Project\Admin\Export;
 
 final class CannotCreateTmpFileToExportProjectException extends \Exception
 {
-
 }

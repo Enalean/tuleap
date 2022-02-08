@@ -24,7 +24,6 @@
  */
 interface AgileDashboard_Milestone_Backlog_IBacklogItemCollection extends Iterator
 {
-
     public function getParentItemName();
 
     public function setParentItemName($name);

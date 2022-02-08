@@ -28,7 +28,6 @@ use Workflow;
 
 class SetIntValueJsonParser implements PostActionUpdateJsonParser
 {
-
     public function accept(array $json): bool
     {
         return isset($json['type'])

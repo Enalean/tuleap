@@ -20,7 +20,6 @@
 
 class b201411101016_add_backup_path_for_repositories extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

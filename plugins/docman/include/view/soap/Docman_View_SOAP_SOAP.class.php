@@ -20,7 +20,6 @@
 
 class Docman_View_SOAP_SOAP
 {
-
     public $_controller;
 
     public function __construct(&$controller)

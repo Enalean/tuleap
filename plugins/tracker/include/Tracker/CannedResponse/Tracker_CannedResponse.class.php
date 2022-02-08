@@ -20,7 +20,6 @@
 
 class Tracker_CannedResponse
 {
-
     public $id;
     public $tracker;
     public $title;

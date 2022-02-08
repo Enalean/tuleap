@@ -20,7 +20,6 @@
 
 abstract class User_ForgeUserGroupPermission
 {
-
     /**
      * @return int
      */

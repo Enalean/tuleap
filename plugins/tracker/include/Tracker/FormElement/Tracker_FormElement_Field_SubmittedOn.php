@@ -26,7 +26,6 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Date implements Tracker_FormElement_Field_ReadOnly
 {
-
     public $default_properties = [];
 
     protected function getDao()

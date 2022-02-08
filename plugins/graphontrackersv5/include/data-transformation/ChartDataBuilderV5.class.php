@@ -21,7 +21,6 @@
 
 abstract class ChartDataBuilderV5
 {
-
     protected $chart;
     protected $artifacts;
 

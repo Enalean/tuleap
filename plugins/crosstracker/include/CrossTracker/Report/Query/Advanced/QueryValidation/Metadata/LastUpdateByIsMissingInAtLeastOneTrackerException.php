@@ -24,7 +24,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryExcept
 
 class LastUpdateByIsMissingInAtLeastOneTrackerException extends InvalidQueryException
 {
-
     public function __construct($count)
     {
         parent::__construct(

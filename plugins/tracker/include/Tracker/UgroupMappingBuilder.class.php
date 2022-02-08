@@ -27,7 +27,6 @@
  */
 class Tracker_UgroupMappingBuilder
 {
-
     /** @var Tracker_UgroupPermissionsGoldenRetriever */
     private $permissions_retriever;
 

@@ -24,7 +24,6 @@ namespace Tuleap\JiraImport\Plugin;
 
 class PluginInfo extends \PluginInfo
 {
-
     public function __construct(\jira_importPlugin $plugin)
     {
         parent::__construct($plugin);

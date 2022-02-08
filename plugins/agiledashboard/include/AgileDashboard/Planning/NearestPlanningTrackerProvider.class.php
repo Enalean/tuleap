@@ -32,7 +32,6 @@
  */
 class AgileDashboard_Planning_NearestPlanningTrackerProvider
 {
-
     /** @var PlanninqFactory */
     private $planning_factory;
 

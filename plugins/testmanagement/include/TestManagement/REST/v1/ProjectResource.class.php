@@ -48,7 +48,6 @@ use UserManager;
 
 class ProjectResource
 {
-
     public const MAX_LIMIT = 1000;
 
     /** @var PFUser */

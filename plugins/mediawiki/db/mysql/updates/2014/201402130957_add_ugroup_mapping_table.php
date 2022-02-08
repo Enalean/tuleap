@@ -18,7 +18,6 @@
 
 class b201402130957_add_ugroup_mapping_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

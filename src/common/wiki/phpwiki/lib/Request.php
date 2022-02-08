@@ -24,7 +24,6 @@ rcs_id('$Id: Request.php,v 1.100 2006/01/17 18:57:09 uckelman Exp $');
 
 class Request
 {
-
     public function __construct()
     {
         $this->_fix_multipart_form_data();

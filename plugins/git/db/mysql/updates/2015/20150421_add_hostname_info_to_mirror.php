@@ -20,7 +20,6 @@
 
 class b20150421_add_hostname_info_to_mirror extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

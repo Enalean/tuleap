@@ -35,7 +35,6 @@ use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class ExecutionCreator
 {
-
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 

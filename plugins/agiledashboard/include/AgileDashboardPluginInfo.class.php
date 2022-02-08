@@ -23,7 +23,6 @@
  */
 class AgileDashboardPluginInfo extends PluginInfo
 {
-
     public function __construct($plugin)
     {
         parent::__construct($plugin);

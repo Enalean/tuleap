@@ -20,7 +20,6 @@
 
 final class FileImporter_PathTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|Tuleap\ProFTPd\Xferlog\Dao
      */

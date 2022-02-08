@@ -24,7 +24,6 @@ use RestBase;
 
 class ArtifactFileBase extends RestBase
 {
-
     public function setUp(): void
     {
         parent::setUp();

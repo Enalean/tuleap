@@ -27,7 +27,6 @@
  */
 class Docman_Folder extends Docman_Item
 {
-
     public function __construct($data = null)
     {
         parent::__construct($data);

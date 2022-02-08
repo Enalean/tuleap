@@ -27,7 +27,6 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class ProjectTest extends TrackerBase
 {
-
     public function testItFiltersProjectsWithTrackerAdministrationPermission()
     {
         $url = 'projects?' . http_build_query([

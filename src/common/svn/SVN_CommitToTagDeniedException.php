@@ -21,5 +21,4 @@
 
 class SVN_CommitToTagDeniedException extends Exception
 {
-
 }

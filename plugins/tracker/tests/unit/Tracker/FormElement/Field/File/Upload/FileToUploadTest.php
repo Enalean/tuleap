@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
 class FileToUploadTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testGetDownloadHref()
     {
         $file = new FileToUpload(123, 'Image Pasted at 2018-9-14 15-15.png');

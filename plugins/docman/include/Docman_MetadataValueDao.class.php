@@ -23,7 +23,6 @@
 
 class Docman_MetadataValueDao extends DataAccessObject
 {
-
     public function searchById($fieldId, $itemId)
     {
         $sql = sprintf(

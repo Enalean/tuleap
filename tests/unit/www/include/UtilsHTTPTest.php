@@ -25,7 +25,6 @@ require_once __DIR__ . '/../../../../src/www/include/utils.php';
 
 class UtilsHTTPTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testItExtractBody()
     {
         $string               = "Content-type: sdfsdf\r\n\r\nThe body";

@@ -26,7 +26,6 @@ use CardwallConfigXml;
 
 final class XMLCardwallColumn
 {
-
     /**
      * @readonly
      * @var string

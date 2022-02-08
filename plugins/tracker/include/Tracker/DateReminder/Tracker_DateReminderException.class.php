@@ -18,5 +18,4 @@
 
 class Tracker_DateReminderException extends Exception
 {
-
 }

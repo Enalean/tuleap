@@ -21,7 +21,6 @@
 
 class b201108311456_add_image_renderer extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

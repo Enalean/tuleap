@@ -18,7 +18,6 @@
 
 class b201602091209_create_plugin_svn_mailing_header extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Create table plugin_svn_mailing_header for SVN plugin';

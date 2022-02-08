@@ -20,8 +20,6 @@
 
 class AgileDashboard_Dao extends DataAccessObject
 {
-
-
     public function getProjectsWithADActivated()
     {
         $sql = "SELECT group_id, is_used AS result

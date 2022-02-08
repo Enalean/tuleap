@@ -20,5 +20,4 @@
  */
 class InitialEffortNotDefinedException extends Exception
 {
-
 }

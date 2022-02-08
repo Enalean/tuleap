@@ -25,7 +25,6 @@
  */
 class PhpWikiTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     public function testOPTIONSId()
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'phpwiki/' . REST_TestDataBuilder::PHPWIKI_PAGE_ID));

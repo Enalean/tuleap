@@ -20,7 +20,6 @@
 
 class b201308051707_correct_plugin_git_service_short_name extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

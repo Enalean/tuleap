@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 class b201909051417_remove_user_preference_display_under_construction_modal extends ForgeUpgrade_Bucket  // phpcs:ignore
 {
-
     public function description(): string
     {
         return 'Remove no more used user preferences for the display of the under construction modal';

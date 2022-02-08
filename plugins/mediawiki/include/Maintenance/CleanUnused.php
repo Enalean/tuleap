@@ -31,7 +31,6 @@ use Tuleap\Mediawiki\MediawikiDataDir;
 
 class CleanUnused
 {
-
     /**
      * @var LoggerInterface
      */

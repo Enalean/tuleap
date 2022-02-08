@@ -22,7 +22,6 @@ require_once('include/DataAccessObject.class.php');
 
 class SvnNotificationDao extends DataAccessObject
 {
-
     /**
      * Set mailing list to be notified on a given path
      *

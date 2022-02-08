@@ -27,7 +27,6 @@ use Tuleap\Project\XML\Import\ArchiveInterface;
 
 class UsersToBeImportedCollectionBuilder
 {
-
     /**
      * @var XML_RNGValidator
      */

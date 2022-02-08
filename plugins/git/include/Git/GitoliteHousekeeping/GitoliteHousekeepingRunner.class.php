@@ -23,7 +23,6 @@
  */
 class Git_GitoliteHousekeeping_GitoliteHousekeepingRunner
 {
-
     /** @var Git_GitoliteHousekeeping_GitoliteHousekeepingDao */
     private $housekeeping_dao;
 

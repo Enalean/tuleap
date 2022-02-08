@@ -39,7 +39,6 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
  */
 final class IterationUpdate implements TimeboxMirroringOrder
 {
-
     private function __construct(
         private IterationIdentifier $iteration,
         private IterationTrackerIdentifier $tracker,

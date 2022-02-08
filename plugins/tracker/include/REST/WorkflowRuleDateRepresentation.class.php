@@ -24,7 +24,6 @@ use Tuleap\REST\JsonCast;
 
 class WorkflowRuleDateRepresentation
 {
-
     /**
      * @var int
      */

@@ -20,7 +20,6 @@
 
 class b201212141142_add_http_port extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

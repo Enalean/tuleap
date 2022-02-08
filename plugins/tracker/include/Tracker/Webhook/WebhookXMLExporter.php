@@ -25,7 +25,6 @@ use Tracker;
 
 class WebhookXMLExporter
 {
-
     /**
      * @var WebhookFactory
      */

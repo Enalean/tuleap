@@ -25,7 +25,6 @@ require_once('HTML_Element_Input_Hidden.class.php');
  */
 class HTML_Element_Input_Radio extends HTML_Element_Input
 {
-
     public function __construct($label, $name, $value, $checked)
     {
         parent::__construct($label, $name, $value);

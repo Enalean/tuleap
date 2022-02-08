@@ -30,7 +30,6 @@ use Project;
 
 class ContinuousIntegrationCollector
 {
-
     /**
      * @var Factory
      */

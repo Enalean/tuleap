@@ -20,7 +20,6 @@
 
 class Cardwall_OnTop_ColumnDao extends DataAccessObject
 {
-
     public function searchColumnsByTrackerId($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);

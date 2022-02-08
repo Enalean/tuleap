@@ -28,7 +28,6 @@ use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtifact
 {
-
     protected $artifacts;
     /**
      * A protected constructor; prevents direct creation of object

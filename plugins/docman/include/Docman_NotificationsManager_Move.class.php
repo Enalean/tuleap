@@ -21,7 +21,6 @@
 
 class Docman_NotificationsManager_Move extends Docman_NotificationsManager
 {
-
     public const MESSAGE_MOVED      = 'moved';      // X has been moved from to
     public const MESSAGE_MOVED_FROM = 'moved_from'; // X has been moved from
     public const MESSAGE_MOVED_TO   = 'moved_to';   // X has been moved to

@@ -23,7 +23,6 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 class PatchAddRemoveValidator
 {
-
     /**
      * @var IValidateElementsToAdd
      */

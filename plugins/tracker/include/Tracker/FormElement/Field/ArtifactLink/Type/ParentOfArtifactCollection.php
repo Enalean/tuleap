@@ -26,7 +26,6 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
 class ParentOfArtifactCollection
 {
-
     private $artifacts = [];
     private $is_graph;
 

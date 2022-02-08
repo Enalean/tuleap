@@ -24,7 +24,6 @@
 
 class Rest_Token
 {
-
     /** @var int */
     private $user_id;
 

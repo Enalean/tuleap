@@ -20,7 +20,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 interface Tracker_DateReminder_Role
 {
-
     /**
      * Get the Role Label as Text
      *

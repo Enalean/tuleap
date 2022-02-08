@@ -23,7 +23,6 @@
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testItStripsVerticalSpaces(): void
     {
         $bad_text = 'blockingment visiblesLe guidage de';

@@ -20,7 +20,6 @@
 
 class b201605310945_add_timeline_event_table extends ForgeUpgrade_Bucket // phpcs:ignore
 {
-
     public function description()
     {
         return <<<EOT

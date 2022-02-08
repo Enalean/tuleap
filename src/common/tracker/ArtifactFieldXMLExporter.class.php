@@ -20,7 +20,6 @@
 
 abstract class ArtifactFieldXMLExporter
 {
-
     /** @var ArtifactXMLNodeHelper */
     protected $node_helper;
 

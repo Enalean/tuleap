@@ -22,7 +22,6 @@
 
 class Docman_View_NewDocument extends Docman_View_New
 {
-
     public function _getTitle($params)
     {
         return dgettext('tuleap-docman', 'New document');

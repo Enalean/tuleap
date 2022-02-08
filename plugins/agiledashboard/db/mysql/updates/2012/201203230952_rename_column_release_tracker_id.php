@@ -21,7 +21,6 @@
 
 class b201203230952_rename_column_release_tracker_id extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

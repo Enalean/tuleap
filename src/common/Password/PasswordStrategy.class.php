@@ -28,7 +28,6 @@ use Tuleap\Password\PasswordCompromiseValidator;
 
 class PasswordStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     public $validators = [];
     public $errors     = [];
 

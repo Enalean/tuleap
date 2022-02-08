@@ -24,7 +24,6 @@
 
 class b201411261504_add_agiledashboard_kanban_configuration_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

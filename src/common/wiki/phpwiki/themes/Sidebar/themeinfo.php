@@ -30,7 +30,6 @@ require_once('lib/WikiPlugin.php');
 
 class Theme_Sidebar extends PHPWikiTheme
 {
-
     public function __construct($theme_name = 'Sidebar')
     {
         parent::__construct($theme_name);

@@ -29,7 +29,6 @@
 */
 /* abstract */ class ArtifactRule
 {
-
     public $id;
     public $group_artifact_id;
     public $source_field;

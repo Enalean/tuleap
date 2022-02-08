@@ -21,7 +21,6 @@
 
 class AgileDashboard_KanbanItemDao extends DataAccessObject
 {
-
     public function getAllKanbanItemIds($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);

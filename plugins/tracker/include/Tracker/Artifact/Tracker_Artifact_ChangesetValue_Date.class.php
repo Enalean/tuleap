@@ -24,7 +24,6 @@
  */
 class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetValue
 {
-
     /**
      * @var int
      */

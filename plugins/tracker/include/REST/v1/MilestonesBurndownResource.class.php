@@ -27,7 +27,6 @@ use Luracast\Restler\RestException;
 
 class MilestonesBurndownResource
 {
-
     public function options()
     {
         Header::allowOptionsGet();

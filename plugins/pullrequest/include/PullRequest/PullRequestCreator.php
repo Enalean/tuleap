@@ -31,7 +31,6 @@ use Tuleap\PullRequest\GitReference\GitPullRequestReferenceCreator;
 
 class PullRequestCreator
 {
-
     /**
      * @var Factory
      */

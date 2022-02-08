@@ -27,7 +27,6 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment;
 
 final class RandomAttachmentNameGenerator implements AttachmentNameGenerator
 {
-
     public function getName(): string
     {
         return bin2hex(random_bytes(32));

@@ -24,7 +24,6 @@
 
 class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     public $fields_per_line;
 
         /**

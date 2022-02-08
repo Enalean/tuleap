@@ -31,7 +31,6 @@ use User_InvalidPasswordException;
 
 class ReplicationHTTPUserAuthenticator
 {
-
     /**
      * @var Git_RemoteServer_GerritServerFactory
      */

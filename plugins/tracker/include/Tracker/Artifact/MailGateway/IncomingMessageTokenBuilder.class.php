@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
 class Tracker_Artifact_IncomingMessageTokenBuilder
 {
-
     /**
      * @var Tracker_Artifact_MailGateway_RecipientFactory
      */

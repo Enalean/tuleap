@@ -29,7 +29,6 @@ use Tuleap\ProgramManagement\Domain\TrackerReference;
  */
 interface TeamPlanning
 {
-
     public function getId(): int;
 
     public function getPlanningTracker(): TrackerReference;

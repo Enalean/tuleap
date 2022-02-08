@@ -23,7 +23,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_FormElement_Container_Column_Group
 {
-
     public function fetchArtifact($columns, Artifact $artifact, array $submitted_values)
     {
         return $this->fetchGroup($columns, 'fetchArtifactInGroup', [$artifact, $submitted_values]);

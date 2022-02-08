@@ -33,7 +33,6 @@ use Tuleap\Project\REST\ProjectResourceReference;
  */
 class ResourcesInjector
 {
-
     public function populate(\Luracast\Restler\Restler $restler): void
     {
         $restler->addAPIClass(GitlabProjectResource::class, ProjectRepresentation::ROUTE);

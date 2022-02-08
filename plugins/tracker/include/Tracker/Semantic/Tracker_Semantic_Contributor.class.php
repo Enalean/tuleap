@@ -22,7 +22,6 @@
 
 class Tracker_Semantic_Contributor extends Tracker_Semantic
 {
-
     public const CONTRIBUTOR_SEMANTIC_SHORTNAME = 'contributor';
 
     /**

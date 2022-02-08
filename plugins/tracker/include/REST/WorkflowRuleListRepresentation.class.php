@@ -24,7 +24,6 @@ use Tuleap\REST\JsonCast;
 
 class WorkflowRuleListRepresentation
 {
-
     /**
      * @var int
      */

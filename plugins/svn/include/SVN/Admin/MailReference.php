@@ -27,7 +27,6 @@ use Tuleap\SVN\Repository\Repository;
 
 class MailReference extends Reference
 {
-
     public function __construct($keyword, $revision_id, Repository $repository)
     {
         $base_id    = 5;

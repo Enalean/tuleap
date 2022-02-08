@@ -22,7 +22,6 @@
 
 class DataBuilderV5
 {
-
     public $field_X;
     public $field_Y;
     public $artifacts;

@@ -21,7 +21,6 @@
 
 class Cardwall_CardController extends MVC2_PluginController
 {
-
     /** @var Cardwall_SingleCard */
     private $single_card;
 

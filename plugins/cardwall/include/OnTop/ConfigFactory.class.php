@@ -20,7 +20,6 @@
 
 class Cardwall_OnTop_ConfigFactory
 {
-
     /**
      * @var TrackerFactory
      */

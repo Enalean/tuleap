@@ -20,7 +20,6 @@
 
 class b201709081530_rename_plugin_structure_to_test_management extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Rename plugin structure to Test Management';

@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\Webhook\Actions;
 
 class WebhookLogPresenter
 {
-
     /**
      * @var string
      */

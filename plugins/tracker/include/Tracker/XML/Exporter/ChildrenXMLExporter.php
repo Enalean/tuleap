@@ -20,7 +20,6 @@
 
 class Tracker_XML_Exporter_ChildrenXMLExporter
 {
-
     /**
      * @var Tracker_XML_ChildrenCollector
      */

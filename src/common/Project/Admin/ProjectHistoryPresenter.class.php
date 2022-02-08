@@ -21,7 +21,6 @@
 
 class ProjectHistoryPresenter
 {
-
     /** @var int */
     public $group_id;
 

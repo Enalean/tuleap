@@ -25,7 +25,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class TimeInfoFactory
 {
-
     /**
      * @var AgileDashboard_KanbanItemDao
      */

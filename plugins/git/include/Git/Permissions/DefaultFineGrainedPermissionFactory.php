@@ -33,7 +33,6 @@ use Feedback;
 
 class DefaultFineGrainedPermissionFactory
 {
-
     /**
      * @var FineGrainedPermissionSorter
      */

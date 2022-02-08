@@ -39,7 +39,6 @@ use Tuleap\Request\NotFoundException;
 
 class WebhooksDisplayController implements DispatchableWithRequest
 {
-
     /**
      * Is able to process a request routed by FrontRouter
      *

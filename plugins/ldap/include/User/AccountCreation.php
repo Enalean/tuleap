@@ -29,7 +29,6 @@ use Tuleap\User\Account\AccountCreated;
 
 final class AccountCreation
 {
-
     /**
      * @var LDAP_UserManager
      */

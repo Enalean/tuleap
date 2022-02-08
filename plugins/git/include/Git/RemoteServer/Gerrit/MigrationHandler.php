@@ -40,7 +40,6 @@ use Tuleap\Git\GitViews\RepoManagement\Pane;
 
 class MigrationHandler
 {
-
     /**
      * @var Git_SystemEventManager
      */

@@ -20,7 +20,6 @@
 
 class MailRegisterByAdminNotificationPresenter extends MailNotificationPresenter
 {
-
     public $section_two;
     public $login;
     public $section_after_login;

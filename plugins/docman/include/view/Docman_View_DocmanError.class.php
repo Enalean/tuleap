@@ -9,5 +9,4 @@
 
 class Docman_View_DocmanError extends Docman_View_Docman
 {
-
 }

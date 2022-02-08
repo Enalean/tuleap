@@ -27,7 +27,6 @@ use PFUser;
  */
 class UpdatedTypeLinkCollection implements ICollectChangeOfLinksBetweenTwoChangesets
 {
-
     /**
      * @var TypePresenter
      */

@@ -23,7 +23,6 @@ use Tuleap\Plugin\PluginLoader;
 
 class LoaderScheduler
 {
-
     private $cookie_manager;
     /**
      * @var PluginLoader

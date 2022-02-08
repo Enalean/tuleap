@@ -24,7 +24,6 @@
  */
 class URLVerificationFactory
 {
-
     /**
      * @var EventManager
      */

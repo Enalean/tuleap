@@ -22,7 +22,6 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_StaticField
 {
-
     protected function fetchReadOnly()
     {
         $html  = '';

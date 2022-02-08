@@ -24,7 +24,6 @@ use Tuleap\SVN\Repository\Repository;
 
 class MailHeaderManager
 {
-
     private $dao;
 
     public function __construct(MailHeaderDao $dao)

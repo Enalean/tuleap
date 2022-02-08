@@ -206,7 +206,6 @@ $__jpg_OldHandler = set_exception_handler(['JpGraphException', 'defaultHandler']
 //=============================================================
 class JpGraphErrObject
 {
-
     protected $iTitle = "JpGraph error: ";
     protected $iDest  = false;
 
@@ -261,7 +260,6 @@ class JpGraphErrObject
 //==============================================================
 class JpGraphErrObjectImg extends JpGraphErrObject
 {
-
     public function __construct()
     {
         parent::__construct();

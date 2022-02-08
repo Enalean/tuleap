@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Artifact_PaginatedArtifacts
 {
-
     /**
      * @var Artifact[]
      */

@@ -23,5 +23,4 @@ namespace Tuleap\Queue;
 
 class QueueServerConnectionException extends \Exception
 {
-
 }

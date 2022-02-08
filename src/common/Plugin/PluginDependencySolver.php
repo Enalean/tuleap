@@ -23,7 +23,6 @@
  */
 class PluginDependencySolver // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     /** @var PluginManager */
     private $plugin_manager;
 

@@ -33,7 +33,6 @@ namespace Tuleap\Git\GitPHP;
  */
 class Controller_Snapshot extends ControllerBase // @codingStandardsIgnoreLine
 {
-
     /**
      * archive
      *

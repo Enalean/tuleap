@@ -22,5 +22,4 @@
 
 class Docman_WikiRequest extends Codendi_Request
 {
-
 }

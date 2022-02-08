@@ -29,7 +29,6 @@ use Tuleap\Tracker\Notifications\GlobalNotification;
 
 class UserNotificationSettingsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testNoNotificationWhenTrackerModeIsNoNotifications(): void
     {
         $has_unsubscribed           = false;

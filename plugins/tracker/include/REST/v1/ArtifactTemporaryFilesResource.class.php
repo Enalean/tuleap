@@ -44,7 +44,6 @@ use UserManager;
 
 class ArtifactTemporaryFilesResource
 {
-
     public const PAGINATION_MAX_LIMIT      = 50;
     public const PAGINATION_DEFAULT_LIMIT  = 10;
     public const PAGINATION_DEFAULT_OFFSET = 0;

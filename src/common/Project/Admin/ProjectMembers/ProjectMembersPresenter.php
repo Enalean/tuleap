@@ -29,7 +29,6 @@ use Project;
 
 class ProjectMembersPresenter
 {
-
     /**
      * @var array
      */

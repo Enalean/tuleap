@@ -44,7 +44,6 @@ use Tuleap\SVN\Repository\Repository;
 
 class ServiceSvn extends Service
 {
-
     /** @var SvnPermissionManager */
     private $permissions_manager;
 

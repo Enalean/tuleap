@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\REST\v1;
 
 class ArtifactValuesRepresentation
 {
-
     /**
      * @var int {@type int} {@required true}
      */

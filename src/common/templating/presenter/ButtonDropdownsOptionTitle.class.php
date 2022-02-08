@@ -21,7 +21,6 @@
 
 class Templating_Presenter_ButtonDropdownsOptionTitle extends Templating_Presenter_ButtonDropdownsOption
 {
-
     public function __construct($label)
     {
         $this->label = $label;

@@ -21,7 +21,6 @@ require_once('HudsonWidget.class.php');
 
 abstract class HudsonOverviewWidget extends HudsonWidget
 {
-
     public function isUnique()
     {
         return true;

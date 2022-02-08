@@ -28,7 +28,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Process
 
 final class BuildIterationUpdateProcessorStub implements BuildIterationUpdateProcessor
 {
-
     private function __construct(private ProcessIterationUpdate $update_processor)
     {
     }

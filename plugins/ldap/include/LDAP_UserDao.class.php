@@ -28,7 +28,6 @@
  */
 class LDAP_UserDao extends DataAccessObject
 {
-
     /**
      *
      * @param int[] $user_ids

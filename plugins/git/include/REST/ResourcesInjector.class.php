@@ -29,7 +29,6 @@ use Tuleap\Project\REST\ProjectResourceReference;
  */
 class Git_REST_ResourcesInjector
 {
-
     public function populate(Luracast\Restler\Restler $restler)
     {
         $restler->addAPIClass(GitProjectResource::class, ProjectRepresentation::ROUTE);

@@ -27,7 +27,6 @@ use Tuleap\Tracker\REST\Artifact\ArtifactReference;
  */
 class AgileDashboard_CardRepresentation
 {
-
     public const ROUTE = 'cards';
 
     /** @var string */

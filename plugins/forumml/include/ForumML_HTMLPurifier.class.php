@@ -27,7 +27,6 @@ define('CODENDI_PURIFIER_FORUMML', 20);
 
 class ForumML_HTMLPurifier extends Codendi_HTMLPurifier
 {
-
     /**
      * Hold an instance of the class
      * @var self|null

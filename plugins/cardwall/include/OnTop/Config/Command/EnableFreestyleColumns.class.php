@@ -24,7 +24,6 @@
  */
 class Cardwall_OnTop_Config_Command_EnableFreestyleColumns extends Cardwall_OnTop_Config_Command
 {
-
     /**
      * @var Cardwall_OnTop_Dao
      */

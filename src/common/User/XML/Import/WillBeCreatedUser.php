@@ -27,7 +27,6 @@ use RandomNumberGenerator;
 
 class WillBeCreatedUser implements ReadyToBeImportedUser
 {
-
     public static $ALLOWED_STATUSES = [
         PFUser::STATUS_ACTIVE,
         PFUser::STATUS_RESTRICTED,

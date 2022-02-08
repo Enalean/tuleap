@@ -24,7 +24,6 @@ namespace Tuleap\User\REST\v1;
  */
 class UserPreferenceRepresentation
 {
-
     /**
      * @var string {@type string}
      */

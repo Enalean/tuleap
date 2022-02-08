@@ -21,7 +21,6 @@
  */
 class b201208241130_add_anonymous_in_filemodule_monitor extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

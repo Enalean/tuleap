@@ -23,7 +23,6 @@
  */
 class Cardwall_Column
 {
-
     /**
      * @var int
      */

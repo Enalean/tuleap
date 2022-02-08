@@ -24,7 +24,6 @@
  */
 class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter //phpcs:ignore
 {
-
     /**
     * @var string
     */

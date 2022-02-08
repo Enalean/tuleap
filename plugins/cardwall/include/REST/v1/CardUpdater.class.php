@@ -26,7 +26,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class CardUpdater
 {
-
     public function updateCard(PFUser $user, Cardwall_SingleCard $card, $label, array $values, $column_id = null)
     {
         $artifact = $card->getArtifact();

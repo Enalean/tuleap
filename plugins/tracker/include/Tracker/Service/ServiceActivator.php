@@ -30,7 +30,6 @@ use Tuleap\Service\ServiceCreator;
 
 class ServiceActivator
 {
-
     /**
      * @var ServiceCreator
      */

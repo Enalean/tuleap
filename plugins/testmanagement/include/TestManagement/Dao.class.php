@@ -24,7 +24,6 @@ use DataAccessObject;
 
 class Dao extends DataAccessObject
 {
-
     /**
      * @return \DataAccessResult|false
      * @psalm-ignore-falsable-return

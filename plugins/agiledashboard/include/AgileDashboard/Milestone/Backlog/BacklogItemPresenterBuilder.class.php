@@ -29,7 +29,6 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder implements AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection
 {
-
     public function getCollection()
     {
         return new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();

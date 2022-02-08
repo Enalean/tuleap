@@ -31,5 +31,4 @@ namespace Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment;
  */
 final class UserIsNotAllowedToSeeUGroups
 {
-
 }

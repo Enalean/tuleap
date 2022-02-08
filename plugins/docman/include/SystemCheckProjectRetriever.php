@@ -20,7 +20,6 @@
 
 class Docman_SystemCheckProjectRetriever
 {
-
     /** @var Docman_SystemCheckDao */
     private $dao;
 

@@ -22,7 +22,6 @@
 
 class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManager
 {
-
     public const MESSAGE_ADDED   = 'added'; // X has been added to monitoring list
     public const MESSAGE_REMOVED = 'removed'; // X has been removed from monitoring list
 

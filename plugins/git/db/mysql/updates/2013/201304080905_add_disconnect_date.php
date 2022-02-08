@@ -18,7 +18,6 @@
 
 class b201304080905_add_disconnect_date extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

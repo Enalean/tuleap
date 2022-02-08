@@ -20,7 +20,6 @@
 
 class b201206291629_add_missing_renderer_table_rows extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add missing renderer table entries';

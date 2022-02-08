@@ -25,7 +25,6 @@
  */
 class Cardwall_FieldsExtractor
 {
-
     /**
      * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
      */

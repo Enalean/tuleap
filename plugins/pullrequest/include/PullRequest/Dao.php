@@ -26,7 +26,6 @@ use Tuleap\PullRequest\Criterion\ISearchOnStatus;
 
 class Dao extends DataAccessObject
 {
-
     public function searchByPullRequestId($pull_request_id)
     {
         $sql = 'SELECT *

@@ -80,7 +80,6 @@ class _CodendiPassUser extends _PassUser
 
 class CodendiUserPreferences extends UserPreferences
 {
-
     public function __construct($saved_prefs = false)
     {
         parent::__construct($saved_prefs);

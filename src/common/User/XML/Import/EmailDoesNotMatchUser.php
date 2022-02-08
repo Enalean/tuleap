@@ -23,7 +23,6 @@ use PFUser;
 
 class EmailDoesNotMatchUser extends ActionToBeTakenForUser
 {
-
     private static $ACTION = 'map';
 
     private $email_found_in_xml;

@@ -34,7 +34,6 @@ use Tuleap\Tracker\Webhook\WebhookFactory;
 
 class WebhookDeleteController implements DispatchableWithRequest
 {
-
     /**
      * @var WebhookFactory
      */

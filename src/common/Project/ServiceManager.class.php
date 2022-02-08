@@ -23,7 +23,6 @@ use Tuleap\Project\Service\ServiceNotFoundException;
 
 class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     public const CUSTOM_SERVICE_SHORTNAME = '';
 
     /** @var ServiceDao */

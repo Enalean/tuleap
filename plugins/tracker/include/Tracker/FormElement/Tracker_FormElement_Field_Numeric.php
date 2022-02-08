@@ -26,7 +26,6 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Field_Alphanum implements Tracker_FormElement_IComputeValues
 {
-
     public $default_properties = [
         'maxchars'      => [
             'value' => 0,

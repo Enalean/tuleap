@@ -23,7 +23,6 @@
  */
 class Cardwall_OnTop_Config_Command_UpdateColumns extends Cardwall_OnTop_Config_Command
 {
-
     /**
      * @var Cardwall_OnTop_ColumnDao
      */

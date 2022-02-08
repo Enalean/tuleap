@@ -30,7 +30,6 @@ use Tuleap\PullRequest\Timeline\Dao as TimeLineDao;
 
 class Factory
 {
-
     /** @var \Tuleap\PullRequest\Comment\Dao */
     private $comments_dao;
 

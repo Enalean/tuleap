@@ -24,7 +24,6 @@
 
 class Statistics_ConfigurationDao extends DataAccessObject
 {
-
     public function isDailyPurgeActivated()
     {
         $sql = "SELECT daily_purge_is_activated FROM plugin_statistics_configuration";

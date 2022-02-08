@@ -24,7 +24,6 @@ use Tuleap\PullRequest\Timeline\TimelineEvent;
 
 class Comment implements TimelineEvent
 {
-
     /** @var int */
     private $id;
 

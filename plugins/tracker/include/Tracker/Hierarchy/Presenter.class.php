@@ -20,7 +20,6 @@
 
 class Tracker_Hierarchy_Presenter
 {
-
     /**
      * @var Tracker_Hierarchy_HierarchicalTracker
      */

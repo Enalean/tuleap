@@ -25,7 +25,6 @@ require_once('Collection.class.php');
  */
 class LinkedList extends Collection
 {
-
     public function __construct($initial_array = '')
     {
         parent::__construct($initial_array);

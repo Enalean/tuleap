@@ -21,7 +21,6 @@
 
 class b201312231005_remove_not_null_http_port_remote_gerrit_servers extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

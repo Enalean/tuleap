@@ -19,7 +19,6 @@
  */
 class b201708101140_add_issue_tracker_to_trafficlights extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Add column issue_tracker_id to plugin_trafficlights table";

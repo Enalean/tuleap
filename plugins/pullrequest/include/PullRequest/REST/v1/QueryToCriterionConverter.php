@@ -31,7 +31,6 @@ use Tuleap\PullRequest\Criterion\StatusClosed;
  */
 class QueryToCriterionConverter
 {
-
     public function convert($query)
     {
         if ($query === '') {

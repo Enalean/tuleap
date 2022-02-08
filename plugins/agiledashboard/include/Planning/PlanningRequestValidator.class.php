@@ -25,7 +25,6 @@ use Tuleap\User\ProvideCurrentUser;
  */
 class Planning_RequestValidator
 {
-
     /**
      * @var PlanningFactory
      */

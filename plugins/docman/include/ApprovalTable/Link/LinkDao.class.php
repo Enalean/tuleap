@@ -23,7 +23,6 @@
 
 class Docman_ApprovalTableLinkDao extends Docman_ApprovalTableItemDao
 {
-
     public function getTableById($versionId, $fields = '*')
     {
         $sql = 'SELECT ' . $fields .

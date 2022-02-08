@@ -28,7 +28,6 @@ use Tuleap\Hudson\HudsonJobBuilder;
  */
 class hudsonActions extends Actions
 {
-
     public function __construct($controler)
     {
         parent::__construct($controler);

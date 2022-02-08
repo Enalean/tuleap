@@ -20,7 +20,6 @@
 
 class Tracker_FormElement_View_Admin_StaticField_Separator extends Tracker_FormElement_View_Admin_StaticField
 {
-
     /**
      * html form for the description
      *

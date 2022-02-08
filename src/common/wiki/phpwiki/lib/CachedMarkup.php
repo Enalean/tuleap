@@ -21,7 +21,6 @@
 
 class CacheableMarkup extends XmlContent
 {
-
     public function __construct($content, $basepage)
     {
         $this->_basepage = $basepage;
@@ -238,7 +237,6 @@ class CacheableMarkup extends XmlContent
  */
 class Cached_DynamicContent
 {
-
     public function cache(&$cache)
     {
         $cache[] = $this;
@@ -257,7 +255,6 @@ class Cached_DynamicContent
 
 class Cached_Link extends Cached_DynamicContent
 {
-
     public function isInlineElement()
     {
         return true;
@@ -271,7 +268,6 @@ class Cached_Link extends Cached_DynamicContent
 
 class Cached_WikiLink extends Cached_Link
 {
-
     public function __construct($page, $label = false, $anchor = false)
     {
         $this->_page = $page;
@@ -403,7 +399,6 @@ class Cached_PhpwikiURL extends Cached_DynamicContent
 
 class Cached_ExternalLink extends Cached_Link
 {
-
     public function __construct($url, $label = false)
     {
         $this->_url = $url;
@@ -452,7 +447,6 @@ class Cached_ExternalLink extends Cached_Link
 
 class Cached_InterwikiLink extends Cached_ExternalLink
 {
-
     public function __construct($link, $label = false)
     {
         $this->_link = $link;
@@ -509,7 +503,6 @@ class Cached_UserLink extends Cached_WikiLink
 
 class Cached_PluginInvocation extends Cached_DynamicContent
 {
-
     public function __construct($pi)
     {
         $this->_pi = $pi;

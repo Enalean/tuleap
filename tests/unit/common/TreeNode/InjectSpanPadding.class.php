@@ -22,7 +22,6 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 abstract class InjectSpanPadding extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     /**
     * Return the Tree
     *

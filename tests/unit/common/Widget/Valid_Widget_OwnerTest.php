@@ -26,7 +26,6 @@
 
 class Valid_Widget_OwnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testOk(): void
     {
         $v = new Valid_Widget_Owner();

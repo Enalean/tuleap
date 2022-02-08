@@ -44,7 +44,6 @@ require_once('lib/XmlParserPHPWiki.php');
 
 class RSSParser extends XmlParserPHPWiki
 {
-
     public $title       = "";
     public $link        = "";
     public $description = "";

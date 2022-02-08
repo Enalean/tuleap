@@ -21,7 +21,6 @@
 
 class GitRepositoryPermissionsManager
 {
-
     /** @var GitDao */
     private $dao;
 

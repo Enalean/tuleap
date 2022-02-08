@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest\REST\v1;
 
 class PaginatedCommentsRepresentations
 {
-
     /** @var array */
     public $comments_representations;
 

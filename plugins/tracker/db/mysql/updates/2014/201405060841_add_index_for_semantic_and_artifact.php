@@ -18,7 +18,6 @@
 
 class b201405060841_add_index_for_semantic_and_artifact extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add Index on semantic and artifact';

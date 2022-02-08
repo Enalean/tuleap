@@ -20,7 +20,6 @@
 
 class b201012240808_add_table_frs_log extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

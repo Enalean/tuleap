@@ -33,7 +33,6 @@ use Tuleap\Request\NotFoundException;
 
 class ProjectTemplatesController implements DispatchableWithRequest
 {
-
     /**
      * Is able to process a request routed by FrontRouter
      *

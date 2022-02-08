@@ -27,7 +27,6 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 
 class ClientSecretUpdater
 {
-
     /**
      * @var SplitTokenVerificationStringHasher
      */

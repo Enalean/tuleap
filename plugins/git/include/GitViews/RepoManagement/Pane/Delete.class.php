@@ -22,7 +22,6 @@ namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
 class Delete extends Pane
 {
-
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */

@@ -21,7 +21,6 @@
 
 class b201111090857_add_table_plugin_git_log extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

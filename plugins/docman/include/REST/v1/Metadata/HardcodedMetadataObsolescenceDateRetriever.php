@@ -27,7 +27,6 @@ use Tuleap\Docman\REST\v1\ItemRepresentation;
 
 class HardcodedMetadataObsolescenceDateRetriever
 {
-
     /**
      * @var HardcodedMetdataObsolescenceDateChecker
      */

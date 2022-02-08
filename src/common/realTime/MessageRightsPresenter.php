@@ -21,5 +21,4 @@ namespace Tuleap\RealTime;
 
 interface MessageRightsPresenter
 {
-
 }

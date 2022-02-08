@@ -20,7 +20,6 @@
 
 class MailRegisterByAdminApprovalPresenter extends MailRegisterPresenter
 {
-
     public $section_three;
 
     public function __construct(

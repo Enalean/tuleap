@@ -19,7 +19,6 @@
  */
 abstract class Tracker_Report_Criteria_ValueDao extends DataAccessObject
 {
-
     public function searchByCriteriaId($criteria_id)
     {
         $criteria_id = $this->da->escapeInt($criteria_id);

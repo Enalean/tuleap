@@ -20,7 +20,6 @@
 
 class b201102091302_deploy_post_receive_to_existing_repositories extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

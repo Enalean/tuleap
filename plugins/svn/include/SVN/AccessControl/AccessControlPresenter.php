@@ -28,7 +28,6 @@ use CSRFSynchronizerToken;
 
 class AccessControlPresenter extends BaseAdminPresenter
 {
-
     public $edit_access_file_title;
     public $default_text;
     public $permissions_warning;

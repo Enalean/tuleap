@@ -22,7 +22,6 @@ use Exception;
 
 class HookConfig
 {
-
     public const MANDATORY_REFERENCE       = 'mandatory_reference';
     public const COMMIT_MESSAGE_CAN_CHANGE = 'commit_message_can_change';
 

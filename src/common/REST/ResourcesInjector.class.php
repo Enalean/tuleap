@@ -52,7 +52,6 @@ use Tuleap\User\REST\v1\UserResource;
  */
 class ResourcesInjector
 {
-
     public function populate(Restler $restler)
     {
         $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', ProjectRepresentation::ROUTE);

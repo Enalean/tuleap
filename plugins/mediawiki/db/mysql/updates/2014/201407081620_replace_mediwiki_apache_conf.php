@@ -18,7 +18,6 @@
 
 class b201407081620_replace_mediwiki_apache_conf extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

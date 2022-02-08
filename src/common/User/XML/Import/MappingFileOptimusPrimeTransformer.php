@@ -25,7 +25,6 @@ use PFUser;
 
 class MappingFileOptimusPrimeTransformer
 {
-
     private static $ALLOWED_ACTIONS = [
         ToBeActivatedUser::ACTION,
         ToBeCreatedUser::ACTION,

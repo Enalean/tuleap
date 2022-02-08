@@ -26,7 +26,6 @@ use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
 class Router implements DispatchableWithRequestNoAuthz
 {
-
     /**
      * @var Login\Controller
      */

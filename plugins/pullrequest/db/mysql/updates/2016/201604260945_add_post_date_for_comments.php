@@ -20,7 +20,6 @@
 
 class b201604260945_add_post_date_for_comments extends ForgeUpgrade_Bucket // phpcs:ignore
 {
-
     public function description()
     {
         return <<<EOT

@@ -22,7 +22,6 @@ namespace Tuleap\News;
 
 class ChooseNewsPresenter
 {
-
     public $news_items;
 
     public $project_id;

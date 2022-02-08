@@ -26,7 +26,6 @@ use CSRFSynchronizerToken;
 
 class HooksConfigurationPresenter extends BaseAdminPresenter
 {
-
     public $project_id;
     public $repo_id;
     public $csrf_input;

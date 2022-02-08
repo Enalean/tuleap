@@ -27,7 +27,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class tracker_date_reminderPlugin extends Plugin
 {
-
     public function __construct($id)
     {
         parent::__construct($id);

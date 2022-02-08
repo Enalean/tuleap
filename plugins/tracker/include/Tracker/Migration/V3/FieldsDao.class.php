@@ -20,7 +20,6 @@
 
 class Tracker_Migration_V3_FieldsDao extends DataAccessObject
 {
-
     public function create($tv3_id, $tv5_id)
     {
         $this->duplicateFields($tv3_id, $tv5_id);

@@ -18,7 +18,6 @@
 
 abstract class Tracker_Artifact_Followup_Item
 {
-
     abstract public function getId();
 
     abstract public function getFollowUpDate();

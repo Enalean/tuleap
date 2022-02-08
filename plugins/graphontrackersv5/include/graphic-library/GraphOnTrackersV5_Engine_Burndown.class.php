@@ -26,7 +26,6 @@ use Tuleap\Chart\Chart;
 
 class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine
 {
-
     public $duration;
     public $start_date;
 

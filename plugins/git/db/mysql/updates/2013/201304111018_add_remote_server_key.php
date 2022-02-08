@@ -18,7 +18,6 @@
 
 class b201304111018_add_remote_server_key extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

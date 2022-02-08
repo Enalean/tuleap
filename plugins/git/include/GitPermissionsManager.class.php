@@ -27,7 +27,6 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
  */
 class GitPermissionsManager
 {
-
     /**
      * @var FineGrainedRetriever
      */

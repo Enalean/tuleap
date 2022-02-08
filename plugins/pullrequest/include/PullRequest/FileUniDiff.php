@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest;
 
 class FileUniDiff
 {
-
     private $lines;
 
     public function __construct()

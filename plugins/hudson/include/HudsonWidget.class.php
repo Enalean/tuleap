@@ -24,7 +24,6 @@ use Tuleap\Dashboard\User\UserDashboardController;
 
 abstract class HudsonWidget extends Widget
 {
-
     /**
      * @var MinimalHudsonJobFactory
      */

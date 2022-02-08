@@ -23,7 +23,6 @@
  */
 class BaseLanguageFactory
 {
-
     /**
      * @var array of BaseLanguage
      */

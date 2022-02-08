@@ -27,7 +27,6 @@
 */
 class ArtifactRuleFactory
 {
-
     public $rules_dao;
     public $rules;
 

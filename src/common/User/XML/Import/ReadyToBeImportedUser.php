@@ -24,7 +24,6 @@ use Psr\Log\LoggerInterface;
 
 interface ReadyToBeImportedUser extends User
 {
-
     public function process(UserManager $user_manager, LoggerInterface $logger);
 
     /** @return \PFUser */

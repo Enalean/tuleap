@@ -20,7 +20,6 @@
 
 class SystemEvent_STATISTICS_DAILY extends SystemEvent
 {
-
     /**
      * @var \Psr\Log\LoggerInterface
      */

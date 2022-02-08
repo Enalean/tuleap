@@ -29,7 +29,6 @@ use Tuleap\Tracker\REST\MinimalFieldRepresentation;
  */
 class ArtifactPatchDryRunFieldsResponseRepresentation
 {
-
     /**
      * @var array {@type MinimalFieldRepresentation}
      */

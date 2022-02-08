@@ -31,7 +31,6 @@ use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermission;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PFUser implements PFO_User, IHaveAnSSHKey
 {
-
     public const PREFERENCE_NAME_DISPLAY_USERS = 'username_display';
     /**
      * The user is active

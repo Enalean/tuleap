@@ -20,7 +20,6 @@
 
 class Tracker_Migration_V3_FieldsetsDao extends DataAccessObject
 {
-
     public function create($tv3_id, $tv5_id)
     {
         $sql = "CREATE TABLE tracker_fieldset_$tv5_id (

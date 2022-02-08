@@ -29,7 +29,6 @@ use Tuleap\PullRequest\Timeline\TimelineGlobalEvent;
  */
 class TimelineEventRepresentation
 {
-
     public const UPDATE  = 'update';
     public const REBASE  = 'rebase';
     public const MERGE   = 'merge';

@@ -25,7 +25,6 @@
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Transition_PostAction_Field extends Transition_PostAction
 {
-
     /**
      * @var Tracker_FormElement_Field The field the post action should modify
      */

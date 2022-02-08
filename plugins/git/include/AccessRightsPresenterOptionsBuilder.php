@@ -31,7 +31,6 @@ use Tuleap\Git\Permissions\DefaultFineGrainedPermission;
 
 class AccessRightsPresenterOptionsBuilder
 {
-
     /**
      * @var User_ForgeUserGroupFactory
      */

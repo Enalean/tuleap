@@ -20,7 +20,6 @@
 
 class b201604071042_create_hudson_git_job extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Create table plugin_hudson_git_job for hudson_git_plugin';

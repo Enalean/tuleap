@@ -20,7 +20,6 @@
 
 class b201206251148_add_table_for_aggregate_field extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add a new table to store aggregate fields';

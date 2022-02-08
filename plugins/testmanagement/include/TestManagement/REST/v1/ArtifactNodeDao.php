@@ -25,7 +25,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactNodeDao extends DataAccessObject
 {
-
     /**
      * @return \DataAccessResult|false
      * @psalm-ignore-falsable-return

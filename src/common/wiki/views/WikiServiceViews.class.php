@@ -29,7 +29,6 @@ require_once(dirname(__FILE__) . '/../lib/WikiEntry.class.php');
 
 class WikiServiceViews extends WikiViews
 {
-
     protected $purifier;
     private $base_url;
 

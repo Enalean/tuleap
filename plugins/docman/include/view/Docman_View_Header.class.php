@@ -21,7 +21,6 @@
 
 /* abstract */ class Docman_View_Header extends Docman_View_View
 {
-
     public function _header($params)
     {
         if (! headers_sent()) {

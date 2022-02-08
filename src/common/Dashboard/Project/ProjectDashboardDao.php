@@ -25,7 +25,6 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 
 class ProjectDashboardDao extends DataAccessObject
 {
-
     /**
      * @var DashboardWidgetDao
      */

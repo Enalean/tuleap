@@ -76,7 +76,6 @@ use Tuleap\Widget\WidgetFactory;
  */
 class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     /**
      * When a project is created, ask plugins if they replace the usage of legacy core services
      *

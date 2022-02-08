@@ -23,5 +23,4 @@ namespace Tuleap\Language;
 
 class CustomContentNotFoundException extends \Exception
 {
-
 }

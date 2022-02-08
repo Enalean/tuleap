@@ -20,7 +20,6 @@
 
 class b201209251711_add_table_bind_ugroups extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add a new table to store bind ugroups';

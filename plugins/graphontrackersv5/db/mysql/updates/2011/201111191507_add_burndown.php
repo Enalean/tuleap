@@ -21,7 +21,6 @@
 
 class b201111191507_add_burndown extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

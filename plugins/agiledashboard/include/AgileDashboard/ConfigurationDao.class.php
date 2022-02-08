@@ -20,7 +20,6 @@
 
 class AgileDashboard_ConfigurationDao extends DataAccessObject
 {
-
     public function updateConfiguration(
         $project_id,
         $scrum_is_activated,

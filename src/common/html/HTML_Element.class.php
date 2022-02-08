@@ -25,7 +25,6 @@
  */
 abstract class HTML_Element
 {
-
     protected $params;
     protected $name;
     protected $value;

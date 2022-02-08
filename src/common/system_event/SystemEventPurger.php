@@ -24,7 +24,6 @@
 
 class SystemEventPurger
 {
-
     public function __construct(SystemEventDao $dao)
     {
         $this->dao = $dao;

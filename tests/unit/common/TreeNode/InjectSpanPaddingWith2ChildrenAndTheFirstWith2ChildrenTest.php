@@ -23,7 +23,6 @@ require_once __DIR__ . '/InjectSpanPadding.class.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class InjectSpanPaddingWith2ChildrenAndTheFirstWith2ChildrenTest extends InjectSpanPadding
 {
-
     /**
      * Return this Tree
      *

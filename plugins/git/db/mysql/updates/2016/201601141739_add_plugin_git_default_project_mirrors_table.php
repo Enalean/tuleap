@@ -20,7 +20,6 @@
 
 class b201601141739_add_plugin_git_default_project_mirrors_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

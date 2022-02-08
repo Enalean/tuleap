@@ -36,7 +36,6 @@ use Tuleap\HudsonGit\Log\LogFactory;
  */
 class GitWebhooksSettingsEnhancer
 {
-
     /**
      * @var LogFactory
      */

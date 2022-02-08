@@ -21,7 +21,6 @@
 
 class Widget_MySystemEvent extends Widget
 {
-
     /**
      * Constructor
      */

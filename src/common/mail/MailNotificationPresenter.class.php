@@ -20,7 +20,6 @@
 
 class MailNotificationPresenter extends MailOutlinePresenter
 {
-
     public $section_one;
     public $redirect_url;
     public $redirect_button;

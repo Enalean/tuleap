@@ -25,7 +25,6 @@ use Tuleap\Tracker\XML\Exporter\ChangesetValue\ExternalExporterCollector;
 
 class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_Artifact_ChangesetValueVisitor
 {
-
     /**
      * @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter
      */

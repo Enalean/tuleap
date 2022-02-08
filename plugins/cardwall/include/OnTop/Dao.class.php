@@ -21,7 +21,6 @@
 
 class Cardwall_OnTop_Dao extends DataAccessObject
 {
-
     /**
      * @return bool
      */

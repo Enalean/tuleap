@@ -24,7 +24,6 @@
 
 class SystemEventProcessCustomQueue implements SystemEventProcess
 {
-
     /** @var string */
     private $queue;
 

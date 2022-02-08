@@ -37,7 +37,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class projectmilestonesPlugin extends Plugin // phpcs:ignore
 {
-
     public function __construct($id)
     {
         parent::__construct($id);

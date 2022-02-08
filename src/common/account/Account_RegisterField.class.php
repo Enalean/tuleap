@@ -19,7 +19,6 @@
 
 class Account_RegisterField
 {
-
     public $value;
     public $has_error;
     public $error;

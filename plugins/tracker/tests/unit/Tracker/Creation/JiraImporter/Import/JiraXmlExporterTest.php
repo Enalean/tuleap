@@ -220,7 +220,6 @@ class JiraXmlExporterTest extends TestCase
         );
 
         $attachment_name_generator = new class implements AttachmentNameGenerator {
-
             private int $i = 0;
 
             public function getName(): string

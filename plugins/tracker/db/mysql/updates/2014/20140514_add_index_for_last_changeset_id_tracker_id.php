@@ -18,7 +18,6 @@
 
 class b20140514_add_index_for_last_changeset_id_tracker_id extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add Index on last changeset id and tracker id';

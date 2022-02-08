@@ -20,7 +20,6 @@
 
 class Docman_View_PermissionsForItem extends Docman_View_View  /* implements Visitor*/
 {
-
     /* protected */ public function _content($params)
     {
         echo $this->fetch($params['item']->getId(), $params);

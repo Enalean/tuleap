@@ -20,7 +20,6 @@
 
 class b201401271106_grant_git_admin_rigths_project_admins extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

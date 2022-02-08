@@ -23,7 +23,6 @@ use Tuleap\FRS\FRSPermissionManager;
 
 class FRSFile
 {
-
     public const EVT_CREATE  = 301;
     public const EVT_UPDATE  = 302;
     public const EVT_DELETE  = 303;

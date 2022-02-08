@@ -27,7 +27,6 @@ use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
  */
 interface Tracker_FormElement_FieldVisitor
 {
-
     public function visitArtifactLink(Tracker_FormElement_Field_ArtifactLink $field);
     public function visitDate(Tracker_FormElement_Field_Date $field);
     public function visitFile(Tracker_FormElement_Field_File $field);

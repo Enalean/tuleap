@@ -29,7 +29,6 @@ namespace Tuleap\Widget;
 */
 class ProjectContacts extends \Widget
 {
-
     public function __construct()
     {
         parent::__construct('projectcontacts');

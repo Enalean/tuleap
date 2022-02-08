@@ -17,7 +17,6 @@ require_once('jpgraph_plotmark.inc.php');
 //===================================================
 class RadarLogTicks extends Ticks
 {
-
     public function __construct()
     {
             // Empty
@@ -107,7 +106,6 @@ class RadarLogTicks extends Ticks
 //===================================================
 class RadarLinearTicks extends Ticks
 {
-
     private $minor_step = 1;
     private $major_step = 2;
 

@@ -21,7 +21,6 @@
 
 class b201204051134_add_index_on_sementic_title_and_artifact extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

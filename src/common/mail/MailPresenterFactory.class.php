@@ -23,7 +23,6 @@ use Tuleap\Mail\MailAccountSuspensionPresenter;
 
 class MailPresenterFactory
 {
-
     public const FLAMING_PARROT_THEME = 'FlamingParrot';
 
     /**

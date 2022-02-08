@@ -27,7 +27,6 @@ use Tuleap\SVN\Repository\Repository;
  */
 class NullAccessFileHistory extends AccessFileHistory
 {
-
     public function __construct(Repository $repository)
     {
         $version_number = 0;

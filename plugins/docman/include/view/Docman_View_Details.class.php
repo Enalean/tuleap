@@ -23,7 +23,6 @@ use Tuleap\Docman\Notifications\CollectionOfUgroupMonitoredItemsBuilder;
 
 class Docman_View_Details extends Docman_View_Display
 {
-
     /* protected */ public function _getTitle($params)
     {
         $hp = Codendi_HTMLPurifier::instance();

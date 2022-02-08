@@ -27,7 +27,6 @@
 */
 class Tracker_Rule_List extends Tracker_Rule
 {
-
     public $target_value;
     public $source_value;
 

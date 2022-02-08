@@ -22,7 +22,6 @@
 
 class b201210291756_add_old_id_column_on_chart extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

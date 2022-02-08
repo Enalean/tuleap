@@ -33,7 +33,6 @@ use Laminas\Feed\Writer\Feed;
 
 class LatestNewsController implements DispatchableWithRequest
 {
-
     /**
      * @var NewsDao
      */

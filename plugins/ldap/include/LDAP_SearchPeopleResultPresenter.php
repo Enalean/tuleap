@@ -20,7 +20,6 @@
 
 class LDAP_SearchPeopleResultPresenter
 {
-
     /** @var  string */
     private $user_name;
 

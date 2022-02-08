@@ -27,7 +27,6 @@
  */
 abstract class SVN_Hook
 {
-
     /** @var SVN_Hooks */
     private $svn_hooks;
 

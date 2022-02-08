@@ -22,7 +22,6 @@ namespace Tuleap\User;
 
 class UserActionPresenter
 {
-
     public $purified_content;
     public $icon;
     public $label;

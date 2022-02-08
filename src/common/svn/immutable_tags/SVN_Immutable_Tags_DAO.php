@@ -18,7 +18,6 @@
 
 class SVN_Immutable_Tags_DAO extends DataAccessObject
 {
-
     public function getImmutableTagsWhitelistForProject($project_id)
     {
         $project_id = $this->da->escapeInt($project_id);

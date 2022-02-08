@@ -34,7 +34,6 @@ use Tuleap\Project\MappingRegistry;
  */
 class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemVisitor
 {
-
     /**
      * The title given by the user to the widget
      *

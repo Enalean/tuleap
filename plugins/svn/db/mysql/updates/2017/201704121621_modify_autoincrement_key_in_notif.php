@@ -20,7 +20,6 @@
 
 class b201704121621_modify_autoincrement_key_in_notif extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Modify autoincrement key in plugin_svn_notification table';

@@ -20,7 +20,6 @@
 
 class GitPresenters_AdminGerritTemplatesPresenter extends GitPresenters_AdminPresenter
 {
-
     /**
      * List of repositories belonging to the project
      *

@@ -20,7 +20,6 @@
 
 class b201301021153_add_postaction_cibuild_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add post actions ci build table.';

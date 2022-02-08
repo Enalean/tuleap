@@ -32,7 +32,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class TimeUpdater
 {
-
     /**
      * @var TimeDao
      */

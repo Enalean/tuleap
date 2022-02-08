@@ -20,7 +20,6 @@
 
 abstract class RestrictedResourceDao extends DataAccessObject
 {
-
     abstract public function getResourceAllowedProjectsTableName();
 
     abstract public function getResourceFieldName();

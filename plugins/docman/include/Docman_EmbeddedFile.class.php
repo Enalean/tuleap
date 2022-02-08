@@ -25,7 +25,6 @@
  */
 class Docman_EmbeddedFile extends Docman_File
 {
-
     public function __construct($data = null)
     {
         parent::__construct($data);

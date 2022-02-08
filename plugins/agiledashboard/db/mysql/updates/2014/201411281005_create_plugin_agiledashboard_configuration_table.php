@@ -24,7 +24,6 @@
 
 class b201411281005_create_plugin_agiledashboard_configuration_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

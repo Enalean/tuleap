@@ -39,7 +39,6 @@ use Tuleap\SVN\Repository\RepositoryManager;
 
 class SvnRouter implements DispatchableWithRequest
 {
-
     /** @var RepositoryDisplayController */
     private $display_controller;
 

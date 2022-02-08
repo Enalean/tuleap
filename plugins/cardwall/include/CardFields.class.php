@@ -25,7 +25,6 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class Cardwall_CardFields
 {
-
     public function __construct(Tracker_FormElementFactory $factory)
     {
         $this->form_element_factory = $factory;

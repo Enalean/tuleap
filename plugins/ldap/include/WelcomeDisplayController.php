@@ -37,7 +37,6 @@ use Valid_String;
 
 class WelcomeDisplayController implements DispatchableWithRequest
 {
-
     /**
      * @var LDAP_UserManager
      */

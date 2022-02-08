@@ -27,7 +27,6 @@ use Tuleap\Backend\FileExtensionFilterIterator;
  */
 class Backend
 {
-
     public const LOG_INFO    = \Psr\Log\LogLevel::INFO;
     public const LOG_WARNING = \Psr\Log\LogLevel::WARNING;
     public const LOG_ERROR   = \Psr\Log\LogLevel::ERROR;

@@ -21,7 +21,6 @@
 
 class b201206211619_add_artifact_priority extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

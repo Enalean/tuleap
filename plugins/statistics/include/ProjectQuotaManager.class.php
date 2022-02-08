@@ -30,7 +30,6 @@ use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
  */
 class ProjectQuotaManager
 {
-
     /**
      * The Projects dao used to fetch data
      *

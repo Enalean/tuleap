@@ -20,7 +20,6 @@
 
 class b201605311559_add_merge_status_for_pull_requests extends ForgeUpgrade_Bucket // phpcs:ignore
 {
-
     public function description()
     {
         return <<<EOT

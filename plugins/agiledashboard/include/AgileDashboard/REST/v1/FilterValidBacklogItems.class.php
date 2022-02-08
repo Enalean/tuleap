@@ -26,7 +26,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\IFilterValidElementsToUnkink;
 
 class FilterValidBacklogItems implements IFilterValidElementsToUnkink
 {
-
     public function filter(PFUser $user, array $artifact_ids_to_be_removed): array
     {
         // No filter, was already done in PatchAddBacklogItemsValidator

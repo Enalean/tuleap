@@ -20,7 +20,6 @@
 
 class b201604291015_add_plugin_pullrequest_inline_comments_table extends ForgeUpgrade_Bucket // phpcs:ignore
 {
-
     public function description()
     {
         return <<<EOT

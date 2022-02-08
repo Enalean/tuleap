@@ -28,7 +28,6 @@ use Tuleap\Tracker\REST\TrackerReference;
  */
 class ArtifactReference
 {
-
     /**
      * @var int ID of the milestone {@type int} {@required true}
      */

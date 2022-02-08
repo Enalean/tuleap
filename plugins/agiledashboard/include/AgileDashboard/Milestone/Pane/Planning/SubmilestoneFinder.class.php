@@ -31,7 +31,6 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
 {
-
     /** @var PlanningFactory */
     private $planning_factory;
 

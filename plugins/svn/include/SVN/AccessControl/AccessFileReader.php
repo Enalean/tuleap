@@ -27,7 +27,6 @@ use Tuleap\SVN\Repository\Repository;
  */
 class AccessFileReader
 {
-
     private static $FILENAME = ".SVNAccessFile";
 
     public function readContentBlock(Repository $repository)

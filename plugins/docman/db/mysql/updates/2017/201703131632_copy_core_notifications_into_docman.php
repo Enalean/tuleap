@@ -20,7 +20,6 @@
 
 class b201703131632_copy_core_notifications_into_docman extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Copy core notifications into docman plugin";

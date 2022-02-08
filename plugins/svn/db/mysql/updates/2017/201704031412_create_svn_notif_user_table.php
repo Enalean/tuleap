@@ -20,7 +20,6 @@
 
 class b201704031412_create_svn_notif_user_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Create the table plugin_svn_notification_users for SVN plugin';

@@ -77,7 +77,6 @@ use UserManager;
  */
 class MilestoneResource extends AuthenticatedResource
 {
-
     public const MAX_LIMIT = 100;
 
     /** @var Planning_MilestoneFactory */

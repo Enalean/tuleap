@@ -23,7 +23,6 @@ use Tuleap\Tracker\Workflow\Transition\Condition\CannotCreateTransitionException
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Workflow_Transition_ConditionFactory
 {
-
     /** @var Workflow_Transition_Condition_CommentNotEmpty_Factory */
     private $commentnotempty_factory;
 

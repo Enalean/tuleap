@@ -18,7 +18,6 @@
 
 class b201511231728_add_trovecat_mandatory_column extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Add mandatory attribute for trovecat";

@@ -24,7 +24,6 @@ use Tracker_Artifact_ChangesetValue_Float;
 
 class ChangesChecker
 {
-
     public function hasChanges(Tracker_Artifact_ChangesetValue_Float $old_value, $new_value): bool
     {
         $value_to_compare = null;

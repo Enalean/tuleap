@@ -23,7 +23,6 @@ use RuntimeException;
 
 class ToBeMappedUser extends ActionToBeTakenForUser
 {
-
     public const ACTION = 'map';
 
     /** @var \PFUser[] */

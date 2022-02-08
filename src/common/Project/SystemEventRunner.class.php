@@ -30,7 +30,6 @@ use Tuleap\DB\DBFactory;
 
 final class SystemEventRunner implements SystemEventRunnerInterface
 {
-
     /** @var SystemEventProcessor_Factory */
     private $system_event_processor_factory;
 

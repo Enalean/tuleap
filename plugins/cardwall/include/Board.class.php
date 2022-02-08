@@ -23,7 +23,6 @@
  */
 class Cardwall_Board
 {
-
     /**
      * @var array of TreeNode
      */

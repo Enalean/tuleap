@@ -20,7 +20,6 @@
 
 class Config_LocalIncFinder
 {
-
     public function getLocalIncPath()
     {
         $default_path = '/etc/tuleap/conf/local.inc';

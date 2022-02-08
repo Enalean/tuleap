@@ -9,7 +9,6 @@
 
 class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements Visitor*/
 {
-
     /* protected */ public function _content($params)
     {
         echo '<select name="ordering">';

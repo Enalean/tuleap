@@ -23,7 +23,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_ArtifactNotificationSubscriber
 {
-
     /** @var Artifact */
     private $artifact;
 

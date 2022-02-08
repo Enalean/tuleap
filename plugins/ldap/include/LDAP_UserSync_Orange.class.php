@@ -22,7 +22,6 @@
  */
 class LDAP_UserSync_Orange extends LDAP_UserSync
 {
-
     /**
      * Return the sync attributes
      *

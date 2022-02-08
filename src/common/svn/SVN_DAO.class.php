@@ -20,7 +20,6 @@
 
 class SVN_DAO extends \Tuleap\DB\DataAccessObject
 {
-
     public function searchSvnRepositories()
     {
         $sql = "SELECT `groups`.*

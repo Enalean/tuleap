@@ -23,7 +23,6 @@
  */
 class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     public function testOptionsPlannings(): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id . '/plannings'));

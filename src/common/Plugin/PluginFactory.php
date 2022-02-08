@@ -20,7 +20,6 @@
 
 class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     /** @var PluginDao */
     private $plugin_dao;
 

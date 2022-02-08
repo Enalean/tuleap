@@ -33,7 +33,6 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
  */
 class AgileDashboard_BacklogItem_SubBacklogItemProvider
 {
-
     /** @var Tracker_ArtifactDao */
     private $dao;
 

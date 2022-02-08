@@ -25,5 +25,4 @@ namespace Tuleap\Redis;
 
 class RedisNotConnectedException extends RedisConnectionException
 {
-
 }

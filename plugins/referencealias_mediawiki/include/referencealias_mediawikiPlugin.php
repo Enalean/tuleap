@@ -29,7 +29,6 @@ use Tuleap\ReferenceAliasMediawiki\ReferencesImporter;
 
 class referencealias_mediawikiPlugin extends Plugin //phpcs:ignore
 {
-
     public function __construct($id)
     {
         parent::__construct($id);

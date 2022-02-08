@@ -21,7 +21,6 @@
  */
 class ArchiveDeletedItemsPluginDescriptor extends PluginDescriptor
 {
-
     /**
      * Constructor
      *

@@ -25,7 +25,6 @@ use DataAccessObject;
 
 class TypeDao extends DataAccessObject
 {
-
     public function create($shortname, $forward_label, $reverse_label)
     {
         $type          = $this->getTypeByShortname($shortname);

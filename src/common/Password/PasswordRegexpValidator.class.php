@@ -27,7 +27,6 @@
  */
 /* abstract */ class PasswordRegexpValidator extends PasswordValidator
 {
-
     public $regexp;
 
     /**

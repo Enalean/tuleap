@@ -27,7 +27,6 @@ use ReferenceManager;
 
 class MetadataValueStore
 {
-
     /**
      * @var Docman_MetadataValueDao
      */

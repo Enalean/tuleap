@@ -21,7 +21,6 @@
 
 class b201203201103_add_column_group_id extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

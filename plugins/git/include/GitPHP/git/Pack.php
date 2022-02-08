@@ -29,7 +29,6 @@ namespace Tuleap\Git\GitPHP;
  */
 class Pack
 {
-
     public const OBJ_COMMIT    = 1;
     public const OBJ_TREE      = 2;
     public const OBJ_BLOB      = 3;

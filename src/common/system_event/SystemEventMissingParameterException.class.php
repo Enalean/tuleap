@@ -20,7 +20,6 @@
 
 class SystemEventMissingParameterException extends Exception
 {
-
     public function __construct($message = 'Parameter not found')
     {
         parent::__construct($message);

@@ -26,7 +26,6 @@ use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
  */
 class Tracker_REST_FormElementRepresentation //phpcs:ignore
 {
-
     public const BIND_TYPE = 'type';
     public const BIND_LIST = 'list';
 

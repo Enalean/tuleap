@@ -33,7 +33,6 @@ use Tuleap\Tracker\Webhook\WebhookDao;
 
 class WebhookCreateController implements DispatchableWithRequest
 {
-
     /**
      * @var TrackerFactory
      */

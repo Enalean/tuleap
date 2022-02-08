@@ -24,7 +24,6 @@ use Tuleap\REST\Exceptions\InvalidJsonException;
 
 class JsonDecoder
 {
-
     /**
      * Heuristic to decide whether user submitted a string or tried to upload json
      *

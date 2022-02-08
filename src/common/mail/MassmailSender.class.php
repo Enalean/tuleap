@@ -22,7 +22,6 @@
  */
 class MassmailSender
 {
-
     /**
      *
      * Send mails to a group of people and check the max number of emailed people limit.

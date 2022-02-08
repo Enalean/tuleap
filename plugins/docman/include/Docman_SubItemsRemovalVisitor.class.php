@@ -21,7 +21,6 @@
  */
 class Docman_SubItemsRemovalVisitor /* implements Visitor */
 {
-
     public function visitFolder(&$item, $params = [])
     {
         $item->removeAllItems();

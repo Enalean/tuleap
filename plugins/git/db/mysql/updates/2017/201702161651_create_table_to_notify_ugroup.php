@@ -20,7 +20,6 @@
 
 class b201702161651_create_table_to_notify_ugroup extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Add table to store the ugroup to notify after a post receive event";

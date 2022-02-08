@@ -25,7 +25,6 @@ use Tracker_FormElement;
 
 class StructureElementRepresentation
 {
-
     /**
      * @var int
      */

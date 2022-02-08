@@ -20,7 +20,6 @@
 
 class b201206271626_rename_aggregate_to_computed extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Rename aggregate field to computed';

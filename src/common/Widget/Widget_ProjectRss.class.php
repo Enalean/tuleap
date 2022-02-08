@@ -34,7 +34,6 @@ require_once('Widget.class.php');
  */
 class Widget_ProjectRss extends Widget_Rss
 {
-
     public function __construct()
     {
         $request = HTTPRequest::instance();

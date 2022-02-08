@@ -18,7 +18,6 @@
 
 class SVN_AccessFile_DAO extends DataAccessObject
 {
-
     private function addNewVersion(int $group_id, string $content)
     {
         $new_version_number  = 0;

@@ -21,7 +21,6 @@
 
 class ArtifactImport
 {
-
   /** the tracker we are working on */
     public $ath;
 

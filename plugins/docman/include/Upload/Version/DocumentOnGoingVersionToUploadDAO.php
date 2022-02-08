@@ -26,7 +26,6 @@ use Tuleap\DB\DataAccessObject;
 
 class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
 {
-
     public function saveDocumentVersionOngoingUpload(
         int $expiration_date,
         int $item_id,

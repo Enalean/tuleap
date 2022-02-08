@@ -25,7 +25,6 @@
  */
 class RestlerCache
 {
-
     public const PREFIX = 'v';
 
     public const RESTLER_CACHE_FILE = 'routes.php';

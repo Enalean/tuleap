@@ -20,7 +20,6 @@
 
 class b201602081457_add_is_child_into_existing_data extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add _is_child nature into existing artifact links';

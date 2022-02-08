@@ -26,7 +26,6 @@
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class HTML_Table_BoostrapTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     /**
      * @var HTML_Table_Bootstrap
      */

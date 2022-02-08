@@ -20,7 +20,6 @@
 
 class b201305101622_remove_orphan_decorators extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Remove orphan decorators from the DB';

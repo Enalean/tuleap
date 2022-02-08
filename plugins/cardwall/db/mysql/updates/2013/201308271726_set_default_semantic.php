@@ -20,7 +20,6 @@
 
 class b201308271726_set_default_semantic extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

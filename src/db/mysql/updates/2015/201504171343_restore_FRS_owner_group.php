@@ -21,7 +21,6 @@
 
 class b201504171343_restore_FRS_owner_group extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Restore FRS owner group";

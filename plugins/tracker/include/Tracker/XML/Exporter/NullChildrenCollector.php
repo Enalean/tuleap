@@ -20,7 +20,6 @@
 
 class Tracker_XML_Exporter_NullChildrenCollector extends Tracker_XML_ChildrenCollector
 {
-
     public const MAX = 50;
 
     public function addChild($artifact_id, $parent_id)

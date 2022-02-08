@@ -23,7 +23,6 @@
  */
 class Git_GitoliteHousekeeping_ChainOfResponsibility_DoNothing extends Git_GitoliteHousekeeping_ChainOfResponsibility_Command
 {
-
     public function __construct()
     {
     }

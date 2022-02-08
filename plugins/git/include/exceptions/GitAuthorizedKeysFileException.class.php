@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 final class GitAuthorizedKeysFileException extends Exception
 {
-
     public function __construct(string $authorized_keys_file)
     {
         parent::__construct(

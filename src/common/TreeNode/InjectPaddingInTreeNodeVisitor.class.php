@@ -22,7 +22,6 @@ require_once 'GetStateVisitor.class.php';
 
 class TreeNode_InjectPaddingInTreeNodeVisitor extends TreeNode_GetStateVisitor
 {
-
     private static $state_classes = [
         TreeNode_GetStateVisitor::STATE_BLANK => 'tree-blank',
         TreeNode_GetStateVisitor::STATE_NODE  => 'tree-node',

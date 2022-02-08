@@ -24,7 +24,6 @@ use RestBase;
 
 class TimetrackingBase extends RestBase
 {
-
     public const PROJECT_NAME = 'test-timetracking';
     public const TRACKER_NAME = 'timetracking_testing';
 

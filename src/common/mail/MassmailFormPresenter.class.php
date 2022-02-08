@@ -20,7 +20,6 @@
 
 class MassmailFormPresenter
 {
-
     public $project_id;
     public $submit_button;
     public $close_button;

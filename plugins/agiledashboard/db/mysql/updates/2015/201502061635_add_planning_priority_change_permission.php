@@ -24,7 +24,6 @@
 
 class b201502061635_add_planning_priority_change_permission extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add priority change permission in permissions_values table';

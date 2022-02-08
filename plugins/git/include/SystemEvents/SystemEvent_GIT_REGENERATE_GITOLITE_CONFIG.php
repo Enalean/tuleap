@@ -21,7 +21,6 @@
 
 class SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG extends SystemEvent
 {
-
     public const NAME = 'GIT_REGENERATE_GITOLITE_CONFIG';
 
     /** @var Git_GitoliteDriver */

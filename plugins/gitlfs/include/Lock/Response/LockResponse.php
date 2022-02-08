@@ -24,5 +24,4 @@ use JsonSerializable;
 
 interface LockResponse extends JsonSerializable
 {
-
 }

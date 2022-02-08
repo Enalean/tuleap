@@ -20,7 +20,6 @@
 
 class ForgeAccess_AdminRouter
 {
-
     /**
      * @var Codendi_Request
      */

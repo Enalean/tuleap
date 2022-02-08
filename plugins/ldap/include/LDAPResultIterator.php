@@ -30,7 +30,6 @@
  */
 class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     public $list;
     public $key;
     public $valid;

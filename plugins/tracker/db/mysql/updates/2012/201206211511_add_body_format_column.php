@@ -18,7 +18,6 @@
 
 class b201206211511_add_body_format_column extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

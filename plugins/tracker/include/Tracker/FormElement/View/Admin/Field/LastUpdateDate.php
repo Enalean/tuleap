@@ -20,7 +20,6 @@
 
 class Tracker_FormElement_View_Admin_Field_LastUpdateDate extends Tracker_FormElement_View_Admin_Field
 {
-
     public function fetchCustomHelp()
     {
         $html  = '';

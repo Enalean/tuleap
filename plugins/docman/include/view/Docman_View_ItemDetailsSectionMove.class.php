@@ -23,7 +23,6 @@
 
 class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionActions
 {
-
     public $token;
     public function __construct($item, $url, $controller, $params, $token)
     {

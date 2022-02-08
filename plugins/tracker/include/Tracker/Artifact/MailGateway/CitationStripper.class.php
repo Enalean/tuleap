@@ -20,7 +20,6 @@
 
 class Tracker_Artifact_MailGateway_CitationStripper
 {
-
     public const TEXT_CITATION_PATTERN = '/(\n>\s+.*)+/';
     public const HTML_CITATION_PATTERN = '%<blockquote[^>]*>.*</blockquote>%';
     public const DEFAULT_REPLACEMENT   = "\n[citation removed]";

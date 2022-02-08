@@ -20,7 +20,6 @@
 
 class TrackerDateReminder_Logger_Prefix extends TrackerDateReminder_Logger
 {
-
     /**
      * @var TrackerDateReminder_Logger
      */

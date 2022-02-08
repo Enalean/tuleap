@@ -26,7 +26,6 @@
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Rule_NumericalTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testBiggerThan(): void
     {
         $r = new Rule_GreaterThan(-1);

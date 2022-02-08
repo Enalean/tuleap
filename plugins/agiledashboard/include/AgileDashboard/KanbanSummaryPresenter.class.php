@@ -20,7 +20,6 @@
 
 class AgileDashboard_Presenter_KanbanSummaryPresenter
 {
-
     /** @var AgileDashboard_Kanban */
     private $kanban;
 

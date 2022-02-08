@@ -24,7 +24,6 @@ use Tuleap\SVN\Repository\Repository;
 
 class Factory
 {
-
     /**
      * @var Dao
      */

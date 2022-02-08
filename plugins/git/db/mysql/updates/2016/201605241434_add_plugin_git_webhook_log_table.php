@@ -20,7 +20,6 @@
 
 class b201605241434_add_plugin_git_webhook_log_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

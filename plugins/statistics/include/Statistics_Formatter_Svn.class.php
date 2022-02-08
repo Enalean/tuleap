@@ -25,7 +25,6 @@ require_once 'Statistics_Formatter_Scm.class.php';
  */
 class Statistics_Formatter_Svn extends Statistics_Formatter_Scm
 {
-
     /**
      * Constructor of the class
      *

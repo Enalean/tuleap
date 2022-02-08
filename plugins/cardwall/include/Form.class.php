@@ -23,7 +23,6 @@
  */
 class Cardwall_Form
 {
-
     /**
      * @var int
      */

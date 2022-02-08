@@ -23,7 +23,6 @@
  */
 class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
 {
-
     /** @var string */
     private $friendly_url_pattern = '%^/plugins/git
         /(?P<project_name>[^/]*)

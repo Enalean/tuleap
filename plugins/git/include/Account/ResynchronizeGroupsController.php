@@ -34,7 +34,6 @@ use Tuleap\Request\ForbiddenException;
 
 class ResynchronizeGroupsController implements DispatchableWithRequest
 {
-
     /**
      * @var Git_RemoteServer_GerritServerFactory
      */

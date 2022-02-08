@@ -22,7 +22,6 @@ namespace Tuleap\Tracker\REST\v1;
 
 class MoveRepresentation
 {
-
     /**
      * @var int {@type int} {@required true}
      */

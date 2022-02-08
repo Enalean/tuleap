@@ -29,7 +29,6 @@ use Tuleap\Git\REST\TestBase;
  */
 final class RepositoryTest extends TestBase
 {
-
     protected function getResponseForNonMember($request)
     {
         return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);

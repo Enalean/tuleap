@@ -13,7 +13,6 @@
 
 class ArtifactFile
 {
-
     public const ROOT_DIRNAME = 'trackerv3';
 
     /**

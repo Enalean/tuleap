@@ -31,7 +31,6 @@ use Tuleap\REST\JsonCast;
  */
 final class ArtifactFieldValueCommonmarkRepresentation implements ArtifactTextFieldValueRepresentation
 {
-
     /**
      * @var int ID of the field
      */

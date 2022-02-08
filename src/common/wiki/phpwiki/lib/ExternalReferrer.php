@@ -24,7 +24,6 @@ if (! function_exists('isExternalReferrer')) { // better define that in stdlib.p
 
 class SearchEngines
 {
-
     public $searchEngines =
     [
           "search.sli.sympatico.ca/" => ["engine" => "Sympatico", "query1" => "query=", "query2" => "", "url" => "http://www1.sympatico.ca/"],

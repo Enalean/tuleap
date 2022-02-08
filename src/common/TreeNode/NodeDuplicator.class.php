@@ -25,7 +25,6 @@ require_once 'TreeNode.class.php';
  */
 abstract class NodeDuplicator extends TreeNode
 {
-
     public function __construct(TreeNode $node)
     {
         parent::__construct($node->getData(), $node->getId());

@@ -29,7 +29,6 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
  */
 final class CampaignsTest extends BaseTest
 {
-
     public function testGetCampaign(): void
     {
         $expected_campaign = $this->valid_73_campaign;

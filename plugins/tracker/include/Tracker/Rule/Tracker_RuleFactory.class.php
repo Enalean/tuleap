@@ -26,7 +26,6 @@
 */
 class Tracker_RuleFactory
 {
-
     /**
      *
      * @var Tracker_RuleDao

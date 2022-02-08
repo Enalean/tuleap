@@ -21,7 +21,6 @@
 
 class AgileDashboard_KanbanColumnFactory
 {
-
     /**
      * @var AgileDashboard_KanbanUserPreferences
      */

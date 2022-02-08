@@ -25,7 +25,6 @@ use Tracker_FormElement_Field;
 
 final class FeedbackFieldCollector implements FeedbackFieldCollectorInterface
 {
-
     /**
      * @var Tracker_FormElement_Field[]
      */

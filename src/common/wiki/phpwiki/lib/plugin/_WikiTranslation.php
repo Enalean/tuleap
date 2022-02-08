@@ -126,7 +126,6 @@ require_once('lib/PageList.php');
 
 class WikiPlugin__WikiTranslation extends WikiPlugin
 {
-
     public function getName()
     {
         return _("_WikiTranslation");

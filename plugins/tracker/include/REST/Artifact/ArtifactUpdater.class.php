@@ -24,7 +24,6 @@ use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresenta
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_REST_Artifact_ArtifactUpdater
 {
-
     /** @var Tracker_REST_Artifact_ArtifactValidator */
     private $artifact_validator;
 

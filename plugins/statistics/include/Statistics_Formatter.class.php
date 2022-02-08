@@ -22,7 +22,6 @@
  */
 class Statistics_Formatter
 {
-
     private $separator;
     public $startDate;
     public $endDate;

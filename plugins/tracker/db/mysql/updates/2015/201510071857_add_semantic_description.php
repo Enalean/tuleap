@@ -21,7 +21,6 @@
 
 class b201510071857_add_semantic_description extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Add table to store semantic description";

@@ -21,7 +21,6 @@
 
 class AgileDashboard_PermissionsManager
 {
-
     public function userCanAdministrate(PFUser $user, $group_id)
     {
         return $user->isAdmin($group_id);

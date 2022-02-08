@@ -26,7 +26,6 @@ use Tuleap\AgileDashboard\Planning\XML\XMLPlanning;
  */
 class AgileDashboard_XMLImporter
 {
-
     /**
      *
      * @param array $tracker_mappings

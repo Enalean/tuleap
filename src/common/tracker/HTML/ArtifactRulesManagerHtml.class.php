@@ -28,7 +28,6 @@
 */
 class ArtifactRulesManagerHtml extends ArtifactRulesManager
 {
-
     public $artifact_type;
     public $href;
 

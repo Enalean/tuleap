@@ -27,7 +27,6 @@ use Tuleap\Label\Labelable;
  */
 class PullRequest implements Labelable
 {
-
     public const STATUS_ABANDONED = 'A';
     public const STATUS_MERGED    = 'M';
     public const STATUS_REVIEW    = 'R';

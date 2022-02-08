@@ -22,8 +22,6 @@
 
 class Docman_View_ItemDetailsSectionReferences extends Docman_View_ItemDetailsSection
 {
-
-
     public function __construct($item, $url)
     {
         parent::__construct($item, $url, 'references', dgettext('tuleap-docman', 'References'));

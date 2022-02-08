@@ -24,7 +24,6 @@ use Tuleap\Layout\IncludeAssets;
 
 class Tracker_Report_HeaderRenderer
 {
-
     /**
      * @var TemplateRenderer
      */

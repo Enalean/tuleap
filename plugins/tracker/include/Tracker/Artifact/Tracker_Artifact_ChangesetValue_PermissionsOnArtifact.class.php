@@ -29,7 +29,6 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValuePermissionsOnArtifactRepresen
  */
 class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Artifact_ChangesetValue
 {
-
     /**
      * @var array<int, string>
      */

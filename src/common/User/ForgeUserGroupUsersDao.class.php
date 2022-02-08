@@ -20,7 +20,6 @@
 
 class User_ForgeUserGroupUsersDao extends DataAccessObject
 {
-
     public function getUsersByForgeUserGroupId($ugroup_id)
     {
         $ugroup_id = $this->da->escapeInt($ugroup_id);

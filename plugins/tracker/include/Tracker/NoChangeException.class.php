@@ -19,7 +19,6 @@
  */
 class Tracker_NoChangeException extends Tracker_Exception
 {
-
     /**
      *
      * @param int $artifact_id

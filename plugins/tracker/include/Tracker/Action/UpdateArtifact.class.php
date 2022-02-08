@@ -25,7 +25,6 @@ use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 class Tracker_Action_UpdateArtifact
 {
-
     /** @var Artifact */
     private $artifact;
 

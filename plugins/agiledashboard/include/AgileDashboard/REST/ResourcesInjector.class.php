@@ -32,7 +32,6 @@ use Tuleap\Project\REST\ProjectResourceReference;
  */
 class AgileDashboard_REST_ResourcesInjector
 {
-
     public function populate(Luracast\Restler\Restler $restler)
     {
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\AgileDashboardProjectResource', ProjectRepresentation::ROUTE);

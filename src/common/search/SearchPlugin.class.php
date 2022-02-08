@@ -20,7 +20,6 @@
 
 class Search_SearchPlugin
 {
-
     public const RESULTS_PER_QUERY = 15;
 
     /**

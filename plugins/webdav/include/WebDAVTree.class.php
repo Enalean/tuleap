@@ -24,7 +24,6 @@
  */
 class WebDAVTree extends \Sabre\DAV\Tree
 {
-
     /**
      * Tests if the release destination is a package
      * we allow moving releases only within the same project

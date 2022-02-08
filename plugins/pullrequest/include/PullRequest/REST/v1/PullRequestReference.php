@@ -27,7 +27,6 @@ use Tuleap\PullRequest\PullRequest;
  */
 class PullRequestReference
 {
-
     /**
      * @var int id
      */

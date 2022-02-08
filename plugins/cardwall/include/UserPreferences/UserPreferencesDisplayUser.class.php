@@ -20,7 +20,6 @@
 
 class Cardwall_UserPreferences_UserPreferencesDisplayUser implements Tracker_CardDisplayPreferences
 {
-
     public const ASSIGNED_TO_USERNAME_PREFERENCE_NAME = 'AD_cardwall_assign_to_display_username_';
 
     public const DISPLAY_USERNAMES = 0;

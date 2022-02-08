@@ -26,7 +26,6 @@ require_once 'ServiceUsageDao.class.php';
  */
 class Project_Service_ServiceUsageFactory
 {
-
     /** @var Project_Service_ServiceUsageDao */
     private $dao;
 

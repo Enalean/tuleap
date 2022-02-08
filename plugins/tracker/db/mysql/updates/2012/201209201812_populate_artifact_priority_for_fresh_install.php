@@ -20,7 +20,6 @@
 
 class b201209201812_populate_artifact_priority_for_fresh_install extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

@@ -28,7 +28,6 @@ use ProjectManager;
 
 class ReferencesBuilder
 {
-
     /**
      * @var CompatibilityDao
      */

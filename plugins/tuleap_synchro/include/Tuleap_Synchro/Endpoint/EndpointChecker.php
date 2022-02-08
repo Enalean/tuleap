@@ -27,7 +27,6 @@ use Laminas\Uri\Exception\InvalidUriException;
 
 class EndpointChecker
 {
-
     /**
      * @var Valid_HTTPURI
      */

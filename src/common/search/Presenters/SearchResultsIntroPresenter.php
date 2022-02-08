@@ -20,7 +20,6 @@
 
 class Search_SearchResultsIntroPresenter
 {
-
     private $results;
 
     /** @var  string */

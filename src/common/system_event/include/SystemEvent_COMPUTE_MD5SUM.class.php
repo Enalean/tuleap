@@ -26,7 +26,6 @@
  */
 class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
 {
-
     /**
      * Set multiple logs
      *

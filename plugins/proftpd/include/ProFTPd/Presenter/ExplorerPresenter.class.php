@@ -26,7 +26,6 @@ use Project;
 
 class ExplorerPresenter
 {
-
     /**
      * @var DirectoryPathCollection
      */

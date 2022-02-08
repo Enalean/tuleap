@@ -29,7 +29,6 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksFullRepresentati
  */
 class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_ChangesetValue
 {
-
     /**
      * @var Tracker_ArtifactLinkInfo[]
      * @psalm-var array<mixed,Tracker_ArtifactLinkInfo>

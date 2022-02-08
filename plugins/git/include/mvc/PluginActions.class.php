@@ -21,7 +21,6 @@
 
 class PluginActions
 {
-
     protected $controller;
 
     /** @var Codendi_Request*/

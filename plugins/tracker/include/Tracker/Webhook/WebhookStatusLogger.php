@@ -25,7 +25,6 @@ use Tuleap\Webhook\Webhook;
 
 class WebhookStatusLogger implements StatusLogger
 {
-
     /**
      * @var WebhookDao
      */

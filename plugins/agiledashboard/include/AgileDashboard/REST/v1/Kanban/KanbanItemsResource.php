@@ -48,7 +48,6 @@ use UserManager;
 
 class KanbanItemsResource extends AuthenticatedResource
 {
-
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;
 

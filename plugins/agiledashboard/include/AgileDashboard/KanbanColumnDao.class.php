@@ -21,7 +21,6 @@
 
 class AgileDashboard_KanbanColumnDao extends DataAccessObject
 {
-
     public function getColumnWipLimit($kanban_id, $column_id)
     {
         $kanban_id = $this->da->escapeInt($kanban_id);

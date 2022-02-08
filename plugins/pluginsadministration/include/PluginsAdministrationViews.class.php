@@ -30,7 +30,6 @@ use Tuleap\PluginsAdministration\PluginPropertiesPresenter;
 
 class PluginsAdministrationViews extends Views
 {
-
     /** @var PluginManager */
     private $plugin_manager;
 

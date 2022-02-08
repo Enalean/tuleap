@@ -22,7 +22,6 @@
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class ColorHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     private $colorSet = [
         '#FFFFFF' => [255, 255, 255],
         '#000000' => [0, 0, 0],

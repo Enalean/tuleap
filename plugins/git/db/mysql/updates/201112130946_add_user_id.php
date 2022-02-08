@@ -21,7 +21,6 @@
 
 class b201112130946_add_user_id extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

@@ -32,7 +32,6 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class Cardwall_Pane extends AgileDashboard_Pane
 {
-
     /**
      * @var CardwallPaneInfo
      */

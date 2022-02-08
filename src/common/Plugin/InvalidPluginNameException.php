@@ -25,7 +25,6 @@ namespace Tuleap\Plugin;
 
 final class InvalidPluginNameException extends \Exception
 {
-
     public function __construct(string $name)
     {
         parent::__construct(sprintf('invalid plugin name %s', $name));

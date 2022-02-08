@@ -20,7 +20,6 @@
 
 class Search_Presenter_SearchPresenter
 {
-
     public $template = 'site-search';
 
     public $type_of_search;

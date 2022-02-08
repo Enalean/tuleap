@@ -26,7 +26,6 @@ use trackerPlugin;
 
 class TrackerReference extends Reference
 {
-
     /**
      * @return Reference
      */

@@ -18,7 +18,6 @@
 
 class b201602021420_create_plugin_svn_accessfile_history_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Create table plugin_svn_accessfile_history for SVN plugin';

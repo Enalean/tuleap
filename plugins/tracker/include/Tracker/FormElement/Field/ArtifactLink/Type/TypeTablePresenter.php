@@ -24,7 +24,6 @@ use Tracker_FormElement_Field_ArtifactLink;
 
 class TypeTablePresenter
 {
-
     public $table_id;
     public $type;
     public $type_label;

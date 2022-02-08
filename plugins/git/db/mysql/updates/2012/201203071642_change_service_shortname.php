@@ -18,7 +18,6 @@
 
 class b201203071642_change_service_shortname extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

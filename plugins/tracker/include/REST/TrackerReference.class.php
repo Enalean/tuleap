@@ -28,7 +28,6 @@ use Tuleap\Project\REST\ProjectReference;
  */
 class TrackerReference
 {
-
     /**
      * @var int ID of the tracker {@type int} {@required true}
      */

@@ -20,7 +20,6 @@
 
 class Tracker_Artifact_Changeset_CommentNull extends Tracker_Artifact_Changeset_Comment
 {
-
     public function __construct(Tracker_Artifact_Changeset $changeset)
     {
         parent::__construct(

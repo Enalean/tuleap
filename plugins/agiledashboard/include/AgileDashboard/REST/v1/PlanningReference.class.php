@@ -27,7 +27,6 @@ use Tuleap\REST\v1\PlanningReferenceBase;
  */
 class PlanningReference extends PlanningReferenceBase
 {
-
     public function __construct(Planning $planning)
     {
         $this->id  = JsonCast::toInt($planning->getId());

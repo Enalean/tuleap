@@ -40,7 +40,6 @@ use UserManager;
 
 class ExecutionRepresentationBuilder
 {
-
     /**
      * @var UserManager
      */

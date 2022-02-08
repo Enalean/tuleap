@@ -25,7 +25,6 @@ use Psr\Log\LoggerInterface;
 
 class WillBeMappedUser implements ReadyToBeImportedUser
 {
-
     /** @var string */
     private $username;
 

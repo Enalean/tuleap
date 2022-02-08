@@ -243,7 +243,6 @@ final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \T
     private function getExternalExporter(): Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter
     {
         return new class extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter{
-
             protected function getFieldChangeType()
             {
             }

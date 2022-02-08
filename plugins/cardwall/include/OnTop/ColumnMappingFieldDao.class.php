@@ -21,7 +21,6 @@
 
 class Cardwall_OnTop_ColumnMappingFieldDao extends DataAccessObject
 {
-
     public function searchMappingFields($cardwall_tracker_id)
     {
         $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);

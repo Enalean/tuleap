@@ -25,7 +25,6 @@ use ForgeConfig;
 
 class AuthenticatedResource implements iUseAuthentication
 {
-
     public const ACCESS_LEVEL_NORMAL      = 0;
     public const ACCESS_LEVEL_FORBID_ANON = 1;
 

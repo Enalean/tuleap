@@ -21,7 +21,6 @@
 
 class b201112151709_add_repository_namespace extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

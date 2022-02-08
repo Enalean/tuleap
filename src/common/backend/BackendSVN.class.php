@@ -34,7 +34,6 @@ require_once __DIR__ . '/../../www/svn/svn_utils.php';
  */
 class BackendSVN extends Backend
 {
-
     protected $SVNApacheConfNeedUpdate;
     /**
      * @var SvnCoreUsage

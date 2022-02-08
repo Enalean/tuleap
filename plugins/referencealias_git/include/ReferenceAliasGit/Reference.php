@@ -26,7 +26,6 @@ use GitPlugin;
 
 class Reference extends \Reference
 {
-
     public function __construct(GitRepository $repository, $keyword, $sha1)
     {
         $base_id       = 0;

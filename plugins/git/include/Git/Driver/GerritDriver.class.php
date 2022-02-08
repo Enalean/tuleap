@@ -23,7 +23,6 @@
  */
 interface Git_Driver_Gerrit
 {
-
     public const CACHE_ACCOUNTS        = 'accounts';
     public const CACHE_GROUPS_INCLUDES = 'groups_byinclude';
 

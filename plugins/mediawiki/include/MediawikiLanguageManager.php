@@ -20,7 +20,6 @@
 
 class MediawikiLanguageManager
 {
-
     /** @var MediawikiLanguageDao */
     private $dao;
 

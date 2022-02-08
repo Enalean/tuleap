@@ -47,7 +47,6 @@ use UserNotExistException;
 
 class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 {
-
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&PostPushCommitArtifactUpdater
      */

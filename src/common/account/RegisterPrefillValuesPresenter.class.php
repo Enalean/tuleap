@@ -19,7 +19,6 @@
 
 class Account_RegisterPrefillValuesPresenter
 {
-
     /** @var Account_RegisterField */
     public $form_loginname;
     /** @var Account_RegisterField */

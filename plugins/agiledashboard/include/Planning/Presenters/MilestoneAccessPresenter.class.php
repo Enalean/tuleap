@@ -25,7 +25,6 @@
  */
 class Planning_Presenter_MilestoneAccessPresenter
 {
-
     /**
      * @var Planning_Milestone[]
      */

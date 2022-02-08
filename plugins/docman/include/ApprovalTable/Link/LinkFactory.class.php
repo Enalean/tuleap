@@ -28,7 +28,6 @@
  */
 class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFactory
 {
-
     /** @var Docman_LinkVersion */
     private $itemVersion;
 

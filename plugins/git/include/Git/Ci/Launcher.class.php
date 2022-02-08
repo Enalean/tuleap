@@ -28,7 +28,6 @@
  */
 class Git_Ci_Launcher
 {
-
     /** @var Jenkins_Client */
     private $jenkins_client;
 

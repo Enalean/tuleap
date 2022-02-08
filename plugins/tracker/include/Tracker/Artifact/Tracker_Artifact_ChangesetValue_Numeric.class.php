@@ -24,7 +24,6 @@
  */
 abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_ChangesetValue
 {
-
     /**
      * @var mixed (int or float)
      */

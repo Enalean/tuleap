@@ -20,7 +20,6 @@
 
 abstract class Git_AdminMirrorPresenter extends Git_AdminPresenter
 {
-
     public $manage_mirrors = true;
 
     public $mirrors_active = 'tlp-tab-active';

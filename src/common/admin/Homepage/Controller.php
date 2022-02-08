@@ -25,7 +25,6 @@ use Tuleap\Layout\HomePage\StatisticsCollectionBuilder;
 
 class Admin_Homepage_Controller
 {
-
     /**
      * @var Response
      */

@@ -20,7 +20,6 @@
 
 class b201605131519_add_repo_dest_id_for_pull_requests extends ForgeUpgrade_Bucket // phpcs:ignore
 {
-
     public function description()
     {
         return <<<EOT

@@ -27,7 +27,6 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class ProjectTrackerTest extends TrackerBase
 {
-
     public function testProjectAdministratorHaveAllTheTrackersOfTheProject()
     {
         $url = 'projects/' . $this->tracker_administrator_project_id . '/trackers?' . http_build_query([

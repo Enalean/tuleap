@@ -20,7 +20,6 @@
 
 class b201310301030_add_body_format_on_field_text_changeset extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add body format column on tracker_changeset_value_text';

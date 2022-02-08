@@ -20,7 +20,6 @@
 
 class Search_SearchPanePresenter
 {
-
     /** @var string */
     public $title;
 

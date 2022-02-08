@@ -22,7 +22,6 @@ namespace Tuleap\HudsonSvn\Plugin;
 
 class HudsonSvnPluginDescriptor extends \PluginDescriptor
 {
-
     public function __construct()
     {
         parent::__construct(

@@ -23,7 +23,6 @@
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class TimeIntervalTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testItRefusesNegativeTimeStamps(): void
     {
         $this->assertInvalidIntervalTimestamps(-1, 1);

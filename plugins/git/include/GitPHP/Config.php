@@ -32,7 +32,6 @@ namespace Tuleap\Git\GitPHP;
  */
 class Config
 {
-
     /**
      * instance
      *

@@ -20,7 +20,6 @@
 
 class GitPresenters_AdminMassUpdateSelectRepositoriesPresenter extends GitPresenters_AdminPresenter
 {
-
     /**
      * @var CSRFSynchronizerToken
      */

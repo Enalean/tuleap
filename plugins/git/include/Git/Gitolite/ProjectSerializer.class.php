@@ -24,7 +24,6 @@ use Tuleap\Git\PathJoinUtil;
 
 class Git_Gitolite_ProjectSerializer
 {
-
     public const OBJECT_SIZE_LIMIT = 52428800;
 
     /**

@@ -20,5 +20,4 @@
 
 class GitRepoNotReadableException extends Exception
 {
-
 }

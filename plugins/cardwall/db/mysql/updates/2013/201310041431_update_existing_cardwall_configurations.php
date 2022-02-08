@@ -23,7 +23,6 @@
 
 class b201310041431_update_existing_cardwall_configurations extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

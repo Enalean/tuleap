@@ -25,7 +25,6 @@ use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 
 class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
     /**
      * Fetch the element for the update artifact form
      *

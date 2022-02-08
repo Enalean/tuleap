@@ -21,5 +21,4 @@
 
 class SVN_SQLRequestNotSuccededException extends Exception
 {
-
 }

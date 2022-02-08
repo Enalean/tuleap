@@ -24,7 +24,6 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 class DirectoryPathParser_CleanPathTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function setUp(): void
     {
         parent::setUp();

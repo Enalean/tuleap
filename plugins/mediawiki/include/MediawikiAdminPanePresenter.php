@@ -20,7 +20,6 @@
 
 class MediawikiAdminPanePresenter
 {
-
     /** @var Project */
     protected $project;
 

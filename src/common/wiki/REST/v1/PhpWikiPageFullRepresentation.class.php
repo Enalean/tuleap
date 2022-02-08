@@ -31,7 +31,6 @@ use WikiPageVersionFactory;
  */
 class PhpWikiPageFullRepresentation extends PhpWikiPageRepresentation
 {
-
     /**
      * @var int {@type int}
      */

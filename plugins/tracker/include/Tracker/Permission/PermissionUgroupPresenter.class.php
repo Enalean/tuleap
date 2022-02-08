@@ -20,7 +20,6 @@
 
 class Tracker_Permission_PermissionUgroupPresenter
 {
-
     private $id;
     private $name;
     private $url;

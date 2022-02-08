@@ -27,7 +27,6 @@ use UserManager;
 
 class JWTGenerator
 {
-
     /** @var UserManager */
     private $user_manager;
 

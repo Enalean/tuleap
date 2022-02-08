@@ -35,7 +35,6 @@ namespace Tuleap\Git\GitPHP;
  */
 class DiffExe
 {
-
     /**
      * binary
      *

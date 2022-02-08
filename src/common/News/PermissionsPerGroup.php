@@ -36,7 +36,6 @@ use Tuleap\Request\NotFoundException;
 
 class PermissionsPerGroup implements DispatchableWithRequest
 {
-
     /**
      * Is able to process a request routed by FrontRouter
      *

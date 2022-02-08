@@ -28,7 +28,6 @@ use ReferenceManager;
 
 class ReferencesBuilder
 {
-
     /**
      * @var Dao
      */

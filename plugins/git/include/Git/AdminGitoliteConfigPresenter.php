@@ -21,7 +21,6 @@
 
 class Git_AdminGitoliteConfigPresenter extends Git_AdminPresenter
 {
-
     public $manage_gitolite_config = true;
     public $gitolite_config_active = 'tlp-tab-active';
     public $regenerate_gitolite_configuration;

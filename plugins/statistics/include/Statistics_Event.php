@@ -20,7 +20,6 @@
 
 class Statistics_Event
 {
-
     /**
      * Get the entries to display in statistics/frequence
      *

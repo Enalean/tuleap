@@ -44,7 +44,6 @@ function group_get_object_by_name($groupname)
 
 class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     //associative array of data from db
     public $data_array;
 

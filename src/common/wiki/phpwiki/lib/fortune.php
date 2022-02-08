@@ -11,7 +11,6 @@ Main methods to use:
 */
 class Fortune
 {
-
     public function quoteFromDir($dir)
     {
         $amount = 0;

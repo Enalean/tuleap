@@ -23,7 +23,6 @@ use Tuleap\Dashboard\Project\ProjectDashboardController;
 
 abstract class HudsonJobWidget extends HudsonWidget
 {
-
     public $widget_id;
     public $group_id;
 

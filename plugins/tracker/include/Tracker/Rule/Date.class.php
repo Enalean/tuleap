@@ -27,7 +27,6 @@
  */
 class Tracker_Rule_Date extends Tracker_Rule
 {
-
     public const COMPARATOR_EQUALS                 = '=';
     public const COMPARATOR_NOT_EQUALS             = '≠';
     public const COMPARATOR_LESS_THAN              = '<';

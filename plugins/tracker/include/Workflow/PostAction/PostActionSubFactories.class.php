@@ -30,7 +30,6 @@
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Transition_PostActionSubFactories
 {
-
     /** @var Transition_PostActionSubFactory[] */
     private $factories;
 

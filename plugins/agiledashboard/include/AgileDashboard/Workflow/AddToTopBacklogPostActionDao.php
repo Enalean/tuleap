@@ -27,7 +27,6 @@ use Tuleap\DB\DataAccessObject;
 
 class AddToTopBacklogPostActionDao extends DataAccessObject
 {
-
     /**
      * @psalm-return list<array{id: int, transition_id: int}>
      */

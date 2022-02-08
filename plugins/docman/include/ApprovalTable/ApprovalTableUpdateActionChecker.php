@@ -25,7 +25,6 @@ namespace Tuleap\Docman\ApprovalTable;
 
 class ApprovalTableUpdateActionChecker
 {
-
     /**
      * @var ApprovalTableRetriever
      */

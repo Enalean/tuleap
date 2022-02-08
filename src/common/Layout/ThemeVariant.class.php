@@ -20,7 +20,6 @@
 
 class ThemeVariant
 {
-
     public const PREFERENCE_NAME = 'theme_variant';
 
     /** @var string */

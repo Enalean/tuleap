@@ -20,7 +20,6 @@
 
 class User_ForgeUserGroupPermissionsDao extends DataAccessObject
 {
-
     public function permissionExistsForUGroup($user_group_id, $permission_id)
     {
         $user_group_id = $this->da->escapeInt($user_group_id);

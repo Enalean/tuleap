@@ -20,7 +20,6 @@
 
 class Tracker_Hierarchy_CyclicHierarchyException extends Exception
 {
-
     public function __construct()
     {
         parent::__construct(dgettext('tuleap-tracker', 'Tracker hierarchy is Cyclic'));

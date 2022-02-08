@@ -21,7 +21,6 @@ namespace User\XML\Import;
 
 abstract class ActionToBeTakenForUser implements User
 {
-
     /** @var string */
     protected $username;
 

@@ -20,7 +20,6 @@
 
 class b201205231210_add_notification_occurence_column extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

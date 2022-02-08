@@ -25,5 +25,4 @@ namespace Tuleap;
 
 class InvalidDirectoryException extends \RuntimeException
 {
-
 }

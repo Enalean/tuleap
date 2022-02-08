@@ -20,7 +20,6 @@
 
 class AgileDashboardConfigurationResponse
 {
-
     /** @var Project */
     private $project;
 

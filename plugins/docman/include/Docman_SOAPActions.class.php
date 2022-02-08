@@ -23,7 +23,6 @@
 
 class Docman_SOAPActions extends Docman_Actions
 {
-
     /**
      * Append a chunk of data to a file
      */

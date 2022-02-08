@@ -20,7 +20,6 @@
 
 class User_ForgeUserGroupUsersManager
 {
-
     /** @var User_ForgeUserGroupUsersDao */
     private $users_dao;
 

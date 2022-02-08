@@ -26,7 +26,6 @@ require_once dirname(__FILE__) . '/../../constants.php';
  */
 class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
 {
-
     /**
      * @var Cardwall_FieldProviders_SemanticStatusFieldRetriever
      */

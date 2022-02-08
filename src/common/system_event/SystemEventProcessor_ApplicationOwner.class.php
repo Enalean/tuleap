@@ -24,7 +24,6 @@
 
 class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor
 {
-
     public function getOwner()
     {
         return SystemEvent::OWNER_APP;

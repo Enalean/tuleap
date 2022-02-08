@@ -20,7 +20,6 @@
 
 class b201704031658_create_svn_notif_group_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Create the table plugin_svn_notification_ugroups for SVN plugin';

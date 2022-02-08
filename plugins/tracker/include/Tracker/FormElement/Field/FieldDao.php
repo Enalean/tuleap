@@ -27,7 +27,6 @@ use DataAccessResult;
 
 class FieldDao extends DataAccessObject
 {
-
     public function searchByTrackerIdAndName($tracker_id, $name)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);

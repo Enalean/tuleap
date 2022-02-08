@@ -20,7 +20,6 @@
 
 class b201701061020_add_missing_index_full_history extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Add missing index in plugin_git_full_history";

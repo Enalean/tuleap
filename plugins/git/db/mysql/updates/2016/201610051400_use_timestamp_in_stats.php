@@ -18,7 +18,6 @@
 
 class b201610051400_use_timestamp_in_stats extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Use timestamp instead of days in git stats';

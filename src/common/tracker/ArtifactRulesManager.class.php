@@ -30,8 +30,6 @@ require_once('ArtifactRuleFactory.class.php');
 */
 class ArtifactRulesManager
 {
-
-
     public function __construct()
     {
     }

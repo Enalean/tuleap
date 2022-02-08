@@ -24,7 +24,6 @@
 
 class ProjectLinksPluginInfo extends PluginInfo
 {
-
     public function __construct($plugin)
     {
         parent::__construct($plugin);

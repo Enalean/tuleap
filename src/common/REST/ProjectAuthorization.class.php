@@ -31,7 +31,6 @@ use Project_AccessNotAdminException;
 
 class ProjectAuthorization
 {
-
     public static function userCanAccessProject(PFUser $user, Project $project, URLVerification $url_verification)
     {
         try {

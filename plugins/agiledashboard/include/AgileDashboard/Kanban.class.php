@@ -21,7 +21,6 @@
 
 class AgileDashboard_Kanban
 {
-
     /** @var int */
     private $id;
 

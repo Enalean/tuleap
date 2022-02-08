@@ -23,7 +23,6 @@
  */
 interface Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
 {
-
     /**
      * @return Tracker_FormElement_Field_List | null
      */

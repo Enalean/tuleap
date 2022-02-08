@@ -20,7 +20,6 @@
 
 class b201403061609_add_gerrit_server_version_and_http_password extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

@@ -27,7 +27,6 @@ use Tuleap\Tracker\Modal\FeatureFlagArtifactModalLinksFieldV2;
 
 class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
 {
-
     /** @var int */
     public $user_id;
 

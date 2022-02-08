@@ -18,7 +18,6 @@
 
 class b201604071310_replace_primary_key_in_table_columns extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Replace primary key in table columns';

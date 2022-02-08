@@ -32,7 +32,6 @@ require_once __DIR__ . '/../bootstrap.php';
  */
 class ArtifactTest extends TrackerBase
 {
-
     protected $project_id;
     protected $tracker_id;
     protected $slogan_field_id;

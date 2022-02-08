@@ -25,7 +25,6 @@
  */
 class BackendService
 {
-
     public function start()
     {
         (new \Tuleap\System\ServiceControl())->execute('tuleap', 'start');

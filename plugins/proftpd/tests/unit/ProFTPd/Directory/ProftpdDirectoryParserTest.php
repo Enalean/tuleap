@@ -24,7 +24,6 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 class DirectoryParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function setUp(): void
     {
         parent::setUp();

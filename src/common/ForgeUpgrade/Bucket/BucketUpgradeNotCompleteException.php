@@ -25,5 +25,4 @@ namespace Tuleap\ForgeUpgrade\Bucket;
 
 class BucketUpgradeNotCompleteException extends \Exception
 {
-
 }

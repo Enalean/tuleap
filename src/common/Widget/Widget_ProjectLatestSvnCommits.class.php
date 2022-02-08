@@ -26,7 +26,6 @@ require_once __DIR__ . '/../../www/svn/svn_utils.php';
 */
 class Widget_ProjectLatestSvnCommits extends Widget_ProjectLatestCommits // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
     public function __construct()
     {
         parent::__construct('projectlatestsvncommits', 'svn_get_revisions');

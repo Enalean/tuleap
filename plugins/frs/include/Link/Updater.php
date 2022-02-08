@@ -23,7 +23,6 @@ namespace Tuleap\FRS\Link;
 
 class Updater
 {
-
     /**
      * @var Retriever
      */

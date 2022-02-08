@@ -23,7 +23,6 @@
  */
 class AgileDashboard_PaneIconLinkPresenter
 {
-
     /** @var string */
     public $uri;
 

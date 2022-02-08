@@ -19,7 +19,6 @@
 
 class Account_TimezoneSelectorPresenter
 {
-
     public bool $has_one_selected;
     public string $placeholder;
     public array $list_of_timezones;

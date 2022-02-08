@@ -20,7 +20,6 @@
 
 class Tracker_Artifact_View_Hierarchy extends Tracker_Artifact_View_View
 {
-
     /** @see Tracker_Artifact_View_View::getTitle() */
     public function getTitle()
     {

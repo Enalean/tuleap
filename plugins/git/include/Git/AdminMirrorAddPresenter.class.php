@@ -20,7 +20,6 @@
 
 class Git_AdminMirrorAddPresenter extends Git_AdminMirrorPresenter
 {
-
     public $btn_submit;
 
     public $id;

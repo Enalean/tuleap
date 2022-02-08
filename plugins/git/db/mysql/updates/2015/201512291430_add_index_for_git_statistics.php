@@ -18,7 +18,6 @@
 
 class b201512291430_add_index_for_git_statistics extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add missing index to speed up statistics generation';

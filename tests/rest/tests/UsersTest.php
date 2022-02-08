@@ -25,7 +25,6 @@ use Test\Rest\TuleapConfig;
  */
 final class UsersTest extends RestBase // phpcs:ignore
 {
-
     /**
  * @var TuleapConfig
 */

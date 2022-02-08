@@ -24,7 +24,6 @@ use Project;
 
 class ProjectQuotaChecker
 {
-
     /**
      * @var \EventManager
      */

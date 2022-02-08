@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Artifact_Changeset_IncomingMailGoldenRetriever
 {
-
     /** @var Tracker_Artifact_Changeset_IncomingMailDao */
     private $dao;
 

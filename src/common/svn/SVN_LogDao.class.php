@@ -20,7 +20,6 @@
 
 class SVN_LogDao extends DataAccessObject
 {
-
     public function searchCommiters($group_id, TimeInterval $interval)
     {
         $group_id  = $this->da->escapeInt($group_id);

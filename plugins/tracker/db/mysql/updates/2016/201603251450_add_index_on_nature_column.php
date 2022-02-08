@@ -20,7 +20,6 @@
 
 class b201603251450_add_index_on_nature_column extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add an index on nature column of the tracker_changeset_value_artifactlink table';

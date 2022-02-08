@@ -23,7 +23,6 @@
  */
 class AgileDashboard_SwimlineRepresentation
 {
-
     /** @var AgileDashboard_CardRepresentation[]*/
     public $cards;
 

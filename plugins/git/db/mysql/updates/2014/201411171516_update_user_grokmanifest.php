@@ -20,7 +20,6 @@
 
 class b201411171516_update_user_grokmanifest extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

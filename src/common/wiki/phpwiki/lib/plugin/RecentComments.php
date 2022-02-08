@@ -67,7 +67,6 @@ class WikiPlugin_RecentComments extends WikiPlugin_RecentChanges
 
 class _RecentChanges_CommentFormatter extends _RecentChanges_HtmlFormatter
 {
-
     public function empty_message()
     {
         return _("No comments found");

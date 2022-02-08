@@ -23,7 +23,6 @@
  */
 class Git_Ci_Dao extends DataAccessObject
 {
-
     /**
      * Retrieve git trigger of a ci job
      *

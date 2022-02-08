@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Cardwall_CardFieldPresenter
 {
-
     /**
      * @var Tracker_FormElement_Field
      */

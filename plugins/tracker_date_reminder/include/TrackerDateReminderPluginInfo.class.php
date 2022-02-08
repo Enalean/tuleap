@@ -20,7 +20,6 @@
 
 class TrackerDateReminderPluginInfo extends PluginFileInfo
 {
-
     public function __construct($plugin)
     {
         parent::__construct($plugin, 'config');

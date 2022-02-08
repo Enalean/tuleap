@@ -29,7 +29,6 @@ require_once 'IProvideDataAccessResult.class.php';
  */
 class DataAccessResultEmpty implements IProvideDataAccessResult
 {
-
     /**
      * @see IProvideDataAccessResult
      * @deprecated

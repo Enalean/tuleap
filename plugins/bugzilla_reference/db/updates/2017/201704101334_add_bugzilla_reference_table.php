@@ -20,7 +20,6 @@
 
 class b201704101334_add_bugzilla_reference_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

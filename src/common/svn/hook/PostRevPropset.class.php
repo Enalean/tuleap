@@ -27,7 +27,6 @@
  */
 class SVN_Hook_PostRevPropset
 {
-
     /** @var SVN_Hooks */
     private $svn_hooks;
 

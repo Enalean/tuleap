@@ -768,7 +768,6 @@ class _RecentChanges_RssFormatter extends _RecentChanges_Formatter
  */
 class _RecentChanges_Rss2Formatter extends _RecentChanges_RssFormatter
 {
-
     public function format($changes)
     {
         include_once('lib/RssWriter2.php');
@@ -1040,7 +1039,6 @@ class WikiPlugin_RecentChanges extends WikiPlugin
 
 class DayButtonBar extends HtmlElement
 {
-
     public function __construct($plugin_args)
     {
         parent::__construct('p', ['class' => 'wiki-rc-action']);

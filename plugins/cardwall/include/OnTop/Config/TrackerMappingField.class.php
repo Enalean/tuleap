@@ -21,7 +21,6 @@
 
 abstract class Cardwall_OnTop_Config_TrackerMappingField extends Cardwall_OnTop_Config_TrackerMapping
 {
-
     /**
      * @var Tracker_FormElement_Field
      */

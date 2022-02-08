@@ -27,7 +27,6 @@ use Tuleap\DB\DataAccessObject;
 
 class NoteDao extends DataAccessObject
 {
-
     public function get($id)
     {
         return $this->getDB()->row('SELECT title, content FROM widget_note WHERE id = ?', $id);

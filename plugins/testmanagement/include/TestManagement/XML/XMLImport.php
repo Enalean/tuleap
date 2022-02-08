@@ -39,7 +39,6 @@ use XML_RNGValidator;
 
 class XMLImport
 {
-
     // Those constants maps testmanagement.rnc
     public const ISSUES      = 'issues';
     public const CAMPAIGNS   = 'campaigns';

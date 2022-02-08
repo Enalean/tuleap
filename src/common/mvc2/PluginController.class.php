@@ -25,7 +25,6 @@
  */
 abstract class MVC2_PluginController extends MVC2_Controller
 {
-
     protected $group_id;
 
     protected function getTemplatesDir()

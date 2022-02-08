@@ -21,7 +21,6 @@
 
 class Codendi_Session extends PHP_Session
 {
-
     protected $session;
     protected $session_namespace_path;
     protected $session_namespace;

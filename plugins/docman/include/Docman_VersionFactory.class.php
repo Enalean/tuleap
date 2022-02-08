@@ -30,7 +30,6 @@ use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
  */
 class Docman_VersionFactory
 {
-
     public function __construct()
     {
     }

@@ -24,7 +24,6 @@
  */
 interface Tracker_CardDisplayPreferences
 {
-
     /**
      * @return bool True if users' avatars should be
  * displayed instead of usernames.

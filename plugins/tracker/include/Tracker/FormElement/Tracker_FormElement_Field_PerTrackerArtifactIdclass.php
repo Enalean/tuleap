@@ -27,7 +27,6 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 
 class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement_Field_ArtifactId
 {
-
     public function getCriteriaWhere($criteria)
     {
         if ($criteria_value = $this->getCriteriaValue($criteria)) {

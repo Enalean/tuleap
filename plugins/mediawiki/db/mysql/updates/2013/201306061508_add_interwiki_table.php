@@ -18,7 +18,6 @@
 
 class b201306061508_add_interwiki_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

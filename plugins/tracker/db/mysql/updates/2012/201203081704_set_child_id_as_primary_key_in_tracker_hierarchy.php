@@ -21,7 +21,6 @@
 
 class b201203081704_set_child_id_as_primary_key_in_tracker_hierarchy extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

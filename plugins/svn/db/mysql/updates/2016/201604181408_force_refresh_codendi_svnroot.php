@@ -18,7 +18,6 @@
 
 class b201604181408_force_refresh_codendi_svnroot extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Force refresh of codendi_svnroot file to change the svnroot in Location';

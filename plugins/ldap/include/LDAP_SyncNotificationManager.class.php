@@ -21,7 +21,6 @@
 
 class LDAP_SyncNotificationManager
 {
-
     private $retentionPeriod;
     private $projectManager;
 

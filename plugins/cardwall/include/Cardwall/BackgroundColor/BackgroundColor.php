@@ -22,7 +22,6 @@ namespace Tuleap\Cardwall\BackgroundColor;
 
 class BackgroundColor
 {
-
     /** @var string */
     private $background_color_name;
 

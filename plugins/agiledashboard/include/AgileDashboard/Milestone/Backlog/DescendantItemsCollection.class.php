@@ -22,7 +22,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class AgileDashboard_Milestone_Backlog_DescendantItemsCollection implements Iterator, Countable
 {
-
     /** @var Artifact[] */
     private $items = [];
 

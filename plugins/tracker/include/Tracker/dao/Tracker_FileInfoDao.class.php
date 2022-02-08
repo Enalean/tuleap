@@ -24,7 +24,6 @@
 
 class Tracker_FileInfoDao extends DataAccessObject
 {
-
     public function __construct()
     {
         parent::__construct();

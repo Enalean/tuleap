@@ -24,7 +24,6 @@ use Tuleap\Project\UserRemover;
 
 class LDAP_CleanUpManager
 {
-
     /*
      * @var retentionPeriod int
      *

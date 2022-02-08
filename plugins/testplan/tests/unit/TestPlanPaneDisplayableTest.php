@@ -32,7 +32,6 @@ use Tuleap\TestManagement\Config;
 
 final class TestPlanPaneDisplayableTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&Config
      */

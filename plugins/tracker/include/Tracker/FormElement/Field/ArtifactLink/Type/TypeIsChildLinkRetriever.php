@@ -30,7 +30,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 
 class TypeIsChildLinkRetriever
 {
-
     /**
      * @var ArtifactLinkFieldValueDao
      */

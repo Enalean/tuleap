@@ -35,7 +35,6 @@ use Tuleap\Git\XmlUgroupRetriever;
 
 class FineGrainedPermissionFactory
 {
-
     /**
      * @var FineGrainedPermissionSorter
      */

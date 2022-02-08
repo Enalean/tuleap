@@ -20,5 +20,4 @@
 
 class PermissionDaoException extends DataAccessQueryException
 {
-
 }

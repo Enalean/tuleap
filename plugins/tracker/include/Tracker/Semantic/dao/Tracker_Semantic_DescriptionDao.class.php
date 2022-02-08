@@ -21,7 +21,6 @@
 
 class Tracker_Semantic_DescriptionDao extends DataAccessObject
 {
-
     public function searchByTrackerId($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);

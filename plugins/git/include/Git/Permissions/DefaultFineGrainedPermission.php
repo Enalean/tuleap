@@ -25,7 +25,6 @@ use Tuleap\User\UserGroup\NameTranslator;
 
 class DefaultFineGrainedPermission
 {
-
     /**
      * @var array
      */

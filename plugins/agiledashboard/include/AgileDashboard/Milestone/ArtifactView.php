@@ -27,7 +27,6 @@ use Tracker_Artifact_View_View;
 
 class ArtifactView extends Tracker_Artifact_View_View
 {
-
     /**
      * @var Planning_Milestone
      */

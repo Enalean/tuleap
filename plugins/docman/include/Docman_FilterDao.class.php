@@ -22,7 +22,6 @@
 
 class Docman_FilterDao extends DataAccessObject
 {
-
     public function searchByReportId($id)
     {
         $sql = sprintf(

@@ -20,7 +20,6 @@
 
 class b201304230915_create_burndown_field_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add burndown build table.';

@@ -18,7 +18,6 @@
 
 class b201403281402_add_index_for_reverse_link extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add Index on artlink to improve lookup of reverse links';

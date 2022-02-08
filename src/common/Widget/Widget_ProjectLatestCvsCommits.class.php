@@ -27,7 +27,6 @@ require_once __DIR__ . '/../../www/cvs/commit_utils.php';
 */
 class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits
 {
-
     public function __construct()
     {
         parent::__construct('projectlatestcvscommits', 'cvs_get_revisions');

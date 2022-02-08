@@ -21,7 +21,6 @@
 
 class b201606271409_add_unique_to_plugin_referencealias_svn extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

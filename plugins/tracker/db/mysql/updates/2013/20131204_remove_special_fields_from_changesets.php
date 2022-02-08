@@ -20,7 +20,6 @@
 
 class b20131204_remove_special_fields_from_changesets extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Remove the values of field subon subby and lud from existing changesets';

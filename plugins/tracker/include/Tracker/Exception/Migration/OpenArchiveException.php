@@ -24,7 +24,6 @@
 
 class Tracker_Exception_Migration_OpenArchiveException extends Exception
 {
-
     public function __construct($archive_path, $error_code)
     {
         $message = 'Impossible to open archive ' . $archive_path . ' error: ' . $error_code;

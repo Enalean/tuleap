@@ -24,7 +24,6 @@ use Tuleap\DB\DataAccessObject;
 
 class IntegrationApiTokenDao extends DataAccessObject
 {
-
     public function storeToken(int $integration_id, string $encrypted_token): void
     {
         $this->getDB()->insertOnDuplicateKeyUpdate(

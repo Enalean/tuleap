@@ -26,7 +26,6 @@ namespace Tuleap\ProFTPd\Directory;
  */
 class DirectoryPathPart
 {
-
     /**
      * The directory or file name
      *

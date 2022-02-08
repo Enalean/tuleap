@@ -28,7 +28,6 @@ use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 class StateManager
 {
-
     /**
      * @var StateStorage
      */

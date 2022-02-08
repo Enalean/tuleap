@@ -24,7 +24,6 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class PaginatedTemporaryFiles
 {
-
     private $total_count;
 
     /**

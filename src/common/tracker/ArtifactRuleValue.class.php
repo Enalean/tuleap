@@ -29,7 +29,6 @@
 */
 class ArtifactRuleValue extends ArtifactRule
 {
-
     public $target_value;
 
     public function __construct($id, $group_artifact_id, $source_field, $source_value, $target_field, $target_value)

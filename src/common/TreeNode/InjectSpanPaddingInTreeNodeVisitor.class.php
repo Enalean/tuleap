@@ -26,7 +26,6 @@ require_once 'GetStateVisitor.class.php';
  */
 class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisitor
 {
-
     /**
      * @var bool
      */

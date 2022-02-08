@@ -26,7 +26,6 @@ use CSRFSynchronizerToken;
 
 class MailGatewayConfigPresenter
 {
-
     /** @var string */
     public $csrf_token;
 

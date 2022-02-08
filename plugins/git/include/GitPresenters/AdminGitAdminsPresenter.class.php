@@ -20,7 +20,6 @@
 
 class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
 {
-
     public const GIT_ADMIN_SELECTBOX_NAME = 'git_admins';
 
     /** @var ProjectUGroup[] */

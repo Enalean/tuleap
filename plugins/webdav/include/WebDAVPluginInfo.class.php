@@ -21,7 +21,6 @@
 
 class WebDAVPluginInfo extends PluginFileInfo
 {
-
     /**
      * Constructor of the class
      *

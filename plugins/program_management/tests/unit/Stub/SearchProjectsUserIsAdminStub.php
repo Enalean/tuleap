@@ -29,7 +29,6 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class SearchProjectsUserIsAdminStub implements SearchProjectsUserIsAdmin
 {
-
     private function __construct(private array $projects)
     {
     }

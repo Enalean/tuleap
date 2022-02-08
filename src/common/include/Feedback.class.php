@@ -21,7 +21,6 @@
 
 class Feedback
 {
-
     /**
      * @var array
      */

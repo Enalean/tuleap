@@ -20,7 +20,6 @@
 
 class b201505061050_rename_to_trafficlights extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

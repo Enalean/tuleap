@@ -27,7 +27,6 @@ use User_UGroup;
 
 class FineGrainedUpdater
 {
-
     /**
      * @var FineGrainedDao
      */

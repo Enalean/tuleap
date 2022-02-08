@@ -18,7 +18,6 @@
 
 class b201311191506_add_gerrit_config_template_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

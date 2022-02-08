@@ -24,7 +24,6 @@
 
 class Statistics_ConfigurationManager
 {
-
     /**
      * @var Statistics_ConfigurationDao
      */

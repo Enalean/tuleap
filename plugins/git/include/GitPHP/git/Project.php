@@ -29,7 +29,6 @@ use Git_Exec;
  */
 class Project
 {
-
 /* internal variables {{{1*/
 
     /**

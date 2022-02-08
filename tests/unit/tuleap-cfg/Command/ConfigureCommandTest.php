@@ -29,7 +29,6 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class ConfigureCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     /**
      * @var vfsStreamDirectory
      */

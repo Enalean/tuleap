@@ -27,7 +27,6 @@ use Tracker;
 
 class ParentTrackerRetriever
 {
-
     /**
      * @var PlanningFactory
      */

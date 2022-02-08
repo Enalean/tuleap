@@ -29,7 +29,6 @@ namespace Tuleap\FRS\LicenseAgreement;
  */
 class NewLicenseAgreement implements LicenseAgreementInterface
 {
-
     /**
      * @var string
      */

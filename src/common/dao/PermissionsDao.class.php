@@ -24,7 +24,6 @@
  */
 class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
 {
-
     public const DUPLICATE_NEW_PROJECT   = 1;
     public const DUPLICATE_SAME_PROJECT  = 2;
     public const DUPLICATE_OTHER_PROJECT = 3;

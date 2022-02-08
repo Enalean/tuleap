@@ -104,7 +104,6 @@ use Tuleap\Request\CollectRoutesEvent;
 
 class pullrequestPlugin extends Plugin // phpcs:ignore
 {
-
     public const PR_REFERENCE_KEYWORD          = 'pr';
     public const PULLREQUEST_REFERENCE_KEYWORD = 'pullrequest';
     public const REFERENCE_NATURE              = 'pullrequest';

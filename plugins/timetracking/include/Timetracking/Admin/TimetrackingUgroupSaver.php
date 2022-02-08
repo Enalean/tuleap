@@ -24,7 +24,6 @@ use Tracker;
 
 class TimetrackingUgroupSaver
 {
-
     /**
      * @var TimetrackingUgroupDao
      */

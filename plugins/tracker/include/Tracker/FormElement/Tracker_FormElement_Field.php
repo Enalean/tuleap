@@ -41,7 +41,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Tracker_FormElement_Field extends Tracker_FormElement implements Tracker_Report_Field, Tracker_FormElement_IAcceptFieldVisitor
 {
-
     protected $has_errors = false;
 
     /**

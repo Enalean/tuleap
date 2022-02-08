@@ -20,7 +20,6 @@
 
 class b201209121717_turn_tables_innodb extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Turn all tracker tables to innodb';

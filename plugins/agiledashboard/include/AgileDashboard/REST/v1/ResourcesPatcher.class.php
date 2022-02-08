@@ -28,7 +28,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 class ResourcesPatcher
 {
-
     /**
      * @var Tracker_Artifact_PriorityManager
      */

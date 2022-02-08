@@ -28,7 +28,6 @@ use SystemEvent;
  */
 class Massmail extends SystemEvent
 {
-
     /**
      * Verbalize the parameters so they are readable and much user friendly in
      * notifications

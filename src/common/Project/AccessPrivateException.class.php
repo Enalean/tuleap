@@ -19,5 +19,4 @@
 
 class Project_AccessPrivateException extends Project_AccessException
 {
-
 }

@@ -24,7 +24,6 @@
 
 class b201502261627_add_plugin_agiledashboard_kanban_configuration_column_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add plugin_agiledashboard_kanban_configuration_column table';

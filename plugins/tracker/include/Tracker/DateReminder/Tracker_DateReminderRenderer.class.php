@@ -19,7 +19,6 @@
 
 class Tracker_DateReminderRenderer
 {
-
     protected $tracker;
     protected $dateReminderFactory;
 

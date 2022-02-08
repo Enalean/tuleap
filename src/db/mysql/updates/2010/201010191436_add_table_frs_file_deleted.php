@@ -20,7 +20,6 @@
 
 class b201010191436_add_table_frs_file_deleted extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

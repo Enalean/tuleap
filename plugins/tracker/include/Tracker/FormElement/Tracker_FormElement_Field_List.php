@@ -32,7 +32,6 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable
 {
-
     public const NONE_VALUE = 100;
 
     protected $bind;

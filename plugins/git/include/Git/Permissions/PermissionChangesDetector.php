@@ -28,7 +28,6 @@ use Project;
 
 class PermissionChangesDetector
 {
-
     /**
      * @var FineGrainedRetriever
      */

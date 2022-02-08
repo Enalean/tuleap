@@ -21,7 +21,6 @@
 
 class b201202101244_shared_field_default_is_0 extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

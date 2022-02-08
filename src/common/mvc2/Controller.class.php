@@ -69,7 +69,6 @@
  */
 abstract class MVC2_Controller
 {
-
     /**
      * @var Codendi_Request
      */

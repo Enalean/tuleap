@@ -26,7 +26,6 @@ use Tuleap\Git\Repository\AdditionalInformationRepresentationRetriever;
 
 class GitRestRouteAdditionalInformations
 {
-
     /**
      * @var Dao
      */

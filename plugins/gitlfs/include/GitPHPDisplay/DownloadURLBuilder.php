@@ -25,7 +25,6 @@ use PFUser;
 
 class DownloadURLBuilder
 {
-
     public function buildDownloadURL(GitRepository $repository, PFUser $user, $file_content)
     {
         if (! $repository->userCanRead($user)) {

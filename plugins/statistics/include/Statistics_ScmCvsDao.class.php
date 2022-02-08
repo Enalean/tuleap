@@ -24,7 +24,6 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
  */
 class Statistics_ScmCvsDao extends DataAccessObject
 {
-
     public $groupFilter = '';
 
     /**

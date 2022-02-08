@@ -27,7 +27,6 @@ use Tuleap\Svn\SvnrootUpdater;
 
 class SystemEventProcessor_Root extends SystemEventProcessor
 {
-
     /**
      * @var SiteCache
      */

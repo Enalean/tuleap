@@ -29,7 +29,6 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
  */
 class Docman_ApprovalTableReminder
 {
-
     /**
      * Remind approval table approvers
      *

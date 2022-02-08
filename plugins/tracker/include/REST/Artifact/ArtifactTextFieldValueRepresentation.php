@@ -25,5 +25,4 @@ namespace Tuleap\Tracker\REST\Artifact;
 
 interface ArtifactTextFieldValueRepresentation
 {
-
 }

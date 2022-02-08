@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest\Criterion;
 
 class StatusClosed implements ISearchOnStatus
 {
-
     public function shouldRetrieveOpenPullRequests()
     {
         return false;

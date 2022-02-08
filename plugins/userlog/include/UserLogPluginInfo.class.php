@@ -25,7 +25,6 @@
 
 class UserLogPluginInfo extends PluginInfo
 {
-
     public function __construct($plugin)
     {
         parent::__construct($plugin);

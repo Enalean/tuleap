@@ -21,7 +21,6 @@
 
 class ArtifactFactory
 {
-
     /**
      * The ArtifactType object.
      *

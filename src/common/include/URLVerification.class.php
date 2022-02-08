@@ -43,7 +43,6 @@ use Tuleap\User\Account\UpdatePasswordController;
  */
 class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     protected $urlChunks = null;
 
     /**

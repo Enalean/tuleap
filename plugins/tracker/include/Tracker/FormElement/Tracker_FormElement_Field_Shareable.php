@@ -25,7 +25,6 @@
  */
 interface Tracker_FormElement_Field_Shareable
 {
-
     /**
      * Fixes original value ids after field duplication.
      *

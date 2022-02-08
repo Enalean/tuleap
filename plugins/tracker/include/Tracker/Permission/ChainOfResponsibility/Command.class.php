@@ -26,7 +26,6 @@
  */
 abstract class Tracker_Permission_Command
 {
-
     public const PERMISSION_PREFIX = 'permissions_';
 
     public const PERMISSION_ADMIN                  = 'ADMIN';

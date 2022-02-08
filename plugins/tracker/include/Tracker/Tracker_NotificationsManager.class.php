@@ -37,7 +37,6 @@ use Tuleap\User\RequestFromAutocompleter;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_NotificationsManager
 {
-
     /** @var Tracker */
     protected $tracker;
 

@@ -20,7 +20,6 @@
 
 class b201609261450_remove_rogue_artifacts extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Remove rogue artifacts';

@@ -20,7 +20,6 @@
 
 class b201607281135_create_plugin_frs_global_permissions extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Create table plugin_frs_global_permissions for frs';

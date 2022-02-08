@@ -20,7 +20,6 @@
 
 class Tracker_FormElement_View_Admin_Field_SubmittedBy extends Tracker_FormElement_View_Admin_Field_List
 {
-
     protected function fetchCustomHelp()
     {
         $html  = '';

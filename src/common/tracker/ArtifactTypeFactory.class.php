@@ -22,7 +22,6 @@
 
 class ArtifactTypeFactory
 {
-
     /**
      * The Group object.
      *

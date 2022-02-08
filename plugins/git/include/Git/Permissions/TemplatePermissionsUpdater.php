@@ -30,7 +30,6 @@ use Project;
 
 class TemplatePermissionsUpdater
 {
-
     public const REQUEST_KEY = 'default_access_rights';
 
     /**

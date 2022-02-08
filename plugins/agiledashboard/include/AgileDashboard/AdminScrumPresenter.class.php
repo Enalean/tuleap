@@ -22,7 +22,6 @@ use Tuleap\AgileDashboard\Event\IScrumAdminSectionControllers;
 
 class AdminScrumPresenter
 {
-
     /** @var int */
     public $group_id;
 

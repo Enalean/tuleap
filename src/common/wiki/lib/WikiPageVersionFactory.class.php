@@ -21,7 +21,6 @@
 
 class WikiPageVersionFactory
 {
-
     /** @return WikiPageVersion */
     public function getInstanceFromRow($row)
     {

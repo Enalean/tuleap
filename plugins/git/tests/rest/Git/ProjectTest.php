@@ -29,7 +29,6 @@ require_once __DIR__ . '/../bootstrap.php';
  */
 class ProjectTest extends TestBase
 {
-
     public function testGetGitRepositories(): void
     {
         $response = $this->getResponse(

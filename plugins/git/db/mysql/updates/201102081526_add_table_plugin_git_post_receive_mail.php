@@ -20,7 +20,6 @@
 
 class b201102081526_add_table_plugin_git_post_receive_mail extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

@@ -22,7 +22,6 @@ namespace Tuleap\SystemEvent\REST\v1;
 
 class PaginatedSystemEventRepresentations
 {
-
     /** @var array */
     public $system_event_representations;
 

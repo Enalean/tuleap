@@ -22,7 +22,6 @@ namespace Tuleap\OpenIDConnectClient\Administration;
 
 class IconPresenter
 {
-
     /**
      * @var string
      */

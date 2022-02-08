@@ -26,7 +26,6 @@ use Tuleap\Project\REST\ProjectReference;
  */
 class PlanningRepresentationBase
 {
-
     public const ROUTE = 'plannings';
 
     /**

@@ -24,7 +24,6 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
 
 /* abstract */ class Docman_View_Display extends Docman_View_Docman
 {
-
     public function _title($params)
     {
         // No title in printer version

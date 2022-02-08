@@ -21,7 +21,6 @@
 
 class MediawikiLanguageDao extends DataAccessObject
 {
-
     public function getUsedLanguageForProject($project_id)
     {
         $project_id = $this->da->escapeInt($project_id);

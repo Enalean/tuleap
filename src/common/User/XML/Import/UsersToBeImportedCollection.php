@@ -21,7 +21,6 @@ namespace User\XML\Import;
 
 class UsersToBeImportedCollection
 {
-
     private $users = [];
 
     public function add(User $user)

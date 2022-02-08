@@ -28,7 +28,6 @@ use Tuleap\REST\JsonDecoder;
 
 class UserGroupQueryParameterParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     /**
      * @var UserGroupQueryParameterParser
      */

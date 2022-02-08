@@ -21,7 +21,6 @@
 
 class SVN_AccessFile_NoFilePresenter
 {
-
     public function access_form_title()
     {
         return $GLOBALS['Language']->getText('svn_admin_access_control', 'access_ctrl');

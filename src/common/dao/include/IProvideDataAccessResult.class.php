@@ -25,7 +25,6 @@
  */
 interface IProvideDataAccessResult extends Iterator, Countable
 {
-
     /**
      * Returns an array from query row or false if no more rows
      * @deprecated

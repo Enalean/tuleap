@@ -24,7 +24,6 @@ use Exception;
 
 class MalformedQueryParameterException extends Exception
 {
-
     public function __construct(?string $message = null)
     {
         if (! isset($message)) {

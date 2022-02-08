@@ -26,7 +26,6 @@
  */
 class GitPluginDescriptor extends PluginDescriptor
 {
-
     public function __construct()
     {
         parent::__construct(dgettext('tuleap-git', 'Git'), false, dgettext('tuleap-git', 'Plugin which provides Git support for Tuleap'));

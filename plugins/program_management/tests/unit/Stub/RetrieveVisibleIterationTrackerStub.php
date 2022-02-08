@@ -30,7 +30,6 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class RetrieveVisibleIterationTrackerStub implements RetrieveVisibleIterationTracker
 {
-
     private ?TrackerReference $tracker;
     private bool $is_visible;
 

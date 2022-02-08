@@ -30,7 +30,6 @@ use Tuleap\User\REST\UserRepresentation;
 
 class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
     public const TYPE = 'users';
 
     public const REGISTERED_USERS_UGROUP_NAME = 'ugroup_2';

@@ -20,7 +20,6 @@
 
 class b201608091537_add_system_references extends ForgeUpgrade_Bucket // phpcs:ignore
 {
-
     public function description()
     {
         return <<<EOT

@@ -23,7 +23,6 @@
  */
 interface Tracker_XML_Exporter_FilePathXMLExporter
 {
-
     /**
      *
      * @return string

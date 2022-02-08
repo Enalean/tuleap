@@ -28,7 +28,6 @@ namespace Tuleap\Git\GitPHP;
  */
 class Blob extends FilesystemObject
 {
-
     /**
      * data
      *

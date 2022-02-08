@@ -26,7 +26,6 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 
 class UserDeletionRetriever
 {
-
     /**
      * @var ArtifactsDeletionDAO
      */

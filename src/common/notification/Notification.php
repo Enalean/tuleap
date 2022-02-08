@@ -20,7 +20,6 @@
 
 class Notification
 {
-
     /** @var array */
     private $emails;
 

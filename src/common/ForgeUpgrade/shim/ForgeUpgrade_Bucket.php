@@ -25,5 +25,4 @@
  */
 abstract class ForgeUpgrade_Bucket extends \Tuleap\ForgeUpgrade\Bucket // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
 }

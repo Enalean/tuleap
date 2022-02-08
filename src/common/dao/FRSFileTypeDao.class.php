@@ -20,7 +20,6 @@
 
 class FRSFileTypeDao extends DataAccessObject
 {
-
     public function listFileTypes($group_id)
     {
         return $this->retrieve("SELECT * FROM frs_filetype ORDER BY type_id");

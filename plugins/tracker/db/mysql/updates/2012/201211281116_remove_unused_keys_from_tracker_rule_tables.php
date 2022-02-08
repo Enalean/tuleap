@@ -20,7 +20,6 @@
 
 class b201211281116_remove_unused_keys_from_tracker_rule_tables extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Remove the unused keys in the tracker rule tables';

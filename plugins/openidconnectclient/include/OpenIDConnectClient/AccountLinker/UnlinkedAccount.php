@@ -33,7 +33,6 @@ namespace Tuleap\OpenIDConnectClient\AccountLinker;
  */
 class UnlinkedAccount
 {
-
     private $id;
     private $provider_id;
     private $user_identifier;

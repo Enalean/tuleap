@@ -35,7 +35,6 @@ use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 class DefinitionRepresentationBuilder
 {
-
     /**
      * @var Tracker_FormElementFactory
      */

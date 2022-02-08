@@ -23,7 +23,6 @@ use PFUser;
 
 class ToBeCreatedUser extends ActionToBeTakenForUser
 {
-
     private static $ALLOWED_ACTIONS = ['create', 'map'];
 
     public const ACTION = 'create';

@@ -24,7 +24,6 @@
 
 class SystemEvent_SVN_AUTHORIZE_TOKENS extends SystemEvent
 {
-
     /** @var BackendSVN */
     private $backend_svn;
 

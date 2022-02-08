@@ -23,8 +23,6 @@
 
 class BackendSystem extends Backend
 {
-
-
     protected $needRefreshUserCache  = false;
     protected $needRefreshGroupCache = false;
 

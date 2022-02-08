@@ -20,7 +20,6 @@
 
 class Tracker_FormElement_View_Admin_Field_CrossReferences extends Tracker_FormElement_View_Admin_Field
 {
-
     /**
      * Fetch the "required" part of field admin
      *

@@ -20,7 +20,6 @@
 
 class Admin_Homepage_Router
 {
-
     /**
      * @var Codendi_Request
      */

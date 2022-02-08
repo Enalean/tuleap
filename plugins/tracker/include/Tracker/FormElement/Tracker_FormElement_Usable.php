@@ -23,7 +23,6 @@
  */
 interface Tracker_FormElement_Usable
 {
-
     /**
      * say if a formElement is used
      *

@@ -20,7 +20,6 @@
 
 class b201011230835_add_column_format_to_artifact_history extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

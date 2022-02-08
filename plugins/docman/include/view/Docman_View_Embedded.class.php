@@ -21,8 +21,6 @@
 
 class Docman_View_Embedded extends Docman_View_Display
 {
-
-
     public function _content($params)
     {
         if (isset($params['version_number'])) {

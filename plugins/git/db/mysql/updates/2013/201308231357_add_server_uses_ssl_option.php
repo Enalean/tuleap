@@ -18,7 +18,6 @@
 
 class b201308231357_add_server_uses_ssl_option extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

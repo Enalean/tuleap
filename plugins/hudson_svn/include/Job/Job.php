@@ -22,7 +22,6 @@ namespace Tuleap\HudsonSvn\Job;
 
 class Job
 {
-
     private $token;
     private $url;
     private $path;

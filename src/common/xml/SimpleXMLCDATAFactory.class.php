@@ -25,7 +25,6 @@
  */
 class XML_SimpleXMLCDATAFactory
 {
-
     public function insert(SimpleXMLElement $parent_node, string $node_name, $node_value): SimpleXMLElement
     {
         $node = $parent_node->addChild($node_name);

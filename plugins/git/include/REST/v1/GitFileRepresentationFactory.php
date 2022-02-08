@@ -27,7 +27,6 @@ use Tuleap\Git\GitPHP\Project;
 
 class GitFileRepresentationFactory
 {
-
     /**
      *
      * @return GitFileContentRepresentation

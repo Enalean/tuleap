@@ -23,7 +23,6 @@ use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter
 {
-
     public $artifact_title;
 
     public $artifact_uri;

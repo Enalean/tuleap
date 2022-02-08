@@ -20,7 +20,6 @@
 
 class b201109151610_add_group_id_index extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

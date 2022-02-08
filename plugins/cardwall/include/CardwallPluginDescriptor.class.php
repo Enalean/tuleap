@@ -24,7 +24,6 @@
  */
 class CardwallPluginDescriptor extends PluginDescriptor
 {
-
     public function __construct()
     {
         parent::__construct(dgettext('tuleap-cardwall', 'Card Wall'), false, dgettext('tuleap-cardwall', 'Electronic card wall for trackers for scrum, kanban, ...'));

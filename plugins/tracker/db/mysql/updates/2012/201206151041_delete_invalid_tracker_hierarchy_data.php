@@ -20,7 +20,6 @@
 
 class b201206151041_delete_invalid_tracker_hierarchy_data extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Delete invalid tracker hierarchy data';

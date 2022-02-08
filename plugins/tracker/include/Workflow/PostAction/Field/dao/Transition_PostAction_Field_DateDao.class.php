@@ -24,7 +24,6 @@
  */
 class Transition_PostAction_Field_DateDao extends Transition_PostAction_FieldDao
 {
-
     public function __construct()
     {
         parent::__construct();

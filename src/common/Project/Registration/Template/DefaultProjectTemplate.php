@@ -28,7 +28,6 @@ use Tuleap\Glyph\GlyphFinder;
 
 class DefaultProjectTemplate implements ProjectTemplate
 {
-
     private const NAME = 'default-and-company-template';
 
     /**

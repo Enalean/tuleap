@@ -28,7 +28,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactNodeBuilder
 {
-
     /**
      * @var NodeBuilderFactory
      */

@@ -26,7 +26,6 @@ use Tuleap\OAuth2Server\OAuth2ServerException;
 
 final class OAuth2MissingVerifierStringException extends \LogicException implements OAuth2ServerException
 {
-
     public function __construct(OAuth2App $app)
     {
         parent::__construct(

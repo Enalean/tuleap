@@ -21,7 +21,6 @@
 
 class NewsBytesDao extends DataAccessObject
 {
-
     public function __construct()
     {
         parent::__construct();

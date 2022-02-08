@@ -20,7 +20,6 @@
 
 class Search_SearchController
 {
-
     public const DEFAULT_SEARCH = Search_SearchProject::NAME;
 
     /**

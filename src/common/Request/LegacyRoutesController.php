@@ -26,7 +26,6 @@ use Tuleap\Layout\BaseLayout;
 
 class LegacyRoutesController implements DispatchableWithRequest
 {
-
     private $script_location;
 
     public function __construct($script_location)

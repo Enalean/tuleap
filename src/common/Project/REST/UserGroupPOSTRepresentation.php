@@ -24,7 +24,6 @@ namespace Tuleap\Project\REST;
  */
 class UserGroupPOSTRepresentation
 {
-
     /**
      * @var int {@type int} {@required true}
      */

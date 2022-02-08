@@ -21,7 +21,6 @@
 
 class PermissionsUGroupMapper
 {
-
     private $mapping = [
         ProjectUGroup::ANONYMOUS     => ProjectUGroup::ANONYMOUS,
         ProjectUGroup::AUTHENTICATED => ProjectUGroup::REGISTERED,

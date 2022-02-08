@@ -29,7 +29,6 @@ use Tuleap\CSRFSynchronizerTokenPresenter;
 
 class Mirroring extends Pane
 {
-
     /**
      * @var Git_Mirror_Mirror[]
      */

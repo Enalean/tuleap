@@ -23,7 +23,6 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_Download extends Docman_View_View
 {
-
     /* protected */ public function _content($params)
     {
         $url_parameters = ['action' => 'show', 'id' => $params['item']->getId()];

@@ -18,7 +18,6 @@
 
 class b201206061045_create_reminder_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

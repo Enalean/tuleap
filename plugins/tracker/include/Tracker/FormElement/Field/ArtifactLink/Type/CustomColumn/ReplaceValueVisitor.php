@@ -54,7 +54,6 @@ use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
  */
 class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
 {
-
     /**
      * @var Tracker_Artifact_Changeset
      */

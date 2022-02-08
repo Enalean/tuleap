@@ -27,7 +27,6 @@ use ParagonIE\EasyDB\EasyDB;
 
 final class EasyDBWrapper implements DBWrapperInterface
 {
-
     /**
      * @var EasyDB
      */

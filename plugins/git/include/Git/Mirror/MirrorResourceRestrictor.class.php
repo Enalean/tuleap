@@ -20,7 +20,6 @@
 
 class Git_MirrorResourceRestrictor
 {
-
     /**
      * @var Git_RestrictedMirrorDao
      */

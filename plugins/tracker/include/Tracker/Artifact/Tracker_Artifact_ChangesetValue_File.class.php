@@ -26,7 +26,6 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
  */
 class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetValue implements Countable, ArrayAccess, Iterator
 {
-
     /**
      * @var array of Tracker_FileInfo
      */

@@ -24,7 +24,6 @@ use Tuleap\DB\DataAccessObject;
 
 class Dao extends DataAccessObject
 {
-
     public function searchAllByPullRequestId($pull_request_id)
     {
         $sql = 'SELECT SQL_CALC_FOUND_ROWS *

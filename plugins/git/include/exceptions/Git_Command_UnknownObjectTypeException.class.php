@@ -24,5 +24,4 @@
 
 class Git_Command_UnknownObjectTypeException extends Exception
 {
-
 }

@@ -22,7 +22,6 @@
 
 class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
         /**
          *  ArtifactHtml() - constructor
          *

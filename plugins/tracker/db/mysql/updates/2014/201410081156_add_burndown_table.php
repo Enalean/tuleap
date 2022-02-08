@@ -18,7 +18,6 @@
 
 class b201410081156_add_burndown_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add table for burndown form elements';

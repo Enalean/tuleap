@@ -28,7 +28,6 @@ use DateTimeInterface;
 
 class JsonCast
 {
-
     /**
      * Cast a value to int if it's not null
      * @psalm-ignore-nullable-return

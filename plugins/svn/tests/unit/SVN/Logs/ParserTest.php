@@ -25,7 +25,6 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testItReturnsALogCache()
     {
         $parser = new Parser();

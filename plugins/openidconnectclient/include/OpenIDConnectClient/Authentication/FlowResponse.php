@@ -24,7 +24,6 @@ use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 class FlowResponse
 {
-
     /**
      * @var Provider
      */

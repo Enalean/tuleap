@@ -24,7 +24,6 @@
  */
 class UserTest extends SOAPBase // phpcs:ignore
 {
-
     public function setUp(): void
     {
         parent::setUp();

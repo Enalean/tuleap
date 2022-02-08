@@ -28,7 +28,6 @@ require_once __DIR__ . '/../../../www/project/admin/project_admin_utils.php';
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class SystemEvent_PROJECT_RENAME extends SystemEvent
 {
-
     /**
      * Set multiple logs
      *

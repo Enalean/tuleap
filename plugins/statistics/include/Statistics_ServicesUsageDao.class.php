@@ -23,7 +23,6 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 
 class Statistics_ServicesUsageDao extends DataAccessObject
 {
-
     private $end_date;
     private $start_date;
 

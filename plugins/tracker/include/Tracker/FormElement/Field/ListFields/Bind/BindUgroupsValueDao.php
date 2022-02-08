@@ -26,7 +26,6 @@ use DataAccessObject;
 
 class BindUgroupsValueDao extends DataAccessObject
 {
-
     public function __construct()
     {
         parent::__construct();

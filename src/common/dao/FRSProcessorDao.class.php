@@ -20,7 +20,6 @@
 
 class FRSProcessorDao extends DataAccessObject
 {
-
     public function listProcessors($group_id)
     {
         $sql = sprintf(

@@ -25,7 +25,6 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
  */
 abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Field
 {
-
     protected function buildMatchExpression($field_name, $criteria_value)
     {
         $expr    = '';

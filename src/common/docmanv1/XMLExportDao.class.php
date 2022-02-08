@@ -19,7 +19,6 @@
 
 class DocmanV1_XMLExportDao extends DataAccessObject
 {
-
     public function searchAllNonEmptyGroups($group_id)
     {
         return $this->retrieve(

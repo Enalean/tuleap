@@ -24,7 +24,6 @@ use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 
 class Tracker_Semantic_DescriptionFactory implements IBuildSemanticFromXML, IDuplicateSemantic
 {
-
     /**
      * Hold an instance of the class
      * @var self|null

@@ -18,7 +18,6 @@
 
 class b201512211530_force_refresh_svnaccessfile extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Force refresh of SVNAccessFile to correct permissions';

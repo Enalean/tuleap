@@ -21,7 +21,6 @@
 
 interface Tracker_Report_Field extends Tracker_FormElement_IHaveAnId, Tracker_FormElement_Usable
 {
-
     /**
      * Return a label (e.g. usable both in a form or as a column header)
      */

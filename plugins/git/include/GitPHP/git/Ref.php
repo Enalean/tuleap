@@ -36,7 +36,6 @@ use Tuleap\Git\Exceptions\GitRepoRefNotFoundException;
  */
 abstract class Ref extends GitObject
 {
-
     /**
      * refName
      *

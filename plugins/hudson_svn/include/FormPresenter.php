@@ -24,7 +24,6 @@ use ForgeConfig;
 
 class FormPresenter
 {
-
     /**
      * @var string
      */

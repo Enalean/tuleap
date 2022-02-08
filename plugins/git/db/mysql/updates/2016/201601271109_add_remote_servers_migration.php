@@ -18,7 +18,6 @@
 
 class b201601271109_add_remote_servers_migration extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

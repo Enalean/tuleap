@@ -20,7 +20,6 @@
 
 class Tracker_SystemEvent_Tv3Tv5Queue extends SystemEventQueue
 {
-
     public const NAME = 'tv3_tv5_migration';
 
     public function getName()

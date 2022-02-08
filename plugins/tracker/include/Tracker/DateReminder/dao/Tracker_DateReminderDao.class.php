@@ -19,7 +19,6 @@
 
 class Tracker_DateReminderDao extends DataAccessObject
 {
-
     /**
      * Get date reminders
      *

@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 final class IterationCannotBePlannedException extends \Exception implements CannotPlanIntoItselfException
 {
-
     private string $i18n_message;
 
     public function __construct()

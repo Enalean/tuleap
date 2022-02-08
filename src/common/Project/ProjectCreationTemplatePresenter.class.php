@@ -20,7 +20,6 @@
 
 class ProjectCreationTemplatePresenter
 {
-
     /**
      * @var Project
      */

@@ -23,7 +23,6 @@ use Tuleap\Tracker\TrackerColor;
 
 class Tracker_ColorPresenterCollection implements Iterator
 {
-
     /** @var array */
     private $colors = [];
 

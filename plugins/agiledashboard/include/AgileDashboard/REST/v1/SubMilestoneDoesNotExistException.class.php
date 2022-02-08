@@ -23,7 +23,6 @@ use Exception;
 
 class SubMilestoneDoesNotExistException extends Exception
 {
-
     public function __construct($milestone_id)
     {
         parent::__construct('SubMilestone ' . $milestone_id . ' does not exist.');

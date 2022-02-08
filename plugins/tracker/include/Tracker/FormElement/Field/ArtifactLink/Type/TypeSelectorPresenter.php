@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
 class TypeSelectorPresenter
 {
-
     public $types;
     public $select_classes;
     public $select_name;

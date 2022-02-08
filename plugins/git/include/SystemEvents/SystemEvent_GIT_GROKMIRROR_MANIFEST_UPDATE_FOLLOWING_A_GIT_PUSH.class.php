@@ -20,7 +20,6 @@
 
 class SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH extends SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE
 {
-
     public const NAME = 'GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH';
 
     public function process()

@@ -18,7 +18,6 @@
 
 class b201512171700_add_svn_token_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add table svn_token to store SVN authentification token';

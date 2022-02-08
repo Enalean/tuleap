@@ -22,7 +22,6 @@ use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
 
 class Planning_Presenter_MilestoneBurndownSummaryPresenter extends Planning_Presenter_MilestoneSummaryPresenterAbstract
 {
-
     /** @var Tracker_Chart_Data_Burndown */
     private $burndown_data;
 

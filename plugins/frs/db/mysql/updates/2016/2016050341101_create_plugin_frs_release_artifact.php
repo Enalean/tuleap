@@ -20,7 +20,6 @@
 
 class b2016050341101_create_plugin_frs_release_artifact extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Create table plugin_frs_release_artifact for frs plugin';

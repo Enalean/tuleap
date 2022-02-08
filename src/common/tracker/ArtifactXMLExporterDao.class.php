@@ -20,7 +20,6 @@
 
 class ArtifactXMLExporterDao extends DataAccessObject
 {
-
     public function searchArtifacts($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);

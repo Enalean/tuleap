@@ -20,7 +20,6 @@
 
 class Admin_Homepage_LogoFinder
 {
-
     public const PATH       = '/images/homepage-logo.png';
     public const THEME_PATH = '/themes/common';
 

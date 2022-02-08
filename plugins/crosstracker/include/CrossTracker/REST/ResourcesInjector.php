@@ -27,7 +27,6 @@ use Tuleap\CrossTracker\REST\v1\CrossTrackerReportRepresentation;
   */
 class ResourcesInjector
 {
-
     public function populate(\Luracast\Restler\Restler $restler)
     {
         $restler->addAPIClass(

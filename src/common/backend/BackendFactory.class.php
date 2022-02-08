@@ -19,7 +19,6 @@
 
 class BackendFactory
 {
-
     /**
      * Return a Backend instance
      *

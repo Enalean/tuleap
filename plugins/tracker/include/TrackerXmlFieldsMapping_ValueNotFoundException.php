@@ -20,7 +20,6 @@
 
 class TrackerXmlFieldsMapping_ValueNotFoundException extends Exception
 {
-
     public function __construct($old_value_id, $old_reference)
     {
         parent::__construct("Unable to find $old_reference (based on $old_value_id) in XML mapping");

@@ -21,7 +21,6 @@
 
 class Project_Service_ServiceUsageDao extends DataAccessObject
 {
-
     /**
      * @param int $group_id
      *

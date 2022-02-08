@@ -20,7 +20,6 @@
 
 class ArtifactXMLExporterArtifact
 {
-
     /** @var ArtifactXMLExporterDao */
     private $dao;
 

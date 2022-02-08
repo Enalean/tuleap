@@ -20,7 +20,6 @@
 
 class Cardwall_REST_ResourcesInjector
 {
-
     public function populate(Luracast\Restler\Restler $restler)
     {
         $restler->addAPIClass('\\Tuleap\\Cardwall\\REST\\v1\\CardsResource', AgileDashboard_CardRepresentation::ROUTE);

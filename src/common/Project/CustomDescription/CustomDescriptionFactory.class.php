@@ -26,7 +26,6 @@ require_once 'CustomDescriptionDao.class.php';
  */
 class Project_CustomDescription_CustomDescriptionFactory
 {
-
     /** @var Project_CustomDescription_CustomDescriptionDao */
     private $dao;
 

@@ -29,7 +29,6 @@
  */
 class Artifact
 {
-
     public const FORMAT_TEXT = 0;
     public const FORMAT_HTML = 1;
 

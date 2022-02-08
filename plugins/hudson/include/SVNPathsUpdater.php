@@ -20,7 +20,6 @@
 
 class SVNPathsUpdater
 {
-
     public function transformContent($submitted_content)
     {
         $submitted_content_lines = explode(PHP_EOL, $submitted_content);

@@ -20,7 +20,6 @@
 
 class Admin_Homepage_Dao extends DataAccessObject
 {
-
     /** @return DataAccessResult */
     public function searchHeadlines()
     {

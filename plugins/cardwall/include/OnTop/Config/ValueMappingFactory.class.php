@@ -22,7 +22,6 @@ require_once dirname(__FILE__) . '/../../constants.php';
 
 class Cardwall_OnTop_Config_ValueMappingFactory
 {
-
     /**
      * @var Tracker_FormElementFactory
      */

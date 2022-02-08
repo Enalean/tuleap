@@ -23,7 +23,6 @@ namespace Tuleap\Git\Permissions;
 
 class FineGrainedPermission implements Permission
 {
-
     /**
      * @var array
      */

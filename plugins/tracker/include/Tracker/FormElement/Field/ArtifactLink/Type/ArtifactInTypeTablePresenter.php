@@ -24,7 +24,6 @@ use Tracker_FormElement_Field_ArtifactLink;
 
 class ArtifactInTypeTablePresenter
 {
-
     public $direct_link_to_artifact;
     public $project_public_name;
     public $tracker_name;

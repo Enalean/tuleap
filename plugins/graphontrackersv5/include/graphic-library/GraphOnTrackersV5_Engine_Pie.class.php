@@ -25,7 +25,6 @@ require_once __DIR__ . '/../../../../src/embedded_vendor/jpgraph/jpgraph_ttf.inc
 
 class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine
 {
-
     public $title;
     public $field_base;
     public $height;

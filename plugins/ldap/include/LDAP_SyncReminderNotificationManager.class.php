@@ -21,7 +21,6 @@
 
 class LDAP_SyncReminderNotificationManager
 {
-
     private $userManager;
     private $projectManager;
 

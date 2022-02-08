@@ -22,7 +22,6 @@ namespace Tuleap\Project\XML\Export;
 
 class NoArchive implements ArchiveInterface
 {
-
     public function __construct()
     {
     }

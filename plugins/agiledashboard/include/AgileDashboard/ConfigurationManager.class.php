@@ -24,7 +24,6 @@ use Tuleap\AgileDashboard\BlockScrumAccess;
 
 class AgileDashboard_ConfigurationManager
 {
-
     public const DEFAULT_SCRUM_TITLE  = 'Scrum';
     public const DEFAULT_KANBAN_TITLE = 'Kanban';
 

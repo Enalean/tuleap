@@ -20,6 +20,5 @@
 
 interface ArtifactAttachmentXMLExporter
 {
-
     public function addFilesToArtifact(DOMElement $artifact_node, $artifact_type_id, $artifact_id);
 }

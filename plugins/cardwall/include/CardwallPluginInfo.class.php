@@ -23,7 +23,6 @@
  */
 class CardwallPluginInfo extends PluginFileInfo
 {
-
     public function __construct($plugin)
     {
         parent::__construct($plugin, 'config');

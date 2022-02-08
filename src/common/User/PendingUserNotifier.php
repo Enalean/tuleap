@@ -21,7 +21,6 @@ require_once __DIR__ . '/../../www/include/proj_email.php';
 
 class User_PendingUserNotifier
 {
-
     public function notifyAdministrator(PFUser $user)
     {
         $user_name = $user->getUserName();

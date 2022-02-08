@@ -30,7 +30,6 @@
  */
 class Tracker_Report_ResultJoiner
 {
-
     public function joinResults(array $matching_ids, array $other_results)
     {
         return call_user_func_array(

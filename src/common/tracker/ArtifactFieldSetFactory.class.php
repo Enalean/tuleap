@@ -32,7 +32,6 @@ function art_fieldset_factory_cmp_place($fieldset1, $fieldset2)
 
 class ArtifactFieldSetFactory
 {
-
     /**
      * The ArtifactType object.
      *

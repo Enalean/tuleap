@@ -23,7 +23,6 @@
 
 class Docman_ItemDao extends DataAccessObject
 {
-
     /**
      * Return the timestamp of the current day at 00:00
      */

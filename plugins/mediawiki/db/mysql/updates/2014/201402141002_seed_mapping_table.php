@@ -18,7 +18,6 @@
 
 class b201402141002_seed_mapping_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

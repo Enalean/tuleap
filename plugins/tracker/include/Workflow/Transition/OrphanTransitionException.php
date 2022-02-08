@@ -29,7 +29,6 @@ use Transition;
  */
 class OrphanTransitionException extends Exception
 {
-
     public function __construct(Transition $transition)
     {
         parent::__construct(sprintf(

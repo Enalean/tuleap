@@ -26,7 +26,6 @@ namespace Tuleap\ProFTPd\Admin;
  */
 class ACLBuilderForDirectory extends ACLBuilder
 {
-
     public function getACL($http_user, $writers, $readers)
     {
         return $this->getDefaultACL($http_user, $writers, $readers) . ',' . $this->getEffectiveACL($http_user, $writers, $readers);

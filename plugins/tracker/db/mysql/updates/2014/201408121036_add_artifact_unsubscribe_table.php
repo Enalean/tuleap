@@ -18,7 +18,6 @@
 
 class b201408121036_add_artifact_unsubscribe_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Add table for unsubscribe option in artifact';

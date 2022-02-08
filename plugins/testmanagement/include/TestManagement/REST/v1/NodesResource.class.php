@@ -31,7 +31,6 @@ use UserManager;
 
 class NodeResource
 {
-
     /**
      * @url OPTIONS
      *

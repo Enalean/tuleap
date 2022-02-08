@@ -23,7 +23,6 @@ use Tuleap\Cardwall\Column\ColumnColorRetriever;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Cardwall_OnTop_Config_ColumnFactory
 {
-
     public const DEFAULT_HEADER_COLOR = 'rgb(248,248,248)';
 
     /**

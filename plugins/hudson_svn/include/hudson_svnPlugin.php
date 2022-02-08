@@ -46,7 +46,6 @@ use Tuleap\SVN\SvnAdmin;
 
 class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
     public function __construct($id)
     {
         parent::__construct($id);

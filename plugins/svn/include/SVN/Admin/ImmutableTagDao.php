@@ -29,7 +29,6 @@ use DataAccessObject;
 
 class ImmutableTagDao extends DataAccessObject
 {
-
     public function save(Repository $repository, $path, $whitelist)
     {
         $repository_id = $this->da->escapeInt($repository->getId());

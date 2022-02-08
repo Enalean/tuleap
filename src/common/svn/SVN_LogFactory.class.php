@@ -25,7 +25,6 @@ require_once __DIR__ . '/../../www/svn/svn_utils.php';
  */
 class SVN_LogFactory
 {
-
     /**
      * @var Project
      */

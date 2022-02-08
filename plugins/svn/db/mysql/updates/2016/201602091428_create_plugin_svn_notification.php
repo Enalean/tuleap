@@ -18,7 +18,6 @@
 
 class b201602091428_create_plugin_svn_notification extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return 'Create table plugin_svn_notification for SVN plugin';

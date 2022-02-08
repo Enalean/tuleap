@@ -18,7 +18,6 @@
 
 class b201601051638_add_trovecat_display_column extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Add display_during_project_creation attribute for trovecat";

@@ -21,7 +21,6 @@
 
 class Docman_SOAPController extends Docman_Controller
 {
-
     public function __construct(&$plugin, $pluginPath, $themePath, &$request)
     {
         parent::__construct($plugin, $pluginPath, $themePath, $request);

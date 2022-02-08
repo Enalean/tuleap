@@ -20,7 +20,6 @@
 
 interface ConfigValueProvider
 {
-
     /**
      * @return array of values indexed by variable name
      */

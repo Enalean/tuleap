@@ -29,7 +29,6 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
  */
 class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
 {
-
     public const FIELDTYPE_STRING            = Tracker_FormElementFactory::FIELD_STRING_TYPE;
     public const FIELDTYPE_TEXT              = 'text';
     public const FIELDTYPE_INT               = 'int';

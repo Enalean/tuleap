@@ -20,7 +20,6 @@
 
 class ConfigValueFileProvider implements ConfigValueProvider
 {
-
     /** @var string */
     private $file;
 

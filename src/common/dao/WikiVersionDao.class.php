@@ -20,7 +20,6 @@
 
 class WikiVersionDao extends DataAccessObject
 {
-
     public function getAllVersionForGivenPage($page_id)
     {
         $page_id = $this->da->escapeInt($page_id);

@@ -23,7 +23,6 @@ require_once __DIR__ . '/../../../www/project/admin/ugroup_utils.php';
 
 class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
     public $FIELD_VALUE_STATUS_HIDDEN    = 'H';
     public $FIELD_VALUE_STATUS_PERMANENT = 'P';
 

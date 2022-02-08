@@ -23,7 +23,6 @@
 
 /* abstract */class Docman_View_ItemDetailsSection
 {
-
     public $id;
     public $title;
     public $item;

@@ -19,5 +19,4 @@
  */
 class HudsonJobURLFileException extends Exception
 {
-
 }

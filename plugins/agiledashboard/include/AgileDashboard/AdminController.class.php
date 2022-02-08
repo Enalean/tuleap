@@ -71,7 +71,6 @@ use XMLImportHelper;
 
 class AdminController extends BaseController
 {
-
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;
 

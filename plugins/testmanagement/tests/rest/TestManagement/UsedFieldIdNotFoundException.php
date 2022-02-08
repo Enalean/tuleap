@@ -25,5 +25,4 @@ namespace Tuleap\TestManagement;
 
 class UsedFieldIdNotFoundException extends \Exception
 {
-
 }

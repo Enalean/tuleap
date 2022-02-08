@@ -21,7 +21,6 @@
  */
 class ArchiveDeletedItemsPluginInfo extends PluginFileInfo
 {
-
     /**
      * Constructor
      *

@@ -20,7 +20,6 @@
 
 class AgileDashboard_KanbanDao extends DataAccessObject
 {
-
     public function duplicateKanbans(array $tracker_mapping, array $field_mapping, array $report_mapping)
     {
         if (empty($tracker_mapping)) {

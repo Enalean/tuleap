@@ -26,7 +26,6 @@ use UserManager;
 
 class UserListResultsPresenter
 {
-
     public $title;
     public $export_url;
     public $nb_matching_users;

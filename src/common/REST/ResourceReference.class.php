@@ -21,7 +21,6 @@ namespace Tuleap\REST;
 
 class ResourceReference
 {
-
     /** Use this variable as a placeholder for future route implementation */
     public const NO_ROUTE = 'route-not-yet-implemented';
 

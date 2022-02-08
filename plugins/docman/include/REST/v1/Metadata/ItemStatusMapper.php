@@ -26,7 +26,6 @@ use Docman_Item;
 
 class ItemStatusMapper
 {
-
     /**
      * @var \Docman_SettingsBo
      */

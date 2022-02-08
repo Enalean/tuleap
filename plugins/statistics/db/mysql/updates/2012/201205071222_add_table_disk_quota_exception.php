@@ -18,7 +18,6 @@
 
 class b201205071222_add_table_disk_quota_exception extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT

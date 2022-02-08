@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest\Timeline;
 
 class PaginatedTimeline
 {
-
     /** @var array */
     public $events;
 

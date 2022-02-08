@@ -34,7 +34,6 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
  */
 final class MirroredIterationIdentifier implements MirroredTimeboxIdentifier
 {
-
     private function __construct(private int $id)
     {
     }

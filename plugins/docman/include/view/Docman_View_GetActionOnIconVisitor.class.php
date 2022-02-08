@@ -10,7 +10,6 @@
 
 class Docman_View_GetActionOnIconVisitor /* implements Visitor*/
 {
-
     public function visitFolder(&$item, $params = [])
     {
         return $params['view']->getActionOnIconForFolder($item, $params);

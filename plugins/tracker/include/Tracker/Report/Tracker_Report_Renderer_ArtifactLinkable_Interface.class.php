@@ -23,5 +23,4 @@
  */
 interface Tracker_Report_Renderer_ArtifactLinkable
 {
-
 }

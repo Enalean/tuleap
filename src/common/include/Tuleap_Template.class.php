@@ -31,7 +31,6 @@
  */
 class Tuleap_Template
 {
-
     /**
      * @var array The variables to pass to the template
      */

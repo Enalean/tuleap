@@ -23,7 +23,6 @@ namespace Tuleap\GitLFS\Lock\Request;
 
 class LockCreateRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-
     public function testParsingRequest()
     {
         $json         = <<<JSON

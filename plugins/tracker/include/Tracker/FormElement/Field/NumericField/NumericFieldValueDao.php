@@ -25,7 +25,6 @@ use Tuleap\Tracker\FormElement\Field\FieldValueDao;
 
 abstract class NumericFieldValueDao extends FieldValueDao
 {
-
     /**
      * Retrieves the value of the given field at the most recent time BEFORE the given timestamp
      *

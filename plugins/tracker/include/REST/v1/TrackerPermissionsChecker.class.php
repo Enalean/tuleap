@@ -30,7 +30,6 @@ use URLVerification;
  */
 class TrackerPermissionsChecker
 {
-
     /**
      * @var URLVerification
      */

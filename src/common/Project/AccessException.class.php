@@ -19,5 +19,4 @@
 
 abstract class Project_AccessException extends Exception
 {
-
 }

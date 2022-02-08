@@ -23,7 +23,6 @@
  */
 abstract class GitViewsRepositoriesTraversalStrategy
 {
-
     public function __construct()
     {
     }

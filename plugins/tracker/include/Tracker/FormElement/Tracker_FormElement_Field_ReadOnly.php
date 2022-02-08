@@ -23,5 +23,4 @@
  */
 interface Tracker_FormElement_Field_ReadOnly
 {
-
 }

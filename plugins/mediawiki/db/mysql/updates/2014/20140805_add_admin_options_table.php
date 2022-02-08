@@ -18,7 +18,6 @@
 
 class b20140805_add_admin_options_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

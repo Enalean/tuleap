@@ -29,7 +29,6 @@ use RestBase;
  */
 class JWTTest extends RestBase
 {
-
     public function testGETJWT(): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('GET', 'jwt/'));

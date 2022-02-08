@@ -21,7 +21,6 @@
 
 class Tracker_URLVerification extends URLVerification
 {
-
     protected function getUrl()
     {
         return new Tracker_URL();

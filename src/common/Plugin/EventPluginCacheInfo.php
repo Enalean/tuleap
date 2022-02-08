@@ -23,7 +23,6 @@ namespace Tuleap\Plugin;
 
 class EventPluginCacheInfo
 {
-
     public $plugin_id;
     public $event;
     public $callback;

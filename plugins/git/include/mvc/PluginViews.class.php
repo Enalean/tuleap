@@ -25,7 +25,6 @@
 
 class PluginViews
 {
-
     protected $request;
 
     /**

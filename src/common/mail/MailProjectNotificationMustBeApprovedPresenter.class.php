@@ -20,7 +20,6 @@
 
 class MailProjectNotificationMustBeApprovedPresenter extends MailOutlinePresenter
 {
-
     /**
      * @var string
      */

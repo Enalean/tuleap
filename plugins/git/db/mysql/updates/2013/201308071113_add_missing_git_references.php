@@ -20,7 +20,6 @@
 
 class b201308071113_add_missing_git_references extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

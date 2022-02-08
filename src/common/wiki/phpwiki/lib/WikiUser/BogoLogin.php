@@ -10,7 +10,6 @@ rcs_id('$Id: BogoLogin.php,v 1.6 2005/08/06 13:21:37 rurban Exp $');
  */
 class _BogoLoginPassUser extends _PassUser
 {
-
     public $_authmethod = 'BogoLogin';
 
     public function userExists()

@@ -24,7 +24,6 @@
  */
 class Tracker_XML_Updater_TemporaryFileXMLUpdater
 {
-
     /**
      * @var Tracker_XML_Updater_TemporaryFileCreator
      */

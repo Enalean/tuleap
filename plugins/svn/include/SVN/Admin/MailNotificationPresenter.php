@@ -26,7 +26,6 @@ use CSRFSynchronizerToken;
 
 class MailNotificationPresenter extends BaseAdminPresenter
 {
-
     public $title;
     public $notification_subtitle;
     public $comment;

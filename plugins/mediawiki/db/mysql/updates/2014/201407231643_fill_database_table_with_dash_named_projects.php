@@ -18,7 +18,6 @@
 
 class b201407231643_fill_database_table_with_dash_named_projects extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

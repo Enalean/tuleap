@@ -18,7 +18,6 @@
 
 class b201506031658_enlarge_your_tinyint extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return "Enlarge your tinyint (svn_commit_to_tag_denied)";

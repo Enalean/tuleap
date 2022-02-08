@@ -25,7 +25,6 @@ require_once 'IRunInAMutex.php';
 
 abstract class SystemEventProcessor implements IRunInAMutex
 {
-
     /**
      * @var SystemEventProcess
      */

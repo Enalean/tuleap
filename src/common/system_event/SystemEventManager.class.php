@@ -39,7 +39,6 @@ use TuleapCfg\Command\ProcessFactory;
 */
 class SystemEventManager
 {
-
     public $dao;
     public $followers_dao;
 

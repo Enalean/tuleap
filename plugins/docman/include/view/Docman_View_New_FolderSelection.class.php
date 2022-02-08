@@ -24,7 +24,6 @@
 
 class Docman_View_New_FolderSelection extends Docman_View_Docman
 {
-
     public function _title($params)
     {
         // No title in printer version

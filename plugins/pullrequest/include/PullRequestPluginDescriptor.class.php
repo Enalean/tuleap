@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest;
 
 class PluginDescriptor extends \PluginDescriptor
 {
-
     public function __construct()
     {
         parent::__construct(

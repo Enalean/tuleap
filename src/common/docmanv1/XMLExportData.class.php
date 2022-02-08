@@ -21,7 +21,6 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class DocmanV1_XMLExportData
 {
-
     public const ROOT_FOLDER_NAME = 'Legacy documentation';
 
     public const FOLDER_TYPE = 'folder';

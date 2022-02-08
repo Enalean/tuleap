@@ -23,7 +23,6 @@
 
 class MediaWikiPluginDescriptor extends PluginDescriptor
 {
-
     public function __construct()
     {
         parent::__construct(dgettext('tuleap-mediawiki', 'Plugin Mediawiki'), false, dgettext('tuleap-mediawiki', 'Mediawiki integration in the forge'));

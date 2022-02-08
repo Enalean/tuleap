@@ -26,7 +26,6 @@ use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
  */
 class MediawikiUserGroupsMapper
 {
-
     public const MEDIAWIKI_GROUPS_ANONYMOUS  = 'anonymous';
     public const MEDIAWIKI_GROUPS_USER       = 'user';
     public const MEDIAWIKI_GROUPS_BOT        = 'bot';

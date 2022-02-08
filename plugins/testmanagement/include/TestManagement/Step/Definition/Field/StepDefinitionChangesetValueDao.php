@@ -25,7 +25,6 @@ use Tuleap\TestManagement\Step\Step;
 
 class StepDefinitionChangesetValueDao extends FieldValueDao
 {
-
     public function __construct()
     {
         parent::__construct();

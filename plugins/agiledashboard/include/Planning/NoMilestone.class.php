@@ -23,7 +23,6 @@
  */
 class Planning_NoMilestone implements Planning_Milestone
 {
-
     /**
      * The project where the milestone is defined
      *

@@ -24,7 +24,6 @@ use Tuleap\Tracker\FormElement\Field\ListFields\MultiSelectboxFieldDao;
 
 class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field_Selectbox
 {
-
     public $default_properties = [
         'size' => [
             'value' => 7,

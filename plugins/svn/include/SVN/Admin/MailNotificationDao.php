@@ -25,7 +25,6 @@ use Tuleap\SVN\Repository\RepositoryRegexpBuilder;
 
 class MailNotificationDao extends DataAccessObject
 {
-
     private $regexp_builder;
 
     public function __construct($da, RepositoryRegexpBuilder $regexp_builder)

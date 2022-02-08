@@ -20,7 +20,6 @@
 
 class b201207271519_add_ldap_ugroup_synchro_policy_and_bind_option_columns extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     /**
      * Description of the bucket
      *

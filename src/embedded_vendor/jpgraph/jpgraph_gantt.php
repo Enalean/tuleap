@@ -3889,7 +3889,6 @@ class TextPropertyBelow extends TextProperty
 
 class GanttVLine extends GanttPlotObject
 {
-
     private $iLine;
     private $title_margin = 3;
     private $iDayOffset   = 0.5;

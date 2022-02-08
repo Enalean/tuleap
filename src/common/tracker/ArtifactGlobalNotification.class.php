@@ -19,7 +19,6 @@
  */
 class ArtifactGlobalNotification
 {
-
     public $data;
 
     /**

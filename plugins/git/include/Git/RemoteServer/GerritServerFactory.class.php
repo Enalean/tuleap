@@ -20,7 +20,6 @@
 
 class Git_RemoteServer_GerritServerFactory
 {
-
     /** @var Git_RemoteServer_Dao */
     private $dao;
 

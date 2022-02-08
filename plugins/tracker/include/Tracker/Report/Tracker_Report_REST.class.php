@@ -19,7 +19,6 @@
 
 class Tracker_Report_REST extends Tracker_Report
 {
-
     public const OPERATOR_PROPERTY_NAME = 'operator';
     public const VALUE_PROPERTY_NAME    = 'value';
     public const DEFAULT_OPERATOR       = 'contains';

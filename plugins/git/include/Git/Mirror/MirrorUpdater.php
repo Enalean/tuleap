@@ -20,7 +20,6 @@
 
 class GitRepositoryMirrorUpdater
 {
-
     /**
      * @var ProjectHistoryDao
      */

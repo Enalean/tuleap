@@ -24,7 +24,6 @@ use Tuleap\User\StatusPresenter;
 
 class UserListResultsUserPresenter
 {
-
     public $name;
     public $id;
     public $realname;

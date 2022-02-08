@@ -22,7 +22,6 @@ use Tuleap\Config\ConfigDao;
 
 class ConfigValueDatabaseProvider implements ConfigValueProvider
 {
-
     /** @var ConfigDao */
     private $dao;
 
