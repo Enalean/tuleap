@@ -63,6 +63,7 @@ export function createRouter(store, project_name) {
                     query: {
                         query: route.query.q || "",
                         type: route.query.type || "",
+                        title: route.query.title || "",
                     },
                     offset: Number(route.query.offset || "0"),
                 }),

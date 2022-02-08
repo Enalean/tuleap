@@ -25,6 +25,7 @@ import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapp
 import type { ConfigurationState } from "../../store/configuration";
 import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
 import CriterionType from "./Criteria/CriterionType.vue";
+import CriterionTitle from "./Criteria/CriterionTitle.vue";
 
 describe("SearchCriteriaPanel", () => {
     it("should allow user to search for new terms", () => {
@@ -43,6 +44,7 @@ describe("SearchCriteriaPanel", () => {
                 query: {
                     query: "Lorem",
                     type: "",
+                    title: "",
                 },
                 folder_id: 101,
             },
@@ -59,10 +61,11 @@ describe("SearchCriteriaPanel", () => {
 
         wrapper.findComponent(CriterionGlobalText).vm.$emit("input", "Lorem ipsum");
         wrapper.findComponent(CriterionType).vm.$emit("input", "folder");
+        wrapper.findComponent(CriterionTitle).vm.$emit("input", "doloret");
         wrapper.find("[data-test=submit]").trigger("click");
 
         expect(wrapper.emitted()["advanced-search"]).toEqual([
-            [{ query: "Lorem ipsum", type: "folder" }],
+            [{ query: "Lorem ipsum", type: "folder", title: "doloret" }],
         ]);
 
         // Avoid memory leaks when attaching to a parent node.
@@ -77,6 +80,7 @@ describe("SearchCriteriaPanel", () => {
                 query: {
                     query: "Lorem",
                     type: "",
+                    title: "",
                 },
                 folder_id: 101,
             },

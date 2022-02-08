@@ -68,12 +68,24 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
             new SearchRepresentationTypeVisitor(),
             new FilePropertiesVisitor($this->version_factory),
         );
+
+        \UserManager::setInstance($this->user_manager);
+    }
+
+    protected function tearDown(): void
+    {
+        \UserManager::clearInstance();
     }
 
     public function testItBuildsItemRepresentations(): void
     {
         $report = new \Docman_Report();
-        $folder = new \Docman_Folder(["group_id" => 101]);
+        $folder = new \Docman_Folder(
+            [
+                'item_id'  => 66,
+                'group_id' => 101,
+            ]
+        );
 
         $item_one_array = [
             "item_id"     => 1,
@@ -104,12 +116,28 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
                 'filesize' => 12345,
             ]));
 
-        $this->item_factory->method('getItemList')->willReturn(
-            new \ArrayIterator([$item_one, $item_two])
-        );
+        $current_user = UserTestBuilder::aUser()->build();
+        $this->user_manager->method('getCurrentUser')->willReturn($current_user);
         $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithId(101));
 
-        $collection = $this->representation_builder->build($report, $folder, UserTestBuilder::aUser()->build(), 50, 0);
+        $this->item_factory
+            ->method('getItemList')
+            ->with(
+                66,
+                0,
+                [
+                    'api_limit'       => 50,
+                    'api_offset'      => 0,
+                    'filter'          => $report,
+                    'user'            => $current_user,
+                    'ignore_obsolete' => true,
+                ]
+            )
+            ->willReturn(
+                new \ArrayIterator([$item_one, $item_two])
+            );
+
+        $collection = $this->representation_builder->build($report, $folder, $current_user, 50, 0);
 
         $this->assertItemEqualsRepresentation($item_one_array, $collection->search_representations[0]);
         $this->assertItemEqualsRepresentation($item_two_array, $collection->search_representations[1]);

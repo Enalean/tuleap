@@ -432,7 +432,7 @@ describe("rest-querier", () => {
 
             const results = await searchInFolder(
                 101,
-                { query: "Lorem ipsum", type: "folder" },
+                { query: "Lorem ipsum", type: "folder", title: "doloret" },
                 170
             );
 
@@ -443,6 +443,7 @@ describe("rest-querier", () => {
                 body: JSON.stringify({
                     global_search: "Lorem ipsum",
                     type: "folder",
+                    title: "doloret",
                     offset: 170,
                     limit: 50,
                 }),
@@ -469,7 +470,7 @@ describe("rest-querier", () => {
                 },
             });
 
-            await searchInFolder(101, { query: "Lorem ipsum", type: "" }, 170);
+            await searchInFolder(101, { query: "Lorem ipsum", type: "", title: "" }, 170);
 
             expect(tlpPost).toHaveBeenCalledWith(`/api/v1/docman_search/101`, {
                 headers: {

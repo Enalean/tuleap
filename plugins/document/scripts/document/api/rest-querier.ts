@@ -114,8 +114,9 @@ async function searchInFolder(
     };
 
     const json_body = {
-        global_search: search.query,
+        ...(search.query && { global_search: search.query }),
         ...(search.type && { type: search.type }),
+        ...(search.title && { title: search.title }),
         offset: offset,
         limit: SEARCH_LIMIT,
     };

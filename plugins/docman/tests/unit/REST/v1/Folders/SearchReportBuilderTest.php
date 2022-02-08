@@ -38,8 +38,9 @@ final class SearchReportBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $filter_factory  = new Docman_FilterFactory(101);
-        $docman_settings = $this->createMock(Docman_SettingsBo::class);
+        $metadata_factory = new \Docman_MetadataFactory(101);
+        $filter_factory   = new Docman_FilterFactory(101);
+        $docman_settings  = $this->createMock(Docman_SettingsBo::class);
         $docman_settings->method('getMetadataUsage')->willReturn(false);
         $always_there_column_retriever = new AlwaysThereColumnRetriever($docman_settings);
 
@@ -52,6 +53,7 @@ final class SearchReportBuilderTest extends TestCase
         $column_report_builder = new ColumnReportAugmenter($column_factory);
 
         $this->search_report_builder = new SearchReportBuilder(
+            $metadata_factory,
             $filter_factory,
             $always_there_column_retriever,
             $column_report_builder
@@ -91,5 +93,21 @@ final class SearchReportBuilderTest extends TestCase
         $second_filter = $report->getFiltersArray()[1];
         self::assertSame("item_type", $second_filter->md->getLabel());
         self::assertSame($expected_internal_value, $second_filter->value);
+    }
+
+    public function testItBuildsAReportWithATitleSearchFilter(): void
+    {
+        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search                = new PostSearchRepresentation();
+        $search->global_search = "*.docx";
+        $search->title         = "lorem";
+
+        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $first_filter = $report->getFiltersArray()[0];
+        self::assertSame("global_txt", $first_filter->md->getLabel());
+        self::assertSame("*.docx", $first_filter->value);
+        $second_filter = $report->getFiltersArray()[1];
+        self::assertSame("title", $second_filter->md->getLabel());
+        self::assertSame("lorem", $second_filter->value);
     }
 }
