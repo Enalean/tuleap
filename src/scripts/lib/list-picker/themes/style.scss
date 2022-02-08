@@ -33,6 +33,10 @@
     &:invalid {
         box-shadow: none;
     }
+
+    &[multiple] {
+        height: 0;
+    }
 }
 
 .list-picker-dropdown {
