@@ -95,7 +95,8 @@ document.addEventListener("DOMContentLoaded", function () {
         add_button_unsubscriber.classList.remove("tracker-unsubcriber-add-hidden");
     }
 
-    function showEditMode() {
+    function showEditMode(event) {
+        event.preventDefault();
         hideEditMode();
 
         var tr = this.parentNode.parentNode.parentNode,
