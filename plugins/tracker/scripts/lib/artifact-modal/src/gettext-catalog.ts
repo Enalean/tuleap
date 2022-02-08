@@ -68,3 +68,9 @@ export const getFieldDateRequiredAndEmptyMessage = (): string =>
 export const getEmptyCrossReferencesCollectionText = (): string =>
     gettextCatalog.getString("References list is empty.");
 export const getDefaultLinkTypeLabel = (): string => gettextCatalog.getString("Linked to");
+export const getEmptyDiskQuotaMessage = (): string =>
+    gettextCatalog.getString("Max allowed upload size: %s");
+export const getUsedQuotaMessage = (): string =>
+    gettextCatalog.getString("File upload quota allowed");
+export const getQuotaUsageMessage = (): string =>
+    gettextCatalog.getString("%(usage)s of %(quota)s");

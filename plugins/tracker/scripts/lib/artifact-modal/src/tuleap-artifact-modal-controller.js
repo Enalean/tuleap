@@ -58,6 +58,8 @@ import { ParentRetriever } from "./domain/parent/ParentRetriever";
 import { LinksMarkedForRemovalStore } from "./adapters/Memory/LinksMarkedForRemovalStore";
 import { LinksStore } from "./adapters/Memory/LinksStore";
 import { ReadonlyDateFieldFormatter } from "./adapters/UI/fields/date-readonly-field/readonly-date-field-formatter";
+import { FileUploadQuotaController } from "./adapters/UI/footer/FileUploadQuotaController";
+import { UserTemporaryFileQuotaStore } from "./adapters/Memory/UserTemporaryFileQuotaStore";
 
 export default ArtifactModalController;
 
@@ -133,6 +135,7 @@ function ArtifactModalController(
             ParentRetriever(api_client),
             ParentArtifactIdentifierProxy.fromCallerArgument(modal_model.parent_artifact_id)
         ),
+        file_upload_quota_controller: FileUploadQuotaController(UserTemporaryFileQuotaStore()),
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
         formatColor,
         getDropdownAttribute,

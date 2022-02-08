@@ -44,6 +44,7 @@
 
 .angular-artifact-modal-disk-usage-progress-bar-progression {
     position: absolute;
+    width: var(--disk-usage-progress, 0);
     height: 10px;
     border-radius: 5px;
     background: var(--tlp-info-color);
