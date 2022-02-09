@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\BotMattermostAgileDashboard\SenderServices;
 
 use AgileDashboard_Milestone_MilestoneStatusCounter;
-use HTTPRequest;
 use PFUser;
 use Planning;
 use Planning_Milestone;

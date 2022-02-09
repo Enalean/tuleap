@@ -174,10 +174,10 @@ class Dao extends DataAccessObject
         $this->getDB()->update(
             'plugin_botmattermost_agiledashboard_notification',
             [
-                'send_time' => $send_time
+                'send_time' => $send_time,
             ],
             [
-                'id' => $id
+                'id' => $id,
             ]
         );
     }
@@ -195,7 +195,7 @@ class Dao extends DataAccessObject
         $this->getDB()->delete(
             'plugin_botmattermost_agiledashboard_notification_channel',
             [
-                'notification_id' => $notification_id
+                'notification_id' => $notification_id,
             ]
         );
     }
@@ -205,7 +205,7 @@ class Dao extends DataAccessObject
         $this->getDB()->delete(
             'plugin_botmattermost_agiledashboard_notification',
             [
-                'id' => $id
+                'id' => $id,
             ]
         );
     }

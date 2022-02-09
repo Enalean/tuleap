@@ -26,7 +26,6 @@ use Tuleap\BotMattermost\Bot\Bot;
 
 class AdminNotificationPresenter
 {
-
     /**
      * @var CSRFSynchronizerToken
      */
@@ -80,16 +79,16 @@ class AdminNotificationPresenter
         array $system_bots,
         array $project_bots,
         int $project_id,
-        array $bot_assigned
+        array $bot_assigned,
     ) {
-        $this->csrf_token             = $csrf_token;
-        $this->system_bots            = $system_bots;
-        $this->project_bots           = $project_bots;
-        $this->project_id             = $project_id;
-        $this->bot_assigned           = $bot_assigned;
-        $this->has_bots               = ! empty($system_bots) || ! empty($project_bots);
-        $this->has_system_bots        = ! empty($system_bots);
-        $this->has_project_bots       = ! empty($project_bots);
+        $this->csrf_token       = $csrf_token;
+        $this->system_bots      = $system_bots;
+        $this->project_bots     = $project_bots;
+        $this->project_id       = $project_id;
+        $this->bot_assigned     = $bot_assigned;
+        $this->has_bots         = ! empty($system_bots) || ! empty($project_bots);
+        $this->has_system_bots  = ! empty($system_bots);
+        $this->has_project_bots = ! empty($project_bots);
 
         $this->title                  = dgettext('tuleap-botmattermost_agiledashboard', 'Mattermost notifications');
         $this->description            = dgettext('tuleap-botmattermost_agiledashboard', 'Choose a bot to send a summary of the stand-up in Mattermost.');

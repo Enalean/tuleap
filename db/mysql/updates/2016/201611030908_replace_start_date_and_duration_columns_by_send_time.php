@@ -22,9 +22,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201611030908_replace_start_date_and_duration_columns_by_send_time extends ForgeUpgrade_Bucket
+class b201611030908_replace_start_date_and_duration_columns_by_send_time extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT
@@ -45,10 +44,10 @@ EOT;
                 DROP COLUMN duration;";
 
         if (! $this->db->dbh->exec($sql1)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while column start_date is replaced by send_time in table plugin_botmattermost_agiledashboard: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while column start_date is replaced by send_time in table plugin_botmattermost_agiledashboard: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
         if (! $this->db->dbh->exec($sql2)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting column duration in table plugin_botmattermost_agiledashboard: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while deleting column duration in table plugin_botmattermost_agiledashboard: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

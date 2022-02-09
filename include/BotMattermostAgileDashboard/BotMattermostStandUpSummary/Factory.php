@@ -24,7 +24,6 @@ use Psr\Log\LoggerInterface;
 use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Exception\ChannelsNotFoundException;
-use Tuleap\BotMattermostAgileDashboard\Exception\CannotCreateBotNotificationException;
 use Tuleap\BotMattermostAgileDashboard\Exception\CannotDeleteBotNotificationException;
 use Tuleap\BotMattermostAgileDashboard\Exception\CannotUpdateBotNotificationException;
 
@@ -40,7 +39,7 @@ class Factory
     public function __construct(
         Dao $dao,
         BotFactory $bot_factory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->dao         = $dao;
         $this->bot_factory = $bot_factory;

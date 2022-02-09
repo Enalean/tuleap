@@ -29,7 +29,6 @@ use Tuleap\BotMattermost\Bot\BotFactory;
 
 class Validator
 {
-
     private $bot_factory;
 
     public function __construct(BotFactory $bot_factory)

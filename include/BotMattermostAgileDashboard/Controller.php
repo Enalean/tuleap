@@ -48,7 +48,7 @@ class Controller
         Factory $bot_agiledashboard_factory,
         BotFactory $bot_factory,
         Validator $validator,
-        NotificationCreator $notification_creator
+        NotificationCreator $notification_creator,
     ) {
         $this->request                    = $request;
         $this->csrf                       = $csrf;
@@ -85,7 +85,7 @@ class Controller
 
     public function render()
     {
-        $renderer   = TemplateRendererFactory::build()->getRenderer(
+        $renderer     = TemplateRendererFactory::build()->getRenderer(
             PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR . '/templates'
         );
         $project_id   = $this->request->getProject()->getID();
@@ -172,7 +172,7 @@ class Controller
                 [
                     'group_id' => $this->request->getProject()->getID(),
                     'action'   => 'admin',
-                    'pane'     => 'scrum'
+                    'pane'     => 'scrum',
                 ]
             )
         );

@@ -45,7 +45,7 @@ class StandUpNotificationBuilder
         Planning_MilestoneFactory $milestone_factory,
         AgileDashboard_Milestone_MilestoneStatusCounter $milestone_status_counter,
         PlanningFactory $planning_factory,
-        MarkdownMustacheRenderer $renderer
+        MarkdownMustacheRenderer $renderer,
     ) {
         $this->milestone_factory        = $milestone_factory;
         $this->milestone_status_counter = $milestone_status_counter;
@@ -56,7 +56,7 @@ class StandUpNotificationBuilder
     public function buildNotificationText(PFUser $user, Project $project)
     {
         $last_plannings_for_presenter = [];
-        $last_plannings               = $this->planning_factory->getLastLevelPlannings($user, (int)$project->getID());
+        $last_plannings               = $this->planning_factory->getLastLevelPlannings($user, (int) $project->getID());
         $project_name                 = $project->getPublicName();
         $last_planning_name           = '';
 
@@ -90,7 +90,7 @@ class StandUpNotificationBuilder
 
     private function buildMilestoneForNotification(
         Planning_Milestone $milestone,
-        PFUser $user
+        PFUser $user,
     ) {
         $linked_artifacts = $this->getLinkedArtifactsWithRecentModification($milestone, $user);
         $tracker_artifact = $milestone->getArtifact();
@@ -115,7 +115,7 @@ class StandUpNotificationBuilder
             'burndown_url'        => $burndown_url,
             'milestone_infos'     => $this->buildMilestoneInformation($milestone, $user),
             'linked_artifacts'    => $this->buildLinkedArtifactTable($linked_artifacts),
-            'has_recent_update'   => (! empty($linked_artifacts))
+            'has_recent_update'   => (! empty($linked_artifacts)),
         ];
     }
 
@@ -137,7 +137,7 @@ class StandUpNotificationBuilder
                 [
                     'formElement' => $artifact->getABurndownField($user)->getId(),
                     'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
-                    'src_aid'     => $artifact->getId()
+                    'src_aid'     => $artifact->getId(),
                 ]
             );
 
@@ -168,7 +168,7 @@ class StandUpNotificationBuilder
                 'planning_id' => $milestone->getPlanningId(),
                 'action'      => 'show',
                 'aid'         => $milestone->getArtifactId(),
-                'pane'        => 'cardwall'
+                'pane'        => 'cardwall',
             ]
         );
     }
@@ -186,7 +186,7 @@ class StandUpNotificationBuilder
             'id'             => $this->buildArtifactLink($milestone->getArtifact()),
             'open'           => $status['open'],
             'closed'         => $status['closed'],
-            'days_remaining' => $this->getMilestoneDaysRemaining($milestone)
+            'days_remaining' => $this->getMilestoneDaysRemaining($milestone),
         ];
     }
 
@@ -209,7 +209,7 @@ class StandUpNotificationBuilder
     {
         return [
             'url'  => ServerHostname::HTTPSUrl() . $tracker_Artifact->getUri(),
-            'name' => $tracker_Artifact->getXRef()
+            'name' => $tracker_Artifact->getXRef(),
         ];
     }
 
@@ -230,7 +230,7 @@ class StandUpNotificationBuilder
             'artifact_link' => $this->buildArtifactLink($tracker_artifact),
             'title'         => $tracker_artifact->getTitle(),
             'status'        => $tracker_artifact->getStatus(),
-            'last_update'   => $this->getDateTime($tracker_artifact->getLastUpdateDate())
+            'last_update'   => $this->getDateTime($tracker_artifact->getLastUpdateDate()),
         ];
     }
 }

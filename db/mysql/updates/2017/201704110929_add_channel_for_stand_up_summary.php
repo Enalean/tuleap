@@ -22,9 +22,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201704110929_add_channel_for_stand_up_summary extends ForgeUpgrade_Bucket
+class b201704110929_add_channel_for_stand_up_summary extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT
@@ -55,13 +54,13 @@ EOT;
                  SELECT * FROM plugin_botmattermost_agiledashboard";
 
         if ($this->db->dbh->exec($sql1) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while creating plugin_botmattermost_agiledashboard_notification_channel table: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while creating plugin_botmattermost_agiledashboard_notification_channel table: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
         if ($this->db->dbh->exec($sql2) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while creating plugin_botmattermost_agiledashboard_notification table: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while creating plugin_botmattermost_agiledashboard_notification table: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
         if ($this->db->dbh->exec($sql3) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while copying values from plugin_botmattermost_agiledashboard to plugin_botmattermost_agiledashboard_notification: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while copying values from plugin_botmattermost_agiledashboard to plugin_botmattermost_agiledashboard_notification: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

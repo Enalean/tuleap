@@ -44,7 +44,6 @@ require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
 
 class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
 {
-
     public function __construct($id)
     {
         parent::__construct($id);

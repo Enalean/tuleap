@@ -20,7 +20,6 @@
 
 namespace Tuleap\BotMattermostAgileDashboard\SenderServices;
 
-use HTTPRequest;
 use ProjectManager;
 use Psr\Log\LoggerInterface;
 use Tuleap\BotMattermost\Exception\BotNotFoundException;
@@ -44,7 +43,7 @@ class StandUpNotificationSender
         Sender $sender,
         StandUpNotificationBuilder $notification_builder,
         ProjectManager $project_manager,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->bot_agiledashboard_factory = $bot_agiledashboard_factory;
         $this->sender                     = $sender;

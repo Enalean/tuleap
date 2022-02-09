@@ -33,7 +33,7 @@ class BotMattermostStandUpSummary
         Bot $bot,
         array $channels,
         $project_id,
-        $send_time
+        $send_time,
     ) {
         $this->bot        = $bot;
         $this->channels   = $channels;
@@ -62,7 +62,7 @@ class BotMattermostStandUpSummary
             'channels'       => $this->channels,
             'project_id'     => $this->project_id,
             'send_time'      => date("H:i", strtotime($this->send_time)),
-            'is_assigned'    => $this->isAssigned()
+            'is_assigned'    => $this->isAssigned(),
         ];
     }
 
