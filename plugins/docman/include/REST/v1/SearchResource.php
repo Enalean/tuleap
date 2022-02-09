@@ -68,6 +68,7 @@ final class SearchResource extends AuthenticatedResource
      * <li>`type` (Allowed types: folder, file, embedded, wiki, link, empty)</li>
      * <li>`title`</li>
      * <li>`description`</li>
+     * <li>`owner` (username or id)</li>
      * </ul>
      *
      * <p><b>Note:</b> Global search will search in all text properties of document (but does not look inside the document).</p>
@@ -126,7 +127,8 @@ final class SearchResource extends AuthenticatedResource
             new \Docman_MetadataFactory($project_id),
             new Docman_FilterFactory($project_id),
             new AlwaysThereColumnRetriever($docman_settings),
-            new ColumnReportAugmenter(new Docman_ReportColumnFactory($project_id))
+            new ColumnReportAugmenter(new Docman_ReportColumnFactory($project_id)),
+            $user_manager,
         );
         $status_mapper         = new ItemStatusMapper($docman_settings);
         $item_dao              = new \Docman_ItemDao();

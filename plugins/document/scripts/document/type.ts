@@ -256,4 +256,5 @@ export interface AdvancedSearchParams {
     readonly type: AllowedSearchType;
     readonly title: string;
     readonly description: string;
+    readonly owner: string;
 }

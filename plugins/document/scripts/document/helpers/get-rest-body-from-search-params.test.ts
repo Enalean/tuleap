@@ -33,6 +33,7 @@ describe("get-rest-body-from-search-params", () => {
             type: "",
             title: "",
             description: "",
+            owner: "",
         };
         expect(getRestBodyFromSearchParams(query_params)).toStrictEqual({});
     });
@@ -52,5 +53,11 @@ describe("get-rest-body-from-search-params", () => {
         expect(getRestBodyFromSearchParams(buildAdvancedSearchParams(params))).toStrictEqual(
             expected
         );
+    });
+
+    it("should return the owner parameter", () => {
+        expect(
+            getRestBodyFromSearchParams(buildAdvancedSearchParams({ owner: "lorem" }))
+        ).toStrictEqual({ owner: "lorem" });
     });
 });

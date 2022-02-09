@@ -31,6 +31,7 @@ use Docman_SettingsBo;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class SearchReportBuilderTest extends TestCase
@@ -54,11 +55,18 @@ final class SearchReportBuilderTest extends TestCase
 
         $column_report_builder = new ColumnReportAugmenter($column_factory);
 
+        $user_manager = $this->createMock(\UserManager::class);
+        $user_manager
+            ->method('findUser')
+            ->with('John Doe (jdoe)')
+            ->willReturn(UserTestBuilder::aUser()->withUserName('jdoe')->build());
+
         $this->search_report_builder = new SearchReportBuilder(
             $metadata_factory,
             $filter_factory,
             $always_there_column_retriever,
-            $column_report_builder
+            $column_report_builder,
+            $user_manager,
         );
     }
 
@@ -127,5 +135,21 @@ final class SearchReportBuilderTest extends TestCase
         $second_filter = $report->getFiltersArray()[1];
         self::assertSame("description", $second_filter->md->getLabel());
         self::assertSame("lorem", $second_filter->value);
+    }
+
+    public function testItBuildsAReportWithAOwnerSearchFilterAndUseTheUsernameToSearch(): void
+    {
+        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search                = new PostSearchRepresentation();
+        $search->global_search = "*.docx";
+        $search->owner         = "John Doe (jdoe)";
+
+        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $first_filter = $report->getFiltersArray()[0];
+        self::assertSame("global_txt", $first_filter->md->getLabel());
+        self::assertSame("*.docx", $first_filter->value);
+        $second_filter = $report->getFiltersArray()[1];
+        self::assertSame("owner", $second_filter->md->getLabel());
+        self::assertSame("jdoe", $second_filter->value);
     }
 }

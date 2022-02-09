@@ -98,13 +98,7 @@ describe("SearchContainer", () => {
         });
 
         const criteria = wrapper.findComponent(SearchCriteriaPanel);
-        const params: AdvancedSearchParams = {
-            query: "Lorem ipsum",
-            type: "",
-            title: "",
-            description: "",
-        };
-        criteria.vm.$emit("advanced-search", params);
+        criteria.vm.$emit("advanced-search", buildAdvancedSearchParams({ query: "Lorem ipsum" }));
 
         expect(router.push).toHaveBeenCalledWith({
             name: "search",
@@ -141,13 +135,7 @@ describe("SearchContainer", () => {
         });
 
         const criteria = wrapper.findComponent(SearchCriteriaPanel);
-        const params: AdvancedSearchParams = {
-            query: "",
-            type: "folder",
-            title: "",
-            description: "",
-        };
-        criteria.vm.$emit("advanced-search", params);
+        criteria.vm.$emit("advanced-search", buildAdvancedSearchParams({ type: "folder" }));
 
         expect(router.push).toHaveBeenCalledWith({
             name: "search",
@@ -184,13 +172,7 @@ describe("SearchContainer", () => {
         });
 
         const criteria = wrapper.findComponent(SearchCriteriaPanel);
-        const params: AdvancedSearchParams = {
-            query: "",
-            type: "",
-            title: "doloret",
-            description: "",
-        };
-        criteria.vm.$emit("advanced-search", params);
+        criteria.vm.$emit("advanced-search", buildAdvancedSearchParams({ title: "doloret" }));
 
         expect(router.push).toHaveBeenCalledWith({
             name: "search",
@@ -227,13 +209,7 @@ describe("SearchContainer", () => {
         });
 
         const criteria = wrapper.findComponent(SearchCriteriaPanel);
-        const params: AdvancedSearchParams = {
-            query: "",
-            type: "",
-            title: "",
-            description: "doloret",
-        };
-        criteria.vm.$emit("advanced-search", params);
+        criteria.vm.$emit("advanced-search", buildAdvancedSearchParams({ description: "doloret" }));
 
         expect(router.push).toHaveBeenCalledWith({
             name: "search",
@@ -321,16 +297,10 @@ describe("SearchContainer", () => {
         const router = new VueRouter();
         jest.spyOn(router, "push").mockImplementation();
 
-        const query: AdvancedSearchParams = {
-            query: "Lorem ipsum",
-            type: "",
-            title: "",
-            description: "",
-        };
         const wrapper = shallowMount(SearchContainer, {
             localVue: createLocalVue().use(VueRouter),
             propsData: {
-                query,
+                query: buildAdvancedSearchParams({ query: "Lorem ipsum" }),
                 folder_id: 101,
                 offset: 0,
             },
@@ -362,16 +332,10 @@ describe("SearchContainer", () => {
     it("should search for items based on criteria", () => {
         searchInFolderMock.mockResolvedValue([]);
 
-        const query: AdvancedSearchParams = {
-            query: "Lorem ipsum",
-            type: "",
-            title: "",
-            description: "",
-        };
         const wrapper = shallowMount(SearchContainer, {
             localVue: createLocalVue().use(VueRouter),
             propsData: {
-                query,
+                query: buildAdvancedSearchParams({ query: "Lorem ipsum" }),
                 folder_id: 101,
                 offset: 0,
             },

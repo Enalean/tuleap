@@ -433,7 +433,13 @@ describe("rest-querier", () => {
 
             const results = await searchInFolder(
                 101,
-                { query: "Lorem ipsum", type: "folder", title: "doloret", description: "sit" },
+                {
+                    query: "Lorem ipsum",
+                    type: "folder",
+                    title: "doloret",
+                    description: "sit",
+                    owner: "jdoe",
+                },
                 170
             );
 
@@ -446,6 +452,7 @@ describe("rest-querier", () => {
                     type: "folder",
                     title: "doloret",
                     description: "sit",
+                    owner: "jdoe",
                     offset: 170,
                     limit: 50,
                 }),

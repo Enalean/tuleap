@@ -33,6 +33,9 @@ export function getRouterQueryFromSearchParams(params: AdvancedSearchParams): Di
     if (params.description.length > 0) {
         query.description = params.description;
     }
+    if (params.owner.length > 0) {
+        query.owner = params.owner;
+    }
 
     return query;
 }
