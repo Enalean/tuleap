@@ -31,7 +31,6 @@ use Tracker_FormElement_Field_Text;
 
 class SemanticValueAdapterFindDescriptionTest extends SemanticValueAdapterTest
 {
-
     public function testFindDescription(): void
     {
         $this->changeset->shouldReceive('getTracker')->andReturn($this->tracker);

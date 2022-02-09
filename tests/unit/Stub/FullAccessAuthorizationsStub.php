@@ -33,7 +33,6 @@ use Tuleap\Baseline\Domain\TransientComparison;
 
 class FullAccessAuthorizationsStub implements Authorizations
 {
-
     public function canCreateBaseline(PFUser $current_user, TransientBaseline $baseline): bool
     {
         return true;
