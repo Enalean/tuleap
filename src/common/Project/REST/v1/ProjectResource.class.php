@@ -58,6 +58,8 @@ use Tuleap\Project\DeletedProjectStatusChangeException;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
+use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Label\LabelsCurlyCoatedRetriever;
@@ -1273,18 +1275,22 @@ class ProjectResource extends AuthenticatedResource
         $this->checkAccess();
         $project = $this->getProjectForUser($id);
 
-        $current_user = $this->user_manager->getCurrentUser();
+        $current_user  = $this->user_manager->getCurrentUser();
+        $event_manager = EventManager::instance();
 
         $config = ProjectSidebarConfigRepresentation::build(
             $project,
             $current_user,
+            new BannerRetriever(new BannerDao()),
+            new ProjectFlagsBuilder(new ProjectFlagsDao()),
+            $event_manager,
             new UserCanAccessProjectAdministrationVerifier(new MembershipDelegationDao()),
             new FlavorFinderFromFilePresence(),
             new CachedCustomizedLogoDetector(
                 new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator()),
                 \BackendLogger::getDefaultLogger(),
             ),
-            new GlyphFinder(EventManager::instance())
+            new GlyphFinder($event_manager)
         );
 
         return new ThirdPartyIntegrationDataRepresentation(

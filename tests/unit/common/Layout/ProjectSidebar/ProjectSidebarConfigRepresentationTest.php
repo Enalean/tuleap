@@ -22,9 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout\ProjectSidebar;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\BuildVersion\FlavorFinder;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
+use Tuleap\Project\Banner\BannerRetriever;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\VerifyUserCanAccessProjectAdministrationStub;
@@ -39,10 +42,23 @@ final class ProjectSidebarConfigRepresentationTest extends TestCase
         $user = $this->createStub(\PFUser::class);
         $user->method('isLoggedIn')->willReturn(false);
         $user->method('getLanguage')->willReturn($base_language);
+        $banner_retriever = $this->createStub(BannerRetriever::class);
+        $banner_retriever->method('getBannerForProject')->willReturn(null);
+        $project_flags_builder = $this->createStub(ProjectFlagsBuilder::class);
+        $project_flags_builder->method('buildProjectFlags')->willReturn([]);
 
         $representation = ProjectSidebarConfigRepresentation::build(
             $project,
             $user,
+            $banner_retriever,
+            $project_flags_builder,
+            new class implements EventDispatcherInterface
+            {
+                public function dispatch(object $event): object
+                {
+                    return $event;
+                }
+            },
             VerifyUserCanAccessProjectAdministrationStub::withPermittedAccess(),
             new class implements FlavorFinder {
                 public function isEnterprise(): bool

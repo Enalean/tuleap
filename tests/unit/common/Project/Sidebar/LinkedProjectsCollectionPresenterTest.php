@@ -71,7 +71,7 @@ final class LinkedProjectsCollectionPresenterTest extends TestCase
         $presenter = LinkedProjectsCollectionPresenter::fromEvent($event);
 
         self::assertSame($is_in_children_context, $presenter->is_in_children_projects_context);
-        self::assertSame(2, $presenter->nb_of_linked_projects);
+        self::assertStringContainsString('2', $presenter->label);
         self::assertCount(2, $presenter->projects);
     }
 

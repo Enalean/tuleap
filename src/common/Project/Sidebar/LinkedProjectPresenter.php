@@ -22,22 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Sidebar;
 
+use Tuleap\ServerHostname;
+
 /**
  * @psalm-immutable
  */
 final class LinkedProjectPresenter
 {
-    public string $public_name;
-    public string $uri;
-
-    private function __construct(string $public_name, string $uri, public ?string $project_icon)
+    private function __construct(public string $name, public string $href, public string $icon)
     {
-        $this->public_name = $public_name;
-        $this->uri         = $uri;
     }
 
     public static function fromLinkedProject(LinkedProject $linked_project): self
     {
-        return new self($linked_project->public_name, $linked_project->uri, $linked_project->project_icon);
+        return new self($linked_project->public_name, ServerHostname::HTTPSUrl() . $linked_project->uri, $linked_project->project_icon);
     }
 }

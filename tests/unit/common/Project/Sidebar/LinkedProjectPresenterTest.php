@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Sidebar;
 
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -29,8 +30,11 @@ use Tuleap\Test\Stubs\CheckProjectAccessStub;
 
 final class LinkedProjectPresenterTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
     public function testItBuildsFromLinkedProject(): void
     {
+        \ForgeConfig::set('sys_default_domain', 'example.com');
         $user      = UserTestBuilder::aUser()->build();
         $project   = ProjectTestBuilder::aProject()
             ->withUnixName('red-team')
@@ -39,7 +43,7 @@ final class LinkedProjectPresenterTest extends TestCase
         $presenter = LinkedProjectPresenter::fromLinkedProject(
             LinkedProject::fromProject(CheckProjectAccessStub::withValidAccess(), $project, $user)
         );
-        self::assertSame('Red Team', $presenter->public_name);
-        self::assertSame('/projects/red-team', $presenter->uri);
+        self::assertSame('Red Team', $presenter->name);
+        self::assertSame('https://example.com/projects/red-team', $presenter->href);
     }
 }

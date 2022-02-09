@@ -80,24 +80,23 @@
                             </span>
                         {{/ is_in_children_projects_context }}
                         <span class="project-sidebar-linked-projects-label">
-                            {{# is_in_children_projects_context }}{{# ngettext }}%d Aggregated project | %d Aggregated projects | {{ nb_of_linked_projects }}{{/ ngettext }}{{/ is_in_children_projects_context }}
-                            {{^ is_in_children_projects_context }}{{# ngettext }}%d Parent project | %d Parent projects | {{ nb_of_linked_projects }}{{/ ngettext }}{{/ is_in_children_projects_context }}
+                            {{ label }}
                         </span>
                     </span>
             <ul class="project-sidebar-linked-projects-list" data-test="nav-bar-linked-projects">
                 {{# projects }}
                     <li class="project-sidebar-linked-projects-item">
-                        <a href="{{ uri }}" class="project-sidebar-linked-projects-item-link">
-                            {{# project_icon }}
-                                <span class="project-sidebar-linked-projects-item-icon" aria-hidden="true">{{ project_icon }}</span>
-                            {{/ project_icon }}
-                            {{^ project_icon }}
+                        <a href="{{ href }}" class="project-sidebar-linked-projects-item-link">
+                            {{# icon }}
+                                <span class="project-sidebar-linked-projects-item-icon" aria-hidden="true">{{ icon }}</span>
+                            {{/ icon }}
+                            {{^ icon }}
                                 <i class="project-sidebar-linked-projects-item-icon fas fa-archive"
                                 aria-hidden="true"
                                 ></i>
-                            {{/ project_icon }}
+                            {{/ icon }}
                             <span class="project-sidebar-linked-projects-item-name">
-                                {{ public_name }}
+                                {{ name }}
                             </span>
                         </a>
                     </li>
@@ -110,8 +109,7 @@
                 {{# is_in_children_projects_context }}<i class="fas fa-fw fa-tlp-project-boxes" aria-hidden="true"></i>{{/ is_in_children_projects_context }}
                 {{^ is_in_children_projects_context }}<i class="fas fa-fw fa-level-up-alt fa-flip-horizontal project-sidebar-linked-projects-icon-parent" aria-hidden="true"></i>{{/ is_in_children_projects_context }}
                 <h1 class="tlp-popover-title">
-                    {{# is_in_children_projects_context }}{{# ngettext }}%d Aggregated project | %d Aggregated projects | {{ nb_of_linked_projects }}{{/ ngettext }}{{/ is_in_children_projects_context }}
-                    {{^ is_in_children_projects_context }}{{# ngettext }}%d Parent project | %d Parent projects | {{ nb_of_linked_projects }}{{/ ngettext }}{{/ is_in_children_projects_context }}
+                    {{ label }}
                 </h1>
             </div>
             <div class="tlp-popover-body">
@@ -119,15 +117,15 @@
                     {{# projects }}
                         <li class="project-sidebar-linked-projects-item">
                             <div class="project-sidebar-linked-projects-item-link">
-                                {{# project_icon }}
-                                    <span class="project-sidebar-linked-projects-item-icon" aria-hidden="true">{{ project_icon }}</span>
-                                {{/ project_icon }}
-                                {{^ project_icon }}
+                                {{# icon }}
+                                    <span class="project-sidebar-linked-projects-item-icon" aria-hidden="true">{{ icon }}</span>
+                                {{/ icon }}
+                                {{^ icon }}
                                     <i class="project-sidebar-linked-projects-item-icon fas fa-archive"
                                     aria-hidden="true"
                                     ></i>
-                                {{/ project_icon }}
-                                {{ public_name }}
+                                {{/ icon }}
+                                {{ name }}
                             </div>
                         </li>
                     {{/ projects }}
