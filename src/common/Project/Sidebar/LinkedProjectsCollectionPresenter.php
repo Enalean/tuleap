@@ -27,21 +27,11 @@ namespace Tuleap\Project\Sidebar;
  */
 final class LinkedProjectsCollectionPresenter
 {
-    public int $nb_of_linked_projects;
-    public bool $is_in_children_projects_context;
-    /**
-     * @var LinkedProjectPresenter[]
-     */
-    public array $projects;
-
     /**
      * @param LinkedProjectPresenter[] $projects
      */
-    private function __construct(bool $is_in_children_projects_context, array $projects)
+    private function __construct(public string $label, public bool $is_in_children_projects_context, public array $projects)
     {
-        $this->is_in_children_projects_context = $is_in_children_projects_context;
-        $this->projects                        = $projects;
-        $this->nb_of_linked_projects           = count($projects);
     }
 
     public static function fromEvent(CollectLinkedProjects $event): ?self
@@ -52,7 +42,19 @@ final class LinkedProjectsCollectionPresenter
             foreach ($children_projects->getProjects() as $child_project) {
                 $presenters[] = LinkedProjectPresenter::fromLinkedProject($child_project);
             }
-            return new self(true, $presenters);
+            $nb_linked_projects = count($presenters);
+            return new self(
+                sprintf(
+                    ngettext(
+                        '%d Aggregated project',
+                        '%d Aggregated projects',
+                        $nb_linked_projects
+                    ),
+                    $nb_linked_projects
+                ),
+                true,
+                $presenters
+            );
         }
         $parent_projects = $event->getParentProjects();
         if (! $parent_projects->isEmpty()) {
@@ -60,7 +62,19 @@ final class LinkedProjectsCollectionPresenter
             foreach ($parent_projects->getProjects() as $parent_project) {
                 $presenters[] = LinkedProjectPresenter::fromLinkedProject($parent_project);
             }
-            return new self(false, $presenters);
+            $nb_linked_projects = count($presenters);
+            return new self(
+                sprintf(
+                    ngettext(
+                        '%d Parent project',
+                        '%d Parent projects',
+                        $nb_linked_projects
+                    ),
+                    $nb_linked_projects
+                ),
+                false,
+                $presenters
+            );
         }
         return null;
     }

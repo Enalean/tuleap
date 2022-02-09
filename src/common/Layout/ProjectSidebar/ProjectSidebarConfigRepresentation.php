@@ -22,12 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout\ProjectSidebar;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\BuildVersion\FlavorFinder;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\Layout\ProjectSidebar\InstanceInformation\ProjectSidebarInstanceInformation;
+use Tuleap\Layout\ProjectSidebar\Project\ProjectSidebarProject;
 use Tuleap\Layout\ProjectSidebar\User\ProjectSidebarUser;
 use Tuleap\Project\Admin\Access\VerifyUserCanAccessProjectAdministration;
+use Tuleap\Project\Banner\BannerRetriever;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
 
 /**
  * @psalm-immutable
@@ -35,6 +39,7 @@ use Tuleap\Project\Admin\Access\VerifyUserCanAccessProjectAdministration;
 final class ProjectSidebarConfigRepresentation
 {
     private function __construct(
+        public ProjectSidebarProject $project,
         public ProjectSidebarUser $user,
         public ProjectSidebarInstanceInformation $instance_information,
     ) {
@@ -43,12 +48,22 @@ final class ProjectSidebarConfigRepresentation
     public static function build(
         \Project $project,
         \PFUser $user,
+        BannerRetriever $banner_retriever,
+        ProjectFlagsBuilder $project_flags_builder,
+        EventDispatcherInterface $event_dispatcher,
         VerifyUserCanAccessProjectAdministration $project_admin_access_verifier,
         FlavorFinder $flavor_finder,
         IDetectIfLogoIsCustomized $customized_logo_detector,
         GlyphFinder $glyph_finder,
     ): self {
         return new self(
+            ProjectSidebarProject::build(
+                $project,
+                $user,
+                $banner_retriever,
+                $project_flags_builder,
+                $event_dispatcher,
+            ),
             ProjectSidebarUser::fromProjectAndUser(
                 $project,
                 $user,
