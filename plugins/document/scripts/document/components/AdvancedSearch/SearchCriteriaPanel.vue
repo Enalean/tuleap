@@ -30,7 +30,18 @@
                     <div class="document-search-criteria">
                         <criterion-global-text v-model="new_query.query" />
                         <criterion-type v-model="new_query.type" />
-                        <criterion-title v-model="new_query.title" />
+                        <criterion-text
+                            name="title"
+                            v-bind:label="$gettext('Title')"
+                            v-model="new_query.title"
+                            data-test="criterion-title"
+                        />
+                        <criterion-text
+                            name="description"
+                            v-bind:label="$gettext('Description')"
+                            v-model="new_query.description"
+                            data-test="criterion-description"
+                        />
                     </div>
                 </section>
                 <section class="tlp-pane-section tlp-pane-section-submit">
@@ -55,13 +66,13 @@ import type { AdvancedSearchParams } from "../../type";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
 import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
 import CriterionType from "./Criteria/CriterionType.vue";
-import CriterionTitle from "./Criteria/CriterionTitle.vue";
+import CriterionText from "./Criteria/CriterionText.vue";
 
 const configuration = namespace("configuration");
 
 @Component({
     components: {
-        CriterionTitle,
+        CriterionText,
         CriterionType,
         CriterionGlobalText,
         SearchCriteriaBreadcrumb,
@@ -81,6 +92,7 @@ export default class SearchCriteriaPanel extends Vue {
         query: "",
         type: "",
         title: "",
+        description: "",
     };
 
     mounted() {

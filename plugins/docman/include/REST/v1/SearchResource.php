@@ -65,11 +65,11 @@ final class SearchResource extends AuthenticatedResource
      * <p>Allowed criteria:</p>
      * <ul>
      * <li>`global_search`</li>
-     * <li>`type`</li>
+     * <li>`type` (Allowed types: folder, file, embedded, wiki, link, empty)</li>
      * <li>`title`</li>
+     * <li>`description`</li>
      * </ul>
      *
-     * <p><b>Note:</b> Allowed types: folder, file, embedded, wiki, link, empty.</p>
      * <p><b>Note:</b> Global search will search in all text properties of document (but does not look inside the document).</p>
      *
      * <p>Allowed patterns for text properties (global_search, title):</p>

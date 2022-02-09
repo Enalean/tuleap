@@ -50,6 +50,7 @@ import type {
     User,
     Wiki,
 } from "../type";
+import { buildAdvancedSearchParams } from "../helpers/build-advanced-search-params";
 
 jest.mock("tlp");
 
@@ -432,7 +433,7 @@ describe("rest-querier", () => {
 
             const results = await searchInFolder(
                 101,
-                { query: "Lorem ipsum", type: "folder", title: "doloret" },
+                { query: "Lorem ipsum", type: "folder", title: "doloret", description: "sit" },
                 170
             );
 
@@ -444,6 +445,7 @@ describe("rest-querier", () => {
                     global_search: "Lorem ipsum",
                     type: "folder",
                     title: "doloret",
+                    description: "sit",
                     offset: 170,
                     limit: 50,
                 }),
@@ -470,7 +472,7 @@ describe("rest-querier", () => {
                 },
             });
 
-            await searchInFolder(101, { query: "Lorem ipsum", type: "", title: "" }, 170);
+            await searchInFolder(101, buildAdvancedSearchParams({ query: "Lorem ipsum" }), 170);
 
             expect(tlpPost).toHaveBeenCalledWith(`/api/v1/docman_search/101`, {
                 headers: {

@@ -36,11 +36,12 @@ use Tuleap\Docman\Metadata\CustomMetadataException;
  */
 class Docman_MetadataFactory
 {
-    public const HARDCODED_METADATA_TITLE_LABEL = 'title';
-    public const HARDCODED_METADATA_OWNER_LABEL = 'owner';
-    public const HARDCODED_METADATA_LABELS      = [
+    public const HARDCODED_METADATA_TITLE_LABEL       = 'title';
+    public const HARDCODED_METADATA_DESCRIPTION_LABEL = 'description';
+    public const HARDCODED_METADATA_OWNER_LABEL       = 'owner';
+    public const HARDCODED_METADATA_LABELS            = [
         self::HARDCODED_METADATA_TITLE_LABEL,
-        'description',
+        self::HARDCODED_METADATA_DESCRIPTION_LABEL,
         self::HARDCODED_METADATA_OWNER_LABEL,
         'create_date',
         'update_date',
@@ -541,10 +542,10 @@ class Docman_MetadataFactory
                 $md->setCanChangeValue(true);
                 break;
 
-            case 'description':
+            case self::HARDCODED_METADATA_DESCRIPTION_LABEL:
                 $md = new Docman_Metadata();
                 $md->setName(dgettext('tuleap-docman', 'Description'));
-                $md->setLabel('description');
+                $md->setLabel(self::HARDCODED_METADATA_DESCRIPTION_LABEL);
                 $md->setDescription(dgettext('tuleap-docman', 'Description of the document.'));
                 $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
                 $md->setIsRequired(true);
