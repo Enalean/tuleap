@@ -20,12 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\App;
+namespace Tuleap\OAuth2ServerCore\App;
 
 final class OAuth2App
 {
-    public const PLUGIN_APP = 'plugin_oauth2';
-
     /**
      * @var int
      * @psalm-readonly

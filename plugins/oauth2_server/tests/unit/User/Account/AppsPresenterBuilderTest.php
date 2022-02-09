@@ -27,7 +27,7 @@ use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\OAuth2Server\App\AppFactory;
-use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2Server\AuthorizationServer\OAuth2ScopeDefinitionPresenter;
 use Tuleap\OAuth2Server\User\AuthorizedScopeFactory;
 use Tuleap\Test\Builders\UserTestBuilder;

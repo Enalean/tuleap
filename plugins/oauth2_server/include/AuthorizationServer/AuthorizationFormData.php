@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
 use Tuleap\Authentication\Scope\AuthenticationScope;
-use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
 
 final class AuthorizationFormData
 {

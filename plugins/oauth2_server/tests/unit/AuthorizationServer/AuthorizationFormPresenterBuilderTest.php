@@ -25,7 +25,7 @@ namespace Tuleap\OAuth2Server\AuthorizationServer;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class AuthorizationFormPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase

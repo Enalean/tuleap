@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\App;
+namespace Tuleap\OAuth2ServerCore\App;
 
 use Tuleap\DB\DataAccessObject;
 
@@ -31,7 +31,7 @@ class AppDao extends DataAccessObject
      */
     public function searchByClientId(ClientIdentifier $client_id): ?array
     {
-        $sql = 'SELECT id, project_id, name, redirect_endpoint, use_pkce FROM plugin_oauth2_server_app
+        $sql = 'SELECT id, project_id, name, redirect_endpoint, use_pkce FROM oauth2_server_app
             WHERE id = ?';
         return $this->getDB()->row($sql, $client_id->getInternalId());
     }
@@ -39,7 +39,7 @@ class AppDao extends DataAccessObject
     public function searchClientSecretByClientID(int $client_id): ?string
     {
         $row = $this->getDB()->row(
-            'SELECT verifier FROM plugin_oauth2_server_app WHERE id = ?',
+            'SELECT verifier FROM oauth2_server_app WHERE id = ?',
             $client_id
         );
 
@@ -49,7 +49,7 @@ class AppDao extends DataAccessObject
     public function searchProjectIDByClientID(int $client_id): ?int
     {
         $row = $this->getDB()->row(
-            'SELECT project_id FROM plugin_oauth2_server_app WHERE id = ?',
+            'SELECT project_id FROM oauth2_server_app WHERE id = ?',
             $client_id
         );
 
@@ -62,7 +62,7 @@ class AppDao extends DataAccessObject
     public function searchByProject(\Project $project, string $app_type): array
     {
         $sql = "SELECT id, project_id, name, redirect_endpoint, use_pkce
-                FROM plugin_oauth2_server_app
+                FROM oauth2_server_app
                 WHERE project_id = ?
                     AND app_type = ?";
 
@@ -75,7 +75,7 @@ class AppDao extends DataAccessObject
     public function searchSiteLevelApps(string $app_type): array
     {
         return $this->getDB()->run(
-            'SELECT id, name, redirect_endpoint, use_pkce FROM plugin_oauth2_server_app
+            'SELECT id, name, redirect_endpoint, use_pkce FROM oauth2_server_app
              WHERE project_id IS NULL
                 AND app_type = ?',
             $app_type
@@ -88,7 +88,7 @@ class AppDao extends DataAccessObject
     public function searchAuthorizedAppsByUser(\PFUser $user, string $app_type): array
     {
         $sql = 'SELECT app.id, project_id, name, redirect_endpoint, use_pkce
-                FROM plugin_oauth2_server_app AS app
+                FROM oauth2_server_app AS app
                 JOIN plugin_oauth2_authorization AS authorization ON app.id = authorization.app_id
                 WHERE authorization.user_id = ?
                     AND app_type = ?';
@@ -100,7 +100,7 @@ class AppDao extends DataAccessObject
     {
         $project = $app->getProject();
         $this->getDB()->insert(
-            'plugin_oauth2_server_app',
+            'oauth2_server_app',
             [
                 'project_id'        => $project !== null ? $project->getID() : null,
                 'name'              => $app->getName(),
@@ -116,7 +116,7 @@ class AppDao extends DataAccessObject
     public function updateSecret(int $app_id, string $hashed_secret): void
     {
         $this->getDB()->update(
-            'plugin_oauth2_server_app',
+            'oauth2_server_app',
             ['verifier' => $hashed_secret],
             ['id' => $app_id]
         );
@@ -125,7 +125,7 @@ class AppDao extends DataAccessObject
     public function updateApp(OAuth2App $updated_app): void
     {
         $this->getDB()->update(
-            'plugin_oauth2_server_app',
+            'oauth2_server_app',
             [
                 'name' => $updated_app->getName(),
                 'redirect_endpoint' => $updated_app->getRedirectEndpoint(),
@@ -137,16 +137,16 @@ class AppDao extends DataAccessObject
 
     public function delete(int $app_id): void
     {
-        $this->getDB()->run('DELETE FROM plugin_oauth2_server_app WHERE id = ?', $app_id);
+        $this->getDB()->run('DELETE FROM oauth2_server_app WHERE id = ?', $app_id);
     }
 
     public function deleteAppsInNonExistingOrDeletedProject(): void
     {
         $this->getDB()->run(
-            'DELETE plugin_oauth2_server_app.*
-            FROM plugin_oauth2_server_app
-            LEFT JOIN `groups` ON plugin_oauth2_server_app.project_id = `groups`.group_id
-            WHERE `groups`.status = "D" OR (`groups`.group_id IS NULL AND plugin_oauth2_server_app.project_id IS NOT NULL)'
+            'DELETE oauth2_server_app.*
+            FROM oauth2_server_app
+            LEFT JOIN `groups` ON oauth2_server_app.project_id = `groups`.group_id
+            WHERE `groups`.status = "D" OR (`groups`.group_id IS NULL AND oauth2_server_app.project_id IS NOT NULL)'
         );
     }
 }

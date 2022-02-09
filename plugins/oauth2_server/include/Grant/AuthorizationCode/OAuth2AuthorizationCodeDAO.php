@@ -57,9 +57,9 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
         return $this->getDB()->row(
             'SELECT plugin_oauth2_authorization_code.verifier, user_id, expiration_date, has_already_been_used, pkce_code_challenge, oidc_nonce
                        FROM plugin_oauth2_authorization_code
-                       JOIN plugin_oauth2_server_app ON plugin_oauth2_authorization_code.app_id = plugin_oauth2_server_app.id
-                       LEFT JOIN `groups` ON plugin_oauth2_server_app.project_id = `groups`.group_id
-                       WHERE plugin_oauth2_authorization_code.id = ? AND (`groups`.status = "A" OR plugin_oauth2_server_app.project_id IS NULL)',
+                       JOIN oauth2_server_app ON plugin_oauth2_authorization_code.app_id = oauth2_server_app.id
+                       LEFT JOIN `groups` ON oauth2_server_app.project_id = `groups`.group_id
+                       WHERE plugin_oauth2_authorization_code.id = ? AND (`groups`.status = "A" OR oauth2_server_app.project_id IS NULL)',
             $authorization_code_id
         );
     }
@@ -143,8 +143,8 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
                        LEFT JOIN plugin_oauth2_access_token_scope on plugin_oauth2_access_token.id = plugin_oauth2_access_token_scope.access_token_id
                        LEFT JOIN plugin_oauth2_refresh_token ON plugin_oauth2_authorization_code.id = plugin_oauth2_refresh_token.authorization_code_id
                        LEFT JOIN plugin_oauth2_refresh_token_scope ON plugin_oauth2_refresh_token.id = plugin_oauth2_refresh_token_scope.refresh_token_id
-                       LEFT JOIN plugin_oauth2_server_app ON plugin_oauth2_authorization_code.app_id = plugin_oauth2_server_app.id
-                       LEFT JOIN `groups` ON plugin_oauth2_server_app.project_id = `groups`.group_id
+                       LEFT JOIN oauth2_server_app ON plugin_oauth2_authorization_code.app_id = oauth2_server_app.id
+                       LEFT JOIN `groups` ON oauth2_server_app.project_id = `groups`.group_id
                        WHERE $filter_statement",
             $filter_statement->values()
         );

@@ -48,7 +48,7 @@ class OAuth2RefreshTokenDAO extends DataAccessObject
             'SELECT token.authorization_code_id, token.verifier, token.expiration_date, token.has_already_been_used, auth_code.app_id
                        FROM plugin_oauth2_refresh_token AS token
                        JOIN plugin_oauth2_authorization_code AS auth_code ON auth_code.id = token.authorization_code_id
-                       JOIN plugin_oauth2_server_app AS app ON app.id = auth_code.app_id
+                       JOIN oauth2_server_app AS app ON app.id = auth_code.app_id
                        LEFT JOIN `groups` ON app.project_id = `groups`.group_id
                        WHERE (`groups`.status = "A" OR app.project_id IS NULL) AND token.id = ?',
             $refresh_token_id
@@ -64,7 +64,7 @@ class OAuth2RefreshTokenDAO extends DataAccessObject
             'SELECT token.authorization_code_id, token.verifier
                        FROM plugin_oauth2_refresh_token AS token
                        JOIN plugin_oauth2_authorization_code AS auth_code ON auth_code.id = token.authorization_code_id
-                       JOIN plugin_oauth2_server_app AS app ON app.id = auth_code.app_id
+                       JOIN oauth2_server_app AS app ON app.id = auth_code.app_id
                        LEFT JOIN `groups` ON app.project_id = `groups`.group_id
                        WHERE (`groups`.status = "A" OR app.project_id IS NULL) AND token.id = ? AND app.id = ?',
             $refresh_token_id,

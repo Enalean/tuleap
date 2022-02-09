@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\App;
 
+use Tuleap\OAuth2ServerCore\App\AppDao;
+use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 

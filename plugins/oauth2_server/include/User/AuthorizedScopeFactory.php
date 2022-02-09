@@ -24,7 +24,7 @@ namespace Tuleap\OAuth2Server\User;
 
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
-use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 class AuthorizedScopeFactory

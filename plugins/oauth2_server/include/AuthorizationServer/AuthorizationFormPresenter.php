@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
 use Psr\Http\Message\UriInterface;
-use Tuleap\OAuth2Server\App\ClientIdentifier;
+use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
 
 final class AuthorizationFormPresenter
 {

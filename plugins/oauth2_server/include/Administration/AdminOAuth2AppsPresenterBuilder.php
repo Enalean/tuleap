@@ -24,11 +24,11 @@ namespace Tuleap\OAuth2Server\Administration;
 
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Cryptography\KeyFactory;
-use Tuleap\OAuth2Server\App\AppDao;
+use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
-use Tuleap\OAuth2Server\App\ClientIdentifier;
+use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
 use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
-use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
 
 class AdminOAuth2AppsPresenterBuilder

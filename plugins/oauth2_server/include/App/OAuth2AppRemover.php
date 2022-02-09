@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2Server\App;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use Tuleap\OAuth2Server\User\AuthorizationDao;
+use Tuleap\OAuth2ServerCore\App\AppDao;
 
 class OAuth2AppRemover
 {

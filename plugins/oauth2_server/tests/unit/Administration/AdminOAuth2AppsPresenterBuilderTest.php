@@ -24,9 +24,9 @@ namespace Tuleap\OAuth2Server\Administration;
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\App\AppFactory;
-use Tuleap\OAuth2Server\App\LastGeneratedClientSecret;
 use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
-use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2ServerCore\App\LastGeneratedClientSecret;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase

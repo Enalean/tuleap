@@ -31,9 +31,9 @@ use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\OAuth2Server\Administration\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\Administration\SiteAdmin\SiteAdminListAppsController;
-use Tuleap\OAuth2Server\App\AppDao;
-use Tuleap\OAuth2Server\App\InvalidAppDataException;
-use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2ServerCore\App\InvalidAppDataException;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
+use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\ForbiddenException;
 

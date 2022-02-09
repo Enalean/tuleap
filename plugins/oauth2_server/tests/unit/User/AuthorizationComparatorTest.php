@@ -24,7 +24,7 @@ namespace Tuleap\OAuth2Server\User;
 
 use Tuleap\Authentication\Scope\AuthenticationTestCoveringScope;
 use Tuleap\Authentication\Scope\AuthenticationTestScopeIdentifier;
-use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AuthorizationComparatorTest extends \Tuleap\Test\PHPUnit\TestCase

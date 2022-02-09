@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\App;
 
 use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
 
 final class OAuth2MissingVerifierStringException extends \LogicException implements OAuth2ServerException
 {
