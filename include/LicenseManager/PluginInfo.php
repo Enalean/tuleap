@@ -22,7 +22,6 @@ namespace Tuleap\Enalean\LicenseManager;
 
 class PluginInfo extends \PluginInfo
 {
-
     public function __construct(\Plugin $plugin)
     {
         parent::__construct($plugin);

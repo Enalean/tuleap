@@ -56,7 +56,7 @@ class LicenseManagerCountDueLicensesCommand extends Command
         \UserDao $user_dao,
         DueLicencesDao $licenses_dao,
         UserManager $user_manager,
-        string $etc_root_path
+        string $etc_root_path,
     ) {
         parent::__construct(self::NAME);
         $this->user_dao     = $user_dao;

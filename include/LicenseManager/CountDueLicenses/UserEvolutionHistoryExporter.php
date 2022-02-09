@@ -46,7 +46,7 @@ class UserEvolutionHistoryExporter
     public function exportHistory(
         DateTimeImmutable $current_timestamp,
         int $nb_active_users,
-        int $nb_real_users
+        int $nb_real_users,
     ): void {
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="' . $this->history_file_location . '"');

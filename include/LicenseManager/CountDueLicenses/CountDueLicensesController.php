@@ -61,7 +61,7 @@ class CountDueLicensesController
         DueLicencesDao $due_licences_dao,
         UserManager $user_manager,
         OutputInterface $output,
-        UserEvolutionHistoryExporter $history_exporter
+        UserEvolutionHistoryExporter $history_exporter,
     ) {
         $this->user_dao         = $user_dao;
         $this->due_licences_dao = $due_licences_dao;
@@ -120,7 +120,7 @@ class CountDueLicensesController
         DateTimeImmutable $current_timestamp,
         int $nb_active_users,
         int $nb_real_users,
-        array $real_users
+        array $real_users,
     ): void {
         $this->output->writeln('###############################################');
         $this->output->writeln('Date: ' . $current_timestamp->format(DateTimeImmutable::ATOM));

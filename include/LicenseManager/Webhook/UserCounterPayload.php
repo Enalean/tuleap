@@ -34,7 +34,7 @@ class UserCounterPayload implements Payload
             'url'       => \Tuleap\ServerHostname::HTTPSUrl(),
             'users'     => [],
             'max_users' => $max_users,
-            'user_id'   => $user_id
+            'user_id'   => $user_id,
         ];
 
         foreach ($dao->getNbOfUsersByStatus() as $row) {
