@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
+namespace Tuleap\OAuth2ServerCore\Grant\AuthorizationCode;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
@@ -36,7 +36,7 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
         ?string $oidc_nonce,
     ): int {
         return (int) $this->getDB()->insertReturnId(
-            'plugin_oauth2_authorization_code',
+            'oauth2_authorization_code',
             [
                 'app_id'                => $app_id,
                 'user_id'               => $user_id,
@@ -55,11 +55,11 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
     public function searchAuthorizationCode(int $authorization_code_id): ?array
     {
         return $this->getDB()->row(
-            'SELECT plugin_oauth2_authorization_code.verifier, user_id, expiration_date, has_already_been_used, pkce_code_challenge, oidc_nonce
-                       FROM plugin_oauth2_authorization_code
-                       JOIN oauth2_server_app ON plugin_oauth2_authorization_code.app_id = oauth2_server_app.id
+            'SELECT oauth2_authorization_code.verifier, user_id, expiration_date, has_already_been_used, pkce_code_challenge, oidc_nonce
+                       FROM oauth2_authorization_code
+                       JOIN oauth2_server_app ON oauth2_authorization_code.app_id = oauth2_server_app.id
                        LEFT JOIN `groups` ON oauth2_server_app.project_id = `groups`.group_id
-                       WHERE plugin_oauth2_authorization_code.id = ? AND (`groups`.status = "A" OR oauth2_server_app.project_id IS NULL)',
+                       WHERE oauth2_authorization_code.id = ? AND (`groups`.status = "A" OR oauth2_server_app.project_id IS NULL)',
             $authorization_code_id
         );
     }
@@ -67,7 +67,7 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
     public function markAuthorizationCodeAsUsed(int $authorization_code_id): void
     {
         $this->getDB()->run(
-            'UPDATE plugin_oauth2_authorization_code SET has_already_been_used=TRUE WHERE id=?',
+            'UPDATE oauth2_authorization_code SET has_already_been_used=TRUE WHERE id=?',
             $authorization_code_id
         );
     }
@@ -75,7 +75,7 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
     public function deleteAuthorizationCodeByAppID(int $app_id): void
     {
         $this->deleteAuthorizationCode(
-            EasyStatement::open()->with('plugin_oauth2_authorization_code.app_id = ?', $app_id)
+            EasyStatement::open()->with('oauth2_authorization_code.app_id = ?', $app_id)
         );
     }
 
@@ -83,7 +83,7 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
     {
         $this->deleteAuthorizationCode(
             EasyStatement::open()->with(
-                'plugin_oauth2_authorization_code.user_id = ? AND plugin_oauth2_authorization_code.app_id = ?',
+                'oauth2_authorization_code.user_id = ? AND oauth2_authorization_code.app_id = ?',
                 $user->getId(),
                 $app_id
             )
@@ -93,7 +93,7 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
     public function deleteAuthorizationCodeByID(int $authorization_code_id): void
     {
         $this->deleteAuthorizationCode(
-            EasyStatement::open()->with('plugin_oauth2_authorization_code.id = ?', $authorization_code_id)
+            EasyStatement::open()->with('oauth2_authorization_code.id = ?', $authorization_code_id)
         );
     }
 
@@ -101,7 +101,7 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
     {
         $this->deleteAuthorizationCode(
             EasyStatement::open()->with(
-                '? > plugin_oauth2_authorization_code.expiration_date
+                '? > oauth2_authorization_code.expiration_date
                 AND (plugin_oauth2_refresh_token.id IS NULL OR ? > plugin_oauth2_refresh_token.expiration_date)
                 AND (plugin_oauth2_access_token.id IS NULL OR ? > plugin_oauth2_access_token.expiration_date)',
                 $current_time,
@@ -115,7 +115,7 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
     {
         $this->deleteAuthorizationCode(
             EasyStatement::open()->with(
-                'plugin_oauth2_authorization_code.user_id = ?',
+                'oauth2_authorization_code.user_id = ?',
                 $user->getId()
             )
         );
@@ -131,19 +131,19 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
     private function deleteAuthorizationCode(EasyStatement $filter_statement): void
     {
         $this->getDB()->safeQuery(
-            "DELETE plugin_oauth2_authorization_code.*,
+            "DELETE oauth2_authorization_code.*,
                               plugin_oauth2_authorization_code_scope.*,
                               plugin_oauth2_access_token.*,
                               plugin_oauth2_access_token_scope.*,
                               plugin_oauth2_refresh_token.*,
                               plugin_oauth2_refresh_token_scope.*
-                       FROM plugin_oauth2_authorization_code
-                       LEFT JOIN plugin_oauth2_authorization_code_scope ON plugin_oauth2_authorization_code.id = plugin_oauth2_authorization_code_scope.auth_code_id
-                       LEFT JOIN plugin_oauth2_access_token ON plugin_oauth2_authorization_code.id = plugin_oauth2_access_token.authorization_code_id
+                       FROM oauth2_authorization_code
+                       LEFT JOIN plugin_oauth2_authorization_code_scope ON oauth2_authorization_code.id = plugin_oauth2_authorization_code_scope.auth_code_id
+                       LEFT JOIN plugin_oauth2_access_token ON oauth2_authorization_code.id = plugin_oauth2_access_token.authorization_code_id
                        LEFT JOIN plugin_oauth2_access_token_scope on plugin_oauth2_access_token.id = plugin_oauth2_access_token_scope.access_token_id
-                       LEFT JOIN plugin_oauth2_refresh_token ON plugin_oauth2_authorization_code.id = plugin_oauth2_refresh_token.authorization_code_id
+                       LEFT JOIN plugin_oauth2_refresh_token ON oauth2_authorization_code.id = plugin_oauth2_refresh_token.authorization_code_id
                        LEFT JOIN plugin_oauth2_refresh_token_scope ON plugin_oauth2_refresh_token.id = plugin_oauth2_refresh_token_scope.refresh_token_id
-                       LEFT JOIN oauth2_server_app ON plugin_oauth2_authorization_code.app_id = oauth2_server_app.id
+                       LEFT JOIN oauth2_server_app ON oauth2_authorization_code.app_id = oauth2_server_app.id
                        LEFT JOIN `groups` ON oauth2_server_app.project_id = `groups`.group_id
                        WHERE $filter_statement",
             $filter_statement->values()

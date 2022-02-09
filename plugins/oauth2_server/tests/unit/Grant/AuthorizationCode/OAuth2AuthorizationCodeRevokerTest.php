@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
+use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 
 final class OAuth2AuthorizationCodeRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {

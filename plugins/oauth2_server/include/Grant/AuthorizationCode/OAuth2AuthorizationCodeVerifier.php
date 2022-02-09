@@ -27,6 +27,7 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
+use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use UserManager;
 
 class OAuth2AuthorizationCodeVerifier
