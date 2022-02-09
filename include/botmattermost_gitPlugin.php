@@ -47,7 +47,6 @@ require_once __DIR__ . '/../../git/include/gitPlugin.php';
 
 class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
 {
-
     public function __construct($id)
     {
         parent::__construct($id);

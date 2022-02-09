@@ -22,7 +22,6 @@ namespace Tuleap\BotMattermostGit\SenderServices;
 
 use GitRepository;
 use Git_GitRepositoryUrlManager;
-use HTTPRequest;
 use PFUser;
 use Project;
 use TemplateRendererFactory;
@@ -42,7 +41,7 @@ class PullRequestNotificationBuilder
         PullRequest $pull_request,
         PFUser $user,
         Project $project,
-        GitRepository $repository_destination
+        GitRepository $repository_destination,
     ) {
         $text       = $this->makeText($pull_request->getDescription());
         $title_link = $this->makeTitleLink($pull_request, $project);
@@ -58,7 +57,7 @@ class PullRequestNotificationBuilder
     private function makePreText(
         PullRequest $pull_request,
         PFUser $user,
-        GitRepository $repository_destination
+        GitRepository $repository_destination,
     ) {
         $renderer =  TemplateRendererFactory::build()->getRenderer(
             PLUGIN_BOT_MATTERMOST_GIT_BASE_DIR . '/templates/attachment'

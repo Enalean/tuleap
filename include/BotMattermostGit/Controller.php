@@ -37,7 +37,6 @@ use Tuleap\Git\GitViews\RepoManagement\Pane\Notification;
 
 class Controller
 {
-
     private $request;
     private $csrf;
     private $git_repository_factory;
@@ -50,7 +49,7 @@ class Controller
         GitRepositoryFactory $git_repository_factory,
         Factory $bot_git_factory,
         BotFactory $bot_factory,
-        Validator $validator
+        Validator $validator,
     ) {
         $this->request                = $request;
         $this->csrf                   = $csrf;

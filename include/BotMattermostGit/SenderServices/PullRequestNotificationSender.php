@@ -21,7 +21,6 @@
 namespace Tuleap\BotMattermostGit\SenderServices;
 
 use GitRepository;
-use HTTPRequest;
 use PFUser;
 use Project;
 use Psr\Log\LoggerInterface;
@@ -33,7 +32,6 @@ use Tuleap\PullRequest\PullRequest;
 
 class PullRequestNotificationSender
 {
-
     private $sender;
     private $bot_git_factory;
     private $notification_builder;
@@ -46,7 +44,7 @@ class PullRequestNotificationSender
         Sender $sender,
         Factory $bot_git_factory,
         PullRequestNotificationBuilder $notification_builder,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->sender               = $sender;
         $this->bot_git_factory      = $bot_git_factory;
@@ -58,7 +56,7 @@ class PullRequestNotificationSender
         PullRequest $pull_request,
         PFUser $user,
         Project $project,
-        GitRepository $repository_destination
+        GitRepository $repository_destination,
     ) {
         try {
             if ($bot_assignment = $this->bot_git_factory->getBotNotification($pull_request->getRepositoryId())) {

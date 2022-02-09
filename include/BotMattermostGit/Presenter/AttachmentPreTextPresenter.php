@@ -22,14 +22,12 @@ namespace Tuleap\BotMattermostGit\Presenter;
 
 use Git_GitRepositoryUrlManager;
 use GitRepository;
-use HTTPRequest;
 use PFUser;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\ServerHostname;
 
 class AttachmentPreTextPresenter
 {
-
     private $repository_destination;
     private $repository_url_manager;
 
@@ -43,7 +41,7 @@ class AttachmentPreTextPresenter
         PullRequest $pull_request,
         PFUser $user,
         GitRepository $repository_destination,
-        Git_GitRepositoryUrlManager $repository_url_manager
+        Git_GitRepositoryUrlManager $repository_url_manager,
     ) {
         $this->user                   = $user;
         $this->repository_destination = $repository_destination;

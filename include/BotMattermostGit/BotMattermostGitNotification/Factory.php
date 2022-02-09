@@ -29,7 +29,6 @@ use Tuleap\BotMattermostGit\Exception\CannotUpdateBotNotificationException;
 
 class Factory
 {
-
     private $dao;
     private $bot_factory;
 

@@ -22,9 +22,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201703221614_add_channel_for_git_notification extends ForgeUpgrade_Bucket
+class b201703221614_add_channel_for_git_notification extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT
@@ -53,13 +52,13 @@ EOT;
                  SELECT * FROM plugin_botmattermost_git";
 
         if ($this->db->dbh->exec($sql1) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while creating plugin_botmattermost_git_notification_channel table: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while creating plugin_botmattermost_git_notification_channel table: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
         if ($this->db->dbh->exec($sql2) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while creating plugin_botmattermost_git_notification table: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while creating plugin_botmattermost_git_notification table: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
         if ($this->db->dbh->exec($sql3) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while copying values from plugin_botmattermost_git to plugin_botmattermost_git_notification: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while copying values from plugin_botmattermost_git to plugin_botmattermost_git_notification: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

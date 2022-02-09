@@ -144,7 +144,7 @@ class Dao extends DataAccessObject
         $this->getDB()->delete(
             'plugin_botmattermost_git_notification',
             [
-                'id' => $id
+                'id' => $id,
             ]
         );
     }
@@ -154,7 +154,7 @@ class Dao extends DataAccessObject
         $this->getDB()->delete(
             'plugin_botmattermost_git_notification_channel',
             [
-                'notification_id' => $notification_id
+                'notification_id' => $notification_id,
             ]
         );
     }

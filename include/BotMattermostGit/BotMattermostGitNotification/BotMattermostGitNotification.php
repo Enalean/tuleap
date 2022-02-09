@@ -29,7 +29,7 @@ class BotMattermostGitNotification
 
     public function __construct(
         Bot $bot,
-        $channels
+        $channels,
     ) {
         $this->bot      = $bot;
         $this->channels = $channels;
@@ -56,7 +56,7 @@ class BotMattermostGitNotification
             'webhook_url'    => $this->bot->getWebhookUrl(),
             'avatar'         => $this->bot->getAvatarUrl(),
             'channels'       => implode(', ', $this->channels),
-            'is_assigned'    => $repository_id !== null
+            'is_assigned'    => $repository_id !== null,
         ];
     }
 }

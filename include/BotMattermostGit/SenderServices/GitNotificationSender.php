@@ -38,7 +38,7 @@ class GitNotificationSender
         Sender $sender,
         Factory $bot_git_factory,
         GitRepository $repository,
-        GitNotificationBuilder $notification_builder
+        GitNotificationBuilder $notification_builder,
     ) {
         $this->sender               = $sender;
         $this->bot_git_factory      = $bot_git_factory;

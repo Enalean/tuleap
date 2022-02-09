@@ -56,7 +56,7 @@ class Presenter
         GitRepository $repository,
         array $system_bots,
         array $project_bots,
-        array $bot_assigned
+        array $bot_assigned,
     ) {
         $this->csrf_token   = $csrf_token;
         $this->repository   = $repository;
@@ -67,9 +67,9 @@ class Presenter
         $this->project_id    = $this->repository->getProjectId();
         $this->repository_id = $this->repository->getId();
 
-        $this->has_bots         = ! empty($system_bots) || ! empty($project_bots) ;
+        $this->has_bots         = ! empty($system_bots) || ! empty($project_bots);
         $this->has_system_bots  = ! empty($system_bots);
-        $this->has_project_bots = ! empty($project_bots) ;
+        $this->has_project_bots = ! empty($project_bots);
 
         $this->title                  = dgettext('tuleap-botmattermost_git', 'Notifications in Mattermost');
         $this->description            = dgettext('tuleap-botmattermost_git', 'Choose a bot to send message in Mattermost when push occurs in this repository.');

@@ -41,7 +41,7 @@ class Validator
         CSRFSynchronizerToken $csrf,
         HTTPRequest $request,
         GitRepositoryFactory $repository_factory,
-        $action
+        $action,
     ) {
         $redirect_to = null;
 
@@ -51,7 +51,7 @@ class Validator
                     'group_id' => $repository->getProjectId(),
                     'action'   => 'repo_management',
                     'repo_id'  => $repository->getId(),
-                    'pane'     => Notification::ID
+                    'pane'     => Notification::ID,
                 ]
             );
         }
