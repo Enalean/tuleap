@@ -25,33 +25,32 @@ namespace Tuleap\Config;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Cryptography\ConcealedString;
 
 final class ConfigSet
 {
-    /**
-     * @var ConfigDao
-     */
-    private $config_dao;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
-
-    public function __construct(EventDispatcherInterface $event_dispatcher, ConfigDao $config_dao)
-    {
-        $this->event_dispatcher = $event_dispatcher;
-        $this->config_dao       = $config_dao;
+    public function __construct(
+        private EventDispatcherInterface $event_dispatcher,
+        private ConfigDao $config_dao,
+    ) {
     }
 
     /**
      * @throws InvalidConfigKeyException
+     * @throws UnknownConfigKeyException
+     * @throws \Tuleap\Cryptography\Exception\CannotPerformIOOperationException
      */
     public function set(string $key, string $value): void
     {
         $white_listed_keys = $this->event_dispatcher->dispatch(new GetWhitelistedKeys());
 
-        if (! $white_listed_keys->canBeModified($key)) {
+        $key_metadata = $white_listed_keys->getKeyMetadata($key);
+        if (! $key_metadata->can_be_modified) {
             throw new InvalidConfigKeyException($white_listed_keys);
+        }
+
+        if ($key_metadata->is_secret) {
+            $value = \ForgeConfig::encryptValue(new ConcealedString($value));
         }
 
         $this->config_dao->save($key, $value);

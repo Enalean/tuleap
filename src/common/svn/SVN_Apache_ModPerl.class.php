@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\DB\DBAuthUserConfig;
 use Tuleap\DB\DBConfig;
 use Tuleap\SvnCore\Cache\Parameters;
 
@@ -48,8 +49,8 @@ class SVN_Apache_ModPerl extends SVN_Apache
         $conf .= "    PerlAccessHandler Apache::Authn::Tuleap::access_handler\n";
         $conf .= "    PerlAuthenHandler Apache::Authn::Tuleap::authen_handler\n";
         $conf .= '    TuleapDSN "' . $tuleap_dsn . '"' . "\n";
-        $conf .= '    TuleapDbUser "' . $this->escapeStringForApacheConf(ForgeConfig::get('sys_dbauth_user')) . '"' . "\n";
-        $conf .= '    TuleapDbPass "' . $this->escapeStringForApacheConf(ForgeConfig::get('sys_dbauth_passwd')) . '"' . "\n";
+        $conf .= '    TuleapDbUser "' . $this->escapeStringForApacheConf(ForgeConfig::get(DBAuthUserConfig::USER)) . '"' . "\n";
+        $conf .= '    TuleapDbPass "' . $this->escapeStringForApacheConf((string) ForgeConfig::getSecretAsClearText(DBAuthUserConfig::PASSWORD)) . '"' . "\n";
         $conf .= '    TuleapGroupId "' . $this->escapeStringForApacheConf((string) $project->getID()) . '"' . "\n";
         $conf .= '    TuleapCacheCredsMax ' . $maximum_credentials . "\n";
         $conf .= '    TuleapCacheLifetime ' . $lifetime . "\n";

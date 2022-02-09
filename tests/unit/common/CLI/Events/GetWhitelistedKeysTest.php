@@ -27,6 +27,7 @@ use Tuleap\Config\ConfigCannotBeModified;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\ConfigKeyMetadata;
+use Tuleap\Config\ConfigKeySecret;
 
 final class GetWhitelistedKeysTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -37,7 +38,7 @@ final class GetWhitelistedKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $all_keys = $get_whitelisted_keys->getSortedKeysWithMetadata();
         self::assertArrayHasKey('sys_use_project_registration', $all_keys);
         self::assertEquals(
-            new ConfigKeyMetadata('Is project creation allowed to regular users (1) or not (0)', true, null),
+            new ConfigKeyMetadata('Is project creation allowed to regular users (1) or not (0)', true, false, null),
             $all_keys['sys_use_project_registration'],
         );
     }
@@ -127,5 +128,20 @@ final class GetWhitelistedKeysTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $keys = $get_whitelisted_keys->getSortedKeysWithMetadata();
         self::assertEquals('bar', $keys['foo']->category);
+    }
+
+    public function testConfigKeyHoldsSecret(): void
+    {
+        $class = new class {
+            #[ConfigKey('summary')]
+            #[ConfigKeySecret]
+            public const SOME_STUFF = 'foo';
+        };
+
+        $get_whitelisted_keys = new GetWhitelistedKeys();
+        $get_whitelisted_keys->addConfigClass($class::class);
+
+        $key_metadata = $get_whitelisted_keys->getKeyMetadata($class::SOME_STUFF);
+        self::assertTrue($key_metadata->is_secret);
     }
 }

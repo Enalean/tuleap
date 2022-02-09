@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,12 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Config;
 
-/**
- * @psalm-immutable
- */
-final class ConfigKeyMetadata
+#[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
+final class ConfigKeySecret
 {
-    public function __construct(public string $description, public bool $can_be_modified, public bool $is_secret, public ?string $category)
-    {
-    }
 }

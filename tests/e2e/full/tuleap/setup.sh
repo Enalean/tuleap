@@ -34,7 +34,6 @@ setup_tuleap() {
     -e "s#/var/lib/tuleap/ftp/codendi#/var/lib/tuleap/ftp/tuleap#g" \
     -e "s#%sys_default_domain%#tuleap#g" \
     -e "s#%sys_fullname%#tuleap#g" \
-    -e "s#%sys_dbauth_passwd%#welcome0#g" \
     -e "s#%sys_org_name%#Tuleap#g" \
     -e "s#%sys_long_org_name%#Tuleap#g" \
     -e 's#\$sys_logger_level =.*#\$sys_logger_level = "debug";#' \

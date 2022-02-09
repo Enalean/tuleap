@@ -18,6 +18,8 @@
  */
 
 use org\bovigo\vfs\vfsStream;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DB\DBAuthUserConfig;
 use Tuleap\SVN\CoreApacheConfRepository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
@@ -34,9 +36,14 @@ class SVN_Apache_ModPerlTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var CoreApacheConfRepository
      */
     private $gpig_repository;
+    private string $root_dir;
 
     protected function setUp(): void
     {
+        $this->root_dir = vfsStream::setup('root', null, ['conf' => []])->url();
+        ForgeConfig::set('sys_custom_dir', $this->root_dir);
+        ForgeConfig::set(DBAuthUserConfig::PASSWORD, \ForgeConfig::encryptValue(new ConcealedString('dat password')));
+
         ForgeConfig::set('svn_prefix', '/var/lib/tuleap/svnroot/');
         $this->gpig_repository = new CoreApacheConfRepository(
             ProjectTestBuilder::aProject()->withId(101)->withPublicName('Guinea Pig')->build(),
@@ -113,7 +120,7 @@ class SVN_Apache_ModPerlTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDSNCertificateValidationIsAlwaysDisabledBecauseItDoesnWorkReliablyOnRHEL7(): void
     {
-        $ca_bundle_path = vfsStream::setup()->url() . '/ca-bundle.pem';
+        $ca_bundle_path = $this->root_dir . '/ca-bundle.pem';
         touch($ca_bundle_path);
         ForgeConfig::set('sys_dbname', 'tuleap');
         ForgeConfig::set('sys_dbhost', 'db-server.example.com');
@@ -128,7 +135,7 @@ class SVN_Apache_ModPerlTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDSNWithSSLDBWithoutCertificateValidation(): void
     {
-        $ca_bundle_path = vfsStream::setup()->url() . '/ca-bundle.pem';
+        $ca_bundle_path = $this->root_dir . '/ca-bundle.pem';
         touch($ca_bundle_path);
         ForgeConfig::set('sys_dbname', 'tuleap');
         ForgeConfig::set('sys_dbhost', 'db-server.example.com');
@@ -153,7 +160,7 @@ class SVN_Apache_ModPerlTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDSNWithCustomPortAndSSL(): void
     {
-        $ca_bundle_path = vfsStream::setup()->url() . '/ca-bundle.pem';
+        $ca_bundle_path = $this->root_dir . '/ca-bundle.pem';
         touch($ca_bundle_path);
         ForgeConfig::set('sys_dbname', 'tuleap');
         ForgeConfig::set('sys_dbhost', 'db-server.example.com');

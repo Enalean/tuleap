@@ -30,7 +30,10 @@ use Tuleap\Config\ConfigCannotBeModified;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\ConfigKeyMetadata;
+use Tuleap\Config\ConfigKeySecret;
 use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\Config\UnknownConfigKeyException;
+use Tuleap\DB\DBAuthUserConfig;
 use Tuleap\DB\DBConfig;
 use Tuleap\Event\Dispatchable;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
@@ -72,6 +75,7 @@ final class GetWhitelistedKeys implements Dispatchable
         BrowserDeprecationMessage::class,
         SwitchToPresenterBuilder::class,
         DBConfig::class,
+        DBAuthUserConfig::class,
     ];
 
     /**
@@ -121,6 +125,18 @@ final class GetWhitelistedKeys implements Dispatchable
         return $keys;
     }
 
+    /**
+     * @throws UnknownConfigKeyException
+     */
+    public function getKeyMetadata(string $key): ConfigKeyMetadata
+    {
+        $this->initWhiteList();
+        if (! isset($this->white_listed_keys[$key])) {
+            throw new UnknownConfigKeyException($key);
+        }
+        return $this->white_listed_keys[$key];
+    }
+
     private function initWhiteList(): void
     {
         foreach ($this->annotated_classes as $class_name) {
@@ -142,25 +158,28 @@ final class GetWhitelistedKeys implements Dispatchable
             $key             = '';
             $summary         = '';
             $can_be_modified = true;
+            $is_secret       = false;
             foreach ($const->getAttributes() as $attribute) {
-                if ($attribute->getName() === ConfigKey::class) {
-                    $config_key  = $attribute->newInstance();
+                $attribute_object = $attribute->newInstance();
+                if ($attribute_object instanceof ConfigKey) {
                     $const_value = $const->getValue();
-                    if (is_string($const_value) && is_string($config_key->summary)) {
+                    if (is_string($const_value)) {
                         $key     = $const_value;
-                        $summary = $config_key->summary;
+                        $summary = $attribute_object->summary;
                     }
                 }
-                if ($attribute->getName() === FeatureFlagConfigKey::class) {
-                    $config_key  = $attribute->newInstance();
+                if ($attribute_object instanceof FeatureFlagConfigKey) {
                     $const_value = $const->getValue();
-                    if (is_string($const_value) && is_string($config_key->summary)) {
+                    if (is_string($const_value)) {
                         $key     = \ForgeConfig::FEATURE_FLAG_PREFIX . $const_value;
-                        $summary = $config_key->summary;
+                        $summary = $attribute_object->summary;
                     }
                 }
-                if ($attribute->getName() === ConfigCannotBeModified::class) {
+                if ($attribute_object instanceof ConfigCannotBeModified) {
                     $can_be_modified = false;
+                }
+                if ($attribute_object instanceof ConfigKeySecret) {
+                    $is_secret = true;
                 }
             }
             if (! $key) {
@@ -169,7 +188,8 @@ final class GetWhitelistedKeys implements Dispatchable
             $this->white_listed_keys[$key] = new ConfigKeyMetadata(
                 $summary,
                 $can_be_modified,
-                $category
+                $is_secret,
+                $category,
             );
         }
     }

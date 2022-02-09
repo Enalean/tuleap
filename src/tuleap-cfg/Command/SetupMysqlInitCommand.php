@@ -30,6 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Tuleap\Config\ConfigKeyLegacyBool;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DB\DBAuthUserConfig;
 use Tuleap\DB\DBConfig;
 use TuleapCfg\Command\SetupMysql\ConnectionManagerInterface;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
@@ -59,8 +60,11 @@ final class SetupMysqlInitCommand extends Command
     private MysqlCommandHelper $command_helper;
     private string $base_directory;
 
-    public function __construct(private ConnectionManagerInterface $connection_manager, private DatabaseConfigurator $database_configurator, ?string $base_directory = null)
-    {
+    public function __construct(
+        private ConnectionManagerInterface $connection_manager,
+        private DatabaseConfigurator $database_configurator,
+        ?string $base_directory = null,
+    ) {
         $this->base_directory = $base_directory ?: '/';
         $this->command_helper = new MysqlCommandHelper($this->base_directory);
 
@@ -203,11 +207,6 @@ final class SetupMysqlInitCommand extends Command
 
         $nss_password = $input->getOption(self::OPT_NSS_PASSWORD);
         assert($nss_password === null || is_string($nss_password));
-        $local_inc_file = $this->base_directory . '/etc/tuleap/conf/local.inc';
-        if ($nss_password !== null && ! file_exists($local_inc_file)) {
-            $io->getErrorStyle()->writeln(sprintf('<error>Setting NSS user/password requires to have %s file first</error>', $local_inc_file));
-            return 1;
-        }
 
         if ($initialize_db) {
             $db = $this->connection_manager->getDBWithoutDBName(
@@ -231,6 +230,7 @@ final class SetupMysqlInitCommand extends Command
                 $db,
                 \ForgeConfig::get(DBConfig::CONF_DBNAME),
                 $db_params->grant_hostname,
+                $db_params->azure_prefix,
                 $nss_user,
                 $nss_password
             );
@@ -244,7 +244,7 @@ final class SetupMysqlInitCommand extends Command
             return $return_value;
         }
 
-        return $this->writeLocalIncFile($local_inc_file, $nss_user, $db_params->azure_prefix, $nss_password);
+        return self::SUCCESS;
     }
 
     private function getSiteAdminPassword(InputInterface $input): ?ConcealedString
@@ -291,6 +291,7 @@ final class SetupMysqlInitCommand extends Command
         DBWrapperInterface $db,
         string $app_dbname,
         string $grant_hostname,
+        string $azure_prefix,
         string $nss_user,
         ?string $nss_password,
     ): void {
@@ -306,6 +307,14 @@ final class SetupMysqlInitCommand extends Command
             $nss_password,
             $grant_hostname,
         );
+
+        $user = $azure_prefix !== '' ? sprintf('%s@%s', $nss_user, $azure_prefix) : $nss_user;
+
+        \ForgeConfig::store();
+        \ForgeConfig::set('sys_custom_dir', $this->base_directory . '/etc/tuleap');
+        $db->run('REPLACE INTO ' . $db->escapeIdentifier($app_dbname, true) . '.forgeconfig (name, value) VALUES (?, ?)', DBAuthUserConfig::USER, $user);
+        $db->run('REPLACE INTO ' . $db->escapeIdentifier($app_dbname, true) . '.forgeconfig (name, value) VALUES (? ,?)', DBAuthUserConfig::PASSWORD, \ForgeConfig::encryptValue(new ConcealedString($nss_password)));
+        \ForgeConfig::restore();
 
         $log_password = $input->getOption(self::OPT_LOG_PASSWORD);
         if (is_string($log_password)) {
@@ -329,33 +338,5 @@ final class SetupMysqlInitCommand extends Command
             assert(is_string($mediawiki));
             $this->database_configurator->setUpMediawiki($output, $db, $mediawiki, $app_user, $grant_hostname);
         }
-    }
-
-    private function writeLocalIncFile(string $local_inc_file, string $user, string $azure_suffix, ?string $password): int
-    {
-        if (! $password) {
-            return 0;
-        }
-
-        if ($azure_suffix !== '') {
-            $user = sprintf('%s@%s', $user, $azure_suffix);
-        }
-
-        $conf_string = preg_replace(
-            [
-                '/\$sys_dbauth_user.*/',
-                '/\$sys_dbauth_passwd.*/',
-            ],
-            [
-                sprintf('$sys_dbauth_user = \'%s\';', $user),
-                sprintf('$sys_dbauth_passwd = \'%s\';', $password),
-            ],
-            file_get_contents($local_inc_file),
-        );
-
-        if (file_put_contents($local_inc_file, $conf_string) === strlen($conf_string)) {
-            return 0;
-        }
-        return 1;
     }
 }

@@ -170,7 +170,7 @@ _pluginSVN() {
     local -r httpd_vhost="/etc/httpd/conf.d/tuleap-vhost.conf"
     local plugin_svn_configured="false"
 
-    if ${grep} --quiet "%sys_dbauth_passwd%" "${tuleap_conf}/${local_inc}"; then
+    if ! $(/usr/bin/tuleap config-get sys_dbauth_passwd 2>/dev/null); then
         if [ ${mysql_user:-NULL} != "NULL" ] && \
            [ ${mysql_password:-NULL} != "NULL" ]; then
             dbauthuser_password="$(_setupRandomPassword)"

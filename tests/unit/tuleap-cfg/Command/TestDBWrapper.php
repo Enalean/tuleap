@@ -28,8 +28,9 @@ use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
 
 final class TestDBWrapper implements DBWrapperInterface
 {
-    private array $prepared_run = [];
-    public array $statements    = [];
+    private array $prepared_run     = [];
+    public array $statements        = [];
+    public array $statements_params = [];
 
     public function assertContains(string $needle)
     {
@@ -61,7 +62,8 @@ final class TestDBWrapper implements DBWrapperInterface
 
     public function run(string $statement, ...$params)
     {
-        $this->statements[] = $statement;
+        $this->statements[]                                    = $statement;
+        $this->statements_params[count($this->statements) - 1] = $params;
         return $this->prepared_run[$statement] ?? null;
     }
 

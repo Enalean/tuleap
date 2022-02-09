@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,12 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Config;
 
-/**
- * @psalm-immutable
- */
-final class ConfigKeyMetadata
+final class UnknownConfigKeyException extends \Exception
 {
-    public function __construct(public string $description, public bool $can_be_modified, public bool $is_secret, public ?string $category)
+    public function __construct(string $key)
     {
+        parent::__construct(sprintf('%s is not a valid configuration variable', $key));
     }
 }
