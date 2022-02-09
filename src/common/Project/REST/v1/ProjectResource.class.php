@@ -44,8 +44,10 @@ use Tuleap\Layout\Logo\CachedCustomizedLogoDetector;
 use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
 use Tuleap\Layout\ProjectSidebar\ProjectSidebarConfigRepresentation;
+use Tuleap\Project\Admin\Access\UserCanAccessProjectAdministrationVerifier;
 use Tuleap\Project\Admin\Categories\CategoryCollectionConsistencyChecker;
 use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker;
+use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Banner\BannerCreator;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerPermissionsChecker;
@@ -1276,6 +1278,7 @@ class ProjectResource extends AuthenticatedResource
         $config = ProjectSidebarConfigRepresentation::build(
             $project,
             $current_user,
+            new UserCanAccessProjectAdministrationVerifier(new MembershipDelegationDao()),
             new FlavorFinderFromFilePresence(),
             new CachedCustomizedLogoDetector(
                 new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator()),
