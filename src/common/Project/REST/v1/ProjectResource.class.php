@@ -35,9 +35,15 @@ use ProjectXMLImporter;
 use Psr\Log\LoggerInterface;
 use ServiceManager;
 use TemplateRendererFactory;
+use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
+use Tuleap\Layout\Logo\CachedCustomizedLogoDetector;
+use Tuleap\Layout\Logo\CustomizedLogoDetector;
+use Tuleap\Layout\Logo\FileContentComparator;
+use Tuleap\Layout\ProjectSidebar\ProjectSidebarConfigRepresentation;
 use Tuleap\Project\Admin\Categories\CategoryCollectionConsistencyChecker;
 use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker;
 use Tuleap\Project\Banner\BannerCreator;
@@ -1267,8 +1273,19 @@ class ProjectResource extends AuthenticatedResource
 
         $current_user = $this->user_manager->getCurrentUser();
 
+        $config = ProjectSidebarConfigRepresentation::build(
+            $project,
+            $current_user,
+            new FlavorFinderFromFilePresence(),
+            new CachedCustomizedLogoDetector(
+                new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator()),
+                \BackendLogger::getDefaultLogger(),
+            ),
+            new GlyphFinder(EventManager::instance())
+        );
+
         return new ThirdPartyIntegrationDataRepresentation(
-            ProjectSidebarDataRepresentation::fromProjectAndUser($project, $current_user),
+            ProjectSidebarDataRepresentation::fromConfigRepresentationAndUser($config, $current_user),
             ThirdPartyIntegrationStylesRepresentation::fromUser($current_user)
         );
     }
