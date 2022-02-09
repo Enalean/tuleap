@@ -44,6 +44,7 @@ describe("SearchContainer", () => {
                 query: {
                     query: "",
                     type: "",
+                    title: "",
                 },
                 folder_id: 101,
                 offset: 0,
@@ -65,6 +66,7 @@ describe("SearchContainer", () => {
                 query: {
                     query: "",
                     type: "",
+                    title: "",
                 },
                 folder_id: 101,
                 offset: 0,
@@ -79,7 +81,7 @@ describe("SearchContainer", () => {
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("loadFolder", 101);
     });
 
-    it("should route to a new search if user changes criteria", () => {
+    it("should route to a new search if user changes global search", () => {
         const router = new VueRouter();
         jest.spyOn(router, "push").mockImplementation();
 
@@ -89,6 +91,7 @@ describe("SearchContainer", () => {
                 query: {
                     query: "",
                     type: "",
+                    title: "",
                 },
                 folder_id: 101,
                 offset: 0,
@@ -109,6 +112,7 @@ describe("SearchContainer", () => {
         const params: AdvancedSearchParams = {
             query: "Lorem ipsum",
             type: "",
+            title: "",
         };
         criteria.vm.$emit("advanced-search", params);
 
@@ -116,6 +120,98 @@ describe("SearchContainer", () => {
             name: "search",
             query: {
                 q: "Lorem ipsum",
+            },
+            params: {
+                folder_id: "101",
+            },
+        });
+    });
+
+    it("should route to a new search if user changes type", () => {
+        const router = new VueRouter();
+        jest.spyOn(router, "push").mockImplementation();
+
+        const wrapper = shallowMount(SearchContainer, {
+            localVue: createLocalVue().use(VueRouter),
+            propsData: {
+                query: {
+                    query: "",
+                    type: "",
+                    title: "",
+                },
+                folder_id: 101,
+                offset: 0,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {},
+                }),
+                $route: {
+                    query: { q: "" },
+                    params: { folder_id: "101" },
+                },
+                $router: router,
+            },
+        });
+
+        const criteria = wrapper.findComponent(SearchCriteriaPanel);
+        const params: AdvancedSearchParams = {
+            query: "",
+            type: "folder",
+            title: "",
+        };
+        criteria.vm.$emit("advanced-search", params);
+
+        expect(router.push).toHaveBeenCalledWith({
+            name: "search",
+            query: {
+                type: "folder",
+            },
+            params: {
+                folder_id: "101",
+            },
+        });
+    });
+
+    it("should route to a new search if user changes title", () => {
+        const router = new VueRouter();
+        jest.spyOn(router, "push").mockImplementation();
+
+        const wrapper = shallowMount(SearchContainer, {
+            localVue: createLocalVue().use(VueRouter),
+            propsData: {
+                query: {
+                    query: "",
+                    type: "",
+                    title: "",
+                },
+                folder_id: 101,
+                offset: 0,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {},
+                }),
+                $route: {
+                    query: { q: "" },
+                    params: { folder_id: "101" },
+                },
+                $router: router,
+            },
+        });
+
+        const criteria = wrapper.findComponent(SearchCriteriaPanel);
+        const params: AdvancedSearchParams = {
+            query: "",
+            type: "",
+            title: "doloret",
+        };
+        criteria.vm.$emit("advanced-search", params);
+
+        expect(router.push).toHaveBeenCalledWith({
+            name: "search",
+            query: {
+                title: "doloret",
             },
             params: {
                 folder_id: "101",
@@ -135,6 +231,7 @@ describe("SearchContainer", () => {
                 query: {
                     query: "Lorem ipsum",
                     type: "",
+                    title: "",
                 },
                 folder_id: 101,
                 offset: 0,
@@ -155,6 +252,7 @@ describe("SearchContainer", () => {
         const params: AdvancedSearchParams = {
             query: "Lorem ipsum",
             type: "",
+            title: "",
         };
         criteria.vm.$emit("advanced-search", params);
 
@@ -174,6 +272,7 @@ describe("SearchContainer", () => {
                 query: {
                     query: "Lorem ipsum",
                     type: "",
+                    title: "",
                 },
                 folder_id: 101,
                 offset: 0,
@@ -195,6 +294,7 @@ describe("SearchContainer", () => {
             {
                 query: "Lorem ipsum",
                 type: "",
+                title: "",
             },
             0
         );
@@ -208,6 +308,7 @@ describe("SearchContainer", () => {
             {
                 query: "Lorem ipsum",
                 type: "",
+                title: "",
             },
             10
         );
@@ -225,6 +326,7 @@ describe("SearchContainer", () => {
                 query: {
                     query: "Lorem ipsum",
                     type: "",
+                    title: "",
                 },
                 folder_id: 101,
                 offset: 0,
@@ -246,6 +348,7 @@ describe("SearchContainer", () => {
             {
                 query: "Lorem ipsum",
                 type: "",
+                title: "",
             },
             0
         );
@@ -259,6 +362,7 @@ describe("SearchContainer", () => {
             {
                 query: "Lorem ipsum",
                 type: "",
+                title: "",
             },
             0
         );
@@ -274,6 +378,7 @@ describe("SearchContainer", () => {
                 query: {
                     query: "Lorem ipsum",
                     type: "",
+                    title: "",
                 },
                 folder_id: 101,
                 offset: 0,
@@ -290,6 +395,7 @@ describe("SearchContainer", () => {
             {
                 query: "Lorem ipsum",
                 type: "",
+                title: "",
             },
             0
         );
@@ -306,6 +412,7 @@ describe("SearchContainer", () => {
                 query: {
                     query: "",
                     type: "",
+                    title: "",
                 },
                 folder_id: 101,
                 offset: 0,
@@ -327,6 +434,7 @@ describe("SearchContainer", () => {
                 query: {
                     query: "",
                     type: "",
+                    title: "",
                 },
                 folder_id: 101,
                 offset: 0,

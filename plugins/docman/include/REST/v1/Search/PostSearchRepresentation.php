@@ -41,6 +41,11 @@ final class PostSearchRepresentation
     public string $type = '';
 
     /**
+     * @var string title of item {@from body} {@required false}
+     */
+    public string $title = '';
+
+    /**
      * @var int limit {@from body} {@required false} {@min 0} {@max 50}
      */
     public int $limit = SearchResource::MAX_LIMIT;

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1\Folders;
 
 use Docman_FilterGlobalText;
+use Docman_FilterText;
 use Docman_Report;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
@@ -32,6 +33,7 @@ use Tuleap\Docman\Search\ColumnReportAugmenter;
 class SearchReportBuilder
 {
     public function __construct(
+        private \Docman_MetadataFactory $metadata_factory,
         private \Docman_FilterFactory $filter_factory,
         private AlwaysThereColumnRetriever $always_there_column_retriever,
         private ColumnReportAugmenter $column_report_builder,
@@ -66,6 +68,16 @@ class SearchReportBuilder
             ];
             $type_filter->setValue($human_readable_value_to_internal_value[$search->type]);
             $report->addFilter($type_filter);
+        }
+
+        if ($search->title) {
+            $title_filter = new Docman_FilterText(
+                $this->metadata_factory->getHardCodedMetadataFromLabel(
+                    \Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL
+                )
+            );
+            $title_filter->setValue($search->title);
+            $report->addFilter($title_filter);
         }
 
         $columns = $this->always_there_column_retriever->getColumns();

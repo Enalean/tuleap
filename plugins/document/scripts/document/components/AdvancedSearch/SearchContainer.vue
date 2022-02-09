@@ -129,6 +129,9 @@ export default class SearchContainer extends Vue {
         if (params.type.length > 0) {
             query.type = params.type;
         }
+        if (params.title.length > 0) {
+            query.title = params.title;
+        }
 
         if (deepEqual(this.$route.query, query)) {
             this.searchQuery(params);

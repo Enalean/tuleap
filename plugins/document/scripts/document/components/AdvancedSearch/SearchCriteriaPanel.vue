@@ -30,6 +30,7 @@
                     <div class="document-search-criteria">
                         <criterion-global-text v-model="new_query.query" />
                         <criterion-type v-model="new_query.type" />
+                        <criterion-title v-model="new_query.title" />
                     </div>
                 </section>
                 <section class="tlp-pane-section tlp-pane-section-submit">
@@ -49,16 +50,18 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { namespace } from "vuex-class";
 import type { AdvancedSearchParams } from "../../type";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
 import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
 import CriterionType from "./Criteria/CriterionType.vue";
-import { namespace } from "vuex-class";
+import CriterionTitle from "./Criteria/CriterionTitle.vue";
 
 const configuration = namespace("configuration");
 
 @Component({
     components: {
+        CriterionTitle,
         CriterionType,
         CriterionGlobalText,
         SearchCriteriaBreadcrumb,
@@ -77,6 +80,7 @@ export default class SearchCriteriaPanel extends Vue {
     private new_query: AdvancedSearchParams = {
         query: "",
         type: "",
+        title: "",
     };
 
     mounted() {

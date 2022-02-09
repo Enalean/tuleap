@@ -46,7 +46,13 @@ final class BuildSearchedItemRepresentationsFromSearchReport
         $results       = $this->item_factory->getItemList(
             $folder->getId(),
             $nb_item_found,
-            ['api_limit' => $limit, 'api_offset' => $offset, 'filter' => $report, 'user' => $user]
+            [
+                'api_limit'       => $limit,
+                'api_offset'      => $offset,
+                'filter'          => $report,
+                'user'            => $user,
+                'ignore_obsolete' => true,
+            ]
         );
 
         $search_results = [];

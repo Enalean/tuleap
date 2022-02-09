@@ -58,23 +58,36 @@ final class SearchResource extends AuthenticatedResource
     public const MAX_LIMIT = 50;
 
     /**
-     * Search elements in folder
-     * Global search will search in all text properties of document (but does not look inside the document)
+     * Search items
      *
-     * Search allowed pattern <br>
+     * Search recursively for items in a folder.
+     *
+     * <p>Allowed criteria:</p>
+     * <ul>
+     * <li>`global_search`</li>
+     * <li>`type`</li>
+     * <li>`title`</li>
+     * </ul>
+     *
+     * <p><b>Note:</b> Allowed types: folder, file, embedded, wiki, link, empty.</p>
+     * <p><b>Note:</b> Global search will search in all text properties of document (but does not look inside the document).</p>
+     *
+     * <p>Allowed patterns for text properties (global_search, title):</p>
      * <ul>
      * <li> `lorem`   => exactly "lorem"</li>
      * <li> `lorem*`  => starting by "lorem"</li>
      * <li> `*lorem`  => finishing by "lorem"</li>
      * <li> `*lorem*` => containing "lorem"</li>
      * </ul>
-     * <br>
-     * usage example:<br>
+     *
+     * <p>Usage example:</p>
+     *
      * <pre>
      * {"global_search": "lorem\*"}
      * </pre>
-     * <br>
-     * You can search on type also. For example to restrict previous example to empty items:
+     *
+     * <p>You can combine multiple search at once. For example to restrict previous example to empty items:</p>
+     *
      * <pre>
      * {"global_search": "lorem\*", "type": "empty"}
      * </pre>
@@ -82,7 +95,7 @@ final class SearchResource extends AuthenticatedResource
      * @url    POST {id}
      * @access hybrid
      *
-     * @param int $id       Id of the folder
+     * @param int $id Id of the folder
      * @param PostSearchRepresentation $search_representation search representation {@from body}
      *
      * @status 200
@@ -110,6 +123,7 @@ final class SearchResource extends AuthenticatedResource
         $project_id            = $folder->getGroupId();
         $docman_settings       = new Docman_SettingsBo($project_id);
         $search_report_builder = new SearchReportBuilder(
+            new \Docman_MetadataFactory($project_id),
             new Docman_FilterFactory($project_id),
             new AlwaysThereColumnRetriever($docman_settings),
             new ColumnReportAugmenter(new Docman_ReportColumnFactory($project_id))
