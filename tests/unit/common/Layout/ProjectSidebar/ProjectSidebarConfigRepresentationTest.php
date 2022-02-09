@@ -27,6 +27,7 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\VerifyUserCanAccessProjectAdministrationStub;
 
 final class ProjectSidebarConfigRepresentationTest extends TestCase
 {
@@ -37,12 +38,12 @@ final class ProjectSidebarConfigRepresentationTest extends TestCase
         $base_language->method('hasText')->willReturn(false);
         $user = $this->createStub(\PFUser::class);
         $user->method('isLoggedIn')->willReturn(false);
-        $user->method('isAdmin')->willReturn(false);
         $user->method('getLanguage')->willReturn($base_language);
 
         $representation = ProjectSidebarConfigRepresentation::build(
             $project,
             $user,
+            VerifyUserCanAccessProjectAdministrationStub::withPermittedAccess(),
             new class implements FlavorFinder {
                 public function isEnterprise(): bool
                 {

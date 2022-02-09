@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout\ProjectSidebar\User;
 
+use Tuleap\Project\Admin\Access\VerifyUserCanAccessProjectAdministration;
+
 /**
  * @psalm-immutable
  */
@@ -33,10 +35,13 @@ final class ProjectSidebarUser
     ) {
     }
 
-    public static function fromProjectAndUser(\Project $project, \PFUser $user): self
-    {
+    public static function fromProjectAndUser(
+        \Project $project,
+        \PFUser $user,
+        VerifyUserCanAccessProjectAdministration $project_admin_access_verifier,
+    ): self {
         return new self(
-            $user->isAdmin((int) $project->getID()),
+            $project_admin_access_verifier->canUserAccessProjectAdministration($user, $project),
             $user->isLoggedIn()
         );
     }

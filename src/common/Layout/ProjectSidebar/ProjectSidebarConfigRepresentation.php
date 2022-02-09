@@ -27,6 +27,7 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\Layout\ProjectSidebar\InstanceInformation\ProjectSidebarInstanceInformation;
 use Tuleap\Layout\ProjectSidebar\User\ProjectSidebarUser;
+use Tuleap\Project\Admin\Access\VerifyUserCanAccessProjectAdministration;
 
 /**
  * @psalm-immutable
@@ -42,6 +43,7 @@ final class ProjectSidebarConfigRepresentation
     public static function build(
         \Project $project,
         \PFUser $user,
+        VerifyUserCanAccessProjectAdministration $project_admin_access_verifier,
         FlavorFinder $flavor_finder,
         IDetectIfLogoIsCustomized $customized_logo_detector,
         GlyphFinder $glyph_finder,
@@ -50,6 +52,7 @@ final class ProjectSidebarConfigRepresentation
             ProjectSidebarUser::fromProjectAndUser(
                 $project,
                 $user,
+                $project_admin_access_verifier,
             ),
             ProjectSidebarInstanceInformation::build(
                 $user->getLanguage(),
