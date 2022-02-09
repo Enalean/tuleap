@@ -4304,10 +4304,10 @@ msgstr "Vous pouvez accéder à l'artefact ici: %1$s"
 
 #, php-format
 msgid ""
-"You can also reply to this artifact <a href=\"javascript:;\" class=\"email-"
-"tracker email-tracker-reply\" data-email=\"%1$s\"><span>by email</span></a>."
+"You can also reply to this artifact <a href=\"#\" class=\"email-tracker "
+"email-tracker-reply\" data-email=\"%1$s\"><span>by email</span></a>."
 msgstr ""
-"Vous pouvez également répondre à cet artéfact <a href=\"javascript:;\" class="
+"Vous pouvez également répondre à cet artéfact <a href=\"#\" class="
 "\"email-tracker email-tracker-reply\" data-email=\"%1$s\"><span>par "
 "courriel</span></a>."
 
