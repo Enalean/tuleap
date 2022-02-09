@@ -55,7 +55,7 @@ class ListBotController implements DispatchableWithRequest, DispatchableWithBurn
         }
 
         $callback = function (\Project $project, \PFUser $user): void {
-            $project_id = (int) $project->getID();
+            $project_id   = (int) $project->getID();
             $project_bots = $this->bot_factory->getProjectBots($project_id);
 
             $this->renderer->renderToPage(

@@ -44,7 +44,7 @@ class BotFactory
         string $bot_name,
         string $bot_webhook_url,
         string $bot_avatar_url,
-        ?int $project_id
+        ?int $project_id,
     ): void {
         if (! $this->isABotWithNameWebhookUrlAndProjectIdAlreadyExisting($bot_name, $bot_webhook_url, $project_id)) {
             $id = $this->dao->addBot(
@@ -66,14 +66,14 @@ class BotFactory
      */
     public function update(
         string $bot_name,
-        string  $bot_webhook_url,
+        string $bot_webhook_url,
         string $bot_avatar_url,
-        int $bot_id
+        int $bot_id,
     ): void {
-        $original_bot = $this->getBotById($bot_id);
-        $trimmed_name = trim($bot_name);
+        $original_bot        = $this->getBotById($bot_id);
+        $trimmed_name        = trim($bot_name);
         $trimmed_webhook_url = trim($bot_webhook_url);
-        $trimmed_avatar_url = trim($bot_avatar_url);
+        $trimmed_avatar_url  = trim($bot_avatar_url);
 
         if (
             ! $this->updateContainsChanges(
@@ -113,7 +113,7 @@ class BotFactory
         Bot $original_bot,
         string $name,
         string $webhook_url,
-        string $avatar_url
+        string $avatar_url,
     ): bool {
         return $original_bot->getName() !== $name ||
             $original_bot->getWebhookUrl() !== $webhook_url ||

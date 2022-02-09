@@ -65,11 +65,11 @@ class BotFactoryTest extends TestCase
     public function testItThrowsAnExceptionIfUpdateEndsUpCreatingAnAlreadyExistingBot(): void
     {
         $bot_to_be_updated = [
-            "id" =>10,
+            "id" => 10,
             "name" => "testbot",
             "webhook_url" => "https://test.example.com",
             "avatar_url" => "",
-            "project_id" => 101
+            "project_id" => 101,
         ];
 
         $this->bot_dao
@@ -90,11 +90,11 @@ class BotFactoryTest extends TestCase
     public function testItDoesNotThrowAnExceptionIfUpdateChangesTheAvatar(): void
     {
         $bot_to_be_updated = [
-            "id" =>10,
+            "id" => 10,
             "name" => "testbot",
             "webhook_url" => "https://test.example.com",
             "avatar_url" => "",
-            "project_id" => 101
+            "project_id" => 101,
         ];
 
         $this->bot_dao
@@ -119,11 +119,11 @@ class BotFactoryTest extends TestCase
     public function testItThrowsAnExceptionIfTheUpdateIsNotChangingAnything(): void
     {
         $bot_to_be_updated = [
-            "id" =>10,
+            "id" => 10,
             "name" => "testbot",
             "webhook_url" => "https://test.example.com",
             "avatar_url" => "https://already.added.avatar.example.com",
-            "project_id" => 101
+            "project_id" => 101,
         ];
 
         $this->bot_dao

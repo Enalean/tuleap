@@ -44,7 +44,7 @@ class DeleteBotController implements DispatchableWithRequest
     {
         try {
             $bot_id = $variables['bot_id'];
-            $bot = $this->bot_factory->getBotById($bot_id);
+            $bot    = $this->bot_factory->getBotById($bot_id);
         } catch (BotNotFoundException $exception) {
             throw new NotFoundException(
                 $exception->getMessage()

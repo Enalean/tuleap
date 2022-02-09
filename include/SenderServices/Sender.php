@@ -27,7 +27,6 @@ use Tuleap\BotMattermost\SenderServicesException\Exception\HasNoMessageContentEx
 
 class Sender
 {
-
     public const DEFAULT_CHANNEL = '';
 
     private $encoder_message;
@@ -37,7 +36,7 @@ class Sender
     public function __construct(
         EncoderMessage $encoder_message,
         ClientBotMattermost $client,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->encoder_message = $encoder_message;
         $this->client          = $client;

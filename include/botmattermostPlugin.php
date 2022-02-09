@@ -51,7 +51,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class BotMattermostPlugin extends Plugin
 {
-
     public function __construct($id)
     {
         parent::__construct($id);
@@ -90,7 +89,7 @@ class BotMattermostPlugin extends Plugin
 
     public function burning_parrot_get_javascript_files($params)
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath(). '/admin/') === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/admin/') === 0) {
             $asset                        = $this->getIncludeAssets();
             $params['javascript_files'][] = $asset->getFileURL('modals.js');
         }
@@ -98,7 +97,7 @@ class BotMattermostPlugin extends Plugin
 
     public function burning_parrot_get_stylesheets(array $params)
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath(). '/admin/') === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/admin/') === 0) {
             $asset                   = $this->getIncludeAssets();
             $params['stylesheets'][] = $asset->getFileURL('botmattermost-style.css');
         }

@@ -56,7 +56,7 @@ class BotDao extends DataAccessObject
                 'name'        => $bot_name,
                 'webhook_url' => $bot_webhook_url,
                 'avatar_url'  => $bot_avatar_url,
-                'project_id'  => $project_id
+                'project_id'  => $project_id,
             ]
         );
     }
@@ -67,7 +67,7 @@ class BotDao extends DataAccessObject
             $this->getDB()->delete(
                 'plugin_botmattermost_bot',
                 [
-                    'id' => $bot_id
+                    'id' => $bot_id,
                 ]
             );
         } catch (\PDOException $ex) {
@@ -84,10 +84,10 @@ class BotDao extends DataAccessObject
                 [
                     'name'        => $bot_name,
                     'webhook_url' => $bot_webhook_url,
-                    'avatar_url'  => $bot_avatar_url
+                    'avatar_url'  => $bot_avatar_url,
                 ],
                 [
-                    'id' => $id
+                    'id' => $id,
                 ]
             );
         } catch (\PDOException $ex) {

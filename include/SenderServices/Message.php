@@ -22,7 +22,6 @@ namespace Tuleap\BotMattermost\SenderServices;
 
 class Message
 {
-
     private $text        = '';
     private $attachments = [];
 

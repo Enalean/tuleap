@@ -22,7 +22,6 @@ namespace Tuleap\BotMattermost\Plugin;
 
 class PluginInfo extends \PluginInfo
 {
-
     public function __construct(\Plugin $plugin)
     {
         parent::__construct($plugin);

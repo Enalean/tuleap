@@ -33,7 +33,7 @@ class Bot
         string $name,
         string $webhook_url,
         string $avatar_url,
-        ?int $project_id
+        ?int $project_id,
     ) {
         $this->id          = $id;
         $this->name        = $name;

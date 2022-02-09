@@ -24,7 +24,6 @@ use Exception;
 
 class BotNotFoundException extends Exception
 {
-
     public function __construct()
     {
         parent::__construct(

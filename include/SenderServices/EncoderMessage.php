@@ -60,7 +60,7 @@ class EncoderMessage
                 'pretext'    => $attachment->getPreText(),
                 'title'      => $attachment->getTitle(),
                 'title_link' => $attachment->getTitleLink(),
-                'text'       => $attachment->getText()
+                'text'       => $attachment->getText(),
             ];
         }
 

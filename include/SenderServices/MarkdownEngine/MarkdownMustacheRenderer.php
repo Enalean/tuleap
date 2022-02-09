@@ -44,7 +44,7 @@ class MarkdownMustacheRenderer extends MustacheRenderer
         ']'  => '&#93;',
         '('  => '&#40;',
         ')'  => '&#41;',
-        '!'  => '&#33;'
+        '!'  => '&#33;',
     ];
 
 

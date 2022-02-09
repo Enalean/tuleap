@@ -25,13 +25,12 @@ use Feedback;
 use Tuleap\BotMattermost\Controller\AdminController;
 use Tuleap\Request\DispatchableWithRequest;
 
-
 class Router implements DispatchableWithRequest
 {
     private $admin_controller;
 
     public function __construct(
-        AdminController $admin_controller
+        AdminController $admin_controller,
     ) {
         $this->admin_controller = $admin_controller;
     }

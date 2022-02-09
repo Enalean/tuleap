@@ -22,9 +22,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201605311330_add_avatar_url_column extends ForgeUpgrade_Bucket
+class b201605311330_add_avatar_url_column extends \Tuleap\ForgeUpgrade\Bucket
 {
-
     public function description()
     {
         return <<<EOT
@@ -45,7 +44,7 @@ EOT;
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while add column avatar_url in table plugin_botmattermost_bot: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while add column avatar_url in table plugin_botmattermost_bot: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

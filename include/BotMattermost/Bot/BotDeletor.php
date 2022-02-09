@@ -31,7 +31,7 @@ class BotDeletor
     public function __construct(
         private BotFactory $bot_factory,
         private EventDispatcherInterface $event_manager,
-        private DBTransactionExecutor $db_transaction_executor
+        private DBTransactionExecutor $db_transaction_executor,
     ) {
     }
 
@@ -40,7 +40,7 @@ class BotDeletor
      */
     public function deleteBot(Bot $bot): void
     {
-        $this->db_transaction_executor->execute(function() use ($bot): void {
+        $this->db_transaction_executor->execute(function () use ($bot): void {
             $this->bot_factory->deleteBotById($bot->getId());
 
             $event = new BotMattermostDeleted($bot);

@@ -61,7 +61,7 @@ class AdminController
         BaseLanguage $language,
         private BotDeletor $bot_deletor,
         private BotEditor $bot_editor,
-        private BotCreator $bot_creator
+        private BotCreator $bot_creator,
     ) {
         $this->csrf          = $csrf;
         $this->bot_factory   = $bot_factory;
