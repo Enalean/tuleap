@@ -27,21 +27,9 @@
                 </div>
                 <section class="tlp-pane-section">
                     <search-criteria-breadcrumb v-if="!is_in_root_folder" />
-                    <div class="tlp-form-element document-search-criteria">
-                        <div class="global-search-label">
-                            <label class="tlp-label" for="document-global-search" v-translate>
-                                Global search
-                            </label>
-                            <search-information-popover />
-                        </div>
-
-                        <input
-                            type="text"
-                            class="tlp-input"
-                            id="document-global-search"
-                            v-model="new_query"
-                            data-test="global-search"
-                        />
+                    <div class="document-search-criteria">
+                        <criterion-global-text v-model="new_query.query" />
+                        <criterion-type v-model="new_query.type" />
                     </div>
                 </section>
                 <section class="tlp-pane-section tlp-pane-section-submit">
@@ -62,18 +50,23 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import type { AdvancedSearchParams } from "../../type";
-import SearchInformationPopover from "./SearchInformationPopover.vue";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
+import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
+import CriterionType from "./Criteria/CriterionType.vue";
 import { namespace } from "vuex-class";
 
 const configuration = namespace("configuration");
 
 @Component({
-    components: { SearchCriteriaBreadcrumb, SearchInformationPopover },
+    components: {
+        CriterionType,
+        CriterionGlobalText,
+        SearchCriteriaBreadcrumb,
+    },
 })
 export default class SearchCriteriaPanel extends Vue {
     @Prop({ required: true })
-    readonly query!: string;
+    readonly query!: AdvancedSearchParams;
 
     @Prop({ required: true })
     readonly folder_id!: number;
@@ -81,18 +74,17 @@ export default class SearchCriteriaPanel extends Vue {
     @configuration.State
     readonly root_id!: number;
 
-    new_query = "";
+    private new_query: AdvancedSearchParams = {
+        query: "",
+        type: "",
+    };
 
     mounted() {
         this.new_query = this.query;
     }
 
     advancedSearch(): void {
-        const params: AdvancedSearchParams = {
-            query: this.new_query,
-        };
-
-        this.$emit("advanced-search", params);
+        this.$emit("advanced-search", this.new_query);
     }
 
     get is_in_root_folder(): boolean {

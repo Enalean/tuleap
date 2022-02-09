@@ -23,6 +23,8 @@ import localVue from "../../helpers/local-vue";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import type { ConfigurationState } from "../../store/configuration";
+import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
+import CriterionType from "./Criteria/CriterionType.vue";
 
 describe("SearchCriteriaPanel", () => {
     it("should allow user to search for new terms", () => {
@@ -38,7 +40,10 @@ describe("SearchCriteriaPanel", () => {
             localVue,
             attachTo: parent_node,
             propsData: {
-                query: "Lorem",
+                query: {
+                    query: "Lorem",
+                    type: "",
+                },
                 folder_id: 101,
             },
             mocks: {
@@ -52,10 +57,13 @@ describe("SearchCriteriaPanel", () => {
             },
         });
 
-        wrapper.find("[data-test=global-search").setValue("Lorem ipsum");
+        wrapper.findComponent(CriterionGlobalText).vm.$emit("input", "Lorem ipsum");
+        wrapper.findComponent(CriterionType).vm.$emit("input", "folder");
         wrapper.find("[data-test=submit]").trigger("click");
 
-        expect(wrapper.emitted()["advanced-search"]).toEqual([[{ query: "Lorem ipsum" }]]);
+        expect(wrapper.emitted()["advanced-search"]).toEqual([
+            [{ query: "Lorem ipsum", type: "folder" }],
+        ]);
 
         // Avoid memory leaks when attaching to a parent node.
         // See https://vue-test-utils.vuejs.org/api/options.html#attachto
@@ -66,7 +74,10 @@ describe("SearchCriteriaPanel", () => {
         const wrapper = shallowMount(SearchCriteriaPanel, {
             localVue,
             propsData: {
-                query: "Lorem",
+                query: {
+                    query: "Lorem",
+                    type: "",
+                },
                 folder_id: 101,
             },
             mocks: {

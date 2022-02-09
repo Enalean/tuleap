@@ -27,6 +27,7 @@ use Docman_FilterFactory;
 use Docman_Metadata;
 use Docman_ReportColumnTitle;
 use Docman_SettingsBo;
+use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -59,11 +60,36 @@ final class SearchReportBuilderTest extends TestCase
 
     public function testItBuildsAReportWithAGlobalSearchFilter(): void
     {
-        $folder            = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
-        $search_parameters = "*.docx";
+        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search                = new PostSearchRepresentation();
+        $search->global_search = "*.docx";
 
-        $report = $this->search_report_builder->buildReport($folder, $search_parameters);
-        self::assertSame($search_parameters, $report->getFiltersArray()[0]->value);
+        $report = $this->search_report_builder->buildReport($folder, $search);
+        self::assertSame($search->global_search, $report->getFiltersArray()[0]->value);
         self::assertSame("My column", $report->columns[0]->md->getLabel());
+    }
+
+    /**
+     * @testWith ["folder", 1]
+     *           ["file", 2]
+     *           ["link", 3]
+     *           ["embedded", 4]
+     *           ["wiki", 5]
+     *           ["empty", 6]
+     */
+    public function testItBuildsAReportWithATypeSearchFilter(string $submitted_type_value, int $expected_internal_value): void
+    {
+        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search                = new PostSearchRepresentation();
+        $search->global_search = "*.docx";
+        $search->type          = $submitted_type_value;
+
+        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $first_filter = $report->getFiltersArray()[0];
+        self::assertSame("global_txt", $first_filter->md->getLabel());
+        self::assertSame("*.docx", $first_filter->value);
+        $second_filter = $report->getFiltersArray()[1];
+        self::assertSame("item_type", $second_filter->md->getLabel());
+        self::assertSame($expected_internal_value, $second_filter->value);
     }
 }

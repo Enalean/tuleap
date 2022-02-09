@@ -242,4 +242,5 @@ export interface UserGroup {
 
 export interface AdvancedSearchParams {
     readonly query: string;
+    readonly type: string;
 }

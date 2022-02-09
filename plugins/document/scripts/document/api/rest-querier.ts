@@ -31,6 +31,7 @@ import type {
     ItemFileUploader,
     UserGroup,
     SearchResult,
+    AdvancedSearchParams,
 } from "../type";
 import { SEARCH_LIMIT } from "../type";
 
@@ -105,7 +106,7 @@ async function addNewDocumentType(url: string, item: Item): Promise<Response> {
 
 async function searchInFolder(
     folder_id: number,
-    query: string,
+    search: AdvancedSearchParams,
     offset: number
 ): Promise<SearchResult> {
     const headers = {
@@ -113,7 +114,8 @@ async function searchInFolder(
     };
 
     const json_body = {
-        global_search: query,
+        global_search: search.query,
+        ...(search.type && { type: search.type }),
         offset: offset,
         limit: SEARCH_LIMIT,
     };

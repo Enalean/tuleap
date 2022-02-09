@@ -430,7 +430,46 @@ describe("rest-querier", () => {
                 },
             });
 
-            const results = await searchInFolder(101, "Lorem ipsum", 170);
+            const results = await searchInFolder(
+                101,
+                { query: "Lorem ipsum", type: "folder" },
+                170
+            );
+
+            expect(tlpPost).toHaveBeenCalledWith(`/api/v1/docman_search/101`, {
+                headers: {
+                    "content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    global_search: "Lorem ipsum",
+                    type: "folder",
+                    offset: 170,
+                    limit: 50,
+                }),
+            });
+            expect(results.items).toStrictEqual(items);
+            expect(results.from).toBe(170);
+            expect(results.to).toBe(171);
+            expect(results.total).toBe(172);
+        });
+
+        it("should exclude type from search when no specific item type is given", async () => {
+            const tlpPost = jest.spyOn(tlp, "post");
+            const items = [{ id: 1 } as ItemSearchResult, { id: 2 } as ItemSearchResult];
+            mockFetchSuccess(tlpPost, {
+                return_json: items,
+                headers: {
+                    get(name): string | null {
+                        if (name === "X-PAGINATION-SIZE") {
+                            return "172";
+                        }
+
+                        return null;
+                    },
+                },
+            });
+
+            await searchInFolder(101, { query: "Lorem ipsum", type: "" }, 170);
 
             expect(tlpPost).toHaveBeenCalledWith(`/api/v1/docman_search/101`, {
                 headers: {
@@ -442,10 +481,6 @@ describe("rest-querier", () => {
                     limit: 50,
                 }),
             });
-            expect(results.items).toStrictEqual(items);
-            expect(results.from).toBe(170);
-            expect(results.to).toBe(171);
-            expect(results.total).toBe(172);
         });
     });
 });

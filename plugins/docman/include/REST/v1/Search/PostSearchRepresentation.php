@@ -36,6 +36,11 @@ final class PostSearchRepresentation
     public string $global_search = '';
 
     /**
+     * @var string type of item {@from body} {@required false} {@choice folder,file,link,embedded,wiki,empty}
+     */
+    public string $type = '';
+
+    /**
      * @var int limit {@from body} {@required false} {@min 0} {@max 50}
      */
     public int $limit = SearchResource::MAX_LIMIT;

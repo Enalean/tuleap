@@ -60,7 +60,10 @@ export function createRouter(store, project_name) {
                     folder_id: route.params.folder_id
                         ? Number(route.params.folder_id)
                         : store.state.configuration.root_id,
-                    query: route.query.q || "",
+                    query: {
+                        query: route.query.q || "",
+                        type: route.query.type || "",
+                    },
                     offset: Number(route.query.offset || "0"),
                 }),
             },

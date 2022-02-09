@@ -20,7 +20,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import SearchInformationPopover from "./SearchInformationPopover.vue";
-import localVue from "../../helpers/local-vue";
+import localVue from "../../../helpers/local-vue";
 
 describe("SearchInformationPopover", () => {
     it("should display a popover content", () => {

@@ -41,7 +41,10 @@ describe("SearchContainer", () => {
     it("should not display the table results if the query is empty", () => {
         const wrapper = shallowMount(SearchContainer, {
             propsData: {
-                query: "",
+                query: {
+                    query: "",
+                    type: "",
+                },
                 folder_id: 101,
                 offset: 0,
             },
@@ -59,7 +62,10 @@ describe("SearchContainer", () => {
     it("should automatically load the current folder so that breadcrumb is accurate when user refresh the page", () => {
         const wrapper = shallowMount(SearchContainer, {
             propsData: {
-                query: "",
+                query: {
+                    query: "",
+                    type: "",
+                },
                 folder_id: 101,
                 offset: 0,
             },
@@ -80,7 +86,10 @@ describe("SearchContainer", () => {
         const wrapper = shallowMount(SearchContainer, {
             localVue: createLocalVue().use(VueRouter),
             propsData: {
-                query: "",
+                query: {
+                    query: "",
+                    type: "",
+                },
                 folder_id: 101,
                 offset: 0,
             },
@@ -99,6 +108,7 @@ describe("SearchContainer", () => {
         const criteria = wrapper.findComponent(SearchCriteriaPanel);
         const params: AdvancedSearchParams = {
             query: "Lorem ipsum",
+            type: "",
         };
         criteria.vm.$emit("advanced-search", params);
 
@@ -122,7 +132,10 @@ describe("SearchContainer", () => {
         const wrapper = shallowMount(SearchContainer, {
             localVue: createLocalVue().use(VueRouter),
             propsData: {
-                query: "Lorem ipsum",
+                query: {
+                    query: "Lorem ipsum",
+                    type: "",
+                },
                 folder_id: 101,
                 offset: 0,
             },
@@ -141,6 +154,7 @@ describe("SearchContainer", () => {
         const criteria = wrapper.findComponent(SearchCriteriaPanel);
         const params: AdvancedSearchParams = {
             query: "Lorem ipsum",
+            type: "",
         };
         criteria.vm.$emit("advanced-search", params);
 
@@ -157,7 +171,10 @@ describe("SearchContainer", () => {
         const wrapper = shallowMount(SearchContainer, {
             localVue: createLocalVue().use(VueRouter),
             propsData: {
-                query: "Lorem ipsum",
+                query: {
+                    query: "Lorem ipsum",
+                    type: "",
+                },
                 folder_id: 101,
                 offset: 0,
             },
@@ -173,13 +190,27 @@ describe("SearchContainer", () => {
             },
         });
 
-        expect(searchInFolderMock).toHaveBeenCalledWith(101, "Lorem ipsum", 0);
+        expect(searchInFolderMock).toHaveBeenCalledWith(
+            101,
+            {
+                query: "Lorem ipsum",
+                type: "",
+            },
+            0
+        );
 
         wrapper.setProps({ offset: 10 });
         await wrapper.vm.$nextTick();
 
         expect(router.push).not.toHaveBeenCalled();
-        expect(searchInFolderMock).toHaveBeenCalledWith(101, "Lorem ipsum", 10);
+        expect(searchInFolderMock).toHaveBeenCalledWith(
+            101,
+            {
+                query: "Lorem ipsum",
+                type: "",
+            },
+            10
+        );
     });
 
     it("should perform a new search if user select another folder in the breadcrumb", async () => {
@@ -191,7 +222,10 @@ describe("SearchContainer", () => {
         const wrapper = shallowMount(SearchContainer, {
             localVue: createLocalVue().use(VueRouter),
             propsData: {
-                query: "Lorem ipsum",
+                query: {
+                    query: "Lorem ipsum",
+                    type: "",
+                },
                 folder_id: 101,
                 offset: 0,
             },
@@ -207,13 +241,27 @@ describe("SearchContainer", () => {
             },
         });
 
-        expect(searchInFolderMock).toHaveBeenCalledWith(101, "Lorem ipsum", 0);
+        expect(searchInFolderMock).toHaveBeenCalledWith(
+            101,
+            {
+                query: "Lorem ipsum",
+                type: "",
+            },
+            0
+        );
 
         wrapper.setProps({ folder_id: 102 });
         await wrapper.vm.$nextTick();
 
         expect(router.push).not.toHaveBeenCalled();
-        expect(searchInFolderMock).toHaveBeenCalledWith(102, "Lorem ipsum", 0);
+        expect(searchInFolderMock).toHaveBeenCalledWith(
+            102,
+            {
+                query: "Lorem ipsum",
+                type: "",
+            },
+            0
+        );
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("loadFolder", 102);
     });
 
@@ -223,7 +271,10 @@ describe("SearchContainer", () => {
         const wrapper = shallowMount(SearchContainer, {
             localVue: createLocalVue().use(VueRouter),
             propsData: {
-                query: "Lorem ipsum",
+                query: {
+                    query: "Lorem ipsum",
+                    type: "",
+                },
                 folder_id: 101,
                 offset: 0,
             },
@@ -234,7 +285,14 @@ describe("SearchContainer", () => {
             },
         });
 
-        expect(searchInFolderMock).toHaveBeenCalledWith(101, "Lorem ipsum", 0);
+        expect(searchInFolderMock).toHaveBeenCalledWith(
+            101,
+            {
+                query: "Lorem ipsum",
+                type: "",
+            },
+            0
+        );
         expect(wrapper.findComponent(SearchResultTable).exists()).toBe(true);
         expect(wrapper.findComponent(SearchResultError).exists()).toBe(false);
     });
@@ -245,7 +303,10 @@ describe("SearchContainer", () => {
         shallowMount(SearchContainer, {
             localVue: createLocalVue().use(VueRouter),
             propsData: {
-                query: "",
+                query: {
+                    query: "",
+                    type: "",
+                },
                 folder_id: 101,
                 offset: 0,
             },
@@ -263,7 +324,10 @@ describe("SearchContainer", () => {
         const wrapper = shallowMount(SearchContainer, {
             localVue: createLocalVue().use(VueRouter),
             propsData: {
-                query: "",
+                query: {
+                    query: "",
+                    type: "",
+                },
                 folder_id: 101,
                 offset: 0,
             },
