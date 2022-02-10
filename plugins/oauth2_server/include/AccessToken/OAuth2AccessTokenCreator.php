@@ -30,6 +30,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
+use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenDAO;
 
 class OAuth2AccessTokenCreator
 {
