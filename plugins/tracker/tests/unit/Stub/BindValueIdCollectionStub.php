@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,19 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
+namespace Tuleap\Tracker\Test\Stub;
 
-final class MappedValues implements MappedValuesInterface
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindValueIdCollection;
+
+final class BindValueIdCollectionStub implements BindValueIdCollection
 {
-    /** @var int[] */
-    private $value_ids;
+    private array $value_ids;
 
     /**
      * @param int[] $value_ids
      */
-    public function __construct(array $value_ids)
+    private function __construct(array $value_ids)
     {
         $this->value_ids = $value_ids;
+    }
+
+    /** @no-named-arguments */
+    public static function withValues(int $first_bind_value_id, int ...$other_bind_value_ids): self
+    {
+        return new self([$first_bind_value_id, ...$other_bind_value_ids]);
     }
 
     /**
@@ -43,17 +50,12 @@ final class MappedValues implements MappedValuesInterface
         return $this->value_ids;
     }
 
-    public function isEmpty(): bool
-    {
-        return empty($this->value_ids);
-    }
-
     public function getFirstValue(): int
     {
         return reset($this->value_ids);
     }
 
-    public function removeValue(int $value): void
+    public function removeValue($value): void
     {
         $key = array_search($value, $this->value_ids);
 

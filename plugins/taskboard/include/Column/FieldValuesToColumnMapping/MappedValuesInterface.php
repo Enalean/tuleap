@@ -20,14 +20,9 @@
 
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
-interface MappedValuesInterface
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindValueIdCollection;
+
+interface MappedValuesInterface extends BindValueIdCollection
 {
-    /**
-     * @return int[]
-     */
-    public function getValueIds(): array;
-
     public function isEmpty(): bool;
-
-    public function getFirstValue(): int;
 }

@@ -2100,6 +2100,11 @@ msgstr "Aucune notification n'a été définie"
 msgid "No notifications at all"
 msgstr "Aucune notification"
 
+msgid ""
+"No possible value found regarding your configuration. Please check your "
+"transition and field dependencies."
+msgstr "Aucune valeur possible trouvée au vu de votre configuration. Veuillez vérifier vos règles de transitions ainsi que vos dépendances entre les champs."
+
 msgid "No reports available"
 msgstr "Aucun rapport disponible"
 
