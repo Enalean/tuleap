@@ -29,7 +29,7 @@
     "css-loader": "^6.2.0",
     "cypress": "^9.2.0",
     "cypress-file-upload": "^5.0.2",
-    "esbuild-loader": "^2.16.0",
+    "esbuild-loader": "^2.18.0",
     "eslint": "^8.1.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-cypress": "^2.11.3",
@@ -96,11 +96,6 @@
     "eslint": "eslint --config .eslintrc.js --no-eslintrc --ext .js,.ts,.vue",
     "stylelint": "stylelint --config .stylelintrc.js",
     "test": "turbo run test --concurrency=2 -- -- --verbose=false"
-  },
-  "pnpm": {
-    "overrides": {
-      "esbuild": ">=0.13.9"
-    }
   },
   "packageManager": "pnpm@6.25.0"
 }
