@@ -20,24 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
+namespace Tuleap\OAuth2ServerCore\Grant\AuthorizationCode;
 
-use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
-
-class OAuth2AuthorizationCodeRevoker
+final class OAuth2AuthorizationCodeRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var OAuth2AuthorizationCodeDAO
-     */
-    private $authorization_code_DAO;
-
-    public function __construct(OAuth2AuthorizationCodeDAO $authorization_code_DAO)
+    public function testRevokeByAuthCodeId(): void
     {
-        $this->authorization_code_DAO = $authorization_code_DAO;
-    }
+        $dao     = $this->createMock(OAuth2AuthorizationCodeDAO::class);
+        $revoker = new OAuth2AuthorizationCodeRevoker($dao);
 
-    public function revokeByAuthCodeId(int $authorization_code_id): void
-    {
-        $this->authorization_code_DAO->deleteAuthorizationCodeByID($authorization_code_id);
+        $dao->expects(self::once())->method('deleteAuthorizationCodeByID')->with(15);
+
+        $revoker->revokeByAuthCodeId(15);
     }
 }
