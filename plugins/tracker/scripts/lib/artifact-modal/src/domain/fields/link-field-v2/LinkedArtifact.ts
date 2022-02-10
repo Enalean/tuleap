@@ -22,6 +22,8 @@ import type { Identifier } from "../../Identifier";
 // I identify an artifact linked to the current artifact under edition
 export type LinkedArtifactIdentifier = Identifier<"LinkedArtifactIdentifier">;
 
+export const FORWARD_DIRECTION = "forward";
+
 export interface LinkType {
     readonly shortname: string;
     readonly direction: string;

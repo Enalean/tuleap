@@ -32,6 +32,8 @@ import { DeleteLinkMarkedForRemovalStub } from "../../../../../tests/stubs/Delet
 import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
 import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
 import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field-v2/VerifyLinkIsMarkedForRemoval";
+import type { LinkedArtifact } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
+import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -129,15 +131,14 @@ describe(`LinkedArtifactTemplate`, () => {
         let marked_for_removal_verifier: VerifyLinkIsMarkedForRemoval;
 
         beforeEach(() => {
-            marked_for_removal_verifier = VerifyLinkIsMarkedForRemovalStub.withLinked();
+            marked_for_removal_verifier =
+                VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval();
         });
 
-        const getHost = (): HostElement => {
+        const getHost = (linked_artifact: LinkedArtifact): HostElement => {
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
-                RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(
-                    LinkedArtifactStub.withDefaults()
-                ),
+                RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(linked_artifact),
                 AddLinkMarkedForRemovalStub.withCount(),
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 marked_for_removal_verifier,
@@ -150,9 +151,13 @@ describe(`LinkedArtifactTemplate`, () => {
             } as unknown as HostElement;
         };
 
-        const render = (host: HostElement, is_marked_for_removal: boolean): void => {
+        const render = (
+            host: HostElement,
+            linked_artifact: LinkedArtifact,
+            is_marked_for_removal: boolean
+        ): void => {
             const linked_artifact_presenter = LinkedArtifactPresenter.fromLinkedArtifact(
-                LinkedArtifactStub.withDefaults(),
+                linked_artifact,
                 is_marked_for_removal
             );
             const update = getActionButton(linked_artifact_presenter);
@@ -160,8 +165,9 @@ describe(`LinkedArtifactTemplate`, () => {
         };
 
         it(`will mark the artifact for removal`, () => {
-            const host = getHost();
-            render(host, false);
+            const linked_artifact = LinkedArtifactStub.withDefaults();
+            const host = getHost(linked_artifact);
+            render(host, linked_artifact, false);
             const button = target.querySelector("[data-test=action-button]");
 
             if (!(button instanceof HTMLButtonElement)) {
@@ -175,9 +181,11 @@ describe(`LinkedArtifactTemplate`, () => {
         });
 
         it(`will cancel the removal of the artifact`, () => {
-            marked_for_removal_verifier = VerifyLinkIsMarkedForRemovalStub.withNoLink();
-            const host = getHost();
-            render(host, true);
+            marked_for_removal_verifier =
+                VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval();
+            const linked_artifact = LinkedArtifactStub.withDefaults();
+            const host = getHost(linked_artifact);
+            render(host, linked_artifact, true);
             const button = target.querySelector("[data-test=action-button]");
 
             if (!(button instanceof HTMLButtonElement)) {
@@ -188,6 +196,18 @@ describe(`LinkedArtifactTemplate`, () => {
             expect(
                 host.presenter.linked_artifacts.some((artifact) => artifact.is_marked_for_removal)
             ).toBe(false);
+        });
+
+        it(`will not render a button if the link's direction is "reverse"`, () => {
+            const linked_artifact = LinkedArtifactStub.withLinkType(
+                LinkTypeStub.buildParentLinkType()
+            );
+            const host = getHost(linked_artifact);
+            render(host, linked_artifact, false);
+
+            const button = target.querySelector("[data-test=action-button]");
+
+            expect(button).toBe(null);
         });
     });
 });

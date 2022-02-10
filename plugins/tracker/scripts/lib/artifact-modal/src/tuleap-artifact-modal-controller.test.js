@@ -96,6 +96,7 @@ describe("TuleapArtifactModalController", () => {
                         },
                     ],
                     color: "inca_silver",
+                    is_links_field_v2_enabled: false,
                 },
                 TuleapArtifactModalLoading,
                 displayItemCallback: mockCallback,
@@ -223,7 +224,9 @@ describe("TuleapArtifactModalController", () => {
             expect(validateArtifactFieldsValues).toHaveBeenCalledWith(
                 values,
                 true,
-                followup_comment
+                followup_comment,
+                false,
+                expect.any(Object)
             );
             expect(createArtifact).toHaveBeenCalledWith(39, values);
             expect(editArtifact).not.toHaveBeenCalled();
@@ -263,7 +266,9 @@ describe("TuleapArtifactModalController", () => {
             expect(validateArtifactFieldsValues).toHaveBeenCalledWith(
                 values,
                 false,
-                followup_comment
+                followup_comment,
+                false,
+                expect.any(Object)
             );
             expect(editArtifactWithConcurrencyChecking).toHaveBeenCalledWith(
                 8155,
@@ -365,7 +370,9 @@ describe("TuleapArtifactModalController", () => {
             expect(validateArtifactFieldsValues).toHaveBeenCalledWith(
                 values,
                 false,
-                followup_comment
+                followup_comment,
+                false,
+                expect.any(Object)
             );
             expect(editArtifact).toHaveBeenCalledWith(8155, values, followup_comment);
             expect(createArtifact).not.toHaveBeenCalled();

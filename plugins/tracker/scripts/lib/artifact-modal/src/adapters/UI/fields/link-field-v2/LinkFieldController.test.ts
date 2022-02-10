@@ -48,7 +48,7 @@ describe(`LinkFieldController`, () => {
                 RetrieveLinkedArtifactsSyncStub.withoutLink(),
                 AddLinkMarkedForRemovalStub.withCount(),
                 DeleteLinkMarkedForRemovalStub.withCount(),
-                VerifyLinkIsMarkedForRemovalStub.withLinked(),
+                VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval(),
                 CurrentArtifactIdentifierStub.withId(18)
             );
             return controller.displayLinkedArtifacts();
@@ -100,7 +100,7 @@ describe(`LinkFieldController`, () => {
                 RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(linked_artifact),
                 deleted_link_adder,
                 DeleteLinkMarkedForRemovalStub.withCount(),
-                VerifyLinkIsMarkedForRemovalStub.withLinked(),
+                VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval(),
                 CurrentArtifactIdentifierStub.withId(40)
             );
             return controller.markForRemoval(identifier);
@@ -132,7 +132,7 @@ describe(`LinkFieldController`, () => {
                 RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(linked_artifact),
                 AddLinkMarkedForRemovalStub.withCount(),
                 deleted_link_remover,
-                VerifyLinkIsMarkedForRemovalStub.withNoLink(),
+                VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
                 CurrentArtifactIdentifierStub.withId(80)
             );
             return controller.unmarkForRemoval(identifier);
