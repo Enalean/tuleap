@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
+namespace Tuleap\OAuth2ServerCore\Grant\AuthorizationCode;
 
 use Project;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
@@ -98,7 +98,7 @@ final class OAuth2AuthorizationCodeDAOTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function tearDown(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run('DELETE FROM plugin_oauth2_authorization_code');
+        $db->run('DELETE FROM oauth2_authorization_code');
         $db->run('DELETE FROM plugin_oauth2_authorization_code_scope');
         $db->run('DELETE FROM plugin_oauth2_access_token');
         $db->run('DELETE FROM plugin_oauth2_access_token_scope');
@@ -236,7 +236,7 @@ final class OAuth2AuthorizationCodeDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertNull(
             DBFactory::getMainTuleapDBConnection()->getDB()->row(
-                'SELECT id FROM plugin_oauth2_authorization_code WHERE id = ?',
+                'SELECT id FROM oauth2_authorization_code WHERE id = ?',
                 $auth_code_id
             )
         );

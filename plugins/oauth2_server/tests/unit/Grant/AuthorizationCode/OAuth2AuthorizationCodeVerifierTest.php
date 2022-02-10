@@ -29,6 +29,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\OAuth2TestScope;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
+use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\TestCase

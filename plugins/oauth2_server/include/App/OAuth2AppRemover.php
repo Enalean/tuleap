@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\App;
 
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
+use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use Tuleap\OAuth2Server\User\AuthorizationDao;
 use Tuleap\OAuth2ServerCore\App\AppDao;
 
