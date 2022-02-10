@@ -32,6 +32,8 @@ import type {
     UserGroup,
     SearchResult,
     AdvancedSearchParams,
+    CreatedItem,
+    CreatedItemFileProperties,
 } from "../type";
 import { SEARCH_LIMIT } from "../type";
 
@@ -89,7 +91,7 @@ async function getItem(id: number): Promise<Item> {
     return response.json();
 }
 
-async function addNewDocumentType(url: string, item: Item): Promise<Response> {
+async function addNewDocumentType(url: string, item: Item): Promise<CreatedItem> {
     const headers = {
         "content-type": "application/json",
     };
@@ -139,42 +141,42 @@ async function searchInFolder(
     };
 }
 
-function addNewFile(item: ItemFile, parent_id: number): Promise<Response> {
+function addNewFile(item: ItemFile, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/files",
         item
     );
 }
 
-function addNewEmpty(item: Empty, parent_id: number): Promise<Response> {
+function addNewEmpty(item: Empty, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/empties",
         item
     );
 }
 
-function addNewEmbedded(item: Embedded, parent_id: number): Promise<Response> {
+function addNewEmbedded(item: Embedded, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/embedded_files",
         item
     );
 }
 
-function addNewWiki(item: Wiki, parent_id: number): Promise<Response> {
+function addNewWiki(item: Wiki, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/wikis",
         item
     );
 }
 
-function addNewLink(item: Link, parent_id: number): Promise<Response> {
+function addNewLink(item: Link, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/links",
         item
     );
 }
 
-function addNewFolder(item: Folder, parent_id: number): Promise<Response> {
+function addNewFolder(item: Folder, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/folders",
         item
@@ -188,7 +190,7 @@ async function createNewVersion(
     dropped_file: ItemFile,
     should_lock_file: boolean,
     approval_table_action: ApprovalTable | null
-): Promise<Response> {
+): Promise<CreatedItemFileProperties> {
     const response = await post(`/api/docman_files/${encodeURIComponent(item.id)}/version`, {
         headers: {
             "Content-Type": "application/json",
@@ -386,7 +388,7 @@ function postNewEmbeddedFileVersionFromEmpty(item_id: number, content: string): 
 async function postNewFileVersionFromEmpty(
     item_id: number,
     dropped_file: ItemFile
-): Promise<Response> {
+): Promise<CreatedItemFileProperties> {
     const response = await post(`/api/docman_empty_documents/${encodeURIComponent(item_id)}/file`, {
         headers: {
             "Content-Type": "application/json",
