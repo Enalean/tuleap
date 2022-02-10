@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ListPickersCreator } from "./ListPickersCreator";
-import { SelectWrappedByListPickerStore } from "./SelectWrappedByListPickerStore";
+type SelectIdentifier = string;
 
-document.addEventListener("DOMContentLoaded", () => {
-    const creator = ListPickersCreator(document, SelectWrappedByListPickerStore());
-    creator.listenToggleEditionEvents();
-    creator.initListPickersInArtifactCreationView();
-    creator.initListPickersPostUpdateErrorView();
-    creator.initTrackerSelector();
-});
+export interface SelectWrappedByListPickerStoreType {
+    isWrapped(id: SelectIdentifier): boolean;
+    add(id: SelectIdentifier): void;
+}
+
+export const SelectWrappedByListPickerStore = (): SelectWrappedByListPickerStoreType => {
+    const identifiers_of_selects_wrapped_by_list_picker = new Set();
+    return {
+        isWrapped: (id: SelectIdentifier): boolean =>
+            identifiers_of_selects_wrapped_by_list_picker.has(id),
+
+        add(id: SelectIdentifier): void {
+            identifiers_of_selects_wrapped_by_list_picker.add(id);
+        },
+    };
+};
