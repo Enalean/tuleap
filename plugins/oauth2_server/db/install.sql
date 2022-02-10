@@ -37,15 +37,6 @@ CREATE TABLE plugin_oauth2_authorization_scope(
     PRIMARY KEY (authorization_id, scope_key)
 ) ENGINE=InnoDB;
 
-CREATE TABLE plugin_oauth2_access_token (
-    id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    authorization_code_id INT(11) NOT NULL,
-    verifier VARCHAR(255) NOT NULL,
-    expiration_date INT(11) UNSIGNED NOT NULL,
-    INDEX idx_expiration_date (expiration_date),
-    INDEX idx_authorization_code (authorization_code_id)
-) ENGINE=InnoDB;
-
 CREATE TABLE plugin_oauth2_access_token_scope (
     access_token_id INT(11) NOT NULL,
     scope_key VARCHAR(255) NOT NULL,
