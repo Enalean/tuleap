@@ -75,6 +75,7 @@ module.exports = {
         "!**/node_modules/**",
         "!**/vendor/**",
         "!**/assets/**",
+        "!**/frontend-assets/**",
         "!**/dist/**",
         "!**/tests/**",
         "!**/coverage/**",

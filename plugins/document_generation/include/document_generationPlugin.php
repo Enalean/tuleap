@@ -113,7 +113,7 @@ class document_generationPlugin extends Plugin
         );
 
         $document_generation_asset = new IncludeViteAssets(
-            __DIR__ . '/../../../src/www/assets/document_generation',
+            __DIR__ . '/../frontend-assets/',
             '/assets/document_generation'
         );
 

@@ -89,8 +89,8 @@ final class api_explorerPlugin extends Plugin
         return new \Tuleap\APIExplorer\ExplorerController(
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
             new \Tuleap\Layout\IncludeViteAssets(
-                __DIR__ . '/../../../src/www/assets/api-explorer',
-                '/assets/api-explorer'
+                __DIR__ . '/../frontend-assets/',
+                '/assets/api_explorer'
             )
         );
     }
