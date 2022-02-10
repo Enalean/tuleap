@@ -29,6 +29,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevoker;
+use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenDAO;
 
 final class OAuth2RefreshTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {

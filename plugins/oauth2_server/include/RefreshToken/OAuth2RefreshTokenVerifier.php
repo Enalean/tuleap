@@ -29,6 +29,7 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevoker;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
+use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenDAO;
 
 class OAuth2RefreshTokenVerifier
 {

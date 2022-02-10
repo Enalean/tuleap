@@ -102,7 +102,7 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
         $this->deleteAuthorizationCode(
             EasyStatement::open()->with(
                 '? > oauth2_authorization_code.expiration_date
-                AND (plugin_oauth2_refresh_token.id IS NULL OR ? > plugin_oauth2_refresh_token.expiration_date)
+                AND (oauth2_refresh_token.id IS NULL OR ? > oauth2_refresh_token.expiration_date)
                 AND (plugin_oauth2_access_token.id IS NULL OR ? > plugin_oauth2_access_token.expiration_date)',
                 $current_time,
                 $current_time,
@@ -135,14 +135,14 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
                               plugin_oauth2_authorization_code_scope.*,
                               plugin_oauth2_access_token.*,
                               plugin_oauth2_access_token_scope.*,
-                              plugin_oauth2_refresh_token.*,
+                              oauth2_refresh_token.*,
                               plugin_oauth2_refresh_token_scope.*
                        FROM oauth2_authorization_code
                        LEFT JOIN plugin_oauth2_authorization_code_scope ON oauth2_authorization_code.id = plugin_oauth2_authorization_code_scope.auth_code_id
                        LEFT JOIN plugin_oauth2_access_token ON oauth2_authorization_code.id = plugin_oauth2_access_token.authorization_code_id
                        LEFT JOIN plugin_oauth2_access_token_scope on plugin_oauth2_access_token.id = plugin_oauth2_access_token_scope.access_token_id
-                       LEFT JOIN plugin_oauth2_refresh_token ON oauth2_authorization_code.id = plugin_oauth2_refresh_token.authorization_code_id
-                       LEFT JOIN plugin_oauth2_refresh_token_scope ON plugin_oauth2_refresh_token.id = plugin_oauth2_refresh_token_scope.refresh_token_id
+                       LEFT JOIN oauth2_refresh_token ON oauth2_authorization_code.id = oauth2_refresh_token.authorization_code_id
+                       LEFT JOIN plugin_oauth2_refresh_token_scope ON oauth2_refresh_token.id = plugin_oauth2_refresh_token_scope.refresh_token_id
                        LEFT JOIN oauth2_server_app ON oauth2_authorization_code.app_id = oauth2_server_app.id
                        LEFT JOIN `groups` ON oauth2_server_app.project_id = `groups`.group_id
                        WHERE $filter_statement",
