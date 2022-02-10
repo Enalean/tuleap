@@ -88,7 +88,10 @@ abstract class AdminView
         );
 
         $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates');
-        $renderer->renderToPage('admin-header-fp', [
+
+        $template = $this->isBurningParrotCompatiblePage() ? 'admin-header-bp' : 'admin-header-fp';
+
+        $renderer->renderToPage($template, [
             'title' => dgettext('tuleap-docman', 'Administration'),
             'tabs'  => $this->getTabs($default_url),
         ]);
@@ -103,6 +106,11 @@ abstract class AdminView
     abstract protected function getTitle(array $params): string;
 
     abstract protected function displayContent(array $params): void;
+
+    protected function isBurningParrotCompatiblePage(): bool
+    {
+        return false;
+    }
 
     private function getProjectIdFromParams(array $params): int
     {
