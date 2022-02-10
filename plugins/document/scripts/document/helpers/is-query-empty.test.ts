@@ -1,0 +1,48 @@
+/**
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import type { AdvancedSearchParams } from "../type";
+import { isQueryEmpty } from "./is-query-empty";
+import { buildAdvancedSearchParams } from "./build-advanced-search-params";
+
+describe("isQueryEmpty", () => {
+    it("should return true if no parameters have been given to the query", () => {
+        // We don't use the helper buildAdvancedSearchParams() on purpose:
+        // That way, there is a better chance that contributor that is adding
+        // a new query parameter do not forget to update isQueryEmpty().
+        // It is not bullet proof but we hope that forcing them to touch this
+        // test file will help.
+        const query_params: AdvancedSearchParams = {
+            query: "",
+            type: "",
+            title: "",
+            description: "",
+        };
+        expect(isQueryEmpty(query_params)).toBe(true);
+    });
+
+    it.each<ReadonlyArray<Partial<AdvancedSearchParams>>>([
+        [{ query: "lorem" }],
+        [{ type: "folder" }],
+        [{ title: "ipsum" }],
+        [{ description: "doloret" }],
+    ])("should return false if parameter is filled", (query_params) => {
+        expect(isQueryEmpty(buildAdvancedSearchParams(query_params))).toBe(false);
+    });
+});

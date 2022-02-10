@@ -34,6 +34,7 @@ import type {
     AdvancedSearchParams,
 } from "../type";
 import { SEARCH_LIMIT } from "../type";
+import { getRestBodyFromSearchParams } from "../helpers/get-rest-body-from-search-params";
 
 export {
     getDocumentManagerServiceInformation,
@@ -114,9 +115,7 @@ async function searchInFolder(
     };
 
     const json_body = {
-        ...(search.query && { global_search: search.query }),
-        ...(search.type && { type: search.type }),
-        ...(search.title && { title: search.title }),
+        ...getRestBodyFromSearchParams(search),
         offset: offset,
         limit: SEARCH_LIMIT,
     };

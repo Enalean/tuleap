@@ -240,8 +240,20 @@ export interface UserGroup {
     label: string;
 }
 
+export const AllowedSearchType = [
+    "",
+    "folder",
+    "file",
+    "embedded",
+    "wiki",
+    "link",
+    "empty",
+] as const;
+export type AllowedSearchType = typeof AllowedSearchType[number];
+
 export interface AdvancedSearchParams {
     readonly query: string;
-    readonly type: string;
+    readonly type: AllowedSearchType;
     readonly title: string;
+    readonly description: string;
 }

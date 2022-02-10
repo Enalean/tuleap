@@ -20,14 +20,14 @@
 
 <template>
     <div class="tlp-form-element document-search-criterion document-search-criterion-text">
-        <label class="tlp-label" for="document-title" v-translate>Title</label>
+        <label class="tlp-label" v-bind:for="id">{{ label }}</label>
         <input
             type="text"
             class="tlp-input"
-            id="document-title"
+            v-bind:id="id"
             v-bind:value="value"
             v-on:input="$emit('input', $event.target.value)"
-            data-test="global-search"
+            v-bind:data-test="id"
         />
     </div>
 </template>
@@ -38,8 +38,18 @@ import Vue from "vue";
 import { Prop } from "vue-property-decorator";
 
 @Component
-export default class CriterionTitle extends Vue {
+export default class CriterionText extends Vue {
+    @Prop({ required: true })
+    readonly name!: string;
+
     @Prop({ required: true })
     readonly value!: string;
+
+    @Prop({ required: true })
+    readonly label!: string;
+
+    get id(): string {
+        return "document-criterion-text-" + this.name;
+    }
 }
 </script>

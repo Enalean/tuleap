@@ -50,12 +50,29 @@ class SearchReportBuilder
             ]
         );
 
+        $this->addGlobalTextFilter($search, $report);
+        $this->addTypeFilter($search, $report);
+        $this->addTitleFilter($search, $report);
+        $this->addDescriptionFilter($search, $report);
+
+        $columns = $this->always_there_column_retriever->getColumns();
+        $this->column_report_builder->addColumnsFromArray($columns, $report);
+
+
+        return $report;
+    }
+
+    private function addGlobalTextFilter(PostSearchRepresentation $search, Docman_Report $report): void
+    {
         $global_search_metadata = $this->filter_factory->getGlobalSearchMetadata();
         $this->getCustomTextFieldsMetadata();
         $filter = new Docman_FilterGlobalText($global_search_metadata, $this->filter_factory->dynTextFields);
         $filter->setValue($search->global_search);
         $report->addFilter($filter);
+    }
 
+    private function addTypeFilter(PostSearchRepresentation $search, Docman_Report $report): void
+    {
         if ($search->type) {
             $type_filter = new \Docman_FilterItemType($this->filter_factory->getItemTypeSearchMetadata());
 
@@ -70,22 +87,27 @@ class SearchReportBuilder
             $type_filter->setValue($human_readable_value_to_internal_value[$search->type]);
             $report->addFilter($type_filter);
         }
+    }
 
-        if ($search->title) {
-            $title_filter = new Docman_FilterText(
-                $this->metadata_factory->getHardCodedMetadataFromLabel(
-                    \Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL
-                )
+    private function addTitleFilter(PostSearchRepresentation $search, Docman_Report $report): void
+    {
+        $this->addTextFilter($report, $search->title, \Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL);
+    }
+
+    private function addDescriptionFilter(PostSearchRepresentation $search, Docman_Report $report): void
+    {
+        $this->addTextFilter($report, $search->description, \Docman_MetadataFactory::HARDCODED_METADATA_DESCRIPTION_LABEL);
+    }
+
+    private function addTextFilter(Docman_Report $report, string $search_term, string $metadata_label): void
+    {
+        if ($search_term) {
+            $text_filter = new Docman_FilterText(
+                $this->metadata_factory->getHardCodedMetadataFromLabel($metadata_label)
             );
-            $title_filter->setValue($search->title);
-            $report->addFilter($title_filter);
+            $text_filter->setValue($search_term);
+            $report->addFilter($text_filter);
         }
-
-        $columns = $this->always_there_column_retriever->getColumns();
-        $this->column_report_builder->addColumnsFromArray($columns, $report);
-
-
-        return $report;
     }
 
     private function getCustomTextFieldsMetadata(): void

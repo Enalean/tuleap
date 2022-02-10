@@ -44,8 +44,9 @@ import deepEqual from "fast-deep-equal";
 import SearchHeader from "./SearchHeader.vue";
 import { searchInFolder } from "../../api/rest-querier";
 import { Action } from "vuex-class";
-import type { Dictionary } from "vue-router/types/router";
 import SearchResultError from "./SearchResult/SearchResultError.vue";
+import { isQueryEmpty } from "../../helpers/is-query-empty";
+import { getRouterQueryFromSearchParams } from "../../helpers/get-router-query-from-search-params";
 
 @Component({
     components: { SearchResultError, SearchHeader, SearchResultTable, SearchCriteriaPanel },
@@ -88,7 +89,7 @@ export default class SearchContainer extends Vue {
     }
 
     search(new_query: AdvancedSearchParams, offset: number): void {
-        if (this.isQueryEmpty(new_query)) {
+        if (isQueryEmpty(new_query)) {
             return;
         }
 
@@ -114,24 +115,11 @@ export default class SearchContainer extends Vue {
     }
 
     get is_query_empty(): boolean {
-        return this.isQueryEmpty(this.query);
-    }
-
-    isQueryEmpty(new_query: AdvancedSearchParams): boolean {
-        return new_query.query.length === 0 && new_query.type.length === 0;
+        return isQueryEmpty(this.query);
     }
 
     advancedSearch(params: AdvancedSearchParams): void {
-        const query: Dictionary<string> = {};
-        if (params.query.length > 0) {
-            query.q = params.query;
-        }
-        if (params.type.length > 0) {
-            query.type = params.type;
-        }
-        if (params.title.length > 0) {
-            query.title = params.title;
-        }
+        const query = getRouterQueryFromSearchParams(params);
 
         if (deepEqual(this.$route.query, query)) {
             this.searchQuery(params);

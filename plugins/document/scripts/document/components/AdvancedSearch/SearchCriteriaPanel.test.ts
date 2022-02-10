@@ -25,7 +25,8 @@ import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapp
 import type { ConfigurationState } from "../../store/configuration";
 import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
 import CriterionType from "./Criteria/CriterionType.vue";
-import CriterionTitle from "./Criteria/CriterionTitle.vue";
+import type { AdvancedSearchParams } from "../../type";
+import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
 
 describe("SearchCriteriaPanel", () => {
     it("should allow user to search for new terms", () => {
@@ -41,11 +42,7 @@ describe("SearchCriteriaPanel", () => {
             localVue,
             attachTo: parent_node,
             propsData: {
-                query: {
-                    query: "Lorem",
-                    type: "",
-                    title: "",
-                },
+                query: buildAdvancedSearchParams({ query: "Lorem" }),
                 folder_id: 101,
             },
             mocks: {
@@ -61,12 +58,17 @@ describe("SearchCriteriaPanel", () => {
 
         wrapper.findComponent(CriterionGlobalText).vm.$emit("input", "Lorem ipsum");
         wrapper.findComponent(CriterionType).vm.$emit("input", "folder");
-        wrapper.findComponent(CriterionTitle).vm.$emit("input", "doloret");
+        wrapper.find("[data-test=criterion-title]").vm.$emit("input", "doloret");
+        wrapper.find("[data-test=criterion-description]").vm.$emit("input", "sit amet");
         wrapper.find("[data-test=submit]").trigger("click");
 
-        expect(wrapper.emitted()["advanced-search"]).toEqual([
-            [{ query: "Lorem ipsum", type: "folder", title: "doloret" }],
-        ]);
+        const expected_params: AdvancedSearchParams = {
+            query: "Lorem ipsum",
+            type: "folder",
+            title: "doloret",
+            description: "sit amet",
+        };
+        expect(wrapper.emitted()["advanced-search"]).toEqual([[expected_params]]);
 
         // Avoid memory leaks when attaching to a parent node.
         // See https://vue-test-utils.vuejs.org/api/options.html#attachto
@@ -77,11 +79,7 @@ describe("SearchCriteriaPanel", () => {
         const wrapper = shallowMount(SearchCriteriaPanel, {
             localVue,
             propsData: {
-                query: {
-                    query: "Lorem",
-                    type: "",
-                    title: "",
-                },
+                query: buildAdvancedSearchParams({ query: "Lorem" }),
                 folder_id: 101,
             },
             mocks: {

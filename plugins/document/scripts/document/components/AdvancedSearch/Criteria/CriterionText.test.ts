@@ -18,15 +18,15 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import CriterionTitle from "./CriterionTitle.vue";
-import localVue from "../../../helpers/local-vue";
+import CriterionText from "./CriterionText.vue";
 
-describe("CriterionTitle", () => {
+describe("CriterionText", () => {
     it("should render the component", async () => {
-        const wrapper = shallowMount(CriterionTitle, {
-            localVue,
+        const wrapper = shallowMount(CriterionText, {
             propsData: {
+                name: "title",
                 value: "Lorem",
+                label: "Title",
             },
         });
 
@@ -36,14 +36,15 @@ describe("CriterionTitle", () => {
     });
 
     it("should warn parent component when user is changing text", () => {
-        const wrapper = shallowMount(CriterionTitle, {
-            localVue,
+        const wrapper = shallowMount(CriterionText, {
             propsData: {
+                name: "title",
                 value: "Lorem",
+                label: "Title",
             },
         });
 
-        wrapper.find("[data-test=global-search]").setValue("Lorem ipsum");
+        wrapper.find("[data-test=document-criterion-text-title]").setValue("Lorem ipsum");
         expect(wrapper.emitted().input).toStrictEqual([["Lorem ipsum"]]);
     });
 });

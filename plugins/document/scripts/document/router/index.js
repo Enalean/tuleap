@@ -24,6 +24,7 @@ import ChildFolder from "../components/Folder/ChildFolder.vue";
 import DisplayEmbedded from "../components/Folder/ItemDisplay/DisplayEmbedded.vue";
 import SearchContainer from "../components/AdvancedSearch/SearchContainer.vue";
 import { abortCurrentUploads } from "../helpers/abort-current-uploads.js";
+import { getSearchPropsFromRoute } from "./get-search-props-from-route";
 
 Vue.use(VueRouter);
 
@@ -56,17 +57,7 @@ export function createRouter(store, project_name) {
                 path: "/search/:folder_id?",
                 name: "search",
                 component: SearchContainer,
-                props: (route) => ({
-                    folder_id: route.params.folder_id
-                        ? Number(route.params.folder_id)
-                        : store.state.configuration.root_id,
-                    query: {
-                        query: route.query.q || "",
-                        type: route.query.type || "",
-                        title: route.query.title || "",
-                    },
-                    offset: Number(route.query.offset || "0"),
-                }),
+                props: (route) => getSearchPropsFromRoute(route, store.state.configuration.root_id),
             },
         ],
     });
