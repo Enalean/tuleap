@@ -51,7 +51,8 @@ class SearchReportBuilder
         );
 
         $global_search_metadata = $this->filter_factory->getGlobalSearchMetadata();
-        $filter                 = new Docman_FilterGlobalText($global_search_metadata, []);
+        $this->getCustomTextFieldsMetadata();
+        $filter = new Docman_FilterGlobalText($global_search_metadata, $this->filter_factory->dynTextFields);
         $filter->setValue($search->global_search);
         $report->addFilter($filter);
 
@@ -85,5 +86,13 @@ class SearchReportBuilder
 
 
         return $report;
+    }
+
+    private function getCustomTextFieldsMetadata(): void
+    {
+        $custom_metadata_array = $this->metadata_factory->getRealMetadataList(true);
+        foreach ($custom_metadata_array as $custom_metadata) {
+            $this->filter_factory->createFromMetadata($custom_metadata, null);
+        }
     }
 }

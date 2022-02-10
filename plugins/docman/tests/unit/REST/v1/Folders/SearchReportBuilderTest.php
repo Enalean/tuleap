@@ -25,6 +25,7 @@ namespace Tuleap\Docman\REST\v1\Folders;
 
 use Docman_FilterFactory;
 use Docman_Metadata;
+use Docman_MetadataFactory;
 use Docman_ReportColumnTitle;
 use Docman_SettingsBo;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
@@ -38,9 +39,10 @@ final class SearchReportBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $metadata_factory = new \Docman_MetadataFactory(101);
-        $filter_factory   = new Docman_FilterFactory(101);
-        $docman_settings  = $this->createMock(Docman_SettingsBo::class);
+        $metadata_factory = $this->getMockBuilder(Docman_MetadataFactory::class)->setConstructorArgs([101])->onlyMethods(["getRealMetadataList"])->getMock();
+        $metadata_factory->method("getRealMetadataList")->willReturn([]);
+        $filter_factory  = new Docman_FilterFactory(101);
+        $docman_settings = $this->createMock(Docman_SettingsBo::class);
         $docman_settings->method('getMetadataUsage')->willReturn(false);
         $always_there_column_retriever = new AlwaysThereColumnRetriever($docman_settings);
 
