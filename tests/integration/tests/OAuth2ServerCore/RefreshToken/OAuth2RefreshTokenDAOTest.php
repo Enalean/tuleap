@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\RefreshToken;
+namespace Tuleap\OAuth2ServerCore\RefreshToken;
 
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBFactory;
@@ -118,7 +118,7 @@ final class OAuth2RefreshTokenDAOTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function tearDown(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run('DELETE FROM plugin_oauth2_refresh_token');
+        $db->run('DELETE FROM oauth2_refresh_token');
     }
 
     public static function tearDownAfterClass(): void

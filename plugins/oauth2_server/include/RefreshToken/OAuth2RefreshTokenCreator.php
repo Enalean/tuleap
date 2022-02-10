@@ -32,6 +32,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCode;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
+use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenDAO;
 
 class OAuth2RefreshTokenCreator
 {

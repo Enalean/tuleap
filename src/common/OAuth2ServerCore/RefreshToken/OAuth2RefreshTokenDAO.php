@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\RefreshToken;
+namespace Tuleap\OAuth2ServerCore\RefreshToken;
 
 use Tuleap\DB\DataAccessObject;
 
@@ -29,7 +29,7 @@ class OAuth2RefreshTokenDAO extends DataAccessObject
     public function create(int $authorization_code_id, string $hashed_verification_string, int $expiration_date_timestamp): int
     {
         return (int) $this->getDB()->insertReturnId(
-            'plugin_oauth2_refresh_token',
+            'oauth2_refresh_token',
             [
                 'authorization_code_id' => $authorization_code_id,
                 'verifier'              => $hashed_verification_string,
@@ -46,7 +46,7 @@ class OAuth2RefreshTokenDAO extends DataAccessObject
     {
         return $this->getDB()->row(
             'SELECT token.authorization_code_id, token.verifier, token.expiration_date, token.has_already_been_used, auth_code.app_id
-                       FROM plugin_oauth2_refresh_token AS token
+                       FROM oauth2_refresh_token AS token
                        JOIN oauth2_authorization_code AS auth_code ON auth_code.id = token.authorization_code_id
                        JOIN oauth2_server_app AS app ON app.id = auth_code.app_id
                        LEFT JOIN `groups` ON app.project_id = `groups`.group_id
@@ -62,7 +62,7 @@ class OAuth2RefreshTokenDAO extends DataAccessObject
     {
         return $this->getDB()->row(
             'SELECT token.authorization_code_id, token.verifier
-                       FROM plugin_oauth2_refresh_token AS token
+                       FROM oauth2_refresh_token AS token
                        JOIN oauth2_authorization_code AS auth_code ON auth_code.id = token.authorization_code_id
                        JOIN oauth2_server_app AS app ON app.id = auth_code.app_id
                        LEFT JOIN `groups` ON app.project_id = `groups`.group_id
@@ -75,7 +75,7 @@ class OAuth2RefreshTokenDAO extends DataAccessObject
     public function markRefreshTokenAsUsed(int $refresh_token_id): void
     {
         $this->getDB()->run(
-            'UPDATE plugin_oauth2_refresh_token SET has_already_been_used=TRUE WHERE id=?',
+            'UPDATE oauth2_refresh_token SET has_already_been_used=TRUE WHERE id=?',
             $refresh_token_id
         );
     }
