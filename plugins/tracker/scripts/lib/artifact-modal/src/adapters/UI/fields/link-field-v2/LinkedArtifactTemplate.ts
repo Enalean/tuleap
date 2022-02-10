@@ -25,7 +25,9 @@ import {
     getMarkForRemovalLabel,
     getDefaultLinkTypeLabel,
 } from "../../../../gettext-catalog";
+import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
 import type { LinkField } from "./LinkField";
+import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
 
 type MapOfClasses = Record<string, boolean>;
 
@@ -55,7 +57,14 @@ const getCrossRefClasses = (artifact: LinkedArtifactPresenter): MapOfClasses => 
     return classes;
 };
 
+const canLinkBeDeleted = (link_type: LinkType): boolean =>
+    link_type.direction === FORWARD_DIRECTION;
+
 export const getActionButton = (artifact: LinkedArtifactPresenter): UpdateFunction<LinkField> => {
+    if (!canLinkBeDeleted(artifact.link_type)) {
+        return html``;
+    }
+
     if (!artifact.is_marked_for_removal) {
         const markForRemoval = (host: LinkField): void => {
             host.presenter = host.controller.markForRemoval(artifact.identifier);

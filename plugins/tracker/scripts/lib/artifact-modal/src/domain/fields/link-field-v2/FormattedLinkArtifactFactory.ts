@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { VerifyLinkIsMarkedForRemoval } from "../../src/domain/fields/link-field-v2/VerifyLinkIsMarkedForRemoval";
+import type { LinkedArtifact } from "./LinkedArtifact";
+import type { Link } from "./LinkFieldValueFormat";
 
-export const VerifyLinkIsMarkedForRemovalStub = {
-    withAllLinksMarkedForRemoval: (): VerifyLinkIsMarkedForRemoval => ({
-        isMarkedForRemoval: (): boolean => true,
-    }),
-    withNoLinkMarkedForRemoval: (): VerifyLinkIsMarkedForRemoval => ({
-        isMarkedForRemoval: (): boolean => false,
+export const FormattedLinkArtifactFactory = {
+    fromLinkedArtifact: (linked_artifact: LinkedArtifact): Link => ({
+        id: linked_artifact.identifier.id,
+        type: linked_artifact.link_type.shortname,
     }),
 };

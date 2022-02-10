@@ -60,6 +60,7 @@ import { LinksStore } from "./adapters/Memory/LinksStore";
 import { ReadonlyDateFieldFormatter } from "./adapters/UI/fields/date-readonly-field/readonly-date-field-formatter";
 import { FileUploadQuotaController } from "./adapters/UI/footer/FileUploadQuotaController";
 import { UserTemporaryFileQuotaStore } from "./adapters/Memory/UserTemporaryFileQuotaStore";
+import { LinkFieldValueFormatter } from "./domain/fields/link-field-v2/LinkFieldValueFormatter";
 
 export default ArtifactModalController;
 
@@ -119,6 +120,10 @@ function ArtifactModalController(
             body: "",
             format: modal_model.text_fields_format,
         },
+        link_field_value_formatter: LinkFieldValueFormatter(
+            links_store,
+            links_marked_for_removal_store
+        ),
         link_field_controller: LinkFieldController(
             LinksRetriever(api_client, api_client, links_store),
             links_store,
@@ -245,7 +250,9 @@ function ArtifactModalController(
                 const validated_values = validateArtifactFieldsValues(
                     self.values,
                     isInCreationMode(),
-                    self.new_followup_comment
+                    self.new_followup_comment,
+                    self.is_links_field_v2_enabled,
+                    self.link_field_value_formatter
                 );
 
                 let promise;

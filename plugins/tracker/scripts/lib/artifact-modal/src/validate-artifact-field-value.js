@@ -24,7 +24,13 @@ import { formatLinkFieldValue } from "./fields/link-field/link-field-value-forma
 import { validateFileField } from "./fields/file-field/file-field-validator.js";
 import { FILE_FIELD, TEXT_FIELD } from "../../../constants/fields-constants.js";
 
-export function validateArtifactFieldsValues(field_values, creation_mode, followup_value_model) {
+export function validateArtifactFieldsValues(
+    field_values,
+    creation_mode,
+    followup_value_model,
+    is_links_field_v2_enabled,
+    link_field_value_formatter
+) {
     const text_field_value_models = Object.values(field_values).filter(
         ({ type }) => type === TEXT_FIELD
     );
@@ -42,7 +48,9 @@ export function validateArtifactFieldsValues(field_values, creation_mode, follow
                 case "tbl":
                     return validateOpenListFieldValue(field);
                 case "art_link":
-                    return formatLinkFieldValue(field);
+                    return is_links_field_v2_enabled
+                        ? link_field_value_formatter.getFormattedValuesByFieldId(field.field_id)
+                        : formatLinkFieldValue(field);
                 case FILE_FIELD:
                     return validateFileField(field, text_field_value_models, followup_value_model);
                 default:
