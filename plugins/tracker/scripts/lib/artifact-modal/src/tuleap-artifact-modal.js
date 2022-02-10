@@ -40,7 +40,6 @@ import UgroupsOpenListFieldDirective from "./fields/open-list-field/ugroups-open
 import UsersOpenListFieldDirective from "./fields/open-list-field/users-open-list-field-directive.js";
 import PermissionFieldDirective from "./fields/permission-field/permission-field-directive.js";
 import AwkwardCreationFields from "./model/awkward-creation-fields-constant.js";
-import QuotaDisplayDirective from "./quota-display/quota-display-directive.js";
 import HighlightDirective from "./tuleap-highlight/highlight-directive.js";
 import ListPickerDirective from "./fields/list-picker-field/list-picker-field-directive.js";
 import ListPickerMultipleDirective from "./fields/list-picker-multiple-field/list-picker-mulitple-field-directive.js";
@@ -61,6 +60,7 @@ import "./adapters/UI/fields/user-avatar-field/UserAvatarField";
 import "./adapters/UI/fields/date-readonly-field/DateReadonlyField";
 import "./followups/FollowupEditor";
 import "./adapters/UI/feedback/ModalFeedback";
+import "./adapters/UI/footer/FileUploadQuota";
 
 export default angular
     .module("tuleap.artifact-modal", [
@@ -90,7 +90,6 @@ export default angular
     .directive("tuleapArtifactModalUgroupsOpenListField", UgroupsOpenListFieldDirective)
     .directive("tuleapArtifactModalUsersOpenListField", UsersOpenListFieldDirective)
     .directive("tuleapArtifactModalPermissionField", PermissionFieldDirective)
-    .directive("tuleapArtifactModalQuotaDisplay", QuotaDisplayDirective)
     .directive("tuleapHighlightDirective", HighlightDirective)
     .directive("tuleapArtifactModalListPickerField", ListPickerDirective)
     .directive("tuleapArtifactModalListPickerMultipleField", ListPickerMultipleDirective)

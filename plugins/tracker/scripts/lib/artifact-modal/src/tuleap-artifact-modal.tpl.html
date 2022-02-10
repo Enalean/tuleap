@@ -450,10 +450,12 @@
     </div>
 
     <div class="tlp-modal-footer">
-        <div class="angular-artifact-modal-disk-usage"
-            tuleap-artifact-modal-quota-display
+        <tuleap-artifact-modal-file-upload-quota
             ng-if="modal.isThereAtLeastOneFileField()"
-        ></div>
+            class="angular-artifact-modal-disk-usage"
+            controller="modal.file_upload_quota_controller"
+            ce-one-way
+        ></tuleap-artifact-modal-file-upload-quota>
         <button type="button"
             class="tlp-button-primary tlp-button-outline tlp-modal-action"
             data-dismiss="modal"
