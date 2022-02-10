@@ -24,16 +24,18 @@ namespace Tuleap\Layout;
 
 use EventManager;
 use Service;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\Service\ProjectDefinedService;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class ProjectSidebarBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectSidebarToolsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
+    use ForgeConfigSandbox;
 
-    private ProjectSidebarBuilder $builder;
+    private ProjectSidebarToolsBuilder $builder;
     private \PFUser $user;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub|\Project
@@ -42,6 +44,8 @@ final class ProjectSidebarBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
+        \ForgeConfig::set('sys_default_domain', 'example.com');
+
         $this->project = $this->createStub(\Project::class);
         $this->project->method('getID')->willReturn(101);
 
@@ -49,15 +53,13 @@ final class ProjectSidebarBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $event_manager = $this->createStub(EventManager::class);
 
-        $project_manager        = $this->createStub(\ProjectManager::class);
-        $codendi__html_purifier = $this->createStub(\Codendi_HTMLPurifier::class);
-        $uri_sanitizer          = $this->createStub(URISanitizer::class);
+        $project_manager = $this->createStub(\ProjectManager::class);
+        $uri_sanitizer   = $this->createStub(URISanitizer::class);
         $uri_sanitizer->method('sanitizeForHTMLAttribute')->willReturn('/tracker');
 
-        $this->builder = new ProjectSidebarBuilder(
+        $this->builder = new ProjectSidebarToolsBuilder(
             $event_manager,
             $project_manager,
-            $codendi__html_purifier,
             $uri_sanitizer
         );
     }
@@ -103,7 +105,7 @@ final class ProjectSidebarBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project->method('getServices')->willReturn([$admin_service, $summary_service, $tracker_service]);
 
 
-        $sidebar = $this->builder->getSidebar(
+        $sidebar = $this->builder->getSidebarTools(
             $this->user,
             10,
             $this->project
@@ -113,5 +115,6 @@ final class ProjectSidebarBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertCount(1, $services);
         self::assertSame('Tracker', $services[0]->label);
+        self::assertSame('https://example.com/tracker', $services[0]->href);
     }
 }

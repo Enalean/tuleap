@@ -2,35 +2,19 @@
 
 <nav class="project-sidebar-nav" data-test="project-sidebar" data-project-id="{{ project_id }}">
     {{# sidebar }}
-        {{# is_project_defined }}
-            <a href="{{{ link }}}"
-               aria-label="{{ label }}"
-               class="project-sidebar-nav-item"
-                {{# open_in_new_tab }}
-               target="_blank"
-               rel="noopener noreferrer"
-                {{/ open_in_new_tab }}
-               title="{{ description }}"
-               data-shortcut-sidebar
-            >
-                <i class="{{ icon }} project-sidebar-nav-item-icon"></i>
-                <span class="project-sidebar-nav-item-label">{{ label }}</span>
-                {{# open_in_new_tab }}
-                    <i class="fa fa-arrow-right project-sidebar-nav-item-new-tab"></i>
-                {{/ open_in_new_tab }}
-            </a>
-        {{/ is_project_defined }}
-        {{^ is_project_defined }}
-            <a id="{{ id }}"
-               href="{{{ link }}}"
-               class="project-sidebar-nav-item {{# enabled }}active{{/ enabled }}"
-               aria-label="{{{ name }}}"
-               title="{{{ name }}}"
-               data-shortcut-sidebar="{{ id }}"
-            >
-                <i class="{{ icon }} project-sidebar-nav-item-icon"></i>
-                <span class="project-sidebar-nav-item-label">{{{ label }}}</span>
-            </a>
-        {{/ is_project_defined }}
+        <a
+            href="{{ href }}"
+            aria-label="{{ label }}"
+            class="project-sidebar-nav-item {{# is_active }}active{{/ is_active }}"
+            title="{{ description }}"
+            {{# open_in_new_tab }}target="_blank" rel="noopener noreferrer"{{/ open_in_new_tab }}
+            data-shortcut-sidebar="sidebar-{{ shortcut_id }}"
+        >
+            <i class="project-sidebar-nav-item-icon {{ icon }}" aria-hidden="true"></i>
+            <span class="project-sidebar-nav-item-label">{{ label }}</span>
+            {{# open_in_new_tab }}
+            <i class="fas fa-arrow-right project-sidebar-nav-item-new-tab" aria-hidden="true"></i>
+            {{/ open_in_new_tab }}
+        </a>
     {{/ sidebar }}
 </nav>

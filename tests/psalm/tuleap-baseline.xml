@@ -63926,7 +63926,7 @@
       <code>$previous_url</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/Layout/ProjectSidebarBuilder.php">
+  <file src="src/common/Layout/ProjectSidebarToolsBuilder.php">
     <InvalidScalarArgument occurrences="1">
       <code>$project_id</code>
     </InvalidScalarArgument>

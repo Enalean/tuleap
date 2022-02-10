@@ -343,14 +343,13 @@ abstract class BaseLayout extends Response
 
     protected function getProjectSidebar($params, $project)
     {
-        $builder = new ProjectSidebarBuilder(
+        $builder = new ProjectSidebarToolsBuilder(
             EventManager::instance(),
             ProjectManager::instance(),
-            Codendi_HTMLPurifier::instance(),
             $this->uri_sanitizer
         );
 
-        return $builder->getSidebar($this->getUser(), $params['toptab'], $project);
+        return $builder->getSidebarTools($this->getUser(), $params['toptab'], $project);
     }
 
     final protected function getProjectBannerWithScript(Project $project, PFUser $current_user, string $script_name): ?BannerDisplay
