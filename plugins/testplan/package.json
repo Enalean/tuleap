@@ -8,6 +8,7 @@
     "@tuleap/concurrency-limit-pool": "file:../../src/scripts/lib/concurrency-limit-pool",
     "@tuleap/plugin-docgen-docx": "file:../document_generation/scripts/lib/docx",
     "@tuleap/plugin-testmanagement": "link:../testmanagement",
+    "@tuleap/vue2-gettext-composition-helper": "link:../../src/scripts/lib/vue2-gettext-composition-helpers",
     "@vue/composition-api": "^1.4.4",
     "docx": "^7.3.0",
     "sprintf-js": "^1.1.2",

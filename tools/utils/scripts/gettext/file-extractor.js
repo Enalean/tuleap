@@ -22,7 +22,20 @@ const path = require("path");
 const ts = require("typescript");
 const vueParser = require("@vue/component-compiler-utils");
 const vueTemplateCompiler = require("vue-template-compiler");
+const { transform } = require("unplugin-vue2-script-setup");
 const { JsExtractors } = require("gettext-extractor");
+
+const tuleapVue2Compiler = {
+    parseComponent(file) {
+        const vue_script_setup_transform = transform(file, "A.vue");
+        if (vue_script_setup_transform !== null) {
+            return vueTemplateCompiler.parseComponent(vue_script_setup_transform.code);
+        }
+
+        return vueTemplateCompiler.parseComponent(file);
+    },
+    compile: vueTemplateCompiler.compile,
+};
 
 const { log } = require("./log.js");
 const {
@@ -93,7 +106,7 @@ function extractFromVueFile(file, file_path, gettext_extractor, gettext_parser) 
     const sfc_descriptor = vueParser.parse({
         source: file,
         filename: file_path,
-        compiler: vueTemplateCompiler,
+        compiler: tuleapVue2Compiler,
         needMap: false,
     });
 
@@ -114,7 +127,7 @@ function extractFromVueFile(file, file_path, gettext_extractor, gettext_parser) 
     }
 
     function extractFromTemplate(template_block) {
-        const compiled = vueTemplateCompiler.compile(template_block.content);
+        const compiled = tuleapVue2Compiler.compile(template_block.content);
         if (compiled.errors.length > 0) {
             compiled.errors.forEach((error) => log(error));
             throw new Error(`Error during Vue template compilation for file: ${file_path}`);

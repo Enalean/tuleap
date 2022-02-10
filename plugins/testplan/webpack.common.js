@@ -39,6 +39,12 @@ module.exports = [
             extensions: [".js", ".ts", ".vue"],
             alias: {
                 docx: path.resolve(__dirname, "node_modules", "docx"),
+                "@vue/composition-api": path.resolve(
+                    __dirname,
+                    "node_modules",
+                    "@vue",
+                    "composition-api"
+                ),
             },
         },
         externals: {

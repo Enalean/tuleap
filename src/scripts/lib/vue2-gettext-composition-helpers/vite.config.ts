@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const base_config = require("../../tests/jest/jest.base.config.js");
-const path = require("path");
+import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
+import * as path from "path";
+import dts from "vite-dts";
 
-module.exports = {
-    ...base_config,
-    transform: {
-        ...base_config.transform,
-        "^.+\\.vue$": path.resolve(__dirname, "../../tests/jest/vue2-script-setup-jest-process.js"),
+export default defineConfig({
+    plugins: [dts()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "Vue2GettextCompositionHelpers",
+        },
+        rollupOptions: {
+            external: ["@vue/composition-api"],
+            output: {
+                globals: {
+                    "@vue/composition-api": "VueCompositionAPI",
+                },
+            },
+        },
     },
-    moduleNameMapper: {
-        ...base_config.moduleNameMapper,
-        "^@vue/composition-api$": path.resolve(__dirname, "./node_modules/@vue/composition-api/"),
-    },
-    displayName: "testplan",
-};
+});
