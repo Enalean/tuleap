@@ -33,7 +33,7 @@ use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantErrorResponseBuilder;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantRepresentationBuilder;
 use Tuleap\OAuth2Server\Grant\OAuth2AccessTokenSuccessfulRequestRepresentation;
-use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 use Tuleap\OAuth2Server\OAuth2TestScope;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshToken;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenVerifier;

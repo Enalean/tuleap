@@ -629,7 +629,7 @@ final class oauth2_serverPlugin extends Plugin
         return new \Tuleap\OAuth2Server\Grant\TokenRevocationController(
             $response_factory,
             $stream_factory,
-            new \Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenRevoker(
+            new \Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenRevoker(
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2RefreshToken()),
                 $authorization_code_revoker,
                 new OAuth2RefreshTokenDAO(),

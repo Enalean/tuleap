@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant;
 
-use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 
 final class CannotSetANegativeExpirationDelayOnAccessTokenException extends \LogicException implements OAuth2ServerException
 {

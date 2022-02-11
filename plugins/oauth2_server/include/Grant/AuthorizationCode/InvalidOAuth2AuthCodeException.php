@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
-use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 
 final class InvalidOAuth2AuthCodeException extends \RuntimeException implements OAuth2ServerException
 {

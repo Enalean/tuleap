@@ -20,10 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server;
+namespace Tuleap\OAuth2ServerCore\RefreshToken;
 
-use Throwable;
+use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 
-interface OAuth2ServerException extends Throwable
+final class OAuth2RefreshTokenNotFoundException extends \RuntimeException implements OAuth2ServerException
 {
+    public function __construct(int $refresh_token_id)
+    {
+        parent::__construct("OAuth2 Refresh token #$refresh_token_id does not exist");
+    }
 }

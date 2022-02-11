@@ -20,14 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\RefreshToken;
+namespace Tuleap\OAuth2ServerCore;
 
-use Tuleap\OAuth2Server\OAuth2ServerException;
+use Throwable;
 
-final class InvalidOAuth2RefreshTokenException extends \RuntimeException implements OAuth2ServerException
+interface OAuth2ServerException extends Throwable
 {
-    public function __construct()
-    {
-        parent::__construct('The OAuth2 refresh token is not valid');
-    }
 }

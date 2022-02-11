@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\AuthorizationServer\PKCE;
 
-use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 
 interface OAuth2PKCEInformationExtractionException extends OAuth2ServerException
 {
