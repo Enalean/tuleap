@@ -28,7 +28,7 @@
                 <section class="tlp-pane-section">
                     <search-criteria-breadcrumb v-if="!is_in_root_folder" />
                     <div class="document-search-criteria">
-                        <criterion-global-text v-model="new_query.query" />
+                        <criterion-global-text v-model="new_query.global_search" />
                         <criterion-type v-model="new_query.type" />
                         <criterion-text
                             name="title"

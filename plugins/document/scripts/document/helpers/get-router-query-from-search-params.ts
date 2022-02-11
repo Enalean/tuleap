@@ -21,8 +21,8 @@ import type { Dictionary } from "vue-router/types/router";
 
 export function getRouterQueryFromSearchParams(params: AdvancedSearchParams): Dictionary<string> {
     const query: Dictionary<string> = {};
-    if (params.query.length > 0) {
-        query.q = params.query;
+    if (params.global_search.length > 0) {
+        query.q = params.global_search;
     }
     if (params.type.length > 0) {
         query.type = params.type;

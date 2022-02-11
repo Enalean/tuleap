@@ -23,7 +23,7 @@ import type { AdvancedSearchParams } from "../type";
 describe("build-advanced-search-params", () => {
     it("should return an empty search params by default", () => {
         const expected: AdvancedSearchParams = {
-            query: "",
+            global_search: "",
             type: "",
             title: "",
             description: "",
@@ -34,7 +34,7 @@ describe("build-advanced-search-params", () => {
 
     it("should accept partial params", () => {
         const expected: AdvancedSearchParams = {
-            query: "",
+            global_search: "",
             type: "folder",
             title: "lorem",
             description: "",

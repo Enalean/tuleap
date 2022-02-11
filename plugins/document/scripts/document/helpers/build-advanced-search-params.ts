@@ -23,7 +23,7 @@ export function buildAdvancedSearchParams(
     params: Partial<AdvancedSearchParams> = {}
 ): AdvancedSearchParams {
     const empty: AdvancedSearchParams = {
-        query: "",
+        global_search: "",
         type: "",
         title: "",
         description: "",

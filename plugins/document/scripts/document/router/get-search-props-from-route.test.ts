@@ -72,7 +72,9 @@ describe("get-search-props-from-route", () => {
                 { params: {}, query: { q: "Lorem ipsum" } } as unknown as Route,
                 101
             );
-            expect(query).toStrictEqual(buildAdvancedSearchParams({ query: "Lorem ipsum" }));
+            expect(query).toStrictEqual(
+                buildAdvancedSearchParams({ global_search: "Lorem ipsum" })
+            );
         });
 
         it("should accept type parameter", () => {
