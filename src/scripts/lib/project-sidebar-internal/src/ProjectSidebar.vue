@@ -21,24 +21,23 @@
   -->
 
 <template>
-    <div
+    <aside
         v-if="sidebar_configuration !== undefined"
+        class="sidebar"
         v-bind:class="{ 'sidebar-collapsed': props.collapsed }"
     >
-        <aside class="sidebar">
-            <sidebar-logo />
-            <div class="sidebar-content-vertical-scroll">
-                <sidebar-header />
-                <tools />
-                <sidebar-collapse-button
-                    v-model:is_sidebar_collapsed="is_sidebar_collapsed"
-                    v-bind:can_sidebar_be_collapsed="can_sidebar_be_collapsed"
-                />
-            </div>
-            <div class="sidebar-spacer"></div>
-            <sidebar-footer />
-        </aside>
-    </div>
+        <sidebar-logo />
+        <div class="sidebar-content-vertical-scroll">
+            <sidebar-header />
+            <tools />
+            <sidebar-collapse-button
+                v-model:is_sidebar_collapsed="is_sidebar_collapsed"
+                v-bind:can_sidebar_be_collapsed="can_sidebar_be_collapsed"
+            />
+        </div>
+        <div class="sidebar-spacer"></div>
+        <sidebar-footer />
+    </aside>
 </template>
 <script setup lang="ts">
 import { unserializeConfiguration } from "./configuration";
@@ -77,6 +76,7 @@ watch(is_sidebar_collapsed, (): void => {
 </script>
 <style lang="scss">
 @use "../../../themes/tlp/src/scss/components/typography";
+@use "../../../themes/BurningParrot/css/includes/global-variables";
 @use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-generic";
 @use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-collapsed";
 @use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-project";
@@ -86,11 +86,30 @@ watch(is_sidebar_collapsed, (): void => {
 @use "../../../themes/tlp/src/fonts/tlp-font/icons";
 @use "@tuleap/tlp-popovers";
 @use "../../../themes/BurningParrot/css/includes/project-privacy-popover";
+
+:host {
+    display: block;
+    contain: content;
+    width: global-variables.$sidebar-expanded-width;
+    height: 100vh;
+}
+
+:host([collapsed]) {
+    width: global-variables.$sidebar-collapsed-width;
+}
 </style>
-<style scoped>
+<style lang="scss" scoped>
+@use "../../../themes/BurningParrot/css/includes/global-variables";
+
 .sidebar {
+    height: 100%;
     font-family: var(--tlp-font-family);
     font-size: 100%;
+}
+
+.sidebar-collapsed {
+    width: global-variables.$sidebar-collapsed-width;
+    padding: 0;
 }
 
 /* stylelint-disable-next-line selector-pseudo-class-no-unknown -- Stylelint does not know about the Vue :deep() selector */
