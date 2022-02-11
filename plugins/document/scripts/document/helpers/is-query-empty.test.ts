@@ -29,7 +29,7 @@ describe("isQueryEmpty", () => {
         // It is not bullet proof but we hope that forcing them to touch this
         // test file will help.
         const query_params: AdvancedSearchParams = {
-            query: "",
+            global_search: "",
             type: "",
             title: "",
             description: "",
@@ -39,7 +39,7 @@ describe("isQueryEmpty", () => {
     });
 
     it.each<ReadonlyArray<Partial<AdvancedSearchParams>>>([
-        [{ query: "lorem" }],
+        [{ global_search: "lorem" }],
         [{ type: "folder" }],
         [{ title: "ipsum" }],
         [{ description: "doloret" }],

@@ -21,7 +21,7 @@ import type { AdvancedSearchParams } from "../type";
 
 export function getRestBodyFromSearchParams(search: AdvancedSearchParams): Record<string, string> {
     return {
-        ...(search.query && { global_search: search.query }),
+        ...(search.global_search && { global_search: search.global_search }),
         ...(search.type && { type: search.type }),
         ...(search.title && { title: search.title }),
         ...(search.description && { description: search.description }),

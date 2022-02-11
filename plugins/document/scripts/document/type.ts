@@ -252,7 +252,7 @@ export const AllowedSearchType = [
 export type AllowedSearchType = typeof AllowedSearchType[number];
 
 export interface AdvancedSearchParams {
-    readonly query: string;
+    readonly global_search: string;
     readonly type: AllowedSearchType;
     readonly title: string;
     readonly description: string;

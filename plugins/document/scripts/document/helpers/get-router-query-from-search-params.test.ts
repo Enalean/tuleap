@@ -30,7 +30,7 @@ describe("getRouterQueryFromSearchParams", () => {
         // It is not bullet proof but we hope that forcing them to touch this
         // test file will help.
         const query_params: AdvancedSearchParams = {
-            query: "",
+            global_search: "",
             type: "",
             title: "",
             description: "",
@@ -40,23 +40,18 @@ describe("getRouterQueryFromSearchParams", () => {
     });
 
     it.each<[Partial<AdvancedSearchParams>, Dictionary<string>]>([
-        [{ query: "lorem" }, { q: "lorem" }],
+        [{ global_search: "lorem" }, { q: "lorem" }],
         [{ type: "folder" }, { type: "folder" }],
         [
-            { query: "lorem", type: "folder" },
+            { global_search: "lorem", type: "folder" },
             { q: "lorem", type: "folder" },
         ],
         [{ title: "lorem" }, { title: "lorem" }],
         [{ description: "lorem" }, { description: "lorem" }],
+        [{ owner: "lorem" }, { owner: "lorem" }],
     ])("should return the url parameters based from search parameters", (params, expected) => {
         expect(getRouterQueryFromSearchParams(buildAdvancedSearchParams(params))).toStrictEqual(
             expected
         );
-    });
-
-    it("should return the owner parameter", () => {
-        expect(
-            getRouterQueryFromSearchParams(buildAdvancedSearchParams({ owner: "lorem" }))
-        ).toStrictEqual({ owner: "lorem" });
     });
 });

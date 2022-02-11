@@ -29,7 +29,7 @@ describe("get-rest-body-from-search-params", () => {
         // It is not bullet proof but we hope that forcing them to touch this
         // test file will help.
         const query_params: AdvancedSearchParams = {
-            query: "",
+            global_search: "",
             type: "",
             title: "",
             description: "",
@@ -40,24 +40,19 @@ describe("get-rest-body-from-search-params", () => {
 
     it.each<[Partial<AdvancedSearchParams>, Record<string, string>]>([
         [{}, {}],
-        [{ query: "lorem" }, { global_search: "lorem" }],
+        [{ global_search: "lorem" }, { global_search: "lorem" }],
         [{ type: "folder" }, { type: "folder" }],
         [{ type: "folder" }, { type: "folder" }],
         [
-            { query: "lorem", type: "folder" },
+            { global_search: "lorem", type: "folder" },
             { global_search: "lorem", type: "folder" },
         ],
         [{ title: "lorem" }, { title: "lorem" }],
         [{ description: "lorem" }, { description: "lorem" }],
+        [{ owner: "lorem" }, { owner: "lorem" }],
     ])("should return the body based on search parameters", (params, expected) => {
         expect(getRestBodyFromSearchParams(buildAdvancedSearchParams(params))).toStrictEqual(
             expected
         );
-    });
-
-    it("should return the owner parameter", () => {
-        expect(
-            getRestBodyFromSearchParams(buildAdvancedSearchParams({ owner: "lorem" }))
-        ).toStrictEqual({ owner: "lorem" });
     });
 });

@@ -434,7 +434,7 @@ describe("rest-querier", () => {
             const results = await searchInFolder(
                 101,
                 {
-                    query: "Lorem ipsum",
+                    global_search: "Lorem ipsum",
                     type: "folder",
                     title: "doloret",
                     description: "sit",
@@ -479,7 +479,11 @@ describe("rest-querier", () => {
                 },
             });
 
-            await searchInFolder(101, buildAdvancedSearchParams({ query: "Lorem ipsum" }), 170);
+            await searchInFolder(
+                101,
+                buildAdvancedSearchParams({ global_search: "Lorem ipsum" }),
+                170
+            );
 
             expect(tlpPost).toHaveBeenCalledWith(`/api/v1/docman_search/101`, {
                 headers: {

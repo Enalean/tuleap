@@ -42,7 +42,7 @@ describe("SearchCriteriaPanel", () => {
             localVue,
             attachTo: parent_node,
             propsData: {
-                query: buildAdvancedSearchParams({ query: "Lorem" }),
+                query: buildAdvancedSearchParams({ global_search: "Lorem" }),
                 folder_id: 101,
             },
             mocks: {
@@ -64,7 +64,7 @@ describe("SearchCriteriaPanel", () => {
         wrapper.find("[data-test=submit]").trigger("click");
 
         const expected_params: AdvancedSearchParams = {
-            query: "Lorem ipsum",
+            global_search: "Lorem ipsum",
             type: "folder",
             title: "doloret",
             description: "sit amet",
@@ -81,7 +81,7 @@ describe("SearchCriteriaPanel", () => {
         const wrapper = shallowMount(SearchCriteriaPanel, {
             localVue,
             propsData: {
-                query: buildAdvancedSearchParams({ query: "Lorem" }),
+                query: buildAdvancedSearchParams({ global_search: "Lorem" }),
                 folder_id: 101,
             },
             mocks: {
