@@ -960,6 +960,9 @@ msgstr ""
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Close sidebar"
+msgstr "Fermer la barre latérale"
+
 msgid ""
 "Collect stories, plan releases, monitor sprints with a ready-to-use Scrum "
 "area"
@@ -2392,6 +2395,9 @@ msgstr "Ouuups une erreur est survenue"
 
 msgid "Oops, I forgot my password"
 msgstr "Oups, j'ai perdu mon mot de passe"
+
+msgid "Open sidebar"
+msgstr "Ouvrir la barre latérale"
 
 msgid "Open user dropdown"
 msgstr "Ouvrir le menu utilisateur"
