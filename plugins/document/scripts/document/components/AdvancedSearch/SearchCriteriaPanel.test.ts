@@ -25,7 +25,7 @@ import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapp
 import type { ConfigurationState } from "../../store/configuration";
 import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
 import CriterionType from "./Criteria/CriterionType.vue";
-import type { AdvancedSearchParams } from "../../type";
+import type { AdvancedSearchParams, SearchDate } from "../../type";
 import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
 
 describe("SearchCriteriaPanel", () => {
@@ -61,6 +61,10 @@ describe("SearchCriteriaPanel", () => {
         wrapper.find("[data-test=criterion-title]").vm.$emit("input", "doloret");
         wrapper.find("[data-test=criterion-description]").vm.$emit("input", "sit amet");
         wrapper.find("[data-test=criterion-owner]").vm.$emit("input", "jdoe");
+        const create_date: SearchDate = { date: "2022-01-01", operator: ">" };
+        wrapper.find("[data-test=criterion-create-date]").vm.$emit("input", create_date);
+        const update_date: SearchDate = { date: "2022-01-31", operator: "<" };
+        wrapper.find("[data-test=criterion-update-date]").vm.$emit("input", update_date);
         wrapper.find("[data-test=submit]").trigger("click");
 
         const expected_params: AdvancedSearchParams = {
@@ -69,6 +73,8 @@ describe("SearchCriteriaPanel", () => {
             title: "doloret",
             description: "sit amet",
             owner: "jdoe",
+            create_date,
+            update_date,
         };
         expect(wrapper.emitted()["advanced-search"]).toEqual([[expected_params]]);
 

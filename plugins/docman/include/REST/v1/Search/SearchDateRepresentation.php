@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AdvancedSearchParams } from "../type";
+declare(strict_types=1);
 
-export function isQueryEmpty(query_params: AdvancedSearchParams): boolean {
-    return (
-        query_params.global_search.length === 0 &&
-        query_params.type.length === 0 &&
-        query_params.title.length === 0 &&
-        query_params.description.length === 0 &&
-        query_params.owner.length === 0 &&
-        query_params.create_date === null &&
-        query_params.update_date === null
-    );
+namespace Tuleap\Docman\REST\v1\Search;
+
+/**
+ * @psalm-immutable
+ */
+class SearchDateRepresentation
+{
+    /**
+     * @var string {@from body} {@choice <,=,>} {@required true}
+     */
+    public string $operator;
+
+    /**
+     * @var string ISO formatted date string {@from body} {@required true}
+     */
+    public string $date;
 }

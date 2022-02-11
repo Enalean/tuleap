@@ -439,6 +439,14 @@ describe("rest-querier", () => {
                     title: "doloret",
                     description: "sit",
                     owner: "jdoe",
+                    create_date: {
+                        date: "2022-01-01",
+                        operator: ">",
+                    },
+                    update_date: {
+                        date: "2022-01-31",
+                        operator: "<",
+                    },
                 },
                 170
             );
@@ -453,6 +461,14 @@ describe("rest-querier", () => {
                     title: "doloret",
                     description: "sit",
                     owner: "jdoe",
+                    create_date: {
+                        date: "2022-01-01",
+                        operator: ">",
+                    },
+                    update_date: {
+                        date: "2022-01-31",
+                        operator: "<",
+                    },
                     offset: 170,
                     limit: 50,
                 }),

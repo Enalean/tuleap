@@ -48,6 +48,18 @@
                             v-model="new_query.owner"
                             data-test="criterion-owner"
                         />
+                        <criterion-date
+                            name="create_date"
+                            v-bind:label="$gettext('Creation date')"
+                            v-model="new_query.create_date"
+                            data-test="criterion-create-date"
+                        />
+                        <criterion-date
+                            name="update_date"
+                            v-bind:label="$gettext('Update date')"
+                            v-model="new_query.update_date"
+                            data-test="criterion-update-date"
+                        />
                     </div>
                 </section>
                 <section class="tlp-pane-section tlp-pane-section-submit">
@@ -74,11 +86,13 @@ import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
 import CriterionType from "./Criteria/CriterionType.vue";
 import CriterionText from "./Criteria/CriterionText.vue";
 import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
+import CriterionDate from "./Criteria/CriterionDate.vue";
 
 const configuration = namespace("configuration");
 
 @Component({
     components: {
+        CriterionDate,
         CriterionText,
         CriterionType,
         CriterionGlobalText,

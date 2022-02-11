@@ -39,12 +39,14 @@ class Docman_MetadataFactory
     public const HARDCODED_METADATA_TITLE_LABEL       = 'title';
     public const HARDCODED_METADATA_DESCRIPTION_LABEL = 'description';
     public const HARDCODED_METADATA_OWNER_LABEL       = 'owner';
+    public const HARDCODED_METADATA_CREATE_DATE_LABEL = 'create_date';
+    public const HARDCODED_METADATA_UPDATE_DATE_LABEL = 'update_date';
     public const HARDCODED_METADATA_LABELS            = [
         self::HARDCODED_METADATA_TITLE_LABEL,
         self::HARDCODED_METADATA_DESCRIPTION_LABEL,
         self::HARDCODED_METADATA_OWNER_LABEL,
-        'create_date',
-        'update_date',
+        self::HARDCODED_METADATA_CREATE_DATE_LABEL,
+        self::HARDCODED_METADATA_UPDATE_DATE_LABEL,
         'status',
         'obsolescence_date',
     ];
@@ -568,10 +570,10 @@ class Docman_MetadataFactory
                 $md->setCanChangeValue(true);
                 break;
 
-            case 'create_date':
+            case self::HARDCODED_METADATA_CREATE_DATE_LABEL:
                 $md = new Docman_Metadata();
                 $md->setName(dgettext('tuleap-docman', 'Create Date'));
-                $md->setLabel('create_date');
+                $md->setLabel(self::HARDCODED_METADATA_CREATE_DATE_LABEL);
                 $md->setDescription(dgettext('tuleap-docman', 'When the document was added into the document manager.'));
                 $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
                 $md->setIsRequired(true);
@@ -581,10 +583,10 @@ class Docman_MetadataFactory
                 $md->setCanChangeValue(false);
                 break;
 
-            case 'update_date':
+            case self::HARDCODED_METADATA_UPDATE_DATE_LABEL:
                 $md = new Docman_Metadata();
                 $md->setName(dgettext('tuleap-docman', 'Update Date'));
-                $md->setLabel('update_date');
+                $md->setLabel(self::HARDCODED_METADATA_UPDATE_DATE_LABEL);
                 $md->setDescription(dgettext('tuleap-docman', 'Last update of the document content or properties.'));
                 $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
                 $md->setIsRequired(true);

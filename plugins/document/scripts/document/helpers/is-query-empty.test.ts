@@ -34,6 +34,8 @@ describe("isQueryEmpty", () => {
             title: "",
             description: "",
             owner: "",
+            create_date: null,
+            update_date: null,
         };
         expect(isQueryEmpty(query_params)).toBe(true);
     });
@@ -44,6 +46,8 @@ describe("isQueryEmpty", () => {
         [{ title: "ipsum" }],
         [{ description: "doloret" }],
         [{ owner: "jdoe" }],
+        [{ create_date: { date: "2022-01-30", operator: "<" } }],
+        [{ update_date: { date: "2022-01-30", operator: "<" } }],
     ])("should return false if parameter is filled", (query_params) => {
         expect(isQueryEmpty(buildAdvancedSearchParams(query_params))).toBe(false);
     });

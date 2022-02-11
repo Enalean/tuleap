@@ -27,6 +27,7 @@ use Docman_FilterGlobalText;
 use Docman_FilterText;
 use Docman_Report;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
+use Tuleap\Docman\REST\v1\Search\SearchDateRepresentation;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
 
@@ -56,6 +57,8 @@ class SearchReportBuilder
         $this->addTitleFilter($search, $report);
         $this->addDescriptionFilter($search, $report);
         $this->addOwnerFilter($search, $report);
+        $this->addCreateDateFilter($search, $report);
+        $this->addUpdateDateFilter($search, $report);
 
         $columns = $this->always_there_column_retriever->getColumns();
         $this->column_report_builder->addColumnsFromArray($columns, $report);
@@ -134,5 +137,45 @@ class SearchReportBuilder
             $owner_filter->setValue($username_to_search);
             $report->addFilter($owner_filter);
         }
+    }
+
+    private function addCreateDateFilter(PostSearchRepresentation $search, Docman_Report $report): void
+    {
+        $this->addDateFilter(
+            $report,
+            $search->create_date,
+            \Docman_MetadataFactory::HARDCODED_METADATA_CREATE_DATE_LABEL,
+        );
+    }
+
+    private function addUpdateDateFilter(PostSearchRepresentation $search, Docman_Report $report): void
+    {
+        $this->addDateFilter(
+            $report,
+            $search->update_date,
+            \Docman_MetadataFactory::HARDCODED_METADATA_UPDATE_DATE_LABEL,
+        );
+    }
+
+    private function addDateFilter(Docman_Report $report, ?SearchDateRepresentation $search_date, string $metadata_label): void
+    {
+        if (! $search_date) {
+            return;
+        }
+
+        $date_filter = new \Docman_FilterDate(
+            $this->metadata_factory->getHardCodedMetadataFromLabel($metadata_label)
+        );
+
+        $symbol_to_numeric = [
+            ">" => 1,
+            "=" => 0,
+            "<" => -1,
+        ];
+
+        $date_filter->setOperator($symbol_to_numeric[$search_date->operator]);
+        $date_filter->setValue($search_date->date);
+
+        $report->addFilter($date_filter);
     }
 }

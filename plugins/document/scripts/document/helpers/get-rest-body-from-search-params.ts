@@ -19,12 +19,20 @@
 
 import type { AdvancedSearchParams } from "../type";
 
-export function getRestBodyFromSearchParams(search: AdvancedSearchParams): Record<string, string> {
+export function getRestBodyFromSearchParams(
+    search: AdvancedSearchParams
+): Record<string, string | Record<string, string>> {
     return {
         ...(search.global_search && { global_search: search.global_search }),
         ...(search.type && { type: search.type }),
         ...(search.title && { title: search.title }),
         ...(search.description && { description: search.description }),
         ...(search.owner && { owner: search.owner }),
+        ...(search.create_date && {
+            create_date: { date: search.create_date.date, operator: search.create_date.operator },
+        }),
+        ...(search.update_date && {
+            update_date: { date: search.update_date.date, operator: search.update_date.operator },
+        }),
     };
 }
