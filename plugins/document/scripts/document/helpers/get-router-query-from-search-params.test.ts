@@ -34,6 +34,7 @@ describe("getRouterQueryFromSearchParams", () => {
             type: "",
             title: "",
             description: "",
+            owner: "",
         };
         expect(getRouterQueryFromSearchParams(query_params)).toStrictEqual({});
     });
@@ -51,5 +52,11 @@ describe("getRouterQueryFromSearchParams", () => {
         expect(getRouterQueryFromSearchParams(buildAdvancedSearchParams(params))).toStrictEqual(
             expected
         );
+    });
+
+    it("should return the owner parameter", () => {
+        expect(
+            getRouterQueryFromSearchParams(buildAdvancedSearchParams({ owner: "lorem" }))
+        ).toStrictEqual({ owner: "lorem" });
     });
 });

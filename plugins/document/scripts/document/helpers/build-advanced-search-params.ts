@@ -27,6 +27,7 @@ export function buildAdvancedSearchParams(
         type: "",
         title: "",
         description: "",
+        owner: "",
     };
 
     return {

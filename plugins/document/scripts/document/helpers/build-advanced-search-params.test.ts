@@ -27,6 +27,7 @@ describe("build-advanced-search-params", () => {
             type: "",
             title: "",
             description: "",
+            owner: "",
         };
         expect(buildAdvancedSearchParams()).toStrictEqual(expected);
     });
@@ -37,6 +38,7 @@ describe("build-advanced-search-params", () => {
             type: "folder",
             title: "lorem",
             description: "",
+            owner: "",
         };
         expect(buildAdvancedSearchParams({ title: "lorem", type: "folder" })).toStrictEqual(
             expected

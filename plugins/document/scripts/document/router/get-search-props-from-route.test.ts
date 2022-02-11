@@ -106,5 +106,13 @@ describe("get-search-props-from-route", () => {
             );
             expect(query).toStrictEqual(buildAdvancedSearchParams({ description: "Lorem ipsum" }));
         });
+
+        it("should accept owner parameter", () => {
+            const { query } = getSearchPropsFromRoute(
+                { params: {}, query: { owner: "jdoe" } } as unknown as Route,
+                101
+            );
+            expect(query).toStrictEqual(buildAdvancedSearchParams({ owner: "jdoe" }));
+        });
     });
 });

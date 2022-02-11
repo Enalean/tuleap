@@ -25,5 +25,6 @@ export function getRestBodyFromSearchParams(search: AdvancedSearchParams): Recor
         ...(search.type && { type: search.type }),
         ...(search.title && { title: search.title }),
         ...(search.description && { description: search.description }),
+        ...(search.owner && { owner: search.owner }),
     };
 }

@@ -37,6 +37,7 @@ class SearchReportBuilder
         private \Docman_FilterFactory $filter_factory,
         private AlwaysThereColumnRetriever $always_there_column_retriever,
         private ColumnReportAugmenter $column_report_builder,
+        private \UserManager $user_manager,
     ) {
     }
 
@@ -54,6 +55,7 @@ class SearchReportBuilder
         $this->addTypeFilter($search, $report);
         $this->addTitleFilter($search, $report);
         $this->addDescriptionFilter($search, $report);
+        $this->addOwnerFilter($search, $report);
 
         $columns = $this->always_there_column_retriever->getColumns();
         $this->column_report_builder->addColumnsFromArray($columns, $report);
@@ -115,6 +117,22 @@ class SearchReportBuilder
         $custom_metadata_array = $this->metadata_factory->getRealMetadataList(true);
         foreach ($custom_metadata_array as $custom_metadata) {
             $this->filter_factory->createFromMetadata($custom_metadata, null);
+        }
+    }
+
+    private function addOwnerFilter(PostSearchRepresentation $search, Docman_Report $report): void
+    {
+        if ($search->owner) {
+            $owner_filter = new \Docman_FilterOwner(
+                $this->metadata_factory->getHardCodedMetadataFromLabel(\Docman_MetadataFactory::HARDCODED_METADATA_OWNER_LABEL)
+            );
+
+            $owner = $this->user_manager->findUser($search->owner);
+
+            $username_to_search = $owner ? $owner->getUserName() : $search->owner;
+
+            $owner_filter->setValue($username_to_search);
+            $report->addFilter($owner_filter);
         }
     }
 }

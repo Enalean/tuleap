@@ -51,6 +51,11 @@ final class PostSearchRepresentation
     public string $description = '';
 
     /**
+     * @var string owner of item {@from body} {@required false}
+     */
+    public string $owner = '';
+
+    /**
      * @var int limit {@from body} {@required false} {@min 0} {@max 50}
      */
     public int $limit = SearchResource::MAX_LIMIT;

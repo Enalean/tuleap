@@ -33,6 +33,7 @@ describe("isQueryEmpty", () => {
             type: "",
             title: "",
             description: "",
+            owner: "",
         };
         expect(isQueryEmpty(query_params)).toBe(true);
     });
@@ -42,6 +43,7 @@ describe("isQueryEmpty", () => {
         [{ type: "folder" }],
         [{ title: "ipsum" }],
         [{ description: "doloret" }],
+        [{ owner: "jdoe" }],
     ])("should return false if parameter is filled", (query_params) => {
         expect(isQueryEmpty(buildAdvancedSearchParams(query_params))).toBe(false);
     });

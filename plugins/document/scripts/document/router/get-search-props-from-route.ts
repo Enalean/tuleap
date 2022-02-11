@@ -39,6 +39,7 @@ export function getSearchPropsFromRoute(
             type,
             title: String(route.query.title || ""),
             description: String(route.query.description || ""),
+            owner: String(route.query.owner || ""),
         },
         offset: Number(route.query.offset || "0"),
     };

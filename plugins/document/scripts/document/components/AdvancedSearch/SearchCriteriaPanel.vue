@@ -42,6 +42,12 @@
                             v-model="new_query.description"
                             data-test="criterion-description"
                         />
+                        <criterion-text
+                            name="owner"
+                            v-bind:label="$gettext('Owner')"
+                            v-model="new_query.owner"
+                            data-test="criterion-owner"
+                        />
                     </div>
                 </section>
                 <section class="tlp-pane-section tlp-pane-section-submit">
@@ -67,6 +73,7 @@ import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
 import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
 import CriterionType from "./Criteria/CriterionType.vue";
 import CriterionText from "./Criteria/CriterionText.vue";
+import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
 
 const configuration = namespace("configuration");
 
@@ -88,12 +95,7 @@ export default class SearchCriteriaPanel extends Vue {
     @configuration.State
     readonly root_id!: number;
 
-    private new_query: AdvancedSearchParams = {
-        query: "",
-        type: "",
-        title: "",
-        description: "",
-    };
+    private new_query: AdvancedSearchParams = buildAdvancedSearchParams({});
 
     mounted() {
         this.new_query = this.query;

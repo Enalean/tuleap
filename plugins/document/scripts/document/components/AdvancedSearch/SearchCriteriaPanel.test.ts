@@ -60,6 +60,7 @@ describe("SearchCriteriaPanel", () => {
         wrapper.findComponent(CriterionType).vm.$emit("input", "folder");
         wrapper.find("[data-test=criterion-title]").vm.$emit("input", "doloret");
         wrapper.find("[data-test=criterion-description]").vm.$emit("input", "sit amet");
+        wrapper.find("[data-test=criterion-owner]").vm.$emit("input", "jdoe");
         wrapper.find("[data-test=submit]").trigger("click");
 
         const expected_params: AdvancedSearchParams = {
@@ -67,6 +68,7 @@ describe("SearchCriteriaPanel", () => {
             type: "folder",
             title: "doloret",
             description: "sit amet",
+            owner: "jdoe",
         };
         expect(wrapper.emitted()["advanced-search"]).toEqual([[expected_params]]);
 
