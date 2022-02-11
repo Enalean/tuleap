@@ -1,0 +1,10 @@
+<h1 class="almost-tlp-title project-header-title">{{ title }}</h1>
+<div class="main-project-tabs">
+    <ul class="nav nav-tabs">
+        {{# tabs }}
+            <li {{# is_active}}class="active"{{/ is_active }}>
+                <a href="{{ url }}" title="{{ description }}">{{ title }}</a>
+            </li>
+        {{/ tabs }}
+    </ul>
+</div>

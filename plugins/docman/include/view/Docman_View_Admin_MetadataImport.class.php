@@ -23,22 +23,49 @@
  *
  */
 
-class Docman_View_Admin_MetadataImport extends Docman_View_Extra
+class Docman_View_Admin_MetadataImport extends \Tuleap\Docman\View\Admin\AdminView
 {
+    public const IDENTIFIER = 'admin_import_metadata_check';
     public $srcGo;
     public $dstGo;
 
-    public function _title($params)
+    protected function getIdentifier(): string
+    {
+        return self::IDENTIFIER;
+    }
+
+    protected function getTitle(array $params): string
     {
         $pm          = ProjectManager::instance();
         $this->srcGo = $pm->getProject($params['sSrcGroupId']);
         $this->dstGo = $pm->getProject($params['group_id']);
 
-        echo '<h2 class="project-header-title">' . $this->_getTitle($params) . ' - ' . sprintf(dgettext('tuleap-docman', 'Import "%1$s" properties'), Codendi_HTMLPurifier::instance()->purify($this->srcGo->getPublicName())) . '</h2>';
+        return sprintf(
+            dgettext('tuleap-docman', 'Import "%1$s" properties'),
+            $this->srcGo->getPublicName()
+        );
     }
 
+    protected function displayContent(array $params): void
+    {
+        $html = '';
 
-    public function getImportForm($sthToImport)
+        // True if there is sth to import in dst project.
+        $sthToImport = false;
+
+        $mdCmp = new Docman_MetadataComparator(
+            $this->srcGo->getGroupId(),
+            $this->dstGo->getGroupId(),
+            $params['theme_path']
+        );
+        $html .= $mdCmp->getMetadataCompareTable($sthToImport);
+
+        $html .= $this->getImportForm($sthToImport);
+
+        echo $html;
+    }
+
+    private function getImportForm($sthToImport)
     {
         $html = '';
         if ($sthToImport) {
@@ -56,27 +83,5 @@ class Docman_View_Admin_MetadataImport extends Docman_View_Extra
             $html .= '<p>' . dgettext('tuleap-docman', 'The properties of the two projects are aligned. Nothing to do.') . '</p>';
         }
         return $html;
-    }
-
-    /**
-     * Build page
-     */
-    public function _content($params)
-    {
-        $html = '';
-
-        // True if there is sth to import in dst project.
-        $sthToImport = false;
-
-        $mdCmp = new Docman_MetadataComparator(
-            $this->srcGo->getGroupId(),
-            $this->dstGo->getGroupId(),
-            $params['theme_path']
-        );
-        $html .= $mdCmp->getMetadataCompareTable($sthToImport);
-
-        $html .= $this->getImportForm($sthToImport);
-
-        echo $html;
     }
 }

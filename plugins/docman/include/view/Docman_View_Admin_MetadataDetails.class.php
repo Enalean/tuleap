@@ -23,14 +23,24 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
+class Docman_View_Admin_MetadataDetails extends \Tuleap\Docman\View\Admin\AdminView
 {
-    public function _title($params)
+    public const IDENTIFIER = 'admin_md_details';
+
+    protected function getIdentifier(): string
     {
-        echo '<h2 class="project-header-title">' . $this->_getTitle($params) . ' - ' . sprintf(dgettext('tuleap-docman', '"%1$s" Property details'), $this->hp->purify($params['md']->getName())) . '</h2>';
+        return self::IDENTIFIER;
     }
 
-    public function _content($params)
+    protected function getTitle(array $params): string
+    {
+        return sprintf(
+            dgettext('tuleap-docman', '"%1$s" Property details'),
+            $params['md']->getName()
+        );
+    }
+
+    protected function displayContent(array $params): void
     {
         $md = $params['md'];
 
@@ -108,7 +118,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
                     // Name
                     $name = Docman_MetadataHtmlList::_getElementName($e);
                     if ($e->getId() > 100) {
-                        $url  = DocmanViewURLBuilder::buildUrl($params['default_url'], ['action' => 'admin_display_love',
+                        $url  = DocmanViewURLBuilder::buildUrl($params['default_url'], ['action' => \Docman_View_Admin_MetadataDetailsUpdateLove::IDENTIFIER,
                                                                              'md' => $md->getLabel(),
                                                                              'loveid' => $e->getId()]);
                         $href = '<a href="' . $url . '">' . $name . '</a>';
@@ -164,7 +174,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
 
         $backUrl = DocmanViewURLBuilder::buildUrl(
             $params['default_url'],
-            ['action' => 'admin_metadata']
+            ['action' => \Docman_View_Admin_Metadata::IDENTIFIER]
         );
         echo '<p><a href="' . $backUrl . '">' . dgettext('tuleap-docman', 'Back to Properties menu') . '</a></p>';
     }

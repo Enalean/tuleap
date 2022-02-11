@@ -22,13 +22,31 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_Admin_Permissions extends Docman_View_Extra
+class Docman_View_Admin_Permissions extends \Tuleap\Docman\View\Admin\AdminView
 {
-    public function _title($params)
+    public const IDENTIFIER = 'admin_permissions';
+
+    protected function getIdentifier(): string
     {
-        echo '<h2 class="project-header-title">' . $this->_getTitle($params) . ' - ' . dgettext('tuleap-docman', 'Manage Permissions') . '</h2>';
+        return self::IDENTIFIER;
     }
-    public function _content($params)
+
+    protected function getTitle(array $params): string
+    {
+        return self::getTabTitle();
+    }
+
+    public static function getTabTitle(): string
+    {
+        return dgettext('tuleap-docman', 'Manage Permissions');
+    }
+
+    public static function getTabDescription(): string
+    {
+        return dgettext('tuleap-docman', 'Define who can administrate the document manager.');
+    }
+
+    protected function displayContent(array $params): void
     {
         $content = '';
 
