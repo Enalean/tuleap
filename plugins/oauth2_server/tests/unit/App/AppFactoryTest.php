@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\App;
 
 use Tuleap\OAuth2ServerCore\App\AppDao;
-use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -87,58 +86,6 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             $result
         );
-    }
-
-    public function testGetAppMatchingClientIdThrowsWhenIDNotFoundInDatabase(): void
-    {
-        $this->app_dao->expects(self::once())->method('searchByClientId')->willReturn(null);
-        $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
-
-        $this->expectException(OAuth2AppNotFoundException::class);
-        $this->app_factory->getAppMatchingClientId($client_id);
-    }
-
-    public function testGetAppMatchingClientIdThrowsWhenProjectNotFound(): void
-    {
-        $this->app_dao->expects(self::once())->method('searchByClientId')
-            ->willReturn(
-                ['id' => 1, 'name' => 'Jenkins', 'project_id' => 404, 'redirect_endpoint' => 'https://jenkins.example.com']
-            );
-        $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
-        $this->project_manager->expects(self::once())->method('getValidProject')
-            ->with(404)
-            ->willThrowException(new \Project_NotFoundException());
-
-        $this->expectException(OAuth2AppNotFoundException::class);
-        $this->app_factory->getAppMatchingClientId($client_id);
-    }
-
-    public function testGetAppMatchingClientIdReturnsAnApp(): void
-    {
-        $this->app_dao->expects(self::once())->method('searchByClientId')
-            ->willReturn(
-                ['id' => 1, 'name' => 'Jenkins', 'project_id' => 102, 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1]
-            );
-        $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
-        $project   = $this->createMock(\Project::class);
-        $this->project_manager->expects(self::once())->method('getValidProject')
-            ->with(102)
-            ->willReturn($project);
-
-        $result = $this->app_factory->getAppMatchingClientId($client_id);
-        $this->assertEquals(new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, $project), $result);
-    }
-
-    public function testGetSiteLevelAppMatchingClientIdReturnsAnApp(): void
-    {
-        $this->app_dao->expects(self::once())->method('searchByClientId')
-            ->willReturn(
-                ['id' => 1, 'name' => 'Jenkins', 'project_id' => null, 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1]
-            );
-        $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
-
-        $result = $this->app_factory->getAppMatchingClientId($client_id);
-        $this->assertEquals(new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, null), $result);
     }
 
     public function testGetAppsAuthorizedByUserReturnsApps(): void

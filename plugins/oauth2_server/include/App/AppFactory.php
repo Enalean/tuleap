@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\App;
 
 use Tuleap\OAuth2ServerCore\App\AppDao;
-use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 
 class AppFactory
@@ -43,26 +42,6 @@ class AppFactory
     {
         $this->app_dao         = $app_dao;
         $this->project_manager = $project_manager;
-    }
-
-    /**
-     * @throws OAuth2AppNotFoundException
-     */
-    public function getAppMatchingClientId(ClientIdentifier $client_identifier): OAuth2App
-    {
-        $row = $this->app_dao->searchByClientId($client_identifier);
-        if (! $row) {
-            throw new OAuth2AppNotFoundException($client_identifier);
-        }
-        $project = null;
-        if ($row['project_id'] !== null) {
-            try {
-                $project = $this->project_manager->getValidProject($row['project_id']);
-            } catch (\Project_NotFoundException $e) {
-                throw new OAuth2AppNotFoundException($client_identifier);
-            }
-        }
-        return new OAuth2App($row['id'], $row['name'], $row['redirect_endpoint'], (bool) $row['use_pkce'], $project);
     }
 
     /**
