@@ -29,8 +29,8 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenRevoker;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
-use Tuleap\OAuth2Server\OAuth2ServerException;
-use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenRevoker;
+use Tuleap\OAuth2ServerCore\OAuth2ServerException;
+use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenRevoker;
 use Tuleap\User\OAuth2\OAuth2Exception;
 
 final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase

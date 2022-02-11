@@ -24,7 +24,7 @@ namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
 use Tuleap\Authentication\SplitToken\SplitToken;
-use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 
 final class OAuth2AuthCodeNoValidScopeFound extends \RuntimeException implements OAuth2ServerException
 {

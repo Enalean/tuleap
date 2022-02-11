@@ -34,7 +34,7 @@ use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
 use Tuleap\OAuth2ServerCore\App\InvalidClientIdentifierKey;
 use Tuleap\OAuth2Server\App\OAuth2AppCredentialVerifier;
-use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 
 /**
  * @see https://tools.ietf.org/html/rfc6749#section-2.3.1

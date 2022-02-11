@@ -24,7 +24,7 @@ namespace Tuleap\OAuth2Server\RefreshToken;
 
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
-use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 
 final class OAuth2RefreshTokenDoesNotCorrespondToExpectedAppException extends \RuntimeException implements OAuth2ServerException
 {

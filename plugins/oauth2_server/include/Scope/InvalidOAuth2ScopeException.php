@@ -24,7 +24,7 @@ namespace Tuleap\OAuth2Server\Scope;
 
 use Throwable;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
-use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 use Tuleap\User\OAuth2\Scope\InvalidOAuth2ScopeIdentifierException;
 
 final class InvalidOAuth2ScopeException extends \RuntimeException implements OAuth2ServerException
