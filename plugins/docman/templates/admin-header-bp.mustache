@@ -1,0 +1,13 @@
+<h1 class="project-administration-title">{{ title }}</h1>
+<div class="main-project-tabs">
+    <nav class="tlp-tabs">
+        {{# tabs }}
+            <a href="{{ url }}"
+               class="tlp-tab{{# is_active }} tlp-tab-active{{/ is_active }}"
+               title="{{ description }}"
+            >
+                {{ title }}
+            </a>
+        {{/ tabs }}
+    </nav>
+</div>

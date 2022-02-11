@@ -1122,7 +1122,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         }
     }
 
-    public function burning_parrot_compatible_page(BurningParrotCompatiblePageEvent $event) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event): void
     {
         if (
             KanbanURL::isKanbanURL(HTTPRequest::instance()) ||

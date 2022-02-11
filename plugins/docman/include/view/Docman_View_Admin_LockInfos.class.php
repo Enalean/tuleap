@@ -46,16 +46,23 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView
         return dgettext('tuleap-docman', 'List of locked documents.');
     }
 
+    protected function isBurningParrotCompatiblePage(): bool
+    {
+        return true;
+    }
+
     protected function displayContent(array $params): void
     {
-        $html = '';
+        $html = '<div class="tlp-framed-vertically">';
 
         // Display help message
-        $html .= '<p>';
+        $html .= '<p class="tlp-framed-horizontally">';
         $html .= dgettext('tuleap-docman', 'This is the list of all locked documents in project.');
         $html .= '</p>';
 
         $html .= $this->getTable($params);
+
+        $html .= '</div>';
 
         print($html);
     }
@@ -65,11 +72,17 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView
         $this->defaultUrl = $params['default_url'];
         $content          = '';
 
-        $content .= html_build_list_table_top([dgettext('tuleap-docman', 'Title'),
-                                                    dgettext('tuleap-docman', 'Location'),
-                                                    dgettext('tuleap-docman', 'Who'),
-                                                    dgettext('tuleap-docman', 'When'),
-                                            ]);
+        $content .= '<table class="tlp-table">
+            <thead>
+                <tr>
+                    <th>' . dgettext('tuleap-docman', 'Title') . '</th>
+                    <th>' . dgettext('tuleap-docman', 'Location') . '</th>
+                    <th>' . dgettext('tuleap-docman', 'Who') . '</th>
+                    <th>' . dgettext('tuleap-docman', 'When') . '</th>
+                </tr>
+            </thead>
+            <tbody>
+        ';
 
         // Get list of all locked documents in the project.
         $dPM       = Docman_PermissionsManager::instance($params['group_id']);
@@ -80,16 +93,14 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView
 
         $dIF = new Docman_ItemFactory($params['group_id']);
 
-        $altRowClass = 0;
         if ($lockInfos !== false) {
             foreach ($lockInfos as $row) {
-                $trclass = html_get_alt_row_color($altRowClass++);
-                $item    = $dIF->getItemFromDb($row['item_id']);
+                $item = $dIF->getItemFromDb($row['item_id']);
                 if ($item === null) {
-                    return '</table>';
+                    return '</tbody></table>';
                 }
                 $parent   = $dIF->getItemFromDb($item->getParentId());
-                $content .= '<tr class="' . $trclass . '">';
+                $content .= '<tr>';
                 $content .= '<td>' . '<a href="/plugins/docman/?group_id=' . $params['group_id'] . '&action=details&id=' . $item->getId() . '">' . $item->getTitle() . '</a></td>';
                 $content .= '<td>';
                 if ($parent === null || $dIF->isRoot($parent)) {
@@ -103,7 +114,7 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView
             }
         }
 
-        $content .= '</table>';
+        $content .= '</tbody></table>';
 
         return $content;
     }
