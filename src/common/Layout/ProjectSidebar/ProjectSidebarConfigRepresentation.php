@@ -27,6 +27,7 @@ use Tuleap\BuildVersion\FlavorFinder;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\Layout\ProjectSidebar\InstanceInformation\ProjectSidebarInstanceInformation;
+use Tuleap\Layout\ProjectSidebar\Internationalization\ProjectSidebarInternationalization;
 use Tuleap\Layout\ProjectSidebar\Project\ProjectSidebarProject;
 use Tuleap\Layout\ProjectSidebar\User\ProjectSidebarUser;
 use Tuleap\Layout\ProjectSidebarToolsBuilder;
@@ -44,6 +45,7 @@ final class ProjectSidebarConfigRepresentation
      * @param SidebarServicePresenter[] $tools
      */
     private function __construct(
+        public ProjectSidebarInternationalization $internationalization,
         public ProjectSidebarProject $project,
         public ProjectSidebarUser $user,
         public ProjectSidebarInstanceInformation $instance_information,
@@ -65,6 +67,7 @@ final class ProjectSidebarConfigRepresentation
         mixed $currently_active_service,
     ): self {
         return new self(
+            ProjectSidebarInternationalization::build(),
             ProjectSidebarProject::build(
                 $project,
                 $user,
