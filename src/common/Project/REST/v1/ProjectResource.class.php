@@ -44,6 +44,7 @@ use Tuleap\Layout\Logo\CachedCustomizedLogoDetector;
 use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
 use Tuleap\Layout\ProjectSidebar\ProjectSidebarConfigRepresentation;
+use Tuleap\Layout\ProjectSidebarToolsBuilder;
 use Tuleap\Project\Admin\Access\UserCanAccessProjectAdministrationVerifier;
 use Tuleap\Project\Admin\Categories\CategoryCollectionConsistencyChecker;
 use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker;
@@ -99,6 +100,7 @@ use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ResourcesInjector;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\REST\v1\ProjectFieldsMinimalRepresentation;
+use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\Widget\Event\GetProjectsWithCriteria;
 use TuleapRegisterMail;
@@ -107,6 +109,8 @@ use URLVerification;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
 use UserManager;
+use Valid_HTTPURI;
+use Valid_LocalURI;
 use Wiki;
 use WikiDao;
 use XMLImportHelper;
@@ -1264,12 +1268,13 @@ class ProjectResource extends AuthenticatedResource
      * @oauth2-scope read:project
      *
      * @param int $id ID of the project
+     * @param string $currently_active_service The currently active service name
      *
      * @throws RestException 401
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getThirdPartyIntegrationData(int $id): ThirdPartyIntegrationDataRepresentation
+    public function getThirdPartyIntegrationData(int $id, string $currently_active_service = ''): ThirdPartyIntegrationDataRepresentation
     {
         $this->optionsThirdPartyIntegrationData($id);
         $this->checkAccess();
@@ -1290,7 +1295,13 @@ class ProjectResource extends AuthenticatedResource
                 new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator()),
                 \BackendLogger::getDefaultLogger(),
             ),
-            new GlyphFinder($event_manager)
+            new GlyphFinder($event_manager),
+            new ProjectSidebarToolsBuilder(
+                $event_manager,
+                ProjectManager::instance(),
+                new URISanitizer(new Valid_HTTPURI(), new Valid_LocalURI())
+            ),
+            $currently_active_service
         );
 
         return new ThirdPartyIntegrationDataRepresentation(

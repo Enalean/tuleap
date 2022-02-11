@@ -23,25 +23,54 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout;
 
-class SidebarServicePresenter
-{
-    public $link;
-    public $icon;
-    public $name;
-    public $label;
-    public $enabled;
-    public $description;
-    public $id;
-    public $is_project_defined = false;
+use Service;
+use Tuleap\Project\Service\ProjectDefinedService;
 
-    public function __construct(string $id, string $name, string $link, string $icon, string $label, string $description, bool $enabled)
+/**
+ * @psalm-immutable
+ */
+final class SidebarServicePresenter
+{
+    private function __construct(
+        public string $href,
+        public string $label,
+        public string $description,
+        public string $icon,
+        public bool $open_in_new_tab,
+        public bool $is_active,
+        public string $shortcut_id,
+    ) {
+    }
+
+    public static function fromProjectDefinedService(ProjectDefinedService $service, string $href): self
     {
-        $this->id          = $id;
-        $this->name        = $name;
-        $this->link        = $link;
-        $this->label       = $label;
-        $this->description = $description;
-        $this->enabled     = $enabled;
-        $this->icon        = $icon;
+        $description          = $service->getInternationalizedDescription();
+        $is_opened_in_new_tab = $service->isOpenedInNewTab();
+        if ($is_opened_in_new_tab) {
+            $description = sprintf(_('%s (opens in a new tab)'), $description);
+        }
+
+        return new self(
+            $href,
+            $service->getInternationalizedName(),
+            $description,
+            $service->getIcon(),
+            $is_opened_in_new_tab,
+            false,
+            '',
+        );
+    }
+
+    public static function fromService(Service $service, string $href, bool $is_enabled): self
+    {
+        return new self(
+            $href,
+            $service->getInternationalizedName(),
+            $service->getInternationalizedDescription(),
+            $service->getIcon(),
+            $service->isOpenedInNewTab(),
+            $is_enabled,
+            $service->getShortName(),
+        );
     }
 }

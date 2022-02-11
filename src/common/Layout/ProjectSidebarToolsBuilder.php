@@ -20,7 +20,6 @@
 
 namespace Tuleap\Layout;
 
-use Codendi_HTMLPurifier;
 use Event;
 use EventManager;
 use ForgeConfig;
@@ -31,26 +30,26 @@ use Tuleap\Project\Service\ProjectDefinedService;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\ServerHostname;
 
-class ProjectSidebarBuilder
+class ProjectSidebarToolsBuilder
 {
     private EventManager $event_manager;
     private ProjectManager $project_manager;
-    private Codendi_HTMLPurifier $purifier;
     private URISanitizer $uri_sanitizer;
 
     public function __construct(
         EventManager $event_manager,
         ProjectManager $project_manager,
-        Codendi_HTMLPurifier $purifier,
         URISanitizer $uri_sanitizer,
     ) {
         $this->event_manager   = $event_manager;
         $this->project_manager = $project_manager;
-        $this->purifier        = $purifier;
         $this->uri_sanitizer   = $uri_sanitizer;
     }
 
-    public function getSidebar(PFUser $user, $toptab, Project $project): \Generator
+    /**
+     * @return \Generator<int, SidebarServicePresenter>
+     */
+    public function getSidebarTools(PFUser $user, $toptab, Project $project): \Generator
     {
         $allowed_services = $this->getAllowedServicesForUser($user, $project);
 
@@ -59,18 +58,11 @@ class ProjectSidebarBuilder
                 continue;
             }
 
+            $href = $this->getLink($service, $project);
             if ($service instanceof ProjectDefinedService) {
-                yield new SidebarProjectDefinedServicePresenter($service, $this->getLink($service, $project));
+                yield SidebarServicePresenter::fromProjectDefinedService($service, $href);
             } else {
-                yield new SidebarServicePresenter(
-                    $this->purifier->purify('sidebar-' . $service->getShortName()),
-                    $this->purifier->purify($service->getInternationalizedName()),
-                    $this->getLink($service, $project),
-                    $service->getIcon(),
-                    $this->getLabel($service),
-                    $this->purifier->purify($service->getInternationalizedDescription()),
-                    $this->isEnabled($toptab, $service)
-                );
+                yield SidebarServicePresenter::fromService($service, $href, $this->isEnabled($toptab, $service));
             }
         }
     }
@@ -142,7 +134,7 @@ class ProjectSidebarBuilder
         $project_id = $project->getID();
 
         if ($service->isIFrame()) {
-            $link = '/service/?group_id=' . $project_id . '&amp;id=' . $service->getId();
+            $link = '/service/?group_id=' . urlencode((string) $project_id) . '&id=' . urlencode((string) $service->getId());
         } else {
             $service_url_collector = new ServiceUrlCollector($project, $service->getShortName());
 
@@ -151,7 +143,7 @@ class ProjectSidebarBuilder
             if ($service_url_collector->hasUrl()) {
                 $link = $service_url_collector->getUrl();
             } else {
-                $link = $this->purifier->purify($service->getUrl());
+                $link = $service->getUrl();
             }
         }
         if ($project_id == 100) {
@@ -172,20 +164,16 @@ class ProjectSidebarBuilder
             $link = str_replace('$group_id', $project_id, $link);
         }
 
-        return $this->uri_sanitizer->sanitizeForHTMLAttribute($link);
+        $href = $this->uri_sanitizer->sanitizeForHTMLAttribute($link);
+        if (preg_match('#^[a-zA-Z]*://#', $href)) {
+            return $href;
+        }
+        return ServerHostname::HTTPSUrl() . $href;
     }
 
     private function isEnabled($toptab, \Service $service): bool
     {
         return (is_numeric($toptab) && $toptab == $service->getId())
             || ($service->getShortName() && ($toptab == $service->getShortName()));
-    }
-
-    private function getLabel(\Service $service): string
-    {
-        $label  = '<span title="' . $this->purifier->purify($service->getInternationalizedDescription()) . '">';
-        $label .= $this->purifier->purify($service->getInternationalizedName()) . '</span>';
-
-        return $label;
     }
 }

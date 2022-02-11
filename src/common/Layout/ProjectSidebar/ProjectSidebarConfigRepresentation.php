@@ -29,6 +29,8 @@ use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\Layout\ProjectSidebar\InstanceInformation\ProjectSidebarInstanceInformation;
 use Tuleap\Layout\ProjectSidebar\Project\ProjectSidebarProject;
 use Tuleap\Layout\ProjectSidebar\User\ProjectSidebarUser;
+use Tuleap\Layout\ProjectSidebarToolsBuilder;
+use Tuleap\Layout\SidebarServicePresenter;
 use Tuleap\Project\Admin\Access\VerifyUserCanAccessProjectAdministration;
 use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
@@ -38,10 +40,14 @@ use Tuleap\Project\Flags\ProjectFlagsBuilder;
  */
 final class ProjectSidebarConfigRepresentation
 {
+    /**
+     * @param SidebarServicePresenter[] $tools
+     */
     private function __construct(
         public ProjectSidebarProject $project,
         public ProjectSidebarUser $user,
         public ProjectSidebarInstanceInformation $instance_information,
+        public array $tools,
     ) {
     }
 
@@ -55,6 +61,8 @@ final class ProjectSidebarConfigRepresentation
         FlavorFinder $flavor_finder,
         IDetectIfLogoIsCustomized $customized_logo_detector,
         GlyphFinder $glyph_finder,
+        ProjectSidebarToolsBuilder $project_sidebar_tools_builder,
+        mixed $currently_active_service,
     ): self {
         return new self(
             ProjectSidebarProject::build(
@@ -75,6 +83,7 @@ final class ProjectSidebarConfigRepresentation
                 $customized_logo_detector,
                 $glyph_finder,
             ),
+            [...$project_sidebar_tools_builder->getSidebarTools($user, $currently_active_service, $project)]
         );
     }
 }

@@ -26,6 +26,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\BuildVersion\FlavorFinder;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
+use Tuleap\Layout\ProjectSidebarToolsBuilder;
 use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -46,6 +47,12 @@ final class ProjectSidebarConfigRepresentationTest extends TestCase
         $banner_retriever->method('getBannerForProject')->willReturn(null);
         $project_flags_builder = $this->createStub(ProjectFlagsBuilder::class);
         $project_flags_builder->method('buildProjectFlags')->willReturn([]);
+        $project_sidebar_tools_builder = $this->createStub(ProjectSidebarToolsBuilder::class);
+        $project_sidebar_tools_builder->method('getSidebarTools')->willReturn(
+            (static function (): \Generator {
+                yield from [];
+            })()
+        );
 
         $representation = ProjectSidebarConfigRepresentation::build(
             $project,
@@ -78,6 +85,8 @@ final class ProjectSidebarConfigRepresentationTest extends TestCase
                 }
             },
             $this->createStub(GlyphFinder::class),
+            $project_sidebar_tools_builder,
+            ''
         );
 
         self::assertNotNull($representation);

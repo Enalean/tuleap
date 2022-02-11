@@ -1,38 +1,21 @@
 <h2 class="project-sidebar-tools-section-label">{{# gettext }}Tools{{/ gettext }}</h2>
 <ul class="nav nav-list">
     {{# sidebar }}
-        {{# is_project_defined }}
-            <li>
-                <a href="{{{ link }}}"
-                   class="project-sidebar-nav-item"
-                   aria-label="{{ label }}"
-                    {{# open_in_new_tab }}
-                   target="_blank"
-                   rel="noopener noreferrer"
-                    {{/ open_in_new_tab }}
-                   data-shortcut-sidebar
-                >
-                    <i class="{{ icon }} project-sidebar-nav-item-icon"></i>
-                    <span title="{{ description }}" class="project-sidebar-nav-item-label">{{ label }}</span>
-                    {{# open_in_new_tab }}
-                        <i class="fa fa-arrow-right project-sidebar-nav-item-new-tab"></i>
-                    {{/ open_in_new_tab }}
-                </a>
-            </li>
-        {{/ is_project_defined }}
-        {{^ is_project_defined }}
-            <li {{# enabled }}class="active"{{/ enabled }}>
-                <a id="{{ id }}"
-                   href="{{{ link }}}"
-                   aria-label="{{{ name }}}"
-                   title="{{{ name }}}"
-                   class="project-sidebar-nav-item"
-                   data-shortcut-sidebar="{{ id }}"
-                >
-                    <i class="{{ icon }} project-sidebar-nav-item-icon"></i>
-                    <span class="project-sidebar-nav-item-label">{{{ label }}}</span>
-                </a>
-            </li>
-        {{/ is_project_defined }}
+        <li {{# is_active }}class="active"{{/ is_active }}>
+            <a
+                href="{{ href }}"
+                aria-label="{{ label }}"
+                class="project-sidebar-nav-item"
+                title="{{ description }}"
+                {{# open_in_new_tab }}target="_blank" rel="noopener noreferrer"{{/ open_in_new_tab }}
+                data-shortcut-sidebar="sidebar-{{ shortcut_id }}"
+            >
+                <i class="project-sidebar-nav-item-icon {{ icon }}" aria-hidden="true"></i>
+                <span class="project-sidebar-nav-item-label">{{ label }}</span>
+                {{# open_in_new_tab }}
+                    <i class="fas fa-arrow-right project-sidebar-nav-item-new-tab" aria-hidden="true"></i>
+                {{/ open_in_new_tab }}
+            </a>
+        </li>
     {{/ sidebar }}
 </ul>
