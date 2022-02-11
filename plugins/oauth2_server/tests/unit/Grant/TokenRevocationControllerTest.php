@@ -27,7 +27,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
-use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenRevoker;
+use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenRevoker;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenRevoker;

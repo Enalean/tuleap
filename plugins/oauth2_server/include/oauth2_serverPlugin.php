@@ -635,7 +635,7 @@ final class oauth2_serverPlugin extends Plugin
                 new OAuth2RefreshTokenDAO(),
                 $split_token_hasher
             ),
-            new \Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenRevoker(
+            new \Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenRevoker(
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
                 $authorization_code_revoker,
                 new OAuth2AccessTokenDAO(),
