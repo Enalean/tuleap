@@ -30,7 +30,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenRevoker;
+use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenRevoker;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenRevoker;
