@@ -33,10 +33,8 @@ Bot Mattermost management for Tuleap
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 
-%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost
-%{__cp} -ar db include site-content templates vendor README.mkd VERSION .use-front-controller $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost
-%{__cp} -ar assets $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets/botmattermost
+%{__cp} -ar db frontend-assets include site-content templates vendor README.mkd VERSION .use-front-controller $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost
 
 # logrotate
 %{__mkdir} -p $RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d
@@ -51,7 +49,6 @@ Bot Mattermost management for Tuleap
 %files
 %defattr(-,root,root,-)
 %{_datadir}/tuleap/plugins/botmattermost
-%{_datadir}/tuleap/src/www/assets/botmattermost
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}.conf
 
 

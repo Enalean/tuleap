@@ -189,7 +189,7 @@ class BotMattermostPlugin extends Plugin
     private function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/botmattermost/',
+            __DIR__ . '/../frontend-assets/',
             '/assets/botmattermost'
         );
     }
