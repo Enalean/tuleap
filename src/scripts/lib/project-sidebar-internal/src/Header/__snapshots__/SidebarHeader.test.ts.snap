@@ -13,6 +13,7 @@ exports[`SidebarHeader displays the sidebar header 1`] = `
     >
       <a
         class="project-sidebar-title"
+        data-test="project-sidebar-title"
         href="/projects/project1"
       >
         <span

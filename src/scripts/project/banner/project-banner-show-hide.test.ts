@@ -18,7 +18,6 @@
  */
 
 import {
-    PROJECT_BANNER_NAVBAR_ID,
     PROJECT_BANNER_MESSAGE_CLOSE_BUTTON_ID,
     PROJECT_BANNER_HIDDEN_CLASS,
     allowToHideAndShowProjectBanner,
@@ -40,18 +39,11 @@ describe("Show and hide project banner", () => {
         document: Document;
         project_banner: HTMLElement;
         close_button: HTMLElement;
-        project_banner_navbar_information: HTMLElement;
         project_sidebar: HTMLElement;
     } {
         const local_document = document.implementation.createHTMLDocument();
 
         local_document.body.classList.add(PROJECT_BANNER_VISIBLE_GLOBAL_CLASS);
-
-        const navbar = local_document.createElement("nav");
-        const navbar_project_banner_info = local_document.createElement("div");
-        navbar_project_banner_info.setAttribute("id", PROJECT_BANNER_NAVBAR_ID);
-        navbar.appendChild(navbar_project_banner_info);
-        local_document.body.appendChild(navbar);
 
         const project_sidebar = local_document.createElement("tuleap-project-sidebar");
         local_document.body.appendChild(project_sidebar);
@@ -68,7 +60,6 @@ describe("Show and hide project banner", () => {
             document: local_document,
             project_banner: project_banner,
             close_button: project_banner_close_button,
-            project_banner_navbar_information: navbar_project_banner_info,
             project_sidebar,
         };
     }
@@ -98,49 +89,6 @@ describe("Show and hide project banner", () => {
         expect(() => {
             allowToHideAndShowProjectBanner(local_document.document, getTlpPatchSpy());
         }).toThrow();
-    });
-
-    it("Can hide and show the project banner", () => {
-        const windowScrollToSpy = jest.spyOn(window, "scrollTo").mockImplementation();
-        const local_document = getLocalDocumentWithProjectBannerAndNavbarInformation();
-        const tlpPatchSpy = getTlpPatchSpy();
-
-        allowToHideAndShowProjectBanner(local_document.document, tlpPatchSpy);
-
-        local_document.close_button.click();
-        expect(local_document.document.body.classList).not.toContain(
-            PROJECT_BANNER_VISIBLE_GLOBAL_CLASS
-        );
-        expect(local_document.project_banner.classList).toContain(PROJECT_BANNER_HIDDEN_CLASS);
-        expect(tlpPatchSpy).toHaveBeenCalledWith(
-            `/api/users/${USER_ID}/preferences`,
-            expect.objectContaining({
-                body: expect.stringContaining(PROJECT_ID),
-            })
-        );
-
-        let click_event: Event | undefined;
-        local_document.project_banner_navbar_information.addEventListener(
-            "click",
-            (event: Event) => {
-                click_event = event;
-            }
-        );
-
-        local_document.project_banner_navbar_information.click();
-        expect(local_document.document.body.classList).toContain(
-            PROJECT_BANNER_VISIBLE_GLOBAL_CLASS
-        );
-        expect(local_document.project_banner.classList).not.toContain(PROJECT_BANNER_HIDDEN_CLASS);
-        expect(local_document.project_banner_navbar_information.classList).not.toContain(
-            PROJECT_BANNER_HIDDEN_CLASS
-        );
-        expect(windowScrollToSpy).toHaveBeenCalledTimes(1);
-        expect(click_event).toBeDefined();
-        if (click_event === undefined) {
-            throw new Error("Expected a click event to be received");
-        }
-        expect(click_event.defaultPrevented).toBe(true);
     });
 
     it("Can hide and show the project banner when using the tuleap-project-sidebar container", () => {

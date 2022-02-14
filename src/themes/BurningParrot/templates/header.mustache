@@ -38,6 +38,12 @@
             {{> switch-to-modal }}
             {{> invite-buddies-modal }}
 
+            {{# project_context }}
+                {{# sidebar_data }}
+                    <tuleap-project-sidebar data-test="project-sidebar" config="{{ config }}" {{# is_collapsed }}collapsed{{/ is_collapsed }}></tuleap-project-sidebar>
+                {{/ sidebar_data }}
+            {{/ project_context }}
+            {{^ project_context }}
             {{# sidebar }}
                 <aside class="sidebar {{ classname }}">
                     {{> logo }}
@@ -70,73 +76,8 @@
                         <span class="sidebar-copyright">{{{ copyright }}}</span>
                     {{/ has_copyright }}
                 </aside>
-                {{# project_context }}
-                    {{# privacy }}
-                        <section class="tlp-popover" id="project-sidebar-nav-title-popover">
-                            <div class="tlp-popover-arrow"></div>
-                            <div class="tlp-popover-header">
-                                <h1 class="tlp-popover-title">{{ privacy_title }}</h1>
-                            </div>
-                            <div class="tlp-popover-body">
-                                <p class="current-project-nav-title-popover-description">{{ explanation_text }}</p>
-                            </div>
-                        </section>
-                    {{/ privacy }}
-                    {{# has_project_flags }}
-                        <section class="tlp-popover" id="project-sidebar-project-flags-popover">
-                            <div class="tlp-popover-arrow"></div>
-                            <div class="tlp-popover-body">
-                                {{# project_flags }}
-                                    <div class="current-project-nav-flag-popover-flag">
-                                        {{# glyph }}project-shield{{/ glyph }}
-                                        <h2 class="current-project-nav-flag-popover-content-title">
-                                            {{ label }}
-                                        </h2>
-                                        {{# description }}
-                                            <p class="current-project-nav-flag-popover-content-description">
-                                                {{ description }}
-                                            </p>
-                                        {{/ description }}
-                                    </div>
-                                {{/ project_flags }}
-                            </div>
-                        </section>
-                    {{/ has_project_flags }}
-                    {{# linked_projects }}
-                            <section class="tlp-popover project-sidebar-linked-projects-popover" id="project-sidebar-linked-projects-popover">
-                                <div class="tlp-popover-arrow project-sidebar-linked-projects-popover-arrow"></div>
-                                <div class="tlp-popover-header">
-                                    {{# is_in_children_projects_context }}<i class="fas fa-fw fa-tlp-project-boxes" aria-hidden="true"></i>{{/ is_in_children_projects_context }}
-                                    {{^ is_in_children_projects_context }}<i class="fas fa-fw fa-level-up-alt fa-flip-horizontal project-sidebar-linked-projects-icon-parent" aria-hidden="true"></i>{{/ is_in_children_projects_context }}
-                                    <h1 class="tlp-popover-title">
-                                        {{ label }}
-                                    </h1>
-                                </div>
-                                <div class="tlp-popover-body project-sidebar-linked-projects-popover-content">
-                                    <ul class="project-sidebar-linked-projects-list-popover">
-                                    {{# projects }}
-                                        <li class="project-sidebar-linked-projects-item">
-                                            <div class="project-sidebar-linked-projects-item-link">
-                                                {{# icon }}
-                                                    <span class="project-sidebar-linked-projects-item-icon" aria-hidden="true">{{ icon }}</span>
-                                                {{/ icon }}
-                                                {{^ icon }}
-                                                    <i class="project-sidebar-linked-projects-item-icon fas fa-archive"
-                                                    aria-hidden="true"
-                                                    ></i>
-                                                {{/ icon }}
-                                                <span class="project-sidebar-linked-projects-item-name">
-                                                    {{ name }}
-                                                </span>
-                                            </div>
-                                        </li>
-                                    {{/ projects }}
-                                    </ul>
-                                </div>
-                            </section>
-                    {{/ linked_projects }}
-                {{/ project_context }}
             {{/ sidebar }}
+            {{/ project_context }}
 
             <main role="main" class="{{ main_classes }}">
                 {{# project_context }}

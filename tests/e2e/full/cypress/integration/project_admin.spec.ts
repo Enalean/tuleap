@@ -233,7 +233,7 @@ describe("Project admin", function () {
     context("project basic administration", function () {
         it("Emoji is displayed", function () {
             cy.visitProjectAdministration("project-admin-test");
-            cy.get("[data-test=project-sidebar-title").contains("😀");
+            cy.get("[data-test=project-sidebar-title", { includeShadowDom: true }).contains("😀");
         });
 
         it("should be able to manipulate projects", function () {

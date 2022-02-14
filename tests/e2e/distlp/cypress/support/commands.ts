@@ -38,9 +38,21 @@ Cypress.Commands.add("login", () => {
     cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
 });
 
-Cypress.Commands.add("getProjectId", (project_shortname: string) => {
-    cy.visit(`/projects/${project_shortname}/`);
-    return cy.get("[data-test=project-sidebar]").should("have.attr", "data-project-id");
-});
+Cypress.Commands.add(
+    "getProjectId",
+    (project_shortname: string): Cypress.Chainable<JQuery<HTMLElement>> => {
+        return cy
+            .request({
+                url: `/api/projects?limit=1&query=${encodeURIComponent(
+                    JSON.stringify({ shortname: project_shortname })
+                )}`,
+                headers: {
+                    accept: "application/json",
+                    referer: Cypress.config("baseUrl"),
+                },
+            })
+            .then((response) => response.body[0].id);
+    }
+);
 
 export {};

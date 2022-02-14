@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const PROJECT_BANNER_NAVBAR_ID = "current-project-banner-bullhorn";
 export const PROJECT_BANNER_MESSAGE_CLOSE_BUTTON_ID = "project-banner-close";
 export const PROJECT_BANNER_VISIBLE_GLOBAL_CLASS = "has-visible-project-banner";
 export const PROJECT_BANNER_HIDDEN_CLASS = "project-banner-hidden";
@@ -41,11 +40,6 @@ export function allowToHideAndShowProjectBanner(
         );
     }
 
-    mount_point
-        .getElementById(PROJECT_BANNER_NAVBAR_ID)
-        ?.addEventListener("click", (event: Event): void => {
-            toggleProjectBannerMessage(event, mount_point.body, full_project_banner);
-        });
     for (const sidebar of mount_point.getElementsByTagName("tuleap-project-sidebar")) {
         sidebar.addEventListener("show-project-announcement", (event) => {
             toggleProjectBannerMessage(event, mount_point.body, full_project_banner);

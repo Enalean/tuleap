@@ -41,9 +41,6 @@ use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
 use Tuleap\Layout\NewDropdown\NewDropdownPresenterBuilder;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
-use Tuleap\Project\Admin\Access\ProjectAdministrationLinkPresenter;
-use Tuleap\Project\Admin\Access\UserCanAccessProjectAdministrationVerifier;
-use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
@@ -51,8 +48,6 @@ use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPresentersBuilder;
 use Tuleap\Project\Registration\ProjectRegistrationPermissionsChecker;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
-use Tuleap\Project\Sidebar\CollectLinkedProjects;
-use Tuleap\Project\Sidebar\LinkedProjectsCollectionPresenter;
 use Tuleap\Project\Sidebar\ProjectContextPresenter;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\User\Account\RegistrationGuardEvent;
@@ -394,18 +389,12 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         bool $is_svg_logo_customized,
         array $main_classes,
     ): void {
-        $project_name    = null;
-        $project_link    = null;
         $project_context = null;
 
         if (! empty($params['group'])) {
             $project = ProjectManager::instance()->getProject($params['group']);
 
-            $event_manager = $this->getEventManager();
-
-            $project_name = $project->getPublicName();
-            $project_link = $this->getProjectLink($project);
-            $crumb_link   = new BreadCrumbLink($project->getPublicName(), $project->getUrl());
+            $crumb_link = new BreadCrumbLink($project->getPublicName(), $project->getUrl());
                 $crumb_link->setProjectIcon(
                     EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat(
                         $project->getIconUnicodeCodepoint()
@@ -415,20 +404,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $crumb->setAdditionalClassname("breadcrumb-project");
             $this->breadcrumbs->addFirst($crumb);
 
-            $administration_link = ProjectAdministrationLinkPresenter::fromProject(
-                new UserCanAccessProjectAdministrationVerifier(new MembershipDelegationDao()),
-                $project,
-                $current_user
-            );
-
-            $linked_projects_event = new CollectLinkedProjects($project, $current_user);
-            $event_manager->dispatch($linked_projects_event);
-
             $project_context = ProjectContextPresenter::build(
                 $project,
-                \Tuleap\Project\ProjectPrivacyPresenter::fromProject($project),
-                $administration_link,
-                LinkedProjectsCollectionPresenter::fromEvent($linked_projects_event),
                 $this->project_flags_builder->buildProjectFlags($project),
                 $banner,
                 $this->getProjectSidebarData($params, $project, $current_user)
@@ -442,8 +419,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $this->render('container', new FlamingParrot_ContainerPresenter(
             $breadcrumbs,
             $this->toolbar,
-            $project_name,
-            $project_link,
             $this->_feedback,
             $this->_getFeedback(),
             $this->tuleap_version,
@@ -454,11 +429,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $is_svg_logo_customized,
             $main_classes,
         ));
-    }
-
-    private function getProjectLink(Project $project)
-    {
-        return '/projects/' . $project->getUnixName() . '/';
     }
 
     public function footer(array $params)
