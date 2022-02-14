@@ -277,3 +277,11 @@ export interface AdvancedSearchParams {
     readonly create_date: SearchDate | null;
     readonly update_date: SearchDate | null;
 }
+
+interface SearchCriterion {
+    readonly name: string;
+    readonly title: string;
+    readonly type: "date" | "text" | "type";
+}
+
+export type SearchCriteria = ReadonlyArray<SearchCriterion>;

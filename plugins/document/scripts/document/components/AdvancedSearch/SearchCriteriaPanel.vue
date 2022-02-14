@@ -29,36 +29,14 @@
                     <search-criteria-breadcrumb v-if="!is_in_root_folder" />
                     <div class="document-search-criteria">
                         <criterion-global-text v-model="new_query.global_search" />
-                        <criterion-type v-model="new_query.type" />
-                        <criterion-text
-                            name="title"
-                            v-bind:label="$gettext('Title')"
-                            v-model="new_query.title"
-                            data-test="criterion-title"
-                        />
-                        <criterion-text
-                            name="description"
-                            v-bind:label="$gettext('Description')"
-                            v-model="new_query.description"
-                            data-test="criterion-description"
-                        />
-                        <criterion-text
-                            name="owner"
-                            v-bind:label="$gettext('Owner')"
-                            v-model="new_query.owner"
-                            data-test="criterion-owner"
-                        />
-                        <criterion-date
-                            name="create_date"
-                            v-bind:label="$gettext('Creation date')"
-                            v-model="new_query.create_date"
-                            data-test="criterion-create-date"
-                        />
-                        <criterion-date
-                            name="update_date"
-                            v-bind:label="$gettext('Update date')"
-                            v-model="new_query.update_date"
-                            data-test="criterion-update-date"
+                        <component
+                            v-for="criterion in criteria"
+                            v-bind:key="criterion.name"
+                            v-bind:is="`criterion-${criterion.type}`"
+                            v-bind:label="criterion.label"
+                            v-bind:name="criterion.name"
+                            v-model="new_query[criterion.name]"
+                            v-bind:data-test="`criterion-${criterion.name}`"
                         />
                     </div>
                 </section>
@@ -80,7 +58,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { namespace } from "vuex-class";
-import type { AdvancedSearchParams } from "../../type";
+import type { AdvancedSearchParams, SearchCriteria } from "../../type";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
 import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
 import CriterionType from "./Criteria/CriterionType.vue";
@@ -108,6 +86,9 @@ export default class SearchCriteriaPanel extends Vue {
 
     @configuration.State
     readonly root_id!: number;
+
+    @configuration.State
+    readonly criteria!: SearchCriteria;
 
     private new_query: AdvancedSearchParams = buildAdvancedSearchParams({});
 

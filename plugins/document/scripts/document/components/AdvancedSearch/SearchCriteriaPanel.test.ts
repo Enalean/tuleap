@@ -50,7 +50,15 @@ describe("SearchCriteriaPanel", () => {
                     state: {
                         configuration: {
                             root_id: 101,
-                        } as ConfigurationState,
+                            criteria: [
+                                { name: "type", type: "type", title: "Type" },
+                                { name: "title", type: "text", title: "Title" },
+                                { name: "description", type: "text", title: "Description" },
+                                { name: "owner", type: "text", title: "Owner" },
+                                { name: "create_date", type: "date", title: "Create date" },
+                                { name: "update_date", type: "date", title: "Update date" },
+                            ],
+                        } as unknown as ConfigurationState,
                     },
                 }),
             },
@@ -62,9 +70,9 @@ describe("SearchCriteriaPanel", () => {
         wrapper.find("[data-test=criterion-description]").vm.$emit("input", "sit amet");
         wrapper.find("[data-test=criterion-owner]").vm.$emit("input", "jdoe");
         const create_date: SearchDate = { date: "2022-01-01", operator: ">" };
-        wrapper.find("[data-test=criterion-create-date]").vm.$emit("input", create_date);
+        wrapper.find("[data-test=criterion-create_date]").vm.$emit("input", create_date);
         const update_date: SearchDate = { date: "2022-01-31", operator: "<" };
-        wrapper.find("[data-test=criterion-update-date]").vm.$emit("input", update_date);
+        wrapper.find("[data-test=criterion-update_date]").vm.$emit("input", update_date);
         wrapper.find("[data-test=submit]").trigger("click");
 
         const expected_params: AdvancedSearchParams = {
@@ -95,7 +103,8 @@ describe("SearchCriteriaPanel", () => {
                     state: {
                         configuration: {
                             root_id: 101,
-                        } as ConfigurationState,
+                            criteria: [],
+                        } as unknown as ConfigurationState,
                     },
                 }),
             },

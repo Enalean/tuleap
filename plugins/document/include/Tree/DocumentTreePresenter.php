@@ -121,6 +121,11 @@ class DocumentTreePresenter
      * @psalm-readonly
      */
     public $project_flags;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $criteria;
 
     public string $project_icon;
 
@@ -136,6 +141,7 @@ class DocumentTreePresenter
         FileDownloadLimits $file_download_limits,
         HistoryEnforcementSettings $history_settings,
         array $project_flags,
+        array $criteria,
     ) {
         $this->project_id                         = $project->getID();
         $this->root_id                            = $root_id;
@@ -162,5 +168,6 @@ class DocumentTreePresenter
         $this->privacy       = json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR);
         $this->project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
         $this->project_icon  = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint());
+        $this->criteria      = json_encode($criteria, JSON_THROW_ON_ERROR);
     }
 }

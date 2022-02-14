@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const project_flags = JSON.parse(vue_mount_point.dataset.projectFlags);
     const project_icon = vue_mount_point.dataset.projectIcon;
     const search_for_document_with_criteria = isFeatureFlagNewSearchEnabled(document);
+    const criteria = JSON.parse(vue_mount_point.dataset.criteria);
 
     moment.tz(user_timezone);
     moment.locale(user_locale);
@@ -110,6 +111,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         project_icon,
         search_for_document_with_criteria,
         user_locale,
+        criteria,
     };
 
     const AppComponent = Vue.extend(App);
