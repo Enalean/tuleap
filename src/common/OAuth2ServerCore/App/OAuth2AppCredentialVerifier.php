@@ -20,15 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\App;
+namespace Tuleap\OAuth2ServerCore\App;
 
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
-use Tuleap\OAuth2ServerCore\App\AppFactory;
-use Tuleap\OAuth2ServerCore\App\AppDao;
-use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
-use Tuleap\OAuth2ServerCore\App\OAuth2App;
-use Tuleap\OAuth2ServerCore\App\OAuth2AppNotFoundException;
 
 class OAuth2AppCredentialVerifier
 {
@@ -56,6 +51,7 @@ class OAuth2AppCredentialVerifier
      * @throws OAuth2AppNotFoundException
      * @throws OAuth2ClientIdentifierAndSecretMismatchException
      * @throws InvalidOAuth2AppSecretException
+     * @throws OAuth2MissingVerifierStringException
      */
     public function getApp(ClientIdentifier $client_identifier, SplitToken $client_secret): OAuth2App
     {

@@ -20,10 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\App;
+namespace Tuleap\OAuth2ServerCore\App;
 
 use Tuleap\OAuth2ServerCore\OAuth2ServerException;
-use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
 
 final class OAuth2ClientIdentifierAndSecretMismatchException extends \RuntimeException implements OAuth2ServerException
 {
