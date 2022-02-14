@@ -18,19 +18,40 @@
  */
 
 describe("Docman", function () {
-    let project_id: string;
+    let project_unixname: string, public_name: string, now: number, project_id: string;
+
+    before(() => {
+        cy.clearSessionCookie();
+        now = Date.now();
+
+        project_unixname = "docman-" + now;
+        public_name = "Docman " + now;
+        cy.projectAdministratorLogin();
+    });
+
+    beforeEach(() => {
+        cy.preserveSessionCookies();
+    });
+
+    it("Creates a project with docman service", () => {
+        cy.visit("/project/new");
+        cy.get(
+            "[data-test=project-registration-card-label][for=project-registration-tuleap-template-issues]"
+        ).click();
+        cy.get("[data-test=project-registration-next-button]").click();
+
+        cy.get("[data-test=new-project-name]").type(public_name);
+        cy.get("[data-test=project-shortname-slugified-section]").click();
+        cy.get("[data-test=new-project-shortname]").type("{selectall}" + project_unixname);
+        cy.get("[data-test=approve_tos]").click();
+        cy.get("[data-test=project-registration-next-button]").click();
+        cy.get("[data-test=start-working]").click({
+            timeout: 20000,
+        });
+        cy.getProjectId(project_unixname).as("docman_project_id");
+    });
 
     context("Project administrators", function () {
-        before(function () {
-            cy.clearSessionCookie();
-            cy.projectAdministratorLogin();
-            cy.getProjectId("docman-project").as("docman_project_id");
-        });
-
-        beforeEach(() => {
-            cy.preserveSessionCookies();
-        });
-
         it("can access to admin section", function () {
             project_id = this.docman_project_id;
             cy.visit("/plugins/docman/?group_id=" + project_id + "&action=admin");
@@ -44,9 +65,7 @@ describe("Docman", function () {
                 cy.get("[data-test=document-switch-to-old-ui]").click();
 
                 cy.get("[data-test=toolbar]").contains("Admin").click();
-                cy.contains("Manage Properties")
-                    .should("have.attr", "href")
-                    .as("manage_properties_url");
+                cy.contains("Properties").should("have.attr", "href").as("manage_properties_url");
             });
 
             it("cannot create a document when a mandatory property is not filled", function () {
@@ -57,6 +76,7 @@ describe("Docman", function () {
                 cy.get("[data-test=use_it]").check();
                 cy.get("[data-test=admin_create_metadata]").submit();
 
+                cy.get("[data-test=project-documentation]").click();
                 cy.get("[data-test=new-document]").click();
                 cy.get("[data-test=create_document_next]").click();
                 cy.get("[data-test=title]").type("my document title");
@@ -86,7 +106,8 @@ describe("Docman", function () {
             });
 
             it("create a folder with mandatory properties", function () {
-                cy.contains("New document").click();
+                cy.get("[data-test=project-documentation]").click();
+                cy.get("[data-test=new-document]").click();
                 cy.get("[data-test=document_type]").select("1");
                 cy.get("[data-test=create_document_next]").click();
 
@@ -105,7 +126,8 @@ describe("Docman", function () {
 
         context("document versioning", function () {
             it("create an embed document", function () {
-                cy.contains("New document").click();
+                cy.get("[data-test=project-documentation]").click();
+                cy.get("[data-test=new-document]").click();
                 cy.get("[data-test=create_document_next]").click();
                 cy.get("[data-test=title]").type("my document title");
 
@@ -173,7 +195,7 @@ describe("Docman", function () {
 
         context("folder creation", function () {
             it("create a folder", function () {
-                cy.contains("New document").click();
+                cy.get("[data-test=new-document]").click();
                 cy.get("[data-test=document_type]").select("1");
                 cy.get("[data-test=create_document_next]").click();
 
@@ -204,10 +226,21 @@ describe("Docman", function () {
 
     context("Project members", function () {
         before(function () {
+            cy.get("[data-test=project-administration-link]").click();
+            cy.get(
+                "[data-test=project-admin-members-add-user-select] + .select2-container"
+            ).click();
+            // ignore rule for select2
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get(".select2-search__field").type(`ProjectMember{enter}`);
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get(".select2-result-user").click();
+            cy.get('[data-test="project-admin-submit-add-member"]').click();
+
             cy.clearSessionCookie();
             cy.projectMemberLogin();
 
-            cy.getProjectId("docman-project").as("docman_project_id");
+            cy.getProjectId(project_unixname).as("docman_project_id");
         });
 
         beforeEach(() => {
@@ -225,7 +258,7 @@ describe("Docman", function () {
         });
         context("advanced search", function () {
             it("create an empty document", function () {
-                cy.contains("New document").click();
+                cy.get("[data-test=new-document]").click();
                 cy.get("[data-test=create_document_next]").click();
                 cy.get("[data-test=title]").type("pattern");
 
