@@ -32,6 +32,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenRevoker;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
+use Tuleap\OAuth2ServerCore\Grant\OAuth2ClientAuthenticationMiddleware;
 use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenRevoker;
 use Tuleap\Request\DispatchablePSR15Compatible;
