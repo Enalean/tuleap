@@ -152,11 +152,11 @@ Cypress.Commands.add(
 
 Cypress.Commands.add("visitProjectAdministration", (project_unixname: string) => {
     cy.visit("/projects/" + project_unixname);
-    cy.get('[data-test="project-administration-link"]').click();
+    cy.get('[data-test="project-administration-link"]', { includeShadowDom: true }).click();
 });
 
 Cypress.Commands.add("visitProjectAdministrationInCurrentProject", () => {
-    cy.get('[data-test="project-administration-link"]').click();
+    cy.get('[data-test="project-administration-link"]', { includeShadowDom: true }).click();
 });
 
 Cypress.Commands.add("visitServiceInCurrentProject", (service_label: string) => {
@@ -169,7 +169,7 @@ function visitServiceInCurrentProject(
     before_visit_callback: (href: string) => void
 ): void {
     cy.get("[data-test=project-sidebar]")
-        .contains(service_label)
+        .contains(service_label, { includeShadowDom: true })
         .should("have.attr", "href")
         .then((href) => {
             before_visit_callback(String(href));
@@ -214,8 +214,13 @@ Cypress.Commands.add("updatePlatformVisibilityForAnonymous", (): void => {
 Cypress.Commands.add(
     "getProjectId",
     (project_shortname: string): Cypress.Chainable<JQuery<HTMLElement>> => {
-        cy.visit(`/projects/${project_shortname}/`);
-        return cy.get("[data-test=project-sidebar]").should("have.attr", "data-project-id");
+        return cy
+            .getFromTuleapAPI(
+                `/api/projects?limit=1&query=${encodeURIComponent(
+                    JSON.stringify({ shortname: project_shortname })
+                )}`
+            )
+            .then((response) => response.body[0].id);
     }
 );
 

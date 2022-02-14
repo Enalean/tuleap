@@ -226,7 +226,7 @@ describe("Docman", function () {
 
     context("Project members", function () {
         before(function () {
-            cy.get("[data-test=project-administration-link]").click();
+            cy.visitProjectAdministrationInCurrentProject();
             cy.get(
                 "[data-test=project-admin-members-add-user-select] + .select2-container"
             ).click();
