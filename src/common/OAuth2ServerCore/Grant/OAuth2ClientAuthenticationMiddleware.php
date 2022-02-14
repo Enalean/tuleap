@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant;
+namespace Tuleap\OAuth2ServerCore\Grant;
 
 use LogicException;
 use Psr\Http\Message\ResponseInterface;

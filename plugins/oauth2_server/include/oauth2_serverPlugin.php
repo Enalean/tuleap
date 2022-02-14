@@ -69,7 +69,7 @@ use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2GrantAccessTokenFromAuthor
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\PKCECodeVerifier;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PrefixOAuth2AuthCode;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeDAO;
-use Tuleap\OAuth2Server\Grant\OAuth2ClientAuthenticationMiddleware;
+use Tuleap\OAuth2ServerCore\Grant\OAuth2ClientAuthenticationMiddleware;
 use Tuleap\OAuth2Server\Grant\RefreshToken\OAuth2GrantAccessTokenFromRefreshToken;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\JWTBuilderFactory;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectIDTokenCreator;

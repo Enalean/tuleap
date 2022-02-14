@@ -29,6 +29,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2GrantAccessTokenFromAuthorizationCode;
 use Tuleap\OAuth2Server\Grant\RefreshToken\OAuth2GrantAccessTokenFromRefreshToken;
+use Tuleap\OAuth2ServerCore\Grant\OAuth2ClientAuthenticationMiddleware;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
