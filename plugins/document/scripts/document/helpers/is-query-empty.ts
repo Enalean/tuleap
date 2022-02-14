@@ -27,6 +27,7 @@ export function isQueryEmpty(query_params: AdvancedSearchParams): boolean {
         query_params.description.length === 0 &&
         query_params.owner.length === 0 &&
         query_params.create_date === null &&
-        query_params.update_date === null
+        query_params.update_date === null &&
+        query_params.obsolescence_date === null
     );
 }

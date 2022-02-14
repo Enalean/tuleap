@@ -276,6 +276,7 @@ export interface AdvancedSearchParams {
     readonly owner: string;
     readonly create_date: SearchDate | null;
     readonly update_date: SearchDate | null;
+    readonly obsolescence_date: SearchDate | null;
 }
 
 interface SearchCriterion {

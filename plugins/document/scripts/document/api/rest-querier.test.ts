@@ -447,6 +447,10 @@ describe("rest-querier", () => {
                         date: "2022-01-31",
                         operator: "<",
                     },
+                    obsolescence_date: {
+                        date: "2022-01-31",
+                        operator: "=",
+                    },
                 },
                 170
             );
@@ -468,6 +472,10 @@ describe("rest-querier", () => {
                     update_date: {
                         date: "2022-01-31",
                         operator: "<",
+                    },
+                    obsolescence_date: {
+                        date: "2022-01-31",
+                        operator: "=",
                     },
                     offset: 170,
                     limit: 50,

@@ -36,19 +36,21 @@ use Tuleap\Docman\Metadata\CustomMetadataException;
  */
 class Docman_MetadataFactory
 {
-    public const HARDCODED_METADATA_TITLE_LABEL       = 'title';
-    public const HARDCODED_METADATA_DESCRIPTION_LABEL = 'description';
-    public const HARDCODED_METADATA_OWNER_LABEL       = 'owner';
-    public const HARDCODED_METADATA_CREATE_DATE_LABEL = 'create_date';
-    public const HARDCODED_METADATA_UPDATE_DATE_LABEL = 'update_date';
-    public const HARDCODED_METADATA_LABELS            = [
+    public const HARDCODED_METADATA_TITLE_LABEL        = 'title';
+    public const HARDCODED_METADATA_DESCRIPTION_LABEL  = 'description';
+    public const HARDCODED_METADATA_OWNER_LABEL        = 'owner';
+    public const HARDCODED_METADATA_CREATE_DATE_LABEL  = 'create_date';
+    public const HARDCODED_METADATA_UPDATE_DATE_LABEL  = 'update_date';
+    public const HARDCODED_METADATA_STATUS_LABEL       = 'status';
+    public const HARDCODED_METADATA_OBSOLESCENCE_LABEL = 'obsolescence_date';
+    public const HARDCODED_METADATA_LABELS             = [
         self::HARDCODED_METADATA_TITLE_LABEL,
         self::HARDCODED_METADATA_DESCRIPTION_LABEL,
         self::HARDCODED_METADATA_OWNER_LABEL,
         self::HARDCODED_METADATA_CREATE_DATE_LABEL,
         self::HARDCODED_METADATA_UPDATE_DATE_LABEL,
-        'status',
-        'obsolescence_date',
+        self::HARDCODED_METADATA_STATUS_LABEL,
+        self::HARDCODED_METADATA_OBSOLESCENCE_LABEL,
     ];
 
 
@@ -59,7 +61,10 @@ class Docman_MetadataFactory
     {
         // Metadata hard coded as table columns but with some user-defined
         // states such as 'useIt' in a dedicated table
-        $this->modifiableMetadata = ['obsolescence_date', 'status'];
+        $this->modifiableMetadata = [
+            self::HARDCODED_METADATA_OBSOLESCENCE_LABEL,
+            self::HARDCODED_METADATA_STATUS_LABEL,
+        ];
 
         $this->scalarMetadata = [PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
                                           PLUGIN_DOCMAN_METADATA_TYPE_STRING,
@@ -205,10 +210,10 @@ class Docman_MetadataFactory
         $mdla = [];
 
         // Status
-        $md = $this->getHardCodedMetadataFromLabel('status');
+        $md = $this->getHardCodedMetadataFromLabel(self::HARDCODED_METADATA_STATUS_LABEL);
         $this->appendHardCodedMetadataParams($md);
         if ($md->isUsed()) {
-            $mdla['status'] = 'status';
+            $mdla[self::HARDCODED_METADATA_STATUS_LABEL] = self::HARDCODED_METADATA_STATUS_LABEL;
         }
 
         // Real metadata
@@ -596,10 +601,10 @@ class Docman_MetadataFactory
                 $md->setCanChangeValue(false);
                 break;
 
-            case 'status':
+            case self::HARDCODED_METADATA_STATUS_LABEL:
                 $md = new Docman_ListMetadata();
                 $md->setName(dgettext('tuleap-docman', 'Status'));
-                $md->setLabel('status');
+                $md->setLabel(self::HARDCODED_METADATA_STATUS_LABEL);
                 $md->setDescription(dgettext('tuleap-docman', 'Document status.'));
                 $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
                 $md->setIsRequired(false);
@@ -609,10 +614,10 @@ class Docman_MetadataFactory
                 $md->setDefaultValue(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
                 break;
 
-            case 'obsolescence_date':
+            case self::HARDCODED_METADATA_OBSOLESCENCE_LABEL:
                 $md = new Docman_Metadata();
                 $md->setName(dgettext('tuleap-docman', 'Obsolescence Date'));
-                $md->setLabel('obsolescence_date');
+                $md->setLabel(self::HARDCODED_METADATA_OBSOLESCENCE_LABEL);
                 $md->setDescription(dgettext('tuleap-docman', 'Define a period of validity for your document. It will automatically be archived at the end of the period.'));
                 $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
                 $md->setIsRequired(false);

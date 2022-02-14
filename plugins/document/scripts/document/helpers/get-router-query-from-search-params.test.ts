@@ -37,6 +37,7 @@ describe("getRouterQueryFromSearchParams", () => {
             owner: "",
             create_date: null,
             update_date: null,
+            obsolescence_date: null,
         };
         expect(getRouterQueryFromSearchParams(query_params)).toStrictEqual({});
     });
@@ -61,6 +62,11 @@ describe("getRouterQueryFromSearchParams", () => {
             { update_date: "2022-01-30", update_date_op: "<" },
         ],
         [{ update_date: { date: "", operator: "<" } }, {}],
+        [
+            { obsolescence_date: { date: "2022-01-30", operator: "<" } },
+            { obsolescence_date: "2022-01-30", obsolescence_date_op: "<" },
+        ],
+        [{ obsolescence_date: { date: "", operator: "<" } }, {}],
     ])("should return the url parameters based from search parameters", (params, expected) => {
         expect(getRouterQueryFromSearchParams(buildAdvancedSearchParams(params))).toStrictEqual(
             expected

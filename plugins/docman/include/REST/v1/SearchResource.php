@@ -78,7 +78,7 @@ final class SearchResource extends AuthenticatedResource
      * </tr>
      * <tr>
      *   <td>`type`</td>
-     *   <td></td>
+     *   <td>List</td>
      *   <td>Type of the item. Allowed types: folder, file, embedded, wiki, link, empty</td>
      * </tr>
      * <tr>
@@ -93,7 +93,7 @@ final class SearchResource extends AuthenticatedResource
      * </tr>
      * <tr>
      *   <td>`owner`</td>
-     *   <td></td>
+     *   <td>Text</td>
      *   <td>Owner of the item. Username or id.</td>
      * </tr>
      * <tr>
@@ -106,6 +106,11 @@ final class SearchResource extends AuthenticatedResource
      *   <td>Date</td>
      *   <td>Last update date of the document.</td>
      * </tr>
+     * <tr>
+     *   <td>`obsolescence_date`</td>
+     *   <td>Date</td>
+     *   <td>Obsolescence date of the document.</td>
+     * </tr>
      * </tbody>
      * </table>
      *
@@ -116,6 +121,8 @@ final class SearchResource extends AuthenticatedResource
      * <li>`operator`: `<` | `>` | `=`</li>
      * <li>`date`: YYYY-mm-dd
      * </ul>
+     *
+     * <p>Usage example:</p>
      *
      * <pre>
      * {"create_date": {"operator": "<", "date": "2022-01-30"}}

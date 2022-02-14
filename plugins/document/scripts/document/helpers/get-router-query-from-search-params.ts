@@ -44,6 +44,10 @@ export function getRouterQueryFromSearchParams(params: AdvancedSearchParams): Di
         query.update_date = params.update_date.date;
         query.update_date_op = params.update_date.operator;
     }
+    if (params.obsolescence_date !== null && params.obsolescence_date.date.length > 0) {
+        query.obsolescence_date = params.obsolescence_date.date;
+        query.obsolescence_date_op = params.obsolescence_date.operator;
+    }
 
     return query;
 }

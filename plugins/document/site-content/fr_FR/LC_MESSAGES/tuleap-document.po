@@ -23,12 +23,6 @@ msgstr ""
 msgid "An error occurred while saving configuration."
 msgstr "Une erreur est survenue lors de la sauvegarde de la configuration."
 
-msgid "Creation date"
-msgstr "Création"
-
-msgid "Description"
-msgstr "Description"
-
 msgid "Document"
 msgstr "Document"
 
@@ -66,9 +60,6 @@ msgstr "Taille maximum de l'archive"
 
 msgid "Megabytes"
 msgstr "Mégaoctets"
-
-msgid "Owner"
-msgstr "Propriétaire"
 
 msgid "Please contact your site administrator."
 msgstr "Veuillez contacter votre administrateur de site."
@@ -119,14 +110,8 @@ msgstr ""
 "Ces paramètres s'appliquent lors du téléchargement d'un dossier en tant "
 "qu'archive zip."
 
-msgid "Title"
-msgstr "Titre"
-
 msgid "Type"
 msgstr "Type"
-
-msgid "Udpate date"
-msgstr "Mise à jour"
 
 msgid "Unable to find the root folder of project"
 msgstr "Impossible de trouver le dossier racine du projet"

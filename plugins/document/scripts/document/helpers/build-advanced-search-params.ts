@@ -30,6 +30,7 @@ export function buildAdvancedSearchParams(
         owner: "",
         create_date: null,
         update_date: null,
+        obsolescence_date: null,
     };
 
     return {

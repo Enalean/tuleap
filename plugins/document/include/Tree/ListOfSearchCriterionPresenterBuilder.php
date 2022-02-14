@@ -24,40 +24,43 @@ namespace Tuleap\Document\Tree;
 
 final class ListOfSearchCriterionPresenterBuilder
 {
-    public function getCriteria(): array
+    public function getCriteria(\Docman_MetadataFactory $metadata_factory): array
     {
+        $numeric_type_to_human_readable_type = [
+            PLUGIN_DOCMAN_METADATA_TYPE_TEXT   => 'text',
+            PLUGIN_DOCMAN_METADATA_TYPE_STRING => 'string',
+            PLUGIN_DOCMAN_METADATA_TYPE_DATE   => 'date',
+            PLUGIN_DOCMAN_METADATA_TYPE_LIST   => 'list',
+        ];
+
         $criteria = [
             new SearchCriterionPresenter(
                 'type',
                 dgettext('tuleap-document', 'Type'),
                 'type',
             ),
-            new SearchCriterionPresenter(
-                'title',
-                dgettext('tuleap-document', 'Title'),
-                'text',
-            ),
-            new SearchCriterionPresenter(
-                'description',
-                dgettext('tuleap-document', 'Description'),
-                'text',
-            ),
-            new SearchCriterionPresenter(
-                'owner',
-                dgettext('tuleap-document', 'Owner'),
-                'text',
-            ),
-            new SearchCriterionPresenter(
-                'create_date',
-                dgettext('tuleap-document', 'Creation date'),
-                'date',
-            ),
-            new SearchCriterionPresenter(
-                'update_date',
-                dgettext('tuleap-document', 'Udpate date'),
-                'date',
-            ),
         ];
+
+        foreach ($metadata_factory->getMetadataForGroup(true) as $metadata) {
+            assert($metadata instanceof \Docman_Metadata);
+            if (! $metadata->isSpecial()) {
+                continue;
+            }
+
+            if (! in_array($metadata->getLabel(), \Docman_MetadataFactory::HARDCODED_METADATA_LABELS, true)) {
+                continue;
+            }
+
+            if ($metadata->getLabel() === \Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL) {
+                continue;
+            }
+
+            $criteria[] = new SearchCriterionPresenter(
+                $metadata->getLabel(),
+                $metadata->getName(),
+                $numeric_type_to_human_readable_type[$metadata->getType()],
+            );
+        }
 
         return $criteria;
     }

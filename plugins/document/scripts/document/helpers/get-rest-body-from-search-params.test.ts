@@ -36,6 +36,7 @@ describe("get-rest-body-from-search-params", () => {
             owner: "",
             create_date: null,
             update_date: null,
+            obsolescence_date: null,
         };
         expect(getRestBodyFromSearchParams(query_params)).toStrictEqual({});
     });
@@ -62,6 +63,11 @@ describe("get-rest-body-from-search-params", () => {
             { update_date: { date: "2022-01-30", operator: "<" } },
         ],
         [{ update_date: { date: "", operator: "<" } }, {}],
+        [
+            { obsolescence_date: { date: "2022-01-30", operator: "<" } },
+            { obsolescence_date: { date: "2022-01-30", operator: "<" } },
+        ],
+        [{ obsolescence_date: { date: "", operator: "<" } }, {}],
     ])("should return the body based on search parameters", (params, expected) => {
         expect(getRestBodyFromSearchParams(buildAdvancedSearchParams(params))).toStrictEqual(
             expected

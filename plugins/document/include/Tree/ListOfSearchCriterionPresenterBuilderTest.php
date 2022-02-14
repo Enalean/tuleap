@@ -26,18 +26,77 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 class ListOfSearchCriterionPresenterBuilderTest extends TestCase
 {
-    public function testGetCriteria(): void
+    public function testItShouldAlwaysReturnTypeCriterion(): void
     {
-        $builder = new ListOfSearchCriterionPresenterBuilder();
+        $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
+        $metadata_factory->method('getMetadataForGroup')
+            ->with(true)
+            ->willReturn([]);
 
-        $criteria = $builder->getCriteria();
+        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory);
 
-        self::assertCount(6, $criteria);
+        self::assertCount(1, $criteria);
         self::assertEquals('type', $criteria[0]->name);
-        self::assertEquals('title', $criteria[1]->name);
-        self::assertEquals('description', $criteria[2]->name);
-        self::assertEquals('owner', $criteria[3]->name);
-        self::assertEquals('create_date', $criteria[4]->name);
-        self::assertEquals('update_date', $criteria[5]->name);
+    }
+
+    /**
+     * @testWith ["title"]
+     *           ["description"]
+     *           ["owner"]
+     *           ["create_date"]
+     *           ["update_date"]
+     *           ["obsolescence_date"]
+     */
+    public function testItShouldReturnCriteriaBasedOnSupportedMetadata(string $metadata_name): void
+    {
+        $metadata = new \Docman_Metadata();
+        $metadata->setSpecial(true);
+        $metadata->setLabel($metadata_name);
+        $metadata->setName($metadata_name);
+        $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+
+        $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
+        $metadata_factory->method('getMetadataForGroup')
+            ->with(true)
+            ->willReturn([$metadata]);
+
+        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory);
+
+        self::assertCount(2, $criteria);
+        self::assertEquals($metadata_name, $criteria[1]->name);
+    }
+
+    public function testItShouldOmitHardcodedStatusMetadataBecauseItIsNotImplementedYet(): void
+    {
+        $metadata = new \Docman_Metadata();
+        $metadata->setSpecial(true);
+        $metadata->setLabel('status');
+        $metadata->setName('status');
+
+        $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
+        $metadata_factory->method('getMetadataForGroup')
+            ->with(true)
+            ->willReturn([$metadata]);
+
+        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory);
+
+        self::assertCount(1, $criteria);
+    }
+
+    public function testItShouldOmitCustomMetadataBecauseWeDoNotSupportThemYet(): void
+    {
+        $metadata = new \Docman_Metadata();
+        $metadata->setSpecial(false);
+        $metadata->setLabel('whatever');
+        $metadata->setName('whatever');
+
+        $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
+        $metadata_factory->method('getMetadataForGroup')
+            ->with(true)
+            ->willReturn([$metadata]);
+
+        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory);
+
+        self::assertCount(1, $criteria);
     }
 }

@@ -87,7 +87,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 $this->file_download_limits_builder->build(),
                 $this->history_enforcement_settings_builder->build(),
                 $this->project_flags_builder->buildProjectFlags($project),
-                $this->criteria_builder->getCriteria()
+                $this->criteria_builder->getCriteria(new \Docman_MetadataFactory($project->getID()))
             )
         );
 

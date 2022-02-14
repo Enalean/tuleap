@@ -36,6 +36,7 @@ describe("isQueryEmpty", () => {
             owner: "",
             create_date: null,
             update_date: null,
+            obsolescence_date: null,
         };
         expect(isQueryEmpty(query_params)).toBe(true);
     });
@@ -48,6 +49,7 @@ describe("isQueryEmpty", () => {
         [{ owner: "jdoe" }],
         [{ create_date: { date: "2022-01-30", operator: "<" } }],
         [{ update_date: { date: "2022-01-30", operator: "<" } }],
+        [{ obsolescence_date: { date: "2022-01-30", operator: "<" } }],
     ])("should return false if parameter is filled", (query_params) => {
         expect(isQueryEmpty(buildAdvancedSearchParams(query_params))).toBe(false);
     });

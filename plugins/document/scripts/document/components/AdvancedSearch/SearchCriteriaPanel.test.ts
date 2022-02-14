@@ -57,6 +57,11 @@ describe("SearchCriteriaPanel", () => {
                                 { name: "owner", type: "text", title: "Owner" },
                                 { name: "create_date", type: "date", title: "Create date" },
                                 { name: "update_date", type: "date", title: "Update date" },
+                                {
+                                    name: "obsolescence_date",
+                                    type: "date",
+                                    title: "Obsolescence date",
+                                },
                             ],
                         } as unknown as ConfigurationState,
                     },
@@ -73,6 +78,10 @@ describe("SearchCriteriaPanel", () => {
         wrapper.find("[data-test=criterion-create_date]").vm.$emit("input", create_date);
         const update_date: SearchDate = { date: "2022-01-31", operator: "<" };
         wrapper.find("[data-test=criterion-update_date]").vm.$emit("input", update_date);
+        const obsolescence_date: SearchDate = { date: "2022-01-31", operator: "<" };
+        wrapper
+            .find("[data-test=criterion-obsolescence_date]")
+            .vm.$emit("input", obsolescence_date);
         wrapper.find("[data-test=submit]").trigger("click");
 
         const expected_params: AdvancedSearchParams = {
@@ -83,6 +92,7 @@ describe("SearchCriteriaPanel", () => {
             owner: "jdoe",
             create_date,
             update_date,
+            obsolescence_date,
         };
         expect(wrapper.emitted()["advanced-search"]).toEqual([[expected_params]]);
 
