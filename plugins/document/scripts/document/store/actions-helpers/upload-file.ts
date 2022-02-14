@@ -21,8 +21,7 @@ import { Upload } from "tus-js-client";
 import { getItem } from "../../api/rest-querier";
 import { flagItemAsCreated } from "./flag-item-as-created";
 import { FILE_UPLOAD_UNKNOWN_ERROR } from "../../constants";
-import type { FakeItem, Folder, ItemFile, State } from "../../type";
-import type { FileProperties } from "../../type";
+import type { CreatedItem, CreatedItemFileProperties, FakeItem, Folder, State } from "../../type";
 import type { ActionContext } from "vuex";
 import { isFile } from "../../helpers/type-check-helper";
 import { getParentFolder } from "./item-retriever";
@@ -46,7 +45,7 @@ export function uploadFile(
     context: ActionContext<State, State>,
     dropped_file: File,
     fake_item: FakeItem,
-    docman_item: ItemFile,
+    docman_item: CreatedItem,
     parent: Folder
 ): Upload {
     const uploader = new Upload(dropped_file, {
@@ -92,7 +91,7 @@ export function uploadVersion(
     context: ActionContext<State, State>,
     dropped_file: File,
     updated_file: FakeItem,
-    new_version: FileProperties
+    new_version: CreatedItemFileProperties
 ): Upload {
     const parent_folder = getParentFolder(
         context.state.folder_content,
@@ -101,7 +100,7 @@ export function uploadVersion(
     );
 
     const uploader = new Upload(dropped_file, {
-        uploadUrl: new_version.upload_href ?? null,
+        uploadUrl: new_version.upload_href,
         metadata: {
             filename: dropped_file.name,
             filetype: dropped_file.type,
@@ -130,7 +129,7 @@ export function uploadVersionFromEmpty(
     context: ActionContext<State, State>,
     dropped_file: File,
     updated_empty: FakeItem,
-    new_version: FileProperties
+    new_version: CreatedItemFileProperties
 ): Upload {
     const parent_folder = getParentFolder(
         context.state.folder_content,
@@ -139,7 +138,7 @@ export function uploadVersionFromEmpty(
     );
 
     const uploader = new Upload(dropped_file, {
-        uploadUrl: new_version.upload_href ?? null,
+        uploadUrl: new_version.upload_href,
         metadata: {
             filename: dropped_file.name,
             filetype: dropped_file.type,

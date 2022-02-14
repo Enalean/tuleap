@@ -218,8 +218,17 @@ export interface FileProperties {
     file_type: string;
     download_href: string;
     file_size: number;
-    upload_href?: string;
     level?: number;
+}
+
+export interface CreatedItem {
+    readonly id: number;
+    readonly uri: string;
+    readonly file_properties: CreatedItemFileProperties | null;
+}
+
+export interface CreatedItemFileProperties {
+    readonly upload_href: string;
 }
 
 export interface LinkProperties {
