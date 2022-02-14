@@ -41,6 +41,7 @@ describe("Show and hide project banner", () => {
         project_banner: HTMLElement;
         close_button: HTMLElement;
         project_banner_navbar_information: HTMLElement;
+        project_sidebar: HTMLElement;
     } {
         const local_document = document.implementation.createHTMLDocument();
 
@@ -51,6 +52,9 @@ describe("Show and hide project banner", () => {
         navbar_project_banner_info.setAttribute("id", PROJECT_BANNER_NAVBAR_ID);
         navbar.appendChild(navbar_project_banner_info);
         local_document.body.appendChild(navbar);
+
+        const project_sidebar = local_document.createElement("tuleap-project-sidebar");
+        local_document.body.appendChild(project_sidebar);
 
         const project_banner = local_document.createElement("div");
         const project_banner_close_button = local_document.createElement("i");
@@ -65,6 +69,7 @@ describe("Show and hide project banner", () => {
             project_banner: project_banner,
             close_button: project_banner_close_button,
             project_banner_navbar_information: navbar_project_banner_info,
+            project_sidebar,
         };
     }
 
@@ -107,9 +112,6 @@ describe("Show and hide project banner", () => {
             PROJECT_BANNER_VISIBLE_GLOBAL_CLASS
         );
         expect(local_document.project_banner.classList).toContain(PROJECT_BANNER_HIDDEN_CLASS);
-        expect(local_document.project_banner_navbar_information.classList).toContain(
-            PROJECT_BANNER_HIDDEN_CLASS
-        );
         expect(tlpPatchSpy).toHaveBeenCalledWith(
             `/api/users/${USER_ID}/preferences`,
             expect.objectContaining({
@@ -139,5 +141,32 @@ describe("Show and hide project banner", () => {
             throw new Error("Expected a click event to be received");
         }
         expect(click_event.defaultPrevented).toBe(true);
+    });
+
+    it("Can hide and show the project banner when using the tuleap-project-sidebar container", () => {
+        const windowScrollToSpy = jest.spyOn(window, "scrollTo").mockImplementation();
+        const local_document = getLocalDocumentWithProjectBannerAndNavbarInformation();
+        const tlpPatchSpy = getTlpPatchSpy();
+
+        allowToHideAndShowProjectBanner(local_document.document, tlpPatchSpy);
+
+        local_document.close_button.click();
+        expect(local_document.document.body.classList).not.toContain(
+            PROJECT_BANNER_VISIBLE_GLOBAL_CLASS
+        );
+        expect(local_document.project_banner.classList).toContain(PROJECT_BANNER_HIDDEN_CLASS);
+        expect(tlpPatchSpy).toHaveBeenCalledWith(
+            `/api/users/${USER_ID}/preferences`,
+            expect.objectContaining({
+                body: expect.stringContaining(PROJECT_ID),
+            })
+        );
+
+        local_document.project_sidebar.dispatchEvent(new CustomEvent("show-project-announcement"));
+        expect(local_document.document.body.classList).toContain(
+            PROJECT_BANNER_VISIBLE_GLOBAL_CLASS
+        );
+        expect(local_document.project_banner.classList).not.toContain(PROJECT_BANNER_HIDDEN_CLASS);
+        expect(windowScrollToSpy).toHaveBeenCalledTimes(1);
     });
 });

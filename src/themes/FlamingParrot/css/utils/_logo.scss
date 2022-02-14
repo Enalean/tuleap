@@ -35,12 +35,6 @@
     }
 }
 
-.sidebar-nav #logo {
-    height: 80px;
-    background-color: var(--tlp-dark-color);
-    background-position: var(--tlp-medium-spacing) center;
-}
-
 .logo-svg-link {
     display: flex;
     align-items: center;
@@ -59,24 +53,6 @@
 
 .logo-svg-fill-default-text-color {
     fill: var(--tlp-dark-color);
-}
-
-.sidebar-nav .logo-svg-link {
-    justify-content: flex-start;
-    width: variables-common.$sidebar-width;
-    height: 80px;
-    min-height: 80px;
-    margin: 0;
-    padding: 0 0 0 var(--tlp-medium-spacing);
-
-    > .logo-svg-normal > svg,
-    > .logo-svg-small > svg {
-        max-height: none;
-    }
-
-    .logo-svg-fill-default-text-color {
-        fill: var(--tlp-white-color);
-    }
 }
 
 .logo-svg-normal {

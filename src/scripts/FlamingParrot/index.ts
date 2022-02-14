@@ -17,27 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { initSidebarPosition } from "../tuleap/sidebar-position.ts";
-import { initMainPosition } from "../tuleap/main-position.ts";
-import { initHeaderPosition } from "../tuleap/header-position.ts";
+import { initSidebarPosition } from "../tuleap/sidebar-position";
+import { initMainPosition } from "../tuleap/main-position";
+import { initHeaderPosition } from "../tuleap/header-position";
 import { init as initNavbarPinned } from "../tuleap/navbar-pinned";
 import { init as initInviteBuddies } from "./invite-buddies";
-import { init as initLinkedProjects } from "./linked-projects";
 import { createPopover } from "@tuleap/tlp-popovers";
-import { init as initNavbarDropdown } from "../navbar-dropdowns/navbar-dropdown.ts";
+import { init as initNavbarDropdown } from "../navbar-dropdowns/navbar-dropdown";
 
-import "./sidebar.js";
-import "./project-flags.ts";
+import "./sidebar";
 import "./project-privacy.js";
-import "./help-dropdown.ts";
-import "../global-shortcuts/index.ts";
+import "./help-dropdown";
+import "../global-shortcuts/index";
 import "./help-window";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const sidebar = document.querySelector(".sidebar-nav");
-    if (sidebar instanceof HTMLElement) {
-        initSidebarPosition(sidebar);
-    }
+    initSidebarPosition();
     const main = document.querySelector(".main");
     if (main instanceof HTMLElement) {
         initMainPosition(main);
@@ -47,5 +42,4 @@ document.addEventListener("DOMContentLoaded", () => {
     initNavbarPinned();
     initInviteBuddies();
     initNavbarDropdown(createPopover);
-    initLinkedProjects();
 });

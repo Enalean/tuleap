@@ -39,7 +39,7 @@ variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_pro
 [appropriate flavor of the stylesheet](https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=blob&hb=refs%2Fheads%2Fmaster&f=src%2Fthemes%2Ftlp%2Fsrc%2Fscss%2Fcomponents%2F_css-var-root.scss)
 will be provided through the communication channel you have with Tuleap.
 
-### Loading the script when using a JS bundler (Webpack, Rollup, Vite…)
+### Loading the custom element when using a bundler (Webpack, Rollup, Vite…)
 
 Import the package in one of the script you load
 
@@ -47,6 +47,11 @@ Import the package in one of the script you load
 import "@tuleap/project-sidebar";
 ```
 
-### Loading the script without using a JS bundler
+and import the CSS in one of your stylesheet
+```css
+import "@tuleap/project-sidebar";
+```
 
-Insert the script `dist/project-sidebar.umd.js` into the page.
+### Loading the script without using a bundler
+
+Insert the script `dist/project-sidebar.umd.js` and the stylesheet `dist/style.css` into the page.

@@ -29,6 +29,7 @@ use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagPresenter;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
+use Tuleap\Project\REST\v1\ProjectSidebarDataRepresentation;
 
 /**
  * @psalm-immutable
@@ -67,6 +68,7 @@ final class ProjectContextPresenter
         ?BannerDisplay $banner,
         string $purified_banner,
         ?string $project_icon,
+        public ?ProjectSidebarDataRepresentation $sidebar_data,
     ) {
         $this->project_id                 = (int) $project->getID();
         $this->privacy                    = $privacy;
@@ -90,6 +92,7 @@ final class ProjectContextPresenter
         ?LinkedProjectsCollectionPresenter $linked_projects_presenter,
         array $project_flags,
         ?BannerDisplay $banner,
+        ?ProjectSidebarDataRepresentation $project_sidebar_data,
     ): self {
         $purified_banner = '';
         if ($banner) {
@@ -109,7 +112,8 @@ final class ProjectContextPresenter
             $project_flags,
             $banner,
             $purified_banner,
-            $project_icon
+            $project_icon,
+            $project_sidebar_data,
         );
     }
 }

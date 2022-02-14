@@ -19,21 +19,21 @@
 
 import { observePlatformBanner } from "../platform/banner/observe-platform-banner";
 
-export function initSidebarPosition(sidebar: HTMLElement): void {
+export function initSidebarPosition(): void {
     const platform_banner = document.querySelector(".platform-banner");
     if (!(platform_banner instanceof HTMLElement)) {
         return;
     }
 
-    adjustSidebarPositionAccordingToPlatformBanner(sidebar, platform_banner);
+    setPlatformBannerOffsetHeightCSSVar(platform_banner);
     observePlatformBanner(platform_banner, () => {
-        adjustSidebarPositionAccordingToPlatformBanner(sidebar, platform_banner);
+        setPlatformBannerOffsetHeightCSSVar(platform_banner);
     });
 }
 
-function adjustSidebarPositionAccordingToPlatformBanner(
-    sidebar: HTMLElement,
-    platform_banner: HTMLElement
-): void {
-    sidebar.style.top = platform_banner.offsetHeight + "px";
+function setPlatformBannerOffsetHeightCSSVar(platform_banner: HTMLElement): void {
+    document.documentElement.style.setProperty(
+        "--platform-banner-offset-height",
+        platform_banner.offsetHeight + "px"
+    );
 }

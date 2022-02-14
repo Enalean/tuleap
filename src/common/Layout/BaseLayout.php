@@ -20,24 +20,36 @@
 
 namespace Tuleap\Layout;
 
+use BackendLogger;
 use Codendi_HTMLPurifier;
 use EventManager;
+use LogoRetriever;
 use PFUser;
 use Project;
 use ProjectManager;
 use Response;
+use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
+use Tuleap\Layout\Logo\CustomizedLogoDetector;
+use Tuleap\Layout\Logo\FileContentComparator;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\Layout\ProjectSidebar\ProjectSidebarConfigRepresentation;
+use Tuleap\Project\Admin\Access\UserCanAccessProjectAdministrationVerifier;
+use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Banner\BannerRetriever;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
+use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
+use Tuleap\Project\REST\v1\ProjectSidebarDataRepresentation;
 use Tuleap\Sanitizer\URISanitizer;
 use UserManager;
 use Valid_FTPURI;
@@ -350,6 +362,30 @@ abstract class BaseLayout extends Response
         );
 
         return $builder->getSidebarTools($this->getUser(), $params['toptab'], $project);
+    }
+
+    final protected function getProjectSidebarData(array $params, Project $project, PFUser $user): ProjectSidebarDataRepresentation
+    {
+        $event_manager = EventManager::instance();
+        return ProjectSidebarDataRepresentation::fromConfigRepresentationAndUser(
+            ProjectSidebarConfigRepresentation::build(
+                $project,
+                $user,
+                new \Tuleap\Project\Banner\BannerRetriever(new \Tuleap\Project\Banner\BannerDao()),
+                new ProjectFlagsBuilder(new ProjectFlagsDao()),
+                EventManager::instance(),
+                new UserCanAccessProjectAdministrationVerifier(new MembershipDelegationDao()),
+                new FlavorFinderFromFilePresence(),
+                new \Tuleap\Layout\Logo\CachedCustomizedLogoDetector(
+                    new CustomizedLogoDetector(new LogoRetriever(), new FileContentComparator()),
+                    BackendLogger::getDefaultLogger(),
+                ),
+                new GlyphFinder($event_manager),
+                new ProjectSidebarToolsBuilder($event_manager, ProjectManager::instance(), $this->uri_sanitizer),
+                $params['toptab']
+            ),
+            $user,
+        );
     }
 
     final protected function getProjectBannerWithScript(Project $project, PFUser $current_user, string $script_name): ?BannerDisplay

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021-Present Enalean
+ * Copyright (c) 2022-Present Enalean
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,15 @@
  * SOFTWARE.
  */
 
-import "./prestyle.scss";
-import fonts_style from "./font-faces.scss?inline";
-import { installProjectSidebarElement } from "@tuleap/project-sidebar-internal";
+@use "../../../themes/BurningParrot/css/includes/global-variables";
 
-installProjectSidebarElement(window, (): void => {
-    const font_face_styles = document.createElement("style");
-    font_face_styles.textContent = fonts_style.toString();
-    document.head.appendChild(font_face_styles);
-});
+tuleap-project-sidebar:not(:defined) {
+    display: block;
+    width: global-variables.$sidebar-expanded-width;
+    height: 100vh;
+    background: var(--tlp-dark-color);
+}
+
+tuleap-project-sidebar[collapsed]:not(:defined) {
+    width: global-variables.$sidebar-collapsed-width;
+}

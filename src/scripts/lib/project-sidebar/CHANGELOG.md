@@ -2,7 +2,10 @@
 
 ## 2.0.0 (Not yet released)
 
-The element has an explicit height and width and is considered a block element by default.
+* The element has an explicit height and width and is considered a block element by default.
+* Only display the project flags icon when some project flags are present.
+* Style the tag when the custom element is not yet defined to limit <abbr title="flash of unstyled content">FOUC</abbr>.
+Note this requires to explicitly load a stylesheet.
 
 ## 1.1.0
 

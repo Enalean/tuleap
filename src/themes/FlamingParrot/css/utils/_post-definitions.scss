@@ -40,49 +40,8 @@ body {
         min-height: 100%;
     }
 
-    &.has-sidebar.sidebar-collapsed {
-        #logo {
-            width: variables-common.$sidebar-width-collapsed;
-            max-width: variables-common.$sidebar-width-collapsed;
-            background: var(--tlp-dark-color-darker-05) url("/images/organization_logo_small.png")
-                no-repeat center center;
-        }
-
-        .sidebar-nav {
-            width: variables-common.$sidebar-width-collapsed;
-
-            .sidebar-about-logo-without-product-name {
-                display: inline;
-            }
-
-            .sidebar-about-logo,
-            .sidebar-about-version,
-            .sidebar-copyright {
-                display: none;
-            }
-
-            li a {
-                justify-content: center;
-
-                > .project-sidebar-nav-item-icon {
-                    margin: 0;
-                    font-size: 1rem;
-                }
-
-                > span {
-                    display: none;
-                }
-            }
-
-            .project-sidebar-nav-item-new-tab {
-                right: 3px;
-                left: auto;
-            }
-        }
-
-        .main {
-            margin-left: variables-common.$sidebar-width-collapsed;
-        }
+    &.has-sidebar.sidebar-collapsed > .main {
+        margin-left: variables-common.$sidebar-width-collapsed;
     }
 
     .main {
