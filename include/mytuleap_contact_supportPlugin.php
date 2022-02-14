@@ -147,7 +147,7 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
     private function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/mytuleap_contact_support/',
+            __DIR__ . '/../frontend-assets/',
             '/assets/mytuleap_contact_support'
         );
     }

@@ -33,7 +33,7 @@ module.exports = [
         entry: entry_points,
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/mytuleap_contact_support/")
+            path.resolve(__dirname, "./frontend-assets/")
         ),
         externals: {
             jquery: "jQuery",

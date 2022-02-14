@@ -34,10 +34,8 @@ Requires:	tuleap >= 11.8
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 
-%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/mytuleap_contact_support
-%{__cp} -ar vendor etc include site-content templates README.md VERSION www .use-front-controller $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/mytuleap_contact_support
-%{__cp} -ar assets $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets/mytuleap_contact_support
+%{__cp} -ar vendor etc frontend-assets include site-content templates README.md VERSION www .use-front-controller $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/mytuleap_contact_support
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -45,4 +43,3 @@ Requires:	tuleap >= 11.8
 %files
 %defattr(-,root,root,-)
 %{_datadir}/tuleap/plugins/mytuleap_contact_support
-%{_datadir}/tuleap/src/www/assets/mytuleap_contact_support
