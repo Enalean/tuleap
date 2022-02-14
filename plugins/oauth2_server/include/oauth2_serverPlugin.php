@@ -469,7 +469,7 @@ final class oauth2_serverPlugin extends Plugin
                 new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationFormPresenterBuilder($redirect_uri_builder)
             ),
             \UserManager::instance(),
-            new AppFactory(new AppDao(), \ProjectManager::instance()),
+            new \Tuleap\OAuth2ServerCore\App\AppFactory(new AppDao(), \ProjectManager::instance()),
             new ScopeExtractor($scope_builder),
             new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationCodeResponseFactory(
                 $response_factory,
@@ -501,7 +501,7 @@ final class oauth2_serverPlugin extends Plugin
         $response_factory = HTTPFactoryBuilder::responseFactory();
         return new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointProcessConsentController(
             \UserManager::instance(),
-            new AppFactory(new AppDao(), ProjectManager::instance()),
+            new \Tuleap\OAuth2ServerCore\App\AppFactory(new AppDao(), ProjectManager::instance()),
             $this->buildScopeBuilder(),
             new \Tuleap\OAuth2Server\User\AuthorizationCreator(
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
@@ -607,7 +607,7 @@ final class oauth2_serverPlugin extends Plugin
             new OAuth2ClientAuthenticationMiddleware(
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
                 new OAuth2AppCredentialVerifier(
-                    new AppFactory($app_dao, ProjectManager::instance()),
+                    new \Tuleap\OAuth2ServerCore\App\AppFactory($app_dao, ProjectManager::instance()),
                     $app_dao,
                     new SplitTokenVerificationStringHasher()
                 ),
@@ -648,7 +648,7 @@ final class oauth2_serverPlugin extends Plugin
             new OAuth2ClientAuthenticationMiddleware(
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
                 new OAuth2AppCredentialVerifier(
-                    new AppFactory($app_dao, ProjectManager::instance()),
+                    new \Tuleap\OAuth2ServerCore\App\AppFactory($app_dao, ProjectManager::instance()),
                     $app_dao,
                     new SplitTokenVerificationStringHasher()
                 ),
