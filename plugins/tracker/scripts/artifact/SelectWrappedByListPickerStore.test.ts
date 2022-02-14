@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ListPickersCreator } from "./ListPickersCreator";
 import { SelectWrappedByListPickerStore } from "./SelectWrappedByListPickerStore";
 
-document.addEventListener("DOMContentLoaded", () => {
-    const creator = ListPickersCreator(document, SelectWrappedByListPickerStore());
-    creator.listenToggleEditionEvents();
-    creator.initListPickersInArtifactCreationView();
-    creator.initListPickersPostUpdateErrorView();
-    creator.initTrackerSelector();
+const ID = "tracker_field_123";
+
+describe(`SelectWrappedByListPickerStore`, () => {
+    it(`stores the id of a select field and returns true if a given id is stored`, () => {
+        const store = SelectWrappedByListPickerStore();
+
+        expect(store.isWrapped(ID)).toBe(false);
+        store.add(ID);
+        expect(store.isWrapped(ID)).toBe(true);
+    });
 });
