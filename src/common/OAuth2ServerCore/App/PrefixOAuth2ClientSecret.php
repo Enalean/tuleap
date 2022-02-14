@@ -20,17 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\RefreshToken;
+namespace Tuleap\OAuth2ServerCore\App;
 
 use Tuleap\Authentication\SplitToken\PrefixSplitTokenForSerialization;
 
-final class PrefixOAuth2RefreshToken implements PrefixSplitTokenForSerialization
+final class PrefixOAuth2ClientSecret implements PrefixSplitTokenForSerialization
 {
     /**
      * @psalm-pure
      */
     public function getString(): string
     {
-        return 'tlp-oauth2-rt1-';
+        return 'tlp-oauth2-c1-';
     }
 }

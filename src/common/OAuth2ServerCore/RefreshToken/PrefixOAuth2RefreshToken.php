@@ -20,15 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\RefreshToken;
+namespace Tuleap\OAuth2ServerCore\RefreshToken;
 
+use Tuleap\Authentication\SplitToken\PrefixSplitTokenForSerialization;
 
-final class PrefixOAuth2RefreshTokenTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PrefixOAuth2RefreshToken implements PrefixSplitTokenForSerialization
 {
-    public function testHasSpecificPrefix(): void
+    /**
+     * @psalm-pure
+     */
+    public function getString(): string
     {
-        $prefix = new PrefixOAuth2RefreshToken();
-        $this->assertStringContainsString('oauth2', $prefix->getString());
-        $this->assertStringContainsString('rt1', $prefix->getString());
+        return 'tlp-oauth2-rt1-';
     }
 }
