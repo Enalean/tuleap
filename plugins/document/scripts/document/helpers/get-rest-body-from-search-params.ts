@@ -28,11 +28,19 @@ export function getRestBodyFromSearchParams(
         ...(search.title && { title: search.title }),
         ...(search.description && { description: search.description }),
         ...(search.owner && { owner: search.owner }),
-        ...(search.create_date && {
-            create_date: { date: search.create_date.date, operator: search.create_date.operator },
-        }),
-        ...(search.update_date && {
-            update_date: { date: search.update_date.date, operator: search.update_date.operator },
-        }),
+        ...(search.create_date &&
+            search.create_date.date.length > 0 && {
+                create_date: {
+                    date: search.create_date.date,
+                    operator: search.create_date.operator,
+                },
+            }),
+        ...(search.update_date &&
+            search.update_date.date.length > 0 && {
+                update_date: {
+                    date: search.update_date.date,
+                    operator: search.update_date.operator,
+                },
+            }),
     };
 }

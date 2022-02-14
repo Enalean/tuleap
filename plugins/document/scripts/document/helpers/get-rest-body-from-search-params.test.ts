@@ -56,10 +56,12 @@ describe("get-rest-body-from-search-params", () => {
             { create_date: { date: "2022-01-30", operator: "<" } },
             { create_date: { date: "2022-01-30", operator: "<" } },
         ],
+        [{ create_date: { date: "", operator: "<" } }, {}],
         [
             { update_date: { date: "2022-01-30", operator: "<" } },
             { update_date: { date: "2022-01-30", operator: "<" } },
         ],
+        [{ update_date: { date: "", operator: "<" } }, {}],
     ])("should return the body based on search parameters", (params, expected) => {
         expect(getRestBodyFromSearchParams(buildAdvancedSearchParams(params))).toStrictEqual(
             expected

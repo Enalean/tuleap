@@ -22,23 +22,19 @@
     <div class="tlp-form-element">
         <label class="tlp-label" v-bind:for="id">{{ label }}</label>
         <div class="tlp-form-element tlp-form-element-prepend document-search-criterion">
-            <select class="tlp-prepend" ref="operator" v-on:change="onChange">
+            <select class="tlp-prepend" v-on:change="onChangeOperator($event.target.value)">
                 <option value=">" v-bind:selected="'>' === operator" v-translate>After</option>
                 <option value="<" v-bind:selected="'<' === operator" v-translate>Before</option>
                 <option value="=" v-bind:selected="'=' === operator" data-test="equal" v-translate>
                     On
                 </option>
             </select>
-            <input
-                type="text"
-                class="tlp-input"
+            <date-flat-picker
                 v-bind:id="id"
+                required="false"
                 v-bind:value="date"
-                ref="date"
-                v-on:input="onChange"
+                v-on:input="onChangeDate"
                 v-bind:data-test="id"
-                placeholder="YYYY-mm-dd"
-                pattern="\d{4}-(?:02-(?:0[1-9]|[12][0-9])|(?:0[469]|11)-(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|1[02])-(?:0[1-9]|[12][0-9]|3[01]))"
             />
         </div>
     </div>
@@ -47,11 +43,14 @@
 <script lang="ts">
 import Component from "vue-class-component";
 import Vue from "vue";
-import { Prop, Ref } from "vue-property-decorator";
+import { Prop, Watch } from "vue-property-decorator";
 import type { AllowedSearchDateOperator, SearchDate } from "../../../type";
+import DateFlatPicker from "../../Folder/Metadata/DateFlatPicker.vue";
 
-@Component
-export default class CriterionText extends Vue {
+@Component({
+    components: { DateFlatPicker },
+})
+export default class CriterionDate extends Vue {
     @Prop({ required: true })
     readonly name!: string;
 
@@ -61,29 +60,29 @@ export default class CriterionText extends Vue {
     @Prop({ required: true })
     readonly label!: string;
 
-    @Ref("operator")
-    readonly operator_selector!: HTMLSelectElement;
+    private date = "";
+    private operator: AllowedSearchDateOperator = ">";
 
-    @Ref("date")
-    readonly date_input!: HTMLInputElement;
+    @Watch("value", { immediate: true })
+    initializeValue(value: SearchDate | null): void {
+        this.date = value?.date ?? "";
+        this.operator = value?.operator ?? ">";
+    }
 
     get id(): string {
         return "document-criterion-date-" + this.name;
     }
 
-    get date(): string {
-        return this.value?.date ?? "";
+    onChangeOperator(new_operator: AllowedSearchDateOperator): void {
+        this.onChange(new_operator, this.date);
     }
 
-    get operator(): AllowedSearchDateOperator {
-        return this.value?.operator ?? ">";
+    onChangeDate(new_date: string): void {
+        this.onChange(this.operator, new_date);
     }
 
-    onChange(): void {
-        const new_value: SearchDate = {
-            operator: this.operator_selector.value,
-            date: this.date_input.value,
-        };
+    onChange(operator: AllowedSearchDateOperator, date: string): void {
+        const new_value: SearchDate = { operator, date };
 
         this.$emit("input", new_value);
     }

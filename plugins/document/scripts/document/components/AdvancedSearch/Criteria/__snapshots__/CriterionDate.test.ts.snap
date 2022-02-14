@@ -47,13 +47,11 @@ exports[`CriterionDate should render the component when date is set 1`] = `
       </option>
     </select>
      
-    <input
-      class="tlp-input"
+    <date-flat-picker-stub
       data-test="document-criterion-date-create_date"
       id="document-criterion-date-create_date"
-      pattern="\\\\d{4}-(?:02-(?:0[1-9]|[12][0-9])|(?:0[469]|11)-(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|1[02])-(?:0[1-9]|[12][0-9]|3[01]))"
-      placeholder="YYYY-mm-dd"
-      type="text"
+      required="false"
+      value="2022-01-01"
     />
   </div>
 </div>
@@ -106,13 +104,11 @@ exports[`CriterionDate should render the component when no date set 1`] = `
       </option>
     </select>
      
-    <input
-      class="tlp-input"
+    <date-flat-picker-stub
       data-test="document-criterion-date-create_date"
       id="document-criterion-date-create_date"
-      pattern="\\\\d{4}-(?:02-(?:0[1-9]|[12][0-9])|(?:0[469]|11)-(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|1[02])-(?:0[1-9]|[12][0-9]|3[01]))"
-      placeholder="YYYY-mm-dd"
-      type="text"
+      required="false"
+      value=""
     />
   </div>
 </div>
