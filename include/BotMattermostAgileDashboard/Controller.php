@@ -98,7 +98,7 @@ class Controller
         }
 
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/botmattermost_agiledashboard/',
+            __DIR__ . '/../../frontend-assets/',
             '/assets/botmattermost_agiledashboard'
         );
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('autocompleter.js'));

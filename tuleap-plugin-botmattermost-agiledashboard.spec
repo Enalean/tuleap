@@ -33,10 +33,8 @@ Bot Mattermost AgileDashboard - Stand up summary
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 
-%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost_agiledashboard
-%{__cp} -ar db include site-content templates vendor README.mkd VERSION .use-front-controller $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost_agiledashboard
-%{__cp} -ar assets $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets/botmattermost_agiledashboard
+%{__cp} -ar db frontend-assets include site-content templates vendor README.mkd VERSION .use-front-controller $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost_agiledashboard
 
 %pre
 
@@ -47,7 +45,6 @@ Bot Mattermost AgileDashboard - Stand up summary
 %files
 %defattr(-,root,root,-)
 %{_datadir}/tuleap/plugins/botmattermost_agiledashboard
-%{_datadir}/tuleap/src/www/assets/botmattermost_agiledashboard
 
 
 %changelog
