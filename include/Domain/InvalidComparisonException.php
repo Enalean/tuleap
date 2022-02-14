@@ -27,5 +27,4 @@ use Exception;
 
 class InvalidComparisonException extends Exception
 {
-
 }

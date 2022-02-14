@@ -4,6 +4,7 @@ vendor/
 test-results.xml
 *~
 node_modules/
+frontend-assets/
 
 # SonarQube scanner temporary files
 .scannerwork/

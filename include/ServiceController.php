@@ -90,7 +90,7 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/baseline',
+            __DIR__ . '/../frontend-assets',
             '/assets/baseline'
         );
     }

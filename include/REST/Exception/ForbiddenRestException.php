@@ -24,7 +24,6 @@ use Luracast\Restler\RestException;
 
 class ForbiddenRestException extends RestException
 {
-
     public function __construct($message)
     {
         parent::__construct(

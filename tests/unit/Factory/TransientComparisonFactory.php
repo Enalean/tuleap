@@ -27,7 +27,6 @@ use Project;
 
 class TransientComparisonFactory
 {
-
     public static function one(): TransientComparisonBuilder
     {
         $base_baseline = BaselineFactory::one()->build();

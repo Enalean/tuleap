@@ -33,10 +33,8 @@ Requires: tuleap-plugin-tracker
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 
-%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/baseline
-%{__cp} -ar db include site-content templates vendor Readme.mkd VERSION $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/baseline
-%{__cp} -ar assets $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets/baseline
+%{__cp} -ar db include frontend-assets site-content templates vendor Readme.mkd VERSION $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/baseline
 echo @@VERSION@@-@@RELEASE@@ > $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/baseline/VERSION
 
 %clean
@@ -45,4 +43,3 @@ echo @@VERSION@@-@@RELEASE@@ > $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/baseli
 %files
 %defattr(-,root,root,-)
 %{_datadir}/tuleap/plugins/baseline
-%{_datadir}/tuleap/src/www/assets/baseline

@@ -24,7 +24,6 @@ use Luracast\Restler\RestException;
 
 class NotFoundRestException extends RestException
 {
-
     public function __construct($message)
     {
         parent::__construct(
