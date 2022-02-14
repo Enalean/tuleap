@@ -47,6 +47,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         private HistoryEnforcementSettingsBuilder $history_enforcement_settings_builder,
         private ProjectFlagsBuilder $project_flags_builder,
         private \Docman_ItemDao $dao,
+        private ListOfSearchCriterionPresenterBuilder $criteria_builder,
     ) {
     }
 
@@ -86,6 +87,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 $this->file_download_limits_builder->build(),
                 $this->history_enforcement_settings_builder->build(),
                 $this->project_flags_builder->buildProjectFlags($project),
+                $this->criteria_builder->getCriteria()
             )
         );
 

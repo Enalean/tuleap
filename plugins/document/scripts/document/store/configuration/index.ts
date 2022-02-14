@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { RootState } from "../../type";
+import type { RootState, SearchCriteria } from "../../type";
 import type { Module } from "vuex";
 import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
@@ -48,6 +48,7 @@ export interface ConfigurationState {
     readonly relative_dates_display: string;
     readonly project_icon: string;
     readonly search_for_document_with_criteria: boolean;
+    readonly criteria: SearchCriteria;
 }
 
 export function createConfigurationModule(

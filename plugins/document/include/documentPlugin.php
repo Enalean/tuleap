@@ -111,6 +111,7 @@ class documentPlugin extends Plugin // phpcs:ignore
             new HistoryEnforcementSettingsBuilder(),
             new ProjectFlagsBuilder(new ProjectFlagsDao()),
             new \Docman_ItemDao(),
+            new \Tuleap\Document\Tree\ListOfSearchCriterionPresenterBuilder(),
         );
     }
 

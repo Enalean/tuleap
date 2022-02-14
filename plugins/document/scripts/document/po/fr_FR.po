@@ -180,9 +180,6 @@ msgstr "Créer une nouvelle version"
 msgid "Creation"
 msgstr "Création"
 
-msgid "Creation date"
-msgstr "Création"
-
 msgid "Cut"
 msgstr "Couper"
 
