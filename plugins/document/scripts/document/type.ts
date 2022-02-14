@@ -251,10 +251,20 @@ export const AllowedSearchType = [
 ] as const;
 export type AllowedSearchType = typeof AllowedSearchType[number];
 
+export const AllowedSearchDateOperator = [">", "|", "<"];
+export type AllowedSearchDateOperator = typeof AllowedSearchDateOperator[number];
+
+export interface SearchDate {
+    readonly operator: AllowedSearchDateOperator;
+    readonly date: string;
+}
+
 export interface AdvancedSearchParams {
     readonly global_search: string;
     readonly type: AllowedSearchType;
     readonly title: string;
     readonly description: string;
     readonly owner: string;
+    readonly create_date: SearchDate | null;
+    readonly update_date: SearchDate | null;
 }

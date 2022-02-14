@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { Route } from "vue-router/types/router";
-import { AllowedSearchType } from "../type";
-import type { AdvancedSearchParams } from "../type";
+import type { AdvancedSearchParams, SearchDate } from "../type";
+import { AllowedSearchDateOperator, AllowedSearchType } from "../type";
 
 export function getSearchPropsFromRoute(
     route: Route,
@@ -40,6 +40,8 @@ export function getSearchPropsFromRoute(
             title: String(route.query.title || ""),
             description: String(route.query.description || ""),
             owner: String(route.query.owner || ""),
+            update_date: getUpdateDate(route),
+            create_date: getCreateDate(route),
         },
         offset: Number(route.query.offset || "0"),
     };
@@ -47,4 +49,34 @@ export function getSearchPropsFromRoute(
 
 function isAllowedType(type: string): type is AllowedSearchType {
     return AllowedSearchType.some((allowed_type) => type === allowed_type);
+}
+
+function getUpdateDate(route: Route): SearchDate | null {
+    const date = String(route.query.update_date || "");
+    const operator = String(route.query.update_date_op || "");
+
+    return getSearchDate(date, operator);
+}
+
+function getCreateDate(route: Route): SearchDate | null {
+    const date = String(route.query.create_date || "");
+    const operator = String(route.query.create_date_op || "");
+
+    return getSearchDate(date, operator);
+}
+
+function getSearchDate(date: string, operator: string): SearchDate | null {
+    if (!date || !isAllowedDateOperator(operator)) {
+        return null;
+    }
+
+    return { date, operator };
+}
+
+function isAllowedDateOperator(operator: string): operator is AllowedSearchDateOperator {
+    if (!operator) {
+        return false;
+    }
+
+    return AllowedSearchDateOperator.some((allowed_operator) => operator === allowed_operator);
 }

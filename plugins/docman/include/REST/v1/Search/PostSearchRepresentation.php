@@ -56,6 +56,16 @@ final class PostSearchRepresentation
     public string $owner = '';
 
     /**
+     * @var SearchDateRepresentation {@type \Tuleap\Docman\REST\v1\Search\SearchDateRepresentation} creation date of item {@from body} {@required false}
+     */
+    public ?SearchDateRepresentation $create_date = null;
+
+    /**
+     * @var SearchDateRepresentation {@type \Tuleap\Docman\REST\v1\Search\SearchDateRepresentation} update date of item {@from body} {@required false}
+     */
+    public ?SearchDateRepresentation $update_date = null;
+
+    /**
      * @var int limit {@from body} {@required false} {@min 0} {@max 50}
      */
     public int $limit = SearchResource::MAX_LIMIT;

@@ -72,6 +72,9 @@ msgstr "Administration"
 msgid "Advanced"
 msgstr "Avancé"
 
+msgid "After"
+msgstr "Après"
+
 msgid ""
 "All the properties values that you define here will be proposed as default "
 "values\n"
@@ -116,6 +119,9 @@ msgstr "Approuvé"
 
 msgid "Archive size warning threshold reached"
 msgstr "Seuil d'avertissement de taille d'archive atteint"
+
+msgid "Before"
+msgstr "Avant"
 
 msgid "Begin"
 msgstr "Début"
@@ -172,6 +178,9 @@ msgid "Create new version"
 msgstr "Créer une nouvelle version"
 
 msgid "Creation"
+msgstr "Création"
+
+msgid "Creation date"
 msgstr "Création"
 
 msgid "Cut"
@@ -417,6 +426,9 @@ msgstr "Date d'obsolescence"
 
 msgid "Obsolete today"
 msgstr "Obsolète aujourd'hui"
+
+msgid "On"
+msgstr "Le"
 
 msgid ""
 "Only the table structure will be kept. Reviewer comments and commitments "

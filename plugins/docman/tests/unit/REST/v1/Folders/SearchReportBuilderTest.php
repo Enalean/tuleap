@@ -29,6 +29,7 @@ use Docman_MetadataFactory;
 use Docman_ReportColumnTitle;
 use Docman_SettingsBo;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
+use Tuleap\Docman\REST\v1\Search\SearchDateRepresentation;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -151,5 +152,57 @@ final class SearchReportBuilderTest extends TestCase
         $second_filter = $report->getFiltersArray()[1];
         self::assertSame("owner", $second_filter->md->getLabel());
         self::assertSame("jdoe", $second_filter->value);
+    }
+
+    /**
+     * @testWith [">", 1]
+     *           ["=", 0]
+     *           ["<", -1]
+     */
+    public function testItBuildsAReportWithAnUpdateDateSearchFilter(string $symbol_operator, int $expected_numeric_operator): void
+    {
+        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search                = new PostSearchRepresentation();
+        $search->global_search = "*.docx";
+        $search->update_date   = new SearchDateRepresentation();
+
+        $search->update_date->operator = $symbol_operator;
+        $search->update_date->date     = "2022-01-30";
+
+        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $first_filter = $report->getFiltersArray()[0];
+        self::assertSame("global_txt", $first_filter->md->getLabel());
+        self::assertSame("*.docx", $first_filter->value);
+        $second_filter = $report->getFiltersArray()[1];
+        assert($second_filter instanceof \Docman_FilterDate);
+        self::assertSame("update_date", $second_filter->md->getLabel());
+        self::assertSame("2022-01-30", $second_filter->value);
+        self::assertSame($expected_numeric_operator, $second_filter->operator);
+    }
+
+    /**
+     * @testWith [">", 1]
+     *           ["=", 0]
+     *           ["<", -1]
+     */
+    public function testItBuildsAReportWithACreateDateSearchFilter(string $symbol_operator, int $expected_numeric_operator): void
+    {
+        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search                = new PostSearchRepresentation();
+        $search->global_search = "*.docx";
+        $search->create_date   = new SearchDateRepresentation();
+
+        $search->create_date->operator = $symbol_operator;
+        $search->create_date->date     = "2022-01-30";
+
+        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $first_filter = $report->getFiltersArray()[0];
+        self::assertSame("global_txt", $first_filter->md->getLabel());
+        self::assertSame("*.docx", $first_filter->value);
+        $second_filter = $report->getFiltersArray()[1];
+        assert($second_filter instanceof \Docman_FilterDate);
+        self::assertSame("create_date", $second_filter->md->getLabel());
+        self::assertSame("2022-01-30", $second_filter->value);
+        self::assertSame($expected_numeric_operator, $second_filter->operator);
     }
 }

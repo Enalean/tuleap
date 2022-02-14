@@ -62,18 +62,68 @@ final class SearchResource extends AuthenticatedResource
      *
      * Search recursively for items in a folder.
      *
-     * <p>Allowed criteria:</p>
+     * <table class="tlp-table">
+     * <thead>
+     * <tr>
+     *   <th>Allowed criteria</th>
+     *   <th>Type</th>
+     *   <th>Notes</th>
+     * </tr>
+     * </thead>
+     * <tbody>
+     * <tr>
+     *   <td>`global_search`</td>
+     *   <td>Text</th>
+     *   <td>Global search will search in all text properties of document (but does not look inside the document).</td>
+     * </tr>
+     * <tr>
+     *   <td>`type`</td>
+     *   <td></td>
+     *   <td>Type of the item. Allowed types: folder, file, embedded, wiki, link, empty</td>
+     * </tr>
+     * <tr>
+     *   <td>`title`</td>
+     *   <td>Text</td>
+     *   <td>Title of the item.</td>
+     * </tr>
+     * <tr>
+     *   <td>`description`</td>
+     *   <td>Text</td>
+     *   <td>Description of the item.</td>
+     * </tr>
+     * <tr>
+     *   <td>`owner`</td>
+     *   <td></td>
+     *   <td>Owner of the item. Username or id.</td>
+     * </tr>
+     * <tr>
+     *   <td>`create_date`</td>
+     *   <td>Date</td>
+     *   <td>Date of creation of the document.</td>
+     * </tr>
+     * <tr>
+     *   <td>`update_date`</td>
+     *   <td>Date</td>
+     *   <td>Last update date of the document.</td>
+     * </tr>
+     * </tbody>
+     * </table>
+     *
+     * <hr>
+     *
+     * <p>Search date format:</p>
      * <ul>
-     * <li>`global_search`</li>
-     * <li>`type` (Allowed types: folder, file, embedded, wiki, link, empty)</li>
-     * <li>`title`</li>
-     * <li>`description`</li>
-     * <li>`owner` (username or id)</li>
+     * <li>`operator`: `<` | `>` | `=`</li>
+     * <li>`date`: YYYY-mm-dd
      * </ul>
      *
-     * <p><b>Note:</b> Global search will search in all text properties of document (but does not look inside the document).</p>
+     * <pre>
+     * {"create_date": {"operator": "<", "date": "2022-01-30"}}
+     * </pre>
      *
-     * <p>Allowed patterns for text properties (global_search, title):</p>
+     * <hr>
+     *
+     * <p>Allowed patterns for text properties (global_search, title, …):</p>
      * <ul>
      * <li> `lorem`   => exactly "lorem"</li>
      * <li> `lorem*`  => starting by "lorem"</li>
@@ -86,6 +136,8 @@ final class SearchResource extends AuthenticatedResource
      * <pre>
      * {"global_search": "lorem\*"}
      * </pre>
+     *
+     * <hr>
      *
      * <p>You can combine multiple search at once. For example to restrict previous example to empty items:</p>
      *

@@ -35,6 +35,8 @@ describe("getRouterQueryFromSearchParams", () => {
             title: "",
             description: "",
             owner: "",
+            create_date: null,
+            update_date: null,
         };
         expect(getRouterQueryFromSearchParams(query_params)).toStrictEqual({});
     });
@@ -49,6 +51,16 @@ describe("getRouterQueryFromSearchParams", () => {
         [{ title: "lorem" }, { title: "lorem" }],
         [{ description: "lorem" }, { description: "lorem" }],
         [{ owner: "lorem" }, { owner: "lorem" }],
+        [
+            { create_date: { date: "2022-01-30", operator: "<" } },
+            { create_date: "2022-01-30", create_date_op: "<" },
+        ],
+        [{ create_date: { date: "", operator: "<" } }, {}],
+        [
+            { update_date: { date: "2022-01-30", operator: "<" } },
+            { update_date: "2022-01-30", update_date_op: "<" },
+        ],
+        [{ update_date: { date: "", operator: "<" } }, {}],
     ])("should return the url parameters based from search parameters", (params, expected) => {
         expect(getRouterQueryFromSearchParams(buildAdvancedSearchParams(params))).toStrictEqual(
             expected

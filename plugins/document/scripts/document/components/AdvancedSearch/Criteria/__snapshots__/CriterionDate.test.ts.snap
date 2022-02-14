@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CriterionDate should render the component when date is set 1`] = `
+<div
+  class="tlp-form-element"
+>
+  <label
+    class="tlp-label"
+    for="document-criterion-date-create_date"
+  >
+    Creation date
+  </label>
+   
+  <div
+    class="tlp-form-element tlp-form-element-prepend document-search-criterion"
+  >
+    <select
+      class="tlp-prepend"
+    >
+      <option
+        data-current-language="en_US"
+        data-msgid="After"
+        value=">"
+      >
+        After
+      </option>
+       
+      <option
+        data-current-language="en_US"
+        data-msgid="Before"
+        value=<
+      >
+        Before
+      </option>
+       
+      <option
+        data-current-language="en_US"
+        data-msgid="
+                On
+            "
+        data-test="equal"
+        value="="
+      >
+        
+                On
+            
+      </option>
+    </select>
+     
+    <input
+      class="tlp-input"
+      data-test="document-criterion-date-create_date"
+      id="document-criterion-date-create_date"
+      pattern="\\\\d{4}-(?:02-(?:0[1-9]|[12][0-9])|(?:0[469]|11)-(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|1[02])-(?:0[1-9]|[12][0-9]|3[01]))"
+      placeholder="YYYY-mm-dd"
+      type="text"
+    />
+  </div>
+</div>
+`;
+
+exports[`CriterionDate should render the component when no date set 1`] = `
+<div
+  class="tlp-form-element"
+>
+  <label
+    class="tlp-label"
+    for="document-criterion-date-create_date"
+  >
+    Creation date
+  </label>
+   
+  <div
+    class="tlp-form-element tlp-form-element-prepend document-search-criterion"
+  >
+    <select
+      class="tlp-prepend"
+    >
+      <option
+        data-current-language="en_US"
+        data-msgid="After"
+        value=">"
+      >
+        After
+      </option>
+       
+      <option
+        data-current-language="en_US"
+        data-msgid="Before"
+        value=<
+      >
+        Before
+      </option>
+       
+      <option
+        data-current-language="en_US"
+        data-msgid="
+                On
+            "
+        data-test="equal"
+        value="="
+      >
+        
+                On
+            
+      </option>
+    </select>
+     
+    <input
+      class="tlp-input"
+      data-test="document-criterion-date-create_date"
+      id="document-criterion-date-create_date"
+      pattern="\\\\d{4}-(?:02-(?:0[1-9]|[12][0-9])|(?:0[469]|11)-(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|1[02])-(?:0[1-9]|[12][0-9]|3[01]))"
+      placeholder="YYYY-mm-dd"
+      type="text"
+    />
+  </div>
+</div>
+`;

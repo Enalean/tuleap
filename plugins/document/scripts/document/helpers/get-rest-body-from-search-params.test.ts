@@ -34,11 +34,13 @@ describe("get-rest-body-from-search-params", () => {
             title: "",
             description: "",
             owner: "",
+            create_date: null,
+            update_date: null,
         };
         expect(getRestBodyFromSearchParams(query_params)).toStrictEqual({});
     });
 
-    it.each<[Partial<AdvancedSearchParams>, Record<string, string>]>([
+    it.each<[Partial<AdvancedSearchParams>, Record<string, string | Record<string, string>>]>([
         [{}, {}],
         [{ global_search: "lorem" }, { global_search: "lorem" }],
         [{ type: "folder" }, { type: "folder" }],
@@ -50,6 +52,14 @@ describe("get-rest-body-from-search-params", () => {
         [{ title: "lorem" }, { title: "lorem" }],
         [{ description: "lorem" }, { description: "lorem" }],
         [{ owner: "lorem" }, { owner: "lorem" }],
+        [
+            { create_date: { date: "2022-01-30", operator: "<" } },
+            { create_date: { date: "2022-01-30", operator: "<" } },
+        ],
+        [
+            { update_date: { date: "2022-01-30", operator: "<" } },
+            { update_date: { date: "2022-01-30", operator: "<" } },
+        ],
     ])("should return the body based on search parameters", (params, expected) => {
         expect(getRestBodyFromSearchParams(buildAdvancedSearchParams(params))).toStrictEqual(
             expected

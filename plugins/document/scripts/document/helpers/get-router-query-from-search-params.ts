@@ -36,6 +36,14 @@ export function getRouterQueryFromSearchParams(params: AdvancedSearchParams): Di
     if (params.owner.length > 0) {
         query.owner = params.owner;
     }
+    if (params.create_date !== null && params.create_date.date.length > 0) {
+        query.create_date = params.create_date.date;
+        query.create_date_op = params.create_date.operator;
+    }
+    if (params.update_date !== null && params.update_date.date.length > 0) {
+        query.update_date = params.update_date.date;
+        query.update_date_op = params.update_date.operator;
+    }
 
     return query;
 }

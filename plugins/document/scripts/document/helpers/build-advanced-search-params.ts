@@ -28,6 +28,8 @@ export function buildAdvancedSearchParams(
         title: "",
         description: "",
         owner: "",
+        create_date: null,
+        update_date: null,
     };
 
     return {
