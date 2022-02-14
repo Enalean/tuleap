@@ -50,7 +50,7 @@ function createNewPrivateProject(project_name: string): void {
 }
 
 function addUser(user_name: string): void {
-    cy.get("[data-test=project-administration-link]").click();
+    cy.visitProjectAdministrationInCurrentProject();
     cy.get("[data-test=project-admin-members-add-user-select] + .select2-container").click();
     // ignore rule for select2
     // eslint-disable-next-line cypress/require-data-selectors
@@ -61,7 +61,7 @@ function addUser(user_name: string): void {
 }
 
 function addAdminUser(user_name: string): void {
-    cy.get("[data-test=project-administration-link]").click();
+    cy.visitProjectAdministrationInCurrentProject();
     cy.get("[data-test=admin-nav-groups]").click();
     cy.get(`[data-test=ugroup-${project_admin_group_id}-details]`).click();
     cy.get("[data-test=select-member-to-add-in-ugroup] + .select2-container").click();
@@ -74,7 +74,7 @@ function addAdminUser(user_name: string): void {
 }
 
 function addNonMemberAdministrator(user_name: string): void {
-    cy.get("[data-test=project-administration-link]").click();
+    cy.visitProjectAdministrationInCurrentProject();
     cy.get("[data-test=admin-nav-groups]").click();
     cy.get(`[data-test=ugroup-${project_admin_group_id}-details]`).click();
     cy.get("[data-test=select-member-to-add-in-ugroup] + .select2-container").click();
@@ -242,10 +242,14 @@ describe("Project admin", function () {
 
             cy.log("Check project visibility");
             cy.visit("/projects/" + public_project_name);
-            cy.get("[data-test=project-icon]").eq(0).should("have.class", "fa-lock-open");
+            cy.get("[data-test=project-icon]", { includeShadowDom: true })
+                .eq(0)
+                .should("have.class", "fa-lock-open");
 
             cy.visit("/projects/" + private_project_name);
-            cy.get("[data-test=project-icon]").eq(0).should("have.class", "fa-lock");
+            cy.get("[data-test=project-icon]", { includeShadowDom: true })
+                .eq(0)
+                .should("have.class", "fa-lock");
 
             cy.log("Check administrator can enable a service");
             cy.visitProjectAdministration(public_project_name);
@@ -397,7 +401,7 @@ context("Membership management", function () {
         cy.log("Restricted user can manage members");
         cy.restrictedRegularUserLogin();
         cy.visit(`/projects/${project_name}/`);
-        cy.get("[data-test=project-administration-link]").click();
+        cy.visitProjectAdministrationInCurrentProject();
         cy.get("[data-test=project-administration-navigation]").should("not.contain", "Data");
 
         cy.get("[data-test=project-admin-members-add-user-select] + .select2-container").click();

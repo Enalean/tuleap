@@ -17,5 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "./commands.ts";
 import "./api-helper.ts";
+import "./commands.ts";

@@ -222,7 +222,9 @@ function checkThatProgramAndTeamsAreCorrect(
 ): void {
     cy.visitProjectService(program_project_name, "Program");
     cy.log("Check sidebar for program");
-    cy.get("[data-test=nav-bar-linked-projects]").contains(team_project_name);
+    cy.get("[data-test=nav-bar-linked-projects]", { includeShadowDom: true }).contains(
+        team_project_name
+    );
 
     cy.log("Check that feature is linked to program increment");
     cy.get("[data-test=program-increment-toggle]").click();
@@ -230,7 +232,9 @@ function checkThatProgramAndTeamsAreCorrect(
 
     cy.log("Check sidebar for team");
     cy.visitProjectService(team_project_name, "Agile Dashboard");
-    cy.get("[data-test=nav-bar-linked-projects]").contains(program_project_name);
+    cy.get("[data-test=nav-bar-linked-projects]", { includeShadowDom: true }).contains(
+        program_project_name
+    );
 
     cy.log("Check that mirror program increment has been created");
     cy.get("[data-test=home-releases]").contains("My first PI");
