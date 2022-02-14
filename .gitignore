@@ -6,3 +6,4 @@ site-content/*/LC_MESSAGES/*.mo
 vendor
 *.po~
 .turbo/
+frontend-assets/

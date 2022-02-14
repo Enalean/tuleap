@@ -33,10 +33,8 @@ Bot Mattermost git - Git Notification
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 
-%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost_git
-%{__cp} -ar db include site-content templates vendor README.mkd VERSION .use-front-controller $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost_git
-%{__cp} -ar assets $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets/botmattermost_git
+%{__cp} -ar db frontend-assets include site-content templates vendor README.mkd VERSION .use-front-controller $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost_git
 
 %pre
 
@@ -47,7 +45,6 @@ Bot Mattermost git - Git Notification
 %files
 %defattr(-,root,root,-)
 %{_datadir}/tuleap/plugins/botmattermost_git
-%{_datadir}/tuleap/src/www/assets/botmattermost_git
 
 
 %changelog

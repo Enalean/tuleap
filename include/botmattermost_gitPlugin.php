@@ -155,7 +155,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         $git_plugin = PluginManager::instance()->getPluginByName('git');
         if (strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0) {
             $asset = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/botmattermost_git/',
+                __DIR__ . '/../frontend-assets/',
                 '/assets/botmattermost_git'
             );
             echo '<link rel="stylesheet" type="text/css" href="' . $asset->getFileURL('style.css') . '" />';
@@ -167,7 +167,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         $git_plugin = PluginManager::instance()->getPluginByName('git');
         if (strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0) {
             $asset  = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/botmattermost_git/',
+                __DIR__ . '/../frontend-assets/',
                 '/assets/botmattermost_git'
             );
             $layout = $params['layout'];
