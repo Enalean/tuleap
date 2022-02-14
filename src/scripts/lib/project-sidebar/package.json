@@ -7,12 +7,7 @@
   "types": "dist/index.d.ts",
   "module": "dist/project-sidebar.es.js",
   "main": "dist/project-sidebar.umd.js",
-  "exports": {
-    ".": {
-      "import": "./dist/project-sidebar.es.js",
-      "require": "./dist/project-sidebar.umd.js"
-    }
-  },
+  "style": "dist/style.css",
   "repository": {
     "type": "git",
     "url": "https://tuleap.net/plugins/git/tuleap/tuleap/stable",

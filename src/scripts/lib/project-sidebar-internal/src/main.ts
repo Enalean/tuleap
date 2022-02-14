@@ -20,6 +20,6 @@
  * SOFTWARE.
  */
 
-import "./default-fonts.scss";
+import "./prestyle.scss";
 export * from "./load-custom-element";
 export * from "./project-sidebar-example-config";

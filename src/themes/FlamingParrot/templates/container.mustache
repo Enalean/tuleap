@@ -1,12 +1,8 @@
-{{#hasSidebar}}
-    {{# project_context }}
-        {{> project-sidebar}}
-    {{/ project_context }}
-    <div class="main container-fluid {{ main_classes }}">
-{{/hasSidebar}}
-{{^hasSidebar}}
-    <div class="main full container-fluid">
-{{/hasSidebar}}
+{{# project_context }}
+    {{> project-sidebar}}
+{{/ project_context }}
+
+<div class="main container-fluid {{ main_classes }}">
 
 {{> switch-to-modal }}
 

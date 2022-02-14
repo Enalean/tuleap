@@ -68,7 +68,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
      */
     protected $renderer;
 
-    private $show_sidebar = false;
     /**
      * @var ProjectFlagsBuilder
      */
@@ -395,25 +394,18 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         bool $is_svg_logo_customized,
         array $main_classes,
     ): void {
-        $sidebar             = null;
-        $project_name        = null;
-        $project_link        = null;
-        $project             = null;
-        $privacy             = null;
-        $project_context     = null;
-        $sidebar_collapsable = false;
+        $project_name    = null;
+        $project_link    = null;
+        $project_context = null;
 
         if (! empty($params['group'])) {
-            $this->show_sidebar = true;
-
             $project = ProjectManager::instance()->getProject($params['group']);
 
-            $event_manager       = $this->getEventManager();
-            $sidebar             = $this->getProjectSidebar($params, $project);
-            $project_name        = $project->getPublicName();
-            $project_link        = $this->getProjectLink($project);
-            $sidebar_collapsable = (! $current_user->isAnonymous() && $current_user->isLoggedIn()) ? true : false;
-            $crumb_link          = new BreadCrumbLink($project->getPublicName(), $project->getUrl());
+            $event_manager = $this->getEventManager();
+
+            $project_name = $project->getPublicName();
+            $project_link = $this->getProjectLink($project);
+            $crumb_link   = new BreadCrumbLink($project->getPublicName(), $project->getUrl());
                 $crumb_link->setProjectIcon(
                     EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat(
                         $project->getIconUnicodeCodepoint()
@@ -438,7 +430,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
                 $administration_link,
                 LinkedProjectsCollectionPresenter::fromEvent($linked_projects_event),
                 $this->project_flags_builder->buildProjectFlags($project),
-                $banner
+                $banner,
+                $this->getProjectSidebarData($params, $project, $current_user)
             );
         }
 
@@ -451,11 +444,9 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $this->toolbar,
             $project_name,
             $project_link,
-            $sidebar,
             $this->_feedback,
             $this->_getFeedback(),
             $this->tuleap_version,
-            $sidebar_collapsable,
             $current_user,
             $project_context,
             $switch_to,
@@ -508,7 +499,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             return false;
         }
 
-        if (empty($params['group']) && ! $this->show_sidebar) {
+        if (empty($params['group'])) {
             return true;
         }
 

@@ -8,12 +8,6 @@
   "module": "dist/project-sidebar-internal.es.js",
   "main": "dist/project-sidebar-internal.umd.js",
   "style": "dist/style.css",
-  "exports": {
-    ".": {
-      "import": "./dist/project-sidebar-internal.es.js",
-      "require": "./dist/project-sidebar-internal.umd.js"
-    }
-  },
   "files": [
     "dist/",
     "src/"

@@ -2747,11 +2747,6 @@ msgstr "Le champ de projet a correctement été modifié."
 msgid "Project fields"
 msgstr "Champs de projet"
 
-msgid "Project flag"
-msgid_plural "Project flags"
-msgstr[0] "Marqueur de projet"
-msgstr[1] "Marqueurs de projet"
-
 msgid "Project flag?"
 msgstr "Marqueur de projet ?"
 

@@ -22,7 +22,6 @@ import mustache from "mustache";
 
 document.addEventListener("DOMContentLoaded", () => {
     handleBreadcrumbPrivacyPopover();
-    handleSidebarPrivacyPopover();
 });
 
 function handleBreadcrumbPrivacyPopover() {
@@ -89,38 +88,6 @@ function handleBreadcrumbPrivacyPopover() {
     $(project_privacy_element).popover({
         placement: "bottom",
         trigger: "hover",
-        html: true,
-        template,
-        content,
-    });
-}
-
-function handleSidebarPrivacyPopover() {
-    const project_privacy_trigger = document.querySelector("[data-project-privacy-icon]");
-    if (!project_privacy_trigger) {
-        return;
-    }
-
-    const template = mustache.render(
-        `<div class="popover current-project-nav-popover current-project-sidebar-popover-privacy">
-            <div class="arrow"></div>
-            <h3>{{ title }}</h3>
-            <div class="popover-content"></div>
-        </div>`,
-        { title: project_privacy_trigger.dataset.title }
-    );
-
-    const content = mustache.render(
-        `<p class="privacy-description">
-            {{ content }}
-        </p>`,
-        { content: project_privacy_trigger.dataset.content }
-    );
-
-    $(project_privacy_trigger).popover({
-        placement: "right",
-        trigger: "hover",
-        container: "body",
         html: true,
         template,
         content,

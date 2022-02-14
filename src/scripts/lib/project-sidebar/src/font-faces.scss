@@ -29,6 +29,7 @@ $-fa-font-display: block;
 
 tuleap-project-sidebar {
     --tuleap-project-sidebar-icon-font-family: "Font Awesome 5 Free Tuleap Project Sidebar";
+    --tuleap-project-sidebar-icon-font-family-brands: "Font Awesome 5 Tuleap Project Sidebar Brands";
 }
 
 // Solid
@@ -51,7 +52,7 @@ tuleap-project-sidebar {
 
 // Brand
 @font-face {
-    font-family: "Font Awesome 5 Free Tuleap Project Sidebar";
+    font-family: "Font Awesome 5 Tuleap Project Sidebar Brands";
     font-style: normal;
     font-weight: 400;
     font-display: $-fa-font-display;

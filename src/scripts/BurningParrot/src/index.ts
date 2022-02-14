@@ -39,10 +39,7 @@ declare global {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const sidebar = document.querySelector(".sidebar");
-    if (sidebar instanceof HTMLElement) {
-        initSidebarPosition(sidebar);
-    }
+    initSidebarPosition();
     const main = document.querySelector("main");
     if (main instanceof HTMLElement) {
         initMainPosition(main);

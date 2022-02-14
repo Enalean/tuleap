@@ -168,6 +168,7 @@ class BurningParrotTheme extends BaseLayout
                 LinkedProjectsCollectionPresenter::fromEvent($linked_projects_event),
                 $this->project_flags_builder->buildProjectFlags($project),
                 $this->getProjectBannerWithScript($project, $this->user, 'project/project-banner-bp.js'),
+                null,
             );
 
             if (! isset($params['without-project-in-breadcrumbs']) || $params['without-project-in-breadcrumbs'] === false) {

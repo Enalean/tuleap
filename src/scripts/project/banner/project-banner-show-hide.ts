@@ -26,12 +26,11 @@ export function allowToHideAndShowProjectBanner(
     mount_point: Document,
     tlpPatch: (url: string, init: RequestInit & { method?: "PATCH" }) => Promise<Response>
 ): void {
-    const project_banner_navbar = mount_point.getElementById(PROJECT_BANNER_NAVBAR_ID);
     const project_banner_message_close_button = mount_point.getElementById(
         PROJECT_BANNER_MESSAGE_CLOSE_BUTTON_ID
     );
 
-    if (project_banner_navbar === null || project_banner_message_close_button === null) {
+    if (project_banner_message_close_button === null) {
         return;
     }
 
@@ -42,14 +41,16 @@ export function allowToHideAndShowProjectBanner(
         );
     }
 
-    project_banner_navbar.addEventListener("click", (event: Event): void => {
-        toggleProjectBannerMessage(
-            event,
-            mount_point.body,
-            project_banner_navbar,
-            full_project_banner
-        );
-    });
+    mount_point
+        .getElementById(PROJECT_BANNER_NAVBAR_ID)
+        ?.addEventListener("click", (event: Event): void => {
+            toggleProjectBannerMessage(event, mount_point.body, full_project_banner);
+        });
+    for (const sidebar of mount_point.getElementsByTagName("tuleap-project-sidebar")) {
+        sidebar.addEventListener("show-project-announcement", (event) => {
+            toggleProjectBannerMessage(event, mount_point.body, full_project_banner);
+        });
+    }
     const project_id = project_banner_message_close_button.dataset.projectId;
     const user_id = project_banner_message_close_button.dataset.userId;
     if (project_id === undefined || user_id === undefined) {
@@ -61,7 +62,6 @@ export function allowToHideAndShowProjectBanner(
         await hideProjectBannerMessage(
             tlpPatch,
             mount_point.body,
-            project_banner_navbar,
             full_project_banner,
             Number.parseInt(project_id, 10),
             Number.parseInt(user_id, 10)
@@ -72,26 +72,22 @@ export function allowToHideAndShowProjectBanner(
 function toggleProjectBannerMessage(
     event: Event,
     document_body: HTMLElement,
-    project_banner_navbar: HTMLElement,
     full_project_banner: HTMLElement
 ): void {
     event.preventDefault();
     window.scrollTo(0, 0);
     document_body.classList.add(PROJECT_BANNER_VISIBLE_GLOBAL_CLASS);
-    project_banner_navbar.classList.remove(PROJECT_BANNER_HIDDEN_CLASS);
     full_project_banner.classList.remove(PROJECT_BANNER_HIDDEN_CLASS);
 }
 
 async function hideProjectBannerMessage(
     tlpPatch: (url: string, init: RequestInit & { method?: "PATCH" }) => Promise<Response>,
     document_body: HTMLElement,
-    project_banner_navbar: HTMLElement,
     full_project_banner: HTMLElement,
     project_id: number,
     user_id: number
 ): Promise<void> {
     document_body.classList.remove(PROJECT_BANNER_VISIBLE_GLOBAL_CLASS);
-    project_banner_navbar.classList.add(PROJECT_BANNER_HIDDEN_CLASS);
     full_project_banner.classList.add(PROJECT_BANNER_HIDDEN_CLASS);
 
     // Not dealing with potential errors here, worst case scenario the user will have to close the banner again on the next page

@@ -20,6 +20,4 @@
  * SOFTWARE.
  */
 
-tuleap-project-sidebar {
-    --tuleap-project-sidebar-icon-font-family: "Font Awesome 5 Free";
-}
+@use "@tuleap/project-sidebar-internal";

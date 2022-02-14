@@ -120,5 +120,14 @@ export const example_config: Configuration = {
             is_active: false,
             shortcut_id: "",
         },
+        {
+            label: "Brand",
+            href: "https://example.com",
+            description: "",
+            icon: "fa-fw fab fa-figma",
+            open_in_new_tab: false,
+            is_active: false,
+            shortcut_id: "",
+        },
     ],
 };

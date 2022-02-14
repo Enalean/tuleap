@@ -16,6 +16,7 @@
     "@tuleap/list-picker": "file:scripts/lib/list-picker",
     "@tuleap/mention": "file:scripts/lib/mention",
     "@tuleap/project-privacy-helper": "link:scripts/lib/project-privacy-helper",
+    "@tuleap/project-sidebar-internal": "link:scripts/lib/project-sidebar-internal",
     "@tuleap/tlp-fetch": "file:scripts/lib/tlp-fetch",
     "@tuleap/tlp-popovers": "file:scripts/lib/tlp-popovers",
     "@tuleap/tooltip": "file:scripts/lib/tooltip",

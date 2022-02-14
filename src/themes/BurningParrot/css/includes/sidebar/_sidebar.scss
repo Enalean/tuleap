@@ -21,3 +21,8 @@
 @use "./sidebar-project";
 @use "./sidebar-siteadmin";
 @use "./sidebar-collapsed";
+
+.sidebar {
+    top: var(--platform-banner-offset-height, 0);
+    height: calc(100vh - var(--platform-banner-offset-height, 0px));
+}

@@ -20,8 +20,12 @@
   - SOFTWARE.
   -->
 
-<template v-if="config.project.flags.length > 0">
-    <div ref="popover_anchor" class="project-sidebar-project-flags">
+<template>
+    <div
+        v-if="config.project.flags.length > 0"
+        ref="popover_anchor"
+        class="project-sidebar-project-flags"
+    >
         <div class="project-sidebar-project-flags-icon">
             <project-shield-icon />
         </div>
@@ -35,7 +39,12 @@
             </span>
         </span>
     </div>
-    <div id="project-sidebar-project-flags-popover" ref="popover_content" class="tlp-popover">
+    <div
+        v-if="config.project.flags.length > 0"
+        id="project-sidebar-project-flags-popover"
+        ref="popover_content"
+        class="tlp-popover"
+    >
         <div class="tlp-popover-arrow"></div>
         <div class="tlp-popover-body">
             <div

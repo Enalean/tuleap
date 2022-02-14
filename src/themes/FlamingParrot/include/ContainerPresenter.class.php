@@ -41,8 +41,6 @@ class FlamingParrot_ContainerPresenter
      */
     public $project_id;
 
-    public ?Generator $sidebar;
-
     /** @var Feedback */
     private $feedback;
 
@@ -54,8 +52,6 @@ class FlamingParrot_ContainerPresenter
      */
     public $version;
 
-    /** @var bool */
-    private $sidebar_collapsable;
     /**
      * @var int
      */
@@ -96,11 +92,9 @@ class FlamingParrot_ContainerPresenter
         $toolbar,
         $project_name,
         $project_link,
-        ?Generator $sidebar,
         $feedback,
         $feedback_content,
         VersionPresenter $version,
-        $sidebar_collapsable,
         PFUser $current_user,
         ?ProjectContextPresenter $project_context,
         ?\Tuleap\User\SwitchToPresenter $switch_to,
@@ -113,11 +107,9 @@ class FlamingParrot_ContainerPresenter
         $this->toolbar                   = $toolbar;
         $this->project_name              = $project_name;
         $this->project_link              = $project_link;
-        $this->sidebar                   = $sidebar;
         $this->feedback                  = $feedback;
         $this->feedback_content          = $feedback_content;
         $this->version                   = $version;
-        $this->sidebar_collapsable       = $sidebar_collapsable;
         $this->current_user_id           = $current_user->getId();
         $this->project_context           = $project_context;
         $this->switch_to                 = $switch_to;
@@ -144,16 +136,6 @@ class FlamingParrot_ContainerPresenter
     public function toolbar()
     {
         return implode('</li><li>', $this->toolbar);
-    }
-
-    public function hasSidebar()
-    {
-        return isset($this->sidebar);
-    }
-
-    public function is_sidebar_collapsable() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        return $this->sidebar_collapsable;
     }
 
     public function has_copyright() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
