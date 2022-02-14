@@ -81,6 +81,8 @@ abstract class AdminView
         $breadcrumbs = new BreadCrumbCollection();
         $breadcrumbs->addBreadCrumb($documents_crumb);
 
+        $this->includeStylesheets();
+
         $service->displayHeader(
             $this->getTitle($params) . ' - ' . dgettext('tuleap-docman', 'Documents administration'),
             $breadcrumbs,
@@ -110,6 +112,10 @@ abstract class AdminView
     protected function isBurningParrotCompatiblePage(): bool
     {
         return false;
+    }
+
+    protected function includeStylesheets(): void
+    {
     }
 
     private function getProjectIdFromParams(array $params): int
