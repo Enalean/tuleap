@@ -56,20 +56,26 @@
         </translate>
     </p>
 </template>
-<script>
-import { mapState } from "vuex";
-import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants";
 
-export default {
-    name: "ClipboardContentInformation",
-    data: () => {
-        return {
-            CLIPBOARD_OPERATION_CUT,
-            CLIPBOARD_OPERATION_COPY,
-        };
-    },
-    computed: {
-        ...mapState("clipboard", ["item_title", "operation_type", "pasting_in_progress"]),
-    },
-};
+<script lang="ts">
+import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants";
+import { Vue } from "vue-property-decorator";
+import Component from "vue-class-component";
+import { namespace } from "vuex-class";
+
+const clipboard = namespace("clipboard");
+
+@Component
+export default class ClipboardContentInformation extends Vue {
+    private CLIPBOARD_OPERATION_CUT = CLIPBOARD_OPERATION_CUT;
+    private CLIPBOARD_OPERATION_COPY = CLIPBOARD_OPERATION_COPY;
+    @clipboard.State
+    readonly item_title!: string | null;
+
+    @clipboard.State
+    readonly operation_type!: string | null;
+
+    @clipboard.State
+    readonly pasting_in_progress!: string | null;
+}
 </script>

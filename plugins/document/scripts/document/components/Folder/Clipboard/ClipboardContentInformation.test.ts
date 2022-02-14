@@ -17,61 +17,62 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import ClipboardContentInformation from "./ClipboardContentInformation.vue";
 import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { ClipboardState } from "../../../store/clipboard/module";
+
+function getWrapper(clipboard: ClipboardState): Wrapper<ClipboardContentInformation> {
+    return shallowMount(ClipboardContentInformation, {
+        localVue,
+        mocks: { $store: createStoreMock({}, { clipboard }) },
+    });
+}
 
 describe("ClipboardContentInformation", () => {
-    let store, content_information_factory;
-    beforeEach(() => {
-        store = createStoreMock({}, { clipboard: {} });
-
-        content_information_factory = () => {
-            return shallowMount(ClipboardContentInformation, {
-                localVue,
-                mocks: { $store: store },
-            });
-        };
-    });
-
     it(`Given there is no item in the clipboard
         Then no information is displayed`, () => {
-        store.state.clipboard = { item_title: null };
-
-        const wrapper = content_information_factory();
+        const wrapper = getWrapper({
+            item_id: null,
+            item_type: null,
+            item_title: null,
+            operation_type: null,
+            pasting_in_progress: false,
+        });
 
         expect(wrapper.html()).toBeFalsy();
     });
 
     it(`Given there is an item in the clipboard
         Then information is displayed`, async () => {
-        store.state.clipboard = {
+        const wrapper = getWrapper({
+            item_id: 123,
+            item_type: "folder",
             item_title: "My item",
             operation_type: CLIPBOARD_OPERATION_COPY,
             pasting_in_progress: false,
-        };
-
-        const wrapper = content_information_factory();
+        });
 
         const result_copy = wrapper.html();
         expect(result_copy).toBeTruthy();
 
-        store.state.clipboard.operation_type = CLIPBOARD_OPERATION_CUT;
+        wrapper.vm.$store.state.clipboard.operation_type = CLIPBOARD_OPERATION_CUT;
         await wrapper.vm.$nextTick();
         const result_cut = wrapper.html();
         expect(result_cut).toBeTruthy();
         expect(result_cut).not.toEqual(result_copy);
 
-        store.state.clipboard.operation_type = CLIPBOARD_OPERATION_COPY;
-        store.state.clipboard.pasting_in_progress = true;
+        wrapper.vm.$store.state.clipboard.operation_type = CLIPBOARD_OPERATION_COPY;
+        wrapper.vm.$store.state.clipboard.pasting_in_progress = true;
         await wrapper.vm.$nextTick();
         const result_copy_paste = wrapper.html();
         expect(result_copy_paste).toBeTruthy();
         expect(result_copy_paste).not.toEqual(result_copy);
 
-        store.state.clipboard.operation_type = CLIPBOARD_OPERATION_CUT;
+        wrapper.vm.$store.state.clipboard.operation_type = CLIPBOARD_OPERATION_CUT;
         await wrapper.vm.$nextTick();
         const result_cut_paste = wrapper.html();
         expect(result_cut_paste).toBeTruthy();
