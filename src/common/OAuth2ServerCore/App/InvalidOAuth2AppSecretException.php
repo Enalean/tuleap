@@ -20,20 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\App;
+namespace Tuleap\OAuth2ServerCore\App;
 
 use Tuleap\OAuth2ServerCore\OAuth2ServerException;
-use Tuleap\OAuth2ServerCore\App\OAuth2App;
 
-final class OAuth2MissingVerifierStringException extends \LogicException implements OAuth2ServerException
+final class InvalidOAuth2AppSecretException extends \RuntimeException implements OAuth2ServerException
 {
     public function __construct(OAuth2App $app)
     {
-        parent::__construct(
-            sprintf(
-                'The app #%d does not seem to have a verifier string. Corrupted DB?',
-                $app->getId()
-            )
-        );
+        parent::__construct(sprintf('The client secret is not valid for app #%d', $app->getId()));
     }
 }
