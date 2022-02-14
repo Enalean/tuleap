@@ -30,6 +30,7 @@ module.exports = [
             notifications: "./scripts/notifications.js",
             "default-style": "./themes/default/css/style.scss",
             "burningparrot-style": "./themes/BurningParrot/css/docman.scss",
+            "admin-style": "./themes/BurningParrot/css/admin.scss",
         },
         context,
         output,

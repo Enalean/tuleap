@@ -1721,7 +1721,13 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event): void
     {
-        if (HTTPRequest::instance()->get('action') === \Docman_View_Admin_LockInfos::IDENTIFIER) {
+        if (
+            in_array(
+                HTTPRequest::instance()->get('action'),
+                [\Docman_View_Admin_LockInfos::IDENTIFIER, \Docman_View_Admin_Obsolete::IDENTIFIER],
+                true,
+            )
+        ) {
             $event->setIsInBurningParrotCompatiblePage();
         }
     }

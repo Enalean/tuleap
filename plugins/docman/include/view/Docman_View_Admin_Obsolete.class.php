@@ -40,7 +40,7 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView
 
     public static function getTabTitle(): string
     {
-        return dgettext('tuleap-docman', 'Manage Obsolete Documents');
+        return dgettext('tuleap-docman', 'Obsolete Documents');
     }
 
     public static function getTabDescription(): string
@@ -48,15 +48,31 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView
         return dgettext('tuleap-docman', 'View and update obsolete documents.');
     }
 
+    protected function isBurningParrotCompatiblePage(): bool
+    {
+        return true;
+    }
+
+    protected function includeStylesheets(): void
+    {
+        $theme_include_assets = new \Tuleap\Layout\IncludeAssets(
+            __DIR__ . '/../../../../src/www/assets/docman/',
+            '/assets/docman'
+        );
+        $GLOBALS['Response']->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($theme_include_assets, 'admin-style'));
+    }
+
     protected function displayContent(array $params): void
     {
-        $html = '';
+        $html = '<div class="tlp-framed-vertically">';
 
-        $html .= '<p>';
+        $html .= '<p class="tlp-framed-horizontally">';
         $html .= dgettext('tuleap-docman', 'This is the list of all documents obsolete today. If you click on document title you will be redirected to the document properties and you will be able to make it available again.');
         $html .= '</p>';
 
         $html .= $this->getTable($params);
+
+        $html .= '</div>';
 
         print $html;
     }
@@ -85,36 +101,44 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView
             $itemIterator = new ArrayIterator([]);
         }
 
-        $table = html_build_list_table_top(['Title', 'Obsolete date']);
+        $table = '<table class="tlp-table">
+            <thead>
+                <tr>
+                    <th class="document-icon"></th>
+                    <th>' . dgettext('tuleap-docman', 'Title') . '</th>
+                    <th>' . dgettext('tuleap-docman', 'Obsolete date') . '</th>
+                </tr>
+            </thead>
+            <tbody>
+        ';
 
-        $altRowClass = 0;
         $itemIterator->rewind();
         while ($itemIterator->valid()) {
             $item = $itemIterator->current();
             $type = $itemFactory->getItemTypeForItem($item);
             if ($type != PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
-                $trclass = html_get_alt_row_color($altRowClass++);
-                $table  .= "<tr class=\"" . $trclass . "\">\n";
+                $table .= '<tr>';
 
-                // Name
-                $docmanIcons = new Docman_Icons($params['theme_path'] . '/images/ic/');
+                $table      .= '<td class="document-icon">';
+                $docmanIcons = new Docman_Icons('/plugins/docman/themes/default/images/ic/');
                 $icon_src    = $docmanIcons->getIconForItem($item, $params);
-                $icon        = '<img src="' . $icon_src . '" class="docman_item_icon" />';
-                $table      .= "<td>";
-                $table      .= '<span style="white-space: nowrap;">';
-                $table      .= $icon;
-                $url         = DocmanViewURLBuilder::buildActionUrl(
+                $table      .= '<img src="' . $icon_src . '" width="16" />';
+                $table      .= '</td>';
+
+                $table .= "<td>";
+                $table .= '<span style="white-space: nowrap;">';
+                $url    = DocmanViewURLBuilder::buildActionUrl(
                     $item,
                     $params,
                     ['action' => 'details', 'id' => $item->getId()],
                     false,
                     true
                 );
-                $table      .= '<a data-help-window href="' . $url . '">';
-                $table      .= htmlentities($item->getTitle(), ENT_QUOTES, 'UTF-8');
-                $table      .= '</a>';
-                $table      .= '</span>';
-                $table      .= "</td>\n";
+                $table .= '<a data-help-window href="' . $url . '">';
+                $table .= htmlentities($item->getTitle(), ENT_QUOTES, 'UTF-8');
+                $table .= '</a>';
+                $table .= '</span>';
+                $table .= "</td>\n";
 
                 // Obsolete date
                 $table .= "<td>";
@@ -126,7 +150,7 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView
             $itemIterator->next();
         }
 
-        $table .= "</table>\n";
+        $table .= '</tbody></table>';
 
         $html = $table;
 

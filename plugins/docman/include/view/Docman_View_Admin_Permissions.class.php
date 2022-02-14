@@ -38,7 +38,7 @@ class Docman_View_Admin_Permissions extends \Tuleap\Docman\View\Admin\AdminView
 
     public static function getTabTitle(): string
     {
-        return dgettext('tuleap-docman', 'Manage Permissions');
+        return dgettext('tuleap-docman', 'Permissions');
     }
 
     public static function getTabDescription(): string

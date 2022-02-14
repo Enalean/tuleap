@@ -40,7 +40,7 @@ class Docman_View_Admin_Metadata extends \Tuleap\Docman\View\Admin\AdminView
 
     public static function getTabTitle(): string
     {
-        return dgettext('tuleap-docman', 'Manage Properties');
+        return dgettext('tuleap-docman', 'Properties');
     }
 
     public static function getTabDescription(): string

@@ -895,6 +895,9 @@ msgstr "Lien direct :"
 msgid "Disabled"
 msgstr "Désactivé"
 
+msgid "Display Preferences"
+msgstr "Préférences d'affichage"
+
 msgid ""
 "Display a docman item directly in the dashboard. <br /><em>For now, only "
 "embedded files are supported</em>."
@@ -1411,18 +1414,6 @@ msgstr "Document réservé"
 msgid "Mail reminder occurence"
 msgstr "Occurence de la notification par mail"
 
-msgid "Manage Display Preferences"
-msgstr "Gérer les préférences d'affichage"
-
-msgid "Manage Obsolete Documents"
-msgstr "Gérer les documents obsolètes"
-
-msgid "Manage Permissions"
-msgstr "Gérer les permissions"
-
-msgid "Manage Properties"
-msgstr "Gérer les propriétés"
-
 msgid "Maximum files size (in Bytes)"
 msgstr "Taille maximum des fichiers  (en Octets)"
 
@@ -1632,6 +1623,12 @@ msgid "Number of items in this folder:"
 msgstr "Nombre d'éléments dans ce dossier :"
 
 msgid "Obsolescence Date"
+msgstr "Date d'obsolescence"
+
+msgid "Obsolete Documents"
+msgstr "Documents obsolètes"
+
+msgid "Obsolete date"
 msgstr "Date d'obsolescence"
 
 msgid "Obsolete today"
