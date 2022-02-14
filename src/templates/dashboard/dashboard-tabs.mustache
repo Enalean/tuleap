@@ -39,7 +39,7 @@
         </a>
     {{/ dashboards }}
     {{# can_update_dashboards }}
-        <a href="javascript:;"
+        <button type="button"
            id="add-dashboard-button"
            class="tlp-button-secondary tlp-button-mini tlp-button-outline"
            data-target-modal-id="add-dashboard"
@@ -47,7 +47,7 @@
         >
             <i class="fa fa-plus tlp-button-icon"></i>
             {{ add_dashboard_label }}
-        </a>
+        </button>
     {{/ can_update_dashboards }}
 </nav>
 </div>
