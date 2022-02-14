@@ -57,9 +57,10 @@ abstract class AdminView
 
         $default_url = $params['default_url'] ?? "";
 
-        $documents_crumb = new BreadCrumb(
-            new BreadCrumbLink(dgettext('tuleap-docman', 'Documents'), $default_url),
-        );
+        $documents_link = new BreadCrumbLink(dgettext('tuleap-docman', 'Documents'), $default_url);
+        $documents_link->setDataAttribute('test', 'project-documentation');
+
+        $documents_crumb = new BreadCrumb($documents_link);
         $sub_items       = new BreadCrumbSubItems();
 
         $sub_items->addSection(
