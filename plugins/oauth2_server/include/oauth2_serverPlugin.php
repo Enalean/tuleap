@@ -53,7 +53,6 @@ use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
 use Tuleap\OAuth2Server\App\OAuth2AppRemover;
-use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
 use Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointController;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
 use Tuleap\OAuth2Server\AuthorizationServer\PromptParameterValuesExtractor;
@@ -63,6 +62,7 @@ use Tuleap\OAuth2Server\Grant\AccessTokenGrantErrorResponseBuilder;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantRepresentationBuilder;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 use Tuleap\OAuth2ServerCore\App\OAuth2AppCredentialVerifier;
+use Tuleap\OAuth2ServerCore\App\PrefixOAuth2ClientSecret;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeVerifier;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2GrantAccessTokenFromAuthorizationCode;
@@ -84,7 +84,6 @@ use Tuleap\OAuth2Server\RefreshToken\OAuth2OfflineAccessScope;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenCreator;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenDAO;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenVerifier;
-use Tuleap\OAuth2Server\RefreshToken\PrefixOAuth2RefreshToken;
 use Tuleap\OAuth2Server\RefreshToken\Scope\OAuth2RefreshTokenScopeDAO;
 use Tuleap\OAuth2Server\REST\Specification\Swagger\SwaggerJsonOAuth2SecurityDefinition;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
@@ -92,6 +91,7 @@ use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
 use Tuleap\OAuth2Server\Scope\ScopeExtractor;
 use Tuleap\OAuth2Server\User\Account\AccountAppsController;
 use Tuleap\OAuth2Server\User\AuthorizationDao;
+use Tuleap\OAuth2ServerCore\RefreshToken\PrefixOAuth2RefreshToken;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
@@ -231,7 +231,6 @@ final class oauth2_serverPlugin extends Plugin
                     $this->getRouteHandler('routeAuthorizationProcessConsentEndpoint')
                 );
                 $r->post('/token', $this->getRouteHandler('routeAccessTokenCreation'));
-                $r->post('/token/revoke', $this->getRouteHandler('routeTokenRevocation'));
             }
         );
         $route_collector->addRoute('GET', '/.well-known/openid-configuration', $this->getRouteHandler('routeDiscovery'));
@@ -613,47 +612,6 @@ final class oauth2_serverPlugin extends Plugin
                 ),
                 new BasicAuthLoginExtractor(),
                 $logger
-            )
-        );
-    }
-
-    public function routeTokenRevocation(): DispatchableWithRequest
-    {
-        $response_factory           = HTTPFactoryBuilder::responseFactory();
-        $stream_factory             = HTTPFactoryBuilder::streamFactory();
-        $app_dao                    = new AppDao();
-        $authorization_code_revoker = new OAuth2AuthorizationCodeRevoker(
-            new OAuth2AuthorizationCodeDAO()
-        );
-        $split_token_hasher         = new SplitTokenVerificationStringHasher();
-        return new \Tuleap\OAuth2Server\Grant\TokenRevocationController(
-            $response_factory,
-            $stream_factory,
-            new \Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenRevoker(
-                new PrefixedSplitTokenSerializer(new PrefixOAuth2RefreshToken()),
-                $authorization_code_revoker,
-                new OAuth2RefreshTokenDAO(),
-                $split_token_hasher
-            ),
-            new \Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenRevoker(
-                new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
-                $authorization_code_revoker,
-                new OAuth2AccessTokenDAO(),
-                $split_token_hasher
-            ),
-            new SapiEmitter(),
-            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
-            new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
-            new DisableCacheMiddleware(),
-            new OAuth2ClientAuthenticationMiddleware(
-                new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
-                new OAuth2AppCredentialVerifier(
-                    new \Tuleap\OAuth2ServerCore\App\AppFactory($app_dao, ProjectManager::instance()),
-                    $app_dao,
-                    new SplitTokenVerificationStringHasher()
-                ),
-                new BasicAuthLoginExtractor(),
-                BackendLogger::getDefaultLogger()
             )
         );
     }

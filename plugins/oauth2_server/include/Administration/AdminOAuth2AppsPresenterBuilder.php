@@ -29,7 +29,7 @@ use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
 use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
-use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
+use Tuleap\OAuth2ServerCore\App\PrefixOAuth2ClientSecret;
 
 class AdminOAuth2AppsPresenterBuilder
 {

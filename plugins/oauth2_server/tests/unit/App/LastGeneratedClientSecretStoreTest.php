@@ -26,6 +26,7 @@ use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\OAuth2ServerCore\App\PrefixOAuth2ClientSecret;
 
 final class LastGeneratedClientSecretStoreTest extends \Tuleap\Test\PHPUnit\TestCase
 {

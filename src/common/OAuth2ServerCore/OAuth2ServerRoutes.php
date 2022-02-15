@@ -22,19 +22,34 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore;
 
+use BackendLogger;
 use DateInterval;
 use EventManager;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use ProjectManager;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
+use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
+use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
+use Tuleap\OAuth2ServerCore\App\PrefixOAuth2ClientSecret;
+use Tuleap\OAuth2ServerCore\RefreshToken\PrefixOAuth2RefreshToken;
+use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenDAO;
+use Tuleap\OAuth2ServerCore\App\AppDao;
+use Tuleap\OAuth2ServerCore\App\OAuth2AppCredentialVerifier;
+use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
+use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevoker;
+use Tuleap\OAuth2ServerCore\Grant\OAuth2ClientAuthenticationMiddleware;
+use Tuleap\OAuth2ServerCore\Grant\TokenRevocationController;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\OpenIDConnectSigningKeyDAO;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\OpenIDConnectSigningKeyFactory;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\JWK\JWKSDocumentEndpointController;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OAuth2SignInScope;
+use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenDAO;
 use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
 use User_LoginManager;
@@ -95,6 +110,47 @@ final class OAuth2ServerRoutes
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::INSTRUMENTATION_NAME),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
+        );
+    }
+
+    public static function routeTokenRevocation(): TokenRevocationController
+    {
+        $response_factory           = HTTPFactoryBuilder::responseFactory();
+        $stream_factory             = HTTPFactoryBuilder::streamFactory();
+        $app_dao                    = new AppDao();
+        $authorization_code_revoker = new OAuth2AuthorizationCodeRevoker(
+            new OAuth2AuthorizationCodeDAO()
+        );
+        $split_token_hasher         = new SplitTokenVerificationStringHasher();
+        return new \Tuleap\OAuth2ServerCore\Grant\TokenRevocationController(
+            $response_factory,
+            $stream_factory,
+            new \Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenRevoker(
+                new PrefixedSplitTokenSerializer(new PrefixOAuth2RefreshToken()),
+                $authorization_code_revoker,
+                new OAuth2RefreshTokenDAO(),
+                $split_token_hasher
+            ),
+            new \Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenRevoker(
+                new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
+                $authorization_code_revoker,
+                new OAuth2AccessTokenDAO(),
+                $split_token_hasher
+            ),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::INSTRUMENTATION_NAME),
+            new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
+            new DisableCacheMiddleware(),
+            new OAuth2ClientAuthenticationMiddleware(
+                new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
+                new OAuth2AppCredentialVerifier(
+                    new \Tuleap\OAuth2ServerCore\App\AppFactory($app_dao, ProjectManager::instance()),
+                    $app_dao,
+                    new SplitTokenVerificationStringHasher()
+                ),
+                new BasicAuthLoginExtractor(),
+                BackendLogger::getDefaultLogger()
+            )
         );
     }
 }
