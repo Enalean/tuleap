@@ -31,24 +31,28 @@
         <translate>Copy</translate>
     </button>
 </template>
-<script>
-import { mapState } from "vuex";
+
+<script lang="ts">
+import { namespace } from "vuex-class";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Item } from "../../../type";
 import emitter from "../../../helpers/emitter";
-export default {
-    name: "CopyItem",
-    props: {
-        item: Object,
-    },
-    computed: {
-        ...mapState("clipboard", ["pasting_in_progress"]),
-    },
-    methods: {
-        copyItem() {
-            if (!this.pasting_in_progress) {
-                emitter.emit("hide-action-menu");
-            }
-            this.$store.commit("clipboard/copyItem", this.item);
-        },
-    },
-};
+
+const clipboard = namespace("clipboard");
+
+@Component
+export default class CopyItem extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    @clipboard.State
+    readonly pasting_in_progress!: boolean;
+
+    copyItem(): void {
+        if (!this.pasting_in_progress) {
+            emitter.emit("hide-action-menu");
+        }
+        this.$store.commit("clipboard/copyItem", this.item);
+    }
+}
 </script>

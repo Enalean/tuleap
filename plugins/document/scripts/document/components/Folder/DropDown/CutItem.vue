@@ -32,28 +32,31 @@
         <translate>Cut</translate>
     </button>
 </template>
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { namespace } from "vuex-class";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Item } from "../../../type";
 import emitter from "../../../helpers/emitter";
 
-export default {
-    name: "CutItem",
-    props: {
-        item: Object,
-    },
-    computed: {
-        ...mapState("clipboard", ["pasting_in_progress"]),
-        can_cut_item() {
-            return this.item.user_can_write && this.item.parent_id !== 0;
-        },
-    },
-    methods: {
-        cutItem() {
-            if (!this.pasting_in_progress) {
-                emitter.emit("hide-action-menu");
-            }
-            this.$store.commit("clipboard/cutItem", this.item);
-        },
-    },
-};
+const clipboard = namespace("clipboard");
+
+@Component
+export default class CutItem extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    @clipboard.State
+    readonly pasting_in_progress!: boolean;
+
+    get can_cut_item(): boolean {
+        return this.item.user_can_write && this.item.parent_id !== 0;
+    }
+
+    cutItem(): void {
+        if (!this.pasting_in_progress) {
+            emitter.emit("hide-action-menu");
+        }
+        this.$store.commit("clipboard/cutItem", this.item);
+    }
+}
 </script>

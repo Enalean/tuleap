@@ -41,77 +41,84 @@
         </div>
     </button>
 </template>
-<script>
-import { mapState } from "vuex";
+
+<script lang="ts">
+import { namespace, State } from "vuex-class";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Folder, Item } from "../../../type";
+import emitter from "../../../helpers/emitter";
+import { isFolder } from "../../../helpers/type-check-helper";
 import { CLIPBOARD_OPERATION_COPY, TYPE_FOLDER } from "../../../constants";
 import {
-    doesFolderNameAlreadyExist,
     doesDocumentNameAlreadyExist,
+    doesFolderNameAlreadyExist,
 } from "../../../helpers/metadata-helpers/check-item-title";
 import { isItemDestinationIntoItself } from "../../../helpers/clipboard/clipboard-helpers";
-import { isFolder } from "../../../helpers/type-check-helper";
-import emitter from "../../../helpers/emitter";
 
-export default {
-    name: "PasteItem",
-    props: {
-        destination: Object,
-    },
-    computed: {
-        ...mapState(["folder_content"]),
-        ...mapState("clipboard", [
-            "item_title",
-            "pasting_in_progress",
-            "operation_type",
-            "item_type",
-            "item_id",
-        ]),
-        can_item_be_pasted() {
-            if (
-                this.item_title === null ||
-                this.operation_type === null ||
-                !isFolder(this.destination) ||
-                !this.destination.user_can_write
-            ) {
-                return false;
-            }
+const clipboard = namespace("clipboard");
 
-            if (this.operation_type === CLIPBOARD_OPERATION_COPY) {
-                return true;
-            }
+@Component
+export default class PasteItem extends Vue {
+    @Prop({ required: true })
+    readonly destination!: Folder;
 
-            if (this.item_type !== TYPE_FOLDER) {
-                return !doesDocumentNameAlreadyExist(
-                    this.item_title,
-                    this.folder_content,
-                    this.destination
-                );
-            }
+    @State
+    readonly folder_content!: Array<Item>;
 
-            return (
-                !doesFolderNameAlreadyExist(
-                    this.item_title,
-                    this.folder_content,
-                    this.destination
-                ) &&
-                !isItemDestinationIntoItself(this.folder_content, this.item_id, this.destination.id)
+    @clipboard.State
+    readonly item_title!: string | null;
+
+    @clipboard.State
+    readonly pasting_in_progress!: boolean;
+
+    @clipboard.State
+    readonly operation_type!: string | null;
+
+    @clipboard.State
+    readonly item_type!: string | null;
+
+    @clipboard.State
+    readonly item_id!: number | null;
+
+    get can_item_be_pasted(): boolean {
+        if (
+            this.item_title === null ||
+            this.operation_type === null ||
+            this.item_id === null ||
+            !isFolder(this.destination) ||
+            !this.destination.user_can_write
+        ) {
+            return false;
+        }
+
+        if (this.operation_type === CLIPBOARD_OPERATION_COPY) {
+            return true;
+        }
+
+        if (this.item_type !== TYPE_FOLDER) {
+            return !doesDocumentNameAlreadyExist(
+                this.item_title,
+                this.folder_content,
+                this.destination
             );
-        },
-    },
-    methods: {
-        async pasteItem() {
-            if (!this.pasting_in_progress) {
-                emitter.emit("hide-action-menu");
-            }
-            await this.$store.dispatch("clipboard/pasteItem", {
-                destination_folder: this.destination,
-                current_folder: this.$store.state.current_folder,
-                global_context: this.$store,
-            });
-        },
-        is_item_a_folder(item) {
-            return isFolder(item);
-        },
-    },
-};
+        }
+
+        return (
+            !doesFolderNameAlreadyExist(this.item_title, this.folder_content, this.destination) &&
+            !isItemDestinationIntoItself(this.folder_content, this.item_id, this.destination.id)
+        );
+    }
+
+    async pasteItem(): Promise<void> {
+        if (!this.pasting_in_progress) {
+            emitter.emit("hide-action-menu");
+        }
+
+        await this.$store.dispatch("clipboard/pasteItem", {
+            destination_folder: this.destination,
+            current_folder: this.$store.state.current_folder,
+            global_context: this.$store,
+        });
+    }
+}
 </script>
