@@ -17,29 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import UpdateProperties from "./UpdateProperties.vue";
 import emitter from "../../../helpers/emitter";
+import type { Item } from "../../../type";
 
 jest.mock("../../../helpers/emitter");
 
 describe("UpdateProperties", () => {
-    let document_action_button_factory;
-    beforeEach(() => {
-        document_action_button_factory = (props = {}) => {
-            return shallowMount(UpdateProperties, {
-                localVue,
-                propsData: { ...props },
-            });
-        };
-    });
+    function createWrapper(item: Item): Wrapper<UpdateProperties> {
+        return shallowMount(UpdateProperties, {
+            localVue: localVue,
+            propsData: { item },
+        });
+    }
 
     it(`Click on folder open the corresponding modal`, () => {
         const item = {
             user_can_write: true,
-        };
-        const wrapper = document_action_button_factory({ item });
+        } as Item;
+        const wrapper = createWrapper(item);
         wrapper.get("[data-test=document-dropdown-update-properties]").trigger("click");
 
         expect(emitter.emit).toHaveBeenCalledWith("show-update-item-metadata-modal", {
