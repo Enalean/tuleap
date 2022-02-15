@@ -1,6 +1,6 @@
 {{# has_result }}
     <div class="tlp-pagination">
-        <a href="{{ first_url }}"
+        <a {{^ first_is_disabled }}href="{{ first_url }}"{{/ first_is_disabled }}
             class="tlp-button-primary
                 tlp-button-outline
                 tlp-button-small
@@ -11,7 +11,7 @@
         >
             <i class="fa fa-angle-double-left"></i>
         </a>
-        <a href="{{ previous_url }}"
+        <a {{^ previous_is_disabled }}href="{{ previous_url }}"{{/ previous_is_disabled }}
             class="tlp-button-primary
                 tlp-button-outline
                 tlp-button-small
@@ -31,7 +31,7 @@
             <span class="tlp-pagination-number">{{ nb_total }}</span>
         </span>
 
-        <a href="{{ next_url }}"
+        <a {{^ next_is_disabled }}href="{{ next_url }}"{{/ next_is_disabled }}
             class="tlp-button-primary
                 tlp-button-outline
                 tlp-button-small
@@ -42,7 +42,7 @@
         >
             <i class="fa fa-angle-right"></i>
         </a>
-        <a href="{{ last_url }}"
+        <a {{^ last_is_disabled }}href="{{ last_url }}"{{/ last_is_disabled }}
             class="tlp-button-primary
                    tlp-button-outline
                    tlp-button-small
