@@ -11,7 +11,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-        "Tuleap\\Docman\\Test\\rest\\": ["./tests/rest/"]
+      "Tuleap\\Docman\\Tests\\Stub\\": "tests/unit/Stubs",
+      "Tuleap\\Docman\\Test\\rest\\": ["./tests/rest/"]
     }
   },
   "config": {
