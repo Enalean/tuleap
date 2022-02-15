@@ -64,7 +64,9 @@ describe("CriterionDate", () => {
             },
         });
 
-        wrapper.find("[data-test=document-criterion-date-create_date]").setValue("2022-01-01");
+        wrapper
+            .find("[data-test=document-criterion-date-create_date]")
+            .vm.$emit("input", "2022-01-01");
 
         const expected: SearchDate = { date: "2022-01-01", operator: ">" };
         expect(wrapper.emitted().input).toStrictEqual([[expected]]);

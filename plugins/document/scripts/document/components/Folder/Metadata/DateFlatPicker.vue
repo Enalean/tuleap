@@ -48,13 +48,13 @@ export default class DateFlatPicker extends Vue {
     private datepicker: null | DatePickerInstance = null;
     private input_value = this.value;
 
-    @Watch("update_value")
-    public updateValue(newValue: string): void {
+    @Watch("value")
+    public updateValue(new_value: string): void {
         if (this.datepicker === null) {
             return;
         }
-        if (newValue) {
-            this.datepicker.setDate(newValue, false);
+        if (new_value) {
+            this.datepicker.setDate(new_value, false);
         }
     }
 
