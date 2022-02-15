@@ -75,18 +75,18 @@ class PaginationPresenter
 
         if ($offset <= 0) {
             $this->first_is_disabled = true;
-            $this->first_url         = 'javascript:;';
+            $this->first_url         = '';
 
             $this->previous_is_disabled = true;
-            $this->previous_url         = 'javascript:;';
+            $this->previous_url         = '';
         }
 
         if (($offset + $limit) >= $nb_total) {
             $this->next_is_disabled = true;
-            $this->next_url         = 'javascript:;';
+            $this->next_url         = '';
 
             $this->last_is_disabled = true;
-            $this->last_url         = 'javascript:;';
+            $this->last_url         = '';
         }
     }
 }
