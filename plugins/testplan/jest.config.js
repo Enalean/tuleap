@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const base_config = require("../../tests/jest/jest.base.config.js");
 const path = require("path");
+
+const base_config = require("../../tests/jest/jest.base.config.js");
 
 module.exports = {
     ...base_config,
     transform: {
         ...base_config.transform,
-        "^.+\\.vue$": path.resolve(__dirname, "../../tests/jest/vue2-script-setup-jest-process.js"),
+        "^.+\\.vue$": "unplugin-vue2-script-setup/jest",
     },
     moduleNameMapper: {
         ...base_config.moduleNameMapper,
