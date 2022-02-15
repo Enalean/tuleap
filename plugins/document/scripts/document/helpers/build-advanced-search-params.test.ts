@@ -30,6 +30,7 @@ describe("build-advanced-search-params", () => {
             owner: "",
             create_date: null,
             update_date: null,
+            obsolescence_date: null,
         };
         expect(buildAdvancedSearchParams()).toStrictEqual(expected);
     });
@@ -43,6 +44,7 @@ describe("build-advanced-search-params", () => {
             owner: "",
             create_date: null,
             update_date: null,
+            obsolescence_date: null,
         };
         expect(buildAdvancedSearchParams({ title: "lorem", type: "folder" })).toStrictEqual(
             expected

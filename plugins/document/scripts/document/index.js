@@ -77,7 +77,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const project_flags = JSON.parse(vue_mount_point.dataset.projectFlags);
     const project_icon = vue_mount_point.dataset.projectIcon;
     const search_for_document_with_criteria = isFeatureFlagNewSearchEnabled(document);
-    const criteria = JSON.parse(vue_mount_point.dataset.criteria);
+
+    const consider_string_criteria_as_text = (criterion) => ({
+        ...criterion,
+        type: criterion.type === "string" ? "text" : criterion.type,
+    });
+    const criteria = JSON.parse(vue_mount_point.dataset.criteria).map(
+        consider_string_criteria_as_text
+    );
 
     moment.tz(user_timezone);
     moment.locale(user_locale);

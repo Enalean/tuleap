@@ -59,6 +59,7 @@ class SearchReportBuilder
         $this->addOwnerFilter($search, $report);
         $this->addCreateDateFilter($search, $report);
         $this->addUpdateDateFilter($search, $report);
+        $this->addObsolescenceDateFilter($search, $report);
 
         $columns = $this->always_there_column_retriever->getColumns();
         $this->column_report_builder->addColumnsFromArray($columns, $report);
@@ -101,7 +102,11 @@ class SearchReportBuilder
 
     private function addDescriptionFilter(PostSearchRepresentation $search, Docman_Report $report): void
     {
-        $this->addTextFilter($report, $search->description, \Docman_MetadataFactory::HARDCODED_METADATA_DESCRIPTION_LABEL);
+        $this->addTextFilter(
+            $report,
+            $search->description,
+            \Docman_MetadataFactory::HARDCODED_METADATA_DESCRIPTION_LABEL
+        );
     }
 
     private function addTextFilter(Docman_Report $report, string $search_term, string $metadata_label): void
@@ -127,7 +132,9 @@ class SearchReportBuilder
     {
         if ($search->owner) {
             $owner_filter = new \Docman_FilterOwner(
-                $this->metadata_factory->getHardCodedMetadataFromLabel(\Docman_MetadataFactory::HARDCODED_METADATA_OWNER_LABEL)
+                $this->metadata_factory->getHardCodedMetadataFromLabel(
+                    \Docman_MetadataFactory::HARDCODED_METADATA_OWNER_LABEL
+                )
             );
 
             $owner = $this->user_manager->findUser($search->owner);
@@ -141,31 +148,50 @@ class SearchReportBuilder
 
     private function addCreateDateFilter(PostSearchRepresentation $search, Docman_Report $report): void
     {
-        $this->addDateFilter(
-            $report,
-            $search->create_date,
-            \Docman_MetadataFactory::HARDCODED_METADATA_CREATE_DATE_LABEL,
+        if (! $search->create_date) {
+            return;
+        }
+
+        $metadata = $this->metadata_factory->getHardCodedMetadataFromLabel(
+            \Docman_MetadataFactory::HARDCODED_METADATA_CREATE_DATE_LABEL
         );
+
+        $this->addDateFilter($report, $search->create_date, $metadata);
     }
 
     private function addUpdateDateFilter(PostSearchRepresentation $search, Docman_Report $report): void
     {
-        $this->addDateFilter(
-            $report,
-            $search->update_date,
-            \Docman_MetadataFactory::HARDCODED_METADATA_UPDATE_DATE_LABEL,
-        );
-    }
-
-    private function addDateFilter(Docman_Report $report, ?SearchDateRepresentation $search_date, string $metadata_label): void
-    {
-        if (! $search_date) {
+        if (! $search->update_date) {
             return;
         }
 
-        $date_filter = new \Docman_FilterDate(
-            $this->metadata_factory->getHardCodedMetadataFromLabel($metadata_label)
+        $metadata = $this->metadata_factory->getHardCodedMetadataFromLabel(
+            \Docman_MetadataFactory::HARDCODED_METADATA_UPDATE_DATE_LABEL
         );
+
+        $this->addDateFilter($report, $search->update_date, $metadata);
+    }
+
+    private function addObsolescenceDateFilter(PostSearchRepresentation $search, Docman_Report $report): void
+    {
+        if (! $search->obsolescence_date) {
+            return;
+        }
+
+        $metadata = $this->metadata_factory->getHardCodedMetadataFromLabel(
+            \Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL
+        );
+        $this->metadata_factory->appendHardCodedMetadataParams($metadata);
+
+        $this->addDateFilter($report, $search->obsolescence_date, $metadata);
+    }
+
+    private function addDateFilter(
+        Docman_Report $report,
+        SearchDateRepresentation $search_date,
+        \Docman_Metadata $metadata,
+    ): void {
+        $date_filter = new \Docman_FilterDate($metadata);
 
         $symbol_to_numeric = [
             ">" => 1,

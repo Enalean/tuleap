@@ -142,5 +142,20 @@ describe("get-search-props-from-route", () => {
                 buildAdvancedSearchParams({ update_date: { operator: "<", date: "2022-01-30" } })
             );
         });
+
+        it("should accept obsolescence_date parameter", () => {
+            const { query } = getSearchPropsFromRoute(
+                {
+                    params: {},
+                    query: { obsolescence_date: "2022-01-30", obsolescence_date_op: "<" },
+                } as unknown as Route,
+                101
+            );
+            expect(query).toStrictEqual(
+                buildAdvancedSearchParams({
+                    obsolescence_date: { operator: "<", date: "2022-01-30" },
+                })
+            );
+        });
     });
 });

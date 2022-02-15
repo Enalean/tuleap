@@ -42,6 +42,7 @@ export function getSearchPropsFromRoute(
             owner: String(route.query.owner || ""),
             update_date: getUpdateDate(route),
             create_date: getCreateDate(route),
+            obsolescence_date: getObsolescenceDate(route),
         },
         offset: Number(route.query.offset || "0"),
     };
@@ -61,6 +62,13 @@ function getUpdateDate(route: Route): SearchDate | null {
 function getCreateDate(route: Route): SearchDate | null {
     const date = String(route.query.create_date || "");
     const operator = String(route.query.create_date_op || "");
+
+    return getSearchDate(date, operator);
+}
+
+function getObsolescenceDate(route: Route): SearchDate | null {
+    const date = String(route.query.obsolescence_date || "");
+    const operator = String(route.query.obsolescence_date_op || "");
 
     return getSearchDate(date, operator);
 }

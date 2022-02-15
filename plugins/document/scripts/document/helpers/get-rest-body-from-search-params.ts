@@ -42,5 +42,12 @@ export function getRestBodyFromSearchParams(
                     operator: search.update_date.operator,
                 },
             }),
+        ...(search.obsolescence_date &&
+            search.obsolescence_date.date.length > 0 && {
+                obsolescence_date: {
+                    date: search.obsolescence_date.date,
+                    operator: search.obsolescence_date.operator,
+                },
+            }),
     };
 }
