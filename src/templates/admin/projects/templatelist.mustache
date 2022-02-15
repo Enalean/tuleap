@@ -35,7 +35,7 @@
                                             <i class="fa fa-cog tlp-button-icon"></i> {{ services_button_label }}
                                         </a>
                                         {{# additional_buttons }}
-                                            <a href="{{# is_disabled }}javascript:;{{/ is_disabled }}{{^ is_disabled }}{{ uri }}{{/ is_disabled }}"
+                                            <a {{^ is_disabled }}href="{{ uri }}"{{/ is_disabled }}
                                                class="tlp-table-cell-actions-button tlp-button-primary tlp-button-small tlp-button-outline {{# is_disabled }}disabled{{/ is_disabled }}"
                                                {{# title }}title="{{ title }}"{{/ title }}
                                             >
