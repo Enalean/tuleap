@@ -22,7 +22,7 @@ import NewItemButton from "./NewItemButton.vue";
 import type { Item } from "../../../type";
 import localVue from "../../../helpers/local-vue";
 import { TYPE_FOLDER } from "../../../constants";
-import mitt from "../../../helpers/emitter";
+import emitter from "../../../helpers/emitter";
 
 jest.mock("../../../helpers/emitter");
 
@@ -45,6 +45,6 @@ describe("NewItemButton", () => {
 
         wrapper.get("[data-test=docman-new-item-button]").trigger("click");
 
-        expect(mitt.emit).toHaveBeenCalledWith("createItem", { item: item });
+        expect(emitter.emit).toHaveBeenCalledWith("createItem", { item: item });
     });
 });

@@ -95,7 +95,6 @@ import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import EmbeddedProperties from "../Property/EmbeddedProperties.vue";
 import FileProperties from "../Property/FileProperties.vue";
 import OtherInformationMetadataForCreate from "../Metadata/DocumentMetadata/OtherInformationMetadataForCreate.vue";
-import EventBus from "../../../helpers/event-bus.js";
 import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper";
 import { handleErrors } from "../../../store/actions-helpers/handle-errors";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
@@ -149,12 +148,12 @@ export default {
     mounted() {
         this.modal = createModal(this.$el);
         emitter.on("createItem", this.show);
-        EventBus.$on("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
+        emitter.on("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
     },
     beforeDestroy() {
         emitter.off("createItem", this.show);
-        EventBus.$off("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
+        emitter.off("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
         this.modal.removeEventListener("tlp-modal-hidden", this.reset);
     },
     methods: {

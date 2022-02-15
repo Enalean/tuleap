@@ -32,14 +32,14 @@
     </button>
 </template>
 <script>
-import EventBus from "../../../helpers/event-bus.js";
 import { isFolder } from "../../../helpers/type-check-helper";
+import emitter from "../../../helpers/emitter";
 export default {
     name: "NewFolderSecondaryAction",
     props: { item: Object },
     methods: {
         showNewFolderModal() {
-            EventBus.$emit("show-new-folder-modal", { detail: { parent: this.item } });
+            emitter.emit("show-new-folder-modal", { detail: { parent: this.item } });
         },
         is_item_a_folder(item) {
             return isFolder(item);

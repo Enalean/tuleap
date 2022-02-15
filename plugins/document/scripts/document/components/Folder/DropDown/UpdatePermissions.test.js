@@ -20,7 +20,9 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
-import EventBus from "../../../helpers/event-bus.js";
+import emitter from "../../../helpers/emitter";
+
+jest.mock("../../../helpers/emitter");
 
 describe("UpdatePermissions", () => {
     let document_action_button_factory;
@@ -46,14 +48,13 @@ describe("UpdatePermissions", () => {
         const item = {
             can_user_manage: true,
         };
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = document_action_button_factory({ item });
 
         expect(wrapper.html()).toBeTruthy();
 
         wrapper.trigger("click");
 
-        expect(event_bus_emit).toHaveBeenCalledWith("show-update-permissions-modal", {
+        expect(emitter.emit).toHaveBeenCalledWith("show-update-permissions-modal", {
             detail: { current_item: item },
         });
     });

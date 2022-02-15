@@ -38,8 +38,8 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import EventBus from "../../../../helpers/event-bus.js";
 import { redirectToUrl } from "../../../../helpers/location-helper";
+import emitter from "../../../../helpers/emitter";
 
 export default {
     name: "DownloadFolderAsZip",
@@ -91,7 +91,7 @@ export default {
             const { total_size, nb_files } = folder_properties;
 
             if (total_size > max_archive_size_in_Bytes) {
-                EventBus.$emit("show-max-archive-size-threshold-exceeded-modal", {
+                emitter.emit("show-max-archive-size-threshold-exceeded-modal", {
                     detail: { current_folder_size: total_size },
                 });
 
@@ -103,7 +103,7 @@ export default {
             const should_warn_osx_user = this.shouldWarnOSXUser(total_size, nb_files);
 
             if (total_size > warning_threshold_in_Bytes) {
-                EventBus.$emit("show-archive-size-warning-modal", {
+                emitter.emit("show-archive-size-warning-modal", {
                     detail: {
                         current_folder_size: total_size,
                         folder_href: this.folder_href,

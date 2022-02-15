@@ -20,7 +20,9 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import UpdateProperties from "./UpdateProperties.vue";
-import EventBus from "../../../helpers/event-bus.js";
+import emitter from "../../../helpers/emitter";
+
+jest.mock("../../../helpers/emitter");
 
 describe("UpdateProperties", () => {
     let document_action_button_factory;
@@ -37,11 +39,10 @@ describe("UpdateProperties", () => {
         const item = {
             user_can_write: true,
         };
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = document_action_button_factory({ item });
         wrapper.get("[data-test=document-dropdown-update-properties]").trigger("click");
 
-        expect(event_bus_emit).toHaveBeenCalledWith("show-update-item-metadata-modal", {
+        expect(emitter.emit).toHaveBeenCalledWith("show-update-item-metadata-modal", {
             detail: { current_item: item },
         });
     });

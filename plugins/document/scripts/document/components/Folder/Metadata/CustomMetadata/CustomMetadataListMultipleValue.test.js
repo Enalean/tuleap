@@ -22,7 +22,9 @@ import localVue from "../../../../helpers/local-vue";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import CustomMetadataListMultipleValue from "./CustomMetadataListMultipleValue.vue";
-import EventBus from "../../../../helpers/event-bus.js";
+import emitter from "../../../../helpers/emitter";
+
+jest.mock("../../../../helpers/emitter");
 
 describe("CustomMetadataListMultipleValue", () => {
     let store, factory;
@@ -227,13 +229,11 @@ describe("CustomMetadataListMultipleValue", () => {
             is_multiple_value_allowed: true,
         };
 
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
-
         const wrapper = factory({ currentlyUpdatedItemMetadata });
 
         wrapper.vm.updateMultipleMetadataListValue();
 
-        expect(event_bus_emit).toHaveBeenCalledWith("update-multiple-metadata-list-value", {
+        expect(emitter.emit).toHaveBeenCalledWith("update-multiple-metadata-list-value", {
             detail: {
                 value: wrapper.vm.multiple_list_values,
                 id: "list",

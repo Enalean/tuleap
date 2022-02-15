@@ -23,7 +23,7 @@ import localVue from "../../../helpers/local-vue";
 import QuickLookButton from "./QuickLookButton.vue";
 import { TYPE_FOLDER } from "../../../constants";
 import type { Item } from "../../../type";
-import mitt from "../../../helpers/emitter";
+import emitter from "../../../helpers/emitter";
 
 jest.mock("../../../helpers/emitter");
 
@@ -40,7 +40,7 @@ describe("QuickLookButton", () => {
         const wrapper = createWrapper(item);
 
         wrapper.get("[data-test=document-quick-look-button]").trigger("click");
-        expect(mitt.emit).toHaveBeenCalledWith("toggle-quick-look", {
+        expect(emitter.emit).toHaveBeenCalledWith("toggle-quick-look", {
             details: { item },
         });
     });

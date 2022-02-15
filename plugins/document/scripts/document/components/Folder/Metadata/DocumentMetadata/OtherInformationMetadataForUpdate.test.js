@@ -22,7 +22,9 @@ import { createStoreMock } from "../../../../../../../../src/scripts/vue-compone
 import localVue from "../../../../helpers/local-vue";
 import OtherInformationMetadataForUpdate from "./OtherInformationMetadataForUpdate.vue";
 import { TYPE_FILE } from "../../../../constants";
-import EventBus from "../../../../helpers/event-bus.js";
+import emitter from "../../../../helpers/emitter";
+
+jest.mock("../../../../helpers/emitter");
 
 describe("OtherInformationMetadataForUpdate", () => {
     let other_metadata, store;
@@ -87,7 +89,7 @@ describe("OtherInformationMetadataForUpdate", () => {
                 value: "",
             });
 
-            EventBus.$emit("show-new-document-modal", {
+            emitter.emit("show-new-document-modal", {
                 detail: { parent: store.state.current_folder },
             });
             await wrapper.vm.$nextTick().then(() => {});

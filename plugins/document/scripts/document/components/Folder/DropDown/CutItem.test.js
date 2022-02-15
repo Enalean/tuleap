@@ -21,7 +21,9 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import CutItem from "./CutItem.vue";
-import EventBus from "../../../helpers/event-bus.js";
+import emitter from "../../../helpers/emitter";
+
+jest.mock("../../../helpers/emitter");
 
 describe("CutItem", () => {
     let store, cut_item_factory;
@@ -35,6 +37,8 @@ describe("CutItem", () => {
                 mocks: { $store: store },
             });
         };
+
+        emitter.emit.mockClear();
     });
 
     it(`Given item is cut
@@ -47,13 +51,12 @@ describe("CutItem", () => {
             parent_id: 146,
             user_can_write: true,
         };
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = cut_item_factory({ item });
 
         wrapper.trigger("click");
 
         expect(store.commit).toHaveBeenCalledWith("clipboard/cutItem", item);
-        expect(event_bus_emit).toHaveBeenCalledWith("hide-action-menu");
+        expect(emitter.emit).toHaveBeenCalledWith("hide-action-menu");
     });
 
     it(`Given an item is being pasted
@@ -67,7 +70,6 @@ describe("CutItem", () => {
             user_can_write: true,
         };
         store.state.clipboard.pasting_in_progress = true;
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = cut_item_factory({ item });
 
         expect(wrapper.attributes().disabled).toBeTruthy();
@@ -75,7 +77,7 @@ describe("CutItem", () => {
 
         wrapper.trigger("click");
 
-        expect(event_bus_emit).not.toHaveBeenCalled();
+        expect(emitter.emit).not.toHaveBeenCalled();
     });
 
     it(`Given the item is the root

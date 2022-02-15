@@ -22,7 +22,9 @@ import { createStoreMock } from "../../../../../../../../src/scripts/vue-compone
 import localVue from "../../../../helpers/local-vue";
 import FolderDefaultPropertiesForUpdate from "./FolderDefaultPropertiesForUpdate.vue";
 import { TYPE_FILE } from "../../../../constants";
-import EventBus from "../../../../helpers/event-bus.js";
+import emitter from "../../../../helpers/emitter";
+
+jest.mock("../../../../helpers/emitter");
 
 describe("FolderDefaultPropertiesForUpdate", () => {
     let default_property, store;
@@ -247,8 +249,6 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                 },
             };
 
-            const event_bus_emit = jest.spyOn(EventBus, "$emit");
-
             const wrapper = default_property({
                 currentlyUpdatedItem: {
                     id: 123,
@@ -285,7 +285,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
             const input = wrapper.get("[data-test=document-custom-metadata-checkbox]");
             input.trigger("change");
 
-            expect(event_bus_emit).toHaveBeenCalledWith("metadata-recursion-metadata-list", {
+            expect(emitter.emit).toHaveBeenCalledWith("metadata-recursion-metadata-list", {
                 detail: { metadata_list: [] },
             });
         });

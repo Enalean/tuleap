@@ -23,7 +23,7 @@ import QuickLookDeleteButton from "./QuickLookDeleteButton.vue";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import localVue from "../../../helpers/local-vue";
 import type { Item } from "../../../type";
-import mitt from "../../../helpers/emitter";
+import emitter from "../../../helpers/emitter";
 
 jest.mock("../../../helpers/emitter");
 
@@ -66,7 +66,7 @@ describe("QuickLookDeleteButton", () => {
         const wrapper = createWrapper(true, true);
         wrapper.get("[data-test=document-quick-look-delete-button]").trigger("click");
 
-        expect(mitt.emit).toHaveBeenCalledWith("deleteItem", {
+        expect(emitter.emit).toHaveBeenCalledWith("deleteItem", {
             item: {
                 id: 1,
                 user_can_write: true,

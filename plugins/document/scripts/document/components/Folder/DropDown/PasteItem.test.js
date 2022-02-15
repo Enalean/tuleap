@@ -21,7 +21,6 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import PasteItem from "./PasteItem.vue";
-import EventBus from "../../../helpers/event-bus.js";
 import * as check_item_title from "../../../helpers/metadata-helpers/check-item-title";
 import * as clipboard_helpers from "../../../helpers/clipboard/clipboard-helpers";
 import {
@@ -30,6 +29,9 @@ import {
     CLIPBOARD_OPERATION_COPY,
     CLIPBOARD_OPERATION_CUT,
 } from "../../../constants";
+import emitter from "../../../helpers/emitter";
+
+jest.mock("../../../helpers/emitter");
 
 describe("PasteItem", () => {
     let store, paste_item_factory;
@@ -43,6 +45,8 @@ describe("PasteItem", () => {
                 mocks: { $store: store },
             });
         };
+
+        emitter.emit.mockClear();
     });
 
     it(`Given an item is in the clipboard
@@ -56,7 +60,6 @@ describe("PasteItem", () => {
             user_can_write: true,
             type: TYPE_FOLDER,
         };
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = paste_item_factory({ destination });
 
         expect(wrapper.text()).toContain("My item");
@@ -68,7 +71,7 @@ describe("PasteItem", () => {
             current_folder,
             global_context: store,
         });
-        expect(event_bus_emit).toHaveBeenCalledWith("hide-action-menu");
+        expect(emitter.emit).toHaveBeenCalledWith("hide-action-menu");
     });
 
     it(`Given no item is in the clipboard
@@ -127,8 +130,6 @@ describe("PasteItem", () => {
             operation_type: CLIPBOARD_OPERATION_COPY,
             pasting_in_progress: true,
         };
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
-
         const wrapper = paste_item_factory({
             destination: {
                 user_can_write: true,
@@ -141,7 +142,7 @@ describe("PasteItem", () => {
 
         wrapper.trigger("click");
 
-        expect(event_bus_emit).not.toHaveBeenCalled();
+        expect(emitter.emit).not.toHaveBeenCalled();
     });
 
     it(`Given a document is in the clipboard to be moved

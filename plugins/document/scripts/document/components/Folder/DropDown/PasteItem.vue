@@ -43,7 +43,6 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import EventBus from "../../../helpers/event-bus.js";
 import { CLIPBOARD_OPERATION_COPY, TYPE_FOLDER } from "../../../constants";
 import {
     doesFolderNameAlreadyExist,
@@ -51,6 +50,7 @@ import {
 } from "../../../helpers/metadata-helpers/check-item-title";
 import { isItemDestinationIntoItself } from "../../../helpers/clipboard/clipboard-helpers";
 import { isFolder } from "../../../helpers/type-check-helper";
+import emitter from "../../../helpers/emitter";
 
 export default {
     name: "PasteItem",
@@ -101,7 +101,7 @@ export default {
     methods: {
         async pasteItem() {
             if (!this.pasting_in_progress) {
-                EventBus.$emit("hide-action-menu");
+                emitter.emit("hide-action-menu");
             }
             await this.$store.dispatch("clipboard/pasteItem", {
                 destination_folder: this.destination,

@@ -59,12 +59,12 @@ import { TYPE_FOLDER } from "../../../constants";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
-import EventBus from "../../../helpers/event-bus.js";
 import FolderGlobalMetadataForCreate from "../Metadata/FolderMetadata/FolderGlobalMetadataForCreate.vue";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
 import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper";
 import { handleErrors } from "../../../store/actions-helpers/handle-errors";
 import { transformCustomMetadataForItemCreation } from "../../../helpers/metadata-helpers/creation-data-transformatter-helper";
+import emitter from "../../../helpers/emitter";
 
 export default {
     name: "NewFolderModal",
@@ -103,13 +103,13 @@ export default {
     mounted() {
         this.item = this.getDefaultItem();
         this.modal = createModal(this.$el);
-        EventBus.$on("show-new-folder-modal", this.show);
-        EventBus.$on("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
+        emitter.on("show-new-folder-modal", this.show);
+        emitter.on("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
     },
     beforeDestroy() {
-        EventBus.$off("show-new-folder-modal", this.show);
-        EventBus.$off("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
+        emitter.off("show-new-folder-modal", this.show);
+        emitter.off("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
         this.modal.removeEventListener("tlp-modal-hidden", this.reset);
     },
     methods: {

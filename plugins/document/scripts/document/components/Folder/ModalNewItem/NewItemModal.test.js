@@ -22,7 +22,7 @@ import localVue from "../../../helpers/local-vue";
 
 import NewItemModal from "./NewItemModal.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-import mitt from "../../../helpers/emitter";
+import emitter from "../../../helpers/emitter";
 import * as tlp from "tlp";
 
 jest.mock("tlp");
@@ -116,7 +116,7 @@ describe("NewItemModal", () => {
         };
 
         const wrapper = factory();
-        mitt.emit("createItem", {
+        emitter.emit("createItem", {
             item: store.state.current_folder,
         });
         await wrapper.vm.$nextTick().then(() => {});

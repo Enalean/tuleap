@@ -24,6 +24,8 @@ import FolderContentRow from "./FolderContentRow.vue";
 import { TYPE_FILE } from "../../constants";
 import emitter from "../../helpers/emitter";
 
+jest.mock("../../helpers/emitter");
+
 function getFolderContentRowInstance(store, props, data = {}) {
     return shallowMount(FolderContentRow, {
         localVue,
@@ -61,6 +63,8 @@ describe("FolderContentRow", () => {
         };
 
         store = createStoreMock(store_options);
+
+        emitter.emit.mockClear();
     });
 
     describe("Quick look and dropdown menu rendering", () => {

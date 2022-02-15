@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import EventBus from "../../../helpers/event-bus.js";
 import { isFolder } from "../../../helpers/type-check-helper";
+import emitter from "../../../helpers/emitter";
 
 export default {
     data() {
@@ -53,10 +53,10 @@ export default {
         },
     },
     created() {
-        EventBus.$on("item-has-been-created-under-the-fold", this.show);
+        emitter.on("item-has-been-created-under-the-fold", this.show);
     },
     beforeDestroy() {
-        EventBus.$off("item-has-been-created-under-the-fold", this.show);
+        emitter.off("item-has-been-created-under-the-fold", this.show);
     },
     methods: {
         show(event) {

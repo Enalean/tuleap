@@ -78,7 +78,6 @@ import ApprovalBadge from "../ApprovalTables/ApprovalBadge.vue";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
 import UpdateMetadataModal from "../ModalUpdateMetadata/UpdateMetadataModal.vue";
 import { mapState } from "vuex";
-import EventBus from "../../../helpers/event-bus.js";
 import emitter from "../../../helpers/emitter";
 
 export default {
@@ -129,14 +128,14 @@ export default {
     created() {
         emitter.on("deleteItem", this.showDeleteItemModal);
         emitter.on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
-        EventBus.$on("show-update-item-metadata-modal", this.showUpdateMetadataModal);
-        EventBus.$on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
+        emitter.on("show-update-item-metadata-modal", this.showUpdateMetadataModal);
+        emitter.on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
     },
     beforeDestroy() {
         emitter.off("deleteItem", this.showDeleteItemModal);
         emitter.off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
-        EventBus.$off("show-update-item-metadata-modal", this.showUpdateMetadataModal);
-        EventBus.$off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
+        emitter.off("show-update-item-metadata-modal", this.showUpdateMetadataModal);
+        emitter.off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
     },
     methods: {
         showCreateNewItemVersionModal() {

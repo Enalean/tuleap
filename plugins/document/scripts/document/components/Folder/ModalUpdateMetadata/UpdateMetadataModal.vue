@@ -64,9 +64,9 @@ import DocumentGlobalMetadataForUpdate from "../Metadata/DocumentMetadata/Docume
 import OtherInformationMetadataForUpdate from "../Metadata/DocumentMetadata/OtherInformationMetadataForUpdate.vue";
 import OwnerMetadata from "../Metadata/OwnerMetadata.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
-import EventBus from "../../../helpers/event-bus.js";
 import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper";
 import { transformCustomMetadataForItemUpdate } from "../../../helpers/metadata-helpers/update-data-transformatter-helper";
+import emitter from "../../../helpers/emitter";
 
 export default {
     components: {
@@ -126,10 +126,10 @@ export default {
         },
     },
     created() {
-        EventBus.$on("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
+        emitter.on("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
     },
     beforeDestroy() {
-        EventBus.$off("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
+        emitter.off("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
     },
     beforeMount() {
         this.item_to_update = JSON.parse(JSON.stringify(this.item));
