@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\RefreshToken\Scope;
 
 use Tuleap\DB\DataAccessObject;
-use Tuleap\OAuth2Server\Scope\OAuth2ScopeIdentifierSaverDAO;
-use Tuleap\OAuth2Server\Scope\OAuth2ScopeIdentifierSearcherDAO;
+use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeIdentifierSaverDAO;
+use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeIdentifierSearcherDAO;
 
 final class OAuth2RefreshTokenScopeDAO extends DataAccessObject implements OAuth2ScopeIdentifierSearcherDAO, OAuth2ScopeIdentifierSaverDAO
 {

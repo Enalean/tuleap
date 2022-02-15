@@ -1756,6 +1756,11 @@ CREATE TABLE oauth2_access_token (
     INDEX idx_authorization_code (authorization_code_id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE oauth2_access_token_scope (
+    access_token_id INT(11) NOT NULL,
+    scope_key VARCHAR(255) NOT NULL,
+    PRIMARY KEY (access_token_id, scope_key)
+) ENGINE=InnoDB;
 #
 # EOF
 #

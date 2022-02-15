@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2Server\Scope;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeIdentifierSearcherDAO;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 class OAuth2ScopeRetriever

@@ -37,12 +37,6 @@ CREATE TABLE plugin_oauth2_authorization_scope(
     PRIMARY KEY (authorization_id, scope_key)
 ) ENGINE=InnoDB;
 
-CREATE TABLE plugin_oauth2_access_token_scope (
-    access_token_id INT(11) NOT NULL,
-    scope_key VARCHAR(255) NOT NULL,
-    PRIMARY KEY (access_token_id, scope_key)
-) ENGINE=InnoDB;
-
 CREATE TABLE plugin_oauth2_refresh_token_scope (
     refresh_token_id INT(11) NOT NULL,
     scope_key VARCHAR(255) NOT NULL,

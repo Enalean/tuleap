@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope;
 
 use Tuleap\DB\DataAccessObject;
-use Tuleap\OAuth2Server\Scope\OAuth2ScopeIdentifierSaverDAO;
-use Tuleap\OAuth2Server\Scope\OAuth2ScopeIdentifierSearcherDAO;
+use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeIdentifierSaverDAO;
+use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeIdentifierSearcherDAO;
 
 class OAuth2AuthorizationCodeScopeDAO extends DataAccessObject implements OAuth2ScopeIdentifierSaverDAO, OAuth2ScopeIdentifierSearcherDAO
 {

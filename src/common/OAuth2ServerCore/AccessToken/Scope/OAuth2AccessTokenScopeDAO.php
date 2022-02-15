@@ -20,11 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AccessToken\Scope;
+namespace Tuleap\OAuth2ServerCore\AccessToken\Scope;
 
 use Tuleap\DB\DataAccessObject;
-use Tuleap\OAuth2Server\Scope\OAuth2ScopeIdentifierSaverDAO;
-use Tuleap\OAuth2Server\Scope\OAuth2ScopeIdentifierSearcherDAO;
+use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeIdentifierSaverDAO;
+use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeIdentifierSearcherDAO;
 
 class OAuth2AccessTokenScopeDAO extends DataAccessObject implements OAuth2ScopeIdentifierSaverDAO, OAuth2ScopeIdentifierSearcherDAO
 {
@@ -36,13 +36,13 @@ class OAuth2AccessTokenScopeDAO extends DataAccessObject implements OAuth2ScopeI
             $data_to_insert[] = ['access_token_id' => $id, 'scope_key' => $scope_key];
         }
 
-        $this->getDB()->insertMany('plugin_oauth2_access_token_scope', $data_to_insert);
+        $this->getDB()->insertMany('oauth2_access_token_scope', $data_to_insert);
     }
 
     public function searchScopeIdentifiersByOAuth2SplitTokenID(int $id): array
     {
         return $this->getDB()->run(
-            'SELECT scope_key FROM plugin_oauth2_access_token_scope WHERE access_token_id = ?',
+            'SELECT scope_key FROM oauth2_access_token_scope WHERE access_token_id = ?',
             $id
         );
     }
