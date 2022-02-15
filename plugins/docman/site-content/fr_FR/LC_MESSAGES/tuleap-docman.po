@@ -1800,6 +1800,12 @@ msgstr "Documentation du projet"
 msgid "Project data export"
 msgstr "Export des données du projet"
 
+msgid "Project has no locked documents"
+msgstr "Le projet n'a pas de document réservé"
+
+msgid "Project has no obsolete documents"
+msgstr "Le projet n'a pas de documents obsolètes."
+
 msgid "Project ids mismatch. Cancel update."
 msgstr "Les ids de projet ne correspondent pas. Mise à jour annulée."
 

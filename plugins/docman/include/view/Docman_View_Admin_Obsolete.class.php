@@ -112,6 +112,16 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView
             <tbody>
         ';
 
+        if ($nbItemsFound === 0) {
+            $table .= '
+                <tr>
+                    <td colspan="3" class="tlp-table-cell-empty">
+                        ' . dgettext('tuleap-docman', 'Project has no obsolete documents') . '
+                    </td>
+                </tr>
+            ';
+        }
+
         $itemIterator->rewind();
         while ($itemIterator->valid()) {
             $item = $itemIterator->current();
