@@ -48,7 +48,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
                 $has_group_by_field = ', ' . $group_by_field->getQuerySelect();
                 $from_group         = '  ' . $group_by_field->getQueryFrom();
                 $group_group        = ', ' . $group_by_field->getQueryGroupBy();
-                $order_by           = $group_by_field->getQueryOrderby();
+                $order_by           = $group_by_field->getQueryOrderby() . ', ' . $source_field->getQueryOrderby();
             } else {
                 $order_by = $source_field->getQueryOrderby();
             }
