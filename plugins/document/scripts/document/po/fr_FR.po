@@ -89,9 +89,6 @@ msgstr "Une erreur est servenue, merci de contacter votre administrateur"
 msgid "An error occurred while searching for results."
 msgstr "Une erreur est survenue lors de la recherche."
 
-msgid "Any"
-msgstr "Tous"
-
 msgid "Apply"
 msgstr "Appliquer"
 
@@ -253,14 +250,8 @@ msgstr "Editer les propriétés de \"%s\""
 msgid "Embedded"
 msgstr "Embarqué"
 
-msgid "Embedded file"
-msgstr "Fichier embarqué"
-
 msgid "Empty"
 msgstr "Vide"
-
-msgid "Empty document"
-msgstr "Document vide"
 
 msgid "End"
 msgstr "Fin"
@@ -276,9 +267,6 @@ msgstr "Date fixe"
 
 msgid "Focus the document search bar"
 msgstr "Se placer dans la barre de recherche"
-
-msgid "Folder"
-msgstr "Dossier"
 
 msgid "Global search"
 msgstr "Recherche globale"
@@ -682,9 +670,6 @@ msgstr "Aujourd'hui"
 
 msgid "Toggle selected folder open and closed"
 msgstr "Ouvrir ou fermer le dossier sélectionné"
-
-msgid "Type"
-msgstr "Type"
 
 msgid "URL"
 msgstr "URL"

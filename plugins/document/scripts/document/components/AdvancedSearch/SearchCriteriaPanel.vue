@@ -33,8 +33,7 @@
                             v-for="criterion in criteria"
                             v-bind:key="criterion.name"
                             v-bind:is="`criterion-${criterion.type}`"
-                            v-bind:label="criterion.label"
-                            v-bind:name="criterion.name"
+                            v-bind:criterion="criterion"
                             v-model="new_query[criterion.name]"
                             v-bind:data-test="`criterion-${criterion.name}`"
                         />
@@ -61,10 +60,10 @@ import { namespace } from "vuex-class";
 import type { AdvancedSearchParams, SearchCriteria } from "../../type";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
 import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
-import CriterionType from "./Criteria/CriterionType.vue";
-import CriterionText from "./Criteria/CriterionText.vue";
 import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
+import CriterionText from "./Criteria/CriterionText.vue";
 import CriterionDate from "./Criteria/CriterionDate.vue";
+import CriterionList from "./Criteria/CriterionList.vue";
 
 const configuration = namespace("configuration");
 
@@ -72,7 +71,7 @@ const configuration = namespace("configuration");
     components: {
         CriterionDate,
         CriterionText,
-        CriterionType,
+        CriterionList,
         CriterionGlobalText,
         SearchCriteriaBreadcrumb,
     },

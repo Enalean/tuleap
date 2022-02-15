@@ -27,9 +27,11 @@ describe("CriterionDate", () => {
         const wrapper = shallowMount(CriterionDate, {
             localVue,
             propsData: {
-                name: "create_date",
+                criterion: {
+                    name: "create_date",
+                    label: "Creation date",
+                },
                 value: null,
-                label: "Creation date",
             },
         });
 
@@ -43,9 +45,11 @@ describe("CriterionDate", () => {
         const wrapper = shallowMount(CriterionDate, {
             localVue,
             propsData: {
-                name: "create_date",
+                criterion: {
+                    name: "create_date",
+                    label: "Creation date",
+                },
                 value,
-                label: "Creation date",
             },
         });
 
@@ -58,9 +62,11 @@ describe("CriterionDate", () => {
         const wrapper = shallowMount(CriterionDate, {
             localVue,
             propsData: {
-                name: "create_date",
+                criterion: {
+                    name: "create_date",
+                    label: "Creation date",
+                },
                 value: null,
-                label: "Creation date",
             },
         });
 
@@ -76,9 +82,11 @@ describe("CriterionDate", () => {
         const wrapper = shallowMount(CriterionDate, {
             localVue,
             propsData: {
-                name: "create_date",
+                criterion: {
+                    name: "create_date",
+                    label: "Creation date",
+                },
                 value: null,
-                label: "Creation date",
             },
         });
 

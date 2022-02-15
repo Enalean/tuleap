@@ -24,7 +24,6 @@ import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import type { ConfigurationState } from "../../store/configuration";
 import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
-import CriterionType from "./Criteria/CriterionType.vue";
 import type { AdvancedSearchParams, SearchDate } from "../../type";
 import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
 
@@ -51,7 +50,7 @@ describe("SearchCriteriaPanel", () => {
                         configuration: {
                             root_id: 101,
                             criteria: [
-                                { name: "type", type: "type", title: "Type" },
+                                { name: "type", type: "list", title: "Type" },
                                 { name: "title", type: "text", title: "Title" },
                                 { name: "description", type: "text", title: "Description" },
                                 { name: "owner", type: "text", title: "Owner" },
@@ -70,7 +69,7 @@ describe("SearchCriteriaPanel", () => {
         });
 
         wrapper.findComponent(CriterionGlobalText).vm.$emit("input", "Lorem ipsum");
-        wrapper.findComponent(CriterionType).vm.$emit("input", "folder");
+        wrapper.find("[data-test=criterion-type]").vm.$emit("input", "folder");
         wrapper.find("[data-test=criterion-title]").vm.$emit("input", "doloret");
         wrapper.find("[data-test=criterion-description]").vm.$emit("input", "sit amet");
         wrapper.find("[data-test=criterion-owner]").vm.$emit("input", "jdoe");

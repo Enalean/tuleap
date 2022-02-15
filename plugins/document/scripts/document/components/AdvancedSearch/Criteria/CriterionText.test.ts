@@ -24,9 +24,11 @@ describe("CriterionText", () => {
     it("should render the component", async () => {
         const wrapper = shallowMount(CriterionText, {
             propsData: {
-                name: "title",
+                criterion: {
+                    name: "title",
+                    label: "Title",
+                },
                 value: "Lorem",
-                label: "Title",
             },
         });
 
@@ -38,9 +40,11 @@ describe("CriterionText", () => {
     it("should warn parent component when user is changing text", () => {
         const wrapper = shallowMount(CriterionText, {
             propsData: {
-                name: "title",
+                criterion: {
+                    name: "title",
+                    label: "Title",
+                },
                 value: "Lorem",
-                label: "Title",
             },
         });
 

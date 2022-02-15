@@ -19,16 +19,19 @@
   -->
 
 <template>
-    <div class="tlp-form-element document-search-criterion document-search-criterion-text">
+    <div class="tlp-form-element document-search-criterion">
         <label class="tlp-label" v-bind:for="id">{{ criterion.label }}</label>
-        <input
-            type="text"
-            class="tlp-input"
-            v-bind:id="id"
-            v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)"
-            v-bind:data-test="id"
-        />
+        <select class="tlp-select" v-bind:id="id" v-on:change="$emit('input', $event.target.value)">
+            <option
+                v-for="option in criterion.options"
+                v-bind:key="option.value"
+                v-bind:value="option.value"
+                v-bind:selected="isSelected(option)"
+                v-bind:data-test="`option-${option.value}`"
+            >
+                {{ option.label }}
+            </option>
+        </select>
     </div>
 </template>
 
@@ -36,18 +39,22 @@
 import Component from "vue-class-component";
 import Vue from "vue";
 import { Prop } from "vue-property-decorator";
-import type { SearchCriterionText } from "../../../type";
+import type { SearchCriterionList, SearchListOption } from "../../../type";
 
 @Component
-export default class CriterionText extends Vue {
+export default class CriterionList extends Vue {
     @Prop({ required: true })
-    readonly criterion!: SearchCriterionText;
+    readonly criterion!: SearchCriterionList;
 
     @Prop({ required: true })
     readonly value!: string;
 
     get id(): string {
-        return "document-criterion-text-" + this.criterion.name;
+        return "document-criterion-list-" + this.criterion.name;
+    }
+
+    isSelected(option: SearchListOption): boolean {
+        return option.value === this.value;
     }
 }
 </script>
