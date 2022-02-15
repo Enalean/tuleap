@@ -260,7 +260,7 @@ export const AllowedSearchType = [
 ] as const;
 export type AllowedSearchType = typeof AllowedSearchType[number];
 
-export const AllowedSearchDateOperator = [">", "|", "<"];
+export const AllowedSearchDateOperator = [">", "=", "<"];
 export type AllowedSearchDateOperator = typeof AllowedSearchDateOperator[number];
 
 export interface SearchDate {

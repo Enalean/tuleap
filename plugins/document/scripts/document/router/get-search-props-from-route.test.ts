@@ -117,45 +117,54 @@ describe("get-search-props-from-route", () => {
             expect(query).toStrictEqual(buildAdvancedSearchParams({ owner: "jdoe" }));
         });
 
-        it("should accept create_date parameter", () => {
-            const { query } = getSearchPropsFromRoute(
-                {
-                    params: {},
-                    query: { create_date: "2022-01-30", create_date_op: "<" },
-                } as unknown as Route,
-                101
-            );
-            expect(query).toStrictEqual(
-                buildAdvancedSearchParams({ create_date: { operator: "<", date: "2022-01-30" } })
-            );
-        });
+        it.each([["<"], ["="], [">"]])(
+            "should accept create_date parameter with %s operator",
+            (operator) => {
+                const { query } = getSearchPropsFromRoute(
+                    {
+                        params: {},
+                        query: { create_date: "2022-01-30", create_date_op: operator },
+                    } as unknown as Route,
+                    101
+                );
+                expect(query).toStrictEqual(
+                    buildAdvancedSearchParams({ create_date: { operator, date: "2022-01-30" } })
+                );
+            }
+        );
 
-        it("should accept update_date parameter", () => {
-            const { query } = getSearchPropsFromRoute(
-                {
-                    params: {},
-                    query: { update_date: "2022-01-30", update_date_op: "<" },
-                } as unknown as Route,
-                101
-            );
-            expect(query).toStrictEqual(
-                buildAdvancedSearchParams({ update_date: { operator: "<", date: "2022-01-30" } })
-            );
-        });
+        it.each([["<"], ["="], [">"]])(
+            "should accept update_date parameter with %s operator",
+            (operator) => {
+                const { query } = getSearchPropsFromRoute(
+                    {
+                        params: {},
+                        query: { update_date: "2022-01-30", update_date_op: operator },
+                    } as unknown as Route,
+                    101
+                );
+                expect(query).toStrictEqual(
+                    buildAdvancedSearchParams({ update_date: { operator, date: "2022-01-30" } })
+                );
+            }
+        );
 
-        it("should accept obsolescence_date parameter", () => {
-            const { query } = getSearchPropsFromRoute(
-                {
-                    params: {},
-                    query: { obsolescence_date: "2022-01-30", obsolescence_date_op: "<" },
-                } as unknown as Route,
-                101
-            );
-            expect(query).toStrictEqual(
-                buildAdvancedSearchParams({
-                    obsolescence_date: { operator: "<", date: "2022-01-30" },
-                })
-            );
-        });
+        it.each([["<"], ["="], [">"]])(
+            "should accept obsolescence_date parameter with %s operator",
+            (operator) => {
+                const { query } = getSearchPropsFromRoute(
+                    {
+                        params: {},
+                        query: { obsolescence_date: "2022-01-30", obsolescence_date_op: operator },
+                    } as unknown as Route,
+                    101
+                );
+                expect(query).toStrictEqual(
+                    buildAdvancedSearchParams({
+                        obsolescence_date: { operator, date: "2022-01-30" },
+                    })
+                );
+            }
+        );
     });
 });
