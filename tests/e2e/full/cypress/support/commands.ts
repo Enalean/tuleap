@@ -51,8 +51,6 @@ declare global {
     }
 }
 
-import "cypress-file-upload";
-
 Cypress.Commands.add("clearSessionCookie", () => {
     cy.clearCookie("__Host-TULEAP_session_hash");
 });

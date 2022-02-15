@@ -78,7 +78,9 @@ describe(`Artifact Modal`, function () {
                 });
 
                 getFieldWithLabel("Attachments", "[data-test=file-field]").within(() => {
-                    cy.get("[data-test=file-field-file-input]").attachFile("attachment.json");
+                    cy.get("[data-test=file-field-file-input]").selectFile(
+                        "cypress/fixtures/attachment.json"
+                    );
                     cy.get("[data-test=file-field-description-input]").type("My JSON attachment");
                 });
 
@@ -238,7 +240,9 @@ describe(`Artifact Modal`, function () {
                 });
 
                 getFieldWithLabel("Attachments", "[data-test=file-field]").within(() => {
-                    cy.get("[data-test=file-field-file-input]").attachFile("svg_attachment.svg");
+                    cy.get("[data-test=file-field-file-input]").selectFile(
+                        "cypress/fixtures/svg_attachment.svg"
+                    );
                     cy.get("[data-test=file-field-description-input]").type("My SVG attachment");
                 });
 

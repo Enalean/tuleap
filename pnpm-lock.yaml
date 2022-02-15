@@ -24,7 +24,6 @@ specifiers:
   copy-webpack-plugin: ^10.2.0
   css-loader: ^6.2.0
   cypress: ^9.4.1
-  cypress-file-upload: ^5.0.2
   esbuild-loader: ^2.18.0
   eslint: ^8.1.0
   eslint-config-prettier: ^8.3.0
@@ -110,7 +109,6 @@ devDependencies:
   copy-webpack-plugin: 10.2.0_webpack@5.64.4
   css-loader: 6.2.0_webpack@5.64.4
   cypress: 9.4.1
-  cypress-file-upload: 5.0.2_cypress@9.4.1
   esbuild-loader: 2.18.0_webpack@5.64.4
   eslint: 8.1.0
   eslint-config-prettier: 8.3.0_eslint@8.1.0
@@ -4426,16 +4424,6 @@ packages:
     resolution: {integrity: sha512-RSU6Hyeg14am3Ah4VZEmeX8H7kLwEEirXe6aU2IPfKNvhXwTflK5HQRDNI0ypQXoqmm+QPyG2IaPuQE5zMwSIQ==}
     dev: true
 
-  /cypress-file-upload/5.0.2_cypress@9.4.1:
-    resolution: {integrity: sha512-QRPnQPeEaW+HMVB62/htIsKh7Kd/x2uzoHKEQxh7LCD+4IaG0rAjLZupCIjjUh+JnRymgfir8wOYtFSJCNWlpA==}
-    engines: {node: '>=8.2.1'}
-    peerDependencies:
-      cypress: '>3.0.0'
-    dependencies:
-      cypress: 9.4.1
-      mime: 2.5.2
-    dev: true
-
   /cypress/9.4.1:
     resolution: {integrity: sha512-+JgMG9uT+QFx97JU9kOHE3jO3+0UdkQ9H1oCBiC7A74qme7Jkdy2sYDBCPjjGczutnWnGUTMRlwiNMP/Uq6LrQ==}
     engines: {node: '>=12.0.0'}
@@ -7547,12 +7535,6 @@ packages:
     engines: {node: '>= 0.6'}
     dependencies:
       mime-db: 1.50.0
-    dev: true
-
-  /mime/2.5.2:
-    resolution: {integrity: sha512-tqkh47FzKeCPD2PUiPB6pkbMzsCasjxAfC62/Wap5qrUWcb+sFasXUC5I3gYM5iBM8v/Qpn4UK0x+j0iHyFPDg==}
-    engines: {node: '>=4.0.0'}
-    hasBin: true
     dev: true
 
   /mimic-fn/2.1.0:

@@ -67,8 +67,8 @@ describe("User preferences", () => {
 
             it("Change his avatar", () => {
                 cy.get("[data-test=account-information-avatar-button]").click();
-                cy.get("[data-test=account-information-avatar-modal-select-file]").attachFile(
-                    "heisenberg.jpg"
+                cy.get("[data-test=account-information-avatar-modal-select-file]").selectFile(
+                    "cypress/fixtures/heisenberg.jpg"
                 );
 
                 cy.get("[data-test=user-prefs-save-avatar-button]").click();

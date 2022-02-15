@@ -3,7 +3,7 @@
         "strict": true,
         "target": "es6",
         "lib": ["es6", "dom"],
-        "types": ["cypress", "cypress-file-upload"]
+        "types": ["cypress"]
     },
     "include": [
         "**/*.ts"
