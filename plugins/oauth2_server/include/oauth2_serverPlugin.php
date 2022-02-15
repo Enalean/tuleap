@@ -44,7 +44,6 @@ use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenVerifier;
-use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
 use Tuleap\OAuth2Server\Administration\OAuth2AppProjectVerifier;
 use Tuleap\OAuth2Server\Administration\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\Administration\SiteAdmin\SiteAdminListAppsController;
@@ -537,7 +536,7 @@ final class oauth2_serverPlugin extends Plugin
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
                 new SplitTokenVerificationStringHasher(),
                 new OAuth2AccessTokenDAO(),
-                new OAuth2ScopeSaver(new OAuth2AccessTokenScopeDAO()),
+                new OAuth2ScopeSaver(new Tuleap\OAuth2ServerCore\AccessToken\Scope\OAuth2AccessTokenScopeDAO()),
                 new DateInterval('PT1H'),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
@@ -684,7 +683,7 @@ final class oauth2_serverPlugin extends Plugin
         $verifier = new OAuth2AccessTokenVerifier(
             new OAuth2AccessTokenDAO(),
             new OAuth2ScopeRetriever(
-                new OAuth2AccessTokenScopeDAO(),
+                new Tuleap\OAuth2ServerCore\AccessToken\Scope\OAuth2AccessTokenScopeDAO(),
                 $this->buildScopeBuilder()
             ),
             UserManager::instance(),

@@ -26,7 +26,7 @@ use Project;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBFactory;
 use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenDAO;
-use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
+use Tuleap\OAuth2ServerCore\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
 use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\OAuth2ServerCore\App\NewOAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeDAO;
@@ -101,7 +101,7 @@ final class OAuth2AuthorizationCodeDAOTest extends \Tuleap\Test\PHPUnit\TestCase
         $db->run('DELETE FROM oauth2_authorization_code');
         $db->run('DELETE FROM plugin_oauth2_authorization_code_scope');
         $db->run('DELETE FROM oauth2_access_token');
-        $db->run('DELETE FROM plugin_oauth2_access_token_scope');
+        $db->run('DELETE FROM oauth2_access_token_scope');
         $db->run('DELETE FROM oauth2_refresh_token');
         $db->run('DELETE FROM plugin_oauth2_refresh_token_scope');
     }
