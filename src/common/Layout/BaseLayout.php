@@ -353,17 +353,6 @@ abstract class BaseLayout extends Response
         $this->is_rendered_through_service = $value;
     }
 
-    protected function getProjectSidebar($params, $project)
-    {
-        $builder = new ProjectSidebarToolsBuilder(
-            EventManager::instance(),
-            ProjectManager::instance(),
-            $this->uri_sanitizer
-        );
-
-        return $builder->getSidebarTools($this->getUser(), $params['toptab'], $project);
-    }
-
     final protected function getProjectSidebarData(array $params, Project $project, PFUser $user): ProjectSidebarDataRepresentation
     {
         $event_manager = EventManager::instance();

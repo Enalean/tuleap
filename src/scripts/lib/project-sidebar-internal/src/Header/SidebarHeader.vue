@@ -23,7 +23,11 @@
 <template>
     <div class="project-sidebar-header-name">
         <div class="project-title-container">
-            <a v-bind:href="config.project.href" class="project-sidebar-title">
+            <a
+                v-bind:href="config.project.href"
+                class="project-sidebar-title"
+                data-test="project-sidebar-title"
+            >
                 <span class="project-sidebar-title-icon" aria-hidden="true">
                     {{ config.project.icon }}
                 </span>

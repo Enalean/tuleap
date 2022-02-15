@@ -18,55 +18,36 @@
  */
 
 import { patch } from "tlp";
+import { installProjectSidebarElement } from "@tuleap/project-sidebar-internal";
+const SIDEBAR_COLLAPSED_CLASS = "sidebar-collapsed";
+const SIDEBAR_EXPANDED_CLASS = "sidebar-expanded";
 
 export { init };
 
 function init(): void {
-    const sidebar_collapsers = document.querySelectorAll("[data-sidebar-collapser]"),
-        sidebar = document.querySelector(".sidebar");
+    installProjectSidebarElement(window, () => {
+        // Nothing to do here, we already load everything we need
+    });
 
-    bindSidebarEvent();
+    const sidebars = document.getElementsByTagName("tuleap-project-sidebar");
 
-    function bindSidebarEvent(): void {
-        if (!sidebar) {
-            return;
-        }
-        sidebar.addEventListener("click", (event) => {
-            const clicked_element = event.target;
-            if (!clicked_element || !(clicked_element instanceof HTMLElement)) {
-                return;
-            }
-
-            const is_clicked_element_a_sidebar_collapser =
-                isClickedElementASidebarCollapser(clicked_element);
-            const sidebar_collapsed_class = clicked_element.dataset.collapsedClass;
-
-            if (!is_clicked_element_a_sidebar_collapser || !sidebar_collapsed_class) {
-                return;
-            }
-
-            if (document.body.classList.contains(sidebar_collapsed_class)) {
-                document.body.classList.remove(sidebar_collapsed_class);
-                updateSidebarStateUserPreference("sidebar-expanded");
-            } else {
-                document.body.classList.remove("sidebar-expanded", sidebar_collapsed_class);
-                document.body.classList.add(sidebar_collapsed_class);
-                updateSidebarStateUserPreference(sidebar_collapsed_class);
-            }
-        });
+    for (const sidebar of sidebars) {
+        setupSidebarInteractions(sidebar);
     }
+}
 
-    function isClickedElementASidebarCollapser(clicked_element: HTMLElement): boolean {
-        let is_clicked_element_a_sidebar_collapser = false;
-
-        for (const sidebar_collapser of sidebar_collapsers) {
-            if (sidebar_collapser === clicked_element) {
-                is_clicked_element_a_sidebar_collapser = true;
-            }
+function setupSidebarInteractions(sidebar: Element): void {
+    const collapse_observer = new MutationObserver((mutations): void => {
+        for (const mutation of mutations) {
+            const state = sidebar.hasAttribute(mutation.attributeName ?? "")
+                ? SIDEBAR_COLLAPSED_CLASS
+                : SIDEBAR_EXPANDED_CLASS;
+            document.body.classList.remove(SIDEBAR_EXPANDED_CLASS, SIDEBAR_COLLAPSED_CLASS);
+            document.body.classList.add(state);
+            updateSidebarStateUserPreference(state);
         }
-
-        return is_clicked_element_a_sidebar_collapser;
-    }
+    });
+    collapse_observer.observe(sidebar, { attributes: true, attributeFilter: ["collapsed"] });
 }
 
 function updateSidebarStateUserPreference(state: string): void {

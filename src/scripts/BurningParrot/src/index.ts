@@ -24,9 +24,6 @@ import { initMainPosition } from "../../tuleap/main-position";
 import { initHeaderPosition } from "../../tuleap/header-position";
 import { init as initNavbarPinned } from "../../tuleap/navbar-pinned";
 import { init as initSidebar } from "./sidebar";
-import { init as initProjectFlags } from "./project-flags";
-import { init as initProjectPrivacy } from "./project-privacy";
-import { init as initLinkedProjects } from "./linked-projects";
 import { initHelpDropdown } from "./help-dropdown";
 import { init as initInviteBuddies } from "./invite-buddies";
 import * as autocomplete from "../../tuleap/autocomplete-for-select2";
@@ -50,10 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initNavbarDropdown(createPopover);
     initSidebar();
     initHelpDropdown();
-    initProjectFlags();
-    initProjectPrivacy();
     initInviteBuddies();
-    initLinkedProjects();
 });
 
 // tuleap.autocomplete* is still used by siteadmin scripts which may run without listening to DOMContentLoaded

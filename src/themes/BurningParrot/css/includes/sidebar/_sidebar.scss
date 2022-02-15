@@ -17,12 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "./sidebar-generic";
 @use "./sidebar-project";
 @use "./sidebar-siteadmin";
-@use "./sidebar-collapsed";
+@use "../global-variables";
 
-.sidebar {
-    top: var(--platform-banner-offset-height, 0);
-    height: calc(100vh - var(--platform-banner-offset-height, 0px));
+.has-sidebar {
+    padding: 0 0 0 global-variables.$sidebar-expanded-width;
 }

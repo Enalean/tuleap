@@ -77,12 +77,12 @@ watch(is_sidebar_collapsed, (): void => {
 <style lang="scss">
 @use "../../../themes/tlp/src/scss/components/typography";
 @use "../../../themes/BurningParrot/css/includes/global-variables";
-@use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-generic";
-@use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-collapsed";
-@use "../../../themes/BurningParrot/css/includes/sidebar/sidebar-project";
+@use "./Styles/sidebar-generic";
+@use "./Styles/sidebar-collapsed";
+@use "./Styles/sidebar-project";
 @use "../../../themes/BurningParrot/css/includes/logo";
 @use "@fortawesome/fontawesome-free/scss/fontawesome";
-@use "./fontawesome-classes";
+@use "./Styles/fontawesome-classes";
 @use "../../../themes/tlp/src/fonts/tlp-font/icons";
 @use "@tuleap/tlp-popovers";
 @use "../../../themes/BurningParrot/css/includes/project-privacy-popover";

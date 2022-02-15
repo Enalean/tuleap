@@ -47,21 +47,14 @@ use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
 use Tuleap\Layout\NewDropdown\NewDropdownPresenterBuilder;
 use Tuleap\Layout\SearchFormPresenterBuilder;
-use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Layout\ThemeVariation;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
-use Tuleap\Project\Admin\Access\ProjectAdministrationLinkPresenter;
-use Tuleap\Project\Admin\Access\UserCanAccessProjectAdministrationVerifier;
-use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPresentersBuilder;
-use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Project\Registration\ProjectRegistrationPermissionsChecker;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
-use Tuleap\Project\Sidebar\CollectLinkedProjects;
-use Tuleap\Project\Sidebar\LinkedProjectsCollectionPresenter;
 use Tuleap\Project\Sidebar\ProjectContextPresenter;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
@@ -152,23 +145,11 @@ class BurningParrotTheme extends BaseLayout
         if (! empty($params['group'])) {
             $project = $this->project_manager->getProject($params['group']);
 
-            $administration_link = ProjectAdministrationLinkPresenter::fromProject(
-                new UserCanAccessProjectAdministrationVerifier(new MembershipDelegationDao()),
-                $project,
-                $this->user
-            );
-
-            $linked_projects_event = new CollectLinkedProjects($project, $this->user);
-            $this->event_manager->dispatch($linked_projects_event);
-
             $project_context = ProjectContextPresenter::build(
                 $project,
-                ProjectPrivacyPresenter::fromProject($project),
-                $administration_link,
-                LinkedProjectsCollectionPresenter::fromEvent($linked_projects_event),
                 $this->project_flags_builder->buildProjectFlags($project),
                 $this->getProjectBannerWithScript($project, $this->user, 'project/project-banner-bp.js'),
-                null,
+                $this->getProjectSidebarData($params, $project, $this->user),
             );
 
             if (! isset($params['without-project-in-breadcrumbs']) || $params['without-project-in-breadcrumbs'] === false) {
@@ -318,7 +299,7 @@ class BurningParrotTheme extends BaseLayout
                 $body_classes[] = 'has-visible-platform-banner';
         }
 
-        if (! $sidebar) {
+        if (! $sidebar && $project === null) {
             return $body_classes;
         }
 
@@ -402,43 +383,13 @@ class BurningParrotTheme extends BaseLayout
         if (isset($params['sidebar'])) {
             $this->show_sidebar = true;
             return $params['sidebar'];
-        } elseif (! empty($params['group'])) {
-            $project            = $this->project_manager->getProject($params['group']);
+        }
+
+        if (! empty($params['group'])) {
             $this->show_sidebar = true;
-            return $this->getSidebarPresenterForProject($project, $params);
         }
 
         return false;
-    }
-
-    private function getSidebarPresenterForProject(Project $project, array $params): SidebarPresenter
-    {
-        $administration_link = ProjectAdministrationLinkPresenter::fromProject(
-            new UserCanAccessProjectAdministrationVerifier(new MembershipDelegationDao()),
-            $project,
-            $this->user
-        );
-
-        $linked_projects_event = new CollectLinkedProjects($project, $this->user);
-        $this->event_manager->dispatch($linked_projects_event);
-
-        $project_sidebar_presenter = new ProjectSidebarPresenter(
-            $this->user,
-            $project,
-            $this->getProjectSidebar($params, $project),
-            ProjectPrivacyPresenter::fromProject($project),
-            $administration_link,
-            $this->version,
-            $this->getProjectBanner($project, $this->user),
-            $this->project_flags_builder->buildProjectFlags($project),
-            LinkedProjectsCollectionPresenter::fromEvent($linked_projects_event)
-        );
-
-        return new SidebarPresenter(
-            'project-sidebar',
-            $this->renderer->renderToString('project-sidebar', $project_sidebar_presenter),
-            $this->version
-        );
     }
 
     private function shouldIncludeSitebarStatePreference(array $params)

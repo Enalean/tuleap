@@ -30,12 +30,6 @@ class FlamingParrot_ContainerPresenter
     /** @var array */
     private $toolbar;
 
-    /** @var string */
-    public $project_name;
-
-    /** @var string */
-    public $project_link;
-
     /**
      * @var ?int
      */
@@ -90,8 +84,6 @@ class FlamingParrot_ContainerPresenter
     public function __construct(
         array $breadcrumbs,
         $toolbar,
-        $project_name,
-        $project_link,
         $feedback,
         $feedback_content,
         VersionPresenter $version,
@@ -105,8 +97,6 @@ class FlamingParrot_ContainerPresenter
         $this->breadcrumbs               = $breadcrumbs;
         $this->has_only_one_breadcrumb   = count($breadcrumbs) === 1;
         $this->toolbar                   = $toolbar;
-        $this->project_name              = $project_name;
-        $this->project_link              = $project_link;
         $this->feedback                  = $feedback;
         $this->feedback_content          = $feedback_content;
         $this->version                   = $version;

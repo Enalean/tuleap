@@ -166,8 +166,8 @@ function visitServiceInCurrentProject(
     service_label: string,
     before_visit_callback: (href: string) => void
 ): void {
-    cy.get("[data-test=project-sidebar]")
-        .contains(service_label, { includeShadowDom: true })
+    cy.get("[data-test=project-sidebar-tool]", { includeShadowDom: true })
+        .contains("[data-test=project-sidebar-tool]", service_label, { includeShadowDom: true })
         .should("have.attr", "href")
         .then((href) => {
             before_visit_callback(String(href));

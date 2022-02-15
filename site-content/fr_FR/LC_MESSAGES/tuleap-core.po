@@ -2402,9 +2402,6 @@ msgstr "Ouvrir la barre latérale"
 msgid "Open user dropdown"
 msgstr "Ouvrir le menu utilisateur"
 
-msgid "Open/close sidebar"
-msgstr "Ouvrir/fermer la barre latérale"
-
 msgid "Optional message…"
 msgstr "Message optionnel…"
 

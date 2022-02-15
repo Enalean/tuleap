@@ -30,6 +30,7 @@
         v-bind:target="open_in_new_tab ? '_blank' : '_self'"
         v-bind:rel="open_in_new_tab ? 'noopener noreferrer' : ''"
         v-bind:data-shortcut-sidebar="shortcut"
+        data-test="project-sidebar-tool"
     >
         <i
             class="project-sidebar-nav-item-icon"
