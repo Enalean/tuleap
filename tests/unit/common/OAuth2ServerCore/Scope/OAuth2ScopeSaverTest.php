@@ -20,10 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Scope;
+namespace Tuleap\OAuth2ServerCore\Scope;
 
 use Tuleap\Authentication\Scope\AuthenticationScope;
-use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeIdentifierSaverDAO;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class OAuth2ScopeSaverTest extends \Tuleap\Test\PHPUnit\TestCase
