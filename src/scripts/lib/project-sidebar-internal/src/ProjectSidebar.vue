@@ -89,7 +89,7 @@ watch(is_sidebar_collapsed, (): void => {
 
 :host {
     display: block;
-    contain: content;
+    contain: layout;
     width: global-variables.$sidebar-expanded-width;
     height: 100vh;
 }
