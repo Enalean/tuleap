@@ -38,7 +38,7 @@ declare global {
             userLogout(): void;
             updatePlatformVisibilityAndAllowRestricted(): void;
             updatePlatformVisibilityForAnonymous(): void;
-            getProjectId(project_shortname: string): Chainable<JQuery<HTMLElement>>;
+            getProjectId(project_shortname: string): Chainable<number>;
             visitProjectService(project_unixname: string, service_label: string): void;
             visitProjectAdministration(project_unixname: string): void;
             visitProjectAdministrationInCurrentProject(): void;
@@ -211,17 +211,14 @@ Cypress.Commands.add("updatePlatformVisibilityForAnonymous", (): void => {
     cy.userLogout();
 });
 
-Cypress.Commands.add(
-    "getProjectId",
-    (project_shortname: string): Cypress.Chainable<JQuery<HTMLElement>> => {
-        return cy
-            .getFromTuleapAPI(
-                `/api/projects?limit=1&query=${encodeURIComponent(
-                    JSON.stringify({ shortname: project_shortname })
-                )}`
-            )
-            .then((response) => response.body[0].id);
-    }
-);
+Cypress.Commands.add("getProjectId", (project_shortname: string): Cypress.Chainable<number> => {
+    return cy
+        .getFromTuleapAPI(
+            `/api/projects?limit=1&query=${encodeURIComponent(
+                JSON.stringify({ shortname: project_shortname })
+            )}`
+        )
+        .then((response) => response.body[0].id);
+});
 
 export {};

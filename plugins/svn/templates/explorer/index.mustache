@@ -75,7 +75,7 @@
     <section class="svn-homepage">
         {{# repository_list }}
             {{# repository }}
-                <div class="svn-homepage-repository">
+                <div class="svn-homepage-repository" data-test="svn-repository-card">
                     {{# is_admin }}
                         <a href="{{ getSettingUrl }}" class="svn-homepage-repository-settings" data-test="svn-admin-repository-access" title="{{# dgettext }} tuleap-svn | Settings {{/ dgettext }}">
                             <i class="fas fa-cog"></i>
