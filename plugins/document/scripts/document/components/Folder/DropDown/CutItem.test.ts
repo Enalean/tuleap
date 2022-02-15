@@ -17,28 +17,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const emitMock = jest.fn();
+jest.mock("../../../helpers/emitter", () => {
+    return {
+        emit: emitMock,
+    };
+});
+
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import CutItem from "./CutItem.vue";
-import emitter from "../../../helpers/emitter";
-
-jest.mock("../../../helpers/emitter");
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { Item } from "../../../type";
 
 describe("CutItem", () => {
-    let store, cut_item_factory;
+    let store = {
+        commit: jest.fn(),
+    };
+    function createWrapper(item: Item, pasting_in_progress: boolean): Wrapper<CutItem> {
+        store = createStoreMock({
+            state: {
+                clipboard: { pasting_in_progress },
+            },
+        });
+        return shallowMount(CutItem, {
+            mocks: {
+                $store: store,
+            },
+            localVue: localVue,
+            propsData: { item },
+        });
+    }
+
     beforeEach(() => {
-        store = createStoreMock({}, { clipboard: {} });
-
-        cut_item_factory = (props = {}) => {
-            return shallowMount(CutItem, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-
-        emitter.emit.mockClear();
+        emitMock.mockClear();
     });
 
     it(`Given item is cut
@@ -50,13 +63,13 @@ describe("CutItem", () => {
             title: "My item",
             parent_id: 146,
             user_can_write: true,
-        };
-        const wrapper = cut_item_factory({ item });
+        } as Item;
+        const wrapper = createWrapper(item, false);
 
         wrapper.trigger("click");
 
         expect(store.commit).toHaveBeenCalledWith("clipboard/cutItem", item);
-        expect(emitter.emit).toHaveBeenCalledWith("hide-action-menu");
+        expect(emitMock).toHaveBeenCalledWith("hide-action-menu");
     });
 
     it(`Given an item is being pasted
@@ -68,16 +81,15 @@ describe("CutItem", () => {
             title: "My item",
             parent_id: 146,
             user_can_write: true,
-        };
-        store.state.clipboard.pasting_in_progress = true;
-        const wrapper = cut_item_factory({ item });
+        } as Item;
+        const wrapper = createWrapper(item, true);
 
         expect(wrapper.attributes().disabled).toBeTruthy();
         expect(wrapper.classes("tlp-dropdown-menu-item-disabled")).toBe(true);
 
         wrapper.trigger("click");
 
-        expect(emitter.emit).not.toHaveBeenCalled();
+        expect(emitMock).not.toHaveBeenCalled();
     });
 
     it(`Given the item is the root
@@ -88,8 +100,8 @@ describe("CutItem", () => {
             title: "My item",
             parent_id: 0,
             user_can_write: true,
-        };
-        const wrapper = cut_item_factory({ item });
+        } as Item;
+        const wrapper = createWrapper(item, false);
 
         expect(wrapper.html()).toBeFalsy();
     });
@@ -102,8 +114,8 @@ describe("CutItem", () => {
             title: "My item",
             parent_id: 146,
             user_can_write: false,
-        };
-        const wrapper = cut_item_factory({ item });
+        } as Item;
+        const wrapper = createWrapper(item, false);
 
         expect(wrapper.html()).toBeFalsy();
     });

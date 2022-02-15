@@ -17,54 +17,66 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const emitMock = jest.fn();
+jest.mock("../../../helpers/emitter", () => {
+    return {
+        emit: emitMock,
+    };
+});
+
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import CopyItem from "./CopyItem.vue";
-import emitter from "../../../helpers/emitter";
-
-jest.mock("../../../helpers/emitter");
+import type { Item } from "../../../type";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
 describe("CopyItem", () => {
-    let store, copy_item_factory;
+    let store = {
+        commit: jest.fn(),
+    };
+    function createWrapper(item: Item, pasting_in_progress: boolean): Wrapper<CopyItem> {
+        store = createStoreMock({
+            state: {
+                clipboard: { pasting_in_progress },
+            },
+        });
+        return shallowMount(CopyItem, {
+            mocks: {
+                $store: store,
+            },
+            localVue: localVue,
+            propsData: { item },
+        });
+    }
+
     beforeEach(() => {
-        store = createStoreMock({}, { clipboard: {} });
-
-        copy_item_factory = (props = {}) => {
-            return shallowMount(CopyItem, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-
-        emitter.emit.mockClear();
+        emitMock.mockClear();
     });
 
     it(`Given item is copied
         Then the store is updated accordingly
         And the menu closed`, () => {
-        const item = { id: 147, type: "item_type", title: "My item" };
-        const wrapper = copy_item_factory({ item });
+        const item = { id: 147, type: "item_type", title: "My item" } as Item;
+        const wrapper = createWrapper(item, false);
 
         wrapper.trigger("click");
 
         expect(store.commit).toHaveBeenCalledWith("clipboard/copyItem", item);
-        expect(emitter.emit).toHaveBeenCalledWith("hide-action-menu");
+        expect(emitMock).toHaveBeenCalledWith("hide-action-menu");
     });
 
     it(`Given an item is being pasted
         Then the action is marked as disabled
         And the menu is not closed if the user tries to click on it`, () => {
-        const item = { id: 147, type: "item_type", title: "My item" };
-        store.state.clipboard.pasting_in_progress = true;
-        const wrapper = copy_item_factory({ item });
+        const item = { id: 147, type: "item_type", title: "My item" } as Item;
+        const wrapper = createWrapper(item, true);
 
         expect(wrapper.attributes().disabled).toBeTruthy();
         expect(wrapper.classes("tlp-dropdown-menu-item-disabled")).toBe(true);
 
         wrapper.trigger("click");
 
-        expect(emitter.emit).not.toHaveBeenCalled();
+        expect(emitMock).not.toHaveBeenCalled();
     });
 });

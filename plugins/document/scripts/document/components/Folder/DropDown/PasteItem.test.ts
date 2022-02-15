@@ -17,9 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const emitMock = jest.fn();
+jest.mock("../../../helpers/emitter", () => {
+    return {
+        emit: emitMock,
+    };
+});
+
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import PasteItem from "./PasteItem.vue";
 import * as check_item_title from "../../../helpers/metadata-helpers/check-item-title";
 import * as clipboard_helpers from "../../../helpers/clipboard/clipboard-helpers";
@@ -29,61 +36,81 @@ import {
     CLIPBOARD_OPERATION_COPY,
     CLIPBOARD_OPERATION_CUT,
 } from "../../../constants";
-import emitter from "../../../helpers/emitter";
-
-jest.mock("../../../helpers/emitter");
+import type { Folder, Item } from "../../../type";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
 describe("PasteItem", () => {
-    let store, paste_item_factory;
+    let store = {
+        commit: jest.fn(),
+        dispatch: jest.fn(),
+    };
+
+    const destination = {
+        user_can_write: true,
+        type: TYPE_FOLDER,
+    } as Item;
+    const current_folder = {} as Folder;
+
+    function createWrapper(
+        destination: Item,
+        current_folder: Folder,
+        operation_type: string | null,
+        item_title: string | null,
+        pasting_in_progress: boolean
+    ): Wrapper<PasteItem> {
+        store = createStoreMock({
+            state: {
+                clipboard: {
+                    item_title,
+                    operation_type,
+                    pasting_in_progress,
+                    item_type: TYPE_FOLDER,
+                },
+                current_folder,
+                folder_content: [],
+            },
+        });
+        return shallowMount(PasteItem, {
+            mocks: {
+                $store: store,
+            },
+            localVue: localVue,
+            propsData: { destination },
+        });
+    }
+
     beforeEach(() => {
-        store = createStoreMock({}, { clipboard: {} });
-
-        paste_item_factory = (props = {}) => {
-            return shallowMount(PasteItem, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-
-        emitter.emit.mockClear();
+        emitMock.mockClear();
     });
 
     it(`Given an item is in the clipboard
         And the inspected item is a folder the user can write
-        Then item can be pasted`, () => {
-        store.state.clipboard = { item_title: "My item", operation_type: CLIPBOARD_OPERATION_COPY };
-        const current_folder = {};
-        store.state.current_folder = current_folder;
-
-        const destination = {
-            user_can_write: true,
-            type: TYPE_FOLDER,
-        };
-        const wrapper = paste_item_factory({ destination });
+        Then item can be pasted`, async () => {
+        const wrapper = createWrapper(
+            destination,
+            current_folder,
+            CLIPBOARD_OPERATION_COPY,
+            "My item",
+            false
+        );
 
         expect(wrapper.text()).toContain("My item");
 
         wrapper.trigger("click");
+
+        await wrapper.vm.$nextTick();
 
         expect(store.dispatch).toHaveBeenCalledWith("clipboard/pasteItem", {
             destination_folder: destination,
             current_folder,
             global_context: store,
         });
-        expect(emitter.emit).toHaveBeenCalledWith("hide-action-menu");
+        expect(emitMock).toHaveBeenCalledWith("hide-action-menu");
     });
 
     it(`Given no item is in the clipboard
         Then no item can be pasted`, () => {
-        store.state.clipboard = { item_title: null, operation_type: null, type: null };
-
-        const wrapper = paste_item_factory({
-            destination: {
-                user_can_write: true,
-                type: TYPE_FOLDER,
-            },
-        });
+        const wrapper = createWrapper(destination, current_folder, null, null, true);
 
         expect(wrapper.html()).toBeFalsy();
     });
@@ -91,18 +118,18 @@ describe("PasteItem", () => {
     it(`Given an item is in the clipboard
         And the inspected item is not a folder
         Then no item can be pasted`, () => {
-        store.state.clipboard = {
-            item_title: "My item",
-            operation_type: CLIPBOARD_OPERATION_COPY,
+        const destination = {
+            user_can_write: true,
             type: TYPE_EMPTY,
-        };
+        } as Item;
 
-        const wrapper = paste_item_factory({
-            destination: {
-                user_can_write: true,
-                type: TYPE_EMPTY,
-            },
-        });
+        const wrapper = createWrapper(
+            destination,
+            current_folder,
+            CLIPBOARD_OPERATION_COPY,
+            "My item",
+            true
+        );
 
         expect(wrapper.html()).toBeFalsy();
     });
@@ -110,14 +137,18 @@ describe("PasteItem", () => {
     it(`Given an item is in the clipboard
         And the inspected item is a folder the user can not write
         Then no item can be pasted`, () => {
-        store.state.clipboard = { item_title: "My item", operation_type: CLIPBOARD_OPERATION_COPY };
+        const destination = {
+            user_can_write: false,
+            type: TYPE_FOLDER,
+        } as Item;
 
-        const wrapper = paste_item_factory({
-            destination: {
-                user_can_write: false,
-                type: TYPE_FOLDER,
-            },
-        });
+        const wrapper = createWrapper(
+            destination,
+            current_folder,
+            CLIPBOARD_OPERATION_COPY,
+            "My item",
+            true
+        );
 
         expect(wrapper.html()).toBeFalsy();
     });
@@ -125,44 +156,34 @@ describe("PasteItem", () => {
     it(`Given an item is being pasted
         Then the action is marked as disabled
         And the menu is not closed if the user tries to click on it`, () => {
-        store.state.clipboard = {
-            item_title: "My item",
-            operation_type: CLIPBOARD_OPERATION_COPY,
-            pasting_in_progress: true,
-        };
-        const wrapper = paste_item_factory({
-            destination: {
-                user_can_write: true,
-                type: TYPE_FOLDER,
-            },
-        });
+        const wrapper = createWrapper(
+            destination,
+            current_folder,
+            CLIPBOARD_OPERATION_COPY,
+            "My item",
+            true
+        );
 
         expect(wrapper.attributes().disabled).toBeTruthy();
         expect(wrapper.classes("tlp-dropdown-menu-item-disabled")).toBe(true);
 
         wrapper.trigger("click");
 
-        expect(emitter.emit).not.toHaveBeenCalled();
+        expect(emitMock).not.toHaveBeenCalled();
     });
 
     it(`Given a document is in the clipboard to be moved
         And the inspected item is a folder containing a document with the same name
         Then the item can not be pasted`, () => {
-        store.state.clipboard = {
-            item_title: "My item",
-            item_type: TYPE_EMPTY,
-            operation_type: CLIPBOARD_OPERATION_CUT,
-        };
-        store.state.folder_content = [];
-
         jest.spyOn(check_item_title, "doesDocumentNameAlreadyExist").mockReturnValue(true);
 
-        const wrapper = paste_item_factory({
-            destination: {
-                user_can_write: true,
-                type: TYPE_FOLDER,
-            },
-        });
+        const wrapper = createWrapper(
+            destination,
+            current_folder,
+            CLIPBOARD_OPERATION_CUT,
+            "My item",
+            true
+        );
 
         expect(wrapper.html()).toBeFalsy();
     });
@@ -170,21 +191,15 @@ describe("PasteItem", () => {
     it(`Given a folder is in the clipboard to be moved
         And the inspected item is a folder containing a folder with the same name
         Then the item can not be pasted`, () => {
-        store.state.clipboard = {
-            item_title: "My item",
-            item_type: TYPE_FOLDER,
-            operation_type: CLIPBOARD_OPERATION_CUT,
-        };
-        store.state.folder_content = [];
-
         jest.spyOn(check_item_title, "doesFolderNameAlreadyExist").mockReturnValue(true);
 
-        const wrapper = paste_item_factory({
-            destination: {
-                user_can_write: true,
-                type: TYPE_FOLDER,
-            },
-        });
+        const wrapper = createWrapper(
+            destination,
+            current_folder,
+            CLIPBOARD_OPERATION_CUT,
+            "My item",
+            true
+        );
 
         expect(wrapper.html()).toBeFalsy();
     });
@@ -192,22 +207,16 @@ describe("PasteItem", () => {
     it(`Given a folder is in the clipboard to be moved
         And the inspected item is a subfolder
         Then the item can not be pasted`, () => {
-        store.state.clipboard = {
-            item_title: "My item",
-            item_type: TYPE_FOLDER,
-            operation_type: CLIPBOARD_OPERATION_CUT,
-        };
-        store.state.folder_content = [];
-
         jest.spyOn(check_item_title, "doesFolderNameAlreadyExist").mockReturnValue(false);
         jest.spyOn(clipboard_helpers, "isItemDestinationIntoItself").mockReturnValue(true);
 
-        const wrapper = paste_item_factory({
-            destination: {
-                user_can_write: true,
-                type: TYPE_FOLDER,
-            },
-        });
+        const wrapper = createWrapper(
+            destination,
+            current_folder,
+            CLIPBOARD_OPERATION_CUT,
+            "My item",
+            true
+        );
 
         expect(wrapper.html()).toBeFalsy();
     });
