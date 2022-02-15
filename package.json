@@ -28,7 +28,6 @@
     "copy-webpack-plugin": "^10.2.0",
     "css-loader": "^6.2.0",
     "cypress": "^9.4.1",
-    "cypress-file-upload": "^5.0.2",
     "esbuild-loader": "^2.18.0",
     "eslint": "^8.1.0",
     "eslint-config-prettier": "^8.3.0",
