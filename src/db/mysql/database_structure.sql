@@ -1761,6 +1761,12 @@ CREATE TABLE oauth2_access_token_scope (
     scope_key VARCHAR(255) NOT NULL,
     PRIMARY KEY (access_token_id, scope_key)
 ) ENGINE=InnoDB;
+
+CREATE TABLE oauth2_refresh_token_scope (
+    refresh_token_id INT(11) NOT NULL,
+    scope_key VARCHAR(255) NOT NULL,
+    PRIMARY KEY (refresh_token_id, scope_key)
+) ENGINE=InnoDB;
 #
 # EOF
 #

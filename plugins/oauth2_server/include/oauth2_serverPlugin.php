@@ -83,7 +83,6 @@ use Tuleap\OAuth2Server\RefreshToken\OAuth2OfflineAccessScope;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenCreator;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenDAO;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenVerifier;
-use Tuleap\OAuth2Server\RefreshToken\Scope\OAuth2RefreshTokenScopeDAO;
 use Tuleap\OAuth2Server\REST\Specification\Swagger\SwaggerJsonOAuth2SecurityDefinition;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
@@ -545,7 +544,7 @@ final class oauth2_serverPlugin extends Plugin
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2RefreshToken()),
                 new SplitTokenVerificationStringHasher(),
                 new OAuth2RefreshTokenDAO(),
-                new OAuth2ScopeSaver(new OAuth2RefreshTokenScopeDAO()),
+                new OAuth2ScopeSaver(new Tuleap\OAuth2ServerCore\RefreshToken\Scope\OAuth2RefreshTokenScopeDAO()),
                 new DateInterval('PT6H'),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
@@ -589,7 +588,7 @@ final class oauth2_serverPlugin extends Plugin
                 new OAuth2RefreshTokenVerifier(
                     new SplitTokenVerificationStringHasher(),
                     new OAuth2RefreshTokenDAO(),
-                    new OAuth2ScopeRetriever(new OAuth2RefreshTokenScopeDAO(), $this->buildScopeBuilder()),
+                    new OAuth2ScopeRetriever(new Tuleap\OAuth2ServerCore\RefreshToken\Scope\OAuth2RefreshTokenScopeDAO(), $this->buildScopeBuilder()),
                     new OAuth2AuthorizationCodeRevoker(new OAuth2AuthorizationCodeDAO()),
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 ),

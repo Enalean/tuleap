@@ -136,13 +136,13 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
                               oauth2_access_token.*,
                               oauth2_access_token_scope.*,
                               oauth2_refresh_token.*,
-                              plugin_oauth2_refresh_token_scope.*
+                              oauth2_refresh_token_scope.*
                        FROM oauth2_authorization_code
                        LEFT JOIN plugin_oauth2_authorization_code_scope ON oauth2_authorization_code.id = plugin_oauth2_authorization_code_scope.auth_code_id
                        LEFT JOIN oauth2_access_token ON oauth2_authorization_code.id = oauth2_access_token.authorization_code_id
                        LEFT JOIN oauth2_access_token_scope on oauth2_access_token.id = oauth2_access_token_scope.access_token_id
                        LEFT JOIN oauth2_refresh_token ON oauth2_authorization_code.id = oauth2_refresh_token.authorization_code_id
-                       LEFT JOIN plugin_oauth2_refresh_token_scope ON oauth2_refresh_token.id = plugin_oauth2_refresh_token_scope.refresh_token_id
+                       LEFT JOIN oauth2_refresh_token_scope ON oauth2_refresh_token.id = oauth2_refresh_token_scope.refresh_token_id
                        LEFT JOIN oauth2_server_app ON oauth2_authorization_code.app_id = oauth2_server_app.id
                        LEFT JOIN `groups` ON oauth2_server_app.project_id = `groups`.group_id
                        WHERE $filter_statement",
