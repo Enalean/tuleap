@@ -30,7 +30,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCode;
+use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCode;
 use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenDAO;
 
@@ -82,7 +82,6 @@ class OAuth2RefreshTokenCreator
         $this->refresh_token_expiration_delay = $refresh_token_expiration_delay;
         $this->transaction_executor           = $transaction_executor;
     }
-
 
     public function issueRefreshTokenIdentifierFromAuthorizationCode(\DateTimeImmutable $current_time, OAuth2AuthorizationCode $authorization_code): ?ConcealedString
     {
