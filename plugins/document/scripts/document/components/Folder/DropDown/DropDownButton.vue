@@ -39,52 +39,61 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import type { Dropdown } from "tlp";
 import { createDropdown, EVENT_TLP_DROPDOWN_SHOWN, EVENT_TLP_DROPDOWN_HIDDEN } from "tlp";
 import { EVENT_TLP_MODAL_SHOWN } from "../../../../../../../src/themes/tlp/src/js/modal";
 import emitter from "../../../helpers/emitter";
+import { Component, Prop, Vue } from "vue-property-decorator";
 
-export default {
-    name: "DropDownButton",
-    props: {
-        isInLargeMode: Boolean,
-        isInQuickLookMode: Boolean,
-        isAppended: {
-            type: Boolean,
-            default: true,
-        },
-    },
-    data() {
-        return { dropdown: null };
-    },
+@Component
+export default class DropDownButton extends Vue {
+    @Prop({ required: true })
+    readonly isInLargeMode!: boolean;
+
+    @Prop({ required: true })
+    readonly isInQuickLookMode!: boolean;
+
+    @Prop({ required: true })
+    readonly isAppended!: boolean;
+
+    private dropdown: null | Dropdown = null;
+
     mounted() {
-        this.dropdown = createDropdown(this.$refs.dropdownButton);
+        const dropdownButton = this.$refs.dropdownButton;
+        if (!(dropdownButton instanceof Element)) {
+            return;
+        }
+
+        this.dropdown = createDropdown(dropdownButton);
 
         this.dropdown.addEventListener(EVENT_TLP_DROPDOWN_SHOWN, this.showDropdownEvent);
         this.dropdown.addEventListener(EVENT_TLP_DROPDOWN_HIDDEN, this.hideDropdownEvent);
         document.addEventListener(EVENT_TLP_MODAL_SHOWN, this.hideActionMenu);
 
         emitter.on("hide-action-menu", this.hideActionMenu);
-    },
+    }
     beforeDestroy() {
-        this.dropdown.removeEventListener(EVENT_TLP_DROPDOWN_SHOWN);
-        this.dropdown.removeEventListener(EVENT_TLP_DROPDOWN_HIDDEN);
         document.removeEventListener(EVENT_TLP_MODAL_SHOWN, this.hideActionMenu);
 
         emitter.off("hide-action-menu", this.hideActionMenu);
-    },
-    methods: {
-        hideActionMenu() {
-            if (this.dropdown && this.dropdown.is_shown) {
-                this.dropdown.hide();
-            }
-        },
-        showDropdownEvent() {
-            emitter.emit("set-dropdown-shown", { is_dropdown_shown: true });
-        },
-        hideDropdownEvent() {
-            emitter.emit("set-dropdown-shown", { is_dropdown_shown: false });
-        },
-    },
-};
+        if (!this.dropdown) {
+            return;
+        }
+        this.dropdown.removeEventListener(EVENT_TLP_DROPDOWN_SHOWN, this.showDropdownEvent);
+        this.dropdown.removeEventListener(EVENT_TLP_DROPDOWN_HIDDEN, this.hideDropdownEvent);
+    }
+
+    hideActionMenu(): void {
+        if (this.dropdown && this.dropdown.is_shown) {
+            this.dropdown.hide();
+        }
+    }
+    showDropdownEvent(): void {
+        emitter.emit("set-dropdown-shown", { is_dropdown_shown: true });
+    }
+    hideDropdownEvent(): void {
+        emitter.emit("set-dropdown-shown", { is_dropdown_shown: false });
+    }
+}
 </script>

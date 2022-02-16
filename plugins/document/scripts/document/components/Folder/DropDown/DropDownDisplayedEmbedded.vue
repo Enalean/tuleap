@@ -21,6 +21,7 @@
     <drop-down-menu
         v-bind:is-in-folder-empty-state="isInFolderEmptyState"
         v-bind:item="currently_previewed_item"
+        v-bind:is-in-quick-look-mode="false"
     >
         <template v-if="currently_previewed_item.user_can_write">
             <lock-item
@@ -55,8 +56,7 @@
     </drop-down-menu>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
 import DropDownMenu from "./DropDownMenu.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import DeleteItem from "./DeleteItem.vue";
@@ -64,9 +64,11 @@ import LockItem from "./LockItem.vue";
 import UnlockItem from "./UnlockItem.vue";
 import UpdateProperties from "./UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { State } from "vuex-class";
+import type { Embedded } from "../../../type";
 
-export default {
-    name: "DropDownDisplayedEmbedded",
+@Component({
     components: {
         UpdateProperties,
         UpdatePermissions,
@@ -76,17 +78,18 @@ export default {
         DropDownSeparator,
         DropDownMenu,
     },
-    props: {
-        isInFolderEmptyState: Boolean,
-    },
-    computed: {
-        ...mapState(["currently_previewed_item"]),
-        can_user_delete_item() {
-            return (
-                this.currently_previewed_item.user_can_write &&
-                this.currently_previewed_item.parent_id
-            );
-        },
-    },
-};
+})
+export default class DropDownDisplayedEmbedded extends Vue {
+    @Prop({ required: true })
+    readonly isInFolderEmptyState!: boolean;
+
+    @State
+    readonly currently_previewed_item!: Embedded;
+
+    get can_user_delete_item(): boolean {
+        return Boolean(
+            this.currently_previewed_item.user_can_write && this.currently_previewed_item.parent_id
+        );
+    }
+}
 </script>

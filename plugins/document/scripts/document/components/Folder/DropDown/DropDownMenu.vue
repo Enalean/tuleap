@@ -89,17 +89,20 @@
         <slot name="delete-item" />
     </div>
 </template>
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
 import CutItem from "./CutItem.vue";
 import CopyItem from "./CopyItem.vue";
 import PasteItem from "./PasteItem.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import DownloadFolderAsZip from "./DownloadFolderAsZip/DownloadFolderAsZip.vue";
 import { isFolder, isEmpty } from "../../../helpers/type-check-helper";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Item } from "../../../type";
+import { namespace } from "vuex-class";
 
-export default {
-    name: "DropDownMenu",
+const configuration = namespace("configuration");
+
+@Component({
     components: {
         DropDownSeparator,
         CutItem,
@@ -107,33 +110,35 @@ export default {
         PasteItem,
         DownloadFolderAsZip,
     },
-    props: {
-        isInFolderEmptyState: Boolean,
-        isInQuickLookMode: Boolean,
-        hideItemTitle: Boolean,
-        hideDetailsEntry: Boolean,
-        item: Object,
-    },
-    data() {
-        return {
-            NOTIFS_PANE_NAME: "notifications",
-            HISTORY_PANE_NAME: "history",
-            APPROVAL_TABLES_PANE_NAME: "approval",
-        };
-    },
-    computed: {
-        ...mapState("configuration", ["project_id", "is_deletion_allowed"]),
-    },
-    methods: {
-        getUrlForPane(pane_name) {
-            return `/plugins/docman/?group_id=${this.project_id}&id=${this.item.id}&action=details&section=${pane_name}`;
-        },
-        is_item_a_folder(item) {
-            return isFolder(item);
-        },
-        is_item_an_empty_document(item) {
-            return isEmpty(item);
-        },
-    },
-};
+})
+export default class DropDownMenu extends Vue {
+    @Prop({ required: true })
+    readonly isInFolderEmptyState!: boolean;
+
+    @Prop({ required: true })
+    readonly isInQuickLookMode!: boolean;
+
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    @configuration.State
+    readonly project_id!: number;
+
+    @configuration.State
+    readonly is_deletion_allowed!: boolean;
+
+    private NOTIFS_PANE_NAME = "notifications";
+    private HISTORY_PANE_NAME = "history";
+    private APPROVAL_TABLES_PANE_NAME = "approval";
+
+    getUrlForPane(pane_name: string): string {
+        return `/plugins/docman/?group_id=${this.project_id}&id=${this.item.id}&action=details&section=${pane_name}`;
+    }
+    is_item_a_folder(item: Item): boolean {
+        return isFolder(item);
+    }
+    is_item_an_empty_document(item: Item): boolean {
+        return isEmpty(item);
+    }
+}
 </script>

@@ -31,19 +31,22 @@
         <translate>New folder</translate>
     </button>
 </template>
-<script>
-import { isFolder } from "../../../helpers/type-check-helper";
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
 import emitter from "../../../helpers/emitter";
-export default {
-    name: "NewFolderSecondaryAction",
-    props: { item: Object },
-    methods: {
-        showNewFolderModal() {
-            emitter.emit("show-new-folder-modal", { detail: { parent: this.item } });
-        },
-        is_item_a_folder(item) {
-            return isFolder(item);
-        },
-    },
-};
+import { isFolder } from "../../../helpers/type-check-helper";
+import type { Item } from "../../../type";
+
+@Component
+export default class NewFolderSecondaryAction extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    showNewFolderModal(): void {
+        emitter.emit("show-new-folder-modal", { detail: { parent: this.item } });
+    }
+    is_item_a_folder(item: Item): boolean {
+        return isFolder(item);
+    }
+}
 </script>

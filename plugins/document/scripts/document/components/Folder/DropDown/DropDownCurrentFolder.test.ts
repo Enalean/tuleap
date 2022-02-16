@@ -17,40 +17,42 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import DropDownCurrentFolder from "./DropDownCurrentFolder.vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { Folder, State } from "../../../type";
 
 describe("DropDownCurrentFolder", () => {
-    let dropdown_factory, state, store, store_options;
-    beforeEach(() => {
-        state = {
+    function createWrapper(
+        isInFolderEmptyState: boolean,
+        user_can_write: boolean,
+        parent_id: number
+    ): Wrapper<DropDownCurrentFolder> {
+        const state = {
             current_folder: {
                 id: 42,
                 title: "current folder title",
-            },
-        };
-
-        store_options = {
+                user_can_write,
+                parent_id,
+            } as Folder,
+        } as State;
+        const store_options = {
             state,
         };
-        store = createStoreMock(store_options);
-
-        dropdown_factory = () => {
-            return shallowMount(DropDownCurrentFolder, {
-                localVue,
-                mocks: { $store: store },
-            });
-        };
-    });
+        const store = createStoreMock(store_options);
+        return shallowMount(DropDownCurrentFolder, {
+            localVue,
+            mocks: { $store: store },
+            propsData: { isInFolderEmptyState },
+        });
+    }
 
     it(`Given user does not have write permission on current folder
         When we display the dropdown
         Then user should not be able to manipulate folder content`, () => {
-        store.state.current_folder.user_can_write = false;
-
-        const wrapper = dropdown_factory();
+        const wrapper = createWrapper(false, false, 3);
 
         expect(
             wrapper.find("[data-test=document-new-folder-creation-button]").exists()
@@ -62,10 +64,7 @@ describe("DropDownCurrentFolder", () => {
     it(`Given user has write permission on current folder
         When we display the dropdown
         Then user should be able to manipulate folder content`, () => {
-        store.state.current_folder.user_can_write = true;
-        store.state.current_folder.parent_id = 3;
-
-        const wrapper = dropdown_factory();
+        const wrapper = createWrapper(false, true, 3);
 
         expect(
             wrapper.find("[data-test=document-new-folder-creation-button]").exists()
@@ -77,10 +76,8 @@ describe("DropDownCurrentFolder", () => {
     it(`Given user is docman writer and the current folder is not the root folder
         When we display the menu
         Then the delete button should be available`, () => {
-        store.state.current_folder.user_can_write = true;
-        store.state.current_folder.parent_id = 3;
+        const wrapper = createWrapper(false, true, 3);
 
-        const wrapper = dropdown_factory();
         expect(wrapper.find("[data-test=document-delete-folder-button]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-delete-folder-separator]").exists()).toBeTruthy();
     });
@@ -88,8 +85,7 @@ describe("DropDownCurrentFolder", () => {
     it(`Given user is docman writer and folder is root folder
         When we display the menu
         Then the delete button should NOT be available`, () => {
-        store.state.current_folder.user_can_write = true;
-        const wrapper = dropdown_factory();
+        const wrapper = createWrapper(false, true, 0);
 
         expect(wrapper.find("[data-test=document-delete-folder-button]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-delete-folder-separator]").exists()).toBeFalsy();
@@ -98,9 +94,7 @@ describe("DropDownCurrentFolder", () => {
     it(`Given user is NOT docman writer
         When we display the menu
         Then the delete button should NOT be available`, () => {
-        store.state.current_folder.user_can_write = false;
-
-        const wrapper = dropdown_factory();
+        const wrapper = createWrapper(false, false, 3);
         expect(wrapper.find("[data-test=document-delete-folder-button]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-delete-folder-separator]").exists()).toBeFalsy();
     });

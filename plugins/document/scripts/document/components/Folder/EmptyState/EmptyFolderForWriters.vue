@@ -32,7 +32,11 @@
                     class="tlp-button-primary tlp-dropdown-split-button-main"
                     v-bind:item="current_folder"
                 />
-                <drop-down-button v-bind:is-in-large-mode="false">
+                <drop-down-button
+                    v-bind:is-in-large-mode="false"
+                    v-bind:is-in-quick-look-mode="false"
+                    v-bind:is-appended="true"
+                >
                     <drop-down-current-folder v-bind:is-in-folder-empty-state="true" />
                 </drop-down-button>
             </div>

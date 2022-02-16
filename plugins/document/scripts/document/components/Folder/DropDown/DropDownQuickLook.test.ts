@@ -17,36 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import localVue from "../../../helpers/local-vue";
 import DropDownQuickLook from "./DropDownQuickLook.vue";
+import type { Folder, Item, ItemFile } from "../../../type";
 
 describe("DropDownQuickLook", () => {
-    let factory, store;
-    beforeEach(() => {
-        store = createStoreMock({});
-
-        factory = (props = {}) => {
-            return shallowMount(DropDownQuickLook, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-    });
+    function createWrapper(item: Item): Wrapper<DropDownQuickLook> {
+        return shallowMount(DropDownQuickLook, {
+            localVue,
+            propsData: { item },
+        });
+    }
 
     it(`Given item is not a folder and user can write
         When we display the menu
         Then the drop down does not display New folder/document entries`, () => {
-        const wrapper = factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "file",
-                user_can_write: true,
-            },
-        });
+        const wrapper = createWrapper({
+            id: 1,
+            title: "my item title",
+            type: "file",
+            user_can_write: true,
+        } as ItemFile);
 
         expect(wrapper.find("[data-test=dropdown-menu-folder-creation]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=dropdown-menu-file-creation]").exists()).toBeFalsy();
@@ -56,32 +49,26 @@ describe("DropDownQuickLook", () => {
     it(`Given item is not a folder and user can read
         When we display the menu
         Then does not display lock informations`, () => {
-        const wrapper = factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "file",
-                user_can_write: false,
-            },
-        });
+        const wrapper = createWrapper({
+            id: 1,
+            title: "my item title",
+            type: "file",
+            user_can_write: false,
+        } as ItemFile);
 
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBeFalsy();
     });
 
     describe("Given item is a folder", () => {
-        let wrapper;
-
-        const item = {
-            id: 1,
-            title: "my folder",
-            type: "folder",
-            user_can_write: true,
-        };
-
         it(`When the dropdown is open
             Then user should not have the "create new version" option`, () => {
-            wrapper = factory({ item });
+            const wrapper = createWrapper({
+                id: 1,
+                title: "my folder",
+                type: "folder",
+                user_can_write: true,
+            } as Folder);
 
             expect(
                 wrapper.find("[data-test=document-quicklook-action-button-new-item]").exists()
@@ -99,9 +86,12 @@ describe("DropDownQuickLook", () => {
 
         it(`When user cannot write and the menu is displayed
             Then the user should not be able to create folder/documents`, () => {
-            item.user_can_write = false;
-
-            wrapper = factory({ item });
+            const wrapper = createWrapper({
+                id: 1,
+                title: "my folder",
+                type: "folder",
+                user_can_write: false,
+            } as Folder);
 
             expect(wrapper.find("[data-test=dropdown-menu-folder-creation]").exists()).toBeFalsy();
             expect(wrapper.find("[data-test=dropdown-menu-file-creation]").exists()).toBeFalsy();
