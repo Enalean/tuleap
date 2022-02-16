@@ -193,7 +193,7 @@ class Docman_Actions extends Actions
                     $project_id = $item->getGroupId();
 
                     $filename_builder = new FilenameBuilder(new FilenamePatternRetriever(new SettingsDAO()));
-                    $updated_filename = $filename_builder->buildFilename($_FILES['file']['name'], $project_id);
+                    $updated_filename = $filename_builder->buildFilename($_FILES['file']['name'], $project_id, $item->getTitle());
 
                     $path = $fs->upload($_FILES['file'], $updated_filename, $project_id, $item->getId(), $number);
                     if ($path) {

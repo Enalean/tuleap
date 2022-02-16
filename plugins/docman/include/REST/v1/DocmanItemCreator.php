@@ -166,8 +166,8 @@ class DocmanItemCreator
     public function createFileDocument(
         Docman_Item $parent_item,
         PFUser $user,
-        $title,
-        $description,
+        string $title,
+        string $description,
         ?string $status,
         ?string $obsolescence_date,
         \DateTimeImmutable $current_time,
@@ -188,7 +188,8 @@ class DocmanItemCreator
 
         $updated_filename = $this->filename_builder->buildFilename(
             $file_properties->file_name,
-            $parent_item->getGroupId()
+            $parent_item->getGroupId(),
+            $title
         );
 
         try {

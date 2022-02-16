@@ -23,18 +23,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\FilenamePattern;
 
+
 final class FilenameBuilder
 {
+    private const TITLE_VARIABLE = "\${TITLE}";
+
     public function __construct(private RetrieveFilenamePattern $filename_pattern_retriever)
     {
     }
 
-    public function buildFilename(string $original_filename, int $project_id): string
+    public function buildFilename(string $original_filename, int $project_id, string $title): string
     {
         $pattern = $this->filename_pattern_retriever->getPattern($project_id);
         if (! $pattern) {
             return $original_filename;
         }
-        return $pattern;
+
+        $new_filename = $pattern;
+        if (str_contains($pattern, self::TITLE_VARIABLE)) {
+            $new_filename = str_replace(self::TITLE_VARIABLE, $title, $new_filename);
+        }
+        return $new_filename;
     }
 }
