@@ -23,10 +23,13 @@
 
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\DestinationCloneItem;
+use Tuleap\Docman\FilenamePattern\FilenameBuilder;
+use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
 use Tuleap\Docman\Metadata\ItemImpactedByMetadataChangeCollection;
 use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
+use Tuleap\Docman\Settings\SettingsDAO;
 
 require_once __DIR__ . '/../../../src/www/news/news_utils.php';
 
@@ -187,10 +190,15 @@ class Docman_Actions extends Actions
                         }
                     }
                 } else {
-                    $path = $fs->upload($_FILES['file'], $item->getGroupId(), $item->getId(), $number);
+                    $project_id = $item->getGroupId();
+
+                    $filename_builder = new FilenameBuilder(new FilenamePatternRetriever(new SettingsDAO()));
+                    $updated_filename = $filename_builder->buildFilename($_FILES['file']['name'], $project_id);
+
+                    $path = $fs->upload($_FILES['file'], $updated_filename, $project_id, $item->getId(), $number);
                     if ($path) {
                         $uploadSucceded = true;
-                        $_filename      = $_FILES['file']['name'];
+                        $_filename      = $updated_filename;
                         $_filesize      = $_FILES['file']['size'];
                         $_filetype      = $_FILES['file']['type']; //TODO detect mime type server side
                     }

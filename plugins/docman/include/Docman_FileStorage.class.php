@@ -30,9 +30,9 @@ class Docman_FileStorage
         $this->root = $root;
     }
 
-    public function upload($file, $group_id, $item_id, $version_number)
+    public function upload(array $file, string $filename, int $group_id, int $item_id, int $version_number): string|false
     {
-        $path = $this->_getPath($file['name'], $group_id, $item_id, $version_number);
+        $path = $this->_getPath($filename, $group_id, $item_id, $version_number);
         if (move_uploaded_file($file['tmp_name'], $path)) {
             return $path;
         } else {

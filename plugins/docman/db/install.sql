@@ -127,6 +127,7 @@ CREATE TABLE plugin_docman_project_settings (
   view      VARCHAR(255),
   use_obsolescence_date TINYINT(4) DEFAULT 0 NOT NULL,
   use_status TINYINT(4) DEFAULT 0 NOT NULL,
+  filename_pattern VARCHAR(255) DEFAULT NULL,
   KEY group_id (group_id)
 );
 
