@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
+namespace Tuleap\OAuth2ServerCore\Grant\AuthorizationCode;
 
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
@@ -42,12 +42,12 @@ final class OAuth2AuthorizationCodeTest extends \Tuleap\Test\PHPUnit\TestCase
             [$scope]
         );
 
-        $this->assertSame(12, $auth_code->getID());
-        $this->assertSame($user, $auth_code->getUser());
-        $this->assertSame($pkce_code_challenge, $auth_code->getPKCECodeChallenge());
-        $this->assertSame($nonce, $auth_code->getOIDCNonce());
+        self::assertSame(12, $auth_code->getID());
+        self::assertSame($user, $auth_code->getUser());
+        self::assertSame($pkce_code_challenge, $auth_code->getPKCECodeChallenge());
+        self::assertSame($nonce, $auth_code->getOIDCNonce());
         $scopes = $auth_code->getScopes();
-        $this->assertCount(1, $scopes);
-        $this->assertEquals($scope, $scopes[0]);
+        self::assertCount(1, $scopes);
+        self::assertEquals($scope, $scopes[0]);
     }
 }

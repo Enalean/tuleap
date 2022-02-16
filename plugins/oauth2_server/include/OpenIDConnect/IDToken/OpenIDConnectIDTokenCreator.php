@@ -26,7 +26,7 @@ use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCode;
+use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCode;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\OpenIDConnectSigningKeyFactory;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Issuer;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OAuth2SignInScope;

@@ -28,7 +28,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenWithIdentifier;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCode;
+use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCode;
 use Tuleap\OAuth2Server\OAuth2TestScope;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectIDTokenCreator;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2OfflineAccessScope;

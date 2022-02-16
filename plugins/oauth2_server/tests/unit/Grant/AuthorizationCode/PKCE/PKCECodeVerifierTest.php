@@ -29,6 +29,7 @@ use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\InvalidFormatCodeVerifierEx
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\MissingExpectedCodeVerifierException;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\PKCECodeVerifier;
 use Tuleap\OAuth2Server\OAuth2TestScope;
+use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCode;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PKCECodeVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
