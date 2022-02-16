@@ -204,6 +204,8 @@ module.exports = {
                     { assertionStyle: "as" },
                 ],
                 // Allow innerHTML in tests
+                "no-unsanitized/property": "off",
+                // Allow insertAdjacentHTML in tests
                 "no-unsanitized/method": "off",
             },
         },

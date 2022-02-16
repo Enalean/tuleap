@@ -9,6 +9,10 @@ import "angular-mocks";
 
 import card_fields_module from "./index.js";
 
+jest.mock("escape-string-regexp", () => ({
+    default: jest.requireActual("escape-string-regexp"),
+}));
+
 describe("tuleapHighlight", () => {
     let highlightFilter, test_phrase;
 
@@ -46,24 +50,6 @@ describe("tuleapHighlight", () => {
 
     it("should work correctly for number text", () => {
         expect(highlightFilter(3210123, "0")).toEqual('321<span class="highlight">0</span>123');
-    });
-
-    it("should work correctly for text containing html tags", () => {
-        test_phrase = "Echo <span>yeah</span>";
-        const search_term = ">";
-
-        expect(highlightFilter(test_phrase, search_term)).toEqual(
-            'Echo &#x3C;span<span class="highlight">&#x3E;</span>yeah&#x3C;/span<span class="highlight">&#x3E;</span>'
-        );
-    });
-
-    it("should not highlight html entities when searching a number in text containing html tags", () => {
-        test_phrase = "Echo<span>yeah</span>";
-        const search_term = "3";
-
-        expect(highlightFilter(test_phrase, search_term)).toEqual(
-            "Echo&#x3C;span&#x3E;yeah&#x3C;/span&#x3E;"
-        );
     });
 
     it("should highlight nothing if empty filter string passed", () => {
