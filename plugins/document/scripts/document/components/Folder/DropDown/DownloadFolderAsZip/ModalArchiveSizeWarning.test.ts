@@ -17,23 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../../helpers/local-vue";
-import ModalSizeThresholdExceeded from "./ModalMaxArchiveSizeThresholdExceeded.vue";
+import ModalArchiveSizeWarningModal from "./ModalArchiveSizeWarning.vue";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
-describe("ModalSizeThresholdExceeded", () => {
-    function getWrapper() {
+describe("ModalArchiveSizeWarningModal", () => {
+    function getWrapper(): Wrapper<ModalArchiveSizeWarningModal> {
         const state = {
-            configuration: { max_archive_size: 1 },
+            configuration: { warning_threshold: 1 },
         };
         const store_options = { state };
         const store = createStoreMock(store_options);
 
-        return shallowMount(ModalSizeThresholdExceeded, {
+        return shallowMount(ModalArchiveSizeWarningModal, {
             localVue,
             propsData: {
                 size: 1050000,
+                folderHref: "/download/me/here",
+                shouldWarnOsxUser: false,
             },
             mocks: { $store: store },
         });
@@ -48,16 +51,28 @@ describe("ModalSizeThresholdExceeded", () => {
     it("displays the size of the folder in MB", () => {
         const wrapper = getWrapper();
 
-        expect(wrapper.vm.size_in_MB).toEqual("1.05");
+        expect(wrapper.find("[data-test=download-as-zip-folder-size-warning]").html()).toContain(
+            "1.05 MB"
+        );
     });
 
     it("Emits an event when it is closed", () => {
         const wrapper = getWrapper();
 
-        wrapper
-            .find("[data-test=close-max-archive-size-threshold-exceeded-modal]")
-            .trigger("click");
+        wrapper.find("[data-test=close-archive-size-warning]").trigger("click");
 
-        expect(wrapper.emitted("download-as-zip-modal-closed").length).toBe(1);
+        expect(wrapper.emitted("download-folder-as-zip-modal-closed")?.length).toBe(1);
+    });
+
+    it("The [Download] button is a link to the archive, the modal is closed when it is clicked", () => {
+        const wrapper = getWrapper();
+        const confirm_button = wrapper.find(
+            "[data-test=confirm-download-archive-button-despite-size-warning]"
+        );
+
+        expect(confirm_button.attributes("href")).toEqual("/download/me/here");
+        confirm_button.trigger("click");
+
+        expect(wrapper.emitted("download-folder-as-zip-modal-closed")?.length).toBe(1);
     });
 });

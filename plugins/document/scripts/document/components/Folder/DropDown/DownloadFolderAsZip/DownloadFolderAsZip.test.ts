@@ -17,24 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const emitMock = jest.fn();
+jest.mock("../../../../helpers/emitter", () => {
+    return {
+        emit: emitMock,
+    };
+});
+
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import localVue from "../../../../helpers/local-vue";
 import DownloadFolderAsZip from "./DownloadFolderAsZip.vue";
 import * as location_helper from "../../../../helpers/location-helper";
+import * as platform_detector from "../../../../helpers/platform-detector";
 import Vue from "vue";
-import emitter from "../../../../helpers/emitter";
-
-jest.mock("../../../../helpers/emitter");
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
 describe("DownloadFolderAsZip", () => {
-    let store;
+    let store = {
+        dispatch: jest.fn(),
+    };
 
     beforeEach(() => {
-        emitter.emit.mockClear();
+        emitMock.mockClear();
     });
 
-    function getWrapper(max_archive_size = 1) {
+    function getWrapper(max_archive_size = 1): Wrapper<DownloadFolderAsZip> {
         const state = {
             configuration: {
                 project_name: "tuleap-documentation",
@@ -74,12 +82,9 @@ describe("DownloadFolderAsZip", () => {
             id: 10,
             type: "folder",
         });
-        expect(emitter.emit).toHaveBeenCalledWith(
-            "show-max-archive-size-threshold-exceeded-modal",
-            {
-                detail: { current_folder_size: 2000000 },
-            }
-        );
+        expect(emitMock).toHaveBeenCalledWith("show-max-archive-size-threshold-exceeded-modal", {
+            detail: { current_folder_size: 2000000 },
+        });
     });
 
     it("Opens the warning modal when the size exceeds the warning_threshold", async () => {
@@ -100,7 +105,7 @@ describe("DownloadFolderAsZip", () => {
             id: 10,
             type: "folder",
         });
-        expect(emitter.emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
+        expect(emitMock).toHaveBeenCalledWith("show-archive-size-warning-modal", {
             detail: {
                 current_folder_size: 600000,
                 should_warn_osx_user: false,
@@ -113,14 +118,8 @@ describe("DownloadFolderAsZip", () => {
     it("Opens the warning modal when user is on OSX and archive size exceeds or equals 4GB", async () => {
         const four_GB = 4 * Math.pow(10, 9);
         const wrapper = getWrapper(2 * four_GB);
-        const navigator = window.navigator;
 
-        delete window.navigator;
-
-        window.navigator = {
-            platform: "MacIntel",
-        };
-
+        jest.spyOn(platform_detector, "isPlatformOSX").mockReturnValue(true);
         jest.spyOn(store, "dispatch").mockReturnValue(
             Promise.resolve({
                 total_size: four_GB,
@@ -136,7 +135,7 @@ describe("DownloadFolderAsZip", () => {
             id: 10,
             type: "folder",
         });
-        expect(emitter.emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
+        expect(emitMock).toHaveBeenCalledWith("show-archive-size-warning-modal", {
             detail: {
                 current_folder_size: four_GB,
                 should_warn_osx_user: true,
@@ -144,20 +143,12 @@ describe("DownloadFolderAsZip", () => {
                     "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip",
             },
         });
-
-        window.navigator = navigator;
     });
 
     it("Opens the warning modal when user is on OSX and archive size contains more than 64k files", async () => {
         const wrapper = getWrapper();
-        const navigator = window.navigator;
 
-        delete window.navigator;
-
-        window.navigator = {
-            platform: "MacIntel",
-        };
-
+        jest.spyOn(platform_detector, "isPlatformOSX").mockReturnValue(true);
         jest.spyOn(store, "dispatch").mockReturnValue(
             Promise.resolve({
                 total_size: 600000,
@@ -173,7 +164,7 @@ describe("DownloadFolderAsZip", () => {
             id: 10,
             type: "folder",
         });
-        expect(emitter.emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
+        expect(emitMock).toHaveBeenCalledWith("show-archive-size-warning-modal", {
             detail: {
                 current_folder_size: 600000,
                 should_warn_osx_user: true,
@@ -181,24 +172,26 @@ describe("DownloadFolderAsZip", () => {
                     "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip",
             },
         });
-        window.navigator = navigator;
     });
 
     it(`Sets the location to the download URI instead of simply using href
         so that people can't just skip the max threshold modal`, async () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         const redirect = jest.spyOn(location_helper, "redirectToUrl").mockImplementation(() => {});
         const wrapper = getWrapper();
         jest.spyOn(store, "dispatch").mockResolvedValue({
             total_size: 10000,
         });
 
-        await wrapper.vm.checkFolderSize();
+        wrapper.get("[data-test=download-as-zip-button]").trigger("click");
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
 
         expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", {
             id: 10,
             type: "folder",
         });
-        expect(emitter.emit).not.toHaveBeenCalled();
+        expect(emitMock).not.toHaveBeenCalled();
         expect(redirect).toHaveBeenCalledWith(
             "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip"
         );

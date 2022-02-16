@@ -101,57 +101,49 @@
         </div>
     </div>
 </template>
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import type { Modal } from "tlp";
 import { createModal } from "tlp";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { namespace } from "vuex-class";
 
-export default {
-    name: "ModalArchiveSizeWarning",
-    props: {
-        size: {
-            type: Number,
-            default: 0,
-        },
-        folderHref: {
-            type: String,
-            default: "",
-        },
-        shouldWarnOsxUser: {
-            type: Boolean,
-            default: false,
-        },
-    },
-    data() {
-        return {
-            modal: null,
-        };
-    },
-    computed: {
-        ...mapState("configuration", ["warning_threshold"]),
-        size_in_MB() {
-            const size_in_mb = this.size / Math.pow(10, 6);
-            return Number.parseFloat(size_in_mb).toFixed(2);
-        },
-        modal_header_title() {
-            const nb_warnings = this.shouldWarnOsxUser === true ? 2 : 1;
-            const translated = this.$ngettext(
-                "1 warning",
-                "%{ nb_warnings } warnings",
-                nb_warnings
-            );
+const configuration = namespace("configuration");
 
-            return this.$gettextInterpolate(translated, { nb_warnings });
-        },
-    },
-    mounted() {
+@Component
+export default class ModalArchiveSizeWarning extends Vue {
+    @Prop({ required: true })
+    readonly size!: number;
+
+    @Prop({ required: true })
+    readonly folderHref!: string;
+
+    @Prop({ required: true })
+    readonly shouldWarnOsxUser!: boolean;
+
+    @configuration.State
+    readonly warning_threshold!: number;
+
+    private modal: Modal | null = null;
+
+    get size_in_MB(): string {
+        const size_in_mb = this.size / Math.pow(10, 6);
+        return Number.parseFloat(size_in_mb.toString()).toFixed(2);
+    }
+    get modal_header_title(): string {
+        const nb_warnings = this.shouldWarnOsxUser === true ? 2 : 1;
+        const translated = this.$ngettext("1 warning", "%{ nb_warnings } warnings", nb_warnings);
+
+        return this.$gettextInterpolate(translated, { nb_warnings });
+    }
+
+    mounted(): void {
         this.modal = createModal(this.$el);
         this.modal.addEventListener("tlp-modal-hidden", this.close);
         this.modal.show();
-    },
-    methods: {
-        close() {
-            this.$emit("download-folder-as-zip-modal-closed");
-        },
-    },
-};
+    }
+
+    close(): void {
+        this.$emit("download-folder-as-zip-modal-closed");
+    }
+}
 </script>
