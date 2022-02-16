@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Grant;
 
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenWithIdentifier;
+use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenWithIdentifier;
 
 final class OAuth2AccessTokenSuccessfulRequestRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {

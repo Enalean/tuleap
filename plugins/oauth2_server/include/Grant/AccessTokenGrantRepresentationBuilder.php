@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant;
 
-use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
+use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCode;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectIDTokenCreator;

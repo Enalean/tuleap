@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AccessToken;
+namespace Tuleap\OAuth2ServerCore\AccessToken;
 
 use DateInterval;
 use Tuleap\Authentication\Scope\AuthenticationScope;
@@ -30,7 +30,6 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
-use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenDAO;
 
 class OAuth2AccessTokenCreator
 {

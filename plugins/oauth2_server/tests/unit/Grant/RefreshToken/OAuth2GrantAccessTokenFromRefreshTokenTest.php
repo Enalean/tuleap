@@ -28,7 +28,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenWithIdentifier;
+use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenWithIdentifier;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantErrorResponseBuilder;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantRepresentationBuilder;
