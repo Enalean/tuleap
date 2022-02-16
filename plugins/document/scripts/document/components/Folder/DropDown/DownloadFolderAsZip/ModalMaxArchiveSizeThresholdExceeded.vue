@@ -67,36 +67,37 @@
         </div>
     </div>
 </template>
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import type { Modal } from "tlp";
 import { createModal } from "tlp";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { namespace } from "vuex-class";
 
-export default {
-    name: "ModalMaxArchiveSizeThresholdExceeded",
-    props: {
-        size: Number,
-    },
-    data() {
-        return {
-            modal: null,
-        };
-    },
-    mounted() {
+const configuration = namespace("configuration");
+
+@Component
+export default class ModalMaxArchiveSizeThresholdExceeded extends Vue {
+    @Prop({ required: true })
+    readonly size!: number;
+
+    @configuration.State
+    readonly max_archive_size!: number;
+
+    private modal: Modal | null = null;
+
+    mounted(): void {
         this.modal = createModal(this.$el);
         this.modal.addEventListener("tlp-modal-hidden", this.close);
         this.modal.show();
-    },
-    computed: {
-        ...mapState("configuration", ["max_archive_size"]),
-        size_in_MB() {
-            const size_in_mb = this.size / Math.pow(10, 6);
-            return Number.parseFloat(size_in_mb).toFixed(2);
-        },
-    },
-    methods: {
-        close() {
-            this.$emit("download-as-zip-modal-closed");
-        },
-    },
-};
+    }
+
+    get size_in_MB(): string {
+        const size_in_mb = this.size / Math.pow(10, 6);
+        return Number.parseFloat(size_in_mb.toString()).toFixed(2);
+    }
+
+    close(): void {
+        this.$emit("download-as-zip-modal-closed");
+    }
+}
 </script>
