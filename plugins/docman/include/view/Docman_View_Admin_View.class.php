@@ -44,30 +44,21 @@ class Docman_View_Admin_View extends \Tuleap\Docman\View\Admin\AdminView
         return dgettext('tuleap-docman', 'Define the default view for the document manager.');
     }
 
+    protected function isBurningParrotCompatiblePage(): bool
+    {
+        return true;
+    }
+
     protected function displayContent(array $params): void
     {
-        $html  = '';
-        $html .= '<p>' . dgettext('tuleap-docman', 'Please select the default view for browsing documents. Please note that this setting can be overridden by user preferences.') . '</p>';
-        $html .= '<form action="' . $params['default_url'] . '" method="POST">';
-        $html .= '<select name="selected_view" onchange="this.form.submit()">';
-
         $sBo    = Docman_SettingsBo::instance($params['group_id']);
         $actual = $sBo->getView();
 
-        $html .= '<option value="Tree" ' . ($actual === 'Tree' ? 'selected="selected"' : '') . '>';
-        $html .= dgettext('tuleap-docman', 'Tree');
-        $html .= '</option>';
-        $html .= '<option value="Icons" ' . ($actual === 'Icons' ? 'selected="selected"' : '') . '>';
-        $html .= dgettext('tuleap-docman', 'Icons');
-        $html .= '</option>';
-        $html .= '<option value="Table" ' . ($actual === 'Table' ? 'selected="selected"' : '') . '>';
-        $html .= dgettext('tuleap-docman', 'Table');
-        $html .= '</option>';
-
-
-        $html .= '</select>';
-        $html .= '<input type="hidden" name="action" value="admin_change_view" />';
-        $html .= '<noscript><input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></noscript>';
-        echo $html;
+        $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/admin');
+        $renderer->renderToPage('display-preferences', [
+            'is_tree'  => $actual === 'Tree',
+            'is_icons' => $actual === 'Icons',
+            'is_table' => $actual === 'Table',
+        ]);
     }
 }

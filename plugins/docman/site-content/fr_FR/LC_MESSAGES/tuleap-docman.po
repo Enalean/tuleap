@@ -806,6 +806,9 @@ msgstr ""
 "Valeur par défaut: celui qui soumet. Correspond au propriétaire officiel du "
 "document."
 
+msgid "Default view"
+msgstr "Vue par défaut"
+
 msgid ""
 "Define a period of validity for your document. It will automatically be "
 "archived at the end of the period."
@@ -1804,7 +1807,7 @@ msgid "Project has no locked documents"
 msgstr "Le projet n'a pas de document réservé"
 
 msgid "Project has no obsolete documents"
-msgstr "Le projet n'a pas de documents obsolètes."
+msgstr "Le projet n'a pas de documents obsolètes"
 
 msgid "Project ids mismatch. Cancel update."
 msgstr "Les ids de projet ne correspondent pas. Mise à jour annulée."

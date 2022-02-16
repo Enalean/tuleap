@@ -1724,7 +1724,11 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         if (
             in_array(
                 HTTPRequest::instance()->get('action'),
-                [\Docman_View_Admin_LockInfos::IDENTIFIER, \Docman_View_Admin_Obsolete::IDENTIFIER],
+                [
+                    \Docman_View_Admin_LockInfos::IDENTIFIER,
+                    \Docman_View_Admin_Obsolete::IDENTIFIER,
+                    \Docman_View_Admin_View::IDENTIFIER,
+                ],
                 true,
             )
         ) {
