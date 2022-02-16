@@ -31,19 +31,20 @@
     </button>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Item } from "../../../type";
 import emitter from "../../../helpers/emitter";
-export default {
-    name: "UpdateProperties",
-    props: {
-        item: Object,
-    },
-    methods: {
-        showUpdateModal() {
-            emitter.emit("show-update-item-metadata-modal", {
-                detail: { current_item: this.item },
-            });
-        },
-    },
-};
+
+@Component
+export default class UpdateProperties extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    showUpdateModal(): void {
+        emitter.emit("show-update-item-metadata-modal", {
+            detail: { current_item: this.item },
+        });
+    }
+}
 </script>

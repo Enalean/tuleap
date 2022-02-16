@@ -17,29 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import emitter from "../../../helpers/emitter";
+import type { Item } from "../../../type";
 
 jest.mock("../../../helpers/emitter");
 
 describe("UpdatePermissions", () => {
-    let document_action_button_factory;
-    beforeEach(() => {
-        document_action_button_factory = (props = {}) => {
-            return shallowMount(UpdatePermissions, {
-                localVue,
-                propsData: { ...props },
-            });
-        };
-    });
+    function createWrapper(item: Item): Wrapper<UpdatePermissions> {
+        return shallowMount(UpdatePermissions, {
+            localVue: localVue,
+            propsData: { item },
+        });
+    }
 
     it(`Given a user can not manage the item then the corresponding option is not shown`, () => {
         const item = {
             can_user_manage: false,
-        };
-        const wrapper = document_action_button_factory({ item });
+        } as Item;
+        const wrapper = createWrapper(item);
 
         expect(wrapper.html()).toBeFalsy();
     });
@@ -47,8 +46,8 @@ describe("UpdatePermissions", () => {
     it(`Given a user click on the element then the corresponding modal is opened`, () => {
         const item = {
             can_user_manage: true,
-        };
-        const wrapper = document_action_button_factory({ item });
+        } as Item;
+        const wrapper = createWrapper(item);
 
         expect(wrapper.html()).toBeTruthy();
 
