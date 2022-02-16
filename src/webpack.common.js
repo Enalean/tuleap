@@ -373,7 +373,6 @@ const fat_combined_files = [
         "./www/scripts/tuleap/datetimepicker.js",
         "./www/scripts/tuleap/svn.js",
         "./www/scripts/tuleap/search.js",
-        "./www/scripts/tuleap/project-privacy-tooltip.js",
         "./www/scripts/tuleap/tuleap-ckeditor-toolbar.js",
     ],
     subset_combined_files = [
@@ -381,7 +380,6 @@ const fat_combined_files = [
         "./www/scripts/bootstrap/bootstrap-tooltip.js",
         "./www/scripts/bootstrap/bootstrap-popover.js",
         "./www/scripts/bootstrap/bootstrap-button.js",
-        "./www/scripts/tuleap/project-privacy-tooltip.js",
     ],
     subset_combined_flamingparrot_files = [
         "./www/scripts/bootstrap/bootstrap-dropdown.js",
