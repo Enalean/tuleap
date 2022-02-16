@@ -28,6 +28,7 @@ use Docman_Metadata;
 use Docman_MetadataFactory;
 use Docman_ReportColumnTitle;
 use Docman_SettingsBo;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
 use Tuleap\Docman\REST\v1\Search\SearchDateRepresentation;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
@@ -45,7 +46,7 @@ final class SearchReportBuilderTest extends TestCase
         $metadata_factory->method("getRealMetadataList")->willReturn([]);
         $filter_factory  = new Docman_FilterFactory(101);
         $docman_settings = $this->createMock(Docman_SettingsBo::class);
-        $docman_settings->method('getMetadataUsage')->willReturn(false);
+        $docman_settings->method('getMetadataUsage')->willReturn("1");
         $always_there_column_retriever = new AlwaysThereColumnRetriever($docman_settings);
 
         $column_factory = $this->createMock(\Docman_ReportColumnFactory::class);
@@ -65,6 +66,7 @@ final class SearchReportBuilderTest extends TestCase
         $this->search_report_builder = new SearchReportBuilder(
             $metadata_factory,
             $filter_factory,
+            new ItemStatusMapper($docman_settings),
             $always_there_column_retriever,
             $column_report_builder,
             $user_manager,
@@ -120,6 +122,28 @@ final class SearchReportBuilderTest extends TestCase
         $second_filter = $report->getFiltersArray()[1];
         self::assertSame("title", $second_filter->md->getLabel());
         self::assertSame("lorem", $second_filter->value);
+    }
+
+    /**
+     * @testWith ["none", 100]
+     *           ["draft", 101]
+     *           ["approved", 102]
+     *           ["rejected", 103]
+     */
+    public function testItBuildsAReportWithAStatusSearchFilter(string $submitted_status_value, int $expected_internal_value): void
+    {
+        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search                = new PostSearchRepresentation();
+        $search->global_search = "*.docx";
+        $search->status        = $submitted_status_value;
+
+        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $first_filter = $report->getFiltersArray()[0];
+        self::assertSame("global_txt", $first_filter->md->getLabel());
+        self::assertSame("*.docx", $first_filter->value);
+        $second_filter = $report->getFiltersArray()[1];
+        self::assertSame("status", $second_filter->md->getLabel());
+        self::assertSame($expected_internal_value, $second_filter->value);
     }
 
     public function testItBuildsAReportWithADescriptionSearchFilter(): void

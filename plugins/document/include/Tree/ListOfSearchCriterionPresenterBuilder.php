@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Tree;
 
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+
 final class ListOfSearchCriterionPresenterBuilder
 {
-    public function getCriteria(\Docman_MetadataFactory $metadata_factory, \Project $project): array
+    public function getCriteria(\Docman_MetadataFactory $metadata_factory, ItemStatusMapper $status_mapper, \Project $project): array
     {
         $numeric_type_to_human_readable_type = [
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT   => 'text',
@@ -41,7 +43,9 @@ final class ListOfSearchCriterionPresenterBuilder
             ),
         ];
 
-        foreach ($metadata_factory->getMetadataForGroup(true) as $metadata) {
+        $all_metadata = $metadata_factory->getMetadataForGroup(true);
+        $metadata_factory->appendAllListOfValues($all_metadata);
+        foreach ($all_metadata as $metadata) {
             assert($metadata instanceof \Docman_Metadata);
             if (! $metadata->isSpecial()) {
                 continue;
@@ -51,7 +55,8 @@ final class ListOfSearchCriterionPresenterBuilder
                 continue;
             }
 
-            if ($metadata->getLabel() === \Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL) {
+            if ($metadata instanceof \Docman_ListMetadata) {
+                $criteria[] = $this->getStatusCriterion($metadata, $status_mapper);
                 continue;
             }
 
@@ -63,6 +68,31 @@ final class ListOfSearchCriterionPresenterBuilder
         }
 
         return $criteria;
+    }
+
+    private function getStatusCriterion(\Docman_ListMetadata $metadata, ItemStatusMapper $status_mapper): SearchCriterionListPresenter
+    {
+        $options = [
+            new SearchCriterionListOptionPresenter("", dgettext("tuleap-document", "Any")),
+        ];
+
+        foreach ($metadata->getListOfValueIterator() as $value) {
+            assert($value instanceof \Docman_MetadataListOfValuesElement);
+            if (! in_array($value->getStatus(), ['A', 'P'], true)) {
+                continue;
+            }
+
+            $status_id = (int) $value->getId();
+
+            $options[] = new SearchCriterionListOptionPresenter(
+                $status_mapper->getItemStatusFromItemStatusNumber($status_id),
+                $status_id === 100 ?
+                    \dgettext('tuleap-document', 'None') :
+                    $value->getName()
+            );
+        }
+
+        return new SearchCriterionListPresenter($metadata->getLabel(), $metadata->getName(), $options);
     }
 
     /**

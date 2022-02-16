@@ -79,7 +79,7 @@ final class SearchResource extends AuthenticatedResource
      * <tr>
      *   <td>`type`</td>
      *   <td>List</td>
-     *   <td>Type of the item. Allowed types: folder, file, embedded, wiki, link, empty</td>
+     *   <td>Type of the item. Searchable types: `folder`, `file`, `embedded`, `wiki`, `link`, `empty`.</td>
      * </tr>
      * <tr>
      *   <td>`title`</td>
@@ -110,6 +110,11 @@ final class SearchResource extends AuthenticatedResource
      *   <td>`obsolescence_date`</td>
      *   <td>Date</td>
      *   <td>Obsolescence date of the document.</td>
+     * </tr>
+     * <tr>
+     *   <td>`status`</td>
+     *   <td>List</td>
+     *   <td>Status of the document. Searchable status: `none`, `draft`, `approved`, `rejected`.</td>
      * </tr>
      * </tbody>
      * </table>
@@ -185,6 +190,7 @@ final class SearchResource extends AuthenticatedResource
         $search_report_builder = new SearchReportBuilder(
             new \Docman_MetadataFactory($project_id),
             new Docman_FilterFactory($project_id),
+            new ItemStatusMapper($docman_settings),
             new AlwaysThereColumnRetriever($docman_settings),
             new ColumnReportAugmenter(new Docman_ReportColumnFactory($project_id)),
             $user_manager,

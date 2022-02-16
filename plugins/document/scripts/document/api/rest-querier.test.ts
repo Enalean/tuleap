@@ -451,6 +451,7 @@ describe("rest-querier", () => {
                         date: "2022-01-31",
                         operator: "=",
                     },
+                    status: "draft",
                 },
                 170
             );
@@ -477,6 +478,7 @@ describe("rest-querier", () => {
                         date: "2022-01-31",
                         operator: "=",
                     },
+                    status: "draft",
                     offset: 170,
                     limit: 50,
                 }),

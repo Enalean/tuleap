@@ -61,6 +61,7 @@ describe("SearchCriteriaPanel", () => {
                                     type: "date",
                                     title: "Obsolescence date",
                                 },
+                                { name: "status", type: "list", title: "Status" },
                             ],
                         } as unknown as ConfigurationState,
                     },
@@ -78,6 +79,7 @@ describe("SearchCriteriaPanel", () => {
         const update_date: SearchDate = { date: "2022-01-31", operator: "<" };
         wrapper.find("[data-test=criterion-update_date]").vm.$emit("input", update_date);
         const obsolescence_date: SearchDate = { date: "2022-01-31", operator: "<" };
+        wrapper.find("[data-test=criterion-status]").vm.$emit("input", "draft");
         wrapper
             .find("[data-test=criterion-obsolescence_date]")
             .vm.$emit("input", obsolescence_date);
@@ -92,6 +94,7 @@ describe("SearchCriteriaPanel", () => {
             create_date,
             update_date,
             obsolescence_date,
+            status: "draft",
         };
         expect(wrapper.emitted()["advanced-search"]).toEqual([[expected_params]]);
 

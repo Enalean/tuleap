@@ -26,6 +26,7 @@ namespace Tuleap\Docman\REST\v1\Folders;
 use Docman_FilterGlobalText;
 use Docman_FilterText;
 use Docman_Report;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
 use Tuleap\Docman\REST\v1\Search\SearchDateRepresentation;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
@@ -36,6 +37,7 @@ class SearchReportBuilder
     public function __construct(
         private \Docman_MetadataFactory $metadata_factory,
         private \Docman_FilterFactory $filter_factory,
+        private ItemStatusMapper $status_mapper,
         private AlwaysThereColumnRetriever $always_there_column_retriever,
         private ColumnReportAugmenter $column_report_builder,
         private \UserManager $user_manager,
@@ -60,6 +62,7 @@ class SearchReportBuilder
         $this->addCreateDateFilter($search, $report);
         $this->addUpdateDateFilter($search, $report);
         $this->addObsolescenceDateFilter($search, $report);
+        $this->addStatusFilter($search, $report);
 
         $columns = $this->always_there_column_retriever->getColumns();
         $this->column_report_builder->addColumnsFromArray($columns, $report);
@@ -203,5 +206,16 @@ class SearchReportBuilder
         $date_filter->setValue($search_date->date);
 
         $report->addFilter($date_filter);
+    }
+
+    private function addStatusFilter(PostSearchRepresentation $search, Docman_Report $report): void
+    {
+        if ($search->status) {
+            $list_filter = new \Docman_FilterList(
+                $this->metadata_factory->getHardCodedMetadataFromLabel(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL)
+            );
+            $list_filter->setValue($this->status_mapper->getItemStatusIdFromItemStatusString($search->status));
+            $report->addFilter($list_filter);
+        }
     }
 }

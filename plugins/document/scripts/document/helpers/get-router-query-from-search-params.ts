@@ -48,6 +48,9 @@ export function getRouterQueryFromSearchParams(params: AdvancedSearchParams): Di
         query.obsolescence_date = params.obsolescence_date.date;
         query.obsolescence_date_op = params.obsolescence_date.operator;
     }
+    if (params.status.length > 0) {
+        query.status = params.status;
+    }
 
     return query;
 }

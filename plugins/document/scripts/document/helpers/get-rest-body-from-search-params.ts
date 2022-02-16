@@ -49,5 +49,6 @@ export function getRestBodyFromSearchParams(
                     operator: search.obsolescence_date.operator,
                 },
             }),
+        ...(search.status && { status: search.status }),
     };
 }

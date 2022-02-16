@@ -31,6 +31,7 @@ export function buildAdvancedSearchParams(
         create_date: null,
         update_date: null,
         obsolescence_date: null,
+        status: "",
     };
 
     return {
