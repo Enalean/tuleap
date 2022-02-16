@@ -33,10 +33,43 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
             ->with(true)
             ->willReturn([]);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory);
+        $project = $this->createMock(\Project::class);
+        $project->method('usesWiki')->willReturn(true);
+
+        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $project);
 
         self::assertCount(1, $criteria);
         self::assertEquals('type', $criteria[0]->name);
+        self::assertEquals(
+            ['', 'folder', 'file', 'embedded', 'wiki', 'empty'],
+            array_map(
+                static fn(SearchCriterionListOptionPresenter $option): string => $option->value,
+                $criteria[0]->options
+            )
+        );
+    }
+
+    public function testItShouldOmitWikiTypeIfProjectDoesNotUseWikiService(): void
+    {
+        $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
+        $metadata_factory->method('getMetadataForGroup')
+            ->with(true)
+            ->willReturn([]);
+
+        $project = $this->createMock(\Project::class);
+        $project->method('usesWiki')->willReturn(false);
+
+        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $project);
+
+        self::assertCount(1, $criteria);
+        self::assertEquals('type', $criteria[0]->name);
+        self::assertEquals(
+            ['', 'folder', 'file', 'embedded', 'empty'],
+            array_map(
+                static fn(SearchCriterionListOptionPresenter $option): string => $option->value,
+                $criteria[0]->options
+            )
+        );
     }
 
     /**
@@ -60,7 +93,10 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
             ->with(true)
             ->willReturn([$metadata]);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory);
+        $project = $this->createMock(\Project::class);
+        $project->method('usesWiki')->willReturn(true);
+
+        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $project);
 
         self::assertCount(2, $criteria);
         self::assertEquals($metadata_name, $criteria[1]->name);
@@ -73,12 +109,15 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $metadata->setLabel('status');
         $metadata->setName('status');
 
+        $project = $this->createMock(\Project::class);
+        $project->method('usesWiki')->willReturn(true);
+
         $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
         $metadata_factory->method('getMetadataForGroup')
             ->with(true)
             ->willReturn([$metadata]);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $project);
 
         self::assertCount(1, $criteria);
     }
@@ -90,12 +129,15 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $metadata->setLabel('whatever');
         $metadata->setName('whatever');
 
+        $project = $this->createMock(\Project::class);
+        $project->method('usesWiki')->willReturn(true);
+
         $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
         $metadata_factory->method('getMetadataForGroup')
             ->with(true)
             ->willReturn([$metadata]);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $project);
 
         self::assertCount(1, $criteria);
     }

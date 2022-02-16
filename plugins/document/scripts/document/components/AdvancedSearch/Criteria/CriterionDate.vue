@@ -20,7 +20,7 @@
 
 <template>
     <div class="tlp-form-element">
-        <label class="tlp-label" v-bind:for="id">{{ label }}</label>
+        <label class="tlp-label" v-bind:for="id">{{ criterion.label }}</label>
         <div class="tlp-form-element tlp-form-element-prepend document-search-criterion">
             <select class="tlp-prepend" v-on:change="onChangeOperator($event.target.value)">
                 <option value=">" v-bind:selected="'>' === operator" v-translate>After</option>
@@ -44,7 +44,7 @@
 import Component from "vue-class-component";
 import Vue from "vue";
 import { Prop, Watch } from "vue-property-decorator";
-import type { AllowedSearchDateOperator, SearchDate } from "../../../type";
+import type { AllowedSearchDateOperator, SearchCriterionDate, SearchDate } from "../../../type";
 import DateFlatPicker from "../../Folder/Metadata/DateFlatPicker.vue";
 
 @Component({
@@ -52,13 +52,10 @@ import DateFlatPicker from "../../Folder/Metadata/DateFlatPicker.vue";
 })
 export default class CriterionDate extends Vue {
     @Prop({ required: true })
-    readonly name!: string;
+    readonly criterion!: SearchCriterionDate;
 
     @Prop({ required: true })
     readonly value!: SearchDate | null;
-
-    @Prop({ required: true })
-    readonly label!: string;
 
     private date = "";
     private operator: AllowedSearchDateOperator = ">";
@@ -70,7 +67,7 @@ export default class CriterionDate extends Vue {
     }
 
     get id(): string {
-        return "document-criterion-date-" + this.name;
+        return "document-criterion-date-" + this.criterion.name;
     }
 
     onChangeOperator(new_operator: AllowedSearchDateOperator): void {

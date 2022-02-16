@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CriterionList should render the component 1`] = `
+<div
+  class="tlp-form-element document-search-criterion"
+>
+  <label
+    class="tlp-label"
+    for="document-criterion-list-type"
+  >
+    Type
+  </label>
+   
+  <select
+    class="tlp-select"
+    id="document-criterion-list-type"
+  >
+    <option
+      data-test="option-"
+      value=""
+    >
+      
+            Any
+        
+    </option>
+    <option
+      data-test="option-folder"
+      value="folder"
+    >
+      
+            Folder
+        
+    </option>
+    <option
+      data-test="option-wiki"
+      value="wiki"
+    >
+      
+            Wiki
+        
+    </option>
+  </select>
+</div>
+`;

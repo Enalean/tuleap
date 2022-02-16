@@ -279,10 +279,29 @@ export interface AdvancedSearchParams {
     readonly obsolescence_date: SearchDate | null;
 }
 
-interface SearchCriterion {
+interface BaseSearchCriterion {
     readonly name: string;
-    readonly title: string;
-    readonly type: "date" | "text" | "type";
+    readonly label: string;
 }
+
+export interface SearchCriterionDate extends BaseSearchCriterion {
+    readonly type: "date";
+}
+
+export interface SearchCriterionText extends BaseSearchCriterion {
+    readonly type: "text";
+}
+
+export interface SearchListOption {
+    readonly value: string;
+    readonly label: string;
+}
+
+export interface SearchCriterionList extends BaseSearchCriterion {
+    readonly type: "list";
+    readonly options: ReadonlyArray<SearchListOption>;
+}
+
+export type SearchCriterion = SearchCriterionDate | SearchCriterionText | SearchCriterionList;
 
 export type SearchCriteria = ReadonlyArray<SearchCriterion>;

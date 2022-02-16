@@ -23,6 +23,9 @@ msgstr ""
 msgid "An error occurred while saving configuration."
 msgstr "Une erreur est survenue lors de la sauvegarde de la configuration."
 
+msgid "Any"
+msgstr "Tous"
+
 msgid "Document"
 msgstr "Document"
 
@@ -33,11 +36,20 @@ msgstr "Gestionnaire de document"
 msgid "Documents service is not activated in project %s"
 msgstr "Le service Documents n'est pas activé pour le projet %s"
 
+msgid "Embedded file"
+msgstr "Fichier embarqué"
+
+msgid "File"
+msgstr "Fichier"
+
 msgid "File download limits"
 msgstr "Limites de téléchargement"
 
 msgid "Files missing in your latest archive download"
 msgstr "Des fichiers manquent dans l'archive récemment téléchargée"
+
+msgid "Folder"
+msgstr "Dossier"
 
 msgid ""
 "Hence, Tuleap will avoid users from forgetting to communicate changes made "

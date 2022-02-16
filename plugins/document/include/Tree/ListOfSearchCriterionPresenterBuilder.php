@@ -24,7 +24,7 @@ namespace Tuleap\Document\Tree;
 
 final class ListOfSearchCriterionPresenterBuilder
 {
-    public function getCriteria(\Docman_MetadataFactory $metadata_factory): array
+    public function getCriteria(\Docman_MetadataFactory $metadata_factory, \Project $project): array
     {
         $numeric_type_to_human_readable_type = [
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT   => 'text',
@@ -34,10 +34,10 @@ final class ListOfSearchCriterionPresenterBuilder
         ];
 
         $criteria = [
-            new SearchCriterionPresenter(
+            new SearchCriterionListPresenter(
                 'type',
                 dgettext('tuleap-document', 'Type'),
-                'type',
+                $this->getTypeOptions($project),
             ),
         ];
 
@@ -63,5 +63,26 @@ final class ListOfSearchCriterionPresenterBuilder
         }
 
         return $criteria;
+    }
+
+    /**
+     * @return SearchCriterionListOptionPresenter[]
+     */
+    private function getTypeOptions(\Project $project): array
+    {
+        $type_options = [
+            new SearchCriterionListOptionPresenter("", dgettext("tuleap-document", "Any")),
+            new SearchCriterionListOptionPresenter("folder", dgettext("tuleap-document", "Folder")),
+            new SearchCriterionListOptionPresenter("file", dgettext("tuleap-document", "File")),
+            new SearchCriterionListOptionPresenter("embedded", dgettext("tuleap-document", "Embedded file")),
+        ];
+
+        if ($project->usesWiki()) {
+            $type_options[] = new SearchCriterionListOptionPresenter("wiki", "Wiki page");
+        }
+
+        $type_options[] = new SearchCriterionListOptionPresenter("empty", "Empty document");
+
+        return $type_options;
     }
 }

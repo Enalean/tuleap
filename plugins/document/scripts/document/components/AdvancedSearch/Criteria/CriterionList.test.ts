@@ -18,16 +18,28 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import CriterionType from "./CriterionType.vue";
+import CriterionList from "./CriterionList.vue";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import localVue from "../../../helpers/local-vue";
 import type { ConfigurationState } from "../../../store/configuration";
+import type { SearchCriterionList } from "../../../type";
 
-describe("CriterionType", () => {
+describe("CriterionList", () => {
+    const criterion: SearchCriterionList = {
+        name: "type",
+        label: "Type",
+        type: "list",
+        options: [
+            { value: "", label: "Any" },
+            { value: "folder", label: "Folder" },
+            { value: "wiki", label: "Wiki" },
+        ],
+    };
     it("should render the component", () => {
-        const wrapper = shallowMount(CriterionType, {
+        const wrapper = shallowMount(CriterionList, {
             localVue,
             propsData: {
+                criterion,
                 value: "folder",
             },
             mocks: {
@@ -44,30 +56,11 @@ describe("CriterionType", () => {
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("should omit wiki option if there is no wiki activated in the project", () => {
-        const wrapper = shallowMount(CriterionType, {
-            localVue,
-            propsData: {
-                value: "folder",
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            user_can_create_wiki: false,
-                        } as ConfigurationState,
-                    },
-                }),
-            },
-        });
-
-        expect(wrapper.find("[data-test=type-wiki]").exists()).toBe(false);
-    });
-
     it("should warn parent component when user is changing selection", () => {
-        const wrapper = shallowMount(CriterionType, {
+        const wrapper = shallowMount(CriterionList, {
             localVue,
             propsData: {
+                criterion,
                 value: "wiki",
             },
             mocks: {
@@ -81,7 +74,7 @@ describe("CriterionType", () => {
             },
         });
 
-        wrapper.find("[data-test=type-folder]").setSelected();
+        wrapper.find("[data-test=option-folder]").setSelected();
         expect(wrapper.emitted().input).toStrictEqual([["folder"]]);
     });
 });
