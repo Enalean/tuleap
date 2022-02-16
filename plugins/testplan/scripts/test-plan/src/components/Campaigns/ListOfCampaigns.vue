@@ -36,77 +36,62 @@
         <create-modal v-bind:is="show_create_modal" />
     </section>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { namespace } from "vuex-class";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import CampaignSkeleton from "./CampaignSkeleton.vue";
 import CampaignCard from "./CampaignCard.vue";
-import type { Campaign } from "../../type";
 import ListOfCampaignsHeader from "./ListOfCampaignsHeader.vue";
 import GlobalErrorMessage from "./GlobalErrorMessage.vue";
+import { computed, defineAsyncComponent, onMounted, ref } from "@vue/composition-api";
+import { useActions, useState } from "vuex-composition-helpers";
+import type { CampaignActions } from "../../store/campaign/campaign-actions";
+import type { AsyncComponent } from "vue";
+import type { CampaignState } from "../../store/campaign/type";
 
-const campaign = namespace("campaign");
+const CampaignEmptyState = defineAsyncComponent(
+    () => import(/* webpackChunkName: "testplan-campaigns-emptystate" */ "./CampaignEmptyState.vue")
+);
+const CampaignErrorState = defineAsyncComponent(
+    () => import(/* webpackChunkName: "testplan-campaigns-errorstate" */ "./CampaignErrorState.vue")
+);
 
-@Component({
-    components: {
-        GlobalErrorMessage,
-        ListOfCampaignsHeader,
-        CampaignCard,
-        CampaignSkeleton,
-        "campaign-empty-state": (): Promise<Record<string, unknown>> =>
-            import(
-                /* webpackChunkName: "testplan-campaigns-emptystate" */ "./CampaignEmptyState.vue"
-            ),
-        "campaign-error-state": (): Promise<Record<string, unknown>> =>
-            import(
-                /* webpackChunkName: "testplan-campaigns-errorstate" */ "./CampaignErrorState.vue"
-            ),
-    },
-})
-export default class ListOfCampaigns extends Vue {
-    @campaign.State
-    readonly is_loading!: boolean;
+const { is_loading, has_loading_error, campaigns } = useState<
+    Pick<CampaignState, "is_loading" | "has_loading_error" | "campaigns">
+>("campaign", ["is_loading", "has_loading_error", "campaigns"]);
 
-    @campaign.State
-    readonly has_loading_error!: boolean;
+const show_create_modal = ref<"" | AsyncComponent>("");
 
-    @campaign.State
-    readonly campaigns!: Campaign[];
-
-    @campaign.Action
-    loadCampaigns!: () => void;
-
-    private show_create_modal: (() => Promise<Record<string, unknown>>) | string = "";
-
-    created(): void {
-        this.loadCampaigns();
-    }
-
-    mounted(): void {
-        const new_dropdown_link = document.querySelector(
-            "[data-shortcut-create-option][data-test-plan-create-new-campaign]"
-        );
-        if (new_dropdown_link instanceof HTMLAnchorElement) {
-            new_dropdown_link.addEventListener("click", (event) => {
-                event.preventDefault();
-                this.showCreateModal();
-            });
-        }
-    }
-
-    showCreateModal(): void {
-        this.show_create_modal = (): Promise<Record<string, unknown>> =>
-            import(/* webpackChunkName: "testplan-create-campaign-modal" */ "./CreateModal.vue");
-    }
-
-    get should_empty_state_be_displayed(): boolean {
-        return this.campaigns.length === 0 && !this.is_loading && !this.has_loading_error;
-    }
-
-    get should_error_state_be_displayed(): boolean {
-        return this.has_loading_error;
-    }
+function showCreateModal(): void {
+    show_create_modal.value = defineAsyncComponent(
+        () => import(/* webpackChunkName: "testplan-create-campaign-modal" */ "./CreateModal.vue")
+    );
 }
+
+const { loadCampaigns } = useActions<CampaignActions>("campaign", ["loadCampaigns"]);
+
+loadCampaigns();
+
+onMounted(() => {
+    const new_dropdown_link = document.querySelector(
+        "[data-shortcut-create-option][data-test-plan-create-new-campaign]"
+    );
+    if (new_dropdown_link instanceof HTMLAnchorElement) {
+        new_dropdown_link.addEventListener("click", (event) => {
+            event.preventDefault();
+            showCreateModal();
+        });
+    }
+});
+
+const should_empty_state_be_displayed = computed((): boolean => {
+    return campaigns.value.length === 0 && !is_loading.value && !has_loading_error.value;
+});
+
+const should_error_state_be_displayed = computed((): boolean => {
+    return has_loading_error.value;
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>
