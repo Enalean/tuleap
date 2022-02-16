@@ -40,6 +40,8 @@ use ProjectManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\FilenamePattern\FilenameBuilder;
+use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreator;
@@ -58,6 +60,7 @@ use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
+use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
@@ -629,7 +632,8 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
                 new DocumentOnGoingVersionToUploadDAO(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
-            new Docman_LockFactory(new Docman_LockDao(), new Docman_Log())
+            new Docman_LockFactory(new Docman_LockDao(), new Docman_Log()),
+            new FilenameBuilder(new FilenamePatternRetriever(new SettingsDAO()))
         );
     }
 

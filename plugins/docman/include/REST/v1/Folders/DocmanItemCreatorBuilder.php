@@ -39,6 +39,8 @@ use ProjectManager;
 use ReferenceManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Docman\FilenamePattern\FilenameBuilder;
+use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
 use Tuleap\Docman\Metadata\DocmanMetadataInputValidator;
 use Tuleap\Docman\Metadata\DocmanMetadataTypeValueFactory;
 use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBuilder;
@@ -58,6 +60,7 @@ use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\NullResponseFeedbackWrapper;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
+use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Docman\Upload\Document\DocumentMetadataCreator;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
@@ -68,7 +71,7 @@ use Tuleap\Project\REST\UserGroupRetriever;
 use UGroupManager;
 use UserManager;
 
-class DocmanItemCreatorBuilder
+final class DocmanItemCreatorBuilder
 {
     public static function build(Project $project): DocmanItemCreator
     {
@@ -171,7 +174,8 @@ class DocmanItemCreatorBuilder
                 $ugroup_manager,
                 new UserGroupRetriever($ugroup_manager),
                 ProjectManager::instance()
-            )
+            ),
+            new FilenameBuilder(new FilenamePatternRetriever(new SettingsDAO()))
         );
     }
 }

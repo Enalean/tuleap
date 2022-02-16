@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1\Files;
 
 use Luracast\Restler\RestException;
+use Tuleap\Docman\FilenamePattern\FilenameBuilder;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
 use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
@@ -32,19 +33,11 @@ use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
 
 class DocmanFileVersionCreator
 {
-    /**
-     * @var VersionToUploadCreator
-     */
-    private $creator;
-    /**
-     * @var \Docman_LockFactory
-     */
-    private $lock_factory;
-
-    public function __construct(VersionToUploadCreator $creator, \Docman_LockFactory $lock_factory)
-    {
-        $this->creator      = $creator;
-        $this->lock_factory = $lock_factory;
+    public function __construct(
+        private VersionToUploadCreator $creator,
+        private \Docman_LockFactory $lock_factory,
+        private FilenameBuilder $filename_builder,
+    ) {
     }
 
     /**
@@ -58,6 +51,11 @@ class DocmanFileVersionCreator
         int $status,
         int $obsolesence_date,
     ): CreatedItemFilePropertiesRepresentation {
+        $updated_filename = $this->filename_builder->buildFilename(
+            $representation->file_properties->file_name,
+            (int) $item->getGroupId()
+        );
+
         try {
             $document_to_upload = $this->creator->create(
                 $item,
@@ -65,7 +63,7 @@ class DocmanFileVersionCreator
                 $current_time,
                 $representation->version_title,
                 $representation->change_log,
-                $representation->file_properties->file_name,
+                $updated_filename,
                 $representation->file_properties->file_size,
                 $representation->should_lock_file,
                 $status,
