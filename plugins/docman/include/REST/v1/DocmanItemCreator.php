@@ -25,6 +25,7 @@ use Docman_Item;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project;
+use Tuleap\Docman\FilenamePattern\FilenameBuilder;
 use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Empties\DocmanEmptyPOSTRepresentation;
@@ -50,75 +51,20 @@ use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 
 class DocmanItemCreator
 {
-    /**
-     * @var \Docman_ItemFactory
-     */
-    private $item_factory;
-    /**
-     * @var DocumentOngoingUploadRetriever
-     */
-    private $document_ongoing_upload_retriever;
-    /**
-     * @var DocumentToUploadCreator
-     */
-    private $document_to_upload_creator;
-    /**
-     * @var AfterItemCreationVisitor
-     */
-    private $creator_visitor;
-    /**
-     * @var EmptyFileToUploadFinisher
-     */
-    private $empty_file_to_upload_finisher;
-    /**
-     * @var DocmanLinksValidityChecker
-     */
-    private $links_validity_checker;
-    /**
-     * @var ItemStatusMapper
-     */
-    private $status_mapper;
-    /**
-     * @var HardcodedMetadataObsolescenceDateRetriever
-     */
-    private $date_retriever;
-    /**
-     * @var CustomMetadataRepresentationRetriever
-     */
-    private $custom_checker;
-    /**
-     * @var \Docman_MetadataValueDao
-     */
-    private $metadata_value_dao;
-    /**
-     * @var DocmanItemPermissionsForGroupsSetFactory
-     */
-    private $permissions_for_groups_set_factory;
-
     public function __construct(
-        \Docman_ItemFactory $item_factory,
-        DocumentOngoingUploadRetriever $document_ongoing_upload_retriever,
-        DocumentToUploadCreator $document_to_upload_creator,
-        AfterItemCreationVisitor $creator_visitor,
-        EmptyFileToUploadFinisher $empty_file_to_upload_finisher,
-        DocmanLinksValidityChecker $links_validity_checker,
-        ItemStatusMapper $status_mapper,
-        HardcodedMetadataObsolescenceDateRetriever $date_retriever,
-        CustomMetadataRepresentationRetriever $custom_checker,
-        \Docman_MetadataValueDao $metadata_value_dao,
-        DocmanItemPermissionsForGroupsSetFactory $permissions_for_groups_set_factory,
+        private \Docman_ItemFactory $item_factory,
+        private DocumentOngoingUploadRetriever $document_ongoing_upload_retriever,
+        private DocumentToUploadCreator $document_to_upload_creator,
+        private AfterItemCreationVisitor $creator_visitor,
+        private EmptyFileToUploadFinisher $empty_file_to_upload_finisher,
+        private DocmanLinksValidityChecker $links_validity_checker,
+        private ItemStatusMapper $status_mapper,
+        private HardcodedMetadataObsolescenceDateRetriever $date_retriever,
+        private CustomMetadataRepresentationRetriever $custom_checker,
+        private \Docman_MetadataValueDao $metadata_value_dao,
+        private DocmanItemPermissionsForGroupsSetFactory $permissions_for_groups_set_factory,
+        private FilenameBuilder $filename_builder,
     ) {
-        $this->item_factory                       = $item_factory;
-        $this->document_ongoing_upload_retriever  = $document_ongoing_upload_retriever;
-        $this->document_to_upload_creator         = $document_to_upload_creator;
-        $this->creator_visitor                    = $creator_visitor;
-        $this->empty_file_to_upload_finisher      = $empty_file_to_upload_finisher;
-        $this->links_validity_checker             = $links_validity_checker;
-        $this->status_mapper                      = $status_mapper;
-        $this->date_retriever                     = $date_retriever;
-        $this->custom_checker                     = $custom_checker;
-        $this->metadata_value_dao                 = $metadata_value_dao;
-        $this->permissions_for_groups_set_factory = $permissions_for_groups_set_factory;
     }
 
     /**
@@ -240,6 +186,11 @@ class DocmanItemCreator
             $current_time
         );
 
+        $updated_filename = $this->filename_builder->buildFilename(
+            $file_properties->file_name,
+            $parent_item->getGroupId()
+        );
+
         try {
             $document_to_upload = $this->document_to_upload_creator->create(
                 $parent_item,
@@ -247,7 +198,7 @@ class DocmanItemCreator
                 $current_time,
                 $title,
                 $description,
-                $file_properties->file_name,
+                $updated_filename,
                 $file_properties->file_size,
                 $status_id,
                 $obsolescence_date_time_stamp,

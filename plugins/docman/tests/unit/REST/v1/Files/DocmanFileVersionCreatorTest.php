@@ -26,6 +26,8 @@ namespace Tuleap\Docman\REST\v1\Files;
 use Docman_Item;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Docman\FilenamePattern\FilenameBuilder;
+use Tuleap\Docman\Tests\Stub\FilenamePatternRetrieverStub;
 use Tuleap\Docman\Upload\Version\VersionToUpload;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
 
@@ -54,7 +56,8 @@ class DocmanFileVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->lock_factory    = Mockery::mock(\Docman_LockFactory::class);
         $this->version_creator = new DocmanFileVersionCreator(
             $this->creator,
-            $this->lock_factory
+            $this->lock_factory,
+            new FilenameBuilder(FilenamePatternRetrieverStub::buildWithNoPattern())
         );
     }
 
@@ -66,6 +69,7 @@ class DocmanFileVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $item->shouldReceive('getObsolescenceDate')->andReturn(0);
         $item->shouldReceive('getTitle')->andReturn('file');
         $item->shouldReceive('getDescription')->andReturn('');
+        $item->shouldReceive('getGroupId')->andReturn(102);
 
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturn(101);
@@ -93,9 +97,7 @@ class DocmanFileVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $representation,
             $date,
             (int) $item->getStatus(),
-            (int) $item->getObsolescenceDate(),
-            $item->getTitle(),
-            $item->getDescription()
+            (int) $item->getObsolescenceDate()
         );
 
         $this->assertEquals("/uploads/docman/version/1", $created_version_representation->upload_href);
