@@ -22,10 +22,12 @@ import TestDefinitionCardStatus from "./TestDefinitionCardStatus.vue";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { RootState } from "../../../store/type";
 import type { TestDefinition } from "../../../type";
+import { createTestPlanLocalVue } from "../../../helpers/local-vue-for-test";
 
 describe("TestDefinitionCardStatus", () => {
-    it("has a link to go to the test exec in TTM when the test definition is planned", () => {
+    it("has a link to go to the test exec in TTM when the test definition is planned", async () => {
         const wrapper = shallowMount(TestDefinitionCardStatus, {
+            localVue: await createTestPlanLocalVue(),
             propsData: {
                 test_definition: {
                     id: 123,
@@ -55,8 +57,9 @@ describe("TestDefinitionCardStatus", () => {
         `);
     });
 
-    it("only shows the icon when the test definition is not planned", () => {
+    it("only shows the icon when the test definition is not planned", async () => {
         const wrapper = shallowMount(TestDefinitionCardStatus, {
+            localVue: await createTestPlanLocalVue(),
             propsData: {
                 test_definition: {
                     id: 123,

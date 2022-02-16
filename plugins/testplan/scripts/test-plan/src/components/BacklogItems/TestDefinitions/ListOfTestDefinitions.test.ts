@@ -27,10 +27,14 @@ import TestDefinitionSkeleton from "./TestDefinitionSkeleton.vue";
 import TestDefinitionCard from "./TestDefinitionCard.vue";
 import TestDefinitionEmptyState from "./TestDefinitionEmptyState.vue";
 import TestDefinitionErrorState from "./TestDefinitionErrorState.vue";
+import { createTestPlanLocalVue } from "../../../helpers/local-vue-for-test";
 
 describe("ListOfTestDefinitions", () => {
-    function createWrapper(backlog_item: BacklogItem): Wrapper<ListOfTestDefinitions> {
+    async function createWrapper(
+        backlog_item: BacklogItem
+    ): Promise<Wrapper<ListOfTestDefinitions>> {
         return shallowMount(ListOfTestDefinitions, {
+            localVue: await createTestPlanLocalVue(),
             propsData: {
                 backlog_item,
             },
@@ -44,8 +48,8 @@ describe("ListOfTestDefinitions", () => {
         });
     }
 
-    it("Displays skeletons while loading", () => {
-        const wrapper = createWrapper({
+    it("Displays skeletons while loading", async () => {
+        const wrapper = await createWrapper({
             are_test_definitions_loaded: false,
             is_loading_test_definitions: true,
             test_definitions: [] as TestDefinition[],
@@ -55,8 +59,8 @@ describe("ListOfTestDefinitions", () => {
         expect(wrapper.findComponent(TestDefinitionSkeleton).exists()).toBe(true);
     });
 
-    it("Does not display skeletons when not loading", () => {
-        const wrapper = createWrapper({
+    it("Does not display skeletons when not loading", async () => {
+        const wrapper = await createWrapper({
             are_test_definitions_loaded: false,
             is_loading_test_definitions: false,
             test_definitions: [] as TestDefinition[],
@@ -66,8 +70,8 @@ describe("ListOfTestDefinitions", () => {
         expect(wrapper.findComponent(TestDefinitionSkeleton).exists()).toBe(false);
     });
 
-    it("Does not display any cards when there is no test definitions", () => {
-        const wrapper = createWrapper({
+    it("Does not display any cards when there is no test definitions", async () => {
+        const wrapper = await createWrapper({
             are_test_definitions_loaded: false,
             is_loading_test_definitions: false,
             test_definitions: [] as TestDefinition[],
@@ -77,8 +81,8 @@ describe("ListOfTestDefinitions", () => {
         expect(wrapper.findComponent(TestDefinitionCard).exists()).toBe(false);
     });
 
-    it("Displays a card for each test definitions", () => {
-        const wrapper = createWrapper({
+    it("Displays a card for each test definitions", async () => {
+        const wrapper = await createWrapper({
             are_test_definitions_loaded: false,
             is_loading_test_definitions: false,
             test_definitions: [{ id: 123 }, { id: 234 }] as TestDefinition[],
@@ -88,8 +92,8 @@ describe("ListOfTestDefinitions", () => {
         expect(wrapper.findAllComponents(TestDefinitionCard).length).toBe(2);
     });
 
-    it("Displays skeletons even if there are test definitions to show loading indication", () => {
-        const wrapper = createWrapper({
+    it("Displays skeletons even if there are test definitions to show loading indication", async () => {
+        const wrapper = await createWrapper({
             are_test_definitions_loaded: false,
             is_loading_test_definitions: true,
             test_definitions: [] as TestDefinition[],
@@ -99,8 +103,8 @@ describe("ListOfTestDefinitions", () => {
         expect(wrapper.findComponent(TestDefinitionSkeleton).exists()).toBe(true);
     });
 
-    it("Displays empty state when there is no test definitions", () => {
-        const wrapper = createWrapper({
+    it("Displays empty state when there is no test definitions", async () => {
+        const wrapper = await createWrapper({
             are_test_definitions_loaded: false,
             is_loading_test_definitions: false,
             test_definitions: [] as TestDefinition[],
@@ -110,8 +114,8 @@ describe("ListOfTestDefinitions", () => {
         expect(wrapper.findComponent(TestDefinitionEmptyState).exists()).toBe(true);
     });
 
-    it("Does not display empty state when there is no test definitions but it is still loading", () => {
-        const wrapper = createWrapper({
+    it("Does not display empty state when there is no test definitions but it is still loading", async () => {
+        const wrapper = await createWrapper({
             are_test_definitions_loaded: false,
             is_loading_test_definitions: true,
             test_definitions: [] as TestDefinition[],
@@ -121,8 +125,8 @@ describe("ListOfTestDefinitions", () => {
         expect(wrapper.findComponent(TestDefinitionEmptyState).exists()).toBe(false);
     });
 
-    it("Does not display empty state when there are test definitions", () => {
-        const wrapper = createWrapper({
+    it("Does not display empty state when there are test definitions", async () => {
+        const wrapper = await createWrapper({
             are_test_definitions_loaded: false,
             is_loading_test_definitions: false,
             test_definitions: [{ id: 123 }, { id: 234 }] as TestDefinition[],
@@ -132,8 +136,8 @@ describe("ListOfTestDefinitions", () => {
         expect(wrapper.findComponent(TestDefinitionEmptyState).exists()).toBe(false);
     });
 
-    it("Does not display empty state when there is an error", () => {
-        const wrapper = createWrapper({
+    it("Does not display empty state when there is an error", async () => {
+        const wrapper = await createWrapper({
             are_test_definitions_loaded: false,
             is_loading_test_definitions: false,
             test_definitions: [] as TestDefinition[],
@@ -143,8 +147,8 @@ describe("ListOfTestDefinitions", () => {
         expect(wrapper.findComponent(TestDefinitionEmptyState).exists()).toBe(false);
     });
 
-    it("Displays error state when there is an error", () => {
-        const wrapper = createWrapper({
+    it("Displays error state when there is an error", async () => {
+        const wrapper = await createWrapper({
             are_test_definitions_loaded: false,
             is_loading_test_definitions: false,
             test_definitions: [] as TestDefinition[],
@@ -154,8 +158,8 @@ describe("ListOfTestDefinitions", () => {
         expect(wrapper.findComponent(TestDefinitionErrorState).exists()).toBe(true);
     });
 
-    it("Does not display error state when there is no error", () => {
-        const wrapper = createWrapper({
+    it("Does not display error state when there is no error", async () => {
+        const wrapper = await createWrapper({
             are_test_definitions_loaded: false,
             is_loading_test_definitions: false,
             test_definitions: [] as TestDefinition[],

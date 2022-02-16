@@ -24,10 +24,14 @@ import BacklogItemCard from "./BacklogItemCard.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { RootState } from "../../store/type";
 import type { BacklogItem } from "../../type";
+import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 
 describe("BacklogItemContainer", () => {
-    function createWrapper(backlog_item: BacklogItem): Wrapper<BacklogItemContainer> {
+    async function createWrapper(
+        backlog_item: BacklogItem
+    ): Promise<Wrapper<BacklogItemContainer>> {
         return shallowMount(BacklogItemContainer, {
+            localVue: await createTestPlanLocalVue(),
             propsData: {
                 backlog_item,
             },
@@ -44,8 +48,8 @@ describe("BacklogItemContainer", () => {
         });
     }
 
-    it("Displays the backlog item as a card", () => {
-        const wrapper = createWrapper({
+    it("Displays the backlog item as a card", async () => {
+        const wrapper = await createWrapper({
             id: 123,
             is_expanded: false,
             are_test_definitions_loaded: false,
@@ -54,8 +58,8 @@ describe("BacklogItemContainer", () => {
         expect(wrapper.findComponent(BacklogItemCard).exists()).toBe(true);
     });
 
-    it("Displays the corresponding test definitions if backlog item is expanded", () => {
-        const wrapper = createWrapper({
+    it("Displays the corresponding test definitions if backlog item is expanded", async () => {
+        const wrapper = await createWrapper({
             id: 123,
             is_expanded: true,
             are_test_definitions_loaded: false,
@@ -64,8 +68,8 @@ describe("BacklogItemContainer", () => {
         expect(wrapper.find("list-of-test-definitions-stub").exists()).toBe(true);
     });
 
-    it("Hides the corresponding test definitions if backlog item is collapsed", () => {
-        const wrapper = createWrapper({
+    it("Hides the corresponding test definitions if backlog item is collapsed", async () => {
+        const wrapper = await createWrapper({
             id: 123,
             is_expanded: false,
             are_test_definitions_loaded: false,
@@ -74,13 +78,13 @@ describe("BacklogItemContainer", () => {
         expect(wrapper.find("list-of-test-definitions-stub").exists()).toBe(false);
     });
 
-    it("Automatically loads the test coverage of the backlog item", () => {
+    it("Automatically loads the test coverage of the backlog item", async () => {
         const backlog_item = {
             id: 123,
             is_expanded: false,
             are_test_definitions_loaded: false,
         } as BacklogItem;
-        const wrapper = createWrapper(backlog_item);
+        const wrapper = await createWrapper(backlog_item);
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
             "backlog_item/loadTestDefinitions",

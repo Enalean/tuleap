@@ -31,38 +31,32 @@
         <test-definition-error-state v-if="should_error_state_be_displayed" />
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import TestDefinitionSkeleton from "./TestDefinitionSkeleton.vue";
-import type { BacklogItem } from "../../../type";
 import TestDefinitionCard from "./TestDefinitionCard.vue";
 import TestDefinitionEmptyState from "./TestDefinitionEmptyState.vue";
 import TestDefinitionErrorState from "./TestDefinitionErrorState.vue";
+import type { BacklogItem } from "../../../type";
+import { computed } from "@vue/composition-api";
 
-@Component({
-    components: {
-        TestDefinitionErrorState,
-        TestDefinitionEmptyState,
-        TestDefinitionCard,
-        TestDefinitionSkeleton,
-    },
-})
-export default class ListOfTestDefinitions extends Vue {
-    @Prop({ required: true })
-    readonly backlog_item!: BacklogItem;
+const props = defineProps<{
+    backlog_item: BacklogItem;
+}>();
 
-    get should_empty_state_be_displayed(): boolean {
-        return (
-            this.backlog_item.test_definitions.length === 0 &&
-            !this.backlog_item.is_loading_test_definitions &&
-            !this.backlog_item.has_test_definitions_loading_error
-        );
-    }
+const should_empty_state_be_displayed = computed((): boolean => {
+    return (
+        props.backlog_item.test_definitions.length === 0 &&
+        !props.backlog_item.is_loading_test_definitions &&
+        !props.backlog_item.has_test_definitions_loading_error
+    );
+});
 
-    get should_error_state_be_displayed(): boolean {
-        return this.backlog_item.has_test_definitions_loading_error;
-    }
-}
+const should_error_state_be_displayed = computed((): boolean => {
+    return props.backlog_item.has_test_definitions_loading_error;
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

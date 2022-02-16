@@ -38,21 +38,21 @@
         </button>
     </section>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import CampaignEmptyStateSvg from "./CampaignEmptyStateSvg.vue";
-import { State } from "vuex-class";
+import { useState } from "vuex-composition-helpers";
+import type { State } from "../../store/type";
 
-@Component({
-    components: { CampaignEmptyStateSvg },
-})
-export default class CampaignEmptyState extends Vue {
-    @State
-    readonly user_can_create_campaign!: boolean;
+defineProps<{
+    showCreateModal: () => void;
+}>();
 
-    @Prop({ required: true })
-    readonly showCreateModal!: () => void;
-}
+const { user_can_create_campaign } = useState<Pick<State, "user_can_create_campaign">>([
+    "user_can_create_campaign",
+]);
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

@@ -27,36 +27,37 @@
         />
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import BacklogItemCard from "./BacklogItemCard.vue";
+import { defineAsyncComponent, onMounted } from "@vue/composition-api";
 import type { BacklogItem } from "../../type";
-import { namespace } from "vuex-class";
+import { useActions } from "vuex-composition-helpers";
+import type { BacklogItemActions } from "../../store/backlog-item/backlog-item-actions";
 
-const backlog_item_store = namespace("backlog_item");
+const ListOfTestDefinitions = defineAsyncComponent(
+    () =>
+        import(
+            /* webpackChunkName: "testplan-tests-list" */ "./TestDefinitions/ListOfTestDefinitions.vue"
+        )
+);
 
-@Component({
-    components: {
-        BacklogItemCard,
-        "list-of-test-definitions": (): Promise<Record<string, unknown>> =>
-            import(
-                /* webpackChunkName: "testplan-tests-list" */ "./TestDefinitions/ListOfTestDefinitions.vue"
-            ),
-    },
-})
-export default class BacklogItemContainer extends Vue {
-    @Prop({ required: true })
-    readonly backlog_item!: BacklogItem;
+const props = defineProps<{
+    backlog_item: BacklogItem;
+}>();
 
-    @backlog_item_store.Action
-    readonly loadTestDefinitions!: (backlog_item: BacklogItem) => Promise<void>;
+const { loadTestDefinitions } = useActions<Pick<BacklogItemActions, "loadTestDefinitions">>(
+    "backlog_item",
+    ["loadTestDefinitions"]
+);
 
-    mounted(): void {
-        if (!this.backlog_item.are_test_definitions_loaded) {
-            this.loadTestDefinitions(this.backlog_item);
-        }
+onMounted((): void => {
+    if (!props.backlog_item.are_test_definitions_loaded) {
+        loadTestDefinitions(props.backlog_item);
     }
-}
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

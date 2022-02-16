@@ -24,29 +24,29 @@
     </a>
     <test-definition-card-status-tooltip-icon v-else v-bind:test_definition="test_definition" />
 </template>
-
-<script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
-import type { TestDefinition } from "../../../type";
-import { State } from "vuex-class";
+<script setup lang="ts">
 import TestDefinitionCardStatusTooltipIcon from "./TestDefinitionCardStatusTooltipIcon.vue";
+import type { TestDefinition } from "../../../type";
+import { useState } from "vuex-composition-helpers";
+import type { State } from "../../../store/type";
+import { computed } from "@vue/composition-api";
 import { buildGoToTestExecutionLink } from "../../../helpers/BacklogItems/url-builder";
-@Component({
-    components: { TestDefinitionCardStatusTooltipIcon },
-})
-export default class TestDefinitionCardStatus extends Vue {
-    @State
-    readonly project_id!: number;
 
-    @State
-    readonly milestone_id!: number;
+const props = defineProps<{
+    test_definition: TestDefinition;
+}>();
 
-    @Prop({ required: true })
-    readonly test_definition!: TestDefinition;
+const { project_id, milestone_id } = useState<Pick<State, "project_id" | "milestone_id">>([
+    "project_id",
+    "milestone_id",
+]);
 
-    get go_to_test_exec_link(): string | null {
-        return buildGoToTestExecutionLink(this.project_id, this.milestone_id, this.test_definition);
-    }
-}
+const go_to_test_exec_link = computed((): string | null => {
+    return buildGoToTestExecutionLink(project_id.value, milestone_id.value, props.test_definition);
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

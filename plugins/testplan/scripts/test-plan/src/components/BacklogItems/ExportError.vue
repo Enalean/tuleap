@@ -23,6 +23,7 @@
         class="tlp-modal tlp-modal-danger"
         role="dialog"
         aria-labelledby="testplan-export-error-modal-title"
+        ref="root"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="testplan-export-error-modal-title">
@@ -52,16 +53,21 @@
         </div>
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import { createModal } from "tlp";
+import { onMounted, ref } from "@vue/composition-api";
 
-@Component
-export default class ExportError extends Vue {
-    mounted(): void {
-        createModal(this.$el, { destroy_on_hide: true }).show();
+const root = ref<InstanceType<typeof Element>>();
+
+onMounted((): void => {
+    const modal_element = root.value;
+    if (modal_element) {
+        createModal(modal_element, { destroy_on_hide: true }).show();
     }
-}
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

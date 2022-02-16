@@ -29,6 +29,11 @@ import type {
     TestDefinitionFromREST,
 } from "../../type";
 
+export interface BacklogItemActions {
+    loadBacklogItems: typeof loadBacklogItems;
+    loadTestDefinitions: typeof loadTestDefinitions;
+}
+
 export async function loadBacklogItems(
     context: ActionContext<BacklogItemState, RootState>
 ): Promise<void> {

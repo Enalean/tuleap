@@ -26,10 +26,14 @@ import type { BacklogItemState } from "../../store/backlog-item/type";
 import ListOfBacklogItems from "./ListOfBacklogItems.vue";
 import BacklogItemSkeleton from "./BacklogItemSkeleton.vue";
 import BacklogItemContainer from "./BacklogItemContainer.vue";
+import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 
 describe("ListOfBacklogItems", () => {
-    function createWrapper(backlog_item: BacklogItemState): Wrapper<ListOfBacklogItems> {
+    async function createWrapper(
+        backlog_item: BacklogItemState
+    ): Promise<Wrapper<ListOfBacklogItems>> {
         return shallowMount(ListOfBacklogItems, {
+            localVue: await createTestPlanLocalVue(),
             mocks: {
                 $store: createStoreMock({
                     state: {
@@ -44,8 +48,8 @@ describe("ListOfBacklogItems", () => {
         });
     }
 
-    it("Displays skeletons while loading", () => {
-        const wrapper = createWrapper({
+    it("Displays skeletons while loading", async () => {
+        const wrapper = await createWrapper({
             is_loading: true,
             has_loading_error: false,
             backlog_items: [] as BacklogItem[],
@@ -54,8 +58,8 @@ describe("ListOfBacklogItems", () => {
         expect(wrapper.findComponent(BacklogItemSkeleton).exists()).toBe(true);
     });
 
-    it("Does not display skeletons when not loading", () => {
-        const wrapper = createWrapper({
+    it("Does not display skeletons when not loading", async () => {
+        const wrapper = await createWrapper({
             is_loading: false,
             has_loading_error: false,
             backlog_items: [] as BacklogItem[],
@@ -64,8 +68,8 @@ describe("ListOfBacklogItems", () => {
         expect(wrapper.findComponent(BacklogItemSkeleton).exists()).toBe(false);
     });
 
-    it("Does not display any cards when there is no backlog_item", () => {
-        const wrapper = createWrapper({
+    it("Does not display any cards when there is no backlog_item", async () => {
+        const wrapper = await createWrapper({
             is_loading: false,
             has_loading_error: false,
             backlog_items: [] as BacklogItem[],
@@ -74,8 +78,8 @@ describe("ListOfBacklogItems", () => {
         expect(wrapper.findComponent(BacklogItemContainer).exists()).toBe(false);
     });
 
-    it("Displays a card for each backlog_item", () => {
-        const wrapper = createWrapper({
+    it("Displays a card for each backlog_item", async () => {
+        const wrapper = await createWrapper({
             is_loading: false,
             has_loading_error: false,
             backlog_items: [{ id: 1 }, { id: 2 }] as BacklogItem[],
@@ -84,8 +88,8 @@ describe("ListOfBacklogItems", () => {
         expect(wrapper.findAllComponents(BacklogItemContainer).length).toBe(2);
     });
 
-    it("Displays skeletons even if there are backlog_items to show loading indication", () => {
-        const wrapper = createWrapper({
+    it("Displays skeletons even if there are backlog_items to show loading indication", async () => {
+        const wrapper = await createWrapper({
             is_loading: true,
             has_loading_error: false,
             backlog_items: [{ id: 1 }, { id: 2 }] as BacklogItem[],
@@ -94,7 +98,7 @@ describe("ListOfBacklogItems", () => {
         expect(wrapper.findComponent(BacklogItemSkeleton).exists()).toBe(true);
     });
 
-    it("Loads automatically the backlog_items", () => {
+    it("Loads automatically the backlog_items", async () => {
         const $store = createStoreMock({
             state: {
                 backlog_item: {
@@ -105,6 +109,7 @@ describe("ListOfBacklogItems", () => {
             } as RootState,
         });
         shallowMount(ListOfBacklogItems, {
+            localVue: await createTestPlanLocalVue(),
             mocks: {
                 $store,
             },
@@ -113,8 +118,8 @@ describe("ListOfBacklogItems", () => {
         expect($store.dispatch).toHaveBeenCalledWith("backlog_item/loadBacklogItems");
     });
 
-    it("Displays empty state when there is no backlog_item", () => {
-        const wrapper = createWrapper({
+    it("Displays empty state when there is no backlog_item", async () => {
+        const wrapper = await createWrapper({
             is_loading: false,
             has_loading_error: false,
             backlog_items: [] as BacklogItem[],
@@ -123,8 +128,8 @@ describe("ListOfBacklogItems", () => {
         expect(wrapper.find("backlog-item-empty-state-stub").exists()).toBe(true);
     });
 
-    it("Does not display empty state when there is no backlog_item but it is still loading", () => {
-        const wrapper = createWrapper({
+    it("Does not display empty state when there is no backlog_item but it is still loading", async () => {
+        const wrapper = await createWrapper({
             is_loading: true,
             has_loading_error: false,
             backlog_items: [] as BacklogItem[],
@@ -133,8 +138,8 @@ describe("ListOfBacklogItems", () => {
         expect(wrapper.find("backlog-item-empty-state-stub").exists()).toBe(false);
     });
 
-    it("Does not display empty state when there are backlog_items", () => {
-        const wrapper = createWrapper({
+    it("Does not display empty state when there are backlog_items", async () => {
+        const wrapper = await createWrapper({
             is_loading: false,
             has_loading_error: false,
             backlog_items: [{ id: 1 }] as BacklogItem[],
@@ -143,8 +148,8 @@ describe("ListOfBacklogItems", () => {
         expect(wrapper.find("backlog-item-empty-state-stub").exists()).toBe(false);
     });
 
-    it("Does not display empty state when there is an error", () => {
-        const wrapper = createWrapper({
+    it("Does not display empty state when there is an error", async () => {
+        const wrapper = await createWrapper({
             is_loading: false,
             has_loading_error: true,
             backlog_items: [] as BacklogItem[],
@@ -153,8 +158,8 @@ describe("ListOfBacklogItems", () => {
         expect(wrapper.find("backlog-item-empty-state-stub").exists()).toBe(false);
     });
 
-    it("Displays error state when there is an error", () => {
-        const wrapper = createWrapper({
+    it("Displays error state when there is an error", async () => {
+        const wrapper = await createWrapper({
             is_loading: false,
             has_loading_error: true,
             backlog_items: [] as BacklogItem[],
@@ -163,8 +168,8 @@ describe("ListOfBacklogItems", () => {
         expect(wrapper.find("backlog-item-error-state-stub").exists()).toBe(true);
     });
 
-    it("Does not display error state when there is no error", () => {
-        const wrapper = createWrapper({
+    it("Does not display error state when there is no error", async () => {
+        const wrapper = await createWrapper({
             is_loading: false,
             has_loading_error: false,
             backlog_items: [] as BacklogItem[],

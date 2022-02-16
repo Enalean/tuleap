@@ -41,75 +41,79 @@
         </template>
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import type { BacklogItem } from "../../type";
 import type { TestStats } from "../../helpers/BacklogItems/compute-test-stats";
 import {
     computeTestStats,
     getTestStatusFromStats,
 } from "../../helpers/BacklogItems/compute-test-stats";
+import { computed } from "@vue/composition-api";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component
-export default class BacklogItemCoverage extends Vue {
-    @Prop({ required: true })
-    readonly backlog_item!: BacklogItem;
+const props = defineProps<{
+    backlog_item: BacklogItem;
+}>();
 
-    get nb_tests(): number {
-        return Object.values(this.stats).reduce((a: number, b: number): number => {
-            return a + b;
-        });
+const stats = computed((): Readonly<TestStats> => {
+    return computeTestStats(props.backlog_item);
+});
+
+const nb_tests = computed((): number => {
+    return Object.values(stats.value).reduce((a: number, b: number): number => {
+        return a + b;
+    });
+});
+
+const { interpolate, $ngettext } = useGettext();
+
+const nb_tests_title = computed((): string => {
+    const nb = nb_tests.value;
+    return interpolate($ngettext("%{ nb } planned test", "%{ nb } planned tests", nb), { nb });
+});
+
+const test_status = computed((): keyof TestStats | null => {
+    return getTestStatusFromStats(stats.value);
+});
+
+const icon_class = computed((): string => {
+    const value = test_status.value;
+    switch (value) {
+        case null:
+            return "";
+        case "failed":
+            return "fa-times-circle";
+        case "blocked":
+            return "fa-exclamation-circle";
+        case "notrun":
+            return "fa-question-circle";
+        case "passed":
+            return "fa-check-circle";
+        default:
+            return ((val: never): never => val)(value);
     }
+});
 
-    get nb_tests_title(): string {
-        return this.$gettextInterpolate(
-            this.$ngettext("%{ nb } planned test", "%{ nb } planned tests", this.nb_tests),
-            { nb: this.nb_tests }
-        );
+const stack_class = computed((): string => {
+    const value = test_status.value;
+    switch (value) {
+        case null:
+            return "";
+        case "failed":
+            return "test-plan-backlog-item-coverage-icon-failed";
+        case "blocked":
+            return "test-plan-backlog-item-coverage-icon-blocked";
+        case "notrun":
+            return "test-plan-backlog-item-coverage-icon-notrun";
+        case "passed":
+            return "test-plan-backlog-item-coverage-icon-passed";
+        default:
+            return ((val: never): never => val)(value);
     }
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
 
-    get stats(): Readonly<TestStats> {
-        return computeTestStats(this.backlog_item);
-    }
-
-    get test_status(): keyof TestStats | null {
-        return getTestStatusFromStats(this.stats);
-    }
-
-    get icon_class(): string {
-        switch (this.test_status) {
-            case null:
-                return "";
-            case "failed":
-                return "fa-times-circle";
-            case "blocked":
-                return "fa-exclamation-circle";
-            case "notrun":
-                return "fa-question-circle";
-            case "passed":
-                return "fa-check-circle";
-            default:
-                return ((val: never): never => val)(this.test_status);
-        }
-    }
-
-    get stack_class(): string {
-        switch (this.test_status) {
-            case null:
-                return "";
-            case "failed":
-                return "test-plan-backlog-item-coverage-icon-failed";
-            case "blocked":
-                return "test-plan-backlog-item-coverage-icon-blocked";
-            case "notrun":
-                return "test-plan-backlog-item-coverage-icon-notrun";
-            case "passed":
-                return "test-plan-backlog-item-coverage-icon-passed";
-            default:
-                return ((val: never): never => val)(this.test_status);
-        }
-    }
-}
+export default defineComponent({});
 </script>
