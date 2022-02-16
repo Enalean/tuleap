@@ -1,0 +1,33 @@
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <form method="POST" action="" class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{# dgettext }}tuleap-docman | Default view{{/dgettext}}</h1>
+            </div>
+            <section class="tlp-pane-section">
+                <p>{{# dgettext }}tuleap-docman | Please select the default view for browsing documents. Please note that this setting can be overridden by user preferences.{{/ dgettext }}</p>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="selected-view">{{# dgettext }}tuleap-docman | Default view{{/dgettext}}</label>
+                    <select class="tlp-select tlp-select-adjusted" id="selected-view" name="selected_view">
+                        <option value="Tree" {{# is_tree }}selected{{/ is_tree }}>
+                            {{# dgettext }}tuleap-docman | Tree{{/dgettext}}
+                        </option>
+                        <option value="Icons" {{# is_icons }}selected{{/ is_icons }}>
+                            {{# dgettext }}tuleap-docman | Icons{{/dgettext}}
+                        </option>
+                        <option value="Table" {{# is_table }}selected{{/ is_table }}>
+                            {{# dgettext }}tuleap-docman | Table{{/dgettext}}
+                        </option>
+                    </select>
+                </div>
+                <input type="hidden" name="action" value="admin_change_view" />
+            </section>
+            <section class="tlp-pane-section tlp-pane-section-submit">
+                <button type="submit" class="tlp-button-primary">
+                    <i class="far fa-save tlp-button-icon" aria-hidden="true"></i>
+                    {{# gettext }}Save{{/ gettext }}
+                </button>
+            </section>
+        </form>
+    </section>
+</div>
