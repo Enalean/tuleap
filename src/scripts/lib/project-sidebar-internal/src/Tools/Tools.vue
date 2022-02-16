@@ -38,7 +38,7 @@ import Tool from "./Tool.vue";
 import { strictInject } from "../strict-inject";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { computed, nextTick, onMounted, onUpdated, ref, watch } from "vue";
-import { getServicesShortcutsGroup } from "../../../../global-shortcuts/src/plugin-access-shortcuts";
+import { getAvailableShortcutsFromToolsConfiguration } from "../shortcuts";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
 
@@ -47,16 +47,14 @@ const tools_element = ref<InstanceType<typeof HTMLElement>>();
 function setupShortcutsInteraction(): void {
     // We want to wait that everything has been rendered including child components
     nextTick((): void => {
-        if (tools_element.value === undefined) {
+        const element_to_check_for_shortcut = tools_element.value;
+        if (element_to_check_for_shortcut === undefined) {
             return;
         }
-        const shortcuts_group = getServicesShortcutsGroup(tools_element.value, {
-            gettext(msgid: string): string {
-                return msgid;
-            },
-        });
 
-        if (shortcuts_group === null) {
+        const shortcuts = getAvailableShortcutsFromToolsConfiguration(config.value.tools);
+
+        if (shortcuts === null) {
             return;
         }
 
@@ -71,11 +69,10 @@ function setupShortcutsInteraction(): void {
             );
         });
 
-        shortcuts_group.shortcuts.forEach((shortcut): void => {
+        shortcuts.forEach((shortcut): void => {
             watch(and(keys[shortcut.keyboard_inputs], not_using_input_element), (pressed): void => {
                 if (pressed) {
-                    const fake_event = new KeyboardEvent("keypress");
-                    shortcut.handle(fake_event);
+                    shortcut.execute(element_to_check_for_shortcut);
                 }
             });
         });
