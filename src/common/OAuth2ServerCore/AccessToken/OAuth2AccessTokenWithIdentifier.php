@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AccessToken;
+namespace Tuleap\OAuth2ServerCore\AccessToken;
 
 use Tuleap\Cryptography\ConcealedString;
 

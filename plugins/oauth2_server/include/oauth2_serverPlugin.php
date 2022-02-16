@@ -42,7 +42,7 @@ use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
+use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\OAuth2Server\Administration\OAuth2AppProjectVerifier;
 use Tuleap\OAuth2Server\Administration\ProjectAdmin\ListAppsController;

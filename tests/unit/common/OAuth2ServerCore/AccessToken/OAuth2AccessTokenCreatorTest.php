@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AccessToken;
+namespace Tuleap\OAuth2ServerCore\AccessToken;
 
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitToken;
@@ -28,7 +28,6 @@ use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
-use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenDAO;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class OAuth2AccessTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
