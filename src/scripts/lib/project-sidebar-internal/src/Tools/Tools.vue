@@ -33,11 +33,11 @@
     </nav>
 </template>
 <script setup lang="ts">
-import { useMagicKeys } from "@vueuse/core";
+import { and, useActiveElement, useMagicKeys } from "@vueuse/core";
 import Tool from "./Tool.vue";
 import { strictInject } from "../strict-inject";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
-import { nextTick, onMounted, onUpdated, ref, watch } from "vue";
+import { computed, nextTick, onMounted, onUpdated, ref, watch } from "vue";
 import { getServicesShortcutsGroup } from "../../../../global-shortcuts/src/plugin-access-shortcuts";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
@@ -61,9 +61,18 @@ function setupShortcutsInteraction(): void {
         }
 
         const keys = useMagicKeys();
+        const active_element = useActiveElement();
+        const not_using_input_element = computed((): boolean => {
+            return (
+                !active_element.value?.isContentEditable &&
+                active_element.value?.tagName !== "INPUT" &&
+                active_element.value?.tagName !== "TEXTAREA" &&
+                active_element.value?.tagName !== "SELECT"
+            );
+        });
 
         shortcuts_group.shortcuts.forEach((shortcut): void => {
-            watch(keys[shortcut.keyboard_inputs], (pressed): void => {
+            watch(and(keys[shortcut.keyboard_inputs], not_using_input_element), (pressed): void => {
                 if (pressed) {
                     const fake_event = new KeyboardEvent("keypress");
                     shortcut.handle(fake_event);

@@ -6,6 +6,7 @@
 * Only display the project flags icon when some project flags are present.
 * Style the tag when the custom element is not yet defined to limit <abbr title="flash of unstyled content">FOUC</abbr>.
 Note this requires to explicitly load a stylesheet.
+* Shortcuts are not triggered anymore when the user is editing content.
 
 ## 1.1.0
 
