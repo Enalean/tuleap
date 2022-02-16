@@ -33,8 +33,8 @@
                 <a
                     v-if="!is_more_shown"
                     data-test="error-details-show-more-button"
-                    v-on:click="is_more_shown = true"
-                    href="javascript:void(0)"
+                    v-on:click.prevent="is_more_shown = true"
+                    href="#"
                     v-translate
                 >
                     Show error details
