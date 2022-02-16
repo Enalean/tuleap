@@ -30,6 +30,7 @@ use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevoker;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
 use Tuleap\OAuth2ServerCore\RefreshToken\InvalidOAuth2RefreshTokenException;
+use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshToken;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenDAO;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenNotFoundException;
 

@@ -560,6 +560,13 @@ msgstr ""
 msgid "Allow for all projects"
 msgstr "Autoriser pour tous les projets"
 
+msgid ""
+"Allow the app to access resources on your behalf for an extended period of "
+"time even while you are disconnected"
+msgstr ""
+"Autoriser l'application à accéder aux ressources en votre nom pendant une "
+"période prolongée même lorsque vous êtes déconnecté"
+
 msgid "Allow to connect to apps and services using your account"
 msgstr ""
 "Autoriser à se connecter à des applications et services à l'aide de votre "
@@ -2370,6 +2377,9 @@ msgstr "Notifications"
 
 msgid "Number of login failure:"
 msgstr "Nombre de connexions échouées :"
+
+msgid "Offline access"
+msgstr "Accès hors-ligne"
 
 msgid "Ok, got it"
 msgstr "Ok, j'ai compris"

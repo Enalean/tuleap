@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\RefreshToken;
+namespace Tuleap\OAuth2ServerCore\RefreshToken;
 
 use DateInterval;
 use Tuleap\Authentication\Scope\AuthenticationScope;
@@ -32,7 +32,6 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCode;
 use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
-use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenDAO;
 
 class OAuth2RefreshTokenCreator
 {

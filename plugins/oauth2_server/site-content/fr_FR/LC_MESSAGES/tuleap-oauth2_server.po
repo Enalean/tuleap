@@ -24,13 +24,6 @@ msgstr "L'accès a été révoqué."
 msgid "Add an App"
 msgstr "Ajouter une App"
 
-msgid ""
-"Allow the app to access resources on your behalf for an extended period of "
-"time even while you are disconnected"
-msgstr ""
-"Autoriser l'application à accéder aux ressources en votre nom pendant une "
-"période prolongée même lorsque vous êtes déconnecté"
-
 msgid "App"
 msgstr "App"
 
@@ -110,9 +103,6 @@ msgstr "Server OAuth2"
 
 msgid "OAuth2 apps common to the whole instance"
 msgstr "Apps OAuth2 communes à l'ensemble de la plateforme"
-
-msgid "Offline access"
-msgstr "Accès hors-ligne"
 
 msgid "Please review the permissions you are about to give to %s:"
 msgstr ""

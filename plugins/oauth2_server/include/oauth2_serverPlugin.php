@@ -79,8 +79,8 @@ use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\OpenIDConnectSigningKeyFactory
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OAuth2SignInScope;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectEmailScope;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectProfileScope;
-use Tuleap\OAuth2Server\RefreshToken\OAuth2OfflineAccessScope;
-use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenCreator;
+use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2OfflineAccessScope;
+use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenCreator;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenDAO;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenVerifier;
 use Tuleap\OAuth2Server\REST\Specification\Swagger\SwaggerJsonOAuth2SecurityDefinition;
