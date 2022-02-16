@@ -22,10 +22,12 @@ import BacklogItemCard from "./BacklogItemCard.vue";
 import type { BacklogItem } from "../../type";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { RootState } from "../../store/type";
+import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 
 describe("BacklogItemCard", () => {
-    it("Displays the backlog item as a card", () => {
+    it("Displays the backlog item as a card", async () => {
         const wrapper = shallowMount(BacklogItemCard, {
+            localVue: await createTestPlanLocalVue(),
             propsData: {
                 backlog_item: {
                     id: 123,
@@ -69,6 +71,7 @@ describe("BacklogItemCard", () => {
         } as BacklogItem;
 
         const wrapper = shallowMount(BacklogItemCard, {
+            localVue: await createTestPlanLocalVue(),
             propsData: {
                 backlog_item,
             },
@@ -101,6 +104,7 @@ describe("BacklogItemCard", () => {
         } as BacklogItem;
 
         const wrapper = shallowMount(BacklogItemCard, {
+            localVue: await createTestPlanLocalVue(),
             propsData: {
                 backlog_item,
             },
@@ -117,7 +121,7 @@ describe("BacklogItemCard", () => {
         );
     });
 
-    it("Marks a backlog item as just refreshed", () => {
+    it("Marks a backlog item as just refreshed", async () => {
         jest.useFakeTimers();
 
         const $store = createStoreMock({
@@ -132,6 +136,7 @@ describe("BacklogItemCard", () => {
         } as BacklogItem;
 
         const wrapper = shallowMount(BacklogItemCard, {
+            localVue: await createTestPlanLocalVue(),
             propsData: {
                 backlog_item,
             },

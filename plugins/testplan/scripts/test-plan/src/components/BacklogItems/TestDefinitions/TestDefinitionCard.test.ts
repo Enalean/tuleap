@@ -22,12 +22,14 @@ import TestDefinitionCard from "./TestDefinitionCard.vue";
 import type { BacklogItem, TestDefinition } from "../../../type";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { RootState } from "../../../store/type";
+import { createTestPlanLocalVue } from "../../../helpers/local-vue-for-test";
 
 jest.useFakeTimers();
 
 describe("TestDefinitionCard", () => {
-    it("Display a test definition as a card", () => {
+    it("Display a test definition as a card", async () => {
         const wrapper = shallowMount(TestDefinitionCard, {
+            localVue: await createTestPlanLocalVue(),
             propsData: {
                 test_definition: {
                     id: 123,
@@ -43,13 +45,14 @@ describe("TestDefinitionCard", () => {
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Marks the test as just refreshed", () => {
+    it("Marks the test as just refreshed", async () => {
         const $store = createStoreMock({
             state: {
                 backlog_item: {},
             } as RootState,
         });
         const wrapper = shallowMount(TestDefinitionCard, {
+            localVue: await createTestPlanLocalVue(),
             propsData: {
                 test_definition: {
                     id: 123,

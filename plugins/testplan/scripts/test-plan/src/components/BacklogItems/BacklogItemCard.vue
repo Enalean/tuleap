@@ -22,7 +22,10 @@
     <a
         v-bind:href="edit_backlog_item_href"
         class="tlp-card tlp-card-selectable test-plan-backlog-item-card"
-        v-bind:class="classname"
+        v-bind:class="{
+            'test-plan-backlog-item-card-expanded': backlog_item.is_expanded,
+            'test-plan-backlog-item-is-just-refreshed': backlog_item.is_just_refreshed,
+        }"
         v-on:click.prevent.stop="toggle"
     >
         <div>
@@ -42,78 +45,68 @@
         <backlog-item-coverage v-bind:backlog_item="backlog_item" />
     </a>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import type { BacklogItem } from "../../type";
-import { namespace, State } from "vuex-class";
+<script setup lang="ts">
 import BacklogItemCoverage from "./BacklogItemCoverage.vue";
-import AddTestButtonWithAdditionalActionsMenu from "./AddTestButtonWithAdditionalActionsMenu.vue";
+import AddTestButton from "./AddTestButtonWithAdditionalActionsMenu.vue";
+import type { BacklogItem } from "../../type";
+import type { State } from "../../store/type";
+import { useMutations, useState } from "vuex-composition-helpers";
+import type { BacklogItemMutations } from "../../store/backlog-item/backlog-item-mutations";
+import { computed, onMounted } from "@vue/composition-api";
 import { buildEditBacklogItemLink } from "../../helpers/BacklogItems/url-builder";
 
-const backlog_item_store = namespace("backlog_item");
-@Component({
-    components: { AddTestButton: AddTestButtonWithAdditionalActionsMenu, BacklogItemCoverage },
-})
-export default class BacklogItemCard extends Vue {
-    @State
-    readonly milestone_id!: number;
+const { milestone_id } = useState<Pick<State, "milestone_id">>(["milestone_id"]);
 
-    @Prop({ required: true })
-    readonly backlog_item!: BacklogItem;
+const props = defineProps<{
+    backlog_item: BacklogItem;
+}>();
 
-    @backlog_item_store.Mutation
-    readonly removeIsJustRefreshedFlagOnBacklogItem!: (item: BacklogItem) => void;
+const { removeIsJustRefreshedFlagOnBacklogItem, expandBacklogItem, collapseBacklogItem } =
+    useMutations<
+        Pick<
+            BacklogItemMutations,
+            "removeIsJustRefreshedFlagOnBacklogItem" | "expandBacklogItem" | "collapseBacklogItem"
+        >
+    >("backlog_item", [
+        "removeIsJustRefreshedFlagOnBacklogItem",
+        "expandBacklogItem",
+        "collapseBacklogItem",
+    ]);
 
-    @backlog_item_store.Mutation
-    readonly expandBacklogItem!: (item: BacklogItem) => void;
-
-    @backlog_item_store.Mutation
-    readonly collapseBacklogItem!: (item: BacklogItem) => void;
-
-    mounted(): void {
-        if (this.backlog_item.is_just_refreshed) {
-            setTimeout(() => {
-                this.removeIsJustRefreshedFlagOnBacklogItem(this.backlog_item);
-            }, 1000);
-        }
+onMounted((): void => {
+    if (props.backlog_item.is_just_refreshed) {
+        setTimeout(() => {
+            removeIsJustRefreshedFlagOnBacklogItem(props.backlog_item);
+        }, 1000);
     }
+});
 
-    toggle(): void {
-        if (this.backlog_item.is_expanded) {
-            this.collapseBacklogItem(this.backlog_item);
-        } else {
-            this.expandBacklogItem(this.backlog_item);
-        }
-    }
-
-    get badge_color(): string {
-        return "cross-ref-badge-" + this.backlog_item.color;
-    }
-
-    get caret(): string {
-        if (this.backlog_item.is_expanded) {
-            return "fa-caret-down";
-        }
-
-        return "fa-caret-right";
-    }
-
-    get classname(): string {
-        let classnames = [];
-        if (this.backlog_item.is_expanded) {
-            classnames.push("test-plan-backlog-item-card-expanded");
-        }
-        if (this.backlog_item.is_just_refreshed) {
-            classnames.push("test-plan-backlog-item-is-just-refreshed");
-        }
-
-        return classnames.join(" ");
-    }
-
-    get edit_backlog_item_href(): string {
-        return buildEditBacklogItemLink(this.milestone_id, this.backlog_item);
+function toggle(): void {
+    if (props.backlog_item.is_expanded) {
+        collapseBacklogItem(props.backlog_item);
+    } else {
+        expandBacklogItem(props.backlog_item);
     }
 }
+
+const badge_color = computed((): string => {
+    return "cross-ref-badge-" + props.backlog_item.color;
+});
+
+const caret = computed((): string => {
+    if (props.backlog_item.is_expanded) {
+        return "fa-caret-down";
+    }
+
+    return "fa-caret-right";
+});
+
+const edit_backlog_item_href = computed(() => {
+    return buildEditBacklogItemLink(milestone_id.value, props.backlog_item);
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

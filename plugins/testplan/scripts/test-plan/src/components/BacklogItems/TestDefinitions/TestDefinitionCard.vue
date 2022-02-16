@@ -19,7 +19,12 @@
   -->
 
 <template>
-    <div class="test-plan-test-definition-card" v-bind:class="classname">
+    <div
+        class="test-plan-test-definition-card"
+        v-bind:class="{
+            'test-plan-test-definition-is-just-refreshed': test_definition.is_just_refreshed,
+        }"
+    >
         <test-definition-card-xref-category-status
             v-bind:test_definition="test_definition"
             v-bind:backlog_item="backlog_item"
@@ -28,47 +33,35 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import type { BacklogItem, TestDefinition } from "../../../type";
-import type { RemoveIsJustRefreshedFlagOnTestDefinitionPayload } from "../../../store/backlog-item/type";
-import { namespace } from "vuex-class";
+<script setup lang="ts">
 import TestDefinitionCardXrefCategoryStatus from "./TestDefinitionCardXrefCategoryStatus.vue";
+import type { BacklogItem, TestDefinition } from "../../../type";
+import { useMutations } from "vuex-composition-helpers";
+import type { BacklogItemMutations } from "../../../store/backlog-item/backlog-item-mutations";
+import { onMounted } from "@vue/composition-api";
 
-const backlog_item_store = namespace("backlog_item");
-@Component({
-    components: { TestDefinitionCardXrefCategoryStatus },
-})
-export default class TestDefinitionCard extends Vue {
-    @Prop({ required: true })
-    readonly test_definition!: TestDefinition;
+const props = defineProps<{
+    test_definition: TestDefinition;
+    backlog_item: BacklogItem;
+}>();
 
-    @Prop({ required: true })
-    readonly backlog_item!: BacklogItem;
+const { removeIsJustRefreshedFlagOnTestDefinition } = useMutations<
+    Pick<BacklogItemMutations, "removeIsJustRefreshedFlagOnTestDefinition">
+>("backlog_item", ["removeIsJustRefreshedFlagOnTestDefinition"]);
 
-    @backlog_item_store.Mutation
-    readonly removeIsJustRefreshedFlagOnTestDefinition!: (
-        payload: RemoveIsJustRefreshedFlagOnTestDefinitionPayload
-    ) => void;
-
-    mounted(): void {
-        if (this.test_definition.is_just_refreshed) {
-            setTimeout(() => {
-                this.removeIsJustRefreshedFlagOnTestDefinition({
-                    backlog_item: this.backlog_item,
-                    test_definition: this.test_definition,
-                });
-            }, 1000);
-        }
+onMounted((): void => {
+    if (props.test_definition.is_just_refreshed) {
+        setTimeout(() => {
+            removeIsJustRefreshedFlagOnTestDefinition({
+                backlog_item: props.backlog_item,
+                test_definition: props.test_definition,
+            });
+        }, 1000);
     }
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
 
-    get classname(): string {
-        if (this.test_definition.is_just_refreshed) {
-            return "test-plan-test-definition-is-just-refreshed";
-        }
-
-        return "";
-    }
-}
+export default defineComponent({});
 </script>
