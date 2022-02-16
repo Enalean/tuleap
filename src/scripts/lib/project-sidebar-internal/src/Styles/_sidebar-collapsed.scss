@@ -22,13 +22,7 @@
 
 @use "../../../themes/BurningParrot/css/includes/global-variables";
 
-.has-sidebar {
-    padding: 0 0 0 global-variables.$sidebar-expanded-width;
-}
-
 .sidebar-collapsed {
-    padding: 0 0 0 global-variables.$sidebar-collapsed-width;
-
     .sidebar {
         width: global-variables.$sidebar-collapsed-width;
     }

@@ -24,3 +24,7 @@
 .has-sidebar {
     padding: 0 0 0 global-variables.$sidebar-expanded-width;
 }
+
+.has-sidebar.sidebar-collapsed {
+    padding: 0 0 0 global-variables.$sidebar-collapsed-width;
+}
