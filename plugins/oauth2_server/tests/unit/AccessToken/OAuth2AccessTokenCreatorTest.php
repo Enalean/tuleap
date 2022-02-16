@@ -27,7 +27,7 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
+use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
 use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenDAO;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 

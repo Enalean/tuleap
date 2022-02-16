@@ -20,10 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Scope;
+namespace Tuleap\OAuth2ServerCore\Scope;
 
 use Tuleap\Authentication\Scope\AuthenticationScope;
-use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeIdentifierSaverDAO;
 
 class OAuth2ScopeSaver
 {
