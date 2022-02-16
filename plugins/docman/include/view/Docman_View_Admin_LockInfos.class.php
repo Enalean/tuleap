@@ -93,6 +93,16 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView
 
         $dIF = new Docman_ItemFactory($params['group_id']);
 
+        if ($lockInfos && count($lockInfos) === 0) {
+            $content .= '
+                <tr>
+                    <td colspan="4" class="tlp-table-cell-empty">
+                        ' . dgettext('tuleap-docman', 'Project has no locked documents') . '
+                    </td>
+                </tr>
+            ';
+        }
+
         if ($lockInfos !== false) {
             foreach ($lockInfos as $row) {
                 $item = $dIF->getItemFromDb($row['item_id']);
