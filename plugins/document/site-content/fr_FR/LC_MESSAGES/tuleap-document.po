@@ -23,9 +23,6 @@ msgstr ""
 msgid "An error occurred while saving configuration."
 msgstr "Une erreur est survenue lors de la sauvegarde de la configuration."
 
-msgid "Any"
-msgstr "Tous"
-
 msgid "Document"
 msgstr "Document"
 

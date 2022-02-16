@@ -47,9 +47,10 @@ describe("build-advanced-search-params", () => {
             update_date: null,
             obsolescence_date: null,
             status: "",
+            field_2: "ipsum",
         };
-        expect(buildAdvancedSearchParams({ title: "lorem", type: "folder" })).toStrictEqual(
-            expected
-        );
+        expect(
+            buildAdvancedSearchParams({ title: "lorem", type: "folder", field_2: "ipsum" })
+        ).toStrictEqual(expected);
     });
 });

@@ -174,5 +174,24 @@ describe("get-search-props-from-route", () => {
             );
             expect(query).toStrictEqual(buildAdvancedSearchParams({ status: "draft" }));
         });
+
+        it.each([["<"], ["="], [">"]])(
+            "should accept custom properties as parameters, including dates with %s operator",
+            (operator) => {
+                const { query } = getSearchPropsFromRoute(
+                    {
+                        params: {},
+                        query: { field_1: "lorem", field_2: "2022-01-30", field_2_op: operator },
+                    } as unknown as Route,
+                    101
+                );
+                expect(query).toStrictEqual(
+                    buildAdvancedSearchParams({
+                        field_1: "lorem",
+                        field_2: { operator, date: "2022-01-30" },
+                    })
+                );
+            }
+        );
     });
 });

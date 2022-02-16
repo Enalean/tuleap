@@ -89,6 +89,9 @@ msgstr "Une erreur est servenue, merci de contacter votre administrateur"
 msgid "An error occurred while searching for results."
 msgstr "Une erreur est survenue lors de la recherche."
 
+msgid "Any"
+msgstr "Tous"
+
 msgid "Apply"
 msgstr "Appliquer"
 

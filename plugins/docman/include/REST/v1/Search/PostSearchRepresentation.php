@@ -76,6 +76,11 @@ final class PostSearchRepresentation
     public string $status = '';
 
     /**
+     * @var array {@type \Tuleap\Docman\REST\v1\Search\CustomPropertyRepresentation} {@from body} {@required false}
+     */
+    public array $custom_properties = [];
+
+    /**
      * @var int limit {@from body} {@required false} {@min 0} {@max 50}
      */
     public int $limit = SearchResource::MAX_LIMIT;

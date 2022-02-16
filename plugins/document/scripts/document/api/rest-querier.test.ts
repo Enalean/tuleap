@@ -452,6 +452,11 @@ describe("rest-querier", () => {
                         operator: "=",
                     },
                     status: "draft",
+                    field_2: "lorem",
+                    field_3: {
+                        date: "2022-01-31",
+                        operator: "=",
+                    },
                 },
                 170
             );
@@ -479,6 +484,19 @@ describe("rest-querier", () => {
                         operator: "=",
                     },
                     status: "draft",
+                    custom_properties: [
+                        {
+                            name: "field_2",
+                            value: "lorem",
+                        },
+                        {
+                            name: "field_3",
+                            value_date: {
+                                date: "2022-01-31",
+                                operator: "=",
+                            },
+                        },
+                    ],
                     offset: 170,
                     limit: 50,
                 }),

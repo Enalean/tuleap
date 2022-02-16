@@ -17,8 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { Route } from "vue-router/types/router";
-import type { AdvancedSearchParams, SearchDate } from "../type";
+import type { AdvancedSearchParams, SearchDate, AdditionalFieldNumber } from "../type";
 import { AllowedSearchDateOperator, AllowedSearchType } from "../type";
+import {
+    isAdditionalFieldNumber,
+    isAdditionalPropertySeemsToBeADate,
+} from "../helpers/additional-custom-properties";
 
 export function getSearchPropsFromRoute(
     route: Route,
@@ -44,9 +48,33 @@ export function getSearchPropsFromRoute(
             create_date: getCreateDate(route),
             obsolescence_date: getObsolescenceDate(route),
             status: String(route.query.status || ""),
+            ...getCustomProperties(route),
         },
         offset: Number(route.query.offset || "0"),
     };
+}
+
+function getCustomProperties(
+    route: Route
+): Record<AdditionalFieldNumber, string | SearchDate | null> {
+    const additional: Record<AdditionalFieldNumber, string | SearchDate | null> = {};
+
+    for (const key of Object.keys(route.query)) {
+        if (!isAdditionalFieldNumber(key)) {
+            continue;
+        }
+
+        if (isAdditionalPropertySeemsToBeADate(route, key)) {
+            additional[key] = getSearchDate(
+                String(route.query[key] || ""),
+                String(route.query[key + "_op"] || "")
+            );
+        } else {
+            additional[key] = String(route.query[key] || "");
+        }
+    }
+
+    return additional;
 }
 
 function isAllowedType(type: string): type is AllowedSearchType {

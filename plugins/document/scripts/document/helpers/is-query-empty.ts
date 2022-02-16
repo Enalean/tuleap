@@ -18,6 +18,8 @@
  */
 
 import type { AdvancedSearchParams } from "../type";
+import { isAdditionalFieldNumber } from "./additional-custom-properties";
+import type { SearchDate } from "../type";
 
 export function isQueryEmpty(query_params: AdvancedSearchParams): boolean {
     return (
@@ -29,6 +31,36 @@ export function isQueryEmpty(query_params: AdvancedSearchParams): boolean {
         query_params.create_date === null &&
         query_params.update_date === null &&
         query_params.obsolescence_date === null &&
-        query_params.status.length === 0
+        query_params.status.length === 0 &&
+        areAllAdditionalParamsEmpty(query_params)
     );
+}
+
+function areAllAdditionalParamsEmpty(query_params: AdvancedSearchParams): boolean {
+    for (const key of Object.keys(query_params)) {
+        if (!isAdditionalFieldNumber(key)) {
+            continue;
+        }
+
+        const search_param = query_params[key];
+        if (!search_param) {
+            continue;
+        }
+
+        if (isSearchDate(search_param)) {
+            if (search_param.date.length > 0) {
+                return false;
+            }
+        } else {
+            if (search_param.length > 0) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+function isSearchDate(search_param: string | SearchDate): search_param is SearchDate {
+    return typeof search_param !== "string";
 }
