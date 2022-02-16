@@ -166,5 +166,13 @@ describe("get-search-props-from-route", () => {
                 );
             }
         );
+
+        it("should accept status parameter", () => {
+            const { query } = getSearchPropsFromRoute(
+                { params: {}, query: { status: "draft" } } as unknown as Route,
+                101
+            );
+            expect(query).toStrictEqual(buildAdvancedSearchParams({ status: "draft" }));
+        });
     });
 });

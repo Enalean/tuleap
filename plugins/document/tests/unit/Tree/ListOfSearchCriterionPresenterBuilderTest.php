@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Tree;
 
+use Docman_SettingsBo;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Test\PHPUnit\TestCase;
 
 class ListOfSearchCriterionPresenterBuilderTest extends TestCase
@@ -32,11 +34,16 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $metadata_factory->method('getMetadataForGroup')
             ->with(true)
             ->willReturn([]);
+        $metadata_factory->method('appendAllListOfValues');
 
         $project = $this->createMock(\Project::class);
         $project->method('usesWiki')->willReturn(true);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $project);
+        $docman_settings = $this->createMock(Docman_SettingsBo::class);
+        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $status_mapper = new ItemStatusMapper($docman_settings);
+
+        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(1, $criteria);
         self::assertEquals('type', $criteria[0]->name);
@@ -55,11 +62,16 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $metadata_factory->method('getMetadataForGroup')
             ->with(true)
             ->willReturn([]);
+        $metadata_factory->method('appendAllListOfValues');
 
         $project = $this->createMock(\Project::class);
         $project->method('usesWiki')->willReturn(false);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $project);
+        $docman_settings = $this->createMock(Docman_SettingsBo::class);
+        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $status_mapper = new ItemStatusMapper($docman_settings);
+
+        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(1, $criteria);
         self::assertEquals('type', $criteria[0]->name);
@@ -92,34 +104,70 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $metadata_factory->method('getMetadataForGroup')
             ->with(true)
             ->willReturn([$metadata]);
+        $metadata_factory->method('appendAllListOfValues');
 
         $project = $this->createMock(\Project::class);
         $project->method('usesWiki')->willReturn(true);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $project);
+        $docman_settings = $this->createMock(Docman_SettingsBo::class);
+        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $status_mapper = new ItemStatusMapper($docman_settings);
+
+        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(2, $criteria);
         self::assertEquals($metadata_name, $criteria[1]->name);
     }
 
-    public function testItShouldOmitHardcodedStatusMetadataBecauseItIsNotImplementedYet(): void
+    public function testItShouldReturnHardcodedStatusMetadata(): void
     {
-        $metadata = new \Docman_Metadata();
+        $metadata = new \Docman_ListMetadata();
         $metadata->setSpecial(true);
         $metadata->setLabel('status');
         $metadata->setName('status');
 
+        $none = new \Docman_MetadataListOfValuesElement();
+        $none->setId(100);
+        $none->setStatus('P');
+        $none->setName('None');
+
+        $draft = new \Docman_MetadataListOfValuesElement();
+        $draft->setId(101);
+        $draft->setStatus('A');
+        $draft->setName('Draft');
+
+        $deleted = new \Docman_MetadataListOfValuesElement();
+        $deleted->setId(102);
+        $deleted->setStatus('D');
+        $deleted->setName('Whatever');
+
+        $elements = [$none, $draft, $deleted];
+        $metadata->setListOfValueElements($elements);
+
         $project = $this->createMock(\Project::class);
         $project->method('usesWiki')->willReturn(true);
+
+        $docman_settings = $this->createMock(Docman_SettingsBo::class);
+        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $status_mapper = new ItemStatusMapper($docman_settings);
 
         $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
         $metadata_factory->method('getMetadataForGroup')
             ->with(true)
             ->willReturn([$metadata]);
+        $metadata_factory->method('appendAllListOfValues');
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
 
-        self::assertCount(1, $criteria);
+        self::assertCount(2, $criteria);
+        self::assertEquals('status', $criteria[1]->name);
+        self::assertEquals(
+            ['', 'none', 'draft'],
+            array_map(
+                static fn(SearchCriterionListOptionPresenter $option): string => $option->value,
+                $criteria[1]->options
+            )
+        );
     }
 
     public function testItShouldOmitCustomMetadataBecauseWeDoNotSupportThemYet(): void
@@ -132,12 +180,17 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $project = $this->createMock(\Project::class);
         $project->method('usesWiki')->willReturn(true);
 
+        $docman_settings = $this->createMock(Docman_SettingsBo::class);
+        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $status_mapper = new ItemStatusMapper($docman_settings);
+
         $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
         $metadata_factory->method('getMetadataForGroup')
             ->with(true)
             ->willReturn([$metadata]);
+        $metadata_factory->method('appendAllListOfValues');
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(1, $criteria);
     }

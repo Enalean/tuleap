@@ -27,6 +27,7 @@ use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Config\HistoryEnforcementSettingsBuilder;
 use Tuleap\Layout\BaseLayout;
@@ -87,7 +88,11 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 $this->file_download_limits_builder->build(),
                 $this->history_enforcement_settings_builder->build(),
                 $this->project_flags_builder->buildProjectFlags($project),
-                $this->criteria_builder->getCriteria(new \Docman_MetadataFactory($project->getID()), $project)
+                $this->criteria_builder->getCriteria(
+                    new \Docman_MetadataFactory($project->getID()),
+                    new ItemStatusMapper(new \Docman_SettingsBo($project->getID())),
+                    $project
+                ),
             )
         );
 

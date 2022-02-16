@@ -73,6 +73,9 @@ msgstr "Taille maximum de l'archive"
 msgid "Megabytes"
 msgstr "Mégaoctets"
 
+msgid "None"
+msgstr "Aucun"
+
 msgid "Please contact your site administrator."
 msgstr "Veuillez contacter votre administrateur de site."
 

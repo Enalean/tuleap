@@ -43,6 +43,7 @@ export function getSearchPropsFromRoute(
             update_date: getUpdateDate(route),
             create_date: getCreateDate(route),
             obsolescence_date: getObsolescenceDate(route),
+            status: String(route.query.status || ""),
         },
         offset: Number(route.query.offset || "0"),
     };

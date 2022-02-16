@@ -71,6 +71,11 @@ final class PostSearchRepresentation
     public ?SearchDateRepresentation $obsolescence_date = null;
 
     /**
+     * @var string status of item {@from body} {@required false} {@choice none,draft,approved,rejected}
+     */
+    public string $status = '';
+
+    /**
      * @var int limit {@from body} {@required false} {@min 0} {@max 50}
      */
     public int $limit = SearchResource::MAX_LIMIT;

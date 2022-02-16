@@ -31,6 +31,7 @@ describe("build-advanced-search-params", () => {
             create_date: null,
             update_date: null,
             obsolescence_date: null,
+            status: "",
         };
         expect(buildAdvancedSearchParams()).toStrictEqual(expected);
     });
@@ -45,6 +46,7 @@ describe("build-advanced-search-params", () => {
             create_date: null,
             update_date: null,
             obsolescence_date: null,
+            status: "",
         };
         expect(buildAdvancedSearchParams({ title: "lorem", type: "folder" })).toStrictEqual(
             expected
