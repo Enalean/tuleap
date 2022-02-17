@@ -27,7 +27,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\NullServerRequest;
-use Tuleap\OAuth2Server\OAuth2TestScope;
+use Tuleap\OAuth2ServerCore\OAuth2TestScope;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectEmailScope;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 use Tuleap\Test\Builders\UserTestBuilder;

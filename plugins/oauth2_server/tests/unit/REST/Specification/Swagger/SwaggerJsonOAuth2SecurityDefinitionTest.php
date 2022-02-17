@@ -27,7 +27,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Language\LocaleSwitcher;
-use Tuleap\OAuth2Server\OAuth2TestScope;
+use Tuleap\OAuth2ServerCore\OAuth2TestScope;
 
 final class SwaggerJsonOAuth2SecurityDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
 {

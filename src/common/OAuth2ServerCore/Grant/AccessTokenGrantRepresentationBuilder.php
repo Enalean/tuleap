@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant;
+namespace Tuleap\OAuth2ServerCore\Grant;
 
 use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;

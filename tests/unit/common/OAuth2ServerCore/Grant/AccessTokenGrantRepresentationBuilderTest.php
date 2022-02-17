@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant;
+namespace Tuleap\OAuth2ServerCore\Grant;
 
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
@@ -29,7 +29,7 @@ use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenWithIdentifier;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCode;
-use Tuleap\OAuth2Server\OAuth2TestScope;
+use Tuleap\OAuth2ServerCore\OAuth2TestScope;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\OpenIDConnectIDTokenCreator;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2OfflineAccessScope;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshToken;
