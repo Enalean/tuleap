@@ -36,32 +36,48 @@ final class ListOfSearchCriterionPresenterBuilder
         ];
 
         $criteria = [
-            new SearchCriterionListPresenter(
-                'type',
-                dgettext('tuleap-document', 'Type'),
-                $this->getTypeOptions($project),
-            ),
+            'hardcoded' => [
+                new SearchCriterionListPresenter(
+                    'type',
+                    dgettext('tuleap-document', 'Type'),
+                    $this->getTypeOptions($project),
+                ),
+            ],
+            'custom' => [],
         ];
 
         $all_metadata = $metadata_factory->getMetadataForGroup(true);
         $metadata_factory->appendAllListOfValues($all_metadata);
         foreach ($all_metadata as $metadata) {
             assert($metadata instanceof \Docman_Metadata);
+            $shard = $metadata->isSpecial() ? 'hardcoded' : 'custom';
+
             if ($metadata instanceof \Docman_ListMetadata) {
-                $criteria[] = $metadata->getLabel() === \Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL
+                $criteria[$shard][] = $metadata->getLabel() === \Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL
                     ? $this->getStatusCriterion($metadata, $status_mapper)
                     : $this->getListCriterion($metadata);
                 continue;
             }
 
-            $criteria[] = new SearchCriterionPresenter(
+            $criteria[$shard][] = new SearchCriterionPresenter(
                 $metadata->getLabel(),
                 $metadata->getName(),
                 $numeric_type_to_human_readable_type[$metadata->getType()],
             );
         }
 
-        return $criteria;
+        usort(
+            $criteria['custom'],
+            static fn (
+                SearchCriterionPresenter | SearchCriterionListPresenter $a,
+                SearchCriterionPresenter | SearchCriterionListPresenter $b,
+            ): int => strnatcasecmp($a->label, $b->label)
+        );
+
+        return array_merge(
+            $criteria['hardcoded'],
+            $criteria['custom']
+        );
     }
 
     private function getStatusCriterion(\Docman_ListMetadata $metadata, ItemStatusMapper $status_mapper): SearchCriterionListPresenter
