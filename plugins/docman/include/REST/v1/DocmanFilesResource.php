@@ -31,6 +31,7 @@ use Docman_Log;
 use Docman_PermissionsManager;
 use Luracast\Restler\RestException;
 use PermissionsManager;
+use Project;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -44,6 +45,7 @@ use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFileVersionCreator;
 use Tuleap\Docman\REST\v1\Files\DocmanFileVersionPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
 use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
@@ -434,7 +436,7 @@ class DocmanFilesResource extends AuthenticatedResource
         Header::allowOptionsPostDelete();
     }
 
-    private function getFileVersionCreator(): DocmanFileVersionCreator
+    private function getFileVersionCreator(Project $project): DocmanFileVersionCreator
     {
         return new DocmanFileVersionCreator(
             new VersionToUploadCreator(
@@ -442,7 +444,7 @@ class DocmanFilesResource extends AuthenticatedResource
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
             new Docman_LockFactory(new Docman_LockDao(), new Docman_Log()),
-            new FilenameBuilder(new FilenamePatternRetriever(new SettingsDAO()))
+            new FilenameBuilder(new FilenamePatternRetriever(new SettingsDAO()), new ItemStatusMapper(new \Docman_SettingsBo($project->getID())))
         );
     }
 
@@ -508,7 +510,7 @@ class DocmanFilesResource extends AuthenticatedResource
         }
 
         try {
-            $docman_item_version_creator = $this->getFileVersionCreator();
+            $docman_item_version_creator = $this->getFileVersionCreator($project);
             return $docman_item_version_creator->createFileVersion(
                 $item,
                 $current_user,

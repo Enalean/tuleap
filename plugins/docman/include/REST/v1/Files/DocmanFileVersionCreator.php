@@ -54,7 +54,9 @@ class DocmanFileVersionCreator
         $updated_filename = $this->filename_builder->buildFilename(
             $representation->file_properties->file_name,
             (int) $item->getGroupId(),
-            (string) $item->getTitle()
+            (string) $item->getTitle(),
+            $status,
+            $representation->version_title
         );
 
         try {

@@ -24,9 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1\Files;
 
 use Docman_Item;
+use Docman_SettingsBo;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Docman\FilenamePattern\FilenameBuilder;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\Tests\Stub\FilenamePatternRetrieverStub;
 use Tuleap\Docman\Upload\Version\VersionToUpload;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
@@ -48,16 +50,20 @@ class DocmanFileVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $lock_factory;
 
+    private \PHPUnit\Framework\MockObject\MockObject|Docman_SettingsBo $docman_settingsbo;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->creator         = Mockery::mock(VersionToUploadCreator::class);
-        $this->lock_factory    = Mockery::mock(\Docman_LockFactory::class);
+        $this->creator           = Mockery::mock(VersionToUploadCreator::class);
+        $this->lock_factory      = Mockery::mock(\Docman_LockFactory::class);
+        $this->docman_settingsbo = $this->createMock(Docman_SettingsBo::class);
+
         $this->version_creator = new DocmanFileVersionCreator(
             $this->creator,
             $this->lock_factory,
-            new FilenameBuilder(FilenamePatternRetrieverStub::buildWithNoPattern())
+            new FilenameBuilder(FilenamePatternRetrieverStub::buildWithNoPattern(), new ItemStatusMapper($this->docman_settingsbo))
         );
     }
 

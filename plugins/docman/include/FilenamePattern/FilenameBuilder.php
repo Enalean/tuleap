@@ -23,16 +23,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\FilenamePattern;
 
+use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
 final class FilenameBuilder
 {
-    private const TITLE_VARIABLE = "\${TITLE}";
+    private const TITLE_VARIABLE        = "\${TITLE}";
+    private const STATUS_VARIABLE       = "\${STATUS}";
+    private const VERSION_NAME_VARIABLE = "\${VERSION_NAME}";
 
-    public function __construct(private RetrieveFilenamePattern $filename_pattern_retriever)
-    {
+    public function __construct(
+        private RetrieveFilenamePattern $filename_pattern_retriever,
+        private ItemStatusMapper $item_status_mapper,
+    ) {
     }
 
-    public function buildFilename(string $original_filename, int $project_id, string $title): string
+    public function buildFilename(string $original_filename, int $project_id, string $title, int $status, string $version_name): string
     {
         $pattern = $this->filename_pattern_retriever->getPattern($project_id);
         if (! $pattern) {
@@ -43,6 +49,21 @@ final class FilenameBuilder
         if (str_contains($pattern, self::TITLE_VARIABLE)) {
             $new_filename = str_replace(self::TITLE_VARIABLE, $title, $new_filename);
         }
+
+        if (str_contains($pattern, self::STATUS_VARIABLE)) {
+            try {
+                $status = $this->item_status_mapper->getItemStatusFromItemStatusNumber($status);
+            } catch (HardCodedMetadataException $e) {
+                $status = ItemStatusMapper::ITEM_STATUS_NONE;
+            }
+            $new_filename = str_replace(self::STATUS_VARIABLE, $status, $new_filename);
+        }
+
+        if (str_contains($pattern, self::VERSION_NAME_VARIABLE)) {
+            $new_filename = str_replace(self::VERSION_NAME_VARIABLE, $version_name, $new_filename);
+        }
+
+
         return $new_filename;
     }
 }

@@ -31,6 +31,7 @@ use Docman_LockDao;
 use Docman_LockFactory;
 use Docman_Log;
 use Docman_PermissionsManager;
+use Docman_SettingsBo;
 use Docman_VersionFactory;
 use Luracast\Restler\RestException;
 use PermissionsManager;
@@ -53,6 +54,7 @@ use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkVersionCreator;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
 use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
@@ -457,7 +459,7 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
         $item->accept($validator);
 
         try {
-            $docman_item_version_creator = $this->getFileVersionCreator();
+            $docman_item_version_creator = $this->getFileVersionCreator($project);
             return $docman_item_version_creator->createVersionFromEmpty(
                 $item,
                 $current_user,
@@ -625,7 +627,7 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
         );
     }
 
-    private function getFileVersionCreator(): DocmanFileVersionCreator
+    private function getFileVersionCreator(Project $project): DocmanFileVersionCreator
     {
         return new DocmanFileVersionCreator(
             new VersionToUploadCreator(
@@ -633,7 +635,10 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
             new Docman_LockFactory(new Docman_LockDao(), new Docman_Log()),
-            new FilenameBuilder(new FilenamePatternRetriever(new SettingsDAO()))
+            new FilenameBuilder(
+                new FilenamePatternRetriever(new SettingsDAO()),
+                new ItemStatusMapper(new Docman_SettingsBo($project->getID()))
+            )
         );
     }
 

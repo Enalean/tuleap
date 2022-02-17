@@ -29,6 +29,7 @@ use Tuleap\Docman\Metadata\ItemImpactedByMetadataChangeCollection;
 use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\Settings\SettingsDAO;
 
 require_once __DIR__ . '/../../../src/www/news/news_utils.php';
@@ -192,8 +193,17 @@ class Docman_Actions extends Actions
                 } else {
                     $project_id = $item->getGroupId();
 
-                    $filename_builder = new FilenameBuilder(new FilenamePatternRetriever(new SettingsDAO()));
-                    $updated_filename = $filename_builder->buildFilename($_FILES['file']['name'], $project_id, $item->getTitle());
+                    $filename_builder = new FilenameBuilder(
+                        new FilenamePatternRetriever(new SettingsDAO()),
+                        new ItemStatusMapper(new Docman_SettingsBo($project_id))
+                    );
+                    $updated_filename = $filename_builder->buildFilename(
+                        $_FILES['file']['name'],
+                        $project_id,
+                        $item->getTitle(),
+                        $item->getStatus(),
+                        $_label
+                    );
 
                     $path = $fs->upload($_FILES['file'], $updated_filename, $project_id, $item->getId(), $number);
                     if ($path) {
