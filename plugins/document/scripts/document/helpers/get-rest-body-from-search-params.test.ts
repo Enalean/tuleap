@@ -19,7 +19,8 @@
 
 import { getRestBodyFromSearchParams } from "./get-rest-body-from-search-params";
 import { buildAdvancedSearchParams } from "./build-advanced-search-params";
-import type { AdvancedSearchParams, SearchDate } from "../type";
+import type { AdvancedSearchParams } from "../type";
+import type { SearchBodyRest } from "../type";
 
 describe("get-rest-body-from-search-params", () => {
     it("should return nothing for empty params", () => {
@@ -42,52 +43,53 @@ describe("get-rest-body-from-search-params", () => {
         expect(getRestBodyFromSearchParams(query_params)).toStrictEqual({});
     });
 
-    it.each<
-        [
-            Partial<AdvancedSearchParams>,
-            Record<
-                string,
-                | string
-                | Record<string, string>
-                | ReadonlyArray<{
-                      name: string;
-                      value?: string;
-                      value_date?: SearchDate;
-                  }>
-            >
-        ]
-    >([
+    it.each<[Partial<AdvancedSearchParams>, SearchBodyRest]>([
         [{}, {}],
         [{ global_search: "lorem" }, { global_search: "lorem" }],
-        [{ type: "folder" }, { type: "folder" }],
+        [{ type: "folder" }, { properties: [{ name: "type", value: "folder" }] }],
         [
             { global_search: "lorem", type: "folder" },
-            { global_search: "lorem", type: "folder" },
+            { global_search: "lorem", properties: [{ name: "type", value: "folder" }] },
         ],
-        [{ title: "lorem" }, { title: "lorem" }],
-        [{ description: "lorem" }, { description: "lorem" }],
-        [{ owner: "lorem" }, { owner: "lorem" }],
+        [{ title: "lorem" }, { properties: [{ name: "title", value: "lorem" }] }],
+        [{ description: "lorem" }, { properties: [{ name: "description", value: "lorem" }] }],
+        [{ owner: "lorem" }, { properties: [{ name: "owner", value: "lorem" }] }],
         [
             { create_date: { date: "2022-01-30", operator: "<" } },
-            { create_date: { date: "2022-01-30", operator: "<" } },
+            {
+                properties: [
+                    { name: "create_date", value_date: { date: "2022-01-30", operator: "<" } },
+                ],
+            },
         ],
         [{ create_date: { date: "", operator: "<" } }, {}],
         [
             { update_date: { date: "2022-01-30", operator: "<" } },
-            { update_date: { date: "2022-01-30", operator: "<" } },
+            {
+                properties: [
+                    { name: "update_date", value_date: { date: "2022-01-30", operator: "<" } },
+                ],
+            },
         ],
         [{ update_date: { date: "", operator: "<" } }, {}],
         [
             { obsolescence_date: { date: "2022-01-30", operator: "<" } },
-            { obsolescence_date: { date: "2022-01-30", operator: "<" } },
+            {
+                properties: [
+                    {
+                        name: "obsolescence_date",
+                        value_date: { date: "2022-01-30", operator: "<" },
+                    },
+                ],
+            },
         ],
         [{ obsolescence_date: { date: "", operator: "<" } }, {}],
-        [{ status: "draft" }, { status: "draft" }],
-        [{ field_2: "lorem" }, { custom_properties: [{ name: "field_2", value: "lorem" }] }],
+        [{ status: "draft" }, { properties: [{ name: "status", value: "draft" }] }],
+        [{ field_2: "lorem" }, { properties: [{ name: "field_2", value: "lorem" }] }],
         [
             { field_2: { date: "2022-01-30", operator: "<" } },
             {
-                custom_properties: [
+                properties: [
                     {
                         name: "field_2",
                         value_date: { date: "2022-01-30", operator: "<" },

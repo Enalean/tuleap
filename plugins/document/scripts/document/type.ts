@@ -309,3 +309,38 @@ export interface SearchCriterionList extends BaseSearchCriterion {
 export type SearchCriterion = SearchCriterionDate | SearchCriterionText | SearchCriterionList;
 
 export type SearchCriteria = ReadonlyArray<SearchCriterion>;
+
+export const HardcodedPropertyName = [
+    "type",
+    "title",
+    "description",
+    "owner",
+    "create_date",
+    "update_date",
+    "obsolescence_date",
+    "status",
+] as const;
+export type AllowedSearchBodyPropertyName =
+    | typeof HardcodedPropertyName[number]
+    | AdditionalFieldNumber;
+
+interface SearchBodyProperty {
+    readonly name: AllowedSearchBodyPropertyName;
+}
+
+export interface SearchBodyPropertySimple extends SearchBodyProperty {
+    readonly value: string;
+}
+
+export interface SearchBodyPropertyDate extends SearchBodyProperty {
+    readonly value_date: SearchDate;
+}
+
+export type ListOfSearchBodyProperties = ReadonlyArray<
+    SearchBodyPropertySimple | SearchBodyPropertyDate
+>;
+
+export interface SearchBodyRest {
+    readonly global_search?: string;
+    readonly properties?: ListOfSearchBodyProperties;
+}

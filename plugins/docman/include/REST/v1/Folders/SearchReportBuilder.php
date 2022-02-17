@@ -26,8 +26,10 @@ namespace Tuleap\Docman\REST\v1\Folders;
 use Docman_FilterGlobalText;
 use Docman_FilterText;
 use Docman_Report;
+use Luracast\Restler\RestException;
+use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
-use Tuleap\Docman\REST\v1\Search\CustomPropertyRepresentation;
+use Tuleap\Docman\REST\v1\Search\SearchPropertyRepresentation;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
 use Tuleap\Docman\REST\v1\Search\SearchDateRepresentation;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
@@ -56,16 +58,8 @@ class SearchReportBuilder
         );
 
         $this->addGlobalTextFilter($search, $report);
-        $this->addTypeFilter($search, $report);
-        $this->addTitleFilter($search, $report);
-        $this->addDescriptionFilter($search, $report);
-        $this->addOwnerFilter($search, $report);
-        $this->addCreateDateFilter($search, $report);
-        $this->addUpdateDateFilter($search, $report);
-        $this->addObsolescenceDateFilter($search, $report);
-        $this->addStatusFilter($search, $report);
-        foreach ($search->custom_properties as $custom_property) {
-            $this->addCustomPropertyFilter($custom_property, $report);
+        foreach ($search->properties as $property) {
+            $this->addPropertyFilter($property, $report);
         }
 
         $columns = $this->always_there_column_retriever->getColumns();
@@ -84,9 +78,9 @@ class SearchReportBuilder
         $report->addFilter($filter);
     }
 
-    private function addTypeFilter(PostSearchRepresentation $search, Docman_Report $report): void
+    private function addTypeFilter(SearchPropertyRepresentation $property, Docman_Report $report): void
     {
-        if ($search->type) {
+        if ($property->value) {
             $type_filter = new \Docman_FilterItemType($this->filter_factory->getItemTypeSearchMetadata());
 
             $human_readable_value_to_internal_value = [
@@ -97,27 +91,12 @@ class SearchReportBuilder
                 'link'     => PLUGIN_DOCMAN_ITEM_TYPE_LINK,
                 'folder'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
             ];
-            $type_filter->setValue($human_readable_value_to_internal_value[$search->type]);
+            if (! isset($human_readable_value_to_internal_value[$property->value])) {
+                throw new RestException(400, 'Unknown type ' . $property->value);
+            }
+            $type_filter->setValue($human_readable_value_to_internal_value[$property->value]);
             $report->addFilter($type_filter);
         }
-    }
-
-    private function addTitleFilter(PostSearchRepresentation $search, Docman_Report $report): void
-    {
-        $metadata = $this->metadata_factory->getHardCodedMetadataFromLabel(
-            \Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL
-        );
-
-        $this->addTextFilter($report, $search->title, $metadata);
-    }
-
-    private function addDescriptionFilter(PostSearchRepresentation $search, Docman_Report $report): void
-    {
-        $metadata = $this->metadata_factory->getHardCodedMetadataFromLabel(
-            \Docman_MetadataFactory::HARDCODED_METADATA_DESCRIPTION_LABEL
-        );
-
-        $this->addTextFilter($report, $search->description, $metadata);
     }
 
     private function addTextFilter(Docman_Report $report, string $search_term, \Docman_Metadata $metadata): void
@@ -137,62 +116,22 @@ class SearchReportBuilder
         }
     }
 
-    private function addOwnerFilter(PostSearchRepresentation $search, Docman_Report $report): void
+    private function addOwnerFilter(SearchPropertyRepresentation $property, Docman_Report $report): void
     {
-        if ($search->owner) {
+        if ($property->value) {
             $owner_filter = new \Docman_FilterOwner(
                 $this->metadata_factory->getHardCodedMetadataFromLabel(
                     \Docman_MetadataFactory::HARDCODED_METADATA_OWNER_LABEL
                 )
             );
 
-            $owner = $this->user_manager->findUser($search->owner);
+            $owner = $this->user_manager->findUser($property->value);
 
-            $username_to_search = $owner ? $owner->getUserName() : $search->owner;
+            $username_to_search = $owner ? $owner->getUserName() : $property->value;
 
             $owner_filter->setValue($username_to_search);
             $report->addFilter($owner_filter);
         }
-    }
-
-    private function addCreateDateFilter(PostSearchRepresentation $search, Docman_Report $report): void
-    {
-        if (! $search->create_date) {
-            return;
-        }
-
-        $metadata = $this->metadata_factory->getHardCodedMetadataFromLabel(
-            \Docman_MetadataFactory::HARDCODED_METADATA_CREATE_DATE_LABEL
-        );
-
-        $this->addDateFilter($report, $search->create_date, $metadata);
-    }
-
-    private function addUpdateDateFilter(PostSearchRepresentation $search, Docman_Report $report): void
-    {
-        if (! $search->update_date) {
-            return;
-        }
-
-        $metadata = $this->metadata_factory->getHardCodedMetadataFromLabel(
-            \Docman_MetadataFactory::HARDCODED_METADATA_UPDATE_DATE_LABEL
-        );
-
-        $this->addDateFilter($report, $search->update_date, $metadata);
-    }
-
-    private function addObsolescenceDateFilter(PostSearchRepresentation $search, Docman_Report $report): void
-    {
-        if (! $search->obsolescence_date) {
-            return;
-        }
-
-        $metadata = $this->metadata_factory->getHardCodedMetadataFromLabel(
-            \Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL
-        );
-        $this->metadata_factory->appendHardCodedMetadataParams($metadata);
-
-        $this->addDateFilter($report, $search->obsolescence_date, $metadata);
     }
 
     private function addDateFilter(
@@ -214,42 +153,66 @@ class SearchReportBuilder
         $report->addFilter($date_filter);
     }
 
-    private function addStatusFilter(PostSearchRepresentation $search, Docman_Report $report): void
+    private function addStatusFilter(SearchPropertyRepresentation $property, Docman_Report $report): void
     {
-        if ($search->status) {
-            $list_filter = new \Docman_FilterList(
-                $this->metadata_factory->getHardCodedMetadataFromLabel(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL)
-            );
-            $list_filter->setValue($this->status_mapper->getItemStatusIdFromItemStatusString($search->status));
-            $report->addFilter($list_filter);
-        }
-    }
-
-    private function addCustomPropertyFilter(CustomPropertyRepresentation $custom_property, Docman_Report $report): void
-    {
-        if (! $custom_property->value_date && ! $custom_property->value) {
+        if (! $property->value) {
             return;
         }
 
-        $metadata = $this->metadata_factory->getMetadataFromLabel($custom_property->name);
+        $list_filter = new \Docman_FilterList(
+            $this->metadata_factory->getHardCodedMetadataFromLabel(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL)
+        );
+
+        try {
+            $list_filter->setValue($this->status_mapper->getItemStatusIdFromItemStatusString($property->value));
+        } catch (HardCodedMetadataException $e) {
+            throw new RestException(400, $e->getMessage());
+        }
+
+        $report->addFilter($list_filter);
+    }
+
+    private function addPropertyFilter(SearchPropertyRepresentation $property, Docman_Report $report): void
+    {
+        if (! $property->value_date && ! $property->value) {
+            return;
+        }
+
+        if ($property->name === 'owner') {
+            $this->addOwnerFilter($property, $report);
+            return;
+        }
+
+        if ($property->name === 'status') {
+            $this->addStatusFilter($property, $report);
+            return;
+        }
+
+        if ($property->name === 'type') {
+            $this->addTypeFilter($property, $report);
+            return;
+        }
+
+        $metadata = $this->metadata_factory->getMetadataFromLabel($property->name);
+
         if (! $metadata) {
             return;
         }
 
-        if ($custom_property->value_date) {
-            $this->addDateFilter($report, $custom_property->value_date, $metadata);
+        if ($property->value_date) {
+            $this->addDateFilter($report, $property->value_date, $metadata);
 
             return;
         }
 
         if ((int) $metadata->getType() === PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             $list_filter = new \Docman_FilterList($metadata);
-            $list_filter->setValue($custom_property->value);
+            $list_filter->setValue($property->value);
             $report->addFilter($list_filter);
 
             return;
         }
 
-        $this->addTextFilter($report, $custom_property->value, $metadata);
+        $this->addTextFilter($report, $property->value, $metadata);
     }
 }
