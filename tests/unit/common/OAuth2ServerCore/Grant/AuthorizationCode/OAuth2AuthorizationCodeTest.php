@@ -24,7 +24,7 @@ namespace Tuleap\OAuth2ServerCore\Grant\AuthorizationCode;
 
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
-use Tuleap\OAuth2Server\OAuth2TestScope;
+use Tuleap\OAuth2ServerCore\OAuth2TestScope;
 
 final class OAuth2AuthorizationCodeTest extends \Tuleap\Test\PHPUnit\TestCase
 {

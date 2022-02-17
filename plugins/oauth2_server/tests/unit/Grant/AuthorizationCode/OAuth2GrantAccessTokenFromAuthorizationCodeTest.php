@@ -31,13 +31,13 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenWithIdentifier;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantErrorResponseBuilder;
-use Tuleap\OAuth2Server\Grant\AccessTokenGrantRepresentationBuilder;
+use Tuleap\OAuth2ServerCore\Grant\AccessTokenGrantRepresentationBuilder;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\OAuth2PKCEVerificationException;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\PKCECodeVerifier;
-use Tuleap\OAuth2Server\Grant\OAuth2AccessTokenSuccessfulRequestRepresentation;
+use Tuleap\OAuth2ServerCore\Grant\OAuth2AccessTokenSuccessfulRequestRepresentation;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCode;
 use Tuleap\OAuth2ServerCore\OAuth2ServerException;
-use Tuleap\OAuth2Server\OAuth2TestScope;
+use Tuleap\OAuth2ServerCore\OAuth2TestScope;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test\PHPUnit\TestCase

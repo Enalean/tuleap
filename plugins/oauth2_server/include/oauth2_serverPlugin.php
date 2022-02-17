@@ -58,7 +58,7 @@ use Tuleap\OAuth2Server\AuthorizationServer\PromptParameterValuesExtractor;
 use Tuleap\OAuth2Server\AuthorizationServer\RedirectURIBuilder;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantController;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantErrorResponseBuilder;
-use Tuleap\OAuth2Server\Grant\AccessTokenGrantRepresentationBuilder;
+use Tuleap\OAuth2ServerCore\Grant\AccessTokenGrantRepresentationBuilder;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 use Tuleap\OAuth2ServerCore\App\OAuth2AppCredentialVerifier;
 use Tuleap\OAuth2ServerCore\App\PrefixOAuth2ClientSecret;

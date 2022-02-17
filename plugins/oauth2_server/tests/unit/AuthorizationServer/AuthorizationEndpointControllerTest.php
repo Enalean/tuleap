@@ -34,7 +34,7 @@ use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\App\OAuth2AppNotFoundException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\OAuth2PKCEInformationExtractionException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
-use Tuleap\OAuth2Server\OAuth2TestScope;
+use Tuleap\OAuth2ServerCore\OAuth2TestScope;
 use Tuleap\OAuth2Server\Scope\InvalidOAuth2ScopeException;
 use Tuleap\OAuth2Server\Scope\ScopeExtractor;
 use Tuleap\OAuth2Server\User\AuthorizationComparator;

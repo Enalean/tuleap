@@ -28,7 +28,7 @@ use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\CodeVerifierDoesNotMatchCha
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\InvalidFormatCodeVerifierException;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\MissingExpectedCodeVerifierException;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\PKCECodeVerifier;
-use Tuleap\OAuth2Server\OAuth2TestScope;
+use Tuleap\OAuth2ServerCore\OAuth2TestScope;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCode;
 use Tuleap\Test\Builders\UserTestBuilder;
 

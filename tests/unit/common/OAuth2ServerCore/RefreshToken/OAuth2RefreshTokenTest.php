@@ -25,7 +25,7 @@ namespace Tuleap\OAuth2ServerCore\RefreshToken;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
-use Tuleap\OAuth2Server\OAuth2TestScope;
+use Tuleap\OAuth2ServerCore\OAuth2TestScope;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class OAuth2RefreshTokenTest extends \Tuleap\Test\PHPUnit\TestCase
