@@ -132,13 +132,13 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
     {
         $this->getDB()->safeQuery(
             "DELETE oauth2_authorization_code.*,
-                              plugin_oauth2_authorization_code_scope.*,
+                              oauth2_authorization_code_scope.*,
                               oauth2_access_token.*,
                               oauth2_access_token_scope.*,
                               oauth2_refresh_token.*,
                               oauth2_refresh_token_scope.*
                        FROM oauth2_authorization_code
-                       LEFT JOIN plugin_oauth2_authorization_code_scope ON oauth2_authorization_code.id = plugin_oauth2_authorization_code_scope.auth_code_id
+                       LEFT JOIN oauth2_authorization_code_scope ON oauth2_authorization_code.id = oauth2_authorization_code_scope.auth_code_id
                        LEFT JOIN oauth2_access_token ON oauth2_authorization_code.id = oauth2_access_token.authorization_code_id
                        LEFT JOIN oauth2_access_token_scope on oauth2_access_token.id = oauth2_access_token_scope.access_token_id
                        LEFT JOIN oauth2_refresh_token ON oauth2_authorization_code.id = oauth2_refresh_token.authorization_code_id
