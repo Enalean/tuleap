@@ -360,7 +360,7 @@ describe(`Artifact Modal`, function () {
 function getArtifactLinkIdFromREST(): Cypress.Chainable<number> {
     return cy
         .getProjectId("kanban-artifact-modal")
-        .then((project_id: JQuery<HTMLElement>) => {
+        .then((project_id: number) => {
             return cy
                 .getFromTuleapAPI(`/api/projects/${project_id}/trackers`)
                 .then((response) => parseInt(response.body[0].id, 10));
