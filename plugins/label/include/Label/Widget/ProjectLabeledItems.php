@@ -27,8 +27,9 @@ use Feedback;
 use HTTPRequest;
 use Project;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\MappingRegistry;
 use Widget;
@@ -245,28 +246,23 @@ class ProjectLabeledItems extends Widget
         $this->dao->removeLabelByContentId($id);
     }
 
-    public function getJavascriptDependencies(): array
+    public function getJavascriptAssets(): array
     {
-        $labeled_items_include_assets = $this->getAssets();
         return [
-            [
-                'file' => $labeled_items_include_assets->getFileURL('widget-project-labeled-items.js'),
-
-            ], [
-                'file' => $labeled_items_include_assets->getFileURL('configure-widget.js'),
-            ],
+            new JavascriptViteAsset($this->getAssets(), 'scripts/project-labeled-items/src/index.js'),
+            new JavascriptViteAsset($this->getAssets(), 'scripts/configure-widget/index.js'),
         ];
     }
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'style')]);
+        return CssViteAsset::buildCollectionFromMainFileName($this->getAssets(), 'scripts/configure-widget/index.js');
     }
 
-    private function getAssets(): IncludeAssets
+    private function getAssets(): IncludeViteAssets
     {
-        return new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/label',
+        return new IncludeViteAssets(
+            __DIR__ . '/../../../frontend-assets',
             '/assets/label'
         );
     }

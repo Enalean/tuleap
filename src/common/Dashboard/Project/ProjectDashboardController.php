@@ -167,6 +167,9 @@ class ProjectDashboardController
                 _('The requested dashboard does not exist.')
             );
         }
+
+        $this->event_manager->dispatch(new ProjectDashboardIsDisplayed($this->layout));
+
         $project_dashboards_presenter = $this->getProjectDashboardsPresenter(
             $user,
             $project,

@@ -22,6 +22,7 @@ namespace Tuleap\Dashboard\Widget;
 
 use Tuleap\Dashboard\Dashboard;
 use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\JavascriptAssetGeneric;
 use Widget;
 
 class DashboardWidgetPresenter
@@ -43,6 +44,10 @@ class DashboardWidgetPresenter
     public $has_icon;
     public $icon;
     public $javascript_dependencies;
+    /**
+     * @var JavascriptAssetGeneric[]
+     */
+    public array $javascript_assets = [];
     public $has_custom_title;
     public $purified_custom_title;
     /** @var CssAssetCollection */
@@ -74,6 +79,7 @@ class DashboardWidgetPresenter
         $this->has_icon    = (bool) $this->icon;
 
         $this->javascript_dependencies = $widget->getJavascriptDependencies();
+        $this->javascript_assets       = $widget->getJavascriptAssets();
         $this->stylesheet_dependencies = $widget->getStylesheetDependencies();
 
         $this->has_actions = $this->has_rss || $can_update_dashboards;

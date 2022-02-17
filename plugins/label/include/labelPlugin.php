@@ -18,13 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\Project\ProjectDashboardIsDisplayed;
 use Tuleap\Label\REST\ResourcesInjector;
 use Tuleap\Label\Widget\Dao;
 use Tuleap\Label\Widget\ProjectLabeledItems;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Project\Label\MergeLabels;
 use Tuleap\Project\Label\RemoveLabel;
-use Tuleap\Request\CurrentPage;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -47,8 +47,7 @@ class labelPlugin extends Plugin
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(RemoveLabel::NAME);
         $this->addHook(MergeLabels::NAME);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(ProjectDashboardIsDisplayed::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -117,35 +116,18 @@ class labelPlugin extends Plugin
         return new Dao();
     }
 
-    /**
-     * @see Event::BURNING_PARROT_GET_JAVASCRIPT_FILES
-     */
-    public function burningParrotGetJavascriptFiles(array $params)
+    public function projectDashboardIsDisplayed(ProjectDashboardIsDisplayed $project_dashboard_is_displayed): void
     {
-        if ($this->isInProjectDashboard()) {
-            $params['javascript_files'][] = $this->getAssets()->getFileURL('configure-widget.js');
-        }
-    }
-
-    public function burningParrotGetStylesheets(array $params)
-    {
-        if ($this->isInProjectDashboard()) {
-            $params['stylesheets'][] = $this->getAssets()->getFileURL('style.css');
-        }
-    }
-
-    private function getAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/label',
-            '/assets/label'
+        $project_dashboard_is_displayed->getLayout()->addJavascriptAsset(
+            new \Tuleap\Layout\JavascriptViteAsset($this->getAssets(), 'scripts/configure-widget/index.js')
         );
     }
 
-    private function isInProjectDashboard()
+    private function getAssets(): IncludeViteAssets
     {
-        $current_page = new CurrentPage();
-
-        return $current_page->isProjectDashboard();
+        return new IncludeViteAssets(
+            __DIR__ . '/../frontend-assets',
+            '/assets/label'
+        );
     }
 }
