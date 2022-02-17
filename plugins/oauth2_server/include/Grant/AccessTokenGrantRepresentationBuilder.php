@@ -25,7 +25,7 @@ namespace Tuleap\OAuth2Server\Grant;
 use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCode;
-use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectIDTokenCreator;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\OpenIDConnectIDTokenCreator;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshToken;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenCreator;
 
