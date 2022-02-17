@@ -37,7 +37,7 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $original_filename = "M2 CS.jpg";
 
-        $update_filename = $filename_builder->buildFilename($original_filename, 101);
+        $update_filename = $filename_builder->buildFilename($original_filename, 101, 'From The Window To the Hood');
         self::assertSame($original_filename, $update_filename);
     }
 
@@ -47,17 +47,28 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $original_filename = "M2 CS.jpg";
 
-        $update_filename = $filename_builder->buildFilename($original_filename, 101);
+        $update_filename = $filename_builder->buildFilename($original_filename, 101, 'From The Window To the Hood');
         self::assertSame($original_filename, $update_filename);
     }
 
-    public function testItReturnsThePatternAsNewFilename(): void
+    public function testItReturnsThePatternAsNewFilenameIfThereIsNoVariable(): void
     {
         $filename_builder = new FilenameBuilder(FilenamePatternRetrieverStub::buildWithPattern("Mercedes"));
 
         $original_filename = "M2 CS.jpg";
 
-        $update_filename = $filename_builder->buildFilename($original_filename, 101);
+        $update_filename = $filename_builder->buildFilename($original_filename, 101, 'From The Window To the Hood');
         self::assertSame("Mercedes", $update_filename);
+    }
+
+    public function testItReturnsTheNewFilenameWithTheTitleVariable(): void
+    {
+        $pattern          = "Brand-\${TITLE}";
+        $filename_builder = new FilenameBuilder(FilenamePatternRetrieverStub::buildWithPattern($pattern));
+
+        $original_filename = "M2 CS.jpg";
+
+        $update_filename = $filename_builder->buildFilename($original_filename, 111, "Mercedes");
+        self::assertSame("Brand-Mercedes", $update_filename);
     }
 }

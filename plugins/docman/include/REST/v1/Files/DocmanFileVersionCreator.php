@@ -53,7 +53,8 @@ class DocmanFileVersionCreator
     ): CreatedItemFilePropertiesRepresentation {
         $updated_filename = $this->filename_builder->buildFilename(
             $representation->file_properties->file_name,
-            (int) $item->getGroupId()
+            (int) $item->getGroupId(),
+            (string) $item->getTitle()
         );
 
         try {
