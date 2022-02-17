@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\OpenIDConnect\IDToken;
+namespace Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken;
 
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\Parser;
@@ -36,9 +36,6 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCode;
 use Tuleap\OAuth2Server\OAuth2TestScope;
-use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\OpenIDConnectSigningKeyFactory;
-use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\SigningPrivateKey;
-use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\SigningPublicKey;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OAuth2SignInScope;
 use Tuleap\Test\Builders\UserTestBuilder;
 
