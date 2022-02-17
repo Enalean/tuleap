@@ -20,18 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\RefreshToken;
+namespace Tuleap\OAuth2ServerCore\RefreshToken;
 
-use Tuleap\Authentication\Scope\AuthenticationScope;
-use Tuleap\OAuth2ServerCore\OAuth2ServerException;
+use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 
-final class OAuth2ScopeNotCoveredByOneOfTheScopeAssociatedWithTheRefreshTokenException extends \RuntimeException implements OAuth2ServerException
+final class OAuth2OfflineAccessScopeTest extends AuthenticationScopeTestCase
 {
-    /**
-     * @psalm-param AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier> $scope
-     */
-    public function __construct(AuthenticationScope $scope)
+    public function getAuthenticationScopeClassname(): string
     {
-        parent::__construct(sprintf('Scope %s is not covered by any of the existing scopes', $scope->getIdentifier()->toString()));
+        return OAuth2OfflineAccessScope::class;
     }
 }

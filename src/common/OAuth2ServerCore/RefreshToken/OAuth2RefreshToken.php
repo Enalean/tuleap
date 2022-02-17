@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\RefreshToken;
+namespace Tuleap\OAuth2ServerCore\RefreshToken;
 
 use Tuleap\Authentication\Scope\AuthenticationScope;
 

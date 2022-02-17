@@ -35,7 +35,7 @@ use Tuleap\OAuth2Server\Grant\AccessTokenGrantRepresentationBuilder;
 use Tuleap\OAuth2Server\Grant\OAuth2AccessTokenSuccessfulRequestRepresentation;
 use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 use Tuleap\OAuth2Server\OAuth2TestScope;
-use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshToken;
+use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshToken;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenVerifier;
 use Tuleap\OAuth2Server\Scope\InvalidOAuth2ScopeException;
 use Tuleap\OAuth2Server\Scope\ScopeExtractor;
