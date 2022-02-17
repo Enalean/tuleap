@@ -143,7 +143,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->custom_metadata_checker,
             $this->metadata_value_dao,
             $this->permissions_for_groups_set_factory,
-            new FilenameBuilder(FilenamePatternRetrieverStub::buildWithNoPattern())
+            new FilenameBuilder(FilenamePatternRetrieverStub::buildWithNoPattern(), $this->item_status_mapper)
         );
     }
 

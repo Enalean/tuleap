@@ -175,7 +175,7 @@ final class DocmanItemCreatorBuilder
                 new UserGroupRetriever($ugroup_manager),
                 ProjectManager::instance()
             ),
-            new FilenameBuilder(new FilenamePatternRetriever(new SettingsDAO()))
+            new FilenameBuilder(new FilenamePatternRetriever(new SettingsDAO()), new ItemStatusMapper($docman_setting_bo))
         );
     }
 }

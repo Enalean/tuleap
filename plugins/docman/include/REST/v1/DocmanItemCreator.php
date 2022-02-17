@@ -189,7 +189,9 @@ class DocmanItemCreator
         $updated_filename = $this->filename_builder->buildFilename(
             $file_properties->file_name,
             $parent_item->getGroupId(),
-            $title
+            $title,
+            $status_id,
+            ''
         );
 
         try {
