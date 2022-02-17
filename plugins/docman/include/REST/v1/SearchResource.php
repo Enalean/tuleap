@@ -60,22 +60,60 @@ final class SearchResource extends AuthenticatedResource
     /**
      * Search items
      *
-     * Search recursively for items in a folder.
+     * Search paginated items in a folder.
+     *
+     * <p><b>Usage examples:</b></p>
+     *
+     * <ul>
+     * <li><p>All folders:</p>
+     * <pre>
+     * {<br>
+     *  &nbsp; "properties": [ {"name": "type", "value": "folder"} ]<br>
+     * }
+     * </pre>
+     * </li>
+     * <li><p>All folders matching "lorem\*":</p>
+     * <pre>
+     * {<br>
+     *  &nbsp; "global_search": "lorem\*",<br>
+     *  &nbsp; "properties": [ {"name": "type", "value": "folder"} ]<br>
+     * }
+     * </pre>
+     * </li>
+     * <li><p>All items matching "lorem\*":</p>
+     * <pre>
+     * {<br>
+     *  &nbsp; "global_search": "lorem\*",<br>
+     * }
+     * </pre>
+     * </li>
+     * <li><p>All drafts, with a given custom text property matching "lorem\*", created after 2022-01-30:</p>
+     * <pre>
+     * {<br>
+     *  &nbsp; "properties": [<br>
+     *  &nbsp; &nbsp; {"name": "status", "value": "draft"},<br>
+     *  &nbsp; &nbsp; {"name": "field_3", "value": "lorem\*"},<br>
+     *  &nbsp; &nbsp; {"name": "create_date", "value_date": { "date": "2022-01-30", operator: ">" } },<br>
+     *  &nbsp; ]<br>
+     * }
+     * </pre>
+     * </li>
+     * </ul>
+     *
+     * <p><b>Note:</b> Global search will search in all text properties of document (but does not look inside the document).</p>
+     * <hr>
+     *
+     * <p><b>Allowed properties:</b></p>
      *
      * <table class="tlp-table">
      * <thead>
      * <tr>
-     *   <th>Allowed criteria</th>
+     *   <th>Name</th>
      *   <th>Type</th>
      *   <th>Notes</th>
      * </tr>
      * </thead>
      * <tbody>
-     * <tr>
-     *   <td>`global_search`</td>
-     *   <td>Text</th>
-     *   <td>Global search will search in all text properties of document (but does not look inside the document).</td>
-     * </tr>
      * <tr>
      *   <td>`type`</td>
      *   <td>List</td>
@@ -109,38 +147,29 @@ final class SearchResource extends AuthenticatedResource
      * <tr>
      *   <td>`obsolescence_date`</td>
      *   <td>Date</td>
-     *   <td>Obsolescence date of the document.</td>
+     *   <td>Obsolescence date of the document. May be disabled in the project.</td>
      * </tr>
      * <tr>
      *   <td>`status`</td>
      *   <td>List</td>
-     *   <td>Status of the document. Searchable status: `none`, `draft`, `approved`, `rejected`.</td>
+     *   <td>Status of the document. Searchable status: `none`, `draft`, `approved`, `rejected`. May be disabled in the project.</td>
      * </tr>
      * <tr>
-     *   <td>`custom_properties`</td>
-     *   <td></td>
-     *   <td>Project may have defined custom properties, this entry allow to search among them.</td>
+     *   <td>`field_XXX`</td>
+     *   <td>string | text | date | list</td>
+     *   <td>Custom property defined by the project.</td>
      * </tr>
      * </tbody>
      * </table>
      *
      * <hr>
      *
-     * <p>Custom properties is an array of:</p>
+     * <p>`properties` is an array of:</p>
      * <ul>
-     * <li>`{ "name": "field_2", "value": "lorem" }` for text, string, and list.</li>
+     * <li>`{ "name": "field_2", "value": "lorem" }` for text and string.</li>
      * <li>`{ "name": "field_2", "value": "102" }` for list, where 102 is the internal id of a value.</li>
      * <li>`{ "name": "field_2", "value_date": { date: "2022-01-30", operator: ">" } }` for date.</li>
      * </ul>
-     *
-     * <p>Usage example:</p>
-     *
-     * <pre>
-     * {<br>
-     *  &nbsp; "global_search": "lorem\*",<br>
-     *  &nbsp; "custom_properties": [ {"name": "field_1", "value": "102"} ]<br>
-     * }
-     * </pre>
      *
      * <hr>
      *
@@ -149,12 +178,6 @@ final class SearchResource extends AuthenticatedResource
      * <li>`operator`: `<` | `>` | `=`</li>
      * <li>`date`: YYYY-mm-dd
      * </ul>
-     *
-     * <p>Usage example:</p>
-     *
-     * <pre>
-     * {"create_date": {"operator": "<", "date": "2022-01-30"}}
-     * </pre>
      *
      * <hr>
      *
@@ -165,20 +188,6 @@ final class SearchResource extends AuthenticatedResource
      * <li> `*lorem`  => finishing by "lorem"</li>
      * <li> `*lorem*` => containing "lorem"</li>
      * </ul>
-     *
-     * <p>Usage example:</p>
-     *
-     * <pre>
-     * {"global_search": "lorem\*"}
-     * </pre>
-     *
-     * <hr>
-     *
-     * <p>You can combine multiple search at once. For example to restrict previous example to empty items:</p>
-     *
-     * <pre>
-     * {"global_search": "lorem\*", "type": "empty"}
-     * </pre>
      *
      * @url    POST {id}
      * @access hybrid

@@ -28,8 +28,9 @@ use Docman_Metadata;
 use Docman_MetadataFactory;
 use Docman_ReportColumnTitle;
 use Docman_SettingsBo;
+use Luracast\Restler\RestException;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
-use Tuleap\Docman\REST\v1\Search\CustomPropertyRepresentation;
+use Tuleap\Docman\REST\v1\Search\SearchPropertyRepresentation;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
 use Tuleap\Docman\REST\v1\Search\SearchDateRepresentation;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
@@ -39,6 +40,11 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class SearchReportBuilderTest extends TestCase
 {
+    private const CUSTOM_TEXT_PROPERTY   = 'field_1';
+    private const CUSTOM_STRING_PROPERTY = 'field_2';
+    private const CUSTOM_DATE_PROPERTY   = 'field_3';
+    private const CUSTOM_LIST_PROPERTY   = 'field_4';
+
     private SearchReportBuilder $search_report_builder;
     private Docman_MetadataFactory|\PHPUnit\Framework\MockObject\MockObject $metadata_factory;
 
@@ -76,6 +82,44 @@ final class SearchReportBuilderTest extends TestCase
             $column_report_builder,
             $user_manager,
         );
+
+        $custom_text_property = new \Docman_Metadata();
+        $custom_text_property->setLabel(self::CUSTOM_TEXT_PROPERTY);
+        $custom_text_property->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+
+        $custom_string_property = new \Docman_Metadata();
+        $custom_string_property->setLabel(self::CUSTOM_STRING_PROPERTY);
+        $custom_string_property->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
+
+        $custom_date_property = new \Docman_Metadata();
+        $custom_date_property->setLabel(self::CUSTOM_DATE_PROPERTY);
+        $custom_date_property->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+
+        $custom_list_property = new \Docman_Metadata();
+        $custom_list_property->setLabel(self::CUSTOM_LIST_PROPERTY);
+        $custom_list_property->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+
+        $this->metadata_factory
+            ->method('getMetadataFromLabel')
+            ->willReturnMap(
+                array_merge(
+                    array_map(
+                        fn (string $hardcoded_metadata_label): array => [
+                            $hardcoded_metadata_label,
+                            $this->metadata_factory->getHardCodedMetadataFromLabel(
+                                $hardcoded_metadata_label
+                            ),
+                        ],
+                        \Docman_MetadataFactory::HARDCODED_METADATA_LABELS
+                    ),
+                    [
+                        [self::CUSTOM_TEXT_PROPERTY, $custom_text_property],
+                        [self::CUSTOM_STRING_PROPERTY, $custom_string_property],
+                        [self::CUSTOM_DATE_PROPERTY, $custom_date_property],
+                        [self::CUSTOM_LIST_PROPERTY, $custom_list_property],
+                    ]
+                )
+            );
     }
 
     public function testItBuildsAReportWithAGlobalSearchFilter(): void
@@ -99,10 +143,8 @@ final class SearchReportBuilderTest extends TestCase
      */
     public function testItBuildsAReportWithATypeSearchFilter(string $submitted_type_value, int $expected_internal_value): void
     {
-        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
-        $search                = new PostSearchRepresentation();
-        $search->global_search = "*.docx";
-        $search->type          = $submitted_type_value;
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithProperty('type', $submitted_type_value);
 
         $report       = $this->search_report_builder->buildReport($folder, $search);
         $first_filter = $report->getFiltersArray()[0];
@@ -113,12 +155,21 @@ final class SearchReportBuilderTest extends TestCase
         self::assertSame($expected_internal_value, $second_filter->value);
     }
 
+    public function testItRaisesA400IfTypeIsUnknown(): void
+    {
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithProperty('type', 'whatever');
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+
+        $this->search_report_builder->buildReport($folder, $search);
+    }
+
     public function testItBuildsAReportWithATitleSearchFilter(): void
     {
-        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
-        $search                = new PostSearchRepresentation();
-        $search->global_search = "*.docx";
-        $search->title         = "lorem";
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithProperty('title', 'lorem');
 
         $report       = $this->search_report_builder->buildReport($folder, $search);
         $first_filter = $report->getFiltersArray()[0];
@@ -137,10 +188,8 @@ final class SearchReportBuilderTest extends TestCase
      */
     public function testItBuildsAReportWithAStatusSearchFilter(string $submitted_status_value, int $expected_internal_value): void
     {
-        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
-        $search                = new PostSearchRepresentation();
-        $search->global_search = "*.docx";
-        $search->status        = $submitted_status_value;
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithProperty('status', $submitted_status_value);
 
         $report       = $this->search_report_builder->buildReport($folder, $search);
         $first_filter = $report->getFiltersArray()[0];
@@ -151,12 +200,22 @@ final class SearchReportBuilderTest extends TestCase
         self::assertSame($expected_internal_value, $second_filter->value);
     }
 
+    public function testItRaisesA400IfStatusIsUnknown(): void
+    {
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithProperty('status', 'whatever');
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+
+
+        $this->search_report_builder->buildReport($folder, $search);
+    }
+
     public function testItBuildsAReportWithADescriptionSearchFilter(): void
     {
-        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
-        $search                = new PostSearchRepresentation();
-        $search->global_search = "*.docx";
-        $search->description   = "lorem";
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithProperty('description', 'lorem');
 
         $report       = $this->search_report_builder->buildReport($folder, $search);
         $first_filter = $report->getFiltersArray()[0];
@@ -169,10 +228,8 @@ final class SearchReportBuilderTest extends TestCase
 
     public function testItBuildsAReportWithAOwnerSearchFilterAndUseTheUsernameToSearch(): void
     {
-        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
-        $search                = new PostSearchRepresentation();
-        $search->global_search = "*.docx";
-        $search->owner         = "John Doe (jdoe)";
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithProperty('owner', 'John Doe (jdoe)');
 
         $report       = $this->search_report_builder->buildReport($folder, $search);
         $first_filter = $report->getFiltersArray()[0];
@@ -190,13 +247,8 @@ final class SearchReportBuilderTest extends TestCase
      */
     public function testItBuildsAReportWithAnUpdateDateSearchFilter(string $symbol_operator, int $expected_numeric_operator): void
     {
-        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
-        $search                = new PostSearchRepresentation();
-        $search->global_search = "*.docx";
-        $search->update_date   = new SearchDateRepresentation();
-
-        $search->update_date->operator = $symbol_operator;
-        $search->update_date->date     = "2022-01-30";
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithDateProperty('update_date', '2022-01-30', $symbol_operator);
 
         $report       = $this->search_report_builder->buildReport($folder, $search);
         $first_filter = $report->getFiltersArray()[0];
@@ -216,13 +268,8 @@ final class SearchReportBuilderTest extends TestCase
      */
     public function testItBuildsAReportWithACreateDateSearchFilter(string $symbol_operator, int $expected_numeric_operator): void
     {
-        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
-        $search                = new PostSearchRepresentation();
-        $search->global_search = "*.docx";
-        $search->create_date   = new SearchDateRepresentation();
-
-        $search->create_date->operator = $symbol_operator;
-        $search->create_date->date     = "2022-01-30";
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithDateProperty('create_date', '2022-01-30', $symbol_operator);
 
         $report       = $this->search_report_builder->buildReport($folder, $search);
         $first_filter = $report->getFiltersArray()[0];
@@ -235,86 +282,59 @@ final class SearchReportBuilderTest extends TestCase
         self::assertSame($expected_numeric_operator, $second_filter->operator);
     }
 
-    public function testItBuildsAReportWithACustomTextSearchFilter(): void
+    /**
+     * @testWith [">", 1]
+     *           ["=", 0]
+     *           ["<", -1]
+     */
+    public function testItBuildsAReportWithAnObsolescenceDateSearchFilter(string $symbol_operator, int $expected_numeric_operator): void
     {
-        $metadata = new \Docman_Metadata();
-        $metadata->setLabel('field_2');
-        $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
-
-        $this->metadata_factory
-            ->method('getMetadataFromLabel')
-            ->with('field_2')
-            ->willReturn($metadata);
-
-        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
-        $search                = new PostSearchRepresentation();
-        $search->global_search = "*.docx";
-
-        $property        = new CustomPropertyRepresentation();
-        $property->name  = 'field_2';
-        $property->value = "lorem";
-
-        $search->custom_properties = [$property];
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithDateProperty('obsolescence_date', '2022-01-30', $symbol_operator);
 
         $report       = $this->search_report_builder->buildReport($folder, $search);
         $first_filter = $report->getFiltersArray()[0];
         self::assertSame("global_txt", $first_filter->md->getLabel());
         self::assertSame("*.docx", $first_filter->value);
         $second_filter = $report->getFiltersArray()[1];
-        self::assertSame("field_2", $second_filter->md->getLabel());
+        assert($second_filter instanceof \Docman_FilterDate);
+        self::assertSame("obsolescence_date", $second_filter->md->getLabel());
+        self::assertSame("2022-01-30", $second_filter->value);
+        self::assertSame($expected_numeric_operator, $second_filter->operator);
+    }
+
+    public function testItBuildsAReportWithACustomTextSearchFilter(): void
+    {
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithProperty(self::CUSTOM_TEXT_PROPERTY, 'lorem');
+
+        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $first_filter = $report->getFiltersArray()[0];
+        self::assertSame("global_txt", $first_filter->md->getLabel());
+        self::assertSame("*.docx", $first_filter->value);
+        $second_filter = $report->getFiltersArray()[1];
+        self::assertSame(self::CUSTOM_TEXT_PROPERTY, $second_filter->md->getLabel());
         self::assertSame("lorem", $second_filter->value);
     }
 
     public function testItBuildsAReportWithACustomStringSearchFilter(): void
     {
-        $metadata = new \Docman_Metadata();
-        $metadata->setLabel('field_2');
-        $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
-
-        $this->metadata_factory
-            ->method('getMetadataFromLabel')
-            ->with('field_2')
-            ->willReturn($metadata);
-
-        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
-        $search                = new PostSearchRepresentation();
-        $search->global_search = "*.docx";
-
-        $property        = new CustomPropertyRepresentation();
-        $property->name  = 'field_2';
-        $property->value = "lorem";
-
-        $search->custom_properties = [$property];
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithProperty(self::CUSTOM_STRING_PROPERTY, 'lorem');
 
         $report       = $this->search_report_builder->buildReport($folder, $search);
         $first_filter = $report->getFiltersArray()[0];
         self::assertSame("global_txt", $first_filter->md->getLabel());
         self::assertSame("*.docx", $first_filter->value);
         $second_filter = $report->getFiltersArray()[1];
-        self::assertSame("field_2", $second_filter->md->getLabel());
+        self::assertSame(self::CUSTOM_STRING_PROPERTY, $second_filter->md->getLabel());
         self::assertSame("lorem", $second_filter->value);
     }
 
     public function testItBuildsAReportWithACustomListSearchFilter(): void
     {
-        $metadata = new \Docman_Metadata();
-        $metadata->setLabel('field_2');
-        $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-
-        $this->metadata_factory
-            ->method('getMetadataFromLabel')
-            ->with('field_2')
-            ->willReturn($metadata);
-
-        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
-        $search                = new PostSearchRepresentation();
-        $search->global_search = "*.docx";
-
-        $property        = new CustomPropertyRepresentation();
-        $property->name  = 'field_2';
-        $property->value = "lorem";
-
-        $search->custom_properties = [$property];
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithProperty(self::CUSTOM_LIST_PROPERTY, 'lorem');
 
         $report       = $this->search_report_builder->buildReport($folder, $search);
         $first_filter = $report->getFiltersArray()[0];
@@ -322,7 +342,7 @@ final class SearchReportBuilderTest extends TestCase
         self::assertSame("*.docx", $first_filter->value);
         $second_filter = $report->getFiltersArray()[1];
         self::assertInstanceOf(\Docman_FilterList::class, $second_filter);
-        self::assertSame("field_2", $second_filter->md->getLabel());
+        self::assertSame(self::CUSTOM_LIST_PROPERTY, $second_filter->md->getLabel());
         self::assertSame("lorem", $second_filter->value);
     }
 
@@ -333,27 +353,8 @@ final class SearchReportBuilderTest extends TestCase
      */
     public function testItBuildsAReportWithACustomDateSearchFilter(string $symbol_operator, int $expected_numeric_operator): void
     {
-        $metadata = new \Docman_Metadata();
-        $metadata->setLabel('field_2');
-        $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
-
-        $this->metadata_factory
-            ->method('getMetadataFromLabel')
-            ->with('field_2')
-            ->willReturn($metadata);
-
-        $folder                = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
-        $search                = new PostSearchRepresentation();
-        $search->global_search = "*.docx";
-
-        $property             = new CustomPropertyRepresentation();
-        $property->name       = 'field_2';
-        $property->value_date = new SearchDateRepresentation();
-
-        $property->value_date->operator = $symbol_operator;
-        $property->value_date->date     = "2022-01-30";
-
-        $search->custom_properties = [$property];
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithDateProperty(self::CUSTOM_DATE_PROPERTY, '2022-01-30', $symbol_operator);
 
         $report       = $this->search_report_builder->buildReport($folder, $search);
         $first_filter = $report->getFiltersArray()[0];
@@ -361,8 +362,39 @@ final class SearchReportBuilderTest extends TestCase
         self::assertSame("*.docx", $first_filter->value);
         $second_filter = $report->getFiltersArray()[1];
         assert($second_filter instanceof \Docman_FilterDate);
-        self::assertSame("field_2", $second_filter->md->getLabel());
+        self::assertSame(self::CUSTOM_DATE_PROPERTY, $second_filter->md->getLabel());
         self::assertSame("2022-01-30", $second_filter->value);
         self::assertSame($expected_numeric_operator, $second_filter->operator);
+    }
+
+    private function searchDocxWithProperty(string $name, string $value): PostSearchRepresentation
+    {
+        $search                = new PostSearchRepresentation();
+        $search->global_search = "*.docx";
+
+        $property        = new SearchPropertyRepresentation();
+        $property->name  = $name;
+        $property->value = $value;
+
+        $search->properties = [$property];
+
+        return $search;
+    }
+
+    private function searchDocxWithDateProperty(string $name, string $date, string $operator): PostSearchRepresentation
+    {
+        $search                = new PostSearchRepresentation();
+        $search->global_search = "*.docx";
+
+        $property             = new SearchPropertyRepresentation();
+        $property->name       = $name;
+        $property->value_date = new SearchDateRepresentation();
+
+        $property->value_date->operator = $operator;
+        $property->value_date->date     = $date;
+
+        $search->properties = [$property];
+
+        return $search;
     }
 }

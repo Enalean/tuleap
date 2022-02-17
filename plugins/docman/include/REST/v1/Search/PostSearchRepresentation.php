@@ -34,51 +34,10 @@ final class PostSearchRepresentation
      * @var string search in all string properties {@from body} {@required false}
      */
     public string $global_search = '';
-
     /**
-     * @var string type of item {@from body} {@required false} {@choice folder,file,link,embedded,wiki,empty}
+     * @var array {@type \Tuleap\Docman\REST\v1\Search\SearchPropertyRepresentation} {@from body} {@required false}
      */
-    public string $type = '';
-
-    /**
-     * @var string title of item {@from body} {@required false}
-     */
-    public string $title = '';
-
-    /**
-     * @var string description of item {@from body} {@required false}
-     */
-    public string $description = '';
-
-    /**
-     * @var string owner of item {@from body} {@required false}
-     */
-    public string $owner = '';
-
-    /**
-     * @var SearchDateRepresentation {@type \Tuleap\Docman\REST\v1\Search\SearchDateRepresentation} creation date of item {@from body} {@required false}
-     */
-    public ?SearchDateRepresentation $create_date = null;
-
-    /**
-     * @var SearchDateRepresentation {@type \Tuleap\Docman\REST\v1\Search\SearchDateRepresentation} update date of item {@from body} {@required false}
-     */
-    public ?SearchDateRepresentation $update_date = null;
-
-    /**
-     * @var SearchDateRepresentation {@type \Tuleap\Docman\REST\v1\Search\SearchDateRepresentation} obsolescence date of item {@from body} {@required false}
-     */
-    public ?SearchDateRepresentation $obsolescence_date = null;
-
-    /**
-     * @var string status of item {@from body} {@required false} {@choice none,draft,approved,rejected}
-     */
-    public string $status = '';
-
-    /**
-     * @var array {@type \Tuleap\Docman\REST\v1\Search\CustomPropertyRepresentation} {@from body} {@required false}
-     */
-    public array $custom_properties = [];
+    public array $properties = [];
 
     /**
      * @var int limit {@from body} {@required false} {@min 0} {@max 50}

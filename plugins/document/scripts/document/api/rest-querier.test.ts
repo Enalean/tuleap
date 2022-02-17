@@ -467,24 +467,48 @@ describe("rest-querier", () => {
                 },
                 body: JSON.stringify({
                     global_search: "Lorem ipsum",
-                    type: "folder",
-                    title: "doloret",
-                    description: "sit",
-                    owner: "jdoe",
-                    create_date: {
-                        date: "2022-01-01",
-                        operator: ">",
-                    },
-                    update_date: {
-                        date: "2022-01-31",
-                        operator: "<",
-                    },
-                    obsolescence_date: {
-                        date: "2022-01-31",
-                        operator: "=",
-                    },
-                    status: "draft",
-                    custom_properties: [
+                    properties: [
+                        {
+                            name: "type",
+                            value: "folder",
+                        },
+                        {
+                            name: "title",
+                            value: "doloret",
+                        },
+                        {
+                            name: "description",
+                            value: "sit",
+                        },
+                        {
+                            name: "owner",
+                            value: "jdoe",
+                        },
+                        {
+                            name: "create_date",
+                            value_date: {
+                                date: "2022-01-01",
+                                operator: ">",
+                            },
+                        },
+                        {
+                            name: "update_date",
+                            value_date: {
+                                date: "2022-01-31",
+                                operator: "<",
+                            },
+                        },
+                        {
+                            name: "obsolescence_date",
+                            value_date: {
+                                date: "2022-01-31",
+                                operator: "=",
+                            },
+                        },
+                        {
+                            name: "status",
+                            value: "draft",
+                        },
                         {
                             name: "field_2",
                             value: "lorem",

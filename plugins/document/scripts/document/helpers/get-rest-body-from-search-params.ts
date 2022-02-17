@@ -17,69 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AdvancedSearchParams } from "../type";
-import type { SearchDate } from "../type";
+import type {
+    SearchBodyRest,
+    SearchDate,
+    AdvancedSearchParams,
+    SearchBodyPropertyDate,
+    SearchBodyPropertySimple,
+    AllowedSearchBodyPropertyName,
+} from "../type";
+import { HardcodedPropertyName } from "../type";
 import { isAdditionalFieldNumber } from "./additional-custom-properties";
 
-export function getRestBodyFromSearchParams(search: AdvancedSearchParams): Record<
-    string,
-    | string
-    | Record<string, string>
-    | ReadonlyArray<{
-          name: string;
-          value?: string;
-          value_date?: SearchDate;
-      }>
-> {
+export function getRestBodyFromSearchParams(search: AdvancedSearchParams): SearchBodyRest {
     return {
         ...(search.global_search && { global_search: search.global_search }),
-        ...(search.type && { type: search.type }),
-        ...(search.title && { title: search.title }),
-        ...(search.description && { description: search.description }),
-        ...(search.owner && { owner: search.owner }),
-        ...(search.create_date &&
-            search.create_date.date.length > 0 && {
-                create_date: {
-                    date: search.create_date.date,
-                    operator: search.create_date.operator,
-                },
-            }),
-        ...(search.update_date &&
-            search.update_date.date.length > 0 && {
-                update_date: {
-                    date: search.update_date.date,
-                    operator: search.update_date.operator,
-                },
-            }),
-        ...(search.obsolescence_date &&
-            search.obsolescence_date.date.length > 0 && {
-                obsolescence_date: {
-                    date: search.obsolescence_date.date,
-                    operator: search.obsolescence_date.operator,
-                },
-            }),
-        ...(search.status && { status: search.status }),
-        ...getAdditionalParams(search),
+        ...getProperties(search),
     };
 }
 
-function getAdditionalParams(search: AdvancedSearchParams):
-    | Record<string, never>
-    | {
-          custom_properties: ReadonlyArray<{
-              name: string;
-              value?: string;
-              value_date?: SearchDate;
-          }>;
-      } {
-    const custom_properties: Array<{
-        name: string;
-        value?: string;
-        value_date?: SearchDate;
-    }> = [];
+function getProperties(search: AdvancedSearchParams): Pick<SearchBodyRest, "properties"> {
+    const properties: Array<SearchBodyPropertySimple | SearchBodyPropertyDate> = [];
 
     for (const key of Object.keys(search)) {
-        if (!isAdditionalFieldNumber(key)) {
+        if (!isAllowedSearchBodyPropertyName(key)) {
             continue;
         }
 
@@ -90,7 +50,7 @@ function getAdditionalParams(search: AdvancedSearchParams):
 
         if (isSearchDate(search_param)) {
             if (search_param.date.length > 0) {
-                custom_properties.push({
+                properties.push({
                     name: key,
                     value_date: {
                         date: search_param.date,
@@ -99,18 +59,25 @@ function getAdditionalParams(search: AdvancedSearchParams):
                 });
             }
         } else {
-            custom_properties.push({
+            properties.push({
                 name: key,
                 value: search_param,
             });
         }
     }
 
-    if (custom_properties.length === 0) {
+    if (properties.length === 0) {
         return {};
     }
 
-    return { custom_properties };
+    return { properties: [...properties] };
+}
+
+function isAllowedSearchBodyPropertyName(name: string): name is AllowedSearchBodyPropertyName {
+    return (
+        HardcodedPropertyName.some((hardcoded) => hardcoded === name) ||
+        isAdditionalFieldNumber(name)
+    );
 }
 
 function isSearchDate(search_param: string | SearchDate): search_param is SearchDate {

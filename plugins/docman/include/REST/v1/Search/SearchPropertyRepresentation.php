@@ -25,7 +25,7 @@ namespace Tuleap\Docman\REST\v1\Search;
 /**
  * @psalm-immutable
  */
-final class CustomPropertyRepresentation
+final class SearchPropertyRepresentation
 {
     /**
      * @var string {@from body} {@required true}
