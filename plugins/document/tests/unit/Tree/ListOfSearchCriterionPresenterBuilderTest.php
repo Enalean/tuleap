@@ -48,7 +48,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         self::assertCount(1, $criteria);
         self::assertEquals('type', $criteria[0]->name);
         self::assertEquals(
-            ['', 'folder', 'file', 'embedded', 'wiki', 'empty'],
+            ['folder', 'file', 'embedded', 'wiki', 'empty'],
             array_map(
                 static fn(SearchCriterionListOptionPresenter $option): string => $option->value,
                 $criteria[0]->options
@@ -76,7 +76,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         self::assertCount(1, $criteria);
         self::assertEquals('type', $criteria[0]->name);
         self::assertEquals(
-            ['', 'folder', 'file', 'embedded', 'empty'],
+            ['folder', 'file', 'embedded', 'empty'],
             array_map(
                 static fn(SearchCriterionListOptionPresenter $option): string => $option->value,
                 $criteria[0]->options
@@ -162,7 +162,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         self::assertCount(2, $criteria);
         self::assertEquals('status', $criteria[1]->name);
         self::assertEquals(
-            ['', 'none', 'draft'],
+            ['none', 'draft'],
             array_map(
                 static fn(SearchCriterionListOptionPresenter $option): string => $option->value,
                 $criteria[1]->options
@@ -170,12 +170,13 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         );
     }
 
-    public function testItShouldOmitCustomMetadataBecauseWeDoNotSupportThemYet(): void
+    public function testItShouldReturnCustomTextMetadataAsWell(): void
     {
         $metadata = new \Docman_Metadata();
         $metadata->setSpecial(false);
-        $metadata->setLabel('whatever');
+        $metadata->setLabel('field_2');
         $metadata->setName('whatever');
+        $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
 
         $project = $this->createMock(\Project::class);
         $project->method('usesWiki')->willReturn(true);
@@ -192,6 +193,51 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
 
         $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
 
-        self::assertCount(1, $criteria);
+        self::assertCount(2, $criteria);
+        self::assertEquals('field_2', $criteria[1]->name);
+    }
+
+    public function testItShouldReturnCustomListMetadataAsWell(): void
+    {
+        $metadata = new \Docman_ListMetadata();
+        $metadata->setSpecial(false);
+        $metadata->setLabel('field_2');
+        $metadata->setName('whatever');
+
+        $none = new \Docman_MetadataListOfValuesElement();
+        $none->setId(100);
+        $none->setStatus('P');
+        $none->setName('None');
+
+        $draft = new \Docman_MetadataListOfValuesElement();
+        $draft->setId(101);
+        $draft->setStatus('A');
+        $draft->setName('Draft');
+
+        $deleted = new \Docman_MetadataListOfValuesElement();
+        $deleted->setId(102);
+        $deleted->setStatus('D');
+        $deleted->setName('Whatever');
+
+        $elements = [$none, $draft, $deleted];
+        $metadata->setListOfValueElements($elements);
+
+        $project = $this->createMock(\Project::class);
+        $project->method('usesWiki')->willReturn(true);
+
+        $docman_settings = $this->createMock(Docman_SettingsBo::class);
+        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $status_mapper = new ItemStatusMapper($docman_settings);
+
+        $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
+        $metadata_factory->method('getMetadataForGroup')
+            ->with(true)
+            ->willReturn([$metadata]);
+        $metadata_factory->method('appendAllListOfValues');
+
+        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
+
+        self::assertCount(2, $criteria);
+        self::assertEquals('field_2', $criteria[1]->name);
     }
 }

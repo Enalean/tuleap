@@ -47,16 +47,10 @@ final class ListOfSearchCriterionPresenterBuilder
         $metadata_factory->appendAllListOfValues($all_metadata);
         foreach ($all_metadata as $metadata) {
             assert($metadata instanceof \Docman_Metadata);
-            if (! $metadata->isSpecial()) {
-                continue;
-            }
-
-            if (! in_array($metadata->getLabel(), \Docman_MetadataFactory::HARDCODED_METADATA_LABELS, true)) {
-                continue;
-            }
-
             if ($metadata instanceof \Docman_ListMetadata) {
-                $criteria[] = $this->getStatusCriterion($metadata, $status_mapper);
+                $criteria[] = $metadata->getLabel() === \Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL
+                    ? $this->getStatusCriterion($metadata, $status_mapper)
+                    : $this->getListCriterion($metadata);
                 continue;
             }
 
@@ -72,9 +66,7 @@ final class ListOfSearchCriterionPresenterBuilder
 
     private function getStatusCriterion(\Docman_ListMetadata $metadata, ItemStatusMapper $status_mapper): SearchCriterionListPresenter
     {
-        $options = [
-            new SearchCriterionListOptionPresenter("", dgettext("tuleap-document", "Any")),
-        ];
+        $options = [];
 
         foreach ($metadata->getListOfValueIterator() as $value) {
             assert($value instanceof \Docman_MetadataListOfValuesElement);
@@ -95,13 +87,33 @@ final class ListOfSearchCriterionPresenterBuilder
         return new SearchCriterionListPresenter($metadata->getLabel(), $metadata->getName(), $options);
     }
 
+    private function getListCriterion(\Docman_ListMetadata $metadata): SearchCriterionListPresenter
+    {
+        $options = [];
+
+        foreach ($metadata->getListOfValueIterator() as $value) {
+            assert($value instanceof \Docman_MetadataListOfValuesElement);
+            if (! in_array($value->getStatus(), ['A', 'P'], true)) {
+                continue;
+            }
+
+            $options[] = new SearchCriterionListOptionPresenter(
+                (string) $value->getId(),
+                (int) $value->getId() === 100 ?
+                    \dgettext('tuleap-document', 'None') :
+                    $value->getName()
+            );
+        }
+
+        return new SearchCriterionListPresenter($metadata->getLabel(), $metadata->getName(), $options);
+    }
+
     /**
      * @return SearchCriterionListOptionPresenter[]
      */
     private function getTypeOptions(\Project $project): array
     {
         $type_options = [
-            new SearchCriterionListOptionPresenter("", dgettext("tuleap-document", "Any")),
             new SearchCriterionListOptionPresenter("folder", dgettext("tuleap-document", "Folder")),
             new SearchCriterionListOptionPresenter("file", dgettext("tuleap-document", "File")),
             new SearchCriterionListOptionPresenter("embedded", dgettext("tuleap-document", "Embedded file")),

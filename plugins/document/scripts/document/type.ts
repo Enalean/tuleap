@@ -268,6 +268,8 @@ export interface SearchDate {
     readonly date: string;
 }
 
+export type AdditionalFieldNumber = `field_${number}`;
+
 export interface AdvancedSearchParams {
     readonly global_search: string;
     readonly type: AllowedSearchType;
@@ -278,6 +280,7 @@ export interface AdvancedSearchParams {
     readonly update_date: SearchDate | null;
     readonly obsolescence_date: SearchDate | null;
     readonly status: string;
+    readonly [key: AdditionalFieldNumber]: string | SearchDate | undefined;
 }
 
 interface BaseSearchCriterion {

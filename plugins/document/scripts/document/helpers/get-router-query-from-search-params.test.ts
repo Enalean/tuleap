@@ -69,6 +69,11 @@ describe("getRouterQueryFromSearchParams", () => {
         ],
         [{ obsolescence_date: { date: "", operator: "<" } }, {}],
         [{ status: "draft" }, { status: "draft" }],
+        [
+            { field_2: { date: "2022-01-30", operator: "<" } },
+            { field_2: "2022-01-30", field_2_op: "<" },
+        ],
+        [{ field_2: { date: "", operator: "<" } }, {}],
     ])(
         "should return the url parameters based from search parameters (%s, %s)",
         (params, expected) => {

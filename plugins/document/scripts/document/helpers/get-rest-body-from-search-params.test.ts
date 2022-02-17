@@ -19,7 +19,7 @@
 
 import { getRestBodyFromSearchParams } from "./get-rest-body-from-search-params";
 import { buildAdvancedSearchParams } from "./build-advanced-search-params";
-import type { AdvancedSearchParams } from "../type";
+import type { AdvancedSearchParams, SearchDate } from "../type";
 
 describe("get-rest-body-from-search-params", () => {
     it("should return nothing for empty params", () => {
@@ -42,7 +42,21 @@ describe("get-rest-body-from-search-params", () => {
         expect(getRestBodyFromSearchParams(query_params)).toStrictEqual({});
     });
 
-    it.each<[Partial<AdvancedSearchParams>, Record<string, string | Record<string, string>>]>([
+    it.each<
+        [
+            Partial<AdvancedSearchParams>,
+            Record<
+                string,
+                | string
+                | Record<string, string>
+                | ReadonlyArray<{
+                      name: string;
+                      value?: string;
+                      value_date?: SearchDate;
+                  }>
+            >
+        ]
+    >([
         [{}, {}],
         [{ global_search: "lorem" }, { global_search: "lorem" }],
         [{ type: "folder" }, { type: "folder" }],
@@ -69,6 +83,19 @@ describe("get-rest-body-from-search-params", () => {
         ],
         [{ obsolescence_date: { date: "", operator: "<" } }, {}],
         [{ status: "draft" }, { status: "draft" }],
+        [{ field_2: "lorem" }, { custom_properties: [{ name: "field_2", value: "lorem" }] }],
+        [
+            { field_2: { date: "2022-01-30", operator: "<" } },
+            {
+                custom_properties: [
+                    {
+                        name: "field_2",
+                        value_date: { date: "2022-01-30", operator: "<" },
+                    },
+                ],
+            },
+        ],
+        [{ field_2: { date: "", operator: "<" } }, {}],
     ])("should return the body based on search parameters (%s, %s)", (params, expected) => {
         expect(getRestBodyFromSearchParams(buildAdvancedSearchParams(params))).toStrictEqual(
             expected

@@ -116,8 +116,31 @@ final class SearchResource extends AuthenticatedResource
      *   <td>List</td>
      *   <td>Status of the document. Searchable status: `none`, `draft`, `approved`, `rejected`.</td>
      * </tr>
+     * <tr>
+     *   <td>`custom_properties`</td>
+     *   <td></td>
+     *   <td>Project may have defined custom properties, this entry allow to search among them.</td>
+     * </tr>
      * </tbody>
      * </table>
+     *
+     * <hr>
+     *
+     * <p>Custom properties is an array of:</p>
+     * <ul>
+     * <li>`{ "name": "field_2", "value": "lorem" }` for text, string, and list.</li>
+     * <li>`{ "name": "field_2", "value": "102" }` for list, where 102 is the internal id of a value.</li>
+     * <li>`{ "name": "field_2", "value_date": { date: "2022-01-30", operator: ">" } }` for date.</li>
+     * </ul>
+     *
+     * <p>Usage example:</p>
+     *
+     * <pre>
+     * {<br>
+     *  &nbsp; "global_search": "lorem\*",<br>
+     *  &nbsp; "custom_properties": [ {"name": "field_1", "value": "102"} ]<br>
+     * }
+     * </pre>
      *
      * <hr>
      *

@@ -27,6 +27,7 @@ use Docman_FilterGlobalText;
 use Docman_FilterText;
 use Docman_Report;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Search\CustomPropertyRepresentation;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
 use Tuleap\Docman\REST\v1\Search\SearchDateRepresentation;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
@@ -63,6 +64,9 @@ class SearchReportBuilder
         $this->addUpdateDateFilter($search, $report);
         $this->addObsolescenceDateFilter($search, $report);
         $this->addStatusFilter($search, $report);
+        foreach ($search->custom_properties as $custom_property) {
+            $this->addCustomPropertyFilter($custom_property, $report);
+        }
 
         $columns = $this->always_there_column_retriever->getColumns();
         $this->column_report_builder->addColumnsFromArray($columns, $report);
@@ -100,24 +104,26 @@ class SearchReportBuilder
 
     private function addTitleFilter(PostSearchRepresentation $search, Docman_Report $report): void
     {
-        $this->addTextFilter($report, $search->title, \Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL);
+        $metadata = $this->metadata_factory->getHardCodedMetadataFromLabel(
+            \Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL
+        );
+
+        $this->addTextFilter($report, $search->title, $metadata);
     }
 
     private function addDescriptionFilter(PostSearchRepresentation $search, Docman_Report $report): void
     {
-        $this->addTextFilter(
-            $report,
-            $search->description,
+        $metadata = $this->metadata_factory->getHardCodedMetadataFromLabel(
             \Docman_MetadataFactory::HARDCODED_METADATA_DESCRIPTION_LABEL
         );
+
+        $this->addTextFilter($report, $search->description, $metadata);
     }
 
-    private function addTextFilter(Docman_Report $report, string $search_term, string $metadata_label): void
+    private function addTextFilter(Docman_Report $report, string $search_term, \Docman_Metadata $metadata): void
     {
         if ($search_term) {
-            $text_filter = new Docman_FilterText(
-                $this->metadata_factory->getHardCodedMetadataFromLabel($metadata_label)
-            );
+            $text_filter = new Docman_FilterText($metadata);
             $text_filter->setValue($search_term);
             $report->addFilter($text_filter);
         }
@@ -217,5 +223,33 @@ class SearchReportBuilder
             $list_filter->setValue($this->status_mapper->getItemStatusIdFromItemStatusString($search->status));
             $report->addFilter($list_filter);
         }
+    }
+
+    private function addCustomPropertyFilter(CustomPropertyRepresentation $custom_property, Docman_Report $report): void
+    {
+        if (! $custom_property->value_date && ! $custom_property->value) {
+            return;
+        }
+
+        $metadata = $this->metadata_factory->getMetadataFromLabel($custom_property->name);
+        if (! $metadata) {
+            return;
+        }
+
+        if ($custom_property->value_date) {
+            $this->addDateFilter($report, $custom_property->value_date, $metadata);
+
+            return;
+        }
+
+        if ((int) $metadata->getType() === PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+            $list_filter = new \Docman_FilterList($metadata);
+            $list_filter->setValue($custom_property->value);
+            $report->addFilter($list_filter);
+
+            return;
+        }
+
+        $this->addTextFilter($report, $custom_property->value, $metadata);
     }
 }

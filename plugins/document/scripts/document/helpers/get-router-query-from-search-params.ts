@@ -18,6 +18,8 @@
  */
 import type { AdvancedSearchParams } from "../type";
 import type { Dictionary } from "vue-router/types/router";
+import { isAdditionalFieldNumber } from "./additional-custom-properties";
+import type { SearchDate } from "../type";
 
 export function getRouterQueryFromSearchParams(params: AdvancedSearchParams): Dictionary<string> {
     const query: Dictionary<string> = {};
@@ -52,5 +54,38 @@ export function getRouterQueryFromSearchParams(params: AdvancedSearchParams): Di
         query.status = params.status;
     }
 
-    return query;
+    return {
+        ...query,
+        ...getAdditionalRouteQuery(params),
+    };
+}
+
+function getAdditionalRouteQuery(params: AdvancedSearchParams): Dictionary<string> {
+    const additional: Dictionary<string> = {};
+
+    for (const key of Object.keys(params)) {
+        if (!isAdditionalFieldNumber(key)) {
+            continue;
+        }
+
+        const search_param = params[key];
+        if (!search_param) {
+            continue;
+        }
+
+        if (isSearchDate(search_param)) {
+            if (search_param.date.length > 0) {
+                additional[key] = search_param.date;
+                additional[key + "_op"] = search_param.operator;
+            }
+        } else {
+            additional[key] = search_param;
+        }
+    }
+
+    return additional;
+}
+
+function isSearchDate(search_param: string | SearchDate): search_param is SearchDate {
+    return typeof search_param !== "string";
 }

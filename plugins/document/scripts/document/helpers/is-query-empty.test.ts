@@ -52,6 +52,8 @@ describe("isQueryEmpty", () => {
         [{ update_date: { date: "2022-01-30", operator: "<" } }],
         [{ obsolescence_date: { date: "2022-01-30", operator: "<" } }],
         [{ status: "draft" }],
+        [{ field_2: "lorem" }],
+        [{ field_2: { date: "2022-01-30", operator: ">" } }],
     ])("should return false if parameter is filled with %s", (query_params) => {
         expect(isQueryEmpty(buildAdvancedSearchParams(query_params))).toBe(false);
     });
