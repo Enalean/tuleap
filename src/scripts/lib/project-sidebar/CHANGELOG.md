@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 (Not yet released)
+## 2.0.0
 
 * The element has an explicit height and width and is considered a block element by default.
 * Only display the project flags icon when some project flags are present.
