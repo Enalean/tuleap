@@ -21,7 +21,7 @@ export interface Shortcut {
     readonly keyboard_inputs: string;
     readonly displayed_inputs?: string;
     readonly description: string;
-    readonly handle: (event: KeyboardEvent) => void | ShortcutHandleOptions;
+    readonly handle: null | ((event: KeyboardEvent) => void | ShortcutHandleOptions);
 }
 
 export interface ShortcutHandleOptions {

@@ -25,13 +25,14 @@ import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { example_config } from "../project-sidebar-example-config";
 import Tools from "./Tools.vue";
 import Tool from "./Tool.vue";
+import { ref } from "vue";
 
 describe("Tools", () => {
     it("displays all the tools", () => {
         const wrapper = shallowMount(Tools, {
             global: {
                 provide: {
-                    [SIDEBAR_CONFIGURATION.valueOf()]: example_config,
+                    [SIDEBAR_CONFIGURATION.valueOf()]: ref(example_config),
                 },
             },
         });

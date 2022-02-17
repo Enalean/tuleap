@@ -20,21 +20,3 @@
 export interface GettextProvider {
     gettext(msgid: string): string;
 }
-
-export type ServiceID =
-    | typeof TRACKERS
-    | typeof GIT
-    | typeof TESTMANAGEMENT
-    | typeof DOCUMENTS
-    | typeof AGILEDASHBOARD;
-
-export const TRACKERS = "plugin_tracker";
-export const GIT = "plugin_git";
-export const TESTMANAGEMENT = "plugin_testmanagement";
-export const DOCUMENTS = "docman";
-export const AGILEDASHBOARD = "plugin_agiledashboard";
-
-export interface ServiceShortcut {
-    name: ServiceID;
-    keyboard_inputs: string;
-}

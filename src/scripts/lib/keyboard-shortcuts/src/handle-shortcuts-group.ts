@@ -37,12 +37,16 @@ export function addGlobalShortcutsGroup(doc: Document, shortcuts_group: Shortcut
 }
 
 function createShortcut(shortcut: Shortcut): void {
+    const shortcut_handle = shortcut.handle;
+    if (shortcut_handle === null) {
+        return;
+    }
     hotkeys(shortcut.keyboard_inputs, HOTKEYS_SCOPE_NO_MODAL, (event) => {
         if (isWildCardAndNotQuestionMark(shortcut, event)) {
             return;
         }
 
-        const shortcut_handle_options = shortcut.handle(event);
+        const shortcut_handle_options = shortcut_handle(event);
         if (shortcut_handle_options?.preventDefault === false) {
             return;
         }
