@@ -17,12 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-CREATE TABLE plugin_oauth2_authorization_code_scope (
-    auth_code_id INT(11) NOT NULL,
-    scope_key VARCHAR(255) NOT NULL,
-    PRIMARY KEY (auth_code_id, scope_key)
-) ENGINE=InnoDB;
-
 CREATE TABLE plugin_oauth2_authorization(
     id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT(11) NOT NULL,
