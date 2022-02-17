@@ -77,7 +77,7 @@
     "vite": "^2.8.0",
     "vite-dts": "^1.0.3",
     "vite-plugin-dts": "^0.9.9",
-    "vite-plugin-vue2": "^1.9.0",
+    "vite-plugin-vue2": "^1.9.3",
     "vue-eslint-parser": "^8.0.1",
     "vue-loader": "^15.9.8",
     "vue-template-compiler": "^2.6.14",
