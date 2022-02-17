@@ -46,7 +46,7 @@ import ItemPermissionError from "./Folder/Error/ItemPermissionError.vue";
 import LoadingError from "./Folder/Error/LoadingError.vue";
 import GlobalErrorModal from "./Folder/Error/GlobalErrorModal.vue";
 import SwitchToOldUI from "./Folder/SwitchToOldUI.vue";
-import PostItemDeletionNotification from "./Folder/ModalDeleteItem/PostItemDeletionNotification.vue";
+import PostItemDeletionNotification from "./Folder/DropDown/Delete/PostItemDeletionNotification.vue";
 
 export default {
     name: "App",

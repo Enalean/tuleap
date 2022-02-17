@@ -1,7 +1,7 @@
 /*
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2019 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,62 +18,52 @@
  *
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
-import { USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE } from "../../../constants";
-import ConfirmationModal from "./ModalConfirmDeletion.vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import localVue from "../../../../helpers/local-vue";
+import { USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE } from "../../../../constants";
 import VueRouter from "vue-router";
-import * as tlp from "tlp";
-
-jest.mock("tlp");
+import type { Folder, Item, ItemFile, State, Wiki } from "../../../../type";
+import ModalConfirmDeletion from "./ModalConfirmDeletion.vue";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { ErrorState } from "../../../../store/error/module";
 
 describe("ModalConfirmDeletion", () => {
-    let router, state, store_options, store;
-
-    function getDeletionModal(props = {}) {
-        return shallowMount(ConfirmationModal, {
-            localVue,
-            mocks: { $store: store },
-            propsData: {
-                ...props,
+    let store = {
+        dispatch: jest.fn(),
+        commit: jest.fn(),
+    };
+    function createWrapper(
+        item: Item,
+        currently_previewed_item: Item | null
+    ): Wrapper<ModalConfirmDeletion> {
+        store = createStoreMock({
+            state: {
+                error: { has_modal_error: false } as ErrorState,
+                currently_previewed_item,
+                current_folder: { id: 42 },
+            } as unknown as State,
+        });
+        return shallowMount(ModalConfirmDeletion, {
+            mocks: {
+                $store: store,
             },
+            localVue: localVue,
+            propsData: { item, shouldRedirectToParentAfterDeletion: false },
             stubs: ["delete-associated-wiki-page-checkbox"],
-            router,
+            router: new VueRouter({
+                routes: [
+                    {
+                        path: "folder/42",
+                        name: "folder",
+                    },
+                ],
+            }),
         });
     }
 
-    beforeEach(() => {
-        router = new VueRouter({
-            routes: [
-                {
-                    path: "folder/42",
-                    name: "folder",
-                },
-            ],
-        });
-        state = {
-            error: {
-                has_modal_error: false,
-            },
-            currently_previewed_item: null,
-            current_folder: { id: 42 },
-        };
-        store_options = {
-            state,
-        };
-        store = createStoreMock(store_options);
-        jest.spyOn(store, "dispatch").mockImplementation();
-
-        jest.spyOn(tlp, "createModal").mockReturnValue({
-            addEventListener: () => {},
-            show: () => {},
-            hide: () => {},
-        });
-    });
-
     describe("When the item is a wiki", () => {
-        let item;
+        let item: Wiki;
 
         beforeEach(() => {
             item = {
@@ -84,7 +74,7 @@ describe("ModalConfirmDeletion", () => {
                     page_id: 123,
                 },
                 type: "wiki",
-            };
+            } as Wiki;
         });
 
         it(`When some docman wikis reference the same wiki page, then it should add a checkbox`, async () => {
@@ -105,7 +95,7 @@ describe("ModalConfirmDeletion", () => {
                 return [];
             });
 
-            const deletion_modal = await getDeletionModal({ item });
+            const deletion_modal = await createWrapper(item, null);
             await deletion_modal.vm.$nextTick();
 
             expect(store.dispatch).toHaveBeenCalledWith("getWikisReferencingSameWikiPage", item);
@@ -120,7 +110,7 @@ describe("ModalConfirmDeletion", () => {
                 return undefined;
             });
 
-            const deletion_modal = await getDeletionModal({ item });
+            const deletion_modal = await createWrapper(item, null);
 
             expect(store.dispatch).toHaveBeenCalledWith("getWikisReferencingSameWikiPage", item);
             expect(deletion_modal.find("[data-test=checkbox]").exists()).toBeFalsy();
@@ -129,7 +119,7 @@ describe("ModalConfirmDeletion", () => {
         it(`when it does not reference an existing wiki page, then it should not add a checkbox`, () => {
             item.wiki_properties.page_id = null;
 
-            const deletion_modal = getDeletionModal({ item });
+            const deletion_modal = createWrapper(item, null);
 
             expect(store.dispatch).not.toHaveBeenCalled();
             expect(deletion_modal.find("[data-test=checkbox]").exists()).toBeFalsy();
@@ -141,9 +131,9 @@ describe("ModalConfirmDeletion", () => {
             id: 42,
             title: "my folder",
             type: "folder",
-        };
+        } as Folder;
 
-        const deletion_modal = getDeletionModal({ item });
+        const deletion_modal = createWrapper(item, null);
 
         expect(store.dispatch).not.toHaveBeenCalled();
         expect(deletion_modal.find("[data-test=delete-folder-warning]").exists()).toBeTruthy();
@@ -155,15 +145,12 @@ describe("ModalConfirmDeletion", () => {
             id: 42,
             title: "my folder",
             type: "folder",
-        };
+        } as Folder;
 
-        const additional_options = {};
-
-        const deletion_modal = getDeletionModal({ item, additional_options });
-        const deleteItem = jest.spyOn(deletion_modal.vm, "deleteItem");
+        const deletion_modal = createWrapper(item, null);
         deletion_modal.get("[data-test=document-confirm-deletion-button]").trigger("click");
 
-        expect(deleteItem).toHaveBeenCalled();
+        expect(store.dispatch).toHaveBeenCalledWith("deleteItem", [item, {}]);
     });
 
     describe("Redirection after deletion", () => {
@@ -173,27 +160,23 @@ describe("ModalConfirmDeletion", () => {
                 title: "my file",
                 type: "file",
                 parent_id: 42,
-            };
+            } as ItemFile;
 
-            const additional_options = {};
-
-            store.state.currently_previewed_item = item;
-
-            const deletion_modal = getDeletionModal({ item, additional_options });
+            const deletion_modal = createWrapper(item, item);
             jest.spyOn(deletion_modal.vm.$router, "replace");
 
             await deletion_modal.vm.$router.push("preview/50");
-            await deletion_modal.vm.deleteItem();
+            deletion_modal.get("[data-test=document-confirm-deletion-button]").trigger("click");
             await deletion_modal.vm.$nextTick();
 
-            expect(store.dispatch).toHaveBeenCalledWith("deleteItem", [item, additional_options]);
+            expect(store.dispatch).toHaveBeenCalledWith("deleteItem", [item, {}]);
             expect(deletion_modal.vm.$store.commit).toHaveBeenCalledWith(
                 "showPostDeletionNotification"
             );
             expect(store.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", null);
             expect(deletion_modal.vm.$router.replace).toHaveBeenCalledWith({
                 name: "folder",
-                params: { item_id: 42 },
+                params: { item_id: "42" },
             });
         });
 
@@ -203,24 +186,21 @@ describe("ModalConfirmDeletion", () => {
                 title: "my folder",
                 type: "folder",
                 parent_id: 41,
-            };
+            } as Folder;
 
-            const additional_options = {};
-            const deletion_modal = getDeletionModal({ item, additional_options });
+            const deletion_modal = createWrapper(item, null);
 
             jest.spyOn(deletion_modal.vm.$router, "replace");
 
-            await deletion_modal.vm.deleteItem();
+            deletion_modal.get("[data-test=document-confirm-deletion-button]").trigger("click");
             await deletion_modal.vm.$nextTick();
 
-            expect(store.dispatch).toHaveBeenCalledWith("deleteItem", [item, additional_options]);
-            expect(deletion_modal.vm.$store.commit).toHaveBeenCalledWith(
-                "showPostDeletionNotification"
-            );
+            expect(store.dispatch).toHaveBeenCalledWith("deleteItem", [item, {}]);
+            expect(store.commit).toHaveBeenCalledWith("showPostDeletionNotification");
             expect(store.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", null);
             expect(deletion_modal.vm.$router.replace).toHaveBeenCalledWith({
                 name: "folder",
-                params: { item_id: 41 },
+                params: { item_id: "41" },
             });
         });
     });

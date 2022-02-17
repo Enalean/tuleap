@@ -83,7 +83,7 @@
 <script lang="ts">
 import DropDownMenu from "./DropDownMenu.vue";
 import CreateNewItemVersionButton from "../ActionsButton/NewItemVersionButton.vue";
-import DeleteItem from "./DeleteItem.vue";
+import DeleteItem from "./Delete/DeleteItem.vue";
 import NewFolderSecondaryAction from "./NewFolderSecondaryAction.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import NewDocument from "./NewDocument.vue";

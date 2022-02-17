@@ -23,7 +23,7 @@ export interface ItemForPath {
     title: string;
 }
 
-interface ItemPath {
+export interface ItemPath {
     id: number;
     path: string;
 }
