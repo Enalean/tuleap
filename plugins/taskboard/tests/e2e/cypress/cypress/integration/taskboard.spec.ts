@@ -24,7 +24,7 @@ describe(`Taskboard`, function () {
         cy.clearSessionCookie();
         cy.projectMemberLogin();
         cy.getProjectId("taskboard-project")
-            .then((project_id: JQuery<HTMLElement>) =>
+            .then((project_id: number) =>
                 cy.getFromTuleapAPI(`/api/projects/${project_id}/milestones?fields=slim`)
             )
             .then((response) => response.body[0].id)
