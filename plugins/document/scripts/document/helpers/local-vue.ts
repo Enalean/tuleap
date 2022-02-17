@@ -21,12 +21,14 @@
 import { createLocalVue } from "@vue/test-utils";
 import Vuex from "vuex";
 import VueDOMPurifyHTML from "vue-dompurify-html";
+import VueCompositionAPI from "@vue/composition-api";
 import GettextPlugin from "vue-gettext";
 import VueRouter from "vue-router";
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
 localVue.use(VueRouter);
+localVue.use(VueCompositionAPI);
 
 localVue.use(VueDOMPurifyHTML);
 localVue.use(GettextPlugin, {

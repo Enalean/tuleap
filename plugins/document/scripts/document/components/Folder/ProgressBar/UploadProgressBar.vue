@@ -42,38 +42,45 @@
     </div>
 </template>
 
-<script>
-import { mapActions } from "vuex";
+<script setup lang="ts">
 import { isFolder } from "../../../helpers/type-check-helper";
+import type { FakeItem } from "../../../type";
+import { computed, ref } from "@vue/composition-api";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useActions } from "vuex-composition-helpers";
 
-export default {
-    props: {
-        item: Object,
-    },
-    data() {
-        return {
-            is_canceled: false,
-        };
-    },
-    computed: {
-        cancel_title() {
-            return this.$gettext("Cancel upload");
-        },
-    },
-    methods: {
-        ...mapActions(["cancelFileUpload", "cancelFolderUpload", "cancelVersionUpload"]),
-        cancel() {
-            if (!this.is_canceled) {
-                this.is_canceled = true;
-                if (this.item.is_uploading_new_version) {
-                    this.cancelVersionUpload(this.item);
-                } else if (!isFolder(this.item)) {
-                    this.cancelFileUpload(this.item);
-                } else {
-                    this.cancelFolderUpload(this.item);
-                }
-            }
-        },
-    },
-};
+const props = defineProps<{ item: FakeItem }>();
+
+const { $gettext } = useGettext();
+
+const is_canceled = ref(false);
+
+const cancel_title = computed((): string => {
+    return $gettext("Cancel upload");
+});
+
+const { cancelFileUpload, cancelFolderUpload, cancelVersionUpload } = useActions([
+    "cancelFileUpload",
+    "cancelFolderUpload",
+    "cancelVersionUpload",
+]);
+
+function cancel() {
+    if (!is_canceled.value) {
+        is_canceled.value = true;
+        if (props.item.is_uploading_new_version) {
+            cancelVersionUpload(props.item);
+        } else if (!isFolder(props.item)) {
+            cancelFileUpload(props.item);
+        } else {
+            cancelFolderUpload(props.item);
+        }
+    }
+}
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>
