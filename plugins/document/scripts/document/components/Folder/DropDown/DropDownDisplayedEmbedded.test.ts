@@ -17,39 +17,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import localVue from "../../../helpers/local-vue";
 import DropDownDisplayedEmbedded from "./DropDownDisplayedEmbedded.vue";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { Item, State } from "../../../type";
 
 describe("DropDownDisplayedEmbedded", () => {
-    let factory, store, state, store_options;
-    beforeEach(() => {
-        state = {
+    function createWrapper(
+        user_can_write: boolean,
+        parent_id: number
+    ): Wrapper<DropDownDisplayedEmbedded> {
+        const state = {
             currently_previewed_item: {
                 id: 42,
-                title: "current folder title",
-            },
-        };
-
-        store_options = {
+                title: "embedded title",
+                user_can_write,
+                parent_id,
+            } as Item,
+        } as State;
+        const store_options = {
             state,
         };
-        store = createStoreMock(store_options);
-        factory = (props = {}) => {
-            return shallowMount(DropDownDisplayedEmbedded, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-    });
+        const store = createStoreMock(store_options);
+        return shallowMount(DropDownDisplayedEmbedded, {
+            localVue,
+            mocks: { $store: store },
+            propsData: { isInFolderEmptyState: false },
+        });
+    }
 
     it(`Given user can write item
         Then he can update its properties and delete it`, () => {
-        store.state.currently_previewed_item.user_can_write = true;
-        store.state.currently_previewed_item.parent_id = 102;
-        const wrapper = factory();
+        const wrapper = createWrapper(true, 102);
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
         expect(
@@ -62,8 +63,8 @@ describe("DropDownDisplayedEmbedded", () => {
 
     it(`Given user can write item, and given folder is root folder
         Then he can update its properties but he can not delete ir`, () => {
-        store.state.currently_previewed_item.user_can_write = true;
-        const wrapper = factory();
+        const wrapper = createWrapper(true, 0);
+
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
         expect(
@@ -76,8 +77,7 @@ describe("DropDownDisplayedEmbedded", () => {
 
     it(`Given user has read permission on item
         Then he can't manage document`, () => {
-        store.state.currently_previewed_item.user_can_write = false;
-        const wrapper = factory();
+        const wrapper = createWrapper(false, 102);
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBeFalsy();

@@ -17,7 +17,12 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 <template>
-    <drop-down-menu v-bind:item="item" v-bind:is-in-quick-look-mode="true" role="menu">
+    <drop-down-menu
+        v-bind:item="item"
+        v-bind:is-in-quick-look-mode="true"
+        v-bind:is-in-folder-empty-state="false"
+        role="menu"
+    >
         <drop-down-item-title
             slot="display-item-title"
             v-bind:item="item"
@@ -75,7 +80,7 @@
         </template>
     </drop-down-menu>
 </template>
-<script>
+<script lang="ts">
 import DropDownMenu from "./DropDownMenu.vue";
 import CreateNewItemVersionButton from "../ActionsButton/NewItemVersionButton.vue";
 import DeleteItem from "./DeleteItem.vue";
@@ -88,9 +93,10 @@ import UpdateProperties from "./UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import DropDownItemTitle from "./DropDownItemTitle.vue";
 import { isFolder } from "../../../helpers/type-check-helper";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Item } from "../../../type";
 
-export default {
-    name: "DropDownMenuTreeView",
+@Component({
     components: {
         DropDownItemTitle,
         UpdateProperties,
@@ -104,11 +110,12 @@ export default {
         CreateNewItemVersionButton,
         DropDownMenu,
     },
-    props: { item: Object },
-    methods: {
-        is_item_a_folder(item) {
-            return isFolder(item);
-        },
-    },
-};
+})
+export default class DropDownMenuTreeView extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+    is_item_a_folder(item: Item): boolean {
+        return isFolder(item);
+    }
+}
 </script>

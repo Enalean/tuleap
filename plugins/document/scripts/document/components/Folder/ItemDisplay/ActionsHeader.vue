@@ -35,8 +35,12 @@
                     v-else
                     data-test="item-action-details-button"
                 />
-                <drop-down-button v-bind:is-in-large-mode="false">
-                    <drop-down-displayed-embedded />
+                <drop-down-button
+                    v-bind:is-in-large-mode="false"
+                    v-bind:is-appended="true"
+                    v-bind:is-in-quick-look-mode="false"
+                >
+                    <drop-down-displayed-embedded v-bind:is-in-folder-empty-state="false" />
                 </drop-down-button>
             </div>
         </div>

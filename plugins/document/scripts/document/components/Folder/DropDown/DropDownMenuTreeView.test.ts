@@ -17,33 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import localVue from "../../../helpers/local-vue";
 import DropDownMenuTreeView from "./DropDownMenuTreeView.vue";
+import type { Folder, Item, ItemFile } from "../../../type";
 
 describe("DropDownMenuTreeView", () => {
-    let dropdown_quicklook_menu_factory, store;
-    beforeEach(() => {
-        store = createStoreMock({});
-        dropdown_quicklook_menu_factory = (props = {}) => {
-            return shallowMount(DropDownMenuTreeView, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-    });
+    function createWrapper(item: Item): Wrapper<DropDownMenuTreeView> {
+        return shallowMount(DropDownMenuTreeView, {
+            localVue,
+            propsData: { item },
+        });
+    }
     it(`Given item is a folder and user can write
         Then the drop down enable user to add new folder and new item inside`, () => {
-        const wrapper = dropdown_quicklook_menu_factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "folder",
-                user_can_write: true,
-            },
-        });
+        const wrapper = createWrapper({
+            id: 1,
+            title: "my item title",
+            type: "folder",
+            user_can_write: true,
+        } as Folder);
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeFalsy();
@@ -55,14 +49,12 @@ describe("DropDownMenuTreeView", () => {
     });
     it(`Given item is not a folder
         Then document can be locked/unlocked`, () => {
-        const wrapper = dropdown_quicklook_menu_factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "file",
-                user_can_write: true,
-            },
-        });
+        const wrapper = createWrapper({
+            id: 1,
+            title: "my item title",
+            type: "file",
+            user_can_write: true,
+        } as ItemFile);
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
@@ -76,14 +68,12 @@ describe("DropDownMenuTreeView", () => {
     });
     it(`Given item is not a folder and user can write
         Then user can create new version of document`, () => {
-        const wrapper = dropdown_quicklook_menu_factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "file",
-                user_can_write: true,
-            },
-        });
+        const wrapper = createWrapper({
+            id: 1,
+            title: "my item title",
+            type: "file",
+            user_can_write: true,
+        } as ItemFile);
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
@@ -97,14 +87,12 @@ describe("DropDownMenuTreeView", () => {
     });
     it(`Given user can write
         Then he can update its properties and delete it`, () => {
-        const wrapper = dropdown_quicklook_menu_factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "file",
-                user_can_write: true,
-            },
-        });
+        const wrapper = createWrapper({
+            id: 1,
+            title: "my item title",
+            type: "file",
+            user_can_write: true,
+        } as ItemFile);
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
@@ -118,14 +106,12 @@ describe("DropDownMenuTreeView", () => {
     });
     it(`Given it is a file and user has read permission
         Then he can't manage document`, () => {
-        const wrapper = dropdown_quicklook_menu_factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "file",
-                user_can_write: false,
-            },
-        });
+        const wrapper = createWrapper({
+            id: 1,
+            title: "my item title",
+            type: "file",
+            user_can_write: false,
+        } as ItemFile);
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
@@ -139,14 +125,12 @@ describe("DropDownMenuTreeView", () => {
     });
     it(`Given it is a folder and user has read permission
         Then he can't manage document`, () => {
-        const wrapper = dropdown_quicklook_menu_factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "folder",
-                user_can_write: false,
-            },
-        });
+        const wrapper = createWrapper({
+            id: 1,
+            title: "my item title",
+            type: "folder",
+            user_can_write: false,
+        } as Folder);
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeFalsy();

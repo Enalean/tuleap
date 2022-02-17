@@ -35,9 +35,14 @@
             />
             <drop-down-button
                 v-bind:is-in-quick-look-mode="true"
+                v-bind:is-in-large-mode="false"
                 v-bind:is-appended="item.user_can_write && !is_item_a_wiki_with_approval_table"
             >
-                <drop-down-menu v-bind:item="item" v-bind:is-in-quick-look-mode="true">
+                <drop-down-menu
+                    v-bind:item="item"
+                    v-bind:is-in-quick-look-mode="true"
+                    v-bind:is-in-folder-empty-state="false"
+                >
                     <template v-if="!is_item_a_folder(item) && item.user_can_write">
                         <lock-item
                             v-bind:item="item"
@@ -64,7 +69,7 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
 import DropDownMenu from "./DropDownMenu.vue";
 import CreateNewItemVersionButton from "../ActionsButton/NewItemVersionButton.vue";
 import NewItemButton from "../ActionsButton/NewItemButton.vue";
@@ -75,9 +80,10 @@ import DropDownSeparator from "./DropDownSeparator.vue";
 import UpdateProperties from "./UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import { isFolder, isWiki } from "../../../helpers/type-check-helper";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Item } from "../../../type";
 
-export default {
-    name: "DropDownQuickLook",
+@Component({
     components: {
         UpdateProperties,
         UpdatePermissions,
@@ -89,18 +95,17 @@ export default {
         NewItemButton,
         DropDownMenu,
     },
-    props: {
-        item: Object,
-    },
-    computed: {
-        is_item_a_wiki_with_approval_table() {
-            return isWiki(this.item) && this.item.approval_table !== null;
-        },
-    },
-    methods: {
-        is_item_a_folder(item) {
-            return isFolder(item);
-        },
-    },
-};
+})
+export default class DropDownQuickLook extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    get is_item_a_wiki_with_approval_table(): boolean {
+        return isWiki(this.item) && this.item.approval_table !== null;
+    }
+
+    is_item_a_folder(item: Item): boolean {
+        return isFolder(item);
+    }
+}
 </script>

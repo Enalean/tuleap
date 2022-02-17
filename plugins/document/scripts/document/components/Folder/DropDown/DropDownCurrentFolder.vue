@@ -20,6 +20,7 @@
 <template>
     <drop-down-menu
         v-bind:is-in-folder-empty-state="isInFolderEmptyState"
+        v-bind:is-in-quick-look-mode="false"
         v-bind:item="current_folder"
     >
         <drop-down-item-title
@@ -57,8 +58,7 @@
     </drop-down-menu>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
 import DropDownMenu from "./DropDownMenu.vue";
 import NewFolderSecondaryAction from "./NewFolderSecondaryAction.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
@@ -66,9 +66,11 @@ import DeleteItem from "./DeleteItem.vue";
 import UpdateProperties from "./UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import DropDownItemTitle from "./DropDownItemTitle.vue";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Folder } from "../../../type";
+import { State } from "vuex-class";
 
-export default {
-    name: "DropDownCurrentFolder",
+@Component({
     components: {
         DropDownItemTitle,
         UpdateProperties,
@@ -78,14 +80,16 @@ export default {
         NewFolderSecondaryAction,
         DropDownMenu,
     },
-    props: {
-        isInFolderEmptyState: Boolean,
-    },
-    computed: {
-        ...mapState(["current_folder"]),
-        can_user_delete_item() {
-            return this.current_folder.user_can_write && this.current_folder.parent_id;
-        },
-    },
-};
+})
+export default class DropDownCurrentFolder extends Vue {
+    @Prop({ required: true })
+    readonly isInFolderEmptyState!: boolean;
+
+    @State
+    readonly current_folder!: Folder;
+
+    get can_user_delete_item(): boolean {
+        return Boolean(this.current_folder.user_can_write && this.current_folder.parent_id);
+    }
+}
 </script>
