@@ -28,14 +28,11 @@
         </p>
     </section>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import BacklogItemErrorStateSvg from "./BacklogItemErrorStateSvg.vue";
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
 
-@Component({
-    components: { BacklogItemErrorStateSvg },
-})
-export default class BacklogItemEmptyState extends Vue {}
+export default defineComponent({});
 </script>

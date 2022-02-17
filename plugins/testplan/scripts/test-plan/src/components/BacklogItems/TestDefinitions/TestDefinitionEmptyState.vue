@@ -25,11 +25,8 @@
         </p>
     </section>
 </template>
-
 <script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { defineComponent } from "@vue/composition-api";
 
-@Component
-export default class TestDefinitionEmptyState extends Vue {}
+export default defineComponent({});
 </script>

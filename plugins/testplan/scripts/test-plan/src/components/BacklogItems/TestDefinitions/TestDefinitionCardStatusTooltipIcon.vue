@@ -32,52 +32,55 @@
         ></i>
     </span>
 </template>
-
-<script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+<script setup lang="ts">
 import type { TestDefinition } from "../../../type";
-import { State } from "vuex-class";
+import { useState } from "vuex-composition-helpers";
+import type { State } from "../../../store/type";
+import { computed } from "@vue/composition-api";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component
-export default class TestDefinitionCardStatusTooltipIcon extends Vue {
-    @State
-    readonly milestone_title!: string;
+const props = defineProps<{
+    test_definition: TestDefinition;
+}>();
 
-    @Prop({ required: true })
-    readonly test_definition!: TestDefinition;
+const { milestone_title } = useState<Pick<State, "milestone_title">>(["milestone_title"]);
 
-    get tooltip_content(): string {
-        switch (this.test_definition.test_status) {
-            case "passed":
-                return this.$gettext("Passed");
-            case "failed":
-                return this.$gettext("Failed");
-            case "blocked":
-                return this.$gettext("Blocked");
-            case "notrun":
-                return this.$gettext("Not run");
-            default:
-                return this.$gettextInterpolate(
-                    this.$gettext("Not planned in release %{ release_name }"),
-                    { release_name: this.milestone_title }
-                );
-        }
+const { interpolate, $gettext } = useGettext();
+
+const tooltip_content = computed((): string => {
+    switch (props.test_definition.test_status) {
+        case "passed":
+            return $gettext("Passed");
+        case "failed":
+            return $gettext("Failed");
+        case "blocked":
+            return $gettext("Blocked");
+        case "notrun":
+            return $gettext("Not run");
+        default:
+            return interpolate($gettext("Not planned in release %{ release_name }"), {
+                release_name: milestone_title.value,
+            });
     }
+});
 
-    get icon_status(): string {
-        switch (this.test_definition.test_status) {
-            case "passed":
-                return "fa-check-circle test-plan-test-definition-icon-status-passed";
-            case "failed":
-                return "fa-times-circle test-plan-test-definition-icon-status-failed";
-            case "blocked":
-                return "fa-exclamation-circle test-plan-test-definition-icon-status-blocked";
-            case "notrun":
-                return "fa-question-circle test-plan-test-definition-icon-status-notrun";
-            default:
-                return "fa-circle-thin test-plan-test-definition-icon-status-notplanned";
-        }
+const icon_status = computed((): string => {
+    switch (props.test_definition.test_status) {
+        case "passed":
+            return "fa-check-circle test-plan-test-definition-icon-status-passed";
+        case "failed":
+            return "fa-times-circle test-plan-test-definition-icon-status-failed";
+        case "blocked":
+            return "fa-exclamation-circle test-plan-test-definition-icon-status-blocked";
+        case "notrun":
+            return "fa-question-circle test-plan-test-definition-icon-status-notrun";
+        default:
+            return "fa-circle-thin test-plan-test-definition-icon-status-notplanned";
     }
-}
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

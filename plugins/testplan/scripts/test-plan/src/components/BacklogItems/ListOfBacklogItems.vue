@@ -31,58 +31,49 @@
         <backlog-item-error-state v-if="should_error_state_be_displayed" />
     </section>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { namespace } from "vuex-class";
-import type { BacklogItem } from "../../type";
+<script setup lang="ts">
 import ListOfBacklogItemsHeader from "./ListOfBacklogItemsHeader.vue";
 import BacklogItemSkeleton from "./BacklogItemSkeleton.vue";
-import BacklogItemCard from "./BacklogItemCard.vue";
 import BacklogItemContainer from "./BacklogItemContainer.vue";
+import { computed, defineAsyncComponent } from "@vue/composition-api";
+import { useActions, useState } from "vuex-composition-helpers";
+import type { BacklogItemState } from "../../store/backlog-item/type";
+import type { BacklogItemActions } from "../../store/backlog-item/backlog-item-actions";
 
-const backlog_item = namespace("backlog_item");
+const BacklogItemEmptyState = defineAsyncComponent(
+    () =>
+        import(
+            /* webpackChunkName: "testplan-backlog-items-emptystate" */ "./BacklogItemEmptyState.vue"
+        )
+);
+const BacklogItemErrorState = defineAsyncComponent(
+    () =>
+        import(
+            /* webpackChunkName: "testplan-backlog-items-errorstate" */ "./BacklogItemErrorState.vue"
+        )
+);
 
-@Component({
-    components: {
-        BacklogItemContainer,
-        BacklogItemCard,
-        BacklogItemSkeleton,
-        ListOfBacklogItemsHeader,
-        "backlog-item-empty-state": (): Promise<Record<string, unknown>> =>
-            import(
-                /* webpackChunkName: "testplan-backlog-items-emptystate" */ "./BacklogItemEmptyState.vue"
-            ),
-        "backlog-item-error-state": (): Promise<Record<string, unknown>> =>
-            import(
-                /* webpackChunkName: "testplan-backlog-items-errorstate" */ "./BacklogItemErrorState.vue"
-            ),
-    },
-})
-export default class ListOfBacklogItems extends Vue {
-    @backlog_item.State
-    readonly is_loading!: boolean;
+const { is_loading, has_loading_error, backlog_items } = useState<
+    Pick<BacklogItemState, "is_loading" | "has_loading_error" | "backlog_items">
+>("backlog_item", ["is_loading", "has_loading_error", "backlog_items"]);
 
-    @backlog_item.State
-    readonly has_loading_error!: boolean;
+const { loadBacklogItems } = useActions<Pick<BacklogItemActions, "loadBacklogItems">>(
+    "backlog_item",
+    ["loadBacklogItems"]
+);
 
-    @backlog_item.State
-    readonly backlog_items!: BacklogItem[];
+loadBacklogItems();
 
-    @backlog_item.Action
-    readonly loadBacklogItems!: () => Promise<void>;
+const should_empty_state_be_displayed = computed((): boolean => {
+    return backlog_items.value.length === 0 && !is_loading.value && !has_loading_error.value;
+});
 
-    created(): void {
-        this.loadBacklogItems();
-    }
+const should_error_state_be_displayed = computed((): boolean => {
+    return has_loading_error.value;
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
 
-    get should_empty_state_be_displayed(): boolean {
-        return this.backlog_items.length === 0 && !this.is_loading && !this.has_loading_error;
-    }
-
-    get should_error_state_be_displayed(): boolean {
-        return this.has_loading_error;
-    }
-}
+export default defineComponent({});
 </script>

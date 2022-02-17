@@ -27,17 +27,16 @@
         An error occurred while retrieving information of the new campaign.
     </div>
 </template>
+<script setup lang="ts">
+import { useState } from "vuex-composition-helpers";
+import type { CampaignState } from "../../store/campaign/type";
 
+const { has_refreshing_error } = useState<Pick<CampaignState, "has_refreshing_error">>("campaign", [
+    "has_refreshing_error",
+]);
+</script>
 <script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { namespace } from "vuex-class";
+import { defineComponent } from "@vue/composition-api";
 
-const campaign = namespace("campaign");
-
-@Component
-export default class GlobalErrorMessage extends Vue {
-    @campaign.State
-    readonly has_refreshing_error!: boolean;
-}
+export default defineComponent({});
 </script>

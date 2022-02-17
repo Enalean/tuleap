@@ -24,15 +24,12 @@
         <list-of-campaigns />
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import ListOfCampaigns from "./Campaigns/ListOfCampaigns.vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import ListOfBacklogItems from "./BacklogItems/ListOfBacklogItems.vue";
+import ListOfCampaigns from "./Campaigns/ListOfCampaigns.vue";
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
 
-@Component({
-    components: { ListOfBacklogItems, ListOfCampaigns },
-})
-export default class App extends Vue {}
+export default defineComponent({});
 </script>

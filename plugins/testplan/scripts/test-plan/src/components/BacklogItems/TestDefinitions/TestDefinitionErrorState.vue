@@ -21,11 +21,8 @@
 <template>
     <div class="tlp-alert-danger" v-translate>An error occurred while loading the tests.</div>
 </template>
-
 <script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { defineComponent } from "@vue/composition-api";
 
-@Component
-export default class TestDefinitionErrorState extends Vue {}
+export default defineComponent({});
 </script>
