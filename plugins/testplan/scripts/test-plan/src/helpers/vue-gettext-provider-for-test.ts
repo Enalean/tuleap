@@ -22,6 +22,6 @@ import type { VueGettextProvider } from "./vue-gettext-provider";
 export function createVueGettextProviderPassthrough(): VueGettextProvider {
     return {
         $gettext: (msgid: string): string => msgid,
-        $gettextInterpolate: (msgid: string): string => msgid,
+        interpolate: (msgid: string): string => msgid,
     };
 }

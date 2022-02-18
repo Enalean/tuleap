@@ -24,6 +24,7 @@
         role="dialog"
         aria-labelledby="test-plan-create-campaign-modal-title"
         v-on:submit.stop.prevent="submit"
+        ref="modal_element"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="test-plan-create-campaign-modal-title">
@@ -33,7 +34,7 @@
                 class="tlp-modal-close"
                 type="button"
                 data-dismiss="modal"
-                v-bind:aria-label="$gettext('Close')"
+                v-bind:aria-label="close_label"
             >
                 <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
@@ -61,7 +62,7 @@
                         type="text"
                         class="tlp-input"
                         id="new-campaign-label"
-                        v-model="label"
+                        v-model="campaign_label"
                         required
                         data-test="new-campaign-label"
                     />
@@ -93,109 +94,119 @@
         </div>
     </form>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import type { Modal } from "tlp";
-import { createModal, FetchWrapperError } from "tlp";
-import { namespace, State } from "vuex-class";
-import type { CreateCampaignPayload } from "../../store/campaign/type";
+<script setup lang="ts">
 import CreateCampaignTestSelector from "./CreateCampaignTestSelector.vue";
 import CreateModalErrorFeedback from "./CreateModalErrorFeedback.vue";
+import { useActions, useState } from "vuex-composition-helpers";
+import type { State } from "../../store/type";
+import type { CampaignActions } from "../../store/campaign/campaign-actions";
+import type { BacklogItemActions } from "../../store/backlog-item/backlog-item-actions";
+import { computed, onMounted, ref } from "@vue/composition-api";
+import type { Modal } from "tlp";
+import { createModal, FetchWrapperError } from "tlp";
 import type { TrackerReport } from "../../helpers/Campaigns/tracker-reports-retriever";
 import { getTrackerReports } from "../../helpers/Campaigns/tracker-reports-retriever";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import type { CampaignInitialTests } from "../../helpers/Campaigns/campaign-initial-tests";
 
-const campaign = namespace("campaign");
-const backlog_item = namespace("backlog_item");
-@Component({
-    components: { CreateModalErrorFeedback, CreateCampaignTestSelector },
-})
-export default class CreateModal extends Vue {
-    @State
-    readonly milestone_title!: string;
-    @State
-    readonly testdefinition_tracker_id!: number | null;
+const { testdefinition_tracker_id } = useState<Pick<State, "testdefinition_tracker_id">>([
+    "testdefinition_tracker_id",
+]);
 
-    @campaign.Action
-    readonly createCampaign!: (payload: CreateCampaignPayload) => Promise<void>;
+const { createCampaign } = useActions<Pick<CampaignActions, "createCampaign">>("campaign", [
+    "createCampaign",
+]);
+const { loadBacklogItems } = useActions<Pick<BacklogItemActions, "loadBacklogItems">>(
+    "backlog_item",
+    ["loadBacklogItems"]
+);
 
-    @backlog_item.Action
-    readonly loadBacklogItems!: () => Promise<void>;
+const testdefinition_tracker_reports = ref<TrackerReport[] | null>(null);
+const campaign_label = ref("");
+const initial_tests = ref<CampaignInitialTests>({ test_selector: "milestone" });
+const is_creating = ref(false);
+const error_message = ref("");
+const error_message_details = ref("");
 
-    private label = "";
-    private initial_tests: CampaignInitialTests = { test_selector: "milestone" };
-    private testdefinition_tracker_reports: TrackerReport[] | null = null;
-    private is_creating = false;
-    private modal!: Modal;
-    private error_message = "";
-    private error_message_details = "";
+const modal_element = ref<InstanceType<typeof Element>>();
+let modal: Modal | null = null;
 
-    async mounted(): Promise<void> {
-        this.modal = createModal(this.$el, { destroy_on_hide: true });
-        this.modal.show();
-        if (this.testdefinition_tracker_id === null) {
-            this.testdefinition_tracker_reports = [];
-        } else {
-            try {
-                this.testdefinition_tracker_reports = await getTrackerReports(
-                    this.testdefinition_tracker_id
-                );
-            } catch (e) {
-                this.error_message = this.$gettext(
-                    "The retrieval of the test definition tracker reports has failed, try again later"
-                );
-                throw e;
-            }
-        }
+const { $gettext } = useGettext();
+
+const close_label = ref($gettext("Close"));
+
+onMounted(async (): Promise<void> => {
+    if (!modal_element.value) {
+        return;
     }
 
-    async submit(): Promise<void> {
-        this.is_creating = true;
+    modal = createModal(modal_element.value, { destroy_on_hide: true });
+    modal.show();
+    if (testdefinition_tracker_id.value === null) {
+        testdefinition_tracker_reports.value = [];
+    } else {
         try {
-            await this.createCampaign({
-                label: this.label,
-                initial_tests: this.initial_tests,
-            });
-            this.modal.hide();
+            testdefinition_tracker_reports.value = await getTrackerReports(
+                testdefinition_tracker_id.value
+            );
         } catch (e) {
-            this.error_message = this.$gettext("An error occurred while creating the campaign.");
-            try {
-                this.error_message_details = await this.getErrorMessageDetailsFromError(e);
-            } catch (error) {
-                this.error_message_details = "";
-            }
+            error_message.value = $gettext(
+                "The retrieval of the test definition tracker reports has failed, try again later"
+            );
             throw e;
-        } finally {
-            this.is_creating = false;
         }
-        await this.loadBacklogItems();
     }
+});
 
-    private async getErrorMessageDetailsFromError(error: unknown): Promise<string> {
-        if (!(error instanceof FetchWrapperError)) {
-            return "";
+async function submit(): Promise<void> {
+    is_creating.value = true;
+    try {
+        await createCampaign({
+            label: campaign_label.value,
+            initial_tests: initial_tests.value,
+        });
+        modal?.hide();
+    } catch (e) {
+        error_message.value = $gettext("An error occurred while creating the campaign.");
+        try {
+            error_message_details.value = await getErrorMessageDetailsFromError(e);
+        } catch (error) {
+            error_message_details.value = "";
         }
-
-        const json = await error.response.json();
-        if (!Object.prototype.hasOwnProperty.call(json, "error")) {
-            return "";
-        }
-
-        if (Object.prototype.hasOwnProperty.call(json.error, "i18n_error_message")) {
-            return json.error.i18n_error_message;
-        }
-
-        return json.error.message;
+        throw e;
+    } finally {
+        is_creating.value = false;
     }
-
-    get icon_class(): string {
-        if (this.is_creating) {
-            return "fa-spin fa-circle-o-notch";
-        }
-
-        return "fa-save";
-    }
+    await loadBacklogItems();
 }
+
+async function getErrorMessageDetailsFromError(error: unknown): Promise<string> {
+    if (!(error instanceof FetchWrapperError)) {
+        return "";
+    }
+
+    const json = await error.response.json();
+    if (!Object.prototype.hasOwnProperty.call(json, "error")) {
+        return "";
+    }
+
+    if (Object.prototype.hasOwnProperty.call(json.error, "i18n_error_message")) {
+        return json.error.i18n_error_message;
+    }
+
+    return json.error.message;
+}
+
+const icon_class = computed((): string => {
+    if (is_creating.value) {
+        return "fa-spin fa-circle-o-notch";
+    }
+
+    return "fa-save";
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

@@ -116,7 +116,7 @@ export async function createExportReport(
     );
 
     return {
-        name: gettext_provider.$gettextInterpolate(
+        name: gettext_provider.interpolate(
             gettext_provider.$gettext("Test Report %{ milestone_title }"),
             { milestone_title: global_properties.milestone_name }
         ),

@@ -51,69 +51,64 @@
         </div>
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
+<script setup lang="ts">
 import type { BacklogItem } from "../../type";
-import { State } from "vuex-class";
-import { createDropdown } from "tlp";
+import { useState } from "vuex-composition-helpers";
+import type { State } from "../../store/type";
+import { computed, nextTick, ref, watch } from "@vue/composition-api";
 import {
     buildCreateNewTestDefinitionLink,
     buildEditBacklogItemLink,
 } from "../../helpers/BacklogItems/url-builder";
+import { createDropdown } from "tlp";
 
-@Component
-export default class AddTestButtonWithAdditionalActionsMenu extends Vue {
-    @Prop({ required: true })
-    readonly backlog_item!: BacklogItem;
+const props = defineProps<{
+    backlog_item: BacklogItem;
+}>();
 
-    @State
-    readonly testdefinition_tracker_id!: number | null;
+const { testdefinition_tracker_id, milestone_id } = useState<
+    Pick<State, "testdefinition_tracker_id" | "milestone_id">
+>(["testdefinition_tracker_id", "milestone_id"]);
 
-    @State
-    readonly milestone_id!: number;
+const dropdownTrigger = ref<InstanceType<typeof Element>>();
+const dropdownMenu = ref<InstanceType<typeof Element>>();
 
-    override $refs!: {
-        dropdownTrigger: HTMLElement;
-        dropdownMenu: HTMLElement;
-    };
+const add_button_href = computed((): string => {
+    if (!testdefinition_tracker_id.value) {
+        return "";
+    }
+    return buildCreateNewTestDefinitionLink(
+        testdefinition_tracker_id.value,
+        milestone_id.value,
+        props.backlog_item
+    );
+});
 
-    get add_button_href(): string {
-        if (!this.testdefinition_tracker_id) {
-            return "";
+const edit_backlog_item_href = computed((): string => {
+    return buildEditBacklogItemLink(milestone_id.value, props.backlog_item);
+});
+
+const can_add_button_be_displayed = computed((): boolean => {
+    return (
+        props.backlog_item.is_expanded &&
+        props.backlog_item.can_add_a_test &&
+        Boolean(testdefinition_tracker_id.value) &&
+        !props.backlog_item.is_loading_test_definitions &&
+        !props.backlog_item.has_test_definitions_loading_error
+    );
+});
+
+watch(can_add_button_be_displayed, (): void => {
+    nextTick((): void => {
+        if (!dropdownTrigger.value || !dropdownMenu.value) {
+            return;
         }
+        createDropdown(dropdownTrigger.value, { dropdown_menu: dropdownMenu.value });
+    });
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
 
-        return buildCreateNewTestDefinitionLink(
-            this.testdefinition_tracker_id,
-            this.milestone_id,
-            this.backlog_item
-        );
-    }
-
-    get edit_backlog_item_href(): string {
-        return buildEditBacklogItemLink(this.milestone_id, this.backlog_item);
-    }
-
-    get can_add_button_be_displayed(): boolean {
-        return (
-            this.backlog_item.is_expanded &&
-            this.backlog_item.can_add_a_test &&
-            Boolean(this.testdefinition_tracker_id) &&
-            !this.backlog_item.is_loading_test_definitions &&
-            !this.backlog_item.has_test_definitions_loading_error
-        );
-    }
-
-    @Watch("can_add_button_be_displayed")
-    onButtonDisplay(): void {
-        this.$nextTick(() => {
-            if (!this.$refs.dropdownTrigger || !this.$refs.dropdownMenu) {
-                return;
-            }
-
-            createDropdown(this.$refs.dropdownTrigger, { dropdown_menu: this.$refs.dropdownMenu });
-        });
-    }
-}
+export default defineComponent({});
 </script>

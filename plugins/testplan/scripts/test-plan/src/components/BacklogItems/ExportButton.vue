@@ -61,179 +61,183 @@
         <export-error v-if="has_encountered_error_during_the_export" />
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { namespace, State } from "vuex-class";
-import type { BacklogItem, Campaign } from "../../type";
+<script setup lang="ts">
 import ExportError from "./ExportError.vue";
+import { useState } from "vuex-composition-helpers";
+import type { State } from "../../store/type";
+import type { BacklogItemState } from "../../store/backlog-item/type";
+import type { CampaignState } from "../../store/campaign/type";
+import { computed, onMounted, ref } from "@vue/composition-api";
 import { createDropdown } from "tlp";
-import type { ArtifactLinkType } from "@tuleap/plugin-docgen-docx";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-const backlog_item = namespace("backlog_item");
-const campaign = namespace("campaign");
-@Component({
-    components: {
-        ExportError,
-    },
-})
-export default class ExportButton extends Vue {
-    @backlog_item.State("is_loading")
-    readonly backlog_items_is_loading!: boolean;
+const {
+    is_loading: backlog_items_is_loading,
+    has_loading_error: backlog_items_has_loading_error,
+    backlog_items,
+} = useState<Pick<BacklogItemState, "is_loading" | "has_loading_error" | "backlog_items">>(
+    "backlog_item",
+    ["is_loading", "has_loading_error", "backlog_items"]
+);
+const {
+    is_loading: campains_is_loading,
+    has_loading_error: campains_has_loading_error,
+    campaigns,
+} = useState<Pick<CampaignState, "is_loading" | "has_loading_error" | "campaigns">>("campaign", [
+    "is_loading",
+    "has_loading_error",
+    "campaigns",
+]);
+const {
+    project_name,
+    milestone_title,
+    parent_milestone_title,
+    user_display_name,
+    platform_name,
+    platform_logo_url,
+    user_timezone,
+    user_locale,
+    milestone_url,
+    base_url,
+    artifact_links_types,
+    testdefinition_tracker_id,
+} = useState<
+    Pick<
+        State,
+        | "project_name"
+        | "milestone_title"
+        | "parent_milestone_title"
+        | "user_display_name"
+        | "platform_name"
+        | "platform_logo_url"
+        | "user_timezone"
+        | "user_locale"
+        | "milestone_url"
+        | "base_url"
+        | "artifact_links_types"
+        | "testdefinition_tracker_id"
+    >
+>([
+    "project_name",
+    "milestone_title",
+    "parent_milestone_title",
+    "user_display_name",
+    "platform_name",
+    "platform_logo_url",
+    "user_timezone",
+    "user_locale",
+    "milestone_url",
+    "base_url",
+    "artifact_links_types",
+    "testdefinition_tracker_id",
+]);
 
-    @backlog_item.State("has_loading_error")
-    readonly backlog_items_has_loading_error!: boolean;
+const trigger = ref<InstanceType<typeof HTMLElement>>();
 
-    @backlog_item.State
-    readonly backlog_items!: ReadonlyArray<BacklogItem>;
+onMounted((): void => {
+    if (trigger.value) {
+        createDropdown(trigger.value);
+    }
+});
 
-    @campaign.State("is_loading")
-    readonly campains_is_loading!: boolean;
+const can_export = computed((): boolean => {
+    return (
+        !backlog_items_is_loading.value &&
+        !backlog_items_has_loading_error.value &&
+        !campains_is_loading.value &&
+        !campains_has_loading_error.value
+    );
+});
 
-    @campaign.State("has_loading_error")
-    readonly campains_has_loading_error!: boolean;
+const is_preparing_the_download = ref(false);
+const has_encountered_error_during_the_export = ref(false);
 
-    @campaign.State
-    readonly campaigns!: ReadonlyArray<Campaign>;
-
-    @State
-    readonly project_name!: string;
-
-    @State
-    readonly milestone_title!: string;
-
-    @State
-    readonly parent_milestone_title!: string;
-
-    @State
-    readonly user_display_name!: string;
-
-    @State
-    readonly platform_name!: string;
-
-    @State
-    readonly platform_logo_url!: string;
-
-    @State
-    readonly user_timezone!: string;
-
-    @State
-    readonly user_locale!: string;
-
-    @State
-    readonly milestone_url!: string;
-
-    @State
-    readonly base_url!: string;
-
-    @State
-    readonly artifact_links_types!: ReadonlyArray<ArtifactLinkType>;
-
-    @State
-    readonly testdefinition_tracker_id!: number | null;
-
-    private is_preparing_the_download = false;
-
-    private has_encountered_error_during_the_export = false;
-
-    override $refs!: {
-        trigger: HTMLElement;
-    };
-
-    mounted(): void {
-        createDropdown(this.$refs.trigger);
+const icon_classes = computed((): string => {
+    if (is_preparing_the_download.value) {
+        return "fa-spin fa-circle-o-notch";
     }
 
-    get can_export(): boolean {
-        return (
-            !this.backlog_items_is_loading &&
-            !this.backlog_items_has_loading_error &&
-            !this.campains_is_loading &&
-            !this.campains_has_loading_error
+    return "fa-download";
+});
+
+const gettext_provider = useGettext();
+
+async function exportTestPlanAsXlsx(): Promise<void> {
+    if (is_preparing_the_download.value) {
+        return;
+    }
+    is_preparing_the_download.value = true;
+    has_encountered_error_during_the_export.value = false;
+
+    try {
+        const { downloadExportDocument } = await import(
+            /* webpackChunkName: "testplan-download-export-sheet" */ "../../helpers/ExportAsSpreadsheet/download-export-document"
         );
-    }
-
-    get icon_classes(): string {
-        if (this.is_preparing_the_download) {
-            return "fa-spin fa-circle-o-notch";
-        }
-
-        return "fa-download";
-    }
-
-    async exportTestPlanAsXlsx(): Promise<void> {
-        if (this.is_preparing_the_download) {
-            return;
-        }
-        this.is_preparing_the_download = true;
-        this.has_encountered_error_during_the_export = false;
-
-        try {
-            const { downloadExportDocument } = await import(
-                /* webpackChunkName: "testplan-download-export-sheet" */ "../../helpers/ExportAsSpreadsheet/download-export-document"
-            );
-            const { downloadXLSX } = await import(
-                /* webpackChunkName: "testplan-download-xlsx-export-sheet" */ "../../helpers/ExportAsSpreadsheet/Exporter/XLSX/download-xlsx"
-            );
-            await downloadExportDocument(
-                this,
-                downloadXLSX,
-                this.project_name,
-                this.milestone_title,
-                this.user_display_name,
-                this.backlog_items,
-                this.campaigns
-            );
-        } catch (e) {
-            this.has_encountered_error_during_the_export = true;
-            throw e;
-        } finally {
-            this.is_preparing_the_download = false;
-        }
-    }
-
-    async exportTestPlanAsDocx(): Promise<void> {
-        if (this.is_preparing_the_download) {
-            return;
-        }
-        this.is_preparing_the_download = true;
-        this.has_encountered_error_during_the_export = false;
-
-        try {
-            const { downloadExportDocument } = await import(
-                /* webpackChunkName: "testplan-download-export-doc" */ "../../helpers/ExportAsDocument/download-export-document"
-            );
-            const { downloadDocx } = await import(
-                /* webpackChunkName: "testplan-download-docx-export-doc" */ "../../../../../../testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Exporter/DOCX/download-docx"
-            );
-            await downloadExportDocument(
-                {
-                    platform_name: this.platform_name,
-                    platform_logo_url: this.platform_logo_url,
-                    project_name: this.project_name,
-                    user_display_name: this.user_display_name,
-                    user_timezone: this.user_timezone,
-                    user_locale: this.user_locale,
-                    title: this.milestone_title,
-                    milestone_name: this.milestone_title,
-                    parent_milestone_name: this.parent_milestone_title,
-                    milestone_url: this.milestone_url,
-                    base_url: this.base_url,
-                    artifact_links_types: this.artifact_links_types,
-                    testdefinition_tracker_id: this.testdefinition_tracker_id,
-                },
-                this,
-                downloadDocx,
-                this.backlog_items,
-                this.campaigns
-            );
-        } catch (e) {
-            this.has_encountered_error_during_the_export = true;
-            throw e;
-        } finally {
-            this.is_preparing_the_download = false;
-        }
+        const { downloadXLSX } = await import(
+            /* webpackChunkName: "testplan-download-xlsx-export-sheet" */ "../../helpers/ExportAsSpreadsheet/Exporter/XLSX/download-xlsx"
+        );
+        await downloadExportDocument(
+            gettext_provider,
+            downloadXLSX,
+            project_name.value,
+            milestone_title.value,
+            user_display_name.value,
+            backlog_items.value,
+            campaigns.value
+        );
+    } catch (e) {
+        has_encountered_error_during_the_export.value = true;
+        throw e;
+    } finally {
+        is_preparing_the_download.value = false;
     }
 }
+
+async function exportTestPlanAsDocx(): Promise<void> {
+    if (is_preparing_the_download.value) {
+        return;
+    }
+    is_preparing_the_download.value = true;
+    has_encountered_error_during_the_export.value = false;
+
+    try {
+        const { downloadExportDocument } = await import(
+            /* webpackChunkName: "testplan-download-export-doc" */ "../../helpers/ExportAsDocument/download-export-document"
+        );
+        const { downloadDocx } = await import(
+            /* webpackChunkName: "testplan-download-docx-export-doc" */ "../../../../../../testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Exporter/DOCX/download-docx"
+        );
+        await downloadExportDocument(
+            {
+                platform_name: platform_name.value,
+                platform_logo_url: platform_logo_url.value,
+                project_name: project_name.value,
+                user_display_name: user_display_name.value,
+                user_timezone: user_timezone.value,
+                user_locale: user_locale.value,
+                title: milestone_title.value,
+                milestone_name: milestone_title.value,
+                parent_milestone_name: parent_milestone_title.value,
+                milestone_url: milestone_url.value,
+                base_url: base_url.value,
+                artifact_links_types: artifact_links_types.value,
+                testdefinition_tracker_id: testdefinition_tracker_id.value,
+            },
+            gettext_provider,
+            downloadDocx,
+            backlog_items.value,
+            campaigns.value
+        );
+    } catch (e) {
+        has_encountered_error_during_the_export.value = true;
+        throw e;
+    } finally {
+        is_preparing_the_download.value = false;
+    }
+}
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

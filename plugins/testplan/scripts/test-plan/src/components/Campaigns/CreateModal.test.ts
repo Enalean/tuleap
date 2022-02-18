@@ -94,7 +94,10 @@ describe("CreateModal", () => {
             },
         });
 
-        wrapper.vm.$data.label = "My new campaign";
+        // We need to wait for the loading state to be rendered and the tracker reports status to be resolved
+        await wrapper.vm.$nextTick();
+
+        wrapper.find("[data-test=new-campaign-label]").setValue("My new campaign");
         wrapper.vm.$data.test_selector = "milestone";
 
         await wrapper.trigger("submit");
@@ -134,7 +137,10 @@ describe("CreateModal", () => {
                 $store,
             },
         });
+        // We need to wait for the loading state to be rendered and then to fail to retrieve the tracker reports
         await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+
         // We need to mock console.error otherwise vue-test-utils tell us something has gone wrong when mounting the
         // component because we re-throw the error which ends up failing the test
         const consoleErrorSpy = jest.spyOn(global.console, "error").mockImplementation();

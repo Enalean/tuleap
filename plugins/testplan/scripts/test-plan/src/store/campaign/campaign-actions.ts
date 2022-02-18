@@ -27,6 +27,7 @@ import type { ActionTree } from "vuex";
 
 export interface CampaignActions extends ActionTree<CampaignState, RootState> {
     loadCampaigns: typeof loadCampaigns;
+    createCampaign: typeof createCampaign;
 }
 
 export async function loadCampaigns(

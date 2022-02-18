@@ -86,71 +86,65 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { State } from "vuex-class";
-import { createDropdown } from "tlp";
-import type { BacklogItem, TestDefinition } from "../../../type";
+<script setup lang="ts">
 import TestDefinitionCardStatus from "./TestDefinitionCardStatus.vue";
+import { useState } from "vuex-composition-helpers";
+import type { State } from "../../../store/type";
+import type { BacklogItem, TestDefinition } from "../../../type";
+import { computed, onMounted, ref } from "@vue/composition-api";
+import { createDropdown } from "tlp";
 import {
     buildEditTestDefinitionItemLink,
     buildGoToTestExecutionLink,
 } from "../../../helpers/BacklogItems/url-builder";
 
-@Component({
-    components: { TestDefinitionCardStatus },
-})
-export default class TestDefinitionCardXrefCategoryStatus extends Vue {
-    @State
-    readonly project_id!: number;
+const { project_id, milestone_id, milestone_title } = useState<
+    Pick<State, "project_id" | "milestone_id" | "milestone_title">
+>(["project_id", "milestone_id", "milestone_title"]);
 
-    @State
-    readonly milestone_id!: number;
+const props = defineProps<{
+    backlog_item: BacklogItem;
+    test_definition: TestDefinition;
+}>();
 
-    @State
-    readonly milestone_title!: string;
+const dropdownTrigger = ref<InstanceType<typeof Element>>();
+const dropdownMenu = ref<InstanceType<typeof Element>>();
 
-    @Prop({ required: true })
-    readonly backlog_item!: BacklogItem;
-
-    @Prop({ required: true })
-    readonly test_definition!: TestDefinition;
-
-    override $refs!: {
-        dropdownTrigger: HTMLElement;
-        dropdownMenu: HTMLElement;
-    };
-
-    mounted(): void {
-        createDropdown(this.$refs.dropdownTrigger, { dropdown_menu: this.$refs.dropdownMenu });
+onMounted((): void => {
+    if (dropdownTrigger.value && dropdownMenu.value) {
+        createDropdown(dropdownTrigger.value, { dropdown_menu: dropdownMenu.value });
     }
+});
 
-    get go_to_test_def_link(): string {
-        return buildEditTestDefinitionItemLink(
-            this.milestone_id,
-            this.test_definition,
-            this.backlog_item
-        );
-    }
+const go_to_test_def_link = computed((): string => {
+    return buildEditTestDefinitionItemLink(
+        milestone_id.value,
+        props.test_definition,
+        props.backlog_item
+    );
+});
 
-    get go_to_last_test_exec_link(): string | null {
-        return buildGoToTestExecutionLink(this.project_id, this.milestone_id, this.test_definition);
-    }
+const go_to_last_test_exec_link = computed((): string | null => {
+    return buildGoToTestExecutionLink(project_id.value, milestone_id.value, props.test_definition);
+});
 
-    get automated_icon_status(): string {
-        switch (this.test_definition.test_status) {
-            case "passed":
-                return "fa-tlp-robot-happy test-plan-test-definition-icon-status-passed";
-            case "failed":
-                return "fa-tlp-robot-unhappy test-plan-test-definition-icon-status-failed";
-            case "blocked":
-                return "fa-tlp-robot test-plan-test-definition-icon-status-blocked";
-            case "notrun":
-                return "fa-tlp-robot test-plan-test-definition-icon-status-notrun";
-            default:
-                return "fa-tlp-robot";
-        }
+const automated_icon_status = computed((): string => {
+    switch (props.test_definition.test_status) {
+        case "passed":
+            return "fa-tlp-robot-happy test-plan-test-definition-icon-status-passed";
+        case "failed":
+            return "fa-tlp-robot-unhappy test-plan-test-definition-icon-status-failed";
+        case "blocked":
+            return "fa-tlp-robot test-plan-test-definition-icon-status-blocked";
+        case "notrun":
+            return "fa-tlp-robot test-plan-test-definition-icon-status-notrun";
+        default:
+            return "fa-tlp-robot";
     }
-}
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

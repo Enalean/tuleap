@@ -52,12 +52,29 @@
         </select>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { State } from "vuex-class";
-import type { TrackerReport } from "../../helpers/Campaigns/tracker-reports-retriever";
+<script setup lang="ts">
+import { useState } from "vuex-composition-helpers";
+import type { State } from "../../store/type";
 import type { CampaignInitialTests } from "../../helpers/Campaigns/campaign-initial-tests";
+import type { TrackerReport } from "../../helpers/Campaigns/tracker-reports-retriever";
+import { computed, ref } from "@vue/composition-api";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+
+const { milestone_title, testdefinition_tracker_name } = useState<
+    Pick<State, "milestone_title" | "testdefinition_tracker_name">
+>(["milestone_title", "testdefinition_tracker_name"]);
+
+const props = withDefaults(
+    defineProps<{
+        value: CampaignInitialTests;
+        testdefinition_tracker_reports: TrackerReport[] | null;
+    }>(),
+    {
+        value: () => {
+            return { test_selector: "milestone" };
+        },
+    }
+);
 
 function transformCampaignInitialTestToStringValue(initial_tests: CampaignInitialTests): string {
     if (initial_tests.test_selector === "report") {
@@ -66,58 +83,52 @@ function transformCampaignInitialTestToStringValue(initial_tests: CampaignInitia
     return initial_tests.test_selector;
 }
 
-@Component
-export default class CreateCampaignTestSelector extends Vue {
-    @State
-    readonly milestone_title!: string;
+const selected_value = ref(transformCampaignInitialTestToStringValue(props.value));
 
-    @State
-    readonly testdefinition_tracker_name!: string;
-
-    @Prop({ required: true, default: { test_selector: "milestone" } })
-    readonly value!: CampaignInitialTests;
-
-    @Prop({ required: true })
-    readonly testdefinition_tracker_reports!: TrackerReport[] | null;
-
-    private selected_value = transformCampaignInitialTestToStringValue(this.value);
-
-    get test_definitions_tracker_reports_group_label(): string {
-        return this.$gettextInterpolate(
-            this.$ngettext(
-                "From %{ tracker_name } tracker report",
-                "From %{ tracker_name } tracker reports",
-                this.getNbTrackerReports()
-            ),
-            { tracker_name: this.testdefinition_tracker_name }
-        );
-    }
-
-    get display_test_definitions_tracker_reports_group_selector(): boolean {
-        return this.getNbTrackerReports() > 0;
-    }
-
-    private getNbTrackerReports(): number {
-        return this.testdefinition_tracker_reports === null
-            ? 0
-            : this.testdefinition_tracker_reports.length;
-    }
-
-    public updateSelectedTests(): void {
-        let initial_tests: CampaignInitialTests;
-        if (
-            this.selected_value === "none" ||
-            this.selected_value === "all" ||
-            this.selected_value === "milestone"
-        ) {
-            initial_tests = { test_selector: this.selected_value };
-        } else {
-            initial_tests = {
-                test_selector: "report",
-                report_id: Number.parseInt(this.selected_value, 10),
-            };
-        }
-        this.$emit("input", initial_tests);
-    }
+function getNbTrackerReports(): number {
+    return props.testdefinition_tracker_reports === null
+        ? 0
+        : props.testdefinition_tracker_reports.length;
 }
+
+const { interpolate, $ngettext } = useGettext();
+const test_definitions_tracker_reports_group_label = computed((): string => {
+    return interpolate(
+        $ngettext(
+            "From %{ tracker_name } tracker report",
+            "From %{ tracker_name } tracker reports",
+            getNbTrackerReports()
+        ),
+        { tracker_name: testdefinition_tracker_name.value }
+    );
+});
+
+const display_test_definitions_tracker_reports_group_selector = computed((): boolean => {
+    return getNbTrackerReports() > 0;
+});
+
+const emit = defineEmits<{
+    (e: "input", value: CampaignInitialTests): void;
+}>();
+function updateSelectedTests(): void {
+    let initial_tests: CampaignInitialTests;
+    if (
+        selected_value.value === "none" ||
+        selected_value.value === "all" ||
+        selected_value.value === "milestone"
+    ) {
+        initial_tests = { test_selector: selected_value.value };
+    } else {
+        initial_tests = {
+            test_selector: "report",
+            report_id: Number.parseInt(selected_value.value, 10),
+        };
+    }
+    emit("input", initial_tests);
+}
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

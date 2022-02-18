@@ -19,5 +19,5 @@
 
 export interface VueGettextProvider {
     $gettext: (msgid: string) => string;
-    $gettextInterpolate: (msgid: string, context: Record<string, unknown>) => string;
+    interpolate: (msgid: string, context: Record<string, unknown>) => string;
 }

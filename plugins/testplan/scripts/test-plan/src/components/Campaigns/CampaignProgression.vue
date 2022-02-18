@@ -58,98 +58,89 @@
         </div>
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Campaign } from "../../type";
+import { computed } from "@vue/composition-api";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component
-export default class CampaignProgression extends Vue {
-    @Prop({ required: true })
-    readonly campaign!: Campaign;
+const props = defineProps<{
+    campaign: Campaign;
+}>();
 
-    private readonly percentage_classname_prefix = "test-plan-campaign-progression-width-";
+const percentage_classname_prefix = "test-plan-campaign-progression-width-";
 
-    private percentage(nb: number): string {
-        if (!nb) {
-            return "";
-        }
+const nb_tests = computed((): number => {
+    return (
+        props.campaign.nb_of_blocked +
+        props.campaign.nb_of_failed +
+        props.campaign.nb_of_notrun +
+        props.campaign.nb_of_passed
+    );
+});
 
-        return this.percentage_classname_prefix + Math.round((nb * 100) / this.nb_tests);
+function percentage(nb: number): string {
+    if (!nb) {
+        return "";
     }
 
-    get nb_tests(): number {
-        return (
-            this.campaign.nb_of_blocked +
-            this.campaign.nb_of_failed +
-            this.campaign.nb_of_notrun +
-            this.campaign.nb_of_passed
-        );
-    }
-
-    get should_not_run_progress_be_displayed(): boolean {
-        if (this.nb_tests === 0) {
-            return true;
-        }
-
-        return this.campaign.nb_of_notrun > 0;
-    }
-
-    get passed_classname(): string {
-        return this.percentage(this.campaign.nb_of_passed);
-    }
-
-    get blocked_classname(): string {
-        return this.percentage(this.campaign.nb_of_blocked);
-    }
-
-    get failed_classname(): string {
-        return this.percentage(this.campaign.nb_of_failed);
-    }
-
-    get notrun_classname(): string {
-        if (this.nb_tests === 0) {
-            return this.percentage_classname_prefix + 100;
-        }
-
-        return this.percentage(this.campaign.nb_of_notrun);
-    }
-
-    get passed_title(): string {
-        return this.$gettextInterpolate(
-            this.$ngettext("%{ nb } passed", "%{ nb } passed", this.nb_tests),
-            {
-                nb: this.campaign.nb_of_passed,
-            }
-        );
-    }
-
-    get blocked_title(): string {
-        return this.$gettextInterpolate(
-            this.$ngettext("%{ nb } blocked", "%{ nb } blocked", this.nb_tests),
-            {
-                nb: this.campaign.nb_of_blocked,
-            }
-        );
-    }
-
-    get failed_title(): string {
-        return this.$gettextInterpolate(
-            this.$ngettext("%{ nb } failed", "%{ nb } failed", this.nb_tests),
-            {
-                nb: this.campaign.nb_of_failed,
-            }
-        );
-    }
-
-    get notrun_title(): string {
-        return this.$gettextInterpolate(
-            this.$ngettext("%{ nb } not run", "%{ nb } not run", this.nb_tests),
-            {
-                nb: this.campaign.nb_of_notrun,
-            }
-        );
-    }
+    return percentage_classname_prefix + Math.round((nb * 100) / nb_tests.value);
 }
+
+const should_not_run_progress_be_displayed = computed((): boolean => {
+    if (nb_tests.value === 0) {
+        return true;
+    }
+
+    return props.campaign.nb_of_notrun > 0;
+});
+
+const passed_classname = computed((): string => {
+    return percentage(props.campaign.nb_of_passed);
+});
+
+const blocked_classname = computed((): string => {
+    return percentage(props.campaign.nb_of_blocked);
+});
+
+const failed_classname = computed((): string => {
+    return percentage(props.campaign.nb_of_failed);
+});
+
+const notrun_classname = computed((): string => {
+    if (nb_tests.value === 0) {
+        return percentage_classname_prefix + 100;
+    }
+
+    return percentage(props.campaign.nb_of_notrun);
+});
+
+const { interpolate, $ngettext } = useGettext();
+const passed_title = computed((): string => {
+    return interpolate($ngettext("%{ nb } passed", "%{ nb } passed", nb_tests.value), {
+        nb: props.campaign.nb_of_passed,
+    });
+});
+
+const blocked_title = computed((): string => {
+    return interpolate($ngettext("%{ nb } blocked", "%{ nb } blocked", nb_tests.value), {
+        nb: props.campaign.nb_of_blocked,
+    });
+});
+
+const failed_title = computed((): string => {
+    return interpolate($ngettext("%{ nb } failed", "%{ nb } failed", nb_tests.value), {
+        nb: props.campaign.nb_of_failed,
+    });
+});
+
+const notrun_title = computed((): string => {
+    return interpolate($ngettext("%{ nb } not run", "%{ nb } not run", nb_tests.value), {
+        nb: props.campaign.nb_of_notrun,
+    });
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>
