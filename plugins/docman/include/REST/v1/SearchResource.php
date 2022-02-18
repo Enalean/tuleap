@@ -157,7 +157,7 @@ final class SearchResource extends AuthenticatedResource
      * <tr>
      *   <td>`field_XXX`</td>
      *   <td>string | text | date | list</td>
-     *   <td>Custom property defined by the project.</td>
+     *   <td>Custom property defined by the project. The list of custom properties defined in the project is accessible via `projects/:id/docman_metadata`.</td>
      * </tr>
      * </tbody>
      * </table>
