@@ -31,7 +31,7 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
+use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeRetriever;
 use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenDAO;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\OAuth2\AccessToken\InvalidOAuth2AccessTokenException;
