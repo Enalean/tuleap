@@ -43,7 +43,8 @@ yarn-error.log
 *.css.map
 node_modules/
 src/www/assets/*
-plugins/*/frontend-assets/
+plugins/**/frontend-assets/
+plugins/**/backend-assets/
 test_results*
 tests/soap/vendor
 tests/rest/vendor

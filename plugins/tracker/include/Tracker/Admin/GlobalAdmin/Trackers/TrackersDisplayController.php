@@ -135,7 +135,7 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
 
         $layout->addJavascriptAsset(
             new JavascriptAsset(
-                new IncludeAssets(__DIR__ . '/../../../../../../../src/www/assets/trackers', '/assets/trackers'),
+                new IncludeAssets(__DIR__ . '/../../../../../frontend-assets', '/assets/trackers'),
                 'global-admin-trackers.js'
             )
         );

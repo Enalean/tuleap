@@ -342,7 +342,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     public function getStylesheetDependencies(): CssAssetCollection
     {
         $tracker_assets  = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/trackers',
+            __DIR__ . '/../../tracker/frontend-assets',
             '/assets/trackers'
         );
         $cardwall_assets = new IncludeAssets(

@@ -327,7 +327,7 @@ class Tracker_NotificationsManager
                 $this->notification_list_builder->getNotificationsPresenter($notifs, $this->addresses_builder)
             )
         );
-        $assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../../src/www/assets/trackers', '/assets/trackers');
+        $assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../frontend-assets', '/assets/trackers');
         $GLOBALS['Response']->includeFooterJavascriptFile($assets->getFileURL('tracker-admin.js'));
     }
 

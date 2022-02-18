@@ -101,7 +101,7 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
         );
 
         $assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/trackers',
+            __DIR__ . '/../../../frontend-assets',
             '/assets/trackers'
         );
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'tracker-creation'));

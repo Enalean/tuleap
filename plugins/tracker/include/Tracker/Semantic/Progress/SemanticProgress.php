@@ -100,7 +100,7 @@ class SemanticProgress extends \Tracker_Semantic
             \Tracker_FormElementFactory::instance()
         );
 
-        $assets = new IncludeAssets(__DIR__ . '/../../../../../../src/www/assets/trackers', '/assets/trackers');
+        $assets = new IncludeAssets(__DIR__ . '/../../../../frontend-assets', '/assets/trackers');
         $GLOBALS['HTML']->includeFooterJavascriptFile(
             $assets->getFileURL("tracker-semantic-progress-options-selector.js")
         );

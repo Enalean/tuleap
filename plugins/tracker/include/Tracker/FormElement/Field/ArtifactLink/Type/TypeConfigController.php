@@ -50,7 +50,7 @@ class TypeConfigController
         $title = dgettext('tuleap-tracker', 'Trackers');
 
         $assets = new IncludeAssets(
-            __DIR__ . '/../../../../../../../../src/www/assets/trackers',
+            __DIR__ . '/../../../../../../frontend-assets',
             '/assets/trackers'
         );
         $base_layout->addJavascriptAsset(new JavascriptAsset($assets, 'admin-type.js'));

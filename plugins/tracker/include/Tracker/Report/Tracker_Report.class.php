@@ -948,7 +948,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
             if ($request->get("should-display-created-tracker-modal")) {
                 $javascript_assets = new IncludeAssets(
-                    __DIR__ . '/../../../../../src/www/assets/trackers',
+                    __DIR__ . '/../../../frontend-assets',
                     '/assets/trackers'
                 );
 

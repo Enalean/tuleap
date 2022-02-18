@@ -2,10 +2,9 @@
   "name": "tuleap/plugin-tracker",
   "autoload": {
     "psr-4": {
-      "Tuleap\\Tracker\\": ["include/", "include/Tracker/"]
+      "Tuleap\\Tracker\\": ["include/", "include/Tracker/", "grammar/backend-assets/"]
     },
     "classmap": ["include/"],
-    "exclude-from-classmap": ["include/Tracker/Report/Query/Advanced/Grammar/Parser.php"],
     "files": [
         "include/tracker_permissions.php"
     ]
