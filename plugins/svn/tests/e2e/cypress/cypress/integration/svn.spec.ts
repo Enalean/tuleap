@@ -21,6 +21,7 @@
 describe("SVN", function () {
     before(function () {
         cy.clearSessionCookie();
+        cy.projectMemberLogin();
         cy.getProjectId("svn-project-full").as("svn_project_id");
     });
 
@@ -29,11 +30,6 @@ describe("SVN", function () {
     });
 
     context("Regular users", function () {
-        before(() => {
-            cy.clearSessionCookie();
-            cy.projectMemberLogin();
-        });
-
         beforeEach(() => {
             cy.visitProjectService("svn-project-full", "SVN");
         });
