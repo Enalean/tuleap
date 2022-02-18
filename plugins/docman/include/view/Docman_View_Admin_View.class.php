@@ -34,9 +34,14 @@ class Docman_View_Admin_View extends \Tuleap\Docman\View\Admin\AdminView
         return self::getTabTitle();
     }
 
+    public static function getTabTitleWhenInterfaceIsEnhanced(): string
+    {
+        return dgettext('tuleap-docman', 'Display (legacy)');
+    }
+
     public static function getTabTitle(): string
     {
-        return dgettext('tuleap-docman', 'Display Preferences');
+        return dgettext('tuleap-docman', 'Display');
     }
 
     public static function getTabDescription(): string

@@ -24,6 +24,7 @@ use Tuleap\Docman\ExternalLinks\DocmanLinkProvider;
 use Tuleap\Docman\ExternalLinks\ExternalLinkRedirector;
 use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
 use Tuleap\Docman\ExternalLinks\Link;
+use Tuleap\Docman\View\Admin\DetectEnhancementOfDocmanInterface;
 use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminController;
 use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminSaveController;
 use Tuleap\Document\Config\Admin\HistoryEnforcementAdminController;
@@ -73,6 +74,7 @@ class documentPlugin extends Plugin // phpcs:ignore
         $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(DocmanLinkProvider::NAME);
         $this->addHook(DocmanSettingsTabsPresenterCollection::NAME);
+        $this->addHook(DetectEnhancementOfDocmanInterface::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -264,5 +266,14 @@ class documentPlugin extends Plugin // phpcs:ignore
         $collection->add(
             new \Tuleap\Document\Config\Admin\HistoryEnforcementTabPresenter()
         );
+    }
+
+    public function detectEnhancementOfDocmanInterface(DetectEnhancementOfDocmanInterface $event): void
+    {
+        if (! PluginManager::instance()->isPluginAllowedForProject($this, $event->getProject()->getID())) {
+            return;
+        }
+
+        $event->docmanInterfaceIsEnhanced();
     }
 }

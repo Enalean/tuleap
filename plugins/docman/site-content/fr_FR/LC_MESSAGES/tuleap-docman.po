@@ -898,8 +898,11 @@ msgstr "Lien direct :"
 msgid "Disabled"
 msgstr "Désactivé"
 
-msgid "Display Preferences"
-msgstr "Préférences d'affichage"
+msgid "Display"
+msgstr "Affichage"
+
+msgid "Display (legacy)"
+msgstr "Affichage (ancienne interface)"
 
 msgid ""
 "Display a docman item directly in the dashboard. <br /><em>For now, only "

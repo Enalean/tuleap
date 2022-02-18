@@ -96,7 +96,7 @@ abstract class AdminView
 
         $renderer->renderToPage($template, [
             'title' => dgettext('tuleap-docman', 'Administration'),
-            'tabs'  => $this->getTabs($default_url),
+            'tabs'  => $this->getTabs($default_url, $project),
         ]);
 
         echo '<div class="docman-content">';
@@ -155,8 +155,10 @@ abstract class AdminView
     /**
      * @return array[]
      */
-    private function getTabs(string $default_url): array
+    private function getTabs(string $default_url, \Project $project): array
     {
+        $interface = \EventManager::instance()->dispatch(new DetectEnhancementOfDocmanInterface($project));
+
         return [
             [
                 'title'       => \Docman_View_Admin_Permissions::getTabTitle(),
@@ -169,7 +171,9 @@ abstract class AdminView
                 'is_active'   => $this->getIdentifier() === \Docman_View_Admin_Permissions::IDENTIFIER,
             ],
             [
-                'title'       => \Docman_View_Admin_View::getTabTitle(),
+                'title'       => $interface->isEnhanced()
+                    ? \Docman_View_Admin_View::getTabTitleWhenInterfaceIsEnhanced()
+                    : \Docman_View_Admin_View::getTabTitle(),
                 'description' => \Docman_View_Admin_View::getTabDescription(),
                 'url'         => DocmanViewURLBuilder::buildUrl(
                     $default_url,
