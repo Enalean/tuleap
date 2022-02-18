@@ -32,7 +32,7 @@ export function downloadXLSX(
     utils.book_append_sheet(book, sheet);
     writeFile(
         book,
-        gettext_provider.$gettextInterpolate(
+        gettext_provider.interpolate(
             gettext_provider.$gettext("Test Report %{ milestone_title }"),
             { milestone_title }
         ) + ".xlsx",

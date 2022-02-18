@@ -13,11 +13,8 @@ specifiers:
   docx: ^7.3.0
   sprintf-js: ^1.1.2
   vue: ^2.6.14
-  vue-class-component: ^7.2.6
   vue-gettext: ^2.1.12
-  vue-property-decorator: ^9.1.2
   vuex: ^3.6.2
-  vuex-class: ^0.3.2
   vuex-composition-helpers: ^1.1.0
   xlsx: ^0.17.5
 
@@ -32,7 +29,6 @@ dependencies:
   vue: 2.6.14
   vue-gettext: 2.1.12
   vuex: 3.6.2_vue@2.6.14
-  vuex-class: 0.3.2_74f9cfd67148c622b48e1672fc254539
   vuex-composition-helpers: 1.1.0
   xlsx: 0.17.5
 
@@ -41,8 +37,6 @@ devDependencies:
   '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
   '@types/sprintf-js': 1.1.2
   '@vue/test-utils': 1.3.0_vue@2.6.14
-  vue-class-component: 7.2.6_vue@2.6.14
-  vue-property-decorator: 9.1.2_cc5a81cd4d75b7f9736a3e9b263f47e5
 
 packages:
 
@@ -408,43 +402,13 @@ packages:
     resolution: {integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=}
     dev: false
 
-  /vue-class-component/7.2.6_vue@2.6.14:
-    resolution: {integrity: sha512-+eaQXVrAm/LldalI272PpDe3+i4mPis0ORiMYxF6Ae4hyuCh15W8Idet7wPUEs4N4YptgFHGys4UrgNQOMyO6w==}
-    peerDependencies:
-      vue: ^2.0.0
-    dependencies:
-      vue: 2.6.14
-    dev: true
-
   /vue-gettext/2.1.12:
     resolution: {integrity: sha512-7Kw36xtKvARp8ZafQGPK9WR6EM+dhFUikR5f0+etSkiHuvUM3yf1HsRDLYoLLdJ0AMaXxKwgekumzvCk6KX8rA==}
     engines: {npm: '>= 3.0.0'}
     dev: false
 
-  /vue-property-decorator/9.1.2_cc5a81cd4d75b7f9736a3e9b263f47e5:
-    resolution: {integrity: sha512-xYA8MkZynPBGd/w5QFJ2d/NM0z/YeegMqYTphy7NJQXbZcuU6FC6AOdUAcy4SXP+YnkerC6AfH+ldg7PDk9ESQ==}
-    peerDependencies:
-      vue: '*'
-      vue-class-component: '*'
-    dependencies:
-      vue: 2.6.14
-      vue-class-component: 7.2.6_vue@2.6.14
-    dev: true
-
   /vue/2.6.14:
     resolution: {integrity: sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==}
-    dev: false
-
-  /vuex-class/0.3.2_74f9cfd67148c622b48e1672fc254539:
-    resolution: {integrity: sha512-m0w7/FMsNcwJgunJeM+wcNaHzK2KX1K1rw2WUQf7Q16ndXHo7pflRyOV/E8795JO/7fstyjH3EgqBI4h4n4qXQ==}
-    peerDependencies:
-      vue: ^2.5.0
-      vue-class-component: ^6.0.0 || ^7.0.0
-      vuex: ^3.0.0
-    dependencies:
-      vue: 2.6.14
-      vue-class-component: 7.2.6_vue@2.6.14
-      vuex: 3.6.2_vue@2.6.14
     dev: false
 
   /vuex-composition-helpers/1.1.0:
