@@ -24,6 +24,13 @@ import type {
 } from "./type";
 import type { BacklogItem, TestDefinition } from "../../type";
 
+export interface BacklogItemMutations {
+    removeIsJustRefreshedFlagOnTestDefinition: typeof removeIsJustRefreshedFlagOnTestDefinition;
+    removeIsJustRefreshedFlagOnBacklogItem: typeof removeIsJustRefreshedFlagOnBacklogItem;
+    expandBacklogItem: typeof expandBacklogItem;
+    collapseBacklogItem: typeof collapseBacklogItem;
+}
+
 export function beginLoadingTestDefinition(state: BacklogItemState, item: BacklogItem): void {
     updateBacklogItem(state, item, (item) => ({ ...item, is_loading_test_definitions: true }));
 }
