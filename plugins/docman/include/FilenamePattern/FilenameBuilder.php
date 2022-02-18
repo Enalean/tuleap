@@ -31,6 +31,7 @@ final class FilenameBuilder
     private const TITLE_VARIABLE        = "\${TITLE}";
     private const STATUS_VARIABLE       = "\${STATUS}";
     private const VERSION_NAME_VARIABLE = "\${VERSION_NAME}";
+    private const ITEM_ID_VARIABLE      = "\${ID}";
 
     public function __construct(
         private RetrieveFilenamePattern $filename_pattern_retriever,
@@ -38,8 +39,14 @@ final class FilenameBuilder
     ) {
     }
 
-    public function buildFilename(string $original_filename, int $project_id, string $title, int $status, string $version_name): string
-    {
+    public function buildFilename(
+        string $original_filename,
+        int $project_id,
+        string $title,
+        int $status,
+        string $version_name,
+        int $item_id,
+    ): string {
         $pattern = $this->filename_pattern_retriever->getPattern($project_id);
         if (! $pattern) {
             return $original_filename;
@@ -52,17 +59,20 @@ final class FilenameBuilder
 
         if (str_contains($pattern, self::STATUS_VARIABLE)) {
             try {
-                $status = $this->item_status_mapper->getItemStatusFromItemStatusNumber($status);
+                $converted_status = $this->item_status_mapper->getItemStatusFromItemStatusNumber($status);
             } catch (HardCodedMetadataException $e) {
-                $status = ItemStatusMapper::ITEM_STATUS_NONE;
+                $converted_status = ItemStatusMapper::ITEM_STATUS_NONE;
             }
-            $new_filename = str_replace(self::STATUS_VARIABLE, $status, $new_filename);
+            $new_filename = str_replace(self::STATUS_VARIABLE, $converted_status, $new_filename);
         }
 
         if (str_contains($pattern, self::VERSION_NAME_VARIABLE)) {
             $new_filename = str_replace(self::VERSION_NAME_VARIABLE, $version_name, $new_filename);
         }
 
+        if (str_contains($pattern, self::ITEM_ID_VARIABLE)) {
+            $new_filename = str_replace(self::ITEM_ID_VARIABLE, (string) $item_id, $new_filename);
+        }
 
         return $new_filename;
     }

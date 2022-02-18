@@ -202,7 +202,8 @@ class Docman_Actions extends Actions
                         $project_id,
                         $item->getTitle(),
                         $item->getStatus(),
-                        $_label
+                        $_label,
+                        $item->getId()
                     );
 
                     $path = $fs->upload($_FILES['file'], $updated_filename, $project_id, $item->getId(), $number);

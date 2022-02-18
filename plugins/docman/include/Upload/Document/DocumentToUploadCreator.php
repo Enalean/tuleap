@@ -24,6 +24,7 @@ use Docman_PermissionsManager;
 use DocmanPlugin;
 use PermissionsManager;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Docman\FilenamePattern\FilenameBuilder;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSet;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
@@ -34,57 +35,32 @@ class DocumentToUploadCreator
 {
     public const EXPIRATION_DELAY_IN_HOURS = 12;
 
-    /**
-     * @var DocumentOngoingUploadDAO
-     */
-    private $dao;
-    /**
-     * @var DBTransactionExecutor
-     */
-    private $transaction_executor;
-    /**
-     * @var DocumentMetadataCreator
-     */
-    private $creator;
-    /**
-     * @var PermissionsManager
-     */
-    private $permissions_manager;
-    /**
-     * @var PermissionItemUpdater
-     */
-    private $permission_item_updater;
-
     public function __construct(
-        DocumentOngoingUploadDAO $dao,
-        DBTransactionExecutor $transaction_executor,
-        DocumentMetadataCreator $creator,
-        PermissionsManager $permissions_manager,
-        PermissionItemUpdater $permission_item_updater,
+        private DocumentOngoingUploadDAO $dao,
+        private DBTransactionExecutor $transaction_executor,
+        private DocumentMetadataCreator $creator,
+        private PermissionsManager $permissions_manager,
+        private PermissionItemUpdater $permission_item_updater,
+        private FilenameBuilder $filename_builder,
     ) {
-        $this->dao                     = $dao;
-        $this->transaction_executor    = $transaction_executor;
-        $this->creator                 = $creator;
-        $this->permissions_manager     = $permissions_manager;
-        $this->permission_item_updater = $permission_item_updater;
     }
 
     public function create(
         \Docman_Item $parent_item,
         \PFUser $user,
         \DateTimeImmutable $current_time,
-        $title,
-        $description,
-        $filename,
-        $filesize,
+        string $title,
+        string $description,
+        string $filename,
+        int $filesize,
         int $status,
         int $obsolescence_date,
         ?array $formatted_metadata,
         ?DocmanItemPermissionsForGroupsSet $permissions_for_groups,
     ) {
-        if ((int) $filesize > (int) \ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
+        if ($filesize > (int) \ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
             throw new UploadMaxSizeExceededException(
-                (int) $filesize,
+                $filesize,
                 (int) \ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)
             );
         }
@@ -118,7 +94,7 @@ class DocumentToUploadCreator
                 if ($row['user_id'] !== (int) $user->getId()) {
                     throw new UploadCreationConflictException();
                 }
-                if ($row['filename'] !== $filename || (int) $filesize !== $row['filesize']) {
+                if ($row['filename'] !== $filename || $filesize !== $row['filesize']) {
                     throw new UploadCreationFileMismatchException();
                 }
                 $item_id = $row['item_id'];
@@ -130,12 +106,23 @@ class DocumentToUploadCreator
                 $parent_item->getId(),
                 $title,
                 $description,
-                $user->getId(),
+                (int) $user->getId(),
                 $filename,
                 $filesize,
                 $status,
                 $obsolescence_date
             );
+
+            $updated_filename = $this->filename_builder->buildFilename(
+                $filename,
+                $parent_item->getGroupId(),
+                $title,
+                $status,
+                '',
+                $item_id
+            );
+
+            $this->dao->updateDocumentFilenameOngoingUpload($item_id, $updated_filename);
 
             if ($formatted_metadata) {
                 $this->creator->storeItemCustomMetadata($item_id, $formatted_metadata);

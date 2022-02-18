@@ -24,8 +24,11 @@ use DocmanPlugin;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
+use Tuleap\Docman\FilenamePattern\FilenameBuilder;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSet;
+use Tuleap\Docman\Tests\Stub\FilenamePatternRetrieverStub;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
 use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
@@ -52,6 +55,10 @@ final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao                      = Mockery::mock(DocumentOngoingUploadDAO::class);
         $this->permissions_manager      = Mockery::mock(PermissionsManager::class);
         $this->permissions_item_updater = Mockery::mock(PermissionItemUpdater::class);
+        $this->filename_builder         = new FilenameBuilder(
+            FilenamePatternRetrieverStub::buildWithNoPattern(),
+            new ItemStatusMapper($this->createMock(\Docman_SettingsBo::class))
+        );
     }
 
     public function tearDown(): void
@@ -70,7 +77,8 @@ final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new DBTransactionExecutorPassthrough(),
             $metadata_creator,
             $this->permissions_manager,
-            $this->permissions_item_updater
+            $this->permissions_item_updater,
+            $this->filename_builder
         );
 
         \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
@@ -82,7 +90,8 @@ final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_time = new \DateTimeImmutable();
 
         $this->dao->shouldReceive('searchDocumentOngoingUploadByParentIDTitleAndExpirationDate')->andReturns([]);
-        $this->dao->shouldReceive('saveDocumentOngoingUpload')->once()->andReturns(12);
+        $this->dao->shouldReceive('updateDocumentFilenameOngoingUpload')->once();
+        $this->dao->shouldReceive('saveDocumentOngoingUpload')->once()->andReturn(12);
 
         $obsolescence_date = \DateTimeImmutable::createFromFormat('Y-m-d', '2100-05-19');
 
@@ -127,7 +136,8 @@ final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new DBTransactionExecutorPassthrough(),
             $metadata_creator,
             $this->permissions_manager,
-            $this->permissions_item_updater
+            $this->permissions_item_updater,
+            $this->filename_builder
         );
 
         \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
@@ -139,7 +149,8 @@ final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_time = new \DateTimeImmutable();
 
         $this->dao->shouldReceive('searchDocumentOngoingUploadByParentIDTitleAndExpirationDate')->andReturns([]);
-        $this->dao->shouldReceive('saveDocumentOngoingUpload')->once()->andReturns(12);
+        $this->dao->shouldReceive('updateDocumentFilenameOngoingUpload')->once();
+        $this->dao->shouldReceive('saveDocumentOngoingUpload')->once()->andReturn(12);
 
         $obsolescence_date = \DateTimeImmutable::createFromFormat('Y-m-d', '2100-05-19');
 
@@ -170,7 +181,8 @@ final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new DBTransactionExecutorPassthrough(),
             Mockery::mock(DocumentMetadataCreator::class),
             $this->permissions_manager,
-            $this->permissions_item_updater
+            $this->permissions_item_updater,
+            $this->filename_builder
         );
 
         \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
@@ -210,7 +222,8 @@ final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new DBTransactionExecutorPassthrough(),
             Mockery::mock(DocumentMetadataCreator::class),
             $this->permissions_manager,
-            $this->permissions_item_updater
+            $this->permissions_item_updater,
+            $this->filename_builder
         );
 
         \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
@@ -250,7 +263,8 @@ final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new DBTransactionExecutorPassthrough(),
             Mockery::mock(DocumentMetadataCreator::class),
             $this->permissions_manager,
-            $this->permissions_item_updater
+            $this->permissions_item_updater,
+            $this->filename_builder
         );
 
         \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
@@ -290,7 +304,8 @@ final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new DBTransactionExecutorPassthrough(),
             Mockery::mock(DocumentMetadataCreator::class),
             $this->permissions_manager,
-            $this->permissions_item_updater
+            $this->permissions_item_updater,
+            $this->filename_builder
         );
 
         \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '1');

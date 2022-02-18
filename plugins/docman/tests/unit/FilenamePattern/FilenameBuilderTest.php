@@ -41,7 +41,7 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheOriginalFilenameWhenThePatternIsNull(): void
     {
-        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage')->willReturn("1");
+        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
 
         $filename_builder = new FilenameBuilder(
             FilenamePatternRetrieverStub::buildWithNoPattern(),
@@ -55,14 +55,15 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             101,
             'From The Window To the Hood',
             100,
-            ""
+            "",
+            15
         );
         self::assertSame($original_filename, $update_filename);
     }
 
     public function testItReturnsTheOriginalFilenameWhenThePatternIsAnEmptyString(): void
     {
-        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage')->willReturn("1");
+        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
 
         $filename_builder = new FilenameBuilder(
             FilenamePatternRetrieverStub::buildWithPattern(""),
@@ -76,14 +77,15 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             101,
             'From The Window To the Hood',
             100,
-            ""
+            "",
+            15
         );
         self::assertSame($original_filename, $update_filename);
     }
 
     public function testItReturnsThePatternAsNewFilenameIfThereIsNoVariable(): void
     {
-        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage')->willReturn("1");
+        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
 
         $filename_builder = new FilenameBuilder(
             FilenamePatternRetrieverStub::buildWithPattern("Mercedes"),
@@ -97,14 +99,15 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             101,
             'From The Window To the Hood',
             100,
-            ""
+            "",
+            15
         );
         self::assertSame("Mercedes", $update_filename);
     }
 
     public function testItReturnsTheNewFilenameWithTheTitleVariable(): void
     {
-        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage')->willReturn("1");
+        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
 
         $pattern          = "Brand-\${TITLE}";
         $filename_builder = new FilenameBuilder(
@@ -119,7 +122,8 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             111,
             "Mercedes",
             100,
-            ""
+            "",
+            15
         );
         self::assertSame("Brand-Mercedes", $update_filename);
     }
@@ -141,13 +145,14 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             111,
             "Mercedes",
             103,
-            ""
+            "",
+            15
         );
         self::assertSame("Brand-Mercedes-rejected", $update_filename);
     }
     public function testItReturnsTheNewFilenameWithTheVersionNameVariable(): void
     {
-        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage')->willReturn("1");
+        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
 
         $pattern          = "Brand-Mercedes-rejected-\${VERSION_NAME}";
         $filename_builder = new FilenameBuilder(
@@ -162,8 +167,55 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             111,
             "Mercedes",
             103,
-            "Not a Mercredes wow"
+            "Not a Mercredes wow",
+            15
         );
         self::assertSame("Brand-Mercedes-rejected-Not a Mercredes wow", $update_filename);
+    }
+
+    public function testItReturnsTheNewFilenameWithTheItemIdVariable(): void
+    {
+        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
+
+        $pattern          = "Brand-Mercedes-rejected-Not a Mercredes wow-#\${ID}";
+        $filename_builder = new FilenameBuilder(
+            FilenamePatternRetrieverStub::buildWithPattern($pattern),
+            new ItemStatusMapper($this->docman_settings_bo)
+        );
+
+        $original_filename = "M2 CS.jpg";
+
+        $update_filename = $filename_builder->buildFilename(
+            $original_filename,
+            111,
+            "Mercedes",
+            103,
+            "Not a Mercredes wow",
+            15
+        );
+        self::assertSame("Brand-Mercedes-rejected-Not a Mercredes wow-#15", $update_filename);
+    }
+
+    public function testItReturnsTheNewFilenameUsingSomeVariable(): void
+    {
+        $this->docman_settings_bo->expects(self::once())->method('getMetadataUsage')->willReturn("1");
+
+        $pattern          = "Brand-\${TITLE}-\${STATUS}-Not a Mercredes wow-#\${ID}";
+        $filename_builder = new FilenameBuilder(
+            FilenamePatternRetrieverStub::buildWithPattern($pattern),
+            new ItemStatusMapper($this->docman_settings_bo)
+        );
+
+        $original_filename = "M2 CS.jpg";
+
+        $update_filename = $filename_builder->buildFilename(
+            $original_filename,
+            111,
+            "BMW",
+            103,
+            "Not a Mercredes wow",
+            15
+        );
+        self::assertSame("Brand-BMW-rejected-Not a Mercredes wow-#15", $update_filename);
     }
 }
