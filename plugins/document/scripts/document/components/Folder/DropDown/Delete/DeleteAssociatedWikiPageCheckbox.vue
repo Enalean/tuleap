@@ -1,7 +1,7 @@
 <!--
-  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+  - Copyright (c) Enalean 2019 -  Present. All Rights Reserved.
   -
-  - This file is a part of Tuleap.
+  -  This file is a part of Tuleap.
   -
   - Tuleap is free software; you can redistribute it and/or modify
   - it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
   -->
 
 <template>
@@ -56,45 +57,52 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
 import { sprintf } from "sprintf-js";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Wiki } from "../../../../type";
+import type { ItemPath } from "../../../../store/actions-helpers/build-parent-paths";
+import { namespace } from "vuex-class";
 
-export default {
-    props: {
-        item: Object,
-        model: Object,
-        wikiPageReferencers: Array,
-    },
-    data() {
-        return {
-            is_option_checked: false,
-        };
-    },
-    computed: {
-        ...mapState("configuration", ["project_id"]),
-        wiki_deletion_warning() {
-            return sprintf(
-                this.$gettext(
-                    'You should also be aware that the following wiki documents referencing page "%s" will no longer be valid if you choose to propagate the deletion to the wiki service:'
-                ),
-                this.item.wiki_properties.page_name
-            );
-        },
-    },
-    methods: {
-        processInput($event) {
-            const is_checked = $event.target.checked;
+const configuration = namespace("configuration");
+
+@Component
+export default class DeleteAssociatedWikiPageCheckbox extends Vue {
+    @Prop({ required: true })
+    readonly item!: Wiki;
+
+    @Prop({ required: true })
+    readonly wikiPageReferencers!: Array<ItemPath>;
+
+    @configuration.State
+    readonly project_id!: number;
+
+    private is_option_checked = false;
+
+    get wiki_deletion_warning(): string {
+        return sprintf(
+            this.$gettext(
+                'You should also be aware that the following wiki documents referencing page "%s" will no longer be valid if you choose to propagate the deletion to the wiki service:'
+            ),
+            this.item.wiki_properties.page_name
+        );
+    }
+
+    processInput($event: Event): void {
+        const event_target = $event.target;
+
+        if (event_target instanceof HTMLInputElement) {
+            const is_checked = event_target.checked;
 
             this.$emit("input", { delete_associated_wiki_page: is_checked });
 
             this.is_option_checked = is_checked;
-        },
-        getWikiPageUrl(referencer) {
-            return `/plugins/docman/?group_id=${encodeURIComponent(
-                this.project_id
-            )}&action=show&id=${encodeURIComponent(referencer.id)}`;
-        },
-    },
-};
+        }
+    }
+    getWikiPageUrl(referencer: ItemPath): string {
+        return `/plugins/docman/?group_id=${encodeURIComponent(
+            this.project_id
+        )}&action=show&id=${encodeURIComponent(referencer.id)}`;
+    }
+}
 </script>

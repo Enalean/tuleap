@@ -59,7 +59,7 @@
 <script lang="ts">
 import DropDownMenu from "./DropDownMenu.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
-import DeleteItem from "./DeleteItem.vue";
+import DeleteItem from "./Delete/DeleteItem.vue";
 import LockItem from "./LockItem.vue";
 import UnlockItem from "./UnlockItem.vue";
 import UpdateProperties from "./UpdateProperties.vue";

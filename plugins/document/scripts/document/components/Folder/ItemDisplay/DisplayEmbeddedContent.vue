@@ -98,7 +98,7 @@ export default {
             ),
         "confirm-deletion-modal": () =>
             import(
-                /* webpackChunkName: "document-confirm-item-deletion-modal" */ "../ModalDeleteItem/ModalConfirmDeletion.vue"
+                /* webpackChunkName: "document-confirm-item-deletion-modal" */ "../DropDown/Delete/ModalConfirmDeletion.vue"
             ),
         "update-metadata-modal": () =>
             import(
