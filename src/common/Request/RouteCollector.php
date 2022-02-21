@@ -1087,6 +1087,7 @@ class RouteCollector
             function (FastRoute\RouteCollector $r): void {
                 $r->addRoute(['GET', 'POST'], '/userinfo', [OAuth2ServerRoutes::class, 'routeOAuth2UserInfoEndpoint']);
                 $r->get('/jwks', [OAuth2ServerRoutes::class, 'routeJWKSDocument']);
+                $r->post('/token', [OAuth2ServerRoutes::class, 'routeAccessTokenCreation']);
                 $r->post('/token/revoke', [OAuth2ServerRoutes::class, 'routeTokenRevocation']);
             }
         );
