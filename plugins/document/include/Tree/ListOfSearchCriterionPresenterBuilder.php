@@ -37,6 +37,11 @@ final class ListOfSearchCriterionPresenterBuilder
 
         $criteria = [
             'hardcoded' => [
+                new SearchCriterionPresenter(
+                    'id',
+                    dgettext('tuleap-document', 'Id'),
+                    'number',
+                ),
                 new SearchCriterionListPresenter(
                     'type',
                     dgettext('tuleap-document', 'Type'),

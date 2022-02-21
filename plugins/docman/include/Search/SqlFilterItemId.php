@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\REST;
+declare(strict_types=1);
 
-use Luracast\Restler\RestException;
+namespace Tuleap\Docman\Search;
 
-class I18NRestException extends RestException
+class SqlFilterItemId extends \Docman_SqlFilter
 {
-    public function __construct(int $httpStatusCode, string $i18n_message)
+    public function getFrom(): array
     {
-        parent::__construct(
-            $httpStatusCode,
-            "",
-            ['i18n_error_message' => $i18n_message]
-        );
+        return [];
+    }
+
+    public function getWhere(): string
+    {
+        $data_access = \CodendiDataAccess::instance();
+
+        return $this->field . ' = ' . $data_access->escapeInt($this->filter->getValue());
     }
 }

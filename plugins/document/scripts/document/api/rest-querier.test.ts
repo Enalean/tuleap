@@ -435,6 +435,7 @@ describe("rest-querier", () => {
                 101,
                 {
                     global_search: "Lorem ipsum",
+                    id: "123",
                     type: "folder",
                     title: "doloret",
                     description: "sit",
@@ -468,6 +469,10 @@ describe("rest-querier", () => {
                 body: JSON.stringify({
                     global_search: "Lorem ipsum",
                     properties: [
+                        {
+                            name: "id",
+                            value: "123",
+                        },
                         {
                             name: "type",
                             value: "folder",

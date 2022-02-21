@@ -64,6 +64,7 @@ import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-p
 import CriterionText from "./Criteria/CriterionText.vue";
 import CriterionDate from "./Criteria/CriterionDate.vue";
 import CriterionList from "./Criteria/CriterionList.vue";
+import CriterionNumber from "./Criteria/CriterionNumber.vue";
 
 const configuration = namespace("configuration");
 
@@ -72,6 +73,7 @@ const configuration = namespace("configuration");
         CriterionDate,
         CriterionText,
         CriterionList,
+        CriterionNumber,
         CriterionGlobalText,
         SearchCriteriaBreadcrumb,
     },

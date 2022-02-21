@@ -31,6 +31,7 @@ describe("get-rest-body-from-search-params", () => {
         // test file will help.
         const query_params: AdvancedSearchParams = {
             global_search: "",
+            id: "",
             type: "",
             title: "",
             description: "",
@@ -46,6 +47,8 @@ describe("get-rest-body-from-search-params", () => {
     it.each<[Partial<AdvancedSearchParams>, SearchBodyRest]>([
         [{}, {}],
         [{ global_search: "lorem" }, { global_search: "lorem" }],
+        [{ id: "123" }, { properties: [{ name: "id", value: "123" }] }],
+        [{ id: "" }, {}],
         [{ type: "folder" }, { properties: [{ name: "type", value: "folder" }] }],
         [
             { global_search: "lorem", type: "folder" },

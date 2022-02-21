@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CriterionNumber should render the component 1`] = `
+<div
+  class="tlp-form-element document-search-criterion document-search-criterion-number"
+>
+  <label
+    class="tlp-label"
+    for="document-criterion-number-id"
+  >
+    Id
+  </label>
+   
+  <input
+    class="tlp-input"
+    data-test="document-criterion-number-id"
+    id="document-criterion-number-id"
+    type="number"
+  />
+</div>
+`;

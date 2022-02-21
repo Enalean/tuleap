@@ -61,6 +61,9 @@ msgstr "Historique"
 msgid "However, all its content could not have been included in the archive."
 msgstr "Cependant, tout son contenu n'a pas pu être ajouté à l'archive."
 
+msgid "Id"
+msgstr "Id"
+
 msgid "MB"
 msgstr "Mo"
 

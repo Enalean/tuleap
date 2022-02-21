@@ -31,6 +31,7 @@ describe("getRouterQueryFromSearchParams", () => {
         // test file will help.
         const query_params: AdvancedSearchParams = {
             global_search: "",
+            id: "",
             type: "",
             title: "",
             description: "",
@@ -46,6 +47,7 @@ describe("getRouterQueryFromSearchParams", () => {
     it.each<[Partial<AdvancedSearchParams>, Dictionary<string>]>([
         [{ global_search: "lorem" }, { q: "lorem" }],
         [{ type: "folder" }, { type: "folder" }],
+        [{ id: "123" }, { id: "123" }],
         [
             { global_search: "lorem", type: "folder" },
             { q: "lorem", type: "folder" },

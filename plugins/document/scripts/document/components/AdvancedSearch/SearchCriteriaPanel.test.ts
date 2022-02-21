@@ -50,6 +50,7 @@ describe("SearchCriteriaPanel", () => {
                         configuration: {
                             root_id: 101,
                             criteria: [
+                                { name: "id", type: "number", title: "Id" },
                                 { name: "type", type: "list", title: "Type" },
                                 { name: "title", type: "text", title: "Title" },
                                 { name: "description", type: "text", title: "Description" },
@@ -70,6 +71,7 @@ describe("SearchCriteriaPanel", () => {
         });
 
         wrapper.findComponent(CriterionGlobalText).vm.$emit("input", "Lorem ipsum");
+        wrapper.find("[data-test=criterion-id]").vm.$emit("input", "123");
         wrapper.find("[data-test=criterion-type]").vm.$emit("input", "folder");
         wrapper.find("[data-test=criterion-title]").vm.$emit("input", "doloret");
         wrapper.find("[data-test=criterion-description]").vm.$emit("input", "sit amet");
@@ -87,6 +89,7 @@ describe("SearchCriteriaPanel", () => {
 
         const expected_params: AdvancedSearchParams = {
             global_search: "Lorem ipsum",
+            id: "123",
             type: "folder",
             title: "doloret",
             description: "sit amet",

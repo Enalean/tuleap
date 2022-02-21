@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\REST;
+declare(strict_types=1);
 
-use Luracast\Restler\RestException;
+namespace Tuleap\Docman\Search;
 
-class I18NRestException extends RestException
+
+class FilterItemId extends \Docman_Filter
 {
-    public function __construct(int $httpStatusCode, string $i18n_message)
+    public function __construct()
     {
-        parent::__construct(
-            $httpStatusCode,
-            "",
-            ['i18n_error_message' => $i18n_message]
-        );
+        $metadata = new \Docman_Metadata();
+        $metadata->setLabel('item_id');
+        $metadata->setName('item_id');
+
+        parent::__construct($metadata);
     }
 }

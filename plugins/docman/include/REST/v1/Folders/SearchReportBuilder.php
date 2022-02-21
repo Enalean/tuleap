@@ -27,6 +27,7 @@ use Docman_FilterGlobalText;
 use Docman_FilterText;
 use Docman_Report;
 use Luracast\Restler\RestException;
+use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Search\SearchPropertyRepresentation;
@@ -34,6 +35,8 @@ use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
 use Tuleap\Docman\REST\v1\Search\SearchDateRepresentation;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
+use Tuleap\Docman\Search\FilterItemId;
+use Tuleap\REST\I18NRestException;
 
 class SearchReportBuilder
 {
@@ -165,8 +168,8 @@ class SearchReportBuilder
 
         try {
             $list_filter->setValue($this->status_mapper->getItemStatusIdFromItemStatusString($property->value));
-        } catch (HardCodedMetadataException $e) {
-            throw new RestException(400, $e->getMessage());
+        } catch (HardCodedMetadataException $exception) {
+            throw new I18NRestException(400, $exception->getI18NExceptionMessage());
         }
 
         $report->addFilter($list_filter);
@@ -193,7 +196,19 @@ class SearchReportBuilder
             return;
         }
 
-        $metadata = $this->metadata_factory->getMetadataFromLabel($property->name);
+        if ($property->name === 'id' && $property->value) {
+            $filter = new FilterItemId();
+            $filter->setValue($property->value);
+            $report->addFilter($filter);
+
+            return;
+        }
+
+        try {
+            $metadata = $this->metadata_factory->getMetadataFromLabel($property->name);
+        } catch (CustomMetadataException $exception) {
+            throw new I18NRestException(400, $exception->getI18NExceptionMessage());
+        }
 
         if (! $metadata) {
             return;

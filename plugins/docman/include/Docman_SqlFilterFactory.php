@@ -49,6 +49,8 @@ class Docman_SqlFilterFactory
             if ($filter->getValue() != 0) {
                 $f = new \Docman_SqlFilter($filter);
             }
+        } elseif ($filter instanceof \Tuleap\Docman\Search\FilterItemId) {
+            $f = new \Tuleap\Docman\Search\SqlFilterItemId($filter);
         }
         return $f;
     }

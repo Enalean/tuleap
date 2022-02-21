@@ -24,6 +24,7 @@ describe("build-advanced-search-params", () => {
     it("should return an empty search params by default", () => {
         const expected: AdvancedSearchParams = {
             global_search: "",
+            id: "",
             type: "",
             title: "",
             description: "",
@@ -39,6 +40,7 @@ describe("build-advanced-search-params", () => {
     it("should accept partial params", () => {
         const expected: AdvancedSearchParams = {
             global_search: "",
+            id: "",
             type: "folder",
             title: "lorem",
             description: "",
