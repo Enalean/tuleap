@@ -56,7 +56,8 @@ class DocmanFileVersionCreator
             (int) $item->getGroupId(),
             (string) $item->getTitle(),
             $status,
-            $representation->version_title
+            $representation->version_title,
+            (int) $item->getId()
         );
 
         try {

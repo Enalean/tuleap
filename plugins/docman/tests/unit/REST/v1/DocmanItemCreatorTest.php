@@ -29,7 +29,6 @@ use Docman_MetadataValueDao;
 use Docman_Wiki;
 use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Docman\FilenamePattern\FilenameBuilder;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Empties\DocmanEmptyPOSTRepresentation;
@@ -50,7 +49,6 @@ use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation;
-use Tuleap\Docman\Tests\Stub\FilenamePatternRetrieverStub;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUpload;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
@@ -143,7 +141,6 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->custom_metadata_checker,
             $this->metadata_value_dao,
             $this->permissions_for_groups_set_factory,
-            new FilenameBuilder(FilenamePatternRetrieverStub::buildWithNoPattern(), $this->item_status_mapper)
         );
     }
 

@@ -67,20 +67,17 @@ class DocumentOngoingUploadDAO extends DataAccessObject
         return $this->getDB()->column('SELECT item_id FROM plugin_docman_new_document_upload');
     }
 
-    /**
-     * @return int
-     */
     public function saveDocumentOngoingUpload(
-        $expiration_date,
-        $parent_id,
-        $title,
-        $description,
-        $user_id,
-        $filename,
-        $filesize,
+        int $expiration_date,
+        int $parent_id,
+        string $title,
+        string $description,
+        int $user_id,
+        string $filename,
+        int $filesize,
         ?int $status,
         ?int $obsolescence_date,
-    ) {
+    ): int {
         $item_id = (int) $this->getDB()->insertReturnId('plugin_docman_item_id', []);
         $this->getDB()->insert(
             'plugin_docman_new_document_upload',
@@ -98,6 +95,22 @@ class DocumentOngoingUploadDAO extends DataAccessObject
             ]
         );
         return $item_id;
+    }
+
+
+    public function updateDocumentFilenameOngoingUpload(
+        int $item_id,
+        string $new_filename,
+    ): void {
+        $this->getDB()->update(
+            'plugin_docman_new_document_upload',
+            [
+                'filename' => $new_filename,
+            ],
+            [
+                'item_id' => $item_id,
+            ]
+        );
     }
 
     public function deleteUnusableDocuments($current_time): void

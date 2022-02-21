@@ -25,7 +25,6 @@ use Docman_Item;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project;
-use Tuleap\Docman\FilenamePattern\FilenameBuilder;
 use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Empties\DocmanEmptyPOSTRepresentation;
@@ -63,7 +62,6 @@ class DocmanItemCreator
         private CustomMetadataRepresentationRetriever $custom_checker,
         private \Docman_MetadataValueDao $metadata_value_dao,
         private DocmanItemPermissionsForGroupsSetFactory $permissions_for_groups_set_factory,
-        private FilenameBuilder $filename_builder,
     ) {
     }
 
@@ -186,14 +184,6 @@ class DocmanItemCreator
             $current_time
         );
 
-        $updated_filename = $this->filename_builder->buildFilename(
-            $file_properties->file_name,
-            $parent_item->getGroupId(),
-            $title,
-            $status_id,
-            ''
-        );
-
         try {
             $document_to_upload = $this->document_to_upload_creator->create(
                 $parent_item,
@@ -201,7 +191,7 @@ class DocmanItemCreator
                 $current_time,
                 $title,
                 $description,
-                $updated_filename,
+                $file_properties->file_name,
                 $file_properties->file_size,
                 $status_id,
                 $obsolescence_date_time_stamp,

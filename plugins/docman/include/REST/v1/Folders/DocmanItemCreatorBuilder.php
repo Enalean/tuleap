@@ -134,7 +134,8 @@ final class DocmanItemCreatorBuilder
                     new \Docman_MetadataDao(\CodendiDataAccess::instance())
                 ),
                 $permission_manager,
-                $permission_item_updater
+                $permission_item_updater,
+                new FilenameBuilder(new FilenamePatternRetriever(new SettingsDAO()), new ItemStatusMapper($docman_setting_bo))
             ),
             new AfterItemCreationVisitor(
                 $permission_manager,
@@ -174,8 +175,7 @@ final class DocmanItemCreatorBuilder
                 $ugroup_manager,
                 new UserGroupRetriever($ugroup_manager),
                 ProjectManager::instance()
-            ),
-            new FilenameBuilder(new FilenamePatternRetriever(new SettingsDAO()), new ItemStatusMapper($docman_setting_bo))
+            )
         );
     }
 }
