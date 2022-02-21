@@ -1,0 +1,31 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/vue3-gettext-init",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/vue3-gettext-init.es.js",
+  "main": "dist/vue3-gettext-init.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/vue3-gettext-init.es.js",
+      "require": "./dist/vue3-gettext-init.umd.js"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "jest"
+  },
+  "dependencies": {
+    "vue3-gettext": "^2.1.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.2.31"
+  },
+  "devDependencies": {
+    "vue": "^3.2.31"
+  }
+}
