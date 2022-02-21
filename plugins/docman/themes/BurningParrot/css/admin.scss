@@ -28,3 +28,15 @@
     }
 }
 /* stylelint-enable selector-no-qualifying-type */
+
+#docman-admin-permission-legacy-form > form {
+    margin: 0 0 var(--tlp-medium-spacing);
+
+    select {
+        margin: 0 0 var(--tlp-medium-spacing);
+    }
+
+    input[name="submit"] {
+        margin: 0 var(--tlp-medium-spacing) 0 0;
+    }
+}

@@ -1258,6 +1258,9 @@ class Docman_Actions extends Actions
         } else {
             $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Permissions successfully updated.'));
         }
+
+        $this->_controler->view                              = 'RedirectAfterCrud';
+        $this->_controler->_viewParams['default_url_params'] = ['action' => \Docman_View_Admin_Permissions::IDENTIFIER];
     }
 
     public function admin_md_details_update()
