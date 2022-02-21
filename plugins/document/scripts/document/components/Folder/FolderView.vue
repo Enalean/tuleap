@@ -44,7 +44,7 @@ import FolderContent from "./FolderContent.vue";
 import EmptyFolderForWriters from "./EmptyState/EmptyFolderForWriters.vue";
 import EmptyFolderForReaders from "./EmptyState/EmptyFolderForReaders.vue";
 import DragNDropHandler from "./DragNDrop/DragNDropHandler.vue";
-import UnderTheFoldNotification from "./ModalNewItem/UnderTheFoldNotification.vue";
+import UnderTheFoldNotification from "./DropDown/NewDocument/UnderTheFoldNotification.vue";
 import ClipboardContentInformation from "./Clipboard/ClipboardContentInformation.vue";
 
 export default {

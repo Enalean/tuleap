@@ -60,9 +60,9 @@
 import DropDownMenu from "./DropDownMenu.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import DeleteItem from "./Delete/DeleteItem.vue";
-import LockItem from "./LockItem.vue";
-import UnlockItem from "./UnlockItem.vue";
-import UpdateProperties from "./UpdateProperties.vue";
+import LockItem from "./Lock/LockItem.vue";
+import UnlockItem from "./Lock/UnlockItem.vue";
+import UpdateProperties from "./UpdateMetadata/UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { State } from "vuex-class";
