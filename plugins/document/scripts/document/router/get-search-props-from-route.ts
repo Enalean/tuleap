@@ -40,6 +40,7 @@ export function getSearchPropsFromRoute(
         folder_id: route.params.folder_id ? Number(route.params.folder_id) : root_id,
         query: {
             global_search: String(route.query.q || ""),
+            id: String(route.query.id || ""),
             type,
             title: String(route.query.title || ""),
             description: String(route.query.description || ""),

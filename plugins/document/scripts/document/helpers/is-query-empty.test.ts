@@ -30,6 +30,7 @@ describe("isQueryEmpty", () => {
         // test file will help.
         const query_params: AdvancedSearchParams = {
             global_search: "",
+            id: "",
             type: "",
             title: "",
             description: "",
@@ -44,6 +45,7 @@ describe("isQueryEmpty", () => {
 
     it.each<ReadonlyArray<Partial<AdvancedSearchParams>>>([
         [{ global_search: "lorem" }],
+        [{ id: "123" }],
         [{ type: "folder" }],
         [{ title: "ipsum" }],
         [{ description: "doloret" }],

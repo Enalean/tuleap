@@ -77,6 +77,14 @@ describe("get-search-props-from-route", () => {
             );
         });
 
+        it("should accept id parameter", () => {
+            const { query } = getSearchPropsFromRoute(
+                { params: {}, query: { id: "123" } } as unknown as Route,
+                101
+            );
+            expect(query).toStrictEqual(buildAdvancedSearchParams({ id: "123" }));
+        });
+
         it("should accept type parameter", () => {
             const { query } = getSearchPropsFromRoute(
                 { params: {}, query: { type: "wiki" } } as unknown as Route,

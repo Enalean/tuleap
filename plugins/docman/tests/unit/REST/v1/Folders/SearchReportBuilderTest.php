@@ -29,12 +29,14 @@ use Docman_MetadataFactory;
 use Docman_ReportColumnTitle;
 use Docman_SettingsBo;
 use Luracast\Restler\RestException;
+use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Search\SearchPropertyRepresentation;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
 use Tuleap\Docman\REST\v1\Search\SearchDateRepresentation;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
+use Tuleap\REST\I18NRestException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -133,6 +135,22 @@ final class SearchReportBuilderTest extends TestCase
         self::assertSame("My column", $report->columns[0]->md->getLabel());
     }
 
+    public function testItRaises400IfUnknownProperty(): void
+    {
+        $this->metadata_factory
+            ->method('getMetadataFromLabel')
+            ->with('unknown')
+            ->willThrowException(CustomMetadataException::metadataNotFound('unknown'));
+
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithProperty('unknown', 'lorem');
+
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
+
+        $this->search_report_builder->buildReport($folder, $search);
+    }
+
     /**
      * @testWith ["folder", 1]
      *           ["file", 2]
@@ -205,7 +223,7 @@ final class SearchReportBuilderTest extends TestCase
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
         $search = $this->searchDocxWithProperty('status', 'whatever');
 
-        $this->expectException(RestException::class);
+        $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
 
 

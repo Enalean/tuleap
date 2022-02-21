@@ -24,6 +24,7 @@ export function buildAdvancedSearchParams(
 ): AdvancedSearchParams {
     const empty: AdvancedSearchParams = {
         global_search: "",
+        id: "",
         type: "",
         title: "",
         description: "",

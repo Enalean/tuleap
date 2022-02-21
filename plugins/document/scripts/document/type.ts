@@ -272,6 +272,7 @@ export type AdditionalFieldNumber = `field_${number}`;
 
 export interface AdvancedSearchParams {
     readonly global_search: string;
+    readonly id: string;
     readonly type: AllowedSearchType;
     readonly title: string;
     readonly description: string;
@@ -311,6 +312,7 @@ export type SearchCriterion = SearchCriterionDate | SearchCriterionText | Search
 export type SearchCriteria = ReadonlyArray<SearchCriterion>;
 
 export const HardcodedPropertyName = [
+    "id",
     "type",
     "title",
     "description",
