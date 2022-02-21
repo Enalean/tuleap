@@ -198,6 +198,34 @@ final class SearchReportBuilderTest extends TestCase
         self::assertSame("lorem", $second_filter->value);
     }
 
+    public function testItBuildsAReportWithAnIdSearchFilter(): void
+    {
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithProperty('id', '123');
+
+        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $first_filter = $report->getFiltersArray()[0];
+        self::assertSame("global_txt", $first_filter->md->getLabel());
+        self::assertSame("*.docx", $first_filter->value);
+        $second_filter = $report->getFiltersArray()[1];
+        self::assertSame("item_id", $second_filter->md->getLabel());
+        self::assertSame("123", $second_filter->value);
+    }
+
+    public function testItBuildsAReportWithAFilenameSearchFilter(): void
+    {
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = $this->searchDocxWithProperty('filename', 'lorem');
+
+        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $first_filter = $report->getFiltersArray()[0];
+        self::assertSame("global_txt", $first_filter->md->getLabel());
+        self::assertSame("*.docx", $first_filter->value);
+        $second_filter = $report->getFiltersArray()[1];
+        self::assertSame("filename", $second_filter->md->getLabel());
+        self::assertSame("lorem", $second_filter->value);
+    }
+
     /**
      * @testWith ["none", 100]
      *           ["draft", 101]

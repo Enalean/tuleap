@@ -29,6 +29,9 @@ export function getRouterQueryFromSearchParams(params: AdvancedSearchParams): Di
     if (params.id.length > 0) {
         query.id = params.id;
     }
+    if (params.filename.length > 0) {
+        query.filename = params.filename;
+    }
     if (params.type.length > 0) {
         query.type = params.type;
     }

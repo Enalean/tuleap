@@ -42,6 +42,7 @@ export function getSearchPropsFromRoute(
             global_search: String(route.query.q || ""),
             id: String(route.query.id || ""),
             type,
+            filename: String(route.query.filename || ""),
             title: String(route.query.title || ""),
             description: String(route.query.description || ""),
             owner: String(route.query.owner || ""),

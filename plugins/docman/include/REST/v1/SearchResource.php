@@ -115,9 +115,19 @@ final class SearchResource extends AuthenticatedResource
      * </thead>
      * <tbody>
      * <tr>
+     *   <td>`id`</td>
+     *   <td>Number</td>
+     *   <td>Exact match of the item id.</td>
+     * </tr>
+     * <tr>
      *   <td>`type`</td>
      *   <td>List</td>
      *   <td>Type of the item. Searchable types: `folder`, `file`, `embedded`, `wiki`, `link`, `empty`.</td>
+     * </tr>
+     * <tr>
+     *   <td>`filename`</td>
+     *   <td>Text</td>
+     *   <td>Filename of the item.</td>
      * </tr>
      * <tr>
      *   <td>`title`</td>

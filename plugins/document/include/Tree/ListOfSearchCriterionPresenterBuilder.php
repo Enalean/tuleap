@@ -47,6 +47,11 @@ final class ListOfSearchCriterionPresenterBuilder
                     dgettext('tuleap-document', 'Type'),
                     $this->getTypeOptions($project),
                 ),
+                new SearchCriterionPresenter(
+                    'filename',
+                    dgettext('tuleap-document', 'Filename'),
+                    'text',
+                ),
             ],
             'custom' => [],
         ];

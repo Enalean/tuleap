@@ -51,6 +51,8 @@ class Docman_SqlFilterFactory
             }
         } elseif ($filter instanceof \Tuleap\Docman\Search\FilterItemId) {
             $f = new \Tuleap\Docman\Search\SqlFilterItemId($filter);
+        } elseif ($filter instanceof \Tuleap\Docman\Search\FilterFilename) {
+            $f = new \Tuleap\Docman\Search\SqlFilterFilename($filter);
         }
         return $f;
     }

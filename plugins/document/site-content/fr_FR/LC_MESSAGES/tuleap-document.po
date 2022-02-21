@@ -42,6 +42,9 @@ msgstr "Fichier"
 msgid "File download limits"
 msgstr "Limites de téléchargement"
 
+msgid "Filename"
+msgstr "Nom du fichier"
+
 msgid "Files missing in your latest archive download"
 msgstr "Des fichiers manquent dans l'archive récemment téléchargée"
 

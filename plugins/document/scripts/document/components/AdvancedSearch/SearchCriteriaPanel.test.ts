@@ -52,6 +52,7 @@ describe("SearchCriteriaPanel", () => {
                             criteria: [
                                 { name: "id", type: "number", title: "Id" },
                                 { name: "type", type: "list", title: "Type" },
+                                { name: "filename", type: "text", title: "Filename" },
                                 { name: "title", type: "text", title: "Title" },
                                 { name: "description", type: "text", title: "Description" },
                                 { name: "owner", type: "text", title: "Owner" },
@@ -73,6 +74,7 @@ describe("SearchCriteriaPanel", () => {
         wrapper.findComponent(CriterionGlobalText).vm.$emit("input", "Lorem ipsum");
         wrapper.find("[data-test=criterion-id]").vm.$emit("input", "123");
         wrapper.find("[data-test=criterion-type]").vm.$emit("input", "folder");
+        wrapper.find("[data-test=criterion-filename]").vm.$emit("input", "bob.jpg");
         wrapper.find("[data-test=criterion-title]").vm.$emit("input", "doloret");
         wrapper.find("[data-test=criterion-description]").vm.$emit("input", "sit amet");
         wrapper.find("[data-test=criterion-owner]").vm.$emit("input", "jdoe");
@@ -91,6 +93,7 @@ describe("SearchCriteriaPanel", () => {
             global_search: "Lorem ipsum",
             id: "123",
             type: "folder",
+            filename: "bob.jpg",
             title: "doloret",
             description: "sit amet",
             owner: "jdoe",
