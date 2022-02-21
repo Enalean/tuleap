@@ -21,7 +21,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import RootFolder from "../components/Folder/RootFolder.vue";
 import ChildFolder from "../components/Folder/ChildFolder.vue";
-import DisplayEmbedded from "../components/Folder/ItemDisplay/DisplayEmbedded.vue";
+import DisplayEmbedded from "../components/EmbeddedDisplay/DisplayEmbedded.vue";
 import SearchContainer from "../components/AdvancedSearch/SearchContainer.vue";
 import { abortCurrentUploads } from "../helpers/abort-current-uploads.js";
 import { getSearchPropsFromRoute } from "./get-search-props-from-route";
