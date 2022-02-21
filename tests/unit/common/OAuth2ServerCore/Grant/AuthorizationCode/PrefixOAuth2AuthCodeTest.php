@@ -20,17 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
+namespace Tuleap\OAuth2ServerCore\Grant\AuthorizationCode;
 
-use Tuleap\Authentication\SplitToken\PrefixSplitTokenForSerialization;
 
-final class PrefixOAuth2AuthCode implements PrefixSplitTokenForSerialization
+final class PrefixOAuth2AuthCodeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @psalm-pure
-     */
-    public function getString(): string
+    public function testHasSpecificPrefix(): void
     {
-        return 'tlp-oauth2-ac1-';
+        $prefix = new PrefixOAuth2AuthCode();
+        $this->assertStringContainsString('oauth2', $prefix->getString());
+        $this->assertStringContainsString('ac1', $prefix->getString());
     }
 }
