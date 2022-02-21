@@ -44,6 +44,7 @@ use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\OAuth2Server\Administration\OAuth2AppProjectVerifier;
 use Tuleap\OAuth2Server\Administration\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\Administration\SiteAdmin\SiteAdminListAppsController;
+use Tuleap\OAuth2Server\AuthorizationServer\OAuth2ConsentChecker;
 use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenDAO;
 use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
@@ -451,16 +452,18 @@ final class oauth2_serverPlugin extends Plugin
                 new \URLRedirect(\EventManager::instance()),
                 HTTPFactoryBuilder::URIFactory()
             ),
-            new \Tuleap\OAuth2Server\User\AuthorizationComparator(
-                new \Tuleap\OAuth2Server\User\AuthorizedScopeFactory(
-                    new \Tuleap\OAuth2Server\User\AuthorizationDao(),
-                    new \Tuleap\OAuth2Server\User\AuthorizationScopeDao(),
-                    $scope_builder
-                )
-            ),
             new PKCEInformationExtractor(),
             new PromptParameterValuesExtractor(),
-            OAuth2OfflineAccessScope::fromItself(),
+            new OAuth2ConsentChecker(
+                new \Tuleap\OAuth2Server\User\AuthorizationComparator(
+                    new \Tuleap\OAuth2Server\User\AuthorizedScopeFactory(
+                        new \Tuleap\OAuth2Server\User\AuthorizationDao(),
+                        new \Tuleap\OAuth2Server\User\AuthorizationScopeDao(),
+                        $scope_builder
+                    )
+                ),
+                OAuth2OfflineAccessScope::fromItself(),
+            ),
             $this->getLogger(),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),

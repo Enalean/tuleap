@@ -27,19 +27,16 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Log\LoggerInterface;
-use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OAuth2ServerCore\App\AppFactory;
 use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
 use Tuleap\OAuth2ServerCore\App\InvalidClientIdentifierKey;
-use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\App\OAuth2AppNotFoundException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\OAuth2PKCEInformationExtractionException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
+use Tuleap\OAuth2ServerCore\AuthorizationServer\ConsentChecker;
 use Tuleap\OAuth2ServerCore\Scope\InvalidOAuth2ScopeException;
 use Tuleap\OAuth2ServerCore\Scope\ScopeExtractor;
-use Tuleap\OAuth2Server\User\AuthorizationComparator;
-use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2OfflineAccessScope;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
@@ -95,10 +92,6 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
      */
     private $response_factory;
     /**
-     * @var AuthorizationComparator
-     */
-    private $authorization_comparator;
-    /**
      * @var PKCEInformationExtractor
      */
     private $pkce_information_extractor;
@@ -106,10 +99,6 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
      * @var PromptParameterValuesExtractor
      */
     private $prompt_parameter_values_extractor;
-    /**
-     * @var OAuth2OfflineAccessScope
-     */
-    private $offline_access_scope;
     /**
      * @var LoggerInterface
      */
@@ -121,10 +110,9 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         AppFactory $app_factory,
         ScopeExtractor $scope_extractor,
         AuthorizationCodeResponseFactory $response_factory,
-        AuthorizationComparator $authorization_comparator,
         PKCEInformationExtractor $pkce_information_extractor,
         PromptParameterValuesExtractor $prompt_parameter_values_extractor,
-        OAuth2OfflineAccessScope $offline_access_scope,
+        private ConsentChecker $consent_checker,
         LoggerInterface $logger,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
@@ -135,10 +123,8 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         $this->app_factory                       = $app_factory;
         $this->scope_extractor                   = $scope_extractor;
         $this->response_factory                  = $response_factory;
-        $this->authorization_comparator          = $authorization_comparator;
         $this->pkce_information_extractor        = $pkce_information_extractor;
         $this->prompt_parameter_values_extractor = $prompt_parameter_values_extractor;
-        $this->offline_access_scope              = $offline_access_scope;
         $this->logger                            = $logger;
     }
 
@@ -269,7 +255,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
 
         $oidc_nonce = $request_params[self::NONCE_PARAMETER] ?? null;
 
-        if (! $this->isConsentRequired($prompt_values, $user, $client_app, $scopes)) {
+        if (! $this->consent_checker->isConsentRequired($prompt_values, $user, $client_app, $scopes)) {
             $this->logger->debug('Consent is not required, redirecting the user with a successful response');
             return $this->response_factory->createSuccessfulResponse(
                 $client_app,
@@ -325,26 +311,5 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         $max_age        = (int) $request_params[self::MAX_AGE_PARAMETER];
 
         return ($current_time - $last_auth_time) >= $max_age;
-    }
-
-    /**
-     * @param string[] $prompt_values
-     * @param AuthenticationScope[] $scopes
-     * @psalm-param non-empty-list<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
-     */
-    private function isConsentRequired(array $prompt_values, \PFUser $user, OAuth2App $client_app, array $scopes): bool
-    {
-        $require_consent = in_array(PromptParameterValuesExtractor::PROMPT_CONSENT, $prompt_values, true);
-        if ($require_consent || ! $this->authorization_comparator->areRequestedScopesAlreadyGranted($user, $client_app, $scopes)) {
-            return true;
-        }
-
-        foreach ($scopes as $scope) {
-            if ($this->offline_access_scope->covers($scope)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
