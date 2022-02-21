@@ -102,6 +102,8 @@ abstract class AdminView
         echo '<div class="docman-content">';
         $this->displayContent($params);
         echo '</div>';
+
+        $GLOBALS['Response']->footer($params);
     }
 
     abstract protected function getIdentifier(): string;
