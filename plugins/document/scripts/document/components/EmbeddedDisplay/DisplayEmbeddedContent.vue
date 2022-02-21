@@ -1,7 +1,7 @@
 <!--
-  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+  - Copyright (c) Enalean 2019 -  Present. All Rights Reserved.
   -
-  - This file is a part of Tuleap.
+  -  This file is a part of Tuleap.
   -
   - Tuleap is free software; you can redistribute it and/or modify
   - it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
   -->
 
 <template>
@@ -73,12 +74,12 @@
 
 <script>
 import ActionsHeader from "./ActionsHeader.vue";
-import DocumentTitleLockInfo from "../LockInfo/DocumentTitleLockInfo.vue";
-import ApprovalBadge from "../ApprovalTables/ApprovalBadge.vue";
+import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
+import ApprovalBadge from "../Folder/ApprovalTables/ApprovalBadge.vue";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
-import UpdateMetadataModal from "../ModalUpdateMetadata/UpdateMetadataModal.vue";
+import UpdateMetadataModal from "../Folder/ModalUpdateMetadata/UpdateMetadataModal.vue";
 import { mapState } from "vuex";
-import emitter from "../../../helpers/emitter";
+import emitter from "../../helpers/emitter";
 
 export default {
     name: "DisplayEmbeddedContent",
@@ -90,19 +91,19 @@ export default {
         ActionsHeader,
         "permissions-update-modal": () =>
             import(
-                /* webpackChunkName: "document-permissions-update-modal" */ "../Permissions/PermissionsUpdateModal.vue"
+                /* webpackChunkName: "document-permissions-update-modal" */ "../Folder/Permissions/PermissionsUpdateModal.vue"
             ),
         "create-new-embedded-file-version-modal": () =>
             import(
-                /* webpackChunkName: "document-new-embedded-file-version-modal" */ "../ModalCreateNewItemVersion/CreateNewVersionEmbeddedFileModal.vue"
+                /* webpackChunkName: "document-new-embedded-file-version-modal" */ "../Folder/ModalCreateNewItemVersion/CreateNewVersionEmbeddedFileModal.vue"
             ),
         "confirm-deletion-modal": () =>
             import(
-                /* webpackChunkName: "document-confirm-item-deletion-modal" */ "../DropDown/Delete/ModalConfirmDeletion.vue"
+                /* webpackChunkName: "document-confirm-item-deletion-modal" */ "../Folder/DropDown/Delete/ModalConfirmDeletion.vue"
             ),
         "update-metadata-modal": () =>
             import(
-                /* webpackChunkName: "update-metadata-modal" */ "../ModalUpdateMetadata/UpdateMetadataModal.vue"
+                /* webpackChunkName: "update-metadata-modal" */ "../Folder/ModalUpdateMetadata/UpdateMetadataModal.vue"
             ),
     },
     data() {
