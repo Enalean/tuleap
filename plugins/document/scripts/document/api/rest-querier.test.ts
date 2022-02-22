@@ -437,6 +437,7 @@ describe("rest-querier", () => {
                     global_search: "Lorem ipsum",
                     id: "123",
                     type: "folder",
+                    filename: "bob.jpg",
                     title: "doloret",
                     description: "sit",
                     owner: "jdoe",
@@ -476,6 +477,10 @@ describe("rest-querier", () => {
                         {
                             name: "type",
                             value: "folder",
+                        },
+                        {
+                            name: "filename",
+                            value: "bob.jpg",
                         },
                         {
                             name: "title",

@@ -35,6 +35,7 @@ use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
 use Tuleap\Docman\REST\v1\Search\SearchDateRepresentation;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
+use Tuleap\Docman\Search\FilterFilename;
 use Tuleap\Docman\Search\FilterItemId;
 use Tuleap\REST\I18NRestException;
 
@@ -198,6 +199,14 @@ class SearchReportBuilder
 
         if ($property->name === 'id' && $property->value) {
             $filter = new FilterItemId();
+            $filter->setValue($property->value);
+            $report->addFilter($filter);
+
+            return;
+        }
+
+        if ($property->name === 'filename' && $property->value) {
+            $filter = new FilterFilename();
             $filter->setValue($property->value);
             $report->addFilter($filter);
 

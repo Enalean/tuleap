@@ -33,6 +33,7 @@ describe("getRouterQueryFromSearchParams", () => {
             global_search: "",
             id: "",
             type: "",
+            filename: "",
             title: "",
             description: "",
             owner: "",
@@ -48,6 +49,7 @@ describe("getRouterQueryFromSearchParams", () => {
         [{ global_search: "lorem" }, { q: "lorem" }],
         [{ type: "folder" }, { type: "folder" }],
         [{ id: "123" }, { id: "123" }],
+        [{ filename: "bob.jpg" }, { filename: "bob.jpg" }],
         [
             { global_search: "lorem", type: "folder" },
             { q: "lorem", type: "folder" },

@@ -70,7 +70,8 @@ CREATE TABLE plugin_docman_version (
   path TEXT NULL,
   PRIMARY KEY(id),
   KEY item_id (item_id),
-  FULLTEXT fltxt (label, changelog, filename)
+  FULLTEXT fltxt (label, changelog, filename),
+  FULLTEXT fltxt_filename (filename)
 );
 
 DROP TABLE IF EXISTS plugin_docman_link_version;

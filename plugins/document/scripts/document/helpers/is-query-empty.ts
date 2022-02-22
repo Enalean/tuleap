@@ -26,6 +26,7 @@ export function isQueryEmpty(query_params: AdvancedSearchParams): boolean {
         query_params.global_search.length === 0 &&
         query_params.id.length === 0 &&
         query_params.type.length === 0 &&
+        query_params.filename.length === 0 &&
         query_params.title.length === 0 &&
         query_params.description.length === 0 &&
         query_params.owner.length === 0 &&

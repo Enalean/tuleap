@@ -274,6 +274,7 @@ export interface AdvancedSearchParams {
     readonly global_search: string;
     readonly id: string;
     readonly type: AllowedSearchType;
+    readonly filename: string;
     readonly title: string;
     readonly description: string;
     readonly owner: string;
@@ -314,6 +315,7 @@ export type SearchCriteria = ReadonlyArray<SearchCriterion>;
 export const HardcodedPropertyName = [
     "id",
     "type",
+    "filename",
     "title",
     "description",
     "owner",

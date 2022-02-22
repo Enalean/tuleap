@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,27 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AdvancedSearchParams } from "../type";
+declare(strict_types=1);
 
-export function buildAdvancedSearchParams(
-    params: Partial<AdvancedSearchParams> = {}
-): AdvancedSearchParams {
-    const empty: AdvancedSearchParams = {
-        global_search: "",
-        id: "",
-        type: "",
-        filename: "",
-        title: "",
-        description: "",
-        owner: "",
-        create_date: null,
-        update_date: null,
-        obsolescence_date: null,
-        status: "",
-    };
+namespace Tuleap\Docman\Search;
 
-    return {
-        ...empty,
-        ...params,
-    };
+class FilterFilename extends \Docman_Filter
+{
+    public function __construct()
+    {
+        $metadata = new \Docman_Metadata();
+        $metadata->setLabel('filename');
+        $metadata->setName('filename');
+
+        parent::__construct($metadata);
+    }
 }

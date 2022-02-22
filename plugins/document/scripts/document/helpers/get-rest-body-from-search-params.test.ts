@@ -33,6 +33,7 @@ describe("get-rest-body-from-search-params", () => {
             global_search: "",
             id: "",
             type: "",
+            filename: "",
             title: "",
             description: "",
             owner: "",
@@ -49,6 +50,8 @@ describe("get-rest-body-from-search-params", () => {
         [{ global_search: "lorem" }, { global_search: "lorem" }],
         [{ id: "123" }, { properties: [{ name: "id", value: "123" }] }],
         [{ id: "" }, {}],
+        [{ filename: "bob.jpg" }, { properties: [{ name: "filename", value: "bob.jpg" }] }],
+        [{ filename: "" }, {}],
         [{ type: "folder" }, { properties: [{ name: "type", value: "folder" }] }],
         [
             { global_search: "lorem", type: "folder" },

@@ -85,6 +85,14 @@ describe("get-search-props-from-route", () => {
             expect(query).toStrictEqual(buildAdvancedSearchParams({ id: "123" }));
         });
 
+        it("should accept filename parameter", () => {
+            const { query } = getSearchPropsFromRoute(
+                { params: {}, query: { filename: "bob.jpg" } } as unknown as Route,
+                101
+            );
+            expect(query).toStrictEqual(buildAdvancedSearchParams({ filename: "bob.jpg" }));
+        });
+
         it("should accept type parameter", () => {
             const { query } = getSearchPropsFromRoute(
                 { params: {}, query: { type: "wiki" } } as unknown as Route,

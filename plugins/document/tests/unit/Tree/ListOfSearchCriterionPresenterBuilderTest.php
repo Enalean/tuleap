@@ -45,7 +45,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
 
         $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
 
-        self::assertCount(2, $criteria);
+        self::assertCount(3, $criteria);
         self::assertEquals('id', $criteria[0]->name);
     }
 
@@ -66,7 +66,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
 
         $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
 
-        self::assertCount(2, $criteria);
+        self::assertCount(3, $criteria);
         self::assertEquals('type', $criteria[1]->name);
         self::assertEquals(
             ['folder', 'file', 'embedded', 'wiki', 'empty'],
@@ -94,7 +94,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
 
         $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
 
-        self::assertCount(2, $criteria);
+        self::assertCount(3, $criteria);
         self::assertEquals('type', $criteria[1]->name);
         self::assertEquals(
             ['folder', 'file', 'embedded', 'empty'],
@@ -103,6 +103,27 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
                 $criteria[1]->options
             )
         );
+    }
+
+    public function testItShouldAlwaysReturnFilenameCriterion(): void
+    {
+        $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
+        $metadata_factory->method('getMetadataForGroup')
+            ->with(true)
+            ->willReturn([]);
+        $metadata_factory->method('appendAllListOfValues');
+
+        $project = $this->createMock(\Project::class);
+        $project->method('usesWiki')->willReturn(true);
+
+        $docman_settings = $this->createMock(Docman_SettingsBo::class);
+        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $status_mapper = new ItemStatusMapper($docman_settings);
+
+        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
+
+        self::assertCount(3, $criteria);
+        self::assertEquals('filename', $criteria[2]->name);
     }
 
     /**
@@ -136,8 +157,8 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
 
         $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
 
-        self::assertCount(3, $criteria);
-        self::assertEquals($metadata_name, $criteria[2]->name);
+        self::assertCount(4, $criteria);
+        self::assertEquals($metadata_name, $criteria[3]->name);
     }
 
     public function testItShouldReturnHardcodedStatusMetadata(): void
@@ -180,13 +201,13 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
 
         $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
 
-        self::assertCount(3, $criteria);
-        self::assertEquals('status', $criteria[2]->name);
+        self::assertCount(4, $criteria);
+        self::assertEquals('status', $criteria[3]->name);
         self::assertEquals(
             ['none', 'draft'],
             array_map(
                 static fn(SearchCriterionListOptionPresenter $option): string => $option->value,
-                $criteria[2]->options
+                $criteria[3]->options
             )
         );
     }
@@ -214,8 +235,8 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
 
         $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
 
-        self::assertCount(3, $criteria);
-        self::assertEquals('field_2', $criteria[2]->name);
+        self::assertCount(4, $criteria);
+        self::assertEquals('field_2', $criteria[3]->name);
     }
 
     public function testItShouldReturnCustomMetadataInAlphabeticOrder(): void
@@ -247,9 +268,9 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
 
         $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
 
-        self::assertCount(4, $criteria);
-        self::assertEquals('Bar', $criteria[2]->label);
-        self::assertEquals('Foo', $criteria[3]->label);
+        self::assertCount(5, $criteria);
+        self::assertEquals('Bar', $criteria[3]->label);
+        self::assertEquals('Foo', $criteria[4]->label);
     }
 
     public function testItShouldReturnCustomListMetadataAsWell(): void
@@ -292,7 +313,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
 
         $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
 
-        self::assertCount(3, $criteria);
-        self::assertEquals('field_2', $criteria[2]->name);
+        self::assertCount(4, $criteria);
+        self::assertEquals('field_2', $criteria[3]->name);
     }
 }
