@@ -44,6 +44,7 @@ class ReleasePresenter
 
     /** @var string */
     public $custom_license_agreement;
+    public string $changelog_html;
 
     public function __construct(
         ReleaseRepresentation $release_representation,
@@ -53,6 +54,7 @@ class ReleasePresenter
     ) {
         $this->release_representation = json_encode($release_representation);
         $this->release_note_html      = $interpreter->getInterpretedContentWithReferences($release_representation->release_note, $release_representation->project->id);
+        $this->changelog_html         = $interpreter->getInterpretedContentWithReferences($release_representation->changelog, $release_representation->project->id);
         $this->language               = $language;
 
         $platform_license_info = [

@@ -138,6 +138,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $release = M::spy(\FRSRelease::class);
         $release->shouldReceive('getProject')->andReturn($project);
         $release->shouldReceive('getNotes')->andReturn('Release notes');
+        $release->shouldReceive('getChanges')->andReturn('Change log')->once();
         $release->shouldReceive('getPackage')->andReturn($package);
         $release->shouldReceive('getStatusID')
             ->once()
