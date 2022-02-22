@@ -31,39 +31,42 @@ use XML_SimpleXMLCDATAFactory;
 final class XMLReport
 {
     /**
-     * @var string
      * @readonly
      */
-    private $name;
+    private bool $is_default = false;
     /**
-     * @var bool
      * @readonly
      */
-    private $is_default = false;
+    private bool $is_in_expert_mode = false;
     /**
-     * @var string
      * @readonly
      */
-    private $description = '';
+    private string $expert_query = '';
+    /**
+     * @readonly
+     */
+    private string $description = '';
     /**
      * @var XMLReportCriterion[]
      * @readonly
      */
-    private $criteria = [];
+    private array $criteria = [];
 
     /**
      * @var XMLRenderer[]
      * @readonly
      */
-    private $renderers = [];
+    private array $renderers = [];
 
-    public function __construct(string $name)
-    {
-        $this->name = $name;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private string $name,
+    ) {
     }
 
     /**
-     * @return static
      * @psalm-mutation-free
      */
     public function withIsDefault(bool $is_default): self
@@ -74,7 +77,26 @@ final class XMLReport
     }
 
     /**
-     * @return static
+     * @psalm-mutation-free
+     */
+    public function withExpertMode(): self
+    {
+        $new                    = clone $this;
+        $new->is_in_expert_mode = true;
+        return $new;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function withExpertQuery(string $expert_query): self
+    {
+        $new               = clone $this;
+        $new->expert_query = $expert_query;
+        return $new;
+    }
+
+    /**
      * @psalm-mutation-free
      */
     public function withDescription(string $description): self
@@ -85,7 +107,6 @@ final class XMLReport
     }
 
     /**
-     * @return static
      * @psalm-mutation-free
      */
     public function withCriteria(XMLReportCriterion ...$criterion): self
@@ -96,13 +117,12 @@ final class XMLReport
     }
 
     /**
-     * @return static
      * @psalm-mutation-free
      */
-    public function withRenderers(XMLRenderer $renderer): self
+    public function withRenderers(XMLRenderer ...$renderers): self
     {
-        $new              = clone $this;
-        $new->renderers[] = $renderer;
+        $new            = clone $this;
+        $new->renderers = array_merge($new->renderers, $renderers);
         return $new;
     }
 
@@ -112,6 +132,14 @@ final class XMLReport
 
         if ($this->is_default) {
             $xml_report->addAttribute('is_default', '1');
+        }
+
+        if ($this->is_in_expert_mode) {
+            $xml_report->addAttribute('is_in_expert_mode', '1');
+        }
+
+        if ($this->expert_query) {
+            $xml_report->addAttribute('expert_query', $this->expert_query);
         }
 
         $cdata = new XML_SimpleXMLCDATAFactory();

@@ -21,6 +21,7 @@
             <formElement type="text" ID="bug_description" rank="2" required="1">
               <name><![CDATA[description]]></name>
               <label><![CDATA[Descriptif]]></label>
+              <properties rows="10" cols="50"/>
             </formElement>
           </formElements>
         </formElement>
@@ -113,6 +114,7 @@
         <formElement type="text" ID="bug_customfield_10204" rank="2" required="1">
           <name><![CDATA[customfield_10204]]></name>
           <label><![CDATA[Comment reproduire]]></label>
+          <properties rows="10" cols="50"/>
         </formElement>
         <formElement type="msb" ID="bug_versions" rank="1" required="1">
           <name><![CDATA[versions]]></name>
@@ -190,30 +192,37 @@
         <formElement type="text" ID="bug_customfield_10231" rank="2" required="1">
           <name><![CDATA[customfield_10231]]></name>
           <label><![CDATA[Fil d'analyse]]></label>
+          <properties rows="10" cols="50"/>
         </formElement>
         <formElement type="text" ID="bug_customfield_10232" rank="2" required="1">
           <name><![CDATA[customfield_10232]]></name>
           <label><![CDATA[Revue de code]]></label>
+          <properties rows="10" cols="50"/>
         </formElement>
         <formElement type="text" ID="bug_customfield_10235" rank="2" required="1">
           <name><![CDATA[customfield_10235]]></name>
           <label><![CDATA[Tags doxygen]]></label>
+          <properties rows="10" cols="50"/>
         </formElement>
         <formElement type="text" ID="bug_customfield_10236" rank="2" required="1">
           <name><![CDATA[customfield_10236]]></name>
           <label><![CDATA[Revue de docs]]></label>
+          <properties rows="10" cols="50"/>
         </formElement>
         <formElement type="text" ID="bug_customfield_10229" rank="2" required="1">
           <name><![CDATA[customfield_10229]]></name>
           <label><![CDATA[Revue FTU]]></label>
+          <properties rows="10" cols="50"/>
         </formElement>
         <formElement type="text" ID="bug_customfield_10233" rank="2" required="1">
           <name><![CDATA[customfield_10233]]></name>
           <label><![CDATA[Comment tester]]></label>
+          <properties rows="10" cols="50"/>
         </formElement>
         <formElement type="text" ID="bug_customfield_10234" rank="2" required="1">
           <name><![CDATA[customfield_10234]]></name>
           <label><![CDATA[Analyse d'impact]]></label>
+          <properties rows="10" cols="50"/>
         </formElement>
         <formElement type="sb" ID="bug_customfield_10249" rank="5">
           <name><![CDATA[customfield_10249]]></name>

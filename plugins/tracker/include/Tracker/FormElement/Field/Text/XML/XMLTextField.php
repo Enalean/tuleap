@@ -27,8 +27,44 @@ use Tuleap\Tracker\FormElement\Field\XML\XMLField;
 
 final class XMLTextField extends XMLField
 {
+    private int $rows = 10;
+    private int $cols = 50;
+
     public static function getType(): string
     {
         return \Tracker_FormElementFactory::FIELD_TEXT_TYPE;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function withRows(int $rows): self
+    {
+        $new       = clone $this;
+        $new->rows = $rows;
+
+        return $new;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function withCols(int $cols): self
+    {
+        $new       = clone $this;
+        $new->cols = $cols;
+
+        return $new;
+    }
+
+    public function export(\SimpleXMLElement $form_elements): \SimpleXMLElement
+    {
+        $field = parent::export($form_elements);
+
+        $properties = $field->addChild('properties');
+        $properties->addAttribute('rows', (string) $this->rows);
+        $properties->addAttribute('cols', (string) $this->cols);
+
+        return $field;
     }
 }

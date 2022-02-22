@@ -31,7 +31,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
 use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\XML\XMLFloatField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindUsersValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsers\XML\XMLBindUsersValue;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLListField;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLMultiSelectBoxField;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLRadioButtonField;

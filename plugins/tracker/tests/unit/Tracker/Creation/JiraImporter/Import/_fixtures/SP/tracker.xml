@@ -21,6 +21,7 @@
             <formElement type="text" ID="bug_description" rank="2">
               <name><![CDATA[description]]></name>
               <label><![CDATA[Description]]></label>
+              <properties rows="10" cols="50"/>
             </formElement>
           </formElements>
         </formElement>

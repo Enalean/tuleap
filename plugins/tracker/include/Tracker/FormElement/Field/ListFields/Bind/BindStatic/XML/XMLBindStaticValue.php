@@ -25,9 +25,11 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML;
 
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLListField;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLDecorator;
 use Tuleap\Tracker\XML\IDGenerator;
 
-class XMLBindStaticValue
+final class XMLBindStaticValue implements XMLBindValue
 {
     /**
      * @readonly
@@ -41,6 +43,18 @@ class XMLBindStaticValue
      * @readonly
      */
     public string $label;
+    /**
+     * @readonly
+     */
+    private ?XMLDecorator $decorator = null;
+    /**
+     * @readonly
+     */
+    private string $description = '';
+    /**
+     * @readonly
+     */
+    public bool $is_default = false;
 
     public function __construct(string|IDGenerator $id, string $label)
     {
@@ -60,10 +74,69 @@ class XMLBindStaticValue
         return new self(sprintf('V%s_%s', $field->id, FieldNameFormatter::getFormattedName($label)), $label);
     }
 
-    public function export(\SimpleXMLElement $bind): void
+    /**
+     * @psalm-mutation-free
+     */
+    public function withIsDefault(): self
     {
-        $item = $bind->addChild('item');
+        $new             = clone $this;
+        $new->is_default = true;
+
+        return $new;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function withDescription(string $description): self
+    {
+        $new              = clone $this;
+        $new->description = $description;
+
+        return $new;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function withDecorator(string $tlp_color_name): self
+    {
+        $new            = clone $this;
+        $new->decorator = new XMLDecorator($this->id, $tlp_color_name);
+
+        return $new;
+    }
+
+    public function export(\SimpleXMLElement $bind, \SimpleXMLElement $values): void
+    {
+        $item = $values->addChild('item');
         $item->addAttribute('ID', $this->id);
         $item->addAttribute('label', $this->label);
+
+        if ($this->description) {
+            (new \XML_SimpleXMLCDATAFactory())->insert($item, 'description', $this->description);
+        }
+
+        $this->exportDecorator($bind);
+        $this->exportDefaultValue($bind);
+    }
+
+    private function exportDecorator(\SimpleXMLElement $bind): void
+    {
+        if (! $this->decorator) {
+            return;
+        }
+
+        $decorators = $bind->decorators ?: $bind->addChild('decorators');
+        $this->decorator->export($decorators);
+    }
+
+    private function exportDefaultValue(\SimpleXMLElement $bind): void
+    {
+        if (! $this->is_default) {
+            return;
+        }
+        $default_values = $bind->default_values ?: $bind->addChild('default_values');
+        $default_values->addChild('value')->addAttribute('REF', $this->id);
     }
 }

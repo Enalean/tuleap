@@ -25,7 +25,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ListFields\XML;
 
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindUsersValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsers\XML\XMLBindUsersValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValue;
 use Tuleap\Tracker\FormElement\Field\XML\XMLField;
 
 abstract class XMLListField extends XMLField
@@ -36,7 +37,7 @@ abstract class XMLListField extends XMLField
      */
     public ?string $bind_type = null;
     /**
-     * @var XMLBindStaticValue[]|XMLBindUsersValue[]
+     * @var XMLBindValue[]
      * @readonly
      */
     public array $bind_values = [];
@@ -109,7 +110,7 @@ abstract class XMLListField extends XMLField
         if (count($this->bind_values) > 0) {
             $items = $bind->addChild('items');
             foreach ($this->bind_values as $bind_value) {
-                $bind_value->export($items);
+                $bind_value->export($bind, $items);
             }
         }
 

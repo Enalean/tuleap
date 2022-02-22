@@ -21,9 +21,11 @@
  */
 
 use Tuleap\GraphOnTrackersV5\Async\ChartDataController;
+use Tuleap\GraphOnTrackersV5\XML\Template\CompleteIssuesTemplate;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
+use Tuleap\Tracker\Template\CompleteIssuesTemplateEvent;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ .  '/../vendor/autoload.php';
@@ -77,6 +79,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
 
             $this->addHook('javascript_file');
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
+            $this->addHook(CompleteIssuesTemplateEvent::NAME);
         }
         $this->allowedForProject = [];
     }
@@ -117,7 +120,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
                 $params['instance']->initiateSession();
             }
             $f = GraphOnTrackersV5_ChartFactory::instance();
-            if (isset($params['row']['charts']) && isset($params['row']['mapping'])) {
+            if (isset($params['row']['charts'], $params['row']['charts']->chart, $params['row']['mapping'])) {
                 $charts = [];
                 foreach ($params['row']['charts']->chart as $chart) {
                     $charts[] = $f->getInstanceFromXML($chart, $params['instance'], $params['row']['mapping'], $params['store_in_session']);
@@ -350,5 +353,12 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
             "/plugins/graphontrackersv5/report/{report_id:\d+}/renderer/{renderer_id:-?\d+}/chart/{chart_id:-?\d+}",
             $this->getRouteHandler('routeGetChart')
         );
+    }
+
+    public function completeIssuesTemplate(CompleteIssuesTemplateEvent $event): void
+    {
+        $event->addAllIssuesRenderers(...CompleteIssuesTemplate::getAllIssuesRenderers());
+        $event->addMyIssuesRenderers(CompleteIssuesTemplate::getMyIssuesRenderer());
+        $event->addOpenIssuesRenderers(CompleteIssuesTemplate::getOpenIssuesRenderer());
     }
 }

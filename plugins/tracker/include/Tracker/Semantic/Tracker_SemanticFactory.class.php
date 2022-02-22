@@ -96,7 +96,7 @@ class Tracker_SemanticFactory
             return $this->getSemanticContributorFactory();
         }
 
-        if ($type === 'tooltip') {
+        if ($type === \Tracker_Tooltip::NAME) {
             return $this->getSemanticTooltipFactory();
         }
 

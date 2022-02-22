@@ -29,6 +29,7 @@ use Tuleap\Cardwall\REST\v1\MilestonesCardwallResource;
 use Tuleap\Cardwall\Semantic\BackgroundColorDao;
 use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFactory;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
+use Tuleap\Cardwall\XML\Template\CompleteIssuesTemplate;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
@@ -36,6 +37,7 @@ use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
 use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
+use Tuleap\Tracker\Template\CompleteIssuesTemplateEvent;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 
@@ -89,6 +91,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             $this->addHook(IsFieldUsedInASemanticEvent::NAME);
             $this->addHook(ImportRendererFromXmlEvent::NAME);
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
+            $this->addHook(CompleteIssuesTemplateEvent::NAME);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(PaneInfoCollector::NAME);
@@ -656,7 +659,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         $request->set('use_freestyle_columns', 1);
 
         $this->getConfigFactory()->getOnTopConfigUpdater($params['tracker'])
-                ->process($request);
+            ->process($request);
     }
 
     /**
@@ -718,5 +721,12 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     public function routeLegacyController(): \Tuleap\Cardwall\CardwallLegacyController
     {
         return new \Tuleap\Cardwall\CardwallLegacyController($this->getConfigFactory());
+    }
+
+    public function completeIssuesTemplate(CompleteIssuesTemplateEvent $event): void
+    {
+        $event->addAllIssuesRenderers(CompleteIssuesTemplate::getAllIssuesRenderer());
+        $event->addMyIssuesRenderers(CompleteIssuesTemplate::getMyIssuesRenderer());
+        $event->addOpenIssuesRenderers(CompleteIssuesTemplate::getOpenIssuesRenderer());
     }
 }

@@ -32,8 +32,9 @@ final class XMLDoneSemantic extends XMLSemantic
 {
     /**
      * @var XMLBindValueReference[]
+     * @readonly
      */
-    private $done_values = [];
+    private array $done_values = [];
 
     public function __construct()
     {
@@ -56,8 +57,8 @@ final class XMLDoneSemantic extends XMLSemantic
 
         $cdata = new \XML_SimpleXMLCDATAFactory();
         $cdata->insert($semantic, 'shortname', SemanticDone::NAME);
-        $cdata->insert($semantic, 'label', dgettext('tuleap-tracker', 'Done'));
-        $cdata->insert($semantic, 'description', dgettext('tuleap-tracker', 'Define the closed status that are considered Done'));
+        $cdata->insert($semantic, 'label', 'Done');
+        $cdata->insert($semantic, 'description', 'Define the closed status that are considered Done');
 
         $closed_values = $semantic->addChild('closed_values');
         foreach ($this->done_values as $done_value) {

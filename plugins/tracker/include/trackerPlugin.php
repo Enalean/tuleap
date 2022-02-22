@@ -53,6 +53,7 @@ use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
+use Tuleap\Project\Registration\Template\DefineIssueTemplateEvent;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\NoArchive;
@@ -350,6 +351,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addHook(NewDropdownProjectLinksCollector::NAME);
 
         $this->addHook(CrossReferenceByNatureOrganizer::NAME);
+        $this->addHook(DefineIssueTemplateEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -2438,5 +2440,10 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         );
 
         $tracker_organizer->organizeArtifactReferences($by_nature_organizer);
+    }
+
+    public function defineIssueTemplateEvent(DefineIssueTemplateEvent $event): void
+    {
+        \Tuleap\Tracker\Template\IssuesTemplate::defineTemplate($event->getProject(), EventManager::instance());
     }
 }
