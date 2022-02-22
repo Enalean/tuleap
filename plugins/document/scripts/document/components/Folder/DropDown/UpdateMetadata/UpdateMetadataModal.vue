@@ -63,9 +63,9 @@ import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import DocumentGlobalMetadataForUpdate from "./DocumentGlobalMetadataForUpdate.vue";
 import OtherInformationMetadataForUpdate from "./OtherInformationMetadataForUpdate.vue";
-import OwnerMetadata from "../MetadataForCreateOrUpdate/AlwaysThereMetadata/OwnerMetadata.vue";
-import { getCustomMetadata } from "../../../../helpers/metadata-helpers/custom-metadata-helper";
-import { transformCustomMetadataForItemUpdate } from "../../../../helpers/metadata-helpers/update-data-transformatter-helper";
+import OwnerMetadata from "../MetadataForCreateOrUpdate/AlwaysThereProperties/OwnerMetadata.vue";
+import { getCustomMetadata } from "../../../../helpers/properties-helpers/custom-metadata-helper";
+import { transformCustomMetadataForItemUpdate } from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
 import emitter from "../../../../helpers/emitter";
 
 export default {

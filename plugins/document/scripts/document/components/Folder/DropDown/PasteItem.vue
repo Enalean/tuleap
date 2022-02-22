@@ -52,7 +52,7 @@ import { CLIPBOARD_OPERATION_COPY, TYPE_FOLDER } from "../../../constants";
 import {
     doesDocumentNameAlreadyExist,
     doesFolderNameAlreadyExist,
-} from "../../../helpers/metadata-helpers/check-item-title";
+} from "../../../helpers/properties-helpers/check-item-title";
 import { isItemDestinationIntoItself } from "../../../helpers/clipboard/clipboard-helpers";
 
 const clipboard = namespace("clipboard");

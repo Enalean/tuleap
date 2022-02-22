@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <status-metadata
+    <status-property
         v-model="status_value"
         v-if="is_item_status_metadata_used"
         data-test="document-status-metadata-for-folder-update"
@@ -28,14 +28,14 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { mapState } from "vuex";
-import StatusMetadata from "../MetadataForCreateOrUpdate/StatusMetadata.vue";
-import { getStatusIdFromName } from "../../../../helpers/metadata-helpers/hardcoded-metadata-mapping-helper";
-import { transformFolderMetadataForRecursionAtUpdate } from "../../../../helpers/metadata-helpers/update-data-transformatter-helper";
+import StatusProperty from "../MetadataForCreateOrUpdate/StatusProperty.vue";
+import { getStatusIdFromName } from "../../../../helpers/properties-helpers/hardcoded-metadata-mapping-helper";
+import { transformFolderMetadataForRecursionAtUpdate } from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
 
 export default {
     name: "StatusMetadataWithCustomBindingForFolderUpdate",
     components: {
-        StatusMetadata,
+        StatusProperty,
     },
     props: {
         currentlyUpdatedItem: Object,

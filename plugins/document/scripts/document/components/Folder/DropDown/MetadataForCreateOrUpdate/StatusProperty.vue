@@ -41,10 +41,12 @@
     </div>
 </template>
 
-<script>
-export default {
-    props: {
-        value: String,
-    },
-};
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+
+@Component
+export default class StatusProperty extends Vue {
+    @Prop({ required: true })
+    readonly value!: string;
+}
 </script>

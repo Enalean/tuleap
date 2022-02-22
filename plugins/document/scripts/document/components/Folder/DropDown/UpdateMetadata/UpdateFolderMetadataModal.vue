@@ -58,8 +58,8 @@ import FolderGlobalMetadataForUpdate from "./FolderGlobalMetadataForUpdate.vue";
 import {
     transformCustomMetadataForItemUpdate,
     transformFolderMetadataForRecursionAtUpdate,
-} from "../../../../helpers/metadata-helpers/update-data-transformatter-helper";
-import { getCustomMetadata } from "../../../../helpers/metadata-helpers/custom-metadata-helper";
+} from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
+import { getCustomMetadata } from "../../../../helpers/properties-helpers/custom-metadata-helper";
 import emitter from "../../../../helpers/emitter";
 
 export default {

@@ -67,7 +67,7 @@
 <script>
 import { mapState } from "vuex";
 import moment from "moment/moment";
-import { getObsolescenceDateValueInput } from "../../../../../helpers/metadata-helpers/obsolescence-date-value";
+import { getObsolescenceDateValueInput } from "../../../../../helpers/properties-helpers/obsolescence-date-value";
 import DateFlatPicker from "../../MetadataForCreateOrUpdate/DateFlatPicker.vue";
 
 export default {

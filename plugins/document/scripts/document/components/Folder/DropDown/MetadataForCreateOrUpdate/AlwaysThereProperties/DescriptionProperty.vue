@@ -20,27 +20,24 @@
 
 <template>
     <div class="tlp-form-element">
-        <label class="tlp-label" for="document-new-item-description" v-translate>Description</label>
+        <label class="tlp-label" for="document-description" v-translate>Description</label>
         <textarea
             class="tlp-textarea"
-            id="document-new-item-description"
+            id="document-description"
             name="description"
-            v-bind:placeholder="placeholder"
+            v-bind:placeholder="`${$gettext('My useful document description')}`"
             v-bind:value="value"
             v-on:input="$emit('input', $event.target.value)"
-            data-test="document-metadata-description"
+            data-test="document-property-description"
         ></textarea>
     </div>
 </template>
-<script>
-export default {
-    props: {
-        value: String,
-    },
-    computed: {
-        placeholder() {
-            return this.$gettext("My useful document description");
-        },
-    },
-};
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+
+@Component
+export default class DescriptionProperty extends Vue {
+    @Prop({ required: true })
+    readonly value!: string;
+}
 </script>

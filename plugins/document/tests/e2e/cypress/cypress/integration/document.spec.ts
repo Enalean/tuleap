@@ -53,7 +53,7 @@ describe("Document new UI", () => {
 
             cy.get("[data-test=document-new-folder-modal]").within(() => {
                 cy.get("[data-test=document-new-item-title]").type("My new folder");
-                cy.get("[data-test=document-metadata-description]").type(
+                cy.get("[data-test=document-property-description]").type(
                     "With a description because I like to describe what I'm doing"
                 );
 

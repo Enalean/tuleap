@@ -95,10 +95,10 @@ import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import EmbeddedProperties from "../MetadataForCreateOrUpdate/EmbeddedProperties.vue";
 import FileProperties from "../MetadataForCreateOrUpdate/FileProperties.vue";
 import OtherInformationMetadataForCreate from "./MetadataForCreate/OtherInformationMetadataForCreate.vue";
-import { getCustomMetadata } from "../../../../helpers/metadata-helpers/custom-metadata-helper";
+import { getCustomMetadata } from "../../../../helpers/properties-helpers/custom-metadata-helper";
 import { handleErrors } from "../../../../store/actions-helpers/handle-errors";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
-import { transformCustomMetadataForItemCreation } from "../../../../helpers/metadata-helpers/creation-data-transformatter-helper";
+import { transformCustomMetadataForItemCreation } from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
 import emitter from "../../../../helpers/emitter";
 
 export default {
