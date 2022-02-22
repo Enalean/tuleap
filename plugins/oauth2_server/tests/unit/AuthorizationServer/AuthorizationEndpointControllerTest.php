@@ -34,10 +34,10 @@ use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\App\OAuth2AppNotFoundException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\OAuth2PKCEInformationExtractionException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
+use Tuleap\OAuth2ServerCore\AuthorizationServer\ConsentChecker;
 use Tuleap\OAuth2ServerCore\OAuth2TestScope;
 use Tuleap\OAuth2ServerCore\Scope\InvalidOAuth2ScopeException;
 use Tuleap\OAuth2ServerCore\Scope\ScopeExtractor;
-use Tuleap\OAuth2Server\User\AuthorizationComparator;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2OfflineAccessScope;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\LayoutBuilder;
@@ -47,8 +47,7 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /** @var AuthorizationEndpointController */
-    private $controller;
+    private AuthorizationEndpointController $controller;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizationFormRenderer
      */
@@ -70,13 +69,13 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
      */
     private $response_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizationComparator
-     */
-    private $comparator;
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject&PKCEInformationExtractor
      */
     private $pkce_information_extractor;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&ConsentChecker
+     */
+    private $consent_checker;
 
     protected function setUp(): void
     {
@@ -85,18 +84,18 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->user_manager               = $this->createMock(\UserManager::class);
         $this->scope_extractor            = $this->createMock(ScopeExtractor::class);
         $this->response_factory           = $this->createMock(AuthorizationCodeResponseFactory::class);
-        $this->comparator                 = $this->createMock(AuthorizationComparator::class);
         $this->pkce_information_extractor = $this->createMock(PKCEInformationExtractor::class);
-        $this->controller                 = new AuthorizationEndpointController(
+        $this->consent_checker            = $this->createMock(ConsentChecker::class);
+
+        $this->controller = new AuthorizationEndpointController(
             $this->form_renderer,
             $this->user_manager,
             $this->app_factory,
             $this->scope_extractor,
             $this->response_factory,
-            $this->comparator,
             $this->pkce_information_extractor,
             new PromptParameterValuesExtractor(),
-            OAuth2OfflineAccessScope::fromItself(),
+            $this->consent_checker,
             new NullLogger(),
             $this->createMock(EmitterInterface::class)
         );
@@ -369,10 +368,13 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
             ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
         $this->scope_extractor->expects(self::once())->method('extractScopes')
             ->willReturn([OAuth2TestScope::fromItself()]);
-        $this->comparator->expects(self::once())->method('areRequestedScopesAlreadyGranted')
-            ->willReturn(true);
         $this->pkce_information_extractor->method('extractCodeChallenge')->willReturn('extracted_code_challenge');
         $this->form_renderer->expects(self::never())->method('renderForm');
+
+        $this->consent_checker
+            ->expects(self::once())
+            ->method('isConsentRequired')
+            ->willReturn(false);
 
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
         $this->response_factory->method('createSuccessfulResponse')->willReturn($response);
@@ -380,36 +382,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->assertSame($response, $this->controller->handle($request));
     }
 
-    public function testRendersAuthorizationFormWhenAPreviousAuthorizationHasBeenGrantedButConsentIsRequiredByPromptParameter(): void
-    {
-        $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->method('getCurrentUser')->willReturn($user);
-        $project = ProjectTestBuilder::aProject()->withPublicName('Test Project')->build();
-        $request = (new NullServerRequest())->withQueryParams(
-            [
-                'client_id'     => 'tlp-client-id-1',
-                'redirect_uri'  => 'https://example.com/redirect',
-                'response_type' => 'code',
-                'state'         => 'xyz',
-                'scope'         => 'scopename:read',
-                'prompt'        => 'consent',
-            ]
-        );
-
-        $this->app_factory->expects(self::once())->method('getAppMatchingClientId')
-            ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
-        $this->scope_extractor->expects(self::once())->method('extractScopes')
-            ->willReturn([$this->createMock(AuthenticationScope::class)]);
-        $this->comparator->method('areRequestedScopesAlreadyGranted')
-            ->willReturn(true);
-        $this->pkce_information_extractor->method('extractCodeChallenge')->willReturn('extracted_code_challenge');
-
-        $this->form_renderer->expects(self::once())->method('renderForm')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
-
-        $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
-    }
-
-    public function testRendersAuthorizationFormWhenAPreviousAuthorizationHasBeenGrantedButConsentIsRequiredBecauseOfflineAccessScopeIsAsked(): void
+    public function testRendersAuthorizationFormWhenConstentIsRequired(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->method('getCurrentUser')->willReturn($user);
@@ -428,9 +401,12 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
             ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
         $this->scope_extractor->expects(self::once())->method('extractScopes')
             ->willReturn([OAuth2OfflineAccessScope::fromItself()]);
-        $this->comparator->expects(self::once())->method('areRequestedScopesAlreadyGranted')
-            ->willReturn(true);
         $this->pkce_information_extractor->method('extractCodeChallenge')->willReturn('extracted_code_challenge');
+
+        $this->consent_checker
+            ->expects(self::once())
+            ->method('isConsentRequired')
+            ->willReturn(true);
 
         $this->form_renderer->expects(self::once())->method('renderForm')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
 
@@ -457,9 +433,12 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
             ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
         $this->scope_extractor->expects(self::once())->method('extractScopes')
             ->willReturn([$this->createMock(AuthenticationScope::class)]);
-        $this->comparator->expects(self::once())->method('areRequestedScopesAlreadyGranted')
-            ->willReturn(false);
         $this->pkce_information_extractor->method('extractCodeChallenge')->willReturn('extracted_code_challenge');
+
+        $this->consent_checker
+            ->expects(self::once())
+            ->method('isConsentRequired')
+            ->willReturn(true);
 
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
         $this->response_factory->expects(self::once())->method('createErrorResponse')
@@ -494,10 +473,13 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
             ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
         $this->scope_extractor->expects(self::once())->method('extractScopes')
             ->willReturn([$this->createMock(AuthenticationScope::class)]);
-        $this->comparator->expects(self::once())->method('areRequestedScopesAlreadyGranted')
-            ->willReturn(false);
         $this->pkce_information_extractor->method('extractCodeChallenge')->willReturn('extracted_code_challenge');
         $this->form_renderer->expects(self::once())->method('renderForm')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
+
+        $this->consent_checker
+            ->expects(self::once())
+            ->method('isConsentRequired')
+            ->willReturn(true);
 
         $response = $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
 
@@ -535,10 +517,13 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
             ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
         $this->scope_extractor->expects(self::once())->method('extractScopes')
             ->willReturn([$this->createMock(AuthenticationScope::class)]);
-        $this->comparator->expects(self::once())->method('areRequestedScopesAlreadyGranted')
-            ->willReturn(false);
         $this->pkce_information_extractor->method('extractCodeChallenge')->willReturn('extracted_code_challenge');
         $this->form_renderer->expects(self::once())->method('renderForm')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
+
+        $this->consent_checker
+            ->expects(self::once())
+            ->method('isConsentRequired')
+            ->willReturn(true);
 
         $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
     }
