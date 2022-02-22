@@ -401,6 +401,32 @@ class XMLTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         assertEquals('Done', $node->formElements->formElement[0]->bind->items->item[2]['label']);
     }
 
+    public function testATrackerHasManyReports(): void
+    {
+        $tracker = (new XMLTracker('id', 'bug'))
+            ->withFormElement((new XMLStringField('some_id', 'name'))->withoutPermissions())
+            ->withReports(
+                (new XMLReport('Default'))
+                    ->withCriteria(
+                        new XMLReportCriterion(
+                            new XMLReferenceByName('name')
+                        )
+                    ),
+                (new XMLReport('Another'))
+                    ->withCriteria(
+                        new XMLReportCriterion(
+                            new XMLReferenceByName('name')
+                        )
+                    ),
+            );
+
+        $xml  = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+        $node = $tracker->export($xml);
+
+        assertEquals('some_id', (string) $node->reports->report[0]->criterias->criteria[0]->field['REF']);
+        assertEquals('some_id', (string) $node->reports->report[1]->criterias->criteria[0]->field['REF']);
+    }
+
     public function testItHasAReportThatReferenceAFieldIndexedByName(): void
     {
         $tracker = (new XMLTracker('id', 'bug'))
