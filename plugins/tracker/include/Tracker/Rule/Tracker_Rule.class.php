@@ -88,7 +88,7 @@ abstract class Tracker_Rule
     }
 
     /**
-     * @return int|string
+     * @return int
      */
     public function getSourceFieldId()
     {
@@ -152,7 +152,7 @@ abstract class Tracker_Rule
 
     /**
      *
-     * @return int|string
+     * @return int
      */
     public function getTargetFieldId()
     {
