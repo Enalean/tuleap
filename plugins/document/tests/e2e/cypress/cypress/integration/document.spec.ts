@@ -184,7 +184,8 @@ describe("Document new UI", () => {
             // Create a folder
             cy.get("[data-test=document-header-actions]").within(() => {
                 cy.get("[data-test=document-drop-down-button]").click();
-                cy.get("[data-test=document-new-folder-creation-button]").click();
+                // need to force click because buttons can be out of viewport
+                cy.get("[data-test=document-new-folder-creation-button]").click({ force: true });
             });
 
             cy.get("[data-test=document-new-folder-modal]").within(() => {
