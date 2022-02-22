@@ -18,15 +18,7 @@
   -->
 
 <template>
-    <select
-        class="tlp-input"
-        id="document-item-owner"
-        name="owner"
-        required
-        ref="owner_input"
-        v-bind:value="value"
-        v-on:input="$emit('input', parseInt($event.target.value), 10)"
-    >
+    <select class="tlp-input" id="document-item-owner" name="owner" required ref="owner_input">
         <option selected v-bind:value="currently_selected_user.id">
             {{ currently_selected_user.display_name }}
         </option>
@@ -34,14 +26,12 @@
     </select>
 </template>
 
-<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { autocomplete_users_for_select2 } from "../../../../../../../../src/scripts/tuleap/autocomplete-for-select2.js";
 
 export default {
     name: "PeoplePicker",
     props: {
-        value: Number,
         currently_selected_user: Object,
     },
     data() {
@@ -52,7 +42,6 @@ export default {
     mounted() {
         const current_user = {
             id: this.currently_selected_user.id,
-            text: this.currently_selected_user.name,
         };
 
         const configuration = {
@@ -69,7 +58,6 @@ export default {
             .on("change", (event) => {
                 const updated_value = parseInt(event.target.value, 10);
                 this.$emit("input", updated_value);
-                this.currently_selected_user.id = updated_value;
             });
     },
     destroyed() {

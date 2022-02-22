@@ -35,10 +35,7 @@
             <document-global-property-for-update
                 v-bind:parent="current_folder"
                 v-bind:currently-updated-item="item_to_update"
-            >
-                <owner-property v-bind:currently-updated-item="item_to_update" />
-            </document-global-property-for-update>
-
+            />
             <other-information-properties-for-update
                 v-bind:currently-updated-item="item_to_update"
                 v-bind:property-to-update="formatted_item_properties"
@@ -63,7 +60,6 @@ import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import DocumentGlobalPropertyForUpdate from "./DocumentGlobalPropertyForUpdate.vue";
 import OtherInformationPropertiesForUpdate from "./OtherInformationPropertiesForUpdate.vue";
-import OwnerProperty from "../PropertiesForCreateOrUpdate/AlwaysThereProperties/OwnerProperty.vue";
 import { getCustomProperties } from "../../../../helpers/properties-helpers/custom-properties-helper";
 import { transformCustomPropertiesForItemUpdate } from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
 import emitter from "../../../../helpers/emitter";
@@ -71,7 +67,6 @@ import emitter from "../../../../helpers/emitter";
 export default {
     components: {
         ModalFeedback,
-        OwnerProperty,
         OtherInformationPropertiesForUpdate,
         DocumentGlobalPropertyForUpdate,
         ModalHeader,
