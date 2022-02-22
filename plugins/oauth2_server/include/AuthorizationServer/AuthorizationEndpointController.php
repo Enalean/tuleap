@@ -27,13 +27,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Log\LoggerInterface;
-use Tuleap\Layout\BaseLayout;
 use Tuleap\OAuth2ServerCore\App\AppFactory;
 use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
 use Tuleap\OAuth2ServerCore\App\InvalidClientIdentifierKey;
 use Tuleap\OAuth2ServerCore\App\OAuth2AppNotFoundException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\OAuth2PKCEInformationExtractionException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
+use Tuleap\OAuth2ServerCore\AuthorizationServer\ConsentRequiredResponseBuilder;
 use Tuleap\OAuth2ServerCore\AuthorizationServer\ConsentChecker;
 use Tuleap\OAuth2ServerCore\Scope\InvalidOAuth2ScopeException;
 use Tuleap\OAuth2ServerCore\Scope\ScopeExtractor;
@@ -72,10 +72,6 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
 
     public const CSRF_TOKEN = 'oauth2_server_authorization_endpoint';
     /**
-     * @var AuthorizationFormRenderer
-     */
-    private $form_renderer;
-    /**
      * @var \UserManager
      */
     private $user_manager;
@@ -105,7 +101,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
     private $logger;
 
     public function __construct(
-        AuthorizationFormRenderer $form_renderer,
+        private ConsentRequiredResponseBuilder $consent_required_response_builder,
         \UserManager $user_manager,
         AppFactory $app_factory,
         ScopeExtractor $scope_extractor,
@@ -118,7 +114,6 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-        $this->form_renderer                     = $form_renderer;
         $this->user_manager                      = $user_manager;
         $this->app_factory                       = $app_factory;
         $this->scope_extractor                   = $scope_extractor;
@@ -278,17 +273,15 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         }
 
         $this->logger->debug('Asking consent to the user');
-        $layout = $request->getAttribute(BaseLayout::class);
-        assert($layout instanceof BaseLayout);
-        $csrf_token = new \CSRFSynchronizerToken(self::CSRF_TOKEN);
-        $data       = new AuthorizationFormData($client_app, $csrf_token, $redirect_uri, $state_value, $code_challenge, $oidc_nonce, ...$scopes);
-        return $this->form_renderer->renderForm($data, $layout)
-            ->withHeader(
-                'Content-Security-Policy',
-                "default-src 'report-sample'; base-uri 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval' 'report-sample'; style-src 'self' 'report-sample'; font-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self';"
-                        . "form-action 'self' " . $redirect_uri . ";"
-                        . "frame-ancestors 'none'; block-all-mixed-content; report-uri /csp-violation;"
-            );
+        return $this->consent_required_response_builder->buildConsentRequiredResponse(
+            $request,
+            $client_app,
+            $redirect_uri,
+            $state_value,
+            $code_challenge,
+            $oidc_nonce,
+            $scopes,
+        );
     }
 
     /**

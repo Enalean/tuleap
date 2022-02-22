@@ -44,6 +44,7 @@ use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\OAuth2Server\Administration\OAuth2AppProjectVerifier;
 use Tuleap\OAuth2Server\Administration\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\Administration\SiteAdmin\SiteAdminListAppsController;
+use Tuleap\OAuth2Server\AuthorizationServer\OAuth2ConsentRequiredResponseBuilder;
 use Tuleap\OAuth2Server\AuthorizationServer\OAuth2ConsentChecker;
 use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenDAO;
 use Tuleap\OAuth2ServerCore\App\AppDao;
@@ -436,11 +437,13 @@ final class oauth2_serverPlugin extends Plugin
         $redirect_uri_builder = new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory());
         $scope_builder        = $this->buildScopeBuilder();
         return new AuthorizationEndpointController(
-            new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationFormRenderer(
-                $response_factory,
-                $stream_factory,
-                TemplateRendererFactory::build(),
-                new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationFormPresenterBuilder($redirect_uri_builder)
+            new OAuth2ConsentRequiredResponseBuilder(
+                new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationFormRenderer(
+                    $response_factory,
+                    $stream_factory,
+                    TemplateRendererFactory::build(),
+                    new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationFormPresenterBuilder($redirect_uri_builder)
+                ),
             ),
             \UserManager::instance(),
             new \Tuleap\OAuth2ServerCore\App\AppFactory(new AppDao(), \ProjectManager::instance()),
