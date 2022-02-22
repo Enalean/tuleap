@@ -351,7 +351,6 @@ const fat_combined_files = [
         "./www/scripts/bootstrap/bootstrap-datetimepicker/js/bootstrap-datetimepicker-fix-prototypejs-conflict.js",
         "./www/scripts/select2/select2.min.js",
         "./www/scripts/codendi/common.js",
-        "./scripts/tuleap/listFilter.js",
         "./www/scripts/codendi/feedback.js",
         "./www/scripts/codendi/cross_references.js",
         "./node_modules/@tuleap/tooltip/dist/tooltip.umd.js",
@@ -381,7 +380,6 @@ const fat_combined_files = [
     subset_combined_flamingparrot_files = [
         "./www/scripts/bootstrap/bootstrap-dropdown.js",
         "./www/scripts/bootstrap/bootstrap-modal.js",
-        "./scripts/tuleap/listFilter.js",
         "./node_modules/@tuleap/tooltip/dist/tooltip.umd.js",
     ];
 
