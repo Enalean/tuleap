@@ -25,8 +25,7 @@ use Service;
 
 class ServicePresenter
 {
-    /** @var string */
-    public $label;
+    public string $label;
     /** @var string */
     public $description;
     /** @var int */
@@ -57,7 +56,7 @@ class ServicePresenter
         ?ServiceJSONPresenter $json_presenter,
     ) {
         $this->id             = $service->getId();
-        $this->label          = $service->getInternationalizedName();
+        $this->label          = $service->getProjectAdministrationName();
         $this->description    = $service->getInternationalizedDescription();
         $this->is_active      = $service->isActive();
         $this->is_used        = $service->isUsed();
