@@ -83,7 +83,7 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame($original_filename, $update_filename);
     }
 
-    public function testItReturnsThePatternAsNewFilenameIfThereIsNoVariable(): void
+    public function testItThrowsExceptionWhenThereIsNoVariable(): void
     {
         $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
 
@@ -94,7 +94,9 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $original_filename = "M2 CS.jpg";
 
-        $update_filename = $filename_builder->buildFilename(
+        self::expectException(InvalidMinimalPatternException::class);
+
+        $filename_builder->buildFilename(
             $original_filename,
             101,
             'From The Window To the Hood',
@@ -102,7 +104,6 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             "",
             15
         );
-        self::assertSame("Mercedes", $update_filename);
     }
 
     public function testItReturnsTheNewFilenameWithTheTitleVariable(): void
@@ -128,33 +129,11 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame("Brand-Mercedes", $update_filename);
     }
 
-    public function testItReturnsTheNewFilenameWithTheStatusVariable(): void
-    {
-        $this->docman_settings_bo->expects(self::once())->method('getMetadataUsage')->willReturn("1");
-
-        $pattern          = "Brand-Mercedes-\${STATUS}";
-        $filename_builder = new FilenameBuilder(
-            FilenamePatternRetrieverStub::buildWithPattern($pattern),
-            new ItemStatusMapper($this->docman_settings_bo)
-        );
-
-        $original_filename = "M2 CS.jpg";
-
-        $update_filename = $filename_builder->buildFilename(
-            $original_filename,
-            111,
-            "Mercedes",
-            103,
-            "",
-            15
-        );
-        self::assertSame("Brand-Mercedes-rejected", $update_filename);
-    }
-    public function testItReturnsTheNewFilenameWithTheVersionNameVariable(): void
+    public function testItThrowsExceptionWhenTheNewFilenameDoesNotHaveTheMandatoryVariable(): void
     {
         $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
 
-        $pattern          = "Brand-Mercedes-rejected-\${VERSION_NAME}";
+        $pattern          = "Brand-Mercedes-\${STATUS}-\${VERSION_NAME}";
         $filename_builder = new FilenameBuilder(
             FilenamePatternRetrieverStub::buildWithPattern($pattern),
             new ItemStatusMapper($this->docman_settings_bo)
@@ -162,15 +141,16 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $original_filename = "M2 CS.jpg";
 
-        $update_filename = $filename_builder->buildFilename(
+        self::expectException(InvalidMinimalPatternException::class);
+
+        $filename_builder->buildFilename(
             $original_filename,
             111,
             "Mercedes",
             103,
-            "Not a Mercredes wow",
+            "Fail",
             15
         );
-        self::assertSame("Brand-Mercedes-rejected-Not a Mercredes wow", $update_filename);
     }
 
     public function testItReturnsTheNewFilenameWithTheItemIdVariable(): void
