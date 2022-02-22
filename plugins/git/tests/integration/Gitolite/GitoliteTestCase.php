@@ -176,7 +176,7 @@ abstract class GitoliteTestCase extends \Tuleap\Test\PHPUnit\TestCase
     {
         $cwd = getcwd();
         chdir($this->gitolite_admin_dir);
-        exec('git status --porcelain', $output, $ret_val);
+        exec(\Git_Exec::getGitCommand() . ' status --porcelain', $output, $ret_val);
         chdir($cwd);
         $this->assertEmpty($output);
         $this->assertEquals(0, $ret_val);

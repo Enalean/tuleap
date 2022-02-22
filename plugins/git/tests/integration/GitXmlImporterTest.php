@@ -326,7 +326,7 @@ XML;
         );
 
         $sys_data_dir_arg = escapeshellarg(ForgeConfig::get('sys_data_dir'));
-        $nb_commit        = shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && git log --oneline| wc -l");
+        $nb_commit        = shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && " . \Git_Exec::getGitCommand() . " log --oneline| wc -l");
         $this->assertEquals(1, intval($nb_commit));
     }
 
@@ -342,10 +342,10 @@ XML;
 XML;
         $this->import(new SimpleXMLElement($xml));
         $sys_data_dir_arg = escapeshellarg(ForgeConfig::get('sys_data_dir'));
-        $nb_commit_stable = shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && git log --oneline| wc -l");
+        $nb_commit_stable = shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && " . \Git_Exec::getGitCommand() . " log --oneline| wc -l");
         $this->assertEquals(1, (int) $nb_commit_stable);
 
-        $nb_commit_stable2 = shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable2.git && git log --oneline| wc -l");
+        $nb_commit_stable2 = shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable2.git && " . \Git_Exec::getGitCommand() . " log --oneline| wc -l");
         $this->assertEquals(1, (int) $nb_commit_stable2);
     }
 
