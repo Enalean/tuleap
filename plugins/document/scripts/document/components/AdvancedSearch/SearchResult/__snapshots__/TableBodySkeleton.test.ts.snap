@@ -1,0 +1,240 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TableBodySkeleton should display skeleton for different types of column 1`] = `
+<tbody>
+  <tr>
+    <!---->
+     
+    <td
+      class="tlp-table-cell-numeric"
+    >
+      <!---->
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+    <td
+      class="document-search-result-icon"
+    >
+      <i
+        aria-hidden="true"
+        class="fas fa-file-alt tlp-skeleton-icon"
+      />
+    </td>
+     
+    <td
+      class=""
+    >
+      <!---->
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+    <!---->
+     
+    <td
+      class=""
+    >
+      <!---->
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+    <!---->
+     
+    <td
+      class=""
+    >
+      <i
+        aria-hidden="true"
+        class="fas fa-user tlp-skeleton-icon"
+      />
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+    <!---->
+     
+    <td
+      class=""
+    >
+      <!---->
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+    <!---->
+     
+    <td
+      class=""
+    >
+      <!---->
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+  </tr>
+  <tr>
+    <!---->
+     
+    <td
+      class="tlp-table-cell-numeric"
+    >
+      <!---->
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+    <td
+      class="document-search-result-icon"
+    >
+      <i
+        aria-hidden="true"
+        class="fas fa-file-alt tlp-skeleton-icon"
+      />
+    </td>
+     
+    <td
+      class=""
+    >
+      <!---->
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+    <!---->
+     
+    <td
+      class=""
+    >
+      <!---->
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+    <!---->
+     
+    <td
+      class=""
+    >
+      <i
+        aria-hidden="true"
+        class="fas fa-user tlp-skeleton-icon"
+      />
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+    <!---->
+     
+    <td
+      class=""
+    >
+      <!---->
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+    <!---->
+     
+    <td
+      class=""
+    >
+      <!---->
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+  </tr>
+  <tr>
+    <!---->
+     
+    <td
+      class="tlp-table-cell-numeric"
+    >
+      <!---->
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+    <td
+      class="document-search-result-icon"
+    >
+      <i
+        aria-hidden="true"
+        class="fas fa-file-alt tlp-skeleton-icon"
+      />
+    </td>
+     
+    <td
+      class=""
+    >
+      <!---->
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+    <!---->
+     
+    <td
+      class=""
+    >
+      <!---->
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+    <!---->
+     
+    <td
+      class=""
+    >
+      <i
+        aria-hidden="true"
+        class="fas fa-user tlp-skeleton-icon"
+      />
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+    <!---->
+     
+    <td
+      class=""
+    >
+      <!---->
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+    <!---->
+     
+    <td
+      class=""
+    >
+      <!---->
+       
+      <span
+        class="tlp-skeleton-text"
+      />
+    </td>
+  </tr>
+</tbody>
+`;

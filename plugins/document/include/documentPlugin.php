@@ -114,6 +114,7 @@ class documentPlugin extends Plugin // phpcs:ignore
             new ProjectFlagsBuilder(new ProjectFlagsDao()),
             new \Docman_ItemDao(),
             new \Tuleap\Document\Tree\ListOfSearchCriterionPresenterBuilder(),
+            new \Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder(),
         );
     }
 

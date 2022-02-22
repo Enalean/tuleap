@@ -334,9 +334,6 @@ msgstr "Mise à jour"
 msgid "Link"
 msgstr "Lien"
 
-msgid "Location"
-msgstr "Emplacement"
-
 msgid "Lock"
 msgstr "Verrouiller"
 
@@ -679,9 +676,6 @@ msgstr "URL"
 
 msgid "Unlock"
 msgstr "Déverrouiller"
-
-msgid "Update date"
-msgstr "Mise à jour"
 
 msgid "Update permissions"
 msgstr "Mettre à jour les permissions"

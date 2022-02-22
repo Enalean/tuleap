@@ -87,6 +87,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const criteria = JSON.parse(vue_mount_point.dataset.criteria).map(
         consider_string_criteria_as_text
     );
+    const columns = JSON.parse(vue_mount_point.dataset.columns);
 
     moment.tz(user_timezone);
     moment.locale(user_locale);
@@ -121,6 +122,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         search_for_document_with_criteria,
         user_locale,
         criteria,
+        columns,
     };
 
     const AppComponent = Vue.extend(App);

@@ -30,6 +30,7 @@ use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Config\HistoryEnforcementSettingsBuilder;
+use Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
@@ -49,6 +50,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         private ProjectFlagsBuilder $project_flags_builder,
         private \Docman_ItemDao $dao,
         private ListOfSearchCriterionPresenterBuilder $criteria_builder,
+        private ListOfSearchColumnDefinitionPresenterBuilder $column_builder,
     ) {
     }
 
@@ -93,6 +95,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                     new ItemStatusMapper(new \Docman_SettingsBo($project->getID())),
                     $project
                 ),
+                $this->column_builder->getColumns(),
             )
         );
 

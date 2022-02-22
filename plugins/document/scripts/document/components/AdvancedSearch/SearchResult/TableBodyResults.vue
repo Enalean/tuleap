@@ -20,19 +20,27 @@
 
 <template>
     <tbody data-test="search-results-table-body">
-        <table-body-result-row v-for="item in results" v-bind:key="item.id" v-bind:item="item" />
+        <table-body-result-row
+            v-for="item in results"
+            v-bind:key="item.id"
+            v-bind:item="item"
+            v-bind:columns="columns"
+        />
     </tbody>
 </template>
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import type { ItemSearchResult } from "../../../type";
+
+<script setup lang="ts">
+import type { ItemSearchResult, ListOfSearchResultColumnDefinition } from "../../../type";
 import TableBodyResultRow from "./TableBodyResultRow.vue";
 
-@Component({
-    components: { TableBodyResultRow },
-})
-export default class TableBodyResults extends Vue {
-    @Prop({ required: true })
-    readonly results!: ReadonlyArray<ItemSearchResult>;
-}
+defineProps<{
+    results: ReadonlyArray<ItemSearchResult>;
+    columns: ListOfSearchResultColumnDefinition;
+}>();
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>
