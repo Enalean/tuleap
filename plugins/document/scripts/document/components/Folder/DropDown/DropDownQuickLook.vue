@@ -71,13 +71,13 @@
 </template>
 <script lang="ts">
 import DropDownMenu from "./DropDownMenu.vue";
-import CreateNewItemVersionButton from "../ActionsButton/NewItemVersionButton.vue";
+import CreateNewItemVersionButton from "./NewVersion/NewItemVersionButton.vue";
 import NewItemButton from "../ActionsButton/NewItemButton.vue";
 import DropDownButton from "./DropDownButton.vue";
-import LockItem from "./LockItem.vue";
-import UnlockItem from "./UnlockItem.vue";
+import LockItem from "./Lock/LockItem.vue";
+import UnlockItem from "./Lock/UnlockItem.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
-import UpdateProperties from "./UpdateProperties.vue";
+import UpdateProperties from "./UpdateMetadata/UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import { isFolder, isWiki } from "../../../helpers/type-check-helper";
 import { Component, Prop, Vue } from "vue-property-decorator";

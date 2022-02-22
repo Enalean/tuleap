@@ -63,7 +63,7 @@ import DropDownMenu from "./DropDownMenu.vue";
 import NewFolderSecondaryAction from "./NewFolderSecondaryAction.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import DeleteItem from "./Delete/DeleteItem.vue";
-import UpdateProperties from "./UpdateProperties.vue";
+import UpdateProperties from "./UpdateMetadata/UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import DropDownItemTitle from "./DropDownItemTitle.vue";
 import { Component, Prop, Vue } from "vue-property-decorator";

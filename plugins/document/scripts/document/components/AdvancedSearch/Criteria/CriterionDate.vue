@@ -45,7 +45,7 @@ import Component from "vue-class-component";
 import Vue from "vue";
 import { Prop, Watch } from "vue-property-decorator";
 import type { AllowedSearchDateOperator, SearchCriterionDate, SearchDate } from "../../../type";
-import DateFlatPicker from "../../Folder/Metadata/DateFlatPicker.vue";
+import DateFlatPicker from "../../Folder/DropDown/MetadataForCreateOrUpdate/DateFlatPicker.vue";
 
 @Component({
     components: { DateFlatPicker },

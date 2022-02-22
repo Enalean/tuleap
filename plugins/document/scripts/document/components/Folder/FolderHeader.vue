@@ -93,8 +93,8 @@ import { mapGetters, mapState } from "vuex";
 import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../constants";
 import SearchBox from "./SearchBox.vue";
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
-import NewItemModal from "./ModalNewItem/NewItemModal.vue";
-import NewFolderModal from "./ModalNewItem/NewFolderModal.vue";
+import NewItemModal from "./DropDown/NewDocument/NewItemModal.vue";
+import NewFolderModal from "./DropDown/NewDocument/NewFolderModal.vue";
 import FolderHeaderAction from "./FolderHeaderAction.vue";
 import { isFolder } from "../../helpers/type-check-helper";
 import emitter from "../../helpers/emitter";
@@ -129,7 +129,7 @@ export default {
         "file-changelog-modal": () =>
             import(
                 /* webpackChunkName: "file-changelog-modal" */
-                "./ModalCreateNewItemVersion/FileVersionChangelogModal.vue"
+                "./DropDown/NewVersion/FileVersionChangelogModal.vue"
             ),
     },
     data() {
@@ -195,31 +195,31 @@ export default {
                 case TYPE_FILE:
                     this.shown_new_version_modal = () =>
                         import(
-                            /* webpackChunkName: "document-new-file-version-modal" */ "./ModalCreateNewItemVersion/CreateNewVersionFileModal.vue"
+                            /* webpackChunkName: "document-new-file-version-modal" */ "./DropDown/NewVersion/CreateNewVersionFileModal.vue"
                         );
                     break;
                 case TYPE_EMBEDDED:
                     this.shown_new_version_modal = () =>
                         import(
-                            /* webpackChunkName: "document-new-embedded-version-file-modal" */ "./ModalCreateNewItemVersion/CreateNewVersionEmbeddedFileModal.vue"
+                            /* webpackChunkName: "document-new-embedded-version-file-modal" */ "./DropDown/NewVersion/CreateNewVersionEmbeddedFileModal.vue"
                         );
                     break;
                 case TYPE_WIKI:
                     this.shown_new_version_modal = () =>
                         import(
-                            /* webpackChunkName: "document-new-wiki-version-modal" */ "./ModalCreateNewItemVersion/CreateNewVersionWikiModal.vue"
+                            /* webpackChunkName: "document-new-wiki-version-modal" */ "./DropDown/NewVersion/CreateNewVersionWikiModal.vue"
                         );
                     break;
                 case TYPE_LINK:
                     this.shown_new_version_modal = () =>
                         import(
-                            /* webpackChunkName: "document-new-link-version-modal" */ "./ModalCreateNewItemVersion/CreateNewVersionLinkModal.vue"
+                            /* webpackChunkName: "document-new-link-version-modal" */ "./DropDown/NewVersion/CreateNewVersionLinkModal.vue"
                         );
                     break;
                 case TYPE_EMPTY:
                     this.shown_new_version_modal = () =>
                         import(
-                            /* webpackChunkName: "document-new-empty-version-modal" */ "./ModalCreateNewItemVersion/CreateNewVersionEmptyModal.vue"
+                            /* webpackChunkName: "document-new-empty-version-modal" */ "./DropDown/NewVersion/CreateNewVersionEmptyModal.vue"
                         );
                     break;
                 default: //nothing
@@ -233,12 +233,12 @@ export default {
             if (!this.isItemAFolder(this.updated_metadata)) {
                 this.shown_update_metadata_modal = () =>
                     import(
-                        /* webpackChunkName: "update-metadata-modal" */ "./ModalUpdateMetadata/UpdateMetadataModal.vue"
+                        /* webpackChunkName: "update-metadata-modal" */ "./DropDown/UpdateMetadata/UpdateMetadataModal.vue"
                     );
             } else {
                 this.shown_update_metadata_modal = () =>
                     import(
-                        /* webpackChunkName: "update-folder-metadata-modal" */ "./ModalUpdateMetadata/UpdateFolderMetadataModal.vue"
+                        /* webpackChunkName: "update-folder-metadata-modal" */ "./DropDown/UpdateMetadata/UpdateFolderMetadataModal.vue"
                     );
             }
         },

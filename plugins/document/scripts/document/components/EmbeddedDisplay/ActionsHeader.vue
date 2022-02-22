@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import CreateNewItemVersionButton from "../Folder/ActionsButton/NewItemVersionButton.vue";
+import CreateNewItemVersionButton from "../Folder/DropDown/NewVersion/NewItemVersionButton.vue";
 import DetailsItemButton from "../Folder/ActionsButton/DetailsItemButton.vue";
 import DropDownButton from "../Folder/DropDown/DropDownButton.vue";
 import DropDownDisplayedEmbedded from "../Folder/DropDown/DropDownDisplayedEmbedded.vue";

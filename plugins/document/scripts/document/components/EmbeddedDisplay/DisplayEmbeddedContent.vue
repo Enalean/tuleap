@@ -77,7 +77,7 @@ import ActionsHeader from "./ActionsHeader.vue";
 import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
 import ApprovalBadge from "../Folder/ApprovalTables/ApprovalBadge.vue";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
-import UpdateMetadataModal from "../Folder/ModalUpdateMetadata/UpdateMetadataModal.vue";
+import UpdateMetadataModal from "../Folder/DropDown/UpdateMetadata/UpdateMetadataModal.vue";
 import { mapState } from "vuex";
 import emitter from "../../helpers/emitter";
 
@@ -95,7 +95,7 @@ export default {
             ),
         "create-new-embedded-file-version-modal": () =>
             import(
-                /* webpackChunkName: "document-new-embedded-file-version-modal" */ "../Folder/ModalCreateNewItemVersion/CreateNewVersionEmbeddedFileModal.vue"
+                /* webpackChunkName: "document-new-embedded-file-version-modal" */ "../Folder/DropDown/NewVersion/CreateNewVersionEmbeddedFileModal.vue"
             ),
         "confirm-deletion-modal": () =>
             import(
@@ -103,7 +103,7 @@ export default {
             ),
         "update-metadata-modal": () =>
             import(
-                /* webpackChunkName: "update-metadata-modal" */ "../Folder/ModalUpdateMetadata/UpdateMetadataModal.vue"
+                /* webpackChunkName: "update-metadata-modal" */ "../Folder/DropDown/UpdateMetadata/UpdateMetadataModal.vue"
             ),
     },
     data() {
