@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,16 @@
 
 declare(strict_types=1);
 
+use Tuleap\Layout\ServiceUrlCollector;
+use Tuleap\MediawikiStandalone\MediawikiStandaloneService;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class mediawiki_standalonePlugin extends Plugin
 {
+    private const SERVICE_SHORTNAME = 'plugin_mediawiki_standalone';
+
     public function __construct(?int $id)
     {
         parent::__construct($id);
@@ -47,5 +52,31 @@ final class mediawiki_standalonePlugin extends Plugin
         }
 
         return $this->pluginInfo;
+    }
+
+    public function getHooksAndCallbacks(): Collection
+    {
+        $this->addHook(Event::SERVICE_CLASSNAMES);
+        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
+        $this->addHook(ServiceUrlCollector::NAME);
+
+        return parent::getHooksAndCallbacks();
+    }
+
+    public function getServiceShortname(): string
+    {
+        return self::SERVICE_SHORTNAME;
+    }
+
+    public function serviceClassnames(array &$params): void
+    {
+        $params['classnames'][$this->getServiceShortname()] = MediawikiStandaloneService::class;
+    }
+
+    public function serviceUrlCollector(ServiceUrlCollector $collector): void
+    {
+        if ($collector->getServiceShortname() === $this->getServiceShortname()) {
+            $collector->setUrl('/to_be_defined');
+        }
     }
 }
