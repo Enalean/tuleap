@@ -31,11 +31,16 @@ final class MediawikiStandaloneService extends \Service
 
     public function getInternationalizedName(): string
     {
+        return 'MediaWiki';
+    }
+
+    public function getProjectAdministrationName(): string
+    {
         return dgettext('tuleap-mediawiki_standalone', 'MediaWiki Standalone');
     }
 
     public function getInternationalizedDescription(): string
     {
-        return $this->getInternationalizedName();
+        return $this->getProjectAdministrationName();
     }
 }

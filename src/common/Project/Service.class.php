@@ -256,6 +256,11 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $this->getInternationalizedText($label, "service_{$short_name}_lbl_key");
     }
 
+    public function getProjectAdministrationName(): string
+    {
+        return $this->getInternationalizedName();
+    }
+
     public function getInternationalizedDescription(): string
     {
         $description = $this->getDescription();
