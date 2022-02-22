@@ -66,7 +66,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     {
         return $this->dao;
     }
-    public function getDriver()
+    public function getDriver(): GitDriver
     {
         return $this->driver;
     }

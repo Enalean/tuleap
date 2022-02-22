@@ -52,7 +52,7 @@ class GitDriver
         $this->checkFileExist($source);
 
         //WARNING : never use --shared/--reference options
-        $cmd = 'git clone ' . $option . ' --local --no-hardlinks ' . escapeshellarg($source) . ' ' . escapeshellarg($destination) . ' 2>&1';
+        $cmd = \Git_Exec::getGitCommand() . ' clone ' . $option . ' --local --no-hardlinks ' . escapeshellarg($source) . ' ' . escapeshellarg($destination) . ' 2>&1';
 
         return $this->execGitAction($cmd, "clone");
     }
@@ -64,91 +64,6 @@ class GitDriver
         $this->cloneRepo($source, $destination, '--bare');
 
         return $this->setUpFreshRepository($destination);
-    }
-
-    public function cloneAtSpecifiqBranch($source, $destination, $branch)
-    {
-        $this->checkFileExist($source);
-
-        return $this->cloneRepo($source, $destination, '--branch ' . $branch);
-    }
-
-    public function add($repositoryPath, $filePathFromRepository)
-    {
-        $this->checkFileExist($repositoryPath);
-        $cmd = 'cd ' . escapeshellarg($repositoryPath) . ' && git add ' . escapeshellarg($filePathFromRepository) . ' 2>&1';
-
-        return $this->execGitAction($cmd, 'add');
-    }
-
-    public function commit($repositoryPath, $message)
-    {
-        $this->checkFileExist($repositoryPath);
-        $cmd = 'cd ' . escapeshellarg($repositoryPath) . ' && git commit --allow-empty -m ' . escapeshellarg($message) . ' 2>&1';
-
-        return $this->execGitAction($cmd, 'commit');
-    }
-
-    public function mergeAndPush($repositoryPath, $bareURL)
-    {
-        $this->checkFileExist($repositoryPath);
-        $cmd = 'cd ' . escapeshellarg($repositoryPath) . ' && git pull --quiet --rebase && git push ' . $bareURL . ' 2>&1';
-
-        return $this->execGitAction($cmd, 'merge and push');
-    }
-
-    public function getInformationsAboutFile($repositoryPath, $filePathFromRepository)
-    {
-        $this->checkFileExist($repositoryPath);
-        $cmd = 'cd ' . escapeshellarg($repositoryPath) . ' && git ls-files --stage ' . escapeshellarg($filePathFromRepository) . ' 2>&1';
-
-        return $this->execGitAction($cmd, 'get informations');
-    }
-
-    public function removeRepository($repositoryPath)
-    {
-        $this->checkFileExist($repositoryPath);
-        $cmd = 'rm --recursive --dir --force ' . escapeshellarg($repositoryPath) . ' 2>&1';
-
-        return $this->execGitAction($cmd, 'rm');
-    }
-
-    public function getGitVersion()
-    {
-        $cmd        = 'git --version';
-        $cmd_result = $this->execGitAction($cmd, 'version');
-        $version    = explode(" ", $cmd_result);
-
-        return $version[2];
-    }
-
-    /**
-     * Initialize a repository
-     * @param bool $bare is a bare a repository
-     * @return bool
-     */
-    public function init($bare = false)
-    {
-        if ($bare === false) {
-            $cmd = 'git init';
-            $out = [];
-            $ret = -1;
-            exec($cmd, $out, $ret);
-            if ($ret !== 0) {
-                throw new GitDriverErrorException('Git init failed on ' . $cmd . PHP_EOL . implode(PHP_EOL, $out));
-            }
-            return true;
-        }
-
-        $cmd = 'git --bare init --shared=group 2>&1';
-        $out = [];
-        $ret = -1;
-        exec($cmd, $out, $ret);
-        if ($ret !== 0) {
-            throw new GitDriverErrorException('Git init failed on ' . $cmd . PHP_EOL . implode(PHP_EOL, $out));
-        }
-
-        return $this->setUpFreshRepository(getcwd());
     }
 
     /**
@@ -163,7 +78,7 @@ class GitDriver
         $cwd = getcwd();
         chdir($path);
 
-        $cmd = 'git update-server-info';
+        $cmd = \Git_Exec::getGitCommand() . ' update-server-info';
         $out = [];
         $ret = -1;
         exec($cmd, $out, $ret);
@@ -265,7 +180,7 @@ class GitDriver
             $value = escapeshellarg($value);
         }
         $configFile = $repoPath . '/config';
-        $cmd        = 'git config --file ' . $configFile . ' --replace-all ' . escapeshellarg($key) . ' ' . $value . ' 2>&1';
+        $cmd        = \Git_Exec::getGitCommand() . ' config --file ' . $configFile . ' --replace-all ' . escapeshellarg($key) . ' ' . $value . ' 2>&1';
         $ret        = -1;
         $out        = [];
         exec($cmd, $out, $ret);
