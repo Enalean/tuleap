@@ -95,8 +95,9 @@ abstract class AdminView
         $template = $this->isBurningParrotCompatiblePage() ? 'admin-header-bp' : 'admin-header-fp';
 
         $renderer->renderToPage($template, [
-            'title' => dgettext('tuleap-docman', 'Administration'),
-            'tabs'  => $this->getTabs($default_url, $project),
+            'title'      => dgettext('tuleap-docman', 'Administration'),
+            'tabs'       => $this->getTabs($default_url),
+            'extra_tabs' => $this->getExtraTabs($default_url, $project),
         ]);
 
         echo '<div class="docman-content">';
@@ -157,10 +158,8 @@ abstract class AdminView
     /**
      * @return array[]
      */
-    private function getTabs(string $default_url, \Project $project): array
+    private function getTabs(string $default_url): array
     {
-        $interface = \EventManager::instance()->dispatch(new DetectEnhancementOfDocmanInterface($project));
-
         return [
             [
                 'title'       => \Docman_View_Admin_Permissions::getTabTitle(),
@@ -171,18 +170,6 @@ abstract class AdminView
                     false,
                 ),
                 'is_active'   => $this->getIdentifier() === \Docman_View_Admin_Permissions::IDENTIFIER,
-            ],
-            [
-                'title'       => $interface->isEnhanced()
-                    ? \Docman_View_Admin_View::getTabTitleWhenInterfaceIsEnhanced()
-                    : \Docman_View_Admin_View::getTabTitle(),
-                'description' => \Docman_View_Admin_View::getTabDescription(),
-                'url'         => DocmanViewURLBuilder::buildUrl(
-                    $default_url,
-                    ['action' => \Docman_View_Admin_View::IDENTIFIER],
-                    false,
-                ),
-                'is_active'   => $this->getIdentifier() === \Docman_View_Admin_View::IDENTIFIER,
             ],
             [
                 'title'       => \Docman_View_Admin_Metadata::getTabTitle(),
@@ -222,6 +209,31 @@ abstract class AdminView
                     false,
                 ),
                 'is_active'   => $this->getIdentifier() === \Docman_View_Admin_LockInfos::IDENTIFIER,
+            ],
+        ];
+    }
+
+    /**
+     * @return array{is_active: bool, tabs: array{array{description: string, title: string, url: string}}}
+     */
+    private function getExtraTabs(string $default_url, \Project $project): array
+    {
+        $interface = \EventManager::instance()->dispatch(new DetectEnhancementOfDocmanInterface($project));
+
+        return [
+            'is_active' => $this->getIdentifier() === \Docman_View_Admin_View::IDENTIFIER,
+            'tabs' => [
+                [
+                    'title'       => $interface->isEnhanced()
+                        ? \Docman_View_Admin_View::getTabTitleWhenInterfaceIsEnhanced()
+                        : \Docman_View_Admin_View::getTabTitle(),
+                    'description' => \Docman_View_Admin_View::getTabDescription(),
+                    'url'         => DocmanViewURLBuilder::buildUrl(
+                        $default_url,
+                        ['action' => \Docman_View_Admin_View::IDENTIFIER],
+                        false,
+                    ),
+                ],
             ],
         ];
     }

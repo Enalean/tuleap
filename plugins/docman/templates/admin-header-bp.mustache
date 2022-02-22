@@ -9,5 +9,21 @@
                 {{ title }}
             </a>
         {{/ tabs }}
+        {{# extra_tabs }}
+            <div class="tlp-tab{{# is_active }} tlp-tab-active{{/ is_active }}">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+                <i class="fas fa-caret-down" aria-hidden="true"></i>
+                <nav class="tlp-tab-menu">
+                    {{# tabs }}
+                        <a href="{{ url }}"
+                           class="tlp-tab-menu-item"
+                           title="{{ description }}"
+                        >
+                            {{ title }}
+                        </a>
+                    {{/ tabs }}
+                </nav>
+            </div>
+        {{/ extra_tabs }}
     </nav>
 </div>
