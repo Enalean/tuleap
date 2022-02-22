@@ -27,6 +27,13 @@
                 <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
+        <div class="tlp-modal-feedback" v-if="displayParentRepositoryWarning">
+            <div class="tlp-alert-warning">
+                <translate>
+                    You don't have permission to see parent repository's branches.
+                </translate>
+            </div>
+        </div>
         <div class="tlp-modal-body">
             <div class="tlp-alert-danger" v-if="create_error_message">
                 {{ create_error_message }}
@@ -109,6 +116,9 @@ import { mapState } from "vuex";
 
 export default {
     name: "CreatePullrequestModal",
+    props: {
+        displayParentRepositoryWarning: Boolean,
+    },
     computed: {
         ...mapState([
             "source_branches",

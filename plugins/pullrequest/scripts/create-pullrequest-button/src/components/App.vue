@@ -20,7 +20,10 @@
 <template>
     <div>
         <create-pullrequest-button v-bind:show-modal="showModal" />
-        <create-pullrequest-modal ref="modal" />
+        <create-pullrequest-modal
+            v-bind:display-parent-repository-warning="display_parent_repository_warning"
+            ref="modal"
+        />
         <create-pullrequest-error-modal ref="error_modal" />
     </div>
 </template>
@@ -46,12 +49,18 @@ export default {
         parent_repository_id: Number,
         parent_repository_name: String,
         parent_project_id: Number,
+        user_can_see_parent_repository: Boolean,
     },
     data() {
         return {
             modal: null,
             error_modal: null,
         };
+    },
+    computed: {
+        display_parent_repository_warning() {
+            return !Number.isNaN(this.parent_repository_id) && !this.user_can_see_parent_repository;
+        },
     },
     mounted() {
         this.$store.dispatch("init", {
@@ -60,6 +69,7 @@ export default {
             parent_repository_id: this.parent_repository_id,
             parent_repository_name: this.parent_repository_name,
             parent_project_id: this.parent_project_id,
+            user_can_see_parent_repository: this.user_can_see_parent_repository,
         });
 
         const modal = this.$refs.modal.$el;

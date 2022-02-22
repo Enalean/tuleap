@@ -52,6 +52,7 @@ use Tuleap\Git\Repository\View\DefaultCloneURLSelector;
 use Tuleap\Git\Repository\View\RepositoryHeaderPresenterBuilder;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Layout\IncludeAssets;
+use URLVerification;
 use UserManager;
 
 class GitRepositoryHeaderDisplayerBuilder
@@ -143,7 +144,8 @@ class GitRepositoryHeaderDisplayerBuilder
             $this->getMirrorDataMapper(),
             $selected_tab,
             EventManager::instance(),
-            new DefaultCloneURLSelector()
+            new DefaultCloneURLSelector(),
+            new URLVerification()
         );
     }
 

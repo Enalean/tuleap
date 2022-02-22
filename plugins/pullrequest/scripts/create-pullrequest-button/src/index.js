@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const parent_repository_id = parseInt(container.dataset.parentRepositoryId, 10);
     const parent_repository_name = container.dataset.parentRepositoryName;
     const parent_project_id = parseInt(container.dataset.parentProjectId, 10);
+    const user_can_see_parent_repository = container.dataset.userCanSeeParentRepository === "1";
 
     const mount_point = document.createElement("div");
     container.appendChild(mount_point);
@@ -60,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
             parent_repository_id,
             parent_repository_name,
             parent_project_id,
+            user_can_see_parent_repository,
         },
     }).$mount(mount_point);
 });
