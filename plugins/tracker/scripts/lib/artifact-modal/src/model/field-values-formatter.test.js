@@ -19,6 +19,7 @@
 
 import moment from "moment";
 import { getSelectedValues } from "./field-values-formatter.js";
+import { NewFileToAttach } from "../adapters/UI/fields/file-field/NewFileToAttach";
 
 describe("TuleapArtifactFieldValues", () => {
     describe("getSelectedValues() -", () => {
@@ -874,12 +875,7 @@ describe("TuleapArtifactFieldValues", () => {
                     file_descriptions: [{ id: 4 }, { id: 9 }],
                     type: "file",
                     images_added_by_text_fields: [],
-                    temporary_files: [
-                        {
-                            file: {},
-                            description: "",
-                        },
-                    ],
+                    temporary_files: [NewFileToAttach.build()],
                     permissions: ["read", "update", "create"],
                     value: [4, 9],
                 },
@@ -906,12 +902,7 @@ describe("TuleapArtifactFieldValues", () => {
                     field_id: 542,
                     type: "file",
                     images_added_by_text_fields: [],
-                    temporary_files: [
-                        {
-                            file: {},
-                            description: "",
-                        },
-                    ],
+                    temporary_files: [NewFileToAttach.build()],
                     permissions: ["read", "update", "create"],
                     value: [],
                 },

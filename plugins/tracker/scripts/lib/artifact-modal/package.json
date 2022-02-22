@@ -16,7 +16,6 @@
     "@tuleap/plugin-tracker-rich-text-editor": "file:../rich-text-editor",
     "@tuleap/tooltip": "file:../../../../../src/scripts/lib/tooltip",
     "angular-custom-elements": "^2.1.0",
-    "angular-filter": "^0.5.16",
     "angular-gettext": "^2.4.2",
     "buffer": "^6.0.3",
     "dompurify": "^2.3.4",
@@ -31,15 +30,13 @@
     "sprintf-js": "^1.1.2"
   },
   "peerDependencies": {
-    "angular": "^1.8.0",
-    "angular-sanitize": "^1.8.0"
+    "angular": "^1.8.0"
   },
   "devDependencies": {
     "@tuleap/tlp-fetch": "file:../../../../../src/scripts/lib/tlp-fetch",
     "@types/ckeditor": "^4.9.10",
     "angular": "^1.8.2",
-    "angular-mocks": "^1.8.2",
-    "angular-sanitize": "^1.8.2"
+    "angular-mocks": "^1.8.2"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

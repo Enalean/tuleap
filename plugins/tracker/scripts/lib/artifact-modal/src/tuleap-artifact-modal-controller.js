@@ -61,6 +61,7 @@ import { ReadonlyDateFieldFormatter } from "./adapters/UI/fields/date-readonly-f
 import { FileUploadQuotaController } from "./adapters/UI/footer/FileUploadQuotaController";
 import { UserTemporaryFileQuotaStore } from "./adapters/Memory/UserTemporaryFileQuotaStore";
 import { LinkFieldValueFormatter } from "./domain/fields/link-field-v2/LinkFieldValueFormatter";
+import { FileFieldController } from "./adapters/UI/fields/file-field/FileFieldController";
 
 export default ArtifactModalController;
 
@@ -141,6 +142,9 @@ function ArtifactModalController(
             ParentArtifactIdentifierProxy.fromCallerArgument(modal_model.parent_artifact_id)
         ),
         file_upload_quota_controller: FileUploadQuotaController(UserTemporaryFileQuotaStore()),
+        getFileFieldController: (field) => {
+            return FileFieldController(field, self.values[field.field_id]);
+        },
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
         formatColor,
         getDropdownAttribute,

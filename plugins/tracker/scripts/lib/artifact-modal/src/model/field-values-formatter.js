@@ -26,6 +26,7 @@ import {
 } from "../fields/open-list-field/open-list-field-initializer.js";
 import { formatExistingValue as formatForTextFieldValue } from "../fields/text-field/text-field-value-formatter.js";
 import { cleanValue as defaultForIntField } from "../fields/int-field/int-field-value-formatter";
+import { NewFileToAttach } from "../adapters/UI/fields/file-field/NewFileToAttach";
 
 /**
  * For every field in the tracker, creates a field object with the value from the given artifact
@@ -209,12 +210,7 @@ function getDefaultValue(field) {
 }
 
 function addPropertiesToFileValueModel(value_obj) {
-    value_obj.temporary_files = [
-        {
-            file: {},
-            description: "",
-        },
-    ];
+    value_obj.temporary_files = [NewFileToAttach.build()];
     value_obj.images_added_by_text_fields = [];
     return value_obj;
 }

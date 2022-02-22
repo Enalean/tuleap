@@ -34,10 +34,7 @@ function uploadAllTemporaryFiles(temporary_files) {
 }
 
 function uploadTemporaryFile(temporary_file) {
-    if (
-        !Object.prototype.hasOwnProperty.call(temporary_file, "file") ||
-        typeof temporary_file.file.name === "undefined"
-    ) {
+    if (temporary_file.file === undefined || temporary_file.file.name === undefined) {
         return Promise.resolve();
     }
 
