@@ -48,8 +48,8 @@ class FirstValidValueAccordingToDependenciesRetriever
         array $rules,
     ): void {
         foreach ($rules as $rule) {
-            $source_id = (int) $rule->getSourceFieldId();
-            $target_id = (int) $rule->getTargetFieldId();
+            $source_id = $rule->getSourceFieldId();
+            $target_id = $rule->getTargetFieldId();
 
             if ($source_id === $field->getId()) {
                 if (! isset($this->rules_for_field[$target_id])) {

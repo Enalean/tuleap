@@ -109,8 +109,8 @@ class Tracker_RuleFactory
                         ->setTargetValue($data['target_value_id'])
                         ->setId($data['id'])
                         ->setTrackerId($data['tracker_id'])
-                        ->setSourceFieldId($data['source_field_id'])
-                        ->setTargetFieldId($data['target_field_id']);
+                        ->setSourceFieldId((int) $data['source_field_id'])
+                        ->setTargetFieldId((int) $data['target_field_id']);
                 $rule =& $rule_list;
                 break;
         }
