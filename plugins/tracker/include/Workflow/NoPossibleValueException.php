@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,29 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
+namespace Tuleap\Tracker\Workflow;
 
-final class EmptyMappedValues implements MappedValuesInterface
+use Exception;
+
+final class NoPossibleValueException extends Exception
 {
-    /**
-     * @return int[]
-     */
-    public function getValueIds(): array
+    public function __construct()
     {
-        return [];
-    }
-
-    public function isEmpty(): bool
-    {
-        return true;
-    }
-
-    public function getFirstValue(): int
-    {
-        throw new \RuntimeException();
-    }
-
-    public function removeValue(int $value): void
-    {
+        parent::__construct(
+            dgettext(
+                'plugin-tracker',
+                "No possible value found regarding your configuration. Please check your transition and field dependencies."
+            )
+        );
     }
 }

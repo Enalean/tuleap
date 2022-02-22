@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,29 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
+namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
-final class EmptyMappedValues implements MappedValuesInterface
+interface BindValueIdCollection
 {
-    /**
-     * @return int[]
-     */
-    public function getValueIds(): array
-    {
-        return [];
-    }
+    /** @return int[] */
+    public function getValueIds(): array;
 
-    public function isEmpty(): bool
-    {
-        return true;
-    }
+    public function removeValue(int $value): void;
 
-    public function getFirstValue(): int
-    {
-        throw new \RuntimeException();
-    }
-
-    public function removeValue(int $value): void
-    {
-    }
+    public function getFirstValue(): int;
 }

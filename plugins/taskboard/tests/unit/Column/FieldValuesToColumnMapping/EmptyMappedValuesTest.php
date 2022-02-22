@@ -51,4 +51,10 @@ final class EmptyMappedValuesTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(\RuntimeException::class);
         $this->empty_mapped_values->getFirstValue();
     }
+
+    public function testRemoveValueDoesNothing(): void
+    {
+        $this->empty_mapped_values->removeValue(12);
+        $this->assertEquals(new EmptyMappedValues(), $this->empty_mapped_values);
+    }
 }

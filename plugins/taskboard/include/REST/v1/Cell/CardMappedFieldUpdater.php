@@ -32,6 +32,7 @@ use Tracker_Exception;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
+use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
 use Tracker_REST_Artifact_ArtifactUpdater;
 use TrackerFactory;
@@ -43,36 +44,21 @@ use Tuleap\Taskboard\Column\MilestoneTrackerRetriever;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
+use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
+use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 class CardMappedFieldUpdater
 {
-    /** @var Cardwall_OnTop_Config_ColumnFactory */
-    private $column_factory;
-    /** @var AddValidator */
-    private $add_validator;
-    /** @var Tracker_REST_Artifact_ArtifactUpdater */
-    private $artifact_updater;
-    /** @var MappedFieldRetriever */
-    private $mapped_field_retriever;
-    /** @var MappedValuesRetriever */
-    private $mapped_values_retriever;
-    /** @var MilestoneTrackerRetriever */
-    private $milestone_tracker_retriever;
-
     public function __construct(
-        Cardwall_OnTop_Config_ColumnFactory $column_factory,
-        MilestoneTrackerRetriever $milestone_tracker_retriever,
-        AddValidator $add_validator,
-        Tracker_REST_Artifact_ArtifactUpdater $artifact_updater,
-        MappedFieldRetriever $mapped_field_retriever,
-        MappedValuesRetriever $mapped_values_retriever,
+        private Cardwall_OnTop_Config_ColumnFactory $column_factory,
+        private MilestoneTrackerRetriever $milestone_tracker_retriever,
+        private AddValidator $add_validator,
+        private Tracker_REST_Artifact_ArtifactUpdater $artifact_updater,
+        private MappedFieldRetriever $mapped_field_retriever,
+        private MappedValuesRetriever $mapped_values_retriever,
+        private FirstPossibleValueInListRetriever $first_possible_value_retriever,
     ) {
-        $this->column_factory              = $column_factory;
-        $this->milestone_tracker_retriever = $milestone_tracker_retriever;
-        $this->add_validator               = $add_validator;
-        $this->artifact_updater            = $artifact_updater;
-        $this->mapped_field_retriever      = $mapped_field_retriever;
-        $this->mapped_values_retriever     = $mapped_values_retriever;
     }
 
     public static function build(): self
@@ -84,7 +70,12 @@ class CardMappedFieldUpdater
             new AddValidator(),
             Tracker_REST_Artifact_ArtifactUpdater::build(),
             MappedFieldRetriever::build(),
-            MappedValuesRetriever::build()
+            MappedValuesRetriever::build(),
+            new FirstPossibleValueInListRetriever(
+                new FirstValidValueAccordingToDependenciesRetriever(
+                    Tracker_FormElementFactory::instance()
+                )
+            )
         );
     }
 
@@ -103,6 +94,7 @@ class CardMappedFieldUpdater
         $this->add_validator->validateArtifacts($swimlane_artifact, $artifact_to_add, $current_user);
 
         $values = $this->buildUpdateValues(
+            $artifact_to_add,
             new TaskboardTracker($milestone_tracker, $artifact_to_add->getTracker()),
             $column,
             $current_user
@@ -140,6 +132,7 @@ class CardMappedFieldUpdater
      * @throws I18NRestException
      */
     private function buildUpdateValues(
+        Artifact $artifact_to_add,
         TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column,
         PFUser $current_user,
@@ -147,8 +140,14 @@ class CardMappedFieldUpdater
         $representation                 = new ArtifactValuesRepresentation();
         $mapped_field                   = $this->getMappedField($taskboard_tracker, $column, $current_user);
         $representation->field_id       = (int) $mapped_field->getId();
-        $first_mapped_value             = $this->getFirstMappedValue($taskboard_tracker, $column);
+        $first_mapped_value             = $this->getFirstMappedValue(
+            $mapped_field,
+            $artifact_to_add,
+            $taskboard_tracker,
+            $column
+        );
         $representation->bind_value_ids = [$first_mapped_value];
+
         return [$representation];
     }
 
@@ -190,9 +189,17 @@ class CardMappedFieldUpdater
     /**
      * @throws I18NRestException
      */
-    private function getFirstMappedValue(TaskboardTracker $taskboard_tracker, Cardwall_Column $column): int
-    {
-        $mapped_values = $this->mapped_values_retriever->getValuesMappedToColumn($taskboard_tracker, $column);
+    private function getFirstMappedValue(
+        Tracker_FormElement_Field_Selectbox $mapped_field,
+        Artifact $artifact_to_add,
+        TaskboardTracker $taskboard_tracker,
+        Cardwall_Column $column,
+    ): int {
+        $mapped_values = $this->mapped_values_retriever->getValuesMappedToColumn(
+            $taskboard_tracker,
+            $column
+        );
+
         if ($mapped_values->isEmpty()) {
             throw new I18NRestException(
                 400,
@@ -206,7 +213,19 @@ class CardMappedFieldUpdater
                 )
             );
         }
-        return $mapped_values->getFirstValue();
+
+        try {
+            return $this->first_possible_value_retriever->getFirstPossibleValue(
+                $artifact_to_add,
+                $mapped_field,
+                $mapped_values
+            );
+        } catch (NoPossibleValueException $exception) {
+            throw new I18NRestException(
+                400,
+                $exception->getMessage()
+            );
+        }
     }
 
     /**

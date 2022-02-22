@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,29 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
+namespace Tuleap\Tracker\Rule;
 
-final class EmptyMappedValues implements MappedValuesInterface
+use Tracker_Rule_List;
+
+final class FieldListRuleCollection
 {
+    private array $rules;
+
+    public function __construct(private ?int $actual_value)
+    {
+        $this->rules = [];
+    }
+
+    public function getActualValue(): ?int
+    {
+        return $this->actual_value;
+    }
+
     /**
-     * @return int[]
+     * @return Tracker_Rule_List[]
      */
-    public function getValueIds(): array
+    public function getRules(): array
     {
-        return [];
+        return $this->rules;
     }
 
-    public function isEmpty(): bool
+    public function addRule(Tracker_Rule_List $rule): void
     {
-        return true;
-    }
-
-    public function getFirstValue(): int
-    {
-        throw new \RuntimeException();
-    }
-
-    public function removeValue(int $value): void
-    {
+        $this->rules[] = $rule;
     }
 }
