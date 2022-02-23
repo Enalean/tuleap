@@ -94,7 +94,7 @@ class ListFieldMapping implements FieldMapping
 
         $bound_values = [];
         foreach ($tuleap_field->bind_values as $bind_value) {
-            if (isset($jira_values_by_name[$bind_value->label]) && $bind_value instanceof XMLBindStaticValue) {
+            if ($bind_value instanceof XMLBindStaticValue && isset($jira_values_by_name[$bind_value->label])) {
                 $bound_values[] = JiraFieldAPIAllowedValueRepresentation::buildFromTuleapXML($jira_values_by_name[$bind_value->label], $bind_value);
             }
         }
