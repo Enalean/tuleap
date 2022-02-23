@@ -293,6 +293,15 @@ class ProjectResource extends AuthenticatedResource
                 throw new I18NRestMultipleMessagesException(400, [$exception->getI18NMessage()]);
             }
             throw new RestException(400, $exception->getMessage());
+        } catch (\XML_ParseException $exception) {
+            $logger = \Tuleap\REST\RESTLogger::getLogger();
+            $logger->error(sprintf('POST /projects (%s): %s', $post_representation->shortname, $exception->getMessage()));
+            $logger->debug($exception->getIndentedXml());
+            foreach ($exception->getErrors() as $error) {
+                $logger->error($error->getMessage() . ' (Type: ' . $error->getType() . ') Line: ' . $error->getLine() . ' Column: ' . $error->getColumn());
+                $logger->error('Error L' . $error->getLine() . ': ' . $exception->getSourceXMLForError($error));
+            }
+            throw new RestException(500, 'Invalid XML. Server side error');
         }
 
         if ($creation_data === null) {
