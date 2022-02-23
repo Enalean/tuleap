@@ -20,10 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AuthorizationServer\PKCE;
+namespace Tuleap\OAuth2ServerCore\AuthorizationServer\PKCE;
 
-use Tuleap\OAuth2ServerCore\OAuth2ServerException;
-
-interface OAuth2PKCEInformationExtractionException extends OAuth2ServerException
+final class CodeChallengeNotBase64URLEncodedException extends \RuntimeException implements OAuth2PKCEInformationExtractionException
 {
+    public function __construct()
+    {
+        parent::__construct('The provided code challenge is not correctly base64 URL encoded');
+    }
 }

@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AuthorizationServer\PKCE;
+namespace Tuleap\OAuth2ServerCore\AuthorizationServer\PKCE;
 
-final class NotSupportedChallengeMethodException extends \RuntimeException implements OAuth2PKCEInformationExtractionException
+final class IncorrectSizeCodeChallengeException extends \RuntimeException implements OAuth2PKCEInformationExtractionException
 {
-    public function __construct(string $requested_challenge_method)
+    public function __construct()
     {
-        parent::__construct(sprintf('The challenge method "%s" is not supported', $requested_challenge_method));
+        parent::__construct('The provided code challenge does not have the expected size');
     }
 }

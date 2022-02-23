@@ -20,12 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AuthorizationServer\PKCE;
+namespace Tuleap\OAuth2ServerCore\AuthorizationServer\PKCE;
 
-final class IncorrectSizeCodeChallengeException extends \RuntimeException implements OAuth2PKCEInformationExtractionException
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
+
+final class MissingMandatoryCodeChallengeException extends \RuntimeException implements OAuth2PKCEInformationExtractionException
 {
-    public function __construct()
+    public function __construct(OAuth2App $app)
     {
-        parent::__construct('The provided code challenge does not have the expected size');
+        parent::__construct('No code_challenge has been provided when requesting authorization for app #' . $app->getId());
     }
 }
