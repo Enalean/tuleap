@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Metadata, ListValue } from "../../../store/metadata/module";
+import type { Property, ListValue } from "../../../store/metadata/module";
 
-export type MetadataListValue = Array<number> | Array<ListValue>;
+export type PropertyListValue = Array<number> | Array<ListValue>;
 export function assertListIsOnlyMultipleValue(
-    list_value: MetadataListValue
+    list_value: PropertyListValue
 ): list_value is Array<ListValue> {
     return typeof list_value[0] === "object";
 }
@@ -31,18 +31,18 @@ export function processFormattingOnKnownType(list_value: Array<ListValue>): Arra
     return list_value_ids.length > 0 ? list_value_ids : [100];
 }
 
-export function formatMetadataMultipleValue(metadata: Metadata): Array<number> {
-    if (!metadata.list_value || !assertListIsOnlyMultipleValue(metadata.list_value)) {
+export function formatPropertyListMultipleValue(property: Property): Array<number> {
+    if (!property.list_value || !assertListIsOnlyMultipleValue(property.list_value)) {
         return [100];
     }
 
-    return processFormattingOnKnownType(metadata.list_value);
+    return processFormattingOnKnownType(property.list_value);
 }
 
-export function formatMetadataListValue(metadata: Metadata): number {
-    if (!metadata.list_value || !assertListIsOnlyMultipleValue(metadata.list_value)) {
+export function formatPropertyListValue(property: Property): number {
+    if (!property.list_value || !assertListIsOnlyMultipleValue(property.list_value)) {
         return 100;
     }
 
-    return metadata.list_value[0].id;
+    return property.list_value[0].id;
 }

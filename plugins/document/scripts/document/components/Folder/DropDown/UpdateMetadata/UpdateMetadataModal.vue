@@ -64,8 +64,8 @@ import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import DocumentGlobalMetadataForUpdate from "./DocumentGlobalMetadataForUpdate.vue";
 import OtherInformationMetadataForUpdate from "./OtherInformationMetadataForUpdate.vue";
 import OwnerMetadata from "../MetadataForCreateOrUpdate/AlwaysThereProperties/OwnerMetadata.vue";
-import { getCustomMetadata } from "../../../../helpers/properties-helpers/custom-metadata-helper";
-import { transformCustomMetadataForItemUpdate } from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
+import { getCustomProperties } from "../../../../helpers/properties-helpers/custom-properties-helper";
+import { transformCustomPropertiesForItemUpdate } from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
 import emitter from "../../../../helpers/emitter";
 
 export default {
@@ -137,8 +137,8 @@ export default {
     mounted() {
         this.modal = createModal(this.$el);
 
-        this.formatted_item_metadata = getCustomMetadata(this.item.metadata);
-        transformCustomMetadataForItemUpdate(this.formatted_item_metadata);
+        this.formatted_item_metadata = getCustomProperties(this.item.metadata);
+        transformCustomPropertiesForItemUpdate(this.formatted_item_metadata);
 
         this.registerEvents();
 

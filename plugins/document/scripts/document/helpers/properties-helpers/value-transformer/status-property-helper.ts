@@ -17,17 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { formatDateValue } from "./date-metadata-helper";
+import type { Item } from "../../../type";
+import type { Property, ListValue } from "../../../store/metadata/module";
+import { getStatusFromMapping } from "../hardcoded-properties-mapping-helper";
+import { assertListIsOnlyMultipleValue } from "./list-value-helper";
 
-describe("transformDocumentMetadataForCreation", () => {
-    it(`Format a date`, () => {
-        const formatted_date = formatDateValue("2019-08-30T00:00:00+02:00");
+export function updateStatusProperty(property: Property, item: Item): void {
+    let status = "none";
 
-        expect(formatted_date).toEqual("2019-08-30");
-    });
-    it(`Returns an empty string when date is null`, () => {
-        const formatted_date = formatDateValue(null);
+    if (property && property.list_value && assertListIsOnlyMultipleValue(property.list_value)) {
+        const multiple_list_value: ListValue = property.list_value[0];
+        status = getStatusFromMapping(multiple_list_value.id);
+    }
 
-        expect(formatted_date).toEqual("");
-    });
-});
+    item.status = status;
+}

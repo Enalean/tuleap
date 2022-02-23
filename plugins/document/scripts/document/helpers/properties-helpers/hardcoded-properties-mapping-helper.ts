@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Metadata } from "../../store/metadata/module";
+import type { Property } from "../../store/metadata/module";
 
-export function getStatusMetadata(all_metadata: Array<Metadata>): Metadata | undefined {
-    return all_metadata.find((metadata) => metadata.short_name === "status");
+export function getStatusProperty(all_properties: Array<Property>): Property | undefined {
+    return all_properties.find((property) => property.short_name === "status");
 }
 
 interface StatusMappingById {

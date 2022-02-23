@@ -17,18 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getStatusFromMapping, getStatusMetadata } from "./hardcoded-metadata-mapping-helper";
-import { updateItemMetadata } from "./value-transformer/status-metadata-helper";
-import { formatDateValue } from "./value-transformer/date-metadata-helper";
+import { getStatusFromMapping, getStatusProperty } from "./hardcoded-properties-mapping-helper";
+import { updateStatusProperty } from "./value-transformer/status-property-helper";
+import { formatDateValue } from "./value-transformer/date-property-helper";
 import {
     assertListIsOnlyMultipleValue,
-    formatMetadataListValue,
-    formatMetadataMultipleValue,
+    formatPropertyListValue,
+    formatPropertyListMultipleValue,
 } from "./value-transformer/list-value-helper";
 import type { Folder, Item } from "../../type";
-import type { Metadata } from "../../store/metadata/module";
+import type { Property } from "../../store/metadata/module";
 
-export function transformFolderMetadataForRecursionAtUpdate(item: Folder): Folder {
+export function transformFolderPropertiesForRecursionAtUpdate(item: Folder): Folder {
     const folder_to_update = JSON.parse(JSON.stringify(item));
 
     if (!folder_to_update.metadata) {
@@ -40,49 +40,49 @@ export function transformFolderMetadataForRecursionAtUpdate(item: Folder): Folde
         return folder_to_update;
     }
 
-    const metadata = getStatusMetadata(folder_to_update.metadata);
+    const property = getStatusProperty(folder_to_update.metadata);
     folder_to_update.status = {
         value:
-            !metadata || !metadata.list_value || !assertListIsOnlyMultipleValue(metadata.list_value)
+            !property || !property.list_value || !assertListIsOnlyMultipleValue(property.list_value)
                 ? "none"
-                : getStatusFromMapping(metadata.list_value[0].id),
+                : getStatusFromMapping(property.list_value[0].id),
         recursion: "none",
     };
 
     return folder_to_update;
 }
 
-export function transformDocumentMetadataForUpdate(
+export function transformDocumentPropertiesForUpdate(
     document_to_update: Item,
-    is_item_status_metadata_used: boolean
+    is_status_property_used: boolean
 ): void {
-    if (!is_item_status_metadata_used) {
+    if (!is_status_property_used) {
         return;
     }
 
-    const metadata = getStatusMetadata(document_to_update.metadata);
-    if (!metadata) {
+    const property = getStatusProperty(document_to_update.metadata);
+    if (!property) {
         return;
     }
-    updateItemMetadata(metadata, document_to_update);
+    updateStatusProperty(property, document_to_update);
 }
 
-export function transformCustomMetadataForItemUpdate(parent_metadata: Array<Metadata>): void {
-    parent_metadata.forEach((parent_metadata) => {
-        switch (parent_metadata.type) {
+export function transformCustomPropertiesForItemUpdate(parent_properties: Array<Property>): void {
+    parent_properties.forEach((parent_property) => {
+        switch (parent_property.type) {
             case "date":
-                parent_metadata.value = formatDateValue(parent_metadata.value);
+                parent_property.value = formatDateValue(parent_property.value);
                 break;
             case "text":
             case "string":
                 break;
             case "list":
-                if (parent_metadata.is_multiple_value_allowed) {
-                    parent_metadata.list_value = formatMetadataMultipleValue(parent_metadata);
-                    parent_metadata.value = null;
+                if (parent_property.is_multiple_value_allowed) {
+                    parent_property.list_value = formatPropertyListMultipleValue(parent_property);
+                    parent_property.value = null;
                 } else {
-                    parent_metadata.value = formatMetadataListValue(parent_metadata);
-                    parent_metadata.list_value = null;
+                    parent_property.value = formatPropertyListValue(parent_property);
+                    parent_property.list_value = null;
                 }
                 break;
             default:
@@ -91,16 +91,16 @@ export function transformCustomMetadataForItemUpdate(parent_metadata: Array<Meta
     });
 }
 
-export function formatCustomMetadataForFolderUpdate(
+export function formatCustomPropertiesForFolderUpdate(
     item_to_update: Folder,
-    metadata_list_to_update: Array<string>,
+    properties_to_update: Array<string>,
     recursion_option: string
 ): void {
-    item_to_update.metadata.forEach((item_metadata) => {
-        if (metadata_list_to_update.find((short_name) => short_name === item_metadata.short_name)) {
-            item_metadata.recursion = recursion_option;
+    item_to_update.metadata.forEach((item_properties) => {
+        if (properties_to_update.find((short_name) => short_name === item_properties.short_name)) {
+            item_properties.recursion = recursion_option;
         } else {
-            item_metadata.recursion = "none";
+            item_properties.recursion = "none";
         }
     });
 }

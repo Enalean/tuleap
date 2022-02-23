@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import type { ListValue, Metadata } from "../../../../../store/metadata/module";
+import type { ListValue, Property } from "../../../../../store/metadata/module";
 import { namespace } from "vuex-class";
 
 const metadata = namespace("metadata");
@@ -61,10 +61,10 @@ const metadata = namespace("metadata");
 @Component
 export default class CustomMetadataListSingleValue extends Vue {
     @Prop({ required: true })
-    readonly currentlyUpdatedItemMetadata!: Metadata;
+    readonly currentlyUpdatedItemMetadata!: Property;
 
     @metadata.State
-    readonly project_metadata_list!: Array<Metadata>;
+    readonly project_metadata_list!: Array<Property>;
 
     private value = String(this.currentlyUpdatedItemMetadata.value);
     private project_metadata_list_possible_values: Array<ListValue> | null = [];

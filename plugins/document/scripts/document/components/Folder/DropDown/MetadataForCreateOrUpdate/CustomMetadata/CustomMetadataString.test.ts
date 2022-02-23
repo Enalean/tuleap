@@ -21,10 +21,10 @@ import localVue from "../../../../../helpers/local-vue";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomMetadataString from "./CustomMetadataString.vue";
-import type { Metadata } from "../../../../../store/metadata/module";
+import type { Property } from "../../../../../store/metadata/module";
 
 describe("CustomMetadataString", () => {
-    function createWrapper(metadata: Metadata): Wrapper<CustomMetadataString> {
+    function createWrapper(metadata: Property): Wrapper<CustomMetadataString> {
         return shallowMount(CustomMetadataString, {
             localVue,
             propsData: { currentlyUpdatedItemMetadata: metadata },
@@ -37,7 +37,7 @@ describe("CustomMetadataString", () => {
             is_required: true,
             name: "field",
             type: "string",
-        } as Metadata;
+        } as Property;
         const wrapper = createWrapper(currentlyUpdatedItemMetadata);
         const string_input = wrapper.get("[data-test=document-string-input]");
 
@@ -57,7 +57,7 @@ describe("CustomMetadataString", () => {
             is_required: false,
             name: "field",
             type: "string",
-        } as Metadata;
+        } as Property;
         const wrapper = createWrapper(currentlyUpdatedItemMetadata);
         const string_input = wrapper.get("[data-test=document-string-input]");
 
@@ -77,7 +77,7 @@ describe("CustomMetadataString", () => {
             is_required: false,
             name: "field",
             type: "text",
-        } as Metadata;
+        } as Property;
 
         const wrapper = createWrapper(currentlyUpdatedItemMetadata);
         expect(wrapper.find("[data-test=document-custom-metadata-string]").exists()).toBeFalsy();

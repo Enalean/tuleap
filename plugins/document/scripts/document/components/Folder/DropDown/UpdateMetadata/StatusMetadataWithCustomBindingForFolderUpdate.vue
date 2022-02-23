@@ -29,8 +29,8 @@
 <script>
 import { mapState } from "vuex";
 import StatusProperty from "../MetadataForCreateOrUpdate/StatusProperty.vue";
-import { getStatusIdFromName } from "../../../../helpers/properties-helpers/hardcoded-metadata-mapping-helper";
-import { transformFolderMetadataForRecursionAtUpdate } from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
+import { getStatusIdFromName } from "../../../../helpers/properties-helpers/hardcoded-properties-mapping-helper";
+import { transformFolderPropertiesForRecursionAtUpdate } from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
 
 export default {
     name: "StatusMetadataWithCustomBindingForFolderUpdate",
@@ -44,7 +44,7 @@ export default {
         ...mapState("configuration", ["is_item_status_metadata_used"]),
         status_value: {
             get() {
-                transformFolderMetadataForRecursionAtUpdate(
+                transformFolderPropertiesForRecursionAtUpdate(
                     this.currentlyUpdatedItem,
                     this.parent,
                     this.is_item_status_metadata_used

@@ -18,15 +18,15 @@
  */
 
 import {
-    formatCustomMetadataForFolderUpdate,
-    transformCustomMetadataForItemUpdate,
-    transformDocumentMetadataForUpdate,
-    transformFolderMetadataForRecursionAtUpdate,
+    formatCustomPropertiesForFolderUpdate,
+    transformCustomPropertiesForItemUpdate,
+    transformDocumentPropertiesForUpdate,
+    transformFolderPropertiesForRecursionAtUpdate,
 } from "./update-data-transformatter-helper";
 import type { Folder, ItemFile } from "../../type";
-import type { Metadata, FolderMetadata, ListValue } from "../../store/metadata/module";
+import type { Property, FolderProperty, ListValue } from "../../store/metadata/module";
 
-describe("transformFolderMetadataForRecursionAtUpdate", () => {
+describe("transformFolderPropertiesForRecursionAtUpdate", () => {
     it("Given an existing folder, then we add specific status update key for update", () => {
         const list_value: Array<ListValue> = [
             {
@@ -34,14 +34,14 @@ describe("transformFolderMetadataForRecursionAtUpdate", () => {
                 value: "Open",
             } as ListValue,
         ];
-        const metadata: Metadata = {
+        const property: Property = {
             short_name: "status",
             list_value: list_value,
-        } as Metadata;
+        } as Property;
         const item: Folder = {
             id: 7,
             type: "folder",
-            metadata: [metadata],
+            metadata: [property],
         } as Folder;
 
         const item_to_update: Folder = {
@@ -52,32 +52,32 @@ describe("transformFolderMetadataForRecursionAtUpdate", () => {
             },
         };
 
-        expect(transformFolderMetadataForRecursionAtUpdate(item)).toEqual(item_to_update);
+        expect(transformFolderPropertiesForRecursionAtUpdate(item)).toEqual(item_to_update);
     });
 });
 
-describe("transformDocumentMetadataForUpdate", () => {
-    it("Given status metadata is used, then the default status metadata is applied", () => {
+describe("transformDocumentPropertiesForUpdate", () => {
+    it("Given status property is used, then the default status property is applied", () => {
         const list_value: Array<ListValue> = [
             {
                 id: 103,
                 value: "Open",
             } as ListValue,
         ];
-        const metadata: Array<Metadata> = [
+        const property: Array<Property> = [
             {
                 short_name: "status",
                 list_value: list_value,
-            } as Metadata,
+            } as Property,
         ];
 
         const item: ItemFile = {
             id: 7,
             type: "file",
-            metadata: metadata,
+            metadata: property,
         } as unknown as ItemFile;
 
-        transformDocumentMetadataForUpdate(item, true);
+        transformDocumentPropertiesForUpdate(item, true);
 
         expect(item.status).toEqual("rejected");
     });
@@ -89,130 +89,130 @@ describe("transformDocumentMetadataForUpdate", () => {
                 value: "Open",
             } as ListValue,
         ];
-        const metadata: Array<Metadata> = [
+        const property: Array<Property> = [
             {
                 short_name: "status",
                 list_value: list_value,
-            } as Metadata,
+            } as Property,
         ];
 
         const item: ItemFile = {
             id: 7,
             type: "file",
-            metadata: metadata,
+            metadata: property,
         } as unknown as ItemFile;
 
-        transformDocumentMetadataForUpdate(item, false);
+        transformDocumentPropertiesForUpdate(item, false);
 
         expect(item.status).toEqual(undefined);
     });
 });
 
-describe("transformCustomMetadataForItemUpdate", () => {
+describe("transformCustomPropertiesForItemUpdate", () => {
     it(`Given parent has a text value,
         it does not update anything`, () => {
-        const parent_metadata: Array<Metadata> = [
+        const parent_properties: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 name: "field_1",
                 value: "value",
                 type: "text",
                 is_multiple_value_allowed: false,
                 is_required: false,
-            } as Metadata,
+            } as Property,
         ];
 
-        transformCustomMetadataForItemUpdate(parent_metadata);
+        transformCustomPropertiesForItemUpdate(parent_properties);
 
-        expect(parent_metadata).toEqual(parent_metadata);
+        expect(parent_properties).toEqual(parent_properties);
     });
 
     it(`Given parent has a string value,
         it does not update anything`, () => {
-        const parent_metadata: Array<Metadata> = [
+        const parent_properties: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 name: "field_1",
                 value: "value",
                 type: "string",
                 is_multiple_value_allowed: false,
                 is_required: false,
-            } as Metadata,
+            } as Property,
         ];
 
-        transformCustomMetadataForItemUpdate(parent_metadata);
+        transformCustomPropertiesForItemUpdate(parent_properties);
 
-        expect(parent_metadata).toEqual(parent_metadata);
+        expect(parent_properties).toEqual(parent_properties);
     });
 
     it(`Given parent has a single list value,
-        then the formatted metadata is bound to value`, () => {
+        then the formatted properties is bound to value`, () => {
         const list_values: Array<ListValue> = [
             {
                 id: 110,
                 value: "My value to display",
             } as ListValue,
         ];
-        const parent_metadata: Array<Metadata> = [
+        const parent_properties: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 name: "field_1",
                 list_value: list_values,
                 is_multiple_value_allowed: false,
                 type: "list",
                 is_required: false,
-            } as Metadata,
+            } as Property,
         ];
 
-        const expected_list: Array<Metadata> = [
+        const expected_list: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 type: "list",
                 name: "field_1",
                 is_multiple_value_allowed: false,
                 value: 110,
                 is_required: false,
                 list_value: null,
-            } as Metadata,
+            } as Property,
         ];
 
-        transformCustomMetadataForItemUpdate(parent_metadata);
+        transformCustomPropertiesForItemUpdate(parent_properties);
 
-        expect(expected_list).toEqual(parent_metadata);
+        expect(expected_list).toEqual(parent_properties);
     });
 
     it(`Given parent has a list with single value, and given list value is null,
-        then the formatted metadata is bound to none`, () => {
-        const parent_metadata = [
+        then the formatted properties is bound to none`, () => {
+        const parent_properties = [
             {
-                short_name: "custom list metadata",
+                short_name: "custom list property",
                 name: "field_1",
                 list_value: [],
                 is_multiple_value_allowed: false,
                 type: "list",
                 is_required: false,
-            } as Metadata,
+            } as Property,
         ];
 
-        const expected_list: Array<Metadata> = [
+        const expected_list: Array<Property> = [
             {
-                short_name: "custom list metadata",
+                short_name: "custom list property",
                 type: "list",
                 name: "field_1",
                 is_multiple_value_allowed: false,
                 value: 100,
                 is_required: false,
                 list_value: null,
-            } as Metadata,
+            } as Property,
         ];
 
-        transformCustomMetadataForItemUpdate(parent_metadata);
+        transformCustomPropertiesForItemUpdate(parent_properties);
 
-        expect(expected_list).toEqual(parent_metadata);
+        expect(expected_list).toEqual(parent_properties);
     });
 
     it(`Given parent has a multiple list
-        then the formatted metadata only keeps list ids`, () => {
+        then the formatted properties only keeps list ids`, () => {
         const list_values: Array<ListValue> = [
             {
                 id: 110,
@@ -223,138 +223,138 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 value: "My other value to display",
             },
         ];
-        const parent_metadata: Array<Metadata> = [
+        const parent_properties: Array<Property> = [
             {
-                short_name: "custom list metadata",
+                short_name: "custom list property",
                 name: "field_1",
                 list_value: list_values,
                 is_multiple_value_allowed: true,
                 type: "list",
                 is_required: false,
-            } as Metadata,
+            } as Property,
         ];
 
         const expected_value: Array<number> = [110, 120];
-        const expected_list: Array<Metadata> = [
+        const expected_list: Array<Property> = [
             {
-                short_name: "custom list metadata",
+                short_name: "custom list property",
                 type: "list",
                 name: "field_1",
                 is_multiple_value_allowed: true,
                 list_value: expected_value,
                 is_required: false,
                 value: null,
-            } as Metadata,
+            } as Property,
         ];
 
-        transformCustomMetadataForItemUpdate(parent_metadata);
+        transformCustomPropertiesForItemUpdate(parent_properties);
 
-        expect(expected_list).toEqual(parent_metadata);
+        expect(expected_list).toEqual(parent_properties);
     });
 
     it(`Given parent has a multiple list without any value
-        then the formatted metadata should have the 100 id`, () => {
-        const parent_metadata: Array<Metadata> = [
+        then the formatted properties should have the 100 id`, () => {
+        const parent_properties: Array<Property> = [
             {
-                short_name: "custom list metadata",
+                short_name: "custom list property",
                 name: "field_1",
                 list_value: [],
                 is_multiple_value_allowed: true,
                 type: "list",
                 is_required: false,
-            } as Metadata,
+            } as Property,
         ];
 
         const expected_value: Array<number> = [100];
-        const expected_list: Array<Metadata> = [
+        const expected_list: Array<Property> = [
             {
-                short_name: "custom list metadata",
+                short_name: "custom list property",
                 type: "list",
                 name: "field_1",
                 is_multiple_value_allowed: true,
                 list_value: expected_value,
                 is_required: false,
                 value: null,
-            } as Metadata,
+            } as Property,
         ];
 
-        transformCustomMetadataForItemUpdate(parent_metadata);
+        transformCustomPropertiesForItemUpdate(parent_properties);
 
-        expect(expected_list).toEqual(parent_metadata);
+        expect(expected_list).toEqual(parent_properties);
     });
     it(`Given parent has a date value,
-        then the formatted date metadata is bound to value with the formatted date`, () => {
-        const parent_metadata: Array<Metadata> = [
+        then the formatted date property is bound to value with the formatted date`, () => {
+        const parent_properties: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 name: "field_1",
                 value: "2019-08-30T00:00:00+02:00",
                 type: "date",
                 is_multiple_value_allowed: false,
                 is_required: false,
-            } as Metadata,
+            } as Property,
         ];
 
-        const expected_list: Array<Metadata> = [
+        const expected_list: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 type: "date",
                 name: "field_1",
                 is_multiple_value_allowed: false,
                 value: "2019-08-30",
                 is_required: false,
-            } as Metadata,
+            } as Property,
         ];
 
-        transformCustomMetadataForItemUpdate(parent_metadata);
+        transformCustomPropertiesForItemUpdate(parent_properties);
 
-        expect(expected_list).toEqual(parent_metadata);
+        expect(expected_list).toEqual(parent_properties);
     });
     it(`Given parent does not have a date value,
-        then the formatted date metadata is bound to value with empty string`, () => {
-        const parent_metadata: Array<Metadata> = [
+        then the formatted date property is bound to value with empty string`, () => {
+        const parent_properties: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 name: "field_1",
                 value: null,
                 type: "date",
                 is_multiple_value_allowed: false,
                 is_required: false,
-            } as Metadata,
+            } as Property,
         ];
 
-        const expected_list: Array<Metadata> = [
+        const expected_list: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 type: "date",
                 name: "field_1",
                 is_multiple_value_allowed: false,
                 value: "",
                 is_required: false,
-            } as Metadata,
+            } as Property,
         ];
 
-        transformCustomMetadataForItemUpdate(parent_metadata);
+        transformCustomPropertiesForItemUpdate(parent_properties);
 
-        expect(expected_list).toEqual(parent_metadata);
+        expect(expected_list).toEqual(parent_properties);
     });
 });
 
-describe("formatCustomMetadataForFolderUpdate", () => {
-    it(`Given an item with metadata to update, a list of metadata short name and a recursion option ,
-        then each metadata of the item to update has a recursion option`, () => {
-        const folder_metadata: Array<FolderMetadata> = [
-            { short_name: "field_1" } as FolderMetadata,
-            { short_name: "field_2" } as FolderMetadata,
-            { short_name: "field_3" } as FolderMetadata,
-            { short_name: "field_4" } as FolderMetadata,
+describe("formatCustomPropertiesForFolderUpdate", () => {
+    it(`Given an item with properties to update, a list of properties short name and a recursion option ,
+        then each property of the item to update has a recursion option`, () => {
+        const parent_properties: Array<FolderProperty> = [
+            { short_name: "field_1" } as FolderProperty,
+            { short_name: "field_2" } as FolderProperty,
+            { short_name: "field_3" } as FolderProperty,
+            { short_name: "field_4" } as FolderProperty,
         ];
         const item_to_update: Folder = {
             id: 1,
-            metadata: folder_metadata,
+            metadata: parent_properties,
         } as Folder;
 
-        const metadata_list_to_update = ["field_2", "field_4"];
+        const properties_to_update = ["field_2", "field_4"];
         const recursion_option = "folders";
 
         const expected_item_to_update = {
@@ -367,9 +367,9 @@ describe("formatCustomMetadataForFolderUpdate", () => {
             ],
         };
 
-        formatCustomMetadataForFolderUpdate(
+        formatCustomPropertiesForFolderUpdate(
             item_to_update,
-            metadata_list_to_update,
+            properties_to_update,
             recursion_option
         );
 

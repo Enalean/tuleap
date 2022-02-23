@@ -19,7 +19,7 @@
  */
 
 import { saveProjectMetadata } from "./metadata-mutations";
-import type { Metadata, MetadataState } from "./module";
+import type { Property, MetadataState } from "./module";
 
 describe("Metadata mutations", () => {
     it("loads metadata and set the loaded information to true", () => {
@@ -28,10 +28,10 @@ describe("Metadata mutations", () => {
                 short_name: "status",
                 name: "status",
                 list_value: [100],
-            } as unknown as Metadata,
+            } as unknown as Property,
         ];
 
-        const original_metadata_list: Array<Metadata> = [];
+        const original_metadata_list: Array<Property> = [];
 
         const state = {
             project_metadata_list: original_metadata_list,
