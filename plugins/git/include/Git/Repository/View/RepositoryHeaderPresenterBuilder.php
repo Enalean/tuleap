@@ -30,6 +30,8 @@ use GitDao;
 use GitPermissionsManager;
 use GitRepository;
 use PFUser;
+use Project_AccessException;
+use URLVerification;
 
 class RepositoryHeaderPresenterBuilder
 {
@@ -95,6 +97,7 @@ class RepositoryHeaderPresenterBuilder
         $selected_tab,
         \EventManager $event_manager,
         DefaultCloneURLSelector $default_clone_url_selector,
+        private URLVerification $url_verificator,
     ) {
         $this->dao                        = $dao;
         $this->url_manager                = $url_manager;
@@ -114,7 +117,7 @@ class RepositoryHeaderPresenterBuilder
         $parent_repository_presenter = null;
         $parent_repository           = $repository->getParent();
         if (! empty($parent_repository)) {
-            $parent_repository_presenter = $this->buildParentPresenter($parent_repository);
+            $parent_repository_presenter = $this->buildParentPresenter($parent_repository, $current_user);
         }
 
         $gerrit_status_presenter = $this->buildGerritStatusPresenter($repository, $current_user);
@@ -140,11 +143,12 @@ class RepositoryHeaderPresenterBuilder
         );
     }
 
-    private function buildParentPresenter(GitRepository $parent_repository)
+    private function buildParentPresenter(GitRepository $parent_repository, PFUser $current_user): ParentRepositoryPresenter
     {
         return new ParentRepositoryPresenter(
             $parent_repository,
-            $this->url_manager->getRepositoryBaseUrl($parent_repository)
+            $this->url_manager->getRepositoryBaseUrl($parent_repository),
+            $this->userCanSeeParentRepository($current_user, $parent_repository)
         );
     }
 
@@ -254,5 +258,15 @@ class RepositoryHeaderPresenterBuilder
             },
             $this->dao->getForksOfRepositoryForUser($repository->getId(), $current_user->getId())
         );
+    }
+
+    private function userCanSeeParentRepository(PFUser $current_user, GitRepository $repository): bool
+    {
+        try {
+            return $this->url_verificator->userCanAccessProject($current_user, $repository->getProject())
+            && $repository->userCanRead($current_user);
+        } catch (Project_AccessException $exception) {
+            return false;
+        }
     }
 }

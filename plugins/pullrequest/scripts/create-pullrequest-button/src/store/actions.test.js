@@ -87,6 +87,7 @@ describe("Store actions", () => {
                 parent_repository_id: 66,
                 parent_project_id: 102,
                 parent_repository_name: "ledepot",
+                user_can_see_parent_repository: true,
             });
 
             expect(context.commit).toHaveBeenCalledWith("setDestinationBranches", [
@@ -119,6 +120,31 @@ describe("Store actions", () => {
             });
 
             expect(context.commit).toHaveBeenCalledWith("setHasErrorWhileLoadingBranchesToTrue");
+        });
+
+        it("loads branches of current repository and store them as destination branches if user can't access parent repository", async () => {
+            const branches = [{ name: "master" }, { name: "feature/branch" }];
+            const getBranches = jest.spyOn(rest_querier, "getBranches");
+            getBranches.mockReturnValue(Promise.resolve(branches));
+
+            await actions.init(context, {
+                repository_id: 42,
+                project_id: 101,
+                parent_repository_id: 66,
+                parent_project_id: 102,
+                parent_repository_name: "ledepot",
+                user_can_see_parent_repository: false,
+            });
+
+            expect(context.commit).toHaveBeenCalledWith("setDestinationBranches", [
+                { display_name: "master", repository_id: 42, project_id: 101, name: "master" },
+                {
+                    display_name: "feature/branch",
+                    repository_id: 42,
+                    project_id: 101,
+                    name: "feature/branch",
+                },
+            ]);
         });
     });
 

@@ -52,3 +52,6 @@ msgstr ""
 
 msgid "Source branch"
 msgstr "Branche source"
+
+msgid "You don't have permission to see parent repository's branches."
+msgstr "Vous n'avez pas la permission de voir les branches du dépot parent."

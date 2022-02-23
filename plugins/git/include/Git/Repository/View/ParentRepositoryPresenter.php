@@ -29,7 +29,7 @@ class ParentRepositoryPresenter
     public $parent_repository_name;
     public $parent_project_id;
 
-    public function __construct(GitRepository $repository, $repository_url)
+    public function __construct(GitRepository $repository, $repository_url, public bool $user_can_see_parent_repository)
     {
         $this->parent_repository_url  = $repository_url;
         $this->parent_repository_name = $repository->getName();

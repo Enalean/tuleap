@@ -22,14 +22,21 @@ import { redirectTo } from "../helpers/window-helper.js";
 
 export async function init(
     context,
-    { repository_id, project_id, parent_repository_id, parent_repository_name, parent_project_id }
+    {
+        repository_id,
+        project_id,
+        parent_repository_id,
+        parent_repository_name,
+        parent_project_id,
+        user_can_see_parent_repository,
+    }
 ) {
     try {
         const branches = (await getBranches(repository_id)).map(extendBranch);
 
         context.commit("setSourceBranches", branches);
 
-        if (parent_repository_id) {
+        if (parent_repository_id && user_can_see_parent_repository) {
             const parent_repository_branches = (await getBranches(parent_repository_id)).map(
                 extendBranchForParent
             );
