@@ -23,9 +23,9 @@
 class Statistics_Formatter
 {
     private $separator;
-    public $startDate;
-    public $endDate;
-    public $groupId = null;
+    public string $startDate;
+    public string $endDate;
+    public int|null $groupId = null;
     private $csv_handle;
 
     public function __construct($startDate, $endDate, $separator, $groupId = null)

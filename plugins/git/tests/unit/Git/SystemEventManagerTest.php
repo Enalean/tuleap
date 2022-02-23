@@ -27,7 +27,7 @@ declare(strict_types=1);
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Git_SystemEventManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Git_SystemEventManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -37,8 +37,6 @@ class Git_SystemEventManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $git_system_event_manager;
     /** @var GitRepository */
     private $gitolite_repository;
-    /** @var GitRepository */
-    private $gitshell_repository;
 
     protected function setUp(): void
     {
@@ -50,11 +48,6 @@ class Git_SystemEventManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->gitolite_repository->shouldReceive('getId')->andReturns(54);
         $this->gitolite_repository->shouldReceive('getProjectId')->andReturns(116);
         $this->gitolite_repository->shouldReceive('getBackend')->andReturns(\Mockery::spy(\Git_Backend_Gitolite::class));
-
-        $this->gitshell_repository = \Mockery::spy(\GitRepository::class);
-        $this->gitshell_repository->shouldReceive('getId')->andReturns(54);
-        $this->gitshell_repository->shouldReceive('getProjectId')->andReturns(116);
-        $this->gitshell_repository->shouldReceive('getBackend')->andReturns(\Mockery::spy(\GitBackend::class));
     }
 
     public function testItCreatesRepositoryUpdateEvent(): void
@@ -62,13 +55,6 @@ class Git_SystemEventManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->system_event_manager->shouldReceive('createEvent')->with(SystemEvent_GIT_REPO_UPDATE::NAME, 54, SystemEvent::PRIORITY_HIGH, SystemEvent::OWNER_APP)->once();
 
         $this->git_system_event_manager->queueRepositoryUpdate($this->gitolite_repository);
-    }
-
-    public function testItDoesntCreateRepositoryUpdateEventForGitShellRepositories()
-    {
-        $this->system_event_manager->shouldReceive('createEvent')->never();
-
-        $this->git_system_event_manager->queueRepositoryUpdate($this->gitshell_repository);
     }
 
     public function testItCreatesRepositoryDeletionEvent(): void
@@ -87,7 +73,7 @@ class Git_SystemEventManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $repository = \Mockery::spy(\GitRepository::class);
         $repository->shouldReceive('getId')->andReturns(54);
         $repository->shouldReceive('getProjectId')->andReturns(116);
-        $repository->shouldReceive('getBackend')->andReturns(\Mockery::spy(\GitBackend::class));
+        $repository->shouldReceive('getBackend')->andReturns(\Mockery::spy(\Git_Backend_Interface::class));
         $this->system_event_manager->shouldReceive('createEvent')->with(SystemEvent_GIT_LEGACY_REPO_DELETE::NAME, "116" . SystemEvent::PARAMETER_SEPARATOR . "54", \Mockery::any(), SystemEvent::OWNER_ROOT)->once();
 
         $this->git_system_event_manager->queueRepositoryDeletion($repository);

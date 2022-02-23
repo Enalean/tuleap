@@ -51,12 +51,7 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends \Tuleap\Test\PH
 
     public function getExpectedPattern($repositories): string
     {
-        $nb_repositories = count($repositories);
-        foreach ($repositories as $r) {
-            if ($r['repository_backend_type'] == 'gitshell') {
-                $nb_repositories--;
-            }
-        }
+        $nb_repositories                         = count($repositories);
         $li_regexp_for_repository_representation = '<option value="(?P<value>[^"]*)">(?P<repo>[^\(<]*)</option>';
 
         $pattern = sprintf('<select (?P<args>[^>]*)>(?:%s){%d}</select>', $li_regexp_for_repository_representation, $nb_repositories);
@@ -87,11 +82,7 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends \Tuleap\Test\PH
             $repository->setName($row['repository_name']);
             $repository->setDescription($row['repository_description']);
             $repository->shouldReceive('userCanRead')->andReturns(true);
-            if ($row['repository_backend_type'] == 'gitolite') {
-                $repository->setBackend(\Mockery::spy(\Git_Backend_Gitolite::class));
-            } else {
-                $repository->setBackend(\Mockery::spy(\GitBackend::class));
-            }
+            $repository->setBackend(\Mockery::spy(\Git_Backend_Gitolite::class));
             $strategy->shouldReceive('getRepository')->with($row)->andReturns($repository);
         }
         return $repositories;
@@ -234,23 +225,6 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends \Tuleap\Test\PH
                     'repository_access' => 'private',
                     'repository_events_mailing_prefix' => '[SCM]',
                     'repository_backend_type' => 'gitolite',
-                ],
-            9 =>
-                 [
-                    'repository_id' => '9',
-                    'repository_name' => 'gitshell',
-                    'repository_namespace' => '',
-                    'repository_description' => '-- Default description --',
-                    'repository_path' => 'ngt/gitshell.git',
-                    'repository_parent_id' => '0',
-                    'project_id' => '101',
-                    'repository_creation_user_id' => '102',
-                    'repository_creation_date' => '2011-12-06 17:25:46',
-                    'repository_deletion_date' => '0000-00-00 00:00:00',
-                    'repository_is_initialized' => '0',
-                    'repository_access' => 'private',
-                    'repository_events_mailing_prefix' => '[SCM]',
-                    'repository_backend_type' => 'gitshell',
                 ],
         ];
     }

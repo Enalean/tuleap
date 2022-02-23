@@ -31,7 +31,7 @@ final class Statistics_FormatterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportsCsv(): void
     {
         $data_line            = ['Data1,', 'Data 2', 'Data 3', 'Data 4', 'Data5'];
-        $statistics_formatter = new Statistics_Formatter('', '', ',', ',');
+        $statistics_formatter = new Statistics_Formatter('', '', ',');
         $statistics_formatter->addHeader('Title');
         $statistics_formatter->addLine($data_line);
         $statistics_formatter->addEmptyLine();

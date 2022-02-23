@@ -587,4 +587,101 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
             $backup_directory
         );
     }
+
+    /**
+     * Obtain statistics about backend format for CSV export
+     *
+     * @param Statistics_Formatter $formatter instance of statistics formatter class
+     *
+     * @return String
+     */
+    public function getBackendStatistics(Statistics_Formatter $formatter)
+    {
+        $formatter->clearContent();
+        $formatter->addEmptyLine();
+        $formatter->addHeader('Git');
+        $gitoliteIndex       = [dgettext('tuleap-git', 'Month')];
+        $gitolite            = ["Gitolite created repositories"];
+        $gitoliteActiveIndex = [dgettext('tuleap-git', 'Month')];
+        $gitoliteActive      = ["Gitolite created repositories (still active)"];
+        $this->fillBackendStatisticsByType($formatter, 'gitolite', $gitoliteIndex, $gitolite, false);
+        $this->fillBackendStatisticsByType($formatter, 'gitolite', $gitoliteActiveIndex, $gitoliteActive, true);
+        $this->retrieveLoggedPushesStatistics($formatter);
+        $this->retrieveReadAccessStatistics($formatter);
+        $content = $formatter->getCsvContent();
+        $formatter->clearContent();
+        return $content;
+    }
+
+    /**
+     * Fill statistics by Backend type
+     *
+     * @param Statistics_Formatter $formatter   instance of statistics formatter class
+     * @param String               $type        backend type
+     * @param Array                $typeIndex   backend type index
+     * @param Array                $typeArray   backend type array
+     * @param bool $keepedAlive keep only reposirtories that still active
+     */
+    private function fillBackendStatisticsByType(Statistics_Formatter $formatter, $type, $typeIndex, $typeArray, $keepedAlive): void
+    {
+        $dao  = $this->getDao();
+        $rows = $dao->getBackendStatistics($type, $formatter->startDate, $formatter->endDate, $formatter->groupId, $keepedAlive);
+        if (count($rows) > 0) {
+            foreach ($rows as $row) {
+                $typeIndex[] = $row['month'] . " " . $row['year'];
+                $typeArray[] = intval($row['count']);
+            }
+            $formatter->addLine($typeIndex);
+            $formatter->addLine($typeArray);
+            $formatter->addEmptyLine();
+        }
+    }
+
+    /**
+     * Retrieve logged pushes statistics for CSV export
+     */
+    private function retrieveLoggedPushesStatistics(Statistics_Formatter $formatter): void
+    {
+        $gitIndex   = [dgettext('tuleap-git', 'Month')];
+        $gitPushes  = [dgettext('tuleap-git', 'Total number of git pushes')];
+        $gitCommits = [dgettext('tuleap-git', 'Total number of git commits')];
+        $gitUsers   = [dgettext('tuleap-git', 'Total number of users')];
+        $gitRepo    = [dgettext('tuleap-git', 'Total number of repositories')];
+
+        $gitLogDao = new Git_LogDao();
+        $rows      = $gitLogDao->totalPushes($formatter->startDate, $formatter->endDate, $formatter->groupId);
+        foreach ($rows as $row) {
+            $gitIndex[]   = $row['month'] . " " . $row['year'];
+            $gitPushes[]  = intval($row['pushes_count']);
+            $gitCommits[] = intval($row['commits_count']);
+            $gitUsers[]   = intval($row['users']);
+            $gitRepo[]    = intval($row['repositories']);
+        }
+        $formatter->addLine($gitIndex);
+        $formatter->addLine($gitPushes);
+        $formatter->addLine($gitCommits);
+        $formatter->addLine($gitUsers);
+        $formatter->addLine($gitRepo);
+        $formatter->addEmptyLine();
+    }
+
+    private function retrieveReadAccessStatistics(Statistics_Formatter $formatter): void
+    {
+        $dao   = new Tuleap\Git\History\Dao();
+        $stats = $dao->searchStatistics($formatter->startDate, $formatter->endDate, $formatter->groupId);
+        if (count($stats) === 0) {
+            return;
+        }
+
+        $header = [dgettext('tuleap-git', 'Month')];
+        $line   = [dgettext('tuleap-git', 'Total number of git read access')];
+        foreach ($stats as $row) {
+            $header[] = $row['month'] . " " . $row['year'];
+            $line[]   = intval($row['nb']);
+        }
+
+        $formatter->addLine($header);
+        $formatter->addLine($line);
+        $formatter->addEmptyLine();
+    }
 }

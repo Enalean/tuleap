@@ -39,7 +39,7 @@ final class Git_PostReceiveMailManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $repo = \Mockery::spy(\GitRepository::class);
 
-        $backend = \Mockery::spy(\GitBackend::class);
+        $backend = \Mockery::spy(\Git_Backend_Interface::class);
         $repo->shouldReceive('getBackend')->andReturn($backend);
 
         $prm->dao->shouldReceive('removeNotification')->andReturnTrue();
