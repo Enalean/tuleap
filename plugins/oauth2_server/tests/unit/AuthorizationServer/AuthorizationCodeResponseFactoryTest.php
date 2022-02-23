@@ -27,7 +27,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
+use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\TestCase

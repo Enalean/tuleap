@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
+namespace Tuleap\OAuth2ServerCore\Grant\AuthorizationCode;
 
 use DateInterval;
 use Tuleap\Authentication\Scope\AuthenticationScope;
@@ -32,7 +32,6 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
-use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 
 class OAuth2AuthorizationCodeCreator
 {
