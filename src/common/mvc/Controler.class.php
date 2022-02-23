@@ -32,8 +32,8 @@ class Controler
   /* protected */ public $gid;
   /* protected */ public $view;
   /* protected */ public $action;
-  /* protected */ public $_viewParams   = [];
-  /* protected */ public $_actionParams = [];
+  /* protected */ public array $_viewParams = [];
+  /* protected */ public $_actionParams     = [];
 
     public function request()
     {

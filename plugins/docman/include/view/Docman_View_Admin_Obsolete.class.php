@@ -53,13 +53,11 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView
         return true;
     }
 
-    protected function includeStylesheets(): void
+    protected function includeStylesheets(\Tuleap\Layout\IncludeAssets $include_assets): void
     {
-        $theme_include_assets = new \Tuleap\Layout\IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/docman/',
-            '/assets/docman'
+        $GLOBALS['Response']->addCssAsset(
+            new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'admin-style')
         );
-        $GLOBALS['Response']->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($theme_include_assets, 'admin-style'));
     }
 
     protected function displayContent(array $params): void

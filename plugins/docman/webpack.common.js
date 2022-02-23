@@ -31,6 +31,10 @@ module.exports = [
             "default-style": "./themes/default/css/style.scss",
             "burningparrot-style": "./themes/BurningParrot/css/docman.scss",
             "admin-style": "./themes/BurningParrot/css/admin.scss",
+            "admin-permissions": "./scripts/admin-permissions.ts",
+        },
+        resolve: {
+            extensions: [".ts", ".js"],
         },
         context,
         output,
@@ -38,10 +42,15 @@ module.exports = [
             jquery: "jQuery",
         },
         module: {
-            rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
+            rules: [
+                ...webpack_configurator.configureTypescriptRules(),
+                webpack_configurator.rule_scss_loader,
+                webpack_configurator.rule_css_assets,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
+            webpack_configurator.getTypescriptCheckerPlugin(true),
             ...webpack_configurator.getCSSExtractionPlugins(),
             ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
                 "docman.js": [

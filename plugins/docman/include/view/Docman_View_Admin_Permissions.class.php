@@ -46,20 +46,50 @@ class Docman_View_Admin_Permissions extends \Tuleap\Docman\View\Admin\AdminView
         return dgettext('tuleap-docman', 'Define who can administrate the document manager.');
     }
 
+    protected function isBurningParrotCompatiblePage(): bool
+    {
+        return true;
+    }
+
+    protected function includeStylesheets(\Tuleap\Layout\IncludeAssets $include_assets): void
+    {
+        $GLOBALS['Response']->addCssAsset(
+            new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'admin-style')
+        );
+    }
+
+    protected function includeJavascript(\Tuleap\Layout\IncludeAssets $include_assets): void
+    {
+        $GLOBALS['Response']->addJavascriptAsset(
+            new \Tuleap\Layout\JavascriptAsset($include_assets, 'admin-permissions.js')
+        );
+    }
+
     protected function displayContent(array $params): void
     {
-        $content = '';
+        $content = '<div class="tlp-framed">';
 
-        //{{{ Explanations
-        $content .= '<div>';
+        $content .= '<section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">' . dgettext('tuleap-docman', 'Permissions') . '</h1>
+                </div>
+                <section class="tlp-pane-section">';
+
+        $content .= '<p>';
         $content .= dgettext('tuleap-docman', 'Please select user groups that can administrate the document manager, in addition of project administrators:');
-        $content .= '</div>';
+        $content .= '</p>';
         echo $content;
-        //}}}
 
         $postUrl = DocmanViewURLBuilder::buildUrl($params['default_url'], [
             'action' => 'admin_set_permissions',
         ]);
+        echo '<div id="docman-admin-permission-legacy-form">';
         permission_display_selection_form("PLUGIN_DOCMAN_ADMIN", $params['group_id'], $params['group_id'], $postUrl);
+        echo '</div>';
+
+        echo '</section>
+            </div>
+        </section>';
     }
 }

@@ -82,7 +82,12 @@ abstract class AdminView
         $breadcrumbs = new BreadCrumbCollection();
         $breadcrumbs->addBreadCrumb($documents_crumb);
 
-        $this->includeStylesheets();
+        $include_assets = new \Tuleap\Layout\IncludeAssets(
+            __DIR__ . '/../../../../../src/www/assets/docman/',
+            '/assets/docman'
+        );
+        $this->includeStylesheets($include_assets);
+        $this->includeJavascript($include_assets);
 
         $service->displayHeader(
             $this->getTitle($params) . ' - ' . dgettext('tuleap-docman', 'Documents administration'),
@@ -118,7 +123,11 @@ abstract class AdminView
         return false;
     }
 
-    protected function includeStylesheets(): void
+    protected function includeStylesheets(\Tuleap\Layout\IncludeAssets $include_assets): void
+    {
+    }
+
+    protected function includeJavascript(\Tuleap\Layout\IncludeAssets $include_assets): void
     {
     }
 
