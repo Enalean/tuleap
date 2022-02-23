@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AuthorizationServer\PKCE;
+namespace Tuleap\OAuth2ServerCore\AuthorizationServer\PKCE;
 
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 

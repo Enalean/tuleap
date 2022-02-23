@@ -52,7 +52,7 @@ use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
 use Tuleap\OAuth2Server\App\OAuth2AppRemover;
 use Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointController;
-use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
+use Tuleap\OAuth2ServerCore\AuthorizationServer\PKCE\PKCEInformationExtractor;
 use Tuleap\OAuth2Server\AuthorizationServer\PromptParameterValuesExtractor;
 use Tuleap\OAuth2Server\AuthorizationServer\RedirectURIBuilder;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;

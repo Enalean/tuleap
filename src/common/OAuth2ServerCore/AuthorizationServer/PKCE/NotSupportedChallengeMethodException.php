@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AuthorizationServer\PKCE;
+namespace Tuleap\OAuth2ServerCore\AuthorizationServer\PKCE;
 
-final class CodeChallengeNotBase64URLEncodedException extends \RuntimeException implements OAuth2PKCEInformationExtractionException
+final class NotSupportedChallengeMethodException extends \RuntimeException implements OAuth2PKCEInformationExtractionException
 {
-    public function __construct()
+    public function __construct(string $requested_challenge_method)
     {
-        parent::__construct('The provided code challenge is not correctly base64 URL encoded');
+        parent::__construct(sprintf('The challenge method "%s" is not supported', $requested_challenge_method));
     }
 }
