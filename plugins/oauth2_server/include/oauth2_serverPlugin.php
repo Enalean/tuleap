@@ -55,7 +55,7 @@ use Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointController;
 use Tuleap\OAuth2ServerCore\AuthorizationServer\PKCE\PKCEInformationExtractor;
 use Tuleap\OAuth2Server\AuthorizationServer\PromptParameterValuesExtractor;
 use Tuleap\OAuth2Server\AuthorizationServer\RedirectURIBuilder;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
+use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 use Tuleap\OAuth2ServerCore\App\PrefixOAuth2ClientSecret;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\PrefixOAuth2AuthCode;

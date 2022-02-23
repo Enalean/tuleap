@@ -28,7 +28,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriFactoryInterface;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
+use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 
 class AuthorizationCodeResponseFactory
 {
