@@ -21,14 +21,19 @@
 declare(strict_types=1);
 
 use Tuleap\Layout\ServiceUrlCollector;
-use Tuleap\MediawikiStandalone\MediawikiStandaloneService;
+use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
+use Tuleap\MediawikiStandalone\Service\ServiceActivationHandler;
+use Tuleap\MediawikiStandalone\Service\ServiceActivationProjectServiceBeforeActivationEvent;
+use Tuleap\MediawikiStandalone\Service\ServiceActivationServiceDisabledCollectorEvent;
+use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\Service\ServiceDisabledCollector;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class mediawiki_standalonePlugin extends Plugin
 {
-    private const SERVICE_SHORTNAME = 'plugin_mediawiki_standalone';
+    public const SERVICE_SHORTNAME = 'plugin_mediawiki_standalone';
 
     public function __construct(?int $id)
     {
@@ -59,6 +64,8 @@ final class mediawiki_standalonePlugin extends Plugin
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(ServiceUrlCollector::NAME);
+        $this->addHook(ProjectServiceBeforeActivation::NAME);
+        $this->addHook(ServiceDisabledCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -78,5 +85,15 @@ final class mediawiki_standalonePlugin extends Plugin
         if ($collector->getServiceShortname() === $this->getServiceShortname()) {
             $collector->setUrl('/to_be_defined');
         }
+    }
+
+    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
+    {
+        (new ServiceActivationHandler())->handle(new ServiceActivationProjectServiceBeforeActivationEvent($event));
+    }
+
+    public function serviceDisabledCollector(ServiceDisabledCollector $event): void
+    {
+        (new ServiceActivationHandler())->handle(new ServiceActivationServiceDisabledCollectorEvent($event));
     }
 }

@@ -12,3 +12,17 @@ msgstr "MediaWiki autonome"
 
 msgid "Standalone MediaWiki instances integration with Tuleap"
 msgstr "Intégration avec Tuleap d'instances autonome de MediaWiki"
+
+msgid ""
+"The MediaWiki standalone service cannot activated when the Mediawiki service "
+"is active"
+msgstr ""
+"Le service MediaWiki autonome ne peut pas être activé quand le service Mediawiki "
+"est actif"
+
+msgid ""
+"The Mediawiki service cannot activated when the MediaWiki standalone service "
+"is active"
+msgstr ""
+"Le service Mediawiki ne peut pas être activé quand le service MediaWiki autonome "
+"est actif"

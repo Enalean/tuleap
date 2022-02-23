@@ -5,6 +5,11 @@
       "Tuleap\\MediawikiStandalone\\": ["include/"]
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\MediawikiStandalone\\": ["tests/unit/"]
+    }
+  },
   "config": {
     "sort-packages": true
   }
