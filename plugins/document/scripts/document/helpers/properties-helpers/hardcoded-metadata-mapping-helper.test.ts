@@ -22,7 +22,7 @@ import {
     getStatusProperty,
     getStatusIdFromName,
 } from "./hardcoded-properties-mapping-helper";
-import type { Property } from "../../store/metadata/module";
+import type { Property } from "../../store/properties/module";
 
 describe("getStatusProperty", () => {
     it("Given properties has a status, then its return the corresponding property", () => {

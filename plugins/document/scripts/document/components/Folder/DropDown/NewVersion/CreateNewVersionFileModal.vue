@@ -59,8 +59,8 @@ import { sprintf } from "sprintf-js";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
-import FileProperties from "../MetadataForCreateOrUpdate/FileProperties.vue";
-import ItemUpdateProperties from "./MetadataForUpdate/ItemUpdateProperties.vue";
+import FileProperties from "../PropertiesForCreateOrUpdate/FileProperties.vue";
+import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
 
 export default {
     name: "CreateNewVersionFileModal",

@@ -61,8 +61,8 @@ import { sprintf } from "sprintf-js";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
-import ItemUpdateProperties from "./MetadataForUpdate/ItemUpdateProperties.vue";
-import LinkProperties from "../MetadataForCreateOrUpdate/LinkProperties.vue";
+import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
+import LinkProperties from "../PropertiesForCreateOrUpdate/LinkProperties.vue";
 
 export default {
     name: "CreateNewVersionLinkModal",

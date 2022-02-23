@@ -22,7 +22,7 @@
     margin: var(--tlp-medium-spacing);
 }
 
-.document-metadata-container {
+.document-properties-container {
     display: flex;
     position: relative;
     padding: 0 0 var(--tlp-medium-spacing);
@@ -65,7 +65,7 @@
     box-shadow: 0 3px 3px var(--tlp-white-color), 0 -3px 3px var(--tlp-white-color);
 }
 
-.document-metadata-recursion-option-section {
+.document-properties-recursion-option-section {
     position: relative;
     padding: 0 0 0 40px;
 
@@ -83,7 +83,7 @@
         );
     }
 
-    > .document-metadata-recursion-option-arrow {
+    > .document-properties-recursion-option-arrow {
         position: absolute;
         top: calc(70% - 11px / 2); // 11px is the height of the svg
         left: 9px;

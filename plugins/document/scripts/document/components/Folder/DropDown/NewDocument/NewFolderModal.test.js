@@ -48,7 +48,7 @@ describe("NewFolderModal", () => {
                             is_required: false,
                         },
                         {
-                            short_name: "custom metadata",
+                            short_name: "custom property",
                             name: "custom",
                             value: "value",
                             is_multiple_value_allowed: false,
@@ -70,7 +70,7 @@ describe("NewFolderModal", () => {
 
         store = createStoreMock(general_store, {
             permissions: { project_ugroups: null },
-            metadata: {},
+            properties: {},
         });
 
         factory = () => {
@@ -87,9 +87,9 @@ describe("NewFolderModal", () => {
         });
     });
 
-    it("Does not load project metadata, when they have already been loaded", async () => {
-        store.state.metadata = {
-            has_loaded_metadata: true,
+    it("Does not load project properties, when they have already been loaded", async () => {
+        store.state.properties = {
+            has_loaded_properties: true,
         };
 
         const wrapper = factory();
@@ -99,14 +99,14 @@ describe("NewFolderModal", () => {
         });
         await wrapper.vm.$nextTick().then(() => {});
 
-        expect(store.dispatch).not.toHaveBeenCalledWith("metadata/loadProjectMetadata");
+        expect(store.dispatch).not.toHaveBeenCalledWith("properties/loadProjectProperties");
     });
 
-    it("inherit default values from parent metadata", () => {
+    it("inherit default values from parent properties", () => {
         const folder_to_create = {
             metadata: [
                 {
-                    short_name: "custom metadata",
+                    short_name: "custom property",
                     name: "custom",
                     value: "value",
                     is_multiple_value_allowed: false,

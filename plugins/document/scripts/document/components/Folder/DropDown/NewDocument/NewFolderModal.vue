@@ -33,7 +33,7 @@
         />
         <modal-feedback />
         <div class="tlp-modal-body document-item-modal-body" v-if="is_displayed">
-            <folder-global-metadata-for-create
+            <folder-global-properties-for-create
                 v-bind:currently-updated-item="item"
                 v-bind:parent="parent"
             />
@@ -59,7 +59,7 @@ import { TYPE_FOLDER } from "../../../../constants";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
-import FolderGlobalMetadataForCreate from "./MetadataForCreate/FolderGlobalMetadataForCreate.vue";
+import FolderGlobalPropertiesForCreate from "./PropertiesForCreate/FolderGlobalPropertiesForCreate.vue";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
 import { getCustomProperties } from "../../../../helpers/properties-helpers/custom-properties-helper";
 import { handleErrors } from "../../../../store/actions-helpers/handle-errors";
@@ -69,7 +69,7 @@ import emitter from "../../../../helpers/emitter";
 export default {
     name: "NewFolderModal",
     components: {
-        FolderGlobalMetadataForCreate,
+        FolderGlobalPropertiesForCreate,
         CreationModalPermissionsSection,
         ModalFeedback,
         ModalHeader,
@@ -104,12 +104,15 @@ export default {
         this.item = this.getDefaultItem();
         this.modal = createModal(this.$el);
         emitter.on("show-new-folder-modal", this.show);
-        emitter.on("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
+        emitter.on("update-multiple-properties-list-value", this.updateMultiplePropertiesListValue);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
     },
     beforeDestroy() {
         emitter.off("show-new-folder-modal", this.show);
-        emitter.off("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
+        emitter.off(
+            "update-multiple-properties-list-value",
+            this.updateMultiplePropertiesListValue
+        );
         this.modal.removeEventListener("tlp-modal-hidden", this.reset);
     },
     methods: {
@@ -128,7 +131,7 @@ export default {
         async show(event) {
             this.item = this.getDefaultItem();
             this.parent = event.detail.parent;
-            this.addParentMetadataToDefaultItem();
+            this.addParentPropertiesToDefaultItem();
             this.item.permissions_for_groups = JSON.parse(
                 JSON.stringify(this.parent.permissions_for_groups)
             );
@@ -164,22 +167,23 @@ export default {
                 this.modal.hide();
             }
         },
-        addParentMetadataToDefaultItem() {
-            const parent_metadata = getCustomProperties(this.parent.metadata);
+        addParentPropertiesToDefaultItem() {
+            const parent_properties = getCustomProperties(this.parent.metadata);
 
-            const formatted_metadata = transformCustomPropertiesForItemCreation(parent_metadata);
-            if (formatted_metadata.length > 0) {
-                this.item.metadata = formatted_metadata;
+            const formatted_properties =
+                transformCustomPropertiesForItemCreation(parent_properties);
+            if (formatted_properties.length > 0) {
+                this.item.metadata = formatted_properties;
             }
         },
-        updateMultipleMetadataListValue(event) {
+        updateMultiplePropertiesListValue(event) {
             if (!this.item.metadata) {
                 return;
             }
-            const item_metadata = this.item.metadata.find(
-                (metadata) => metadata.short_name === event.detail.id
+            const item_properties = this.item.metadata.find(
+                (property) => property.short_name === event.detail.id
             );
-            item_metadata.list_value = event.detail.value;
+            item_properties.list_value = event.detail.value;
         },
     },
 };

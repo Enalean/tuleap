@@ -78,7 +78,7 @@ describe("DownloadFolderAsZip", () => {
 
         await Vue.nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", {
+        expect(store.dispatch).toHaveBeenCalledWith("properties/getFolderProperties", {
             id: 10,
             type: "folder",
         });
@@ -101,7 +101,7 @@ describe("DownloadFolderAsZip", () => {
 
         await Vue.nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", {
+        expect(store.dispatch).toHaveBeenCalledWith("properties/getFolderProperties", {
             id: 10,
             type: "folder",
         });
@@ -131,7 +131,7 @@ describe("DownloadFolderAsZip", () => {
 
         await Vue.nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", {
+        expect(store.dispatch).toHaveBeenCalledWith("properties/getFolderProperties", {
             id: 10,
             type: "folder",
         });
@@ -160,7 +160,7 @@ describe("DownloadFolderAsZip", () => {
 
         await Vue.nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", {
+        expect(store.dispatch).toHaveBeenCalledWith("properties/getFolderProperties", {
             id: 10,
             type: "folder",
         });
@@ -187,7 +187,7 @@ describe("DownloadFolderAsZip", () => {
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", {
+        expect(store.dispatch).toHaveBeenCalledWith("properties/getFolderProperties", {
             id: 10,
             type: "folder",
         });

@@ -36,7 +36,7 @@
         <div class="tlp-modal-body document-item-modal-body" v-if="is_displayed">
             <type-selector v-model="item.type" />
 
-            <document-global-metadata-for-create
+            <document-global-property-for-create
                 v-bind:currently-updated-item="item"
                 v-bind:parent="parent"
             >
@@ -60,8 +60,8 @@
                     v-bind:item="item"
                     name="properties"
                 />
-            </document-global-metadata-for-create>
-            <other-information-metadata-for-create
+            </document-global-property-for-create>
+            <other-information-properties-for-create
                 v-bind:currently-updated-item="item"
                 v-model="item.obsolescence_date"
             />
@@ -85,16 +85,16 @@
 import { mapState } from "vuex";
 import { createModal } from "tlp";
 import { TYPE_FILE } from "../../../../constants";
-import DocumentGlobalMetadataForCreate from "./MetadataForCreate/DocumentGlobalMetadataForCreate.vue";
-import LinkProperties from "../MetadataForCreateOrUpdate/LinkProperties.vue";
-import WikiProperties from "../MetadataForCreateOrUpdate/WikiProperties.vue";
+import DocumentGlobalPropertyForCreate from "./PropertiesForCreate/DocumentGlobalPropertyForCreate.vue";
+import LinkProperties from "../PropertiesForCreateOrUpdate/LinkProperties.vue";
+import WikiProperties from "../PropertiesForCreateOrUpdate/WikiProperties.vue";
 import TypeSelector from "./TypeSelector.vue";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
-import EmbeddedProperties from "../MetadataForCreateOrUpdate/EmbeddedProperties.vue";
-import FileProperties from "../MetadataForCreateOrUpdate/FileProperties.vue";
-import OtherInformationMetadataForCreate from "./MetadataForCreate/OtherInformationMetadataForCreate.vue";
+import EmbeddedProperties from "../PropertiesForCreateOrUpdate/EmbeddedProperties.vue";
+import FileProperties from "../PropertiesForCreateOrUpdate/FileProperties.vue";
+import OtherInformationPropertiesForCreate from "./PropertiesForCreate/OtherInformationPropertiesForCreate.vue";
 import { getCustomProperties } from "../../../../helpers/properties-helpers/custom-properties-helper";
 import { handleErrors } from "../../../../store/actions-helpers/handle-errors";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
@@ -104,8 +104,8 @@ import emitter from "../../../../helpers/emitter";
 export default {
     name: "NewItemModal",
     components: {
-        OtherInformationMetadataForCreate,
-        DocumentGlobalMetadataForCreate,
+        OtherInformationPropertiesForCreate,
+        DocumentGlobalPropertyForCreate,
         FileProperties,
         EmbeddedProperties,
         ModalFooter,
@@ -129,11 +129,11 @@ export default {
         ...mapState(["current_folder"]),
         ...mapState("configuration", [
             "project_id",
-            "is_item_status_metadata_used",
-            "is_obsolescence_date_metadata_used",
+            "is_status_property_used",
+            "is_obsolescence_date_property_used",
         ]),
         ...mapState("error", ["has_modal_error"]),
-        ...mapState("metadata", ["has_loaded_metadata"]),
+        ...mapState("properties", ["has_loaded_properties"]),
         ...mapState("permissions", ["project_ugroups"]),
         submit_button_label() {
             return this.$gettext("Create document");
@@ -148,12 +148,15 @@ export default {
     mounted() {
         this.modal = createModal(this.$el);
         emitter.on("createItem", this.show);
-        emitter.on("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
+        emitter.on("update-multiple-properties-list-value", this.updateMultiplePropertiesListValue);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
     },
     beforeDestroy() {
         emitter.off("createItem", this.show);
-        emitter.off("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
+        emitter.off(
+            "update-multiple-properties-list-value",
+            this.updateMultiplePropertiesListValue
+        );
         this.modal.removeEventListener("tlp-modal-hidden", this.reset);
     },
     methods: {
@@ -186,7 +189,7 @@ export default {
         async show(event) {
             this.item = this.getDefaultItem();
             this.parent = event.item;
-            this.addParentMetadataToDefaultItem();
+            this.addParentPropertiesToDefaultItem();
             this.item.permissions_for_groups = JSON.parse(
                 JSON.stringify(this.parent.permissions_for_groups)
             );
@@ -228,22 +231,24 @@ export default {
                 this.modal.hide();
             }
         },
-        addParentMetadataToDefaultItem() {
-            const parent_metadata = getCustomProperties(this.parent.metadata);
+        addParentPropertiesToDefaultItem() {
+            const parent_properties = getCustomProperties(this.parent.metadata);
 
-            const formatted_metadata = transformCustomPropertiesForItemCreation(parent_metadata);
-            if (formatted_metadata.length > 0) {
-                this.item.metadata = formatted_metadata;
+            const formatted_properties =
+                transformCustomPropertiesForItemCreation(parent_properties);
+
+            if (formatted_properties.length > 0) {
+                this.item.metadata = formatted_properties;
             }
         },
-        updateMultipleMetadataListValue(event) {
+        updateMultiplePropertiesListValue(event) {
             if (!this.item.metadata) {
                 return;
             }
-            const item_metadata = this.item.metadata.find(
-                (metadata) => metadata.short_name === event.detail.id
+            const item_properties = this.item.metadata.find(
+                (property) => property.short_name === event.detail.id
             );
-            item_metadata.list_value = event.detail.value;
+            item_properties.list_value = event.detail.value;
         },
     },
 };

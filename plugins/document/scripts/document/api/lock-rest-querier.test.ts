@@ -33,7 +33,7 @@ import type { Embedded, Empty, ItemFile, Link } from "../type";
 
 jest.mock("tlp");
 
-describe("metadata rest querier", () => {
+describe("lock rest querier", () => {
     const id = 1234;
 
     it("Locks a file", async () => {

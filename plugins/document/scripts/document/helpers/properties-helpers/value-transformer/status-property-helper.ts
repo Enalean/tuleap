@@ -18,7 +18,7 @@
  */
 
 import type { Item } from "../../../type";
-import type { Property, ListValue } from "../../../store/metadata/module";
+import type { Property, ListValue } from "../../../store/properties/module";
 import { getStatusFromMapping } from "../hardcoded-properties-mapping-helper";
 import { assertListIsOnlyMultipleValue } from "./list-value-helper";
 

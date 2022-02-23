@@ -52,7 +52,7 @@ import { createModal } from "tlp";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
-import ItemUpdateProperties from "./MetadataForUpdate/ItemUpdateProperties.vue";
+import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
 import { sprintf } from "sprintf-js";
 import { mapState } from "vuex";
 

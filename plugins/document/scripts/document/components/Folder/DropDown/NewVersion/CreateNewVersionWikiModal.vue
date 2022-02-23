@@ -54,7 +54,7 @@ import { sprintf } from "sprintf-js";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
-import WikiProperties from "../MetadataForCreateOrUpdate/WikiProperties.vue";
+import WikiProperties from "../PropertiesForCreateOrUpdate/WikiProperties.vue";
 import LockProperty from "../Lock/LockProperty.vue";
 
 export default {

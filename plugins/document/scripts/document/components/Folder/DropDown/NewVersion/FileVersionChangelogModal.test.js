@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../../helpers/local-vue";
 import FileVersionChangelogModal from "./FileVersionChangelogModal.vue";
-import ItemUpdateProperties from "./MetadataForUpdate/ItemUpdateProperties.vue";
+import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import * as tlp from "tlp";
 

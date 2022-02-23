@@ -40,10 +40,10 @@
                     v-bind:item="updated_item"
                     data-test="document-new-version-modal"
                 />
-                <update-metadata-modal
-                    v-bind:is="shown_update_metadata_modal"
-                    v-bind:item="updated_metadata"
-                    data-test="document-update-metadata-modal"
+                <update-properties-modal
+                    v-bind:is="shown_update_properties_modal"
+                    v-bind:item="updated_properties"
+                    data-test="document-update-properties-modal"
                 />
             </div>
             <div class="document-header-spacer"></div>
@@ -135,9 +135,9 @@ export default {
     data() {
         return {
             shown_new_version_modal: "",
-            shown_update_metadata_modal: "",
+            shown_update_properties_modal: "",
             updated_item: null,
-            updated_metadata: null,
+            updated_properties: null,
             item_to_delete: null,
             item_to_update_permissions: {},
             current_folder_size: null,
@@ -166,7 +166,7 @@ export default {
     created() {
         emitter.on("deleteItem", this.showDeleteItemModal);
         emitter.on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
-        emitter.on("show-update-item-metadata-modal", this.showUpdateItemMetadataModal);
+        emitter.on("show-update-item-properties-modal", this.showUpdateItemPropertiesModal);
         emitter.on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
         emitter.on(
             "show-max-archive-size-threshold-exceeded-modal",
@@ -178,7 +178,7 @@ export default {
     beforeDestroy() {
         emitter.off("deleteItem", this.showDeleteItemModal);
         emitter.off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
-        emitter.off("show-update-item-metadata-modal", this.showUpdateItemMetadataModal);
+        emitter.off("show-update-item-properties-modal", this.showUpdateItemPropertiesModal);
         emitter.off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
         emitter.off(
             "show-max-archive-size-threshold-exceeded-modal",
@@ -228,17 +228,17 @@ export default {
         showChangelogModal(event) {
             this.file_changelog_properties = event.detail;
         },
-        showUpdateItemMetadataModal(event) {
-            this.updated_metadata = event.detail.current_item;
-            if (!this.isItemAFolder(this.updated_metadata)) {
-                this.shown_update_metadata_modal = () =>
+        showUpdateItemPropertiesModal(event) {
+            this.updated_properties = event.detail.current_item;
+            if (!this.isItemAFolder(this.updated_properties)) {
+                this.shown_update_properties_modal = () =>
                     import(
-                        /* webpackChunkName: "update-metadata-modal" */ "./DropDown/UpdateMetadata/UpdateMetadataModal.vue"
+                        /* webpackChunkName: "update-properties-modal" */ "./DropDown/UpdateProperties/UpdatePropertiesModal.vue"
                     );
             } else {
-                this.shown_update_metadata_modal = () =>
+                this.shown_update_properties_modal = () =>
                     import(
-                        /* webpackChunkName: "update-folder-metadata-modal" */ "./DropDown/UpdateMetadata/UpdateFolderMetadataModal.vue"
+                        /* webpackChunkName: "update-folder-properties-modal" */ "./DropDown/UpdateProperties/UpdateFolderPropertiesModal.vue"
                     );
             }
         },

@@ -413,7 +413,7 @@ async function createNewFile(
         file_properties,
         status,
         obsolescence_date,
-        metadata,
+        properties,
         permissions_for_groups,
     },
     parent,
@@ -430,7 +430,7 @@ async function createNewFile(
             },
             status: status,
             obsolescence_date: obsolescence_date,
-            metadata: metadata,
+            metadata: properties,
             permissions_for_groups: permissions_for_groups,
         },
         parent.id

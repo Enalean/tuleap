@@ -89,7 +89,7 @@ import DropDownSeparator from "./DropDownSeparator.vue";
 import NewDocument from "./NewDocument/NewDocument.vue";
 import LockItem from "./Lock/LockItem.vue";
 import UnlockItem from "./Lock/UnlockItem.vue";
-import UpdateProperties from "./UpdateMetadata/UpdateProperties.vue";
+import UpdateProperties from "./UpdateProperties/UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import DropDownItemTitle from "./DropDownItemTitle.vue";
 import { isFolder } from "../../../helpers/type-check-helper";
