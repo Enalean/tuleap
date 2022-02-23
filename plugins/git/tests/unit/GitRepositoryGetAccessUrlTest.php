@@ -41,7 +41,7 @@ class GitRepositoryGetAccessUrlTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->backend = \Mockery::spy(\GitBackend::class);
+        $this->backend = \Mockery::spy(\Git_Backend_Interface::class);
 
         $this->repository = new GitRepository();
         $this->repository->setBackend($this->backend);

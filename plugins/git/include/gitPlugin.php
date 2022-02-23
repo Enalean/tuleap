@@ -798,9 +798,8 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     private function isNameAvailable($newName, &$error)
     {
         $backend_gitolite = $this->getBackendGitolite();
-        $backend_gitshell = Backend::instance('Git', 'GitBackend', [$this->getGitRepositoryUrlManager()]);
 
-        if (! $backend_gitolite->isNameAvailable($newName) && ! $backend_gitshell->isNameAvailable($newName)) {
+        if (! $backend_gitolite->isNameAvailable($newName)) {
             $error = dgettext('tuleap-git', 'A file already exists with this name under gitroot');
             return false;
         }
@@ -1251,10 +1250,8 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function statistics_collector($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! empty($params['formatter'])) {
-            include_once('GitBackend.class.php');
-            $formatter  = $params['formatter'];
-            $gitBackend = Backend::instance('Git', 'GitBackend', [$this->getGitRepositoryUrlManager()]);
-            echo $gitBackend->getBackendStatistics($formatter);
+            $formatter = $params['formatter'];
+            echo $this->getBackendGitolite()->getBackendStatistics($formatter);
         }
     }
 

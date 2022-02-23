@@ -211,14 +211,11 @@ class GitRepository
         if (empty($this->backend)) {
             $git_plugin = PluginManager::instance()->getPluginByName('git');
             \assert($git_plugin instanceof GitPlugin);
-            $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
-            switch ($this->getBackendType()) {
-                case GitDao::BACKEND_GITOLITE:
-                    $this->backend = $git_plugin->getBackendGitolite();
-                    break;
-                default:
-                    $this->backend = Backend::instance('Git', 'GitBackend', [$url_manager]);
-            }
+            $backend_type  = $this->getBackendType();
+            $this->backend = match ($backend_type) {
+                GitDao::BACKEND_GITOLITE => $git_plugin->getBackendGitolite(),
+                default => throw new \Tuleap\Git\UnsupportedBackendTypeException($backend_type),
+            };
         }
         return $this->backend;
     }
