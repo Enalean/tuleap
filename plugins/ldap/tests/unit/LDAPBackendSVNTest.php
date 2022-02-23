@@ -26,7 +26,10 @@ use Event;
 use EventManager;
 use LDAP_SVN_Apache_ModPerl;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use org\bovigo\vfs\vfsStream;
 use SVN_Apache_Auth_Factory;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DB\DBAuthUserConfig;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalSVNPollution;
@@ -89,6 +92,9 @@ class LDAPBackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFullConfShouldWrapEveryThing(): void
     {
+        \ForgeConfig::set('sys_custom_dir', vfsStream::setup('root', null, ['conf' => []])->url());
+        \ForgeConfig::set(DBAuthUserConfig::PASSWORD, \ForgeConfig::encryptValue(new ConcealedString('dat password')));
+
         $conf = $this->givenAFullApacheConf();
 
         $this->assertMatchesRegularExpression('%TuleapLdapServers "ldap://ldap.tuleap.com"%', $conf);

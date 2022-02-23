@@ -29,7 +29,7 @@ namespace Tuleap\Config;
 #[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
 final class ConfigKeyString implements ConfigKeyType
 {
-    public function __construct(public ?string $default_value)
+    public function __construct(public ?string $default_value = null)
     {
     }
 

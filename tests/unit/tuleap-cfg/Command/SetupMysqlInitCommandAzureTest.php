@@ -25,6 +25,7 @@ namespace TuleapCfg\Command;
 
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Console\Tester\CommandTester;
+use Tuleap\DB\DBAuthUserConfig;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
 
@@ -50,7 +51,8 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->base_dir = vfsStream::setup()->url();
         mkdir($this->base_dir . '/etc/tuleap/conf', 0750, true);
-        copy(__DIR__ . '/../../../../src/etc/local.inc.dist', $this->base_dir . '/etc/tuleap/conf/local.inc');
+
+        \ForgeConfig::set('sys_custom_dir', $this->base_dir . '/etc/tuleap');
 
         $this->db_wrapper = new TestDBWrapper();
 
@@ -168,19 +170,18 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItWritesDBAuthUserCredentials(): void
     {
         $this->command_tester->execute([
-            '--skip-database'  => true,
             '--admin-password' => 'welcome0',
             '--nss-password'   => 'another complex password',
             '--azure-suffix'   => 'some-id',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
-        $this->assertEmpty($this->command_tester->getDisplay());
 
-        $this->assertFileDoesNotExist($this->base_dir . '/etc/tuleap/conf/database.inc');
+        $first_insert_pos = array_search("REPLACE INTO 'tuleap'.forgeconfig (name, value) VALUES (?, ?)", $this->db_wrapper->statements, true);
+        self::assertEquals(DBAuthUserConfig::USER, $this->db_wrapper->statements_params[$first_insert_pos][0]);
+        self::assertEquals('dbauthuser@some-id', $this->db_wrapper->statements_params[$first_insert_pos][1]);
 
-        require($this->base_dir . '/etc/tuleap/conf/local.inc');
-        $this->assertEquals('dbauthuser@some-id', $sys_dbauth_user);
-        $this->assertEquals('another complex password', $sys_dbauth_passwd);
+        self::assertEquals(DBAuthUserConfig::PASSWORD, $this->db_wrapper->statements_params[$first_insert_pos + 1][0]);
+        self::assertNotEmpty($this->db_wrapper->statements_params[$first_insert_pos + 1][1]);
     }
 }

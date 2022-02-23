@@ -25,6 +25,7 @@ namespace TuleapCfg\Command;
 
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Console\Tester\CommandTester;
+use Tuleap\DB\DBAuthUserConfig;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use function PHPUnit\Framework\assertStringContainsString;
 
@@ -199,8 +200,6 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGrantTuleapAccessToNssUser(): void
     {
-        copy(__DIR__ . '/../../../../src/etc/local.inc.dist', $this->base_dir . '/etc/tuleap/conf/local.inc');
-
         $this->command_tester->execute([
             '--admin-password' => 'welcome0',
             '--nss-password'   => 'another complex password',
@@ -211,21 +210,13 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->db_wrapper->assertContains("CREATE USER IF NOT EXISTS 'dbauthuser'@'%' IDENTIFIED BY 'another complex password'");
         $this->db_wrapper->assertContains("GRANT CREATE,SELECT ON 'tuleap'.'user' TO 'dbauthuser'@'%'");
-    }
 
-    public function testCannotSetupNssUserWithoutLocalInc(): void
-    {
-        $this->command_tester->execute([
-            '--admin-password' => 'welcome0',
-            '--nss-password'   => 'another complex password',
-            '--nss-user'       => 'dbauthuser',
-        ]);
+        $first_insert_pos = array_search("REPLACE INTO 'tuleap'.forgeconfig (name, value) VALUES (?, ?)", $this->db_wrapper->statements, true);
+        self::assertEquals(DBAuthUserConfig::USER, $this->db_wrapper->statements_params[$first_insert_pos][0]);
+        self::assertEquals('dbauthuser', $this->db_wrapper->statements_params[$first_insert_pos][1]);
 
-        $this->assertStringContainsString('requires to have ' . $this->base_dir . '/etc/tuleap/conf/local.inc', $this->command_tester->getDisplay());
-
-        $this->assertEquals(1, $this->command_tester->getStatusCode());
-
-        $this->db_wrapper->assertNoStatments();
+        self::assertEquals(DBAuthUserConfig::PASSWORD, $this->db_wrapper->statements_params[$first_insert_pos + 1][0]);
+        self::assertNotEmpty($this->db_wrapper->statements_params[$first_insert_pos + 1][1]);
     }
 
     public function testGrantMediawikiPerProjectAccessToApplicationUser(): void

@@ -98,7 +98,7 @@ $CLI_command_collector->addCommand(
         return new ConfigSetCommand(
             new \Tuleap\Config\ConfigSet(
                 $event_manager,
-                new ConfigDao()
+                new ConfigDao(),
             )
         );
     }

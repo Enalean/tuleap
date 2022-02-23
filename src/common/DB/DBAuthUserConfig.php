@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,14 +21,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Config;
+namespace Tuleap\DB;
 
-/**
- * @psalm-immutable
- */
-final class ConfigKeyMetadata
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyHelp;
+use Tuleap\Config\ConfigKeySecret;
+use Tuleap\Config\ConfigKeyString;
+
+final class DBAuthUserConfig
 {
-    public function __construct(public string $description, public bool $can_be_modified, public bool $is_secret, public ?string $category)
-    {
-    }
+    #[ConfigKey('Database user for SVN authentication')]
+    #[ConfigKeyHelp('On some platforms it is also used for local accounts (CVS, proftpd & co)')]
+    #[ConfigKeyString('dbauthuser')]
+    public const USER = 'sys_dbauth_user';
+
+    #[ConfigKey('Password for `' . self::USER . '`')]
+    #[ConfigKeyString]
+    #[ConfigKeySecret]
+    public const PASSWORD = 'sys_dbauth_passwd';
 }

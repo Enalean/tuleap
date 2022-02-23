@@ -29,6 +29,8 @@ use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectManager;
 use SVNAccessFile;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DB\DBAuthUserConfig;
 
 final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -53,7 +55,7 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectManager
      */
     private $project_manager;
-    private $backend;
+    private \BackendSVN|\Mockery\MockInterface $backend;
 
     protected function setUp(): void
     {
@@ -82,6 +84,11 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         mkdir(ForgeConfig::get('sys_project_backup_path'), 0777, true);
         $this->initial_codendi_bin_prefix = ForgeConfig::get('codendi_bin_prefix');
         ForgeConfig::set('codendi_bin_prefix', $this->bin_dir);
+
+        ForgeConfig::set('sys_custom_dir', $this->tmp_dir);
+        mkdir($this->tmp_dir . '/conf');
+        ForgeConfig::set(DBAuthUserConfig::USER, 'dbauthuser');
+        ForgeConfig::set(DBAuthUserConfig::PASSWORD, ForgeConfig::encryptValue(new ConcealedString('welcome0')));
 
         $this->project_manager  = \Mockery::spy(\ProjectManager::class);
         $this->cache_parameters = \Mockery::spy(\Tuleap\SvnCore\Cache\Parameters::class);

@@ -26,6 +26,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ConfigGetCommand extends Command
@@ -40,6 +41,7 @@ class ConfigGetCommand extends Command
     protected function configure()
     {
         $this->setDescription('Get configuration values')
+            ->addOption('reveal-secret', '', InputOption::VALUE_NONE, 'If configuration variable hold a secret, this switch will decrypt it.')
             ->addArgument('key', InputArgument::REQUIRED, 'Variable key');
     }
 
@@ -49,7 +51,11 @@ class ConfigGetCommand extends Command
         if (! ForgeConfig::exists($key)) {
             throw new InvalidArgumentException("Invalid key $key");
         }
-        $value = ForgeConfig::get($key);
+        if ($input->getOption('reveal-secret')) {
+            $value = ForgeConfig::getSecretAsClearText($key);
+        } else {
+            $value = ForgeConfig::get($key);
+        }
         $output->write($value);
         return 0;
     }

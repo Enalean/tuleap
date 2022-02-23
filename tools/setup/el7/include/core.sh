@@ -91,8 +91,8 @@ function _configureNSSMySQL() {
     local libnss_conf="/etc/libnss-mysql.cfg"
     local libnss_conf_root="/etc/libnss-mysql-root.cfg"
 
-    local dbauthuser_username=$(${awk} --field-separator="'" '/^\$sys_dbauth_user/ {print $2}' ${tuleap_conf}/local.inc)
-    local dbauthuser_password=$(${awk} --field-separator="'" '/^\$sys_dbauth_passwd/ {print $2}' ${tuleap_conf}/local.inc)
+    local dbauthuser_username=$(/usr/bin/tuleap config-get sys_dbauth_user)
+    local dbauthuser_password=$(/usr/bin/tuleap config-get --reveal-secret sys_dbauth_passwd)
 
     if ! ${grep} --quiet "$dbauthuser_password" "$libnss_conf"; then
         ${cp} -f "$install_dir/src/etc/libnss-mysql.cfg.dist" "$libnss_conf"

@@ -24,6 +24,9 @@
 use Tuleap\Config\ConfigDao;
 use Tuleap\Config\ConfigValueDefaultValueAttributeProvider;
 use Tuleap\Config\ConfigValueEnvironmentProvider;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\KeyFactory;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 
 class ForgeConfig
 {
@@ -146,6 +149,25 @@ class ForgeConfig
         return self::$conf_stack[0][$name] === \Tuleap\Config\ConfigKeyLegacyBool::TRUE;
     }
 
+    /**
+     * @throws \Tuleap\Cryptography\Exception\InvalidCiphertextException
+     * @throws \Tuleap\Config\UnknownConfigKeyException
+     * @throws \Tuleap\Cryptography\Exception\CannotPerformIOOperationException
+     */
+    public static function getSecretAsClearText(string $name): ConcealedString
+    {
+        if (! self::exists($name)) {
+            throw new \Tuleap\Config\UnknownConfigKeyException($name);
+        }
+
+        if (self::get($name) === '') {
+            return new ConcealedString('');
+        }
+
+        return self::decryptValue(self::get($name));
+    }
+
+
     public static function exists($name): bool
     {
         return isset(self::$conf_stack[0][$name]);
@@ -241,5 +263,21 @@ class ForgeConfig
     public static function setFeatureFlag(string $name, mixed $value): void
     {
         self::set(self::FEATURE_FLAG_PREFIX . $name, $value);
+    }
+
+    public static function encryptValue(ConcealedString $value): string
+    {
+        return \sodium_bin2base64(
+            SymmetricCrypto::encrypt($value, (new KeyFactory())->getEncryptionKey()),
+            SODIUM_BASE64_VARIANT_ORIGINAL
+        );
+    }
+
+    private static function decryptValue(string $value): ConcealedString
+    {
+        return SymmetricCrypto::decrypt(
+            \sodium_base642bin($value, SODIUM_BASE64_VARIANT_ORIGINAL),
+            (new KeyFactory())->getEncryptionKey(),
+        );
     }
 }

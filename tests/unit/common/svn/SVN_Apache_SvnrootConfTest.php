@@ -19,6 +19,7 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\SVN\CoreApacheConfRepository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -36,7 +37,12 @@ class SVN_Apache_SvnrootConfTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_dbname', 'db');
         ForgeConfig::set('svn_prefix', '/bla');
         ForgeConfig::set('sys_dbauth_user', 'dbauth_user');
-        ForgeConfig::set('sys_dbauth_passwd', 'dbauth_passwd');
+
+        ForgeConfig::set('sys_custom_dir', vfsStream::setup('root', null, ['conf' => []])->url());
+        ForgeConfig::set(
+            \Tuleap\DB\DBAuthUserConfig::PASSWORD,
+            ForgeConfig::encryptValue(new \Tuleap\Cryptography\ConcealedString('dbauth_passwd')),
+        );
     }
 
     private function givenSvnrootForTwoGroups(): SVN_Apache_SvnrootConf

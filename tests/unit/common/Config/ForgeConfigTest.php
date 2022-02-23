@@ -28,6 +28,7 @@ use ConfigValueProvider;
 use ForgeAccess;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use org\bovigo\vfs\vfsStream;
 use Tuleap\DB\DBConfig;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
@@ -253,5 +254,16 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::getSuperPublicProjectsFromRestrictedFile();
 
         $this->assertFalse(ForgeConfig::get('public_projects'));
+    }
+
+    public function testEncryptedSecretIsRevealed(): void
+    {
+        ForgeConfig::set('sys_custom_dir', vfsStream::setup('root', null, ['conf' => []])->url());
+        ForgeConfig::set(
+            \Tuleap\DB\DBAuthUserConfig::PASSWORD,
+            ForgeConfig::encryptValue(new \Tuleap\Cryptography\ConcealedString('a very good secret')),
+        );
+
+        self::assertEquals('a very good secret', ForgeConfig::getSecretAsClearText(\Tuleap\DB\DBAuthUserConfig::PASSWORD));
     }
 }

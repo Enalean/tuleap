@@ -214,10 +214,6 @@ $unix_gid_add	= '1000';
 // Users
 $sys_http_user  = 'codendiadm'; // Unix user running the HTTP server
 
-// DB user for http authentication (must have access to user/group/user_group tables)
-$sys_dbauth_user   = 'dbauthuser';
-$sys_dbauth_passwd = '%sys_dbauth_passwd%';
-
 //
 //
 // Part III - GUI modifications (menu colors, etc.) and other parameters
