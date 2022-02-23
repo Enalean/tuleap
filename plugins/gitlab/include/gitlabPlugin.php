@@ -105,6 +105,7 @@ use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
+use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
@@ -112,6 +113,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalService;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalServiceEvent;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
@@ -253,6 +255,12 @@ class gitlabPlugin extends Plugin
             TemplateRendererFactory::build(),
         );
 
+        $first_possible_value_retriever = new FirstPossibleValueInListRetriever(
+            new FirstValidValueAccordingToDependenciesRetriever(
+                Tracker_FormElementFactory::instance()
+            )
+        );
+
         return new GitlabRepositoryWebhookController(
             new WebhookDataExtractor(
                 new PostPushWebhookDataBuilder(
@@ -282,12 +290,13 @@ class gitlabPlugin extends Plugin
                     $commenter,
                     new PostPushWebhookCloseArtifactHandler(
                         new PostPushCommitArtifactUpdater(
-                            new StatusValueRetriever(new Tracker_Semantic_StatusFactory()),
+                            new StatusValueRetriever(new Tracker_Semantic_StatusFactory(), $first_possible_value_retriever),
                             new DoneValueRetriever(
                                 new SemanticDoneFactory(
                                     new SemanticDoneDao(),
-                                    new SemanticDoneValueChecker()
-                                )
+                                    new SemanticDoneValueChecker(),
+                                ),
+                                $first_possible_value_retriever
                             ),
                             UserManager::instance(),
                             $logger
@@ -416,6 +425,11 @@ class gitlabPlugin extends Plugin
             TemplateRendererFactory::build(),
         );
 
+        $first_possible_value_retriever = new FirstPossibleValueInListRetriever(
+            new FirstValidValueAccordingToDependenciesRetriever(
+                Tracker_FormElementFactory::instance()
+            )
+        );
         return new IntegrationWebhookController(
             new WebhookDataExtractor(
                 new PostPushWebhookDataBuilder(
@@ -445,12 +459,13 @@ class gitlabPlugin extends Plugin
                     $commenter,
                     new PostPushWebhookCloseArtifactHandler(
                         new PostPushCommitArtifactUpdater(
-                            new StatusValueRetriever(new Tracker_Semantic_StatusFactory()),
+                            new StatusValueRetriever(new Tracker_Semantic_StatusFactory(), $first_possible_value_retriever),
                             new DoneValueRetriever(
                                 new SemanticDoneFactory(
                                     new SemanticDoneDao(),
                                     new SemanticDoneValueChecker()
-                                )
+                                ),
+                                $first_possible_value_retriever
                             ),
                             UserManager::instance(),
                             $logger

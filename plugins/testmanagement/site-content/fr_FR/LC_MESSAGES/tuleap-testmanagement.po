@@ -161,6 +161,14 @@ msgstr "La campagne %s est maintenant fermée."
 msgid "The campaign %s is now open."
 msgstr "La campagne %s est maintenant ouverte."
 
+#, php-format
+msgid "The campaign cannot be closed : %s"
+msgstr "La campagne ne peut être fermée : %s"
+
+#, php-format
+msgid "The campaign cannot be open : %s"
+msgstr "La campagne ne peut être ouverte : %s"
+
 msgid "The campaign is closed."
 msgstr "La campagne est fermée."
 

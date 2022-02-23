@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow;
 
-use Tracker_FormElement_Field_Selectbox;
+use Tracker_FormElement_Field_List;
 use Tracker_Rule_List;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindValueIdCollection;
@@ -40,7 +40,7 @@ class FirstPossibleValueInListRetriever
      */
     public function getFirstPossibleValue(
         Artifact $artifact,
-        Tracker_FormElement_Field_Selectbox $field,
+        Tracker_FormElement_Field_List $field,
         BindValueIdCollection $list_of_values,
     ): int {
         $workflow = $artifact->getWorkflow();

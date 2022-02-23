@@ -24,7 +24,6 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tracker;
 use Tracker_Exception;
 use Tracker_FormElement_Field_List_BindValue;
 use Tracker_NoChangeException;
@@ -69,6 +68,9 @@ class PostPushCommitArtifactUpdater
         $this->logger                 = $logger;
     }
 
+    /**
+     * @throws \Tuleap\Tracker\Workflow\NoPossibleValueException
+     */
     public function closeTuleapArtifact(
         Artifact $artifact,
         PFUser $tracker_workflow_user,
@@ -86,7 +88,7 @@ class PostPushCommitArtifactUpdater
             }
 
             $closed_value = $this->getClosedValue(
-                $artifact->getTracker(),
+                $artifact,
                 $tracker_workflow_user
             );
 
@@ -116,17 +118,20 @@ class PostPushCommitArtifactUpdater
         }
     }
 
-    private function getClosedValue(Tracker $tracker, PFUser $tracker_workflow_user): Tracker_FormElement_Field_List_BindValue
+    /**
+     * @throws \Tuleap\Tracker\Workflow\NoPossibleValueException
+     */
+    private function getClosedValue(Artifact $artifact, PFUser $tracker_workflow_user): Tracker_FormElement_Field_List_BindValue
     {
         try {
-            return $this->done_value_retriever->getFirstDoneValueUserCanRead($tracker, $tracker_workflow_user);
+            return $this->done_value_retriever->getFirstDoneValueUserCanRead($artifact, $tracker_workflow_user);
         } catch (
             SemanticDoneNotDefinedException | SemanticDoneValueNotFoundException $exception
         ) {
             $this->logger->warning("|  |_ " . $exception->getMessage() . " Status semantic will be checked to close the artifact.");
         }
 
-        return $this->status_value_retriever->getFirstClosedValueUserCanRead($tracker, $tracker_workflow_user);
+        return $this->status_value_retriever->getFirstClosedValueUserCanRead($tracker_workflow_user, $artifact);
     }
 
     public function addTuleapArtifactCommentNoSemanticDefined(

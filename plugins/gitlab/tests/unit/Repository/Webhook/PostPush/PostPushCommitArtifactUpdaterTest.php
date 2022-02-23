@@ -38,7 +38,7 @@ use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use UserManager;
 
 class PostPushCommitArtifactUpdaterTest extends TestCase
@@ -200,12 +200,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
 
     public function testItDoesNotAddArtifactCommentAndUpdateStatusIfAnErrorOccursDuringTheCommentCreation(): void
     {
-        $tracker  = TrackerTestBuilder::aTracker()->build();
         $artifact = $this->createMock(Artifact::class);
-        $artifact
-            ->expects(self::once())
-            ->method('getTracker')
-            ->willReturn($tracker);
 
         $artifact->method('isOpen')->willReturn(true);
         $message = 'solved by @asticotc with gitlab_commit #MyRepo/azer12563';
@@ -262,7 +257,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->done_value_retriever
             ->expects(self::once())
             ->method("getFirstDoneValueUserCanRead")
-            ->with($tracker, $tracker_workflow_user)
+            ->with($artifact, $tracker_workflow_user)
             ->willReturn(new Tracker_FormElement_Field_List_Bind_StaticValue(14, "Done", "", 1, false));
 
         $artifact->method("createNewChangeset")
@@ -279,14 +274,56 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         );
     }
 
+    public function testItDoesNotAddArtifactCommentAndUpdateStatusIfNoPossibleValueAreFound(): void
+    {
+        $artifact = $this->createMock(Artifact::class);
+
+        $artifact->method('isOpen')->willReturn(true);
+
+        $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
+            [
+                "user_id" => Tracker_Workflow_WorkflowUser::ID,
+                'language_id' => 'en',
+            ]
+        );
+
+        $reference   = new WebhookTuleapReference(12, "resolves");
+        $integration = new GitlabRepositoryIntegration(
+            1,
+            12,
+            "MyRepo",
+            "",
+            "https://example",
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
+
+        $status_field = $this->createMock(\Tracker_FormElement_Field_List::class);
+
+        $this->expectException(NoPossibleValueException::class);
+
+        $this->done_value_retriever
+            ->expects(self::once())
+            ->method("getFirstDoneValueUserCanRead")
+            ->with($artifact, $tracker_workflow_user)
+            ->willThrowException(new NoPossibleValueException());
+
+        $artifact->expects(self::never())->method("createNewChangeset");
+
+        $this->updater->closeTuleapArtifact(
+            $artifact,
+            $tracker_workflow_user,
+            $this->webhook_data,
+            $reference,
+            $status_field,
+            $integration
+        );
+    }
+
     public function testItDoesNotAddArtifactCommentAndUpdateStatusIfCommentIsNotCreated(): void
     {
-        $tracker  = TrackerTestBuilder::aTracker()->build();
         $artifact = $this->createMock(Artifact::class);
-        $artifact
-            ->expects(self::once())
-            ->method('getTracker')
-            ->willReturn($tracker);
 
         $artifact->method('isOpen')->willReturn(true);
         $message = 'solved by @asticotc with gitlab_commit #MyRepo/azer12563';
@@ -342,7 +379,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->done_value_retriever
             ->expects(self::once())
             ->method("getFirstDoneValueUserCanRead")
-            ->with($tracker, $tracker_workflow_user)
+            ->with($artifact, $tracker_workflow_user)
             ->willReturn(new Tracker_FormElement_Field_List_Bind_StaticValue(14, "Done", "", 1, false));
 
         $artifact->method("createNewChangeset")->with([18 => 1234], $message, $tracker_workflow_user)->willReturn(null);
@@ -359,12 +396,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
 
     public function testItAddArtifactCommentWithoutStatusUpdatedIfNotCloseStatusSemanticDefined(): void
     {
-        $tracker  = TrackerTestBuilder::aTracker()->build();
         $artifact = $this->createMock(Artifact::class);
-        $artifact
-            ->expects(self::once())
-            ->method('getTracker')
-            ->willReturn($tracker);
 
         $artifact->method('isOpen')->willReturn(true);
         $message = '@asticotc attempts to close this artifact from GitLab but neither done nor status semantic defined.';
@@ -406,13 +438,13 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->done_value_retriever
             ->expects(self::once())
             ->method("getFirstDoneValueUserCanRead")
-            ->with($tracker, $tracker_workflow_user)
+            ->with($artifact, $tracker_workflow_user)
             ->willThrowException(new SemanticDoneValueNotFoundException());
 
         $this->status_value_retriever
             ->expects(self::once())
             ->method("getFirstClosedValueUserCanRead")
-            ->with($tracker, $tracker_workflow_user)
+            ->with($tracker_workflow_user, $artifact)
             ->willThrowException(new SemanticStatusClosedValueNotFoundException());
 
         $artifact->method("createNewChangeset")->with([], $message, $tracker_workflow_user)->willReturn(null);
@@ -473,12 +505,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
 
     public function testItClosesArtifactWithDoneValue(): void
     {
-        $tracker  = TrackerTestBuilder::aTracker()->build();
         $artifact = $this->createMock(Artifact::class);
-        $artifact
-            ->expects(self::once())
-            ->method('getTracker')
-            ->willReturn($tracker);
 
         $artifact->method('isOpen')->willReturn(true);
         $message = 'solved by @asticotc with gitlab_commit #MyRepo/azer12563';
@@ -534,7 +561,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->done_value_retriever
             ->expects(self::once())
             ->method("getFirstDoneValueUserCanRead")
-            ->with($tracker, $tracker_workflow_user)
+            ->with($artifact, $tracker_workflow_user)
             ->willReturn(new Tracker_FormElement_Field_List_Bind_StaticValue(14, "Done", "", 1, false));
 
         $artifact->method("createNewChangeset")->with([18 => 1234], $message, $tracker_workflow_user)
@@ -554,12 +581,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
 
     public function testItClosesArtifactWithFirstClosedStatusValue(): void
     {
-        $tracker  = TrackerTestBuilder::aTracker()->build();
         $artifact = $this->createMock(Artifact::class);
-        $artifact
-            ->expects(self::once())
-            ->method('getTracker')
-            ->willReturn($tracker);
 
         $artifact->method('isOpen')->willReturn(true);
         $message = 'solved by @asticotc with gitlab_commit #MyRepo/azer12563';
@@ -615,7 +637,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->done_value_retriever
             ->expects(self::once())
             ->method("getFirstDoneValueUserCanRead")
-            ->with($tracker, $tracker_workflow_user)
+            ->with($artifact, $tracker_workflow_user)
             ->willThrowException(
                 new SemanticDoneValueNotFoundException()
             );
@@ -623,7 +645,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->status_value_retriever
             ->expects(self::once())
             ->method("getFirstClosedValueUserCanRead")
-            ->with($tracker, $tracker_workflow_user)
+            ->with($tracker_workflow_user, $artifact)
             ->willReturn(new Tracker_FormElement_Field_List_Bind_StaticValue(14, "Done", "", 1, false));
 
         $artifact->method("createNewChangeset")->with([18 => 1234], $message, $tracker_workflow_user)

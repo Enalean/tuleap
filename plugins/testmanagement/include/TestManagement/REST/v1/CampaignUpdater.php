@@ -67,6 +67,7 @@ class CampaignUpdater
      * @throws \Tracker_Exception
      * @throws \Tracker_FormElement_InvalidFieldException
      * @throws \Tracker_FormElement_InvalidFieldValueException
+     * @throws \Tuleap\Tracker\Workflow\NoPossibleValueException
      */
     public function updateCampaign(
         PFUser $user,
@@ -80,7 +81,7 @@ class CampaignUpdater
         $values   = $this->field_values_builder->getFieldValuesForCampaignArtifactUpdate(
             $tracker,
             $user,
-            $campaign->getLabel(),
+            $campaign,
             $change_status
         );
 
