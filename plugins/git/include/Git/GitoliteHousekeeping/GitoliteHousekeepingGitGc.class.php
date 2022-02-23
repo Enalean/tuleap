@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
+
 /**
  * I run git gc on gitolite admin working copy
  */
@@ -61,6 +64,27 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc
      */
     protected function execGitGcAsAppAdm()
     {
-        exec("su - codendiadm -c '(cd {$this->gitolite_admin_working_copy} && git gc)'");
+        try {
+            $admin_wc = rtrim($this->gitolite_admin_working_copy, '/');
+
+            $process = new Process([
+                '/usr/bin/sudo',
+                '-u',
+                'codendiadm',
+                Git_Exec::getGitCommand(),
+                '--work-tree',
+                $admin_wc,
+                '--git-dir',
+                $admin_wc . '/.git',
+                'gc',
+            ]);
+            $process->setTimeout(null);
+            $process->mustRun();
+            $this->logger->debug($process->getOutput());
+        } catch (ProcessFailedException $exception) {
+            $this->logger->error('git gc failure: ' .  $exception->getMessage());
+            $this->logger->error($exception->getProcess()->getErrorOutput());
+            throw $exception;
+        }
     }
 }
