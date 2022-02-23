@@ -54,13 +54,12 @@ class Docman_View_Admin_View extends \Tuleap\Docman\View\Admin\AdminView
         return true;
     }
 
-    protected function displayContent(array $params): void
+    protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $sBo    = Docman_SettingsBo::instance($params['group_id']);
         $actual = $sBo->getView();
 
-        $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/admin');
-        $renderer->renderToPage('display-preferences', [
+        $renderer->renderToPage('admin/display-preferences', [
             'is_tree'  => $actual === 'Tree',
             'is_icons' => $actual === 'Icons',
             'is_table' => $actual === 'Table',

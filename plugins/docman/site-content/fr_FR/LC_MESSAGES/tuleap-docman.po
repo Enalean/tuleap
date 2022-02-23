@@ -244,18 +244,6 @@ msgstr ""
 "strong> eux-mêmes, ça ne s'applique qu'aux propriétés.</p>"
 
 msgid ""
-"<p>Define what properties are available in your document manager. Each "
-"property can be edited during document submission and updated in the "
-"document properties panel.</p><p><strong>Permissions:</strong> The same "
-"permissions are applied on a document and its properties.</p>"
-msgstr ""
-"<p>Définissez quelles propriétés sont disponibles dans votre gestionnaire de "
-"documents. Chaque propriété sera remplie lors de la soumission d'un document "
-"et sera visible dans les propriétés du document.</p><p><strong>Permissions :"
-"</strong> les permissions sur les propriétés d'un document sont les mêmes "
-"que sur le document lui-même.</p>"
-
-msgid ""
 "<p>If you choose to:<ul><li><strong>Copy the previous approval table:</"
 "strong> A new approval table will be created from the previous one. Keeps "
 "reviewers, comments and commitments.</li><li><strong>Reset the approval "
@@ -372,12 +360,18 @@ msgstr ""
 "Tous les utilisateurs sélectionnés ont été supprimé de la table "
 "d'approbation."
 
+msgid "Allow empty value"
+msgstr "Autorise la valeur vide"
+
 msgid "Allow empty value:"
 msgstr "Autorise la valeur vide :"
 
 #, php-format
 msgid "Allow empty value: <strong>%1$s</strong>"
 msgstr "Autoriser la valeur vide : <strong>%1$s</strong>"
+
+msgid "Allow multiple selection"
+msgstr "Autorise les valeurs multiples"
 
 msgid "Allow multiple selection:"
 msgstr "Autorise les valeurs multiples :"
@@ -494,9 +488,8 @@ msgstr "Table d'approbation :"
 msgid "Approved"
 msgstr "Approuvé"
 
-#, php-format
 msgid "Are you sure you want to delete the property '%1$s'?"
-msgstr "Etes-vous sûr de vouloir supprimer la propriété '%1$s' ?"
+msgstr "Etes-vous sûr de vouloir supprimer la propriété '%1$s' ?"
 
 msgid "Are you sure you want to remove this filter from the list?"
 msgstr "Etes-vous sûr de vouloir enlever ce filtre de la liste ?"
@@ -740,6 +733,9 @@ msgstr "Créer le dossier"
 msgid "Create new version"
 msgstr "Créer une nouvelle version"
 
+msgid "Create property"
+msgstr "Créer une propriété"
+
 msgid "Creation date:"
 msgstr "Date de création :"
 
@@ -829,6 +825,15 @@ msgstr "Définir la vue par défaut pour le gestionnaire de documents."
 msgid "Define the properties of your documents."
 msgstr "Sélectionnez les propriétés que vous voulez pour vos documents."
 
+msgid ""
+"Define what properties are available in your document manager. Each property "
+"can be edited during document submission and updated in the document "
+"properties panel."
+msgstr ""
+"Définissez quelles propriétés sont disponibles dans votre gestionnaire de "
+"documents. Chaque propriété sera remplie lors de la soumission d'un document "
+"et sera visible dans les propriétés du document."
+
 msgid "Define who can administrate the document manager."
 msgstr "Définir qui peut administrer le gestionnaire de documents."
 
@@ -846,9 +851,8 @@ msgstr "Date de suppression"
 msgid "Delete report '%1$s'"
 msgstr "Supprimer le rapport '%1$s'"
 
-#, php-format
-msgid "Delete the property '%1$s'"
-msgstr "Supprimer la propriété '%1$s'"
+msgid "Delete the property"
+msgstr "Supprimer la propriété"
 
 #, php-format
 msgid "Delete value '%1$s'"
@@ -1743,6 +1747,9 @@ msgstr "Permissions pour les sous-éléments mises à jour."
 msgid "Permissions successfully updated."
 msgstr "Permissions mises à jour."
 
+msgid "Permissions:"
+msgstr "Permissions :"
+
 msgid "Personal"
 msgstr "Personnel"
 
@@ -2207,6 +2214,11 @@ msgstr "La version demandée de ce fichier ne peut être trouvé."
 msgid "The resource %d does not exist."
 msgstr "La ressource %d n'existe pas."
 
+msgid "The same permissions are applied on a document and its properties."
+msgstr ""
+"Les permissions sur les propriétés d'un document sont les mêmes que sur le "
+"document lui-même."
+
 msgid ""
 "The selected group will not affect people notified for permission requests "
 "on documents service.<br> Only the <b>document managers</b> will be notified "
@@ -2371,6 +2383,9 @@ msgstr "L'élément n'a pas été mis à jour."
 msgid "Unknown property label '%1$s'."
 msgstr "Nom de propriété '%1$s' inconnu."
 
+msgid "Unused"
+msgstr "Inutilisée"
+
 msgid "Update"
 msgstr "Modifier"
 
@@ -2398,8 +2413,14 @@ msgstr "Url :"
 msgid "Usage: <strong>%1$s</strong>"
 msgstr "Usage : <strong>%1$s</strong>"
 
+msgid "Use this property"
+msgstr "Utiliser cette propriété"
+
 msgid "Use this property:"
 msgstr "Utiliser cette propriété:"
+
+msgid "Used"
+msgstr "Utilisée"
 
 msgid "User Groups..."
 msgstr "List des groupes d'utilisateurs..."
@@ -2455,6 +2476,9 @@ msgstr "Afficher et modifier les documents obsolètes."
 
 msgid "View as:"
 msgstr "Vue:"
+
+msgid "Wait a minute..."
+msgstr "Attendez une minute..."
 
 msgid "Weeks"
 msgstr "Semaines"

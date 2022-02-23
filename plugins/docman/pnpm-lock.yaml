@@ -1,7 +1,11 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/core': file:../../src
   '@tuleap/html-escaper': file:../../src/scripts/lib/html-escaper
+  '@tuleap/tlp-popovers': link:../../src/scripts/lib/tlp-popovers
 
 dependencies:
+  '@tuleap/core': link:../../src
   '@tuleap/html-escaper': link:../../src/scripts/lib/html-escaper
+  '@tuleap/tlp-popovers': link:../../src/scripts/lib/tlp-popovers

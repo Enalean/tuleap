@@ -40,7 +40,7 @@ class Docman_View_Admin_MetadataDetails extends \Tuleap\Docman\View\Admin\AdminV
         );
     }
 
-    protected function displayContent(array $params): void
+    protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $md = $params['md'];
 

@@ -48,153 +48,76 @@ class Docman_View_Admin_Metadata extends \Tuleap\Docman\View\Admin\AdminView
         return dgettext('tuleap-docman', 'Define the properties of your documents.');
     }
 
-    protected function displayContent(array $params): void
+    protected function isBurningParrotCompatiblePage(): bool
     {
-        $content = '';
-
-        $content .= $this->getMetadataTable($params['mdIter'], $params['group_id'], $params['default_url']);
-        $content .= $this->getNewMetadataForm($params['group_id']);
-        $content .= $this->getImportForm($params['group_id']);
-
-        echo $content;
+        return true;
     }
 
-    /**
-     * List the available metadata
-     */
-    private function getMetadataTable($mdIter, $groupId, $defaultUrl)
+    protected function includeJavascript(\Tuleap\Layout\IncludeAssets $include_assets): void
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $GLOBALS['Response']->addJavascriptAsset(
+            new \Tuleap\Layout\JavascriptAsset($include_assets, 'admin-properties.js')
+        );
+    }
 
-        $content = '';
+    public static function getCSRFToken(int $project_id): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken(
+            DOCMAN_BASE_URL . '/?' . http_build_query([
+                'group_id' => $project_id,
+                'action'   => self::IDENTIFIER,
+            ])
+        );
+    }
 
-        $content .= '<h3>' . dgettext('tuleap-docman', 'Available properties') . '</h3>' . "\n";
+    protected function displayContent(\TemplateRenderer $renderer, array $params): void
+    {
+        $renderer->renderToPage('admin/properties', [
+            'available_properties' => $this->getAvailableProperties($params['mdIter'], $params['default_url']),
+            'id_for_type_text'     => PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
+            'id_for_type_string'   => PLUGIN_DOCMAN_METADATA_TYPE_STRING,
+            'id_for_type_date'     => PLUGIN_DOCMAN_METADATA_TYPE_DATE,
+            'id_for_type_list'     => PLUGIN_DOCMAN_METADATA_TYPE_LIST,
+            'create_url'           => '?' . http_build_query(['group_id' => $params['group_id'], 'action' => 'admin_create_metadata']),
+            'import_url'           => '?' . http_build_query(['group_id' => $params['group_id'], 'action' => \Docman_View_Admin_MetadataImport::IDENTIFIER]),
+            'csrf'                 => self::getCSRFToken((int) $params['group_id']),
+        ]);
+    }
 
-        $content .= dgettext('tuleap-docman', '<p>Define what properties are available in your document manager. Each property can be edited during document submission and updated in the document properties panel.</p><p><strong>Permissions:</strong> The same permissions are applied on a document and its properties.</p>') . "\n";
+    private function getAvailableProperties(ArrayIterator $iterator, string $default_url): array
+    {
+        $properties = [];
 
-        $content    .= html_build_list_table_top([dgettext('tuleap-docman', 'Name'),
-                                                    dgettext('tuleap-docman', 'Description'),
-                                                    dgettext('tuleap-docman', 'Status'),
-                                                    dgettext('tuleap-docman', 'Delete'),
-                                                    ]);
-        $altRowClass = 0;
-
-        $mdIter->rewind();
-        while ($mdIter->valid()) {
-            $md = $mdIter->current();
-
-            $canDelete = false;
-            if (Docman_MetadataFactory::isRealMetadata($md->getLabel())) {
-                $canDelete = true;
-            }
-
-            $trclass  = html_get_alt_row_color($altRowClass++);
-            $content .= '<tr class="' . $trclass . '">';
-
-            $nameUrl  = DocmanViewURLBuilder::buildUrl(
-                $defaultUrl,
-                ['action' => \Docman_View_Admin_MetadataDetails::IDENTIFIER,
-                'md'     => $md->getLabel()]
-            );
-            $nameHref = '<a href="' . $nameUrl . '">' . $hp->purify($md->getName()) . '</a>';
-            $content .= '<td>' . $nameHref . '</td>';
-
-            $content .= '<td>' . $hp->purify($md->getDescription()) . '</td>';
-
-            $content .= '<td>';
-            if ($md->isRequired()) {
-                $content .= "-";
-            } else {
-                if ($md->isUsed()) {
-                    $content .= "Used";
-                } else {
-                    $content .= "Unused";
-                }
-            }
-            $content .= '</td>';
-
-            $trash = '-';
-            if ($canDelete) {
-                $link = DocmanViewURLBuilder::buildUrl(
-                    $defaultUrl,
-                    ['action' => 'admin_delete_metadata',
-                    'md' => $md->getLabel()]
+        foreach ($iterator as $property) {
+            assert($property instanceof \Docman_Metadata);
+            $delete_url = '';
+            if (Docman_MetadataFactory::isRealMetadata($property->getLabel())) {
+                $delete_url = DocmanViewURLBuilder::buildUrl(
+                    $default_url,
+                    [
+                        'action' => 'admin_delete_metadata',
+                        'md' => $property->getLabel(),
+                    ],
+                    false,
                 );
-
-                $warn  = sprintf(dgettext('tuleap-docman', 'Are you sure you want to delete the property \'%1$s\'?'), $hp->purify($md->getName()));
-                $alt   = sprintf(dgettext('tuleap-docman', 'Delete the property \'%1$s\''), $hp->purify($md->getName()));
-                $trash = html_trash_link($link, $warn, $alt);
             }
-            $content .= '<td>' . $trash . '</td>';
-
-            $content .= '</tr>' . "\n";
-
-            $mdIter->next();
+            $properties[] = [
+                'id' => $property->getId(),
+                'name' => $property->getName(),
+                'url' => DocmanViewURLBuilder::buildUrl(
+                    $default_url,
+                    [
+                        'action' => \Docman_View_Admin_MetadataDetails::IDENTIFIER,
+                        'md'     => $property->getLabel(),
+                    ],
+                    false,
+                ),
+                'description' => $property->getDescription(),
+                'is_required' => $property->isRequired(),
+                'is_used' => $property->isUsed(),
+                'delete_url' => $delete_url,
+            ];
         }
-
-        $content .= '</table>' . "\n";
-
-        return $content;
-    }
-
-    /**
-     * Return form to create a new metadata
-     */
-    private function getNewMetadataForm($groupId)
-    {
-        $content  = '';
-        $content .= '<h3>' . dgettext('tuleap-docman', 'Create a new property') . '</h3>' . "\n";
-
-        $content .= '<form name="admin_create_metadata" data-test="admin_create_metadata" method="post" action="?group_id=' . $groupId . '&action=admin_create_metadata" class="docman_form">';
-
-        $content .= '<table>';
-
-        $md = new Docman_Metadata();
-        $md->setCanChangeName(true);
-        $md->setCanChangeType(true);
-        $md->setCanChangeDescription(true);
-        $md->setCanChangeIsEmptyAllowed(true);
-        $md->setCanChangeIsMultipleValuesAllowed(true);
-        $md->setIsEmptyAllowed(true);
-        $md->setIsMultipleValuesAllowed(false);
-
-        $sthCanChange = '';
-        $metaMdHtml   = new Docman_MetaMetadataHtml($md);
-        $content     .= $metaMdHtml->getName($sthCanChange);
-        $content     .= $metaMdHtml->getDescription($sthCanChange);
-        $content     .= $metaMdHtml->getType($sthCanChange);
-        $content     .= $metaMdHtml->getEmptyAllowed($sthCanChange);
-        $content     .= $metaMdHtml->getMultipleValuesAllowed($sthCanChange);
-        $content     .= $metaMdHtml->getUseIt($sthCanChange);
-
-        $content .= '<tr>';
-        $content .= '<td colspan="2">';
-        $content .= '<input type="submit" value="' . dgettext('tuleap-docman', 'Create') . '" />';
-        $content .= '</td>';
-        $content .= '</tr>';
-
-        $content .= '</table>';
-
-        $content .= '</form>';
-
-        return $content;
-    }
-
-    /**
-     * Import metadata from a given project
-     */
-    private function getImportForm($groupId)
-    {
-        $GLOBALS['HTML']->includeFooterJavascriptSnippet("new ProjectAutoCompleter('plugin_docman_metadata_import_group', '" . util_get_dir_image_theme() . "', false);");
-        $content  = '';
-        $content .= '<h3>' . dgettext('tuleap-docman', 'Import properties from another project') . '</h3>' . "\n";
-        $content .= '<p>' . dgettext('tuleap-docman', 'You can import properties from any public projects or private projects you are member of.') . '</p>' . "\n";
-        $content .= '<form name="admin_import_metadata" method="post" action="?group_id=' . $groupId . '&action=' . \Docman_View_Admin_MetadataImport::IDENTIFIER . '">';
-        $content .= '<input id="plugin_docman_metadata_import_group" name="plugin_docman_metadata_import_group" type="text" size="60" placeholder="';
-        $content .= dgettext('tuleap-docman', 'Enter a project shortname or identifier here.');
-        $content .= '" /><br />';
-        $content .= '<input name="submit" type="submit" value="' . dgettext('tuleap-docman', 'Check before import') . '" />';
-        $content .= '</form>';
-        return $content;
+        return $properties;
     }
 }

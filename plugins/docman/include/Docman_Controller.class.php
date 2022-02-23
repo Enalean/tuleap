@@ -646,6 +646,7 @@ class Docman_Controller extends Controler
                 $this->view = 'RedirectAfterCrud';
                 break;
             case 'admin_create_metadata':
+                \Docman_View_Admin_Metadata::getCSRFToken($this->getGroupId())->check();
                 $_name = trim($this->request->get('name'));
                 $valid = $this->validateNewMetadata($_name);
 
@@ -657,6 +658,7 @@ class Docman_Controller extends Controler
                 $this->view                              = 'RedirectAfterCrud';
                 break;
             case 'admin_delete_metadata':
+                \Docman_View_Admin_Metadata::getCSRFToken($this->getGroupId())->check();
                 $valid = false;
                 // md
                 // Sanitize

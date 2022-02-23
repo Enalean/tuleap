@@ -1,0 +1,245 @@
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{# dgettext }}tuleap-docman | Available properties{{/ dgettext }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <p>
+                    {{# dgettext }}tuleap-docman | Define what properties are available in your document manager. Each property can be edited during document submission and updated in the document properties panel.{{/ dgettext }}
+                </p>
+                <p>
+                    <strong>{{# dgettext }}tuleap-docman | Permissions:{{/ dgettext }}</strong>
+                    {{# dgettext }}tuleap-docman | The same permissions are applied on a document and its properties.{{/ dgettext }}
+                </p>
+                <div class="tlp-table-actions">
+                    <button
+                        type="button"
+                        class="tlp-button-primary tlp-table-actions-element docman-admin-properties-modal-button"
+                        data-target-modal-id="docman-admin-properties-create-modal"
+                    >
+                        <i class="tlp-button-icon fas fa-plus" aria-hidden="true"></i>
+                        {{# dgettext }}tuleap-docman | Create property{{/ dgettext }}
+                    </button>
+                    <button
+                        type="button"
+                        class="tlp-button-primary tlp-button-outline tlp-table-actions-element docman-admin-properties-modal-button"
+                        data-target-modal-id="docman-admin-properties-import-modal"
+                    >
+                        {{# dgettext }}tuleap-docman | Import{{/ dgettext }}
+                    </button>
+                </div>
+                <table class="tlp-table">
+                    <thead>
+                        <tr>
+                            <th>{{# dgettext }}tuleap-docman | Name{{/ dgettext }}</th>
+                            <th>{{# dgettext }}tuleap-docman | Description{{/ dgettext }}</th>
+                            <th>{{# dgettext }}tuleap-docman | Status{{/ dgettext }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{# available_properties }}
+                            <tr>
+                                <td>
+                                    <a href="{{ url }}">
+                                        {{ name }}
+                                    </a>
+                                </td>
+                                <td>{{ description }}</td>
+                                <td>
+                                    {{# is_required }}
+                                        −
+                                    {{/ is_required }}
+                                    {{^ is_required }}
+                                        {{# is_used }}
+                                            <span class="tlp-badge-success tlp-badge-outline">
+                                                {{# dgettext }}tuleap-docman | Used{{/ dgettext }}
+                                            </span>
+                                        {{/ is_used }}
+                                        {{^ is_used }}
+                                            <span class="tlp-badge-danger tlp-badge-outline">
+                                                {{# dgettext }}tuleap-docman | Unused{{/ dgettext }}
+                                            </span>
+                                        {{/ is_used }}
+                                    {{/ is_required }}
+                                </td>
+                                <td class="tlp-table-cell-actions">
+                                    {{# delete_url }}
+                                        <button
+                                            type="button"
+                                            class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline docman-admin-properties-delete-button"
+                                            data-target="docman-admin-properties-delete-button-{{ id }}"
+                                        >
+                                            <i class="tlp-button-icon far fa-trash-alt" aria-hidden="true"></i>
+                                            {{# gettext }}Delete{{/ gettext }}
+                                        </button>
+                                    {{/ delete_url }}
+                                </td>
+                            </tr>
+                        {{/ available_properties }}
+                    </tbody>
+                </table>
+                {{# available_properties }}
+                    {{# delete_url }}
+                        <form method="post"
+                              action="{{ delete_url }}"
+                              class="tlp-popover tlp-popover-danger"
+                              id="docman-admin-properties-delete-button-{{ id }}"
+                        >
+                            {{# csrf }}
+                                {{> csrf_token_input }}
+                            {{/ csrf }}
+                            <div class="tlp-popover-arrow"></div>
+                            <div class="tlp-popover-header">
+                                <h1 class="tlp-popover-title">{{# dgettext }}tuleap-docman | Wait a minute...{{/ dgettext }}</h1>
+                            </div>
+                            <div class="tlp-popover-body">
+                                <p>
+                                    {{# dgettext }}tuleap-docman
+                                        | Are you sure you want to delete the property '%1$s'?
+                                        | {{ name }}
+                                    {{/ dgettext }}
+                                </p>
+                            </div>
+                            <div class="tlp-popover-footer">
+                                <button type="button" class="tlp-button-danger tlp-button-outline" data-dismiss="popover">
+                                    {{# gettext }}Cancel{{/ gettext }}
+                                </button>
+                                <button type="submit" class="tlp-button-danger">
+                                    {{# dgettext }}tuleap-docman | Delete the property{{/ dgettext }}
+                                </button>
+                            </div>
+                        </form>
+                    {{/ delete_url }}
+                {{/ available_properties }}
+            </section>
+        </div>
+    </section>
+</div>
+
+<form
+    method="post"
+    action="{{ create_url }}"
+    data-test="admin_create_metadata"
+    class="tlp-modal"
+    role="dialog"
+    id="docman-admin-properties-create-modal"
+    aria-labelledby="docman-admin-properties-create-modal-title"
+>
+    {{# csrf }}
+        {{> csrf_token_input }}
+    {{/ csrf }}
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="docman-admin-properties-create-modal-title">
+            {{# dgettext }}tuleap-docman | Create a new property{{/ dgettext }}
+        </h1>
+        <button class="tlp-modal-close" type="reset" data-dismiss="modal" aria-label="{{# gettext}}Close{{/ gettext }}">
+            <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="docman-admin-properties-create-name">
+                {{# dgettext }}tuleap-docman | Name{{/ dgettext }}
+            </label>
+            <input type="text" class="tlp-input" id="docman-admin-properties-create-name" name="name" data-test="metadata_name">
+        </div>
+
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="docman-admin-properties-create-description">
+                {{# dgettext }}tuleap-docman | Description{{/ dgettext }}
+            </label>
+            <textarea class="tlp-textarea" name="descr"></textarea>
+        </div>
+
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="docman-admin-properties-create-type">
+                {{# dgettext }}tuleap-docman | Type{{/ dgettext }}
+            </label>
+            <select class="tlp-select" id="docman-admin-properties-create-type" name="type">
+                <option value="{{ id_for_type_text }}">{{# dgettext }}tuleap-docman | Text{{/ dgettext }}</option>
+                <option value="{{ id_for_type_string }}">{{# dgettext }}tuleap-docman | String{{/ dgettext }}</option>
+                <option value="{{ id_for_type_date }}">{{# dgettext }}tuleap-docman | Date{{/ dgettext }}</option>
+                <option value="{{ id_for_type_list }}">{{# dgettext }}tuleap-docman | List of values{{/ dgettext }}</option>
+            </select>
+        </div>
+
+        <div class="tlp-form-element">
+            <label class="tlp-label tlp-checkbox">
+                <input type="checkbox" data-test="empty_allowed" name="empty_allowed" value="1" checked>
+                {{# dgettext }}tuleap-docman | Allow empty value{{/ dgettext }}
+            </label>
+        </div>
+
+        <div class="tlp-form-element">
+            <label class="tlp-label tlp-checkbox">
+                <input type="checkbox" name="multiplevalues_allowed" id="docman-admin-properties-create-multiplevalues-allowed" value="1">
+                {{# dgettext }}tuleap-docman | Allow multiple selection{{/ dgettext }}
+            </label>
+        </div>
+
+        <div class="tlp-form-element">
+            <label class="tlp-label tlp-checkbox">
+                <input type="checkbox" data-test="use_it" name="use_it" value="1">
+                {{# dgettext }}tuleap-docman | Use this property{{/ dgettext }}
+            </label>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# gettext}}Cancel{{/ gettext }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action">
+            {{# gettext}}Create{{/ gettext }}
+        </button>
+    </div>
+</form>
+
+<form
+    method="post"
+    action="{{ import_url }}"
+    data-test="admin_create_metadata"
+    class="tlp-modal"
+    role="dialog"
+    id="docman-admin-properties-import-modal"
+    aria-labelledby="docman-admin-properties-import-modal-title"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="docman-admin-properties-import-modal-title">
+            {{# dgettext }}tuleap-docman | Import properties from another project{{/ dgettext }}
+        </h1>
+        <button class="tlp-modal-close" type="reset" data-dismiss="modal" aria-label="{{# gettext}}Close{{/ gettext }}">
+            <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        <p>
+            {{# dgettext }}tuleap-docman | You can import properties from any public projects or private projects you are member of.{{/ dgettext }}
+        </p>
+
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="docman-admin-properties-import-project">
+                {{# dgettext }}tuleap-docman | Project{{/ dgettext }}
+            </label>
+            <input
+                type="text"
+                class="tlp-input"
+                id="docman-admin-properties-import-project"
+                name="plugin_docman_metadata_import_group"
+                placeholder="{{# dgettext }}tuleap-docman | Enter a project shortname or identifier here.{{/ dgettext }}"
+            >
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# gettext}}Cancel{{/ gettext }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <i class="tlp-button-icon fas fa-long-arrow-alt-right" aria-hidden="true"></i>
+            {{# dgettext }}tuleap-docman | Check before import{{/ dgettext }}
+        </button>
+    </div>
+</form>

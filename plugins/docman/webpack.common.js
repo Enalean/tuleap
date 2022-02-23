@@ -32,6 +32,7 @@ module.exports = [
             "burningparrot-style": "./themes/BurningParrot/css/docman.scss",
             "admin-style": "./themes/BurningParrot/css/admin.scss",
             "admin-permissions": "./scripts/admin-permissions.ts",
+            "admin-properties": "./scripts/admin-properties.ts",
         },
         resolve: {
             extensions: [".ts", ".js"],
@@ -40,6 +41,7 @@ module.exports = [
         output,
         externals: {
             jquery: "jQuery",
+            tlp: "tlp",
         },
         module: {
             rules: [

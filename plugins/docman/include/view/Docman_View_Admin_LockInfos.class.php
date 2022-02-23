@@ -51,7 +51,7 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView
         return true;
     }
 
-    protected function displayContent(array $params): void
+    protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $html = '<div class="tlp-framed-vertically">';
 
