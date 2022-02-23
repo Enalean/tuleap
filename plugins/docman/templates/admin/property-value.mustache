@@ -1,0 +1,67 @@
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <form method="post" action="{{ form_url }}" class="tlp-pane-container">
+            {{# csrf }}
+                {{> csrf_token_input }}
+            {{/ csrf }}
+            <input type="hidden" name="md" value="{{ property_name }}">
+            <input type="hidden" name="loveid" value="{{ id }}">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{# dgettext }}tuleap-docman
+                        | Value "%2$s" in "%1$s" property
+                        | {{ property_label }}
+                        | {{ name }}
+                    {{/ dgettext }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="docman-admin-property-update-name">
+                        {{# dgettext }}tuleap-docman | Name{{/ dgettext }}
+                    </label>
+                    <input
+                        type="text"
+                        class="tlp-input"
+                        id="docman-admin-property-update-name"
+                        name="name"
+                        value="{{ name }}"
+                        size="30"
+                    >
+                </div>
+
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="docman-admin-property-update-description">
+                        {{# dgettext }}tuleap-docman | Description{{/ dgettext }}
+                    </label>
+                    <textarea class="tlp-textarea" name="descr">{{ description }}</textarea>
+                </div>
+
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="docman-admin-property-update-rank">
+                        {{# dgettext }}tuleap-docman | Rank{{/ dgettext }}
+                    </label>
+                    <select class="tlp-select tlp-select-adjusted" id="docman-admin-property-update-rank" name="rank">
+                        <option value="beg">{{# dgettext }}tuleap-docman | At the beginning{{/ dgettext }}</option>
+                        <option value="end">{{# dgettext }}tuleap-docman | At the end{{/ dgettext }}</option>
+                        <option value="--" selected>----</option>
+                        {{# ranks }}
+                            <option value="{{ value }}">{{ label }}</option>
+                        {{/ranks}}
+                    </select>
+                </div>
+            </section>
+            <section class="tlp-pane-section tlp-pane-section-submit">
+                <button type="submit" class="tlp-button-primary">
+                    <i class="far fa-save tlp-button-icon" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-docman | Update{{/ dgettext }}
+                </button>
+            </section>
+        </form>
+    </section>
+    <p>
+        <a href="{{ back_url }}">
+            {{# dgettext }}tuleap-docman | Back to property details{{/ dgettext }}
+        </a>
+    </p>
+</div>

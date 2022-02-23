@@ -352,6 +352,10 @@ msgstr "Administration"
 msgid "After"
 msgstr "Après"
 
+#, php-format
+msgid "After %s"
+msgstr "Après %s"
+
 msgid "All at once"
 msgstr "Tous d'un coup"
 
@@ -1334,13 +1338,13 @@ msgid ""
 "'${ID} variable"
 msgstr ""
 "Modèle invalide: le modèle doit contenir au moins la variable ${TITLE}' or "
-"'${ID} variable."
+"'${ID} variable"
 
 msgid ""
 "Invalid pattern: filename pattern cannot be applied to the uploaded file."
 msgstr ""
 "Modèle invalide: le modèle de nom de fichier ne peut pas être appliqué pour "
-"le fichier téléversé"
+"le fichier téléversé."
 
 msgid "Invalid property"
 msgstr "Propriété invalide"
@@ -2442,6 +2446,9 @@ msgstr "Validité :"
 
 msgid "Value"
 msgstr "Valeur"
+
+msgid "Value \"%2$s\" in \"%1$s\" property"
+msgstr "Valeur \"%2$s\" de la propriété \"%1$s\""
 
 msgid "Version"
 msgstr "Version"

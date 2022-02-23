@@ -42,36 +42,55 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends \Tuleap\Docman\View\Ad
         );
     }
 
+    protected function isBurningParrotCompatiblePage(): bool
+    {
+        return true;
+    }
+
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
-        $md   = $params['md'];
+        $metadata = $params['md'];
+        assert($metadata instanceof \Docman_ListMetadata);
         $love = $params['love'];
-        $html = '';
+        assert($love instanceof Docman_MetadataListOfValuesElement);
 
-        $loveDetailsHtml = new Docman_View_LoveDetails($md);
+        $ranks = [];
+        foreach ($metadata->getListOfValueIterator() as $value) {
+            assert($value instanceof Docman_MetadataListOfValuesElement);
+            if (! in_array($value->getStatus(), ['A', 'P'], true)) {
+                continue;
+            }
 
-        $act_url = DocmanViewURLBuilder::buildUrl($params['default_url'], ['action' => 'admin_update_love']);
+            $ranks[] = [
+                'value' => $value->getRank() + 1,
+                'label' => sprintf(
+                    dgettext('tuleap-docman', 'After %s'),
+                    \Docman_MetadataHtmlList::_getElementName($value)
+                ),
+            ];
+        }
 
-        $html .= '<form name="md_update_love" method="POST" action="' . $act_url . '" class="docman_form">';
-        $html .= $loveDetailsHtml->getHiddenFields($love->getId());
-
-        $html .= '<table>';
-        $html .= $loveDetailsHtml->getNameField($love->getName());
-        $html .= $loveDetailsHtml->getDescriptionField($love->getDescription());
-        $html .= $loveDetailsHtml->getRankField('--');
-        $html .= '</table>';
-
-        $html .= '<input type="submit" name="submit" value="' . dgettext('tuleap-docman', 'Update') . '" />';
-
-        $html .= '</form>';
-
-        $backUrl = DocmanViewURLBuilder::buildUrl(
-            $params['default_url'],
-            ['action' => \Docman_View_Admin_MetadataDetails::IDENTIFIER,
-            'md' => $md->getLabel()]
-        );
-        $html   .= '<p><a href="' . $backUrl . '">' . dgettext('tuleap-docman', 'Back to property details') . '</a></p>';
-
-        echo $html;
+        $renderer->renderToPage('admin/property-value', [
+            'property_label' => $metadata->getName(),
+            'property_name'  => $metadata->getLabel(),
+            'id'             => $love->getId(),
+            'name'           => $love->getName(),
+            'description'    => $love->getDescription(),
+            'form_url'       => DocmanViewURLBuilder::buildUrl(
+                $params['default_url'],
+                ['action' => 'admin_update_love'],
+                false
+            ),
+            'back_url'       => DocmanViewURLBuilder::buildUrl(
+                $params['default_url'],
+                [
+                    'action' => \Docman_View_Admin_MetadataDetails::IDENTIFIER,
+                    'md' => $metadata->getLabel(),
+                ],
+                false
+            ),
+            'ranks' => $ranks,
+            'csrf'  => \Docman_View_Admin_Metadata::getCSRFToken((int) $params['group_id']),
+        ]);
     }
 }
