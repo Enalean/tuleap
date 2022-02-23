@@ -28,7 +28,7 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import PasteItem from "./PasteItem.vue";
-import * as check_item_title from "../../../helpers/metadata-helpers/check-item-title";
+import * as check_item_title from "../../../helpers/properties-helpers/check-item-title";
 import * as clipboard_helpers from "../../../helpers/clipboard/clipboard-helpers";
 import {
     TYPE_FOLDER,

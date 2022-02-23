@@ -21,7 +21,7 @@
 <template>
     <div class="document-metadata">
         <div class="document-metadata-title-and-status-properties-container">
-            <title-metadata
+            <title-property
                 v-model="currentlyUpdatedItem.title"
                 v-bind:currently-updated-item="currentlyUpdatedItem"
                 v-bind:parent="parent"
@@ -32,22 +32,22 @@
                 v-bind:parent="parent"
             />
         </div>
-        <description-metadata v-model="currentlyUpdatedItem.description" />
+        <description-property v-model="currentlyUpdatedItem.description" />
         <slot></slot>
     </div>
 </template>
 
 <script>
-import TitleMetadata from "../../MetadataForCreateOrUpdate/AlwaysThereMetadata/TitleMetadata.vue";
-import DescriptionMetadata from "../../MetadataForCreateOrUpdate/AlwaysThereMetadata/DescriptionMetadata.vue";
+import TitleProperty from "../../MetadataForCreateOrUpdate/AlwaysThereProperties/TitleProperty.vue";
+import DescriptionProperty from "../../MetadataForCreateOrUpdate/AlwaysThereProperties/DescriptionProperty.vue";
 import StatusMetadataWithCustomBindingForDocumentCreate from "./StatusMetadataWithCustomBindingForDocumentCreate.vue";
 
 export default {
     name: "DocumentGlobalMetadataForCreate",
     components: {
         StatusMetadataWithCustomBindingForDocumentCreate,
-        DescriptionMetadata,
-        TitleMetadata,
+        DescriptionProperty,
+        TitleProperty,
     },
     props: {
         currentlyUpdatedItem: Object,

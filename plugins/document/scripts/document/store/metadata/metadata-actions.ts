@@ -27,10 +27,10 @@ import {
     putLinkMetadata,
     putWikiMetadata,
 } from "../../api/metadata-rest-querier";
-import { getCustomMetadata } from "../../helpers/metadata-helpers/custom-metadata-helper";
+import { getCustomMetadata } from "../../helpers/properties-helpers/custom-metadata-helper";
 import { getItem, getItemWithSize } from "../../api/rest-querier";
 import Vue from "vue";
-import { formatCustomMetadataForFolderUpdate } from "../../helpers/metadata-helpers/update-data-transformatter-helper";
+import { formatCustomMetadataForFolderUpdate } from "../../helpers/properties-helpers/update-data-transformatter-helper";
 import type { ActionContext } from "vuex";
 import type { Folder, FolderProperties, Item, RootState } from "../../type";
 import type { FolderStatus, MetadataState } from "./module";

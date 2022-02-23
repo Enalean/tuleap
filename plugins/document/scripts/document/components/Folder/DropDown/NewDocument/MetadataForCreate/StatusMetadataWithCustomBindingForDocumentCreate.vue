@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <status-metadata
+    <status-property
         v-model="status_value"
         v-if="is_item_status_metadata_used"
         data-test="document-status-metadata-for-item-create"
@@ -28,13 +28,13 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { mapState } from "vuex";
-import StatusMetadata from "../../MetadataForCreateOrUpdate/StatusMetadata.vue";
-import { transformItemMetadataForCreation } from "../../../../../helpers/metadata-helpers/creation-data-transformatter-helper";
+import { transformItemMetadataForCreation } from "../../../../../helpers/properties-helpers/creation-data-transformatter-helper";
+import StatusProperty from "../../MetadataForCreateOrUpdate/StatusProperty.vue";
 
 export default {
     name: "StatusMetadataWithCustomBindingForDocumentCreate",
     components: {
-        StatusMetadata,
+        StatusProperty,
     },
     props: {
         currentlyUpdatedItem: Object,

@@ -18,21 +18,27 @@
  */
 
 import localVue from "../../../../../helpers/local-vue";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import TitleMetadata from "./TitleMetadata.vue";
-import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../../../constants";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { Folder, Item, ItemFile, State } from "../../../../../type";
+import TitlePropery from "./TitleProperty.vue";
 
-describe("TitleMetadata", () => {
-    let title_metadata_factory,
-        store,
-        existing_folder_name,
-        existing_document_name,
-        updated_document_name;
+describe("TitleProperty", () => {
+    let existing_folder_name: string, existing_document_name: string, updated_document_name: string;
     beforeEach(() => {
         existing_folder_name = "Existing folder";
         existing_document_name = "Existing file";
         updated_document_name = "my file";
+    });
+
+    function createWrapper(
+        value: string,
+        isInUpdateContext: boolean,
+        parent: Folder,
+        currentlyUpdatedItem: Item
+    ): Wrapper<TitlePropery> {
         const state = {
             folder_content: [
                 {
@@ -40,57 +46,55 @@ describe("TitleMetadata", () => {
                     title: existing_folder_name,
                     type: TYPE_FOLDER,
                     parent_id: 3,
-                },
+                } as Folder,
                 {
                     id: 20,
                     title: existing_document_name,
                     type: TYPE_FILE,
                     parent_id: 3,
-                },
+                } as ItemFile,
                 {
                     id: 10,
                     title: updated_document_name,
                     type: TYPE_FILE,
                     parent_id: 3,
-                },
+                } as ItemFile,
             ],
-        };
+        } as unknown as State;
 
-        const store_options = {
-            state,
-        };
-
-        store = createStoreMock(store_options);
-
-        title_metadata_factory = (props = {}) => {
-            return shallowMount(TitleMetadata, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-    });
+        const store = createStoreMock({ state });
+        return shallowMount(TitlePropery, {
+            mocks: {
+                $store: store,
+            },
+            localVue: localVue,
+            propsData: {
+                value,
+                isInUpdateContext,
+                parent,
+                currentlyUpdatedItem,
+            },
+        });
+    }
 
     it(`Title can not be updated for root folder`, async () => {
         const value = "A new folder title";
         const isInUpdateContext = true;
-        const parent = {};
+        const parent = {} as Folder;
         const currentlyUpdatedItem = {
             type: TYPE_FOLDER,
             parent_id: 0,
-        };
+        } as Folder;
 
-        const wrapper = title_metadata_factory({
-            value,
-            isInUpdateContext,
-            parent,
-            currentlyUpdatedItem,
-        });
+        const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
         wrapper.setProps({ value: value });
 
-        await wrapper.vm.$nextTick().then(() => {});
+        await wrapper.vm.$nextTick();
         const input = wrapper.get("[data-test=document-new-item-title]");
 
+        if (!(input.element instanceof HTMLInputElement)) {
+            throw new Error("input element is not an html input");
+        }
         expect(input.element.disabled).toBe(true);
         expect(wrapper.get("[data-test=document-new-item-title-form-element]").classes()).toContain(
             "tlp-form-element-disabled"
@@ -100,23 +104,21 @@ describe("TitleMetadata", () => {
     it(`Title can be updated for other items`, async () => {
         const value = "A new folder title";
         const isInUpdateContext = true;
-        const parent = {};
+        const parent = {} as Folder;
         const currentlyUpdatedItem = {
             type: TYPE_FOLDER,
             parent_id: 3,
-        };
+        } as Folder;
 
-        const wrapper = title_metadata_factory({
-            value,
-            isInUpdateContext,
-            parent,
-            currentlyUpdatedItem,
-        });
+        const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
         wrapper.setProps({ value: value });
 
-        await wrapper.vm.$nextTick().then(() => {});
+        await wrapper.vm.$nextTick();
         const input = wrapper.get("[data-test=document-new-item-title]");
 
+        if (!(input.element instanceof HTMLInputElement)) {
+            throw new Error("input element is not an html input");
+        }
         expect(input.element.disabled).toBe(false);
     });
 
@@ -126,20 +128,15 @@ describe("TitleMetadata", () => {
             const isInUpdateContext = false;
             const parent = {
                 id: 3,
-            };
+            } as Folder;
             const currentlyUpdatedItem = {
                 type: TYPE_FOLDER,
-            };
+            } as Folder;
 
-            const wrapper = title_metadata_factory({
-                value,
-                isInUpdateContext,
-                parent,
-                currentlyUpdatedItem,
-            });
+            const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
             wrapper.setProps({ value: value });
 
-            await wrapper.vm.$nextTick().then(() => {});
+            await wrapper.vm.$nextTick();
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeFalsy();
         });
 
@@ -148,20 +145,15 @@ describe("TitleMetadata", () => {
             const isInUpdateContext = false;
             const parent = {
                 id: 3,
-            };
+            } as Folder;
             const currentlyUpdatedItem = {
                 type: TYPE_FOLDER,
-            };
+            } as Folder;
 
-            const wrapper = title_metadata_factory({
-                value,
-                isInUpdateContext,
-                parent,
-                currentlyUpdatedItem,
-            });
+            const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
             wrapper.setProps({ value: existing_folder_name });
 
-            await wrapper.vm.$nextTick().then(() => {});
+            await wrapper.vm.$nextTick();
 
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeTruthy();
         });
@@ -173,20 +165,15 @@ describe("TitleMetadata", () => {
             const isInUpdateContext = false;
             const parent = {
                 id: 3,
-            };
+            } as Folder;
             const currentlyUpdatedItem = {
                 type: TYPE_FILE,
-            };
+            } as ItemFile;
 
-            const wrapper = title_metadata_factory({
-                value,
-                isInUpdateContext,
-                parent,
-                currentlyUpdatedItem,
-            });
+            const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
             wrapper.setProps({ value: value });
 
-            await wrapper.vm.$nextTick().then(() => {});
+            await wrapper.vm.$nextTick();
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeFalsy();
         });
 
@@ -195,20 +182,15 @@ describe("TitleMetadata", () => {
             const isInUpdateContext = false;
             const parent = {
                 id: 3,
-            };
+            } as Folder;
             const currentlyUpdatedItem = {
                 type: TYPE_FILE,
-            };
+            } as ItemFile;
 
-            const wrapper = title_metadata_factory({
-                value,
-                isInUpdateContext,
-                parent,
-                currentlyUpdatedItem,
-            });
+            const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
             wrapper.setProps({ value: existing_document_name });
 
-            await wrapper.vm.$nextTick().then(() => {});
+            await wrapper.vm.$nextTick();
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeTruthy();
         });
     });
@@ -219,20 +201,15 @@ describe("TitleMetadata", () => {
             const isInUpdateContext = true;
             const parent = {
                 id: 3,
-            };
+            } as Folder;
             const currentlyUpdatedItem = {
                 type: TYPE_FILE,
-            };
+            } as ItemFile;
 
-            const wrapper = title_metadata_factory({
-                value,
-                isInUpdateContext,
-                parent,
-                currentlyUpdatedItem,
-            });
+            const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
             wrapper.setProps({ value: "updated title" });
 
-            await wrapper.vm.$nextTick().then(() => {});
+            await wrapper.vm.$nextTick();
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeFalsy();
         });
 
@@ -241,20 +218,15 @@ describe("TitleMetadata", () => {
             const isInUpdateContext = true;
             const parent = {
                 id: 3,
-            };
+            } as Folder;
             const currentlyUpdatedItem = {
                 type: TYPE_FILE,
-            };
+            } as ItemFile;
 
-            const wrapper = title_metadata_factory({
-                value,
-                isInUpdateContext,
-                parent,
-                currentlyUpdatedItem,
-            });
+            const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
             wrapper.setProps({ value: existing_document_name });
 
-            await wrapper.vm.$nextTick().then(() => {});
+            await wrapper.vm.$nextTick();
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeTruthy();
         });
     });

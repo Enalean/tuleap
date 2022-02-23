@@ -21,14 +21,14 @@
 <template>
     <div class="document-metadata">
         <div class="document-metadata-properties-margin">
-            <title-metadata
+            <title-property
                 v-model="currentlyUpdatedItem.title"
                 v-bind:currently-updated-item="currentlyUpdatedItem"
                 v-bind:parent="parent"
                 v-bind:is-in-update-context="true"
             />
         </div>
-        <description-metadata v-model="currentlyUpdatedItem.description" />
+        <description-property v-model="currentlyUpdatedItem.description" />
         <folder-default-properties-for-update
             v-bind:currently-updated-item="currentlyUpdatedItem"
             v-bind:item-metadata="itemMetadata"
@@ -37,16 +37,16 @@
 </template>
 
 <script>
-import TitleMetadata from "../MetadataForCreateOrUpdate/AlwaysThereMetadata/TitleMetadata.vue";
-import DescriptionMetadata from "../MetadataForCreateOrUpdate/AlwaysThereMetadata/DescriptionMetadata.vue";
 import FolderDefaultPropertiesForUpdate from "./FolderDefaultPropertiesForUpdate.vue";
+import DescriptionProperty from "../MetadataForCreateOrUpdate/AlwaysThereProperties/DescriptionProperty.vue";
+import TitleProperty from "../MetadataForCreateOrUpdate/AlwaysThereProperties/TitleProperty.vue";
 
 export default {
     name: "FolderGlobalMetadataForUpdate",
     components: {
+        TitleProperty,
+        DescriptionProperty,
         FolderDefaultPropertiesForUpdate,
-        DescriptionMetadata,
-        TitleMetadata,
     },
     props: {
         currentlyUpdatedItem: Object,
