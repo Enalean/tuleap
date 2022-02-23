@@ -42,7 +42,7 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends \Tuleap\Docman\View\Ad
         );
     }
 
-    protected function displayContent(array $params): void
+    protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $md   = $params['md'];
         $love = $params['love'];

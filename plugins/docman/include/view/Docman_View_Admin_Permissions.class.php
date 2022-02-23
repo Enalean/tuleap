@@ -65,7 +65,7 @@ class Docman_View_Admin_Permissions extends \Tuleap\Docman\View\Admin\AdminView
         );
     }
 
-    protected function displayContent(array $params): void
+    protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $content = '<div class="tlp-framed">';
 

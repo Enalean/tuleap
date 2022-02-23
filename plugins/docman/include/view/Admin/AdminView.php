@@ -106,7 +106,7 @@ abstract class AdminView
         ]);
 
         echo '<div class="docman-content">';
-        $this->displayContent($params);
+        $this->displayContent($renderer, $params);
         echo '</div>';
 
         $GLOBALS['Response']->footer($params);
@@ -116,7 +116,7 @@ abstract class AdminView
 
     abstract protected function getTitle(array $params): string;
 
-    abstract protected function displayContent(array $params): void;
+    abstract protected function displayContent(\TemplateRenderer $renderer, array $params): void;
 
     protected function isBurningParrotCompatiblePage(): bool
     {
