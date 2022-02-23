@@ -25,6 +25,7 @@ use Docman_Item;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project;
+use Tuleap\Docman\FilenamePattern\InvalidMinimalPatternException;
 use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Empties\DocmanEmptyPOSTRepresentation;
@@ -208,11 +209,9 @@ class DocmanItemCreator
 
                 return CreatedItemRepresentation::build($document_to_upload->getItemId());
             }
-        } catch (UploadCreationConflictException $exception) {
+        } catch (UploadCreationConflictException | UploadCreationFileMismatchException $exception) {
             throw new RestException(409, $exception->getMessage());
-        } catch (UploadCreationFileMismatchException $exception) {
-            throw new RestException(409, $exception->getMessage());
-        } catch (UploadMaxSizeExceededException $exception) {
+        } catch (UploadMaxSizeExceededException | InvalidMinimalPatternException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
 

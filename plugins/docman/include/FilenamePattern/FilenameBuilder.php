@@ -28,10 +28,10 @@ use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
 final class FilenameBuilder
 {
-    private const TITLE_VARIABLE        = "\${TITLE}";
+    public const  TITLE_VARIABLE        = "\${TITLE}";
+    public const  ITEM_ID_VARIABLE      = "\${ID}";
     private const STATUS_VARIABLE       = "\${STATUS}";
     private const VERSION_NAME_VARIABLE = "\${VERSION_NAME}";
-    private const ITEM_ID_VARIABLE      = "\${ID}";
 
     public function __construct(
         private RetrieveFilenamePattern $filename_pattern_retriever,
@@ -39,6 +39,9 @@ final class FilenameBuilder
     ) {
     }
 
+    /**
+     * @throws InvalidMinimalPatternException
+     */
     public function buildFilename(
         string $original_filename,
         int $project_id,
@@ -50,6 +53,10 @@ final class FilenameBuilder
         $pattern = $this->filename_pattern_retriever->getPattern($project_id);
         if (! $pattern) {
             return $original_filename;
+        }
+
+        if (! FilenamePatternValidator::isPatternValid($pattern)) {
+            throw new InvalidMinimalPatternException();
         }
 
         $new_filename = $pattern;

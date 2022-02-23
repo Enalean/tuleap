@@ -22,6 +22,7 @@
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Docman\ResponseFeedbackWrapper;
 
 /**
  * Unit tests for Docman_SOAPActions
@@ -49,7 +50,7 @@ class Docman_SOAPActionsTest extends \Tuleap\Test\PHPUnit\TestCase
 
         // Mock instanciation
         $controller           = \Mockery::spy(\Docman_SOAPController::class);
-        $controller->feedback = \Mockery::spy(\Feedback::class);
+        $controller->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
 
         $version = new Docman_Version(['number' => 0]);
 

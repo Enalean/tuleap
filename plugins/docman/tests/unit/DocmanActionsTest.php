@@ -22,6 +22,7 @@
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Docman\ResponseFeedbackWrapper;
 
 // Make easier the navigation in IDE between the main class and this class
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -34,7 +35,7 @@ final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         // Definition acceptance criteria:
         // test is complete if there is an error and the error message is the right one
         $ctrl           = \Mockery::spy(\Docman_Controller::class);
-        $ctrl->feedback = \Mockery::spy(\Feedback::class);
+        $ctrl->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
         // Test log message
         $ctrl->feedback->shouldReceive('log')->with('error', 'Cannot delete a version on something that is not a file.')->once();
 
@@ -65,7 +66,7 @@ final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         // Definition acceptance criteria:
         // test is complete if there is an info flash message that tells version is deleted
         $ctrl           = \Mockery::spy(\Docman_Controller::class);
-        $ctrl->feedback = \Mockery::spy(\Feedback::class);
+        $ctrl->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
         // Test log message
         $ctrl->feedback->shouldReceive('log')->with('info', 'Version 1 (label 5) successfully deleted')->once();
 
@@ -107,7 +108,7 @@ final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         // Definition acceptance criteria:
         // test is complete if there is an error and the error message is the right one
         $ctrl           = \Mockery::spy(\Docman_Controller::class);
-        $ctrl->feedback = \Mockery::spy(\Feedback::class);
+        $ctrl->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
         // Test log message
         $ctrl->feedback->shouldReceive('log')->with('error', 'Cannot delete last version of a file. If you want to continue, please delete the document itself.')->once();
 
@@ -143,7 +144,7 @@ final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         // Definition acceptance criteria:
         // test is complete if there is an info flash message that tells version is deleted
         $ctrl           = \Mockery::spy(\Docman_Controller::class);
-        $ctrl->feedback = \Mockery::spy(\Feedback::class);
+        $ctrl->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
         // Test log message
         $ctrl->feedback->shouldReceive('log')->with('error', 'Cannot delete a version that doesn\'t exist.')->once();
 
@@ -184,7 +185,7 @@ final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $notificationsManager                  = \Mockery::spy(\Docman_NotificationsManager::class);
         $controller                            = \Mockery::spy(\Docman_Controller::class);
-        $controller->feedback                  = \Mockery::spy(\Feedback::class);
+        $controller->feedback                  = \Mockery::spy(ResponseFeedbackWrapper::class);
         $actions                               = \Mockery::mock(\Docman_Actions::class)->makePartial(
         )->shouldAllowMockingProtectedMethods();
         $actions->_controler                   = $controller;
@@ -198,7 +199,7 @@ final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRemoveMonitoringNotifDoesNotExist(): void
     {
         $controller           = \Mockery::spy(\Docman_Controller::class);
-        $controller->feedback = \Mockery::spy(\Feedback::class);
+        $controller->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
         $user1                = \Mockery::spy(\PFUser::class);
         $user1->shouldReceive('getId')->andReturns(123);
         $user1->shouldReceive('getName')->andReturns('Carol');
@@ -227,7 +228,7 @@ final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRemoveMonitoringError(): void
     {
         $controller           = \Mockery::spy(\Docman_Controller::class);
-        $controller->feedback = \Mockery::spy(\Feedback::class);
+        $controller->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
         $userManager          = \Mockery::spy(\UserManager::class);
         $user1                = \Mockery::spy(\PFUser::class);
         $user1->shouldReceive('getId')->andReturns(123);
@@ -259,7 +260,7 @@ final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRemoveMonitoringSuccess(): void
     {
         $controller           = \Mockery::spy(\Docman_Controller::class);
-        $controller->feedback = \Mockery::spy(\Feedback::class);
+        $controller->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
         $userManager          = \Mockery::spy(\UserManager::class);
         $user1                = \Mockery::spy(\PFUser::class);
         $user1->shouldReceive('getId')->andReturns(123);
@@ -302,7 +303,7 @@ final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAddMonitoringNotifAlreadyExist(): void
     {
         $controller                       = \Mockery::spy(\Docman_Controller::class);
-        $controller->feedback             = \Mockery::spy(\Feedback::class);
+        $controller->feedback             = \Mockery::spy(ResponseFeedbackWrapper::class);
         $notificationsManager             = \Mockery::spy(\Docman_NotificationsManager::class);
         $controller->notificationsManager = $notificationsManager;
         $actions                          = \Mockery::mock(\Docman_Actions::class)->makePartial(
@@ -328,7 +329,7 @@ final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAddMonitoringError(): void
     {
         $controller                       = \Mockery::spy(\Docman_Controller::class);
-        $controller->feedback             = \Mockery::spy(\Feedback::class);
+        $controller->feedback             = \Mockery::spy(ResponseFeedbackWrapper::class);
         $notificationsManager             = \Mockery::spy(\Docman_NotificationsManager::class);
         $controller->notificationsManager = $notificationsManager;
         $actions                          = \Mockery::mock(\Docman_Actions::class)->makePartial(
@@ -355,7 +356,7 @@ final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAddMonitoringNoUserPermissions(): void
     {
         $controller                       = \Mockery::spy(\Docman_Controller::class);
-        $controller->feedback             = \Mockery::spy(\Feedback::class);
+        $controller->feedback             = \Mockery::spy(ResponseFeedbackWrapper::class);
         $notificationsManager             = \Mockery::spy(\Docman_NotificationsManager::class);
         $controller->notificationsManager = $notificationsManager;
         $actions                          = \Mockery::mock(\Docman_Actions::class)->makePartial(
@@ -384,7 +385,7 @@ final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAddMonitoringSuccess(): void
     {
         $controller           = \Mockery::spy(\Docman_Controller::class);
-        $controller->feedback = \Mockery::spy(\Feedback::class);
+        $controller->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
         $user                 = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getId')->andReturns(123);
         $user->shouldReceive('getName')->andReturns('Carol');

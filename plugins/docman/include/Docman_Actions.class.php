@@ -25,6 +25,7 @@ use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\DestinationCloneItem;
 use Tuleap\Docman\FilenamePattern\FilenameBuilder;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
+use Tuleap\Docman\FilenamePattern\InvalidMinimalPatternException;
 use Tuleap\Docman\Metadata\ItemImpactedByMetadataChangeCollection;
 use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
@@ -197,19 +198,32 @@ class Docman_Actions extends Actions
                         new FilenamePatternRetriever(new SettingsDAO()),
                         new ItemStatusMapper(new Docman_SettingsBo($project_id))
                     );
-                    $updated_filename = $filename_builder->buildFilename(
-                        $_FILES['file']['name'],
-                        $project_id,
-                        $item->getTitle(),
-                        $item->getStatus(),
-                        $_label,
-                        $item->getId()
-                    );
+                    $final_filename   = $_FILES['file']['name'];
 
-                    $path = $fs->upload($_FILES['file'], $updated_filename, $project_id, $item->getId(), $number);
+                    try {
+                        $final_filename = $filename_builder->buildFilename(
+                            $_FILES['file']['name'],
+                            $project_id,
+                            $item->getTitle(),
+                            $item->getStatus(),
+                            $_label,
+                            $item->getId()
+                        );
+                    } catch (InvalidMinimalPatternException $e) {
+                        // Do not stop execution to avoid inconsistency between the already created item and the associated file.
+                        $this->_controler->feedback->log(
+                            Feedback::WARN,
+                            dgettext(
+                                'tuleap-docman',
+                                "Invalid pattern: filename pattern cannot be applied to the uploaded file."
+                            )
+                        );
+                    }
+
+                    $path = $fs->upload($_FILES['file'], $final_filename, $project_id, $item->getId(), $number);
                     if ($path) {
                         $uploadSucceded = true;
-                        $_filename      = $updated_filename;
+                        $_filename      = $final_filename;
                         $_filesize      = $_FILES['file']['size'];
                         $_filetype      = $_FILES['file']['type']; //TODO detect mime type server side
                     }
