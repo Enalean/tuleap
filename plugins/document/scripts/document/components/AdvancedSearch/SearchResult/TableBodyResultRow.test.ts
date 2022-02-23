@@ -26,6 +26,7 @@ import CellTitle from "./Cells/CellTitle.vue";
 import CellDescription from "./Cells/CellDescription.vue";
 import CellOwner from "./Cells/CellOwner.vue";
 import CellUpdateDate from "./Cells/CellUpdateDate.vue";
+import CellCreateDate from "./Cells/CellCreateDate.vue";
 import CellLocation from "./Cells/CellLocation.vue";
 
 describe("TableBodyResultRow", () => {
@@ -35,6 +36,7 @@ describe("TableBodyResultRow", () => {
         ["description", CellDescription],
         ["owner", CellOwner],
         ["update_date", CellUpdateDate],
+        ["create_date", CellCreateDate],
         ["location", CellLocation],
     ])(
         "when wanted column is %s then matching component should be %s",

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CellUpdateDate should display the update date of the item 1`] = `
+exports[`CellDate should display the update date of the item 1`] = `
 <td>
   <tlp-relative-date-stub
     absolute-date="2021-10-06 00:00"

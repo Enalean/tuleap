@@ -35,6 +35,7 @@ final class ListOfSearchColumnDefinitionPresenterBuilder
             new SearchColumnDefinitionPresenter("description", dgettext('tuleap-document', 'Description')),
             new SearchColumnDefinitionPresenter("owner", dgettext('tuleap-document', 'Owner')),
             new SearchColumnDefinitionPresenter("update_date", dgettext('tuleap-document', 'Update date')),
+            new SearchColumnDefinitionPresenter("create_date", dgettext('tuleap-document', 'Create date')),
             new SearchColumnDefinitionPresenter("location", dgettext('tuleap-document', 'Location')),
         ];
     }
