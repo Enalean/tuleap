@@ -17,29 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getCustomMetadata } from "./custom-metadata-helper";
-import type { Metadata } from "../../store/metadata/module";
+import { getCustomProperties } from "./custom-properties-helper";
+import type { Property } from "../../store/metadata/module";
 
-describe("getCustomMetadata", () => {
-    it("only returns custom metadata", () => {
-        const metadata = [
-            { short_name: "title" } as Metadata,
-            { short_name: "description" } as Metadata,
-            { short_name: "owner" } as Metadata,
-            { short_name: "create_date" } as Metadata,
-            { short_name: "update_date" } as Metadata,
-            { short_name: "field_1" } as Metadata,
-            { short_name: "field_2" } as Metadata,
-            { short_name: "field_3" } as Metadata,
+describe("getCustomProperties", () => {
+    it("only returns custom properties", () => {
+        const properties = [
+            { short_name: "title" } as Property,
+            { short_name: "description" } as Property,
+            { short_name: "owner" } as Property,
+            { short_name: "create_date" } as Property,
+            { short_name: "update_date" } as Property,
+            { short_name: "field_1" } as Property,
+            { short_name: "field_2" } as Property,
+            { short_name: "field_3" } as Property,
         ];
 
-        expect(getCustomMetadata(metadata)).toEqual([
+        expect(getCustomProperties(properties)).toEqual([
             { short_name: "field_1" },
             { short_name: "field_2" },
             { short_name: "field_3" },
         ]);
     });
-    it("Returns empty array if metadata is not defined", () => {
-        expect(getCustomMetadata(null)).toEqual([]);
+    it("Returns empty array if properties is not defined", () => {
+        expect(getCustomProperties(null)).toEqual([]);
     });
 });

@@ -29,7 +29,7 @@
 <script>
 import { mapState } from "vuex";
 import StatusProperty from "../../MetadataForCreateOrUpdate/StatusProperty.vue";
-import { transformItemMetadataForCreation } from "../../../../../helpers/properties-helpers/creation-data-transformatter-helper";
+import { transformItemPropertiesForCreation } from "../../../../../helpers/properties-helpers/creation-data-transformatter-helper";
 
 export default {
     name: "StatusMetadataWithCustomBindingForFolderCreate",
@@ -44,7 +44,7 @@ export default {
         ...mapState("configuration", ["is_item_status_metadata_used"]),
         status_value: {
             get() {
-                transformItemMetadataForCreation(
+                transformItemPropertiesForCreation(
                     this.currentlyUpdatedItem,
                     this.parent,
                     this.is_item_status_metadata_used

@@ -17,42 +17,42 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Metadata, ListValue } from "../../../store/metadata/module";
+import type { Property, ListValue } from "../../../store/metadata/module";
 import type { Folder } from "../../../type";
-import { updateItemMetadata } from "./status-metadata-helper";
+import { updateStatusProperty } from "./status-property-helper";
 
-describe("updateItemMetadata", () => {
-    it("Given status is provided in metadata array, then we extract and return its value", () => {
+describe("updateStatusProperty", () => {
+    it("Given status is provided in properties array, then we extract and return its value", () => {
         const list_value = [
             {
                 id: 103,
             } as ListValue,
         ];
 
-        const metadata: Metadata = {
+        const property: Property = {
             short_name: "status",
             list_value: list_value,
-        } as Metadata;
+        } as Property;
 
         const item = {
             id: 7,
             type: "folder",
         } as Folder;
 
-        updateItemMetadata(metadata, item);
+        updateStatusProperty(property, item);
 
         expect(item.status).toEqual("rejected");
     });
 
     it("Status is none by default", () => {
-        const metadata: Metadata = {} as Metadata;
+        const property: Property = {} as Property;
 
         const item = {
             id: 7,
             type: "folder",
         } as Folder;
 
-        updateItemMetadata(metadata, item);
+        updateStatusProperty(property, item);
 
         expect(item.status).toEqual("none");
     });

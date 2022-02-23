@@ -28,8 +28,8 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { mapState } from "vuex";
-import { transformDocumentMetadataForUpdate } from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
 import StatusProperty from "../MetadataForCreateOrUpdate/StatusProperty.vue";
+import { transformDocumentPropertiesForUpdate } from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
 
 export default {
     name: "StatusMetadataWithCustomBindingForDocumentUpdate",
@@ -43,7 +43,7 @@ export default {
         ...mapState("configuration", ["is_item_status_metadata_used"]),
         status_value: {
             get() {
-                transformDocumentMetadataForUpdate(
+                transformDocumentPropertiesForUpdate(
                     this.currentlyUpdatedItem,
                     this.is_item_status_metadata_used
                 );

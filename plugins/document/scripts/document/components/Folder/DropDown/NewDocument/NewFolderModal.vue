@@ -61,9 +61,9 @@ import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import FolderGlobalMetadataForCreate from "./MetadataForCreate/FolderGlobalMetadataForCreate.vue";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
-import { getCustomMetadata } from "../../../../helpers/properties-helpers/custom-metadata-helper";
+import { getCustomProperties } from "../../../../helpers/properties-helpers/custom-properties-helper";
 import { handleErrors } from "../../../../store/actions-helpers/handle-errors";
-import { transformCustomMetadataForItemCreation } from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
+import { transformCustomPropertiesForItemCreation } from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
 import emitter from "../../../../helpers/emitter";
 
 export default {
@@ -165,9 +165,9 @@ export default {
             }
         },
         addParentMetadataToDefaultItem() {
-            const parent_metadata = getCustomMetadata(this.parent.metadata);
+            const parent_metadata = getCustomProperties(this.parent.metadata);
 
-            const formatted_metadata = transformCustomMetadataForItemCreation(parent_metadata);
+            const formatted_metadata = transformCustomPropertiesForItemCreation(parent_metadata);
             if (formatted_metadata.length > 0) {
                 this.item.metadata = formatted_metadata;
             }

@@ -36,7 +36,7 @@ import {
 } from "../../constants";
 import type { ActionContext } from "vuex";
 import type { Embedded, Empty, Folder, ItemFile, Link, RootState, Wiki } from "../../type";
-import type { FolderMetadata, MetadataState, Metadata, ListValue } from "./module";
+import type { FolderProperty, MetadataState, Property, ListValue } from "./module";
 
 describe("Metadata actions", () => {
     let context: ActionContext<MetadataState, RootState>, getProjectMetadata: jest.SpyInstance;
@@ -113,7 +113,7 @@ describe("Metadata actions", () => {
                     obsolescence_date: null,
                 } as ItemFile;
 
-                const metadata: Array<Metadata> = [];
+                const metadata: Array<Property> = [];
                 const item_to_update = {
                     id: 123,
                     title: "My new title",
@@ -216,7 +216,7 @@ describe("Metadata actions", () => {
                     obsolescence_date: null,
                 } as Embedded;
 
-                const metadata: Array<Metadata> = [];
+                const metadata: Array<Property> = [];
                 const item_to_update = {
                     id: 123,
                     title: "My new embedded  title",
@@ -269,7 +269,7 @@ describe("Metadata actions", () => {
                     obsolescence_date: null,
                 } as Link;
 
-                const metadata: Array<Metadata> = [];
+                const metadata: Array<Property> = [];
                 const item_to_update = {
                     id: 123,
                     title: "My new link title",
@@ -323,7 +323,7 @@ describe("Metadata actions", () => {
                     obsolescence_date: null,
                 } as Wiki;
 
-                const metadata: Array<Metadata> = [];
+                const metadata: Array<Property> = [];
                 const item_to_update = {
                     id: 123,
                     title: "My new wiki title",
@@ -376,7 +376,7 @@ describe("Metadata actions", () => {
                     obsolescence_date: null,
                 } as Empty;
 
-                const metadata: Array<Metadata> = [];
+                const metadata: Array<Property> = [];
                 const item_to_update = {
                     id: 123,
                     title: "My new empty title",
@@ -433,11 +433,11 @@ describe("Metadata actions", () => {
                         id: 103,
                     } as ListValue,
                 ];
-                const folder_metadata: FolderMetadata = {
+                const folder_metadata: FolderProperty = {
                     short_name: "status",
                     list_value: list_values,
-                } as FolderMetadata;
-                const metadata: Array<Metadata> = [folder_metadata];
+                } as FolderProperty;
+                const metadata: Array<Property> = [folder_metadata];
                 const item_to_update = {
                     id: 123,
                     title: "My new empty title",
@@ -503,7 +503,7 @@ describe("Metadata actions", () => {
                     obsolescence_date: null,
                 } as Folder;
 
-                const metadata: Array<Metadata> = [];
+                const metadata: Array<Property> = [];
                 const item_to_update = {
                     id: 123,
                     title: "My new title",

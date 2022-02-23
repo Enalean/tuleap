@@ -27,10 +27,10 @@ import {
     putLinkMetadata,
     putWikiMetadata,
 } from "../../api/metadata-rest-querier";
-import { getCustomMetadata } from "../../helpers/properties-helpers/custom-metadata-helper";
+import { getCustomProperties } from "../../helpers/properties-helpers/custom-properties-helper";
 import { getItem, getItemWithSize } from "../../api/rest-querier";
 import Vue from "vue";
-import { formatCustomMetadataForFolderUpdate } from "../../helpers/properties-helpers/update-data-transformatter-helper";
+import { formatCustomPropertiesForFolderUpdate } from "../../helpers/properties-helpers/update-data-transformatter-helper";
 import type { ActionContext } from "vuex";
 import type { Folder, FolderProperties, Item, RootState } from "../../type";
 import type { FolderStatus, MetadataState } from "./module";
@@ -68,7 +68,7 @@ export const updateMetadata = async (
     payload: updateMetadataPayload
 ): Promise<void> => {
     const item_to_update = payload.item_to_update;
-    const custom_metadata = getCustomMetadata(item_to_update.metadata);
+    const custom_metadata = getCustomProperties(item_to_update.metadata);
     const item_obsolescence_date = item_to_update.obsolescence_date;
     let obsolescence_date = null;
     if (item_obsolescence_date) {
@@ -169,7 +169,7 @@ export const updateFolderMetadata = async (
     context: ActionContext<MetadataState, RootState>,
     payload: updateFolderMetadataPayload
 ): Promise<void> => {
-    formatCustomMetadataForFolderUpdate(
+    formatCustomPropertiesForFolderUpdate(
         payload.item_to_update,
         payload.metadata_list_to_update,
         payload.recursion_option

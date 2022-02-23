@@ -46,13 +46,13 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import type { Metadata } from "../../../../../store/metadata/module";
+import type { Property } from "../../../../../store/metadata/module";
 import DateFlatPicker from "../DateFlatPicker.vue";
 
 @Component({ components: { DateFlatPicker } })
 export default class CustomMetadataDate extends Vue {
     @Prop({ required: true })
-    readonly currentlyUpdatedItemMetadata!: Metadata;
+    readonly currentlyUpdatedItemMetadata!: Property;
 
     private value = String(this.currentlyUpdatedItemMetadata.value);
 }

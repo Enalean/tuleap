@@ -19,19 +19,19 @@
 
 import {
     getStatusFromMapping,
-    getStatusMetadata,
+    getStatusProperty,
     getStatusIdFromName,
-} from "./hardcoded-metadata-mapping-helper";
-import type { Metadata } from "../../store/metadata/module";
+} from "./hardcoded-properties-mapping-helper";
+import type { Property } from "../../store/metadata/module";
 
-describe("getStatusMetadata", () => {
-    it("Given metadata has a status, then its return the corresponding metadata", () => {
-        const all_metadata = [
-            { short_name: "test" } as Metadata,
-            { short_name: "status" } as Metadata,
+describe("getStatusProperty", () => {
+    it("Given properties has a status, then its return the corresponding property", () => {
+        const all_properties = [
+            { short_name: "test" } as Property,
+            { short_name: "status" } as Property,
         ];
 
-        expect(getStatusMetadata(all_metadata)).toEqual({ short_name: "status" });
+        expect(getStatusProperty(all_properties)).toEqual({ short_name: "status" });
     });
 });
 

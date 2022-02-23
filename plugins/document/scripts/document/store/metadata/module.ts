@@ -22,7 +22,7 @@ import * as mutations from "./metadata-mutations";
 import * as actions from "./metadata-actions";
 
 export interface MetadataState {
-    project_metadata_list: Array<Metadata>;
+    project_metadata_list: Array<Property>;
     has_loaded_metadata: true;
 }
 
@@ -35,7 +35,7 @@ export interface MetadataState {
  *
  * Please also note that value is used for dates/string
  */
-export interface Metadata {
+export interface Property {
     short_name: string;
     name: string;
     description: string | null;
@@ -48,7 +48,7 @@ export interface Metadata {
     allowed_list_values: Array<ListValue> | null;
 }
 
-export interface FolderMetadata extends Metadata {
+export interface FolderProperty extends Property {
     recursion: string | null;
 }
 

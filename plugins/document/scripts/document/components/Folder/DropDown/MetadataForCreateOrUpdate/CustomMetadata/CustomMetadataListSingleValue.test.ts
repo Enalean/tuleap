@@ -21,12 +21,13 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomMetadataList from "./CustomMetadataListSingleValue.vue";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
-import type { ListValue, Metadata } from "../../../../../store/metadata/module";
+import type { ListValue, Property } from "../../../../../store/metadata/module";
 import localVue from "../../../../../helpers/local-vue";
 
 describe("CustomMetadataListSingleValue", () => {
     const store_options = { state: { metadata: {} } };
-    function createWrapper(metadata: Metadata): Wrapper<CustomMetadataList> {
+
+    function createWrapper(metadata: Property): Wrapper<CustomMetadataList> {
         const store = createStoreMock(store_options);
         return shallowMount(CustomMetadataList, {
             localVue,
@@ -63,7 +64,7 @@ describe("CustomMetadataListSingleValue", () => {
             is_required: false,
             type: "list",
             is_multiple_value_allowed: false,
-        } as Metadata;
+        } as Property;
         const wrapper = createWrapper(currentlyUpdatedItemMetadata);
 
         await wrapper.vm.$nextTick();
@@ -96,7 +97,7 @@ describe("CustomMetadataListSingleValue", () => {
             is_required: true,
             type: "list",
             is_multiple_value_allowed: false,
-        } as Metadata;
+        } as Property;
         const wrapper = createWrapper(currentlyUpdatedItemMetadata);
 
         expect(wrapper.find("[data-test=document-custom-list-select]").exists()).toBeTruthy();
@@ -124,7 +125,7 @@ describe("CustomMetadataListSingleValue", () => {
             value: "test",
             is_required: true,
             type: "text",
-        } as Metadata;
+        } as Property;
 
         const wrapper = createWrapper(currentlyUpdatedItemMetadata);
         expect(wrapper.find("[data-test=document-custom-metadata-list]").exists()).toBeFalsy();
@@ -149,7 +150,7 @@ describe("CustomMetadataListSingleValue", () => {
             is_required: true,
             type: "list",
             is_multiple_value_allowed: true,
-        } as Metadata;
+        } as Property;
 
         const wrapper = createWrapper(currentlyUpdatedItemMetadata);
         expect(wrapper.find("[data-test=document-custom-metadata-list]").exists()).toBeFalsy();

@@ -18,7 +18,7 @@
  */
 
 import { put, recursiveGet } from "tlp";
-import type { FolderStatus, Metadata } from "../store/metadata/module";
+import type { FolderStatus, Property } from "../store/metadata/module";
 
 export {
     putFileMetadata,
@@ -37,7 +37,7 @@ function putFileMetadata(
     owner_id: number,
     status: string | null,
     obsolescence_date: number | null,
-    metadata: Array<Metadata> | null
+    metadata: Array<Property> | null
 ): Promise<Response> {
     return put(`/api/docman_files/${encodeURIComponent(id)}/metadata`, {
         headers: {
@@ -61,7 +61,7 @@ function putEmbeddedFileMetadata(
     owner_id: number,
     status: string | null,
     obsolescence_date: number | null,
-    metadata: Array<Metadata> | null
+    metadata: Array<Property> | null
 ): Promise<Response> {
     return put(`/api/docman_embedded_files/${encodeURIComponent(id)}/metadata`, {
         headers: {
@@ -85,7 +85,7 @@ function putLinkMetadata(
     owner_id: number,
     status: string | null,
     obsolescence_date: number | null,
-    metadata: Array<Metadata> | null
+    metadata: Array<Property> | null
 ): Promise<Response> {
     return put(`/api/docman_links/${encodeURIComponent(id)}/metadata`, {
         headers: {
@@ -109,7 +109,7 @@ function putWikiMetadata(
     owner_id: number,
     status: string | null,
     obsolescence_date: number | null,
-    metadata: Array<Metadata> | null
+    metadata: Array<Property> | null
 ): Promise<Response> {
     return put(`/api/docman_wikis/${encodeURIComponent(id)}/metadata`, {
         headers: {
@@ -133,7 +133,7 @@ function putEmptyDocumentMetadata(
     owner_id: number,
     status: string | null,
     obsolescence_date: number | null,
-    metadata: Array<Metadata> | null
+    metadata: Array<Property> | null
 ): Promise<Response> {
     return put(`/api/docman_empty_documents/${encodeURIComponent(id)}/metadata`, {
         headers: {
@@ -157,7 +157,7 @@ function putFolderDocumentMetadata(
     owner_id: number,
     status: FolderStatus | null,
     obsolescence_date: number | null,
-    metadata: Array<Metadata> | null
+    metadata: Array<Property> | null
 ): Promise<Response> {
     return put(`/api/docman_folders/${encodeURIComponent(id)}/metadata`, {
         headers: {
@@ -174,7 +174,7 @@ function putFolderDocumentMetadata(
     });
 }
 
-function getProjectMetadata(project_id: number): Promise<Array<Metadata>> {
+function getProjectMetadata(project_id: number): Promise<Array<Property>> {
     const escaped_project_id = encodeURIComponent(project_id);
     return recursiveGet(`/api/projects/${escaped_project_id}/docman_metadata`, {
         params: {

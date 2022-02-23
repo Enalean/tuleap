@@ -21,9 +21,9 @@ import type { ConfigurationState } from "./store/configuration";
 import type { ErrorState } from "./store/error/module";
 import type { PermissionsState } from "./store/permissions/permissions-default-state";
 import type {
-    FolderMetadata,
+    FolderProperty,
     FolderStatus,
-    Metadata,
+    Property,
     MetadataState,
 } from "./store/metadata/module";
 
@@ -88,7 +88,7 @@ export interface Item {
     user_can_write: boolean;
     can_user_manage: boolean;
     lock_info: LockInfo | null;
-    metadata: Array<Metadata> | Array<FolderMetadata>;
+    metadata: Array<Property> | Array<FolderProperty>;
     parent_id: number | null;
     type: string;
     status: string | FolderStatus;
@@ -109,7 +109,7 @@ export interface Folder extends Item {
     permissions_for_groups: Permissions;
     folder_properties: FolderProperties;
     type: "folder";
-    metadata: Array<FolderMetadata>;
+    metadata: Array<FolderProperty>;
     status: FolderStatus;
 }
 

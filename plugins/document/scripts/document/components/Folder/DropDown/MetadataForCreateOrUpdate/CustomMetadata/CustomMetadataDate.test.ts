@@ -21,12 +21,12 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomMetadataDate from "./CustomMetadataDate.vue";
-import type { Metadata } from "../../../../../store/metadata/module";
+import type { Property } from "../../../../../store/metadata/module";
 import localVue from "../../../../../helpers/local-vue";
 import DateFlatPicker from "../DateFlatPicker.vue";
 
 describe("CustomMetadataDate", () => {
-    function createWrapper(metadata: Metadata): Wrapper<CustomMetadataDate> {
+    function createWrapper(metadata: Property): Wrapper<CustomMetadataDate> {
         return shallowMount(CustomMetadataDate, {
             localVue,
             propsData: { currentlyUpdatedItemMetadata: metadata },
@@ -39,7 +39,7 @@ describe("CustomMetadataDate", () => {
             is_required: true,
             name: "date field",
             type: "text",
-        } as Metadata;
+        } as Property;
 
         const wrapper = createWrapper(currentlyUpdatedItemMetadata);
         expect(wrapper.find("[data-test=document-custom-metadata-date]").exists()).toBeFalsy();
@@ -51,7 +51,7 @@ describe("CustomMetadataDate", () => {
             is_required: true,
             name: "date field",
             type: "date",
-        } as Metadata;
+        } as Property;
 
         const wrapper = createWrapper(currentlyUpdatedItemMetadata);
         wrapper.findComponent(DateFlatPicker).vm.$emit("input", "2019-06-30");

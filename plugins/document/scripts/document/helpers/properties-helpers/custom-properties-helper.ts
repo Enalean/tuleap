@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Metadata } from "../../store/metadata/module";
+import type { Property } from "../../store/metadata/module";
 
-export function getCustomMetadata(metadata_list: Array<Metadata> | null): Array<Metadata> {
-    if (!metadata_list) {
+export function getCustomProperties(properties: Array<Property> | null): Array<Property> {
+    if (!properties) {
         return [];
     }
 
-    const hardcoded_metadata = [
+    const hardcoded_properties = [
         "title",
         "description",
         "owner",
@@ -34,5 +34,5 @@ export function getCustomMetadata(metadata_list: Array<Metadata> | null): Array<
         "obsolescence_date",
     ];
 
-    return metadata_list.filter(({ short_name }) => !hardcoded_metadata.includes(short_name));
+    return properties.filter(({ short_name }) => !hardcoded_properties.includes(short_name));
 }

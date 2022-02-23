@@ -56,10 +56,10 @@ import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import FolderGlobalMetadataForUpdate from "./FolderGlobalMetadataForUpdate.vue";
 import {
-    transformCustomMetadataForItemUpdate,
-    transformFolderMetadataForRecursionAtUpdate,
+    transformCustomPropertiesForItemUpdate,
+    transformFolderPropertiesForRecursionAtUpdate,
 } from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
-import { getCustomMetadata } from "../../../../helpers/properties-helpers/custom-metadata-helper";
+import { getCustomProperties } from "../../../../helpers/properties-helpers/custom-properties-helper";
 import emitter from "../../../../helpers/emitter";
 
 export default {
@@ -98,14 +98,14 @@ export default {
         },
     },
     beforeMount() {
-        this.item_to_update = transformFolderMetadataForRecursionAtUpdate(this.item);
+        this.item_to_update = transformFolderPropertiesForRecursionAtUpdate(this.item);
     },
     mounted() {
         this.modal = createModal(this.$el);
 
-        this.formatted_item_metadata = getCustomMetadata(this.item.metadata);
+        this.formatted_item_metadata = getCustomProperties(this.item.metadata);
 
-        transformCustomMetadataForItemUpdate(this.formatted_item_metadata);
+        transformCustomPropertiesForItemUpdate(this.formatted_item_metadata);
 
         this.show();
     },

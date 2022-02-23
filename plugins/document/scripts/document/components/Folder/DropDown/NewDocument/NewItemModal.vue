@@ -95,10 +95,10 @@ import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import EmbeddedProperties from "../MetadataForCreateOrUpdate/EmbeddedProperties.vue";
 import FileProperties from "../MetadataForCreateOrUpdate/FileProperties.vue";
 import OtherInformationMetadataForCreate from "./MetadataForCreate/OtherInformationMetadataForCreate.vue";
-import { getCustomMetadata } from "../../../../helpers/properties-helpers/custom-metadata-helper";
+import { getCustomProperties } from "../../../../helpers/properties-helpers/custom-properties-helper";
 import { handleErrors } from "../../../../store/actions-helpers/handle-errors";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
-import { transformCustomMetadataForItemCreation } from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
+import { transformCustomPropertiesForItemCreation } from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
 import emitter from "../../../../helpers/emitter";
 
 export default {
@@ -229,9 +229,9 @@ export default {
             }
         },
         addParentMetadataToDefaultItem() {
-            const parent_metadata = getCustomMetadata(this.parent.metadata);
+            const parent_metadata = getCustomProperties(this.parent.metadata);
 
-            const formatted_metadata = transformCustomMetadataForItemCreation(parent_metadata);
+            const formatted_metadata = transformCustomPropertiesForItemCreation(parent_metadata);
             if (formatted_metadata.length > 0) {
                 this.item.metadata = formatted_metadata;
             }

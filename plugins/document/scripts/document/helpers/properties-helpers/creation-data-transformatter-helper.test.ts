@@ -18,14 +18,14 @@
  */
 
 import {
-    transformCustomMetadataForItemCreation,
-    transformItemMetadataForCreation,
+    transformCustomPropertiesForItemCreation,
+    transformItemPropertiesForCreation,
 } from "./creation-data-transformatter-helper";
 import type { Folder, Item } from "../../type";
-import type { Metadata, ListValue } from "../../store/metadata/module";
+import type { Property, ListValue } from "../../store/metadata/module";
 
-describe("creation metadata transformer", () => {
-    it("Given an existing document, then the default status metadata is the parent one", () => {
+describe("creation properties transformer", () => {
+    it("Given an existing document, then the default status property is the parent one", () => {
         const item = {
             id: 7,
             type: "file",
@@ -44,11 +44,11 @@ describe("creation metadata transformer", () => {
                 {
                     short_name: "status",
                     list_value: list_value,
-                } as Metadata,
+                } as Property,
             ],
         } as Folder;
 
-        transformItemMetadataForCreation(item, parent, true);
+        transformItemPropertiesForCreation(item, parent, true);
 
         expect(item.status).toEqual("rejected");
     });
@@ -72,28 +72,28 @@ describe("creation metadata transformer", () => {
                 {
                     short_name: "status",
                     list_value: list_value,
-                } as Metadata,
+                } as Property,
             ],
         } as Folder;
 
-        transformItemMetadataForCreation(item, parent, false);
+        transformItemPropertiesForCreation(item, parent, false);
 
         expect(item.status).toEqual(undefined);
     });
 
-    it("Given parent has no metadata then it returns an empty array", () => {
-        const parent_metadata: Array<Metadata> = [];
+    it("Given parent has no properties then it returns an empty array", () => {
+        const parent_properties: Array<Property> = [];
 
-        const formatted_result = transformCustomMetadataForItemCreation(parent_metadata);
+        const formatted_result = transformCustomPropertiesForItemCreation(parent_properties);
 
         expect(formatted_result).toEqual([]);
     });
 
     it(`Given parent has a text value,
-        then the formatted metadata is bound to value`, () => {
-        const parent_metadata: Array<Metadata> = [
+        then the formatted property is bound to value`, () => {
+        const parent_properties: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 name: "field_1",
                 value: "value",
                 type: "text",
@@ -106,9 +106,9 @@ describe("creation metadata transformer", () => {
             },
         ];
 
-        const expected_list: Array<Metadata> = [
+        const expected_list: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 type: "text",
                 name: "field_1",
                 is_multiple_value_allowed: false,
@@ -121,16 +121,16 @@ describe("creation metadata transformer", () => {
             },
         ];
 
-        const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
+        const formatted_list = transformCustomPropertiesForItemCreation(parent_properties);
 
         expect(expected_list).toEqual(formatted_list);
     });
 
     it(`Given parent has a string value,
-        then the formatted metadata is bound to value`, () => {
-        const parent_metadata: Array<Metadata> = [
+        then the formatted property is bound to value`, () => {
+        const parent_properties: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 name: "field_1",
                 value: "value",
                 type: "string",
@@ -143,9 +143,9 @@ describe("creation metadata transformer", () => {
             },
         ];
 
-        const expected_list: Array<Metadata> = [
+        const expected_list: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 type: "string",
                 name: "field_1",
                 is_multiple_value_allowed: false,
@@ -158,13 +158,13 @@ describe("creation metadata transformer", () => {
             },
         ];
 
-        const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
+        const formatted_list = transformCustomPropertiesForItemCreation(parent_properties);
 
         expect(expected_list).toEqual(formatted_list);
     });
 
     it(`Given parent has a single list value,
-        then the formatted metadata is bound to value`, () => {
+        then the formatted property is bound to value`, () => {
         const list_value: Array<ListValue> = [
             {
                 id: 110,
@@ -172,9 +172,9 @@ describe("creation metadata transformer", () => {
             } as ListValue,
         ];
 
-        const parent_metadata: Array<Metadata> = [
+        const parent_properties: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 name: "field_1",
                 list_value: list_value,
                 is_multiple_value_allowed: false,
@@ -187,9 +187,9 @@ describe("creation metadata transformer", () => {
             },
         ];
 
-        const expected_list: Array<Metadata> = [
+        const expected_list: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 type: "list",
                 name: "field_1",
                 is_multiple_value_allowed: false,
@@ -202,16 +202,16 @@ describe("creation metadata transformer", () => {
             },
         ];
 
-        const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
+        const formatted_list = transformCustomPropertiesForItemCreation(parent_properties);
 
         expect(expected_list).toEqual(formatted_list);
     });
 
     it(`Given parent has a list with single value, and given list value is null,
-        then the formatted metadata is bound to none`, () => {
-        const parent_metadata: Array<Metadata> = [
+        then the formatted property is bound to none`, () => {
+        const parent_properties: Array<Property> = [
             {
-                short_name: "custom list metadata",
+                short_name: "custom list property",
                 name: "field_1",
                 list_value: [],
                 is_multiple_value_allowed: false,
@@ -224,9 +224,9 @@ describe("creation metadata transformer", () => {
             },
         ];
 
-        const expected_list: Array<Metadata> = [
+        const expected_list: Array<Property> = [
             {
-                short_name: "custom list metadata",
+                short_name: "custom list property",
                 type: "list",
                 name: "field_1",
                 is_multiple_value_allowed: false,
@@ -239,13 +239,13 @@ describe("creation metadata transformer", () => {
             },
         ];
 
-        const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
+        const formatted_list = transformCustomPropertiesForItemCreation(parent_properties);
 
         expect(expected_list).toEqual(formatted_list);
     });
 
     it(`Given parent has a multiple list
-        then the formatted metadata only keeps list ids`, () => {
+        then the formatted property only keeps list ids`, () => {
         const list_value: Array<ListValue> = [
             {
                 id: 110,
@@ -257,9 +257,9 @@ describe("creation metadata transformer", () => {
             } as ListValue,
         ];
 
-        const parent_metadata: Array<Metadata> = [
+        const parent_properties: Array<Property> = [
             {
-                short_name: "custom list metadata",
+                short_name: "custom list property",
                 name: "field_1",
                 list_value: list_value,
                 is_multiple_value_allowed: true,
@@ -272,9 +272,9 @@ describe("creation metadata transformer", () => {
             },
         ];
 
-        const expected_list: Array<Metadata> = [
+        const expected_list: Array<Property> = [
             {
-                short_name: "custom list metadata",
+                short_name: "custom list property",
                 type: "list",
                 name: "field_1",
                 is_multiple_value_allowed: true,
@@ -287,16 +287,16 @@ describe("creation metadata transformer", () => {
             },
         ];
 
-        const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
+        const formatted_list = transformCustomPropertiesForItemCreation(parent_properties);
 
         expect(expected_list).toEqual(formatted_list);
     });
 
     it(`Given parent has a multiple list without any value
-        then the formatted metadata should have the 100 id`, () => {
-        const parent_metadata: Array<Metadata> = [
+        then the formatted property should have the 100 id`, () => {
+        const parent_properties: Array<Property> = [
             {
-                short_name: "custom list metadata",
+                short_name: "custom list property",
                 name: "field_1",
                 list_value: [],
                 is_multiple_value_allowed: true,
@@ -309,9 +309,9 @@ describe("creation metadata transformer", () => {
             },
         ];
 
-        const expected_list: Array<Metadata> = [
+        const expected_list: Array<Property> = [
             {
-                short_name: "custom list metadata",
+                short_name: "custom list property",
                 type: "list",
                 name: "field_1",
                 is_multiple_value_allowed: true,
@@ -324,15 +324,15 @@ describe("creation metadata transformer", () => {
             },
         ];
 
-        const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
+        const formatted_list = transformCustomPropertiesForItemCreation(parent_properties);
 
         expect(expected_list).toEqual(formatted_list);
     });
     it(`Given parent has a date value,
-        then the formatted date metadata is bound to value with the formatted date`, () => {
-        const parent_metadata: Array<Metadata> = [
+        then the formatted date property is bound to value with the formatted date`, () => {
+        const parent_properties: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 name: "field_1",
                 value: "2019-08-30T00:00:00+02:00",
                 type: "date",
@@ -345,9 +345,9 @@ describe("creation metadata transformer", () => {
             },
         ];
 
-        const expected_list: Array<Metadata> = [
+        const expected_list: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 type: "date",
                 name: "field_1",
                 is_multiple_value_allowed: false,
@@ -360,15 +360,15 @@ describe("creation metadata transformer", () => {
             },
         ];
 
-        const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
+        const formatted_list = transformCustomPropertiesForItemCreation(parent_properties);
 
         expect(expected_list).toEqual(formatted_list);
     });
     it(`Given parent does not have a date value,
-        then the formatted date metadata is bound to value with empty string`, () => {
-        const parent_metadata: Array<Metadata> = [
+        then the formatted date property is bound to value with empty string`, () => {
+        const parent_properties: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 name: "field_1",
                 value: null,
                 type: "date",
@@ -381,9 +381,9 @@ describe("creation metadata transformer", () => {
             },
         ];
 
-        const expected_list: Array<Metadata> = [
+        const expected_list: Array<Property> = [
             {
-                short_name: "custom metadata",
+                short_name: "custom property",
                 type: "date",
                 name: "field_1",
                 is_multiple_value_allowed: false,
@@ -396,7 +396,7 @@ describe("creation metadata transformer", () => {
             },
         ];
 
-        const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
+        const formatted_list = transformCustomPropertiesForItemCreation(parent_properties);
 
         expect(expected_list).toEqual(formatted_list);
     });
