@@ -1,7 +1,7 @@
 <!--
-  - Copyright (c) Enalean 2022 -  Present. All Rights Reserved.
+  - Copyright (c) Enalean, 2022 - present. All Rights Reserved.
   -
-  -  This file is a part of Tuleap.
+  - This file is a part of Tuleap.
   -
   - Tuleap is free software; you can redistribute it and/or modify
   - it under the terms of the GNU General Public License as published by
@@ -19,22 +19,16 @@
   -->
 
 <template>
-    <tbody>
-        <tr>
-            <td
-                v-bind:colspan="nb_columns"
-                class="tlp-table-cell-empty"
-                data-test="search-results-table-body-empty"
-                v-translate
-            >
-                No matching results
-            </td>
-        </tr>
-    </tbody>
+    <td>
+        <user-badge v-bind:user="item.owner" />
+    </td>
 </template>
 
 <script setup lang="ts">
-defineProps<{ nb_columns: number }>();
+import UserBadge from "../../../User/UserBadge.vue";
+import type { ItemSearchResult } from "../../../../type";
+
+defineProps<{ item: ItemSearchResult }>();
 </script>
 
 <script lang="ts">

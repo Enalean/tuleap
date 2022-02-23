@@ -126,6 +126,11 @@ class DocumentTreePresenter
      * @psalm-readonly
      */
     public $criteria;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $columns;
 
     public string $project_icon;
 
@@ -142,6 +147,7 @@ class DocumentTreePresenter
         HistoryEnforcementSettings $history_settings,
         array $project_flags,
         array $criteria,
+        array $columns,
     ) {
         $this->project_id                         = $project->getID();
         $this->root_id                            = $root_id;
@@ -169,5 +175,6 @@ class DocumentTreePresenter
         $this->project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
         $this->project_icon  = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint());
         $this->criteria      = json_encode($criteria, JSON_THROW_ON_ERROR);
+        $this->columns       = json_encode($columns, JSON_THROW_ON_ERROR);
     }
 }

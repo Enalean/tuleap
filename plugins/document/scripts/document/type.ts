@@ -348,3 +348,10 @@ export interface SearchBodyRest {
     readonly global_search?: string;
     readonly properties?: ListOfSearchBodyProperties;
 }
+
+interface SearchResultColumnDefinition {
+    readonly name: string;
+    readonly label: string;
+}
+
+export type ListOfSearchResultColumnDefinition = ReadonlyArray<SearchResultColumnDefinition>;

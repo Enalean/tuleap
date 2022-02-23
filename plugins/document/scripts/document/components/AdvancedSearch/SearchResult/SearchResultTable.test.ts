@@ -25,6 +25,8 @@ import TableBodyEmpty from "./TableBodyEmpty.vue";
 import TableBodyResults from "./TableBodyResults.vue";
 import type { ItemSearchResult, SearchResult } from "../../../type";
 import SearchResultPagination from "./SearchResultPagination.vue";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { ConfigurationState } from "../../../store/configuration";
 
 describe("SearchResultTable", () => {
     it("should display skeleton while loading", () => {
@@ -33,6 +35,15 @@ describe("SearchResultTable", () => {
             propsData: {
                 is_loading: true,
                 results: null,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: {
+                            columns: [],
+                        } as unknown as ConfigurationState,
+                    },
+                }),
             },
         });
 
@@ -54,6 +65,15 @@ describe("SearchResultTable", () => {
                     items: [],
                 } as SearchResult,
             },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: {
+                            columns: [],
+                        } as unknown as ConfigurationState,
+                    },
+                }),
+            },
         });
 
         expect(wrapper.findComponent(TableBodySkeleton).exists()).toBe(false);
@@ -73,6 +93,15 @@ describe("SearchResultTable", () => {
                     total: 172,
                     items: [{} as ItemSearchResult],
                 } as SearchResult,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: {
+                            columns: [],
+                        } as unknown as ConfigurationState,
+                    },
+                }),
             },
         });
 

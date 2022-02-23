@@ -21,24 +21,38 @@
 <template>
     <tbody>
         <tr v-for="i in 3" v-bind:key="i">
-            <td class="tlp-table-cell-numeric"><span class="tlp-skeleton-text"></span></td>
-            <td class="document-search-result-icon">
-                <i class="fas fa-file-alt tlp-skeleton-icon" aria-hidden="true"></i>
-            </td>
-            <td><span class="tlp-skeleton-text"></span></td>
-            <td><span class="tlp-skeleton-text"></span></td>
-            <td>
-                <i class="fas fa-user tlp-skeleton-icon" aria-hidden="true"></i>
-                <span class="tlp-skeleton-text"></span>
-            </td>
-            <td><span class="tlp-skeleton-text"></span></td>
-            <td><span class="tlp-skeleton-text"></span></td>
+            <template v-for="column of columns">
+                <td
+                    v-if="column.name === 'title'"
+                    class="document-search-result-icon"
+                    v-bind:key="'document-search-result-' + column.name + '-icon-skeleton'"
+                >
+                    <i class="fas fa-file-alt tlp-skeleton-icon" aria-hidden="true"></i>
+                </td>
+                <td
+                    v-bind:class="{ 'tlp-table-cell-numeric': column.name === 'id' }"
+                    v-bind:key="'document-search-result-' + column.name + '-skeleton'"
+                >
+                    <i
+                        class="fas fa-user tlp-skeleton-icon"
+                        aria-hidden="true"
+                        v-if="column.name === 'owner'"
+                    ></i>
+                    <span class="tlp-skeleton-text"></span>
+                </td>
+            </template>
         </tr>
     </tbody>
 </template>
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 
-@Component
-export default class TableBodySkeleton extends Vue {}
+<script setup lang="ts">
+import type { ListOfSearchResultColumnDefinition } from "../../../type";
+
+defineProps<{ columns: ListOfSearchResultColumnDefinition }>();
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

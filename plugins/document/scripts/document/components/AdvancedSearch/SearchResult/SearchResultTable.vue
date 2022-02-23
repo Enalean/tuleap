@@ -24,18 +24,30 @@
             <table class="tlp-table document-search-table">
                 <thead>
                     <tr>
-                        <th class="tlp-table-cell-numeric" v-translate>Id</th>
-                        <th class="document-search-result-icon"></th>
-                        <th v-translate>Title</th>
-                        <th v-translate>Description</th>
-                        <th v-translate>Owner</th>
-                        <th v-translate>Update date</th>
-                        <th v-translate>Location</th>
+                        <template v-for="column of columns">
+                            <th
+                                v-if="column.name === 'title'"
+                                class="document-search-result-icon"
+                                v-bind:key="
+                                    'document-search-result-' + column.name + '-icon-header'
+                                "
+                            ></th>
+                            <th
+                                v-bind:class="{ 'tlp-table-cell-numeric': column.name === 'id' }"
+                                v-bind:key="'document-search-result-' + column.name + '-header'"
+                            >
+                                {{ column.label }}
+                            </th>
+                        </template>
                     </tr>
                 </thead>
-                <table-body-skeleton v-if="is_loading" />
-                <table-body-results v-else-if="items.length > 0" v-bind:results="items" />
-                <table-body-empty v-else />
+                <table-body-skeleton v-if="is_loading" v-bind:columns="columns" />
+                <table-body-results
+                    v-else-if="items.length > 0"
+                    v-bind:results="items"
+                    v-bind:columns="columns"
+                />
+                <table-body-empty v-else v-bind:nb_columns="nb_columns" />
             </table>
         </div>
         <search-result-pagination
@@ -47,8 +59,7 @@
         />
     </fragment>
 </template>
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
 import TableBodySkeleton from "./TableBodySkeleton.vue";
 import TableBodyEmpty from "./TableBodyEmpty.vue";
 import type { ItemSearchResult, SearchResult } from "../../../type";
@@ -56,29 +67,29 @@ import { SEARCH_LIMIT } from "../../../type";
 import TableBodyResults from "./TableBodyResults.vue";
 import SearchResultPagination from "./SearchResultPagination.vue";
 import { Fragment } from "vue-frag";
+import { computed, ref } from "@vue/composition-api";
+import { useState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
 
-@Component({
-    components: {
-        SearchResultPagination,
-        TableBodyResults,
-        TableBodyEmpty,
-        TableBodySkeleton,
-        Fragment,
-    },
-})
-export default class SearchResultTable extends Vue {
-    @Prop({ required: true })
-    readonly is_loading!: boolean;
+const props = defineProps<{ is_loading: boolean; results: SearchResult | null }>();
 
-    @Prop({ required: true })
-    readonly results!: SearchResult | null;
+const limit = ref(SEARCH_LIMIT);
 
-    get limit(): number {
-        return SEARCH_LIMIT;
-    }
+const { columns } = useState<Pick<ConfigurationState, "columns">>("configuration", ["columns"]);
 
-    get items(): ReadonlyArray<ItemSearchResult> {
-        return this.results?.items || [];
-    }
-}
+const nb_columns = computed((): number => {
+    let nb_extra_columns = columns.value.some((column) => column.name === "title") ? 1 : 0;
+
+    return columns.value.length + nb_extra_columns;
+});
+
+const items = computed((): ReadonlyArray<ItemSearchResult> => {
+    return props.results?.items || [];
+});
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

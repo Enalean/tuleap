@@ -19,233 +19,38 @@
 
 import { shallowMount } from "@vue/test-utils";
 import TableBodyResultRow from "./TableBodyResultRow.vue";
-import type { ConfigurationState } from "../../../store/configuration";
-import type { FileProperties, ItemSearchResult, User } from "../../../type";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { ItemSearchResult } from "../../../type";
 import localVue from "../../../helpers/local-vue";
+import CellId from "./Cells/CellId.vue";
+import CellTitle from "./Cells/CellTitle.vue";
+import CellDescription from "./Cells/CellDescription.vue";
+import CellOwner from "./Cells/CellOwner.vue";
+import CellUpdateDate from "./Cells/CellUpdateDate.vue";
+import CellLocation from "./Cells/CellLocation.vue";
 
 describe("TableBodyResultRow", () => {
-    it("should display an item as a table row", () => {
-        const owner: User = {
-            id: 102,
-            uri: "users/102",
-        } as unknown as User;
+    it.each([
+        ["id", CellId],
+        ["title", CellTitle],
+        ["description", CellDescription],
+        ["owner", CellOwner],
+        ["update_date", CellUpdateDate],
+        ["location", CellLocation],
+    ])(
+        "when wanted column is %s then matching component should be %s",
+        (name, expected_component) => {
+            const wrapper = shallowMount(TableBodyResultRow, {
+                localVue,
+                propsData: {
+                    item: {
+                        id: 123,
+                    } as ItemSearchResult,
+                    columns: [{ name, label: "Whatever" }],
+                },
+            });
 
-        const wrapper = shallowMount(TableBodyResultRow, {
-            localVue,
-            propsData: {
-                item: {
-                    id: 123,
-                    type: "folder",
-                    title: "Lorem",
-                    post_processed_description: "ipsum doloret",
-                    owner,
-                    last_update_date: "2021-10-06",
-                    parents: [
-                        {
-                            id: 120,
-                            title: "Path",
-                        },
-                        {
-                            id: 121,
-                            title: "To",
-                        },
-                        {
-                            id: 122,
-                            title: "Folder",
-                        },
-                    ],
-                    file_properties: null,
-                } as ItemSearchResult,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            date_time_format: "Y-m-d H:i",
-                            relative_dates_display: "relative_first-absolute_shown",
-                            user_locale: "en_US",
-                            project_id: 101,
-                        } as unknown as ConfigurationState,
-                    },
-                }),
-            },
-            stubs: {
-                "tlp-relative-date": true,
-            },
-        });
-
-        expect(wrapper).toMatchSnapshot();
-    });
-
-    it("should output a link for File", () => {
-        const owner: User = {
-            id: 102,
-            uri: "users/102",
-        } as unknown as User;
-
-        const wrapper = shallowMount(TableBodyResultRow, {
-            localVue,
-            propsData: {
-                item: {
-                    id: 123,
-                    type: "file",
-                    title: "Lorem",
-                    post_processed_description: "ipsum doloret",
-                    owner,
-                    last_update_date: "2021-10-06",
-                    parents: [
-                        {
-                            id: 120,
-                            title: "Path",
-                        },
-                        {
-                            id: 121,
-                            title: "To",
-                        },
-                        {
-                            id: 122,
-                            title: "Folder",
-                        },
-                    ],
-                    file_properties: {
-                        file_type: "text/html",
-                        download_href: "/path/to/file",
-                    } as FileProperties,
-                } as ItemSearchResult,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            date_time_format: "Y-m-d H:i",
-                            relative_dates_display: "relative_first-absolute_shown",
-                            user_locale: "en_US",
-                            project_id: 101,
-                        } as unknown as ConfigurationState,
-                    },
-                }),
-            },
-            stubs: {
-                "tlp-relative-date": true,
-            },
-        });
-
-        const link = wrapper.find("[data-test=link]");
-        expect(link.attributes().href).toBe("/path/to/file");
-    });
-
-    it("should output a link for Wiki", () => {
-        const owner: User = {
-            id: 102,
-            uri: "users/102",
-        } as unknown as User;
-
-        const wrapper = shallowMount(TableBodyResultRow, {
-            localVue,
-            propsData: {
-                item: {
-                    id: 123,
-                    type: "wiki",
-                    title: "Lorem",
-                    post_processed_description: "ipsum doloret",
-                    owner,
-                    last_update_date: "2021-10-06",
-                    parents: [
-                        {
-                            id: 120,
-                            title: "Path",
-                        },
-                        {
-                            id: 121,
-                            title: "To",
-                        },
-                        {
-                            id: 122,
-                            title: "Folder",
-                        },
-                    ],
-                    file_properties: null,
-                } as ItemSearchResult,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            date_time_format: "Y-m-d H:i",
-                            relative_dates_display: "relative_first-absolute_shown",
-                            user_locale: "en_US",
-                            project_id: 101,
-                        } as unknown as ConfigurationState,
-                    },
-                }),
-            },
-            stubs: {
-                "tlp-relative-date": true,
-            },
-        });
-
-        const link = wrapper.find("[data-test=link]");
-        expect(link.attributes().href).toBe("/plugins/docman/?group_id=101&action=show&id=123");
-    });
-
-    it("should output a route link for Embedded", () => {
-        const owner: User = {
-            id: 102,
-            uri: "users/102",
-        } as unknown as User;
-
-        const wrapper = shallowMount(TableBodyResultRow, {
-            localVue,
-            propsData: {
-                item: {
-                    id: 123,
-                    type: "embedded",
-                    title: "Lorem",
-                    post_processed_description: "ipsum doloret",
-                    owner,
-                    last_update_date: "2021-10-06",
-                    parents: [
-                        {
-                            id: 120,
-                            title: "Path",
-                        },
-                        {
-                            id: 121,
-                            title: "To",
-                        },
-                        {
-                            id: 122,
-                            title: "Folder",
-                        },
-                    ],
-                    file_properties: null,
-                } as ItemSearchResult,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            date_time_format: "Y-m-d H:i",
-                            relative_dates_display: "relative_first-absolute_shown",
-                            user_locale: "en_US",
-                            project_id: 101,
-                        } as unknown as ConfigurationState,
-                    },
-                }),
-            },
-            stubs: {
-                "tlp-relative-date": true,
-            },
-        });
-
-        const link = wrapper.find("[data-test=router-link]");
-        expect(link.props().to).toStrictEqual({
-            name: "item",
-            params: {
-                folder_id: "120",
-                item_id: "123",
-            },
-        });
-    });
+            expect(wrapper.findComponent(expected_component).exists()).toBe(true);
+            expect(wrapper.element.children.length).toBe(1);
+        }
+    );
 });
