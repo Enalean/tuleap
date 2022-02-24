@@ -39,7 +39,7 @@
                 v-if="is_obsolescence_date_property_used"
                 v-model="obsolescence_date_value"
             />
-            <custom-property v-bind:item-property="currentlyUpdatedItem.metadata" />
+            <custom-property v-bind:item-property="currentlyUpdatedItem.properties" />
         </template>
     </div>
 </template>
@@ -68,7 +68,7 @@ export default {
         has_properties_to_create() {
             return (
                 this.is_obsolescence_date_property_used ||
-                this.currentlyUpdatedItem.metadata !== null
+                this.currentlyUpdatedItem.properties !== null
             );
         },
         obsolescence_date_value: {

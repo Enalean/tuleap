@@ -41,7 +41,7 @@ describe("transformFolderPropertiesForRecursionAtUpdate", () => {
         const item: Folder = {
             id: 7,
             type: "folder",
-            metadata: [property],
+            properties: [property],
         } as Folder;
 
         const item_to_update: Folder = {
@@ -64,7 +64,7 @@ describe("transformDocumentPropertiesForUpdate", () => {
                 value: "Open",
             } as ListValue,
         ];
-        const property: Array<Property> = [
+        const properties: Array<Property> = [
             {
                 short_name: "status",
                 list_value: list_value,
@@ -74,7 +74,7 @@ describe("transformDocumentPropertiesForUpdate", () => {
         const item: ItemFile = {
             id: 7,
             type: "file",
-            metadata: property,
+            properties,
         } as unknown as ItemFile;
 
         transformDocumentPropertiesForUpdate(item, true);
@@ -89,7 +89,7 @@ describe("transformDocumentPropertiesForUpdate", () => {
                 value: "Open",
             } as ListValue,
         ];
-        const property: Array<Property> = [
+        const properties: Array<Property> = [
             {
                 short_name: "status",
                 list_value: list_value,
@@ -99,7 +99,7 @@ describe("transformDocumentPropertiesForUpdate", () => {
         const item: ItemFile = {
             id: 7,
             type: "file",
-            metadata: property,
+            properties,
         } as unknown as ItemFile;
 
         transformDocumentPropertiesForUpdate(item, false);
@@ -351,7 +351,7 @@ describe("formatCustomPropertiesForFolderUpdate", () => {
         ];
         const item_to_update: Folder = {
             id: 1,
-            metadata: parent_properties,
+            properties: parent_properties,
         } as Folder;
 
         const properties_to_update = ["field_2", "field_4"];
@@ -359,7 +359,7 @@ describe("formatCustomPropertiesForFolderUpdate", () => {
 
         const expected_item_to_update = {
             id: 1,
-            metadata: [
+            properties: [
                 { short_name: "field_1", recursion: "none" },
                 { short_name: "field_2", recursion: "folders" },
                 { short_name: "field_3", recursion: "none" },

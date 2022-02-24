@@ -40,7 +40,7 @@ describe("creation properties transformer", () => {
         const parent = {
             id: 7,
             type: "folder",
-            metadata: [
+            properties: [
                 {
                     short_name: "status",
                     list_value: list_value,
@@ -68,7 +68,7 @@ describe("creation properties transformer", () => {
         const parent = {
             id: 7,
             type: "folder",
-            metadata: [
+            properties: [
                 {
                     short_name: "status",
                     list_value: list_value,

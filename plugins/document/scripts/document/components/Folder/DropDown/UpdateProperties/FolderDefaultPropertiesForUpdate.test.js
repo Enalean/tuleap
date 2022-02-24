@@ -57,7 +57,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
 
             default_property({
                 currentlyUpdatedItem: {
-                    metadata: [],
+                    properties: [],
                     status: 100,
                     type: TYPE_FILE,
                     title: "title",
@@ -72,7 +72,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
             Then it displays spinner`, async () => {
             const wrapper = default_property({
                 currentlyUpdatedItem: {
-                    metadata: [],
+                    properties: [],
                     status: 100,
                     type: TYPE_FILE,
                     title: "title",
@@ -114,7 +114,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                     owner: {
                         id: 102,
                     },
-                    metadata: [
+                    properties: [
                         {
                             short_name: "status",
                             list_value: [
@@ -152,7 +152,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                     owner: {
                         id: 102,
                     },
-                    metadata: [
+                    properties: [
                         {
                             short_name: "field_",
                             list_value: [
@@ -186,7 +186,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                     owner: {
                         id: 102,
                     },
-                    metadata: null,
+                    properties: null,
                 },
                 itemProperty: [],
             });
@@ -214,7 +214,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                     owner: {
                         id: 102,
                     },
-                    metadata: [
+                    properties: [
                         {
                             short_name: "field_",
                             list_value: [
@@ -257,7 +257,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                     owner: {
                         id: 102,
                     },
-                    metadata: [
+                    properties: [
                         {
                             short_name: "field_",
                             list_value: [
@@ -308,7 +308,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                     owner: {
                         id: 102,
                     },
-                    metadata: [
+                    properties: [
                         {
                             short_name: "field_1",
                             list_value: [
@@ -385,7 +385,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                     owner: {
                         id: 102,
                     },
-                    metadata: [
+                    properties: [
                         {
                             short_name: "field_1",
                             list_value: [
@@ -457,7 +457,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                     owner: {
                         id: 102,
                     },
-                    metadata: [
+                    properties: [
                         {
                             short_name: "field_1",
                             list_value: [

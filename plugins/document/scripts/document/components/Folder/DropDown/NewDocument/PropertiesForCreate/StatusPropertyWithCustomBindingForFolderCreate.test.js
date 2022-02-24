@@ -57,7 +57,7 @@ describe("StatusPropertyWithCustomBindingForFolderCreate", () => {
             },
             parent: {
                 id: 40,
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [
@@ -86,7 +86,7 @@ describe("StatusPropertyWithCustomBindingForFolderCreate", () => {
             },
             parent: {
                 id: 40,
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [
@@ -115,7 +115,7 @@ describe("StatusPropertyWithCustomBindingForFolderCreate", () => {
             },
             parent: {
                 id: 40,
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [
@@ -136,7 +136,7 @@ describe("StatusPropertyWithCustomBindingForFolderCreate", () => {
     it(`Given status value is updated Then the props used for document creation is updated`, () => {
         const wrapper = status_property({
             currentlyUpdatedItem: {
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [
@@ -152,7 +152,7 @@ describe("StatusPropertyWithCustomBindingForFolderCreate", () => {
             },
             parent: {
                 id: 40,
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [

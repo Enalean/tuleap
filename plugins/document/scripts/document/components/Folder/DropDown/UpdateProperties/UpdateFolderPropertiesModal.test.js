@@ -37,7 +37,7 @@ describe("UpdateFolderPropertiesModal", () => {
                 current_folder: {
                     id: 42,
                     title: "My current folder",
-                    metadata: [
+                    properties: [
                         {
                             short_name: "title",
                             name: "title",
@@ -82,7 +82,7 @@ describe("UpdateFolderPropertiesModal", () => {
             const item = {
                 id: 7,
                 type: "folder",
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [
@@ -106,7 +106,7 @@ describe("UpdateFolderPropertiesModal", () => {
             const item = {
                 id: 7,
                 type: "folder",
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [
@@ -146,7 +146,7 @@ describe("UpdateFolderPropertiesModal", () => {
         const item = {
             id: 7,
             type: "folder",
-            metadata: [
+            properties: [
                 {
                     short_name: "status",
                     list_value: [

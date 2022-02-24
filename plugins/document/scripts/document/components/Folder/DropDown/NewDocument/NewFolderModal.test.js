@@ -38,7 +38,7 @@ describe("NewFolderModal", () => {
                 current_folder: {
                     id: 42,
                     title: "My current folder",
-                    metadata: [
+                    properties: [
                         {
                             short_name: "title",
                             name: "title",
@@ -104,7 +104,7 @@ describe("NewFolderModal", () => {
 
     it("inherit default values from parent properties", () => {
         const folder_to_create = {
-            metadata: [
+            properties: [
                 {
                     short_name: "custom property",
                     name: "custom",
@@ -123,6 +123,6 @@ describe("NewFolderModal", () => {
         emitter.emit("show-new-folder-modal", {
             detail: { parent: store.state.current_folder },
         });
-        expect(wrapper.vm.item.metadata).toEqual(folder_to_create.metadata);
+        expect(wrapper.vm.item.properties).toEqual(folder_to_create.properties);
     });
 });

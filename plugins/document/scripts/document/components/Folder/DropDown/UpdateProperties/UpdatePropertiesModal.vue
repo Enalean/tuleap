@@ -94,11 +94,11 @@ export default {
         },
         obsolescence_date_value: {
             get() {
-                if (!this.item.metadata) {
+                if (!this.item.properties) {
                     return "";
                 }
 
-                const obsolescence_date = this.item.metadata.find(
+                const obsolescence_date = this.item.properties.find(
                     (property) => property.short_name === "obsolescence_date"
                 );
 
@@ -131,7 +131,7 @@ export default {
     mounted() {
         this.modal = createModal(this.$el);
 
-        this.formatted_item_properties = getCustomProperties(this.item.metadata);
+        this.formatted_item_properties = getCustomProperties(this.item.properties);
         transformCustomPropertiesForItemUpdate(this.formatted_item_properties);
 
         this.registerEvents();
@@ -155,7 +155,7 @@ export default {
             this.is_loading = true;
             this.$store.commit("error/resetModalError");
 
-            this.item_to_update.metadata = this.formatted_item_properties;
+            this.item_to_update.properties = this.formatted_item_properties;
             await this.$store.dispatch("properties/updateProperties", {
                 item: this.item,
                 item_to_update: this.item_to_update,

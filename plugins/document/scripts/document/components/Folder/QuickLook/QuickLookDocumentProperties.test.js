@@ -61,7 +61,7 @@ describe("QuickLookDocumentProperties", () => {
             owner: {
                 id: 102,
             },
-            metadata: [
+            properties: [
                 { title: "custom", short_name: "custom property" },
                 { title: "other", short_name: "other property" },
             ],
@@ -83,7 +83,7 @@ describe("QuickLookDocumentProperties", () => {
             owner: {
                 id: 102,
             },
-            metadata: [{ title: "title document", short_name: "title" }],
+            properties: [{ title: "title document", short_name: "title" }],
             creation_date: "2019-06-25T16:56:22+04:00",
         };
 
@@ -103,7 +103,7 @@ describe("QuickLookDocumentProperties", () => {
                 id: 102,
             },
             approval_table: null,
-            metadata: [{ title: "title document", short_name: "title" }],
+            properties: [{ title: "title document", short_name: "title" }],
         };
 
         const wrapper = properties_factory({ item });
@@ -124,7 +124,7 @@ describe("QuickLookDocumentProperties", () => {
                 file_size: 123456,
             },
             creation_date: "2019-06-25T16:56:22+04:00",
-            metadata: [],
+            properties: [],
         };
 
         const wrapper = properties_factory({ item });
@@ -144,7 +144,7 @@ describe("QuickLookDocumentProperties", () => {
                 approval_state: "Approved",
             },
             creation_date: "2019-06-25T16:56:22+04:00",
-            metadata: [],
+            properties: [],
         };
 
         const wrapper = properties_factory({ item });
@@ -164,7 +164,7 @@ describe("QuickLookDocumentProperties", () => {
             },
             approval_table: null,
             creation_date: "2019-06-25T16:56:22+04:00",
-            metadata: [],
+            properties: [],
         };
 
         const wrapper = properties_factory({ item });

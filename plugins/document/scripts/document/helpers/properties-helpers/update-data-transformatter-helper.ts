@@ -31,7 +31,7 @@ import type { Property } from "../../store/properties/module";
 export function transformFolderPropertiesForRecursionAtUpdate(item: Folder): Folder {
     const folder_to_update = JSON.parse(JSON.stringify(item));
 
-    if (!folder_to_update.metadata) {
+    if (!folder_to_update.properties) {
         folder_to_update.status = {
             value: "none",
             recursion: "none",
@@ -40,7 +40,7 @@ export function transformFolderPropertiesForRecursionAtUpdate(item: Folder): Fol
         return folder_to_update;
     }
 
-    const property = getStatusProperty(folder_to_update.metadata);
+    const property = getStatusProperty(folder_to_update.properties);
     folder_to_update.status = {
         value:
             !property || !property.list_value || !assertListIsOnlyMultipleValue(property.list_value)
@@ -60,7 +60,7 @@ export function transformDocumentPropertiesForUpdate(
         return;
     }
 
-    const property = getStatusProperty(document_to_update.metadata);
+    const property = getStatusProperty(document_to_update.properties);
     if (!property) {
         return;
     }
@@ -96,7 +96,7 @@ export function formatCustomPropertiesForFolderUpdate(
     properties_to_update: Array<string>,
     recursion_option: string
 ): void {
-    item_to_update.metadata.forEach((item_properties) => {
+    item_to_update.properties.forEach((item_properties) => {
         if (properties_to_update.find((short_name) => short_name === item_properties.short_name)) {
             item_properties.recursion = recursion_option;
         } else {

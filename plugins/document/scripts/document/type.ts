@@ -114,12 +114,12 @@ export interface Item {
     user_can_write: boolean;
     can_user_manage: boolean;
     lock_info: LockInfo | null;
-    metadata: Array<Property> | Array<FolderProperty>;
     parent_id: number | null;
     type: string;
     status: string | FolderStatus;
     created?: boolean;
     obsolescence_date: null | number;
+    properties: Array<Property> | Array<FolderProperty>;
 }
 
 export interface FakeItem extends Item {
@@ -135,7 +135,7 @@ export interface Folder extends Item {
     permissions_for_groups: Permissions;
     folder_properties: FolderProperties;
     type: "folder";
-    metadata: Array<FolderProperty>;
+    properties: Array<FolderProperty>;
     status: FolderStatus;
 }
 

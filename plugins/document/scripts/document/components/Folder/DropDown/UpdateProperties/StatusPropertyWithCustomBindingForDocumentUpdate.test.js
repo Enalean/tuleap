@@ -46,7 +46,7 @@ describe("StatusPropertyWithCustomBindingForDocumentUpdate", () => {
     it(`display status selectbox only when status property is enabled for project`, async () => {
         const wrapper = status_property({
             currentlyUpdatedItem: {
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [
@@ -71,7 +71,7 @@ describe("StatusPropertyWithCustomBindingForDocumentUpdate", () => {
     it(`does not display status if property is not available`, () => {
         const wrapper = status_property({
             currentlyUpdatedItem: {
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [
@@ -95,7 +95,7 @@ describe("StatusPropertyWithCustomBindingForDocumentUpdate", () => {
     it(`Given status value is updated Then the props used for document update is updated`, async () => {
         const wrapper = status_property({
             currentlyUpdatedItem: {
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [

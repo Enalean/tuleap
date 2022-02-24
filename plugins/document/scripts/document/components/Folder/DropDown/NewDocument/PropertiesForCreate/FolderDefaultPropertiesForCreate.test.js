@@ -56,7 +56,7 @@ describe("FolderDefaultPropertiesForCreate", () => {
                     owner: {
                         id: 102,
                     },
-                    metadata: [
+                    properties: [
                         {
                             short_name: "status",
                             list_value: [
@@ -93,7 +93,7 @@ describe("FolderDefaultPropertiesForCreate", () => {
                     owner: {
                         id: 102,
                     },
-                    metadata: [
+                    properties: [
                         {
                             short_name: "field_",
                             list_value: [
@@ -129,7 +129,7 @@ describe("FolderDefaultPropertiesForCreate", () => {
                     owner: {
                         id: 102,
                     },
-                    metadata: null,
+                    properties: null,
                 },
             });
 
