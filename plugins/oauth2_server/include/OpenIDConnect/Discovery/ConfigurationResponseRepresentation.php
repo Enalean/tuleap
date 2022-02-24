@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\OpenIDConnect\Discovery;
 
 use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointController;
+use Tuleap\OAuth2ServerCore\AuthorizationServer\AuthorizationEndpointController;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Issuer;
 
 /**

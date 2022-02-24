@@ -51,10 +51,10 @@ use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
 use Tuleap\OAuth2Server\App\OAuth2AppRemover;
-use Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointController;
+use Tuleap\OAuth2ServerCore\AuthorizationServer\AuthorizationEndpointController;
 use Tuleap\OAuth2ServerCore\AuthorizationServer\PKCE\PKCEInformationExtractor;
-use Tuleap\OAuth2Server\AuthorizationServer\PromptParameterValuesExtractor;
-use Tuleap\OAuth2Server\AuthorizationServer\RedirectURIBuilder;
+use Tuleap\OAuth2ServerCore\AuthorizationServer\PromptParameterValuesExtractor;
+use Tuleap\OAuth2ServerCore\AuthorizationServer\RedirectURIBuilder;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 use Tuleap\OAuth2ServerCore\App\PrefixOAuth2ClientSecret;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
@@ -448,7 +448,7 @@ final class oauth2_serverPlugin extends Plugin
             \UserManager::instance(),
             new \Tuleap\OAuth2ServerCore\App\AppFactory(new AppDao(), \ProjectManager::instance()),
             new ScopeExtractor($scope_builder),
-            new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationCodeResponseFactory(
+            new \Tuleap\OAuth2ServerCore\AuthorizationServer\AuthorizationCodeResponseFactory(
                 $response_factory,
                 $this->buildOAuth2AuthorizationCodeCreator(),
                 $redirect_uri_builder,
@@ -487,7 +487,7 @@ final class oauth2_serverPlugin extends Plugin
                 new \Tuleap\OAuth2Server\User\AuthorizationDao(),
                 new \Tuleap\OAuth2Server\User\AuthorizationScopeDao()
             ),
-            new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationCodeResponseFactory(
+            new \Tuleap\OAuth2ServerCore\AuthorizationServer\AuthorizationCodeResponseFactory(
                 $response_factory,
                 $this->buildOAuth2AuthorizationCodeCreator(),
                 new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory()),

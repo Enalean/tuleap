@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AuthorizationServer;
+namespace Tuleap\OAuth2ServerCore\AuthorizationServer;
 
 
 final class PromptParameterValuesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
