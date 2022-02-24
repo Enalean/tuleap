@@ -25,6 +25,7 @@
         <directory name="plugins/program_management/tests/unit/" />
         <directory name="plugins/userlog/tests/unit/" />
         <directory name="plugins/testplan/tests/unit/" />
+        <directory name="plugins/mediawiki_standalone/tests/unit/" />
         <ignoreFiles>
             <directory name="src/common/wiki/phpwiki/"/>
             <directory name="src/www/assets/"/>

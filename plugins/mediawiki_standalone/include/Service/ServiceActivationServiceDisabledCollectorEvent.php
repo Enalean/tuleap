@@ -15,32 +15,34 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\MediawikiStandalone;
+namespace Tuleap\MediawikiStandalone\Service;
 
-final class MediawikiStandaloneService extends \Service
+use Tuleap\Project\Service\ServiceDisabledCollector;
+
+final class ServiceActivationServiceDisabledCollectorEvent implements ServiceActivation
 {
-    public function getIconName(): string
+    public function __construct(private ServiceDisabledCollector $event)
     {
-        return 'fas fa-tlp-mediawiki';
     }
 
-    public function getInternationalizedName(): string
+    public function isForService(string $service_shortname): bool
     {
-        return 'MediaWiki';
+        return $this->event->isForService($service_shortname);
     }
 
-    public function getProjectAdministrationName(): string
+    public function getProject(): \Project
     {
-        return dgettext('tuleap-mediawiki_standalone', 'MediaWiki Standalone');
+        return $this->event->getProject();
     }
 
-    public function getInternationalizedDescription(): string
+    public function cannotBeActivated(string $reason): void
     {
-        return $this->getProjectAdministrationName();
+        $this->event->setIsDisabled($reason);
     }
 }
