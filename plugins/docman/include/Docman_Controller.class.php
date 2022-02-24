@@ -743,6 +743,7 @@ class Docman_Controller extends Controler
                 }
                 break;
             case 'admin_update_love':
+                \Docman_View_Admin_Metadata::getCSRFToken($this->getGroupId())->check();
                 $valid = false;
                 // Required params:
                 // md (string [a-z_]+)
