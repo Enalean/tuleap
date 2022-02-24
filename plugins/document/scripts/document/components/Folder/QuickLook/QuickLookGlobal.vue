@@ -40,7 +40,7 @@
                 v-bind:item="currently_previewed_item"
             />
         </section>
-        <quick-look-document-metadata v-bind:item="currently_previewed_item" />
+        <quick-look-document-properties v-bind:item="currently_previewed_item" />
         <section class="tlp-pane-section" v-if="currently_previewed_item.description">
             <div class="tlp-property">
                 <label class="tlp-label" for="item-description" v-translate>Description</label>
@@ -69,7 +69,7 @@ import {
     TYPE_EMPTY,
 } from "../../../constants";
 import { iconForMimeType } from "../../../helpers/icon-for-mime-type";
-import QuickLookDocumentMetadata from "./QuickLookDocumentMetadata.vue";
+import QuickLookDocumentProperties from "./QuickLookDocumentProperties.vue";
 import QuickLookDocumentPreview from "./QuickLookDocumentPreview.vue";
 import QuickLookItemIsLockedMessage from "./QuickLookItemIsLockedMessage.vue";
 
@@ -78,7 +78,7 @@ export default {
     components: {
         QuickLookItemIsLockedMessage,
         QuickLookDocumentPreview,
-        QuickLookDocumentMetadata,
+        QuickLookDocumentProperties,
     },
     computed: {
         ...mapState(["currently_previewed_item"]),

@@ -24,8 +24,8 @@ import type {
     FolderProperty,
     FolderStatus,
     Property,
-    MetadataState,
-} from "./store/metadata/module";
+    PropertiesState,
+} from "./store/properties/module";
 
 export interface State {
     is_loading_folder: boolean;
@@ -40,7 +40,7 @@ export interface RootState extends State {
     readonly configuration: ConfigurationState;
     error: ErrorState;
     permissions: PermissionsState;
-    metadata: MetadataState;
+    properties: PropertiesState;
 }
 
 export type Direction = "BOTTOM" | "TOP" | "NEXT" | "PREVIOUS";

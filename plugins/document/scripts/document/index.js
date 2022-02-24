@@ -65,9 +65,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const max_archive_size = Number.parseInt(vue_mount_point.dataset.maxArchiveSize, 10);
     const embedded_are_allowed = Boolean(vue_mount_point.dataset.embeddedAreAllowed);
     const is_deletion_allowed = Boolean(vue_mount_point.dataset.userCanDeleteItem);
-    const is_item_status_metadata_used = Boolean(vue_mount_point.dataset.isItemStatusMetadataUsed);
-    const is_obsolescence_date_metadata_used = Boolean(
-        vue_mount_point.dataset.isObsolescenceDateMetadataUsed
+    const is_status_property_used = Boolean(vue_mount_point.dataset.isItemStatusPropertyUsed);
+    const is_obsolescence_date_property_used = Boolean(
+        vue_mount_point.dataset.isObsolescenceDatePropertyUsed
     );
     const is_changelog_proposed_after_dnd = Boolean(
         vue_mount_point.dataset.isChangelogProposedAfterDnd
@@ -105,8 +105,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         user_is_admin,
         user_can_create_wiki,
         embedded_are_allowed,
-        is_item_status_metadata_used,
-        is_obsolescence_date_metadata_used,
+        is_status_property_used,
+        is_obsolescence_date_property_used,
         project_url,
         date_time_format,
         max_files_dragndrop,

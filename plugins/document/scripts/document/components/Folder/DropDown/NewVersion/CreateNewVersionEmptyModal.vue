@@ -65,9 +65,9 @@ import { redirectToUrl } from "../../../../helpers/location-helper";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
-import EmbeddedProperties from "../MetadataForCreateOrUpdate/EmbeddedProperties.vue";
-import LinkProperties from "../MetadataForCreateOrUpdate/LinkProperties.vue";
-import FileProperties from "../MetadataForCreateOrUpdate/FileProperties.vue";
+import EmbeddedProperties from "../PropertiesForCreateOrUpdate/EmbeddedProperties.vue";
+import LinkProperties from "../PropertiesForCreateOrUpdate/LinkProperties.vue";
+import FileProperties from "../PropertiesForCreateOrUpdate/FileProperties.vue";
 import TypeSelectorForEmptyModal from "./TypeSelectorForEmptyModal.vue";
 
 export default {

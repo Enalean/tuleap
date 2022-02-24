@@ -26,7 +26,7 @@ import {
     formatPropertyListMultipleValue,
 } from "./value-transformer/list-value-helper";
 import type { Folder, Item } from "../../type";
-import type { Property } from "../../store/metadata/module";
+import type { Property } from "../../store/properties/module";
 
 export function transformFolderPropertiesForRecursionAtUpdate(item: Folder): Folder {
     const folder_to_update = JSON.parse(JSON.stringify(item));

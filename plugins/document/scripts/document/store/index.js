@@ -31,7 +31,7 @@ import * as actions from "./actions.js";
 import state from "./state.js";
 import error from "./error/module";
 import clipboard from "./clipboard/module";
-import metadata from "./metadata/module";
+import properties from "./properties/module";
 import lock from "./lock/module";
 import preferencies from "./preferencies/module";
 import permissions from "./permissions/module";
@@ -50,7 +50,7 @@ export function createStore(user_id, project_id, configuration_state) {
         modules: {
             error,
             clipboard,
-            metadata,
+            properties,
             lock,
             preferencies,
             permissions,

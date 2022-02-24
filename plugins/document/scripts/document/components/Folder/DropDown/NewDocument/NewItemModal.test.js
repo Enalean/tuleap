@@ -46,7 +46,7 @@ describe("NewItemModal", () => {
                             is_required: false,
                         },
                         {
-                            short_name: "custom metadata",
+                            short_name: "custom property",
                             name: "custom",
                             value: "value",
                             is_multiple_value_allowed: false,
@@ -62,15 +62,15 @@ describe("NewItemModal", () => {
                 },
                 configuration: {
                     project_id: 102,
-                    is_item_status_metadata_used: true,
-                    is_obsolescence_date_metadata_used: true,
+                    is_status_property_used: true,
+                    is_obsolescence_date_property_used: true,
                 },
             },
         };
 
         store = createStoreMock(general_store, {
             permissions: { project_ugroups: null },
-            metadata: {},
+            properties: {},
         });
 
         factory = () => {
@@ -87,23 +87,23 @@ describe("NewItemModal", () => {
         });
     });
 
-    it("Does not load project metadata, when they have already been loaded", async () => {
-        store.state.metadata = {
-            has_loaded_metadata: true,
+    it("Does not load project properties, when they have already been loaded", async () => {
+        store.state.properties = {
+            has_loaded_properties: true,
         };
 
         const wrapper = factory();
 
         await wrapper.vm.$nextTick().then(() => {});
 
-        expect(store.dispatch).not.toHaveBeenCalledWith("metadata/loadProjectMetadata");
+        expect(store.dispatch).not.toHaveBeenCalledWith("properties/loadProjectProperties");
     });
 
-    it("inherit default values from parent metadata", async () => {
+    it("inherit default values from parent properties", async () => {
         const item_to_create = {
             metadata: [
                 {
-                    short_name: "custom metadata",
+                    short_name: "custom property",
                     name: "custom",
                     value: "value",
                     is_multiple_value_allowed: false,

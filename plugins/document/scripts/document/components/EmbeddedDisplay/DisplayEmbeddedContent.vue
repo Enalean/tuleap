@@ -60,10 +60,10 @@
             v-on:delete-modal-closed="hideDeleteItemModal"
         />
 
-        <update-metadata-modal
-            v-if="show_update_metadata_modal"
+        <update-properties-modal
+            v-if="show_update_properties_modal"
             v-bind:item="currently_previewed_item"
-            v-on:update-metadata-modal-closed="hideUpdateMetadataModal"
+            v-on:update-properties-modal-closed="hideUpdatePropertiesModal"
         />
         <permissions-update-modal
             v-if="show_update_permissions_modal"
@@ -77,14 +77,14 @@ import ActionsHeader from "./ActionsHeader.vue";
 import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
 import ApprovalBadge from "../Folder/ApprovalTables/ApprovalBadge.vue";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
-import UpdateMetadataModal from "../Folder/DropDown/UpdateMetadata/UpdateMetadataModal.vue";
+import UpdatePropertiesModal from "../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue";
 import { mapState } from "vuex";
 import emitter from "../../helpers/emitter";
 
 export default {
     name: "DisplayEmbeddedContent",
     components: {
-        UpdateMetadataModal,
+        UpdatePropertiesModal,
         EmbeddedFileEditionSwitcher,
         ApprovalBadge,
         DocumentTitleLockInfo,
@@ -101,16 +101,16 @@ export default {
             import(
                 /* webpackChunkName: "document-confirm-item-deletion-modal" */ "../Folder/DropDown/Delete/ModalConfirmDeletion.vue"
             ),
-        "update-metadata-modal": () =>
+        "update-properties-modal": () =>
             import(
-                /* webpackChunkName: "update-metadata-modal" */ "../Folder/DropDown/UpdateMetadata/UpdateMetadataModal.vue"
+                /* webpackChunkName: "update-properties-modal" */ "../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue"
             ),
     },
     data() {
         return {
             is_modal_shown: false,
             show_confirm_deletion_modal: false,
-            show_update_metadata_modal: false,
+            show_update_properties_modal: false,
             show_update_permissions_modal: false,
             is_in_large_view: false,
         };
@@ -129,13 +129,13 @@ export default {
     created() {
         emitter.on("deleteItem", this.showDeleteItemModal);
         emitter.on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
-        emitter.on("show-update-item-metadata-modal", this.showUpdateMetadataModal);
+        emitter.on("show-update-item-properties-modal", this.showUpdatePropertiesModal);
         emitter.on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
     },
     beforeDestroy() {
         emitter.off("deleteItem", this.showDeleteItemModal);
         emitter.off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
-        emitter.off("show-update-item-metadata-modal", this.showUpdateMetadataModal);
+        emitter.off("show-update-item-properties-modal", this.showUpdatePropertiesModal);
         emitter.off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
     },
     methods: {
@@ -145,11 +145,11 @@ export default {
         hideModal() {
             this.is_modal_shown = false;
         },
-        showUpdateMetadataModal() {
-            this.show_update_metadata_modal = true;
+        showUpdatePropertiesModal() {
+            this.show_update_properties_modal = true;
         },
-        hideUpdateMetadataModal() {
-            this.show_update_metadata_modal = false;
+        hideUpdatePropertiesModal() {
+            this.show_update_properties_modal = false;
         },
         showUpdateItemPermissionsModal() {
             this.show_update_permissions_modal = true;

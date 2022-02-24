@@ -130,18 +130,22 @@ describe("FolderHeader", () => {
             expect(wrapper.find("[data-test=document-delete-item-modal]").exists()).toBe(true);
         });
 
-        it(`Loads update metadata modal`, async () => {
+        it(`Loads update properties modal`, async () => {
             store.state.is_loading_ascendant_hierarchy = false;
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
-            expect(wrapper.find("[data-test=document-update-metadata-modal]").exists()).toBe(false);
+            expect(wrapper.find("[data-test=document-update-properties-modal]").exists()).toBe(
+                false
+            );
 
             const event = { detail: { current_item: { type: TYPE_EMPTY } } };
-            wrapper.vm.showUpdateItemMetadataModal(event);
+            wrapper.vm.showUpdateItemPropertiesModal(event);
             await wrapper.vm.$nextTick();
-            await wrapper.vm.shown_update_metadata_modal();
-            expect(wrapper.find("[data-test=document-update-metadata-modal]").exists()).toBe(true);
+            await wrapper.vm.shown_update_properties_modal();
+            expect(wrapper.find("[data-test=document-update-properties-modal]").exists()).toBe(
+                true
+            );
         });
 
         it(`Loads permission modal`, async () => {
