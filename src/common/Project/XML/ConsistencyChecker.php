@@ -27,30 +27,18 @@ use Tuleap\XML\PHPCast;
 
 class ConsistencyChecker
 {
-    /**
-     * @var \EventManager
-     */
-    private $event_manager;
-    /**
-     * @var XMLFileContentRetriever
-     */
-    private $xml_file_content_retriever;
-    /**
-     * @var ServiceEnableForXmlImportRetriever
-     */
-    private $event;
-
     public function __construct(
-        XMLFileContentRetriever $xml_file_content_retriever,
-        \EventManager $event_manager,
-        ServiceEnableForXmlImportRetriever $event,
+        private XMLFileContentRetriever $xml_file_content_retriever,
+        private \EventManager $event_manager,
+        private ServiceEnableForXmlImportRetriever $event,
+        private \PluginFactory $plugin_factory,
     ) {
-        $this->xml_file_content_retriever = $xml_file_content_retriever;
-        $this->event_manager              = $event_manager;
-        $this->event                      = $event;
     }
 
-    public function areAllServicesAvailable(string $file_path): bool
+    /**
+     * @param string[] $needed_extra_plugins
+     */
+    public function areAllServicesAvailable(string $file_path, array $needed_extra_plugins): bool
     {
         if (! is_file($file_path)) {
             throw new \RuntimeException('Invalid file path provided');
@@ -72,6 +60,14 @@ class ConsistencyChecker
                 }
             }
         }
+
+        foreach ($needed_extra_plugins as $plugin_name) {
+            $plugin = $this->plugin_factory->getPluginByName($plugin_name);
+            if (! $this->plugin_factory->isPluginAvailable($plugin)) {
+                return false;
+            }
+        }
+
         return true;
     }
 }

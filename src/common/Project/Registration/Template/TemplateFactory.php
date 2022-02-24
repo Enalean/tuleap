@@ -80,7 +80,9 @@ class TemplateFactory
 
     public static function build(): self
     {
-        $event_manager = \EventManager::instance();
+        $event_manager  = \EventManager::instance();
+        $plugin_factory = \PluginFactory::instance();
+
         return new self(
             new GlyphFinder(
                 $event_manager
@@ -89,7 +91,8 @@ class TemplateFactory
             new ConsistencyChecker(
                 new XMLFileContentRetriever(),
                 $event_manager,
-                new ServiceEnableForXmlImportRetriever(\PluginFactory::instance())
+                new ServiceEnableForXmlImportRetriever($plugin_factory),
+                $plugin_factory,
             ),
             new TemplateDao(),
             \ProjectManager::instance(),

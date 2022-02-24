@@ -1331,10 +1331,12 @@ final class program_managementPlugin extends Plugin
     {
         $event_manager       = EventManager::instance();
         $glyph_finder        = new GlyphFinder($event_manager);
+        $plugin_factory      = \PluginFactory::instance();
         $consistency_checker = new ConsistencyChecker(
             new XMLFileContentRetriever(),
             $event_manager,
-            new ServiceEnableForXmlImportRetriever(\PluginFactory::instance())
+            new ServiceEnableForXmlImportRetriever($plugin_factory),
+            $plugin_factory,
         );
         $event->addCategorisedTemplate(new PortfolioTemplate($glyph_finder, $consistency_checker));
         $event->addCategorisedTemplate(new ProgramTemplate($glyph_finder, $consistency_checker));

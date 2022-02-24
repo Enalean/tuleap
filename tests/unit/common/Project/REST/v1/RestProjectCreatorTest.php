@@ -80,6 +80,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var M\LegacyMockInterface|M\MockInterface|TemplateDao
      */
     private $template_dao;
+    private \PHPUnit\Framework\MockObject\MockObject|\PluginFactory $plugin_factory;
 
     protected function setUp(): void
     {
@@ -91,9 +92,10 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_XML_importer = M::mock(ProjectXMLImporter::class);
         $this->template_dao         = M::mock(TemplateDao::class);
 
-        $this->event_manager = \Mockery::mock(\EventManager::class);
-        $this->retriever     = \Mockery::mock(ServiceEnableForXmlImportRetriever::class);
-        $this->creator       = new RestProjectCreator(
+        $this->event_manager  = \Mockery::mock(\EventManager::class);
+        $this->retriever      = \Mockery::mock(ServiceEnableForXmlImportRetriever::class);
+        $this->plugin_factory = $this->createMock(\PluginFactory::class);
+        $this->creator        = new RestProjectCreator(
             $this->project_creator,
             $this->project_XML_importer,
             new TemplateFactory(
@@ -104,7 +106,8 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 new ConsistencyChecker(
                     new XMLFileContentRetriever(),
                     $this->event_manager,
-                    $this->retriever
+                    $this->retriever,
+                    $this->plugin_factory,
                 ),
                 $this->template_dao,
                 M::mock(ProjectManager::class),
@@ -243,6 +246,9 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             M::mock(Service::class, ['getShortName' => \AgileDashboardPlugin::PLUGIN_SHORTNAME, 'getId' => 14]),
             M::mock(Service::class, ['getShortName' => \trackerPlugin::SERVICE_SHORTNAME, 'getId' => 15]),
         ];
+
+        $this->plugin_factory->method('getPluginByName')->willReturn(new \Plugin());
+        $this->plugin_factory->method('isPluginAvailable')->willReturn(true);
 
         $this->retriever->shouldReceive('addServiceByName');
         $this->retriever->shouldReceive('getAvailableServices')->andReturn(

@@ -121,7 +121,10 @@ class ScrumTemplate implements TuleapTemplate
         }
 
         if ($this->available === null) {
-            $this->available = $this->consistency_checker->areAllServicesAvailable($this->getXMLPath());
+            $this->available = $this->consistency_checker->areAllServicesAvailable(
+                $this->getXMLPath(),
+                ['graphontrackersv5']
+            );
         }
         return $this->available;
     }
