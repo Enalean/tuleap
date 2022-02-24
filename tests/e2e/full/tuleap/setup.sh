@@ -92,6 +92,7 @@ enable_plugins() {
         tracker \
         cardwall \
         agiledashboard \
+        graphontrackersv5 \
         svn \
         git \
         docman \
