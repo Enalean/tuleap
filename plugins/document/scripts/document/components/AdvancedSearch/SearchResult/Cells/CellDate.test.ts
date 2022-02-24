@@ -17,46 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ItemSearchResult, User } from "../../../../type";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../../helpers/local-vue";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import type { ConfigurationState } from "../../../../store/configuration";
-import CellUpdateDate from "./CellUpdateDate.vue";
+import CellDate from "./CellDate.vue";
 
-describe("CellUpdateDate", () => {
+describe("CellDate", () => {
     it("should display the update date of the item", () => {
-        const owner: User = {
-            id: 102,
-            uri: "users/102",
-        } as unknown as User;
-
-        const wrapper = shallowMount(CellUpdateDate, {
+        const wrapper = shallowMount(CellDate, {
             localVue,
             propsData: {
-                item: {
-                    id: 123,
-                    type: "folder",
-                    title: "Lorem",
-                    post_processed_description: "ipsum doloret",
-                    owner,
-                    last_update_date: "2021-10-06",
-                    parents: [
-                        {
-                            id: 120,
-                            title: "Path",
-                        },
-                        {
-                            id: 121,
-                            title: "To",
-                        },
-                        {
-                            id: 122,
-                            title: "Folder",
-                        },
-                    ],
-                    file_properties: null,
-                } as ItemSearchResult,
+                date: "2021-10-06",
             },
             mocks: {
                 $store: createStoreMock({

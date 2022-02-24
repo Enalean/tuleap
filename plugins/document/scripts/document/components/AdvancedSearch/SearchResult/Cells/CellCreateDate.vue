@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <cell-date v-bind:date="item.last_update_date" />
+    <cell-date v-bind:date="item.creation_date" />
 </template>
 
 <script setup lang="ts">

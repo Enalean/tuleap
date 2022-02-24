@@ -41,6 +41,7 @@ describe("CellTitle", () => {
                     post_processed_description: "ipsum doloret",
                     owner,
                     last_update_date: "2021-10-06",
+                    creation_date: "2021-10-04",
                     parents: [
                         {
                             id: 120,
@@ -92,6 +93,7 @@ describe("CellTitle", () => {
                     post_processed_description: "ipsum doloret",
                     owner,
                     last_update_date: "2021-10-06",
+                    creation_date: "2021-10-04",
                     parents: [
                         {
                             id: 120,
@@ -140,6 +142,7 @@ describe("CellTitle", () => {
                     post_processed_description: "ipsum doloret",
                     owner,
                     last_update_date: "2021-10-06",
+                    creation_date: "2021-10-04",
                     parents: [
                         {
                             id: 120,

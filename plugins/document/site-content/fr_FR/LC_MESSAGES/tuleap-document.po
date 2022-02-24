@@ -23,6 +23,9 @@ msgstr ""
 msgid "An error occurred while saving configuration."
 msgstr "Une erreur est survenue lors de la sauvegarde de la configuration."
 
+msgid "Create date"
+msgstr "Date de création"
+
 msgid "Description"
 msgstr "Description"
 

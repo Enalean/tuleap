@@ -57,6 +57,12 @@ final class SearchRepresentation
      * @var string | null {@type string}
      */
     public $last_update_date;
+
+    /**
+     * @var string | null {@type string}
+     */
+    public $creation_date;
+
     /**
      * @var array {@type ParentFolderRepresentation}
      */
@@ -77,7 +83,8 @@ final class SearchRepresentation
         string $post_processed_description,
         string $status,
         MinimalUserRepresentation $owner,
-        ?string $update_date,
+        string $update_date,
+        string $creation_date,
         PaginatedParentRowCollection $parents,
         ?string $type,
         ?FilePropertiesRepresentation $file_properties,
@@ -88,6 +95,7 @@ final class SearchRepresentation
         $this->status                     = $status;
         $this->owner                      = $owner;
         $this->last_update_date           = JsonCast::toDate($update_date);
+        $this->creation_date              = JsonCast::toDate($creation_date);
         $this->parents                    = $parents->getPaginatedElementCollection();
         $this->type                       = $type;
         $this->file_properties            = $file_properties;
@@ -109,6 +117,7 @@ final class SearchRepresentation
             $status,
             MinimalUserRepresentation::build($user),
             (string) $item->getUpdateDate(),
+            (string) $item->getCreateDate(),
             $parents,
             $type,
             $file_properties,
