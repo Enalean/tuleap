@@ -27,6 +27,7 @@ function FilesController(SharedPropertiesService) {
     Object.assign(self, {
         release: SharedPropertiesService.getRelease(),
         release_note_html: SharedPropertiesService.getReleaseNoteHtml(),
+        changelog_html: SharedPropertiesService.getChangelogHtml(),
         custom_license_agreement: SharedPropertiesService.getCustomLicenseAgreement(),
         isEmpty() {
             return (

@@ -5,6 +5,7 @@ function SharedPropertiesService() {
         project_id: null,
         release: null,
         release_note_html: null,
+        changelog_html: null,
         platform_license_info: null,
         custom_license_agreement: null,
     };
@@ -16,6 +17,8 @@ function SharedPropertiesService() {
         setRelease: setRelease,
         getReleaseNoteHtml,
         setReleaseNoteHtml,
+        getChangelogHtml,
+        setChangelogHtml,
         getPlatformLicenseInfo: getPlatformLicenseInfo,
         setPlatformLicenseInfo: setPlatformLicenseInfo,
         setCustomLicenseAgreement: setCustomLicenseAgreement,
@@ -45,6 +48,14 @@ function SharedPropertiesService() {
 
     function setReleaseNoteHtml(release_note_html) {
         property.release_note_html = release_note_html;
+    }
+
+    function getChangelogHtml() {
+        return property.changelog_html;
+    }
+
+    function setChangelogHtml(changelog_html) {
+        property.changelog_html = changelog_html;
     }
 
     function setPlatformLicenseInfo(platform_license_info) {
