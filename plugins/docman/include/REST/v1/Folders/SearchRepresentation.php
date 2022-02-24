@@ -47,7 +47,12 @@ final class SearchRepresentation
      * @var string {@type string}
      */
     public $post_processed_description;
-    public string $status;
+
+    /**
+     * @var string | null {@type string}
+     */
+    public $status;
+
     /**
      * @var MinimalUserRepresentation {@type MinimalUserRepresentation}
      */
@@ -81,7 +86,7 @@ final class SearchRepresentation
         int $id,
         string $title,
         string $post_processed_description,
-        string $status,
+        ?string $status,
         MinimalUserRepresentation $owner,
         string $update_date,
         string $creation_date,
@@ -104,7 +109,7 @@ final class SearchRepresentation
     public static function build(
         \Docman_Item $item,
         \Codendi_HTMLPurifier $purifier,
-        string $status,
+        ?string $status,
         \PFUser $user,
         PaginatedParentRowCollection $parents,
         ?string $type,

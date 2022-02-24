@@ -28,6 +28,7 @@ import CellOwner from "./Cells/CellOwner.vue";
 import CellUpdateDate from "./Cells/CellUpdateDate.vue";
 import CellCreateDate from "./Cells/CellCreateDate.vue";
 import CellLocation from "./Cells/CellLocation.vue";
+import CellStatus from "./Cells/CellStatus.vue";
 
 describe("TableBodyResultRow", () => {
     it.each([
@@ -38,6 +39,7 @@ describe("TableBodyResultRow", () => {
         ["update_date", CellUpdateDate],
         ["create_date", CellCreateDate],
         ["location", CellLocation],
+        ["status", CellStatus],
     ])(
         "when wanted column is %s then matching component should be %s",
         (name, expected_component) => {
