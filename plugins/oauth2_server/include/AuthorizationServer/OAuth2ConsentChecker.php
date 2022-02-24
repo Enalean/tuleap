@@ -26,6 +26,7 @@ use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\OAuth2Server\User\AuthorizationComparator;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\AuthorizationServer\ConsentChecker;
+use Tuleap\OAuth2ServerCore\AuthorizationServer\PromptParameterValuesExtractor;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2OfflineAccessScope;
 
 final class OAuth2ConsentChecker implements ConsentChecker

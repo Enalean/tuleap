@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AuthorizationServer;
+namespace Tuleap\OAuth2ServerCore\AuthorizationServer;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Log\NullLogger;
@@ -34,8 +34,6 @@ use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\App\OAuth2AppNotFoundException;
 use Tuleap\OAuth2ServerCore\AuthorizationServer\PKCE\OAuth2PKCEInformationExtractionException;
 use Tuleap\OAuth2ServerCore\AuthorizationServer\PKCE\PKCEInformationExtractor;
-use Tuleap\OAuth2ServerCore\AuthorizationServer\ConsentRequiredResponseBuilder;
-use Tuleap\OAuth2ServerCore\AuthorizationServer\ConsentChecker;
 use Tuleap\OAuth2ServerCore\OAuth2TestScope;
 use Tuleap\OAuth2ServerCore\Scope\InvalidOAuth2ScopeException;
 use Tuleap\OAuth2ServerCore\Scope\ScopeExtractor;

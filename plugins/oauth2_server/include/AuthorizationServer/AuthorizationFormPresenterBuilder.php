@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
+use Tuleap\OAuth2ServerCore\AuthorizationServer\AuthorizationEndpointController;
+use Tuleap\OAuth2ServerCore\AuthorizationServer\RedirectURIBuilder;
+
 class AuthorizationFormPresenterBuilder
 {
     /**

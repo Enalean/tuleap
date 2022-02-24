@@ -33,6 +33,7 @@ use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\App\OAuth2AppNotFoundException;
 use Tuleap\OAuth2Server\User\AuthorizationCreator;
 use Tuleap\OAuth2Server\User\NewAuthorization;
+use Tuleap\OAuth2ServerCore\AuthorizationServer\AuthorizationCodeResponseFactory;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 

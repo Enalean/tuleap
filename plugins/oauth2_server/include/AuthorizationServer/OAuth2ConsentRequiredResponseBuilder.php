@@ -26,6 +26,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
+use Tuleap\OAuth2ServerCore\AuthorizationServer\AuthorizationEndpointController;
 use Tuleap\OAuth2ServerCore\AuthorizationServer\ConsentRequiredResponseBuilder;
 
 final class OAuth2ConsentRequiredResponseBuilder implements ConsentRequiredResponseBuilder
