@@ -24,6 +24,8 @@ declare(strict_types=1);
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
+use Tuleap\DB\DBFactory;
+use Tuleap\ForgeUpgrade\ForgeUpgrade;
 use TuleapCfg\Command\ProcessFactory;
 
 $application = new Application();
@@ -37,7 +39,13 @@ $application->add(new \TuleapCfg\Command\SetupMysqlInitCommand(
         new \TuleapCfg\Command\SetupMysql\ConnectionManager(),
     ),
 ));
-$application->add(new \TuleapCfg\Command\SetupTuleapCommand());
+$application->add(new \TuleapCfg\Command\SetupTuleapCommand(
+    new ProcessFactory(),
+    static fn (\Psr\Log\LoggerInterface $logger) => new ForgeUpgrade(
+        DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
+        $logger,
+    ),
+));
 $application->add(new \TuleapCfg\Command\SetupForgeUpgradeCommand());
 $application->add(new \TuleapCfg\Command\SiteDeploy\SiteDeployCommand());
 $application->add(new \TuleapCfg\Command\SiteDeploy\Images\SiteDeployImagesCommand());

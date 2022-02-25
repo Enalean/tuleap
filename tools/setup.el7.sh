@@ -93,24 +93,6 @@ if [ ${tuleap_installed:-false} = "false" ] || \
     fi
 
     ${tuleapcfg} setup:tuleap --force --tuleap-fqdn="${server_name}"
-
-    _infoMessage "Register buckets in forgeupgrade"
-    ${tuleapcfg} setup:forgeupgrade 2> >(_logCatcher)
-
-    _infoMessage "Install and activate tracker plugin"
-    sudo -u "${tuleap_unix_user}" /usr/bin/tuleap plugin:install tracker 2> >(_logCatcher)
-
-    _infoMessage "Configure timers"
-    ${tuleapcfg} systemctl enable "${timers[@]}"
-    ${tuleapcfg} systemctl start "${timers[@]}"
-
-    _infoMessage "Force redeploy of site configuration"
-    ${tuleapcfg} site-deploy --force
-
-    _infoMessage "Start services"
-    ${tuleapcfg} systemctl restart "nginx" "tuleap"
-    ${tuleapcfg} systemctl enable "nginx"
-    _endMessage
 fi
 
 if [ ${configure:-false} = "true" ]; then

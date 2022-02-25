@@ -23,23 +23,36 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command;
 
+use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
-use Tuleap\Config\ConfigKeyLegacyBool;
-use Tuleap\Config\ConfigurationVariables;
-use Tuleap\Config\ConfigSerializer;
-use Tuleap\ServerHostname;
+use TuleapCfg\Command\SetupTuleap\SetupTuleap;
 
 final class SetupTuleapCommand extends Command
 {
     private const OPT_TULEAP_FQDN = 'tuleap-fqdn';
     private const OPT_FORCE       = 'force';
 
+    private const SYSTEMD_UNITS = [
+        'tuleap-process-system-events-default.timer',
+        'tuleap-process-system-events-statistics.timer',
+        'tuleap-process-system-events-tv3-tv5-migration.timer',
+        'tuleap-launch-system-check.timer',
+        'tuleap-launch-daily-event.timer',
+        'tuleap-launch-plugin-job.timer',
+        'nginx.service',
+        'tuleap.service',
+    ];
+
     private string $base_directory;
 
-    public function __construct(?string $base_directory = null)
+    /**
+     * @param \Closure(\Psr\Log\LoggerInterface): \Tuleap\ForgeUpgrade\ForgeUpgradeRecordOnly $forge_upgrade_provider
+     */
+    public function __construct(private ProcessFactory $process_factory, private \Closure $forge_upgrade_provider, ?string $base_directory = null)
     {
         $this->base_directory = $base_directory ?: '/';
         parent::__construct('setup:tuleap');
@@ -58,45 +71,55 @@ final class SetupTuleapCommand extends Command
         $fqdn  = $input->getOption(self::OPT_TULEAP_FQDN);
         $force = (bool) $input->getOption(self::OPT_FORCE);
 
+        $logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
+
         $local_inc = $this->base_directory . '/etc/tuleap/conf/local.inc';
-        $output->writeln(sprintf("Write initial configuration in %s", $local_inc));
+        $logger->info(sprintf("Write initial configuration in %s", $local_inc));
         if (file_exists($local_inc)) {
             if (! $force) {
-                $output->writeln(sprintf("%s already exists, skip configuration", $local_inc));
+                $logger->info(sprintf("%s already exists, skip configuration", $local_inc));
                 return 0;
             }
             $backup = $this->base_directory . '/etc/tuleap/conf/local.inc.' . date('Y-m-d_H-i-s');
-            $output->writeln(sprintf("%s already exists, backup as %s before overwrite", $local_inc, $backup));
+            $logger->info(sprintf("%s already exists, backup as %s before overwrite", $local_inc, $backup));
             rename($local_inc, $backup);
         }
 
-        return $this->configureAndSave($fqdn) ? Command::SUCCESS : Command::FAILURE;
-    }
+        $forge_upgrade_callback = $this->forge_upgrade_provider;
+        \ForgeConfig::wrapWithCleanConfig(function () use ($forge_upgrade_callback, $logger, $fqdn) {
+            $logger->info("Configure local.inc");
+            (new SetupTuleap($this->base_directory))->setup($fqdn);
 
-    private function configureAndSave(string $fqdn): bool
-    {
-        return \ForgeConfig::wrapWithCleanConfig(function () use ($fqdn) {
-            \ForgeConfig::set(ServerHostname::DEFAULT_DOMAIN, $fqdn);
-            \ForgeConfig::set(ServerHostname::LIST_HOST, 'lists.' . $fqdn);
-            \ForgeConfig::set(ServerHostname::FULL_NAME, $fqdn);
-            \ForgeConfig::set(ConfigurationVariables::EMAIL_ADMIN, 'codendi-admin@' . $fqdn);
-            \ForgeConfig::set(ConfigurationVariables::EMAIL_CONTACT, 'codendi-contact@' . $fqdn);
-            \ForgeConfig::set(ConfigurationVariables::NOREPLY, sprintf('"Tuleap" <noreply@%s>', $fqdn));
-            \ForgeConfig::set(ConfigurationVariables::ORG_NAME, 'Tuleap');
-            \ForgeConfig::set(ConfigurationVariables::LONG_ORG_NAME, 'Tuleap');
-            \ForgeConfig::set(ConfigurationVariables::HOMEDIR_PREFIX, '');
-            \ForgeConfig::set(ConfigurationVariables::GRPDIR_PREFIX, '');
-            \ForgeConfig::set(ConfigurationVariables::MAIL_SECURE_MODE, ConfigKeyLegacyBool::FALSE);
-            \ForgeConfig::set(ConfigurationVariables::DISABLE_SUBDOMAINS, ConfigKeyLegacyBool::TRUE);
-
-            return (new ConfigSerializer())->save(
-                $this->base_directory . '/etc/tuleap/conf/local.inc',
-                0640,
-                'root',
-                'codendiadm',
-                ServerHostname::class,
-                ConfigurationVariables::class
-            );
+            $logger->info("Register buckets in forgeupgrade");
+            \ForgeConfig::loadDatabaseConfig();
+            $forge_upgrade_callback($logger)->recordOnlyCore();
         });
+
+        $logger->info("Install and activate tracker plugin");
+        $this->process_factory->getProcessWithoutTimeout([
+            '/usr/bin/sudo',
+            '-u',
+            'codendiadm',
+            '/usr/bin/tuleap',
+            'plugin:install',
+            'tracker',
+        ])->mustRun();
+
+        $logger->info("Redeploy configuration");
+        $this->process_factory->getProcessWithoutTimeout([
+            __DIR__ . '/../tuleap-cfg.php',
+            'site-deploy',
+            '--force',
+        ])->mustRun();
+
+        $logger->info("Enable and start systemd timers and services");
+        $this->process_factory->getProcessWithoutTimeout(
+            array_merge([__DIR__ . '/../tuleap-cfg.php', 'systemctl', 'enable'], self::SYSTEMD_UNITS)
+        )->mustRun();
+        $this->process_factory->getProcessWithoutTimeout(
+            array_merge([__DIR__ . '/../tuleap-cfg.php', 'systemctl', 'start'], self::SYSTEMD_UNITS)
+        )->mustRun();
+
+        return Command::SUCCESS;
     }
 }

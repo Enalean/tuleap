@@ -33,7 +33,7 @@ use const PHP_EOL;
 /**
  * Centralize upgrade of the Forge
  */
-class ForgeUpgrade
+class ForgeUpgrade implements ForgeUpgradeRecordOnly
 {
     private ForgeUpgradeDb $db;
 
@@ -388,7 +388,7 @@ class ForgeUpgrade
         $bucket = null;
         $class  = $this->getClassName($scriptPath->getPathname());
         if (! class_exists($class)) {
-            include $scriptPath->getPathname();
+            include_once $scriptPath->getPathname();
         }
         if (is_subclass_of($class, Bucket::class)) {
             $bucket = new $class($this->logger, $this->bucketApi);

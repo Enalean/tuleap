@@ -37,6 +37,7 @@ use TuleapCfg\Command\Configure\ConfigureApache;
 use TuleapCfg\Command\ProcessFactory;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use TuleapCfg\Command\SetupMysql\DBSetupParameters;
+use TuleapCfg\Command\SetupTuleap\SetupTuleap;
 use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPM;
 use TuleapCfg\Command\SiteDeploy\Gitolite3\SiteDeployGitolite3;
 use TuleapCfg\Command\SiteDeploy\Nginx\SiteDeployNginx;
@@ -76,12 +77,28 @@ final class Tuleap
             throw new \RuntimeException(sprintf('No variable named `%s` found in environment', DBConfig::CONF_DBPASSWORD));
         }
 
-        $this->database_configurator->setupDatabase(
-            $output,
-            DBSetupParameters::fromAdminCredentials($variable_provider->get(self::DB_ADMIN_USER), $variable_provider->get(self::DB_ADMIN_PASSWORD))
+        $output->writeln("Setup database");
+        $this->database_configurator
+            ->setupDatabase(
+                $output,
+                DBSetupParameters::fromAdminCredentials(
+                    $variable_provider->get(self::DB_ADMIN_USER),
+                    $variable_provider->get(self::DB_ADMIN_PASSWORD)
+                )
                 ->withSiteAdminPassword(new ConcealedString($variable_provider->get(self::SITE_ADMIN_PASSWORD)))
                 ->withTuleapFQDN($fqdn)
+            );
+
+        $output->writeln("Configure local.inc");
+        $logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
+        (new SetupTuleap())->setup($fqdn);
+
+        $output->writeln("Register buckets in forgeupgrade");
+        $forge_upgrade = new ForgeUpgrade(
+            DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
+            $logger,
         );
+        $forge_upgrade->recordOnlyCore();
 
         $ssh_daemon->startDaemon($output);
         $this->setup(
@@ -103,7 +120,7 @@ final class Tuleap
 
     private function setup(OutputInterface $output, string $tuleap_fqdn, string $db_host, string $db_admin_user, string $db_admin_password): void
     {
-        $output->writeln('Install Tuleap');
+        $output->writeln('Configure Tuleap');
         $this->process_factory->getProcessWithoutTimeout(
             [
                 '/bin/bash',
@@ -116,7 +133,7 @@ final class Tuleap
                 '--mysql-user=' . $db_admin_user,
                 '--mysql-password=' . $db_admin_password,
             ]
-        )->mustRun(null, ['TULEAP_INSTALL_SKIP_DB' => 'true']);
+        )->mustRun();
         $this->regenerateConfigurations($output);
     }
 
