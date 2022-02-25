@@ -30,6 +30,7 @@ import CellCreateDate from "./Cells/CellCreateDate.vue";
 import CellObsolescenceDate from "./Cells/CellObsolescenceDate.vue";
 import CellLocation from "./Cells/CellLocation.vue";
 import CellStatus from "./Cells/CellStatus.vue";
+import CellCustomProperty from "./Cells/CellCustomProperty.vue";
 
 describe("TableBodyResultRow", () => {
     it.each([
@@ -42,6 +43,7 @@ describe("TableBodyResultRow", () => {
         ["obsolescence_date", CellObsolescenceDate],
         ["location", CellLocation],
         ["status", CellStatus],
+        ["field_123", CellCustomProperty],
     ])(
         "when wanted column is %s then matching component should be %s",
         (name, expected_component) => {

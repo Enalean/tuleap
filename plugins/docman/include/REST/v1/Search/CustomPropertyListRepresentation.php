@@ -20,28 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Document\Tree\Search;
+namespace Tuleap\Docman\REST\v1\Search;
 
-use Tuleap\Docman\REST\v1\Search\SearchColumn;
-use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
-
-final class ListOfSearchColumnDefinitionPresenterBuilder
+/**
+ * @psalm-immutable
+ */
+final class CustomPropertyListRepresentation implements CustomPropertyRepresentation
 {
-    public function __construct(private SearchColumnCollectionBuilder $column_collection_builder)
-    {
-    }
-
     /**
-     * @return SearchColumnDefinitionPresenter[]
+     * @param string[] $values
      */
-    public function getColumns(\Docman_MetadataFactory $metadata_factory): array
+    public function __construct(public string $type, public array $values)
     {
-        return array_map(
-            static fn(SearchColumn $column): SearchColumnDefinitionPresenter => new SearchColumnDefinitionPresenter(
-                $column->getName(),
-                $column->getLabel()
-            ),
-            $this->column_collection_builder->getCollection($metadata_factory)->getColumns()
-        );
     }
 }

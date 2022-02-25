@@ -25,6 +25,7 @@ namespace Tuleap\Docman\REST\v1\Folders;
 
 use Tuleap\Docman\Item\PaginatedParentRowCollection;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
+use Tuleap\Docman\REST\v1\Search\CustomPropertyRepresentation;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
@@ -86,7 +87,11 @@ final class SearchRepresentation
      * @var FilePropertiesRepresentation | null
      */
     public $file_properties;
+    public array $custom_properties;
 
+    /**
+     * @param array<string, CustomPropertyRepresentation> $custom_properties
+     */
     private function __construct(
         int $id,
         string $title,
@@ -99,6 +104,7 @@ final class SearchRepresentation
         PaginatedParentRowCollection $parents,
         ?string $type,
         ?FilePropertiesRepresentation $file_properties,
+        array $custom_properties,
     ) {
         $this->id                         = $id;
         $this->title                      = $title;
@@ -111,8 +117,12 @@ final class SearchRepresentation
         $this->parents                    = $parents->getPaginatedElementCollection();
         $this->type                       = $type;
         $this->file_properties            = $file_properties;
+        $this->custom_properties          = $custom_properties;
     }
 
+    /**
+     * @param array<string, CustomPropertyRepresentation> $custom_properties
+     */
     public static function build(
         \Docman_Item $item,
         \Codendi_HTMLPurifier $purifier,
@@ -121,6 +131,7 @@ final class SearchRepresentation
         PaginatedParentRowCollection $parents,
         ?string $type,
         ?FilePropertiesRepresentation $file_properties,
+        array $custom_properties,
     ): self {
         $obsolescence_date = $item->getObsolescenceDate();
 
@@ -136,6 +147,7 @@ final class SearchRepresentation
             $parents,
             $type,
             $file_properties,
+            $custom_properties,
         );
     }
 }

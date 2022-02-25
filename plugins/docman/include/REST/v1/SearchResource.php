@@ -44,7 +44,9 @@ use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\Docman\REST\v1\Search\FilePropertiesVisitor;
+use Tuleap\Docman\REST\v1\Search\ListOfCustomPropertyRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
+use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationTypeVisitor;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
@@ -229,8 +231,9 @@ final class SearchResource extends AuthenticatedResource
 
         $project_id            = $folder->getGroupId();
         $docman_settings       = new Docman_SettingsBo($project_id);
+        $metadata_factory      = new \Docman_MetadataFactory($project_id);
         $search_report_builder = new SearchReportBuilder(
-            new \Docman_MetadataFactory($project_id),
+            $metadata_factory,
             new Docman_FilterFactory($project_id),
             new ItemStatusMapper($docman_settings),
             new AlwaysThereColumnRetriever($docman_settings),
@@ -295,15 +298,21 @@ final class SearchResource extends AuthenticatedResource
             $item_factory,
             new SearchRepresentationTypeVisitor(),
             new FilePropertiesVisitor($version_factory),
+            new ListOfCustomPropertyRepresentationBuilder(),
         );
 
-        $report     = $search_report_builder->buildReport($folder, $search_representation);
+        $wanted_custom_properties = (new SearchColumnCollectionBuilder())
+            ->getCollection($metadata_factory)
+            ->extractColumnsOnCustomProperties();
+
+        $report     = $search_report_builder->buildReport($folder, $search_representation, $wanted_custom_properties);
         $collection = $search_representations_builder->build(
             $report,
             $folder,
             $user,
             $search_representation->limit,
-            $search_representation->offset
+            $search_representation->offset,
+            $wanted_custom_properties
         );
         Header::sendPaginationHeaders(
             $search_representation->limit,

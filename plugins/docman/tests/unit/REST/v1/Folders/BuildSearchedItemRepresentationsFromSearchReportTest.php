@@ -28,6 +28,9 @@ use Tuleap\Docman\REST\v1\ItemRepresentationCollectionBuilder;
 use Tuleap\Docman\REST\v1\ItemRepresentationVisitor;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Search\FilePropertiesVisitor;
+use Tuleap\Docman\REST\v1\Search\ListOfCustomPropertyRepresentationBuilder;
+use Tuleap\Docman\REST\v1\Search\SearchColumn;
+use Tuleap\Docman\REST\v1\Search\SearchColumnCollection;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationTypeVisitor;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -67,6 +70,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
             $this->item_factory,
             new SearchRepresentationTypeVisitor(),
             new FilePropertiesVisitor($this->version_factory),
+            new ListOfCustomPropertyRepresentationBuilder(),
         );
 
         \UserManager::setInstance($this->user_manager);
@@ -108,6 +112,12 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
         ];
         $item_two       = new \Docman_File($item_two_array);
 
+        $metadata = new \Docman_Metadata();
+        $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
+        $metadata->setLabel('field_23');
+        $metadata->setValue('Lorem ipsum');
+        $item_two->addMetadata($metadata);
+
         $this->version_factory
             ->method('getCurrentVersionForItem')
             ->willReturn(new \Docman_Version([
@@ -137,7 +147,17 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
                 new \ArrayIterator([$item_one, $item_two])
             );
 
-        $collection = $this->representation_builder->build($report, $folder, $current_user, 50, 0);
+        $wanted_custom_properties = new SearchColumnCollection();
+        $wanted_custom_properties->add(SearchColumn::buildForCustomProperty('field_23', 'Comments'));
+
+        $collection = $this->representation_builder->build(
+            $report,
+            $folder,
+            $current_user,
+            50,
+            0,
+            $wanted_custom_properties
+        );
 
         $this->assertItemEqualsRepresentation($item_one_array, $collection->search_representations[0]);
         $this->assertItemEqualsRepresentation($item_two_array, $collection->search_representations[1]);
@@ -145,6 +165,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
 
         $this->assertEquals("file", $collection->search_representations[1]->type);
         $this->assertEquals('text/html', $collection->search_representations[1]->file_properties->file_type);
+        $this->assertEquals('Lorem ipsum', $collection->search_representations[1]->custom_properties['field_23']->value);
 
         self::assertCount(2, $collection->search_representations);
     }

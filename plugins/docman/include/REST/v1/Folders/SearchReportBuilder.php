@@ -30,6 +30,7 @@ use Luracast\Restler\RestException;
 use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Search\SearchColumnCollection;
 use Tuleap\Docman\REST\v1\Search\SearchPropertyRepresentation;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
 use Tuleap\Docman\REST\v1\Search\SearchDateRepresentation;
@@ -51,8 +52,11 @@ class SearchReportBuilder
     ) {
     }
 
-    public function buildReport(\Docman_Folder $item, PostSearchRepresentation $search): Docman_Report
-    {
+    public function buildReport(
+        \Docman_Folder $item,
+        PostSearchRepresentation $search,
+        SearchColumnCollection $wanted_custom_properties,
+    ): Docman_Report {
         $report = new Docman_Report();
         $report->initFromRow(
             [
@@ -66,9 +70,12 @@ class SearchReportBuilder
             $this->addPropertyFilter($property, $report);
         }
 
-        $columns = $this->always_there_column_retriever->getColumns();
-        $this->column_report_builder->addColumnsFromArray($columns, $report);
+        $always_there_columns_names = $this->always_there_column_retriever->getColumns();
+        $additional_columns_names   = $wanted_custom_properties->getColumnNames();
 
+        $deduplicated_column_names = array_flip(array_flip([...$always_there_columns_names, ...$additional_columns_names]));
+
+        $this->column_report_builder->addColumnsFromArray($deduplicated_column_names, $report);
 
         return $report;
     }

@@ -20,14 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Document\Tree\Search;
+namespace Tuleap\Docman\REST\v1\Search;
 
-use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
+final class SearchColumnCollectionBuilderTest extends TestCase
 {
-    public function testItBuildsPresenters(): void
+    public function testGetColumnsAlwaysReturnTitleBecauseItIsTheOnlyColumnThatHasALinkToRetrieveTheItem(): void
+    {
+        $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
+        $metadata_factory
+            ->method('getMetadataForGroup')
+            ->willReturn([]);
+
+        $collection = (new SearchColumnCollectionBuilder())->getCollection($metadata_factory);
+
+        self::assertEquals("title", $collection->getColumnNames()[1]);
+    }
+
+    public function testItReturnsIdThenHardcodedPropertiesThenLocationThenCustomProperties(): void
     {
         $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
         $metadata_factory
@@ -40,17 +51,27 @@ class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
                 $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_CREATE_DATE_LABEL),
                 $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL),
                 $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL),
+                $this->getCustomMetadata("field_1"),
+                $this->getCustomMetadata("field_2"),
             ]);
 
-        $columns = (new ListOfSearchColumnDefinitionPresenterBuilder(new SearchColumnCollectionBuilder()))
-            ->getColumns($metadata_factory);
+        $collection = (new SearchColumnCollectionBuilder())->getCollection($metadata_factory);
 
         self::assertEquals(
-            ["id", "title", "description", "owner", "update_date", "create_date", "status", "obsolescence_date", "location"],
-            array_map(
-                static fn(SearchColumnDefinitionPresenter $column): string => $column->name,
-                $columns,
-            ),
+            [
+                "id",
+                "title",
+                "description",
+                "owner",
+                "update_date",
+                "create_date",
+                "status",
+                "obsolescence_date",
+                "location",
+                "field_1",
+                "field_2",
+            ],
+            $collection->getColumnNames(),
         );
     }
 
@@ -60,6 +81,16 @@ class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
         $metadata->setLabel($label);
         $metadata->setName(\ucfirst($label));
         $metadata->setSpecial(true);
+
+        return $metadata;
+    }
+
+    private function getCustomMetadata(string $label): \Docman_Metadata
+    {
+        $metadata = new \Docman_Metadata();
+        $metadata->setLabel($label);
+        $metadata->setName(\ucfirst($label));
+        $metadata->setSpecial(false);
 
         return $metadata;
     }
