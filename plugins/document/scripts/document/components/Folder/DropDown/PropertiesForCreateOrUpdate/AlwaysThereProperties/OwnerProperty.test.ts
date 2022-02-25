@@ -20,34 +20,30 @@
 import localVue from "../../../../../helpers/local-vue";
 import { shallowMount } from "@vue/test-utils";
 import OwnerProperty from "./OwnerProperty.vue";
-import { TYPE_FILE } from "../../../../../constants";
+import type { User } from "../../../../../type";
+import PeoplePicker from "../PeoplePicker.vue";
 
 describe("OwnerProperty", () => {
-    let owner_factory;
-    beforeEach(() => {
-        owner_factory = (props = {}) => {
-            return shallowMount(OwnerProperty, {
-                localVue,
-                propsData: { ...props },
-            });
-        };
-    });
-
     it(`Given owner value is updated
-              Then the props used for document creation is updated`, () => {
-        const wrapper = owner_factory({
-            currentlyUpdatedItem: {
-                owner: {
+        Then an event is emitted with the new user id choosen`, async () => {
+        const wrapper = shallowMount(OwnerProperty, {
+            localVue,
+            propsData: {
+                value: {
                     id: 137,
-                },
-                status: 100,
-                type: TYPE_FILE,
-                title: "title",
+                } as User,
             },
         });
 
-        wrapper.vm.owner_id = 102;
+        await wrapper.findComponent(PeoplePicker).vm.$emit("input", 102);
 
-        expect(wrapper.vm.currentlyUpdatedItem.owner_id).toEqual(102);
+        const event = wrapper.emitted().input;
+        if (!event) {
+            throw Error("Input event not emitted");
+        }
+
+        expect(event[0][0]).toStrictEqual({
+            id: 102,
+        });
     });
 });

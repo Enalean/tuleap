@@ -25,32 +25,22 @@
             <i class="fa fa-asterisk"></i>
         </label>
         <people-picker
-            v-bind:value="owner_id"
+            v-bind:currently_selected_user="value"
+            v-on:input="$emit('input', { ...value, id: $event })"
             id="document-item-owner"
-            v-bind:currently_selected_user="currentlyUpdatedItem.owner"
         />
     </div>
 </template>
 
-<!-- eslint-disable vue/no-mutating-props -->
-<script>
+<script setup lang="ts">
 import PeoplePicker from "../PeoplePicker.vue";
+import type { User } from "../../../../../type";
 
-export default {
-    name: "OwnerProperty",
-    components: { PeoplePicker },
-    props: {
-        currentlyUpdatedItem: Object,
-    },
-    computed: {
-        owner_id: {
-            get() {
-                return this.currentlyUpdatedItem.owner.id;
-            },
-            set(value) {
-                this.currentlyUpdatedItem.owner_id = value;
-            },
-        },
-    },
-};
+defineProps<{ value: User }>();
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

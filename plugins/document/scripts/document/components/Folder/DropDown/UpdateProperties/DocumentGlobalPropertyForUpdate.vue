@@ -31,7 +31,7 @@
             />
         </div>
         <description-property v-model="currentlyUpdatedItem.description" />
-        <slot></slot>
+        <owner-property v-model="currentlyUpdatedItem.owner" />
     </div>
 </template>
 
@@ -39,10 +39,12 @@
 import StatusPropertyWithCustomBindingForDocumentUpdate from "./StatusPropertyWithCustomBindingForDocumentUpdate.vue";
 import TitleProperty from "../PropertiesForCreateOrUpdate/AlwaysThereProperties/TitleProperty.vue";
 import DescriptionProperty from "../PropertiesForCreateOrUpdate/AlwaysThereProperties/DescriptionProperty.vue";
+import OwnerProperty from "../PropertiesForCreateOrUpdate/AlwaysThereProperties/OwnerProperty.vue";
 
 export default {
     name: "DocumentGlobalPropertyForUpdate",
     components: {
+        OwnerProperty,
         DescriptionProperty,
         TitleProperty,
         StatusPropertyWithCustomBindingForDocumentUpdate,
