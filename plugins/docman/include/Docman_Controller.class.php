@@ -536,7 +536,7 @@ class Docman_Controller extends Controler
                             $this->_viewParams['item'] = $item;
                             if (strpos($view, 'admin') === 0 && ! $this->userCanAdmin()) {
                                 $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to administrate the document manager.'));
-                                $this->view = $item->accept($get_show_view, $this->request->get('report'));
+                                $this->view = 'RedirectAfterCrud';
                             } else {
                                 if ($item->isObsolete()) {
                                     $this->feedback->log('warning', dgettext('tuleap-docman', 'The file is obsolete and no longer available in standard views (Tree, Table, ...)'));
