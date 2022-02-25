@@ -32,25 +32,23 @@ final class ListOfSearchColumnDefinitionPresenterBuilder
         $columns = [
             new SearchColumnDefinitionPresenter("id", dgettext('tuleap-document', 'Id')),
             new SearchColumnDefinitionPresenter("title", dgettext('tuleap-document', 'Title')),
-            new SearchColumnDefinitionPresenter("description", dgettext('tuleap-document', 'Description')),
-            new SearchColumnDefinitionPresenter("owner", dgettext('tuleap-document', 'Owner')),
-            new SearchColumnDefinitionPresenter("update_date", dgettext('tuleap-document', 'Update date')),
-            new SearchColumnDefinitionPresenter("create_date", dgettext('tuleap-document', 'Create date')),
-            new SearchColumnDefinitionPresenter("location", dgettext('tuleap-document', 'Location')),
         ];
 
-        $status_metadata       = $metadata_factory->getHardCodedMetadataFromLabel(
-            \Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL
-        );
-        $obsolescence_metadata = $metadata_factory->getHardCodedMetadataFromLabel(
-            \Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL
-        );
-        foreach ([$status_metadata, $obsolescence_metadata] as $metadata) {
-            $metadata_factory->appendHardCodedMetadataParams($metadata);
-            if ($metadata->isUsed()) {
-                $columns[] = new SearchColumnDefinitionPresenter($metadata->getLabel(), $metadata->getName());
+        $all_metadata = $metadata_factory->getMetadataForGroup(true);
+        foreach ($all_metadata as $metadata) {
+            assert($metadata instanceof \Docman_Metadata);
+            if (! $metadata->isSpecial()) {
+                continue;
             }
+
+            if ($metadata->getLabel() === \Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL) {
+                continue;
+            }
+
+            $columns[] = new SearchColumnDefinitionPresenter($metadata->getLabel(), $metadata->getName());
         }
+
+        $columns[] = new SearchColumnDefinitionPresenter("location", dgettext('tuleap-document', 'Location'));
 
         return $columns;
     }
