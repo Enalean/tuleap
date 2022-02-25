@@ -44,7 +44,7 @@
             v-on:change="updatePropertiesListValue"
         >
             <option
-                v-for="possible_value in project_properties_list_possible_values.allowed_list_values"
+                v-for="possible_value in allowed_values"
                 v-bind:key="possible_value.id"
                 v-bind:value="possible_value.id"
                 v-bind:data-test="`document-custom-list-multiple-value-${possible_value.id}`"
@@ -56,43 +56,48 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { ListValue, Property } from "../../../../../store/properties/module";
+import { namespace } from "vuex-class";
 import emitter from "../../../../../helpers/emitter";
 
-export default {
-    name: "CustomPropertyListMultipleValue",
-    props: {
-        currentlyUpdatedItemProperty: Object,
-    },
-    data() {
-        return {
-            project_properties_list_possible_values: [],
-            multiple_list_values: this.currentlyUpdatedItemProperty.list_value,
-        };
-    },
-    computed: {
-        ...mapState("properties", ["project_properties"]),
-    },
-    mounted() {
+const properties = namespace("properties");
+
+@Component
+export default class CustomPropertyListMultipleValue extends Vue {
+    @Prop({ required: true })
+    readonly currentlyUpdatedItemProperty!: Property;
+
+    @properties.State
+    readonly project_properties!: Array<Property>;
+
+    private multiple_list_values = this.currentlyUpdatedItemProperty.list_value;
+
+    get allowed_values(): Array<ListValue> {
         if (
             this.currentlyUpdatedItemProperty.is_multiple_value_allowed &&
             this.currentlyUpdatedItemProperty.type === "list"
         ) {
-            this.project_properties_list_possible_values = this.project_properties.find(
+            const property = this.project_properties.find(
                 ({ short_name }) => short_name === this.currentlyUpdatedItemProperty.short_name
             );
+
+            if (property && property.allowed_list_values) {
+                return property.allowed_list_values;
+            }
         }
-    },
-    methods: {
-        updatePropertiesListValue() {
-            emitter.emit("update-multiple-properties-list-value", {
-                detail: {
-                    value: this.multiple_list_values,
-                    id: this.currentlyUpdatedItemProperty.short_name,
-                },
-            });
-        },
-    },
-};
+
+        return [];
+    }
+
+    updatePropertiesListValue(): void {
+        emitter.emit("update-multiple-properties-list-value", {
+            detail: {
+                value: this.multiple_list_values,
+                id: this.currentlyUpdatedItemProperty.short_name,
+            },
+        });
+    }
+}
 </script>

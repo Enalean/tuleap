@@ -131,7 +131,7 @@ export default {
     mounted() {
         this.modal = createModal(this.$el);
 
-        this.formatted_item_properties = getCustomProperties(this.item.properties);
+        this.formatted_item_properties = getCustomProperties(this.item_to_update.properties);
         transformCustomPropertiesForItemUpdate(this.formatted_item_properties);
 
         this.registerEvents();
