@@ -70,6 +70,7 @@ export interface ItemSearchResult {
     readonly owner: User;
     readonly last_update_date: string;
     readonly creation_date: string | null;
+    readonly obsolescence_date: string | null;
     readonly parents: ReadonlyArray<{
         readonly id: number;
         readonly title: string;

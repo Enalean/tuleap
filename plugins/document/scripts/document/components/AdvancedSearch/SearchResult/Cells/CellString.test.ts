@@ -23,11 +23,15 @@ import CellString from "./CellString.vue";
 describe("CellString", () => {
     it("should display the text as is", () => {
         const wrapper = shallowMount(CellString, {
-            propsData: {
-                text: "Lorem ipsum",
+            slots: {
+                default: "Lorem ipsum",
             },
         });
 
-        expect(wrapper.text()).toBe("Lorem ipsum");
+        expect(wrapper.element).toMatchInlineSnapshot(`
+            <td>
+              Lorem ipsum
+            </td>
+        `);
     });
 });

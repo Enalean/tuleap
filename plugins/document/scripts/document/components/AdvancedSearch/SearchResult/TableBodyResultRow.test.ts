@@ -27,6 +27,7 @@ import CellDescription from "./Cells/CellDescription.vue";
 import CellOwner from "./Cells/CellOwner.vue";
 import CellUpdateDate from "./Cells/CellUpdateDate.vue";
 import CellCreateDate from "./Cells/CellCreateDate.vue";
+import CellObsolescenceDate from "./Cells/CellObsolescenceDate.vue";
 import CellLocation from "./Cells/CellLocation.vue";
 import CellStatus from "./Cells/CellStatus.vue";
 
@@ -38,6 +39,7 @@ describe("TableBodyResultRow", () => {
         ["owner", CellOwner],
         ["update_date", CellUpdateDate],
         ["create_date", CellCreateDate],
+        ["obsolescence_date", CellObsolescenceDate],
         ["location", CellLocation],
         ["status", CellStatus],
     ])(

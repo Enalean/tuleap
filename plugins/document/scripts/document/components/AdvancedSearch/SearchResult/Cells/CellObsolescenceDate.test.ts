@@ -17,24 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ItemSearchResult } from "../../../../type";
 import { shallowMount } from "@vue/test-utils";
+import CellObsolescenceDate from "./CellObsolescenceDate.vue";
 import localVue from "../../../../helpers/local-vue";
-import CellId from "./CellId.vue";
 
-describe("CellId", () => {
-    it("should display the item id", () => {
-        const wrapper = shallowMount(CellId, {
+describe("CellObsolescenceDate", () => {
+    it("should display the obsolescence date", () => {
+        const wrapper = shallowMount(CellObsolescenceDate, {
             localVue,
             propsData: {
                 item: {
-                    id: 123,
-                } as ItemSearchResult,
+                    obsolescence_date: "2022-01-30",
+                },
             },
         });
 
-        expect(wrapper.text()).toContain("123");
-        expect(wrapper.classes("tlp-table-cell-numeric")).toBe(true);
-        expect(wrapper.classes("document-search-result-id")).toBe(true);
+        expect(wrapper.element).toMatchInlineSnapshot(`
+            <cell-date-stub
+              date="2022-01-30"
+            />
+        `);
+    });
+
+    it("should display a dash when the obsolescence date is null", () => {
+        const wrapper = shallowMount(CellObsolescenceDate, {
+            localVue,
+            propsData: {
+                item: {
+                    obsolescence_date: null,
+                },
+            },
+        });
+
+        expect(wrapper.element).toMatchInlineSnapshot(`<cell-string-stub />`);
     });
 });

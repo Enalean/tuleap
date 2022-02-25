@@ -42,7 +42,7 @@ describe("CellStatus", () => {
                 },
             });
 
-            expect(wrapper.findComponent(CellString).props().text).toBe(expected);
+            expect(wrapper.findComponent(CellString).text()).toBe(expected);
         }
     );
 });
