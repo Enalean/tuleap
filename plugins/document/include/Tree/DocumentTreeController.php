@@ -75,7 +75,8 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
             throw new NotFoundException(dgettext('tuleap-document', 'Unable to find the root folder of project'));
         }
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
+        $renderer         = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
+        $metadata_factory = new \Docman_MetadataFactory($project->getID());
         $renderer->renderToPage(
             'document-tree',
             new DocumentTreePresenter(
@@ -91,11 +92,11 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 $this->history_enforcement_settings_builder->build(),
                 $this->project_flags_builder->buildProjectFlags($project),
                 $this->criteria_builder->getCriteria(
-                    new \Docman_MetadataFactory($project->getID()),
+                    $metadata_factory,
                     new ItemStatusMapper(new \Docman_SettingsBo($project->getID())),
                     $project
                 ),
-                $this->column_builder->getColumns(),
+                $this->column_builder->getColumns($metadata_factory),
             )
         );
 

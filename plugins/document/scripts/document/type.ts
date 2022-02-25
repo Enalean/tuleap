@@ -65,6 +65,7 @@ export interface ItemSearchResult {
     readonly id: number;
     readonly type: string;
     readonly title: string;
+    readonly status: string | null;
     readonly post_processed_description: string;
     readonly owner: User;
     readonly last_update_date: string;

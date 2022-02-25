@@ -44,6 +44,7 @@ import CellOwner from "./Cells/CellOwner.vue";
 import CellUpdateDate from "./Cells/CellUpdateDate.vue";
 import CellCreateDate from "./Cells/CellCreateDate.vue";
 import CellLocation from "./Cells/CellLocation.vue";
+import CellStatus from "./Cells/CellStatus.vue";
 
 export default defineComponent({
     components: {
@@ -54,6 +55,7 @@ export default defineComponent({
         CellUpdateDate,
         CellCreateDate,
         CellLocation,
+        CellStatus,
     },
 });
 </script>

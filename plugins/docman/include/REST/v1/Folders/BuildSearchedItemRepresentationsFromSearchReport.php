@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1\Folders;
 
 use Tuleap\Docman\REST\v1\ItemRepresentationCollectionBuilder;
+use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Search\FilePropertiesVisitor;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationTypeVisitor;
@@ -59,12 +60,18 @@ final class BuildSearchedItemRepresentationsFromSearchReport
         foreach ($results as $item) {
             assert($item instanceof \Docman_Item);
 
+            try {
+                $converted_status = $this->status_mapper->getItemStatusFromItemStatusNumber((int) $item->getStatus());
+            } catch (HardCodedMetadataException $e) {
+                $converted_status = null;
+            }
+
             $owner = $this->user_manager->getUserById($item->getOwnerId());
             assert($owner instanceof \PFUser);
             $search_results[] = SearchRepresentation::build(
                 $item,
                 \Codendi_HTMLPurifier::instance(),
-                $this->status_mapper->getItemStatusFromItemStatusNumber((int) $item->getStatus()),
+                $converted_status,
                 $owner,
                 $this->item_representation_collection_builder->buildParentRowCollection($item, $user, $limit, $offset),
                 $item->accept($this->type_visitor),

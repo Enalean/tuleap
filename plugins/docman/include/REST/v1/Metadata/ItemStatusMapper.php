@@ -104,7 +104,6 @@ class ItemStatusMapper
         return $status_string;
     }
 
-
     /**
      *
      * @throws HardCodedMetadataException

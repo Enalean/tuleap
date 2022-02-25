@@ -27,9 +27,9 @@ final class ListOfSearchColumnDefinitionPresenterBuilder
     /**
      * @return SearchColumnDefinitionPresenter[]
      */
-    public function getColumns(): array
+    public function getColumns(\Docman_MetadataFactory $metadata_factory): array
     {
-        return [
+        $columns = [
             new SearchColumnDefinitionPresenter("id", dgettext('tuleap-document', 'Id')),
             new SearchColumnDefinitionPresenter("title", dgettext('tuleap-document', 'Title')),
             new SearchColumnDefinitionPresenter("description", dgettext('tuleap-document', 'Description')),
@@ -38,5 +38,15 @@ final class ListOfSearchColumnDefinitionPresenterBuilder
             new SearchColumnDefinitionPresenter("create_date", dgettext('tuleap-document', 'Create date')),
             new SearchColumnDefinitionPresenter("location", dgettext('tuleap-document', 'Location')),
         ];
+
+        $status_metadata = $metadata_factory->getHardCodedMetadataFromLabel(
+            \Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL
+        );
+        $metadata_factory->appendHardCodedMetadataParams($status_metadata);
+        if ($status_metadata->isUsed()) {
+            $columns[] = new SearchColumnDefinitionPresenter($status_metadata->getLabel(), $status_metadata->getName());
+        }
+
+        return $columns;
     }
 }
