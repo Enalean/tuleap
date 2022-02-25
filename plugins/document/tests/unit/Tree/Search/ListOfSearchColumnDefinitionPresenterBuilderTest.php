@@ -26,63 +26,37 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
 {
-    public function testGetColumns(): void
+    public function testGetColumnsAlwaysReturnTitleBecauseItIsTheOnlyColumnThatHasALinkToRetrieveTheItem(): void
     {
         $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
-
-        $status_metadata = new \Docman_Metadata();
-        $status_metadata->setLabel(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL);
-        $status_metadata->setName('Status');
-        $status_metadata->setUseIt(true);
-
-        $obsolescence_metadata = new \Docman_Metadata();
-        $obsolescence_metadata->setLabel(\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL);
-        $obsolescence_metadata->setName('Obsolescence');
-        $obsolescence_metadata->setUseIt(true);
-
-        $metadata_factory->method('getHardCodedMetadataFromLabel')
-            ->willReturnMap([
-                [\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL, null, $status_metadata],
-                [\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL, null, $obsolescence_metadata],
-            ]);
-        $metadata_factory->method('appendHardCodedMetadataParams');
+        $metadata_factory
+            ->method('getMetadataForGroup')
+            ->willReturn([]);
 
         $columns = (new ListOfSearchColumnDefinitionPresenterBuilder())->getColumns($metadata_factory);
 
-        self::assertEquals(
-            ["id", "title", "description", "owner", "update_date", "create_date", "location", "status", "obsolescence_date"],
-            array_map(
-                static fn(SearchColumnDefinitionPresenter $column): string => $column->name,
-                $columns,
-            ),
-        );
+        self::assertEquals("title", $columns[1]->name);
     }
 
     public function testGetColumnsWithoutStatus(): void
     {
         $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
-
-        $status_metadata = new \Docman_Metadata();
-        $status_metadata->setLabel(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL);
-        $status_metadata->setName('Status');
-        $status_metadata->setUseIt(false);
-
-        $obsolescence_metadata = new \Docman_Metadata();
-        $obsolescence_metadata->setLabel(\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL);
-        $obsolescence_metadata->setName('Obsolescence');
-        $obsolescence_metadata->setUseIt(true);
-
-        $metadata_factory->method('getHardCodedMetadataFromLabel')
-            ->willReturnMap([
-                [\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL, null, $status_metadata],
-                [\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL, null, $obsolescence_metadata],
+        $metadata_factory
+            ->method('getMetadataForGroup')
+            ->willReturn([
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_DESCRIPTION_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_OWNER_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_UPDATE_DATE_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_CREATE_DATE_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL),
             ]);
-        $metadata_factory->method('appendHardCodedMetadataParams');
 
         $columns = (new ListOfSearchColumnDefinitionPresenterBuilder())->getColumns($metadata_factory);
 
         self::assertEquals(
-            ["id", "title", "description", "owner", "update_date", "create_date", "location", "obsolescence_date"],
+            ["id", "title", "description", "owner", "update_date", "create_date", "status", "obsolescence_date", "location"],
             array_map(
                 static fn(SearchColumnDefinitionPresenter $column): string => $column->name,
                 $columns,
@@ -90,35 +64,13 @@ class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
         );
     }
 
-    public function testGetColumnsWithoutObsolescence(): void
+    private function getHardcodedMetadata(string $label): \Docman_Metadata
     {
-        $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
+        $metadata = new \Docman_Metadata();
+        $metadata->setLabel($label);
+        $metadata->setName(\ucfirst($label));
+        $metadata->setSpecial(true);
 
-        $status_metadata = new \Docman_Metadata();
-        $status_metadata->setLabel(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL);
-        $status_metadata->setName('Status');
-        $status_metadata->setUseIt(true);
-
-        $obsolescence_metadata = new \Docman_Metadata();
-        $obsolescence_metadata->setLabel(\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL);
-        $obsolescence_metadata->setName('Obsolescence');
-        $obsolescence_metadata->setUseIt(false);
-
-        $metadata_factory->method('getHardCodedMetadataFromLabel')
-            ->willReturnMap([
-                [\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL, null, $status_metadata],
-                [\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL, null, $obsolescence_metadata],
-            ]);
-        $metadata_factory->method('appendHardCodedMetadataParams');
-
-        $columns = (new ListOfSearchColumnDefinitionPresenterBuilder())->getColumns($metadata_factory);
-
-        self::assertEquals(
-            ["id", "title", "description", "owner", "update_date", "create_date", "location", "status"],
-            array_map(
-                static fn(SearchColumnDefinitionPresenter $column): string => $column->name,
-                $columns,
-            ),
-        );
+        return $metadata;
     }
 }

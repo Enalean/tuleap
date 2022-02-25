@@ -23,12 +23,6 @@ msgstr ""
 msgid "An error occurred while saving configuration."
 msgstr "Une erreur est survenue lors de la sauvegarde de la configuration."
 
-msgid "Create date"
-msgstr "Date de création"
-
-msgid "Description"
-msgstr "Description"
-
 msgid "Document"
 msgstr "Document"
 
@@ -88,9 +82,6 @@ msgstr "Mégaoctets"
 msgid "None"
 msgstr "Aucun"
 
-msgid "Owner"
-msgstr "Propriétaire"
-
 msgid "Please contact your site administrator."
 msgstr "Veuillez contacter votre administrateur de site."
 
@@ -148,9 +139,6 @@ msgstr "Type"
 
 msgid "Unable to find the root folder of project"
 msgstr "Impossible de trouver le dossier racine du projet"
-
-msgid "Update date"
-msgstr "Date de mise à jour"
 
 msgid "Warning threshold"
 msgstr "Seuil d'avertissement"
