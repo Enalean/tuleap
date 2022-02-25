@@ -19,12 +19,8 @@
   -->
 
 <template>
-    <td>{{ text }}</td>
+    <td><slot /></td>
 </template>
-
-<script setup lang="ts">
-defineProps<{ text: string }>();
-</script>
 
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";

@@ -60,18 +60,12 @@ final class BuildSearchedItemRepresentationsFromSearchReport
         foreach ($results as $item) {
             assert($item instanceof \Docman_Item);
 
-            try {
-                $converted_status = $this->status_mapper->getItemStatusFromItemStatusNumber((int) $item->getStatus());
-            } catch (HardCodedMetadataException $e) {
-                $converted_status = null;
-            }
-
             $owner = $this->user_manager->getUserById($item->getOwnerId());
             assert($owner instanceof \PFUser);
             $search_results[] = SearchRepresentation::build(
                 $item,
                 \Codendi_HTMLPurifier::instance(),
-                $converted_status,
+                $this->getStatus($item),
                 $owner,
                 $this->item_representation_collection_builder->buildParentRowCollection($item, $user, $limit, $offset),
                 $item->accept($this->type_visitor),
@@ -80,5 +74,14 @@ final class BuildSearchedItemRepresentationsFromSearchReport
         }
 
         return new SearchRepresentationsCollection($search_results, $nb_item_found);
+    }
+
+    private function getStatus(\Docman_Item $item): ?string
+    {
+        try {
+            return $this->status_mapper->getItemStatusFromItemStatusNumber((int) $item->getStatus());
+        } catch (HardCodedMetadataException $e) {
+            return null;
+        }
     }
 }

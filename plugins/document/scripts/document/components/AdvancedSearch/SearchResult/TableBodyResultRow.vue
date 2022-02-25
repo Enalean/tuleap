@@ -43,6 +43,7 @@ import CellDescription from "./Cells/CellDescription.vue";
 import CellOwner from "./Cells/CellOwner.vue";
 import CellUpdateDate from "./Cells/CellUpdateDate.vue";
 import CellCreateDate from "./Cells/CellCreateDate.vue";
+import CellObsolescenceDate from "./Cells/CellObsolescenceDate.vue";
 import CellLocation from "./Cells/CellLocation.vue";
 import CellStatus from "./Cells/CellStatus.vue";
 
@@ -54,6 +55,7 @@ export default defineComponent({
         CellOwner,
         CellUpdateDate,
         CellCreateDate,
+        CellObsolescenceDate,
         CellLocation,
         CellStatus,
     },

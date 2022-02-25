@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CellOwner from "./CellOwner.vue";
-import type { FileProperties, ItemSearchResult, User } from "../../../../type";
+import type { ItemSearchResult, User } from "../../../../type";
 import localVue from "../../../../helpers/local-vue";
 import UserBadge from "../../../User/UserBadge.vue";
 
@@ -34,32 +34,7 @@ describe("CellOwner", () => {
             localVue,
             propsData: {
                 item: {
-                    id: 123,
-                    type: "file",
-                    title: "Lorem",
-                    status: "draft",
-                    post_processed_description: "ipsum doloret",
                     owner,
-                    last_update_date: "2021-10-06",
-                    creation_date: "2021-10-04",
-                    parents: [
-                        {
-                            id: 120,
-                            title: "Path",
-                        },
-                        {
-                            id: 121,
-                            title: "To",
-                        },
-                        {
-                            id: 122,
-                            title: "Folder",
-                        },
-                    ],
-                    file_properties: {
-                        file_type: "text/html",
-                        download_href: "/path/to/file",
-                    } as FileProperties,
                 } as ItemSearchResult,
             },
         });

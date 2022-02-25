@@ -69,6 +69,11 @@ final class SearchRepresentation
     public $creation_date;
 
     /**
+     * @var string | null {@type string}
+     */
+    public $obsolescence_date;
+
+    /**
      * @var array {@type ParentFolderRepresentation}
      */
     public array $parents;
@@ -90,6 +95,7 @@ final class SearchRepresentation
         MinimalUserRepresentation $owner,
         string $update_date,
         string $creation_date,
+        ?int $obsolescence_date,
         PaginatedParentRowCollection $parents,
         ?string $type,
         ?FilePropertiesRepresentation $file_properties,
@@ -101,6 +107,7 @@ final class SearchRepresentation
         $this->owner                      = $owner;
         $this->last_update_date           = JsonCast::toDate($update_date);
         $this->creation_date              = JsonCast::toDate($creation_date);
+        $this->obsolescence_date          = JsonCast::toDate($obsolescence_date);
         $this->parents                    = $parents->getPaginatedElementCollection();
         $this->type                       = $type;
         $this->file_properties            = $file_properties;
@@ -115,6 +122,8 @@ final class SearchRepresentation
         ?string $type,
         ?FilePropertiesRepresentation $file_properties,
     ): self {
+        $obsolescence_date = $item->getObsolescenceDate();
+
         return new self(
             (int) $item->getId(),
             (string) $item->getTitle(),
@@ -123,6 +132,7 @@ final class SearchRepresentation
             MinimalUserRepresentation::build($user),
             (string) $item->getUpdateDate(),
             (string) $item->getCreateDate(),
+            $obsolescence_date > 0 ? $obsolescence_date : null,
             $parents,
             $type,
             $file_properties,

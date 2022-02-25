@@ -19,33 +19,16 @@
   -->
 
 <template>
-    <cell-string>{{ status }}</cell-string>
+    <cell-date v-bind:date="item.obsolescence_date" v-if="item.obsolescence_date" />
+    <cell-string v-else />
 </template>
 
 <script setup lang="ts">
+import type { ItemSearchResult } from "../../../../type";
+import CellDate from "./CellDate.vue";
 import CellString from "./CellString.vue";
-import type { ItemSearchResult } from "plugins/document/scripts/document/type";
-import { computed } from "@vue/composition-api";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-const { $gettext } = useGettext();
-
-const props = defineProps<{ item: ItemSearchResult }>();
-
-const status = computed((): string => {
-    switch (props.item.status) {
-        case "none":
-            return $gettext("None");
-        case "draft":
-            return $gettext("Draft");
-        case "approved":
-            return $gettext("Approved");
-        case "rejected":
-            return $gettext("Rejected");
-        default:
-            return "";
-    }
-});
+defineProps<{ item: ItemSearchResult }>();
 </script>
 
 <script lang="ts">
