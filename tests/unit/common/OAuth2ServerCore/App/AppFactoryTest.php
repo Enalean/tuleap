@@ -29,9 +29,9 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $app_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&AppDao
+     * @var \PHPUnit\Framework\MockObject\Stub&RetrieveAppMatchingClientID
      */
-    private $app_dao;
+    private $app_retriever;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\ProjectManager
      */
@@ -39,14 +39,14 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->app_dao         = $this->createMock(AppDao::class);
+        $this->app_retriever   = $this->createStub(RetrieveAppMatchingClientID::class);
         $this->project_manager = $this->createMock(\ProjectManager::class);
-        $this->app_factory     = new AppFactory($this->app_dao, $this->project_manager);
+        $this->app_factory     = new AppFactory($this->app_retriever, $this->project_manager);
     }
 
     public function testGetAppMatchingClientIdThrowsWhenIDNotFoundInDatabase(): void
     {
-        $this->app_dao->expects(self::once())->method('searchByClientId')->willReturn(null);
+        $this->app_retriever->expects(self::once())->method('searchByClientId')->willReturn(null);
         $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
 
         $this->expectException(OAuth2AppNotFoundException::class);
@@ -55,7 +55,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetAppMatchingClientIdThrowsWhenProjectNotFound(): void
     {
-        $this->app_dao->expects(self::once())->method('searchByClientId')
+        $this->app_retriever->expects(self::once())->method('searchByClientId')
             ->willReturn(
                 ['id' => 1, 'name' => 'Jenkins', 'project_id' => 404, 'redirect_endpoint' => 'https://jenkins.example.com']
             );
@@ -70,7 +70,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetAppMatchingClientIdReturnsAnApp(): void
     {
-        $this->app_dao->expects(self::once())->method('searchByClientId')
+        $this->app_retriever->expects(self::once())->method('searchByClientId')
             ->willReturn(
                 ['id' => 1, 'name' => 'Jenkins', 'project_id' => 102, 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1]
             );
@@ -86,7 +86,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetSiteLevelAppMatchingClientIdReturnsAnApp(): void
     {
-        $this->app_dao->expects(self::once())->method('searchByClientId')
+        $this->app_retriever->expects(self::once())->method('searchByClientId')
             ->willReturn(
                 ['id' => 1, 'name' => 'Jenkins', 'project_id' => null, 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1]
             );

@@ -24,14 +24,14 @@ namespace Tuleap\OAuth2ServerCore\App;
 
 use Tuleap\DB\DataAccessObject;
 
-class AppDao extends DataAccessObject
+class AppDao extends DataAccessObject implements RetrieveAppMatchingClientID
 {
     /**
-     * @psalm-return array{id:int, project_id:int|null, name:string, redirect_endpoint: string, use_pkce:0|1}
+     * @psalm-return array{id:int, project_id:int|null, name:string, redirect_endpoint: string, use_pkce:0|1, app_type: string}
      */
     public function searchByClientId(ClientIdentifier $client_id): ?array
     {
-        $sql = 'SELECT id, project_id, name, redirect_endpoint, use_pkce FROM oauth2_server_app
+        $sql = 'SELECT id, project_id, name, redirect_endpoint, use_pkce, app_type FROM oauth2_server_app
             WHERE id = ?';
         return $this->getDB()->row($sql, $client_id->getInternalId());
     }
