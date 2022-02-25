@@ -18,7 +18,7 @@
  */
 
 describe("Docman", function () {
-    let project_unixname: string, public_name: string, now: number, project_id: string;
+    let project_unixname: string, public_name: string, now: number;
 
     before(() => {
         cy.clearSessionCookie();
@@ -48,20 +48,19 @@ describe("Docman", function () {
         cy.get("[data-test=start-working]").click({
             timeout: 20000,
         });
-        cy.getProjectId(project_unixname).as("docman_project_id");
+        cy.getProjectId(project_unixname).as("project_id");
     });
 
     context("Project administrators", function () {
         it("can access to admin section", function () {
-            project_id = this.docman_project_id;
-            cy.visit("/plugins/docman/?group_id=" + project_id + "&action=admin");
+            cy.visit("/plugins/docman/?group_id=" + this.project_id + "&action=admin");
         });
 
         context("document properties", function () {
             it("switch back on legacy ui", function () {
                 //document is available on new instance, so we must switch back to old UI
                 //because, even if we call old UI, as the project has no custom metadata we'll be redirected on new UI
-                cy.visit(`/plugins/docman/?group_id=${this.docman_project_id}`);
+                cy.visit(`/plugins/docman/?group_id=${this.project_id}`);
                 cy.get("[data-test=document-switch-to-old-ui]").click();
 
                 cy.get("[data-test=toolbar]").contains("Admin").click();
@@ -70,6 +69,7 @@ describe("Docman", function () {
 
             it("cannot create a document when a mandatory property is not filled", function () {
                 cy.visit(this.manage_properties_url);
+                cy.get("[data-test=docman-admin-properties-create-button]").click();
 
                 cy.get("[data-test=metadata_name]").type("my custom property");
                 cy.get("[data-test=empty_allowed]").uncheck();
@@ -94,6 +94,7 @@ describe("Docman", function () {
 
             it("cannot create a property with an empty name", function () {
                 cy.visit(this.manage_properties_url);
+                cy.get("[data-test=docman-admin-properties-create-button]").click();
 
                 cy.get("[data-test=metadata_name]").type("  ");
                 cy.get("[data-test=empty_allowed]").uncheck();
@@ -116,7 +117,8 @@ describe("Docman", function () {
 
             it("remove a property", function () {
                 cy.visit(this.manage_properties_url);
-                cy.get("[data-test=html_trash_link]").click();
+                cy.get("[data-test=docman-admin-properties-delete-button]").click();
+                cy.get("[data-test=docman-admin-properties-delete-confirm-button]").click();
 
                 cy.get("[data-test=feedback]").contains(
                     '"my custom property" successfully deleted'
@@ -239,17 +241,22 @@ describe("Docman", function () {
 
             cy.clearSessionCookie();
             cy.projectMemberLogin();
-
-            cy.getProjectId(project_unixname).as("docman_project_id");
         });
 
         beforeEach(() => {
             cy.preserveSessionCookies();
         });
 
+        it("switch back on legacy ui", function () {
+            //document is available on new instance, so we must switch back to old UI
+            //because, even if we call old UI, as the project has no custom metadata we'll be redirected on new UI
+            cy.visit(`/plugins/docman/?group_id=${this.project_id}`);
+            cy.get("[data-test=document-switch-to-old-ui]").click();
+        });
+
         context("docman permissions", function () {
             it("should raise an error when user try to access to docman admin page", function () {
-                cy.visit("/plugins/docman/?group_id=" + project_id + "&action=admin");
+                cy.visit("/plugins/docman/?group_id=" + this.project_id + "&action=admin");
 
                 cy.get("[data-test=feedback]").contains(
                     "You do not have sufficient access rights to administrate the document manager."
@@ -269,8 +276,7 @@ describe("Docman", function () {
                 cy.contains("pattern");
             });
             it("adds the 'Title' criteria", function () {
-                //We should be into the new document UI.
-                cy.get("[data-test=document-advanced-link]").click();
+                cy.get("[data-test=docman_report_search]").click();
 
                 cy.get("[data-test=title-filter]").should("not.exist", "Title");
                 cy.get("[data-test=plugin_docman_report_add_filter]").select("title");
