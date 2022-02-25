@@ -1,0 +1,51 @@
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <form method="POST" action="" class="tlp-pane-container">
+            {{# csrf }}
+                {{> csrf_token_input }}
+            {{/ csrf }}
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{# dgettext }}tuleap-docman | File pattern{{/dgettext}}</h1>
+            </div>
+            <section class="tlp-pane-section">
+                <p> {{# dgettext }} tuleap-docman | Apply a naming pattern on files.{{/dgettext}}<br/>
+                    {{# dgettext }}
+                        tuleap-docman | Pattern is defined with variables that comes from Tuleap. There are 4 variables
+                        available:
+                    {{/dgettext}}
+                </p>
+                <ul>
+                    <li> {{# dgettext }} tuleap-docman | ${ID}: the document internal id. {{/dgettext}}</li>
+                    <li> {{# dgettext }} tuleap-docman | ${TITLE}: the document title. {{/dgettext}}</li>
+                    <li>
+                        {{# dgettext }}
+                            tuleap-docman | ${STATUS}: the document status ("Draft", "Approved" or "Rejected").
+                        {{/dgettext}}
+                    </li>
+                    <li>
+                        {{# dgettext }}
+                            tuleap-docman | ${VERSION_NAME}: the latest version name of the document.
+                        {{/dgettext}}
+                    </li>
+                </ul>
+                <p class="tlp-text-danger">
+                    {{# dgettext }}
+                        tuleap-docman | There must be at least either ${TITLE} or ${ID} variable in the pattern.
+                    {{/dgettext}}
+                </p>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="pattern">{{# dgettext }}tuleap-docman | Pattern {{/dgettext}}</label>
+                    <input type="text" class="tlp-input" id="pattern" name="filename_pattern" placeholder="tuleap-doc#{ID}"
+                           value="{{pattern}}" pattern=".*\$\{(TITLE|ID)\}.*" />
+                </div>
+                <input type="hidden" name="action" value="admin_change_filename_pattern" />
+            </section>
+            <section class="tlp-pane-section tlp-pane-section-submit">
+                <button type="submit" class="tlp-button-primary">
+                    <i class="far fa-save tlp-button-icon" aria-hidden="true"></i>
+                    {{# gettext }}Save{{/ gettext }}
+                </button>
+            </section>
+        </form>
+    </section>
+</div>

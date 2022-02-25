@@ -23,23 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Settings;
 
-final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements DAOSettings
+interface DAOSettings
 {
-    public function searchFileNamePatternFromProjectId(int $project_id): ?string
-    {
-        $sql = "SELECT filename_pattern FROM plugin_docman_project_settings WHERE group_id=?";
-        $row = $this->getDB()->first($sql, $project_id);
-        return $row[0];
-    }
-
-    public function saveFilenamePattern(int $project_id, ?string $pattern): void
-    {
-        $this->getDB()->update(
-            'plugin_docman_project_settings',
-            [
-                'filename_pattern' => $pattern,
-            ],
-            ['group_id' => $project_id]
-        );
-    }
+    public function saveFilenamePattern(int $project_id, ?string $pattern): void;
 }

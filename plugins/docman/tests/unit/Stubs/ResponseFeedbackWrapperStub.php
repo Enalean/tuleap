@@ -21,25 +21,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Settings;
+namespace Tuleap\Docman\Tests\Stub;
 
-final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements DAOSettings
+use Tuleap\Docman\ResponseFeedbackWrapper;
+
+final class ResponseFeedbackWrapperStub extends ResponseFeedbackWrapper
 {
-    public function searchFileNamePatternFromProjectId(int $project_id): ?string
+    public function __construct(private string $level)
     {
-        $sql = "SELECT filename_pattern FROM plugin_docman_project_settings WHERE group_id=?";
-        $row = $this->getDB()->first($sql, $project_id);
-        return $row[0];
     }
 
-    public function saveFilenamePattern(int $project_id, ?string $pattern): void
+    public static function buildWithNoPredefinedLevel(): self
     {
-        $this->getDB()->update(
-            'plugin_docman_project_settings',
-            [
-                'filename_pattern' => $pattern,
-            ],
-            ['group_id' => $project_id]
-        );
+        return new self("");
+    }
+
+    public function log($level, $msg, $purify = CODENDI_PURIFIER_CONVERT_HTML): void
+    {
+        $this->level = $level;
+    }
+
+    public function getLevel(): string
+    {
+        return $this->level;
     }
 }

@@ -630,6 +630,15 @@ class Docman_Controller extends Controler
                     $this->_viewParams['md'] = $md;
                 }
                 break;
+            case \Docman_View_Admin_FilenamePattern::IDENTIFIER:
+                $this->view = "Admin_FilenamePattern";
+                break;
+            case "admin_change_filename_pattern":
+                Docman_View_Admin_FilenamePattern::getCSRFToken($this->getGroupId())->check();
+                $this->action                            = $view;
+                $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_FilenamePattern::IDENTIFIER];
+                $this->view                              = 'RedirectAfterCrud';
+                break;
             case 'admin_md_details_update':
                 $_name  = trim($this->request->get('name'));
                 $_label = $this->request->get('label');

@@ -21,25 +21,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Settings;
+namespace Tuleap\Docman\Tests\Stub;
 
-final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements DAOSettings
+use Tuleap\Docman\Settings\DAOSettings;
+
+final class SettingsDAOStub implements DAOSettings
 {
-    public function searchFileNamePatternFromProjectId(int $project_id): ?string
+    private function __construct(private int $count_save_filename_pattern)
     {
-        $sql = "SELECT filename_pattern FROM plugin_docman_project_settings WHERE group_id=?";
-        $row = $this->getDB()->first($sql, $project_id);
-        return $row[0];
+        $this->count_save_filename_pattern = 0;
+    }
+
+    public static function buildSaveFilenamePatternMethodCounter(): self
+    {
+        return new self(0);
     }
 
     public function saveFilenamePattern(int $project_id, ?string $pattern): void
     {
-        $this->getDB()->update(
-            'plugin_docman_project_settings',
-            [
-                'filename_pattern' => $pattern,
-            ],
-            ['group_id' => $project_id]
-        );
+        $this->count_save_filename_pattern++;
+    }
+
+    public function getCountSaveFilenamePattern(): int
+    {
+        return $this->count_save_filename_pattern;
     }
 }

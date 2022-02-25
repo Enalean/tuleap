@@ -21,25 +21,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Settings;
+namespace Tuleap\Docman\FilenamePattern;
 
-final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements DAOSettings
+use Tuleap\Docman\Settings\DAOSettings;
+
+final class FilenamePatternUpdater
 {
-    public function searchFileNamePatternFromProjectId(int $project_id): ?string
+    public function __construct(private DAOSettings $settings_DAO)
     {
-        $sql = "SELECT filename_pattern FROM plugin_docman_project_settings WHERE group_id=?";
-        $row = $this->getDB()->first($sql, $project_id);
-        return $row[0];
     }
 
-    public function saveFilenamePattern(int $project_id, ?string $pattern): void
+    public function updatePattern(int $project_id, ?string $pattern): void
     {
-        $this->getDB()->update(
-            'plugin_docman_project_settings',
-            [
-                'filename_pattern' => $pattern,
-            ],
-            ['group_id' => $project_id]
-        );
+        if (! FilenamePatternValidator::isPatternValid($pattern)) {
+            throw new InvalidMinimalPatternException();
+        }
+        $this->settings_DAO->saveFilenamePattern($project_id, $pattern);
     }
 }
