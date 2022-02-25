@@ -29,7 +29,6 @@ module.exports = [
     {
         entry: {
             graphontrackersv5: "./scripts/src/loadGraphs.js",
-            dependencies: "./scripts/dependencies.js",
             style: "./themes/default/css/style.scss",
         },
         context,
