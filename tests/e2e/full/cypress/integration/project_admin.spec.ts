@@ -275,6 +275,7 @@ describe("Project admin", function () {
             cy.visitProjectAdministration(project_name);
             addUser("SecondProjectAdministrator");
             addAdminUser("SecondProjectAdministrator");
+            cy.visitProjectAdministration(project_name);
             cy.get("[data-test=admin-nav-groups]").click();
             cy.get(`[data-test=ugroup-${project_admin_group_id}-details]`).click();
 

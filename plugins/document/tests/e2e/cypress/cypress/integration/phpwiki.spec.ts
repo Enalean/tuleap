@@ -85,7 +85,8 @@ describe("Document PhpWiki integration", () => {
         cy.log("wiki document have their permissions in document service");
 
         createAWikiDocument(`private${now}`, `My Wiki & Page document${now}`);
-        cy.get("[data-test=document-tree-content]").contains("tr", `private${now}`).click();
+        cy.visitProjectService(project_unixname, "Documents");
+        cy.get("[data-test=document-tree-content]").contains("td", `private${now}`).click();
         cy.get("[data-test=go-to-the-wiki-page]").click();
 
         // ignore rule for phpwiki generated content
@@ -107,7 +108,7 @@ describe("Document PhpWiki integration", () => {
 
         cy.log("Document events");
         cy.visitProjectService(project_unixname, "Documents");
-        cy.get("[data-test=document-tree-content]").contains("tr", `private${now}`).click();
+        cy.get("[data-test=document-tree-content]").contains("td", `private${now}`).click();
         cy.get("[data-test=document-history]").last().click({ force: true });
 
         cy.get("[data-test=table-test]").contains("Wiki page content change");
@@ -115,7 +116,7 @@ describe("Document PhpWiki integration", () => {
 
         cy.log("project member can not see document when lack of permissions");
         cy.visitProjectService(project_unixname, "Documents");
-        cy.get("[data-test=document-tree-content]").contains("tr", `private${now}`).click();
+        cy.get("[data-test=document-tree-content]").contains("td", `private${now}`).click();
 
         cy.get("[data-test=document-permissions]").last().click({ force: true });
 
@@ -126,7 +127,8 @@ describe("Document PhpWiki integration", () => {
 
         cy.log("wiki page have their permissions in wiki service");
 
-        cy.get("[data-test=document-tree-content]").contains("tr", `private${now}`).click();
+        cy.visitProjectService(project_unixname, "Documents");
+        cy.get("[data-test=document-tree-content]").contains("td", `private${now}`).click();
 
         cy.url().then((url) => {
             cy.userLogout();

@@ -11,5 +11,7 @@
     "pluginsFile": false,
     "pageLoadTimeout": 120000,
     "chromeWebSecurity": false,
-    "retries": 1
+    "retries": 1,
+    "viewportWidth": 1366,
+    "viewportHeight": 768
 }
