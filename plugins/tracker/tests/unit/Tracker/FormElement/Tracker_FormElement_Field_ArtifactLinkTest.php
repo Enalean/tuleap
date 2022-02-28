@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -418,30 +419,6 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $field->getFieldDataFromRESTValueByField($value);
     }
 
-    /**
-     * @dataProvider getInvalidRESTValue
-     */
-    public function testGetFieldDataFromRESTValueThrowsExceptionIfFormatIsNotValid($invalid_value): void
-    {
-        $field = $this->buildField();
-
-        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
-
-        $field->getFieldDataFromRESTValue($invalid_value, null);
-    }
-
-    public function getInvalidRESTValue(): array
-    {
-        return [
-            [
-                [],
-            ],
-            [
-                ["links" => 123],
-            ],
-        ];
-    }
-
     public function testGetFieldDataFromRESTValueExtractsLinksFromRESTValue(): void
     {
         $user_manager = $this->createMock(UserManager::class);
@@ -471,6 +448,12 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testGetFieldDataFromRESTValueExtractsParentFromRESTValue(): void
     {
+        $user_manager = $this->createMock(UserManager::class);
+        $user_manager
+            ->method('getCurrentUser')
+            ->willReturn(\Tuleap\Test\Builders\UserTestBuilder::anAnonymousUser()->build());
+        UserManager::setInstance($user_manager);
+
         $field = $this->buildField();
 
         self::assertEquals(
@@ -518,6 +501,8 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
             ->willReturn(\Tuleap\Test\Builders\UserTestBuilder::anAnonymousUser()->build());
         UserManager::setInstance($user_manager);
 
+        $field = $this->buildField();
+
         $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $changeset
             ->method("getId")
@@ -527,6 +512,9 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $artifact
             ->method("getLastChangeset")
             ->willReturn($changeset);
+        $artifact
+            ->method('getAnArtifactLinkField')
+            ->willReturn($field);
 
         $dao = $this->createMock(\Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao::class);
         $dao
@@ -552,10 +540,15 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $existing_link
             ->method("getId")
             ->willReturn(666);
+        $existing_link
+            ->method('getTracker')
+            ->willReturn(TrackerTestBuilder::aTracker()->withId(101)->build());
+        $existing_link
+            ->method('getLastChangeset')
+            ->willReturn(\Tuleap\Tracker\Test\Builders\ChangesetTestBuilder::aChangeset('100001')->build());
 
         Tracker_ArtifactFactory::setInstance($this->givenAnArtifactFactory([$existing_link]));
 
-        $field = $this->buildField();
         $field->setChangesetValueArtifactLinkDao($dao);
 
         self::assertEquals(

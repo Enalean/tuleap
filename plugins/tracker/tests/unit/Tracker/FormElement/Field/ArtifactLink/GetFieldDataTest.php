@@ -108,32 +108,6 @@ final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testAddsTwoNewValuesWithTypes(): void
-    {
-        $this->field->shouldReceive('getChangesetValues')->andReturn([]);
-
-        $new_values = [
-            'links' => [
-                ['id' => '55', 'type' => '_is_child'],
-                ['id' => '66', 'type' => 'custom'],
-                ['id' => '77', 'type' => ''],
-            ],
-        ];
-
-        $this->assertEquals(
-            [
-                'new_values' => '55,66,77',
-                'removed_values' => [],
-                'types' => [
-                    '55' => '_is_child',
-                    '66' => 'custom',
-                    '77' => '',
-                ],
-            ],
-            $this->field->getFieldDataFromRESTValue($new_values, $this->artifact)
-        );
-    }
-
     public function testIgnoresAddOfArtifactThatAreAlreadyLinked(): void
     {
         $this->field->shouldReceive('getChangesetValues')->andReturn(

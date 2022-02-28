@@ -40,6 +40,13 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\PossibleParentSelectorRenderer
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\PostSaveNewChangesetLinkParentArtifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RequestDataAugmentor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactForwardLinksInfoRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksByChangesetCache;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksFieldUpdateValueBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksFieldUpdateValueFormatter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksPayloadExtractor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksPayloadStructureChecker;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactParentLinkPayloadExtractor;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -245,27 +252,20 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      */
     public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {
-        if (
-            ! array_key_exists('parent', $value) &&
-            (! array_key_exists('links', $value) || ! is_array($value['links']))
-        ) {
-            throw new Tracker_FormElement_InvalidFieldValueException(
-                'Value should be \'links\' and an array of {"id": integer, ["type": string]} and/or \'parent\' with {"id": integer}'
-            );
-        }
+        $update_value = (
+            new ArtifactLinksFieldUpdateValueBuilder(
+                new ArtifactLinksPayloadStructureChecker(),
+                new ArtifactLinksPayloadExtractor(),
+                new ArtifactParentLinkPayloadExtractor(),
+                new ArtifactForwardLinksInfoRetriever(
+                    new ArtifactLinksByChangesetCache(),
+                    $this->getChangesetValueArtifactLinkDao(),
+                    Tracker_ArtifactFactory::instance()
+                )
+            )
+        )->buildArtifactLinksFieldUpdateValue($this->getCurrentUser(), $this, $value, $artifact);
 
-        $fields_data = [];
-        if (array_key_exists('links', $value) && is_array($value['links'])) {
-            $submitted_ids = $this->getFieldDataBuilder()->getArrayOfIdsFromArray($value['links']);
-
-            $fields_data = $this->getDataLikeWebUI($submitted_ids, $value['links'], $artifact);
-        }
-
-        if (array_key_exists('parent', $value) && isset($value[self::FIELDS_DATA_PARENT_KEY]['id'])) {
-            $fields_data[self::FIELDS_DATA_PARENT_KEY] = [$value[self::FIELDS_DATA_PARENT_KEY]['id']];
-        }
-
-        return $fields_data;
+        return ArtifactLinksFieldUpdateValueFormatter::formatForWebUI($update_value);
     }
 
     public function getFieldDataFromRESTValueByField($value, ?Artifact $artifact = null)

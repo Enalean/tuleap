@@ -64,22 +64,6 @@ class FieldDataBuilder
         return $values;
     }
 
-    /**
-     * @param array $new_value
-     *
-     * @return array
-     */
-    public function getArrayOfIdsFromArray(array $new_value)
-    {
-        $artifact_ids = [];
-
-        foreach ($new_value as $value) {
-            $artifact_ids[] = (int) $value['id'];
-        }
-
-        return $artifact_ids;
-    }
-
     public function getArrayOfIdsFromString($new_value)
     {
         return array_filter(array_map('intval', explode(',', $new_value)));
