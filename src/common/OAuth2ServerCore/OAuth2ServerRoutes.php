@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore;
 
-use BackendLogger;
 use DateInterval;
 use EventManager;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use ProjectManager;
+use Psr\Log\LoggerInterface;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
@@ -156,7 +156,7 @@ final class OAuth2ServerRoutes
                 new OAuth2ScopeBuilderCollector()
             )
         );
-        $logger                                    = \BackendLogger::getDefaultLogger('oauth2_server.log');
+        $logger                                    = self::getOAuth2ServerLogger();
         $access_token_grant_representation_builder = new AccessTokenGrantRepresentationBuilder(
             new OAuth2AccessTokenCreator(
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
@@ -277,8 +277,13 @@ final class OAuth2ServerRoutes
                     new SplitTokenVerificationStringHasher()
                 ),
                 new BasicAuthLoginExtractor(),
-                BackendLogger::getDefaultLogger()
+                self::getOAuth2ServerLogger()
             )
         );
+    }
+
+    public static function getOAuth2ServerLogger(): LoggerInterface
+    {
+        return \BackendLogger::getDefaultLogger('oauth2_server.log');
     }
 }

@@ -843,11 +843,6 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
 
 %if %{with enterprise}
 
-# Plugin oauth2_server
-%{__install} plugins/oauth2_server/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_oauth2_server
-%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_oauth2_server
-%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_oauth2_server
-
 # Plugin program_management
 %{__install} plugins/program_management/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_program_management
 %{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_program_management
@@ -1421,8 +1416,6 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/oauth2_server
 %{APP_DIR}/src/www/assets/oauth2_server
-%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_oauth2_server
-%config(noreplace) /etc/logrotate.d/%{APP_NAME}_oauth2_server
 
 %files plugin-project-ownership
 %defattr(-,root,root,-)
