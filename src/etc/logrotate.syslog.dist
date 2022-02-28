@@ -48,3 +48,10 @@
     dateext
     create 640 %APP_USER% %APP_USER%
 }
+
+/var/log/%PROJECT_NAME%/oauth2_server.log {
+    missingok
+    weekly
+    rotate 4
+    create 640 %APP_USER% %APP_USER%
+}

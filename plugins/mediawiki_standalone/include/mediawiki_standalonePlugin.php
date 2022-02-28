@@ -159,7 +159,7 @@ final class mediawiki_standalonePlugin extends Plugin
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
         );
 
-        $logger = BackendLogger::getDefaultLogger();
+        $logger = \Tuleap\OAuth2ServerCore\OAuth2ServerRoutes::getOAuth2ServerLogger();
         return new AuthorizationEndpointController(
             new RejectAuthorizationRequiringConsent(
                 new AuthorizationCodeResponseFactory(

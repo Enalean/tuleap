@@ -21,7 +21,6 @@
 declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Psr\Log\LoggerInterface;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
@@ -471,7 +470,7 @@ final class oauth2_serverPlugin extends Plugin
                 ),
                 OAuth2OfflineAccessScope::fromItself(),
             ),
-            $this->getLogger(),
+            \Tuleap\OAuth2ServerCore\OAuth2ServerRoutes::getOAuth2ServerLogger(),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
@@ -648,11 +647,6 @@ final class oauth2_serverPlugin extends Plugin
     public function passwordUserPostUpdateEvent(PasswordUserPostUpdateEvent $password_user_post_update_event): void
     {
         (new OAuth2AuthorizationCodeDAO())->deleteAuthorizationCodeByUser($password_user_post_update_event->getUser());
-    }
-
-    private function getLogger(): LoggerInterface
-    {
-        return \BackendLogger::getDefaultLogger('oauth2_server.log');
     }
 
     public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
