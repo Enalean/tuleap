@@ -220,16 +220,6 @@ abstract class AdminView
                 ),
                 'is_active'   => $this->getIdentifier() === \Docman_View_Admin_LockInfos::IDENTIFIER,
             ],
-            [
-                'title'       => Docman_View_Admin_FilenamePattern::getTabTitle(),
-                'description' => Docman_View_Admin_FilenamePattern::getTabDescription(),
-                'url'         => DocmanViewURLBuilder::buildUrl(
-                    $default_url,
-                    ['action' => \Docman_View_Admin_FilenamePattern::IDENTIFIER],
-                    false,
-                ),
-                'is_active'   => $this->getIdentifier() === \Docman_View_Admin_FilenamePattern::IDENTIFIER,
-            ],
         ];
     }
 
@@ -253,6 +243,16 @@ abstract class AdminView
                         ['action' => \Docman_View_Admin_View::IDENTIFIER],
                         false,
                     ),
+                ],
+                [
+                    'title'       => Docman_View_Admin_FilenamePattern::getTabTitle(),
+                    'description' => Docman_View_Admin_FilenamePattern::getTabDescription(),
+                    'url'         => DocmanViewURLBuilder::buildUrl(
+                        $default_url,
+                        ['action' => \Docman_View_Admin_FilenamePattern::IDENTIFIER],
+                        false,
+                    ),
+                    'is_active'   => $this->getIdentifier() === \Docman_View_Admin_FilenamePattern::IDENTIFIER,
                 ],
             ],
         ];
