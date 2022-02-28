@@ -31,6 +31,8 @@ use Docman_SettingsBo;
 use Luracast\Restler\RestException;
 use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Search\SearchColumn;
+use Tuleap\Docman\REST\v1\Search\SearchColumnCollection;
 use Tuleap\Docman\REST\v1\Search\SearchPropertyRepresentation;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
 use Tuleap\Docman\REST\v1\Search\SearchDateRepresentation;
@@ -49,6 +51,7 @@ final class SearchReportBuilderTest extends TestCase
 
     private SearchReportBuilder $search_report_builder;
     private Docman_MetadataFactory|\PHPUnit\Framework\MockObject\MockObject $metadata_factory;
+    private SearchColumnCollection $custom_properties;
 
     protected function setUp(): void
     {
@@ -122,6 +125,19 @@ final class SearchReportBuilderTest extends TestCase
                     ]
                 )
             );
+
+        $this->custom_properties = new SearchColumnCollection();
+    }
+
+    public function testItBuildsAReportWithAlwaysThereAndWantedCustomProperties(): void
+    {
+        $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
+        $search = new PostSearchRepresentation();
+
+        $this->custom_properties->add(SearchColumn::buildForCustomProperty("field_2", "Comments"));
+
+        $report = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
+        self::assertCount(7, $report->getColumnIterator());
     }
 
     public function testItBuildsAReportWithAGlobalSearchFilter(): void
@@ -130,7 +146,7 @@ final class SearchReportBuilderTest extends TestCase
         $search                = new PostSearchRepresentation();
         $search->global_search = "*.docx";
 
-        $report = $this->search_report_builder->buildReport($folder, $search);
+        $report = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
         self::assertSame($search->global_search, $report->getFiltersArray()[0]->value);
         self::assertSame("My column", $report->columns[0]->md->getLabel());
     }
@@ -148,7 +164,7 @@ final class SearchReportBuilderTest extends TestCase
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
 
-        $this->search_report_builder->buildReport($folder, $search);
+        $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
     }
 
     /**
@@ -164,7 +180,7 @@ final class SearchReportBuilderTest extends TestCase
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
         $search = $this->searchDocxWithProperty('type', $submitted_type_value);
 
-        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $report       = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
         $first_filter = $report->getFiltersArray()[0];
         self::assertSame("global_txt", $first_filter->md->getLabel());
         self::assertSame("*.docx", $first_filter->value);
@@ -181,7 +197,7 @@ final class SearchReportBuilderTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->search_report_builder->buildReport($folder, $search);
+        $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
     }
 
     public function testItBuildsAReportWithATitleSearchFilter(): void
@@ -189,7 +205,7 @@ final class SearchReportBuilderTest extends TestCase
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
         $search = $this->searchDocxWithProperty('title', 'lorem');
 
-        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $report       = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
         $first_filter = $report->getFiltersArray()[0];
         self::assertSame("global_txt", $first_filter->md->getLabel());
         self::assertSame("*.docx", $first_filter->value);
@@ -203,7 +219,7 @@ final class SearchReportBuilderTest extends TestCase
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
         $search = $this->searchDocxWithProperty('id', '123');
 
-        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $report       = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
         $first_filter = $report->getFiltersArray()[0];
         self::assertSame("global_txt", $first_filter->md->getLabel());
         self::assertSame("*.docx", $first_filter->value);
@@ -217,7 +233,7 @@ final class SearchReportBuilderTest extends TestCase
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
         $search = $this->searchDocxWithProperty('filename', 'lorem');
 
-        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $report       = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
         $first_filter = $report->getFiltersArray()[0];
         self::assertSame("global_txt", $first_filter->md->getLabel());
         self::assertSame("*.docx", $first_filter->value);
@@ -237,7 +253,7 @@ final class SearchReportBuilderTest extends TestCase
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
         $search = $this->searchDocxWithProperty('status', $submitted_status_value);
 
-        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $report       = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
         $first_filter = $report->getFiltersArray()[0];
         self::assertSame("global_txt", $first_filter->md->getLabel());
         self::assertSame("*.docx", $first_filter->value);
@@ -255,7 +271,7 @@ final class SearchReportBuilderTest extends TestCase
         $this->expectExceptionCode(400);
 
 
-        $this->search_report_builder->buildReport($folder, $search);
+        $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
     }
 
     public function testItBuildsAReportWithADescriptionSearchFilter(): void
@@ -263,7 +279,7 @@ final class SearchReportBuilderTest extends TestCase
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
         $search = $this->searchDocxWithProperty('description', 'lorem');
 
-        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $report       = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
         $first_filter = $report->getFiltersArray()[0];
         self::assertSame("global_txt", $first_filter->md->getLabel());
         self::assertSame("*.docx", $first_filter->value);
@@ -277,7 +293,7 @@ final class SearchReportBuilderTest extends TestCase
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
         $search = $this->searchDocxWithProperty('owner', 'John Doe (jdoe)');
 
-        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $report       = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
         $first_filter = $report->getFiltersArray()[0];
         self::assertSame("global_txt", $first_filter->md->getLabel());
         self::assertSame("*.docx", $first_filter->value);
@@ -296,7 +312,7 @@ final class SearchReportBuilderTest extends TestCase
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
         $search = $this->searchDocxWithDateProperty('update_date', '2022-01-30', $symbol_operator);
 
-        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $report       = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
         $first_filter = $report->getFiltersArray()[0];
         self::assertSame("global_txt", $first_filter->md->getLabel());
         self::assertSame("*.docx", $first_filter->value);
@@ -317,7 +333,7 @@ final class SearchReportBuilderTest extends TestCase
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
         $search = $this->searchDocxWithDateProperty('create_date', '2022-01-30', $symbol_operator);
 
-        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $report       = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
         $first_filter = $report->getFiltersArray()[0];
         self::assertSame("global_txt", $first_filter->md->getLabel());
         self::assertSame("*.docx", $first_filter->value);
@@ -338,7 +354,7 @@ final class SearchReportBuilderTest extends TestCase
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
         $search = $this->searchDocxWithDateProperty('obsolescence_date', '2022-01-30', $symbol_operator);
 
-        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $report       = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
         $first_filter = $report->getFiltersArray()[0];
         self::assertSame("global_txt", $first_filter->md->getLabel());
         self::assertSame("*.docx", $first_filter->value);
@@ -354,7 +370,7 @@ final class SearchReportBuilderTest extends TestCase
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
         $search = $this->searchDocxWithProperty(self::CUSTOM_TEXT_PROPERTY, 'lorem');
 
-        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $report       = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
         $first_filter = $report->getFiltersArray()[0];
         self::assertSame("global_txt", $first_filter->md->getLabel());
         self::assertSame("*.docx", $first_filter->value);
@@ -368,7 +384,7 @@ final class SearchReportBuilderTest extends TestCase
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
         $search = $this->searchDocxWithProperty(self::CUSTOM_STRING_PROPERTY, 'lorem');
 
-        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $report       = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
         $first_filter = $report->getFiltersArray()[0];
         self::assertSame("global_txt", $first_filter->md->getLabel());
         self::assertSame("*.docx", $first_filter->value);
@@ -382,7 +398,7 @@ final class SearchReportBuilderTest extends TestCase
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
         $search = $this->searchDocxWithProperty(self::CUSTOM_LIST_PROPERTY, 'lorem');
 
-        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $report       = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
         $first_filter = $report->getFiltersArray()[0];
         self::assertSame("global_txt", $first_filter->md->getLabel());
         self::assertSame("*.docx", $first_filter->value);
@@ -402,7 +418,7 @@ final class SearchReportBuilderTest extends TestCase
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
         $search = $this->searchDocxWithDateProperty(self::CUSTOM_DATE_PROPERTY, '2022-01-30', $symbol_operator);
 
-        $report       = $this->search_report_builder->buildReport($folder, $search);
+        $report       = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
         $first_filter = $report->getFiltersArray()[0];
         self::assertSame("global_txt", $first_filter->md->getLabel());
         self::assertSame("*.docx", $first_filter->value);

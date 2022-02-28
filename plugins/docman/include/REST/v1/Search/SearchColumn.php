@@ -20,28 +20,39 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Document\Tree\Search;
+namespace Tuleap\Docman\REST\v1\Search;
 
-use Tuleap\Docman\REST\v1\Search\SearchColumn;
-use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
-
-final class ListOfSearchColumnDefinitionPresenterBuilder
+/**
+ * @psalm-immutable
+ */
+final class SearchColumn
 {
-    public function __construct(private SearchColumnCollectionBuilder $column_collection_builder)
+    private function __construct(private string $name, private string $label, private bool $is_custom_property)
     {
     }
 
-    /**
-     * @return SearchColumnDefinitionPresenter[]
-     */
-    public function getColumns(\Docman_MetadataFactory $metadata_factory): array
+    public static function buildForCustomProperty(string $name, string $label): self
     {
-        return array_map(
-            static fn(SearchColumn $column): SearchColumnDefinitionPresenter => new SearchColumnDefinitionPresenter(
-                $column->getName(),
-                $column->getLabel()
-            ),
-            $this->column_collection_builder->getCollection($metadata_factory)->getColumns()
-        );
+        return new self($name, $label, true);
+    }
+
+    public static function buildForHardcodedProperty(string $name, string $label): self
+    {
+        return new self($name, $label, false);
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
+
+    public function isCustomProperty(): bool
+    {
+        return $this->is_custom_property;
     }
 }

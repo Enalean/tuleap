@@ -20,28 +20,46 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Document\Tree\Search;
+namespace Tuleap\Docman\REST\v1\Search;
 
-use Tuleap\Docman\REST\v1\Search\SearchColumn;
-use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
 
-final class ListOfSearchColumnDefinitionPresenterBuilder
+final class SearchColumnCollection
 {
-    public function __construct(private SearchColumnCollectionBuilder $column_collection_builder)
+    /**
+     * @var SearchColumn[]
+     */
+    private array $columns = [];
+
+    public function add(SearchColumn $column): void
     {
+        $this->columns[] = $column;
+    }
+
+    public function getColumns(): array
+    {
+        return $this->columns;
+    }
+
+    public function extractColumnsOnCustomProperties(): self
+    {
+        $only_custom_properties = new self();
+        foreach ($this->columns as $column) {
+            if ($column->isCustomProperty()) {
+                $only_custom_properties->add($column);
+            }
+        }
+
+        return $only_custom_properties;
     }
 
     /**
-     * @return SearchColumnDefinitionPresenter[]
+     * @return array<int, string>
      */
-    public function getColumns(\Docman_MetadataFactory $metadata_factory): array
+    public function getColumnNames(): array
     {
         return array_map(
-            static fn(SearchColumn $column): SearchColumnDefinitionPresenter => new SearchColumnDefinitionPresenter(
-                $column->getName(),
-                $column->getLabel()
-            ),
-            $this->column_collection_builder->getCollection($metadata_factory)->getColumns()
+            static fn(SearchColumn $column): string => $column->getName(),
+            $this->columns,
         );
     }
 }

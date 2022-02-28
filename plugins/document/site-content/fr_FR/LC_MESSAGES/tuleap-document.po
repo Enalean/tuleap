@@ -67,9 +67,6 @@ msgstr "Cependant, tout son contenu n'a pas pu être ajouté à l'archive."
 msgid "Id"
 msgstr "Id"
 
-msgid "Location"
-msgstr "Emplacement"
-
 msgid "MB"
 msgstr "Mo"
 
@@ -130,9 +127,6 @@ msgid "Those settings apply when downloading a folder as a zip archive."
 msgstr ""
 "Ces paramètres s'appliquent lors du téléchargement d'un dossier en tant "
 "qu'archive zip."
-
-msgid "Title"
-msgstr "Titre"
 
 msgid "Type"
 msgstr "Type"

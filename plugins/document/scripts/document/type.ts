@@ -61,6 +61,26 @@ export interface SearchResult {
     readonly items: ReadonlyArray<ItemSearchResult>;
 }
 
+export interface CustomPropertySearchResultDate {
+    readonly type: "date";
+    readonly value: string | null;
+}
+
+export interface CustomPropertySearchResultString {
+    readonly type: "string";
+    readonly value: string;
+}
+
+export interface CustomPropertySearchResultList {
+    readonly type: "list";
+    readonly values: ReadonlyArray<string>;
+}
+
+export type CustomPropertySearchResult =
+    | CustomPropertySearchResultDate
+    | CustomPropertySearchResultString
+    | CustomPropertySearchResultList;
+
 export interface ItemSearchResult {
     readonly id: number;
     readonly type: string;
@@ -76,6 +96,9 @@ export interface ItemSearchResult {
         readonly title: string;
     }>;
     readonly file_properties: FileProperties | null;
+    readonly custom_properties: {
+        readonly [key: AdditionalFieldNumber]: CustomPropertySearchResult;
+    };
 }
 
 export const SEARCH_LIMIT = 50;
@@ -352,7 +375,7 @@ export interface SearchBodyRest {
     readonly properties?: ListOfSearchBodyProperties;
 }
 
-interface SearchResultColumnDefinition {
+export interface SearchResultColumnDefinition {
     readonly name: string;
     readonly label: string;
 }

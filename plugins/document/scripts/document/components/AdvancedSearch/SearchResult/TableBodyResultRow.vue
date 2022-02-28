@@ -23,8 +23,9 @@
         <component
             v-for="column of columns"
             v-bind:key="'cell-' + item.id + '-' + column.name"
-            v-bind:is="'cell-' + column.name.replace('_', '-')"
+            v-bind:is="getComponentName(column)"
             v-bind:item="item"
+            v-bind:column_name="column.name"
         />
     </tr>
 </template>
@@ -46,6 +47,9 @@ import CellCreateDate from "./Cells/CellCreateDate.vue";
 import CellObsolescenceDate from "./Cells/CellObsolescenceDate.vue";
 import CellLocation from "./Cells/CellLocation.vue";
 import CellStatus from "./Cells/CellStatus.vue";
+import CellCustomProperty from "./Cells/CellCustomProperty.vue";
+import type { SearchResultColumnDefinition } from "../../../type";
+import { isAdditionalFieldNumber } from "../../../helpers/additional-custom-properties";
 
 export default defineComponent({
     components: {
@@ -58,6 +62,16 @@ export default defineComponent({
         CellObsolescenceDate,
         CellLocation,
         CellStatus,
+        CellCustomProperty,
+    },
+    methods: {
+        getComponentName(column: SearchResultColumnDefinition): string {
+            if (isAdditionalFieldNumber(column.name)) {
+                return "cell-custom-property";
+            }
+
+            return "cell-" + column.name.replace("_", "-");
+        },
     },
 });
 </script>

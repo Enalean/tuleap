@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean 2022 -  Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,32 +16,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Search;
+namespace Tuleap\Docman\REST\v1\Search;
 
-use Docman_SettingsBo;
-
-final class AlwaysThereColumnRetriever
+/**
+ * @psalm-immutable
+ */
+final class CustomPropertyDateRepresentation implements CustomPropertyRepresentation
 {
-    public function __construct(private Docman_SettingsBo $docman_settings)
+    public function __construct(public string $type, public ?string $value)
     {
-    }
-
-    /**
-     * @return array<int, string>
-     */
-    public function getColumns(): array
-    {
-        $useStatus = $this->docman_settings->getMetadataUsage('status');
-
-        if ($useStatus) {
-            return ['status', 'title', 'description', 'location', 'owner', 'update_date'];
-        } else {
-            return ['title', 'description', 'location', 'owner', 'update_date'];
-        }
     }
 }

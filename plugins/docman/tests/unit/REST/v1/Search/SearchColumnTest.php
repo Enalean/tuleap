@@ -20,28 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Document\Tree\Search;
+namespace Tuleap\Docman\REST\v1\Search;
 
-use Tuleap\Docman\REST\v1\Search\SearchColumn;
-use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class ListOfSearchColumnDefinitionPresenterBuilder
+final class SearchColumnTest extends TestCase
 {
-    public function __construct(private SearchColumnCollectionBuilder $column_collection_builder)
+    public function testBuildForHardcodedProperty(): void
     {
+        $column = SearchColumn::buildForHardcodedProperty("name", "label");
+
+        self::assertEquals("name", $column->getName());
+        self::assertEquals("label", $column->getLabel());
+        self::assertFalse($column->isCustomProperty());
     }
 
-    /**
-     * @return SearchColumnDefinitionPresenter[]
-     */
-    public function getColumns(\Docman_MetadataFactory $metadata_factory): array
+    public function testBuildForCustomProperty(): void
     {
-        return array_map(
-            static fn(SearchColumn $column): SearchColumnDefinitionPresenter => new SearchColumnDefinitionPresenter(
-                $column->getName(),
-                $column->getLabel()
-            ),
-            $this->column_collection_builder->getCollection($metadata_factory)->getColumns()
-        );
+        $column = SearchColumn::buildForCustomProperty("name", "label");
+
+        self::assertEquals("name", $column->getName());
+        self::assertEquals("label", $column->getLabel());
+        self::assertTrue($column->isCustomProperty());
     }
 }

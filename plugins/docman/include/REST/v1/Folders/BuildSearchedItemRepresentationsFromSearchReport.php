@@ -27,6 +27,8 @@ use Tuleap\Docman\REST\v1\ItemRepresentationCollectionBuilder;
 use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Search\FilePropertiesVisitor;
+use Tuleap\Docman\REST\v1\Search\ListOfCustomPropertyRepresentationBuilder;
+use Tuleap\Docman\REST\v1\Search\SearchColumnCollection;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationTypeVisitor;
 
 final class BuildSearchedItemRepresentationsFromSearchReport
@@ -38,11 +40,18 @@ final class BuildSearchedItemRepresentationsFromSearchReport
         private \Docman_ItemFactory $item_factory,
         private SearchRepresentationTypeVisitor $type_visitor,
         private FilePropertiesVisitor $file_properties_visitor,
+        private ListOfCustomPropertyRepresentationBuilder $custom_property_builder,
     ) {
     }
 
-    public function build(\Docman_Report $report, \Docman_Item $folder, \PFUser $user, int $limit, int $offset): SearchRepresentationsCollection
-    {
+    public function build(
+        \Docman_Report $report,
+        \Docman_Item $folder,
+        \PFUser $user,
+        int $limit,
+        int $offset,
+        SearchColumnCollection $wanted_custom_properties,
+    ): SearchRepresentationsCollection {
         $nb_item_found = 0;
         $results       = $this->item_factory->getItemList(
             $folder->getId(),
@@ -70,6 +79,7 @@ final class BuildSearchedItemRepresentationsFromSearchReport
                 $this->item_representation_collection_builder->buildParentRowCollection($item, $user, $limit, $offset),
                 $item->accept($this->type_visitor),
                 $item->accept($this->file_properties_visitor),
+                $this->custom_property_builder->getCustomProperties($item, $wanted_custom_properties),
             );
         }
 

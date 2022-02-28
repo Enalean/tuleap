@@ -367,8 +367,12 @@ class Docman_MetadataFactory
     public function addMetadataValueToItem(&$item, $md)
     {
         $value = $this->getMetadataValue($item, $md);
-        $md->setValue($value);
-        $item->addMetadata($md);
+
+        // We need to work on a clone, else every items will share the same metadata values
+        $copy = clone $md;
+
+        $copy->setValue($value);
+        $item->addMetadata($copy);
     }
 
     /**
