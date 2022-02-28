@@ -5,7 +5,7 @@ exports[`CriterionGlobalText should render the component 1`] = `
   class="tlp-form-element document-search-criterion document-search-criterion-text"
 >
   <div
-    class="global-search-label"
+    class="document-search-criterion-with-popover"
   >
     <label
       class="tlp-label"

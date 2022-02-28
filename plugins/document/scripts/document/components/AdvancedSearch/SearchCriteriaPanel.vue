@@ -62,6 +62,7 @@ import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
 import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
 import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
 import CriterionText from "./Criteria/CriterionText.vue";
+import CriterionOwner from "./Criteria/CriterionOwner.vue";
 import CriterionDate from "./Criteria/CriterionDate.vue";
 import CriterionList from "./Criteria/CriterionList.vue";
 import CriterionNumber from "./Criteria/CriterionNumber.vue";
@@ -72,6 +73,7 @@ const configuration = namespace("configuration");
     components: {
         CriterionDate,
         CriterionText,
+        CriterionOwner,
         CriterionList,
         CriterionNumber,
         CriterionGlobalText,

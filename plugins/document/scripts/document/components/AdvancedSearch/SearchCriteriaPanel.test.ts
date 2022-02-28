@@ -55,7 +55,7 @@ describe("SearchCriteriaPanel", () => {
                                 { name: "filename", type: "text", title: "Filename" },
                                 { name: "title", type: "text", title: "Title" },
                                 { name: "description", type: "text", title: "Description" },
-                                { name: "owner", type: "text", title: "Owner" },
+                                { name: "owner", type: "owner", title: "Owner" },
                                 { name: "create_date", type: "date", title: "Create date" },
                                 { name: "update_date", type: "date", title: "Update date" },
                                 {

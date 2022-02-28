@@ -320,6 +320,10 @@ export interface SearchCriterionDate extends BaseSearchCriterion {
     readonly type: "date";
 }
 
+export interface SearchCriterionOwner extends BaseSearchCriterion {
+    readonly type: "owner";
+}
+
 export interface SearchCriterionText extends BaseSearchCriterion {
     readonly type: "text";
 }

@@ -69,6 +69,15 @@ final class ListOfSearchCriterionPresenterBuilder
                 continue;
             }
 
+            if ($metadata->getLabel() === \Docman_MetadataFactory::HARDCODED_METADATA_OWNER_LABEL) {
+                $criteria[$shard][] = new SearchCriterionPresenter(
+                    $metadata->getLabel(),
+                    $metadata->getName(),
+                    'owner',
+                );
+                continue;
+            }
+
             $criteria[$shard][] = new SearchCriterionPresenter(
                 $metadata->getLabel(),
                 $metadata->getName(),
