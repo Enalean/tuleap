@@ -24,7 +24,9 @@
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\DestinationCloneItem;
 use Tuleap\Docman\FilenamePattern\FilenameBuilder;
+use Tuleap\Docman\FilenamePattern\FilenamePatternFeedbackHandler;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
+use Tuleap\Docman\FilenamePattern\FilenamePatternUpdater;
 use Tuleap\Docman\FilenamePattern\InvalidMinimalPatternException;
 use Tuleap\Docman\Metadata\ItemImpactedByMetadataChangeCollection;
 use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
@@ -2111,6 +2113,20 @@ class Docman_Actions extends Actions
         }
     }
 
+    public function admin_change_filename_pattern(): void
+    {
+        $request = HTTPRequest::instance();
+
+        $project_id = (int) $request->get('group_id');
+        $pattern    = $request->get('filename_pattern');
+
+        $updater_feedback = new FilenamePatternFeedbackHandler(
+            new FilenamePatternUpdater(new SettingsDAO()),
+            $this->_controler->feedback
+        );
+        $updater_feedback->getFilenamePatternUpdateFeedback($project_id, $pattern);
+    }
+
     private function removeNotificationUsersByItem(Docman_Item $item, array $users_to_delete)
     {
         $users = [];
@@ -2118,7 +2134,11 @@ class Docman_Actions extends Actions
             if ($this->_controler->notificationsManager->userExists($user->getId(), $item->getId())) {
                 if (
                     $this->_controler->notificationsManager->removeUser($user->getId(), $item->getId())
-                    && $this->_controler->notificationsManager->removeUser($user->getId(), $item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)
+                    && $this->_controler->notificationsManager->removeUser(
+                        $user->getId(),
+                        $item->getId(),
+                        PLUGIN_DOCMAN_NOTIFICATION_CASCADE
+                    )
                 ) {
                     $users[] = $user;
                 } else {

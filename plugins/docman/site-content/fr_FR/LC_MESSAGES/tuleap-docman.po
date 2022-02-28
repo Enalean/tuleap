@@ -24,6 +24,20 @@ msgstr "\"%1$s\" est requis, merci de remplir le champ."
 msgid "\"%1$s\" successfully deleted"
 msgstr "\"%1$s\" supprimée"
 
+msgid "${ID}: the document internal id."
+msgstr "${ID} : l'ID interne du document."
+
+msgid ""
+"${STATUS}: the document status (\"Draft\", \"Approved\" or \"Rejected\")."
+msgstr ""
+"${STATUS}: le statut du document (\"Brouillon\",\"Approuvé\" ou \"Rejeté\")."
+
+msgid "${TITLE}: the document title."
+msgstr "${TITLE} : Le titre du document."
+
+msgid "${VERSION_NAME}: the latest version name of the document."
+msgstr "${VERSION_NAME} : Le dernier nom de version du document"
+
 #, php-format
 msgid "%1$s <strong>locked</strong> this document on %2$s."
 msgstr "Ce document est <strong>réservé</strong> par %1$s depuis le %2$s."
@@ -448,6 +462,9 @@ msgstr "Anonyme"
 
 msgid "Append the members to the table:"
 msgstr "Ajouter les membres d'un groupe d'utilisateurs :"
+
+msgid "Apply a naming pattern on files."
+msgstr "Applique un modèle de nommage sur les fichiers"
 
 msgid "Apply on documents & folders"
 msgstr "Appliquer sur les documents et les dossiers"
@@ -1144,6 +1161,12 @@ msgstr "Date de l'export"
 msgid "File"
 msgstr "Fichier"
 
+msgid "File Pattern"
+msgstr "Modèle de fichier"
+
+msgid "File pattern"
+msgstr "Modèle de fichier"
+
 #, php-format
 msgid "File upload error(%1$s). Failed to write file to disk."
 msgstr ""
@@ -1722,6 +1745,17 @@ msgstr "Coller en cours..."
 msgid "Path"
 msgstr "Chemin"
 
+msgid "Pattern"
+msgstr "Modèle"
+
+msgid ""
+"Pattern is defined with variables that comes from Tuleap. There are 4 "
+"variables\n"
+"                        available:"
+msgstr ""
+"Le modèle est défini avec des variables venant de Tuleap. Il y a 4 variables "
+"disponibles"
+
 msgid "Permanent"
 msgstr "Permanent"
 
@@ -2186,6 +2220,9 @@ msgstr "La date d'obsolescence est antérieur à la date actuelle"
 msgid "The page name is required."
 msgstr "Le nom de la page wiki est requis."
 
+msgid "The pattern has been successfully updated."
+msgstr "Le modèle a été mis à jour avec succès."
+
 msgid ""
 "The project does not support obsolescence date, you should not provide it to "
 "create or update a new document."
@@ -2297,6 +2334,12 @@ msgstr "Il n'y a pas encore d'historique"
 
 msgid "There is no version yet"
 msgstr "Il n'y a pas encore de versions"
+
+msgid ""
+"There must be at least either ${TITLE} or ${ID} variable in the pattern."
+msgstr ""
+"Il doit avoir au moins la variable ${TITLE} ou la variable ${ID} dans le "
+"modèle."
 
 msgid "This is an automatic message. Please do not reply to this email"
 msgstr ""

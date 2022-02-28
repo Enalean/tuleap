@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\View\Admin;
 
+use Docman_View_Admin_FilenamePattern;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
@@ -218,6 +219,16 @@ abstract class AdminView
                     false,
                 ),
                 'is_active'   => $this->getIdentifier() === \Docman_View_Admin_LockInfos::IDENTIFIER,
+            ],
+            [
+                'title'       => Docman_View_Admin_FilenamePattern::getTabTitle(),
+                'description' => Docman_View_Admin_FilenamePattern::getTabDescription(),
+                'url'         => DocmanViewURLBuilder::buildUrl(
+                    $default_url,
+                    ['action' => \Docman_View_Admin_FilenamePattern::IDENTIFIER],
+                    false,
+                ),
+                'is_active'   => $this->getIdentifier() === \Docman_View_Admin_FilenamePattern::IDENTIFIER,
             ],
         ];
     }

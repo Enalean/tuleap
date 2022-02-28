@@ -1732,6 +1732,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                     \Docman_View_Admin_View::IDENTIFIER,
                     \Docman_View_Admin_Permissions::IDENTIFIER,
                     'admin',
+                    \Docman_View_Admin_FilenamePattern::IDENTIFIER,
                 ],
                 true,
             )
