@@ -28,8 +28,8 @@ use Project;
 use TemplateRendererFactory;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Document\Config\ChangeLogModalDisplayer;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
-use Tuleap\Document\Config\HistoryEnforcementSettingsBuilder;
 use Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
@@ -46,7 +46,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         private DocumentTreeProjectExtractor $project_extractor,
         private \DocmanPluginInfo $docman_plugin_info,
         private FileDownloadLimitsBuilder $file_download_limits_builder,
-        private HistoryEnforcementSettingsBuilder $history_enforcement_settings_builder,
+        private ChangeLogModalDisplayer $changelog_modal_display_handler,
         private ProjectFlagsBuilder $project_flags_builder,
         private \Docman_ItemDao $dao,
         private ListOfSearchCriterionPresenterBuilder $criteria_builder,
@@ -89,7 +89,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 (bool) $this->docman_plugin_info->getPropertyValueForName('only_siteadmin_can_delete'),
                 new CSRFSynchronizerToken('plugin-document'),
                 $this->file_download_limits_builder->build(),
-                $this->history_enforcement_settings_builder->build(),
+                $this->changelog_modal_display_handler->isChangelogModalDisplayedAfterDragAndDrop((int) $project->getID()),
                 $this->project_flags_builder->buildProjectFlags($project),
                 $this->criteria_builder->getCriteria(
                     $metadata_factory,

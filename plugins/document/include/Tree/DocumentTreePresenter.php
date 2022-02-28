@@ -26,7 +26,6 @@ use CSRFSynchronizerToken;
 use DocmanPlugin;
 use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Document\Config\FileDownloadLimits;
-use Tuleap\Document\Config\HistoryEnforcementSettings;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 
@@ -94,10 +93,6 @@ class DocumentTreePresenter
     public $warning_threshold;
 
     /**
-     * @var bool
-     */
-    public $is_changelog_proposed_after_dnd;
-    /**
      * @var string
      */
     public $relative_dates_display;
@@ -144,7 +139,7 @@ class DocumentTreePresenter
         bool $only_siteadmin_can_delete_option,
         CSRFSynchronizerToken $csrf,
         FileDownloadLimits $file_download_limits,
-        HistoryEnforcementSettings $history_settings,
+        public bool $is_changelog_displayed_after_dnd,
         array $project_flags,
         array $criteria,
         array $columns,
@@ -168,7 +163,6 @@ class DocumentTreePresenter
         $this->csrf_token                         = $csrf->getToken();
         $this->max_archive_size                   = $file_download_limits->getMaxArchiveSize();
         $this->warning_threshold                  = $file_download_limits->getWarningThreshold();
-        $this->is_changelog_proposed_after_dnd    = $history_settings->isChangelogProposedAfterDragAndDrop();
         $this->relative_dates_display             = $user->getPreference(\DateHelper::PREFERENCE_NAME) ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
 
         $this->privacy       = json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR);
