@@ -37,6 +37,7 @@ class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var M\LegacyMockInterface|M\MockInterface|\EventManager
      */
     private $event_manager;
+    private \PHPUnit\Framework\MockObject\MockObject|\PluginFactory $plugin_factory;
 
     protected function setUp(): void
     {
@@ -44,7 +45,14 @@ class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event         = M::mock(ServiceEnableForXmlImportRetriever::class);
         $this->event->shouldReceive('addServiceByName');
 
-        $this->checker = new ConsistencyChecker(new XMLFileContentRetriever(), $this->event_manager, $this->event);
+        $this->plugin_factory = $this->createMock(\PluginFactory::class);
+
+        $this->checker = new ConsistencyChecker(
+            new XMLFileContentRetriever(),
+            $this->event_manager,
+            $this->event,
+            $this->plugin_factory
+        );
     }
 
     public function testAreAllServicesAvailable(): void
@@ -58,7 +66,59 @@ class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->assertTrue($this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml'));
+        $this->assertTrue($this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml', []));
+    }
+
+    public function testAllServicesAreAvailableButNotExtraPlugin(): void
+    {
+        $this->event_manager->shouldReceive('processEvent')->withArgs([$this->event]);
+        $this->event->shouldReceive('getAvailableServices')->andReturn(
+            [
+                \trackerPlugin::SERVICE_SHORTNAME       => true,
+                \GitPlugin::SERVICE_SHORTNAME           => true,
+                \AgileDashboardPlugin::PLUGIN_SHORTNAME => true,
+            ]
+        );
+
+        $plugin = new \Plugin();
+        $this->plugin_factory
+            ->method('getPluginByName')
+            ->with('graphontrackersv5')
+            ->willReturn($plugin);
+        $this->plugin_factory
+            ->method('isPluginAvailable')
+            ->with($plugin)
+            ->willReturn(false);
+
+        $this->assertFalse(
+            $this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml', ['graphontrackersv5'])
+        );
+    }
+
+    public function testAllServicesAndExtraPluginsAreAvailable(): void
+    {
+        $this->event_manager->shouldReceive('processEvent')->withArgs([$this->event]);
+        $this->event->shouldReceive('getAvailableServices')->andReturn(
+            [
+                \trackerPlugin::SERVICE_SHORTNAME       => true,
+                \GitPlugin::SERVICE_SHORTNAME           => true,
+                \AgileDashboardPlugin::PLUGIN_SHORTNAME => true,
+            ]
+        );
+
+        $plugin = new \Plugin();
+        $this->plugin_factory
+            ->method('getPluginByName')
+            ->with('graphontrackersv5')
+            ->willReturn($plugin);
+        $this->plugin_factory
+            ->method('isPluginAvailable')
+            ->with($plugin)
+            ->willReturn(true);
+
+        $this->assertTrue(
+            $this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml', ['graphontrackersv5'])
+        );
     }
 
     public function testAgileDashboardIsNotAvailable(): void
@@ -71,12 +131,12 @@ class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->assertFalse($this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml'));
+        $this->assertFalse($this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml', []));
     }
 
     public function testInvalidFile(): void
     {
         $this->expectException(\RuntimeException::class);
-        $this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures');
+        $this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures', []);
     }
 }

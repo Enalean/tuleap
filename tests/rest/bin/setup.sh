@@ -97,6 +97,7 @@ seed_data() {
         tracker \
         cardwall \
         agiledashboard \
+        graphontrackersv5 \
         frs \
         svn \
         git \
