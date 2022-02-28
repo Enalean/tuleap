@@ -26,7 +26,7 @@ use ProjectManager;
 
 class AppFactory
 {
-    public function __construct(private AppDao $app_dao, private ProjectManager $project_manager)
+    public function __construct(private RetrieveAppMatchingClientID $app_retriever, private ProjectManager $project_manager)
     {
     }
 
@@ -35,7 +35,7 @@ class AppFactory
      */
     public function getAppMatchingClientId(ClientIdentifier $client_identifier): OAuth2App
     {
-        $row = $this->app_dao->searchByClientId($client_identifier);
+        $row = $this->app_retriever->searchByClientId($client_identifier);
         if (! $row) {
             throw new OAuth2AppNotFoundException($client_identifier);
         }

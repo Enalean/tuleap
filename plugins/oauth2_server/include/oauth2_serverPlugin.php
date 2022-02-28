@@ -51,6 +51,7 @@ use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
 use Tuleap\OAuth2Server\App\OAuth2AppRemover;
+use Tuleap\OAuth2ServerCore\App\AppMatchingClientIDFilterAppTypeRetriever;
 use Tuleap\OAuth2ServerCore\AuthorizationServer\AuthorizationEndpointController;
 use Tuleap\OAuth2ServerCore\AuthorizationServer\PKCE\PKCEInformationExtractor;
 use Tuleap\OAuth2ServerCore\AuthorizationServer\PromptParameterValuesExtractor;
@@ -446,7 +447,10 @@ final class oauth2_serverPlugin extends Plugin
                 ),
             ),
             \UserManager::instance(),
-            new \Tuleap\OAuth2ServerCore\App\AppFactory(new AppDao(), \ProjectManager::instance()),
+            new \Tuleap\OAuth2ServerCore\App\AppFactory(
+                new AppMatchingClientIDFilterAppTypeRetriever(new AppDao(), AppFactory::PLUGIN_APP),
+                \ProjectManager::instance()
+            ),
             new ScopeExtractor($scope_builder),
             new \Tuleap\OAuth2ServerCore\AuthorizationServer\AuthorizationCodeResponseFactory(
                 $response_factory,
