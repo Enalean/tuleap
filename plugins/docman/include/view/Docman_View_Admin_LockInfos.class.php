@@ -53,16 +53,24 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView
 
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
-        $html = '<div class="tlp-framed-vertically">';
+        $html = '<div class="tlp-framed">';
 
-        // Display help message
-        $html .= '<p class="tlp-framed-horizontally">';
+        $html .= '<section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">' . dgettext('tuleap-docman', 'Locked Documents') . '</h1>
+                </div>
+                <section class="tlp-pane-section">';
+
+        $html .= '<p>';
         $html .= dgettext('tuleap-docman', 'This is the list of all locked documents in project.');
         $html .= '</p>';
 
         $html .= $this->getTable($params);
 
-        $html .= '</div>';
+        $html .= '</section>
+            </div>
+        </section>';
 
         print($html);
     }

@@ -18,16 +18,17 @@
  */
 
 /* stylelint-disable selector-no-qualifying-type */
-.tlp-table > tbody > tr > th.document-icon,
-.tlp-table > tbody > tr > td.document-icon {
+.tlp-pane-section .tlp-table > tbody > tr > th.document-icon,
+.tlp-pane-section .tlp-table > tbody > tr > td.document-icon {
     width: calc(16px + var(--tlp-small-spacing));
-    padding-right: 0;
-
-    > img {
-        vertical-align: middle;
-    }
+    padding: calc(var(--tlp-small-spacing) / 2) 0 calc(var(--tlp-small-spacing) / 2)
+        var(--tlp-small-spacing);
 }
 /* stylelint-enable selector-no-qualifying-type */
+
+.document-icon > img {
+    vertical-align: middle;
+}
 
 #docman-admin-permission-legacy-form > form {
     margin: 0 0 var(--tlp-medium-spacing);

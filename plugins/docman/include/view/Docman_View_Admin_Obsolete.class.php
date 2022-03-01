@@ -62,15 +62,24 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView
 
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
-        $html = '<div class="tlp-framed-vertically">';
+        $html = '<div class="tlp-framed">';
 
-        $html .= '<p class="tlp-framed-horizontally">';
+        $html .= '<section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">' . dgettext('tuleap-docman', 'Obsolete Documents') . '</h1>
+                </div>
+                <section class="tlp-pane-section">';
+
+        $html .= '<p>';
         $html .= dgettext('tuleap-docman', 'This is the list of all documents obsolete today. If you click on document title you will be redirected to the document properties and you will be able to make it available again.');
         $html .= '</p>';
 
         $html .= $this->getTable($params);
 
-        $html .= '</div>';
+        $html .= '</section>
+            </div>
+        </section>';
 
         print $html;
     }
