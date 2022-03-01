@@ -43,7 +43,6 @@ const webpack_config = {
         jquery: "jquery",
         ckeditor4: "ckeditor4",
         angular: "angular",
-        "angular-sanitize": "angular-sanitize",
     },
     resolve: {
         extensions: [".js", ".ts"],

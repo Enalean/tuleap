@@ -18,8 +18,6 @@
  */
 
 import angular from "angular";
-import ngSanitize from "angular-sanitize";
-import filter from "angular-filter";
 import "angular-gettext";
 import angular_tlp from "@tuleap/angular-tlp";
 import french_translations from "../po/fr_FR.po";
@@ -32,8 +30,6 @@ import { setCatalog } from "./gettext-catalog";
 
 import ArtifactModalService from "./tuleap-artifact-modal-service.js";
 import ArtifactModalController from "./tuleap-artifact-modal-controller.js";
-import FileFieldDirective from "./fields/file-field/file-field-directive.js";
-import FileInputDirective from "./fields/file-field/file-input-directive.js";
 import LinkFieldDirective from "./fields/link-field/link-field-directive.js";
 import StaticOpenListFieldDirective from "./fields/open-list-field/static-open-list-field-directive.js";
 import UgroupsOpenListFieldDirective from "./fields/open-list-field/ugroups-open-list-field-directive.js";
@@ -58,18 +54,13 @@ import "./adapters/UI/fields/priority-field/PriorityField";
 import "./adapters/UI/fields/cross-references-field/CrossReferencesField";
 import "./adapters/UI/fields/user-avatar-field/UserAvatarField";
 import "./adapters/UI/fields/date-readonly-field/DateReadonlyField";
+import "./adapters/UI/fields/file-field/FileField";
 import "./followups/FollowupEditor";
 import "./adapters/UI/feedback/ModalFeedback";
 import "./adapters/UI/footer/FileUploadQuota";
 
 export default angular
-    .module("tuleap.artifact-modal", [
-        "gettext",
-        angular_tlp,
-        angular_custom_elements_module,
-        filter,
-        ngSanitize,
-    ])
+    .module("tuleap.artifact-modal", ["gettext", angular_tlp, angular_custom_elements_module])
     .run([
         "gettextCatalog",
         function (gettextCatalog) {
@@ -83,8 +74,6 @@ export default angular
     .constant("TuleapArtifactModalAwkwardCreationFields", AwkwardCreationFields)
     .constant("TuleapArtifactModalStructuralFields", STRUCTURAL_FIELDS)
     .controller("TuleapArtifactModalController", ArtifactModalController)
-    .directive("tuleapArtifactModalFileField", FileFieldDirective)
-    .directive("tuleapArtifactModalFileInput", FileInputDirective)
     .directive("tuleapArtifactModalLinkField", LinkFieldDirective)
     .directive("tuleapArtifactModalStaticOpenListField", StaticOpenListFieldDirective)
     .directive("tuleapArtifactModalUgroupsOpenListField", UgroupsOpenListFieldDirective)

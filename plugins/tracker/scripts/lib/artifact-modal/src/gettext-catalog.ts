@@ -74,3 +74,10 @@ export const getUsedQuotaMessage = (): string =>
     gettextCatalog.getString("File upload quota allowed");
 export const getQuotaUsageMessage = (): string =>
     gettextCatalog.getString("%(usage)s of %(quota)s");
+export const getFileSubmittedByText = (): string => gettextCatalog.getString("By: %s");
+export const getFileSizeText = (): string => gettextCatalog.getString("Size: %s");
+export const getUndoFileRemovalLabel = (): string => gettextCatalog.getString("Keep the file");
+export const getFileDescriptionPlaceholder = (): string =>
+    gettextCatalog.getString("File description");
+export const getResetLabel = (): string => gettextCatalog.getString("Reset");
+export const getAddFileButtonlabel = (): string => gettextCatalog.getString("Add another file");

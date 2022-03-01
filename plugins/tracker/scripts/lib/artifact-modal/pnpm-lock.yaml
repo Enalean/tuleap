@@ -12,10 +12,8 @@ specifiers:
   '@types/ckeditor': ^4.9.10
   angular: ^1.8.2
   angular-custom-elements: ^2.1.0
-  angular-filter: ^0.5.16
   angular-gettext: ^2.4.2
   angular-mocks: ^1.8.2
-  angular-sanitize: ^1.8.2
   buffer: ^6.0.3
   dompurify: ^2.3.4
   events: ^3.3.0
@@ -37,7 +35,6 @@ dependencies:
   '@tuleap/plugin-tracker-rich-text-editor': link:../rich-text-editor
   '@tuleap/tooltip': link:../../../../../src/scripts/lib/tooltip
   angular-custom-elements: 2.1.0
-  angular-filter: 0.5.17
   angular-gettext: 2.4.2
   buffer: 6.0.3
   dompurify: 2.3.4
@@ -56,7 +53,6 @@ devDependencies:
   '@types/ckeditor': 4.9.10
   angular: 1.8.2
   angular-mocks: 1.8.2
-  angular-sanitize: 1.8.2
 
 packages:
 
@@ -68,13 +64,6 @@ packages:
     resolution: {integrity: sha1-pEiW4XK/IAxYFESHA6GheId/hXU=}
     dev: false
 
-  /angular-filter/0.5.17:
-    resolution: {integrity: sha1-YMDHOA/UWHLLjxCAHP4H4VQGKTU=}
-    engines: {node: '>=0.10.0'}
-    dependencies:
-      angular: 1.8.2
-    dev: false
-
   /angular-gettext/2.4.2:
     resolution: {integrity: sha512-J9Zy76VmN5otw6GyIqJjoLjl+0wwsZSCUPgPfQwM4Mx//hP3leqyS/fgf2MDiMLLyKgoHWkMMzzWbP4iH3+5vQ==}
     dev: false
@@ -83,12 +72,9 @@ packages:
     resolution: {integrity: sha512-I5L3P0l21HPdVsP4A4qWmENt4ePjjbkDFdAzOaM7QiibFySbt14DptPbt2IjeG4vFBr4vSLbhIz8Fk03DISl8Q==}
     dev: true
 
-  /angular-sanitize/1.8.2:
-    resolution: {integrity: sha512-OB6Goa+QN3byf5asQ7XRl7DKZejm/F/ZOqa9z1skqYVOWA2hoBxoCmt9E7+i7T/TbxZP5zYzKxNZVVJNu860Hg==}
-    dev: true
-
   /angular/1.8.2:
     resolution: {integrity: sha512-IauMOej2xEe7/7Ennahkbb5qd/HFADiNuLSESz9Q27inmi32zB0lnAsFeLEWcox3Gd1F6YhNd1CP7/9IukJ0Gw==}
+    dev: true
 
   /base64-js/1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}

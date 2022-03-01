@@ -267,13 +267,13 @@
 </script>
 
 <script type="text/ng-template" id="field-file.tpl.html">
-<div
-    class="tlp-form-element"
-    tuleap-artifact-modal-file-field="field"
-    is-disabled="modal.isDisabled(field)"
-    value-model="modal.values[field.field_id]"
+<tuleap-artifact-modal-file-field
+    field="field"
+    controller="modal.getFileFieldController(field)"
+    disabled="modal.isDisabled(field)"
     data-test="file-field"
-></div>
+    ce-one-way
+></tuleap-artifact-modal-file-field>
 </script>
 
 <script type="text/ng-template" id="field-perm.tpl.html">

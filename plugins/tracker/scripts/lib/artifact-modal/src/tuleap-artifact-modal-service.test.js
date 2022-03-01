@@ -270,7 +270,7 @@ describe("NewTuleapArtifactModalService", () => {
             tracker_id = 93;
             artifact_id = 250;
             getUserPreference.mockImplementation((user_id, preference_key) => {
-                if (preference_key.contains("tracker_comment_invertorder_")) {
+                if (preference_key.includes("tracker_comment_invertorder_")) {
                     return $q.when(comment_order_preference);
                 } else if (preference_key === "user_edition_default_format") {
                     return $q.when(text_format_preference);
@@ -367,7 +367,7 @@ describe("NewTuleapArtifactModalService", () => {
                 };
 
                 getUserPreference.mockImplementation((user_id, preference_key) => {
-                    if (preference_key.contains("tracker_comment_invertorder_")) {
+                    if (preference_key.includes("tracker_comment_invertorder_")) {
                         return $q.when(comment_order_preference);
                     } else if (preference_key === "user_edition_default_format") {
                         return $q.when({
