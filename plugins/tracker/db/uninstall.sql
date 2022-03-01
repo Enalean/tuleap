@@ -140,4 +140,6 @@ DELETE FROM user WHERE user_id = 90;
 
 DELETE FROM user_access WHERE user_id = 91;
 DELETE FROM user WHERE user_id = 91;
+
 DELETE FROM forgeconfig WHERE name = 'feature_flag_use_list_pickers_in_trackers_and_modals';
+DELETE FROM forgeconfig WHERE name = 'tracker_jira_force_basic_auth';

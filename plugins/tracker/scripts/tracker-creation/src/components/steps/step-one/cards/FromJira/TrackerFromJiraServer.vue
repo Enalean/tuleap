@@ -36,7 +36,7 @@
         </div>
         <div class="tlp-form-element">
             <label class="tlp-label" for="jira-email" name="jira-email" v-translate>
-                User email
+                User email (or jira login for Jira Server)
             </label>
             <div class="tlp-form-element tlp-form-element-prepend">
                 <span class="tlp-prepend">@</span>
@@ -52,7 +52,7 @@
         </div>
         <div class="tlp-form-element">
             <label class="tlp-label" for="jira-token" name="jira-token" v-translate>
-                API Token
+                API Token (or password for Jira Server)
             </label>
             <div class="tlp-form-element tlp-form-element-prepend">
                 <span class="tlp-prepend"><i class="fa fa-key"></i></span>

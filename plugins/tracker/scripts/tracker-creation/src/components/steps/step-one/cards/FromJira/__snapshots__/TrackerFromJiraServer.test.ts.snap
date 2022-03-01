@@ -36,13 +36,13 @@ exports[`TrackerFromJiraServer renders the component 1`] = `
       class="tlp-label"
       data-current-language="en_US"
       data-msgid="
-            User email
+            User email (or jira login for Jira Server)
         "
       for="jira-email"
       name="jira-email"
     >
       
-            User email
+            User email (or jira login for Jira Server)
         
     </label>
      
@@ -72,13 +72,13 @@ exports[`TrackerFromJiraServer renders the component 1`] = `
       class="tlp-label"
       data-current-language="en_US"
       data-msgid="
-            API Token
+            API Token (or password for Jira Server)
         "
       for="jira-token"
       name="jira-token"
     >
       
-            API Token
+            API Token (or password for Jira Server)
         
     </label>
      

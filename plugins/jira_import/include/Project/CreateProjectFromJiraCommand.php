@@ -85,8 +85,8 @@ final class CreateProjectFromJiraCommand extends Command
     {
         $this->setDescription('Import a project from a Jira instance')
             ->addOption(self::OPT_JIRA_HOST, '', InputOption::VALUE_REQUIRED, 'URL of the Jira server')
-            ->addOption(self::OPT_JIRA_USER, '', InputOption::VALUE_REQUIRED, 'User email to access the platform')
-            ->addOption(self::OPT_JIRA_TOKEN, '', InputOption::VALUE_REQUIRED, 'User Token (API or Personal) to access the platform')
+            ->addOption(self::OPT_JIRA_USER, '', InputOption::VALUE_REQUIRED, 'User email (or login for Jira Server) to access the platform')
+            ->addOption(self::OPT_JIRA_TOKEN, '', InputOption::VALUE_REQUIRED, 'User token (or password for Jira Server) to access the platform')
             ->addOption(self::OPT_JIRA_PROJECT, '', InputOption::VALUE_REQUIRED, 'ID of the Jira project to import (you will be prompted if not provided)')
             ->addOption(self::OPT_JIRA_EPIC_ISSUE_TYPE, '', InputOption::VALUE_REQUIRED, 'Name of the epic issue type of the Jira project to import (default is Epic if not provided)')
             ->addOption(self::OPT_TULEAP_USER, '', InputOption::VALUE_REQUIRED, 'Login name of the user who will be admin of the project')
@@ -121,7 +121,7 @@ final class CreateProjectFromJiraCommand extends Command
         $jira_username = $this->getStringOption($input, self::OPT_JIRA_USER);
         if (! $input->getOption(self::OPT_JIRA_TOKEN)) {
             do {
-                $question = new Question("Please provide $jira_username token: ");
+                $question = new Question("Please provide $jira_username token (or password for Jira Server): ");
                 $question->setHidden(true);
                 $question->setHiddenFallback(false);
                 $token = $question_helper->ask($input, $output, $question);
