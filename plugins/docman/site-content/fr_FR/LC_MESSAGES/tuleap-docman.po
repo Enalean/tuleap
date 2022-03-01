@@ -36,7 +36,7 @@ msgid "${TITLE}: the document title."
 msgstr "${TITLE} : Le titre du document."
 
 msgid "${VERSION_NAME}: the latest version name of the document."
-msgstr "${VERSION_NAME} : Le dernier nom de version du document"
+msgstr "${VERSION_NAME} : Le dernier nom de version du document."
 
 #, php-format
 msgid "%1$s <strong>locked</strong> this document on %2$s."
@@ -381,18 +381,12 @@ msgstr ""
 msgid "Allow empty value"
 msgstr "Autorise la valeur vide"
 
-msgid "Allow empty value:"
-msgstr "Autorise la valeur vide :"
-
 #, php-format
 msgid "Allow empty value: <strong>%1$s</strong>"
 msgstr "Autoriser la valeur vide : <strong>%1$s</strong>"
 
 msgid "Allow multiple selection"
 msgstr "Autorise les valeurs multiples"
-
-msgid "Allow multiple selection:"
-msgstr "Autorise les valeurs multiples :"
 
 #, php-format
 msgid "Allow multiple selection: <strong>%1$s</strong>"
@@ -464,7 +458,7 @@ msgid "Append the members to the table:"
 msgstr "Ajouter les membres d'un groupe d'utilisateurs :"
 
 msgid "Apply a naming pattern on files."
-msgstr "Applique un modèle de nommage sur les fichiers"
+msgstr "Applique un modèle de nommage sur les fichiers."
 
 msgid "Apply on documents & folders"
 msgstr "Appliquer sur les documents et les dossiers"
@@ -576,8 +570,8 @@ msgstr "Disponible"
 msgid "Available properties"
 msgstr "Propriétés disponibles"
 
-msgid "Back to Properties menu"
-msgstr "Retour au menu"
+msgid "Back to properties"
+msgstr "Retour aux propriétés"
 
 msgid "Back to property details"
 msgstr "Retour vers les détails de propriété"
@@ -757,6 +751,9 @@ msgstr "Créer une nouvelle version"
 msgid "Create property"
 msgstr "Créer une propriété"
 
+msgid "Create value"
+msgstr "Créer une nouvelle valeur"
+
 msgid "Creation date:"
 msgstr "Date de création :"
 
@@ -875,9 +872,8 @@ msgstr "Supprimer le rapport '%1$s'"
 msgid "Delete the property"
 msgstr "Supprimer la propriété"
 
-#, php-format
-msgid "Delete value '%1$s'"
-msgstr "Supprimer la valeur '%1$s'"
+msgid "Delete the value"
+msgstr "Supprimer la valeur"
 
 msgid "Delete version"
 msgstr "Supprimer la version"
@@ -1404,8 +1400,8 @@ msgstr "Type d'élément"
 msgid "Items permissions are not listed."
 msgstr "Les permissions des éléments ne sont pas listées."
 
-msgid "Keep history:"
-msgstr "Garde l'historique :"
+msgid "Keep history"
+msgstr "Garde l'historique"
 
 msgid "Keep the current table."
 msgstr "Conserver l'ancienne table."
@@ -1491,9 +1487,6 @@ msgstr "La metadonnée n'a pas été mise à jour."
 msgid "Metadata successfully updated."
 msgstr "La metadonnée a été mise à jour."
 
-msgid "Modify"
-msgstr "Modifier"
-
 msgid "Monitored document"
 msgstr "Document monitoré"
 
@@ -1558,9 +1551,6 @@ msgstr "Nom"
 
 msgid "Name conflict"
 msgstr "Conflit de nommage"
-
-msgid "Name:"
-msgstr "Nom :"
 
 msgid "New Value"
 msgstr "Nouvelle valeur"
@@ -1754,7 +1744,7 @@ msgid ""
 "                        available:"
 msgstr ""
 "Le modèle est défini avec des variables venant de Tuleap. Il y a 4 variables "
-"disponibles"
+"disponibles :"
 
 msgid "Permanent"
 msgstr "Permanent"
@@ -1891,9 +1881,6 @@ msgstr "Mise à jour de propriété"
 
 msgid "Property name is required, please fill this field."
 msgstr "Le nom de la propriété est requis, merci de remplir ce champ."
-
-msgid "Property parameters"
-msgstr "Paramètres de la propriété"
 
 msgid "Property successfully created."
 msgstr "La propriété a bien été créée."
@@ -2409,9 +2396,6 @@ msgstr "Tentative de mise à jour d'une propriété inconnue '%1$s'"
 msgid "Type"
 msgstr "Type"
 
-msgid "Type:"
-msgstr "Type :"
-
 #, php-format
 msgid "Unable to remove monitoring for group '%1$s'"
 msgstr "Impossible de supprimer le monitoring pour le groupe '%1$s'"
@@ -2462,9 +2446,6 @@ msgstr "Usage : <strong>%1$s</strong>"
 
 msgid "Use this property"
 msgstr "Utiliser cette propriété"
-
-msgid "Use this property:"
-msgstr "Utiliser cette propriété:"
 
 msgid "Used"
 msgstr "Utilisée"
@@ -2622,15 +2603,12 @@ msgstr ""
 "tables d'approbation, les permissions, etc. En fait, seul le parent de "
 "l'item change."
 
-#, php-format
 msgid ""
-"You are about to delete the value '%1$s' in the current category. All "
-"documents already labeled with this value will be bound to 'None'. Click on "
-"'Ok' to proceed otherwise click on 'Cancel'."
+"You are about to delete the value '%1$s'. All documents already labeled with "
+"this value will be bound to 'None'."
 msgstr ""
 "Vous supprimez la valeur '%1$s' de la catégorie courante. Tous les documents "
-"déjà étiquettés avec cette valeur se verront affecter la valeur 'None'. "
-"Cliquez 'Ok' pour continuer ou alors cliquez 'Cancel'."
+"déjà étiquetés avec cette valeur se verront affecter la valeur 'None'."
 
 msgid "You are not allowed to delete system properties."
 msgstr "Vous n'êtes pas autorisés à supprimer les propriétés systemes."

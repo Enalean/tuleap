@@ -54,22 +54,6 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends \Tuleap\Docman\View\Ad
         $love = $params['love'];
         assert($love instanceof Docman_MetadataListOfValuesElement);
 
-        $ranks = [];
-        foreach ($metadata->getListOfValueIterator() as $value) {
-            assert($value instanceof Docman_MetadataListOfValuesElement);
-            if (! in_array($value->getStatus(), ['A', 'P'], true)) {
-                continue;
-            }
-
-            $ranks[] = [
-                'value' => $value->getRank() + 1,
-                'label' => sprintf(
-                    dgettext('tuleap-docman', 'After %s'),
-                    \Docman_MetadataHtmlList::_getElementName($value)
-                ),
-            ];
-        }
-
         $renderer->renderToPage('admin/property-value', [
             'property_label' => $metadata->getName(),
             'property_name'  => $metadata->getLabel(),
@@ -89,7 +73,7 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends \Tuleap\Docman\View\Ad
                 ],
                 false
             ),
-            'ranks' => $ranks,
+            'ranks' => (new \Tuleap\Docman\View\Admin\ValueRanksBuilder())->getRanks($metadata),
             'csrf'  => \Docman_View_Admin_Metadata::getCSRFToken((int) $params['group_id']),
         ]);
     }

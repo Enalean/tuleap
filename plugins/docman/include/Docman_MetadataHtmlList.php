@@ -26,6 +26,7 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_MetadataHtmlList extends \Docman_MetadataHtml
 {
+    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     public static function _getElementName($e, $hideNone = \false)
     {
         $hp   = \Codendi_HTMLPurifier::instance();
@@ -41,19 +42,7 @@ class Docman_MetadataHtmlList extends \Docman_MetadataHtml
         }
         return $name;
     }
-    public static function _getElementDescription($e)
-    {
-        $name = '';
-        switch ($e->getId()) {
-            case 100:
-                $name = \dgettext('tuleap-docman', 'None');
-                break;
-            default:
-                $hp   = \Codendi_HTMLPurifier::instance();
-                $name = $hp->purify($e->getDescription());
-        }
-        return $name;
-    }
+
     public function getValue($hideNone = \false)
     {
         $vIter = $this->md->getValue();
@@ -71,6 +60,8 @@ class Docman_MetadataHtmlList extends \Docman_MetadataHtml
         }
         return $html;
     }
+
+    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     public function _getField()
     {
         $html = '';

@@ -1,4 +1,10 @@
 <div class="tlp-framed">
+    <p>
+        <a href="{{ back_url }}">
+            <i class="fas fa-long-arrow-alt-left" aria-hidden="true"></i>
+            {{# dgettext }}tuleap-docman | Back to property details{{/ dgettext }}
+        </a>
+    </p>
     <section class="tlp-pane">
         <form method="post" action="{{ form_url }}" class="tlp-pane-container">
             {{# csrf }}
@@ -59,9 +65,4 @@
             </section>
         </form>
     </section>
-    <p>
-        <a href="{{ back_url }}">
-            {{# dgettext }}tuleap-docman | Back to property details{{/ dgettext }}
-        </a>
-    </p>
 </div>
