@@ -220,7 +220,7 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->assertEquals(ProjectUGroup::ANONYMOUS, $representation->can_update[0]->id);
     }
 
-    public function testItExcludedFromUpdateGroupsThatAreFrozenWhenThereIsAnArtifact()
+    public function testItExcludedFromUpdateGroupsThatAreFrozenWhenThereIsAnArtifact(): void
     {
         $field_id     = 1234;
         $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
@@ -257,7 +257,7 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->assertEquals(ProjectUGroup::ANONYMOUS, $representation->can_update[0]->id);
     }
 
-    public function testItAllowUpdateWhenUseArifactButFieldIsNotFrozen()
+    public function testItAllowUpdateWhenUseArifactButFieldIsNotFrozen(): void
     {
         $field_id     = 1234;
         $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
