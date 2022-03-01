@@ -9,5 +9,7 @@
     "video": true,
     "videoUploadOnPasses": false,
     "pluginsFile": false,
-    "pageLoadTimeout": 120000
+    "pageLoadTimeout": 120000,
+    "viewportWidth": 1366,
+    "viewportHeight": 768
 }

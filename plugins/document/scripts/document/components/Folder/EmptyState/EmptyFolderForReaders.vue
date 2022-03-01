@@ -62,24 +62,27 @@ export default class EmptyFolderForReaders extends Vue {
     @State
     readonly current_folder_ascendant_hierarchy!: Array<Folder>;
 
-    index_of_parent(): number {
+    get index_of_parent(): number {
         return this.current_folder_ascendant_hierarchy.length - 2;
     }
-    parent(): Item | null {
-        if (this.index_of_parent() > 0) {
-            return this.current_folder_ascendant_hierarchy[this.index_of_parent()];
+
+    get parent(): Item | null {
+        if (this.index_of_parent > 0) {
+            return this.current_folder_ascendant_hierarchy[this.index_of_parent];
         }
 
         return null;
     }
-    route_to(): RouterPayload {
-        const parent = this.parent();
+
+    get route_to(): RouterPayload {
+        const parent = this.parent;
         return parent !== null
             ? { name: "folder", params: { item_id: parent.id } }
             : { name: "root_folder" };
     }
-    can_go_to_parent(): boolean {
-        return this.index_of_parent() >= -1;
+
+    get can_go_to_parent(): boolean {
+        return this.index_of_parent >= -1;
     }
 }
 </script>
