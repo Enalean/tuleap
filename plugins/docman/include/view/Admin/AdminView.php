@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Docman\View\Admin;
 
 use Docman_View_Admin_FilenamePattern;
+use DocmanPlugin;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
@@ -230,31 +231,34 @@ abstract class AdminView
     {
         $interface = \EventManager::instance()->dispatch(new DetectEnhancementOfDocmanInterface($project));
 
+        $tab = [
+            [
+                'title' => $interface->isEnhanced()
+                    ? \Docman_View_Admin_View::getTabTitleWhenInterfaceIsEnhanced()
+                    : \Docman_View_Admin_View::getTabTitle(),
+                'description' => \Docman_View_Admin_View::getTabDescription(),
+                'url' => DocmanViewURLBuilder::buildUrl(
+                    $default_url,
+                    ['action' => \Docman_View_Admin_View::IDENTIFIER],
+                    false,
+                ),
+            ],
+        ];
+        if ((int) \ForgeConfig::getFeatureFlag(DocmanPlugin::PLUGIN_DOCMAN_APPLY_NAMING_PATTERN) === 1) {
+            $tab[] = [
+                'title' => Docman_View_Admin_FilenamePattern::getTabTitle(),
+                'description' => Docman_View_Admin_FilenamePattern::getTabDescription(),
+                'url' => DocmanViewURLBuilder::buildUrl(
+                    $default_url,
+                    ['action' => \Docman_View_Admin_FilenamePattern::IDENTIFIER],
+                    false,
+                ),
+            ];
+        }
+
         return [
             'is_active' => $this->getIdentifier() === \Docman_View_Admin_View::IDENTIFIER,
-            'tabs' => [
-                [
-                    'title'       => $interface->isEnhanced()
-                        ? \Docman_View_Admin_View::getTabTitleWhenInterfaceIsEnhanced()
-                        : \Docman_View_Admin_View::getTabTitle(),
-                    'description' => \Docman_View_Admin_View::getTabDescription(),
-                    'url'         => DocmanViewURLBuilder::buildUrl(
-                        $default_url,
-                        ['action' => \Docman_View_Admin_View::IDENTIFIER],
-                        false,
-                    ),
-                ],
-                [
-                    'title'       => Docman_View_Admin_FilenamePattern::getTabTitle(),
-                    'description' => Docman_View_Admin_FilenamePattern::getTabDescription(),
-                    'url'         => DocmanViewURLBuilder::buildUrl(
-                        $default_url,
-                        ['action' => \Docman_View_Admin_FilenamePattern::IDENTIFIER],
-                        false,
-                    ),
-                    'is_active'   => $this->getIdentifier() === \Docman_View_Admin_FilenamePattern::IDENTIFIER,
-                ],
-            ],
+            'tabs' => $tab,
         ];
     }
 }
