@@ -20,7 +20,7 @@
 
 <template>
     <div class="tlp-form-element document-search-criterion document-search-criterion-text">
-        <div class="global-search-label">
+        <div class="document-search-criterion-with-popover">
             <label class="tlp-label" for="document-global-search" v-translate>Global search</label>
             <search-information-popover />
         </div>

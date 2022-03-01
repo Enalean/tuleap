@@ -94,6 +94,7 @@
     margin: 0;
 }
 
+.document-search-criterion-owner,
 .document-search-criterion-text {
     min-width: 300px;
 }
@@ -171,7 +172,7 @@
 }
 /* stylelint-enable selector-no-qualifying-type */
 
-.global-search-label {
+.document-search-criterion-with-popover {
     display: flex;
     align-items: center;
     margin: 0 0 var(--tlp-small-spacing);
