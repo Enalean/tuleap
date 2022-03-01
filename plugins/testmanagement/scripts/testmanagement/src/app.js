@@ -23,6 +23,7 @@ import ui_router from "@uirouter/angularjs";
 import angular_artifact_modal from "@tuleap/plugin-tracker-artifact-modal";
 import angular_tlp from "@tuleap/angular-tlp";
 import angular_moment from "angular-moment";
+import angular_filter from "angular-filter";
 
 import "angular-breadcrumb";
 import "angular-gettext";
@@ -56,6 +57,7 @@ export default angular
         "ncy-angular-breadcrumb",
         "gettext",
         angular_moment,
+        angular_filter,
         shared_properties,
         uuid_generator,
         socket,
