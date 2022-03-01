@@ -22,6 +22,7 @@ specifiers:
   angular: ^1.8.2
   angular-breadcrumb: ^0.5.0
   angular-cookies: ^1.8.2
+  angular-filter: 0.5.17
   angular-gettext: ^2.4.2
   angular-jwt: ^0.1.11
   angular-locker: ~2.0.3
@@ -70,6 +71,7 @@ dependencies:
   angular: 1.8.2
   angular-breadcrumb: 0.5.0
   angular-cookies: 1.8.2
+  angular-filter: 0.5.17
   angular-gettext: 2.4.2
   angular-jwt: 0.1.11
   angular-locker: 2.0.5
@@ -165,6 +167,13 @@ packages:
 
   /angular-cookies/1.8.2:
     resolution: {integrity: sha512-M6fCnsnw1pj1+nXuO28ilJ+h6pFCIXQKSEgy9/PIoN0sZr5FqsE9BK18PdBQa8dif+fnHCAYpPU8MgDzT/sZSg==}
+    dev: false
+
+  /angular-filter/0.5.17:
+    resolution: {integrity: sha1-YMDHOA/UWHLLjxCAHP4H4VQGKTU=}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      angular: 1.8.2
     dev: false
 
   /angular-gettext/2.4.2:

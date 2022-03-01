@@ -23,6 +23,7 @@
     "angular": "^1.8.2",
     "angular-breadcrumb": "^0.5.0",
     "angular-cookies": "^1.8.2",
+    "angular-filter": "0.5.17",
     "angular-gettext": "^2.4.2",
     "angular-jwt": "^0.1.11",
     "angular-locker": "~2.0.3",
