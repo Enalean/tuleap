@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         vue_mount_point.dataset.isObsolescenceDatePropertyUsed
     );
     const is_changelog_proposed_after_dnd = Boolean(
-        vue_mount_point.dataset.isChangelogProposedAfterDnd
+        vue_mount_point.dataset.isChangelogDisplayedAfterDnd
     );
     const csrf_token_name = vue_mount_point.dataset.csrfTokenName;
     const csrf_token = vue_mount_point.dataset.csrfToken;

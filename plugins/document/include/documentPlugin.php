@@ -24,11 +24,14 @@ use Tuleap\Docman\ExternalLinks\DocmanLinkProvider;
 use Tuleap\Docman\ExternalLinks\ExternalLinkRedirector;
 use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
 use Tuleap\Docman\ExternalLinks\Link;
+use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
+use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Docman\View\Admin\DetectEnhancementOfDocmanInterface;
 use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminController;
 use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminSaveController;
 use Tuleap\Document\Config\Admin\HistoryEnforcementAdminController;
 use Tuleap\Document\Config\Admin\HistoryEnforcementAdminSaveController;
+use Tuleap\Document\Config\ChangeLogModalDisplayer;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Config\HistoryEnforcementSettingsBuilder;
 use Tuleap\Document\DocumentUsageRetriever;
@@ -106,11 +109,15 @@ class documentPlugin extends Plugin // phpcs:ignore
 
     public function routeGet(): DocumentTreeController
     {
+        $history_enforcement_settings_builder = new HistoryEnforcementSettingsBuilder();
         return new DocumentTreeController(
             $this->getProjectExtractor(),
             $this->getOldPluginInfo(),
             new FileDownloadLimitsBuilder(),
-            new HistoryEnforcementSettingsBuilder(),
+            new ChangeLogModalDisplayer(
+                new FilenamePatternRetriever(new SettingsDAO()),
+                $history_enforcement_settings_builder->build()
+            ),
             new ProjectFlagsBuilder(new ProjectFlagsDao()),
             new \Docman_ItemDao(),
             new \Tuleap\Document\Tree\ListOfSearchCriterionPresenterBuilder(),
