@@ -744,22 +744,6 @@ class GitRepository
     }
 
     /**
-     * Rename project
-     */
-    public function renameProject(Project $project, $newName)
-    {
-        $newName = strtolower($newName);
-        if ($this->getBackend()->renameProject($project, $newName)) {
-            unset($this->backend);
-            $this->setBackendType(GitDao::BACKEND_GITOLITE);
-            if ($this->getBackend()->renameProject($project, $newName)) {
-                return $this->getDao()->renameProject($project, $newName);
-            }
-        }
-        return false;
-    }
-
-    /**
      * Verify if the notfication is alreadyu enabled for the given mail
      *
      * @param String $mail

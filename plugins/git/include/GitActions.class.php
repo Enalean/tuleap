@@ -1065,19 +1065,6 @@ class GitActions extends PluginActions
         }
     }
 
-    /**
-     * Method called by SystemEvent_PROJECT_RENAME event
-     *
-     * @param Project $project Project to modify
-     * @param String  $newName New unix group name
-     *
-     * @return bool
-     */
-    public static function renameProject(Project $project, $newName)
-    {
-        $r = new GitRepository();
-        return $r->renameProject($project, $newName);
-    }
 
     public function _loadRepository($projectId, $repositoryId)
     {

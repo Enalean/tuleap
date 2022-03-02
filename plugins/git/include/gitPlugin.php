@@ -66,6 +66,7 @@ use Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin;
 use Tuleap\Git\Gitolite\SSHKey\Provider\User;
 use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\GitProjectRenamer;
 use Tuleap\Git\GitService;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\GitXmlExporter;
@@ -787,7 +788,8 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function systemEventProjectRename($params)
     {
-        GitActions::renameProject($params['project'], $params['new_name']);
+        $project_renamer = new GitProjectRenamer($this->getBackendGitolite(), $this->getGitDao());
+        $project_renamer->renameProject($params['project'], $params['new_name']);
     }
 
     public function file_exists_in_data_dir($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
