@@ -26,7 +26,6 @@ use Lcobucci\JWT\Validation\Validator;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
-use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -108,7 +107,6 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $this->addHook('javascript_file');
         $this->addHook('cssfile');
         $this->addHook(SiteAdministrationAddOption::NAME);
-        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::GET_LOGIN_URL);
         $this->addHook(RegistrationGuardEvent::NAME);
@@ -341,13 +339,6 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
                 $this->getPluginPath() . '/admin'
             )
         );
-    }
-
-    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/admin') === 0) {
-            $event->setIsInBurningParrotCompatiblePage();
-        }
     }
 
     private function getLogger(): \Psr\Log\LoggerInterface
