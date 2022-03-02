@@ -29,7 +29,6 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
-use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\Config\ConfigDao;
 use Tuleap\Config\ConfigKey;
@@ -213,7 +212,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
         $this->addHook(SiteAdministrationAddOption::NAME);
-        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
     }
 
     public function getHooksAndCallbacks()
@@ -1721,27 +1719,5 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $xml_importer->import($params['xml_content']->docman);
 
         $logger->info('Import completed');
-    }
-
-    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event): void
-    {
-        if (
-            in_array(
-                HTTPRequest::instance()->get('action'),
-                [
-                    \Docman_View_Admin_MetadataDetailsUpdateLove::IDENTIFIER,
-                    \Docman_View_Admin_Metadata::IDENTIFIER,
-                    \Docman_View_Admin_LockInfos::IDENTIFIER,
-                    \Docman_View_Admin_Obsolete::IDENTIFIER,
-                    \Docman_View_Admin_View::IDENTIFIER,
-                    \Docman_View_Admin_Permissions::IDENTIFIER,
-                    'admin',
-                    \Docman_View_Admin_FilenamePattern::IDENTIFIER,
-                ],
-                true,
-            )
-        ) {
-            $event->setIsInBurningParrotCompatiblePage();
-        }
     }
 }

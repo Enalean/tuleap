@@ -229,6 +229,8 @@ class FrontRouter
     {
         if ($handler instanceof DispatchableWithBurningParrot) {
             $layout = $this->getBurningParrotTheme($request);
+        } elseif ($handler instanceof DispatchableWithThemeSelection && $handler->isInABurningParrotPage($request, $route_info)) {
+            $layout = $this->getBurningParrotTheme($request);
         } else {
             $layout = $this->theme_manager->getTheme($request->getCurrentUser());
         }
