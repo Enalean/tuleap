@@ -1781,13 +1781,6 @@ msgstr "Erreur interne : le mot de passe n'a pas été mis à jour"
 msgid "Internal server error"
 msgstr "Erreur interne du serveur"
 
-msgid ""
-"Internet Explorer is not supported. Please upgrade to a modern, fully "
-"supported browser such as Firefox, Chrome or Edge."
-msgstr ""
-"Internet Explorer n'est pas supporté. Veuillez utiliser un navigateur "
-"moderne tel que Firefox, Chrome ou Edge."
-
 #, php-format
 msgid ""
 "Introductory message to replace the default one on the <a href=\"%1$s\">CVS "
