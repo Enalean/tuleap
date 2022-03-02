@@ -22,6 +22,7 @@
 namespace Tuleap\Request;
 
 use FastRoute;
+use HTTPRequest;
 use Mockery;
 use org\bovigo\vfs\vfsStream;
 use PluginManager;
@@ -29,8 +30,9 @@ use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\ErrorRendering;
 use Tuleap\Theme\BurningParrot\BurningParrotTheme;
+use function PHPUnit\Framework\assertInstanceOf;
 
-class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -291,6 +293,44 @@ class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
         $_SERVER['REQUEST_URI']    = '/stuff';
 
         $this->router->route($this->request);
+    }
+
+    public function testItProvidesABurningParrotThemeWhenControllerSelectItExplicitly(): void
+    {
+        $handler = new class implements DispatchableWithRequest, DispatchableWithThemeSelection {
+            public bool $has_processed = false;
+            public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+            {
+                $this->has_processed = true;
+                assertInstanceOf(BurningParrotTheme::class, $layout);
+            }
+
+            public function isInABurningParrotPage(HTTPRequest $request, array $variables): bool
+            {
+                return true;
+            }
+        };
+
+        $this->request_instrumentation->shouldReceive('increment')->once();
+
+        $url_verification = Mockery::mock(\URLVerification::class);
+        $url_verification->shouldReceive('assertValidUrl');
+        $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
+
+        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler) {
+            $r->get('/stuff', function () use ($handler) {
+                return $handler;
+            });
+
+            return true;
+        }));
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/stuff';
+
+        $this->router->route($this->request);
+
+        self::assertTrue($handler->has_processed);
     }
 
     public function testItInstantiatePluginsWhenRoutingAPluginRoute(): void

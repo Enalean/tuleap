@@ -27,8 +27,9 @@ use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\DispatchableWithThemeSelection;
 
-final class DocmanLegacyController implements DispatchableWithRequest
+final class DocmanLegacyController implements DispatchableWithRequest, DispatchableWithThemeSelection
 {
     /**
      * @var \DocmanPlugin
@@ -74,5 +75,23 @@ final class DocmanLegacyController implements DispatchableWithRequest
                 $this->dao
             )
         )->process($request, $request->getCurrentUser());
+    }
+
+    public function isInABurningParrotPage(HTTPRequest $request, array $variables): bool
+    {
+        return in_array(
+            $request->get('action'),
+            [
+                \Docman_View_Admin_MetadataDetailsUpdateLove::IDENTIFIER,
+                \Docman_View_Admin_Metadata::IDENTIFIER,
+                \Docman_View_Admin_LockInfos::IDENTIFIER,
+                \Docman_View_Admin_Obsolete::IDENTIFIER,
+                \Docman_View_Admin_View::IDENTIFIER,
+                \Docman_View_Admin_Permissions::IDENTIFIER,
+                'admin',
+                \Docman_View_Admin_FilenamePattern::IDENTIFIER,
+            ],
+            true,
+        );
     }
 }

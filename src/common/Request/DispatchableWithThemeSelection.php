@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,26 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap;
+declare(strict_types=1);
 
-use Tuleap\Event\Dispatchable;
+namespace Tuleap\Request;
+
+use HTTPRequest;
 
 /**
- * @deprecated See \Tuleap\Request\DispatchableWithBurningParrot or \Tuleap\Request\DispatchableWithThemeSelection
+ * This is only needed when migrating only some parts of a controller dealing with legacy code
+ * Favor DispatchableWithBurningParrot for all the other use cases
  */
-class BurningParrotCompatiblePageEvent implements Dispatchable
+interface DispatchableWithThemeSelection
 {
-    public const NAME = 'burningParrotCompatiblePage';
-
-    private $is_in_burning_parrot_compatible_page = false;
-
-    public function setIsInBurningParrotCompatiblePage()
-    {
-        $this->is_in_burning_parrot_compatible_page = true;
-    }
-
-    public function isInBurningParrotCompatiblePage()
-    {
-        return $this->is_in_burning_parrot_compatible_page;
-    }
+    public function isInABurningParrotPage(HTTPRequest $request, array $variables): bool;
 }
