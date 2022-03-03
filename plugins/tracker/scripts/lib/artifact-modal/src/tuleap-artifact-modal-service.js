@@ -321,13 +321,15 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
             target_field,
             field_dependencies_rules
         ) {
-            var source_value_ids = [].concat(field_values[source_field_id].bind_value_ids);
+            if (field_values[source_field_id] !== undefined) {
+                var source_value_ids = [].concat(field_values[source_field_id].bind_value_ids);
 
-            target_field.filtered_values = getTargetFieldPossibleValues(
-                source_value_ids,
-                target_field,
-                field_dependencies_rules
-            );
+                target_field.filtered_values = getTargetFieldPossibleValues(
+                    source_value_ids,
+                    target_field,
+                    field_dependencies_rules
+                );
+            }
         };
 
         setUpFieldDependenciesActions(tracker, filterTargetFieldValues);
