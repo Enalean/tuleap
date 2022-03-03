@@ -32,6 +32,39 @@
                         {{# dgettext }}tuleap-docman | Import{{/ dgettext }}
                     </button>
                 </div>
+                {{# available_properties }}
+                    {{# delete_url }}
+                        <form method="post"
+                              action="{{ delete_url }}"
+                              class="tlp-popover tlp-popover-danger"
+                              id="docman-admin-properties-delete-button-{{ id }}"
+                        >
+                            {{# csrf }}
+                                {{> csrf_token_input }}
+                            {{/ csrf }}
+                            <div class="tlp-popover-arrow"></div>
+                            <div class="tlp-popover-header">
+                                <h1 class="tlp-popover-title">{{# dgettext }}tuleap-docman | Wait a minute...{{/ dgettext }}</h1>
+                            </div>
+                            <div class="tlp-popover-body">
+                                <p>
+                                    {{# dgettext }}tuleap-docman
+                                        | Are you sure you want to delete the property '%1$s'?
+                                        | {{ name }}
+                                    {{/ dgettext }}
+                                </p>
+                            </div>
+                            <div class="tlp-popover-footer">
+                                <button type="button" class="tlp-button-danger tlp-button-outline" data-dismiss="popover">
+                                    {{# gettext }}Cancel{{/ gettext }}
+                                </button>
+                                <button type="submit" class="tlp-button-danger" data-test="docman-admin-properties-delete-confirm-button">
+                                    {{# dgettext }}tuleap-docman | Delete the property{{/ dgettext }}
+                                </button>
+                            </div>
+                        </form>
+                    {{/ delete_url }}
+                {{/ available_properties }}
                 <table class="tlp-table">
                     <thead>
                         <tr>
@@ -84,39 +117,6 @@
                         {{/ available_properties }}
                     </tbody>
                 </table>
-                {{# available_properties }}
-                    {{# delete_url }}
-                        <form method="post"
-                              action="{{ delete_url }}"
-                              class="tlp-popover tlp-popover-danger"
-                              id="docman-admin-properties-delete-button-{{ id }}"
-                        >
-                            {{# csrf }}
-                                {{> csrf_token_input }}
-                            {{/ csrf }}
-                            <div class="tlp-popover-arrow"></div>
-                            <div class="tlp-popover-header">
-                                <h1 class="tlp-popover-title">{{# dgettext }}tuleap-docman | Wait a minute...{{/ dgettext }}</h1>
-                            </div>
-                            <div class="tlp-popover-body">
-                                <p>
-                                    {{# dgettext }}tuleap-docman
-                                        | Are you sure you want to delete the property '%1$s'?
-                                        | {{ name }}
-                                    {{/ dgettext }}
-                                </p>
-                            </div>
-                            <div class="tlp-popover-footer">
-                                <button type="button" class="tlp-button-danger tlp-button-outline" data-dismiss="popover">
-                                    {{# gettext }}Cancel{{/ gettext }}
-                                </button>
-                                <button type="submit" class="tlp-button-danger" data-test="docman-admin-properties-delete-confirm-button">
-                                    {{# dgettext }}tuleap-docman | Delete the property{{/ dgettext }}
-                                </button>
-                            </div>
-                        </form>
-                    {{/ delete_url }}
-                {{/ available_properties }}
             </section>
         </div>
     </section>
@@ -154,7 +154,7 @@
             <label class="tlp-label" for="docman-admin-properties-create-description">
                 {{# dgettext }}tuleap-docman | Description{{/ dgettext }}
             </label>
-            <textarea class="tlp-textarea" name="descr"></textarea>
+            <textarea id="docman-admin-properties-create-description" class="tlp-textarea" name="descr"></textarea>
         </div>
 
         <div class="tlp-form-element">

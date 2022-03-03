@@ -1,0 +1,187 @@
+<div class="tlp-framed">
+    <p>
+        <a href="{{ back_url }}">
+            <i class="fas fa-long-arrow-alt-left" aria-hidden="true"></i>
+            {{# dgettext }}tuleap-docman | Back to properties{{/ dgettext }}
+        </a>
+    </p>
+    <section class="tlp-pane">
+        <form method="post" action="{{ update_url }}" class="tlp-pane-container">
+            <input type="hidden" name="label" value="{{ label }}" />
+            {{# csrf }}
+                {{> csrf_token_input }}
+            {{/ csrf }}
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{ title }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                {{# can_change_name }}
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="docman-admin-properties-update-name">
+                            {{# dgettext }}tuleap-docman | Name{{/ dgettext }}
+                        </label>
+                        <input type="text"
+                               class="tlp-input"
+                               id="docman-admin-properties-update-name"
+                               name="name"
+                               value="{{ name }}"
+                               size="30"
+                               data-test="metadata_name"
+                        >
+                    </div>
+                {{/ can_change_name }}
+                {{^ can_change_name }}
+                    <div class="tlp-property">
+                        <label class="tlp-label">
+                            {{# dgettext }}tuleap-docman | Name{{/ dgettext }}
+                        </label>
+                        <p>{{ name }}</p>
+                    </div>
+                {{/ can_change_name }}
+
+                {{# can_change_description }}
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="docman-admin-properties-update-description">
+                            {{# dgettext }}tuleap-docman | Description{{/ dgettext }}
+                        </label>
+                        <textarea id="docman-admin-properties-update-description"
+                                  class="tlp-textarea"
+                                  name="descr"
+                        >{{ description }}</textarea>
+                    </div>
+                {{/ can_change_description }}
+                {{^ can_change_description }}
+                    <div class="tlp-property">
+                        <label class="tlp-label">
+                            {{# dgettext }}tuleap-docman | Name{{/ dgettext }}
+                        </label>
+                        <p>{{ description }}</p>
+                    </div>
+                {{/ can_change_description }}
+
+                <div class="tlp-property">
+                    <label class="tlp-label">
+                        {{# dgettext }}tuleap-docman | Type{{/ dgettext }}
+                    </label>
+                    <p>{{ type }}</p>
+                </div>
+
+                <div class="tlp-property">
+                    <label class="tlp-label">
+                        {{# dgettext }}tuleap-docman | Keep history{{/ dgettext }}
+                    </label>
+                    <p>
+                        {{# keep_history }}
+                            {{# dgettext }}tuleap-docman | Yes{{/dgettext}}
+                        {{/ keep_history }}
+                        {{^ keep_history }}
+                            {{# dgettext }}tuleap-docman | No{{/dgettext}}
+                        {{/ keep_history }}
+                    </p>
+                </div>
+
+                {{# can_change_empty_allowed }}
+                    <div class="tlp-form-element">
+                        <label class="tlp-label tlp-checkbox">
+                            <input type="checkbox"
+                                   data-test="empty_allowed"
+                                   name="empty_allowed"
+                                   value="1"
+                                   {{# empty_allowed }}checked{{/ empty_allowed }}
+                            >
+                            {{# dgettext }}tuleap-docman | Allow empty value{{/ dgettext }}
+                        </label>
+                    </div>
+                {{/ can_change_empty_allowed }}
+                {{^ can_change_empty_allowed }}
+                    <div class="tlp-property">
+                        <label class="tlp-label">
+                            {{# dgettext }}tuleap-docman | Allow empty value{{/ dgettext }}
+                        </label>
+                        <p>
+                            {{# empty_allowed }}
+                                {{# dgettext }}tuleap-docman | Yes{{/dgettext}}
+                            {{/ empty_allowed }}
+                            {{^ empty_allowed }}
+                                {{# dgettext }}tuleap-docman | No{{/dgettext}}
+                            {{/ empty_allowed }}
+                        </p>
+                    </div>
+                {{/ can_change_empty_allowed }}
+
+                {{# is_list }}
+                    {{# can_change_multiplevalues_allowed }}
+                        <div class="tlp-form-element">
+                            <label class="tlp-label tlp-checkbox">
+                                <input type="checkbox"
+                                       name="multiplevalues_allowed"
+                                       value="1"
+                                       {{# multiplevalues_allowed }}checked{{/ multiplevalues_allowed }}
+                                >
+                                {{# dgettext }}tuleap-docman | Allow multiple selection{{/ dgettext }}
+                            </label>
+                        </div>
+                    {{/ can_change_multiplevalues_allowed }}
+                    {{^ can_change_multiplevalues_allowed }}
+                        <div class="tlp-property">
+                            <label class="tlp-label">
+                                {{# dgettext }}tuleap-docman | Allow multiple selection{{/ dgettext }}
+                            </label>
+                            <p>
+                                {{# multiplevalues_allowed }}
+                                    {{# dgettext }}tuleap-docman | Yes{{/dgettext}}
+                                {{/ multiplevalues_allowed }}
+                                {{^ multiplevalues_allowed }}
+                                    {{# dgettext }}tuleap-docman | No{{/dgettext}}
+                                {{/ multiplevalues_allowed }}
+                            </p>
+                        </div>
+                    {{/ can_change_multiplevalues_allowed }}
+                {{/ is_list }}
+
+                {{# can_change_use_it }}
+                    <div class="tlp-form-element">
+                        <label class="tlp-label tlp-checkbox">
+                            <input type="checkbox"
+                                   data-test="use_it"
+                                   name="use_it"
+                                   value="1"
+                                   {{# use_it }}checked{{/ use_it }}
+                            >
+                            {{# dgettext }}tuleap-docman | Use this property{{/ dgettext }}
+                        </label>
+                    </div>
+                {{/ can_change_use_it }}
+                {{^ can_change_use_it}}
+                    <div class="tlp-property">
+                        <label class="tlp-label">
+                            {{# dgettext }}tuleap-docman | Use this property{{/ dgettext }}
+                        </label>
+                        <p>
+                            {{# use_it }}
+                                {{# dgettext }}tuleap-docman | Yes{{/dgettext}}
+                            {{/ use_it }}
+                            {{^ use_it }}
+                                {{# dgettext }}tuleap-docman | No{{/dgettext}}
+                            {{/ use_it }}
+                        </p>
+                    </div>
+                {{/ can_change_use_it }}
+            </section>
+            {{# something_can_change }}
+                <section class="tlp-pane-section tlp-pane-section-submit">
+                    <button type="submit" class="tlp-button-primary">
+                        <i class="far fa-save tlp-button-icon" aria-hidden="true"></i>
+                        {{# gettext }}Save{{/ gettext }}
+                    </button>
+                </section>
+            {{/ something_can_change }}
+        </form>
+    </section>
+
+    {{# is_list }}
+        {{> admin/property-list-values }}
+    {{/ is_list }}
+</div>

@@ -1,0 +1,164 @@
+
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                {{# dgettext }}tuleap-docman | Property values{{/ dgettext }}
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
+            {{# can_create_value }}
+                <div class="tlp-table-actions">
+                    <button
+                        type="button"
+                        class="tlp-button-primary tlp-table-actions-element docman-admin-properties-modal-button"
+                        data-target-modal-id="docman-admin-properties-create-value-modal"
+                    >
+                        <i class="tlp-button-icon fas fa-plus" aria-hidden="true"></i>
+                        {{# dgettext }}tuleap-docman | Create value{{/ dgettext }}
+                    </button>
+                </div>
+            {{/ can_create_value }}
+            {{# values }}
+                {{# can_delete }}
+                    <form method="post"
+                          action="{{ delete_url }}"
+                          class="tlp-popover tlp-popover-danger"
+                          id="docman-admin-properties-delete-value-button-{{ id }}"
+                    >
+                        {{# csrf }}
+                            {{> csrf_token_input }}
+                        {{/ csrf }}
+                        <div class="tlp-popover-arrow"></div>
+                        <div class="tlp-popover-header">
+                            <h1 class="tlp-popover-title">{{# dgettext }}tuleap-docman | Wait a minute...{{/ dgettext }}</h1>
+                        </div>
+                        <div class="tlp-popover-body">
+                            <p>
+                                {{# dgettext }}tuleap-docman
+                                    | You are about to delete the value '%1$s'. All documents already labeled with this value will be bound to 'None'.
+                                    | {{ name }}
+                                {{/ dgettext }}
+                            </p>
+                        </div>
+                        <div class="tlp-popover-footer">
+                            <button type="button" class="tlp-button-danger tlp-button-outline" data-dismiss="popover">
+                                {{# gettext }}Cancel{{/ gettext }}
+                            </button>
+                            <button type="submit" class="tlp-button-danger" data-test="docman-admin-properties-delete-confirm-button">
+                                {{# dgettext }}tuleap-docman | Delete the value{{/ dgettext }}
+                            </button>
+                        </div>
+                    </form>
+                {{/ can_delete }}
+            {{/ values }}
+            <table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th>{{# dgettext }}tuleap-docman | Name{{/ dgettext }}</th>
+                        <th>{{# dgettext }}tuleap-docman | Description{{/ dgettext }}</th>
+                        <th>{{# dgettext }}tuleap-docman | Status{{/ dgettext }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{# values }}
+                        {{# is_none }}
+                            <tr>
+                                <td>{{# dgettext }}tuleap-docman | None{{/ dgettext }}</td>
+                                <td>{{# dgettext }}tuleap-docman | None{{/ dgettext }}</td>
+                                <td>{{ status }}</td>
+                                <td></td>
+                            </tr>
+                        {{/ is_none }}
+                        {{^ is_none }}
+                            <tr>
+                                <td>
+                                    <a href="{{ url }}">
+                                        {{ name }}
+                                    </a>
+                                </td>
+                                <td>{{ description }}</td>
+                                <td>{{ status }}</td>
+                                <td class="tlp-table-cell-actions">
+                                    {{# can_delete }}
+                                        <button
+                                            type="button"
+                                            class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline docman-admin-properties-delete-button"
+                                            data-target="docman-admin-properties-delete-value-button-{{ id }}"
+                                        >
+                                            <i class="tlp-button-icon far fa-trash-alt" aria-hidden="true"></i>
+                                            {{# gettext }}Delete{{/ gettext }}
+                                        </button>
+                                    {{/ can_delete }}
+                                </td>
+                            </tr>
+                        {{/ is_none }}
+                    {{/ values }}
+                </tbody>
+            </table>
+        </section>
+    </div>
+</section>
+
+{{# can_create_value }}
+    <form
+        method="post"
+        action="{{ create_value_url }}"
+        class="tlp-modal"
+        role="dialog"
+        id="docman-admin-properties-create-value-modal"
+        aria-labelledby="docman-admin-properties-create-value-modal-title"
+    >
+        {{# csrf }}
+            {{> csrf_token_input }}
+        {{/ csrf }}
+        <input type="hidden" name="md" value="{{ label }}" />
+
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="docman-admin-properties-create-value-modal-title">
+                {{# dgettext }}tuleap-docman | Create a new value{{/ dgettext }}
+            </h1>
+            <button class="tlp-modal-close" type="reset" data-dismiss="modal" aria-label="{{# gettext}}Close{{/ gettext }}">
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="tlp-modal-body">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="docman-admin-properties-create-value-name">
+                    {{# dgettext }}tuleap-docman | Name{{/ dgettext }}
+                </label>
+                <input type="text" class="tlp-input" id="docman-admin-properties-create-value-name" name="name">
+            </div>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="docman-admin-properties-create-description">
+                    {{# dgettext }}tuleap-docman | Description{{/ dgettext }}
+                </label>
+                <textarea id="docman-admin-properties-create-description" class="tlp-textarea" name="descr"></textarea>
+            </div>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="docman-admin-property-update-rank">
+                    {{# dgettext }}tuleap-docman | Rank{{/ dgettext }}
+                </label>
+                <select class="tlp-select tlp-select-adjusted" id="docman-admin-property-update-rank" name="rank">
+                    <option value="beg">{{# dgettext }}tuleap-docman | At the beginning{{/ dgettext }}</option>
+                    <option value="end" selected>{{# dgettext }}tuleap-docman | At the end{{/ dgettext }}</option>
+                    <option value="--">----</option>
+                    {{# ranks }}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {{/ ranks }}
+                </select>
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                {{# gettext}}Cancel{{/ gettext }}
+            </button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action">
+                {{# gettext}}Create{{/ gettext }}
+            </button>
+        </div>
+    </form>
+{{/ can_create_value }}

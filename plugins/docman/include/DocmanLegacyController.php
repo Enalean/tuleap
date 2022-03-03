@@ -82,6 +82,7 @@ final class DocmanLegacyController implements DispatchableWithRequest, Dispatcha
         return in_array(
             $request->get('action'),
             [
+                \Docman_View_Admin_MetadataDetails::IDENTIFIER,
                 \Docman_View_Admin_MetadataDetailsUpdateLove::IDENTIFIER,
                 \Docman_View_Admin_Metadata::IDENTIFIER,
                 \Docman_View_Admin_LockInfos::IDENTIFIER,

@@ -40,142 +40,126 @@ class Docman_View_Admin_MetadataDetails extends \Tuleap\Docman\View\Admin\AdminV
         );
     }
 
+    protected function isBurningParrotCompatiblePage(): bool
+    {
+        return true;
+    }
+
+    protected function includeJavascript(\Tuleap\Layout\IncludeAssets $include_assets): void
+    {
+        $GLOBALS['Response']->addJavascriptAsset(
+            new \Tuleap\Layout\JavascriptAsset($include_assets, 'admin-properties.js')
+        );
+    }
+
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
-        $md = $params['md'];
+        $metadata = $params['md'];
+        assert($metadata instanceof \Docman_Metadata);
 
-        $sthCanChange = false;
-        $mdContent    = '';
+        $can_change_name                       = $metadata->canChangeName();
+        $can_change_description                = $metadata->canChangeDescription();
+        $can_change_is_empty_allowed           = $metadata->canChangeIsEmptyAllowed();
+        $can_change_is_multiple_values_allowed = $metadata->canChangeIsMultipleValuesAllowed();
+        $can_change_use_it                     = ! $metadata->isRequired();
 
-        $mdContent .= '<h3>' . dgettext('tuleap-docman', 'Property parameters') . '</h3>';
+        $something_can_change = $can_change_name
+            || $can_change_description
+            || $can_change_is_empty_allowed
+            || $can_change_is_multiple_values_allowed
+            || $can_change_use_it;
 
-        $mdContent .= '<table>';
+        $is_list = (int) $metadata->getType() === PLUGIN_DOCMAN_METADATA_TYPE_LIST;
 
-        $metaMdHtml = new Docman_MetaMetadataHtml($md);
+        $renderer->renderToPage('admin/property-details', [
+            'title'                             => $this->getTitle($params),
+            'update_url'                        => DocmanViewURLBuilder::buildUrl($params['default_url'], ['action' => 'admin_md_details_update'], false),
+            'back_url'                          => DocmanViewURLBuilder::buildUrl($params['default_url'], ['action' => \Docman_View_Admin_Metadata::IDENTIFIER], false),
+            'create_value_url'                  => DocmanViewURLBuilder::buildUrl($params['default_url'], ['action' => 'admin_create_love'], false),
+            'can_change_name'                   => $can_change_name,
+            'can_change_description'            => $can_change_description,
+            'can_change_empty_allowed'          => $can_change_is_empty_allowed,
+            'can_change_multiplevalues_allowed' => $can_change_is_multiple_values_allowed,
+            'can_change_use_it'                 => $can_change_use_it,
+            'something_can_change'              => $something_can_change,
+            'name'                              => $metadata->getName(),
+            'label'                             => $metadata->getLabel(),
+            'description'                       => $metadata->getDescription(),
+            'empty_allowed'                     => $metadata->isEmptyAllowed(),
+            'multiplevalues_allowed'            => $metadata->isMultipleValuesAllowed(),
+            'use_it'                            => $metadata->isUsed(),
+            'keep_history'                      => $metadata->getKeepHistory(),
+            'is_list'                           => $is_list,
+            'can_create_value'                  => $is_list && $metadata->getLabel() !== \Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL,
+            'values'                            => $is_list ? $this->getValues($metadata, $params) : [],
+            'ranks'                             => $this->getRanks($metadata),
+            'csrf'                              => \Docman_View_Admin_Metadata::getCSRFToken((int) $params['group_id']),
+            'type'                              => match ((int) $metadata->getType()) {
+                PLUGIN_DOCMAN_METADATA_TYPE_TEXT => dgettext('tuleap-docman', 'Text'),
+                PLUGIN_DOCMAN_METADATA_TYPE_STRING => dgettext('tuleap-docman', 'String'),
+                PLUGIN_DOCMAN_METADATA_TYPE_DATE => dgettext('tuleap-docman', 'Date'),
+                PLUGIN_DOCMAN_METADATA_TYPE_LIST => dgettext('tuleap-docman', 'List of values'),
+                default => '',
+            },
+        ]);
+    }
 
-        $mdContent .= $metaMdHtml->getName($sthCanChange);
-        $mdContent .= $metaMdHtml->getDescription($sthCanChange);
-        $mdContent .= $metaMdHtml->getType($sthCanChange);
-        $mdContent .= $metaMdHtml->getEmptyAllowed($sthCanChange);
-        if ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-            $mdContent .= $metaMdHtml->getMultipleValuesAllowed($sthCanChange);
-        }
-        $mdContent .= $metaMdHtml->getUseIt($sthCanChange);
-        $mdContent .= $metaMdHtml->getKeepHistory($sthCanChange);
+    private function getValues(\Docman_Metadata $metadata, array $params): array
+    {
+        assert($metadata instanceof \Docman_ListMetadata);
 
-        $mdContent .= '</table>';
-
-        if ($sthCanChange) {
-            $act_url = DocmanViewURLBuilder::buildUrl($params['default_url'], []);
-            echo '<form name="md_details_update" method="POST" action="' . $act_url . '" class="docman_form">';
-            echo '<input type="hidden" name="label" value="' . $md->getLabel() . '" />';
-            echo '<input type="hidden" name="action" value="admin_md_details_update" />';
-            echo $mdContent;
-            echo '<input type="submit" name="submit" value="' . dgettext('tuleap-docman', 'Modify') . '" />';
-            echo '</form>';
-        } else {
-            echo $mdContent;
-        }
-
-        // Display list of values
-        if ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-            echo '<h3>' . dgettext('tuleap-docman', 'Property values') . '</h3>';
-
-            echo '<div class="docman_admin_list_values">' . "\n";
-
-            echo html_build_list_table_top([dgettext('tuleap-docman', 'Name'),
-                                                 dgettext('tuleap-docman', 'Description'),
-                                                 dgettext('tuleap-docman', 'Status'),
-                                                 dgettext('tuleap-docman', 'Delete')]);
-            $vIter = $md->getListOfValueIterator();
-            $vIter->rewind();
-            $rowColorIdx = 0;
-            while ($vIter->valid()) {
-                $e = $vIter->current();
-
-                // Status
-                $canDelete = false;
-                $displayed = true;
-                switch ($e->getStatus()) {
-                    case 'A':
-                        $canDelete = true;
-                        $status    = dgettext('tuleap-docman', 'Active');
-                        break;
-                    case 'P':
-                        $status = dgettext('tuleap-docman', 'Permanent');
-                        break;
-                    case 'D':
-                        $displayed = false;
-                        break;
-                    default:
-                        $status = dgettext('tuleap-docman', 'Inactive');
-                }
-
-                if ($displayed) {
-                    $class = ' class="' . html_get_alt_row_color($rowColorIdx++) . '"';
-                    echo '<tr' . $class . '>';
-
-                    // Name
-                    $name = Docman_MetadataHtmlList::_getElementName($e);
-                    if ($e->getId() > 100) {
-                        $url  = DocmanViewURLBuilder::buildUrl($params['default_url'], ['action' => \Docman_View_Admin_MetadataDetailsUpdateLove::IDENTIFIER,
-                                                                             'md' => $md->getLabel(),
-                                                                             'loveid' => $e->getId()]);
-                        $href = '<a href="' . $url . '">' . $name . '</a>';
-                    } else {
-                        $href = $name;
-                    }
-                    echo '<td>' . $href . '</td>';
-
-                    // Description
-                    echo '<td>' . Docman_MetadataHtmlList::_getElementDescription($e) . '</td>';
-
-                    // Status
-                    echo '<td>' . $status . '</td>';
-
-                    // Delete
-                    $trash = '-';
-                    if ($canDelete) {
-                        $link  = '?group_id=' . $params['group_id'] . '&action=admin_delete_love&loveid=' . $e->getId() . '&md=' . $md->getLabel();
-                        $warn  = sprintf(dgettext('tuleap-docman', 'You are about to delete the value \'%1$s\' in the current category. All documents already labeled with this value will be bound to \'None\'. Click on \'Ok\' to proceed otherwise click on \'Cancel\'.'), $name);
-                        $alt   = sprintf(dgettext('tuleap-docman', 'Delete value \'%1$s\''), $name);
-                        $trash = html_trash_link($link, $warn, $alt);
-                    }
-                    echo '<td>' . $trash . '</td>';
-
-                    echo '</tr>';
-                }
-                $vIter->next();
+        $values = [];
+        foreach ($metadata->getListOfValueIterator() as $value) {
+            assert($value instanceof \Docman_MetadataListOfValuesElement);
+            if ($value->getStatus() === 'D') {
+                continue;
             }
-            echo '</table>';
-            echo '</div><!--  docman_admin_list_values -->' . "\n";
 
-            if ($md->getLabel() != 'status') {
-                echo '<h3>' . dgettext('tuleap-docman', 'Create a new value') . '</h3>';
+            $url = DocmanViewURLBuilder::buildUrl(
+                $params['default_url'],
+                [
+                    'action' => \Docman_View_Admin_MetadataDetailsUpdateLove::IDENTIFIER,
+                    'md'     => $metadata->getLabel(),
+                    'loveid' => $value->getId(),
+                ],
+                false,
+            );
 
-                $loveDetailsHtml = new Docman_View_LoveDetails($md);
+            $delete_url = DocmanViewURLBuilder::buildUrl(
+                $params['default_url'],
+                [
+                    'action' => 'admin_delete_love',
+                    'md'     => $metadata->getLabel(),
+                    'loveid' => $value->getId(),
+                ],
+                false,
+            );
 
-                echo '<form name="md_create_love" method="POST" action="?group_id=' . $params['group_id'] . '&action=admin_create_love" class="docman_form">';
-                echo $loveDetailsHtml->getHiddenFields();
-
-                echo '<table>';
-
-                echo $loveDetailsHtml->getNameField();
-                echo $loveDetailsHtml->getDescriptionField();
-                echo $loveDetailsHtml->getRankField();
-
-                echo '</table>';
-
-                echo '<input type="submit" name="submit" value="' . dgettext('tuleap-docman', 'Create') . '" />';
-
-                echo '</form>';
-            }
+            $values[] = [
+                'id'          => $value->getId(),
+                'is_none'     => (int) $value->getId() === 100,
+                'name'        => $value->getName(),
+                'description' => $value->getDescription(),
+                'url'         => $url,
+                'can_delete'  => $value->getStatus() === 'A',
+                'delete_url'  => $delete_url,
+                'status'      => match ($value->getStatus()) {
+                    'A' => dgettext('tuleap-docman', 'Active'),
+                    'P' => dgettext('tuleap-docman', 'Permanent'),
+                    default => dgettext('tuleap-docman', 'Inactive'),
+                },
+            ];
         }
 
-        $backUrl = DocmanViewURLBuilder::buildUrl(
-            $params['default_url'],
-            ['action' => \Docman_View_Admin_Metadata::IDENTIFIER]
-        );
-        echo '<p><a href="' . $backUrl . '">' . dgettext('tuleap-docman', 'Back to Properties menu') . '</a></p>';
+        return $values;
+    }
+
+    private function getRanks(\Docman_Metadata $metadata): array
+    {
+        if ($metadata instanceof \Docman_ListMetadata) {
+            return (new \Tuleap\Docman\View\Admin\ValueRanksBuilder())->getRanks($metadata);
+        }
+
+        return [];
     }
 }

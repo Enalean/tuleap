@@ -640,6 +640,7 @@ class Docman_Controller extends Controler
                 $this->view                              = 'RedirectAfterCrud';
                 break;
             case 'admin_md_details_update':
+                \Docman_View_Admin_Metadata::getCSRFToken($this->getGroupId())->check();
                 $_name  = trim($this->request->get('name'));
                 $_label = $this->request->get('label');
 
@@ -700,6 +701,7 @@ class Docman_Controller extends Controler
 
                 break;
             case 'admin_create_love':
+                \Docman_View_Admin_Metadata::getCSRFToken($this->getGroupId())->check();
                 $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
                 if ($mdFactory->isValidLabel($this->request->get('md'))) {
                     $this->action                            = $view;
@@ -711,6 +713,7 @@ class Docman_Controller extends Controler
                 $this->view = 'RedirectAfterCrud';
                 break;
             case 'admin_delete_love':
+                \Docman_View_Admin_Metadata::getCSRFToken($this->getGroupId())->check();
                 $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
                 if ($mdFactory->isValidLabel($this->request->get('md'))) {
                     $this->action                            = $view;
