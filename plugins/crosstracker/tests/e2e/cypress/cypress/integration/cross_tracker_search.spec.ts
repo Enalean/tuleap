@@ -60,27 +60,34 @@ function clearCodeMirror(): void {
 }
 
 describe("Cross tracker search", function () {
+    let now: number;
+
     before(() => {
         cy.clearSessionCookie();
         cy.projectMemberLogin();
     });
 
     beforeEach(function () {
+        now = Date.now();
         cy.preserveSessionCookies();
     });
 
     it("User should be able to set trackers from widgets", function () {
         cy.visit("/my/");
 
+        cy.get("[data-test=dashboard-add-button]").click();
+        cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
+        cy.get("[data-test=dashboard-add-button-submit]").click();
+
         cy.get("[data-test=dashboard-configuration-button]").click();
         cy.get("[data-test=dashboard-add-widget-button]").click();
         cy.get("[data-test=crosstrackersearch]").click();
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
 
-        // select some trackers
+        cy.log("select some trackers");
         cy.get("[data-test=cross-tracker-reading-mode]").click();
 
-        //select project
+        cy.log("select project");
         cy.get("[data-test=cross-tracker-selector-project]").select("Cross tracker search");
 
         cy.get("[data-test=cross-tracker-selector-tracker]").select("Bugs");
@@ -89,7 +96,7 @@ describe("Cross tracker search", function () {
         cy.get("[data-test=cross-tracker-selector-tracker-button]").click();
         cy.get("[data-test=search-report-button]").click();
 
-        // Bugs has some artifacts
+        cy.log("Bugs has some artifacts");
         cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 5);
         assertOpenArtifacts();
     });
@@ -110,11 +117,11 @@ describe("Cross tracker search", function () {
         cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 6);
         assertAllArtifacts();
 
-        // save report
+        cy.log("Save results");
         cy.get("[data-test=cross-tracker-save-report]").click();
         cy.get("[data-test=cross-tracker-report-success]");
 
-        // reload page and check report still has results
+        cy.log("reload page and check report still has results");
         cy.reload();
         cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 6);
         assertAllArtifacts();
