@@ -39,4 +39,213 @@
     <service shortname="plugin_tracker" enabled="true"/>
     <service shortname="plugin_agiledashboard" enabled="true"/>
   </services>
+
+  <trackers>
+    <tracker id="T51" parent_id="0" instantiate_for_new_projects="1" is_displayed_in_new_dropdown="1">
+      <name>Activities </name>
+      <item_name>activity</item_name>
+      <description />
+      <color>inca-silver</color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="fieldset" ID="F1031" rank="30" id="1031" tracker_id="51" parent_id="0">
+          <name>details_1</name>
+          <label>Details</label>
+          <formElements>
+            <formElement type="string" ID="F1032" rank="0" id="1032" tracker_id="51" parent_id="1031" required="1">
+              <name>title</name>
+              <label>Title</label>
+              <properties maxchars="150" size="80"/>
+            </formElement>
+            <formElement type="text" ID="F1033" rank="2" id="1033" tracker_id="51" parent_id="1031">
+              <name>description</name>
+              <label>Description</label>
+              <properties rows="10" cols="100"/>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F1034" rank="31" id="1034" tracker_id="51" parent_id="0">
+          <name>progress</name>
+          <label>Progress</label>
+          <formElements>
+            <formElement type="msb" ID="F1036" rank="0" id="1036" tracker_id="51" parent_id="1035">
+              <name>assigned_to</name>
+              <label>Assigned to</label>
+              <description>Who is in charge of solving the artifact</description>
+              <properties size="7"/>
+              <bind type="users">
+                <items>
+                  <item label="group_members"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="column" ID="F1037" rank="1" id="1037" tracker_id="51" parent_id="1034">
+              <name>c2</name>
+              <label>c2</label>
+              <formElements>
+                <formElement type="sb" ID="F1038" rank="0" id="1038" tracker_id="51" parent_id="1037">
+                  <name>status</name>
+                  <label>Status</label>
+                  <bind type="static" is_rank_alpha="0">
+                    <items>
+                      <item ID="V372" label="To be done" is_hidden="0"/>
+                      <item ID="V374" label="Review" is_hidden="0"/>
+                      <item ID="V373" label="In progress" is_hidden="0"/>
+                      <item ID="V375" label="Done" is_hidden="0"/>
+                      <item ID="V377" label="Bullit" is_hidden="1"/>
+                    </items>
+                    <default_values>
+                      <value REF="V372"/>
+                    </default_values>
+                  </bind>
+                </formElement>
+                <formElement type="sb" ID="F1039" rank="3" id="1039" tracker_id="51" parent_id="1037">
+                  <name>importance</name>
+                  <label>Importance</label>
+                  <bind type="static" is_rank_alpha="0">
+                    <items>
+                      <item ID="V376" label="High" is_hidden="0"/>
+                    </items>
+                    <decorators>
+                      <decorator REF="V376" tlp_color_name="fiesta-red"/>
+                    </decorators>
+                  </bind>
+                </formElement>
+              </formElements>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname>
+            <![CDATA[ title ]]>
+          </shortname>
+          <label>
+            <![CDATA[ Title ]]>
+          </label>
+          <description>
+            <![CDATA[ Define the title of an artifact ]]>
+          </description>
+          <field REF="F1032"/>
+        </semantic>
+        <semantic type="status">
+          <shortname>
+            <![CDATA[ status ]]>
+          </shortname>
+          <label>
+            <![CDATA[ Status ]]>
+          </label>
+          <description>
+            <![CDATA[ Define the status of an artifact ]]>
+          </description>
+          <field REF="F1038"/>
+          <open_values>
+            <open_value REF="V372"/>
+            <open_value REF="V373"/>
+            <open_value REF="V374"/>
+          </open_values>
+        </semantic>
+        <semantic type="contributor">
+          <shortname>
+            <![CDATA[ contributor ]]>
+          </shortname>
+          <label>
+            <![CDATA[ Contributor/assignee ]]>
+          </label>
+          <description>
+            <![CDATA[ Define the contributor/assignee of an artifact ]]>
+          </description>
+          <field REF="F1036"/>
+        </semantic>
+        <semantic type="tooltip">
+          <field REF="F1032"/>
+          <field REF="F1038"/>
+        </semantic>
+      </semantics>
+      <rules />
+      <reports />
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F1032" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1032" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F1032" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F1033" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1033" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F1033" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F1036" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1036" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F1036" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F1038" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1038" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F1038" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F1039" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1039" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F1039" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts>
+        <artifact id="5790">
+          <changeset id="CHANGESET_11914">
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-09-10T15:41:27+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="title">
+              <value><![CDATA[Think about my revenge]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[372]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="5791">
+          <changeset id="CHANGESET_11915">
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-09-10T15:41:27+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="title">
+              <value><![CDATA[Still speedin']]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[372]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="5792">
+          <changeset id="CHANGESET_11916">
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-09-10T15:41:27+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="title">
+              <value><![CDATA[i30 Namyang]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[372]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="5793">
+          <changeset id="CHANGESET_11917">
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-09-10T15:41:27+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="title">
+              <value><![CDATA[Other]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[373]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+  </trackers>
+  <agiledashboard>
+    <plannings/>
+    <kanban_list title="Kanban">
+      <kanban tracker_id="T51" name="Activities" ID="K01">
+        <column wip="2" REF="V372"/>
+        <column wip="2" REF="V373"/>
+      </kanban>
+    </kanban_list>
+  </agiledashboard>
 </project>
