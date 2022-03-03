@@ -116,6 +116,7 @@ export function uploadVersion(
 
             const new_item_version = await getItem(updated_file.id);
             context.commit("replaceFileWithNewVersion", [updated_file, new_item_version]);
+            context.commit("replaceUploadingFileWithActualFile", [updated_file, new_item_version]);
         },
         onError: (error: Error): void => {
             updated_file.upload_error = error.message;
@@ -161,6 +162,7 @@ export function uploadVersionFromEmpty(
             context.commit("removeItemFromFolderContent", new_item_version);
             context.commit("addJustCreatedItemToFolderContent", new_item_version);
             context.commit("updateCurrentItemForQuickLokDisplay", new_item_version);
+            context.commit("replaceUploadingFileWithActualFile", [updated_empty, new_item_version]);
         },
         onError: (error: Error): void => {
             updated_empty.upload_error = error.message;
