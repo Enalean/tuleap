@@ -1,0 +1,16 @@
+{
+  "require": {
+    "nikic/php-parser": "^4.2",
+    "composer/xdebug-handler": "^2.0",
+    "symfony/console": "^5.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\Tools\\Xml2Php\\": "src/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.0",
+    "mikey179/vfsstream": "^1.6"
+  }
+}

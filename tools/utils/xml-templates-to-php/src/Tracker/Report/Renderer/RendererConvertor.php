@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,14 +16,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-require_once __DIR__ . '/../lib/bootstrap.php';
-require_once __DIR__ . '/../lib/Network/HTTPResponseFunctionsOverload.php';
+declare(strict_types=1);
 
-foreach (glob(__DIR__ . '/../../plugins/*/phpunit/bootstrap.php') as $bootstrap_plugin) {
-    require_once $bootstrap_plugin;
+namespace Tuleap\Tools\Xml2Php\Tracker\Report\Renderer;
+
+use PhpParser\Node\Expr;
+use Psr\Log\LoggerInterface;
+use Tuleap\Tools\Xml2Php\Tracker\FormElement\IdToNameMapping;
+
+abstract class RendererConvertor
+{
+    abstract public function buildFromXml(
+        \SimpleXMLElement $renderer,
+        LoggerInterface $logger,
+        IdToNameMapping $id_to_name_mapping,
+    ): Expr;
 }
-
-require_once __DIR__ . '/../../tools/utils/xml-templates-to-php/vendor/autoload.php';
