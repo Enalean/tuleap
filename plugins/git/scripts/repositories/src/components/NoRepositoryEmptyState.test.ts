@@ -71,20 +71,20 @@ describe("NoRepositoryEmptyState", () => {
     it("When there is no used externals services, Then there is a button to create a repo", () => {
         const wrapper = instantiateComponent();
         expect(wrapper.findComponent(DropdownActionButton).exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=empty_state_create_repository]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=create-repository-button]").exists()).toBeTruthy();
     });
 
     it("When Gitlab is an external service, Then dropdown is displayed the action is displayed", () => {
         store_options.getters.areExternalUsedServices = true;
         const wrapper = instantiateComponent();
         expect(wrapper.findComponent(DropdownActionButton).exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=empty_state_create_repository]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=create-repository-button]").exists()).toBeFalsy();
     });
 
     it("When the user is not git admin, Then there aren't any button", () => {
         jest.spyOn(repo_list, "getUserIsAdmin").mockReturnValue(false);
         const wrapper = instantiateComponent();
         expect(wrapper.findComponent(DropdownActionButton).exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=empty_state_create_repository]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=create-repository-button]").exists()).toBeFalsy();
     });
 });
