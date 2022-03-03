@@ -36,7 +36,7 @@
     "mustache": "^4.2.0",
     "node-gettext": "^3.0.0",
     "panzoom": "^9.4.1",
-    "prismjs": "^1.26.0",
+    "prismjs": "^1.27.0",
     "slugify": "^1.6.1",
     "sprintf-js": "^1.1.2",
     "turndown": "^7.0.0",
