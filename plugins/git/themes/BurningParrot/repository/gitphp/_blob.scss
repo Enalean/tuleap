@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../code-font-parameters";
-
 $codemirror-like-line-numbers-color: #8c8c8c;
 
 .git-repository-blob-header {
@@ -73,14 +71,14 @@ $codemirror-like-line-numbers-color: #8c8c8c;
     display: flex;
     width: 100%;
     background: var(--tlp-white-color);
-    font-family: code-font-parameters.$code-font-family;
+    font-family: var(--tlp-font-family-mono);
     line-height: 1.5;
 }
 
 .git-repository-blob-file-code,
 .git-repository-blob-file-linenumbers {
     border: 0;
-    font-family: code-font-parameters.$code-font-family;
+    font-family: var(--tlp-font-family-mono);
 }
 
 .git-repository-blob-file-linenumbers {
@@ -121,7 +119,7 @@ $above-highlight-line: 2;
     padding: 5px var(--tlp-small-spacing);
     background: none;
     color: var(--tlp-typo-default-text-color);
-    font-family: code-font-parameters.$code-font-family;
+    font-family: var(--tlp-font-family-mono);
     line-height: 1.5;
 
     &[class*="language-"] {
@@ -133,7 +131,7 @@ $above-highlight-line: 2;
     > code[class*="language-"] {
         position: relative;
         z-index: $above-highlight-line;
-        font-family: code-font-parameters.$code-font-family;
+        font-family: var(--tlp-font-family-mono);
         text-shadow: none;
     }
 }
