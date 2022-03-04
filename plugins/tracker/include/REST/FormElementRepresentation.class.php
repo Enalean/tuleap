@@ -97,7 +97,7 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
      * @param mixed $values
      * @param mixed $default_rest_value
      */
-    private function __construct(
+    protected function __construct(
         Tracker_FormElement $form_element,
         string $type,
         bool $is_collapsed,

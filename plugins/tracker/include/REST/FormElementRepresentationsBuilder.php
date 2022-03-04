@@ -33,7 +33,9 @@ use Tracker_REST_FormElement_FieldOpenListRepresentation;
 use Tracker_REST_FormElementRepresentation;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\IRetrieveAllUsableTypesInProject;
 use Tuleap\Tracker\REST\FormElement\FieldFileRepresentation;
+use Tuleap\Tracker\REST\FormElement\LinksFieldRepresentation;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 
 class FormElementRepresentationsBuilder
@@ -62,6 +64,7 @@ class FormElementRepresentationsBuilder
         PermissionsExporter $permissions_exporter,
         HiddenFieldsetChecker $hidden_fieldset_checker,
         PermissionsForGroupsBuilder $permissions_for_groups_builder,
+        private IRetrieveAllUsableTypesInProject $types_allowed_retriever,
     ) {
         $this->permissions_exporter           = $permissions_exporter;
         $this->form_element_factory           = $form_element_factory;
@@ -124,6 +127,14 @@ class FormElementRepresentationsBuilder
                     $this->getPermissionsForFormElement($form_element, $artifact, $user),
                     $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user),
                     $this->hidden_fieldset_checker->mustFieldsetBeHidden($form_element, $artifact)
+                );
+            } elseif ($form_element instanceof \Tracker_FormElement_Field_ArtifactLink) {
+                $form_element_representation = LinksFieldRepresentation::buildRepresentationWithAllowedLinkTypes(
+                    $form_element,
+                    $this->form_element_factory->getType($form_element),
+                    $this->getPermissionsForFormElement($form_element, $artifact, $user),
+                    $this->types_allowed_retriever->getAllUsableTypesInProject($tracker->getProject()),
+                    $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user),
                 );
             } else {
                 $form_element_representation = Tracker_REST_FormElementRepresentation::build(

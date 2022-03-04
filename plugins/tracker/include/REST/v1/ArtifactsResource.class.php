@@ -281,6 +281,10 @@ class ArtifactsResource extends AuthenticatedResource
                     new \UGroupManager(),
                     $frozen_fields_detector,
                     new PermissionsFunctionsWrapper()
+                ),
+                new TypePresenterFactory(
+                    new TypeDao(),
+                    new ArtifactLinksUsageDao()
                 )
             ),
             new PermissionsRepresentationBuilder(
