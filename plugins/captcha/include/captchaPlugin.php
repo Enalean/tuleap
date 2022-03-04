@@ -22,7 +22,6 @@ use FastRoute\RouteCollector;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
-use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Captcha\Administration\DisplayController;
 use Tuleap\Captcha\Administration\UpdateController;
 use Tuleap\Captcha\Configuration;
@@ -57,7 +56,6 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook(Event::USER_REGISTER_ADDITIONAL_FIELD, 'addAdditionalFieldUserRegistration');
         $this->addHook(Event::BEFORE_USER_REGISTRATION, 'checkCaptchaBeforeSubmission');
         $this->addHook(SiteAdministrationAddOption::NAME);
-        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
     }
 
@@ -180,13 +178,6 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         $site_administration_add_option->addPluginOption(
             SiteAdministrationPluginOption::build($this->getPluginInfo()->getPluginDescriptor()->getFullName(), CAPTCHA_BASE_URL . '/admin/')
         );
-    }
-
-    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
-    {
-        if (strpos($_SERVER['REQUEST_URI'], CAPTCHA_BASE_URL . '/admin/') === 0) {
-            $event->setIsInBurningParrotCompatiblePage();
-        }
     }
 
     public function routeGetAdmin(): DispatchableWithRequest

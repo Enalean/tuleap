@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\AgileDashboardLegacyController;
 use Tuleap\AgileDashboard\Artifact\AdditionalArtifactActionBuilder;
 use Tuleap\AgileDashboard\Artifact\EventRedirectAfterArtifactCreationOrUpdateHandler;
 use Tuleap\AgileDashboard\Artifact\HomeServiceRedirectionExtractor;
@@ -88,7 +89,6 @@ use Tuleap\AgileDashboard\Workflow\PostAction\Update\Internal\AddToTopBacklogVal
 use Tuleap\AgileDashboard\Workflow\PostAction\Update\Internal\AddToTopBacklogValueUpdater;
 use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogJsonParser;
 use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogRepresentation;
-use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\DB\DBFactory;
@@ -229,7 +229,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
             $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
             $this->addHook(PermissionPerGroupDisplayEvent::NAME);
-            $this->addHook(BurningParrotCompatiblePageEvent::NAME);
             $this->addHook(HistoryEntryCollection::NAME);
             $this->addHook(Event::USER_HISTORY_CLEAR);
             $this->addHook(ArtifactCreated::NAME);
@@ -736,17 +735,17 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     /** @see Event::BURNING_PARROT_GET_STYLESHEETS */
     public function burning_parrot_get_stylesheets(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $variant = $params['variant'];
-        if ($this->isInOverviewTab() || $this->isPlanningV2URL()) {
+        $request = HTTPRequest::instance();
+        if (AgileDashboardLegacyController::isInOverviewTab($request) || AgileDashboardLegacyController::isPlanningV2URL($request)) {
             $params['stylesheets'][] = $this->getIncludeAssets()->getFileURL('scrum-style.css');
-        } elseif ($this->isScrumAdminURL()) {
+        } elseif (AgileDashboardLegacyController::isScrumAdminURL($request)) {
             $params['stylesheets'][] = $this->getIncludeAssets()->getFileURL('administration-style.css');
         }
     }
 
     public function burning_parrot_get_javascript_files(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if ($this->isInOverviewTab()) {
+        if (AgileDashboardLegacyController::isInOverviewTab(HTTPRequest::instance())) {
             $params['javascript_files'][] = $this->getIncludeAssets()->getFileURL('scrum-header.js');
             return;
         }
@@ -776,9 +775,10 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
      */
     private function getJavascriptDependenciesProvider()
     {
-        if (KanbanURL::isKanbanURL(HTTPRequest::instance())) {
+        $request = HTTPRequest::instance();
+        if (KanbanURL::isKanbanURL($request)) {
             return new KanbanJavascriptDependenciesProvider($this->getIncludeAssets());
-        } elseif ($this->isPlanningV2URL()) {
+        } elseif (AgileDashboardLegacyController::isPlanningV2URL($request)) {
             return new PlanningJavascriptDependenciesProvider($this->getIncludeAssets());
         }
 
@@ -1119,18 +1119,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $milestone = $this->getMilestoneFactory()->getBareMilestoneByArtifact($user, $artifact);
         if ($milestone) {
             $collection->add(new Tuleap\AgileDashboard\Milestone\ArtifactView($milestone, $request, $user));
-        }
-    }
-
-    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event): void
-    {
-        if (
-            KanbanURL::isKanbanURL(HTTPRequest::instance()) ||
-            $this->isInOverviewTab() ||
-            $this->isPlanningV2URL() ||
-            $this->isScrumAdminURL()
-        ) {
-            $event->setIsInBurningParrotCompatiblePage();
         }
     }
 
@@ -1639,13 +1627,13 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         });
     }
 
-    public function routeLegacyController(?ProvideCurrentUser $current_user_provider = null): \Tuleap\AgileDashboard\AgileDashboardLegacyController
+    public function routeLegacyController(?ProvideCurrentUser $current_user_provider = null): AgileDashboardLegacyController
     {
         if ($current_user_provider === null) {
             $current_user_provider = UserManager::instance();
         }
 
-        return new \Tuleap\AgileDashboard\AgileDashboardLegacyController(
+        return new AgileDashboardLegacyController(
             new AgileDashboardRouterBuilder(
                 PluginFactory::instance(),
                 $this->getMilestonePaneFactory(),

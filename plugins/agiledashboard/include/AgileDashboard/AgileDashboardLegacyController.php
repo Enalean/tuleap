@@ -27,14 +27,16 @@ use AgileDashboardRouterBuilder;
 use Feedback;
 use HTTPRequest;
 use Tuleap\AgileDashboard\Kanban\KanbanURL;
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\DispatchableWithThemeSelection;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class AgileDashboardLegacyController implements DispatchableWithRequest
+class AgileDashboardLegacyController implements DispatchableWithRequest, DispatchableWithThemeSelection
 {
     /**
      * @var AgileDashboardRouterBuilder
@@ -81,5 +83,33 @@ class AgileDashboardLegacyController implements DispatchableWithRequest
         } catch (\Tuleap\AgileDashboard\Planning\NotFoundException $exception) {
             throw new NotFoundException('', $exception);
         }
+    }
+
+    public function isInABurningParrotPage(HTTPRequest $request, array $variables): bool
+    {
+        return KanbanURL::isKanbanURL($request)
+            || $this->isInOverviewTab($request)
+            || $this->isPlanningV2URL($request)
+            || $this->isScrumAdminURL($request);
+    }
+
+    public static function isInOverviewTab(HTTPRequest $request): bool
+    {
+        return $request->get('action') === DetailsPaneInfo::ACTION
+            && $request->get('pane') === DetailsPaneInfo::IDENTIFIER;
+    }
+
+    public static function isPlanningV2URL(HTTPRequest $request): bool
+    {
+        $pane_info_identifier = new \AgileDashboard_PaneInfoIdentifier();
+
+        return $pane_info_identifier->isPaneAPlanningV2($request->get('pane'));
+    }
+
+    public static function isScrumAdminURL(HTTPRequest $request): bool
+    {
+        return $request->get('action') === 'admin'
+            && $request->get('pane') !== 'kanban'
+            && $request->get('pane') !== 'charts';
     }
 }

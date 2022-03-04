@@ -27,9 +27,10 @@ use PFUser;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Captcha\Configuration;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 
-class DisplayController implements DispatchableWithRequest
+class DisplayController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     /**
      * @var CSRFSynchronizerToken
