@@ -218,6 +218,23 @@ class ForgeConfig
     }
 
     /**
+     * @template T
+     *
+     * @psalm-param callable():T $fn
+     *
+     * @throws Throwable
+     *
+     * @psalm-return T
+     */
+    public static function wrapWithCleanConfig(callable $fn): mixed
+    {
+        self::store();
+        $result = $fn();
+        self::restore();
+        return $result;
+    }
+
+    /**
      * Set a configuration value. Only useful for testing purpose. DON'T USE IT IN PRODUCTION
      */
     public static function set(string $name, mixed $value): void

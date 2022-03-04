@@ -39,7 +39,7 @@ final class ConfigKeyLegacyBool implements ConfigKeyType
 
     public ?string $default_value = null;
 
-    public function __construct(?bool $value)
+    public function __construct(?bool $value = null)
     {
         if ($value !== null) {
             if ($value === true) {

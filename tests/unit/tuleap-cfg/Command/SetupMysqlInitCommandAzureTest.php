@@ -26,6 +26,7 @@ namespace TuleapCfg\Command;
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\DB\DBAuthUserConfig;
+use Tuleap\ForgeConfigSandbox;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
 
@@ -34,6 +35,8 @@ use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
  */
 final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use ForgeConfigSandbox;
+
     /**
      * @var string
      */

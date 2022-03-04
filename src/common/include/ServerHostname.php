@@ -22,15 +22,45 @@ declare(strict_types=1);
 
 namespace Tuleap;
 
+use Tuleap\Config\ConfigCannotBeModifiedYet;
+use Tuleap\Config\ConfigKeyHelp;
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyString;
+
 final class ServerHostname
 {
+    #[ConfigKey('The default Tuleap domain')]
+    #[ConfigKeyHelp(<<<EOT
+    This is used where ever the "naked" form of the Tuleap domain might be used.
+    This is also used as the default name for the Web server using
+    the standard https protocols. You can also define a specific port number (useful for test servers - default 443)
+    EOT)]
+    #[ConfigCannotBeModifiedYet]
+    #[ConfigKeyString]
+    public const DEFAULT_DOMAIN = 'sys_default_domain';
+
+    #[ConfigKey('Machine that hosts the mailing lists')]
+    #[ConfigKeyHelp(<<<EOT
+    (This could also be the mail host if you have enough horsepower & bandwidth)
+    /!\ Developers: if you need to change the default value, it will have an
+    impact on the source code, grep is your friend.
+    EOT)]
+    #[ConfigCannotBeModifiedYet]
+    #[ConfigKeyString]
+    public const LIST_HOST = 'sys_lists_host';
+
+    #[ConfigKey('Fully qualified name')]
+    #[ConfigCannotBeModifiedYet]
+    #[ConfigKeyString]
+    public const FULL_NAME = 'sys_fullname';
+
     private function __construct()
     {
     }
 
     public static function hostnameWithHTTPSPort(): string
     {
-        return \ForgeConfig::get('sys_default_domain', '');
+        return \ForgeConfig::get(self::DEFAULT_DOMAIN, '');
     }
 
     public static function HTTPSUrl(): string

@@ -240,8 +240,8 @@ final class SetupMysqlInitCommand extends Command
         }
 
         $return_value = $this->database_configurator->writeDatabaseIncFile($db_params->azure_prefix, $this->base_directory);
-        if ($return_value !== 0) {
-            return $return_value;
+        if ($return_value !== true) {
+            return Command::FAILURE;
         }
 
         return self::SUCCESS;
