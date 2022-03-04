@@ -28,15 +28,16 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use RuntimeException;
 use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\Project\Service\XML\XMLService;
 use Tuleap\Project\XML\ConsistencyChecker;
+use Tuleap\Project\XML\XMLProject;
 use Tuleap\XML\ProjectXMLMerger;
 
 class IssuesTemplate implements TuleapTemplate
 {
     public const NAME = 'issues';
 
-    private const PROJECT_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/issues/project.xml';
-    private const ISSUES_XML  = __DIR__ . '/../../../../../tools/utils/setup_templates/issues/issue_template.xml';
+    private const ISSUES_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/issues/issue_template.xml';
 
     /**
      * @var string
@@ -95,8 +96,30 @@ class IssuesTemplate implements TuleapTemplate
             }
             $this->xml_path = ForgeConfig::getCacheDir() . '/issues_template/project.xml';
 
+            $project = (new XMLProject(
+                'issuetracking',
+                'Issue Tracking',
+                'Template used to create a project providing an issue tracking, the best way to start your project with Tuleap.',
+                'public'
+            ))
+                ->withService(XMLService::buildEnabled('summary'))
+                ->withService(XMLService::buildEnabled('admin'))
+                ->withService(XMLService::buildEnabled('docman'))
+                ->withService(XMLService::buildEnabled('plugin_git'))
+                ->withService(XMLService::buildEnabled('plugin_tracker'))
+                ->withService(XMLService::buildDisabled('plugin_agiledashboard'))
+                ->withService(XMLService::buildDisabled('plugin_svn'))
+                ->withService(XMLService::buildDisabled('file'))
+                ->withService(XMLService::buildDisabled('hudson'))
+                ->withService(XMLService::buildDisabled('plugin_baseline'))
+                ->withService(XMLService::buildDisabled('plugin_mediawiki'))
+                ->withService(XMLService::buildDisabled('plugin_testmanagement'))
+                ->withService(XMLService::buildDisabled('plugin_program_management'));
+
+            $project->export()->asXML($this->xml_path);
+
             $this->project_xml_merger->merge(
-                self::PROJECT_XML,
+                $this->xml_path,
                 self::ISSUES_XML,
                 $this->xml_path,
             );
