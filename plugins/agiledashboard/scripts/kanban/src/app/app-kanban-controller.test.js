@@ -21,14 +21,12 @@ import kanban_module from "./app.js";
 import angular from "angular";
 import "angular-mocks";
 import BaseController from "./app-kanban-controller.js";
-import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
 
 describe("KanbanCtrl", function () {
     let $rootScope,
         $scope,
         $controller,
         $q,
-        wrapPromise,
         KanbanCtrl,
         SharedPropertiesService,
         KanbanService,
@@ -118,8 +116,6 @@ describe("KanbanCtrl", function () {
             ColumnCollectionService: ColumnCollectionService,
             UserPreferencesService: UserPreferencesService,
         });
-
-        wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
     describe("init() -", function () {
@@ -619,7 +615,9 @@ describe("KanbanCtrl", function () {
                 });
                 get_request = $q.defer();
                 jest.spyOn(KanbanItemRestService, "getItem").mockReturnValue(get_request.promise);
-                jest.spyOn(KanbanCtrl, "moveItemAtTheEnd").mockImplementation(() => {});
+                jest.spyOn(KanbanCtrl, "moveItemAtTheEndWithoutItemUpdate").mockImplementation(
+                    () => {}
+                );
 
                 var archive = {
                     id: "archive",
@@ -666,7 +664,7 @@ describe("KanbanCtrl", function () {
                 // make a deep copy of it, so when we update the object later with _.extend, it biases the test...
                 // see https://github.com/jasmine/jasmine/issues/872
                 // I'd rather have an imprecise test than a misleading one, so I used jasmine.any(Object)
-                expect(KanbanCtrl.moveItemAtTheEnd).toHaveBeenCalledWith(
+                expect(KanbanCtrl.moveItemAtTheEndWithoutItemUpdate).toHaveBeenCalledWith(
                     expect.any(Object),
                     "archive"
                 );
@@ -682,7 +680,7 @@ describe("KanbanCtrl", function () {
                 get_request.resolve(fake_updated_item);
                 $scope.$apply();
 
-                expect(KanbanCtrl.moveItemAtTheEnd).not.toHaveBeenCalled();
+                expect(KanbanCtrl.moveItemAtTheEndWithoutItemUpdate).not.toHaveBeenCalled();
             });
         });
     });
@@ -848,26 +846,28 @@ describe("KanbanCtrl", function () {
         });
     });
 
-    describe("moveItemAtTheEnd() -", function () {
+    describe("moveItemAtTheEndWithoutItemUpdate() -", function () {
         it(`Given a kanban item in a column and another kanban column,
             when I move the item to the column,
             then the item will be marked as updating,
             will be removed from the previous column's content,
-            will be appended to the given column's content,
-            the REST backend will be called to move the item in the new column
-            and a resolved promise will be returned`, () => {
-            var move_request = $q.defer();
+            will be appended to the given column's content.`, () => {
+            const move_request = $q.defer();
             DroppedService.moveToColumn.mockReturnValue(move_request.promise);
-            var item = {
+            const item = {
                 id: 19,
                 updating: false,
                 in_column: 3,
             };
-            var source_column = {
+            const source_column = {
                 id: 3,
             };
-            var destination_column = {
+            const destination_column = {
                 id: 6,
+            };
+            const compared_to = {
+                direction: "before",
+                item_id: 19,
             };
             ColumnCollectionService.getColumn.mockImplementation(function (column_id) {
                 if (column_id === 3) {
@@ -876,22 +876,20 @@ describe("KanbanCtrl", function () {
 
                 return destination_column;
             });
-            DroppedService.getComparedToBeLastItemOfColumn.mockReturnValue(null);
+            DroppedService.getComparedToBeLastItemOfColumn.mockReturnValue(compared_to);
 
-            var promise = KanbanCtrl.moveItemAtTheEnd(item, destination_column.id, item.in_column);
-
-            move_request.resolve();
-            $scope.$apply();
-
-            expect(DroppedService.moveToColumn).toHaveBeenCalledWith(
-                kanban.id,
-                6,
-                item.id,
-                null,
-                3
+            KanbanCtrl.moveItemAtTheEndWithoutItemUpdate(
+                item,
+                destination_column.id,
+                item.in_column
             );
 
-            return wrapPromise(promise);
+            expect(KanbanColumnService.moveItem).toHaveBeenCalledWith(
+                item,
+                source_column,
+                destination_column,
+                compared_to
+            );
         });
     });
 
