@@ -87,7 +87,9 @@ use Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
+use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\GetExternalExporter;
@@ -435,7 +437,8 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             ),
             new StatusUpdater(
                 new StatusValueRetriever(
-                    Tracker_Semantic_StatusFactory::instance()
+                    Tracker_Semantic_StatusFactory::instance(),
+                    $this->getFirstPossibleValueInListRetriever()
                 )
             )
         );
@@ -451,7 +454,8 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             ),
             new StatusUpdater(
                 new StatusValueRetriever(
-                    Tracker_Semantic_StatusFactory::instance()
+                    Tracker_Semantic_StatusFactory::instance(),
+                    $this->getFirstPossibleValueInListRetriever()
                 )
             )
         );
@@ -990,6 +994,15 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     {
         return new StepXMLExporter(
             new XML_SimpleXMLCDATAFactory()
+        );
+    }
+
+    private function getFirstPossibleValueInListRetriever(): FirstPossibleValueInListRetriever
+    {
+        return new FirstPossibleValueInListRetriever(
+            new FirstValidValueAccordingToDependenciesRetriever(
+                Tracker_FormElementFactory::instance()
+            )
         );
     }
 }

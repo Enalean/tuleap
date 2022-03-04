@@ -26,6 +26,9 @@ use PFUser;
 use Tracker;
 use Tracker_FormElement_Field_List_BindValue;
 use Tracker_Semantic_StatusFactory;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
+use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 class StatusValueRetriever
 {
@@ -34,7 +37,7 @@ class StatusValueRetriever
      */
     private $semantic_status_factory;
 
-    public function __construct(Tracker_Semantic_StatusFactory $semantic_status_factory)
+    public function __construct(Tracker_Semantic_StatusFactory $semantic_status_factory, private FirstPossibleValueInListRetriever $first_possible_value_retriever)
     {
         $this->semantic_status_factory = $semantic_status_factory;
     }
@@ -42,37 +45,57 @@ class StatusValueRetriever
     /**
      * @throws SemanticStatusNotDefinedException
      * @throws SemanticStatusClosedValueNotFoundException
+     * @throws NoPossibleValueException
      */
-    public function getFirstClosedValueUserCanRead(Tracker $tracker, PFUser $user): Tracker_FormElement_Field_List_BindValue
+    public function getFirstClosedValueUserCanRead(PFUser $user, Artifact $artifact): Tracker_FormElement_Field_List_BindValue
     {
-        $status_semantic_defined = $this->getStatusSemanticDefined($tracker, $user);
+        $status_semantic_defined = $this->getStatusSemanticDefined($artifact->getTracker(), $user);
         $open_values             = $status_semantic_defined->getOpenValues();
         $status_field            = $status_semantic_defined->getField();
+        $values                  = [];
+
         foreach ($status_field->getAllValues() as $value_id => $value) {
             if (! $value->isHidden() && ! in_array($value_id, $open_values)) {
-                return $value;
+                $values[$value->getId()] = $value;
             }
         }
+        if (empty($values)) {
+            throw new SemanticStatusClosedValueNotFoundException();
+        }
 
-        throw new SemanticStatusClosedValueNotFoundException();
+        $collection = new StatusValuesCollection(array_keys($values));
+
+        $bind_value_id = $this->first_possible_value_retriever->getFirstPossibleValue($artifact, $status_field, $collection);
+
+        return $values[$bind_value_id];
     }
 
     /**
      * @throws SemanticStatusNotDefinedException
      * @throws SemanticStatusClosedValueNotFoundException
+     * @throws NoPossibleValueException
      */
-    public function getFirstOpenValueUserCanRead(Tracker $tracker, PFUser $user): Tracker_FormElement_Field_List_BindValue
+    public function getFirstOpenValueUserCanRead(PFUser $user, Artifact $artifact): Tracker_FormElement_Field_List_BindValue
     {
-        $status_semantic_defined = $this->getStatusSemanticDefined($tracker, $user);
+        $status_semantic_defined = $this->getStatusSemanticDefined($artifact->getTracker(), $user);
         $open_values             = $status_semantic_defined->getOpenValues();
         $status_field            = $status_semantic_defined->getField();
+        $values                  = [];
         foreach ($status_field->getAllValues() as $value_id => $value) {
             if (! $value->isHidden() && in_array($value_id, $open_values)) {
-                return $value;
+                $values[$value->getId()] = $value;
             }
         }
 
-        throw new SemanticStatusOpenValueNotFoundException();
+        if (empty($values)) {
+            throw new SemanticStatusOpenValueNotFoundException();
+        }
+
+        $collection = new StatusValuesCollection(array_keys($values));
+
+        $bind_value_id = $this->first_possible_value_retriever->getFirstPossibleValue($artifact, $status_field, $collection);
+
+        return $values[$bind_value_id];
     }
 
     /**

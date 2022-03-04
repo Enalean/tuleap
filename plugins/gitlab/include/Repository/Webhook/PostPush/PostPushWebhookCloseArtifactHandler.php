@@ -32,6 +32,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
+use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use UserManager;
 use UserNotExistException;
 
@@ -85,6 +86,11 @@ class PostPushWebhookCloseArtifactHandler
         $this->logger                  = $logger;
     }
 
+    /**
+     * @throws UserNotExistException
+     * @throws \Tuleap\Gitlab\API\GitlabResponseAPIException
+     * @throws \Tuleap\Gitlab\API\GitlabRequestException
+     */
     public function handleArtifactClosure(
         WebhookTuleapReference $tuleap_reference,
         PostPushCommitWebhookData $post_push_commit_webhook_data,
@@ -160,6 +166,8 @@ class PostPushWebhookCloseArtifactHandler
             );
         } catch (ArtifactNotFoundException $e) {
             $this->logger->error("|  |  |_ Artifact #{$tuleap_reference->getId()} not found");
+        } catch (NoPossibleValueException $e) {
+            $this->logger->error("|  |  |_ Artifact #{$tuleap_reference->getId()} cannot be closed. " . $e->getMessage());
         }
     }
 }

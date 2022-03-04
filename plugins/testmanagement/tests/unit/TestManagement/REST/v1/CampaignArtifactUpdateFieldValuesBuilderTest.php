@@ -30,8 +30,10 @@ use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertSame;
 
@@ -58,6 +60,10 @@ class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PHPUnit\
 
         $this->formelement_factory    = Mockery::mock(Tracker_FormElementFactory::class);
         $this->status_value_retriever = Mockery::mock(StatusValueRetriever::class);
+
+        $this->campaign = Mockery::mock(Campaign::class);
+        $this->campaign->shouldReceive('getLabel')->andReturn("new_label");
+        $this->campaign->shouldReceive('getArtifact')->andReturn(ArtifactTestBuilder::anArtifact(112)->build());
 
         $this->builder = new CampaignArtifactUpdateFieldValuesBuilder(
             $this->formelement_factory,
@@ -94,7 +100,7 @@ class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PHPUnit\
         $field_values = $this->builder->getFieldValuesForCampaignArtifactUpdate(
             $tracker,
             $user,
-            'new_label',
+            $this->campaign,
             null
         );
 
@@ -162,7 +168,7 @@ class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PHPUnit\
         $field_values = $this->builder->getFieldValuesForCampaignArtifactUpdate(
             $tracker,
             $user,
-            'new_label',
+            $this->campaign,
             'closed'
         );
 
@@ -232,7 +238,7 @@ class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PHPUnit\
         $field_values = $this->builder->getFieldValuesForCampaignArtifactUpdate(
             $tracker,
             $user,
-            'new_label',
+            $this->campaign,
             'open'
         );
 
@@ -259,7 +265,7 @@ class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->builder->getFieldValuesForCampaignArtifactUpdate(
             $tracker,
             $user,
-            'new_label',
+            $this->campaign,
             null
         );
     }

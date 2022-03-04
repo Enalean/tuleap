@@ -97,9 +97,12 @@ use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
+use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
+use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use UserManager;
 
 class KanbanResource extends AuthenticatedResource
@@ -175,6 +178,7 @@ class KanbanResource extends AuthenticatedResource
      * @var TrackerReportUpdater
      */
     private $tracker_report_updater;
+    private FirstPossibleValueInListRetriever $first_possible_value_retriever;
 
     public function __construct()
     {
@@ -693,15 +697,26 @@ class KanbanResource extends AuthenticatedResource
 
     private function moveArtifactsInArchive(AgileDashboard_Kanban $kanban, PFUser $user, KanbanAddRepresentation $add)
     {
-        $status_value_retriever = new StatusValueRetriever(
-            Tracker_Semantic_StatusFactory::instance()
-        );
-
         try {
-            $tracker      = $this->getTrackerForKanban($kanban);
-            $closed_value = $status_value_retriever->getFirstClosedValueUserCanRead($tracker, $user);
+            foreach ($add->ids as $artifact_id) {
+                $artifact     = $this->artifact_factory->getArtifactById($artifact_id);
+                $status_field = $this->getStatusField($kanban, $user);
 
-            $this->moveArtifactsInColumn($kanban, $user, $add, $closed_value->getId());
+                if (! $artifact) {
+                    continue;
+                }
+
+                try {
+                    $closed_value = $this->getStatusValueRetriever()->getFirstClosedValueUserCanRead(
+                        $user,
+                        $artifact
+                    );
+                } catch (NoPossibleValueException $e) {
+                    throw new RestException(400, $e->getMessage());
+                }
+
+                $this->moveArtifact($artifact, $user, $status_field, $closed_value->getId());
+            }
         } catch (SemanticStatusNotDefinedException $exception) {
             throw new RestException(403);
         } catch (SemanticStatusClosedValueNotFoundException $exception) {
@@ -719,15 +734,15 @@ class KanbanResource extends AuthenticatedResource
             $artifact     = $this->artifact_factory->getArtifactById($artifact_id);
             $status_field = $this->getStatusField($kanban, $user);
 
+            if (! $artifact) {
+                continue;
+            }
+
             if (! $artifact->userCanView($user)) {
                 throw new RestException(403, 'You cannot access this kanban item.');
             }
 
-            $fields_data = [
-                $status_field->getId() => $column_id,
-            ];
-
-            $artifact->createNewChangeset($fields_data, '', $user);
+            $this->moveArtifact($artifact, $user, $status_field, $column_id);
         }
     }
 
@@ -1604,5 +1619,41 @@ class KanbanResource extends AuthenticatedResource
         }
 
         return $kanban_tracker->getProject();
+    }
+
+    private function getStatusValueRetriever(): StatusValueRetriever
+    {
+        return new StatusValueRetriever(
+            Tracker_Semantic_StatusFactory::instance(),
+            new FirstPossibleValueInListRetriever(
+                new FirstValidValueAccordingToDependenciesRetriever(
+                    Tracker_FormElementFactory::instance()
+                )
+            )
+        );
+    }
+
+    /**
+     * @throws RestException
+     * @throws \Tracker_Exception
+     */
+    private function moveArtifact(
+        \Tuleap\Tracker\Artifact\Artifact $artifact,
+        PFUser $user,
+        \Tracker_FormElement_Field_List $status_field,
+        int $closed_value,
+    ): void {
+        if (! $artifact->userCanView($user)) {
+            throw new RestException(403, 'You cannot access this kanban item.');
+        }
+
+        $fields_data = [
+            $status_field->getId() => $closed_value,
+        ];
+
+        try {
+            $artifact->createNewChangeset($fields_data, '', $user);
+        } catch (Tracker_NoChangeException $exception) {
+        }
     }
 }

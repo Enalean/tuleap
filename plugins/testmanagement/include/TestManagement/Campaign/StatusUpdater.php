@@ -42,6 +42,9 @@ class StatusUpdater
         $this->status_value_retriever = $status_value_retriever;
     }
 
+    /**
+     * @throws \Tuleap\Tracker\Workflow\NoPossibleValueException
+     */
     public function openCampaign(
         Campaign $campaign,
         PFUser $user,
@@ -55,6 +58,9 @@ class StatusUpdater
         );
     }
 
+    /**
+     * @throws \Tuleap\Tracker\Workflow\NoPossibleValueException
+     */
     public function closeCampaign(
         Campaign $campaign,
         PFUser $user,
@@ -70,6 +76,7 @@ class StatusUpdater
 
     /**
      * @throws SemanticStatusNotDefinedException
+     * @throws \Tuleap\Tracker\Workflow\NoPossibleValueException
      */
     public function updateCampaignStatus(
         Campaign $campaign,
@@ -88,9 +95,9 @@ class StatusUpdater
         }
 
         if ($change_status === self::STATUS_CHANGE_CLOSED_VALUE) {
-            $value = $this->status_value_retriever->getFirstClosedValueUserCanRead($tracker, $user);
+            $value = $this->status_value_retriever->getFirstClosedValueUserCanRead($user, $artifact);
         } else {
-            $value = $this->status_value_retriever->getFirstOpenValueUserCanRead($tracker, $user);
+            $value = $this->status_value_retriever->getFirstOpenValueUserCanRead($user, $artifact);
         }
 
         $fields_data = [

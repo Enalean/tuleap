@@ -30,6 +30,7 @@ use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 class OpenCampaignController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
@@ -67,19 +68,29 @@ class OpenCampaignController implements DispatchableWithRequest, DispatchableWit
             "/plugins/testmanagement/?group_id=" . (int) $project->getID()
         );
 
-        $this->status_updater->openCampaign(
-            $campaign,
-            $user,
-            $csrf_token
-        );
+        try {
+            $this->status_updater->openCampaign(
+                $campaign,
+                $user,
+                $csrf_token
+            );
 
-        $layout->addFeedback(
-            Feedback::INFO,
-            sprintf(
-                dgettext('tuleap-testmanagement', "The campaign %s is now open."),
-                $campaign->getLabel()
-            )
-        );
+            $layout->addFeedback(
+                Feedback::INFO,
+                sprintf(
+                    dgettext('tuleap-testmanagement', "The campaign %s is now open."),
+                    $campaign->getLabel()
+                )
+            );
+        } catch (NoPossibleValueException $exception) {
+            $layout->addFeedback(
+                Feedback::ERROR,
+                sprintf(
+                    dgettext('tuleap-testmanagement', "The campaign cannot be open : %s"),
+                    $exception->getMessage()
+                )
+            );
+        }
 
         $layout->redirect(
             StatusChangedRedirectURLBuilder::buildRedirectURL(

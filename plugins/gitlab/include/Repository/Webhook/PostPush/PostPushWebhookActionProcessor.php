@@ -93,6 +93,10 @@ class PostPushWebhookActionProcessor
         $this->action_branch_handler           = $action_branch_handler;
     }
 
+    /**
+     * @throws \Tuleap\Gitlab\API\GitlabResponseAPIException
+     * @throws \Tuleap\Gitlab\API\GitlabRequestException
+     */
     public function process(
         GitlabRepositoryIntegration $gitlab_repository_integration,
         PostPushWebhookData $webhook_data,
@@ -109,6 +113,10 @@ class PostPushWebhookActionProcessor
         );
     }
 
+    /**
+     * @throws \Tuleap\Gitlab\API\GitlabRequestException
+     * @throws \Tuleap\Gitlab\API\GitlabResponseAPIException
+     */
     private function parseCommitReferences(
         GitlabRepositoryIntegration $gitlab_repository_integration,
         PostPushCommitWebhookData $commit_webhook_data,

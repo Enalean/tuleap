@@ -25,6 +25,10 @@ namespace Tuleap\Tracker\Semantic\Status\Done;
 use PFUser;
 use Tracker;
 use Tracker_FormElement_Field_List_BindValue;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Status\StatusValuesCollection;
+use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
+use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 class DoneValueRetriever
 {
@@ -33,7 +37,7 @@ class DoneValueRetriever
      */
     private $semantic_done_factory;
 
-    public function __construct(SemanticDoneFactory $semantic_done_factory)
+    public function __construct(SemanticDoneFactory $semantic_done_factory, private FirstPossibleValueInListRetriever $first_possible_value_retriever)
     {
         $this->semantic_done_factory = $semantic_done_factory;
     }
@@ -41,19 +45,28 @@ class DoneValueRetriever
     /**
      * @throws SemanticDoneNotDefinedException
      * @throws SemanticDoneValueNotFoundException
+     * @throws NoPossibleValueException
      */
-    public function getFirstDoneValueUserCanRead(Tracker $tracker, PFUser $user): Tracker_FormElement_Field_List_BindValue
+    public function getFirstDoneValueUserCanRead(Artifact $artifact, PFUser $user): Tracker_FormElement_Field_List_BindValue
     {
-        $done_semantic_defined = $this->getDoneSemanticDefined($tracker, $user);
+        $done_semantic_defined = $this->getDoneSemanticDefined($artifact->getTracker(), $user);
         $done_values           = $done_semantic_defined->getDoneValues();
         $status_field          = $done_semantic_defined->getField();
+        $values                = [];
         foreach ($status_field->getAllValues() as $value_id => $value) {
             if (! $value->isHidden() && in_array($value_id, $done_values)) {
-                return $value;
+                $values[$value->getId()] = $value;
             }
         }
+        if (empty($values)) {
+            throw new SemanticDoneValueNotFoundException();
+        }
 
-        throw new SemanticDoneValueNotFoundException();
+        $collection = new StatusValuesCollection(array_keys($values));
+
+        $bind_value_id = $this->first_possible_value_retriever->getFirstPossibleValue($artifact, $status_field, $collection);
+
+        return $values[$bind_value_id];
     }
 
     /**

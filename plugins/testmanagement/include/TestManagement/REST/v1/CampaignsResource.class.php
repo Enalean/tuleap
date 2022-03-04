@@ -101,9 +101,12 @@ use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
+use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
+use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -307,7 +310,12 @@ class CampaignsResource
             new CampaignArtifactUpdateFieldValuesBuilder(
                 $this->formelement_factory,
                 new StatusValueRetriever(
-                    Tracker_Semantic_StatusFactory::instance()
+                    Tracker_Semantic_StatusFactory::instance(),
+                    new FirstPossibleValueInListRetriever(
+                        new FirstValidValueAccordingToDependenciesRetriever(
+                            $this->formelement_factory
+                        )
+                    )
                 )
             )
         );
@@ -719,7 +727,8 @@ class CampaignsResource
             throw new RestException(500, $exception->getMessage());
         } catch (
             SemanticStatusNotDefinedException |
-            SemanticStatusClosedValueNotFoundException $exception
+            SemanticStatusClosedValueNotFoundException |
+            NoPossibleValueException $exception
         ) {
             throw new RestException(400, $exception->getMessage());
         }

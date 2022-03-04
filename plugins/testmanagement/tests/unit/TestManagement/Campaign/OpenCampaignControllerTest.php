@@ -31,6 +31,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -106,6 +107,51 @@ class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $layout->shouldReceive('addFeedback')->once();
+        $layout->shouldReceive('redirect')->once();
+
+        $this->controller->process(
+            $request,
+            $layout,
+            $variables
+        );
+    }
+
+    public function testItDisplayErrorFeedbackIfNoPossibleValueToOpenTheCampaign(): void
+    {
+        $user    = Mockery::mock(PFUser::class);
+        $request = new HTTPRequest();
+        $request->setCurrentUser($user);
+
+        $layout    = Mockery::mock(BaseLayout::class);
+        $variables = [
+            'campaign_id' => '3',
+        ];
+
+        $project          = new \Project(['group_id' => 101]);
+        $tracker_campaign = Mockery::mock(Tracker::class);
+        $tracker_campaign->shouldReceive('getProject')->andReturn($project);
+
+        $artifact_campaign = Mockery::mock(Artifact::class);
+        $artifact_campaign->shouldReceive('getTracker')->andReturn($tracker_campaign);
+
+        $campaign = new Campaign(
+            $artifact_campaign,
+            'Campaign 01',
+            new NoJobConfiguration()
+        );
+        $this->campaign_retriever->shouldReceive('getById')
+            ->once()
+            ->with(3)
+            ->andReturn($campaign);
+
+        $user->shouldReceive('isAdmin')
+            ->once()
+            ->with(101)
+            ->andReturnTrue();
+
+        $this->status_updater->shouldReceive('openCampaign')->andThrow(NoPossibleValueException::class);
+
+        $layout->shouldReceive('addFeedback')->once()->withArgs(["error", 'The campaign cannot be open : No possible value found regarding your configuration. Please check your transition and field dependencies.']);
         $layout->shouldReceive('redirect')->once();
 
         $this->controller->process(

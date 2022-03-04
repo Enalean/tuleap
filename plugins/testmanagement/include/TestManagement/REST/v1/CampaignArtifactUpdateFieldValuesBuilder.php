@@ -25,11 +25,14 @@ namespace Tuleap\TestManagement\REST\v1;
 use PFUser;
 use Tracker;
 use Tracker_FormElementFactory;
+use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 /**
  * @psalm-type StatusAcceptableValue = self::STATUS_CHANGE_CLOSED_VALUE|self::STATUS_CHANGE_OPEN_VALUE|null
@@ -63,23 +66,25 @@ class CampaignArtifactUpdateFieldValuesBuilder
      * @throws SemanticStatusClosedValueNotFoundException
      *
      * @throws LabelFieldNotFoundException
+     * @throws NoPossibleValueException
      */
     public function getFieldValuesForCampaignArtifactUpdate(
         Tracker $tracker,
         PFUser $user,
-        string $label,
+        Campaign $campaign,
         ?string $change_status,
     ): array {
         $field_values = [
             $this->getLabelValueRepresentation(
                 $tracker,
                 $user,
-                $label
+                $campaign->getLabel()
             ),
             $this->getStatusValueRepresentation(
                 $tracker,
                 $user,
-                $change_status
+                $change_status,
+                $campaign->getArtifact()
             ),
         ];
 
@@ -91,11 +96,13 @@ class CampaignArtifactUpdateFieldValuesBuilder
      *
      * @throws SemanticStatusNotDefinedException
      * @throws SemanticStatusClosedValueNotFoundException
+     * @throws NoPossibleValueException
      */
     private function getStatusValueRepresentation(
         Tracker $tracker,
         PFUser $user,
         ?string $change_status,
+        Artifact $artifact,
     ): ?ArtifactValuesRepresentation {
         if ($change_status === null) {
             return null;
@@ -109,9 +116,9 @@ class CampaignArtifactUpdateFieldValuesBuilder
         $status_value = new ArtifactValuesRepresentation();
 
         if ($change_status === self::STATUS_CHANGE_CLOSED_VALUE) {
-            $value = $this->status_value_retriever->getFirstClosedValueUserCanRead($tracker, $user);
+            $value = $this->status_value_retriever->getFirstClosedValueUserCanRead($user, $artifact);
         } else {
-            $value = $this->status_value_retriever->getFirstOpenValueUserCanRead($tracker, $user);
+            $value = $this->status_value_retriever->getFirstOpenValueUserCanRead($user, $artifact);
         }
 
         $status_value->bind_value_ids = [$value->getId()];

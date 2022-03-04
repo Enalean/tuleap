@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Rule;
 
-use Tracker_FormElement_Field_Selectbox;
+use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tracker_Rule_List;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -43,7 +43,7 @@ class FirstValidValueAccordingToDependenciesRetriever
      * @param Tracker_Rule_List[] $rules all rules indexed by the source or target field
      */
     private function buildCollections(
-        Tracker_FormElement_Field_Selectbox $field,
+        Tracker_FormElement_Field_List $field,
         Artifact $artifact,
         array $rules,
     ): void {
@@ -94,7 +94,7 @@ class FirstValidValueAccordingToDependenciesRetriever
      */
     public function getFirstValidValuesAccordingToDependencies(
         BindValueIdCollection $list_of_values,
-        Tracker_FormElement_Field_Selectbox $field,
+        Tracker_FormElement_Field_List $field,
         Artifact $artifact,
         array $rules,
     ): ?int {
