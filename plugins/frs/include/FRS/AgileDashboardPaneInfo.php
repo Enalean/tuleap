@@ -20,16 +20,15 @@
 
 namespace Tuleap\FRS;
 
-use Planning_Milestone;
-use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
+use Tuleap\Tracker\Milestone\PaneInfo;
 
 class AgileDashboardPaneInfo extends PaneInfo
 {
     private $release_id;
 
-    public function __construct(Planning_Milestone $milestone, $release_id)
+    public function __construct($release_id)
     {
-        parent::__construct($milestone);
+        parent::__construct();
         $this->release_id = $release_id;
     }
 
@@ -50,7 +49,7 @@ class AgileDashboardPaneInfo extends PaneInfo
         return dgettext('tuleap-frs', 'File release');
     }
 
-    public function getUri()
+    public function getUri(): string
     {
         $release_id = urlencode((string) $this->release_id);
         return "/frs/release/$release_id/release-notes";

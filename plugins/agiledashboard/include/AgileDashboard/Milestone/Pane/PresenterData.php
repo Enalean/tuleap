@@ -25,6 +25,7 @@
 namespace Tuleap\AgileDashboard\Milestone\Pane;
 
 use AgileDashboard_Pane;
+use Tuleap\Tracker\Milestone\PaneInfo;
 
 /**
  * I carry data between MilestonePane factories and MilestonePresenter

@@ -305,7 +305,7 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $milestone  = $collector->getMilestone();
         $release_id = $this->getLinkRetriever()->getLinkedReleaseId($milestone->getArtifact());
         if ($release_id) {
-            $collector->addPane(new Tuleap\FRS\AgileDashboardPaneInfo($milestone, $release_id));
+            $collector->addPane(new Tuleap\FRS\AgileDashboardPaneInfo($release_id));
         }
     }
 

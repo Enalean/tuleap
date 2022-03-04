@@ -19,11 +19,11 @@
  */
 
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
-use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\TopPlanning\TopPlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 use Tuleap\Event\Events\HasCurrentProjectParentProjects;
+use Tuleap\Tracker\Milestone\PaneInfo;
 
 /**
  * I build panes for a Planning_Milestone

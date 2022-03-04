@@ -22,7 +22,7 @@ namespace Tuleap\AgileDashboard\Milestone\Pane\Planning;
 
 use Planning_Milestone;
 use Tracker;
-use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
+use Tuleap\Tracker\Milestone\PaneInfo;
 
 class PlanningV2PaneInfo extends PaneInfo
 {
@@ -31,9 +31,9 @@ class PlanningV2PaneInfo extends PaneInfo
     /** @var Tracker */
     private $submilestone_tracker;
 
-    public function __construct(Planning_Milestone $milestone, Tracker $submilestone_tracker)
+    public function __construct(private Planning_Milestone $milestone, Tracker $submilestone_tracker)
     {
-        parent::__construct($milestone);
+        parent::__construct();
         $this->submilestone_tracker = $submilestone_tracker;
     }
 
@@ -50,5 +50,19 @@ class PlanningV2PaneInfo extends PaneInfo
     public function getIconName()
     {
         return 'fa-sign-in';
+    }
+
+    public function getUri(): string
+    {
+        return AGILEDASHBOARD_BASE_URL . '/?' .
+               http_build_query(
+                   [
+                       'group_id'    => $this->milestone->getGroupId(),
+                       'planning_id' => $this->milestone->getPlanningId(),
+                       'action'      => $this->action,
+                       'aid'         => $this->milestone->getArtifactId(),
+                       'pane'        => $this->getIdentifier(),
+                   ]
+               );
     }
 }

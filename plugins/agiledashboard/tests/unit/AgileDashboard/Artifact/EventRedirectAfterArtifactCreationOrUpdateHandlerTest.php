@@ -35,11 +35,11 @@ use Project;
 use ProjectManager;
 use Tracker;
 use Tracker_Artifact_Redirect;
-use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 use Tuleap\AgileDashboard\Planning\NotFoundException;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Milestone\PaneInfo;
 
 class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {

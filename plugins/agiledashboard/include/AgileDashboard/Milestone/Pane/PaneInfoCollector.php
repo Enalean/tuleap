@@ -27,6 +27,7 @@ use AgileDashboard_Pane;
 use PFUser;
 use Planning_Milestone;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\Milestone\PaneInfo;
 
 class PaneInfoCollector implements Dispatchable
 {
