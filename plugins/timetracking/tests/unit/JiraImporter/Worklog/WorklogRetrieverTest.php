@@ -26,7 +26,7 @@ use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 
-class WorklogRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WorklogRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsWorklogsFromAPIResponse(): void
     {
@@ -82,18 +82,18 @@ class WorklogRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $worklogs = $retriever->getIssueWorklogsFromAPI($issue);
 
-        $this->assertCount(2, $worklogs);
+        self::assertCount(2, $worklogs);
 
         $first_worklog = $worklogs[0];
-        $this->assertSame(144000, $first_worklog->getSeconds());
-        $this->assertSame(1612807601, $first_worklog->getStartDate()->getTimestamp());
-        $this->assertSame("What Ever", $first_worklog->getAuthor()->getDisplayName());
-        $this->assertSame("whatever@example.com", $first_worklog->getAuthor()->getEmailAddress());
+        self::assertSame(144000, $first_worklog->getSeconds());
+        self::assertSame(1612807601, $first_worklog->getStartDate()->getTimestamp());
+        self::assertSame("What Ever", $first_worklog->getAuthor()->getDisplayName());
+        self::assertSame("whatever@example.com", $first_worklog->getAuthor()->getEmailAddress());
 
         $last_worklog = $worklogs[1];
-        $this->assertSame(18000, $last_worklog->getSeconds());
-        $this->assertSame(1612933772, $last_worklog->getStartDate()->getTimestamp());
-        $this->assertSame("What Ever", $last_worklog->getAuthor()->getDisplayName());
-        $this->assertSame("whatever@example.com", $last_worklog->getAuthor()->getEmailAddress());
+        self::assertSame(18000, $last_worklog->getSeconds());
+        self::assertSame(1612933772, $last_worklog->getStartDate()->getTimestamp());
+        self::assertSame("What Ever", $last_worklog->getAuthor()->getDisplayName());
+        self::assertSame("whatever@example.com", $last_worklog->getAuthor()->getEmailAddress());
     }
 }

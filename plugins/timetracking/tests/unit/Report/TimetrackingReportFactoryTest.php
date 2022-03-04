@@ -27,70 +27,62 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\Report;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Timetracking\Exceptions\TimetrackingReportNotFoundException;
 use Tuleap\Timetracking\Time\TimetrackingReport;
 use Tuleap\Timetracking\Time\TimetrackingReportDao;
 use Tuleap\Timetracking\Time\TimetrackingReportFactory;
 
-class TimetrackingReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TimetrackingReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var TimetrackingReportDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&TimetrackingReportDao
      */
     private $timetracking_report_dao;
-
     /**
-     * @var TimetrackingReportFactory
-     */
-    private $timetracking_report_factory;
-
-    /**
-     * @var TrackerFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&\TrackerFactory
      */
     private $tracker_factory;
-
-    /**
-     * @var Tracker
-     */
-    private $tracker;
+    private TimetrackingReportFactory $timetracking_report_factory;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->timetracking_report_dao     = \Mockery::mock(TimetrackingReportDao::class);
-        $this->tracker_factory             = \Mockery::mock(\TrackerFactory::class);
-        $this->timetracking_report_factory = new TimetrackingReportFactory($this->timetracking_report_dao, $this->tracker_factory);
-        $this->tracker                     = \Mockery::mock(\Tracker::class);
+        $this->timetracking_report_dao     = $this->createMock(TimetrackingReportDao::class);
+        $this->tracker_factory             = $this->createMock(\TrackerFactory::class);
+        $this->timetracking_report_factory = new TimetrackingReportFactory(
+            $this->timetracking_report_dao,
+            $this->tracker_factory
+        );
     }
 
-    public function testGetReportByIdRetrievesTimeTrackingReport()
+    public function testGetReportByIdRetrievesTimeTrackingReport(): void
     {
-        $this->timetracking_report_dao->shouldReceive("searchReportById")->andReturn(1);
-        $this->timetracking_report_dao->shouldReceive("searchReportTrackersById")->andReturn(
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('userCanView')->willReturn(true);
+
+        $this->timetracking_report_dao->method("searchReportById")->willReturn(1);
+        $this->timetracking_report_dao->method("searchReportTrackersById")->willReturn(
             [
                 ['tracker_id' => 1],
                 ['tracker_id' => 2],
             ]
         );
 
-        $this->tracker_factory->shouldReceive('getTrackerById')->with(1)->andReturn(null);
+        $this->tracker_factory->method('getTrackerById')->willReturnMap([
+            [1, null],
+            [2, $tracker],
+        ]);
 
-        $this->tracker_factory->shouldReceive('getTrackerById')->with(2)->andReturn($this->tracker);
-        $this->tracker->shouldReceive('userCanView')->andReturn(true);
-
-        $expected_result = new TimetrackingReport(1, [$this->tracker]);
+        $expected_result = new TimetrackingReport(1, [$tracker]);
         $result          = $this->timetracking_report_factory->getReportById(1);
 
-        $this->assertEquals($expected_result, $result);
+        self::assertEquals($expected_result, $result);
     }
 
-    public function testItThrowsAnExceptionWhenReportIsNotFound()
+    public function testItThrowsAnExceptionWhenReportIsNotFound(): void
     {
-        $this->timetracking_report_dao->shouldReceive('searchReportById')->andReturn(false);
+        $this->timetracking_report_dao->method('searchReportById')->willReturn(false);
         $this->expectException(TimetrackingReportNotFoundException::class);
 
         $this->timetracking_report_factory->getReportById(1);

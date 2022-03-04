@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\XML;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
 use ProjectUGroup;
@@ -40,64 +38,48 @@ use XML_RNGValidator;
 
 final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    private XML_RNGValidator $rng_validator;
     /**
-     * @var XMLImport
-     */
-    private $xml_import;
-
-    /**
-     * @var XML_RNGValidator
-     */
-    private $rng_validator;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TimetrackingEnabler
+     * @var TimetrackingEnabler&\PHPUnit\Framework\MockObject\MockObject
      */
     private $timetracking_enabler;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TimetrackingUgroupSaver
+     * @var TimetrackingUgroupSaver&\PHPUnit\Framework\MockObject\MockObject
      */
     private $timetracking_ugroup_saver;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UGroupManager
+     * @var UGroupManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $ugroup_manager;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IFindUserFromXMLReference
+     * @var \PHPUnit\Framework\MockObject\MockObject&IFindUserFromXMLReference
      */
     private $user_finder;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TimeDao
+     * @var TimeDao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $time_dao;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     * @var LoggerInterface&\PHPUnit\Framework\MockObject\MockObject
      */
     private $logger;
+    private XMLImport $xml_import;
+    /**
+     * @var Project&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $project;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->rng_validator             = new XML_RNGValidator();
-        $this->timetracking_enabler      = Mockery::mock(TimetrackingEnabler::class);
-        $this->timetracking_ugroup_saver = Mockery::mock(TimetrackingUgroupSaver::class);
-        $this->ugroup_manager            = Mockery::mock(UGroupManager::class);
-        $this->user_finder               = Mockery::mock(IFindUserFromXMLReference::class);
-        $this->time_dao                  = Mockery::mock(TimeDao::class);
-        $this->logger                    = Mockery::mock(LoggerInterface::class);
+        $this->timetracking_enabler      = $this->createMock(TimetrackingEnabler::class);
+        $this->timetracking_ugroup_saver = $this->createMock(TimetrackingUgroupSaver::class);
+        $this->ugroup_manager            = $this->createMock(UGroupManager::class);
+        $this->user_finder               = $this->createMock(IFindUserFromXMLReference::class);
+        $this->time_dao                  = $this->createMock(TimeDao::class);
+        $this->logger                    = $this->createMock(LoggerInterface::class);
 
         $this->xml_import = new XMLImport(
             $this->rng_validator,
@@ -109,12 +91,12 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->logger
         );
 
-        $this->project = Mockery::mock(Project::class);
+        $this->project = $this->createMock(Project::class);
     }
 
     public function testItImportsTimesByXML(): void
     {
-        $tracker_mapping          = Mockery::mock(Tracker::class);
+        $tracker_mapping          = $this->createMock(Tracker::class);
         $created_trackers_objects = [
             '789' => $tracker_mapping,
         ];
@@ -150,36 +132,40 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $this->timetracking_enabler->shouldReceive('enableTimetrackingForTracker')
-            ->once()
+        $this->timetracking_enabler
+            ->expects(self::once())
+            ->method('enableTimetrackingForTracker')
             ->with($tracker_mapping);
 
-        $ugroup_project_admins = new ProjectUGroup(['ugroup_id' => 3]);
-        $this->ugroup_manager->shouldReceive('getUGroupByName')
-            ->with($this->project, "project_admins")
-            ->once()
-            ->andReturn($ugroup_project_admins);
-
+        $ugroup_project_admins  = new ProjectUGroup(['ugroup_id' => 3]);
         $ugroup_project_members = new ProjectUGroup(['ugroup_id' => 4]);
-        $this->ugroup_manager->shouldReceive('getUGroupByName')
-            ->with($this->project, "project_members")
-            ->once()
-            ->andReturn($ugroup_project_members);
 
-        $this->timetracking_ugroup_saver->shouldReceive('saveReaders')
-            ->with($tracker_mapping, [3])
-            ->once();
+        $this->ugroup_manager
+            ->method('getUGroupByName')
+            ->with()
+            ->willReturnMap([
+                [$this->project, "project_admins", $ugroup_project_admins],
+                [$this->project, "project_members", $ugroup_project_members],
+            ]);
 
-        $this->timetracking_ugroup_saver->shouldReceive('saveWriters')
-            ->with($tracker_mapping, [4])
-            ->once();
+        $this->timetracking_ugroup_saver
+            ->expects(self::once())
+            ->method('saveReaders')
+            ->with($tracker_mapping, [3]);
 
-        $user = Mockery::mock(PFUser::class)->shouldReceive('getId')->andReturn(123)->getMock();
-        $this->user_finder->shouldReceive('getUser')
-            ->andReturn($user);
+        $this->timetracking_ugroup_saver
+            ->expects(self::once())
+            ->method('saveWriters')
+            ->with($tracker_mapping, [4]);
 
-        $this->time_dao->shouldReceive('addTime')
-            ->once()
+        $user = $this->createMock(PFUser::class);
+        $user->method('getId')->willReturn(123);
+        $this->user_finder->method('getUser')
+            ->willReturn($user);
+
+        $this->time_dao
+            ->expects(self::once())
+            ->method('addTime')
             ->with(
                 123,
                 9999,
@@ -200,7 +186,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItImportsTimesWitoutStepByXML(): void
     {
-        $tracker_mapping          = Mockery::mock(Tracker::class);
+        $tracker_mapping          = $this->createMock(Tracker::class);
         $created_trackers_objects = [
             '789' => $tracker_mapping,
         ];
@@ -235,36 +221,40 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $this->timetracking_enabler->shouldReceive('enableTimetrackingForTracker')
-            ->once()
+        $this->timetracking_enabler
+            ->expects(self::once())
+            ->method('enableTimetrackingForTracker')
             ->with($tracker_mapping);
 
-        $ugroup_project_admins = new ProjectUGroup(['ugroup_id' => 3]);
-        $this->ugroup_manager->shouldReceive('getUGroupByName')
-            ->with($this->project, "project_admins")
-            ->once()
-            ->andReturn($ugroup_project_admins);
-
+        $ugroup_project_admins  = new ProjectUGroup(['ugroup_id' => 3]);
         $ugroup_project_members = new ProjectUGroup(['ugroup_id' => 4]);
-        $this->ugroup_manager->shouldReceive('getUGroupByName')
-            ->with($this->project, "project_members")
-            ->once()
-            ->andReturn($ugroup_project_members);
 
-        $this->timetracking_ugroup_saver->shouldReceive('saveReaders')
-            ->with($tracker_mapping, [3])
-            ->once();
+        $this->ugroup_manager
+            ->method('getUGroupByName')
+            ->with()
+            ->willReturnMap([
+                [$this->project, "project_admins", $ugroup_project_admins],
+                [$this->project, "project_members", $ugroup_project_members],
+            ]);
 
-        $this->timetracking_ugroup_saver->shouldReceive('saveWriters')
-            ->with($tracker_mapping, [4])
-            ->once();
+        $this->timetracking_ugroup_saver
+            ->expects(self::once())
+            ->method('saveReaders')
+            ->with($tracker_mapping, [3]);
 
-        $user = Mockery::mock(PFUser::class)->shouldReceive('getId')->andReturn(123)->getMock();
-        $this->user_finder->shouldReceive('getUser')
-            ->andReturn($user);
+        $this->timetracking_ugroup_saver
+            ->expects(self::once())
+            ->method('saveWriters')
+            ->with($tracker_mapping, [4]);
 
-        $this->time_dao->shouldReceive('addTime')
-            ->once()
+        $user = $this->createMock(PFUser::class);
+        $user->method('getId')->willReturn(123);
+        $this->user_finder->method('getUser')
+            ->willReturn($user);
+
+        $this->time_dao
+            ->expects(self::once())
+            ->method('addTime')
             ->with(
                 123,
                 9999,
@@ -285,7 +275,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItImportsOnlyConfigurationIfNoTimesProvidedInXML(): void
     {
-        $tracker_mapping          = Mockery::mock(Tracker::class);
+        $tracker_mapping          = $this->createMock(Tracker::class);
         $created_trackers_objects = [
             '789' => $tracker_mapping,
         ];
@@ -315,35 +305,37 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $this->timetracking_enabler->shouldReceive('enableTimetrackingForTracker')
-            ->once()
+        $this->timetracking_enabler
+            ->expects(self::once())
+            ->method('enableTimetrackingForTracker')
             ->with($tracker_mapping);
 
-        $ugroup_project_admins = new ProjectUGroup(['ugroup_id' => 3]);
-        $this->ugroup_manager->shouldReceive('getUGroupByName')
-            ->with($this->project, "project_admins")
-            ->once()
-            ->andReturn($ugroup_project_admins);
-
+        $ugroup_project_admins  = new ProjectUGroup(['ugroup_id' => 3]);
         $ugroup_project_members = new ProjectUGroup(['ugroup_id' => 4]);
-        $this->ugroup_manager->shouldReceive('getUGroupByName')
-            ->with($this->project, "project_members")
-            ->once()
-            ->andReturn($ugroup_project_members);
+        $this->ugroup_manager
+            ->method('getUGroupByName')
+            ->with()
+            ->willReturnMap([
+                [$this->project, "project_admins", $ugroup_project_admins],
+                [$this->project, "project_members", $ugroup_project_members],
+            ]);
 
-        $this->timetracking_ugroup_saver->shouldReceive('saveReaders')
-            ->with($tracker_mapping, [3])
-            ->once();
+        $this->timetracking_ugroup_saver
+            ->expects(self::once())
+            ->method('saveReaders')
+            ->with($tracker_mapping, [3]);
 
-        $this->timetracking_ugroup_saver->shouldReceive('saveWriters')
-            ->with($tracker_mapping, [4])
-            ->once();
+        $this->timetracking_ugroup_saver
+            ->expects(self::once())
+            ->method('saveWriters')
+            ->with($tracker_mapping, [4]);
 
-        $user = Mockery::mock(PFUser::class)->shouldReceive('getId')->andReturn(123)->getMock();
-        $this->user_finder->shouldReceive('getUser')
-            ->andReturn($user);
+        $user = $this->createMock(PFUser::class);
+        $user->method('getId')->willReturn(123);
+        $this->user_finder->method('getUser')
+            ->willReturn($user);
 
-        $this->time_dao->shouldNotReceive('addTime');
+        $this->time_dao->expects(self::never())->method('addTime');
 
         $this->mockLogInfo();
 
@@ -357,7 +349,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItImportsOnlyWriteConfigurationIfNoTimesAndReadersProvidedInXML(): void
     {
-        $tracker_mapping          = Mockery::mock(Tracker::class);
+        $tracker_mapping          = $this->createMock(Tracker::class);
         $created_trackers_objects = [
             '789' => $tracker_mapping,
         ];
@@ -384,35 +376,37 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $this->timetracking_enabler->shouldReceive('enableTimetrackingForTracker')
-            ->once()
+        $this->timetracking_enabler
+            ->expects(self::once())
+            ->method('enableTimetrackingForTracker')
             ->with($tracker_mapping);
 
         $ugroup_project_members = new ProjectUGroup(['ugroup_id' => 4]);
-        $this->ugroup_manager->shouldReceive('getUGroupByName')
+        $this->ugroup_manager
+            ->expects(self::once())->method('getUGroupByName')
             ->with($this->project, "project_members")
-            ->once()
-            ->andReturn($ugroup_project_members);
+            ->willReturn($ugroup_project_members);
 
-        $this->timetracking_ugroup_saver->shouldNotReceive('saveReaders');
+        $this->timetracking_ugroup_saver->expects(self::never())->method('saveReaders');
 
-        $this->timetracking_ugroup_saver->shouldReceive('saveWriters')
-            ->with($tracker_mapping, [4])
-            ->once();
+        $this->timetracking_ugroup_saver
+            ->expects(self::once())
+            ->method('saveWriters')
+            ->with($tracker_mapping, [4]);
 
-        $user = Mockery::mock(PFUser::class)->shouldReceive('getId')->andReturn(123)->getMock();
-        $this->user_finder->shouldReceive('getUser')
-            ->andReturn($user);
+        $user = $this->createMock(PFUser::class);
+        $user->method('getId')->willReturn(123);
+        $this->user_finder->method('getUser')
+            ->willReturn($user);
 
-        $this->time_dao->shouldNotReceive('addTime');
+        $this->time_dao->expects(self::never())->method('addTime');
 
-        $this->logger->shouldReceive('info')
-            ->with('Enable timetracking for tracker 789.')
-            ->once();
-
-        $this->logger->shouldReceive('info')
-            ->with('Add timetracking writer permission.')
-            ->once();
+        $this->logger
+            ->method('info')
+            ->withConsecutive(
+                ['Enable timetracking for tracker 789.'],
+                ['Add timetracking writer permission.'],
+            );
 
         $this->xml_import->import(
             $xml,
@@ -424,7 +418,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSkipsUnkownUgroupForConfigurationInXML(): void
     {
-        $tracker_mapping          = Mockery::mock(Tracker::class);
+        $tracker_mapping          = $this->createMock(Tracker::class);
         $created_trackers_objects = [
             '789' => $tracker_mapping,
         ];
@@ -455,44 +449,42 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $this->timetracking_enabler->shouldReceive('enableTimetrackingForTracker')
-            ->once()
+        $this->timetracking_enabler
+            ->expects(self::once())
+            ->method('enableTimetrackingForTracker')
             ->with($tracker_mapping);
 
-        $ugroup_project_admins = new ProjectUGroup(['ugroup_id' => 3]);
-        $this->ugroup_manager->shouldReceive('getUGroupByName')
-            ->with($this->project, "project_admins")
-            ->once()
-            ->andReturn($ugroup_project_admins);
-
+        $ugroup_project_admins  = new ProjectUGroup(['ugroup_id' => 3]);
         $ugroup_project_members = new ProjectUGroup(['ugroup_id' => 4]);
-        $this->ugroup_manager->shouldReceive('getUGroupByName')
-            ->with($this->project, "project_members")
-            ->once()
-            ->andReturn($ugroup_project_members);
+        $this->ugroup_manager
+            ->method('getUGroupByName')
+            ->willReturnMap([
+                [$this->project, "project_members", $ugroup_project_members],
+                [$this->project, "project_admins", $ugroup_project_admins],
+                [$this->project, "unkown_ugroup", null],
+            ]);
 
-        $this->ugroup_manager->shouldReceive('getUGroupByName')
-            ->with($this->project, "unkown_ugroup")
-            ->once()
-            ->andReturnNull();
+        $this->timetracking_ugroup_saver
+            ->expects(self::once())
+            ->method('saveReaders')
+            ->with($tracker_mapping, [3]);
 
-        $this->timetracking_ugroup_saver->shouldReceive('saveReaders')
-            ->with($tracker_mapping, [3])
-            ->once();
+        $this->timetracking_ugroup_saver
+            ->expects(self::once())
+            ->method('saveWriters')
+            ->with($tracker_mapping, [4]);
 
-        $this->timetracking_ugroup_saver->shouldReceive('saveWriters')
-            ->with($tracker_mapping, [4])
-            ->once();
-
-        $user = Mockery::mock(PFUser::class)->shouldReceive('getId')->andReturn(123)->getMock();
-        $this->user_finder->shouldReceive('getUser')
-            ->andReturn($user);
+        $user = $this->createMock(PFUser::class);
+        $user->method('getId')->willReturn(123);
+        $this->user_finder->method('getUser')
+            ->willReturn($user);
 
         $this->mockLogInfo();
 
-        $this->logger->shouldReceive('warning')
-            ->with('Could not find any ugroup named unkown_ugroup, skipping.')
-            ->once();
+        $this->logger
+            ->expects(self::once())
+            ->method('warning')
+            ->with('Could not find any ugroup named unkown_ugroup, skipping.');
 
         $this->xml_import->import(
             $xml,
@@ -504,7 +496,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNothingIfTrackerIsNotProvidedInProjectXML(): void
     {
-        $tracker_mapping          = Mockery::mock(Tracker::class);
+        $tracker_mapping          = $this->createMock(Tracker::class);
         $created_trackers_objects = [
             '789' => $tracker_mapping,
         ];
@@ -520,13 +512,13 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $this->timetracking_enabler->shouldNotReceive('enableTimetrackingForTracker');
-        $this->ugroup_manager->shouldNotReceive('getUGroupByName');
-        $this->ugroup_manager->shouldNotReceive('getUGroupByName');
-        $this->timetracking_ugroup_saver->shouldNotReceive('saveReaders');
-        $this->timetracking_ugroup_saver->shouldNotReceive('saveWriters');
-        $this->user_finder->shouldNotReceive('getUser');
-        $this->time_dao->shouldNotReceive('addTime');
+        $this->timetracking_enabler->expects(self::never())->method('enableTimetrackingForTracker');
+        $this->ugroup_manager->expects(self::never())->method('getUGroupByName');
+        $this->ugroup_manager->expects(self::never())->method('getUGroupByName');
+        $this->timetracking_ugroup_saver->expects(self::never())->method('saveReaders');
+        $this->timetracking_ugroup_saver->expects(self::never())->method('saveWriters');
+        $this->user_finder->expects(self::never())->method('getUser');
+        $this->time_dao->expects(self::never())->method('addTime');
 
         $this->xml_import->import(
             $xml,
@@ -538,16 +530,12 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockLogInfo(): void
     {
-        $this->logger->shouldReceive('info')
-            ->with('Enable timetracking for tracker 789.')
-            ->once();
-
-        $this->logger->shouldReceive('info')
-            ->with('Add timetracking reader permission.')
-            ->once();
-
-        $this->logger->shouldReceive('info')
-            ->with('Add timetracking writer permission.')
-            ->once();
+        $this->logger
+            ->method('info')
+            ->withConsecutive(
+                ['Enable timetracking for tracker 789.'],
+                ['Add timetracking reader permission.'],
+                ['Add timetracking writer permission.'],
+            );
     }
 }

@@ -22,22 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\JiraImporter\Configuration;
 
-use Mockery;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\NullLogger;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraServerClientStub;
 
-class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private JiraCloudClientStub $jira_client;
     private JiraTimetrackingConfigurationRetriever $retriever;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapper
-     */
-    private $jira_client;
 
     protected function setUp(): void
     {
@@ -60,8 +56,8 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
         $configuration = $this->retriever->getJiraTimetrackingConfiguration();
 
-        $this->assertNotNull($configuration);
-        $this->assertSame("jira_timetracking", $configuration);
+        self::assertNotNull($configuration);
+        self::assertSame("jira_timetracking", $configuration);
     }
 
     public function testItReturnsNullIfTheWrapperReturnsFalseForTimeTrackingEnabled(): void
@@ -72,7 +68,7 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
         $configuration = $this->retriever->getJiraTimetrackingConfiguration();
 
-        $this->assertNull($configuration);
+        self::assertNull($configuration);
     }
 
     public function testItReturnsNullIfKeyEntryIsMissingInJson(): void
@@ -81,7 +77,7 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
         $configuration = $this->retriever->getJiraTimetrackingConfiguration();
 
-        $this->assertNull($configuration);
+        self::assertNull($configuration);
     }
 
     public function testItReturnsNullIfTimetrackingIsNotFoundOnServer(): void
@@ -90,7 +86,7 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(404);
 
         $jira_server_client = new class ($request, $response) extends JiraServerClientStub {
-            public function __construct(private $request, private $response)
+            public function __construct(private RequestInterface $request, private ResponseInterface $response)
             {
             }
 
@@ -102,6 +98,6 @@ class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
         $retriever = new JiraTimetrackingConfigurationRetriever($jira_server_client, new NullLogger());
 
-        $this->assertNull($retriever->getJiraTimetrackingConfiguration());
+        self::assertNull($retriever->getJiraTimetrackingConfiguration());
     }
 }

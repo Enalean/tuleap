@@ -36,7 +36,7 @@ class TimetrackingQueryChecker
      * @param array $json_query
      * @throws RestException
      */
-    public function checkQuery(array $json_query)
+    public function checkQuery(array $json_query): void
     {
         if (! isset($json_query["start_date"]) || ! isset($json_query["end_date"])) {
             throw new RestException(400, "Please provide a start date and an end date");
@@ -58,7 +58,7 @@ class TimetrackingQueryChecker
      * @param $end_date
      * @throws RestException
      */
-    public function checkTimePeriodIsValid(string $start_date, string $end_date)
+    public function checkTimePeriodIsValid(string $start_date, string $end_date): void
     {
         $period_start = DateTime::createFromFormat(DateTime::ATOM, $start_date);
         $period_end   = DateTime::createFromFormat(DateTime::ATOM, $end_date);

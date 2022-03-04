@@ -18,6 +18,7 @@
         <directory name="plugins/*/bin/" />
         <directory name="tests/phpcs/TuleapCodingStandard/" />
         <directory name="tests/unit/common/Project/Registration/" />
+        <directory name="tests/integration/tests/Svn/" />
         <directory name="plugins/oauth2_server/tests/unit/" />
         <directory name="plugins/gitlab/tests/unit/" />
         <directory name="plugins/jira_import/tests/unit/" />
@@ -26,6 +27,7 @@
         <directory name="plugins/userlog/tests/unit/" />
         <directory name="plugins/testplan/tests/unit/" />
         <directory name="plugins/mediawiki_standalone/tests/unit/" />
+        <directory name="plugins/timetracking/tests/unit/" />
         <ignoreFiles>
             <directory name="src/common/wiki/phpwiki/"/>
             <directory name="src/www/assets/"/>
