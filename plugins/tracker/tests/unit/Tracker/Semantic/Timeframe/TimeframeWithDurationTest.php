@@ -210,7 +210,7 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertNull($time_period->getStartDate());
-        $this->assertSame(1209600, $time_period->getEndDate());
+        $this->assertNull($time_period->getEndDate());
         $this->assertSame(10, $time_period->getDuration());
     }
 
@@ -280,7 +280,7 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertSame(0, $time_period->getStartDate());
-        $this->assertSame(1209600, $time_period->getEndDate());
+        $this->assertNull($time_period->getEndDate());
         $this->assertSame(10, $time_period->getDuration());
     }
 

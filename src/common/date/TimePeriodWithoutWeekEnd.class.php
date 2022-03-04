@@ -53,13 +53,13 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
             $duration = (int) ceil((float) $duration);
         }
 
-        if ($duration === null) {
-            return new TimePeriodWithoutWeekEnd($start_date, null, null, '');
+        if ($duration === null || ! $start_date) {
+            return new TimePeriodWithoutWeekEnd($start_date, $duration, null, '');
         }
 
-        $day_offsets = self::getDayOffsetsFromStartDateAndDuration((int) $start_date, (int) $duration);
+        $day_offsets = self::getDayOffsetsFromStartDateAndDuration($start_date, (int) $duration);
         $last_offset = end($day_offsets);
-        $end_date    = (int) strtotime("+$last_offset days", (int) $start_date);
+        $end_date    = (int) strtotime("+$last_offset days", $start_date);
 
         return new TimePeriodWithoutWeekEnd(
             $start_date,
