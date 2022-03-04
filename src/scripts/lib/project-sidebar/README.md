@@ -21,6 +21,9 @@ communicate with Tuleap. For test purposes you can find the description of expec
 [configuration.ts](https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=blob&hb=refs%2Fheads%2Fmaster&f=src%2Fscripts%2Flib%2Fproject-sidebar-internal%2Fsrc%2Fconfiguration.ts)
 and a complete example in
 [project-sidebar-example-config.ts](https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=blob&hb=refs%2Fheads%2Fmaster&f=src%2Fscripts%2Flib%2Fproject-sidebar-internal%2Fsrc%2Fproject-sidebar-example-config.ts).
+For production, the configuration can be retrieved from the REST endpoint `GET /api/projects/:id/3rd_party_integration_data`.
+As it is likely to be too costful to retrieve the information each time you display the sidebar we suggest you retrieve
+it once and then cache it for some time. The cache needs to be done per user and per project.
 
 The sidebar also accepts an attribute `collapsed` to collapse it. You can watch this attribute with a
 [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to detect when the sidebar is
