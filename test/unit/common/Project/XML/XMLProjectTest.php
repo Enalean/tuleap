@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\XML;
 
+use Tuleap\Dashboard\XML\XMLDashboard;
 use Tuleap\Project\Service\XML\XMLService;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -40,6 +41,7 @@ class XMLProjectTest extends TestCase
         self::assertEquals('', (string) $xml->{'long-description'});
         self::assertCount(1, $xml->services);
         self::assertCount(0, $xml->services->service);
+        self::assertCount(0, $xml->dashboards);
     }
 
     public function testExportServices(): void
@@ -53,5 +55,35 @@ class XMLProjectTest extends TestCase
         self::assertCount(2, $xml->services->service);
         self::assertEquals('git', (string) $xml->services->service[0]['shortname']);
         self::assertEquals('docman', (string) $xml->services->service[1]['shortname']);
+    }
+
+    public function testExportDashboards(): void
+    {
+        $project = (new XMLProject('lorem', 'Ipsum', 'Doloret', 'public'))
+            ->withDashboard(new XMLDashboard('Team view'))
+            ->withDashboard(new XMLDashboard('Manager view'));
+
+        $xml = $project->export();
+
+        self::assertCount(1, $xml->dashboards);
+        self::assertCount(2, $xml->dashboards->dashboard);
+        self::assertEquals('Team view', (string) $xml->dashboards->dashboard[0]['name']);
+        self::assertEquals('Manager view', (string) $xml->dashboards->dashboard[1]['name']);
+    }
+
+    public function testExportSpreadDashboards(): void
+    {
+        $project = (new XMLProject('lorem', 'Ipsum', 'Doloret', 'public'))
+            ->withDashboards(
+                new XMLDashboard('Team view'),
+                new XMLDashboard('Manager view')
+            );
+
+        $xml = $project->export();
+
+        self::assertCount(1, $xml->dashboards);
+        self::assertCount(2, $xml->dashboards->dashboard);
+        self::assertEquals('Team view', (string) $xml->dashboards->dashboard[0]['name']);
+        self::assertEquals('Manager view', (string) $xml->dashboards->dashboard[1]['name']);
     }
 }

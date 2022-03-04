@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Template;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use SimpleXMLElement;
+use Tuleap\Project\Registration\Template\IssuesTemplateDashboardDefinition;
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\XML\XMLArtifactIdField;
@@ -58,6 +59,9 @@ use Tuleap\Tracker\Semantic\XML\XMLFieldsBasedSemantic;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Workflow\XML\XMLSimpleWorkflow;
 use Tuleap\Tracker\XML\XMLTracker;
+use Tuleap\Widget\XML\XMLPreference;
+use Tuleap\Widget\XML\XMLPreferenceValue;
+use Tuleap\Widget\XML\XMLWidget;
 
 /**
  * @psalm-immutable
@@ -68,9 +72,11 @@ final class IssuesTemplate
     public const STATUS_FIELD_NAME      = 'status';
     public const ASSIGNED_TO_FIELD_NAME = 'assigned_to';
 
-    private const ISSUE_NUMBER_FIELD_NAME = 'issue_number';
-    private const TITLE_FIELD_NAME        = 'title';
-    private const SUBMITTED_ON_FIELD_NAME = 'submitted_on';
+    private const ISSUE_NUMBER_FIELD_NAME     = 'issue_number';
+    private const TITLE_FIELD_NAME            = 'title';
+    private const SUBMITTED_ON_FIELD_NAME     = 'submitted_on';
+    private const OPEN_ISSUES_RENDERER_ID     = 'Open_Issues_Table_Renderer';
+    private const CRITICAL_ISSUES_RENDERER_ID = 'Critical_Issues_Table_Renderer';
 
     public static function defineTemplate(
         SimpleXMLElement $project_template,
@@ -391,7 +397,7 @@ final class IssuesTemplate
 
         $open_issues_renderers = [
             (new XMLTable('Open Issues'))
-                ->withId('Open_Issues_to_be_used_in_remaining_XML_dashboard_definition')
+                ->withId(self::OPEN_ISSUES_RENDERER_ID)
                 ->withChunkSize(15)
                 ->withColumns(
                     new XMLTableColumn(
@@ -454,7 +460,7 @@ final class IssuesTemplate
                         ->withSelectedValues(new XMLBindValueReferenceById('V13626'))
                 )->withRenderers(
                     (new XMLTable('Critical Issues'))
-                        ->withId('Critical_Issues_to_be_used_in_remaining_XML_dashboard_definition')
+                        ->withId(self::CRITICAL_ISSUES_RENDERER_ID)
                         ->withChunkSize(15)
                         ->withColumns(
                             new XMLTableColumn(
@@ -513,5 +519,25 @@ final class IssuesTemplate
                     ...$renderers->getOpenIssuesRenderers()
                 ),
         ];
+    }
+
+    public static function defineDashboards(IssuesTemplateDashboardDefinition $dashboard_definition): void
+    {
+        $dashboard_definition->withWidgetInLeftColumnOfTeamDashboard(
+            (new XMLWidget('plugin_tracker_projectrenderer'))
+                ->withPreference((new XMLPreference('renderer'))
+                    ->withValue(XMLPreferenceValue::ref('id', self::OPEN_ISSUES_RENDERER_ID))
+                    ->withValue(XMLPreferenceValue::text('title', 'Open Issues')))
+        );
+
+        $critical_issues_widget = (new XMLWidget('plugin_tracker_projectrenderer'))
+            ->withPreference(
+                (new XMLPreference('renderer'))
+                    ->withValue(XMLPreferenceValue::ref('id', self::CRITICAL_ISSUES_RENDERER_ID))
+                    ->withValue(XMLPreferenceValue::text('title', 'Critical Issues'))
+            );
+
+        $dashboard_definition->withWidgetInLeftColumnOfTeamDashboard($critical_issues_widget);
+        $dashboard_definition->withWidgetInMainColumnOfManagerDashboard(clone $critical_issues_widget);
     }
 }

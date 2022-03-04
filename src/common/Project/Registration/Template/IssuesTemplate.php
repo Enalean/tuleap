@@ -31,13 +31,10 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\Service\XML\XMLService;
 use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\Project\XML\XMLProject;
-use Tuleap\XML\ProjectXMLMerger;
 
 class IssuesTemplate implements TuleapTemplate
 {
     public const NAME = 'issues';
-
-    private const ISSUES_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/issues/issue_template.xml';
 
     /**
      * @var string
@@ -51,10 +48,6 @@ class IssuesTemplate implements TuleapTemplate
      * @var GlyphFinder
      */
     private $glyph_finder;
-    /**
-     * @var ProjectXMLMerger
-     */
-    private $project_xml_merger;
     /**
      * @var ConsistencyChecker
      */
@@ -71,14 +64,12 @@ class IssuesTemplate implements TuleapTemplate
 
     public function __construct(
         GlyphFinder $glyph_finder,
-        ProjectXMLMerger $project_xml_merger,
         ConsistencyChecker $consistency_checker,
         EventDispatcherInterface $dispatcher,
     ) {
         $this->title               = _('Issue tracking');
         $this->description         = _('Trace and Track all types of activities.');
         $this->glyph_finder        = $glyph_finder;
-        $this->project_xml_merger  = $project_xml_merger;
         $this->consistency_checker = $consistency_checker;
         $this->dispatcher          = $dispatcher;
     }
@@ -114,17 +105,10 @@ class IssuesTemplate implements TuleapTemplate
                 ->withService(XMLService::buildDisabled('plugin_baseline'))
                 ->withService(XMLService::buildDisabled('plugin_mediawiki'))
                 ->withService(XMLService::buildDisabled('plugin_testmanagement'))
-                ->withService(XMLService::buildDisabled('plugin_program_management'));
+                ->withService(XMLService::buildDisabled('plugin_program_management'))
+                ->withDashboards(...(new IssuesTemplateDashboardDefinition($this->dispatcher))->getDashboards());
 
-            $project->export()->asXML($this->xml_path);
-
-            $this->project_xml_merger->merge(
-                $this->xml_path,
-                self::ISSUES_XML,
-                $this->xml_path,
-            );
-
-            $template = simplexml_load_string(file_get_contents($this->xml_path));
+            $template = $project->export();
 
             $this->dispatcher->dispatch(new DefineIssueTemplateEvent($template));
 

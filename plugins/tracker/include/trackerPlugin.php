@@ -54,6 +54,7 @@ use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\Registration\Template\DefineIssueTemplateEvent;
+use Tuleap\Project\Registration\Template\IssuesTemplateDashboardDefinition;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\NoArchive;
@@ -352,6 +353,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         $this->addHook(CrossReferenceByNatureOrganizer::NAME);
         $this->addHook(DefineIssueTemplateEvent::NAME);
+        $this->addHook(IssuesTemplateDashboardDefinition::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -2445,5 +2447,10 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function defineIssueTemplateEvent(DefineIssueTemplateEvent $event): void
     {
         \Tuleap\Tracker\Template\IssuesTemplate::defineTemplate($event->getProject(), EventManager::instance());
+    }
+
+    public function issuesTemplateDashboardDefinition(IssuesTemplateDashboardDefinition $dashboard_definition): void
+    {
+        \Tuleap\Tracker\Template\IssuesTemplate::defineDashboards($dashboard_definition);
     }
 }

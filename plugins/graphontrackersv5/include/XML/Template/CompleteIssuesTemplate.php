@@ -25,15 +25,23 @@ namespace Tuleap\GraphOnTrackersV5\XML\Template;
 use Tuleap\GraphOnTrackersV5\XML\XMLBarChart;
 use Tuleap\GraphOnTrackersV5\XML\XMLGraphOnTrackerRenderer;
 use Tuleap\GraphOnTrackersV5\XML\XMLPieChart;
+use Tuleap\Project\Registration\Template\IssuesTemplateDashboardDefinition;
 use Tuleap\Tracker\FormElement\XML\XMLReferenceByName;
 use Tuleap\Tracker\Report\Renderer\XML\XMLRenderer;
 use Tuleap\Tracker\Template\IssuesTemplate;
+use Tuleap\Widget\XML\XMLPreference;
+use Tuleap\Widget\XML\XMLPreferenceValue;
+use Tuleap\Widget\XML\XMLWidget;
 
 /**
  * @psalm-immutable
  */
 final class CompleteIssuesTemplate
 {
+    private const ALL_ISSUES_PRIORITY_CHART_RENDERER_ID = 'All_Issues_Priority_Chart_to_be_used_in_remaining_XML_dashboard_definition';
+    private const OPEN_ISSUES_CHART_RENDERER_ID         = 'Open_Issues_Charts_to_be_used_in_remaining_XML_dashboard_definition';
+    private const ALL_ISSUES_CHART_RENDERER_ID          = 'All_Issues_Charts_to_be_used_in_remaining_XML_dashboard_definition';
+
     /**
      * @return XMLRenderer[]
      */
@@ -41,7 +49,7 @@ final class CompleteIssuesTemplate
     {
         return [
             (new XMLGraphOnTrackerRenderer('All Issues Charts'))
-                ->withId('All_Issues_Charts_to_be_used_in_remaining_XML_dashboard_definition')
+                ->withId(self::ALL_ISSUES_CHART_RENDERER_ID)
                 ->withDescription('All Issues Charts')
                 ->withCharts(
                     (new XMLBarChart(600, 400, 0, 'Priority'))
@@ -55,7 +63,7 @@ final class CompleteIssuesTemplate
                         ->withBase(new XMLReferenceByName(IssuesTemplate::ASSIGNED_TO_FIELD_NAME))
                 ),
             (new XMLGraphOnTrackerRenderer('All Issues Priority Chart'))
-                ->withId('All_Issues_Priority_Chart_to_be_used_in_remaining_XML_dashboard_definition')
+                ->withId(self::ALL_ISSUES_PRIORITY_CHART_RENDERER_ID)
                 ->withDescription('All Issues Priority Chart')
                 ->withCharts(
                     (new XMLBarChart(600, 400, 0, 'Priority'))
@@ -85,7 +93,7 @@ final class CompleteIssuesTemplate
     public static function getOpenIssuesRenderer(): XMLRenderer
     {
         return (new XMLGraphOnTrackerRenderer('Open Issues Charts'))
-            ->withId('Open_Issues_Charts_to_be_used_in_remaining_XML_dashboard_definition')
+            ->withId(self::OPEN_ISSUES_CHART_RENDERER_ID)
             ->withDescription('Open Issues Charts')
             ->withCharts(
                 (new XMLBarChart(600, 400, 0, 'Priority'))
@@ -98,5 +106,29 @@ final class CompleteIssuesTemplate
                     ->withDescription('Number of Artifacts by Assignee')
                     ->withBase(new XMLReferenceByName(IssuesTemplate::ASSIGNED_TO_FIELD_NAME))
             );
+    }
+
+    public static function defineDashboards(IssuesTemplateDashboardDefinition $dashboard_definition): void
+    {
+        $dashboard_definition->withWidgetInLeftColumnOfGlobalDashboard(
+            (new XMLWidget('plugin_tracker_projectrenderer'))
+                ->withPreference((new XMLPreference('renderer'))
+                    ->withValue(XMLPreferenceValue::ref('id', self::ALL_ISSUES_PRIORITY_CHART_RENDERER_ID))
+                    ->withValue(XMLPreferenceValue::text('title', 'All issues Priority Chart')))
+        );
+
+        $dashboard_definition->withWidgetInRightColumnOfTeamDashboard(
+            (new XMLWidget('plugin_tracker_projectrenderer'))
+                ->withPreference((new XMLPreference('renderer'))
+                    ->withValue(XMLPreferenceValue::ref('id', self::OPEN_ISSUES_CHART_RENDERER_ID))
+                    ->withValue(XMLPreferenceValue::text('title', 'Open Issues Charts')))
+        );
+
+        $dashboard_definition->withWidgetInMainColumnOfManagerDashboard(
+            (new XMLWidget('plugin_tracker_projectrenderer'))
+                ->withPreference((new XMLPreference('renderer'))
+                    ->withValue(XMLPreferenceValue::ref('id', self::ALL_ISSUES_CHART_RENDERER_ID))
+                    ->withValue(XMLPreferenceValue::text('title', 'All issues Charts')))
+        );
     }
 }
