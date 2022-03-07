@@ -22,11 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\AgileDashboard;
 
-use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
+use Tuleap\Tracker\Milestone\PaneInfo;
 
 class TaskboardPaneInfo extends PaneInfo
 {
     public const NAME = \taskboardPlugin::NAME;
+
+    public function __construct(private \Planning_Milestone $milestone)
+    {
+        parent::__construct();
+    }
 
     public function getIdentifier(): string
     {

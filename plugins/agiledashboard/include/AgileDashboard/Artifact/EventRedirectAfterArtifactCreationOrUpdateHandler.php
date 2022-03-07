@@ -32,9 +32,9 @@ use Planning_MilestonePaneFactory;
 use PlanningFactory;
 use Project;
 use Tracker_Artifact_Redirect;
-use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 use Tuleap\AgileDashboard\Planning\NotFoundException;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Milestone\PaneInfo;
 
 class EventRedirectAfterArtifactCreationOrUpdateHandler
 {

@@ -22,15 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 final class AgileDashboardPaneInfoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var M\LegacyMockInterface|M\MockInterface|\Planning_Milestone */
-    private $milestone;
     /** @var int */
     private $release_id = 78;
     /** @var AgileDashboardPaneInfo */
@@ -38,8 +32,7 @@ final class AgileDashboardPaneInfoTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->milestone                 = M::mock(\Planning_Milestone::class);
-        $this->agile_dashboard_pane_info = new AgileDashboardPaneInfo($this->milestone, $this->release_id);
+        $this->agile_dashboard_pane_info = new AgileDashboardPaneInfo($this->release_id);
     }
 
     public function testGetUri(): void

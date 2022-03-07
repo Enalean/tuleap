@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
+use Tuleap\Tracker\Milestone\PaneInfo;
 
 class PaneInfoRepresentation
 {

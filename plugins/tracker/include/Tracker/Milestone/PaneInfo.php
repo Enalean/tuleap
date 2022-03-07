@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Milestone\Pane;
-
-use Planning_Milestone;
+namespace Tuleap\Tracker\Milestone;
 
 /**
  * An agile dashboard can have several panes (MilestonePlanning, Burndown, Cardwall)
@@ -33,29 +31,18 @@ abstract class PaneInfo
 {
     public const ACTION = 'show';
 
-    /**
-     * @var bool
-     */
-    private $is_active;
+    private bool $is_active = false;
 
-    /**
-     * @var Planning_Milestone
-     */
-    protected $milestone;
+    protected string $action = self::ACTION;
 
-    protected $action = self::ACTION;
-
-    public function __construct(Planning_Milestone $milestone)
+    public function __construct()
     {
-        $this->milestone = $milestone;
     }
 
     /**
      * Return true if the current Pane is selected
-     *
-     * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->is_active;
     }
@@ -70,32 +57,13 @@ abstract class PaneInfo
 
     /**
      * Set activation
-     *
-     * @param bool $state
      */
-    public function setActive($state)
+    public function setActive(bool $state): void
     {
-        $this->is_active = (bool) $state;
+        $this->is_active = $state;
     }
 
-    /**
-     * Return the URI of the current pane
-     *
-     * @return string
-     */
-    public function getUri()
-    {
-        return AGILEDASHBOARD_BASE_URL . '/?' .
-            http_build_query(
-                [
-                    'group_id'    => $this->milestone->getGroupId(),
-                    'planning_id' => $this->milestone->getPlanningId(),
-                    'action'      => $this->action,
-                    'aid'         => $this->milestone->getArtifactId(),
-                    'pane'        => $this->getIdentifier(),
-                ]
-            );
-    }
+    abstract public function getUri(): string;
 
     /**
      * Technical identifier for HTML output

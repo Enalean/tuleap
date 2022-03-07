@@ -20,11 +20,17 @@
 
 namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
-use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
+use Planning_Milestone;
+use Tuleap\Tracker\Milestone\PaneInfo;
 
 class DetailsPaneInfo extends PaneInfo
 {
     public const IDENTIFIER = 'details';
+
+    public function __construct(private Planning_Milestone $milestone)
+    {
+        parent::__construct();
+    }
 
     /**
      * @return string eg: 'cardwall'
@@ -45,5 +51,19 @@ class DetailsPaneInfo extends PaneInfo
     public function getIconName()
     {
         return 'fa-bar-chart';
+    }
+
+    public function getUri(): string
+    {
+        return AGILEDASHBOARD_BASE_URL . '/?' .
+               http_build_query(
+                   [
+                       'group_id'    => $this->milestone->getGroupId(),
+                       'planning_id' => $this->milestone->getPlanningId(),
+                       'action'      => $this->action,
+                       'aid'         => $this->milestone->getArtifactId(),
+                       'pane'        => $this->getIdentifier(),
+                   ]
+               );
     }
 }

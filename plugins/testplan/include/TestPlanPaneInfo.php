@@ -21,7 +21,7 @@
 namespace Tuleap\TestPlan;
 
 use Planning_Milestone;
-use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
+use Tuleap\Tracker\Milestone\PaneInfo;
 
 final class TestPlanPaneInfo extends PaneInfo
 {
@@ -40,7 +40,7 @@ final class TestPlanPaneInfo extends PaneInfo
 
     public function __construct(Planning_Milestone $milestone)
     {
-        parent::__construct($milestone);
+        parent::__construct();
 
         $artifact           = $milestone->getArtifact();
         $this->project      = $artifact->getTracker()->getProject();

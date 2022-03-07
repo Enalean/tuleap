@@ -20,16 +20,15 @@
 
 namespace Tuleap\Cardwall\Agiledashboard;
 
-use Planning_Milestone;
-use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
+use Tuleap\Tracker\Milestone\PaneInfo;
 
 class CardwallPaneInfo extends PaneInfo
 {
     public const IDENTIFIER = 'cardwall';
 
-    public function __construct(Planning_Milestone $milestone)
+    public function __construct(private int $project_id, private int $planning_id, private int $artifact_id)
     {
-        parent::__construct($milestone);
+        parent::__construct();
     }
 
     /**
@@ -51,5 +50,19 @@ class CardwallPaneInfo extends PaneInfo
     public function getIconName()
     {
         return 'fa-table';
+    }
+
+    public function getUri(): string
+    {
+        return '/plugins/agiledashboard/?' .
+               http_build_query(
+                   [
+                       'group_id'    => $this->project_id,
+                       'planning_id' => $this->planning_id,
+                       'action'      => $this->action,
+                       'aid'         => $this->artifact_id,
+                       'pane'        => $this->getIdentifier(),
+                   ]
+               );
     }
 }

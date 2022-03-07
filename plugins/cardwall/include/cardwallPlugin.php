@@ -447,14 +447,14 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             return;
         }
 
-        return new CardwallPaneInfo($milestone);
+        return new CardwallPaneInfo($milestone->getGroupId(), $milestone->getPlanningId(), $milestone->getArtifactId());
     }
 
     public function agiledashboard_event_index_page($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         // Only display a cardwall if there is something to display
         if ($params['milestone'] && $params['milestone']->getPlannedArtifacts() && count($params['milestone']->getPlannedArtifacts()->getChildren()) > 0) {
-            $pane_info      = new CardwallPaneInfo($params['milestone']);
+            $pane_info      = new CardwallPaneInfo($params['milestone']->getGroupId(), $params['milestone']->getPlanningId(), $params['milestone']->getArtifactId());
             $params['pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user'], $params['milestone_factory']);
         }
     }
