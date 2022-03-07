@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\Report\Renderer\Table;
 
 use Tuleap\Event\Dispatchable;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptAssetGeneric;
 
 class GetExportOptionsMenuItemsEvent implements Dispatchable
 {
@@ -43,7 +43,7 @@ class GetExportOptionsMenuItemsEvent implements Dispatchable
      */
     private $additional_content;
     /**
-     * @var JavascriptAsset[]
+     * @var JavascriptAssetGeneric[]
      */
     private array $javascript_assets = [];
 
@@ -95,14 +95,14 @@ class GetExportOptionsMenuItemsEvent implements Dispatchable
     }
 
     /**
-     * @return JavascriptAsset[]
+     * @return JavascriptAssetGeneric[]
      */
     public function getJavascriptAssets(): array
     {
         return $this->javascript_assets;
     }
 
-    public function addJavascriptAssets(JavascriptAsset $javascript_asset): void
+    public function addJavascriptAssets(JavascriptAssetGeneric $javascript_asset): void
     {
         $this->javascript_assets[] = $javascript_asset;
     }

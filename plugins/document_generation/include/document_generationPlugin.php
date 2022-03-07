@@ -20,9 +20,11 @@
 
 declare(strict_types=1);
 
+use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\DocumentGeneration\FeatureFlagCrossTrackerReportAction;
 use Tuleap\DocumentGeneration\Report\ReportCriteriaJsonBuilder;
 use Tuleap\Layout\IncludeViteAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
@@ -57,8 +59,14 @@ class document_generationPlugin extends Plugin
     public function getHooksAndCallbacks(): Collection
     {
         $this->addHook(GetExportOptionsMenuItemsEvent::NAME);
+        $this->addHook(GetWhitelistedKeys::NAME);
 
         return parent::getHooksAndCallbacks();
+    }
+
+    public function getWhitelistedKeys(GetWhitelistedKeys $event): void
+    {
+        $event->addConfigClass(FeatureFlagCrossTrackerReportAction::class);
     }
 
     public function getExportOptionsMenuItems(GetExportOptionsMenuItemsEvent $event): void
@@ -117,11 +125,23 @@ class document_generationPlugin extends Plugin
             '/assets/document_generation'
         );
 
-        $javascript_asset = new JavascriptAsset(
+        $javascript_asset = new JavascriptViteAsset(
             $document_generation_asset,
             "scripts/tracker-report-action/src/index.ts"
         );
 
         $event->addJavascriptAssets($javascript_asset);
+
+
+        if (! FeatureFlagCrossTrackerReportAction::isEnabled()) {
+            return;
+        }
+
+        $event->addExportItem(
+            $renderer->renderToString('tracker-cross-report-action', [])
+        );
+        $event->addJavascriptAssets(
+            new JavascriptViteAsset($document_generation_asset, 'scripts/tracker-cross-report-action/src/index.ts')
+        );
     }
 }

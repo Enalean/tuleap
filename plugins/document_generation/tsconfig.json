@@ -5,6 +5,7 @@
         "types": ["jest"]
     },
     "include": [
-        "scripts/tracker-report-action/**/*"
+        "scripts/tracker-report-action/**/*",
+        "scripts/tracker-cross-report-action/**/*"
     ]
 }
