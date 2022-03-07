@@ -2025,6 +2025,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      * Return the first (and only one) ArtifactLink field (if any)
      *
      * @return Tracker_FormElement_Field_ArtifactLink|null
+     * @deprecated Use \Tracker_FormElementFactory::getAnArtifactLinkField() instead
      */
     public function getAnArtifactLinkField(PFUser $user)
     {
