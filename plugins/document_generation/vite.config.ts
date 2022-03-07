@@ -32,6 +32,10 @@ export default defineAppConfig("document_generation", {
                     __dirname,
                     "scripts/tracker-report-action/src/index.ts"
                 ),
+                "tracker-cross-report-action": path.resolve(
+                    __dirname,
+                    "scripts/tracker-cross-report-action/src/index.ts"
+                ),
             },
         },
     },

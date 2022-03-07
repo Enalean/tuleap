@@ -834,8 +834,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         if ($request->get('only-renderer')) {
             echo $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified, $current_user);
         } else {
-            $this->displayHeader($layout, $request, $current_user, $report_can_be_modified);
-
             $html = '';
 
             //Display Criteria
@@ -965,6 +963,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                     new SuccessPresenter($this->getTracker())
                 );
             }
+
+            $this->displayHeader($layout, $request, $current_user, $report_can_be_modified);
 
             echo $html;
 
