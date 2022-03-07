@@ -120,7 +120,7 @@ describe("TuleapArtifactModalController", () => {
             jest.spyOn($scope, "$watch").mockImplementation(() => {});
         });
 
-        it("when I load the controller, then field dependencies watchers will be set once for each different source field", function () {
+        it("when I load the controller, then field dependencies watchers will be set once for each different source field which are submittable", function () {
             jest.spyOn(field_dependencies_helper, "setUpFieldDependenciesActions");
             controller_params.modal_model.tracker = {
                 fields: [{ field_id: 22 }],
@@ -133,12 +133,24 @@ describe("TuleapArtifactModalController", () => {
                                 target_field_id: 22,
                                 target_value_id: 519,
                             },
+                            {
+                                source_field_id: 112,
+                                source_value_id: 666,
+                                target_field_id: 42,
+                                target_value_id: 777,
+                            },
                         ],
                     },
                 },
             };
 
             ArtifactModalController = $controller(BaseModalController, controller_params);
+
+            const values = {
+                43: { field_id: 43, bind_value_ids: [907] },
+            };
+
+            ArtifactModalController.values = values;
             ArtifactModalController.$onInit();
 
             expect($scope.$watch).toHaveBeenCalledTimes(1);

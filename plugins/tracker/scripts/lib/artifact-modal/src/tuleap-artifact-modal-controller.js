@@ -385,6 +385,10 @@ function ArtifactModalController(
     }
 
     function setFieldDependenciesWatcher(source_field_id, target_field, field_dependencies_rules) {
+        if (self.values[source_field_id] === undefined) {
+            return;
+        }
+
         $scope.$watch(
             function () {
                 return self.values[source_field_id].bind_value_ids;
