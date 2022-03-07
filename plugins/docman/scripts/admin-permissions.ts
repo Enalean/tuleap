@@ -37,6 +37,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const reset_button = legacy.querySelector("input[name=reset]");
     if (reset_button) {
-        reset_button.classList.add("tlp-button-primary", "tlp-button-outline");
+        reset_button.remove();
     }
+
+    const addendum = document.getElementById("docman-admin-permission-legacy-form-addendum");
+    if (submit_button && submit_button.parentElement && addendum) {
+        submit_button.parentElement.insertAdjacentElement("beforebegin", addendum);
+    }
+
+    legacy.classList.remove("loading");
 });

@@ -1267,6 +1267,15 @@ class Docman_Actions extends Actions
 
     public function admin_set_permissions()
     {
+        $request = HTTPRequest::instance();
+        if ($request->exist('forbid_writers_to_update')) {
+            $settings_dao = new Tuleap\Docman\Settings\SettingsDAO();
+            $settings_dao->saveForbidWriters(
+                $request->get('group_id'),
+                (bool) $request->get('forbid_writers_to_update')
+            );
+        }
+
         /** @psalm-suppress DeprecatedFunction */
         [$return_code, $feedback] = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
         if (! $return_code) {

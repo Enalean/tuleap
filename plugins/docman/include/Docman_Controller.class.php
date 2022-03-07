@@ -587,6 +587,7 @@ class Docman_Controller extends Controler
                 $this->view                = 'Tree';
                 break;
             case 'admin_set_permissions':
+                \Docman_View_Admin_Permissions::getCSRFToken($this->getGroupId())->check();
                 $this->action = $view;
                 $this->view   = 'Admin_Permissions';
                 break;

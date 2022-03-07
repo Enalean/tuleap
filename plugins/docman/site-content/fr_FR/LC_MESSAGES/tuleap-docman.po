@@ -1243,6 +1243,10 @@ msgstr ""
 "<strong>Forcer la notification</strong> pour envoyer un email de "
 "notification indépendamment de l'état d'approbation.</li></ul></li></ul>"
 
+msgid "Forbid modifications of document properties by Writers"
+msgstr ""
+"Interdire les modifications des propriétés de document par les Rédacteurs"
+
 msgid "Forcast purge date"
 msgstr "Date de purge prévue"
 
@@ -2525,6 +2529,14 @@ msgstr "Date d'ajout du document dans le gestionnaire."
 
 msgid "When the pattern doesn't start with * (pattern #1 or #2):"
 msgstr "Si le motif ne commence pas par * (motif #1 or #2) :"
+
+msgid ""
+"When turned on, Writers will be allowed to set properties when they create a "
+"new document but will no longer be able to modify them afterward"
+msgstr ""
+"Une fois activée, les Rédacteurs peuvent définir des propriétés lors de la "
+"création d'un nouveau document mais ne seront pas capable de les modifier "
+"après coup"
 
 msgid "Who"
 msgstr "Qui"
