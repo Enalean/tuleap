@@ -16,7 +16,7 @@
     "vue-gettext": "^2.1.12",
     "vuex": "^3.6.2",
     "vuex-composition-helpers": "^1.1.0",
-    "xlsx": "^0.17.5"
+    "xlsx": "^0.18.3"
   },
   "devDependencies": {
     "@tuleap/gettext": "file:../../src/scripts/lib/gettext",
