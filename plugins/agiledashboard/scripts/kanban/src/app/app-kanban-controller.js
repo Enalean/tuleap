@@ -112,7 +112,7 @@ function KanbanCtrl(
         setIsCollapsed,
         filterCards,
         showEditModal,
-        moveItemAtTheEnd,
+        moveItemAtTheEndWithoutItemUpdate,
         saveCardsViewMode,
         moveKanbanItemToTop,
         moveKanbanItemToBottom,
@@ -642,10 +642,11 @@ function KanbanCtrl(
 
     function updateItemMoveAtTheEnd(item, item_updated) {
         if (checkColumnChanged(item, item_updated)) {
-            self.moveItemAtTheEnd(item, item_updated.in_column);
-        } else {
-            item.updating = false;
+            self.moveItemAtTheEndWithoutItemUpdate(item, item_updated.in_column);
         }
+
+        item.updating = false;
+
         KanbanColumnService.updateItemContent(item, item_updated);
     }
 
@@ -655,22 +656,12 @@ function KanbanCtrl(
         return previous_column !== new_column;
     }
 
-    function moveItemAtTheEnd(item, column_id) {
-        var source_column = ColumnCollectionService.getColumn(item.in_column),
+    function moveItemAtTheEndWithoutItemUpdate(item, column_id) {
+        const source_column = ColumnCollectionService.getColumn(item.in_column),
             destination_column = ColumnCollectionService.getColumn(column_id),
             compared_to = DroppedService.getComparedToBeLastItemOfColumn(destination_column);
 
-        var promise = DroppedService.moveToColumn(
-            kanban.id,
-            column_id,
-            item.id,
-            compared_to,
-            item.in_column
-        ).then(function () {
-            KanbanColumnService.moveItem(item, source_column, destination_column, compared_to);
-        });
-
-        return promise;
+        KanbanColumnService.moveItem(item, source_column, destination_column, compared_to);
     }
 
     function moveKanbanItemToTop(item) {
