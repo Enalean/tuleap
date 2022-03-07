@@ -25,7 +25,7 @@ namespace Tuleap\Document\Config;
 
 use Tuleap\Docman\FilenamePattern\RetrieveFilenamePattern;
 
-final class ChangeLogModalDisplayer
+final class ModalDisplayer
 {
     public function __construct(
         private RetrieveFilenamePattern $pattern_retriever,

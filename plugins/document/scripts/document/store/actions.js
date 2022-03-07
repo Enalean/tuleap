@@ -97,6 +97,12 @@ export const getSubfolderContent = async (context, folder_id) => {
     }
 };
 
+export const createNewFiles = async (context, [items, parent, current_folder]) => {
+    for (const item of items) {
+        await createNewItem(context, [item, parent, current_folder]);
+    }
+};
+
 export const createNewItem = async (context, [item, parent, current_folder]) => {
     try {
         let should_display_item = true;

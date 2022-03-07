@@ -85,6 +85,12 @@
             v-bind:dropped-file="file_changelog_properties.dropped_file"
             data-test="file-changelog-modal"
         />
+        <file-creation-modal
+            v-if="file_creation_properties"
+            v-on:close-file-creation-modal="hideFileCreationModal()"
+            v-bind:dropped-file="file_creation_properties.dropped_file"
+            v-bind:parent="file_creation_properties.parent"
+        />
     </div>
 </template>
 
@@ -98,10 +104,12 @@ import NewFolderModal from "./DropDown/NewDocument/NewFolderModal.vue";
 import FolderHeaderAction from "./FolderHeaderAction.vue";
 import { isFolder } from "../../helpers/type-check-helper";
 import emitter from "../../helpers/emitter";
+import FileCreationModal from "./DropDown/NewVersion/FileCreationModal.vue";
 
 export default {
     name: "FolderHeader",
     components: {
+        FileCreationModal,
         FolderHeaderAction,
         NewFolderModal,
         SearchBox,
@@ -131,6 +139,11 @@ export default {
                 /* webpackChunkName: "file-changelog-modal" */
                 "./DropDown/NewVersion/FileVersionChangelogModal.vue"
             ),
+        "file-creation-modal": () =>
+            import(
+                /* webpackChunkName: "file-creation-modal" */
+                "./DropDown/NewVersion/FileCreationModal.vue"
+            ),
     },
     data() {
         return {
@@ -143,6 +156,7 @@ export default {
             current_folder_size: null,
             folder_above_warning_threshold_props: null,
             file_changelog_properties: null,
+            file_creation_properties: null,
         };
     },
     computed: {
@@ -174,6 +188,7 @@ export default {
         );
         emitter.on("show-archive-size-warning-modal", this.showArchiveSizeWarningModal);
         emitter.on("show-changelog-modal", this.showChangelogModal);
+        emitter.on("show-file-creation-modal", this.showFileCreationModal);
     },
     beforeDestroy() {
         emitter.off("deleteItem", this.showDeleteItemModal);
@@ -186,6 +201,7 @@ export default {
         );
         emitter.off("show-archive-size-warning-modal", this.showArchiveSizeWarningModal);
         emitter.off("show-changelog-modal", this.showChangelogModal);
+        emitter.off("show-file-creation-modal", this.showFileCreationModal);
     },
     methods: {
         showCreateNewItemVersionModal(event) {
@@ -228,6 +244,10 @@ export default {
         showChangelogModal(event) {
             this.file_changelog_properties = event.detail;
         },
+
+        showFileCreationModal(event) {
+            this.file_creation_properties = event.detail;
+        },
         showUpdateItemPropertiesModal(event) {
             this.updated_properties = event.detail.current_item;
             if (!this.isItemAFolder(this.updated_properties)) {
@@ -254,6 +274,9 @@ export default {
         },
         hideChangelogModal() {
             this.file_changelog_properties = null;
+        },
+        hideFileCreationModal() {
+            this.file_creation_properties = null;
         },
         hideDownloadFolderModals() {
             this.current_folder_size = null;
