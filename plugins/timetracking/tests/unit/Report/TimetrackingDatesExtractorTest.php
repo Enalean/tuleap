@@ -29,14 +29,11 @@ namespace Tuleap\Timetracking\Report;
 
 use DateTime;
 use Luracast\Restler\RestException;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\Timetracking\REST\v1\TimetrackingDatesExtractor;
 
 final class TimetrackingDatesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var TimetrackingDatesExtractor
      */
@@ -49,7 +46,7 @@ final class TimetrackingDatesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dates_extractor = new TimetrackingDatesExtractor(new JsonDecoder());
     }
 
-    public function testWhenQueryIsNotProvidedThenStartDateIsAMonthAgo()
+    public function testWhenQueryIsNotProvidedThenStartDateIsAMonthAgo(): void
     {
         $date       = new DateTime();
         $end_date   = $date->format('Y-m-d');
@@ -57,11 +54,11 @@ final class TimetrackingDatesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->dates_extractor->getDatesFromRoute(null);
 
-        $this->assertEquals($end_date, $result->getEndDate()->format('Y-m-d'));
-        $this->assertEquals($start_date, $result->getStartDate()->format('Y-m-d'));
+        self::assertEquals($end_date, $result->getEndDate()->format('Y-m-d'));
+        self::assertEquals($start_date, $result->getStartDate()->format('Y-m-d'));
     }
 
-    public function testWhenStartDateIsNotProvidedThenStartDateIsAMonthAgo()
+    public function testWhenStartDateIsNotProvidedThenStartDateIsAMonthAgo(): void
     {
         $date       = new DateTime();
         $end_date   = $date->format('Y-m-d');
@@ -70,20 +67,20 @@ final class TimetrackingDatesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $query = json_encode(["trackers_id" => [1, 2, 3]]);
 
         $result = $this->dates_extractor->getDatesFromRoute($query);
-        $this->assertEquals($end_date, $result->getEndDate()->format('Y-m-d'));
-        $this->assertEquals($start_date, $result->getStartDate()->format('Y-m-d'));
+        self::assertEquals($end_date, $result->getEndDate()->format('Y-m-d'));
+        self::assertEquals($start_date, $result->getStartDate()->format('Y-m-d'));
     }
 
-    public function testWhenStartDateIsProvidedByUserThenItReturnsTheUserStartDate()
+    public function testWhenStartDateIsProvidedByUserThenItReturnsTheUserStartDate(): void
     {
         $query = json_encode(["start_date" => "2010-03-01T00:00:00+01", "end_date"   => "2019-03-21T00:00:00+01"]);
 
         $result = $this->dates_extractor->getDatesFromRoute($query);
-        $this->assertEquals("2010-03-01T00:00:00+01:00", $result->getStartDate()->format(\DateTimeInterface::ATOM));
-        $this->assertEquals("2019-03-21T00:00:00+01:00", $result->getEndDate()->format(\DateTimeInterface::ATOM));
+        self::assertEquals("2010-03-01T00:00:00+01:00", $result->getStartDate()->format(\DateTimeInterface::ATOM));
+        self::assertEquals("2019-03-21T00:00:00+01:00", $result->getEndDate()->format(\DateTimeInterface::ATOM));
     }
 
-    public function testItThrowsAnExceptionWhenDatesAreNotCorrectlyFormated()
+    public function testItThrowsAnExceptionWhenDatesAreNotCorrectlyFormated(): void
     {
         $query = json_encode(["end_date" => "2019-03-21T00:00:00+01"]);
 

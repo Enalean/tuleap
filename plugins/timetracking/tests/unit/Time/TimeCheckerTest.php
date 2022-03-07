@@ -20,92 +20,97 @@
 
 namespace Tuleap\Timetracking\Time;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Timetracking\Exceptions\TimeTrackingBadDateFormatException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class TimeCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TimeCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /*
-    * TimeChecker
-    */
-    private $time_checker;
+    private TimeChecker $time_checker;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\PFUser
+     */
+    private $user;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&Time
+     */
+    private $time;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\Tracker\Artifact\Artifact
+     */
+    private $artifact;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->user = \Mockery::spy(\PFUser::class);
-        $this->user->allows()->getId()->andReturns(102);
+        $this->user = $this->createMock(\PFUser::class);
+        $this->user->method('getId')->willReturn(102);
 
         $this->time_checker = new TimeChecker();
-        $this->time         = \Mockery::spy(Time::class);
+        $this->time         = $this->createMock(Time::class);
 
-        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact->shouldReceive([
-            'getId'      => 200,
-        ]);
+        $this->artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->artifact->method('getId')->willReturn(200);
     }
 
-    public function testItReturnFalseIfEqual()
+    public function testItReturnFalseIfEqual(): void
     {
-        $this->time->allows()->getUserId()->andReturns(102);
-        $this->assertFalse($this->time_checker->doesTimeBelongsToUser($this->time, $this->user));
+        $this->time->method('getUserId')->willReturn(102);
+        self::assertFalse($this->time_checker->doesTimeBelongsToUser($this->time, $this->user));
     }
 
-    public function testItReturnTrueIfNotEqual()
+    public function testItReturnTrueIfNotEqual(): void
     {
-        $this->time->allows()->getUserId()->andReturns(103);
-        $this->assertTrue($this->time_checker->doesTimeBelongsToUser($this->time, $this->user));
+        $this->time->method('getUserId')->willReturn(103);
+        self::assertTrue($this->time_checker->doesTimeBelongsToUser($this->time, $this->user));
     }
 
-    public function testItReturnTimeTrackingNoTimeExceptionIfTimeIsNull()
+    public function testItReturnTimeTrackingNoTimeExceptionIfTimeIsNull(): void
     {
         $this->expectException(TimeTrackingMissingTimeException::class);
         $this->time_checker->checkMandatoryTimeValue(null);
     }
 
-    public function testItReturnNullIfGoodTimeFormat()
+    public function testItDoesNotThrowExceptionIfGoodTimeFormat(): void
     {
-        $this->assertNull($this->time_checker->checkMandatoryTimeValue("11:23"));
+        $this->time_checker->checkMandatoryTimeValue("11:23");
+        $this->expectNotToPerformAssertions();
     }
 
-
-    public function testItReturnTimeTrackingBadTimeFormatExceptionIfBadTimeFormatWrongSlashSeparator()
+    public function testItReturnTimeTrackingBadTimeFormatExceptionIfBadTimeFormatWrongSlashSeparator(): void
     {
         $this->expectException(TimeTrackingBadTimeFormatException::class);
         $this->time_checker->checkMandatoryTimeValue("11/23");
     }
 
-    public function testItReturnTimeTrackingBadTimeFormatExceptionIfBadTimeFormatWrongSemicolonSeparator()
+    public function testItReturnTimeTrackingBadTimeFormatExceptionIfBadTimeFormatWrongSemicolonSeparator(): void
     {
         $this->expectException(TimeTrackingBadTimeFormatException::class);
         $this->time_checker->checkMandatoryTimeValue("11;23");
     }
 
-    public function testItReturnTimeTrackingBadTimeFormatExceptionIfBadTimeFormatToLong()
+    public function testItReturnTimeTrackingBadTimeFormatExceptionIfBadTimeFormatToLong(): void
     {
         $this->expectException(TimeTrackingBadTimeFormatException::class);
         $this->time_checker->checkMandatoryTimeValue("11:234");
     }
 
-    public function testItReturnTimeTrackingBadTimeFormatExceptionIfBadTimeFormatIfLetter()
+    public function testItReturnTimeTrackingBadTimeFormatExceptionIfBadTimeFormatIfLetter(): void
     {
         $this->expectException(TimeTrackingBadTimeFormatException::class);
         $this->time_checker->checkMandatoryTimeValue("11:f8");
     }
 
-    public function testItReturnNullIfGoodDateFormat()
+    public function testItDoesNotThrowExceptionIfGoodDateFormat(): void
     {
-        $this->assertNull($this->time_checker->checkDateFormat("2018-01-01"));
+        $this->time_checker->checkDateFormat("2018-01-01");
+        $this->expectNotToPerformAssertions();
     }
 
-    public function testItReturnTimeTrackingBadDateFormatException()
+    public function testItReturnTimeTrackingBadDateFormatException(): void
     {
         $this->expectException(TimeTrackingBadDateFormatException::class);
         $this->time_checker->checkDateFormat("toto");

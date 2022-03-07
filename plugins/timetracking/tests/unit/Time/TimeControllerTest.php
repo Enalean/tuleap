@@ -22,69 +22,83 @@ namespace Tuleap\Timetracking\Time;
 
 use Codendi_Request;
 use CSRFSynchronizerToken;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNoTimeException;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class TimeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TimeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /*
-     * TimeController
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&TimeUpdater
      */
-    private $time_controller;
-
-    /*
-     * Time
+    private $time_updater;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&TimeRetriever
      */
-    private $time;
+    private $time_retriever;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&Codendi_Request
+     */
+    private $request;
+    private TimeController $time_controller;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\PFUser
+     */
+    private $user;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker
+     */
+    private $tracker;
+    private Time $time;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\Tracker\Artifact\Artifact
+     */
+    private $artifact;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&CSRFSynchronizerToken
+     */
+    private $csrf;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->time_updater    = \Mockery::spy(\Tuleap\Timetracking\Time\TimeUpdater::class);
-        $this->time_retriever  = \Mockery::spy(TimeRetriever::class);
-        $this->request         = \Mockery::spy(Codendi_Request::class);
+        $this->time_updater    = $this->createMock(\Tuleap\Timetracking\Time\TimeUpdater::class);
+        $this->time_retriever  = $this->createMock(TimeRetriever::class);
+        $this->request         = $this->createMock(Codendi_Request::class);
         $this->time_controller = new TimeController($this->time_updater, $this->time_retriever);
 
-        $this->user = \Mockery::spy(\PFUser::class);
-        $this->user->allows()->getId()->andReturns(102);
+        $this->user = $this->createMock(\PFUser::class);
+        $this->user->method('getId')->willReturn(102);
 
-        $this->tracker  = \Mockery::spy(Tracker::class);
+        $this->tracker  = $this->createMock(Tracker::class);
         $this->time     = new Time(83, 102, 2, '2018-04-04', 81, 'g');
-        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
 
-        $this->tracker->shouldReceive([
-            'getGroupId' => 102,
-            'getId'      => 16,
-        ]);
+        $this->tracker->method('getGroupId')->willReturn(102);
+        $this->tracker->method('getId')->willReturn(16);
 
-        $this->artifact->shouldReceive([
-            'getTracker' => $this->tracker,
-            'getId'      => 200,
-        ]);
+        $this->artifact->method('getTracker')->willReturn($this->tracker);
+        $this->artifact->method('getId')->willReturn(200);
 
-        $this->request->allows()->get('time-id')->andReturns(83);
+        $this->request->method('get')->with('time-id')->willReturn(83);
 
-        $this->csrf = \Mockery::spy(CSRFSynchronizerToken::class);
-        $this->csrf->allows()->check()->andReturns(true);
+        $this->csrf = $this->createMock(CSRFSynchronizerToken::class);
+        $this->csrf->method('check')->willReturn(true);
     }
 
-    public function testItThrowsTimeTrackingNoTimeExceptionToDeleteTime()
+    public function testItThrowsTimeTrackingNoTimeExceptionToDeleteTime(): void
     {
-        $this->time_retriever->allows()->getTimeByIdForUser($this->user, $this->time->getId())->andReturns(null);
+        $this->time_retriever->method('getTimeByIdForUser')->with($this->user, $this->time->getId())->willReturn(null);
         $this->expectException(TimeTrackingNoTimeException::class);
 
         $this->time_controller->deleteTimeForUser($this->request, $this->user, $this->artifact, $this->csrf);
     }
 
-    public function testItThrowsTimeTrackingNoTimeExceptionToEditTime()
+    public function testItThrowsTimeTrackingNoTimeExceptionToEditTime(): void
     {
-        $this->time_retriever->allows()->getTimeByIdForUser($this->user, $this->time->getId())->andReturns(null);
+        $this->time_retriever->method('getTimeByIdForUser')->with($this->user, $this->time->getId())->willReturn(null);
         $this->expectException(TimeTrackingNoTimeException::class);
 
         $this->time_controller->editTimeForUser($this->request, $this->user, $this->artifact, $this->csrf);

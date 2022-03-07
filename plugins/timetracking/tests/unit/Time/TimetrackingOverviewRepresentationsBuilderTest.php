@@ -25,7 +25,6 @@
 
 namespace Tuleap\Timetracking\Time;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tracker;
 use Tracker_REST_TrackerRestBuilder;
@@ -36,64 +35,46 @@ use Tuleap\Timetracking\REST\v1\TimetrackingOverviewRepresentationsBuilder;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\TrackerColor;
 
-class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var AdminDao
+     * @var AdminDao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $admin_dao;
-
     /**
-     * @var PermissionsRetriever
+     * @var PermissionsRetriever&\PHPUnit\Framework\MockObject\MockObject
      */
     private $permissions_retriever;
-
     /**
-     * @var TrackerFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerFactory
      */
     private $tracker_factory;
-
     /**
-     * @var Tracker_REST_TrackerRestBuilder
+     * @var Tracker_REST_TrackerRestBuilder&\PHPUnit\Framework\MockObject\MockObject
      */
     private $tracker_rest_builder;
-
+    private TimetrackingOverviewRepresentationsBuilder $timetracking_overview_representations_builder;
     /**
-     * @var TimetrackingOverviewRepresentationsBuilder
-     */
-    private $timetracking_overview_representations_builder;
-
-    /**
-     * @var Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var \PFUser
+     * @var \PHPUnit\Framework\MockObject\MockObject&\PFUser
      */
     private $user;
-
     /**
-     * @var Project
+     * @var Project&\PHPUnit\Framework\MockObject\MockObject
      */
     private $project;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker
+     */
+    private $tracker;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->admin_dao = \Mockery::spy(
-            \Tuleap\Timetracking\Admin\AdminDao::class
-        );
-
-        $this->permissions_retriever = \Mockery::spy(
-            \Tuleap\Timetracking\Permissions\PermissionsRetriever::class
-        );
-
-        $this->tracker_factory                               = \Mockery::spy(\TrackerFactory::class);
-        $this->tracker_rest_builder                          = \Mockery::spy(\Tracker_REST_TrackerRestBuilder::class);
+        $this->admin_dao                                     = $this->createMock(\Tuleap\Timetracking\Admin\AdminDao::class);
+        $this->permissions_retriever                         = $this->createMock(\Tuleap\Timetracking\Permissions\PermissionsRetriever::class);
+        $this->tracker_factory                               = $this->createMock(\TrackerFactory::class);
+        $this->tracker_rest_builder                          = $this->createMock(\Tracker_REST_TrackerRestBuilder::class);
         $this->timetracking_overview_representations_builder = new TimetrackingOverviewRepresentationsBuilder(
             $this->admin_dao,
             $this->permissions_retriever,
@@ -101,36 +82,37 @@ class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\PHPUni
             $this->tracker_rest_builder
         );
 
-        $this->user    = \Mockery::spy(\PFUser::class);
-        $this->project = \Mockery::spy(Project::class);
-        $this->user->allows()->getId()->andReturns(102);
+        $this->user = $this->createMock(\PFUser::class);
+        $this->user->method('getId')->willReturn(102);
 
-        $this->tracker = \Mockery::spy(Tracker::class);
-        $this->tracker->shouldReceive(
-            [
-                'getId'    => 16,
-                'getName'  => 'tracker name',
-                'getColor' => TrackerColor::default(),
-            ]
-        );
+        $this->project = $this->createMock(Project::class);
+        $this->project->method('getID')->willReturn(101);
+        $this->project->method('getPublicName')->willReturn('project01');
+        $this->project->method('getIconUnicodeCodepoint')->willReturn('');
+
+        $this->tracker = $this->createMock(Tracker::class);
+        $this->tracker->method('getId')->willReturn(16);
+        $this->tracker->method('getName')->willReturn('tracker name');
+        $this->tracker->method('getColor')->willReturn(TrackerColor::default());
+        $this->tracker->method('getProject')->willReturn($this->project);
     }
 
-    public function testGetTrackersMinimalRepresentationWithTimetracking()
+    public function testGetTrackersMinimalRepresentationWithTimetracking(): void
     {
-        $this->permissions_retriever->allows()->userCanSeeAllTimesInTracker(
+        $this->permissions_retriever->method('userCanSeeAllTimesInTracker')->with(
             $this->user,
             $this->tracker
-        )->andReturns(true);
-        $this->admin_dao->shouldReceive("foundRows")->andReturns(1);
-        $this->admin_dao->shouldReceive('getProjectTrackersWithEnabledTimetracking')->andReturns(
+        )->willReturn(true);
+        $this->admin_dao->method("foundRows")->willReturn(1);
+        $this->admin_dao->method('getProjectTrackersWithEnabledTimetracking')->willReturn(
             [
                 ['tracker_id' => 16],
             ]
         );
 
-        $this->tracker_factory->shouldReceive('getTrackerById')->with(16)->andReturn($this->tracker);
+        $this->tracker_factory->method('getTrackerById')->with(16)->willReturn($this->tracker);
 
-        $this->tracker->shouldReceive('userCanView')->with($this->user)->andReturn(true);
+        $this->tracker->method('userCanView')->with($this->user)->willReturn(true);
         $result = $this->timetracking_overview_representations_builder->getTrackersMinimalRepresentationsWithTimetracking(
             $this->user,
             $this->project,
@@ -138,34 +120,43 @@ class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\PHPUni
             0
         );
 
-        $this->assertEquals($this->tracker->getId(), $result["trackers"][0]->id);
-        $this->assertEquals(1, $result["total_trackers"]);
+        self::assertEquals($this->tracker->getId(), $result["trackers"][0]->id);
+        self::assertEquals(1, $result["total_trackers"]);
     }
 
-    public function testGetTrackersFullRepresentationWithTimetracking()
+    public function testGetTrackersFullRepresentationWithTimetracking(): void
     {
-        $tracker_representation     = \Mockery::mock(CompleteTrackerRepresentation::class);
-        $tracker_representation->id = $this->tracker->getId();
+        $this->tracker->method('getParent')->willReturn(null);
+        $this->tracker->method('getUri')->willReturn('');
+        $this->tracker->method('getDescription')->willReturn('');
+        $this->tracker->method('getItemName')->willReturn('tracker01');
 
-        $this->permissions_retriever->allows()->userCanSeeAllTimesInTracker(
+        $tracker_representation = CompleteTrackerRepresentation::build(
+            $this->tracker,
+            [],
+            [],
+            []
+        );
+
+        $this->permissions_retriever->method('userCanSeeAllTimesInTracker')->with(
             $this->user,
             $this->tracker
-        )->andReturns(true);
+        )->willReturn(true);
 
-        $this->admin_dao->shouldReceive("foundRows")->andReturns(1);
-        $this->admin_dao->shouldReceive('getProjectTrackersWithEnabledTimetracking')->andReturns(
+        $this->admin_dao->method("foundRows")->willReturn(1);
+        $this->admin_dao->method('getProjectTrackersWithEnabledTimetracking')->willReturn(
             [
                 ['tracker_id' => 16],
             ]
         );
 
-        $this->tracker_factory->shouldReceive('getTrackerById')->with(16)->andReturn($this->tracker);
-        $this->tracker_rest_builder->shouldReceive('getTrackerRepresentationInTrackerContext')->with(
+        $this->tracker_factory->method('getTrackerById')->with(16)->willReturn($this->tracker);
+        $this->tracker_rest_builder->method('getTrackerRepresentationInTrackerContext')->with(
             $this->user,
             $this->tracker
-        )->andReturn($tracker_representation);
+        )->willReturn($tracker_representation);
 
-        $this->tracker->shouldReceive('userCanView')->with($this->user)->andReturn(true);
+        $this->tracker->method('userCanView')->with($this->user)->willReturn(true);
         $result = $this->timetracking_overview_representations_builder->getTrackersFullRepresentationsWithTimetracking(
             $this->user,
             $this->project,
@@ -173,7 +164,7 @@ class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\PHPUni
             0
         );
 
-        $this->assertEquals($tracker_representation->id, $result["trackers"][0]->id);
-        $this->assertEquals(1, $result["total_trackers"]);
+        self::assertEquals($tracker_representation->id, $result["trackers"][0]->id);
+        self::assertEquals(1, $result["total_trackers"]);
     }
 }

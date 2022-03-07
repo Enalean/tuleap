@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\JiraImporter;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
@@ -38,29 +36,22 @@ use XML_SimpleXMLCDATAFactory;
 
 final class JiraXMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var JiraXMLExport
-     */
-    private $exporter;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WorklogRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&WorklogRetriever
      */
     private $worklog_retriever;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JiraUserRetriever
+     * @var JiraUserRetriever&\PHPUnit\Framework\MockObject\MockObject
      */
     private $jira_user_retriever;
+    private JiraXMLExport $exporter;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->worklog_retriever   = Mockery::mock(WorklogRetriever::class);
-        $this->jira_user_retriever = Mockery::mock(JiraUserRetriever::class);
+        $this->worklog_retriever   = $this->createMock(WorklogRetriever::class);
+        $this->jira_user_retriever = $this->createMock(JiraUserRetriever::class);
 
         $this->exporter = new JiraXMLExport(
             $this->worklog_retriever,
@@ -87,10 +78,11 @@ final class JiraXMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $issue_collection->addIssueRepresentationInCollection($issue_representation);
 
-        $this->worklog_retriever->shouldReceive('getIssueWorklogsFromAPI')
-            ->once()
+        $this->worklog_retriever
+            ->expects(self::once())
+            ->method('getIssueWorklogsFromAPI')
             ->with($issue_representation)
-            ->andReturn([
+            ->willReturn([
                 new Worklog(
                     new \DateTimeImmutable('2021-02-08T19:06:41.386+0100'),
                     18000,
@@ -105,13 +97,14 @@ final class JiraXMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
                 ),
             ]);
 
-        $time_user = Mockery::mock(PFUser::class);
-        $time_user->shouldReceive('getUserName')->andReturn('user_time');
-        $time_user->shouldReceive('getId')->andReturn('147');
+        $time_user = $this->createMock(PFUser::class);
+        $time_user->method('getUserName')->willReturn('user_time');
+        $time_user->method('getId')->willReturn('147');
 
-        $this->jira_user_retriever->shouldReceive('retrieveJiraAuthor')
-            ->once()
-            ->andReturn($time_user);
+        $this->jira_user_retriever
+            ->expects(self::once())
+            ->method('retrieveJiraAuthor')
+            ->willReturn($time_user);
 
         $this->exporter->exportJiraTimetracking(
             $xml_tracker,
@@ -121,12 +114,12 @@ final class JiraXMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertTimetrackingConfiguration($xml_tracker);
 
-        $this->assertTrue(isset($xml_tracker->timetracking->time));
-        $this->assertSame("2021-02-08T19:06:41+01:00", (string) $xml_tracker->timetracking->time->day);
-        $this->assertSame("300", (string) $xml_tracker->timetracking->time->minutes);
-        $this->assertSame("user_time", (string) $xml_tracker->timetracking->time->user);
-        $this->assertSame("username", (string) $xml_tracker->timetracking->time->user['format']);
-        $this->assertSame("content 01 content 02", (string) $xml_tracker->timetracking->time->step);
+        self::assertTrue(isset($xml_tracker->timetracking->time));
+        self::assertSame("2021-02-08T19:06:41+01:00", (string) $xml_tracker->timetracking->time->day);
+        self::assertSame("300", (string) $xml_tracker->timetracking->time->minutes);
+        self::assertSame("user_time", (string) $xml_tracker->timetracking->time->user);
+        self::assertSame("username", (string) $xml_tracker->timetracking->time->user['format']);
+        self::assertSame("content 01 content 02", (string) $xml_tracker->timetracking->time->step);
     }
 
     public function testItOnlyEnablesTimetrackingConfigurationIfProviderIsNotKnown(): void
@@ -135,7 +128,7 @@ final class JiraXMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
         $platform_configuration = new PlatformConfiguration();
         $issue_collection       = new IssueAPIRepresentationCollection();
 
-        $this->worklog_retriever->shouldNotReceive('getIssueWorklogsFromAPI');
+        $this->worklog_retriever->expects(self::never())->method('getIssueWorklogsFromAPI');
 
         $this->exporter->exportJiraTimetracking(
             $xml_tracker,
@@ -145,19 +138,19 @@ final class JiraXMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertTimetrackingConfiguration($xml_tracker);
 
-        $this->assertFalse(isset($xml_tracker->timetracking->time));
+        self::assertFalse(isset($xml_tracker->timetracking->time));
     }
 
     private function assertTimetrackingConfiguration(SimpleXMLElement $xml_tracker): void
     {
-        $this->assertTrue(isset($xml_tracker->timetracking));
-        $this->assertSame("1", (string) $xml_tracker->timetracking['is_enabled']);
+        self::assertTrue(isset($xml_tracker->timetracking));
+        self::assertSame("1", (string) $xml_tracker->timetracking['is_enabled']);
 
-        $this->assertTrue(isset($xml_tracker->timetracking->permissions));
-        $this->assertTrue(isset($xml_tracker->timetracking->permissions->write));
-        $this->assertCount(1, $xml_tracker->timetracking->permissions->write->children());
-        $this->assertSame("project_members", (string) $xml_tracker->timetracking->permissions->write->ugroup);
+        self::assertTrue(isset($xml_tracker->timetracking->permissions));
+        self::assertTrue(isset($xml_tracker->timetracking->permissions->write));
+        self::assertCount(1, $xml_tracker->timetracking->permissions->write->children());
+        self::assertSame("project_members", (string) $xml_tracker->timetracking->permissions->write->ugroup);
 
-        $this->assertFalse(isset($xml_tracker->timetracking->permissions->read));
+        self::assertFalse(isset($xml_tracker->timetracking->permissions->read));
     }
 }

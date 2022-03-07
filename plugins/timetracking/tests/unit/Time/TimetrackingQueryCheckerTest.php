@@ -25,44 +25,40 @@
 
 namespace Tuleap\Timetracking\Time;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Timetracking\REST\v1\TimetrackingQueryChecker;
 use Luracast\Restler\RestException;
 
 class TimetrackingQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * GetTimesByTrackersQueryChecker
-     */
-    private $checker;
+    private TimetrackingQueryChecker $checker;
 
     public function setUp(): void
     {
         $this->checker = new TimetrackingQueryChecker();
     }
 
-    public function testPassWhenQueryIsValid()
+    public function testPassWhenQueryIsValid(): void
     {
         $json_query = ["trackers_id" => [1, 2], "start_date" => "2018-11-20T00:00:00+01", "end_date" => "2018-12-30T00:00:00+01"];
-        $this->assertNull($this->checker->checkQuery($json_query));
+        $this->checker->checkQuery($json_query);
+        $this->expectNotToPerformAssertions();
     }
 
-    public function testPassWhenNoTrackers()
+    public function testPassWhenNoTrackers(): void
     {
         $json_query = ["start_date" => "2018-11-20T00:00:00+01", "end_date" => "2018-12-30T00:00:00+01"];
-        $this->assertNull($this->checker->checkQuery($json_query));
+        $this->checker->checkQuery($json_query);
+        $this->expectNotToPerformAssertions();
     }
 
-    public function testPassWhenStartDateEqualsEndDate()
+    public function testPassWhenStartDateEqualsEndDate(): void
     {
         $json_query = ["trackers_id" => [1, 2], "start_date" => "2018-11-20T00:00:00+01", "end_date" => "2018-11-20T00:00:00+01"];
-
-        $this->assertNull($this->checker->checkQuery($json_query));
+        $this->checker->checkQuery($json_query);
+        $this->expectNotToPerformAssertions();
     }
 
-    public function testItRaiseExeptionWhenBadDates()
+    public function testItRaiseExeptionWhenBadDates(): void
     {
         $json_query = ["trackers_id" => [1, 2], "start_date" => "2018-11-20T00:00:00+01", "end_date" => "Banane"];
 
@@ -73,7 +69,7 @@ class TimetrackingQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->checker->checkQuery($json_query);
     }
 
-    public function testItRaiseExeptionWhenStartDateGreaterThanEndDate()
+    public function testItRaiseExeptionWhenStartDateGreaterThanEndDate(): void
     {
         $json_query = ["trackers_id" => [1, 2], "start_date" => "2019-11-20T00:00:00+01", "end_date" => "2018-11-20T00:00:00+01"];
 
@@ -84,7 +80,7 @@ class TimetrackingQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->checker->checkQuery($json_query);
     }
 
-    public function testItRaiseExeptionWhenNoDates()
+    public function testItRaiseExeptionWhenNoDates(): void
     {
         $json_query = ["trackers_id" => [1, 2]];
 
@@ -92,10 +88,10 @@ class TimetrackingQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectExceptionCode(400);
         $this->expectExceptionMessage('Please provide a start date and an end date');
 
-        $this->checker->checkQuery($json_query, true);
+        $this->checker->checkQuery($json_query);
     }
 
-    public function testItRaiseExeptionWhenBadIds()
+    public function testItRaiseExeptionWhenBadIds(): void
     {
         $json_query = ["trackers_id" => [1, "bad id"], "start_date" => "2018-11-20T00:00:00+01", "end_date" => "2018-12-30T00:00:00+01"];
 
@@ -103,6 +99,6 @@ class TimetrackingQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectExceptionCode(400);
         $this->expectExceptionMessage('Please provide valid trackers\' ids');
 
-        $this->checker->checkQuery($json_query, true);
+        $this->checker->checkQuery($json_query);
     }
 }

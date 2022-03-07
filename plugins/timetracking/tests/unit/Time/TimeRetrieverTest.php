@@ -20,80 +20,89 @@
 
 namespace Tuleap\Timetracking\Time;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class TimeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TimeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var TimeRetriever
+     * @var TimeDao&\PHPUnit\Framework\MockObject\MockObject
      */
-    private $retriever;
+    private $dao;
+    /**
+     * @var \Tuleap\Timetracking\Admin\AdminDao&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $admin_dao;
+    /**
+     * @var \Tuleap\Timetracking\Permissions\PermissionsRetriever&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $permissions_retriever;
+    private TimeRetriever $retriever;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\PFUser
+     */
+    private $user;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker
+     */
+    private $tracker;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\Tracker\Artifact\Artifact
+     */
+    private $artifact;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->dao                   = \Mockery::spy(\Tuleap\Timetracking\Time\TimeDao::class);
-        $this->admin_dao             = \Mockery::spy(\Tuleap\Timetracking\Admin\AdminDao::class);
-        $this->tracker_dao           = \Mockery::spy(\TrackerDao::class);
-        $this->permissions_retriever = \Mockery::spy(\Tuleap\Timetracking\Permissions\PermissionsRetriever::class);
+        $this->dao                   = $this->createMock(\Tuleap\Timetracking\Time\TimeDao::class);
+        $this->admin_dao             = $this->createMock(\Tuleap\Timetracking\Admin\AdminDao::class);
+        $this->permissions_retriever = $this->createMock(\Tuleap\Timetracking\Permissions\PermissionsRetriever::class);
 
         $this->retriever = new TimeRetriever($this->dao, $this->permissions_retriever, $this->admin_dao, \ProjectManager::instance());
 
-        $this->user = \Mockery::spy(\PFUser::class);
-        $this->user->allows()->getId()->andReturns(102);
+        $this->user = $this->createMock(\PFUser::class);
+        $this->user->method('getId')->willReturn(102);
 
-        $this->tracker  = \Mockery::spy(Tracker::class);
-        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->tracker  = $this->createMock(Tracker::class);
+        $this->artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
 
-        $this->tracker->shouldReceive([
-            'getId'      => 16,
-        ]);
+        $this->tracker->method('getId')->willReturn(16);
 
-        $this->artifact->shouldReceive([
-            'getTracker' => $this->tracker,
-            'getId'      => 200,
-        ]);
+        $this->artifact->method('getTracker')->willReturn($this->tracker);
+        $this->artifact->method('getId')->willReturn(200);
     }
 
-    public function testItReturnsAnEmptyArrayIfUserIsNotAbleToReadTimes()
+    public function testItReturnsAnEmptyArrayIfUserIsNotAbleToReadTimes(): void
     {
-        $this->permissions_retriever->allows()->userCanSeeAllTimesInTracker($this->user, $this->tracker)->andReturns(false);
-        $this->permissions_retriever->allows()->userCanAddTimeInTracker($this->user, $this->tracker)->andReturns(false);
+        $this->permissions_retriever->method('userCanSeeAllTimesInTracker')->with($this->user, $this->tracker)->willReturn(false);
+        $this->permissions_retriever->method('userCanAddTimeInTracker')->with($this->user, $this->tracker)->willReturn(false);
 
-        $this->dao->shouldNotReceive('getTimesAddedInArtifactByUser');
-        $this->dao->shouldNotReceive('getAllTimesAddedInArtifact');
+        $this->dao->expects(self::never())->method('getTimesAddedInArtifactByUser');
+        $this->dao->expects(self::never())->method('getAllTimesAddedInArtifact');
 
-        $this->assertEmpty($this->retriever->getTimesForUser($this->user, $this->artifact));
+        self::assertEmpty($this->retriever->getTimesForUser($this->user, $this->artifact));
     }
 
-    public function testItRetrievesTimesIfTheUserIsWriter()
+    public function testItRetrievesTimesIfTheUserIsWriter(): void
     {
-        $this->permissions_retriever->allows()->userCanSeeAllTimesInTracker($this->user, $this->tracker)->andReturns(false);
-        $this->permissions_retriever->allows()->userCanAddTimeInTracker($this->user, $this->tracker)->andReturns(true);
+        $this->permissions_retriever->method('userCanSeeAllTimesInTracker')->with($this->user, $this->tracker)->willReturn(false);
+        $this->permissions_retriever->method('userCanAddTimeInTracker')->with($this->user, $this->tracker)->willReturn(true);
 
-        $epected_once = $this->dao->allows()->getTimesAddedInArtifactByUser(102, 200)->andReturns([]);
-        $epected_once->times(1);
-
-        $this->dao->shouldNotReceive('getAllTimesAddedInArtifact');
+        $this->dao->expects(self::once())->method('getTimesAddedInArtifactByUser')->with(102, 200)->willReturn([]);
+        $this->dao->expects(self::never())->method('getAllTimesAddedInArtifact');
 
         $this->retriever->getTimesForUser($this->user, $this->artifact);
     }
 
-    public function testItRetrievesTimesIfTheUserIsGlobalReader()
+    public function testItRetrievesTimesIfTheUserIsGlobalReader(): void
     {
-        $this->permissions_retriever->allows()->userCanSeeAllTimesInTracker($this->user, $this->tracker)->andReturns(true);
-        $this->permissions_retriever->allows()->userCanAddTimeInTracker($this->user, $this->tracker)->andReturns(false);
+        $this->permissions_retriever->method('userCanSeeAllTimesInTracker')->with($this->user, $this->tracker)->willReturn(true);
+        $this->permissions_retriever->method('userCanAddTimeInTracker')->with($this->user, $this->tracker)->willReturn(false);
 
-        $epected_once = $this->dao->allows()->getAllTimesAddedInArtifact(200)->andReturns([]);
-        $epected_once->times(1);
-
-        $this->dao->shouldNotReceive('getTimesAddedInArtifactByUser');
+        $this->dao->expects(self::once())->method('getAllTimesAddedInArtifact')->with(200)->willReturn([]);
+        $this->dao->expects(self::never())->method('getTimesAddedInArtifactByUser');
 
         $this->retriever->getTimesForUser($this->user, $this->artifact);
     }

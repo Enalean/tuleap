@@ -22,7 +22,6 @@
 namespace Tuleap\Timetracking\REST\v1;
 
 use Luracast\Restler\RestException;
-use Mockery as M;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Timetracking\Admin\TimetrackingEnabler;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
@@ -33,63 +32,58 @@ use Tuleap\Timetracking\REST\v1\Exception\UserCannotSeeTrackedTimeException;
 use Tuleap\Timetracking\Time\Time;
 use Tuleap\Timetracking\Time\TimeRetriever;
 
-class ArtifactTimeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ArtifactTimeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var ArtifactTimeRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&TimeRetriever
      */
-    private $retriever;
+    private $time_retriever;
     /**
-     * @var M\MockInterface|\PFUser
-     */
-    private $user;
-    /**
-     * @var M\MockInterface|\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var M\MockInterface|\Tuleap\Tracker\Artifact\Artifact
-     */
-    private $artifact;
-    /**
-     * @var M\MockInterface|ProjectStatusVerificator
-     */
-    private $project_verificator;
-    /**
-     * @var M\MockInterface|TimetrackingEnabler
-     */
-    private $timetracking_enabler;
-    /**
-     * @var M\MockInterface|\Tracker
-     */
-    private $tracker;
-    /**
-     * @var M\MockInterface|\Project
-     */
-    private $project;
-    /**
-     * @var M\MockInterface|PermissionsRetriever
+     * @var PermissionsRetriever&\PHPUnit\Framework\MockObject\MockObject
      */
     private $permissions_retriever;
     /**
-     * @var M\MockInterface|TimeRetriever
+     * @var TimetrackingEnabler&\PHPUnit\Framework\MockObject\MockObject
      */
-    private $time_retriever;
+    private $timetracking_enabler;
+    /**
+     * @var ProjectStatusVerificator&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $project_verificator;
+    /**
+     * @var \Project&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $project;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker
+     */
+    private $tracker;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\Tracker\Artifact\Artifact
+     */
+    private $artifact;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\PFUser
+     */
+    private $user;
+    private ArtifactTimeRetriever $retriever;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->time_retriever        = M::mock(TimeRetriever::class);
-        $this->permissions_retriever = M::mock(PermissionsRetriever::class);
-        $this->timetracking_enabler  = M::mock(TimetrackingEnabler::class);
-        $this->project_verificator   = M::mock(ProjectStatusVerificator::class);
-        $this->project               = M::mock(\Project::class);
-        $this->tracker               = M::mock(\Tracker::class, ['getProject' => $this->project]);
-        $this->artifact              = M::mock(\Tuleap\Tracker\Artifact\Artifact::class, ['getTracker' => $this->tracker]);
-        $this->artifact_factory      = M::mock(\Tracker_ArtifactFactory::class);
-        $this->user                  = M::mock(\PFUser::class);
+        $this->time_retriever        = $this->createMock(TimeRetriever::class);
+        $this->permissions_retriever = $this->createMock(PermissionsRetriever::class);
+        $this->timetracking_enabler  = $this->createMock(TimetrackingEnabler::class);
+        $this->project_verificator   = $this->createMock(ProjectStatusVerificator::class);
+        $this->project               = $this->createMock(\Project::class);
+        $this->tracker               = $this->createMock(\Tracker::class);
+        $this->artifact              = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->artifact_factory      = $this->createMock(\Tracker_ArtifactFactory::class);
+        $this->user                  = $this->createMock(\PFUser::class);
         $this->retriever             = new ArtifactTimeRetriever(
             $this->artifact_factory,
             $this->project_verificator,
@@ -97,73 +91,76 @@ class ArtifactTimeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->permissions_retriever,
             $this->time_retriever
         );
+
+        $this->tracker->method('getProject')->willReturn($this->project);
+        $this->artifact->method('getTracker')->willReturn($this->tracker);
     }
 
-    public function testItRaisesAnExceptionWhenQueryIsEmpty()
+    public function testItRaisesAnExceptionWhenQueryIsEmpty(): void
     {
         $this->expectException(ArtifactIDMissingException::class);
         $this->retriever->getArtifactTime($this->user, '');
     }
 
-    public function testItRaisesAnExceptionWhenQueryIsNotValidJSON()
+    public function testItRaisesAnExceptionWhenQueryIsNotValidJSON(): void
     {
         $this->expectException(ArtifactIDMissingException::class);
         $this->retriever->getArtifactTime($this->user, 'artifact id => 12');
     }
 
-    public function testItRaisesAnExceptionWhenArtifactDoesntExist()
+    public function testItRaisesAnExceptionWhenArtifactDoesntExist(): void
     {
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 12)->andReturns(null);
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->with($this->user, 12)->willReturn(null);
         $this->expectException(ArtifactDoesNotExistException::class);
         $this->retriever->getArtifactTime($this->user, '{"artifact_id": "12"}');
     }
 
-    public function testItRaisesAnExceptionWhenArtifactBelongsToAnInvalidProject()
+    public function testItRaisesAnExceptionWhenArtifactBelongsToAnInvalidProject(): void
     {
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturns($this->artifact);
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($this->artifact);
 
-        $this->project_verificator->shouldReceive('checkProjectStatusAllowsAllUsersToAccessIt')->with($this->project)->andThrow(new RestException(403));
+        $this->project_verificator->method('checkProjectStatusAllowsAllUsersToAccessIt')->with($this->project)->willThrowException(new RestException(403));
         $this->expectException(RestException::class);
 
         $this->retriever->getArtifactTime($this->user, '{"artifact_id": "12"}');
     }
 
-    public function testItRaisesAnExceptionWhenTrackerDoesntHaveTimeTracking()
+    public function testItRaisesAnExceptionWhenTrackerDoesntHaveTimeTracking(): void
     {
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturns($this->artifact);
-        $this->project_verificator->shouldReceive('checkProjectStatusAllowsAllUsersToAccessIt');
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($this->artifact);
+        $this->project_verificator->method('checkProjectStatusAllowsAllUsersToAccessIt');
 
-        $this->timetracking_enabler->shouldReceive('isTimetrackingEnabledForTracker')->with($this->tracker)->andReturns(false);
+        $this->timetracking_enabler->method('isTimetrackingEnabledForTracker')->with($this->tracker)->willReturn(false);
         $this->expectException(NoTimetrackingForTrackerException::class);
 
         $this->retriever->getArtifactTime($this->user, '{"artifact_id": "12"}');
     }
 
-    public function testItRaisesAnExceptionWhenUserCannotSeeAggregatedTimesOnTracker()
+    public function testItRaisesAnExceptionWhenUserCannotSeeAggregatedTimesOnTracker(): void
     {
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturns($this->artifact);
-        $this->project_verificator->shouldReceive('checkProjectStatusAllowsAllUsersToAccessIt');
-        $this->timetracking_enabler->shouldReceive('isTimetrackingEnabledForTracker')->with($this->tracker)->andReturns(true);
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($this->artifact);
+        $this->project_verificator->method('checkProjectStatusAllowsAllUsersToAccessIt');
+        $this->timetracking_enabler->method('isTimetrackingEnabledForTracker')->with($this->tracker)->willReturn(true);
 
-        $this->permissions_retriever->shouldReceive('userCanSeeAllTimesInTracker')->andReturn(false);
+        $this->permissions_retriever->method('userCanSeeAllTimesInTracker')->willReturn(false);
         $this->expectException(UserCannotSeeTrackedTimeException::class);
 
         $this->retriever->getArtifactTime($this->user, '{"artifact_id": "12"}');
     }
 
-    public function testItReturnsACollectionOfTimes()
+    public function testItReturnsACollectionOfTimes(): void
     {
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturns($this->artifact);
-        $this->project_verificator->shouldReceive('checkProjectStatusAllowsAllUsersToAccessIt');
-        $this->timetracking_enabler->shouldReceive('isTimetrackingEnabledForTracker')->with($this->tracker)->andReturns(true);
-        $this->permissions_retriever->shouldReceive('userCanSeeAllTimesInTracker')->andReturn(true);
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($this->artifact);
+        $this->project_verificator->method('checkProjectStatusAllowsAllUsersToAccessIt');
+        $this->timetracking_enabler->method('isTimetrackingEnabledForTracker')->with($this->tracker)->willReturn(true);
+        $this->permissions_retriever->method('userCanSeeAllTimesInTracker')->willReturn(true);
 
         $times_for_user = [
             new Time(9000, 120, 12, '2018-12-12', 45, 'Write some tests'),
         ];
-        $this->time_retriever->shouldReceive('getTimesForUser')->with($this->user, $this->artifact)->andReturns($times_for_user);
+        $this->time_retriever->method('getTimesForUser')->with($this->user, $this->artifact)->willReturn($times_for_user);
 
         $times = $this->retriever->getArtifactTime($this->user, '{"artifact_id": "12"}');
-        $this->assertEquals(45, $times[0]->minutes);
+        self::assertEquals(45, $times[0]->minutes);
     }
 }

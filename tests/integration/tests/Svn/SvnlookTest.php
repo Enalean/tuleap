@@ -22,30 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\Svn;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use SVN_Svnlook;
 use Tuleap\TemporaryTestDirectory;
 
 final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
+    private SVN_Svnlook $svnlook;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Project
+     * @var Project&\PHPUnit\Framework\MockObject\MockObject
      */
     private $project;
-    /**
-     * @var SVN_Svnlook
-     */
-    private $svnlook;
 
     protected function setUp(): void
     {
         $project_name  = 'svnrepo';
-        $this->project = \Mockery::spy(Project::class);
-        $this->project->shouldReceive('getSVNRootPath')->andReturn($this->getTmpDir() . '/' . $project_name);
+        $this->project = $this->createMock(Project::class);
+        $this->project->method('getSVNRootPath')->willReturn($this->getTmpDir() . '/' . $project_name);
 
         $svnrepo = $this->getTmpDir() . '/' . $project_name;
 
@@ -61,7 +56,7 @@ final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
         $tags = $this->svnlook->getDirectoryListing($this->project, '/tags');
         $tags = array_values($tags);
         sort($tags);
-        $this->assertEquals(['/tags/', '/tags/1.0/', '/tags/2.0/'], $tags);
+        self::assertEquals(['/tags/', '/tags/1.0/', '/tags/2.0/'], $tags);
     }
 
     public function testItGetsTheTree(): void
@@ -70,12 +65,12 @@ final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected = ['/', 'tags/', 'tags/2.0/', 'tags/1.0/'];
 
-        $this->assertEqualsCanonicalizing($expected, $tree);
+        self::assertEqualsCanonicalizing($expected, $tree);
     }
 
     public function testItGetsHistoryOfAPath(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'REVISION   PATH',
                 '--------   ----',
@@ -89,16 +84,21 @@ final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $expected_message = 'this is 1.0';
         $log              = $this->svnlook->getInfo($this->project, 1);
-        $this->assertCount(4, $log);
-        $this->assertEquals('donald_duck', $log[0]);
-        $this->assertEquals(strlen($expected_message), $log[2]);
-        $this->assertEquals($expected_message, $log[3]);
+        self::assertCount(4, $log);
+        self::assertEquals('donald_duck', $log[0]);
+        self::assertEquals(strlen($expected_message), $log[2]);
+        self::assertEquals($expected_message, $log[3]);
+
+        $pos_parenthesis = strpos($log[1], '(');
+        if ($pos_parenthesis === false) {
+            $this->fail('first ( not found');
+        }
 
         // Date
-        $str_date      = substr($log[1], 0, strpos($log[1], '('));
+        $str_date      = substr($log[1], 0, $pos_parenthesis);
         $log_timestamp = strtotime($str_date);
 
         // Same year-month-day
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', $log_timestamp));
+        self::assertEquals(date('Y-m-d'), date('Y-m-d', $log_timestamp));
     }
 }

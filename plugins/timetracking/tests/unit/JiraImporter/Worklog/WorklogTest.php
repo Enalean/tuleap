@@ -22,8 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\JiraImporter\Worklog;
 
-
-class WorklogTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WorklogTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAWorklogObjectFromAPIResponse(): void
     {
@@ -43,13 +42,13 @@ class WorklogTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $worklog = Worklog::buildFromAPIResponse($response);
 
-        $this->assertSame(1612807601, $worklog->getStartDate()->getTimestamp());
-        $this->assertSame(144000, $worklog->getSeconds());
+        self::assertSame(1612807601, $worklog->getStartDate()->getTimestamp());
+        self::assertSame(144000, $worklog->getSeconds());
 
-        $this->assertSame("What Ever", $worklog->getAuthor()->getDisplayName());
-        $this->assertSame("whatever123", $worklog->getAuthor()->getJiraAccountId());
-        $this->assertSame("whatever@example.com", $worklog->getAuthor()->getEmailAddress());
-        $this->assertSame("*Comment* {color:#36b37e}*RED*{color}", $worklog->getComment());
+        self::assertSame("What Ever", $worklog->getAuthor()->getDisplayName());
+        self::assertSame("whatever123", $worklog->getAuthor()->getJiraAccountId());
+        self::assertSame("whatever@example.com", $worklog->getAuthor()->getEmailAddress());
+        self::assertSame("*Comment* {color:#36b37e}*RED*{color}", $worklog->getComment());
     }
 
     public function testItThrowsAnExceptionIfMandatoryKeyIsMissing(): void
