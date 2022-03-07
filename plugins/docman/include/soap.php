@@ -464,7 +464,13 @@ function _updateDocmanItem($sessionKey, $group_id, $item_id, $title, $descriptio
     if ($result instanceof SoapFault) {
         return $result;
     }
-    $result = _makeDocmanRequest($sessionKey, $group_id, 'update', _safe_array_merge_recursive($params, $extraParams));
+
+    try {
+        $result = _makeDocmanRequest($sessionKey, $group_id, 'update', _safe_array_merge_recursive($params, $extraParams));
+    } catch (\Tuleap\Request\ForbiddenException $exception) {
+        return new SoapFault(null, 'You do not have sufficient access rights to edit this item.');
+    }
+
     if ($result instanceof SoapFault) {
         return $result;
     }

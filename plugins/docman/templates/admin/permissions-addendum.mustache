@@ -2,7 +2,7 @@
     {{# csrf }}
         {{> csrf_token_input }}
     {{/ csrf }}
-    {{# feature_flag }}
+
     <div class="tlp-form-element">
         <label class="tlp-label tlp-checkbox">
             <input type="hidden" name="forbid_writers_to_update" value="0">
@@ -17,5 +17,4 @@
             {{# dgettext }}tuleap-docman | When turned on, Writers will be allowed to set properties when they create a new document but will no longer be able to modify them afterward{{/ dgettext }}
         </p>
     </div>
-    {{/ feature_flag }}
 </div>

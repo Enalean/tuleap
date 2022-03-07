@@ -1270,9 +1270,10 @@ class Docman_Controller extends Controler
                 break;
 
             case 'edit':
-                if (! $this->userCanWrite($item->getId())) {
+                if (! $dpm->userCanUpdateItemProperties($this->getUser(), $item)) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
-                    $this->view = 'Details';
+                    $this->view                              = 'RedirectAfterCrud';
+                    $this->_viewParams['default_url_params'] = ['action'  => 'details', 'id' => $item->getId()];
                 } else {
                     $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
                     $mdFactory->appendAllListOfValuesToItem($item);
@@ -1413,6 +1414,12 @@ class Docman_Controller extends Controler
                 }
                 break;
             case 'update':
+                if (! $dpm->userCanUpdateItemProperties($this->getUser(), $item)) {
+                    $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
+                    $this->view                              = 'RedirectAfterCrud';
+                    $this->_viewParams['default_url_params'] = ['action'  => 'details', 'id' => $item->getId()];
+                    break;
+                }
                 $this->_viewParams['recurseOnDocs']   = false;
                 $this->_actionParams['recurseOnDocs'] = false;
                 if ($this->request->get('recurse_on_doc') == 1) {

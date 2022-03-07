@@ -76,6 +76,10 @@ class DocumentTreePresenter
      */
     public $is_obsolescence_date_metadata_used;
     /**
+     * @var bool
+     */
+    public $forbid_writers_to_update;
+    /**
      * @var string
      */
     public $csrf_token_name;
@@ -137,6 +141,7 @@ class DocumentTreePresenter
         bool $is_item_status_metadata_used,
         bool $is_obsolescence_date_metadata_used,
         bool $only_siteadmin_can_delete_option,
+        bool $forbid_writers_to_update,
         CSRFSynchronizerToken $csrf,
         FileDownloadLimits $file_download_limits,
         public bool $is_changelog_displayed_after_dnd,
@@ -159,6 +164,7 @@ class DocumentTreePresenter
         $this->embedded_are_allowed               = $embedded_are_allowed;
         $this->is_item_status_metadata_used       = $is_item_status_metadata_used;
         $this->is_obsolescence_date_metadata_used = $is_obsolescence_date_metadata_used;
+        $this->forbid_writers_to_update           = $forbid_writers_to_update;
         $this->csrf_token_name                    = $csrf->getTokenName();
         $this->csrf_token                         = $csrf->getToken();
         $this->max_archive_size                   = $file_download_limits->getMaxArchiveSize();

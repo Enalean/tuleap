@@ -24,11 +24,11 @@
                 v-bind:item="item"
                 v-bind:button-classes="'tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main'"
                 v-bind:icon-classes="'fas fa-share tlp-button-icon'"
-                v-if="!is_item_a_wiki_with_approval_table && !is_item_a_folder(item)"
+                v-if="!is_item_a_wiki_with_approval_table && !is_item_a_folder"
                 data-test="document-quicklook-action-button-new-version"
             />
             <new-item-button
-                v-if="item.user_can_write && is_item_a_folder(item)"
+                v-if="item.user_can_write && is_item_a_folder"
                 class="tlp-button-primary tlp-button-small tlp-button-outline"
                 v-bind:item="item"
                 data-test="document-quicklook-action-button-new-item"
@@ -43,7 +43,7 @@
                     v-bind:is-in-quick-look-mode="true"
                     v-bind:is-in-folder-empty-state="false"
                 >
-                    <template v-if="!is_item_a_folder(item) && item.user_can_write">
+                    <template v-if="!is_item_a_folder && item.user_can_write">
                         <lock-item
                             v-bind:item="item"
                             data-test="document-dropdown-menu-lock-item"
@@ -61,7 +61,7 @@
                         slot="update-properties"
                         data-test="document-dropdown-menu-update-properties"
                         v-bind:item="item"
-                        v-if="item.user_can_write"
+                        v-if="should_display_update_properties"
                     />
                     <update-permissions slot="update-permissions" v-bind:item="item" />
                 </drop-down-menu>
@@ -69,7 +69,7 @@
         </div>
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import DropDownMenu from "./DropDownMenu.vue";
 import CreateNewItemVersionButton from "./NewVersion/NewItemVersionButton.vue";
 import NewItemButton from "../ActionsButton/NewItemButton.vue";
@@ -80,32 +80,34 @@ import DropDownSeparator from "./DropDownSeparator.vue";
 import UpdateProperties from "./UpdateProperties/UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import { isFolder, isWiki } from "../../../helpers/type-check-helper";
-import { Component, Prop, Vue } from "vue-property-decorator";
 import type { Item } from "../../../type";
+import { computed } from "@vue/composition-api";
+import { useState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
+import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
 
-@Component({
-    components: {
-        UpdateProperties,
-        UpdatePermissions,
-        DropDownSeparator,
-        UnlockItem,
-        LockItem,
-        DropDownButton,
-        CreateNewItemVersionButton,
-        NewItemButton,
-        DropDownMenu,
-    },
-})
-export default class DropDownQuickLook extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
+const props = defineProps<{ item: Item }>();
 
-    get is_item_a_wiki_with_approval_table(): boolean {
-        return isWiki(this.item) && this.item.approval_table !== null;
-    }
+const { forbid_writers_to_update } = useState<Pick<ConfigurationState, "forbid_writers_to_update">>(
+    "configuration",
+    ["forbid_writers_to_update"]
+);
 
-    is_item_a_folder(item: Item): boolean {
-        return isFolder(item);
-    }
-}
+const is_item_a_wiki_with_approval_table = computed((): boolean => {
+    return isWiki(props.item) && props.item.approval_table !== null;
+});
+
+const is_item_a_folder = computed((): boolean => {
+    return isFolder(props.item);
+});
+
+const should_display_update_properties = computed((): boolean => {
+    return canUpdateProperties(forbid_writers_to_update.value, props.item);
+});
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

@@ -23,28 +23,34 @@ import localVue from "../../../helpers/local-vue";
 import DropDownCurrentFolder from "./DropDownCurrentFolder.vue";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import type { Folder, State } from "../../../type";
+import type { ConfigurationState } from "../../../store/configuration";
 
 describe("DropDownCurrentFolder", () => {
     function createWrapper(
         isInFolderEmptyState: boolean,
         user_can_write: boolean,
-        parent_id: number
+        can_user_manage: boolean,
+        parent_id: number,
+        forbid_writers_to_update: boolean
     ): Wrapper<DropDownCurrentFolder> {
-        const state = {
-            current_folder: {
-                id: 42,
-                title: "current folder title",
-                user_can_write,
-                parent_id,
-            } as Folder,
-        } as State;
-        const store_options = {
-            state,
-        };
-        const store = createStoreMock(store_options);
         return shallowMount(DropDownCurrentFolder, {
             localVue,
-            mocks: { $store: store },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        current_folder: {
+                            id: 42,
+                            title: "current folder title",
+                            user_can_write,
+                            can_user_manage,
+                            parent_id,
+                        } as Folder,
+                        configuration: {
+                            forbid_writers_to_update,
+                        } as ConfigurationState,
+                    } as unknown as State,
+                }),
+            },
             propsData: { isInFolderEmptyState },
         });
     }
@@ -52,7 +58,7 @@ describe("DropDownCurrentFolder", () => {
     it(`Given user does not have write permission on current folder
         When we display the dropdown
         Then user should not be able to manipulate folder content`, () => {
-        const wrapper = createWrapper(false, false, 3);
+        const wrapper = createWrapper(false, false, false, 3, false);
 
         expect(
             wrapper.find("[data-test=document-new-folder-creation-button]").exists()
@@ -64,7 +70,7 @@ describe("DropDownCurrentFolder", () => {
     it(`Given user has write permission on current folder
         When we display the dropdown
         Then user should be able to manipulate folder content`, () => {
-        const wrapper = createWrapper(false, true, 3);
+        const wrapper = createWrapper(false, true, false, 3, false);
 
         expect(
             wrapper.find("[data-test=document-new-folder-creation-button]").exists()
@@ -76,7 +82,7 @@ describe("DropDownCurrentFolder", () => {
     it(`Given user is docman writer and the current folder is not the root folder
         When we display the menu
         Then the delete button should be available`, () => {
-        const wrapper = createWrapper(false, true, 3);
+        const wrapper = createWrapper(false, true, false, 3, false);
 
         expect(wrapper.find("[data-test=document-delete-folder-button]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-delete-folder-separator]").exists()).toBeTruthy();
@@ -85,7 +91,7 @@ describe("DropDownCurrentFolder", () => {
     it(`Given user is docman writer and folder is root folder
         When we display the menu
         Then the delete button should NOT be available`, () => {
-        const wrapper = createWrapper(false, true, 0);
+        const wrapper = createWrapper(false, true, false, 0, false);
 
         expect(wrapper.find("[data-test=document-delete-folder-button]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-delete-folder-separator]").exists()).toBeFalsy();
@@ -94,8 +100,26 @@ describe("DropDownCurrentFolder", () => {
     it(`Given user is NOT docman writer
         When we display the menu
         Then the delete button should NOT be available`, () => {
-        const wrapper = createWrapper(false, false, 3);
+        const wrapper = createWrapper(false, false, false, 3, false);
         expect(wrapper.find("[data-test=document-delete-folder-button]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-delete-folder-separator]").exists()).toBeFalsy();
+    });
+
+    it(`Given writers are not allowed to update properties
+        And user is writer
+        When we display the menu
+        Then it does not display update properties entry`, () => {
+        const wrapper = createWrapper(false, true, false, 3, true);
+
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeFalsy();
+    });
+
+    it(`Given writers are not allowed to update properties
+        And user is manager
+        When we display the menu
+        Then it displays update properties entry`, () => {
+        const wrapper = createWrapper(false, true, true, 3, true);
+
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
     });
 });

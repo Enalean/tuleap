@@ -341,7 +341,7 @@ final class SearchResource extends AuthenticatedResource
             Docman_PermissionsManager::instance($project->getGroupId()),
             $current_user,
             $item,
-            new DoesItemHasExpectedTypeVisitor(Docman_Folder::class)
+            new DoesItemHasExpectedTypeVisitor(Docman_Folder::class),
         );
     }
 }
