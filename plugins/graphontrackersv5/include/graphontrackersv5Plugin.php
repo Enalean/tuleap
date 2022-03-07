@@ -23,6 +23,7 @@
 use Tuleap\GraphOnTrackersV5\Async\ChartDataController;
 use Tuleap\GraphOnTrackersV5\XML\Template\CompleteIssuesTemplate;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Registration\Template\IssuesTemplateDashboardDefinition;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 use Tuleap\Tracker\Template\CompleteIssuesTemplateEvent;
@@ -80,6 +81,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
             $this->addHook('javascript_file');
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
             $this->addHook(CompleteIssuesTemplateEvent::NAME);
+            $this->addHook(IssuesTemplateDashboardDefinition::NAME);
         }
         $this->allowedForProject = [];
     }
@@ -360,5 +362,10 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
         $event->addAllIssuesRenderers(...CompleteIssuesTemplate::getAllIssuesRenderers());
         $event->addMyIssuesRenderers(CompleteIssuesTemplate::getMyIssuesRenderer());
         $event->addOpenIssuesRenderers(CompleteIssuesTemplate::getOpenIssuesRenderer());
+    }
+
+    public function issuesTemplateDashboardDefinition(IssuesTemplateDashboardDefinition $dashboard_definition): void
+    {
+        CompleteIssuesTemplate::defineDashboards($dashboard_definition);
     }
 }

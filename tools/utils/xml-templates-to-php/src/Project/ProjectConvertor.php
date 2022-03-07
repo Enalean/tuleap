@@ -33,8 +33,14 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt;
 use Psr\Log\LoggerInterface;
+use Tuleap\Dashboard\XML\XMLColumn;
+use Tuleap\Dashboard\XML\XMLDashboard;
+use Tuleap\Dashboard\XML\XMLLine;
 use Tuleap\Project\Service\XML\XMLService;
 use Tuleap\Project\XML\XMLProject;
+use Tuleap\Widget\XML\XMLPreference;
+use Tuleap\Widget\XML\XMLPreferenceValue;
+use Tuleap\Widget\XML\XMLWidget;
 
 class ProjectConvertor
 {
@@ -70,6 +76,7 @@ class ProjectConvertor
                         ->withLongDescription($logger)
                         ->withServices()
                         ->withUserGroups($logger)
+                        ->withDashboards()
                         ->getExpr()
                 ),
             ),
@@ -99,6 +106,93 @@ class ProjectConvertor
                             )
                         ),
                     ]
+                );
+            }
+        }
+
+        return $this;
+    }
+
+    private function withDashboards(): self
+    {
+        if (count($this->xml_project->dashboards) > 0) {
+            foreach ($this->xml_project->dashboards->dashboard as $dashboard) {
+                $dashboard_expr = new New_(
+                    new Name('\\' . XMLDashboard::class),
+                    [new Arg(new String_((string) $dashboard['name']))]
+                );
+
+                foreach ($dashboard->line as $line) {
+                    $line_expr = $line['layout']
+                        ? new StaticCall(
+                            new Name('\\' . XMLLine::class),
+                            'withLayout',
+                            [new Arg(new String_((string) $line['layout']))]
+                        )
+                        : new StaticCall(
+                            new Name('\\' . XMLLine::class),
+                            'withDefaultLayout'
+                        );
+
+                    foreach ($line->column as $column) {
+                        $column_expr = new New_(
+                            new Name('\\' . XMLColumn::class),
+                        );
+
+                        foreach ($column->widget as $widget) {
+                            $widget_expr = new New_(
+                                new Name('\\' . XMLWidget::class),
+                                [new Arg(new String_((string) $widget['name']))]
+                            );
+
+                            foreach ($widget->preference as $preference) {
+                                $preference_expr = new New_(
+                                    new Name('\\' . XMLPreference::class),
+                                    [new Arg(new String_((string) $preference['name']))]
+                                );
+
+                                foreach ($preference->reference as $reference) {
+                                    $reference_expr = new StaticCall(
+                                        new Name('\\' . XMLPreferenceValue::class),
+                                        'ref',
+                                        [
+                                            new Arg(new String_((string) $reference['name'])),
+                                            new Arg(new String_((string) $reference['REF'])),
+                                        ]
+                                    );
+
+                                    $preference_expr = new MethodCall($preference_expr, 'withValue', [new Arg($reference_expr)]);
+                                }
+
+                                foreach ($preference->value as $value) {
+                                    $value_expr = new StaticCall(
+                                        new Name('\\' . XMLPreferenceValue::class),
+                                        'text',
+                                        [
+                                            new Arg(new String_((string) $value['name'])),
+                                            new Arg(new String_((string) $value)),
+                                        ]
+                                    );
+
+                                    $preference_expr = new MethodCall($preference_expr, 'withValue', [new Arg($value_expr)]);
+                                }
+
+                                $widget_expr = new MethodCall($widget_expr, 'withPreference', [new Arg($preference_expr)]);
+                            }
+
+                            $column_expr = new MethodCall($column_expr, 'withWidget', [new Arg($widget_expr)]);
+                        }
+
+                        $line_expr = new MethodCall($line_expr, 'withColumn', [new Arg($column_expr)]);
+                    }
+
+                    $dashboard_expr = new MethodCall($dashboard_expr, 'withLine', [new Arg($line_expr)]);
+                }
+
+                $this->current_expr = new MethodCall(
+                    $this->current_expr,
+                    'withDashboard',
+                    [new Arg($dashboard_expr)]
                 );
             }
         }

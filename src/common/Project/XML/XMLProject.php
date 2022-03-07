@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\XML;
 
+use Tuleap\Dashboard\XML\XMLDashboard;
 use Tuleap\Project\Service\XML\XMLService;
 
 final class XMLProject
@@ -31,6 +32,12 @@ final class XMLProject
      * @psalm-readonly
      */
     private array $services = [];
+
+    /**
+     * @var XMLDashboard[]
+     * @psalm-readonly
+     */
+    private array $dashboards = [];
 
     public function __construct(
         private string $unix_name,
@@ -57,6 +64,13 @@ final class XMLProject
             }
         }
 
+        if (count($this->dashboards) > 0) {
+            $dashboards = $xml->addChild('dashboards');
+            foreach ($this->dashboards as $dashboard) {
+                $dashboard->export($dashboards);
+            }
+        }
+
         return $xml;
     }
 
@@ -67,6 +81,28 @@ final class XMLProject
     {
         $new             = clone $this;
         $new->services[] = $service;
+
+        return $new;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function withDashboard(XMLDashboard $dashboard): self
+    {
+        $new               = clone $this;
+        $new->dashboards[] = $dashboard;
+
+        return $new;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function withDashboards(XMLDashboard ...$dashboards): self
+    {
+        $new             = clone $this;
+        $new->dashboards = array_merge($new->dashboards, $dashboards);
 
         return $new;
     }
