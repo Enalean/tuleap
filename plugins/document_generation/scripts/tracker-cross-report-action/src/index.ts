@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { utils, writeFile } from "xlsx";
+
 document.addEventListener("DOMContentLoaded", () => {
     const generate_document_link = document.getElementById(
         "tracker-cross-report-action-generate-document"
@@ -28,7 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
     generate_document_link.addEventListener("click", (event): void => {
         event.preventDefault();
 
-        throw new Error("Not implemented yet");
+        const book = utils.book_new();
+        const sheet = utils.aoa_to_sheet([]);
+        utils.book_append_sheet(book, sheet);
+        writeFile(book, "tracker-cross-report.xlsx", { bookSST: true });
     });
 });
 
