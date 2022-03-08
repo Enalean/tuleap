@@ -41,7 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const book = utils.book_new();
         const sheet = utils.aoa_to_sheet([["report_id", properties.report_id]]);
         utils.book_append_sheet(book, sheet);
-        writeFile(book, "tracker-cross-report.xlsx", { bookSST: true });
+        writeFile(book, properties.tracker_name + "-" + properties.report_name + ".xlsx", {
+            bookSST: true,
+        });
     });
 });
 
