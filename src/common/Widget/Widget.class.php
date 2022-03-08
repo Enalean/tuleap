@@ -21,6 +21,7 @@
 
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Project\MappingRegistry;
 
 /**
@@ -242,8 +243,19 @@ use Tuleap\Project\MappingRegistry;
         return '';
     }
 
-    /** @return array */
+    /**
+     * @return array
+     * @deprecated
+     */
     public function getJavascriptDependencies()
+    {
+        return [];
+    }
+
+    /**
+     * @return JavascriptAssetGeneric[]
+     */
+    public function getJavascriptAssets(): array
     {
         return [];
     }

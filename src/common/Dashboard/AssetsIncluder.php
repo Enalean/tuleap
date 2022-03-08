@@ -78,6 +78,9 @@ class AssetsIncluder
                     \assert($widget instanceof DashboardWidgetPresenter);
                     $deduplicated_css_assets = $deduplicated_css_assets->merge($widget->stylesheet_dependencies);
 
+                    foreach ($widget->javascript_assets as $javascript_asset) {
+                        $this->layout->addJavascriptAsset($javascript_asset);
+                    }
                     foreach ($widget->javascript_dependencies as $javascript) {
                         if (isset($javascript['unique-name'])) {
                             if (isset($is_unique_dependency_included[$javascript['unique-name']])) {

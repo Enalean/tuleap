@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import "../../themes/label.scss";
 import { create } from "./labels-box";
 
 document.addEventListener("dashboard-edit-widget-modal-content-loaded", (event) =>

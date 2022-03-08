@@ -34,6 +34,9 @@ class CurrentPage
         return ! $is_managing_bookmarks && strpos($_SERVER['REQUEST_URI'], '/my/') === 0;
     }
 
+    /**
+     * @deprecated See \Tuleap\Dashboard\Project\ProjectDashboardIsDisplayed
+     */
     public function isProjectDashboard()
     {
         return strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;

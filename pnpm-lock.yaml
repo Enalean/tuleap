@@ -73,6 +73,7 @@ specifiers:
   vite: ^2.8.0
   vite-dts: ^1.0.3
   vite-plugin-dts: ^0.9.9
+  vite-plugin-externals: ^0.3.4
   vite-plugin-vue2: ^1.9.3
   vue-eslint-parser: ^8.0.1
   vue-loader: ^15.9.8
@@ -158,6 +159,7 @@ devDependencies:
   vite: 2.8.0_sass@1.32.2
   vite-dts: 1.0.3_vite@2.8.0
   vite-plugin-dts: 0.9.9_vite@2.8.0
+  vite-plugin-externals: 0.3.4_vite@2.8.0
   vite-plugin-vue2: 1.9.3_1f59c684e7252a19388f7d9f916e315d
   vue-eslint-parser: 8.0.1_eslint@8.1.0
   vue-loader: 15.9.8_d9c93ac1e5c9b2efc738ddcfe8fa650e
@@ -4640,6 +4642,10 @@ packages:
       string.prototype.trimend: 1.0.4
       string.prototype.trimstart: 1.0.4
       unbox-primitive: 1.0.1
+    dev: true
+
+  /es-module-lexer/0.4.1:
+    resolution: {integrity: sha512-ooYciCUtfw6/d2w56UVeqHPcoCFAiJdz5XOkYpv/Txl1HMUozpXjz/2RIQgqwKdXNDPSF1W7mJCFse3G+HDyAA==}
     dev: true
 
   /es-module-lexer/0.9.3:
@@ -9556,6 +9562,18 @@ packages:
       fast-glob: 3.2.7
       fs-extra: 10.0.0
       ts-morph: 13.0.2
+      vite: 2.8.0_sass@1.32.2
+    dev: true
+
+  /vite-plugin-externals/0.3.4_vite@2.8.0:
+    resolution: {integrity: sha512-q1dwCUZbToU/7djAUDDYoarQdzbYSeC9yWOxogDnW33PN8pcaEqj4SBLCy46nwyZ5dHh9Qdbkp7JL5aYhF+Cyw==}
+    peerDependencies:
+      vite: ^2.0.0
+    dependencies:
+      acorn: 8.5.0
+      es-module-lexer: 0.4.1
+      fs-extra: 10.0.0
+      magic-string: 0.25.7
       vite: 2.8.0_sass@1.32.2
     dev: true
 

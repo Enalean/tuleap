@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
+declare(strict_types=1);
 
-module.exports = webpack_configurator.extendDevConfiguration(common);
+namespace Tuleap\Dashboard\Project;
+
+use Tuleap\Event\Dispatchable;
+use Tuleap\Layout\BaseLayout;
+
+final class ProjectDashboardIsDisplayed implements Dispatchable
+{
+    public const NAME = 'projectDashboardIsDisplayed';
+
+    public function __construct(private BaseLayout $layout)
+    {
+    }
+
+    public function getLayout(): BaseLayout
+    {
+        return $this->layout;
+    }
+}

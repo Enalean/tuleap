@@ -14,8 +14,8 @@
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch"
   },
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
-    "watch": "webpack --config webpack.dev.js --watch",
+    "build": "vite build",
+    "watch": "vite build --watch",
     "test": "jest"
   }
 }
