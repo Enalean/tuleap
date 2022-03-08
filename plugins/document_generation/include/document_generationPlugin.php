@@ -138,7 +138,17 @@ class document_generationPlugin extends Plugin
         }
 
         $event->addExportItem(
-            $renderer->renderToString('tracker-cross-report-action', [])
+            $renderer->renderToString(
+                'tracker-cross-report-action',
+                [
+                    'properties' => json_encode(
+                        [
+                            "report_id" => $report_id,
+                        ],
+                        JSON_THROW_ON_ERROR
+                    ),
+                ]
+            )
         );
         $event->addJavascriptAssets(
             new JavascriptViteAsset($document_generation_asset, 'scripts/tracker-cross-report-action/src/index.ts')
