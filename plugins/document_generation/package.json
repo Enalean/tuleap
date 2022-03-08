@@ -9,7 +9,8 @@
     "@tuleap/plugin-docgen-docx": "file:./scripts/lib/docx",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "docx": "^7.3.0",
-    "sprintf-js": "^1.1.2"
+    "sprintf-js": "^1.1.2",
+    "xlsx": "^0.18.3"
   },
   "devDependencies": {
     "@types/sprintf-js": "^1.1.2"
