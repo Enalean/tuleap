@@ -18,6 +18,7 @@
  */
 
 import { utils, writeFile } from "xlsx";
+import type { GlobalExportProperties } from "./type";
 
 document.addEventListener("DOMContentLoaded", () => {
     const generate_document_link = document.getElementById(
@@ -30,8 +31,15 @@ document.addEventListener("DOMContentLoaded", () => {
     generate_document_link.addEventListener("click", (event): void => {
         event.preventDefault();
 
+        if (!generate_document_link.dataset.properties) {
+            throw new Error("Missing properties dataset");
+        }
+        const properties: GlobalExportProperties = JSON.parse(
+            generate_document_link.dataset.properties
+        );
+
         const book = utils.book_new();
-        const sheet = utils.aoa_to_sheet([]);
+        const sheet = utils.aoa_to_sheet([["report_id", properties.report_id]]);
         utils.book_append_sheet(book, sheet);
         writeFile(book, "tracker-cross-report.xlsx", { bookSST: true });
     });
