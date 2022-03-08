@@ -112,6 +112,15 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertNull($time_period->getEndDate());
     }
 
+    public function testDoesNotAssumeTheEndDateWhenStartDateIsNotProvided(): void
+    {
+        $start_date  = null;
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, 12);
+
+        self::assertEquals(12, $time_period->getDuration());
+        self::assertNull($time_period->getEndDate());
+    }
+
     /**
      * @dataProvider providerForNumberOfDaysSinceStart
      */
