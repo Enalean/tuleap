@@ -144,6 +144,8 @@ class document_generationPlugin extends Plugin
                     'properties' => json_encode(
                         [
                             "report_id" => $report_id,
+                            "report_name" => $report_name,
+                            "tracker_name" => $tracker->getName(),
                         ],
                         JSON_THROW_ON_ERROR
                     ),
