@@ -42,4 +42,25 @@ final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements DAOSettin
             ['group_id' => $project_id]
         );
     }
+
+    /**
+     * @return null|array{forbid_writers_to_update: int}
+     */
+    public function searchByProjectId(int $project_id): ?array
+    {
+        $sql = "SELECT forbid_writers_to_update FROM plugin_docman_project_settings WHERE group_id = ?";
+
+        return $this->getDB()->row($sql, $project_id);
+    }
+
+    public function saveForbidWriters(int $project_id, bool $forbid_writers_to_update): void
+    {
+        $this->getDB()->update(
+            'plugin_docman_project_settings',
+            [
+                'forbid_writers_to_update' => (int) $forbid_writers_to_update,
+            ],
+            ['group_id' => $project_id]
+        );
+    }
 }

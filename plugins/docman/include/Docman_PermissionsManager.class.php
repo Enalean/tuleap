@@ -221,7 +221,7 @@ class Docman_PermissionsManager
     *
     * This method takes into account permissions and lock.
     *
-    * User can read an item if:
+    * User can write an item if:
     * - he is super user,
     * - he is admin of the current docman,
     * - he can manage the item (@see userCanManage),

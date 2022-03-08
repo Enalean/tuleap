@@ -65,8 +65,23 @@ class Docman_View_Admin_Permissions extends \Tuleap\Docman\View\Admin\AdminView
         );
     }
 
+    public static function getCSRFToken(int $project_id): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken(
+            DOCMAN_BASE_URL . '/?' . http_build_query([
+                'group_id' => $project_id,
+                'action'   => self::IDENTIFIER,
+            ])
+        );
+    }
+
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
+        $project_id = (int) $params['group_id'];
+
+        $dao      = new \Tuleap\Docman\Settings\SettingsDAO();
+        $settings = $dao->searchByProjectId($project_id);
+
         $content = '<div class="tlp-framed">';
 
         $content .= '<section class="tlp-pane">
@@ -81,11 +96,19 @@ class Docman_View_Admin_Permissions extends \Tuleap\Docman\View\Admin\AdminView
         $content .= '</p>';
         echo $content;
 
-        $postUrl = DocmanViewURLBuilder::buildUrl($params['default_url'], [
+        $post_url = DocmanViewURLBuilder::buildUrl($params['default_url'], [
             'action' => 'admin_set_permissions',
         ]);
-        echo '<div id="docman-admin-permission-legacy-form">';
-        permission_display_selection_form("PLUGIN_DOCMAN_ADMIN", $params['group_id'], $params['group_id'], $postUrl);
+
+        echo '<div id="docman-admin-permission-legacy-form" class="loading">';
+
+        $renderer->renderToPage('admin/permissions-addendum', [
+            'csrf'                     => self::getCSRFToken($project_id),
+            'forbid_writers_to_update' => $settings['forbid_writers_to_update'] ?? false,
+            'feature_flag'             => \HTTPRequest::instance()->get('feature-flag-forbid-writers'),
+        ]);
+        permission_display_selection_form("PLUGIN_DOCMAN_ADMIN", $project_id, $project_id, $post_url);
+
         echo '</div>';
 
         echo '</section>
