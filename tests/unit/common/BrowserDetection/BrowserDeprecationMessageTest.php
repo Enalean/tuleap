@@ -38,26 +38,6 @@ final class BrowserDeprecationMessageTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertNull(BrowserDeprecationMessage::fromDetectedBrowser(UserTestBuilder::aUser()->build(), $detected_browser));
     }
 
-    public function testGetsDeprecationMessageForIE(): void
-    {
-        $detected_browser = $this->buildDetectedBrowserFromUserAgent(DetectedBrowserTest::IE11_USER_AGENT_STRING);
-        $message          = BrowserDeprecationMessage::fromDetectedBrowser(UserTestBuilder::aUser()->build(), $detected_browser);
-
-        self::assertNotNull($message);
-        self::assertFalse($message->can_be_dismiss);
-    }
-
-    public function testIEDeprecationMessageCanBeDismissedWithASpecialFlag(): void
-    {
-        \ForgeConfig::set('temporarily_allow_dismiss_ie_deprecation_message', 'I_understand_this_is_a_temporary_configuration_switch_(please_warn_the_Tuleap_dev_team_when_enabling_this)');
-
-        $detected_browser = $this->buildDetectedBrowserFromUserAgent(DetectedBrowserTest::IE11_USER_AGENT_STRING);
-        $message          = BrowserDeprecationMessage::fromDetectedBrowser(UserTestBuilder::aUser()->build(), $detected_browser);
-
-        self::assertNotNull($message);
-        self::assertTrue($message->can_be_dismiss);
-    }
-
     public function testGetsDeprecationMessageForEdgeLegacy(): void
     {
         $detected_browser = $this->buildDetectedBrowserFromUserAgent(DetectedBrowserTest::EDGE_LEGACY_USER_AGENT_STRING);
