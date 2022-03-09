@@ -7,16 +7,19 @@
   "dependencies": {
     "@tuleap/gettext": "file:../../src/scripts/lib/gettext",
     "@tuleap/plugin-docgen-docx": "file:./scripts/lib/docx",
+    "@tuleap/tlp": "link:../../src/themes/tlp",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "docx": "^7.3.0",
     "sprintf-js": "^1.1.2",
+    "vue": "^3.2.31",
     "xlsx": "^0.18.3"
   },
   "devDependencies": {
-    "@types/sprintf-js": "^1.1.2"
+    "@types/sprintf-js": "^1.1.2",
+    "@vue/test-utils": "^2.0.0-rc.17"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit",
+    "typecheck": "vue-tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch",
     "test": "jest"

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-process.env.DISABLE_TS_TYPECHECK = "true";
-
-const base_config = require("../../tests/jest/jest.base.config.js");
-
-module.exports = {
-    ...base_config,
-    displayName: "document_generation",
-    transform: {
-        ...base_config.transform,
-        "^.+\\.vue$": "@vue/vue3-jest",
-    },
-};
+declare module "*.vue" {
+    import type { DefineComponent } from "vue";
+    const component: DefineComponent;
+    export default component;
+}
