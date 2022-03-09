@@ -6,8 +6,8 @@
  */
 
 import { isNumber } from "angular";
-import escapeStringRegexp from "escape-string-regexp";
-import { encode } from "he";
+import { Classifier } from "./highlight/Classifier";
+import { HighlightedText } from "./highlight/HighlightedText";
 
 export default TuleapHighlightFilter;
 
@@ -25,22 +25,16 @@ function TuleapHighlightFilter() {
 
     return function (text, search) {
         if (!isTextSearchable(text, search)) {
-            return text ? encode(text.toString()) : text;
+            return text ? text.toString() : text;
         }
 
-        const regexp_escaped_search = escapeStringRegexp(search.toString());
-        const or_search = regexp_escaped_search.replace(" ", "|");
-
-        const regex = new RegExp("(" + or_search + ")", "gi");
-
-        const split_html = text.toString().split(regex);
-        const encoded_parts = split_html.map((part) => {
-            if (regex.test(part)) {
-                return `<span class="highlight">${encode(part)}</span>`;
+        const classifier = Classifier(String(search));
+        const parts = classifier.classify(String(text)).map((highlighted_text) => {
+            if (!HighlightedText.isHighlight(highlighted_text)) {
+                return highlighted_text.content;
             }
-
-            return encode(part);
+            return `<span class="highlight">${highlighted_text.content}</span>`;
         });
-        return encoded_parts.join("");
+        return parts.join("");
     };
 }
