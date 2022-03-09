@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { utils, writeFile } from "xlsx";
 import type { GlobalExportProperties } from "./type";
+import { downloadXLSXDocument } from "./export-document";
+import { downloadXLSX } from "./Exporter/XLSX/download-xlsx";
 
 document.addEventListener("DOMContentLoaded", () => {
     const generate_document_link = document.getElementById(
@@ -38,12 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
             generate_document_link.dataset.properties
         );
 
-        const book = utils.book_new();
-        const sheet = utils.aoa_to_sheet([["report_id", properties.report_id]]);
-        utils.book_append_sheet(book, sheet);
-        writeFile(book, properties.tracker_name + "-" + properties.report_name + ".xlsx", {
-            bookSST: true,
-        });
+        downloadXLSXDocument(properties, downloadXLSX);
     });
 });
 
