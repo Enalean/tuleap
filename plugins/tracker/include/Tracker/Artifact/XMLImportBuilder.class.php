@@ -20,6 +20,7 @@
 
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
@@ -51,21 +52,32 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
             $artifact_link_usage_dao
         );
 
-        $fields_validator      = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator($formelement_factory, $artifact_link_validator);
-        $changeset_dao         = new Tracker_Artifact_ChangesetDao();
-        $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
-        $send_notifications    = false;
+        $fields_validator            = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator(
+            $formelement_factory,
+            $artifact_link_validator
+        );
+        $changeset_comment_dao       = new Tracker_Artifact_Changeset_CommentDao();
+        $fields_retriever            = new FieldsToBeSavedInSpecificOrderRetriever($formelement_factory);
+        $event_manager               = EventManager::instance();
+        $after_new_changeset_handler = new AfterNewChangesetHandler(
+            $artifact_factory,
+            $fields_retriever,
+            \WorkflowFactory::instance()
+        );
+        $field_initializator         = new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory);
+        $artifact_changeset_saver    = ArtifactChangesetSaver::build();
+
+        $send_notifications = false;
 
         $artifact_creator = TrackerArtifactCreator::build(
             new Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator(
                 $fields_validator,
-                new FieldsToBeSavedInSpecificOrderRetriever($formelement_factory),
-                $changeset_dao,
-                $artifact_factory,
-                EventManager::instance(),
-                new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
+                $fields_retriever,
+                $event_manager,
+                $field_initializator,
                 $logger,
-                ArtifactChangesetSaver::build()
+                $artifact_changeset_saver,
+                $after_new_changeset_handler
             ),
             $fields_validator,
             $logger
@@ -73,19 +85,18 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
 
         $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
             $fields_validator,
-            new FieldsToBeSavedInSpecificOrderRetriever($formelement_factory),
-            $changeset_dao,
+            $fields_retriever,
             $changeset_comment_dao,
-            $artifact_factory,
-            EventManager::instance(),
+            $event_manager,
             ReferenceManager::instance(),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
+            $field_initializator,
             new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
-            ArtifactChangesetSaver::build(),
+            $artifact_changeset_saver,
             new \Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction(
                 $artifact_factory
             ),
-            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao())
+            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+            $after_new_changeset_handler
         );
 
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();
@@ -94,17 +105,17 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
             new XML_RNGValidator(),
             $artifact_creator,
             $new_changeset_creator,
-            Tracker_FormElementFactory::instance(),
+            $formelement_factory,
             $user_finder,
             new BindStaticValueDao(),
             $logger,
             $send_notifications,
-            Tracker_ArtifactFactory::instance(),
+            $artifact_factory,
             $type_dao,
             new XMLArtifactSourcePlatformExtractor(new Valid_HTTPURI(), $logger),
             new ExistingArtifactSourceIdFromTrackerExtractor($artifact_source_id_dao),
             $artifact_source_id_dao,
-            new ExternalFieldsExtractor(EventManager::instance()),
+            new ExternalFieldsExtractor($event_manager),
             new TrackerPrivateCommentUGroupExtractor(new TrackerPrivateCommentUGroupEnabledDao(), new UGroupManager())
         );
     }

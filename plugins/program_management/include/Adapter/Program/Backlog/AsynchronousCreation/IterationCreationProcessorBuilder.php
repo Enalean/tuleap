@@ -52,6 +52,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
@@ -129,6 +130,8 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
             $changeset_values_formatter
         );
 
+        $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+
         $changeset_creator = new \Tracker_Artifact_Changeset_NewChangesetCreator(
             new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
                 $form_element_factory,
@@ -153,10 +156,8 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
                     ),
                 ),
             ),
-            new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory),
-            $artifact_changeset_dao,
+            $fields_retriever,
             new \Tracker_Artifact_Changeset_CommentDao(),
-            $artifact_factory,
             \EventManager::instance(),
             \ReferenceManager::instance(),
             new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
@@ -168,7 +169,8 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
                 new ChangesetFromXmlDao()
             ),
             new ParentLinkAction($artifact_factory),
-            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao())
+            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+            new AfterNewChangesetHandler($artifact_factory, $fields_retriever, \WorkflowFactory::instance())
         );
 
         $changeset_adder = new ChangesetAdder(

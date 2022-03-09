@@ -19,15 +19,20 @@
  *
  */
 
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
+use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
+use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
 
 final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalResponseMock;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactChangesetSaver
@@ -39,22 +44,6 @@ final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \Tule
      */
     private $field;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_ChangesetFactory
-     */
-    private $changeset_factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping
-     */
-    private $url_mapping;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $submitter;
-    /**
-     * @var \Mockery\Mock|Artifact
-     */
-    private $artifact;
-    /**
      * @var array
      */
     private $fields_data = [];
@@ -63,10 +52,6 @@ final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \Tule
      */
     private $factory;
     /**
-     * @var mixed
-     */
-    private $submitted_on;
-    /**
      * @var Tracker_Artifact_Changeset_InitialChangesetCreator
      */
     private $creator;
@@ -74,120 +59,104 @@ final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \Tule
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Workflow
      */
     private $workflow;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_ChangesetDao
-     */
-    private $changeset_dao;
+    private SaveArtifactStub $artifact_saver;
 
     protected function setUp(): void
     {
-        $this->submitter = Mockery::mock(PFUser::class);
-        $this->submitter->shouldReceive('isAnonymous')->andReturnFalse();
-        $this->submitter->shouldReceive('getId')->andReturn(102);
+        $this->factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
-        $this->changeset_dao = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
-        $this->factory       = \Mockery::spy(\Tracker_FormElementFactory::class);
-
-        $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class);
-        $this->workflow          = \Mockery::spy(\Workflow::class);
-        $this->changeset_factory = \Mockery::spy(\Tracker_Artifact_ChangesetFactory::class);
-        $this->changeset_factory->shouldReceive('getChangeset')->andReturns(new Tracker_Artifact_Changeset_Null());
-        $tracker = \Mockery::spy(\Tracker::class)->shouldReceive('getWorkflow')->andReturns($this->workflow)->getMock();
-        $tracker->shouldReceive('getId')->andReturns(888);
-        $this->artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->artifact->setId(42);
-        $this->artifact->setTracker($tracker);
-        $this->artifact->shouldReceive('getChangesetFactory')->andReturns($this->changeset_factory);
-
-        $fields_validator = \Mockery::spy(\Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::class);
-        $fields_validator->shouldReceive('validate')->andReturns(true);
-
-        $this->url_mapping = Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class);
-
+        $this->artifact_saver  = SaveArtifactStub::withSuccess();
+        $this->workflow        = \Mockery::spy(\Workflow::class);
         $this->changeset_saver = Mockery::mock(ArtifactChangesetSaver::class);
-        $this->creator         = new Tracker_Artifact_Changeset_InitialChangesetCreator(
-            $fields_validator,
-            new FieldsToBeSavedInSpecificOrderRetriever($this->factory),
-            $this->changeset_dao,
-            $this->artifact_factory,
-            \Mockery::spy(\EventManager::class),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->factory),
-            new \Psr\Log\NullLogger(),
-            $this->changeset_saver
-        );
-
-        $this->submitted_on = $_SERVER['REQUEST_TIME'];
 
         $this->field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
         $this->field->shouldReceive('getId')->andReturns(123);
         $this->field->shouldReceive('isSubmitable')->andReturns(true);
     }
 
-    public function testItCallsTheAfterMethodOnWorkflowWhenCreateInitialChangeset(): void
+    private function create(): ?int
     {
-        $this->setFields([]);
-        $this->changeset_dao->shouldReceive('create')->andReturns(5667);
-        $this->artifact_factory->shouldReceive('save')->andReturns(true);
-        $this->workflow->shouldReceive('validate')->andReturns(true);
-        $this->changeset_saver->shouldReceive('saveChangeset')->once();
+        $changeset_factory = \Mockery::spy(\Tracker_Artifact_ChangesetFactory::class);
+        $changeset_factory->shouldReceive('getChangeset')->andReturns(new Tracker_Artifact_Changeset_Null());
 
-        $this->workflow->shouldReceive('after')->with($this->fields_data, Mockery::any(), null)->once();
+        $tracker = \Mockery::spy(\Tracker::class)
+            ->shouldReceive('getWorkflow')
+            ->andReturns($this->workflow)
+            ->getMock();
+        $tracker->shouldReceive('getId')->andReturns(888);
 
-        $this->creator->create(
-            $this->artifact,
+        $artifact = \Mockery::mock(Artifact::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+        $artifact->setId(42);
+        $artifact->setTracker($tracker);
+        $artifact->shouldReceive('getChangesetFactory')->andReturns($changeset_factory);
+
+        $submitter = UserTestBuilder::aUser()->withId(102)->build();
+
+        $fields_validator = \Mockery::spy(\Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::class);
+        $fields_validator->shouldReceive('validate')->andReturns(true);
+        $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($this->factory);
+
+        $creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
+            $fields_validator,
+            $fields_retriever,
+            \Mockery::spy(\EventManager::class),
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->factory),
+            new \Psr\Log\NullLogger(),
+            $this->changeset_saver,
+            new AfterNewChangesetHandler(
+                $this->artifact_saver,
+                $fields_retriever,
+                RetrieveWorkflowStub::withWorkflow($this->workflow)
+            )
+        );
+
+        return $creator->create(
+            $artifact,
             $this->fields_data,
-            $this->submitter,
-            $this->submitted_on,
-            $this->url_mapping,
+            $submitter,
+            1234567890,
+            Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
             new TrackerNoXMLImportLoggedConfig(),
             new NullChangesetValidationContext()
         );
+    }
+
+    public function testItCallsTheAfterMethodOnWorkflowWhenCreateInitialChangeset(): void
+    {
+        $this->setFields([]);
+        $this->workflow->shouldReceive('validate')->andReturns(true);
+        $this->changeset_saver->shouldReceive('saveChangeset')->once()->andReturns(5667);
+
+        $this->workflow->shouldReceive('after')->with($this->fields_data, Mockery::any(), null)->once();
+
+        $this->create();
     }
 
     public function testItDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfInitialChangesetFails(): void
     {
         $this->setFields([]);
-        $this->changeset_dao->shouldReceive('create')->andReturns(false);
         $this->workflow->shouldReceive('validate')->andReturns(true);
-        $this->changeset_saver->shouldReceive('saveChangeset')->once();
+        $this->changeset_saver->shouldReceive('saveChangeset')
+            ->once()
+            ->andThrows(new \Tracker_Artifact_Exception_CannotCreateNewChangeset());
 
         $this->workflow->shouldReceive('after')->never();
 
-        $this->creator->create(
-            $this->artifact,
-            $this->fields_data,
-            $this->submitter,
-            $this->submitted_on,
-            $this->url_mapping,
-            new TrackerNoXMLImportLoggedConfig(),
-            new NullChangesetValidationContext()
-        );
+        $this->create();
     }
 
     public function testItDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFails(): void
     {
         $this->setFields([]);
-        $this->changeset_dao->shouldReceive('create')->andReturns(123);
-        $this->artifact_factory->shouldReceive('save')->andReturns(false);
+        $this->artifact_saver = SaveArtifactStub::withFailure();
         $this->workflow->shouldReceive('validate')->andReturns(true);
-        $this->changeset_saver->shouldReceive('saveChangeset')->once();
+        $this->changeset_saver->shouldReceive('saveChangeset')->once()->andReturns(123);
 
         $this->workflow->shouldReceive('after')->never();
 
-        $this->creator->create(
-            $this->artifact,
-            $this->fields_data,
-            $this->submitter,
-            $this->submitted_on,
-            $this->url_mapping,
-            new TrackerNoXMLImportLoggedConfig(),
-            new NullChangesetValidationContext()
-        );
+        $this->create();
     }
 
     public function testItDoesNotCreateTheChangesetIfTheWorkflowValidationFailed(): void
@@ -199,20 +168,10 @@ final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \Tule
             new Tracker_Workflow_Transition_InvalidConditionForTransitionException($transition)
         );
 
-        $this->changeset_dao->shouldReceive('create')->never();
-        $this->artifact_factory->shouldReceive('save')->never();
         $this->workflow->shouldReceive('after')->never();
         $this->changeset_saver->shouldReceive('saveChangeset')->never();
 
-        $creation = $this->creator->create(
-            $this->artifact,
-            $this->fields_data,
-            $this->submitter,
-            $this->submitted_on,
-            $this->url_mapping,
-            new TrackerNoXMLImportLoggedConfig(),
-            new NullChangesetValidationContext()
-        );
+        $creation = $this->create();
 
         $this->assertEquals(null, $creation);
     }
@@ -220,11 +179,10 @@ final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \Tule
     public function testItSavesTheDefaultValueWhenFieldIsSubmittedButCannotSubmit(): void
     {
         $this->setFields([$this->field]);
-        $this->changeset_dao->shouldReceive('create')->andReturns(123);
 
         $this->field->shouldReceive('userCanSubmit')->andReturns(false);
         $this->field->shouldReceive('getDefaultValue')->andReturns('default value');
-        $this->changeset_saver->shouldReceive('saveChangeset')->once();
+        $this->changeset_saver->shouldReceive('saveChangeset')->once()->andReturns(123);
 
         $this->fields_data[123] = 'value';
 
@@ -239,25 +197,16 @@ final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \Tule
             \Mockery::any()
         )->once();
 
-        $this->creator->create(
-            $this->artifact,
-            $this->fields_data,
-            $this->submitter,
-            $this->submitted_on,
-            $this->url_mapping,
-            new TrackerNoXMLImportLoggedConfig(),
-            new NullChangesetValidationContext()
-        );
+        $this->create();
     }
 
     public function testItIgnoresTheDefaultValueWhenFieldIsSubmittedAndCanSubmit(): void
     {
         $this->setFields([$this->field]);
-        $this->changeset_dao->shouldReceive('create')->andReturns(123);
 
         $this->field->shouldReceive('userCanSubmit')->andReturns(true);
         $this->field->shouldReceive('getDefaultValue')->andReturns('default value');
-        $this->changeset_saver->shouldReceive('saveChangeset')->once();
+        $this->changeset_saver->shouldReceive('saveChangeset')->once()->andReturns(123);
 
         $this->fields_data[123] = 'value';
 
@@ -272,26 +221,17 @@ final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \Tule
             \Mockery::any()
         )->once();
 
-        $this->creator->create(
-            $this->artifact,
-            $this->fields_data,
-            $this->submitter,
-            $this->submitted_on,
-            $this->url_mapping,
-            new TrackerNoXMLImportLoggedConfig(),
-            new NullChangesetValidationContext()
-        );
+        $this->create();
     }
 
     public function testItBypassPermsWhenWorkflowBypassPerms(): void
     {
         $this->setFields([$this->field]);
-        $this->changeset_dao->shouldReceive('create')->andReturns(123);
 
         $this->field->shouldReceive('userCanSubmit')->andReturns(false);
         $this->field->shouldReceive('getDefaultValue')->andReturns('default value');
         $this->workflow->shouldReceive('bypassPermissions')->with($this->field)->andReturns(true);
-        $this->changeset_saver->shouldReceive('saveChangeset')->once();
+        $this->changeset_saver->shouldReceive('saveChangeset')->once()->andReturns(123);
 
         $this->fields_data[123] = 'value';
 
@@ -306,15 +246,7 @@ final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \Tule
             \Mockery::any()
         )->once();
 
-        $this->creator->create(
-            $this->artifact,
-            $this->fields_data,
-            $this->submitter,
-            $this->submitted_on,
-            $this->url_mapping,
-            new TrackerNoXMLImportLoggedConfig(),
-            new NullChangesetValidationContext()
-        );
+        $this->create();
     }
 
     private function setFields(array $fields): void

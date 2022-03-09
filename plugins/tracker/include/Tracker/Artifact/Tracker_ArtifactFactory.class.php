@@ -26,7 +26,7 @@ use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtifact
+class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtifact, \Tuleap\Tracker\Artifact\SaveArtifact
 {
     protected $artifacts;
     /**
@@ -391,7 +391,7 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
         return $artifact;
     }
 
-    public function save(Artifact $artifact)
+    public function save(Artifact $artifact): bool
     {
         return $this->getDao()->save($artifact->getId(), $artifact->getTrackerId(), $artifact->useArtifactPermissions());
     }
