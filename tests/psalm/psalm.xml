@@ -58,7 +58,6 @@
     </plugins>
 
     <issueHandlers>
-        <DeprecatedMethod errorLevel="info" />
         <DeprecatedProperty errorLevel="info" />
         <DeprecatedClass errorLevel="info" />
         <DeprecatedConstant errorLevel="info" />
