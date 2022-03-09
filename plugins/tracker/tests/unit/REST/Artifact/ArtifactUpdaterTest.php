@@ -26,6 +26,8 @@ use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 
 final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -34,14 +36,19 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private ArtifactUpdater $updater;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_REST_Artifact_ArtifactValidator
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface & \Tracker_REST_Artifact_ArtifactValidator
      */
     private $validator;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface & \Tracker_Artifact_Changeset_NewChangesetCreator
+     */
+    private $changeset_creator;
 
     protected function setUp(): void
     {
-        $this->validator = \Mockery::mock(\Tracker_REST_Artifact_ArtifactValidator::class);
-        $this->updater   = new ArtifactUpdater($this->validator);
+        $this->validator         = \Mockery::mock(\Tracker_REST_Artifact_ArtifactValidator::class);
+        $this->changeset_creator = \Mockery::spy(\Tracker_Artifact_Changeset_NewChangesetCreator::class);
+        $this->updater           = new ArtifactUpdater($this->validator, $this->changeset_creator);
     }
 
     protected function tearDown(): void
@@ -64,7 +71,22 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->updater->update($user, $artifact, $values, null);
 
-        $artifact->shouldHaveReceived('createNewChangeset', [$fields_data, '', $user, true, \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT]);
+        $expected_comment_body = '';
+        $this->changeset_creator->shouldHaveReceived(
+            'create',
+            [
+                $artifact,
+                $fields_data,
+                $expected_comment_body,
+                $user,
+                \Mockery::type('int'),
+                true,
+                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
+                \Mockery::type(CreatedFileURLMapping::class),
+                \Mockery::type(TrackerNoXMLImportLoggedConfig::class),
+                [],
+            ]
+        );
     }
 
     public function testUpdatePassesComment(): void
@@ -80,12 +102,26 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($values, $artifact)
             ->andReturn($fields_data);
 
-        $comment = new NewChangesetCommentRepresentation('<p>An HTML comment</p>', 'html');
+        $comment_body   = '<p>An HTML comment</p>';
+        $comment_format = 'html';
+        $comment        = new NewChangesetCommentRepresentation($comment_body, $comment_format);
+
         $this->updater->update($user, $artifact, $values, $comment);
 
-        $artifact->shouldHaveReceived(
-            'createNewChangeset',
-            [$fields_data, '<p>An HTML comment</p>', $user, true, 'html']
+        $this->changeset_creator->shouldHaveReceived(
+            'create',
+            [
+                $artifact,
+                $fields_data,
+                $comment_body,
+                $user,
+                \Mockery::type('int'),
+                true,
+                $comment_format,
+                \Mockery::type(CreatedFileURLMapping::class),
+                \Mockery::type(TrackerNoXMLImportLoggedConfig::class),
+                [],
+            ]
         );
     }
 

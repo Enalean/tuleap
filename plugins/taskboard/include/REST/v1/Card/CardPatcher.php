@@ -30,11 +30,28 @@ use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
-use Tracker_REST_Artifact_ArtifactValidator;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\I18NRestException;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
 class CardPatcher
 {
@@ -55,11 +72,43 @@ class CardPatcher
 
     public static function build(): self
     {
-        $form_element_factory = Tracker_FormElementFactory::instance();
-        $updater              = new ArtifactUpdater(
-            new Tracker_REST_Artifact_ArtifactValidator(
-                $form_element_factory
-            )
+        $usage_dao            = new ArtifactLinksUsageDao();
+        $form_element_factory = \Tracker_FormElementFactory::instance();
+        $artifact_factory     = \Tracker_ArtifactFactory::instance();
+        $changeset_creator    = new \Tracker_Artifact_Changeset_NewChangesetCreator(
+            new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                $form_element_factory,
+                new ArtifactLinkValidator(
+                    $artifact_factory,
+                    new TypePresenterFactory(new TypeDao(), $usage_dao),
+                    $usage_dao
+                ),
+                new WorkflowUpdateChecker(
+                    new FrozenFieldDetector(
+                        new TransitionRetriever(
+                            new StateFactory(\TransitionFactory::instance(), new SimpleWorkflowDao()),
+                            new TransitionExtractor()
+                        ),
+                        FrozenFieldsRetriever::instance(),
+                    )
+                )
+            ),
+            new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory),
+            new \Tracker_Artifact_ChangesetDao(),
+            new \Tracker_Artifact_Changeset_CommentDao(),
+            $artifact_factory,
+            \EventManager::instance(),
+            \ReferenceManager::instance(),
+            new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            ArtifactChangesetSaver::build(),
+            new ParentLinkAction($artifact_factory),
+            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao())
+        );
+
+        $updater = new ArtifactUpdater(
+            new \Tracker_REST_Artifact_ArtifactValidator($form_element_factory),
+            $changeset_creator
         );
 
         return new self($form_element_factory, $updater);

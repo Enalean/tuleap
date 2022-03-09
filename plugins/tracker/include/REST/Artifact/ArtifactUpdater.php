@@ -20,26 +20,28 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-use PFUser;
-use Tracker_Artifact_Changeset_Comment;
-use Tracker_Exception;
-use Tracker_NoChangeException;
+use Luracast\Restler\RestException;
+use Tracker_Artifact_Changeset_NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 
 class ArtifactUpdater
 {
-    public function __construct(private \Tracker_REST_Artifact_ArtifactValidator $artifact_validator)
-    {
+    public function __construct(
+        private \Tracker_REST_Artifact_ArtifactValidator $artifact_validator,
+        private Tracker_Artifact_Changeset_NewChangesetCreator $changeset_creator,
+    ) {
     }
 
     /**
-     * @throws Tracker_Exception
-     * @throws Tracker_NoChangeException
-     * @throws \Luracast\Restler\RestException
+     * @throws \Tracker_Exception
+     * @throws \Tracker_NoChangeException
+     * @throws RestException
      */
     public function update(
-        PFUser $user,
+        \PFUser $user,
         Artifact $artifact,
         array $values,
         ?NewChangesetCommentRepresentation $comment = null,
@@ -48,23 +50,38 @@ class ArtifactUpdater
         $fields_data = $this->artifact_validator->getFieldsDataOnUpdate($values, $artifact);
 
         $comment_body   = '';
-        $comment_format = Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT;
+        $comment_format = \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT;
         if ($comment) {
             $comment_body   = $comment->body;
             $comment_format = $comment->format;
         }
 
-        $artifact->createNewChangeset($fields_data, $comment_body, $user, true, $comment_format);
+        $submitted_on = $_SERVER['REQUEST_TIME'];
+        $this->changeset_creator->create(
+            $artifact,
+            $fields_data,
+            $comment_body,
+            $user,
+            $submitted_on,
+            true,
+            $comment_format,
+            new CreatedFileURLMapping(),
+            new TrackerNoXMLImportLoggedConfig(),
+            []
+        );
     }
 
-    private function checkArtifact(PFUser $user, Artifact $artifact): void
+    /**
+     * @throws RestException
+     */
+    private function checkArtifact(\PFUser $user, Artifact $artifact): void
     {
         if (! $artifact->userCanUpdate($user)) {
-            throw new \Luracast\Restler\RestException(403, 'You have not the permission to update this card');
+            throw new RestException(403, 'You have not the permission to update this card');
         }
 
         if ($this->clientWantsToUpdateLatestVersion() && ! $this->isUpdatingLatestVersion($artifact)) {
-            throw new \Luracast\Restler\RestException(
+            throw new RestException(
                 412,
                 'Artifact has been modified since you last requested it. Please edit the latest version'
             );
