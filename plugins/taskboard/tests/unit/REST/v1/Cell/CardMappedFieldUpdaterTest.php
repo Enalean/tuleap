@@ -30,7 +30,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tracker;
 use Tracker_FormElement_Field_Selectbox;
-use Tracker_REST_Artifact_ArtifactUpdater;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\REST\I18NRestException;
@@ -41,6 +40,7 @@ use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesRetriever;
 use Tuleap\Taskboard\Column\MilestoneTrackerRetriever;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
@@ -58,7 +58,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private $milestone_tracker_retriever;
     /** @var M\LegacyMockInterface|M\MockInterface|AddValidator */
     private $add_validator;
-    /** @var M\LegacyMockInterface|M\MockInterface|Tracker_REST_Artifact_ArtifactUpdater */
+    /** @var M\LegacyMockInterface|M\MockInterface & ArtifactUpdater */
     private $artifact_updater;
     /** @var M\LegacyMockInterface|M\MockInterface|MappedFieldRetriever */
     private $mapped_field_retriever;
@@ -79,7 +79,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->column_factory                 = M::mock(Cardwall_OnTop_Config_ColumnFactory::class);
         $this->milestone_tracker_retriever    = M::mock(MilestoneTrackerRetriever::class);
         $this->add_validator                  = M::mock(AddValidator::class);
-        $this->artifact_updater               = M::mock(Tracker_REST_Artifact_ArtifactUpdater::class);
+        $this->artifact_updater               = M::mock(ArtifactUpdater::class);
         $this->mapped_field_retriever         = M::mock(MappedFieldRetriever::class);
         $this->mapped_values_retriever        = M::mock(MappedValuesRetriever::class);
         $this->first_possible_value_retriever = M::mock(FirstPossibleValueInListRetriever::class);

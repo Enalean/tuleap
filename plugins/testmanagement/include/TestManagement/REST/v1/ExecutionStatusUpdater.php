@@ -25,20 +25,17 @@ use PFUser;
 use Tracker_Exception;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_NoChangeException;
-use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_Workflow_GlobalRulesViolationException;
 use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\User\REST\UserRepresentation;
 use UserManager;
 
 class ExecutionStatusUpdater
 {
-    /**
-     * @var Tracker_REST_Artifact_ArtifactUpdater
-     */
-    private $artifact_updater;
+    private ArtifactUpdater $artifact_updater;
     /**
      * @var ArtifactFactory
      */
@@ -53,7 +50,7 @@ class ExecutionStatusUpdater
     private $user_manager;
 
     public function __construct(
-        Tracker_REST_Artifact_ArtifactUpdater $artifact_updater,
+        ArtifactUpdater $artifact_updater,
         ArtifactFactory $testmanagement_artifact_factory,
         RealTimeMessageSender $realtime_message_sender,
         UserManager $user_manager,

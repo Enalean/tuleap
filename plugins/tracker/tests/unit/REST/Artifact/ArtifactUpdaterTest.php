@@ -32,10 +32,7 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var \Tracker_REST_Artifact_ArtifactUpdater
-     */
-    private $updater;
+    private ArtifactUpdater $updater;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_REST_Artifact_ArtifactValidator
      */
@@ -44,7 +41,7 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->validator = \Mockery::mock(\Tracker_REST_Artifact_ArtifactValidator::class);
-        $this->updater   = new \Tracker_REST_Artifact_ArtifactUpdater($this->validator);
+        $this->updater   = new ArtifactUpdater($this->validator);
     }
 
     protected function tearDown(): void

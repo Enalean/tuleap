@@ -18,23 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\REST\Artifact;
+
+use PFUser;
+use Tracker_Artifact_Changeset_Comment;
+use Tracker_Exception;
+use Tracker_NoChangeException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_REST_Artifact_ArtifactUpdater
+class ArtifactUpdater
 {
-    /** @var Tracker_REST_Artifact_ArtifactValidator */
-    private $artifact_validator;
-
-    public function __construct(Tracker_REST_Artifact_ArtifactValidator $artifact_validator)
+    public function __construct(private \Tracker_REST_Artifact_ArtifactValidator $artifact_validator)
     {
-        $this->artifact_validator = $artifact_validator;
-    }
-
-    public static function build(): self
-    {
-        return new self(new Tracker_REST_Artifact_ArtifactValidator(Tracker_FormElementFactory::instance()));
     }
 
     /**
@@ -61,23 +57,26 @@ class Tracker_REST_Artifact_ArtifactUpdater
         $artifact->createNewChangeset($fields_data, $comment_body, $user, true, $comment_format);
     }
 
-    private function checkArtifact(PFUser $user, Artifact $artifact)
+    private function checkArtifact(PFUser $user, Artifact $artifact): void
     {
         if (! $artifact->userCanUpdate($user)) {
             throw new \Luracast\Restler\RestException(403, 'You have not the permission to update this card');
         }
 
         if ($this->clientWantsToUpdateLatestVersion() && ! $this->isUpdatingLatestVersion($artifact)) {
-            throw new \Luracast\Restler\RestException(412, 'Artifact has been modified since you last requested it. Please edit the latest version');
+            throw new \Luracast\Restler\RestException(
+                412,
+                'Artifact has been modified since you last requested it. Please edit the latest version'
+            );
         }
     }
 
-    private function clientWantsToUpdateLatestVersion()
+    private function clientWantsToUpdateLatestVersion(): bool
     {
         return (isset($_SERVER['HTTP_IF_UNMODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_MATCH']));
     }
 
-    private function isUpdatingLatestVersion(Artifact $artifact)
+    private function isUpdatingLatestVersion(Artifact $artifact): bool
     {
         $valid_unmodified = true;
         $valid_match      = true;

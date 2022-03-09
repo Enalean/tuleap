@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
-use Tracker_REST_Artifact_ArtifactUpdater;
 use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\Campaign\CampaignSaver;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
+use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 
@@ -35,8 +35,7 @@ use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
  */
 class CampaignUpdater
 {
-    /** @var Tracker_REST_Artifact_ArtifactUpdater */
-    private $artifact_updater;
+    private ArtifactUpdater $artifact_updater;
     /** @var CampaignSaver */
     private $campaign_saver;
     /**
@@ -45,7 +44,7 @@ class CampaignUpdater
     private $field_values_builder;
 
     public function __construct(
-        Tracker_REST_Artifact_ArtifactUpdater $artifact_updater,
+        ArtifactUpdater $artifact_updater,
         CampaignSaver $campaign_saver,
         CampaignArtifactUpdateFieldValuesBuilder $field_values_builder,
     ) {

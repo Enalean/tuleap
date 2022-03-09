@@ -42,7 +42,6 @@ use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
 use Tracker_REST_Artifact_ArtifactCreator;
-use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_REST_Artifact_ArtifactValidator;
 use Tracker_URLVerification;
 use Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
@@ -98,6 +97,7 @@ use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
+use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
@@ -687,7 +687,7 @@ class ArtifactsResource extends AuthenticatedResource
 
         $this->sendAllowHeadersForArtifact();
         try {
-            $updater = new Tracker_REST_Artifact_ArtifactUpdater(
+            $updater = new ArtifactUpdater(
                 new Tracker_REST_Artifact_ArtifactValidator(
                     $this->formelement_factory
                 )
