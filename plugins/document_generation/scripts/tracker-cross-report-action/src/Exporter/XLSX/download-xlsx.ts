@@ -19,10 +19,14 @@
 
 import { utils, writeFile } from "xlsx";
 import type { GlobalExportProperties } from "../../type";
+import type { ArtifactResponse } from "../../type";
 
-export function downloadXLSX(global_properties: GlobalExportProperties): void {
+export function downloadXLSX(
+    global_properties: GlobalExportProperties,
+    report_artifacts: ArtifactResponse[]
+): void {
     const book = utils.book_new();
-    const sheet = utils.aoa_to_sheet([["report_id", global_properties.report_id]]);
+    const sheet = utils.aoa_to_sheet(buildContent(global_properties, report_artifacts));
     utils.book_append_sheet(book, sheet);
     writeFile(
         book,
@@ -31,4 +35,16 @@ export function downloadXLSX(global_properties: GlobalExportProperties): void {
             bookSST: true,
         }
     );
+}
+
+function buildContent(
+    global_properties: GlobalExportProperties,
+    report_artifacts: ArtifactResponse[]
+): Array<Array<string | number>> {
+    const content: Array<Array<string | number>> = [["report_id", global_properties.report_id]];
+    for (const artifact of report_artifacts) {
+        content.push(["artifact_id", artifact.id]);
+    }
+
+    return content;
 }
