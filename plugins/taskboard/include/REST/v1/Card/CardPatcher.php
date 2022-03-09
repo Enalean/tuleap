@@ -30,10 +30,10 @@ use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
-use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_REST_Artifact_ArtifactValidator;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class CardPatcher
@@ -42,14 +42,11 @@ class CardPatcher
      * @var Tracker_FormElementFactory
      */
     private $form_element_factory;
-    /**
-     * @var Tracker_REST_Artifact_ArtifactUpdater
-     */
-    private $updater;
+    private ArtifactUpdater $updater;
 
     public function __construct(
         Tracker_FormElementFactory $form_element_factory,
-        Tracker_REST_Artifact_ArtifactUpdater $updater,
+        ArtifactUpdater $updater,
     ) {
         $this->form_element_factory = $form_element_factory;
 
@@ -59,7 +56,7 @@ class CardPatcher
     public static function build(): self
     {
         $form_element_factory = Tracker_FormElementFactory::instance();
-        $updater              = new Tracker_REST_Artifact_ArtifactUpdater(
+        $updater              = new ArtifactUpdater(
             new Tracker_REST_Artifact_ArtifactValidator(
                 $form_element_factory
             )

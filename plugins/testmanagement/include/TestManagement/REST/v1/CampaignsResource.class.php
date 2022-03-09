@@ -48,7 +48,6 @@ use Tracker_Permission_PermissionRetrieveAssignee;
 use Tracker_Permission_PermissionsSerializer;
 use Tracker_ReportFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
-use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_REST_Artifact_ArtifactValidator;
 use Tracker_Semantic_StatusFactory;
 use Tracker_URLVerification;
@@ -101,6 +100,7 @@ use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
+use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
@@ -168,10 +168,7 @@ class CampaignsResource
 
     /** @var ExecutionDao */
     private $execution_dao;
-    /**
-     * @var Tracker_REST_Artifact_ArtifactUpdater
-     */
-    private $artifact_updater;
+    private ArtifactUpdater $artifact_updater;
     /**
      * @var Tracker_FormElementFactory
      */
@@ -300,9 +297,7 @@ class CampaignsResource
             $this->execution_creator
         );
 
-        $this->artifact_updater = new Tracker_REST_Artifact_ArtifactUpdater(
-            $artifact_validator
-        );
+        $this->artifact_updater = new ArtifactUpdater($artifact_validator);
 
         $this->campaign_updater = new CampaignUpdater(
             $this->artifact_updater,

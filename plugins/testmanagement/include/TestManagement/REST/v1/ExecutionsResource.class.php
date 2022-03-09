@@ -34,7 +34,6 @@ use Tracker_NoChangeException;
 use Tracker_Permission_PermissionRetrieveAssignee;
 use Tracker_Permission_PermissionsSerializer;
 use Tracker_REST_Artifact_ArtifactCreator;
-use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_REST_Artifact_ArtifactValidator;
 use Tracker_URLVerification;
 use TrackerFactory;
@@ -67,6 +66,7 @@ use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
+use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
@@ -108,8 +108,7 @@ class ExecutionsResource
     /** @var DefinitionForExecutionRetriever */
     private $definition_retriever;
 
-    /** @var Tracker_REST_Artifact_ArtifactUpdater */
-    private $artifact_updater;
+    private ArtifactUpdater $artifact_updater;
 
     /** @var UserManager */
     private $user_manager;
@@ -192,8 +191,8 @@ class ExecutionsResource
             $artifact_message_sender
         );
 
-        $this->artifact_updater = new Tracker_REST_Artifact_ArtifactUpdater(
-            new Tracker_REST_Artifact_ArtifactValidator(
+        $this->artifact_updater = new ArtifactUpdater(
+            new \Tracker_REST_Artifact_ArtifactValidator(
                 $this->formelement_factory
             )
         );

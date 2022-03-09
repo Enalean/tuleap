@@ -34,7 +34,6 @@ use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
-use Tracker_REST_Artifact_ArtifactUpdater;
 use TrackerFactory;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
@@ -43,6 +42,7 @@ use Tuleap\Taskboard\Column\InvalidColumnException;
 use Tuleap\Taskboard\Column\MilestoneTrackerRetriever;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
@@ -54,7 +54,7 @@ class CardMappedFieldUpdater
         private Cardwall_OnTop_Config_ColumnFactory $column_factory,
         private MilestoneTrackerRetriever $milestone_tracker_retriever,
         private AddValidator $add_validator,
-        private Tracker_REST_Artifact_ArtifactUpdater $artifact_updater,
+        private ArtifactUpdater $artifact_updater,
         private MappedFieldRetriever $mapped_field_retriever,
         private MappedValuesRetriever $mapped_values_retriever,
         private FirstPossibleValueInListRetriever $first_possible_value_retriever,
@@ -63,17 +63,18 @@ class CardMappedFieldUpdater
 
     public static function build(): self
     {
-        $column_dao = new Cardwall_OnTop_ColumnDao();
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $column_dao           = new Cardwall_OnTop_ColumnDao();
         return new self(
             new Cardwall_OnTop_Config_ColumnFactory($column_dao),
             new MilestoneTrackerRetriever($column_dao, TrackerFactory::instance()),
             new AddValidator(),
-            Tracker_REST_Artifact_ArtifactUpdater::build(),
+            new ArtifactUpdater(new \Tracker_REST_Artifact_ArtifactValidator($form_element_factory)),
             MappedFieldRetriever::build(),
             MappedValuesRetriever::build(),
             new FirstPossibleValueInListRetriever(
                 new FirstValidValueAccordingToDependenciesRetriever(
-                    Tracker_FormElementFactory::instance()
+                    $form_element_factory
                 )
             )
         );

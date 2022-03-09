@@ -33,8 +33,8 @@ use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_Numeric;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
-use Tracker_REST_Artifact_ArtifactUpdater;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -46,7 +46,7 @@ class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $factory;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_REST_Artifact_ArtifactUpdater
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface & ArtifactUpdater
      */
     private $updater;
     /**
@@ -82,7 +82,7 @@ class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->payload->remaining_effort = 3.14;
 
         $this->factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $this->updater = Mockery::mock(Tracker_REST_Artifact_ArtifactUpdater::class);
+        $this->updater = Mockery::mock(ArtifactUpdater::class);
 
         $this->patcher = new CardPatcher($this->factory, $this->updater);
     }
