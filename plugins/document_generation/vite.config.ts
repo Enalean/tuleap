@@ -22,9 +22,10 @@ import {
     defineAppConfig,
 } from "../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
+import vue from "@vitejs/plugin-vue";
 
 export default defineAppConfig("document_generation", {
-    plugins: [createPOGettextPlugin()],
+    plugins: [createPOGettextPlugin(), vue()],
     build: {
         rollupOptions: {
             input: {

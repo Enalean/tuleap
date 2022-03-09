@@ -18,8 +18,6 @@
  */
 
 import type { GlobalExportProperties } from "./type";
-import { downloadXLSXDocument } from "./export-document";
-import { downloadXLSX } from "./Exporter/XLSX/download-xlsx";
 
 document.addEventListener("DOMContentLoaded", () => {
     const generate_document_link = document.getElementById(
@@ -29,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("Missing generate cross tracker document button");
     }
 
-    generate_document_link.addEventListener("click", (event): void => {
+    generate_document_link.addEventListener("click", async (event): Promise<void> => {
         event.preventDefault();
 
         if (!generate_document_link.dataset.properties) {
@@ -39,8 +37,16 @@ document.addEventListener("DOMContentLoaded", () => {
             generate_document_link.dataset.properties
         );
 
-        downloadXLSXDocument(properties, downloadXLSX);
+        const modal_mount_point = document.getElementById(
+            "tracker-cross-report-generate-document-modal"
+        );
+        if (modal_mount_point === null) {
+            throw new Error(
+                "Cannot find the mount point for the cross report document export modal"
+            );
+        }
+
+        const { initModal } = await import("./init-modal");
+        initModal(modal_mount_point, properties);
     });
 });
-
-export {};

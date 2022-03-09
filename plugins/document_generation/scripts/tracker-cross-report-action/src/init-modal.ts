@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-process.env.DISABLE_TS_TYPECHECK = "true";
+import type { App } from "vue";
+import { createApp } from "vue";
+import Main from "./Components/Main.vue";
+import type { GlobalExportProperties } from "./type";
 
-const base_config = require("../../tests/jest/jest.base.config.js");
+let app: App<Element> | null = null;
 
-module.exports = {
-    ...base_config,
-    displayName: "document_generation",
-    transform: {
-        ...base_config.transform,
-        "^.+\\.vue$": "@vue/vue3-jest",
-    },
-};
+export function initModal(mount_point: Element, properties: GlobalExportProperties): void {
+    if (app !== null) {
+        app.unmount();
+    }
+    app = createApp(Main, { properties });
+    app.mount(mount_point);
+}

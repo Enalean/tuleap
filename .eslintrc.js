@@ -250,7 +250,10 @@ module.exports = {
         // At some point in the future this should the default and the Vue 2 rules should be explitcly enabled on the
         // remaining apps
         {
-            files: ["src/scripts/lib/project-sidebar-internal/**/*.vue"],
+            files: [
+                "src/scripts/lib/project-sidebar-internal/**/*.vue",
+                "plugins/document_generation/scripts/**/*.vue",
+            ],
             extends: ["plugin:vue/vue3-recommended"],
             rules: {
                 "vue/html-indent": "off", // Conflict with Prettier

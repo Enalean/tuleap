@@ -2,7 +2,9 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "module": "esnext",
-        "types": ["jest"]
+        "types": ["jest"],
+        "incremental": false,
+        "skipLibCheck": true
     },
     "include": [
         "scripts/tracker-report-action/**/*",
