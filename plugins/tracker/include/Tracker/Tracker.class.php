@@ -3133,10 +3133,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function getWorkflow()
     {
         if (! $this->workflow) {
-            $this->workflow = $this->getWorkflowFactory()->getWorkflowByTrackerId($this->getId());
-            if (! $this->workflow) {
-                $this->workflow = $this->getWorkflowFactory()->getWorkflowWithoutTransition($this);
-            }
+            $this->workflow = $this->getWorkflowFactory()->getNonNullWorkflow($this);
         }
         return $this->workflow;
     }

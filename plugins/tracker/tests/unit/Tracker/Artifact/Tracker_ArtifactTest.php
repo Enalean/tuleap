@@ -773,7 +773,6 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
 
-        $workflow->shouldReceive('setArtifact')->with($artifact)->once();
         $this->assertEquals($workflow, $artifact->getWorkflow());
     }
 

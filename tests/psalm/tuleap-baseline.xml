@@ -36358,6 +36358,9 @@
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/ChangesetCreatorBase.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>getWorkflow</code>
+    </DeprecatedMethod>
     <PossiblyNullReference occurrences="1">
       <code>after</code>
     </PossiblyNullReference>
@@ -36413,7 +36416,15 @@
       <code>$submitted_value</code>
     </MissingParamType>
   </file>
+  <file src="plugins/tracker/include/Tracker/Artifact/Changeset/InitialChangesetCreator.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>getWorkflow</code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/InitialChangesetCreatorBase.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>getWorkflow</code>
+    </DeprecatedMethod>
     <PossiblyNullReference occurrences="1">
       <code>validate</code>
     </PossiblyNullReference>
@@ -36425,12 +36436,19 @@
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/NewChangesetCreator.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>getWorkflow</code>
+    </DeprecatedMethod>
     <MissingParamType occurrences="2">
       <code>$changeset_id</code>
       <code>$previous_changeset</code>
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/NewChangesetCreatorBase.class.php">
+    <DeprecatedMethod occurrences="2">
+      <code>getWorkflow</code>
+      <code>getWorkflow</code>
+    </DeprecatedMethod>
     <InvalidScalarArgument occurrences="2">
       <code>$artifact-&gt;getTracker()-&gt;getGroupID()</code>
       <code>$submitter-&gt;getId()</code>
@@ -52081,6 +52099,11 @@
       <code>shouldBypassPermissions</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Workflow/FirstPossibleValueInListRetriever.php">
+    <DeprecatedMethod occurrences="1">
+      <code>getWorkflow</code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/tracker/include/Workflow/PostAction/CIBuild/Transition_PostAction_CIBuild.class.php">
     <MissingReturnType occurrences="1">
       <code>accept</code>
@@ -52312,6 +52335,9 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/HiddenFieldsets/HiddenFieldsetsDetector.php">
+    <DeprecatedMethod occurrences="1">
+      <code>getWorkflow</code>
+    </DeprecatedMethod>
     <RedundantCastGivenDocblockType occurrences="2">
       <code>(int) $fieldset-&gt;getID()</code>
       <code>(int) $fieldset_in_post_action-&gt;getID()</code>
@@ -52549,6 +52575,11 @@
     <PossiblyFalseArgument occurrences="1">
       <code>array_search($workflow-&gt;getFieldId(), $xml_mapping)</code>
     </PossiblyFalseArgument>
+  </file>
+  <file src="plugins/tracker/include/Workflow/SimpleMode/State/TransitionRetriever.php">
+    <DeprecatedMethod occurrences="1">
+      <code>getWorkflow</code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/tracker/include/Workflow/SimpleMode/State/TransitionUpdater.php">
     <MissingReturnType occurrences="2">
@@ -53080,17 +53111,16 @@
       <code>$transitions</code>
       <code>$workflow_id</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="5">
+    <MissingReturnType occurrences="4">
       <code>checkGlobalRules</code>
       <code>disable</code>
       <code>hasTransitions</code>
-      <code>setArtifact</code>
       <code>setField</code>
     </MissingReturnType>
     <PossiblyFalseArgument occurrences="1">
       <code>array_search($this-&gt;field_id, $xmlMapping)</code>
     </PossiblyFalseArgument>
-    <PossiblyNullPropertyAssignmentValue occurrences="3">
+    <PossiblyNullPropertyAssignmentValue occurrences="2">
       <code>null</code>
       <code>null</code>
       <code>null</code>

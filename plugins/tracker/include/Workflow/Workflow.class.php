@@ -42,11 +42,6 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public $is_used;
 
     /**
-     * @var Artifact
-     */
-    protected $artifact = null;
-
-    /**
      * @var Tracker_FormElement_Field
      */
     protected $field = null;
@@ -103,22 +98,6 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $this->logger                = $logger;
         $this->is_advanced           = $is_advanced;
         $this->is_legacy             = $is_legacy;
-    }
-
-    /**
-     * Set artifact
-     *
-     * @param Artifact $artifact artifact the workflow control
-     */
-    public function setArtifact(Artifact $artifact)
-    {
-        $this->artifact = $artifact;
-    }
-
-    /** @return Artifact */
-    public function getArtifact()
-    {
-        return $this->artifact;
     }
 
     /**
