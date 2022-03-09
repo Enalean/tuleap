@@ -68,7 +68,7 @@ final class WebdavController implements DispatchableWithRequestNoAuthz
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $this->server_builder->getServerOnSubPath($this->authentication->authenticate())->exec();
+        $this->server_builder->getServerOnSubPath($this->authentication->authenticate())->start();
     }
 
     public static function getFastRoutePattern(): string
