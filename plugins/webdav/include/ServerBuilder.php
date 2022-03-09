@@ -80,7 +80,7 @@ final class ServerBuilder
 
         // Finally, we create the server object. The server object is responsible for making sense out of the WebDAV protocol
         $server = new Server($tree);
-        $server->setLogger(\BackendLogger::getDefaultLogger());
+        $server->setLogger(\BackendLogger::getDefaultLogger(\WebDAVPlugin::LOG_IDENTIFIER));
 
         // Base URI is the path used to access to WebDAV server
         $server->setBaseUri($base_uri);
