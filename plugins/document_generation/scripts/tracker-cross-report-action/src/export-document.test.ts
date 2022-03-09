@@ -19,13 +19,32 @@
 
 import { downloadXLSXDocument } from "./export-document";
 import type { GlobalExportProperties } from "./type";
+import * as rest_querier from "./rest-querier";
+import type { ArtifactResponse } from "./type";
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 describe("export-document", () => {
     it("generates the export document and then trigger the download", async (): Promise<void> => {
         const document_exporter = jest.fn();
+        const getReportArtifactsMock = jest.spyOn(rest_querier, "getReportArtifacts");
 
-        await downloadXLSXDocument({} as GlobalExportProperties, document_exporter);
+        const artifacts_report_response: ArtifactResponse[] = [
+            {
+                id: 74,
+            },
+            {
+                id: 4,
+            },
+        ];
+        mockFetchSuccess(getReportArtifactsMock, {
+            return_json: {
+                artifacts_report_response,
+            },
+        });
 
+        await downloadXLSXDocument({ report_id: 1 } as GlobalExportProperties, document_exporter);
+
+        expect(getReportArtifactsMock).toHaveBeenCalled();
         expect(document_exporter).toHaveBeenCalled();
     });
 });

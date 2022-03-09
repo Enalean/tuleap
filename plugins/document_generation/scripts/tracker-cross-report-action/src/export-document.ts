@@ -17,11 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GlobalExportProperties } from "./type";
+import type { GlobalExportProperties, ArtifactResponse } from "./type";
+import { getReportArtifacts } from "./rest-querier";
 
-export function downloadXLSXDocument(
+export async function downloadXLSXDocument(
     global_properties: GlobalExportProperties,
-    download_document: (global_properties: GlobalExportProperties) => void
-): void {
-    download_document(global_properties);
+    download_document: (
+        global_properties: GlobalExportProperties,
+        report_artifacts: ArtifactResponse[]
+    ) => void
+): Promise<void> {
+    const report_artifacts: ArtifactResponse[] = await getReportArtifacts(
+        global_properties.report_id,
+        true
+    );
+
+    download_document(global_properties, report_artifacts);
 }

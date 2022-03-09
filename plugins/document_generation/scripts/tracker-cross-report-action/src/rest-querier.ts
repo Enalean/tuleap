@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,12 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface GlobalExportProperties {
-    readonly report_id: number;
-    readonly report_name: string;
-    readonly tracker_name: string;
-}
+import { recursiveGet } from "@tuleap/tlp-fetch";
+import type { ArtifactResponse } from "./type";
 
-export interface ArtifactResponse {
-    readonly id: number;
+export async function getReportArtifacts(
+    report_id: number,
+    report_has_changed: boolean
+): Promise<ArtifactResponse[]> {
+    const report_artifacts: ArtifactResponse[] = await recursiveGet(
+        `/api/v1/tracker_reports/${encodeURIComponent(report_id)}/artifacts`,
+        {
+            params: {
+                values: "all",
+                with_unsaved_changes: report_has_changed,
+                limit: 50,
+            },
+        }
+    );
+
+    return report_artifacts;
 }
