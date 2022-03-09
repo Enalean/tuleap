@@ -50,6 +50,7 @@ export interface ConfigurationState {
     readonly search_for_document_with_criteria: boolean;
     readonly criteria: SearchCriteria;
     readonly columns: ListOfSearchResultColumnDefinition;
+    readonly forbid_writers_to_update: boolean;
 }
 
 export function createConfigurationModule(

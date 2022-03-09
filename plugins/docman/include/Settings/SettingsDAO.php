@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Settings;
 
-final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements DAOSettings
+final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements DAOSettings, ForbidWritersToUpdateDAOSettings
 {
     public function searchFileNamePatternFromProjectId(int $project_id): ?string
     {

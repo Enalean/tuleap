@@ -46,7 +46,7 @@ class DocmanTest extends SOAPBase
         parent::tearDown();
     }
 
-    public function testGetDocumentRootFolder()
+    public function testGetDocumentRootFolder(): int
     {
         $session_hash = $this->getSessionHash();
 
@@ -58,14 +58,13 @@ class DocmanTest extends SOAPBase
         $this->assertNotNull($root_folder_id);
         $this->assertTrue(is_int($root_folder_id));
 
-        return $root_folder_id;
+        return (int) $root_folder_id;
     }
 
     /**
      * @depends testGetDocumentRootFolder
-     * @param $root_folder_id
      */
-    public function testCreateFile($root_folder_id)
+    public function testCreateFile(int $root_folder_id): int
     {
         $session_hash = $this->getSessionHash();
 
@@ -95,14 +94,13 @@ class DocmanTest extends SOAPBase
 
         $this->assertTrue($file_id > 0);
 
-        return $file_id;
+        return (int) $file_id;
     }
 
     /**
      * @depends testCreateFile
-     * @param int $file_id
      */
-    public function testGetFile($file_id)
+    public function testGetFile(int $file_id): void
     {
         $session_hash = $this->getSessionHash();
 
@@ -121,10 +119,33 @@ class DocmanTest extends SOAPBase
 
     /**
      * @depends testCreateFile
-     * @param int $item_id
-     * @return int
      */
-    public function testCreateFileVersion($item_id)
+    public function testRenameTitle(int $file_id): void
+    {
+        $session_hash = $this->getSessionHash();
+
+        $this->soap_base->updateDocmanFile(
+            $session_hash,
+            SOAP_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+            $file_id,
+            'Uploaded and updated document',
+            'Description of uploaded document',
+            null,
+            null,
+            [],
+            [],
+            SOAP_TestDataBuilder::TEST_USER_1_NAME,
+            '1438953065',
+            ''
+        );
+
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @depends testCreateFile
+     */
+    public function testCreateFileVersion(int $item_id): int
     {
         $session_hash = $this->getSessionHash();
 
@@ -151,9 +172,8 @@ class DocmanTest extends SOAPBase
 
     /**
      * @depends testGetDocumentRootFolder
-     * @param $root_folder_id
      */
-    public function testCreateFileWithTheWrongSizeFail($root_folder_id): void
+    public function testCreateFileWithTheWrongSizeFail(int $root_folder_id): void
     {
         $session_hash = $this->getSessionHash();
 
@@ -186,9 +206,8 @@ class DocmanTest extends SOAPBase
 
     /**
      * @depends testCreateFileVersion
-     * @param int $file_id
      */
-    public function testGetFileVersion($file_id)
+    public function testGetFileVersion(int $file_id): void
     {
         $session_hash = $this->getSessionHash();
 
@@ -213,7 +232,7 @@ class DocmanTest extends SOAPBase
     /**
      * @depends testGetDocumentRootFolder
      */
-    public function testCreateFolder($root_folder_id)
+    public function testCreateFolder(int $root_folder_id): int
     {
         $session_hash = $this->getSessionHash();
 
@@ -251,7 +270,7 @@ class DocmanTest extends SOAPBase
     /**
      * @depends testCreateFolder
      */
-    public function testCreateFolderWithSpaces($root_folder_id)
+    public function testCreateFolderWithSpaces(int $root_folder_id): int
     {
         $session_hash = $this->getSessionHash();
 
@@ -289,7 +308,7 @@ class DocmanTest extends SOAPBase
     /**
      * @depends testCreateFolderWithSpaces
      */
-    public function testGetFirstFolder($root_folder_id)
+    public function testGetFirstFolder(int $root_folder_id): void
     {
         $session_hash = $this->getSessionHash();
 
@@ -303,6 +322,6 @@ class DocmanTest extends SOAPBase
 
         $this->assertEquals($response[0]->title, 'My second Folder');
         $this->assertEquals($response[1]->title, 'My Folder');
-        $this->assertEquals($response[2]->title, 'Uploaded document');
+        $this->assertEquals($response[2]->title, 'Uploaded and updated document');
     }
 }

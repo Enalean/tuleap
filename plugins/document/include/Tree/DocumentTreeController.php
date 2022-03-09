@@ -28,6 +28,7 @@ use Project;
 use TemplateRendererFactory;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\Settings\ForbidUpdatePropertiesSettings;
 use Tuleap\Document\Config\ChangeLogModalDisplayer;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder;
@@ -51,6 +52,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         private \Docman_ItemDao $dao,
         private ListOfSearchCriterionPresenterBuilder $criteria_builder,
         private ListOfSearchColumnDefinitionPresenterBuilder $column_builder,
+        private ForbidUpdatePropertiesSettings $forbid_update_properties_checker,
     ) {
     }
 
@@ -75,6 +77,8 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
             throw new NotFoundException(dgettext('tuleap-document', 'Unable to find the root folder of project'));
         }
 
+        $forbid_writers_to_update = ! $this->forbid_update_properties_checker->areWritersAllowedToUpdateProperties((int) $project->getID());
+
         $renderer         = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
         $metadata_factory = new \Docman_MetadataFactory($project->getID());
         $renderer->renderToPage(
@@ -87,6 +91,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 $is_item_status_used,
                 $is_obsolescence_date_used,
                 (bool) $this->docman_plugin_info->getPropertyValueForName('only_siteadmin_can_delete'),
+                $forbid_writers_to_update,
                 new CSRFSynchronizerToken('plugin-document'),
                 $this->file_download_limits_builder->build(),
                 $this->changelog_modal_display_handler->isChangelogModalDisplayedAfterDragAndDrop((int) $project->getID()),

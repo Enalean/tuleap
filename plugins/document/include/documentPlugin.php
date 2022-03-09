@@ -110,12 +110,14 @@ class documentPlugin extends Plugin // phpcs:ignore
     public function routeGet(): DocumentTreeController
     {
         $history_enforcement_settings_builder = new HistoryEnforcementSettingsBuilder();
+        $settings_DAO                         = new SettingsDAO();
+
         return new DocumentTreeController(
             $this->getProjectExtractor(),
             $this->getOldPluginInfo(),
             new FileDownloadLimitsBuilder(),
             new ChangeLogModalDisplayer(
-                new FilenamePatternRetriever(new SettingsDAO()),
+                new FilenamePatternRetriever($settings_DAO),
                 $history_enforcement_settings_builder->build()
             ),
             new ProjectFlagsBuilder(new ProjectFlagsDao()),
@@ -124,6 +126,7 @@ class documentPlugin extends Plugin // phpcs:ignore
             new \Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder(
                 new \Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder()
             ),
+            new \Tuleap\Docman\Settings\ForbidUpdatePropertiesSettings($settings_DAO)
         );
     }
 

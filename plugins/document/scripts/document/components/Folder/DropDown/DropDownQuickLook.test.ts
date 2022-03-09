@@ -22,24 +22,41 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import DropDownQuickLook from "./DropDownQuickLook.vue";
 import type { Folder, Item, ItemFile } from "../../../type";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { ConfigurationState } from "../../../store/configuration";
 
 describe("DropDownQuickLook", () => {
-    function createWrapper(item: Item): Wrapper<DropDownQuickLook> {
+    function createWrapper(
+        item: Item,
+        forbid_writers_to_update: boolean
+    ): Wrapper<DropDownQuickLook> {
         return shallowMount(DropDownQuickLook, {
             localVue,
             propsData: { item },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: {
+                            forbid_writers_to_update,
+                        } as ConfigurationState,
+                    },
+                }),
+            },
         });
     }
 
     it(`Given item is not a folder and user can write
         When we display the menu
         Then the drop down does not display New folder/document entries`, () => {
-        const wrapper = createWrapper({
-            id: 1,
-            title: "my item title",
-            type: "file",
-            user_can_write: true,
-        } as ItemFile);
+        const wrapper = createWrapper(
+            {
+                id: 1,
+                title: "my item title",
+                type: "file",
+                user_can_write: true,
+            } as ItemFile,
+            false
+        );
 
         expect(wrapper.find("[data-test=dropdown-menu-folder-creation]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=dropdown-menu-file-creation]").exists()).toBeFalsy();
@@ -49,26 +66,72 @@ describe("DropDownQuickLook", () => {
     it(`Given item is not a folder and user can read
         When we display the menu
         Then does not display lock informations`, () => {
-        const wrapper = createWrapper({
-            id: 1,
-            title: "my item title",
-            type: "file",
-            user_can_write: false,
-        } as ItemFile);
+        const wrapper = createWrapper(
+            {
+                id: 1,
+                title: "my item title",
+                type: "file",
+                user_can_write: false,
+            } as ItemFile,
+            false
+        );
 
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBeFalsy();
     });
 
+    it(`Given writers are not allowed to update properties
+        And user is writer
+        When we display the menu
+        Then it does not display update properties entry`, () => {
+        const wrapper = createWrapper(
+            {
+                id: 1,
+                title: "my item title",
+                type: "file",
+                user_can_write: true,
+                can_user_manage: false,
+            } as ItemFile,
+            true
+        );
+
+        expect(
+            wrapper.find("[data-test=document-dropdown-menu-update-properties]").exists()
+        ).toBeFalsy();
+    });
+
+    it(`Given writers are not allowed to update properties
+        And user is manager
+        When we display the menu
+        Then it displays update properties entry`, () => {
+        const wrapper = createWrapper(
+            {
+                id: 1,
+                title: "my item title",
+                type: "file",
+                user_can_write: true,
+                can_user_manage: true,
+            } as ItemFile,
+            true
+        );
+
+        expect(
+            wrapper.find("[data-test=document-dropdown-menu-update-properties]").exists()
+        ).toBeTruthy();
+    });
+
     describe("Given item is a folder", () => {
         it(`When the dropdown is open
             Then user should not have the "create new version" option`, () => {
-            const wrapper = createWrapper({
-                id: 1,
-                title: "my folder",
-                type: "folder",
-                user_can_write: true,
-            } as Folder);
+            const wrapper = createWrapper(
+                {
+                    id: 1,
+                    title: "my folder",
+                    type: "folder",
+                    user_can_write: true,
+                } as Folder,
+                false
+            );
 
             expect(
                 wrapper.find("[data-test=document-quicklook-action-button-new-item]").exists()
@@ -86,12 +149,15 @@ describe("DropDownQuickLook", () => {
 
         it(`When user cannot write and the menu is displayed
             Then the user should not be able to create folder/documents`, () => {
-            const wrapper = createWrapper({
-                id: 1,
-                title: "my folder",
-                type: "folder",
-                user_can_write: false,
-            } as Folder);
+            const wrapper = createWrapper(
+                {
+                    id: 1,
+                    title: "my folder",
+                    type: "folder",
+                    user_can_write: false,
+                } as Folder,
+                false
+            );
 
             expect(wrapper.find("[data-test=dropdown-menu-folder-creation]").exists()).toBeFalsy();
             expect(wrapper.find("[data-test=dropdown-menu-file-creation]").exists()).toBeFalsy();

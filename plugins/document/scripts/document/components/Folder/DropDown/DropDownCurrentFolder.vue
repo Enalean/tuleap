@@ -39,6 +39,7 @@
                 v-bind:item="current_folder"
                 data-test="document-update-properties"
                 slot="update-properties"
+                v-if="should_display_update_properties"
             />
             <update-permissions v-bind:item="current_folder" slot="update-permissions" />
 
@@ -68,7 +69,10 @@ import UpdatePermissions from "./UpdatePermissions.vue";
 import DropDownItemTitle from "./DropDownItemTitle.vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import type { Folder } from "../../../type";
-import { State } from "vuex-class";
+import { namespace, State } from "vuex-class";
+import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
+
+const configuration = namespace("configuration");
 
 @Component({
     components: {
@@ -88,8 +92,15 @@ export default class DropDownCurrentFolder extends Vue {
     @State
     readonly current_folder!: Folder;
 
+    @configuration.State
+    readonly forbid_writers_to_update!: boolean;
+
     get can_user_delete_item(): boolean {
         return Boolean(this.current_folder.user_can_write && this.current_folder.parent_id);
+    }
+
+    get should_display_update_properties(): boolean {
+        return canUpdateProperties(this.forbid_writers_to_update, this.current_folder);
     }
 }
 </script>

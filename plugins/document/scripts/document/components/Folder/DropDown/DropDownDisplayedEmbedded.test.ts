@@ -23,34 +23,40 @@ import localVue from "../../../helpers/local-vue";
 import DropDownDisplayedEmbedded from "./DropDownDisplayedEmbedded.vue";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import type { Item, State } from "../../../type";
+import type { ConfigurationState } from "../../../store/configuration";
 
 describe("DropDownDisplayedEmbedded", () => {
     function createWrapper(
         user_can_write: boolean,
-        parent_id: number
+        can_user_manage: boolean,
+        parent_id: number,
+        forbid_writers_to_update: boolean
     ): Wrapper<DropDownDisplayedEmbedded> {
-        const state = {
-            currently_previewed_item: {
-                id: 42,
-                title: "embedded title",
-                user_can_write,
-                parent_id,
-            } as Item,
-        } as State;
-        const store_options = {
-            state,
-        };
-        const store = createStoreMock(store_options);
         return shallowMount(DropDownDisplayedEmbedded, {
             localVue,
-            mocks: { $store: store },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        currently_previewed_item: {
+                            id: 42,
+                            title: "embedded title",
+                            user_can_write,
+                            can_user_manage,
+                            parent_id,
+                        } as Item,
+                        configuration: {
+                            forbid_writers_to_update,
+                        } as ConfigurationState,
+                    } as unknown as State,
+                }),
+            },
             propsData: { isInFolderEmptyState: false },
         });
     }
 
     it(`Given user can write item
         Then he can update its properties and delete it`, () => {
-        const wrapper = createWrapper(true, 102);
+        const wrapper = createWrapper(true, false, 102, false);
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
         expect(
@@ -63,7 +69,7 @@ describe("DropDownDisplayedEmbedded", () => {
 
     it(`Given user can write item, and given folder is root folder
         Then he can update its properties but he can not delete ir`, () => {
-        const wrapper = createWrapper(true, 0);
+        const wrapper = createWrapper(true, false, 0, false);
 
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
@@ -77,12 +83,30 @@ describe("DropDownDisplayedEmbedded", () => {
 
     it(`Given user has read permission on item
         Then he can't manage document`, () => {
-        const wrapper = createWrapper(false, 102);
+        const wrapper = createWrapper(false, false, 102, false);
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-delete-item]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-separator]").exists()).toBeFalsy();
+    });
+
+    it(`Given writers are not allowed to update properties
+        And user is writer
+        When we display the menu
+        Then it does not display update properties entry`, () => {
+        const wrapper = createWrapper(true, false, 3, true);
+
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeFalsy();
+    });
+
+    it(`Given writers are not allowed to update properties
+        And user is manager
+        When we display the menu
+        Then it displays update properties entry`, () => {
+        const wrapper = createWrapper(true, true, 3, true);
+
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
     });
 });

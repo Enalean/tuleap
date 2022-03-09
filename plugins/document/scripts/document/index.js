@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const embedded_are_allowed = Boolean(vue_mount_point.dataset.embeddedAreAllowed);
     const is_deletion_allowed = Boolean(vue_mount_point.dataset.userCanDeleteItem);
     const is_status_property_used = Boolean(vue_mount_point.dataset.isItemStatusPropertyUsed);
+    const forbid_writers_to_update = Boolean(vue_mount_point.dataset.forbidWritersToUpdate);
     const is_obsolescence_date_property_used = Boolean(
         vue_mount_point.dataset.isObsolescenceDatePropertyUsed
     );
@@ -123,6 +124,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         user_locale,
         criteria,
         columns,
+        forbid_writers_to_update,
     };
 
     const AppComponent = Vue.extend(App);

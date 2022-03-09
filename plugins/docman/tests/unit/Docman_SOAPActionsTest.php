@@ -61,7 +61,10 @@ class Docman_SOAPActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         // Item MD5 Map: id => md5sum
         $this->MD5Map = [128000 => '99999999999999999999999999999999'];
         foreach ($this->MD5Map as $itemId => $md5) {
-            $file = M::spy(Docman_File::class, ['getID' => $itemId, 'getCurrentVersion' => $version]);
+            $file = M::spy(
+                Docman_File::class,
+                ['getID' => $itemId, 'getCurrentVersion' => $version, 'getTitle' => 'My original title']
+            );
             $this->itemFactory->shouldReceive('getItemFromDb')->with($itemId)->andReturn($file);
             $this->itemFactory->shouldReceive('getItemTypeForItem')->with($file)->andReturn(
                 PLUGIN_DOCMAN_ITEM_TYPE_FILE
@@ -250,6 +253,64 @@ class Docman_SOAPActionsTest extends \Tuleap\Test\PHPUnit\TestCase
             '*'
         )->ordered();
         $action->event_manager->shouldReceive('processEvent')->with('send_notifications', '*')->ordered();
+
+        $action->update();
+    }
+
+    public function testUpdateOfTitleSucceed(): void
+    {
+        $action = $this->action;
+
+        $params  = [
+            'item'     => [
+                'owner' => 'testuser',
+                'id'    => 128000,
+                'title' => 'The new title',
+            ],
+            'group_id' => 2,
+        ];
+        $request = \Mockery::spy(\SOAPRequest::class);
+        $request->shouldReceive('exist')->with('item')->andReturns(true);
+        $request->shouldReceive('get')->with('item')->andReturns($params['item']);
+
+        $this->docmanPermissionsManager->shouldReceive('userCanUpdateItemProperties')->andReturns(true);
+
+        $action->getControler()->request = $request;
+
+        $action->shouldReceive('_checkOwnerChange')->with($params['item']['owner'], $this->user)->once();
+        $this->itemFactory->shouldReceive('update')->once();
+        $action->event_manager->shouldReceive('processEvent')->with(
+            'plugin_docman_event_metadata_update',
+            '*'
+        )->ordered();
+        $action->event_manager->shouldReceive('processEvent')->with('send_notifications', '*')->ordered();
+
+        $action->update();
+    }
+
+    public function testUpdateOfTitleFailsIfNoRight(): void
+    {
+        $action = $this->action;
+
+        $params  = [
+            'item'     => [
+                'owner' => 'testuser',
+                'id'    => 128000,
+                'title' => 'The new title',
+            ],
+            'group_id' => 2,
+        ];
+        $request = \Mockery::spy(\SOAPRequest::class);
+        $request->shouldReceive('exist')->with('item')->andReturns(true);
+        $request->shouldReceive('get')->with('item')->andReturns($params['item']);
+
+        $this->docmanPermissionsManager->shouldReceive('userCanUpdateItemProperties')->andReturns(false);
+
+        $action->getControler()->request = $request;
+
+        $this->itemFactory->shouldReceive('update')->never();
+
+        $this->expectException(\Tuleap\Request\ForbiddenException::class);
 
         $action->update();
     }

@@ -21,6 +21,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\Settings\ForbidUpdatePropertiesSettings;
+use Tuleap\Docman\Settings\ITellIfWritersAreAllowedToUpdateProperties;
+use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
@@ -38,14 +41,6 @@ class Docman_PermissionsManager
         self::ITEM_PERMISSION_TYPE_MANAGE,
     ];
 
-    /**
-     * @var Project
-     */
-    private $project;
-    /**
-     * @var ProjectAccessChecker
-     */
-    private $project_access_checker;
     protected $cache_access = [];
     protected $cache_read   = [];
     protected $cache_write  = [];
@@ -61,11 +56,12 @@ class Docman_PermissionsManager
     private static $instance = [];
     private $plugin;
 
-    private function __construct(Project $project, ProjectAccessChecker $project_access_checker)
-    {
-        $this->project                = $project;
-        $this->project_access_checker = $project_access_checker;
-        $this->plugin                 = PluginManager::instance()->getPluginByName(DocmanPlugin::SERVICE_SHORTNAME);
+    private function __construct(
+        private Project $project,
+        private ProjectAccessChecker $project_access_checker,
+        private ITellIfWritersAreAllowedToUpdateProperties $forbid_update_properties_settings,
+    ) {
+        $this->plugin = PluginManager::instance()->getPluginByName(DocmanPlugin::SERVICE_SHORTNAME);
     }
 
     /**
@@ -84,7 +80,8 @@ class Docman_PermissionsManager
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessProjectVerifier(),
                     EventManager::instance()
-                )
+                ),
+                new ForbidUpdatePropertiesSettings(new SettingsDAO()),
             );
         }
         return self::$instance[$groupId];
@@ -130,6 +127,14 @@ class Docman_PermissionsManager
             $this->dao = new Docman_PermissionsManagerDao(CodendiDataAccess::instance(), $this->getProject()->getID());
         }
         return $this->dao;
+    }
+
+    /**
+     * @protected for Testing purpose
+     */
+    protected function getForbidUpdatePropertiesSettings(): ITellIfWritersAreAllowedToUpdateProperties
+    {
+        return $this->forbid_update_properties_settings;
     }
 
     /**
@@ -346,6 +351,16 @@ class Docman_PermissionsManager
             $this->_setCanManage($user->getId(), $item_id, $canManage);
         }
         return $this->cache_manage[$user->getId()][$item_id];
+    }
+
+    public function userCanUpdateItemProperties(PFUser $user, Docman_Item $item): bool
+    {
+        if ($this->userCanManage($user, $item->getId())) {
+            return true;
+        }
+
+        return $this->userCanWrite($user, $item->getId())
+            && $this->getForbidUpdatePropertiesSettings()->areWritersAllowedToUpdateProperties((int) $this->getProject()->getID());
     }
 
     /**

@@ -29,7 +29,7 @@
             data-test="document-folder-title"
         />
 
-        <template v-if="item.user_can_write && is_item_a_folder(item)">
+        <template v-if="item.user_can_write && is_item_a_folder">
             <new-folder-secondary-action
                 v-bind:item="item"
                 slot="new-folder-secondary-action"
@@ -38,7 +38,7 @@
             <new-document v-bind:item="item" slot="new-document" />
         </template>
 
-        <template v-if="!is_item_a_folder(item)">
+        <template v-if="!is_item_a_folder">
             <lock-item
                 v-bind:item="item"
                 data-test="document-dropdown-menu-lock-item"
@@ -51,12 +51,12 @@
             />
         </template>
 
-        <template v-if="item.user_can_write && !is_item_a_folder(item)">
+        <template v-if="item.user_can_write && !is_item_a_folder">
             <create-new-item-version-button
                 v-bind:item="item"
                 v-bind:button-classes="`tlp-dropdown-menu-item`"
                 v-bind:icon-classes="`fas fa-fw fa-share tlp-dropdown-menu-item-icon`"
-                v-if="!is_item_a_folder(item)"
+                v-if="!is_item_a_folder"
                 data-test="document-dropdown-create-new-version-button"
                 slot="new-item-version"
             />
@@ -66,7 +66,7 @@
             <update-properties
                 slot="update-properties"
                 v-bind:item="item"
-                v-if="item.user_can_write"
+                v-if="should_display_update_properties"
                 data-test="document-update-properties"
             />
             <update-permissions v-bind:item="item" slot="update-permissions" />
@@ -80,7 +80,8 @@
         </template>
     </drop-down-menu>
 </template>
-<script lang="ts">
+
+<script setup lang="ts">
 import DropDownMenu from "./DropDownMenu.vue";
 import CreateNewItemVersionButton from "../DropDown/NewVersion/NewItemVersionButton.vue";
 import DeleteItem from "./Delete/DeleteItem.vue";
@@ -93,29 +94,30 @@ import UpdateProperties from "./UpdateProperties/UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import DropDownItemTitle from "./DropDownItemTitle.vue";
 import { isFolder } from "../../../helpers/type-check-helper";
-import { Component, Prop, Vue } from "vue-property-decorator";
 import type { Item } from "../../../type";
+import { useState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
+import { computed } from "@vue/composition-api";
+import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
 
-@Component({
-    components: {
-        DropDownItemTitle,
-        UpdateProperties,
-        UpdatePermissions,
-        UnlockItem,
-        LockItem,
-        NewDocument,
-        DropDownSeparator,
-        NewFolderSecondaryAction,
-        DeleteItem,
-        CreateNewItemVersionButton,
-        DropDownMenu,
-    },
-})
-export default class DropDownMenuTreeView extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
-    is_item_a_folder(item: Item): boolean {
-        return isFolder(item);
-    }
-}
+const props = defineProps<{ item: Item }>();
+
+const { forbid_writers_to_update } = useState<Pick<ConfigurationState, "forbid_writers_to_update">>(
+    "configuration",
+    ["forbid_writers_to_update"]
+);
+
+const is_item_a_folder = computed((): boolean => {
+    return isFolder(props.item);
+});
+
+const should_display_update_properties = computed((): boolean => {
+    return canUpdateProperties(forbid_writers_to_update.value, props.item);
+});
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

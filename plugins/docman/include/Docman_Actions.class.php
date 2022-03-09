@@ -580,7 +580,7 @@ class Docman_Actions extends Actions
         $this->event_manager->processEvent('send_notifications', []);
     }
 
-    public function update()
+    public function update(): void
     {
         $request = $this->_controler->request;
         if ($request->exist('item')) {
@@ -594,6 +594,13 @@ class Docman_Actions extends Actions
 
             $item_factory = $this->_getItemFactory($request->get('group_id'));
             $item         = $item_factory->getItemFromDb($data['id']);
+
+            if (
+                ($request->exist('metadata') || (isset($data['title']) && $data['title'] !== $item->getTitle()))
+                && ! $this->_getDocmanPermissionsManagerInstance($item->getGroupId())->userCanUpdateItemProperties($user, $item)
+            ) {
+                throw new \Tuleap\Request\ForbiddenException();
+            }
 
             // Update Owner
             $ownerChanged = false;

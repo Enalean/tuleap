@@ -750,6 +750,13 @@ class DocmanFoldersResource extends AuthenticatedResource
 
         $project = $item_request->getProject();
 
+        if (! $this->getPermissionManager($project)->userCanUpdateItemProperties($current_user, $item)) {
+            throw new I18NRestException(
+                403,
+                dgettext('tuleap-docman', 'You are not allowed to write this item.')
+            );
+        }
+
         $validator = $this->getValidator($project, $current_user, $item);
         $item->accept($validator, []);
 
@@ -855,7 +862,7 @@ class DocmanFoldersResource extends AuthenticatedResource
             $this->getPermissionManager($project),
             $current_user,
             $item,
-            new DoesItemHasExpectedTypeVisitor(Docman_Folder::class)
+            new DoesItemHasExpectedTypeVisitor(Docman_Folder::class),
         );
     }
 
