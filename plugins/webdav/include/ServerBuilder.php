@@ -49,11 +49,6 @@ final class ServerBuilder
         $this->plugin        = $plugin;
     }
 
-    public function getServerOnDedicatedDomain(\PFUser $user): \Sabre\DAV\Server
-    {
-        return $this->getServer($user, '/');
-    }
-
     public function getServerOnSubPath(\PFUser $user): \Sabre\DAV\Server
     {
         return $this->getServer($user, WebdavController::ROUTE_BASE);
