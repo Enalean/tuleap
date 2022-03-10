@@ -30,7 +30,7 @@ final class ListFieldsIncluder
         ListPickerIncluder::includeListPickerAssets($tracker_id);
 
         $include_assets = new \Tuleap\Layout\IncludeAssets(
-            __DIR__ . '/../../../../../../src/www/assets/trackers',
+            __DIR__ . '/../../../../frontend-assets',
             '/assets/trackers'
         );
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('run-field-dependencies.js'));

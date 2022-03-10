@@ -127,7 +127,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
 
         $response->addJavascriptAsset(
             new JavascriptAsset(
-                new IncludeAssets(__DIR__ . '/../../../../../../../src/www/assets/trackers', '/assets/trackers'),
+                new IncludeAssets(__DIR__ . '/../../../../../frontend-assets', '/assets/trackers'),
                 'global-admin-artifact-links.js'
             )
         );

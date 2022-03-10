@@ -17,13 +17,11 @@ fs.readFile("tql.pegjs", function (err, data) {
         },
     });
 
-    fs.writeFile(
-        "../include/Tracker/Report/Query/Advanced/Grammar/Parser.php",
-        parser,
-        function (err) {
-            if (err) {
-                throw err;
-            }
+    const output_dir = "./backend-assets/Tracker/Report/Query/Advanced/Grammar/";
+    fs.mkdirSync(output_dir, { recursive: true });
+    fs.writeFile(output_dir + "Parser.php", parser, function (err) {
+        if (err) {
+            throw err;
         }
-    );
+    });
 });

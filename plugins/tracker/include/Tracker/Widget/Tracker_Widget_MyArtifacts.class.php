@@ -246,7 +246,7 @@ class Tracker_Widget_MyArtifacts extends Widget
     public function getStylesheetDependencies(): CssAssetCollection
     {
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/trackers',
+            __DIR__ . '/../../../frontend-assets',
             '/assets/trackers'
         );
         return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'tracker-bp')]);

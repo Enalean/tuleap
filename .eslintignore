@@ -1,4 +1,6 @@
 **/assets/*
+**/frontend-assets/*
+**/backend-assets/*
 **/build/*
 **/bin/*
 **/coverage/*

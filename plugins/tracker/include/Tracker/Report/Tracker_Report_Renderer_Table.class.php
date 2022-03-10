@@ -2640,7 +2640,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     public function getStylesheetDependencies(): CssAssetCollection
     {
         $assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/trackers',
+            __DIR__ . '/../../../frontend-assets',
             '/assets/trackers'
         );
         return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'tracker-bp')]);

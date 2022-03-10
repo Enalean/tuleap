@@ -23,7 +23,7 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 const manifest_plugin = webpack_configurator.getManifestPlugin();
 const context = __dirname;
 const output = webpack_configurator.configureOutput(
-    path.resolve(__dirname, "../../src/www/assets/trackers"),
+    path.resolve(__dirname, "./frontend-assets/"),
     "/assets/trackers/"
 );
 

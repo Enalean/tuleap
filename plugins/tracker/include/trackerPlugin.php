@@ -2330,7 +2330,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private function getAssets(): IncludeAssets
     {
-        return new IncludeAssets(__DIR__ . '/../../../src/www/assets/trackers', '/assets/trackers');
+        return new IncludeAssets(__DIR__ . '/../frontend-assets', '/assets/trackers');
     }
 
     public function collectOAuth2ScopeBuilder(OAuth2ScopeBuilderCollector $collector): void

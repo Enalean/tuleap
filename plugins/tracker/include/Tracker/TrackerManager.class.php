@@ -584,7 +584,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         $GLOBALS['HTML']->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
 
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/trackers',
+            __DIR__ . '/../../frontend-assets',
             '/assets/trackers'
         );
 

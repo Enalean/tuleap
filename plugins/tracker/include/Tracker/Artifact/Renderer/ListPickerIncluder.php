@@ -33,7 +33,7 @@ final class ListPickerIncluder
     {
         if (self::isListPickerEnabledAndBrowserCompatible($tracker_id)) {
             $include_assets = new \Tuleap\Layout\IncludeAssets(
-                __DIR__ . '/../../../../../../src/www/assets/trackers',
+                __DIR__ . '/../../../../frontend-assets',
                 '/assets/trackers'
             );
 
@@ -45,7 +45,7 @@ final class ListPickerIncluder
     {
         if (self::isListPickerEnabledAndBrowserCompatible($tracker_id)) {
             $include_assets = new \Tuleap\Layout\IncludeAssets(
-                __DIR__ . '/../../../../../../src/www/assets/trackers',
+                __DIR__ . '/../../../../frontend-assets',
                 '/assets/trackers'
             );
 

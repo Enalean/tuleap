@@ -3395,7 +3395,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     private function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/trackers',
+            __DIR__ . '/../../frontend-assets',
             '/assets/trackers'
         );
     }

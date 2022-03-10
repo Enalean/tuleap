@@ -173,7 +173,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
 
         $assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/trackers',
+            __DIR__ . '/../../../frontend-assets',
             '/assets/trackers'
         );
 
