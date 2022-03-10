@@ -730,6 +730,9 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
 
 ## plugin webdav
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
+%{__install} plugins/webdav/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_webdav
+%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_webdav
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_webdav
 
 ## plugin forumml
 %{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/forumml
@@ -1253,6 +1256,7 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/webdav
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/plugins/webdav
+%attr(00644,root,root) %{_sysconfdir}/logrotate.d/%{APP_NAME}_webdav
 
 %files plugin-svn
 %defattr(-,root,root,-)
