@@ -74,6 +74,7 @@ use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\ReportRepresentation;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\v1\Workflow\ModeUpdater;
+use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -872,7 +873,8 @@ class TrackersResource extends AuthenticatedResource
             new PermissionsRepresentationBuilder(
                 new \UGroupManager(),
                 new PermissionsFunctionsWrapper()
-            )
+            ),
+            new WorkflowRestBuilder()
         );
     }
 

@@ -57,7 +57,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
                     })
                 );
 
-                if ($from_id !== $to_id && $is_not_used_transition) {
+                if ($from_id !== $to_id && $is_not_used_transition && $from_id !== null && $to_id !== null) {
                     $all_transitions["missing_transitions"][] = [
                         "from_id" => $from_id,
                         "to_id" => $to_id,
@@ -97,9 +97,9 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $available_transition = $transition_combinations["missing_transitions"][0];
 
         $params = json_encode([
-            "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
-            "from_id" => $available_transition['from_id'] ?: 0,
-            "to_id" => $available_transition['to_id'],
+            "tracker_id" => (int) $this->tracker_workflow_transitions_tracker_id,
+            "from_id" => (int) $available_transition['from_id'] ?: 0,
+            "to_id" => (int) $available_transition['to_id'],
         ]);
 
         $response = $this->getResponseByName(
