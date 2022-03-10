@@ -36,7 +36,7 @@ import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import { Mutation, State } from "vuex-class";
 import type { Modal } from "tlp";
-import { EVENT_TLP_MODAL_HIDDEN } from "../../../../../themes/tlp/src/js/modal";
+import { EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 
 @Component
 export default class SwitchToFilter extends Vue {

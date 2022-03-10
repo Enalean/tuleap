@@ -9,6 +9,7 @@
   "module": "./src/js/index.ts",
   "dependencies": {
     "@tuleap/tlp-fetch": "file:../../scripts/lib/tlp-fetch",
+    "@tuleap/tlp-modal": "link:../../scripts/lib/tlp-modal",
     "@tuleap/tlp-popovers": "file:../../scripts/lib/tlp-popovers",
     "flatpickr": "^4.6.9",
     "jquery": "^3.6.0",

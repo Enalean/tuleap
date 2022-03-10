@@ -18,6 +18,7 @@
     "@tuleap/project-privacy-helper": "link:scripts/lib/project-privacy-helper",
     "@tuleap/project-sidebar-internal": "link:scripts/lib/project-sidebar-internal",
     "@tuleap/tlp-fetch": "file:scripts/lib/tlp-fetch",
+    "@tuleap/tlp-modal": "link:scripts/lib/tlp-modal",
     "@tuleap/tlp-popovers": "file:scripts/lib/tlp-popovers",
     "@tuleap/tooltip": "file:scripts/lib/tooltip",
     "ckeditor4": "^4.17.1",

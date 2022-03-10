@@ -76,8 +76,8 @@
 </template>
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import type { Modal } from "@tuleap/tlp/src/js/modal";
-import { createModal } from "@tuleap/tlp/src/js/modal";
+import type { Modal } from "@tuleap/tlp-modal";
+import { createModal } from "@tuleap/tlp-modal";
 import type { GlobalExportProperties } from "../type";
 
 const modal_element = ref<InstanceType<typeof HTMLElement>>();
@@ -87,7 +87,7 @@ onMounted(() => {
     if (modal_element.value === undefined) {
         throw new Error("Cannot find modal root element");
     }
-    modal = createModal(document, modal_element.value);
+    modal = createModal(modal_element.value);
     modal.show();
 });
 
@@ -111,13 +111,12 @@ async function startExport(): Promise<void> {
 }
 </script>
 <style lang="scss" scoped>
+@use "sass:meta";
+
 /* stylelint-disable-next-line selector-pseudo-class-no-unknown -- Stylelint does not know about the Vue :deep() selector */
 .tracker-cross-report-document-modal :deep() {
-    @import "@tuleap/tlp/src/scss/components/typography";
-    @import "@tuleap/tlp/src/scss/components/modal";
-
-    .tlp-modal-footer {
-        min-height: unset;
-    }
+    @include meta.load-css("@tuleap/tlp/src/scss/components/typography");
+    @include meta.load-css("@tuleap/tlp/src/scss/components/buttons");
+    @include meta.load-css("@tuleap/tlp-modal");
 }
 </style>

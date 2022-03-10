@@ -17,10 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "buttons";
-
-$tlp-modal-padding: var(--tlp-medium-spacing);
-$tlp-modal-radius: var(--tlp-x-large-radius);
+$-tlp-modal-padding: var(--tlp-medium-spacing);
+$-tlp-modal-radius: var(--tlp-x-large-radius);
 
 .tlp-modal {
     display: none;
@@ -34,7 +32,7 @@ $tlp-modal-radius: var(--tlp-x-large-radius);
     max-height: 90vh;
     margin: 5vh auto;
     border: 0;
-    border-radius: $tlp-modal-radius;
+    border-radius: $-tlp-modal-radius;
     background: var(--tlp-white-color);
     box-shadow: var(--tlp-modal-shadow);
     text-align: left;
@@ -89,10 +87,10 @@ $tlp-modal-radius: var(--tlp-x-large-radius);
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    padding: $tlp-modal-padding;
+    padding: $-tlp-modal-padding;
     border-bottom: 1px solid var(--tlp-neutral-light-color);
-    border-top-left-radius: $tlp-modal-radius;
-    border-top-right-radius: $tlp-modal-radius;
+    border-top-left-radius: $-tlp-modal-radius;
+    border-top-right-radius: $-tlp-modal-radius;
     color: var(--tlp-dark-color);
 }
 
@@ -143,7 +141,7 @@ $tlp-modal-radius: var(--tlp-x-large-radius);
 }
 
 .tlp-modal-feedback {
-    padding: $tlp-modal-padding;
+    padding: $-tlp-modal-padding;
     border-bottom: 1px solid var(--tlp-neutral-light-color);
 
     &:empty {
@@ -154,7 +152,7 @@ $tlp-modal-radius: var(--tlp-x-large-radius);
 .tlp-modal-body {
     height: 100%;
     max-height: 70vh;
-    padding: $tlp-modal-padding;
+    padding: $-tlp-modal-padding;
     overflow-y: auto;
 }
 
@@ -166,7 +164,7 @@ $tlp-modal-radius: var(--tlp-x-large-radius);
 
 .tlp-modal-body-section {
     flex: 0 1 50%;
-    padding: $tlp-modal-padding;
+    padding: $-tlp-modal-padding;
     overflow-y: auto;
     border-right: 1px solid var(--tlp-neutral-light-color);
 
@@ -178,15 +176,10 @@ $tlp-modal-radius: var(--tlp-x-large-radius);
 .tlp-modal-footer {
     display: flex;
     justify-content: flex-end;
-    min-height: calc(2 * #{$tlp-modal-padding} + #{buttons.$tlp-button-normal-height});
-    padding: $tlp-modal-padding;
+    padding: $-tlp-modal-padding;
     border-top: 1px solid var(--tlp-neutral-light-color);
-    border-bottom-right-radius: $tlp-modal-radius;
-    border-bottom-left-radius: $tlp-modal-radius;
-
-    &.tlp-modal-footer-large {
-        min-height: calc(2 * #{$tlp-modal-padding} + #{buttons.$tlp-button-large-height});
-    }
+    border-bottom-right-radius: $-tlp-modal-radius;
+    border-bottom-left-radius: $-tlp-modal-radius;
 }
 
 .tlp-modal-action {

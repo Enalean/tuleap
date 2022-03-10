@@ -4,6 +4,8 @@ import * as tlp from "tlp";
 import angular_tlp_module from "./index.js";
 import { createAngularPromiseWrapper } from "../../../../../tests/jest/angular-promise-wrapper.js";
 
+jest.mock("tlp");
+
 describe("TlpModalService -", function () {
     let wrapPromise, TlpModalService, $templateCache, $document, $rootScope, $q;
 

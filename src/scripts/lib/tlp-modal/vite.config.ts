@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,24 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { displayBrowserDeprecationModalIfNeeded } from "./browser-deprecation-modal";
-import { createModal, Modal } from "tlp";
+import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
+import * as path from "path";
+import dts from "vite-dts";
 
-class NonDismissibleModal extends Modal {
-    override hide(): void {
-        // Empty on purpose, we do not want this modal to be hidden
-    }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    displayBrowserDeprecationModalIfNeeded(
-        document,
-        (modal_element: Element) => {
-            createModal(modal_element).show();
+export default defineConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "TlpModal",
         },
-        (modal_element: Element) => {
-            new NonDismissibleModal(document, modal_element).show();
-        },
-        window.localStorage
-    );
+    },
+    plugins: [dts()],
 });

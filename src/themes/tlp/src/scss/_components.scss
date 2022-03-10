@@ -18,6 +18,7 @@
  */
 
 @use "@tuleap/tlp-popovers";
+@use "@tuleap/tlp-modal";
 @use "./components/fonts";
 @import "./components/layout";
 @import "./components/typography";
@@ -34,7 +35,6 @@
 @import "./components/forms";
 @import "./components/dropdowns";
 @import "./components/tooltips";
-@import "./components/modal";
 @import "./components/switch";
 @import "./components/illustration";
 @import "./components/skeleton";
