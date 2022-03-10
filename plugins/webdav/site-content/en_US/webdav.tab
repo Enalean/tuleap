@@ -9,7 +9,6 @@ plugin_webdav_upload	create_file_fail	Could not create the file into the filesys
 plugin_webdav_upload	write_file_fail	Could not write into the file.
 plugin_webdav_upload	close_file_fail	Error while closing the file.
 plugin_webdav_common	plugin_not_available	WebDAV plugin not available for this project.
-plugin_webdav_common	plugin_not_active	WebDAV plugin is not activated.
 plugin_webdav_common	copy	Copy is not implemented.
 plugin_webdav_common	move_error	Move action not authorised.
 plugin_webdav_common	project_not_available	Project not available.

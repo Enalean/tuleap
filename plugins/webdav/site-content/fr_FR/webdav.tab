@@ -11,7 +11,6 @@ plugin_webdav_upload	close_file_fail	Erreur lors de la fermeture du fichier.
 plugin_webdav_common	copy	Copier n'est pas implementee.
 plugin_webdav_common	move_error	Ce deplacement n'est pas autorise.
 plugin_webdav_common	plugin_not_available	Le plugin WebDAV n'est pas disponible pour ce projet.
-plugin_webdav_common	plugin_not_active	Le plugin WebDAV n'est pas active.	
 plugin_webdav_common	project_not_available	Le projet n'est pas disponible.
 plugin_webdav_common	project_access_not_authorized	Vous n'avez pas les droits d'acces sur ce projet. Veuillez contacter un administrateur du projet.
 plugin_webdav_common	project_have_no_frs	La livraison de fichier n'est pas activee pour ce projet.
