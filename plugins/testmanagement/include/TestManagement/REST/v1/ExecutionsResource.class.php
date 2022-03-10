@@ -38,6 +38,8 @@ use Tracker_REST_Artifact_ArtifactValidator;
 use Tracker_URLVerification;
 use TrackerFactory;
 use TransitionFactory;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Markdown\CommonMarkInterpreter;
@@ -63,8 +65,17 @@ use Tuleap\TestManagement\REST\FormattedChangesetValueForTextFieldRetriever;
 use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentationBuilder;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsFilter;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
+use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
@@ -77,6 +88,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use UserManager;
 
 class ExecutionsResource
@@ -191,10 +203,33 @@ class ExecutionsResource
             $artifact_message_sender
         );
 
+        $usage_dao         = new ArtifactLinksUsageDao();
+        $changeset_creator = new \Tracker_Artifact_Changeset_NewChangesetCreator(
+            new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                $this->formelement_factory,
+                new ArtifactLinkValidator(
+                    $this->artifact_factory,
+                    new TypePresenterFactory(new TypeDao(), $usage_dao),
+                    $usage_dao
+                ),
+                new WorkflowUpdateChecker($this->getFrozenFieldDetector())
+            ),
+            new FieldsToBeSavedInSpecificOrderRetriever($this->formelement_factory),
+            new \Tracker_Artifact_ChangesetDao(),
+            new \Tracker_Artifact_Changeset_CommentDao(),
+            $this->artifact_factory,
+            \EventManager::instance(),
+            \ReferenceManager::instance(),
+            new \Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            ArtifactChangesetSaver::build(),
+            new ParentLinkAction($this->artifact_factory),
+            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao())
+        );
+
         $this->artifact_updater = new ArtifactUpdater(
-            new \Tracker_REST_Artifact_ArtifactValidator(
-                $this->formelement_factory
-            )
+            new \Tracker_REST_Artifact_ArtifactValidator($this->formelement_factory),
+            $changeset_creator
         );
 
         $this->steps_results_changes_builder = new StepsResultsChangesBuilder(

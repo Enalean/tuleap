@@ -32,21 +32,38 @@ use Tracker_Exception;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
-use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
 use TrackerFactory;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesRetriever;
 use Tuleap\Taskboard\Column\InvalidColumnException;
 use Tuleap\Taskboard\Column\MilestoneTrackerRetriever;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
 class CardMappedFieldUpdater
 {
@@ -63,13 +80,46 @@ class CardMappedFieldUpdater
 
     public static function build(): self
     {
-        $form_element_factory = Tracker_FormElementFactory::instance();
-        $column_dao           = new Cardwall_OnTop_ColumnDao();
+        $usage_dao            = new ArtifactLinksUsageDao();
+        $form_element_factory = \Tracker_FormElementFactory::instance();
+        $artifact_factory     = \Tracker_ArtifactFactory::instance();
+        $changeset_creator    = new \Tracker_Artifact_Changeset_NewChangesetCreator(
+            new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                $form_element_factory,
+                new ArtifactLinkValidator(
+                    $artifact_factory,
+                    new TypePresenterFactory(new TypeDao(), $usage_dao),
+                    $usage_dao
+                ),
+                new WorkflowUpdateChecker(
+                    new FrozenFieldDetector(
+                        new TransitionRetriever(
+                            new StateFactory(\TransitionFactory::instance(), new SimpleWorkflowDao()),
+                            new TransitionExtractor()
+                        ),
+                        FrozenFieldsRetriever::instance(),
+                    )
+                )
+            ),
+            new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory),
+            new \Tracker_Artifact_ChangesetDao(),
+            new \Tracker_Artifact_Changeset_CommentDao(),
+            $artifact_factory,
+            \EventManager::instance(),
+            \ReferenceManager::instance(),
+            new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            ArtifactChangesetSaver::build(),
+            new ParentLinkAction($artifact_factory),
+            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao())
+        );
+
+        $column_dao = new Cardwall_OnTop_ColumnDao();
         return new self(
             new Cardwall_OnTop_Config_ColumnFactory($column_dao),
             new MilestoneTrackerRetriever($column_dao, TrackerFactory::instance()),
             new AddValidator(),
-            new ArtifactUpdater(new \Tracker_REST_Artifact_ArtifactValidator($form_element_factory)),
+            new ArtifactUpdater(new \Tracker_REST_Artifact_ArtifactValidator($form_element_factory), $changeset_creator),
             MappedFieldRetriever::build(),
             MappedValuesRetriever::build(),
             new FirstPossibleValueInListRetriever(
