@@ -36417,50 +36417,9 @@
     <DeprecatedMethod occurrences="1">
       <code>getWorkflow</code>
     </DeprecatedMethod>
-    <PossiblyNullReference occurrences="1">
-      <code>validate</code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Changeset/NewChangesetAtGivenDateCreator.class.php">
-    <MissingParamType occurrences="2">
-      <code>$changeset_id</code>
-      <code>$previous_changeset</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Changeset/NewChangesetCreator.class.php">
-    <DeprecatedMethod occurrences="1">
-      <code>getWorkflow</code>
-    </DeprecatedMethod>
-    <MissingParamType occurrences="2">
-      <code>$changeset_id</code>
-      <code>$previous_changeset</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Changeset/NewChangesetCreatorBase.class.php">
-    <DeprecatedMethod occurrences="2">
-      <code>getWorkflow</code>
-      <code>getWorkflow</code>
-    </DeprecatedMethod>
-    <InvalidScalarArgument occurrences="2">
-      <code>$artifact-&gt;getTracker()-&gt;getGroupID()</code>
-      <code>$submitter-&gt;getId()</code>
-    </InvalidScalarArgument>
-    <MissingParamType occurrences="10">
-      <code>$changeset_id</code>
-      <code>$changeset_id</code>
-      <code>$changeset_id</code>
-      <code>$comment</code>
-      <code>$comment</code>
-      <code>$comment_format</code>
-      <code>$email</code>
-      <code>$previous_changeset</code>
-      <code>$previous_changeset</code>
-      <code>$submitted_on</code>
-    </MissingParamType>
-    <PossiblyNullReference occurrences="2">
-      <code>before</code>
-      <code>validate</code>
-    </PossiblyNullReference>
+    <PossiblyNullArgument occurrences="1">
+      <code>$workflow</code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/NewChangesetFieldsValidator.class.php">
     <MissingParamType occurrences="1">

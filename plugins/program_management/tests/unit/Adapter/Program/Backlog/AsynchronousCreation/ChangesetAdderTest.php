@@ -41,6 +41,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -67,7 +68,7 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
     private const MIRRORED_ITERATION_ID         = 33;
 
     /**
-     * @var MockObject&\Tracker_Artifact_Changeset_NewChangesetCreator
+     * @var MockObject&NewChangesetCreator
      */
     private $changeset_creator;
     private \PFUser $pfuser;
@@ -77,7 +78,7 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->changeset_creator = $this->createMock(\Tracker_Artifact_Changeset_NewChangesetCreator::class);
+        $this->changeset_creator = $this->createMock(NewChangesetCreator::class);
 
         $this->pfuser = UserTestBuilder::buildWithId(self::USER_ID);
 

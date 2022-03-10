@@ -48,7 +48,6 @@ use Tracker_Artifact_Changeset_Comment;
 use Tracker_Artifact_Changeset_CommentDao;
 use Tracker_Artifact_Changeset_FieldsValidator;
 use Tracker_Artifact_Changeset_IncomingMailGoldenRetriever;
-use Tracker_Artifact_Changeset_NewChangesetCreator;
 use Tracker_Artifact_Changeset_NewChangesetFieldsValidator;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetFactoryBuilder;
@@ -105,13 +104,15 @@ use Tuleap\Tracker\Artifact\ActionButtons\ArtifactMoveButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactNotificationActionButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
-use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
@@ -2160,12 +2161,12 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return $email_domain;
     }
 
-    private function getNewChangesetCreator(Tracker_Artifact_Changeset_FieldsValidator $fields_validator): Tracker_Artifact_Changeset_NewChangesetCreator
+    private function getNewChangesetCreator(Tracker_Artifact_Changeset_FieldsValidator $fields_validator): NewChangesetCreator
     {
         $tracker_artifact_factory = $this->getArtifactFactory();
         $form_element_factory     = $this->getFormElementFactory();
         $fields_retriever         = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
-        return new Tracker_Artifact_Changeset_NewChangesetCreator(
+        return new NewChangesetCreator(
             $fields_validator,
             $fields_retriever,
             $this->getChangesetCommentDao(),
@@ -2178,8 +2179,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $tracker_artifact_factory
             ),
             new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-            new AfterNewChangesetHandler($tracker_artifact_factory, $fields_retriever, $this->getWorkflowRetriever()),
-            $this->getActionsRunner()
+            new AfterNewChangesetHandler($tracker_artifact_factory, $fields_retriever),
+            $this->getActionsRunner(),
+            new ChangesetValueSaver(),
+            $this->getWorkflowRetriever()
         );
     }
 

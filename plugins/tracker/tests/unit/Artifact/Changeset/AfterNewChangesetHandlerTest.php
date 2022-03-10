@@ -26,7 +26,6 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
 use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
 
 final class AfterNewChangesetHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -36,7 +35,6 @@ final class AfterNewChangesetHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject & \Workflow
      */
     private $workflow;
-    private RetrieveWorkflowStub $workflow_retriever;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub & \Tracker_FormElementFactory
      */
@@ -57,13 +55,13 @@ final class AfterNewChangesetHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $handler = new AfterNewChangesetHandler(
             $this->artifact_saver,
-            new FieldsToBeSavedInSpecificOrderRetriever($this->form_element_factory),
-            RetrieveWorkflowStub::withWorkflow($this->workflow)
+            new FieldsToBeSavedInSpecificOrderRetriever($this->form_element_factory)
         );
         return $handler->handle(
             $artifact,
             [],
             UserTestBuilder::buildWithDefaults(),
+            $this->workflow,
             ChangesetTestBuilder::aChangeset('3311')->ofArtifact($artifact)->build(),
             ChangesetTestBuilder::aChangeset('3310')->ofArtifact($artifact)->build()
         );

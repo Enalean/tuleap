@@ -21,27 +21,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact;
+namespace Tuleap\Tracker\Artifact\Changeset;
 
 use Mockery;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
 use Tracker_Artifact_Changeset_Comment;
-use Tracker_Artifact_Changeset_NewChangesetCreator;
 use Tracker_Artifact_Changeset_Null;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
-use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
-use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
 use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
 
-final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalResponseMock;
@@ -88,9 +85,6 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends \Tuleap\T
     {
         $this->fields_data = [];
 
-        $new_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $new_changeset->shouldReceive("getId")->andReturn(12);
-
         $changeset = new Tracker_Artifact_Changeset_Null();
         $factory   = \Mockery::spy(\Tracker_FormElementFactory::class);
         $factory->shouldReceive('getAllFormElementsForTracker')->andReturn([]);
@@ -128,7 +122,7 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends \Tuleap\T
         $field_initializator = Mockery::mock(Tracker_Artifact_Changeset_ChangesetDataInitializator::class);
         $field_initializator->shouldReceive('process')->andReturn([]);
 
-        $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
+        $creator = new NewChangesetCreator(
             $fields_validator,
             $field_retriever,
             $this->comment_dao,
@@ -139,12 +133,10 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends \Tuleap\T
             $this->changeset_saver,
             $this->parent_link_action,
             $this->ugroup_private_comment_inserter,
-            new AfterNewChangesetHandler(
-                $this->artifact_saver,
-                $field_retriever,
-                RetrieveWorkflowStub::withWorkflow($this->workflow)
-            ),
-            Mockery::spy(ActionsRunner::class)
+            new AfterNewChangesetHandler($this->artifact_saver, $field_retriever),
+            Mockery::spy(ActionsRunner::class),
+            new ChangesetValueSaver(),
+            RetrieveWorkflowStub::withWorkflow($this->workflow)
         );
 
         $creator->create(
@@ -174,10 +166,12 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends \Tuleap\T
         $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('hasChanges')->andReturnFalse();
 
+        $tracker        = Mockery::spy(\Tracker::class);
         $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
         $this->artifact->shouldReceive('getId')->andReturn(154);
         $this->artifact->shouldReceive('getXRef')->andReturn('xRef');
+        $this->artifact->shouldReceive('getTracker')->andReturn($tracker);
 
         $this->workflow->shouldNotReceive('after');
         $this->changeset_saver->shouldNotReceive('saveChangeset');

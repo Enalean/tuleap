@@ -45,7 +45,9 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaverIgnoringPermissions;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
@@ -3169,9 +3171,9 @@ class Tracker implements Tracker_Dispatchable_Interface
         $artifact_factory         = $this->getTrackerArtifactFactory();
         $artifact_saver           = new AfterNewChangesetHandler(
             $artifact_factory,
-            $fields_retriever,
-            \WorkflowFactory::instance()
+            $fields_retriever
         );
+        $workflow_retriever       = \WorkflowFactory::instance();
 
         $send_notifications = true;
 
@@ -3183,13 +3185,14 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $field_initializator,
                 $logger,
                 $artifact_changeset_saver,
-                $artifact_saver
+                $artifact_saver,
+                $workflow_retriever
             ),
             $fields_validator,
             $logger
         );
 
-        $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
+        $new_changeset_creator = new NewChangesetCreator(
             $fields_validator,
             $fields_retriever,
             $changeset_comment_dao,
@@ -3203,7 +3206,9 @@ class Tracker implements Tracker_Dispatchable_Interface
             ),
             new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
             $artifact_saver,
-            ActionsRunner::build($logger)
+            ActionsRunner::build($logger),
+            new ChangesetValueSaverIgnoringPermissions(),
+            $workflow_retriever
         );
 
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();

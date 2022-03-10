@@ -107,9 +107,9 @@ final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \Tule
             $this->changeset_saver,
             new AfterNewChangesetHandler(
                 $this->artifact_saver,
-                $fields_retriever,
-                RetrieveWorkflowStub::withWorkflow($this->workflow)
-            )
+                $fields_retriever
+            ),
+            RetrieveWorkflowStub::withWorkflow($this->workflow)
         );
 
         return $creator->create(

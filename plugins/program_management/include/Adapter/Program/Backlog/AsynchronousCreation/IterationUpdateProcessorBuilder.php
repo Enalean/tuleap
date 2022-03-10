@@ -44,13 +44,15 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildIt
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationUpdateProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationUpdate;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
-use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaver;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
@@ -86,7 +88,7 @@ final class IterationUpdateProcessorBuilder implements BuildIterationUpdateProce
 
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
-        $changeset_creator = new \Tracker_Artifact_Changeset_NewChangesetCreator(
+        $changeset_creator = new NewChangesetCreator(
             new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
                 $form_element_factory,
                 new ArtifactLinkValidator(
@@ -124,8 +126,10 @@ final class IterationUpdateProcessorBuilder implements BuildIterationUpdateProce
             ),
             new ParentLinkAction($artifact_factory),
             new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-            new AfterNewChangesetHandler($artifact_factory, $fields_retriever, \WorkflowFactory::instance()),
-            ActionsRunner::build(\BackendLogger::getDefaultLogger())
+            new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
+            ActionsRunner::build(\BackendLogger::getDefaultLogger()),
+            new ChangesetValueSaver(),
+            \WorkflowFactory::instance()
         );
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(

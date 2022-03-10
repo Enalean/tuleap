@@ -33,7 +33,6 @@ use Tracker;
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_Comment;
-use Tracker_Artifact_Changeset_NewChangesetCreatorBase;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_XMLImport;
 use Tracker_ArtifactFactory;
@@ -45,6 +44,7 @@ use TrackerXmlFieldsMapping_FromAnotherPlatform;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
@@ -88,7 +88,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
     private $artifact_creator;
 
     /**
-     * @var Tracker_Artifact_Changeset_NewChangesetCreatorBase
+     * @var NewChangesetCreator
      */
     private $new_changeset_creator;
 
@@ -176,7 +176,7 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker->shouldReceive('getWorkflow')->andReturn(Mockery::spy(Workflow::class));
 
         $this->artifact_creator                       = Mockery::mock(TrackerArtifactCreator::class);
-        $this->new_changeset_creator                  = Mockery::mock(Tracker_Artifact_Changeset_NewChangesetCreatorBase::class);
+        $this->new_changeset_creator                  = Mockery::mock(NewChangesetCreator::class);
         $this->formelement_factory                    = Mockery::mock(Tracker_FormElementFactory::class);
         $this->tracker_artifact_factory               = Mockery::mock(Tracker_ArtifactFactory::class);
         $this->existing_artifact_source_id_extractor  = Mockery::mock(ExistingArtifactSourceIdFromTrackerExtractor::class);

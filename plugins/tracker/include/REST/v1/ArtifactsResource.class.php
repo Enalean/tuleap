@@ -78,8 +78,8 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
-use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
@@ -88,6 +88,8 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaver;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
@@ -699,7 +701,7 @@ class ArtifactsResource extends AuthenticatedResource
         $usage_dao        = new ArtifactLinksUsageDao();
         $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($this->formelement_factory);
 
-        $changeset_creator = new \Tracker_Artifact_Changeset_NewChangesetCreator(
+        $changeset_creator = new NewChangesetCreator(
             new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
                 $this->formelement_factory,
                 new ArtifactLinkValidator(
@@ -726,8 +728,10 @@ class ArtifactsResource extends AuthenticatedResource
             ArtifactChangesetSaver::build(),
             new ParentLinkAction($this->artifact_factory),
             new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-            new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever, \WorkflowFactory::instance()),
-            ActionsRunner::build(\BackendLogger::getDefaultLogger())
+            new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever),
+            ActionsRunner::build(\BackendLogger::getDefaultLogger()),
+            new ChangesetValueSaver(),
+            \WorkflowFactory::instance()
         );
 
         $this->sendAllowHeadersForArtifact();
