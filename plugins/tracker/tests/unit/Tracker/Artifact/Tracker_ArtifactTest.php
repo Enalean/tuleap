@@ -41,6 +41,7 @@ use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -235,7 +236,8 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
                 SaveArtifactStub::withSuccess(),
                 $fields_retriever,
                 RetrieveWorkflowStub::withWorkflow($workflow)
-            )
+            ),
+            Mockery::spy(ActionsRunner::class)
         );
 
         $creator->create(
@@ -313,6 +315,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
         $artifact->shouldReceive('getId')->andReturns(66);
         $artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
+        $artifact->shouldReceive('getActionsRunner')->andReturns(\Mockery::spy(ActionsRunner::class));
 
         $workflow_checker = \Mockery::mock(\Tuleap\Tracker\Workflow\WorkflowUpdateChecker::class);
         $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
@@ -419,6 +422,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact->shouldReceive('getArtifactFactory')->andReturns($art_factory);
         $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
         $artifact->shouldReceive('getChangesetSaver')->andReturns($changeset_saver);
+        $artifact->shouldReceive('getActionsRunner')->andReturns(\Mockery::spy(ActionsRunner::class));
 
         $workflow_checker = \Mockery::mock(\Tuleap\Tracker\Workflow\WorkflowUpdateChecker::class);
         $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
@@ -537,6 +541,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact->shouldReceive('getReferenceManager')->andReturns($reference_manager);
         $artifact->shouldReceive('getArtifactFactory')->andReturns($art_factory);
         $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
+        $artifact->shouldReceive('getActionsRunner')->andReturns(\Mockery::spy(ActionsRunner::class));
 
         $workflow_checker = \Mockery::mock(\Tuleap\Tracker\Workflow\WorkflowUpdateChecker::class);
         $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
@@ -666,6 +671,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact->shouldReceive('getArtifactFactory')->andReturns($art_factory);
         $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
         $artifact->shouldReceive('getChangesetSaver')->andReturns($changeset_saver);
+        $artifact->shouldReceive('getActionsRunner')->andReturns(\Mockery::spy(ActionsRunner::class));
 
         $GLOBALS['Response']->method('getFeedbackErrors')->willReturn([]);
 

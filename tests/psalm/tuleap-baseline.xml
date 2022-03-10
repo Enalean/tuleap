@@ -36357,14 +36357,6 @@
       <code>$submitted_value</code>
     </MissingParamType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Changeset/ChangesetCreatorBase.class.php">
-    <DeprecatedMethod occurrences="1">
-      <code>getWorkflow</code>
-    </DeprecatedMethod>
-    <PossiblyNullReference occurrences="1">
-      <code>after</code>
-    </PossiblyNullReference>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/ChangesetDataInitializator.class.php">
     <MissingReturnType occurrences="1">
       <code>process</code>
@@ -36465,9 +36457,8 @@
       <code>$previous_changeset</code>
       <code>$submitted_on</code>
     </MissingParamType>
-    <PossiblyNullReference occurrences="3">
+    <PossiblyNullReference occurrences="2">
       <code>before</code>
-      <code>executePostCreationActions</code>
       <code>validate</code>
     </PossiblyNullReference>
   </file>
@@ -36606,6 +36597,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Creation/TrackerArtifactCreator.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>executePostCreationActions</code>
+    </DeprecatedMethod>
     <InvalidScalarArgument occurrences="2">
       <code>$user-&gt;getId()</code>
       <code>$user-&gt;getId()</code>
@@ -37175,13 +37169,12 @@
       <code>$dao</code>
       <code>$instance</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="9">
+    <MissingReturnType occurrences="8">
       <code>clearInstance</code>
       <code>getArtifactIds</code>
       <code>getClosedArtifactsByTrackerIdUserCanView</code>
       <code>getOpenArtifactsByTrackerIdUserCanView</code>
       <code>getTitleFromRowAsText</code>
-      <code>save</code>
       <code>setDao</code>
       <code>setInstance</code>
       <code>setTitles</code>
@@ -37224,6 +37217,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>executePostCreationActions</code>
+    </DeprecatedMethod>
     <FalseOperand occurrences="2">
       <code>$result</code>
       <code>$result</code>
@@ -50290,7 +50286,7 @@
       <code>$webhooks</code>
       <code>$workflow</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="48">
+    <MissingReturnType occurrences="47">
       <code>_getCSVDateformat</code>
       <code>_getCSVSeparator</code>
       <code>arePriorityChangesShown</code>
@@ -50322,7 +50318,6 @@
       <code>fetchAdminPalette</code>
       <code>fetchFormElementsMasschange</code>
       <code>getArtifactXMLExporter</code>
-      <code>getArtifactXMLImporterForArtifactCopy</code>
       <code>getChangesetXMLUpdater</code>
       <code>getChildrenCollector</code>
       <code>getFileXMLUpdater</code>
@@ -53121,7 +53116,6 @@
       <code>array_search($this-&gt;field_id, $xmlMapping)</code>
     </PossiblyFalseArgument>
     <PossiblyNullPropertyAssignmentValue occurrences="2">
-      <code>null</code>
       <code>null</code>
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>

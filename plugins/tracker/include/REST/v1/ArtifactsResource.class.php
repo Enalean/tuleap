@@ -87,6 +87,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
@@ -725,7 +726,8 @@ class ArtifactsResource extends AuthenticatedResource
             ArtifactChangesetSaver::build(),
             new ParentLinkAction($this->artifact_factory),
             new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-            new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever, \WorkflowFactory::instance())
+            new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever, \WorkflowFactory::instance()),
+            ActionsRunner::build(\BackendLogger::getDefaultLogger())
         );
 
         $this->sendAllowHeadersForArtifact();

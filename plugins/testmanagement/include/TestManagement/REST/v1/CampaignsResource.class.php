@@ -104,6 +104,7 @@ use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
@@ -333,7 +334,8 @@ class CampaignsResource
             ArtifactChangesetSaver::build(),
             new ParentLinkAction($this->artifact_factory),
             new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-            new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever, \WorkflowFactory::instance())
+            new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever, \WorkflowFactory::instance()),
+            ActionsRunner::build(\BackendLogger::getDefaultLogger())
         );
 
         $this->artifact_updater = new ArtifactUpdater($artifact_validator, $changeset_creator);

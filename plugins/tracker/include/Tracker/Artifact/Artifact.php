@@ -111,6 +111,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
@@ -2177,7 +2178,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $tracker_artifact_factory
             ),
             new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-            new AfterNewChangesetHandler($tracker_artifact_factory, $fields_retriever, $this->getWorkflowRetriever())
+            new AfterNewChangesetHandler($tracker_artifact_factory, $fields_retriever, $this->getWorkflowRetriever()),
+            $this->getActionsRunner()
         );
     }
 
@@ -2292,6 +2294,14 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     protected function getChangesetSaver(): ArtifactChangesetSaver
     {
         return ArtifactChangesetSaver::build();
+    }
+
+    /**
+     * for testing purpose
+     */
+    protected function getActionsRunner(): ActionsRunner
+    {
+        return ActionsRunner::build(\BackendLogger::getDefaultLogger());
     }
 
     /**
