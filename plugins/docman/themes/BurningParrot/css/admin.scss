@@ -29,25 +29,3 @@
 .document-icon > img {
     vertical-align: middle;
 }
-
-#docman-admin-permission-legacy-form {
-    &.loading {
-        display: none;
-    }
-
-    > form {
-        margin: 0 0 var(--tlp-medium-spacing);
-
-        select {
-            margin: 0 0 var(--tlp-medium-spacing);
-        }
-
-        input[name="submit"] {
-            margin: 0 var(--tlp-medium-spacing) 0 0;
-        }
-    }
-}
-
-#docman-admin-permission-legacy-form-addendum {
-    margin: 0 0 var(--tlp-medium-spacing);
-}

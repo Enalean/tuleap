@@ -1803,13 +1803,6 @@ msgstr ""
 "Merci de sélectionner le répertoire où vous souhaitez que ce document "
 "apparaisse."
 
-msgid ""
-"Please select user groups that can administrate the document manager, in "
-"addition of project administrators:"
-msgstr ""
-"Sélectionnez les groupes d'utilisateurs qui peuvent administrer le "
-"gestionnaire de documents, en complément des administrateurs de projet :"
-
 #, php-format
 msgid ""
 "Please wait for the paste to complete. This may take a while depending on "
@@ -2110,6 +2103,9 @@ msgstr "Chaîne de caractères"
 
 msgid "Subject:"
 msgstr "Sujet :"
+
+msgid "Submit permissions"
+msgstr "Valider les permissions"
 
 msgid "Subscribers"
 msgstr "Abonnés"
@@ -2459,6 +2455,13 @@ msgstr "List des groupes d'utilisateurs..."
 
 msgid "User groups"
 msgstr "Groupes d'utilisateurs"
+
+msgid ""
+"User groups who can administrate the document manager, in addition of "
+"project administrators"
+msgstr ""
+"Les groupes d'utilisateurs pouvant administrer le gestionnaire de documents, "
+"en complément des administrateurs de projet"
 
 msgid "User successfully added to the approval table."
 msgstr "L'utilisateur a été ajouté à la table."

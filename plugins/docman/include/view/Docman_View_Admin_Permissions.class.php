@@ -91,24 +91,35 @@ class Docman_View_Admin_Permissions extends \Tuleap\Docman\View\Admin\AdminView
                 </div>
                 <section class="tlp-pane-section">';
 
-        $content .= '<p>';
-        $content .= dgettext('tuleap-docman', 'Please select user groups that can administrate the document manager, in addition of project administrators:');
-        $content .= '</p>';
         echo $content;
 
-        $post_url = DocmanViewURLBuilder::buildUrl($params['default_url'], [
-            'action' => 'admin_set_permissions',
-        ]);
+        $post_url = DocmanViewURLBuilder::buildUrl(
+            $params['default_url'],
+            ['action' => 'admin_set_permissions'],
+            false
+        );
 
-        echo '<div id="docman-admin-permission-legacy-form" class="loading">';
+        $purifier = Codendi_HTMLPurifier::instance();
+        echo '<form action="' . $purifier->purify($post_url) . '" method="post" id="docman-admin-permissions-form">
+            <input type="hidden" name="func" value="update_permissions">
+            <input type="hidden" name="group_id" value="' . $purifier->purify($project_id) . '">
+            <input type="hidden" name="permission_type" value="PLUGIN_DOCMAN_ADMIN">
+            <input type="hidden" name="object_id" value="' . $purifier->purify($project_id) . '">
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="area">'
+            . dgettext('tuleap-docman', 'User groups who can administrate the document manager, in addition of project administrators')
+            . ' </label>'
+            . permission_fetch_selection_field('PLUGIN_DOCMAN_ADMIN', $project_id, $project_id)
+            . '
+            </div>';
 
         $renderer->renderToPage('admin/permissions-addendum', [
             'csrf'                     => self::getCSRFToken($project_id),
             'forbid_writers_to_update' => $settings['forbid_writers_to_update'] ?? false,
         ]);
-        permission_display_selection_form("PLUGIN_DOCMAN_ADMIN", $project_id, $project_id, $post_url);
 
-        echo '</div>';
+        echo '</form>';
 
         echo '</section>
             </div>

@@ -20,30 +20,13 @@
 export {};
 
 document.addEventListener("DOMContentLoaded", () => {
-    const legacy = document.getElementById("docman-admin-permission-legacy-form");
-    if (!legacy) {
+    const form = document.getElementById("docman-admin-permissions-form");
+    if (!form) {
         return;
     }
 
-    const legacy_selects = legacy.querySelectorAll("select");
+    const legacy_selects = form.querySelectorAll("select");
     for (const select of legacy_selects) {
         select.classList.add("tlp-select", "tlp-select-adjusted");
     }
-
-    const submit_button = legacy.querySelector("input[name=submit]");
-    if (submit_button) {
-        submit_button.classList.add("tlp-button-primary");
-    }
-
-    const reset_button = legacy.querySelector("input[name=reset]");
-    if (reset_button) {
-        reset_button.remove();
-    }
-
-    const addendum = document.getElementById("docman-admin-permission-legacy-form-addendum");
-    if (submit_button && submit_button.parentElement && addendum) {
-        submit_button.parentElement.insertAdjacentElement("beforebegin", addendum);
-    }
-
-    legacy.classList.remove("loading");
 });

@@ -1,20 +1,22 @@
-<div id="docman-admin-permission-legacy-form-addendum">
-    {{# csrf }}
-        {{> csrf_token_input }}
-    {{/ csrf }}
+{{# csrf }}
+    {{> csrf_token_input }}
+{{/ csrf }}
 
-    <div class="tlp-form-element">
-        <label class="tlp-label tlp-checkbox">
-            <input type="hidden" name="forbid_writers_to_update" value="0">
-            <input type="checkbox"
-                   name="forbid_writers_to_update"
-                   value="1"
-                   {{# forbid_writers_to_update }}checked{{/ forbid_writers_to_update }}
-            >
-            {{# dgettext }}tuleap-docman | Forbid modifications of document properties by Writers{{/ dgettext }}
-        </label>
-        <p class="tlp-text-info">
-            {{# dgettext }}tuleap-docman | When turned on, Writers will be allowed to set properties when they create a new document but will no longer be able to modify them afterward{{/ dgettext }}
-        </p>
-    </div>
+<div class="tlp-form-element">
+    <label class="tlp-label tlp-checkbox">
+        <input type="hidden" name="forbid_writers_to_update" value="0">
+        <input type="checkbox"
+               name="forbid_writers_to_update"
+               value="1"
+               {{# forbid_writers_to_update }}checked{{/ forbid_writers_to_update }}
+        >
+        {{# dgettext }}tuleap-docman | Forbid modifications of document properties by Writers{{/ dgettext }}
+    </label>
+    <p class="tlp-text-info">
+        {{# dgettext }}tuleap-docman | When turned on, Writers will be allowed to set properties when they create a new document but will no longer be able to modify them afterward{{/ dgettext }}
+    </p>
 </div>
+
+<button type="submit" class="tlp-button-primary">
+    {{# dgettext }}tuleap-docman | Submit permissions{{/ dgettext }}
+</button>
