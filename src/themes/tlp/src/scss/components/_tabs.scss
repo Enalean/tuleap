@@ -99,7 +99,7 @@ $inactive-tab-right-margin: calc(
 
     &:focus,
     &:hover {
-        background: var(--tlp-main-color-transparent-90);
+        background: var(--tlp-main-color-hover-background);
         color: var(--tlp-main-color);
         text-decoration: none;
     }

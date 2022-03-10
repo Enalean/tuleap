@@ -14,11 +14,10 @@
                     <h2 class="tlp-pane-subtitle">{{ . }}</h2>
                 {{/ label }}
                 {{# cross_references }}
-                    <div class="tlp-card-container" id="{{ id }}">
-                        <a
-                            class="tlp-card tlp-card-selectable cross-reference tracker-cross-reference-card {{# can_delete }}tracker-cross-reference-card-deletable{{/ can_delete }}"
-                            href="{{ url }}"
-                        >
+                    <a href="{{ url }}"
+                        id="{{ id }}"
+                        class="tlp-card tlp-card-selectable cross-reference tracker-cross-reference-card {{# can_delete }}tracker-cross-reference-card-deletable{{/ can_delete }}">
+                        <div class="tracker-cross-reference-card-content">
                             <div class="tracker-cross-reference-card-main">
                                 {{# title_badge }}
                                     {{# icon }}
@@ -72,18 +71,18 @@
                                     {{/ created_on }}
                                 </div>
                             {{/ creation_metadata }}
-                        </a>
+                        </div>
                         {{# can_delete }}
-                            <a
+                            <span
                                 class="tracker-cross-reference-delete-link delete_ref"
-                                href='{{ delete_url }}'
-                                onClick="return delete_ref('{{ id }}', '{{# dgettext }}tuleap-tracker | Delete the reference?{{/ dgettext }}');"
+                                data-href='{{ delete_url }}'
+                                onClick="return delete_ref('{{ id }}', '{{# dgettext }}tuleap-tracker | Delete the reference?{{/ dgettext }}', event);"
                                 title="{{# dgettext }}tuleap-tracker | Delete{{/ dgettext }}"
                             >
                                 <i class="far fa-trash-alt" aria-hidden="true"></i>
-                            </a>
+                            </span>
                         {{/ can_delete }}
-                    </div>
+                    </a>
                 {{/ cross_references }}
             </section>
         {{/ sections }}

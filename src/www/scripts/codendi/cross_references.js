@@ -78,7 +78,9 @@ function show_references_to() {
 }
 window.show_references_to = show_references_to;
 
-function delete_ref(id, message) {
+function delete_ref(id, message, event) {
+    event.stopPropagation();
+
     //eslint-disable-next-line no-alert
     if (confirm(message)) {
         const opt = {
@@ -137,7 +139,7 @@ function delete_ref(id, message) {
                 }
             },
         };
-        new Ajax.Updater("id", $(id).down(".delete_ref").href, opt);
+        new Ajax.Updater("id", $(id).down(".delete_ref").readAttribute("data-href"), opt);
     }
     return false;
 }

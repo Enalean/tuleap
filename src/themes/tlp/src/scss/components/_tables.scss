@@ -77,6 +77,8 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
     }
 
     > tbody {
+        background: var(--tlp-white-color);
+
         &.tlp-table-tbody-hidden {
             display: none;
         }
@@ -91,7 +93,7 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
 
         > tr:hover > td,
         > tr:focus-within > td {
-            background: var(--tlp-main-color-lighter-85);
+            background: var(--tlp-main-color-hover-background);
         }
 
         > tr > td {
@@ -218,5 +220,15 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
     > thead > tr > th:last-child,
     > tbody > tr > td:last-child {
         padding-right: var(--tlp-medium-spacing);
+    }
+
+    > tbody > tr:last-child {
+        > td:first-child {
+            border-bottom-left-radius: var(--tlp-large-radius);
+        }
+
+        > td:last-child {
+            border-bottom-right-radius: var(--tlp-large-radius);
+        }
     }
 }

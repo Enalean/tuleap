@@ -69,8 +69,6 @@
     }
 
     &.select2-results__option--highlighted {
-        background: var(--tlp-main-color);
-
         @each $color-name, $colors in common-colors.$tlp-swatch-color-map {
             &.select-item-label-color-#{$color-name} {
                 background: map.get($colors, "primary");

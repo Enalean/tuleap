@@ -169,7 +169,7 @@ $tlp-dropdown-transition: 75ms ease-out;
 
     &:focus,
     &:hover {
-        background: var(--tlp-main-color-transparent-90);
+        background: var(--tlp-main-color-hover-background);
         color: var(--tlp-main-color);
         text-decoration: none;
     }
@@ -391,7 +391,7 @@ span.flatpickr-weekday {
 
     &:hover {
         border-color: transparent;
-        background: var(--tlp-main-color-transparent-90);
+        background: var(--tlp-main-color-hover-background);
         color: var(--tlp-main-color);
     }
 
@@ -400,7 +400,7 @@ span.flatpickr-weekday {
 
         &:hover {
             border-color: var(--tlp-main-color);
-            background: var(--tlp-main-color-transparent-90);
+            background: var(--tlp-main-color-hover-background);
             color: var(--tlp-main-color);
         }
     }
@@ -413,7 +413,7 @@ span.flatpickr-weekday {
 
         &:hover {
             border-color: transparent;
-            background: var(--tlp-dimmed-color-transparent-90);
+            background: var(--tlp-main-color-hover-background);
         }
     }
 
