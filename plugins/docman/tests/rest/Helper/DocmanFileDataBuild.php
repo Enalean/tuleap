@@ -37,15 +37,15 @@ class DocmanFileDataBuild
     private $docman_user_id;
 
     /**
-     * @var DocmanDataBuildCommon
+     * @var DocmanProjectBuilder
      */
     private $common_builder;
 
-    public function __construct(DocmanDataBuildCommon $common_builder)
+    public function __construct(DocmanProjectBuilder $common_builder)
     {
         $this->common_builder = $common_builder;
-        $this->docman_user_id = $this->common_builder->getUserByName(DocmanDataBuildCommon::DOCMAN_REGULAR_USER_NAME);
-        $this->admin_user_id  = $this->common_builder->getUserByName(DocmanDataBuilder::ADMIN_USER_NAME);
+        $this->docman_user_id = $this->common_builder->getUserByName(DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME);
+        $this->admin_user_id  = $this->common_builder->getUserByName(\TestDataBuilder::ADMIN_USER_NAME);
     }
 
     /**

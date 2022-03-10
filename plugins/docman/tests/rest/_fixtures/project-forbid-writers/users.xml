@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<users>
+    <user>
+        <id>102</id>
+        <username>rest_api_tester_1</username>
+        <realname><![CDATA[Test User 1]]></realname>
+        <email><![CDATA[test_user_1@example.com]]></email>
+        <ldapid>tester1</ldapid>
+    </user>
+    <user>
+        <id>121</id>
+        <username>docman_writer_user</username>
+        <realname><![CDATA[]]></realname>
+        <email><![CDATA[docman_writer_user@example.com]]></email>
+        <ldapid></ldapid>
+    </user>
+    <user>
+        <id>122</id>
+        <username>docman_manager_user</username>
+        <realname><![CDATA[]]></realname>
+        <email><![CDATA[docman_manager_user@example.com]]></email>
+        <ldapid></ldapid>
+    </user>
+</users>

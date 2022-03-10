@@ -21,14 +21,27 @@
 require_once __DIR__ . '/../../../../src/vendor/autoload.php';
 
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
+use Tuleap\Docman\Test\rest\DocmanForbidWritersDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanWithMetadataActivatedDataBuilder;
-use Tuleap\Docman\Test\rest\Helper\DocmanDataBuildCommon;
+use Tuleap\Docman\Test\rest\Helper\DocmanProjectBuilder;
 
-$data_builder = new DocmanDataBuilder(DocmanDataBuilder::PROJECT_NAME);
+$plugin_manager = PluginManager::instance();
+$plugin_manager->installAndActivate('docman');
+
+$data_builder = new DocmanDataBuilder(
+    new DocmanProjectBuilder(DocmanDataBuilder::PROJECT_NAME)
+);
 $data_builder->setUp();
 
-$common_builder        = new DocmanDataBuildCommon(DocmanWithMetadataActivatedDataBuilder::PROJECT_NAME);
 $data_builder_metadata = new DocmanWithMetadataActivatedDataBuilder(
-    $common_builder
+    new DocmanProjectBuilder(DocmanWithMetadataActivatedDataBuilder::PROJECT_NAME)
 );
 $data_builder_metadata->setUp();
+
+$data_builder_forbid = new DocmanForbidWritersDataBuilder(
+    new DocmanProjectBuilder(DocmanForbidWritersDataBuilder::PROJECT_NAME),
+    \UserManager::instance(),
+    new \Tuleap\Docman\Settings\SettingsDAO(),
+    \ProjectManager::instance(),
+);
+$data_builder_forbid->setUp();

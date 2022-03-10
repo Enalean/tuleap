@@ -24,16 +24,14 @@ namespace Tuleap\Docman\Test\rest\Helper;
 use Docman_ApprovalTableItemDao;
 use Docman_ItemFactory;
 use Docman_MetadataValueFactory;
-use PluginManager;
 use ProjectUGroup;
 use REST_TestDataBuilder;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Docman\Test\rest\DocmanDatabaseInitialization;
+use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 
-class DocmanDataBuildCommon extends REST_TestDataBuilder
+class DocmanProjectBuilder extends REST_TestDataBuilder
 {
-    public const DOCMAN_REGULAR_USER_NAME = 'docman_regular_user';
-
     private const DOCMAN_REGULAR_USER_PASSWORD = 'welcome0';
 
     /**
@@ -44,7 +42,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
     /**
      * @var \Docman_ItemFactory
      */
-    protected $docman_item_factory;
+    private $docman_item_factory;
 
     /**
      * @var \Project
@@ -62,10 +60,8 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
     public function __construct(string $project_name)
     {
         parent::__construct();
-        $this->project             = $this->project_manager->getProjectByUnixName($project_name);
-        $this->docman_item_factory = Docman_ItemFactory::instance($this->project->getID());
-        $this->installPlugin($this->project);
-
+        $this->project                = $this->project_manager->getProjectByUnixName($project_name);
+        $this->docman_item_factory    = Docman_ItemFactory::instance($this->project->getID());
         $this->metadata_value_factory = new Docman_MetadataValueFactory($this->project->getID());
     }
 
@@ -173,16 +169,9 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
 
     public function generateDocmanRegularUser(): void
     {
-        $this->user = $this->user_manager->getUserByUserName(self::DOCMAN_REGULAR_USER_NAME);
+        $this->user = $this->user_manager->getUserByUserName(DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME);
         $this->user->setPassword(new ConcealedString(self::DOCMAN_REGULAR_USER_PASSWORD));
         $this->user_manager->updateDb($this->user);
-    }
-
-    public function installPlugin(\Project $project): void
-    {
-        $plugin_manager = PluginManager::instance();
-        $plugin_manager->installAndActivate('docman');
-        $this->activateWikiServiceForTheProject($project->getUnixName());
     }
 
     public function addReadPermissionOnItem(int $object_id, int $ugroup_name): void
@@ -219,10 +208,9 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         $this->metadata_value_factory->create($metadata_value);
     }
 
-    private function activateWikiServiceForTheProject(string $project_name): void
+    public function activateWikiServiceForTheProject(): void
     {
-        $this->project = $this->project_manager->getProjectByUnixName($project_name);
-        $initializer   = new DocmanDatabaseInitialization();
+        $initializer = new DocmanDatabaseInitialization();
         $initializer->setup($this->project);
     }
 
@@ -308,5 +296,10 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
     {
         $this->user = $this->user_manager->getUserByUserName($user_name);
         return $this->user->getId();
+    }
+
+    public function getRoot(): \Docman_Item|null
+    {
+        return $this->docman_item_factory->getRoot($this->project->getID());
     }
 }
