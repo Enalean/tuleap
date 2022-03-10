@@ -19,13 +19,11 @@
     "watch": "vite build --watch --mode development --minify false",
     "test": "jest"
   },
-  "dependencies": {
-    "vue3-gettext": "^2.1.0"
-  },
   "peerDependencies": {
     "vue": "^3.2.31"
   },
   "devDependencies": {
-    "vue": "^3.2.31"
+    "vue": "^3.2.31",
+    "vue3-gettext": "^2.1.0"
   }
 }

@@ -9,9 +9,11 @@
     "@tuleap/plugin-docgen-docx": "file:./scripts/lib/docx",
     "@tuleap/tlp": "link:../../src/themes/tlp",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
+    "@tuleap/vue3-gettext-init": "link:../../src/scripts/lib/vue3-gettext-init",
     "docx": "^7.3.0",
     "sprintf-js": "^1.1.2",
     "vue": "^3.2.31",
+    "vue3-gettext": "^2.1.0",
     "xlsx": "^0.18.3"
   },
   "devDependencies": {

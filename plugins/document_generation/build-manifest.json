@@ -5,5 +5,11 @@
             "src": "scripts/tracker-report-action/src",
             "po": "scripts/tracker-report-action/po"
         }
+    },
+    "gettext-vue": {
+        "tracker-cross-report-action": {
+            "src": "scripts/tracker-cross-report-action/src",
+            "po": "scripts/tracker-cross-report-action/po"
+        }
     }
 }

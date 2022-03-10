@@ -17,20 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createGettext } from "vue3-gettext";
+import type { createGettext } from "vue3-gettext";
 
 type VueGettext = ReturnType<typeof createGettext>;
 
-interface TranslatedStrings {
-    readonly [key: string]: string;
+interface Vue3GettextTranslationData {
+    [message_id: string]: string[];
 }
 
-interface GettextTranslationsMap {
-    [locale: string]: TranslatedStrings;
+interface Vue3GettextTranslationMap {
+    [language: string]: Vue3GettextTranslationData;
+}
+
+interface TranslatedStrings {
+    readonly [key: string]: {
+        readonly msgid: string;
+        readonly msgstr: string[];
+    };
 }
 
 export interface POFile {
-    readonly messages: TranslatedStrings;
+    readonly translations: {
+        "": TranslatedStrings;
+    };
 }
 
 export {
@@ -39,20 +48,32 @@ export {
 } from "../../../../scripts/tuleap/gettext/gettext-init";
 
 export async function initVueGettext(
+    create_gettext: typeof createGettext,
     load_translations_callback: (locale: string) => Promise<POFile>
 ): Promise<VueGettext> {
-    const translations: GettextTranslationsMap = {};
+    const translations: Vue3GettextTranslationMap = {};
     const locale = document.body.dataset.userLocale;
     if (locale) {
         try {
-            translations[locale] = (await load_translations_callback(locale)).messages;
+            translations[locale] = transformTranslationToVue3GettextFormat(
+                await load_translations_callback(locale)
+            );
         } catch (exception) {
             // default to en_US
         }
     }
 
-    return createGettext({
+    return create_gettext({
+        defaultLanguage: locale ?? "",
         translations,
         silent: true,
     });
+}
+
+function transformTranslationToVue3GettextFormat(po_file: POFile): Vue3GettextTranslationData {
+    const vue3_gettext_data: Vue3GettextTranslationData = {};
+    for (const [, value] of Object.entries(po_file.translations[""])) {
+        vue3_gettext_data[value.msgid] = value.msgstr;
+    }
+    return vue3_gettext_data;
 }

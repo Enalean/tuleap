@@ -47,6 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const { initModal } = await import("./init-modal");
-        initModal(modal_mount_point, properties);
+        await initModal(modal_mount_point, properties);
     });
 });

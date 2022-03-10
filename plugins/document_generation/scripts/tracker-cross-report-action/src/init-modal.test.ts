@@ -31,6 +31,7 @@ describe("init-modal", () => {
         spy_create_app.mockReturnValue({
             mount: jest.fn(),
             unmount: spy_unmount,
+            use: jest.fn(),
         } as unknown as App);
 
         initModal(element, {} as GlobalExportProperties);

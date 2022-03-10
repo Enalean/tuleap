@@ -134,6 +134,7 @@ if (! $plugin) {
     gettextJS("core", $basedir, $json);
     gettextTS("core", $basedir, $json);
     gettextVue("core", $basedir, $json);
+    gettextVue3("core", $basedir, $json);
 }
 
 foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
@@ -151,6 +152,7 @@ foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
         gettextTS($translated_plugin, $path, $json);
         gettextSmarty($translated_plugin, $path, $json);
         gettextVue($translated_plugin, $path, $json);
+        gettextVue3($translated_plugin, $path, $json);
         gettextAngularJS($translated_plugin, $path, $json);
     }
 }
@@ -333,6 +335,34 @@ function gettextVue($translated_plugin, $path, $manifest_json)
     }
 }
 
+function gettextVue3(string $translated_plugin, string $path, array $manifest_json): void
+{
+    if (! isset($manifest_json['gettext-vue3']) || ! is_array($manifest_json['gettext-vue3'])) {
+        return;
+    }
+
+    foreach ($manifest_json['gettext-vue3'] as $component => $gettext) {
+        info("[$translated_plugin][vue][$component] Generating default .pot file");
+        $src      = escapeshellarg("$path/${gettext['src']}");
+        $po       = escapeshellarg("$path/${gettext['po']}");
+        $template = escapeshellarg("$path/${gettext['po']}/template.pot");
+
+        executeCommandAndExitIfStderrNotEmpty("tools/utils/scripts/vue3-typescript-gettext-extractor-cli.js \
+        $(find $src  \
+            -not \( -name '*.spec.js' -o -name '*.test.js' -o -name '*.test.ts' -o -name '*.d.ts' \) \
+            -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) \
+            -and \( -type f -name '*.vue' -o -name '*.ts' -o -name '*.js' \) \
+        ) \
+        --output $template");
+        executeCommandAndExitIfStderrNotEmpty("msguniq --sort-output --use-first -o $template $template");
+
+        executeCommandAndExitIfStderrNotEmpty("msgcat --no-location --sort-output -o $template $template");
+
+        info("[$translated_plugin][vue][$component] Merging .pot file into .po files");
+        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
+    }
+}
+
 function gettextTS($translated_plugin, $path, $manifest_json)
 {
     if (! isset($manifest_json['gettext-ts']) || ! is_array($manifest_json['gettext-ts'])) {
@@ -345,7 +375,7 @@ function gettextTS($translated_plugin, $path, $manifest_json)
         $po       = escapeshellarg("$path/${gettext['po']}");
         $template = escapeshellarg("$path/${gettext['po']}/template.pot");
 
-        executeCommandAndExitIfStderrNotEmpty("tools/utils/scripts/vue-typescript-gettext-extractor-cli.js \
+        executeCommandAndExitIfStderrNotEmpty("tools/utils/scripts/vue3-typescript-gettext-extractor-cli.js \
         $(find $src \
             -not \( -name '*.test.ts' -o -name '*.d.ts' \) \
             -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) \

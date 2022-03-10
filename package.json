@@ -14,7 +14,6 @@
     "@typescript-eslint/parser": "^5.5.0",
     "@vitejs/plugin-vue": "^2.0.0",
     "@vue/compiler-sfc": "^3.2.26",
-    "@vue/component-compiler-utils": "^3.3.0",
     "@vue/runtime-dom": "^3.2.12",
     "@vue/vue2-jest": "^27.0.0-alpha.2",
     "@vue/vue3-jest": "^27.0.0-alpha.4",
