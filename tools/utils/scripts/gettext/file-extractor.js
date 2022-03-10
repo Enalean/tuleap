@@ -20,22 +20,7 @@
 const fs = require("fs");
 const path = require("path");
 const ts = require("typescript");
-const vueParser = require("@vue/component-compiler-utils");
-const vueTemplateCompiler = require("vue-template-compiler");
-const { transform } = require("unplugin-vue2-script-setup");
 const { JsExtractors } = require("gettext-extractor");
-
-const tuleapVue2Compiler = {
-    parseComponent(file) {
-        const vue_script_setup_transform = transform(file, "A.vue");
-        if (vue_script_setup_transform !== null) {
-            return vueTemplateCompiler.parseComponent(vue_script_setup_transform.code);
-        }
-
-        return vueTemplateCompiler.parseComponent(file);
-    },
-    compile: vueTemplateCompiler.compile,
-};
 
 const { log } = require("./log.js");
 const {
@@ -48,7 +33,7 @@ const {
 const INTERPOLATED_TEXT_NODE = 2;
 const TEXT_NODE = 3;
 
-function extractFileSync(file_path, gettext_extractor) {
+function extractFileSync(file_path, gettext_extractor, vue_parser) {
     const ext = path.extname(file_path).slice(1);
     if (!ALLOWED_EXTENSIONS.includes(ext)) {
         log(`will not extract: '${file_path}' (invalid extension)`);
@@ -60,7 +45,7 @@ function extractFileSync(file_path, gettext_extractor) {
 
     if (ext === "vue") {
         const file = fs.readFileSync(file_path, { encoding: "utf-8" }).toString();
-        extractFromVueFile(file, file_path, gettext_extractor, gettext_parser);
+        extractFromVueFile(file, file_path, gettext_extractor, gettext_parser, vue_parser);
     } else if (ext === "js" || ext === "ts") {
         gettext_parser.parseFile(file_path);
     }
@@ -102,19 +87,17 @@ function createParser(gettext_extractor) {
     ]);
 }
 
-function extractFromVueFile(file, file_path, gettext_extractor, gettext_parser) {
-    const sfc_descriptor = vueParser.parse({
-        source: file,
-        filename: file_path,
-        compiler: tuleapVue2Compiler,
-        needMap: false,
-    });
+function extractFromVueFile(file, file_path, gettext_extractor, gettext_parser, vue_parser) {
+    const sfc_descriptor = vue_parser.parse(file);
 
     if (sfc_descriptor.script !== null) {
         extractFromVueScript(sfc_descriptor.script);
     }
+    if (sfc_descriptor.scriptSetup !== undefined && sfc_descriptor.scriptSetup !== null) {
+        extractFromVueScript(sfc_descriptor.scriptSetup);
+    }
     if (sfc_descriptor.template !== null) {
-        extractFromTemplate(sfc_descriptor.template);
+        extractFromTemplate(sfc_descriptor.template, vue_parser);
     }
 
     function extractFromVueScript(script_block) {
@@ -126,11 +109,17 @@ function extractFromVueFile(file, file_path, gettext_extractor, gettext_parser) 
         });
     }
 
-    function extractFromTemplate(template_block) {
-        const compiled = tuleapVue2Compiler.compile(template_block.content);
+    function extractFromTemplate(template_block, vue_parser) {
+        const compiled = vue_parser.compile(template_block.content);
         if (compiled.errors.length > 0) {
             compiled.errors.forEach((error) => log(error));
             throw new Error(`Error during Vue template compilation for file: ${file_path}`);
+        }
+        if (compiled.render !== undefined) {
+            const scriptKind = ts.ScriptKind.JS;
+            gettext_parser.parseString(compiled.render, undefined, {
+                scriptKind,
+            });
         }
         parseNode(compiled.ast);
     }

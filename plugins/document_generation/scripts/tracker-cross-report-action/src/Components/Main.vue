@@ -29,13 +29,13 @@
             >
                 <div class="tlp-modal-header">
                     <h1 id="cross-report-document-export-modal-title" class="tlp-modal-title">
-                        Export a cross tracker report document as .xlsx
+                        {{ $gettext("Export a cross tracker report document as .xlsx") }}
                     </h1>
                     <button
                         class="tlp-modal-close"
                         type="button"
                         data-dismiss="modal"
-                        aria-label="Close"
+                        v-bind:aria-label="$gettext('Close')"
                     >
                         <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
                     </button>
@@ -50,7 +50,7 @@
                         class="tlp-button-primary tlp-button-outline tlp-modal-action"
                         data-dismiss="modal"
                     >
-                        Cancel
+                        {{ $gettext("Cancel") }}
                     </button>
                     <button
                         type="button"
@@ -67,7 +67,7 @@
                                 'fa-download': !export_is_ongoing,
                             }"
                         ></i>
-                        Export
+                        {{ $gettext("Export") }}
                     </button>
                 </div>
             </div>

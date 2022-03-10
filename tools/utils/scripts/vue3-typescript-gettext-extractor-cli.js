@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,19 +19,17 @@
  */
 
 const { execute } = require("./gettext/common-cli");
-const vueTemplateCompiler = require("vue-template-compiler");
-const { transform } = require("unplugin-vue2-script-setup");
+const { parse, compileTemplate } = require("@vue/compiler-sfc");
 
-const tuleapVue2Compiler = {
-    parse(file) {
-        const vue_script_setup_transform = transform(file, "A.vue");
-        if (vue_script_setup_transform !== null) {
-            return vueTemplateCompiler.parseComponent(vue_script_setup_transform.code);
-        }
-
-        return vueTemplateCompiler.parseComponent(file);
+execute({
+    parse(content) {
+        return parse(content).descriptor;
     },
-    compile: vueTemplateCompiler.compile,
-};
-
-execute(tuleapVue2Compiler);
+    compile(content) {
+        return compileTemplate({
+            filename: "A.vue",
+            id: "ID",
+            source: content,
+        });
+    },
+});

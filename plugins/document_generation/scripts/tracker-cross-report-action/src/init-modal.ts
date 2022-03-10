@@ -21,13 +21,23 @@ import type { App } from "vue";
 import { createApp } from "vue";
 import Main from "./Components/Main.vue";
 import type { GlobalExportProperties } from "./type";
+import { createGettext } from "vue3-gettext";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 
 let app: App<Element> | null = null;
 
-export function initModal(mount_point: Element, properties: GlobalExportProperties): void {
+export async function initModal(
+    mount_point: Element,
+    properties: GlobalExportProperties
+): Promise<void> {
     if (app !== null) {
         app.unmount();
     }
     app = createApp(Main, { properties });
+    app.use(
+        await initVueGettext(createGettext, (locale: string) => {
+            return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+        })
+    );
     app.mount(mount_point);
 }

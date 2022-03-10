@@ -19,8 +19,7 @@
 
 import type { POFile } from "./main";
 import { initVueGettext } from "./main";
-
-import * as vue3_gettext from "vue3-gettext";
+import { createGettext } from "vue3-gettext";
 
 describe("vue3-gettext-init", () => {
     beforeEach(() => {
@@ -30,8 +29,13 @@ describe("vue3-gettext-init", () => {
     describe("when a locale is defined on the document's body", () => {
         const callback = (): Promise<POFile> =>
             Promise.resolve({
-                messages: {
-                    "Hello world": "Bonjour monde",
+                translations: {
+                    "": {
+                        "Hello world": {
+                            msgid: "Hello world",
+                            msgstr: ["Bonjour monde"],
+                        },
+                    },
                 },
             });
         beforeEach(() => {
@@ -39,17 +43,14 @@ describe("vue3-gettext-init", () => {
         });
 
         it("loads the translations and gives them to vue3-gettext", async () => {
-            const create_gettext_spy = jest.spyOn(vue3_gettext, "createGettext");
+            const create_gettext_spy = jest.fn(createGettext);
 
-            const gettext = await initVueGettext(callback);
+            const gettext = await initVueGettext(create_gettext_spy, callback);
 
             expect(create_gettext_spy).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    translations: {
-                        fr_FR: {
-                            "Hello world": "Bonjour monde",
-                        },
-                    },
+                    defaultLanguage: "fr_FR",
+                    translations: { fr_FR: { "Hello world": ["Bonjour monde"] } },
                 })
             );
             expect(Object.keys(gettext).length).toBeGreaterThan(0);
@@ -57,17 +58,17 @@ describe("vue3-gettext-init", () => {
     });
 
     describe("when a locale is NOT defined on the document's body", () => {
-        const callback = jest.fn(() => Promise.resolve({ messages: {} }));
+        const callback = jest.fn(() => Promise.resolve({ translations: { "": {} } }));
 
         it("does not call the callback", async () => {
-            await initVueGettext(callback);
+            await initVueGettext(jest.fn(), callback);
             expect(callback).not.toHaveBeenCalled();
         });
 
         it("gives an empty translations object to vue-gettext", async () => {
-            const create_gettext_spy = jest.spyOn(vue3_gettext, "createGettext");
+            const create_gettext_spy = jest.fn(createGettext);
 
-            const gettext = await initVueGettext(callback);
+            const gettext = await initVueGettext(create_gettext_spy, callback);
             expect(create_gettext_spy).toHaveBeenCalledWith(
                 expect.objectContaining({
                     translations: {},

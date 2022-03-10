@@ -27,6 +27,7 @@ jest.mock("../export-document", () => {
 
 import Main from "./Main.vue";
 import { shallowMount } from "@vue/test-utils";
+import { createGettext } from "vue3-gettext";
 
 describe("Main", () => {
     beforeEach(() => {
@@ -39,6 +40,7 @@ describe("Main", () => {
                 stubs: {
                     teleport: true,
                 },
+                plugins: [createGettext({ silent: true })],
             },
             props: {
                 properties: {} as GlobalExportProperties,
