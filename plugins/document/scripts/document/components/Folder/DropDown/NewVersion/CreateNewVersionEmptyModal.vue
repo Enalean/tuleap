@@ -28,7 +28,6 @@
         <modal-header
             v-bind:modal-title="modal_title"
             v-bind:aria-labelled-by="`document-new-empty-version-modal`"
-            v-bind:icon-header-class="'fa-plus'"
         />
         <modal-feedback />
 

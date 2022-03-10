@@ -25,11 +25,7 @@
         v-bind:aria-labelled-by="aria_labelled_by"
         v-on:submit="updateProperties"
     >
-        <modal-header
-            v-bind:modal-title="modal_title"
-            v-bind:aria-labelled-by="aria_labelled_by"
-            v-bind:icon-header-class="'fa-pencil'"
-        />
+        <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by" />
         <modal-feedback />
         <div class="tlp-modal-body document-item-modal-body">
             <document-global-property-for-update

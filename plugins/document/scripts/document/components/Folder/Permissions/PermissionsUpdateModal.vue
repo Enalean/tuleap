@@ -25,11 +25,7 @@
         enctype="multipart/form-data"
         v-on:submit.prevent="updatePermissions"
     >
-        <modal-header
-            v-bind:modal-title="modal_title"
-            v-bind:aria-labelled-by="aria_labelled_by"
-            v-bind:icon-header-class="'fa-pencil'"
-        />
+        <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by" />
         <modal-feedback />
         <div class="tlp-modal-body document-item-modal-body">
             <div v-if="project_ugroups === null" class="document-permissions-modal-loading-state">

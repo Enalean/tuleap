@@ -47,8 +47,5 @@ export default class ModalHeader extends Vue {
 
     @Prop({ required: true })
     readonly ariaLabelledBy!: string;
-
-    @Prop({ required: true })
-    readonly iconHeaderClass!: string;
 }
 </script>
