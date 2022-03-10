@@ -97,7 +97,7 @@ class Tracker_Report_RendererFactory
     {
         $renderers = [];
         //Check that renderers are already in the session
-        $renderers_data = $report->report_session->get('renderers');
+        $renderers_data = $report->report_session?->get('renderers');
         if (! $renderers_data) {
             //if not, load the renderers from the db
             $renderers_data = $this->getDao()->searchByReportId($report->id);

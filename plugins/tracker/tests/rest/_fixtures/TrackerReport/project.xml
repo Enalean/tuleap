@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+  ~
+  ~ This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<project unix-name="tracker-reports" full-name="Tracker All Fields" description="" access="public">
+  <long-description/>
+  <services>
+    <service shortname="summary" enabled="1"/>
+    <service shortname="admin" enabled="1"/>
+    <service shortname="plugin_tracker" enabled="1"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_admins" description="Project administrators">
+      <members>
+        <member format="username">rest_api_tester_1</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_members" description="Project members">
+      <members>
+        <member format="username">rest_api_tester_1</member>
+      </members>
+    </ugroup>
+  </ugroups>
+  <trackers use-natures="true">
+    <tracker id="T1347" parent_id="0" instantiate_for_new_projects="1" is_displayed_in_new_dropdown="1">
+      <name><![CDATA[Report Renderers]]></name>
+      <item_name><![CDATA[report_renderers]]></item_name>
+      <description><![CDATA[]]></description>
+      <color><![CDATA[sherwood-green]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="fieldset" ID="F32082" rank="26" id="32082" tracker_id="1347" parent_id="0">
+          <name><![CDATA[details_1]]></name>
+          <label><![CDATA[Details]]></label>
+          <formElements>
+            <formElement type="string" ID="F32083" rank="0" id="32083" tracker_id="1347" parent_id="32082" required="1">
+              <name><![CDATA[title]]></name>
+              <label><![CDATA[Title]]></label>
+              <properties maxchars="150" size="80"/>
+            </formElement>
+            <formElement type="text" ID="F32084" rank="2" id="32084" tracker_id="1347" parent_id="32082">
+              <name><![CDATA[description]]></name>
+              <label><![CDATA[Description]]></label>
+              <properties rows="10" cols="100"/>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F32085" rank="27" id="32085" tracker_id="1347" parent_id="0">
+          <name><![CDATA[other_fields]]></name>
+          <label><![CDATA[Other fields]]></label>
+          <formElements>
+            <formElement type="staticrichtext" ID="F32086" rank="0" id="32086" tracker_id="1347" parent_id="32085">
+              <name><![CDATA[static_text]]></name>
+              <label><![CDATA[Static text]]></label>
+              <properties static_value="&lt;p&gt;&lt;strong&gt;All fields&lt;/strong&gt; are listed below&lt;/p&gt;&#13;&#10;"/>
+            </formElement>
+            <formElement type="string" ID="F32087" rank="2" id="32087" tracker_id="1347" parent_id="32085">
+              <name><![CDATA[string]]></name>
+              <label><![CDATA[String]]></label>
+              <properties size="30"/>
+            </formElement>
+            <formElement type="text" ID="F32088" rank="3" id="32088" tracker_id="1347" parent_id="32085">
+              <name><![CDATA[text]]></name>
+              <label><![CDATA[Text]]></label>
+              <properties rows="10" cols="50"/>
+            </formElement>
+            <formElement type="int" ID="F32089" rank="4" id="32089" tracker_id="1347" parent_id="32085">
+              <name><![CDATA[integer]]></name>
+              <label><![CDATA[Integer]]></label>
+              <properties size="5"/>
+            </formElement>
+            <formElement type="float" ID="F32090" rank="5" id="32090" tracker_id="1347" parent_id="32085">
+              <name><![CDATA[float]]></name>
+              <label><![CDATA[Float]]></label>
+              <properties size="5"/>
+            </formElement>
+            <formElement type="date" ID="F32091" rank="6" id="32091" tracker_id="1347" parent_id="32085">
+              <name><![CDATA[date]]></name>
+              <label><![CDATA[Date]]></label>
+              <properties default_value="today" display_time="0"/>
+            </formElement>
+            <formElement type="date" ID="F32092" rank="7" id="32092" tracker_id="1347" parent_id="32085">
+              <name><![CDATA[datetime]]></name>
+              <label><![CDATA[Datetime]]></label>
+              <properties default_value="today" display_time="1"/>
+            </formElement>
+            <formElement type="computed" ID="F32093" rank="8" id="32093" tracker_id="1347" parent_id="32085">
+              <name><![CDATA[computed]]></name>
+              <label><![CDATA[Computed]]></label>
+            </formElement>
+            <formElement type="file" ID="F32094" rank="26" id="32094" tracker_id="1347" parent_id="32085">
+              <name><![CDATA[attachments_1]]></name>
+              <label><![CDATA[Attachments]]></label>
+            </formElement>
+            <formElement type="perm" ID="F32095" rank="27" id="32095" tracker_id="1347" parent_id="32085">
+              <name><![CDATA[permissions]]></name>
+              <label><![CDATA[Permissions]]></label>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F32096" rank="28" id="32096" tracker_id="1347" parent_id="0">
+          <name><![CDATA[list_fields]]></name>
+          <label><![CDATA[List fields]]></label>
+          <formElements>
+            <formElement type="sb" ID="F32097" rank="0" id="32097" tracker_id="1347" parent_id="32096">
+              <name><![CDATA[selectbox_static]]></name>
+              <label><![CDATA[Selectbox static]]></label>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V13537" label="Uno" is_hidden="0"/>
+                  <item ID="V13538" label="Dos" is_hidden="0"/>
+                  <item ID="V13539" label="Tres" is_hidden="0"/>
+                  <item ID="V13540" label="Quatro" is_hidden="0"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="sb" ID="F32098" rank="1" id="32098" tracker_id="1347" parent_id="32096">
+              <name><![CDATA[selectbox_users_registered]]></name>
+              <label><![CDATA[Selectbox users (members)]]></label>
+              <bind type="users">
+                <items>
+                  <item label="group_members"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="sb" ID="F32099" rank="2" id="32099" tracker_id="1347" parent_id="32096">
+              <name><![CDATA[selectbox_ugroups]]></name>
+              <label><![CDATA[Selectbox ugroups]]></label>
+              <bind type="ugroups">
+                <items>
+                  <item ID="V1" label="ugroup_project_members_name_key" is_hidden="0"/>
+                  <item ID="V2" label="ugroup_project_admins_name_key" is_hidden="0"/>
+                  <item ID="V3" label="ugroup_authenticated_users_name_key" is_hidden="0"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="rb" ID="F32100" rank="3" id="32100" tracker_id="1347" parent_id="32096">
+              <name><![CDATA[radio_static]]></name>
+              <label><![CDATA[Radio static]]></label>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V13541" label="一" is_hidden="0"/>
+                  <item ID="V13542" label="二" is_hidden="0"/>
+                  <item ID="V13543" label="三" is_hidden="0"/>
+                  <item ID="V13544" label="四" is_hidden="0"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="rb" ID="F32101" rank="4" id="32101" tracker_id="1347" parent_id="32096">
+              <name><![CDATA[radio_users_registered]]></name>
+              <label><![CDATA[Radio users (members)]]></label>
+              <bind type="users">
+                <items>
+                  <item label="group_members"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="rb" ID="F32102" rank="5" id="32102" tracker_id="1347" parent_id="32096">
+              <name><![CDATA[radio_ugroups]]></name>
+              <label><![CDATA[Radio ugroups]]></label>
+              <bind type="ugroups">
+                <items>
+                  <item ID="V4" label="ugroup_project_members_name_key" is_hidden="0"/>
+                  <item ID="V5" label="ugroup_project_admins_name_key" is_hidden="0"/>
+                  <item ID="V6" label="ugroup_authenticated_users_name_key" is_hidden="0"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="msb" ID="F32103" rank="6" id="32103" tracker_id="1347" parent_id="32096">
+              <name><![CDATA[msb_static]]></name>
+              <label><![CDATA[MSB static]]></label>
+              <properties size="7"/>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V13545" label="Un" is_hidden="0"/>
+                  <item ID="V13546" label="Deux" is_hidden="0"/>
+                  <item ID="V13547" label="Trois" is_hidden="0"/>
+                  <item ID="V13548" label="Quatre" is_hidden="0"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="msb" ID="F32104" rank="7" id="32104" tracker_id="1347" parent_id="32096">
+              <name><![CDATA[msb_users_members]]></name>
+              <label><![CDATA[MSB users (members)]]></label>
+              <properties size="7"/>
+              <bind type="users">
+                <items>
+                  <item label="group_members"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="msb" ID="F32105" rank="8" id="32105" tracker_id="1347" parent_id="32096">
+              <name><![CDATA[msb_ugroups]]></name>
+              <label><![CDATA[MSB ugroups]]></label>
+              <properties size="7"/>
+              <bind type="ugroups">
+                <items>
+                  <item ID="V7" label="ugroup_project_members_name_key" is_hidden="0"/>
+                  <item ID="V8" label="ugroup_project_admins_name_key" is_hidden="0"/>
+                  <item ID="V9" label="ugroup_authenticated_users_name_key" is_hidden="0"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="cb" ID="F32106" rank="9" id="32106" tracker_id="1347" parent_id="32096">
+              <name><![CDATA[checkbox_static]]></name>
+              <label><![CDATA[Checkbox static]]></label>
+              <properties size="7"/>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V13549" label="One" is_hidden="0"/>
+                  <item ID="V13550" label="Two" is_hidden="0"/>
+                  <item ID="V13551" label="Three" is_hidden="0"/>
+                  <item ID="V13552" label="Four" is_hidden="0"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="cb" ID="F32107" rank="10" id="32107" tracker_id="1347" parent_id="32096">
+              <name><![CDATA[checkbox_users_members]]></name>
+              <label><![CDATA[Checkbox users (members)]]></label>
+              <properties size="7"/>
+              <bind type="users">
+                <items>
+                  <item label="group_members"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="cb" ID="F32108" rank="11" id="32108" tracker_id="1347" parent_id="32096">
+              <name><![CDATA[checkbox_ugroups]]></name>
+              <label><![CDATA[Checkbox ugroups]]></label>
+              <properties size="7"/>
+              <bind type="ugroups">
+                <items>
+                  <item ID="V10" label="ugroup_project_members_name_key" is_hidden="0"/>
+                  <item ID="V11" label="ugroup_project_admins_name_key" is_hidden="0"/>
+                  <item ID="V12" label="ugroup_authenticated_users_name_key" is_hidden="0"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="tbl" ID="F32109" rank="12" id="32109" tracker_id="1347" parent_id="32096">
+              <name><![CDATA[openlist_static]]></name>
+              <label><![CDATA[Openlist static]]></label>
+              <properties hint="Type in a search term"/>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V13553" label="Alpha" is_hidden="0"/>
+                  <item ID="V13554" label="Bravo" is_hidden="0"/>
+                  <item ID="V13555" label="Charlie" is_hidden="0"/>
+                  <item ID="V13556" label="Delta" is_hidden="0"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="tbl" ID="F32110" rank="13" id="32110" tracker_id="1347" parent_id="32096">
+              <name><![CDATA[openlist_users_members]]></name>
+              <label><![CDATA[Openlist users (members)]]></label>
+              <properties hint="Project members"/>
+              <bind type="users">
+                <items>
+                  <item label="group_members"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="tbl" ID="F32111" rank="14" id="32111" tracker_id="1347" parent_id="32096">
+              <name><![CDATA[openlist_ugroups]]></name>
+              <label><![CDATA[Openlist ugroups]]></label>
+              <properties hint="Type in a search term"/>
+              <bind type="ugroups">
+                <items>
+                  <item ID="V13" label="ugroup_project_members_name_key" is_hidden="0"/>
+                  <item ID="V14" label="ugroup_project_admins_name_key" is_hidden="0"/>
+                  <item ID="V15" label="ugroup_authenticated_users_name_key" is_hidden="0"/>
+                </items>
+              </bind>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F32112" rank="29" id="32112" tracker_id="1347" parent_id="0">
+          <name><![CDATA[progress]]></name>
+          <label><![CDATA[Progress]]></label>
+          <formElements>
+            <formElement type="column" ID="F32113" rank="0" id="32113" tracker_id="1347" parent_id="32112">
+              <name><![CDATA[c1]]></name>
+              <label><![CDATA[c1]]></label>
+              <formElements>
+                <formElement type="msb" ID="F32114" rank="0" id="32114" tracker_id="1347" parent_id="32113">
+                  <name><![CDATA[assigned_to]]></name>
+                  <label><![CDATA[Assigned to]]></label>
+                  <description><![CDATA[Who is in charge of solving the artifact]]></description>
+                  <properties size="7"/>
+                  <bind type="users">
+                    <items>
+                      <item label="group_members"/>
+                    </items>
+                  </bind>
+                </formElement>
+              </formElements>
+            </formElement>
+            <formElement type="column" ID="F32115" rank="1" id="32115" tracker_id="1347" parent_id="32112">
+              <name><![CDATA[c2]]></name>
+              <label><![CDATA[c2]]></label>
+              <formElements>
+                <formElement type="sb" ID="F32116" rank="0" id="32116" tracker_id="1347" parent_id="32115">
+                  <name><![CDATA[status]]></name>
+                  <label><![CDATA[Status]]></label>
+                  <bind type="static" is_rank_alpha="0">
+                    <items>
+                      <item ID="V13557" label="To be done" is_hidden="0"/>
+                      <item ID="V13558" label="In progress" is_hidden="0"/>
+                      <item ID="V13559" label="Review" is_hidden="0"/>
+                      <item ID="V13560" label="Done" is_hidden="0"/>
+                    </items>
+                    <decorators>
+                      <decorator REF="V13557" tlp_color_name="firemist-silver"/>
+                      <decorator REF="V13558" tlp_color_name="acid-green"/>
+                      <decorator REF="V13559" tlp_color_name="neon-green"/>
+                      <decorator REF="V13560" tlp_color_name="army-green"/>
+                    </decorators>
+                    <default_values>
+                      <value REF="V13557"/>
+                    </default_values>
+                  </bind>
+                </formElement>
+                <formElement type="sb" ID="F32117" rank="3" id="32117" tracker_id="1347" parent_id="32115">
+                  <name><![CDATA[importance]]></name>
+                  <label><![CDATA[Importance]]></label>
+                  <bind type="static" is_rank_alpha="0">
+                    <items>
+                      <item ID="V13561" label="High" is_hidden="0"/>
+                    </items>
+                    <decorators>
+                      <decorator REF="V13561" tlp_color_name="fiesta-red"/>
+                    </decorators>
+                  </bind>
+                </formElement>
+              </formElements>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F32118" rank="32" id="32118" tracker_id="1347" parent_id="0">
+          <name><![CDATA[references]]></name>
+          <label><![CDATA[References]]></label>
+          <formElements>
+            <formElement type="art_link" ID="F32119" rank="0" id="32119" tracker_id="1347" parent_id="32118">
+              <name><![CDATA[artifact_link]]></name>
+              <label><![CDATA[Artifact link]]></label>
+            </formElement>
+            <formElement type="cross" ID="F32120" rank="1" id="32120" tracker_id="1347" parent_id="32118">
+              <name><![CDATA[cross_references]]></name>
+              <label><![CDATA[Cross References]]></label>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="column" ID="F32121" rank="31239" id="32121" tracker_id="1347" parent_id="0">
+          <name><![CDATA[column_top_1]]></name>
+          <label><![CDATA[Column Top 1]]></label>
+          <formElements>
+            <formElement type="aid" ID="F32122" rank="0" id="32122" tracker_id="1347" parent_id="32121">
+              <name><![CDATA[artifact_id]]></name>
+              <label><![CDATA[Artifact ID]]></label>
+            </formElement>
+            <formElement type="subby" ID="F32123" rank="1" id="32123" tracker_id="1347" parent_id="32121">
+              <name><![CDATA[submitted_by]]></name>
+              <label><![CDATA[Submitted By]]></label>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="column" ID="F32124" rank="31240" id="32124" tracker_id="1347" parent_id="0">
+          <name><![CDATA[column_top_2]]></name>
+          <label><![CDATA[Column Top 2]]></label>
+          <formElements>
+            <formElement type="lud" ID="F32125" rank="0" id="32125" tracker_id="1347" parent_id="32124">
+              <name><![CDATA[last_modified_on]]></name>
+              <label><![CDATA[Last Modified On]]></label>
+            </formElement>
+            <formElement type="subon" ID="F32126" rank="1" id="32126" tracker_id="1347" parent_id="32124">
+              <name><![CDATA[submitted_on]]></name>
+              <label><![CDATA[Submitted On]]></label>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Title]]></label>
+          <description><![CDATA[Define the title of an artifact]]></description>
+          <field REF="F32083"/>
+        </semantic>
+        <semantic type="description">
+          <shortname><![CDATA[description]]></shortname>
+          <label><![CDATA[Description]]></label>
+          <description><![CDATA[Define the description of an artifact]]></description>
+          <field REF="F32084"/>
+        </semantic>
+        <semantic type="status">
+          <shortname><![CDATA[status]]></shortname>
+          <label><![CDATA[Status]]></label>
+          <description><![CDATA[Define the status of an artifact]]></description>
+          <field REF="F32116"/>
+          <open_values>
+            <open_value REF="V13557"/>
+            <open_value REF="V13558"/>
+            <open_value REF="V13559"/>
+          </open_values>
+        </semantic>
+        <semantic type="done">
+          <shortname><![CDATA[done]]></shortname>
+          <label><![CDATA[Done]]></label>
+          <description><![CDATA[Define the closed status that are considered Done]]></description>
+          <closed_values/>
+        </semantic>
+        <semantic type="contributor">
+          <shortname><![CDATA[contributor]]></shortname>
+          <label><![CDATA[Contributor/assignee]]></label>
+          <description><![CDATA[Define the contributor/assignee of an artifact]]></description>
+          <field REF="F32114"/>
+        </semantic>
+        <semantic type="tooltip">
+          <field REF="F32122"/>
+          <field REF="F32083"/>
+          <field REF="F32116"/>
+        </semantic>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name><![CDATA[Activities]]></name>
+          <description><![CDATA[The system default artifact report]]></description>
+          <criterias/>
+          <renderers>
+            <renderer ID="R4593" type="table" rank="0" chunksz="15">
+              <name><![CDATA[Results]]></name>
+              <columns>
+                <field REF="F32122"/>
+                <field REF="F32083"/>
+                <field REF="F32116"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F32083" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32083" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32083" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32084" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32084" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32084" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32087" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32087" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32087" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32088" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32088" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32088" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32089" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32089" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32089" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32090" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32090" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32090" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32091" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32091" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32091" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32092" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32092" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32092" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32093" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32093" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32093" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32094" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32094" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32094" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32095" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32095" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32095" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32097" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32097" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32097" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32098" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32098" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32098" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32099" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32099" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32099" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32100" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32100" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32100" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32101" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32101" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32101" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32102" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32102" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32102" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32103" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32103" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32103" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32104" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32104" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32104" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32105" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32105" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32105" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32106" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32106" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32106" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32107" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32107" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32107" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32108" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32108" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32108" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32109" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32109" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32109" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32110" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32110" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32110" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32111" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32111" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32111" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32114" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32114" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32114" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32116" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32116" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32116" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32117" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32117" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32117" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32119" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32119" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F32119" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F32120" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32122" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32123" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32125" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F32126" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+      </permissions>
+      <artifacts>
+        <artifact id="2446">
+          <changeset id="CHANGESET_12645">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2021-04-02T16:52:06+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="title">
+              <value><![CDATA[Artifact with all fields]]></value>
+            </field_change>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[Description]]></value>
+            </field_change>
+            <field_change type="string" field_name="string">
+              <value><![CDATA[String]]></value>
+            </field_change>
+            <field_change type="text" field_name="text">
+              <value format="html"><![CDATA[<p>&lt;p&gt;&amp;lt;p&amp;gt;&amp;lt;strong&amp;gt;&amp;lt;em&amp;gt;Text&amp;lt;/em&amp;gt;&amp;lt;/strong&amp;gt;&amp;lt;/p&amp;gt;&lt;/p&gt;</p>
+]]></value>
+            </field_change>
+            <field_change field_name="integer" type="int">
+              <value><![CDATA[1]]></value>
+            </field_change>
+            <field_change type="float" field_name="float">
+              <value><![CDATA[1.25]]></value>
+            </field_change>
+            <field_change field_name="date" type="date">
+              <value format="ISO8601"><![CDATA[2021-04-02T00:00:00+02:00]]></value>
+            </field_change>
+            <field_change field_name="datetime" type="date">
+              <value format="ISO8601"><![CDATA[2021-04-02T16:49:00+02:00]]></value>
+            </field_change>
+            <field_change field_name="computed" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="attachments_1" type="file">
+              <value/>
+            </field_change>
+            <field_change field_name="permissions" type="permissions_on_artifact" use_perm="1">
+              <ugroup ugroup_name="ugroup_project_members_name_key"/>
+            </field_change>
+            <field_change field_name="selectbox_static" type="list" bind="static">
+              <value format="id"><![CDATA[13537]]></value>
+            </field_change>
+            <field_change field_name="selectbox_users_registered" type="list" bind="users">
+              <value format="username">rest_api_tester_1</value>
+            </field_change>
+            <field_change field_name="selectbox_ugroups" type="list" bind="ugroups">
+              <value format="id"><![CDATA[1]]></value>
+            </field_change>
+            <field_change field_name="radio_static" type="list" bind="static">
+              <value format="id"><![CDATA[13543]]></value>
+            </field_change>
+            <field_change field_name="radio_users_registered" type="list" bind="users">
+              <value format="username">rest_api_tester_1</value>
+            </field_change>
+            <field_change field_name="radio_ugroups" type="list" bind="ugroups">
+              <value format="id"><![CDATA[5]]></value>
+            </field_change>
+            <field_change field_name="msb_static" type="list" bind="static">
+              <value format="id"><![CDATA[13545]]></value>
+              <value format="id"><![CDATA[13546]]></value>
+            </field_change>
+            <field_change field_name="msb_users_members" type="list" bind="users">
+              <value format="username">rest_api_tester_1</value>
+            </field_change>
+            <field_change field_name="msb_ugroups" type="list" bind="ugroups">
+              <value format="id"><![CDATA[7]]></value>
+            </field_change>
+            <field_change field_name="checkbox_static" type="list" bind="static">
+              <value format="id"><![CDATA[13549]]></value>
+              <value format="id"><![CDATA[13551]]></value>
+            </field_change>
+            <field_change field_name="checkbox_users_members" type="list" bind="users">
+              <value format="username">rest_api_tester_1</value>
+            </field_change>
+            <field_change field_name="checkbox_ugroups" type="list" bind="ugroups">
+              <value format="id"><![CDATA[11]]></value>
+            </field_change>
+            <field_change field_name="openlist_static" type="open_list" bind="static">
+              <value format="label"><![CDATA[value_ol1]]></value>
+            </field_change>
+            <field_change field_name="openlist_users_members" type="open_list" bind="users">
+              <value format="username">rest_api_tester_1</value>
+            </field_change>
+            <field_change field_name="openlist_ugroups" type="open_list" bind="ugroups">
+              <value format="id"><![CDATA[b13]]></value>
+            </field_change>
+            <field_change field_name="assigned_to" type="list" bind="users">
+              <value format="username">rest_api_tester_1</value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[13558]]></value>
+            </field_change>
+            <field_change field_name="importance" type="list" bind="static">
+              <value format="id"><![CDATA[13561]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+    <triggers/>
+  </trackers>
+  <natures>
+    <nature><![CDATA[_is_child]]></nature>
+  </natures>
+</project>
