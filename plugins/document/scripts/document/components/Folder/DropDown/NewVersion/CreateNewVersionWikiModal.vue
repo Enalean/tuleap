@@ -25,11 +25,7 @@
         v-on:submit="createNewWikiVersion"
         data-test="document-new-item-version-modal"
     >
-        <modal-header
-            v-bind:modal-title="modal_title"
-            v-bind:aria-labelled-by="aria_labelled_by"
-            v-bind:icon-header-class="'fa-plus'"
-        />
+        <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by" />
         <modal-feedback />
         <div class="tlp-modal-body">
             <div class="docman-item-update-property">
