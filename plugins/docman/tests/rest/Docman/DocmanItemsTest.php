@@ -60,7 +60,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $wiki     = $this->findItemByTitle($items_folder_1, 'GET W');
 
         $response       = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
+            \TestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $folder['id'] . '/docman_items')
         );
         $items_folder_2 = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);

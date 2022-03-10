@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="docman-forbid-writers" full-name="ForbidWritersProject" description="e" access="private">
+    <long-description></long-description>
+    <services>
+        <service shortname="summary" enabled="1"/>
+        <service shortname="admin" enabled="1"/>
+        <service shortname="mail" enabled="0"/>
+        <service shortname="docman" enabled="1"/>
+        <service shortname="wiki" enabled="1"/>
+        <service shortname="plugin_svn" enabled="0"/>
+        <service shortname="file" enabled="0"/>
+        <service shortname="plugin_tracker" enabled="0"/>
+        <service shortname="plugin_agiledashboard" enabled="0"/>
+        <service shortname="hudson" enabled="0"/>
+        <service shortname="plugin_git" enabled="0"/>
+    </services>
+    <ugroups>
+        <ugroup name="project_admins" description="Project administrators">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_members" description="Project members">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+                <member format="username">docman_writer_user</member>
+                <member format="username">docman_manager_user</member>
+            </members>
+        </ugroup>
+        <ugroup name="Managers" description="Managers">
+            <members>
+                <member format="username">docman_manager_user</member>
+            </members>
+        </ugroup>
+    </ugroups>
+</project>

@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Test\rest;
 
-use Docman_ItemFactory;
 use ProjectUGroup;
-use Tuleap\Docman\Test\rest\Helper\DocmanDataBuildCommon;
+use Tuleap\Docman\Test\rest\Helper\DocmanProjectBuilder;
 
 class DocmanWithMetadataActivatedDataBuilder
 {
@@ -35,25 +34,20 @@ class DocmanWithMetadataActivatedDataBuilder
      */
     private $metadata_factory;
     /**
-     * @var Docman_ItemFactory
-     */
-    private $docman_factory;
-    /**
      * @var int
      */
     private $docman_user_id;
 
     /**
-     * @var DocmanDataBuildCommon
+     * @var DocmanProjectBuilder
      */
-    private $common_builder;
+    private $project_builder;
 
-    public function __construct(DocmanDataBuildCommon $common_builder)
+    public function __construct(DocmanProjectBuilder $project_builder)
     {
-        $this->common_builder   = $common_builder;
-        $this->docman_user_id   = $this->common_builder->getUserByName(DocmanDataBuildCommon::DOCMAN_REGULAR_USER_NAME);
-        $this->docman_factory   = new Docman_ItemFactory();
-        $this->metadata_factory = new \Docman_MetadataFactory($this->common_builder->getProject()->getID());
+        $this->project_builder  = $project_builder;
+        $this->docman_user_id   = $this->project_builder->getUserByName(DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME);
+        $this->metadata_factory = new \Docman_MetadataFactory($this->project_builder->getProject()->getID());
     }
 
     public function setUp(): void
@@ -63,7 +57,7 @@ class DocmanWithMetadataActivatedDataBuilder
         $this->setMetadataUsageByLabel('status');
         $this->setMetadataUsageByLabel('obsolescence_date');
         $this->createCustomMetadata();
-        $this->common_builder->installPlugin($this->common_builder->getProject());
+        $this->project_builder->activateWikiServiceForTheProject();
         $this->addContent();
     }
 
@@ -80,8 +74,8 @@ class DocmanWithMetadataActivatedDataBuilder
      */
     private function addContent(): void
     {
-        $docman_root = $this->docman_factory->getRoot($this->common_builder->getProject()->getID());
-        $this->common_builder->addWritePermissionOnItem((int) $docman_root->getId(), ProjectUGroup::PROJECT_MEMBERS);
+        $docman_root = $this->project_builder->getRoot();
+        $this->project_builder->addWritePermissionOnItem((int) $docman_root->getId(), ProjectUGroup::PROJECT_MEMBERS);
         $this->createFolderWithHardcodedMetadataItems($docman_root);
     }
 
@@ -101,43 +95,43 @@ class DocmanWithMetadataActivatedDataBuilder
      */
     private function createFolderWithHardcodedMetadataItems(\Docman_Item $docman_root): void
     {
-        $folder_with_hardcoded_metadata_items_id = $this->common_builder->createItemWithVersion(
+        $folder_with_hardcoded_metadata_items_id = $this->project_builder->createItemWithVersion(
             $this->docman_user_id,
             (int) $docman_root->getId(),
             'Folder HM',
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
 
-        $this->common_builder->addWritePermissionOnItem($folder_with_hardcoded_metadata_items_id, ProjectUGroup::PROJECT_MEMBERS);
+        $this->project_builder->addWritePermissionOnItem($folder_with_hardcoded_metadata_items_id, ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->common_builder->createItemWithVersion(
+        $this->project_builder->createItemWithVersion(
             $this->docman_user_id,
             $folder_with_hardcoded_metadata_items_id,
             'PUT F OD',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
-        $this->common_builder->createItemWithVersion(
+        $this->project_builder->createItemWithVersion(
             $this->docman_user_id,
             $folder_with_hardcoded_metadata_items_id,
             'PUT F',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
-        $sub_folder_id = $this->common_builder->createItemWithVersion(
+        $sub_folder_id = $this->project_builder->createItemWithVersion(
             $this->docman_user_id,
             $folder_with_hardcoded_metadata_items_id,
             'PUT HM FO',
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
 
-        $this->common_builder->addWritePermissionOnItem($sub_folder_id, ProjectUGroup::PROJECT_MEMBERS);
+        $this->project_builder->addWritePermissionOnItem($sub_folder_id, ProjectUGroup::PROJECT_MEMBERS);
     }
 
     private function setMetadataUsageByLabel(string $label): void
     {
         $settings_dao = new \Docman_SettingsDao();
-        $settings_dao->updateMetadataUsageForGroupId($this->common_builder->getProject()->getID(), $label, 1);
+        $settings_dao->updateMetadataUsageForGroupId($this->project_builder->getProject()->getID(), $label, 1);
     }
 
     private function createCustomMetadata(): void

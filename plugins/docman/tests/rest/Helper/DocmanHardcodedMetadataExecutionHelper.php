@@ -73,7 +73,7 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
     }
 
 
-    public function loadRootFolderContent(int $root_id, string $user_name = REST_TestDataBuilder::ADMIN_USER_NAME): array
+    public function loadRootFolderContent(int $root_id, string $user_name = \TestDataBuilder::ADMIN_USER_NAME): array
     {
         $response = $this->getResponseByName(
             $user_name,
@@ -88,7 +88,7 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
     public function loadFolderContent(
         int $folder_id,
         string $folder_name,
-        string $user_name = REST_TestDataBuilder::ADMIN_USER_NAME,
+        string $user_name = \TestDataBuilder::ADMIN_USER_NAME,
     ): array {
         $response = $this->getResponseByName(
             $user_name,

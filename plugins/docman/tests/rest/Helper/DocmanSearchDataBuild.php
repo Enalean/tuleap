@@ -24,14 +24,15 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Test\rest\Helper;
 
 use ProjectUGroup;
+use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 
 final class DocmanSearchDataBuild
 {
     private int $docman_user_id;
 
-    public function __construct(private DocmanDataBuildCommon $common_builder)
+    public function __construct(private DocmanProjectBuilder $common_builder)
     {
-        $this->docman_user_id = $this->common_builder->getUserByName(DocmanDataBuildCommon::DOCMAN_REGULAR_USER_NAME);
+        $this->docman_user_id = $this->common_builder->getUserByName(DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME);
     }
     /**
      * To help understand tests structure, below a representation of search hierarchy

@@ -34,7 +34,7 @@ final class DocmanProjectServiceTest extends DocmanTestExecutionHelper
     {
         $admin_response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->project_id) . '/docman_service'),
-            REST_TestDataBuilder::ADMIN_USER_NAME
+            \TestDataBuilder::ADMIN_USER_NAME
         );
         $this->assertSame(200, $admin_response->getStatusCode());
         $admin_result = json_decode($admin_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);

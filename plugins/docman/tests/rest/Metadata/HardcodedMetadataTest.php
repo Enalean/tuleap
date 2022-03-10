@@ -479,14 +479,14 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         ];
 
         $updated_metadata_file_response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
+            \TestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('PUT', 'docman_files/' . $file_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource)))
         );
 
         $this->assertEquals(200, $updated_metadata_file_response->getStatusCode());
 
         $new_version_response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
+            \TestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $file_to_update_id)
         );
 
@@ -528,7 +528,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         ];
 
         $updated_metadata_file_response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
+            \TestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('PUT', 'docman_files/' . $file_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource)))
         );
 
@@ -588,7 +588,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         ];
 
         $updated_metadata_file_response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
+            \TestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('PUT', 'docman_folders/' . $folder_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource)))
         );
 
@@ -596,7 +596,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'docman_items/' . $folder_to_update_id . '/docman_items'),
-            DocmanDataBuilder::ADMIN_USER_NAME
+            \TestDataBuilder::ADMIN_USER_NAME
         );
 
         $updated_content = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -629,7 +629,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         ];
 
         $updated_metadata_file_response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
+            \TestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('PUT', 'docman_folders/' . $folder_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource)))
         );
 
@@ -637,7 +637,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'docman_items/' . $folder_to_update_id . '/docman_items'),
-            DocmanDataBuilder::ADMIN_USER_NAME
+            \TestDataBuilder::ADMIN_USER_NAME
         );
 
         $updated_content = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);

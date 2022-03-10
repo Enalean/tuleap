@@ -77,7 +77,7 @@ class DocmanTestExecutionHelper extends DocmanBase
 
     public function loadRootFolderContent(
         int $root_id,
-        string $user_name = REST_TestDataBuilder::ADMIN_USER_NAME,
+        string $user_name = \TestDataBuilder::ADMIN_USER_NAME,
     ): array {
         $response = $this->getResponseByName(
             $user_name,
@@ -94,7 +94,7 @@ class DocmanTestExecutionHelper extends DocmanBase
     public function loadFolderContent(
         int $folder_id,
         string $folder_name,
-        string $user_name = REST_TestDataBuilder::ADMIN_USER_NAME,
+        string $user_name = \TestDataBuilder::ADMIN_USER_NAME,
     ): array {
         $response = $this->getResponseByName(
             $user_name,
@@ -130,7 +130,7 @@ class DocmanTestExecutionHelper extends DocmanBase
     public function checkItemHasNotBeenDeleted(int $file_to_delete_id): void
     {
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
+            \TestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $file_to_delete_id)
         );
 
@@ -140,7 +140,7 @@ class DocmanTestExecutionHelper extends DocmanBase
     public function checkItemHasBeenDeleted(int $file_to_delete_id): void
     {
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
+            \TestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $file_to_delete_id)
         );
 
@@ -167,7 +167,7 @@ class DocmanTestExecutionHelper extends DocmanBase
         $file = $this->findItemByTitle($items, $title);
 
         $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
+            \TestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $file['id'])
         );
 
