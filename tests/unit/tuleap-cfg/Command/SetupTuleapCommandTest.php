@@ -25,20 +25,32 @@ namespace TuleapCfg\Command;
 
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Process\Process;
+use Tuleap\ForgeUpgrade\ForgeUpgradeRecordOnly;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class SetupTuleapCommandTest extends TestCase
 {
     private string $base_dir;
     private CommandTester $command_tester;
+    private \PHPUnit\Framework\MockObject\MockObject|ProcessFactory $process_factory;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->base_dir = vfsStream::setup()->url();
         mkdir($this->base_dir . '/etc/tuleap/conf', 0750, true);
+        $this->process_factory = $this->createMock(ProcessFactory::class);
+        $this->process_factory->method('getProcessWithoutTimeout')->willReturn(new Process(['/bin/true']));
+
+        $forge_upgrade = new class implements ForgeUpgradeRecordOnly {
+            public function recordOnlyCore(): void
+            {
+            }
+        };
+
         $this->command_tester = new CommandTester(
-            new SetupTuleapCommand($this->base_dir)
+            new SetupTuleapCommand($this->process_factory, fn () => $forge_upgrade, $this->base_dir)
         );
     }
 

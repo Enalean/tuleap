@@ -83,6 +83,8 @@ class ForgeConfig
         $database_config_file = self::get('db_config_file');
         if (is_file($database_config_file)) {
             self::loadFromFile($database_config_file);
+        } elseif (is_file('/etc/tuleap/conf/database.inc')) {
+            self::loadFromFile('/etc/tuleap/conf/database.inc');
         }
     }
 
