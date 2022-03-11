@@ -4,8 +4,9 @@
     "homepage": "https://tuleap.org",
     "license": "GPL-2.0-or-later",
     "private": true,
-    "dependencies": {},
-    "devDependencies": {},
+    "dependencies": {
+        "@tuleap/tlp": "link:../../src/themes/tlp"
+    },
     "scripts": {
         "build": "webpack --config webpack.prod.js",
         "watch": "webpack --config webpack.dev.js --watch"

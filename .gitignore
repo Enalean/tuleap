@@ -9,3 +9,4 @@ vendor
 *.po~
 .turbo/
 tsconfig.tsbuildinfo
+frontend-assets/
