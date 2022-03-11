@@ -175,9 +175,10 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         return $this->cache[$workflow_id];
     }
 
-    public function getWorkflowWithoutTransition(Tracker $tracker): WorkflowWithoutTransition
+    public function getNonNullWorkflow(Tracker $tracker): Workflow|WorkflowWithoutTransition
     {
-        return new WorkflowWithoutTransition(
+        $workflow = $this->getWorkflowByTrackerId($tracker->getId());
+        return $workflow ?? new WorkflowWithoutTransition(
             $this->getGlobalRulesManager($tracker),
             $this->trigger_rules_manager,
             $this->logger,

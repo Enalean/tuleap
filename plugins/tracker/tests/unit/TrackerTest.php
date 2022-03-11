@@ -384,8 +384,7 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->setUpTrackerWorkflowTest();
         $workflow = Mockery::mock(WorkflowWithoutTransition::class)->shouldReceive('getId')->andReturn($this->tracker_id)->getMock();
-        $this->workflow_factory->shouldReceive('getWorkflowByTrackerId')->andReturns(false);
-        $this->workflow_factory->shouldReceive('getWorkflowWithoutTransition')->andReturns($workflow);
+        $this->workflow_factory->shouldReceive('getNonNullWorkflow')->andReturns($workflow);
         $this->assertEquals($workflow, $this->tracker->getWorkflow());
     }
 
@@ -406,7 +405,7 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->setUpTrackerWorkflowTest();
         $workflow = Mockery::mock(Workflow::class)->shouldReceive('getId')->andReturn($this->tracker_id)->getMock();
-        $this->workflow_factory->shouldReceive('getWorkflowByTrackerId')->with($this->tracker_id)->andReturns($workflow);
+        $this->workflow_factory->shouldReceive('getNonNullWorkflow')->with($this->tracker)->andReturns($workflow);
         $this->assertEquals($workflow, $this->tracker->getWorkflow());
     }
 

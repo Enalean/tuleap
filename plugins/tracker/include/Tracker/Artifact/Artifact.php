@@ -1673,6 +1673,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /**
      * Return Workflow the artifact should respect
      *
+     * @deprecated Use \WorkflowFactory::getNonNullWorkflow() instead
      * @return Workflow|null
      */
     public function getWorkflow()
@@ -1681,7 +1682,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         if ($workflow === null) {
             return null;
         }
-        $workflow->setArtifact($this);
 
         return $workflow;
     }
