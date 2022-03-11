@@ -117,6 +117,7 @@ class Docman_View_Admin_Permissions extends \Tuleap\Docman\View\Admin\AdminView
         $renderer->renderToPage('admin/permissions-addendum', [
             'csrf'                     => self::getCSRFToken($project_id),
             'forbid_writers_to_update' => $settings['forbid_writers_to_update'] ?? false,
+            'forbid_writers_to_delete' => $settings['forbid_writers_to_delete'] ?? false,
         ]);
 
         echo '</form>';

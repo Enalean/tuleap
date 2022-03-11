@@ -30,7 +30,8 @@ describe("DropDownDisplayedEmbedded", () => {
         user_can_write: boolean,
         can_user_manage: boolean,
         parent_id: number,
-        forbid_writers_to_update: boolean
+        forbid_writers_to_update: boolean,
+        forbid_writers_to_delete: boolean
     ): Wrapper<DropDownDisplayedEmbedded> {
         return shallowMount(DropDownDisplayedEmbedded, {
             localVue,
@@ -46,6 +47,7 @@ describe("DropDownDisplayedEmbedded", () => {
                         } as Item,
                         configuration: {
                             forbid_writers_to_update,
+                            forbid_writers_to_delete,
                         } as ConfigurationState,
                     } as unknown as State,
                 }),
@@ -56,7 +58,7 @@ describe("DropDownDisplayedEmbedded", () => {
 
     it(`Given user can write item
         Then he can update its properties and delete it`, () => {
-        const wrapper = createWrapper(true, false, 102, false);
+        const wrapper = createWrapper(true, false, 102, false, false);
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
         expect(
@@ -69,7 +71,7 @@ describe("DropDownDisplayedEmbedded", () => {
 
     it(`Given user can write item, and given folder is root folder
         Then he can update its properties but he can not delete ir`, () => {
-        const wrapper = createWrapper(true, false, 0, false);
+        const wrapper = createWrapper(true, false, 0, false, false);
 
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
@@ -83,7 +85,7 @@ describe("DropDownDisplayedEmbedded", () => {
 
     it(`Given user has read permission on item
         Then he can't manage document`, () => {
-        const wrapper = createWrapper(false, false, 102, false);
+        const wrapper = createWrapper(false, false, 102, false, false);
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBeFalsy();
@@ -96,7 +98,7 @@ describe("DropDownDisplayedEmbedded", () => {
         And user is writer
         When we display the menu
         Then it does not display update properties entry`, () => {
-        const wrapper = createWrapper(true, false, 3, true);
+        const wrapper = createWrapper(true, false, 3, true, false);
 
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeFalsy();
     });
@@ -105,8 +107,26 @@ describe("DropDownDisplayedEmbedded", () => {
         And user is manager
         When we display the menu
         Then it displays update properties entry`, () => {
-        const wrapper = createWrapper(true, true, 3, true);
+        const wrapper = createWrapper(true, true, 3, true, false);
 
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
+    });
+
+    it(`Given writers are not allowed to delete
+        And user is writer
+        When we display the menu
+        Then it does not display delete entry`, () => {
+        const wrapper = createWrapper(true, false, 3, true, true);
+
+        expect(wrapper.find("[data-test=document-delete-item]").exists()).toBeFalsy();
+    });
+
+    it(`Given writers are not allowed to delete
+        And user is manager
+        When we display the menu
+        Then it displays delete entry`, () => {
+        const wrapper = createWrapper(true, true, 3, true, true);
+
+        expect(wrapper.find("[data-test=document-delete-item]").exists()).toBeTruthy();
     });
 });

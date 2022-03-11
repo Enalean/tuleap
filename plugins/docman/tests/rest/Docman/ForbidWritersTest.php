@@ -122,7 +122,7 @@ class ForbidWritersTest extends \RestBase
     /**
      * @depends testCreateEmptyItem
      */
-    public function testManagerIsAllowedToUpdate(int $item_id): void
+    public function testManagerIsAllowedToUpdate(int $item_id): int
     {
         $update_response = $this->getResponse(
             $this->request_factory
@@ -139,12 +139,14 @@ class ForbidWritersTest extends \RestBase
         );
 
         $this->assertSame(200, $update_response->getStatusCode());
+
+        return $item_id;
     }
 
     /**
-     * @depends testCreateEmptyItem
+     * @depends testManagerIsAllowedToUpdate
      */
-    public function testWriterIsNotAllowedToUpdate(int $item_id): void
+    public function testWriterIsNotAllowedToUpdate(int $item_id): int
     {
         $update_response = $this->getResponse(
             $this->request_factory
@@ -161,5 +163,35 @@ class ForbidWritersTest extends \RestBase
         );
 
         $this->assertSame(403, $update_response->getStatusCode());
+
+        return $item_id;
+    }
+
+    /**
+     * @depends testWriterIsNotAllowedToUpdate
+     */
+    public function testWriterIsNotAllowedToDelete(int $item_id): int
+    {
+        $update_response = $this->getResponse(
+            $this->request_factory->createRequest('DELETE', 'docman_empty_documents/' . urlencode((string) $item_id)),
+            DocmanForbidWritersDataBuilder::WRITER_USERNAME,
+        );
+
+        $this->assertSame(403, $update_response->getStatusCode());
+
+        return $item_id;
+    }
+
+    /**
+     * @depends testWriterIsNotAllowedToDelete
+     */
+    public function testManagerIsAllowedToDelete(int $item_id): void
+    {
+        $update_response = $this->getResponse(
+            $this->request_factory->createRequest('DELETE', 'docman_empty_documents/' . urlencode((string) $item_id)),
+            DocmanForbidWritersDataBuilder::MANAGER_USERNAME,
+        );
+
+        $this->assertSame(200, $update_response->getStatusCode());
     }
 }

@@ -70,12 +70,13 @@
                 data-test="document-update-properties"
             />
             <update-permissions v-bind:item="item" slot="update-permissions" />
-            <drop-down-separator slot="delete-item-separator" />
+            <drop-down-separator slot="delete-item-separator" v-if="should_display_delete_item" />
             <delete-item
                 v-bind:item="item"
                 role="menuitem"
                 data-test="document-dropdown-delete"
                 slot="delete-item"
+                v-if="should_display_delete_item"
             />
         </template>
     </drop-down-menu>
@@ -99,13 +100,13 @@ import { useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import { computed } from "@vue/composition-api";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
+import { canDelete } from "../../../helpers/can-delete-helper";
 
 const props = defineProps<{ item: Item }>();
 
-const { forbid_writers_to_update } = useState<Pick<ConfigurationState, "forbid_writers_to_update">>(
-    "configuration",
-    ["forbid_writers_to_update"]
-);
+const { forbid_writers_to_update, forbid_writers_to_delete } = useState<
+    Pick<ConfigurationState, "forbid_writers_to_update" | "forbid_writers_to_delete">
+>("configuration", ["forbid_writers_to_update", "forbid_writers_to_delete"]);
 
 const is_item_a_folder = computed((): boolean => {
     return isFolder(props.item);
@@ -113,6 +114,10 @@ const is_item_a_folder = computed((): boolean => {
 
 const should_display_update_properties = computed((): boolean => {
     return canUpdateProperties(forbid_writers_to_update.value, props.item);
+});
+
+const should_display_delete_item = computed((): boolean => {
+    return canDelete(forbid_writers_to_delete.value, props.item);
 });
 </script>
 

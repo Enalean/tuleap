@@ -1282,8 +1282,7 @@ class Docman_Controller extends Controler
                 break;
             case 'delete':
                 if ($this->userCannotDelete($user, $item)) {
-                    $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to delete this item.'));
-                    $this->_set_deleteView_errorPerms();
+                    throw new \Tuleap\Request\ForbiddenException(dgettext('tuleap-docman', 'You do not have sufficient access rights to delete this item.'));
                 } elseif ($this->request->exist('confirm')) {
                     $this->action = $view;
                     $this->_set_redirectView();

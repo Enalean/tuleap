@@ -21,8 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Docman\Settings\ForbidUpdatePropertiesSettings;
-use Tuleap\Docman\Settings\ITellIfWritersAreAllowedToUpdateProperties;
+use Tuleap\Docman\Settings\ForbidWritersSettings;
+use Tuleap\Docman\Settings\ITellIfWritersAreAllowedToUpdatePropertiesOrDelete;
 use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -59,7 +59,7 @@ class Docman_PermissionsManager
     private function __construct(
         private Project $project,
         private ProjectAccessChecker $project_access_checker,
-        private ITellIfWritersAreAllowedToUpdateProperties $forbid_update_properties_settings,
+        private ITellIfWritersAreAllowedToUpdatePropertiesOrDelete $forbid_writers_settings,
     ) {
         $this->plugin = PluginManager::instance()->getPluginByName(DocmanPlugin::SERVICE_SHORTNAME);
     }
@@ -81,7 +81,7 @@ class Docman_PermissionsManager
                     new RestrictedUserCanAccessProjectVerifier(),
                     EventManager::instance()
                 ),
-                new ForbidUpdatePropertiesSettings(new SettingsDAO()),
+                new ForbidWritersSettings(new SettingsDAO()),
             );
         }
         return self::$instance[$groupId];
@@ -132,20 +132,22 @@ class Docman_PermissionsManager
     /**
      * @protected for Testing purpose
      */
-    protected function getForbidUpdatePropertiesSettings(): ITellIfWritersAreAllowedToUpdateProperties
+    protected function getForbidWritersSettings(): ITellIfWritersAreAllowedToUpdatePropertiesOrDelete
     {
-        return $this->forbid_update_properties_settings;
+        return $this->forbid_writers_settings;
     }
 
     /**
-     * Return an item factory
-     *
-     * @param int $groupId
-     * @return Docman_ItemFactory
+     * @protected for Testing purpose
      */
-    public function _getItemFactory($groupId = 0)
+    protected function getPlugin(): \Plugin
     {
-        return Docman_ItemFactory::instance($groupId);
+        return $this->plugin;
+    }
+
+    private function getItemFactory(int $project_id = 0): Docman_ItemFactory
+    {
+        return Docman_ItemFactory::instance($project_id);
     }
 
     /**
@@ -173,7 +175,7 @@ class Docman_PermissionsManager
         if (! isset($this->cache_access[$user->getId()][$item_id])) {
             $can_read = $this->userCanRead($user, $item_id);
             if ($can_read) {
-                $item_factory = $this->_getItemFactory();
+                $item_factory = $this->getItemFactory();
                 $item         = $item_factory->getItemFromDb($item_id);
                 if ($item) {
                     $can_access_parent                            = $item->getParentId() == 0 || $this->userCanAccess($user, $item->getParentId());
@@ -262,15 +264,21 @@ class Docman_PermissionsManager
     {
         return (
             ! $this->cannotDeleteBecauseNotSuperadmin($user)
-            && $this->userCanWrite($user, $item->getId())
             && $this->userCanWrite($user, $item->getParentId())
+            && (
+                $this->userCanManage($user, $item->getId())
+                || (
+                    $this->userCanWrite($user, $item->getId())
+                    && $this->getForbidWritersSettings()->areWritersAllowedToDelete((int) $this->getProject()->getID())
+                )
+            )
         );
     }
 
     private function cannotDeleteBecauseNotSuperadmin(PFUser $user)
     {
         return (
-            $this->plugin->getPluginInfo()->getPropertyValueForName(self::PLUGIN_OPTION_DELETE)
+            $this->getPlugin()->getPluginInfo()->getPropertyValueForName(self::PLUGIN_OPTION_DELETE)
             && ! $user->isSuperUser()
         );
     }
@@ -360,7 +368,7 @@ class Docman_PermissionsManager
         }
 
         return $this->userCanWrite($user, $item->getId())
-            && $this->getForbidUpdatePropertiesSettings()->areWritersAllowedToUpdateProperties((int) $this->getProject()->getID());
+            && $this->getForbidWritersSettings()->areWritersAllowedToUpdateProperties((int) $this->getProject()->getID());
     }
 
     /**
@@ -424,21 +432,22 @@ class Docman_PermissionsManager
     {
         $user = UserManager::instance()->getCurrentUser();
 
-        return $this->userCanWriteSubItems($user, $itemId);
-    }
-
-    /**
-     * Check if given user has write access on a item tree.
-     *
-     * @param $user   PFUser User object.
-     * @param $itemId int The parent item id.
-     * @return bool
-     */
-    public function userCanWriteSubItems($user, $itemId)
-    {
         $item                          = $this->_getItemTreeForPermChecking($itemId, $user);
         $this->subItemsWritableVisitor = new Docman_SubItemsWritableVisitor($this->getProject()->getID(), $user);
         return $item->accept($this->subItemsWritableVisitor);
+    }
+
+    /**
+     * Check if given user has rights to delete an item tree.
+     */
+    public function userCanDeleteSubItems(PFUser $user, Docman_Item $item): bool
+    {
+        $item_hierarchy = $this->getItemFactory((int) $this->getProject()->getID())
+            ->getItemSubTree($item, $user, true, true);
+
+        return $item_hierarchy->accept(
+            new \Tuleap\Docman\Item\SubItemsDeletableVisitor($this, $user)
+        );
     }
 
     /**
@@ -451,7 +460,7 @@ class Docman_PermissionsManager
      */
     public function _getItemTreeForPermChecking($itemId, $user)
     {
-        $itemFactory = $this->_getItemFactory($this->getProject()->getID());
+        $itemFactory = $this->getItemFactory((int) $this->getProject()->getID());
         $srcItem     = $itemFactory->getItemFromDb($itemId);
         $item        = $itemFactory->getItemSubTree($srcItem, $user, true, true);
         return $item;

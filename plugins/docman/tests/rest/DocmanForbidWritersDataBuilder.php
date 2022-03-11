@@ -63,7 +63,8 @@ class DocmanForbidWritersDataBuilder
     {
         $this->settings_dao->saveForbidWriters(
             (int) $this->project_manager->getProjectByUnixName(self::PROJECT_NAME)->getID(),
-            true
+            true,
+            true,
         );
     }
 }

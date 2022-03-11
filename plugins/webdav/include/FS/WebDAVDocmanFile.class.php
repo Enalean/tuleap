@@ -115,12 +115,16 @@ class WebDAVDocmanFile implements IFile
     public function delete(): void
     {
         if ($this->utils->isWriteEnabled()) {
-            // Request
-            $params['action']   = 'delete';
-            $params['group_id'] = $this->project->getID();
-            $params['confirm']  = true;
-            $params['id']       = $this->item->getId();
-            $this->utils->processDocmanRequest(new WebDAV_Request($params), $this->user);
+            try {
+                // Request
+                $params['action']   = 'delete';
+                $params['group_id'] = $this->project->getID();
+                $params['confirm']  = true;
+                $params['id']       = $this->item->getId();
+                $this->utils->processDocmanRequest(new WebDAV_Request($params), $this->user);
+            } catch (Exception $e) {
+                throw new \Sabre\DAV\Exception\MethodNotAllowed($e->getMessage());
+            }
         } else {
             throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }

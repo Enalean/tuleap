@@ -319,7 +319,6 @@ class WebDAVUtils
         $controller->process();
 
         if ($GLOBALS['Response']->feedbackHasErrors()) {
-            //file_put_contents('/tmp/webdav.log', $GLOBALS['Response']->getRawFeedback());
             throw new WebDAVExceptionServerError($GLOBALS['Response']->getRawFeedback());
         }
     }

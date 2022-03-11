@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Settings;
 
-final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements DAOSettings, ForbidWritersToUpdateDAOSettings
+final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements DAOSettings, ForbidWritersDAOSettings
 {
     public function searchFileNamePatternFromProjectId(int $project_id): ?string
     {
@@ -44,21 +44,25 @@ final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements DAOSettin
     }
 
     /**
-     * @return null|array{forbid_writers_to_update: int}
+     * @return null|array{forbid_writers_to_update: int, forbid_writers_to_delete: int}
      */
     public function searchByProjectId(int $project_id): ?array
     {
-        $sql = "SELECT forbid_writers_to_update FROM plugin_docman_project_settings WHERE group_id = ?";
+        $sql = "SELECT forbid_writers_to_update, forbid_writers_to_delete FROM plugin_docman_project_settings WHERE group_id = ?";
 
         return $this->getDB()->row($sql, $project_id);
     }
 
-    public function saveForbidWriters(int $project_id, bool $forbid_writers_to_update): void
-    {
+    public function saveForbidWriters(
+        int $project_id,
+        bool $forbid_writers_to_update,
+        bool $forbid_writers_to_delete,
+    ): void {
         $this->getDB()->update(
             'plugin_docman_project_settings',
             [
                 'forbid_writers_to_update' => (int) $forbid_writers_to_update,
+                'forbid_writers_to_delete' => (int) $forbid_writers_to_delete,
             ],
             ['group_id' => $project_id]
         );

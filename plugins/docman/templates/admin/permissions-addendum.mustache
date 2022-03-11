@@ -17,6 +17,21 @@
     </p>
 </div>
 
+<div class="tlp-form-element">
+    <label class="tlp-label tlp-checkbox">
+        <input type="hidden" name="forbid_writers_to_delete" value="0">
+        <input type="checkbox"
+               name="forbid_writers_to_delete"
+               value="1"
+               {{# forbid_writers_to_delete }}checked{{/ forbid_writers_to_delete }}
+        >
+        {{# dgettext }}tuleap-docman | Forbid deletion of document & versions by Writers{{/ dgettext }}
+    </label>
+    <p class="tlp-text-info">
+        {{# dgettext }}tuleap-docman | When turned on, Writers will not be able to delete a document or a version of documents{{/ dgettext }}
+    </p>
+</div>
+
 <button type="submit" class="tlp-button-primary">
     {{# dgettext }}tuleap-docman | Submit permissions{{/ dgettext }}
 </button>

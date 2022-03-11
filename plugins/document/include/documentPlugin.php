@@ -126,7 +126,7 @@ class documentPlugin extends Plugin // phpcs:ignore
             new \Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder(
                 new \Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder()
             ),
-            new \Tuleap\Docman\Settings\ForbidUpdatePropertiesSettings($settings_DAO)
+            new \Tuleap\Docman\Settings\ForbidWritersSettings($settings_DAO)
         );
     }
 

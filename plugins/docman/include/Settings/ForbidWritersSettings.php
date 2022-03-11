@@ -22,7 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Settings;
 
-interface ITellIfWritersAreAllowedToUpdateProperties
+final class ForbidWritersSettings implements ITellIfWritersAreAllowedToUpdatePropertiesOrDelete
 {
-    public function areWritersAllowedToUpdateProperties(int $project_id): bool;
+    public function __construct(private ForbidWritersDAOSettings $dao)
+    {
+    }
+
+    public function areWritersAllowedToUpdateProperties(int $project_id): bool
+    {
+        $settings = $this->dao->searchByProjectId($project_id);
+
+        if (! $settings) {
+            return true;
+        }
+
+        return ! $settings['forbid_writers_to_update'];
+    }
+
+    public function areWritersAllowedToDelete(int $project_id): bool
+    {
+        $settings = $this->dao->searchByProjectId($project_id);
+
+        if (! $settings) {
+            return true;
+        }
+
+        return ! $settings['forbid_writers_to_delete'];
+    }
 }

@@ -45,7 +45,7 @@
                 v-if="should_display_update_properties"
             />
             <update-permissions v-bind:item="currently_previewed_item" slot="update-permissions" />
-            <drop-down-separator slot="delete-item-separator" />
+            <drop-down-separator slot="delete-item-separator" v-if="can_user_delete_item" />
             <delete-item
                 v-bind:item="currently_previewed_item"
                 role="menuitem"
@@ -69,6 +69,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
 import type { Embedded } from "../../../type";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
+import { canDelete } from "../../../helpers/can-delete-helper";
 
 const configuration = namespace("configuration");
 
@@ -93,9 +94,14 @@ export default class DropDownDisplayedEmbedded extends Vue {
     @configuration.State
     readonly forbid_writers_to_update!: boolean;
 
+    @configuration.State
+    readonly forbid_writers_to_delete!: boolean;
+
     get can_user_delete_item(): boolean {
-        return Boolean(
-            this.currently_previewed_item.user_can_write && this.currently_previewed_item.parent_id
+        return (
+            this.currently_previewed_item.user_can_write &&
+            canDelete(this.forbid_writers_to_delete, this.currently_previewed_item) &&
+            Boolean(this.currently_previewed_item.parent_id)
         );
     }
 

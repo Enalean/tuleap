@@ -67,6 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const is_deletion_allowed = Boolean(vue_mount_point.dataset.userCanDeleteItem);
     const is_status_property_used = Boolean(vue_mount_point.dataset.isItemStatusPropertyUsed);
     const forbid_writers_to_update = Boolean(vue_mount_point.dataset.forbidWritersToUpdate);
+    const forbid_writers_to_delete = Boolean(vue_mount_point.dataset.forbidWritersToDelete);
     const is_obsolescence_date_property_used = Boolean(
         vue_mount_point.dataset.isObsolescenceDatePropertyUsed
     );
@@ -125,6 +126,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         criteria,
         columns,
         forbid_writers_to_update,
+        forbid_writers_to_delete,
     };
 
     const AppComponent = Vue.extend(App);

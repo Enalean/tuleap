@@ -28,7 +28,8 @@ import type { ConfigurationState } from "../../../store/configuration";
 describe("DropDownMenuTreeView", () => {
     function createWrapper(
         item: Item,
-        forbid_writers_to_update: boolean
+        forbid_writers_to_update: boolean,
+        forbid_writers_to_delete: boolean
     ): Wrapper<DropDownMenuTreeView> {
         return shallowMount(DropDownMenuTreeView, {
             localVue,
@@ -38,6 +39,7 @@ describe("DropDownMenuTreeView", () => {
                     state: {
                         configuration: {
                             forbid_writers_to_update,
+                            forbid_writers_to_delete,
                         } as ConfigurationState,
                     },
                 }),
@@ -53,6 +55,7 @@ describe("DropDownMenuTreeView", () => {
                 type: "folder",
                 user_can_write: true,
             } as Folder,
+            false,
             false
         );
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
@@ -73,6 +76,7 @@ describe("DropDownMenuTreeView", () => {
                 type: "file",
                 user_can_write: true,
             } as ItemFile,
+            false,
             false
         );
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
@@ -95,6 +99,7 @@ describe("DropDownMenuTreeView", () => {
                 type: "file",
                 user_can_write: true,
             } as ItemFile,
+            false,
             false
         );
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
@@ -117,6 +122,7 @@ describe("DropDownMenuTreeView", () => {
                 type: "file",
                 user_can_write: true,
             } as ItemFile,
+            false,
             false
         );
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
@@ -139,6 +145,7 @@ describe("DropDownMenuTreeView", () => {
                 type: "file",
                 user_can_write: false,
             } as ItemFile,
+            false,
             false
         );
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
@@ -161,6 +168,7 @@ describe("DropDownMenuTreeView", () => {
                 type: "folder",
                 user_can_write: false,
             } as Folder,
+            false,
             false
         );
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
@@ -185,7 +193,8 @@ describe("DropDownMenuTreeView", () => {
                 user_can_write: true,
                 can_user_manage: false,
             } as ItemFile,
-            true
+            true,
+            false
         );
 
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeFalsy();
@@ -203,9 +212,48 @@ describe("DropDownMenuTreeView", () => {
                 user_can_write: true,
                 can_user_manage: true,
             } as ItemFile,
-            true
+            true,
+            false
         );
 
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
+    });
+
+    it(`Given writers are not allowed to delete
+        And user is writer
+        When we display the menu
+        Then it does not display delete entry`, () => {
+        const wrapper = createWrapper(
+            {
+                id: 1,
+                title: "my item title",
+                type: "file",
+                user_can_write: true,
+                can_user_manage: false,
+            } as ItemFile,
+            true,
+            true
+        );
+
+        expect(wrapper.find("[data-test=document-dropdown-delete]").exists()).toBeFalsy();
+    });
+
+    it(`Given writers are not allowed to delete
+        And user is manager
+        When we display the menu
+        Then it displays delete entry`, () => {
+        const wrapper = createWrapper(
+            {
+                id: 1,
+                title: "my item title",
+                type: "file",
+                user_can_write: true,
+                can_user_manage: true,
+            } as ItemFile,
+            true,
+            true
+        );
+
+        expect(wrapper.find("[data-test=document-dropdown-delete]").exists()).toBeTruthy();
     });
 });
