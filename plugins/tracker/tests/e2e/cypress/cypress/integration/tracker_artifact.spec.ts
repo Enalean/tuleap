@@ -182,7 +182,7 @@ describe("Tracker artifacts", function () {
         it("can add a report on his dashboard", function () {
             cy.visitProjectService("tracker-artifact", "Trackers");
             cy.get("[data-test=tracker-link-artifact_link]").click();
-            cy.get("[data-test=add-to-my-dashboard]").click();
+            cy.get("[data-test=add-to-my-dashboard]").first().click({ force: true });
 
             cy.get("[data-test=artifact-report-table]").contains("test A");
             cy.get("[data-test=artifact-report-table]").contains("test B");
