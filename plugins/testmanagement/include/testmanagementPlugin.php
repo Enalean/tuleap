@@ -61,6 +61,7 @@ use Tuleap\TestManagement\TestmanagementTrackersConfigurator;
 use Tuleap\TestManagement\TestmanagementTrackersCreator;
 use Tuleap\TestManagement\TrackerComesFromLegacyEngineException;
 use Tuleap\TestManagement\TrackerNotCreatedException;
+use Tuleap\TestManagement\Workflow\PostActionChecker;
 use Tuleap\TestManagement\XML\Exporter;
 use Tuleap\TestManagement\XML\ImportXMLFromTracker;
 use Tuleap\TestManagement\XML\StepXMLExporter;
@@ -860,25 +861,8 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
     public function checkPostActionsForTracker(CheckPostActionsForTracker $event): void
     {
-        $frozen_fields_post_actions    = $event->getPostActions()->getFrozenFieldsPostActions();
-        $hidden_fieldsets_post_actions = $event->getPostActions()->getHiddenFieldsetsPostActions();
-
-        if (count($frozen_fields_post_actions) > 0 || count($hidden_fieldsets_post_actions) > 0) {
-            $tracker = $event->getTracker();
-            $config  = $this->getConfig();
-
-            if (
-                $tracker->getId() == $config->getTestExecutionTrackerId($tracker->getProject()) ||
-                $tracker->getId() == $config->getTestDefinitionTrackerId($tracker->getProject())
-            ) {
-                $message = dgettext(
-                    'tuleap-testmanagement',
-                    'The post actions cannot be saved because this tracker is used in TestManagement and "frozen fields" or "hidden fieldsets" actions are defined.'
-                );
-                $event->setPostActionsNonEligible();
-                $event->setErrorMessage($message);
-            }
-        }
+        $checker = new PostActionChecker($this->getConfig(), Tracker_FormElementFactory::instance());
+        $checker->checkPostActions($event);
     }
 
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void

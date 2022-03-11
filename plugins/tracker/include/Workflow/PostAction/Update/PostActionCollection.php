@@ -160,11 +160,17 @@ class PostActionCollection implements PostActionVisitor
         $validator->validate($tracker, ...$this->set_float_value_actions);
     }
 
+    /**
+     * @return FrozenFieldsValue[]
+     */
     public function getFrozenFieldsPostActions(): array
     {
         return $this->frozen_fields_actions;
     }
 
+    /**
+     * @return HiddenFieldsetsValue[]
+     */
     public function getHiddenFieldsetsPostActions(): array
     {
         return $this->hidden_fieldsets_actions;
