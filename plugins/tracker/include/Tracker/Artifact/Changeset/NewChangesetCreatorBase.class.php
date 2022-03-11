@@ -23,6 +23,7 @@ declare(strict_types=1);
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
@@ -36,13 +37,20 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 /**
  * I am a Template Method to create a new changeset (update of an artifact)
  */
-abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracker_Artifact_Changeset_ChangesetCreatorBase //phpcs:ignore
+abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase
 {
-    /** @var Tracker_Artifact_ChangesetDao */
-    protected $changeset_dao;
-
     /** @var Tracker_Artifact_Changeset_CommentDao */
-    protected $changeset_comment_dao;
+    private $changeset_comment_dao;
+    /** @var Tracker_Artifact_Changeset_ChangesetDataInitializator */
+    private $field_initializator;
+    /**
+     * @var FieldsToBeSavedInSpecificOrderRetriever
+     */
+    private $fields_retriever;
+    /** @var Tracker_Artifact_Changeset_FieldsValidator */
+    private $fields_validator;
+    /** @var EventManager */
+    private $event_manager;
     /**
      * @var ReferenceManager
      */
@@ -64,13 +72,12 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
      * @var TrackerPrivateCommentUGroupPermissionInserter
      */
     private $comment_ugroup_permission_inserter;
+    private AfterNewChangesetHandler $after_new_changeset_handler;
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
         FieldsToBeSavedInSpecificOrderRetriever $fields_retriever,
-        Tracker_Artifact_ChangesetDao $changeset_dao,
         Tracker_Artifact_Changeset_CommentDao $changeset_comment_dao,
-        Tracker_ArtifactFactory $artifact_factory,
         EventManager $event_manager,
         ReferenceManager $reference_manager,
         Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
@@ -78,22 +85,19 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         ArtifactChangesetSaver $artifact_changeset_saver,
         ParentLinkAction $parent_link_action,
         TrackerPrivateCommentUGroupPermissionInserter $comment_ugroup_permission_inserter,
+        AfterNewChangesetHandler $after_new_changeset_handler,
     ) {
-        parent::__construct(
-            $fields_validator,
-            $fields_retriever,
-            $artifact_factory,
-            $event_manager,
-            $field_initializator
-        );
-
-        $this->changeset_dao                      = $changeset_dao;
+        $this->fields_validator                   = $fields_validator;
+        $this->event_manager                      = $event_manager;
+        $this->field_initializator                = $field_initializator;
+        $this->fields_retriever                   = $fields_retriever;
         $this->changeset_comment_dao              = $changeset_comment_dao;
         $this->reference_manager                  = $reference_manager;
         $this->transaction_executor               = $transaction_executor;
         $this->artifact_changeset_saver           = $artifact_changeset_saver;
         $this->parent_link_action                 = $parent_link_action;
         $this->comment_ugroup_permission_inserter = $comment_ugroup_permission_inserter;
+        $this->after_new_changeset_handler        = $after_new_changeset_handler;
     }
 
     /**
@@ -196,7 +200,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
                     );
                     $artifact->addChangeset($new_changeset);
 
-                    $save_after_ok = $this->saveArtifactAfterNewChangeset(
+                    $save_after_ok = $this->after_new_changeset_handler->handle(
                         $artifact,
                         $fields_data,
                         $submitter,
@@ -243,6 +247,11 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $changeset_id,
         CreatedFileURLMapping $url_mapping,
     ): bool;
+
+    protected function isFieldSubmitted(Tracker_FormElement_Field $field, array $fields_data): bool
+    {
+        return isset($fields_data[$field->getId()]);
+    }
 
     /**
      * @throws Tracker_FieldValueNotStoredException

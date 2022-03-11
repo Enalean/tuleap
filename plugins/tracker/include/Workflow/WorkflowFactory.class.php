@@ -22,6 +22,7 @@
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\RetrieveWorkflow;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsDao;
@@ -29,7 +30,7 @@ use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
-class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class WorkflowFactory implements RetrieveWorkflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /** @var TransitionFactory */
     private $transition_factory;

@@ -68,6 +68,7 @@ use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
@@ -203,7 +204,9 @@ class ExecutionsResource
             $artifact_message_sender
         );
 
-        $usage_dao         = new ArtifactLinksUsageDao();
+        $usage_dao        = new ArtifactLinksUsageDao();
+        $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($this->formelement_factory);
+
         $changeset_creator = new \Tracker_Artifact_Changeset_NewChangesetCreator(
             new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
                 $this->formelement_factory,
@@ -214,17 +217,16 @@ class ExecutionsResource
                 ),
                 new WorkflowUpdateChecker($this->getFrozenFieldDetector())
             ),
-            new FieldsToBeSavedInSpecificOrderRetriever($this->formelement_factory),
-            new \Tracker_Artifact_ChangesetDao(),
+            $fields_retriever,
             new \Tracker_Artifact_Changeset_CommentDao(),
-            $this->artifact_factory,
             \EventManager::instance(),
             \ReferenceManager::instance(),
             new \Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             ArtifactChangesetSaver::build(),
             new ParentLinkAction($this->artifact_factory),
-            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao())
+            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+            new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever, \WorkflowFactory::instance())
         );
 
         $this->artifact_updater = new ArtifactUpdater(

@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -31,10 +32,15 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 /**
  * I am a Template Method to create an initial changeset.
  */
-abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tracker_Artifact_Changeset_ChangesetCreatorBase //phpcs:ignore
+abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase
 {
-    /** @var Tracker_Artifact_ChangesetDao */
-    protected $changeset_dao;
+    /** @var Tracker_Artifact_Changeset_FieldsValidator */
+    private $fields_validator;
+    private FieldsToBeSavedInSpecificOrderRetriever $fields_retriever;
+    /** @var EventManager */
+    private $event_manager;
+    /** @var Tracker_Artifact_Changeset_ChangesetDataInitializator */
+    private $field_initializator;
     /**
      * @var \Psr\Log\LoggerInterface
      */
@@ -43,28 +49,24 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
      * @var ArtifactChangesetSaver
      */
     private $artifact_changeset_saver;
+    private AfterNewChangesetHandler $after_new_changeset_handler;
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
         FieldsToBeSavedInSpecificOrderRetriever $fields_retriever,
-        Tracker_Artifact_ChangesetDao $changeset_dao,
-        Tracker_ArtifactFactory $artifact_factory,
         EventManager $event_manager,
         Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
         \Psr\Log\LoggerInterface $logger,
         ArtifactChangesetSaver $artifact_changeset_saver,
+        AfterNewChangesetHandler $after_new_changeset_handler,
     ) {
-        parent::__construct(
-            $fields_validator,
-            $fields_retriever,
-            $artifact_factory,
-            $event_manager,
-            $field_initializator
-        );
-
-        $this->changeset_dao            = $changeset_dao;
-        $this->logger                   = $logger;
-        $this->artifact_changeset_saver = $artifact_changeset_saver;
+        $this->fields_validator            = $fields_validator;
+        $this->fields_retriever            = $fields_retriever;
+        $this->event_manager               = $event_manager;
+        $this->field_initializator         = $field_initializator;
+        $this->logger                      = $logger;
+        $this->artifact_changeset_saver    = $artifact_changeset_saver;
+        $this->after_new_changeset_handler = $after_new_changeset_handler;
     }
 
     /**
@@ -129,7 +131,13 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
 
         $changeset = $artifact->getChangeset($changeset_id);
         assert($changeset !== null);
-        $this->saveArtifactAfterNewChangeset($artifact, $fields_data, $submitter, $changeset);
+        $this->after_new_changeset_handler->handle(
+            $artifact,
+            $fields_data,
+            $submitter,
+            $changeset,
+            null
+        );
 
         $artifact->clearChangesets();
 
@@ -146,6 +154,11 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         int $changeset_id,
         CreatedFileURLMapping $url_mapping,
     ): void;
+
+    protected function isFieldSubmitted(Tracker_FormElement_Field $field, array $fields_data): bool
+    {
+        return isset($fields_data[$field->getId()]);
+    }
 
     private function storeFieldsValues(
         Artifact $artifact,

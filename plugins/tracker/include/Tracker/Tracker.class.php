@@ -38,6 +38,7 @@ use Tuleap\Tracker\Admin\HeaderPresenter;
 use Tuleap\Tracker\Admin\TrackerGeneralSettingsChecker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
@@ -100,8 +101,8 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
-use Tuleap\Tracker\XML\XMLTracker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
+use Tuleap\Tracker\XML\XMLTracker;
 
 class Tracker implements Tracker_Dispatchable_Interface
 {
@@ -3148,27 +3149,40 @@ class Tracker implements Tracker_Dispatchable_Interface
         return TRACKER_BASE_URL . '/?tracker=' . $this->getId();
     }
 
-    private function getArtifactXMLImporterForArtifactCopy(Tracker_XML_Importer_CopyArtifactInformationsAggregator $logger)
-    {
-        $fields_validator = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator(
-            $this->getFormElementFactory(),
+    private function getArtifactXMLImporterForArtifactCopy(
+        Tracker_XML_Importer_CopyArtifactInformationsAggregator $logger,
+    ): Tracker_Artifact_XMLImport {
+        $form_element_factory = $this->getFormElementFactory();
+        $fields_validator     = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator(
+            $form_element_factory,
             $this->getArtifactLinkValidator()
         );
 
-        $changeset_dao         = new Tracker_Artifact_ChangesetDao();
-        $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
-        $send_notifications    = true;
+        $changeset_comment_dao    = new Tracker_Artifact_Changeset_CommentDao();
+        $fields_retriever         = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+        $event_manager            = EventManager::instance();
+        $field_initializator      = new Tracker_Artifact_Changeset_ChangesetDataInitializator(
+            $form_element_factory
+        );
+        $artifact_changeset_saver = ArtifactChangesetSaver::build();
+        $artifact_factory         = $this->getTrackerArtifactFactory();
+        $artifact_saver           = new AfterNewChangesetHandler(
+            $artifact_factory,
+            $fields_retriever,
+            \WorkflowFactory::instance()
+        );
+
+        $send_notifications = true;
 
         $artifact_creator = TrackerArtifactCreator::build(
             new Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator(
                 $fields_validator,
-                new FieldsToBeSavedInSpecificOrderRetriever($this->getFormElementFactory()),
-                $changeset_dao,
-                $this->getTrackerArtifactFactory(),
-                EventManager::instance(),
-                new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory()),
+                $fields_retriever,
+                $event_manager,
+                $field_initializator,
                 $logger,
-                ArtifactChangesetSaver::build()
+                $artifact_changeset_saver,
+                $artifact_saver
             ),
             $fields_validator,
             $logger
@@ -3176,19 +3190,18 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
             $fields_validator,
-            new FieldsToBeSavedInSpecificOrderRetriever($this->getFormElementFactory()),
-            $changeset_dao,
+            $fields_retriever,
             $changeset_comment_dao,
-            $this->getTrackerArtifactFactory(),
-            EventManager::instance(),
+            $event_manager,
             ReferenceManager::instance(),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory()),
+            $field_initializator,
             new DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
-            ArtifactChangesetSaver::build(),
+            $artifact_changeset_saver,
             new \Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction(
-                $this->getTrackerArtifactFactory()
+                $artifact_factory
             ),
-            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao())
+            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+            $artifact_saver
         );
 
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();
@@ -3196,17 +3209,17 @@ class Tracker implements Tracker_Dispatchable_Interface
             new XML_RNGValidator(),
             $artifact_creator,
             $new_changeset_creator,
-            Tracker_FormElementFactory::instance(),
+            $form_element_factory,
             new XMLImportHelper($this->getUserManager()),
             new BindStaticValueDao(),
             $logger,
             $send_notifications,
-            Tracker_ArtifactFactory::instance(),
+            $artifact_factory,
             new TypeDao(),
             new XMLArtifactSourcePlatformExtractor(new Valid_HTTPURI(), $logger),
             new ExistingArtifactSourceIdFromTrackerExtractor($artifact_source_id_dao),
             $artifact_source_id_dao,
-            new ExternalFieldsExtractor(EventManager::instance()),
+            new ExternalFieldsExtractor($event_manager),
             new TrackerPrivateCommentUGroupExtractor(new TrackerPrivateCommentUGroupEnabledDao(), new UGroupManager())
         );
     }

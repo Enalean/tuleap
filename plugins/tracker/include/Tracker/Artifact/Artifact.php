@@ -50,7 +50,6 @@ use Tracker_Artifact_Changeset_FieldsValidator;
 use Tracker_Artifact_Changeset_IncomingMailGoldenRetriever;
 use Tracker_Artifact_Changeset_NewChangesetCreator;
 use Tracker_Artifact_Changeset_NewChangesetFieldsValidator;
-use Tracker_Artifact_ChangesetDao;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_Artifact_ChangesetValue;
@@ -107,6 +106,7 @@ use Tuleap\Tracker\Artifact\ActionButtons\ArtifactNotificationActionButtonPresen
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
@@ -133,6 +133,7 @@ use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
+use Tuleap\Tracker\Workflow\RetrieveWorkflow;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
@@ -1495,16 +1496,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return $commentators;
     }
 
-    /**
-     * Return the ChangesetDao
-     *
-     * @return Tracker_Artifact_ChangesetDao The Dao
-     */
-    protected function getChangesetDao()
-    {
-        return new Tracker_Artifact_ChangesetDao();
-    }
-
     protected function getChangesetFactory(): Tracker_Artifact_ChangesetFactory
     {
         return Tracker_Artifact_ChangesetFactoryBuilder::build();
@@ -2170,21 +2161,23 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
     private function getNewChangesetCreator(Tracker_Artifact_Changeset_FieldsValidator $fields_validator): Tracker_Artifact_Changeset_NewChangesetCreator
     {
+        $tracker_artifact_factory = $this->getArtifactFactory();
+        $form_element_factory     = $this->getFormElementFactory();
+        $fields_retriever         = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
         return new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
-            new FieldsToBeSavedInSpecificOrderRetriever($this->getFormElementFactory()),
-            $this->getChangesetDao(),
+            $fields_retriever,
             $this->getChangesetCommentDao(),
-            $this->getArtifactFactory(),
             $this->getEventManager(),
             $this->getReferenceManager(),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory()),
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
             $this->getTransactionExecutor(),
             $this->getChangesetSaver(),
             new Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction(
-                $this->getArtifactFactory()
+                $tracker_artifact_factory
             ),
-            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao())
+            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+            new AfterNewChangesetHandler($tracker_artifact_factory, $fields_retriever, $this->getWorkflowRetriever())
         );
     }
 
@@ -2299,6 +2292,14 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     protected function getChangesetSaver(): ArtifactChangesetSaver
     {
         return ArtifactChangesetSaver::build();
+    }
+
+    /**
+     * for testing purpose
+     */
+    protected function getWorkflowRetriever(): RetrieveWorkflow
+    {
+        return \WorkflowFactory::instance();
     }
 
     private function getArtifactLinkValidator(): \Tuleap\Tracker\FormElement\ArtifactLinkValidator

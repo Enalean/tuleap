@@ -79,6 +79,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedExcep
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
@@ -694,7 +695,9 @@ class ArtifactsResource extends AuthenticatedResource
             $artifact->getTracker()->getProject()
         );
 
-        $usage_dao         = new ArtifactLinksUsageDao();
+        $usage_dao        = new ArtifactLinksUsageDao();
+        $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($this->formelement_factory);
+
         $changeset_creator = new \Tracker_Artifact_Changeset_NewChangesetCreator(
             new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
                 $this->formelement_factory,
@@ -713,17 +716,16 @@ class ArtifactsResource extends AuthenticatedResource
                     )
                 )
             ),
-            new FieldsToBeSavedInSpecificOrderRetriever($this->formelement_factory),
-            new \Tracker_Artifact_ChangesetDao(),
+            $fields_retriever,
             new \Tracker_Artifact_Changeset_CommentDao(),
-            $this->artifact_factory,
             $this->event_manager,
             \ReferenceManager::instance(),
             new \Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             ArtifactChangesetSaver::build(),
             new ParentLinkAction($this->artifact_factory),
-            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao())
+            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+            new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever, \WorkflowFactory::instance())
         );
 
         $this->sendAllowHeadersForArtifact();

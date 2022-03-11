@@ -44,6 +44,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Process
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateProcessor;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
@@ -51,9 +52,9 @@ use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -79,6 +80,7 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
         $tracker_retriever        = new TrackerFactoryAdapter($tracker_factory);
         $artifact_retriever       = new ArtifactFactoryAdapter($artifact_factory);
         $field_retriever          = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
+        $fields_retriever         = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
 
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
@@ -106,10 +108,8 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
                     ),
                 ),
             ),
-            new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory),
-            $artifact_changeset_dao,
+            $fields_retriever,
             new \Tracker_Artifact_Changeset_CommentDao(),
-            $artifact_factory,
             \EventManager::instance(),
             \ReferenceManager::instance(),
             new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
@@ -121,7 +121,8 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
                 new ChangesetFromXmlDao()
             ),
             new ParentLinkAction($artifact_factory),
-            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao())
+            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+            new AfterNewChangesetHandler($artifact_factory, $fields_retriever, \WorkflowFactory::instance())
         );
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
