@@ -23,7 +23,7 @@
     <div class="tlp-form-element document-header-filter-container">
         <input
             type="search"
-            class="tlp-search tlp-search-small document-search-box"
+            class="tlp-search document-search-box"
             v-bind:placeholder="`${$gettext('Name, description...')}`"
             v-model="search_query"
             data-shortcut-search-document
@@ -43,7 +43,7 @@
         <div v-else>
             <input
                 type="search"
-                class="tlp-search tlp-search-small document-search-box"
+                class="tlp-search document-search-box"
                 v-bind:placeholder="`${$gettext('Name, description...')}`"
                 v-model="search_query"
                 v-on:keyup.enter="searchUrl()"
