@@ -22,12 +22,12 @@ namespace Tuleap\Request;
 
 class CurrentPage
 {
-    public function isDashboard()
+    public function isDashboard(): bool
     {
         return $this->isPersonalDashboard() || $this->isProjectDashboard();
     }
 
-    private function isPersonalDashboard()
+    private function isPersonalDashboard(): bool
     {
         $is_managing_bookmarks = strpos($_SERVER['REQUEST_URI'], '/my/bookmark') === 0;
 
@@ -37,7 +37,7 @@ class CurrentPage
     /**
      * @deprecated See \Tuleap\Dashboard\Project\ProjectDashboardIsDisplayed
      */
-    public function isProjectDashboard()
+    private function isProjectDashboard(): bool
     {
         return strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }

@@ -21,10 +21,10 @@
 declare(strict_types=1);
 
 use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Dashboard\Project\ProjectDashboardIsDisplayed;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Request\CurrentPage;
 use Tuleap\Roadmap\REST\ResourcesInjector;
 use Tuleap\Roadmap\RoadmapProjectWidget;
 use Tuleap\Roadmap\RoadmapWidgetDao;
@@ -77,8 +77,7 @@ class RoadmapPlugin extends Plugin
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(ConfigureAtXMLImport::NAME);
         $this->addHook(GetSemanticProgressUsageEvent::NAME);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(ProjectDashboardIsDisplayed::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -131,24 +130,16 @@ class RoadmapPlugin extends Plugin
         );
     }
 
-    /**
-     * @see Event::BURNING_PARROT_GET_JAVASCRIPT_FILES
-     */
-    public function burningParrotGetJavascriptFiles(array $params): void
+    public function projectDashboardIsDisplayed(ProjectDashboardIsDisplayed $event): void
     {
-        if ($this->isInProjectDashboard()) {
-            $params['javascript_files'][] = $this->getAssets()->getFileURL('configure-roadmap-widget-script.js');
-        }
-    }
-
-    /**
-     * @see Event::BURNING_PARROT_GET_STYLESHEETS
-     */
-    public function burningParrotGetStylesheets(array $params): void
-    {
-        if ($this->isInProjectDashboard()) {
-            $params['stylesheets'][] = $this->getAssets()->getFileURL('configure-roadmap-widget-style.css');
-        }
+        $layout = $event->getLayout();
+        $assets = $this->getAssets();
+        $layout->addJavascriptAsset(
+            new \Tuleap\Layout\JavascriptAsset($assets, 'configure-roadmap-widget-script.js')
+        );
+        $layout->addCssAsset(
+            new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'configure-roadmap-widget-style')
+        );
     }
 
     private function getAssets(): IncludeAssets
@@ -157,12 +148,5 @@ class RoadmapPlugin extends Plugin
             __DIR__ . '/../../../src/www/assets/roadmap',
             '/assets/roadmap'
         );
-    }
-
-    private function isInProjectDashboard(): bool
-    {
-        $current_page = new CurrentPage();
-
-        return $current_page->isProjectDashboard();
     }
 }
