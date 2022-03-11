@@ -85,7 +85,7 @@ final class PossibleParentSelectorRendererTest extends TestCase
     {
         $possible_parent_selector = new PossibleParentSelector($this->user, $this->user_story_tracker, 0, 0);
         $possible_parent_selector->disableCreate();
-        $possible_parent_selector->setPossibleParents(
+        $possible_parent_selector->addPossibleParents(
             new \Tracker_Artifact_PaginatedArtifacts(
                 [
                     ArtifactTestBuilder::anArtifact(123)
@@ -119,7 +119,7 @@ final class PossibleParentSelectorRendererTest extends TestCase
     public function testItProposePossibleParentsInDifferentTrackersAndProjects(): void
     {
         $possible_parent_selector = new PossibleParentSelector($this->user, $this->user_story_tracker, 0, 0);
-        $possible_parent_selector->setPossibleParents(
+        $possible_parent_selector->addPossibleParents(
             new \Tracker_Artifact_PaginatedArtifacts(
                 [
                     ArtifactTestBuilder::anArtifact(123)

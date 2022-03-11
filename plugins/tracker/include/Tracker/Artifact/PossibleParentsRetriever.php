@@ -42,25 +42,25 @@ class PossibleParentsRetriever
     ): PossibleParentSelector {
         $possible_parents = $this->event_dispatcher->dispatch(new PossibleParentSelector($user, $tracker, $offset, $limit));
 
-        if ($possible_parents->getPossibleParents()) {
-            return $possible_parents;
-        }
-
         $parent_tracker = $tracker->getParentUserCanView($user);
-        if (! $parent_tracker) {
+
+        if (! $parent_tracker && ! $possible_parents->getPossibleParents()) {
             $possible_parents->disableSelector();
             return $possible_parents;
         }
 
-        $possible_parents->setParentLabel($parent_tracker->getItemName());
-        $possible_parents->setPossibleParents(
-            $this->artifact_factory->getPaginatedPossibleParentArtifactsUserCanView(
-                $user,
-                $parent_tracker->getId(),
-                $limit,
-                $offset
-            )
-        );
+        if ($parent_tracker) {
+            $possible_parents->setParentLabel($parent_tracker->getItemName());
+            $possible_parents->addPossibleParents(
+                $this->artifact_factory->getPaginatedPossibleParentArtifactsUserCanView(
+                    $user,
+                    $parent_tracker->getId(),
+                    $limit,
+                    $offset
+                )
+            );
+        }
+
         if (! $can_create) {
             $possible_parents->disableCreate();
         }

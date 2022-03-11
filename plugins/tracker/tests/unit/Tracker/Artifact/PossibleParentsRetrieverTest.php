@@ -49,7 +49,7 @@ final class PossibleParentsRetrieverTest extends TestCase
             public function dispatch(object $event)
             {
                 assert($event instanceof PossibleParentSelector);
-                $event->setPossibleParents(new \Tracker_Artifact_PaginatedArtifacts(
+                $event->addPossibleParents(new \Tracker_Artifact_PaginatedArtifacts(
                     [
                         ArtifactTestBuilder::anArtifact(123)->build(),
                     ],
@@ -63,6 +63,8 @@ final class PossibleParentsRetrieverTest extends TestCase
             $event_manager,
         );
 
+        $this->tracker->setParent(null);
+
         $possible_parent_selector = $possible_parents_retriever->getPossibleArtifactParents($this->tracker, $this->user, 0, 0, true);
 
         assertTrue($possible_parent_selector->isSelectorDisplayed());
@@ -71,7 +73,7 @@ final class PossibleParentsRetrieverTest extends TestCase
 
     public function testPluginsHaveThePaginationInfo(): void
     {
-        $event_manager              = new class implements EventDispatcherInterface {
+        $event_manager = new class implements EventDispatcherInterface {
             public int $limit  = 0;
             public int $offset = 0;
             public function dispatch(object $event)
@@ -79,7 +81,7 @@ final class PossibleParentsRetrieverTest extends TestCase
                 assert($event instanceof PossibleParentSelector);
                 $this->limit  = $event->limit;
                 $this->offset = $event->offset;
-                $event->setPossibleParents(new \Tracker_Artifact_PaginatedArtifacts(
+                $event->addPossibleParents(new \Tracker_Artifact_PaginatedArtifacts(
                     [
                         ArtifactTestBuilder::anArtifact(123)->build(),
                     ],
@@ -88,6 +90,9 @@ final class PossibleParentsRetrieverTest extends TestCase
                 return $event;
             }
         };
+
+        $this->tracker->setParent(null);
+
         $possible_parents_retriever = new PossibleParentsRetriever(
             $this->createStub(\Tracker_ArtifactFactory::class),
             $event_manager,
@@ -144,6 +149,54 @@ final class PossibleParentsRetrieverTest extends TestCase
 
         assertTrue($possible_parent_selector->isSelectorDisplayed());
         assertEquals([ArtifactTestBuilder::anArtifact(123)->build()], $possible_parent_selector->getPossibleParents()->getArtifacts());
+        assertEquals($possible_parent_selector->getParentLabel(), 'epic');
+    }
+
+    public function testDisplayPossibleParentsFromEventAndHierarchy(): void
+    {
+        $event_manager = new class implements EventDispatcherInterface {
+            public function dispatch(object $event)
+            {
+                assert($event instanceof PossibleParentSelector);
+                $event->addPossibleParents(new \Tracker_Artifact_PaginatedArtifacts(
+                    [
+                                                   ArtifactTestBuilder::anArtifact(124)->build(),
+                                               ],
+                    1
+                ));
+                return $event;
+            }
+        };
+
+        $artifact_factory = $this->createStub(\Tracker_ArtifactFactory::class);
+        $artifact_factory
+            ->method('getPaginatedPossibleParentArtifactsUserCanView')
+            ->willReturn(
+                new \Tracker_Artifact_PaginatedArtifacts(
+                    [
+                        ArtifactTestBuilder::anArtifact(123)->build(),
+                    ],
+                    1
+                )
+            );
+
+        $parent_tracker = $this->createStub(\Tracker::class);
+        $parent_tracker->method('userCanView')->willReturn(true);
+        $parent_tracker->method('isDeleted')->willReturn(false);
+        $parent_tracker->method('getName')->willReturn('Epics');
+        $parent_tracker->method('getItemName')->willReturn('epic');
+        $parent_tracker->method('getId')->willReturn(567);
+        $this->tracker->setParent($parent_tracker);
+
+        $possible_parents_retriever = new PossibleParentsRetriever(
+            $artifact_factory,
+            $event_manager,
+        );
+
+        $possible_parent_selector = $possible_parents_retriever->getPossibleArtifactParents($this->tracker, $this->user, 0, 0, true);
+
+        assertTrue($possible_parent_selector->isSelectorDisplayed());
+        assertEquals([ArtifactTestBuilder::anArtifact(124)->build(), ArtifactTestBuilder::anArtifact(123)->build()], $possible_parent_selector->getPossibleParents()->getArtifacts());
         assertEquals($possible_parent_selector->getParentLabel(), 'epic');
     }
 }
