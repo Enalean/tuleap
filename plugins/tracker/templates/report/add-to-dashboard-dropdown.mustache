@@ -17,7 +17,8 @@
             </a>
             <ul class="dropdown-menu">
                 {{# user_dashboards_presenter }}
-                    <li><a href="{{ my_dashboard_url }}&dashboard-id={{ getId }}">{{ getName }}</a></li>
+                    <li><a href="{{ my_dashboard_url }}&dashboard-id={{ getId }}"
+                        data-test="add-to-my-dashboard">{{ getName }}</a></li>
                 {{/ user_dashboards_presenter }}
             </ul>
         </div>
