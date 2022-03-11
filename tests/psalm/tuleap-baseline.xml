@@ -8203,7 +8203,7 @@
       <code>$userManager</code>
       <code>$version_factory</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="62">
+    <MissingReturnType occurrences="61">
       <code>_approval_update_add_users</code>
       <code>_approval_update_del_users</code>
       <code>_approval_update_notif_resend</code>
@@ -8263,7 +8263,6 @@
       <code>report_del</code>
       <code>report_import</code>
       <code>report_upd</code>
-      <code>update</code>
       <code>updateLink</code>
       <code>update_monitoring</code>
     </MissingReturnType>
@@ -24960,12 +24959,9 @@
     <MissingParamType occurrences="1">
       <code>$id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="10">
-      <code>burningParrotGetJavascriptFiles</code>
-      <code>burningParrotGetStylesheets</code>
+    <MissingReturnType occurrences="7">
       <code>getHooksAndCallbacks</code>
       <code>getProjectWidgetList</code>
-      <code>isInProjectDashboard</code>
       <code>mergeLabel</code>
       <code>removeLabel</code>
       <code>restProjectResources</code>
@@ -30259,6 +30255,11 @@
       <code>registerExtraReferences</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/roadmap/include/roadmapPlugin.php">
+    <DeprecatedMethod occurrences="1">
+      <code>isProjectDashboard</code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/statistics/bin/collectDiskUsage.php">
     <UndefinedClass occurrences="5">
       <code>CVSCollector</code>
@@ -34437,12 +34438,6 @@
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
   </file>
-  <file src="plugins/timetracking/include/Timetracking/REST/v1/TimetrackingQueryChecker.php">
-    <MissingReturnType occurrences="2">
-      <code>checkQuery</code>
-      <code>checkTimePeriodIsValid</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/timetracking/include/Timetracking/REST/v1/TimetrackingReportResource.php">
     <MissingParamType occurrences="2">
       <code>$id</code>
@@ -34988,13 +34983,6 @@
       <code>$changeset</code>
       <code>$changeset</code>
     </PossiblyNullArgument>
-  </file>
-  <file src="plugins/tracker/include/REST/Artifact/ArtifactUpdater.class.php">
-    <MissingReturnType occurrences="3">
-      <code>checkArtifact</code>
-      <code>clientWantsToUpdateLatestVersion</code>
-      <code>isUpdatingLatestVersion</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/REST/Artifact/ArtifactValidator.class.php">
     <MissingParamType occurrences="1">
@@ -50880,6 +50868,9 @@
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
     </DeprecatedFunction>
+    <DeprecatedMethod occurrences="1">
+      <code>parent::getJavascriptDependencies()</code>
+    </DeprecatedMethod>
     <MissingParamType occurrences="10">
       <code>$id</code>
       <code>$id</code>
@@ -55899,6 +55890,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Dashboard/Widget/DashboardWidgetPresenter.php">
+    <DeprecatedMethod occurrences="1">
+      <code>getJavascriptDependencies</code>
+    </DeprecatedMethod>
     <MissingParamType occurrences="1">
       <code>$can_update_dashboards</code>
     </MissingParamType>
@@ -62784,6 +62778,9 @@
     </DeprecatedMethod>
   </file>
   <file src="src/common/Request/CurrentPage.php">
+    <DeprecatedMethod occurrences="1">
+      <code>isProjectDashboard</code>
+    </DeprecatedMethod>
     <MissingReturnType occurrences="3">
       <code>isDashboard</code>
       <code>isPersonalDashboard</code>
