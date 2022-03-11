@@ -38,12 +38,15 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\Report\Renderer\Table\TableRendererForReportRetriever;
+use Tuleap\Tracker\Report\Renderer\Table\UsedFieldsRetriever;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\ReportRepresentation;
+use Tuleap\Tracker\REST\v1\Report\MatchingArtifactRepresentationBuilder;
 use UserManager;
 
 /**
@@ -51,11 +54,12 @@ use UserManager;
  */
 class ReportsResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT      = 50;
-    public const DEFAULT_LIMIT  = 10;
-    public const DEFAULT_OFFSET = 0;
-    public const DEFAULT_VALUES = null;
-    public const ALL_VALUES     = 'all';
+    public const MAX_LIMIT             = 50;
+    public const DEFAULT_LIMIT         = 10;
+    public const DEFAULT_OFFSET        = 0;
+    public const DEFAULT_VALUES        = null;
+    public const ALL_VALUES            = 'all';
+    public const TABLE_RENDERER_VALUES = 'from_table_renderer';
 
     /** @var ReportArtifactFactory */
     private $report_artifact_factory;
@@ -133,12 +137,19 @@ class ReportsResource extends AuthenticatedResource
      * <ul>
      *  <li>…?id=123&values=summary,status //add summary and status values
      *  <li>…?id=123&values=all            //add all fields values
+     *  <li>…?id=123&values=from_table_renderer //add all fields selected in the table renderer of the report
      *  <li>…?id=123&values=               //(empty string) do not add any field values
      * </ul>
      * </p>
      *
      * <p>
-     *   <strong>/!\</strong> Please note that <strong>only "all" and "" (empty string) are available</strong> for now.
+     *   <strong>Warning:</strong> Please note that <strong>only "all", "from_table_renderer" and "" (empty string) are available</strong> for now.
+     * </p>
+     *
+     * <p>
+     *   "from_table_renderer" values option only work if there is only one table renderer in the report.<br/>
+     *    An error will be thrown if there is no or mulitple table renderer.<br/>
+     *    <strong>Warning:</strong> Please note that artifact link field values are not exported in this value format.
      * </p>
      *
      * @url GET {id}/artifacts
@@ -147,7 +158,7 @@ class ReportsResource extends AuthenticatedResource
      *
      * @param int $id Id of the report
      * @param bool $with_unsaved_changes Enable to take into account unsaved changes made to the report on your ongoing session {@from query}{@required false}
-     * @param string $values Which fields to include in the response. Default is no field values {@from query}{@choice ,all}
+     * @param string $values Which fields to include in the response. Default is no field values {@from query}{@choice ,all,from_table_renderer}
      * @param int $limit Number of elements displayed per page {@from query}{@min 1} {@max 50}
      * @param int $offset Position of the first element to display {@from query}{@min 0}
      *
@@ -163,6 +174,7 @@ class ReportsResource extends AuthenticatedResource
         int $offset = self::DEFAULT_OFFSET,
     ): array {
         $this->checkAccess();
+        Header::allowOptionsGet();
 
         $user   = UserManager::instance()->getCurrentUser();
         $report = $this->getReportById($user, $id, $with_unsaved_changes);
@@ -172,15 +184,32 @@ class ReportsResource extends AuthenticatedResource
             $report->getTracker()->getProject()
         );
 
+        if ($values === self::TABLE_RENDERER_VALUES) {
+            $builder = new MatchingArtifactRepresentationBuilder(
+                $this->report_artifact_factory,
+                new TableRendererForReportRetriever(),
+                new UsedFieldsRetriever(),
+            );
+
+            $artifact_collection = $builder->buildMatchingArtifactRepresentationCollection(
+                $user,
+                $report,
+                $limit,
+                $offset
+            );
+
+            Header::sendPaginationHeaders($limit, $offset, $artifact_collection->getTotalSize(), self::MAX_LIMIT);
+            return $artifact_collection->getArtifactRepresentations();
+        }
+
+        $with_all_field_values = $values == self::ALL_VALUES;
+
         $artifact_collection = $this->report_artifact_factory->getArtifactsMatchingReport(
             $report,
             $limit,
             $offset
         );
 
-        $with_all_field_values = $values == self::ALL_VALUES;
-
-        Header::allowOptionsGet();
         Header::sendPaginationHeaders($limit, $offset, $artifact_collection->getTotalSize(), self::MAX_LIMIT);
 
         return $this->getListOfArtifactRepresentation(
