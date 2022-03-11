@@ -27,6 +27,7 @@ use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
@@ -73,6 +74,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase
      */
     private $comment_ugroup_permission_inserter;
     private AfterNewChangesetHandler $after_new_changeset_handler;
+    private ActionsRunner $post_creation_runner;
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
@@ -86,6 +88,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase
         ParentLinkAction $parent_link_action,
         TrackerPrivateCommentUGroupPermissionInserter $comment_ugroup_permission_inserter,
         AfterNewChangesetHandler $after_new_changeset_handler,
+        ActionsRunner $post_creation_runner,
     ) {
         $this->fields_validator                   = $fields_validator;
         $this->event_manager                      = $event_manager;
@@ -98,6 +101,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase
         $this->parent_link_action                 = $parent_link_action;
         $this->comment_ugroup_permission_inserter = $comment_ugroup_permission_inserter;
         $this->after_new_changeset_handler        = $after_new_changeset_handler;
+        $this->post_creation_runner               = $post_creation_runner;
     }
 
     /**
@@ -227,7 +231,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase
                 return null;
             }
             if (! $tracker_import_config->isFromXml()) {
-                $artifact->getChangeset((int) $new_changeset->getId())->executePostCreationActions($send_notification);
+                $this->post_creation_runner->executePostCreationActions($new_changeset, $send_notification);
             }
 
             $this->event_manager->processEvent(new ArtifactUpdated($artifact, $submitter, $new_changeset));

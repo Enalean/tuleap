@@ -49,6 +49,7 @@ use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -113,7 +114,8 @@ class CardMappedFieldUpdater
             ArtifactChangesetSaver::build(),
             new ParentLinkAction($artifact_factory),
             new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-            new AfterNewChangesetHandler($artifact_factory, $fields_retriever, \WorkflowFactory::instance())
+            new AfterNewChangesetHandler($artifact_factory, $fields_retriever, \WorkflowFactory::instance()),
+            ActionsRunner::build(\BackendLogger::getDefaultLogger())
         );
 
         $column_dao = new Cardwall_OnTop_ColumnDao();

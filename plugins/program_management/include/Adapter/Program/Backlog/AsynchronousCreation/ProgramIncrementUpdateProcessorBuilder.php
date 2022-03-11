@@ -49,6 +49,7 @@ use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
@@ -122,7 +123,8 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
             ),
             new ParentLinkAction($artifact_factory),
             new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-            new AfterNewChangesetHandler($artifact_factory, $fields_retriever, \WorkflowFactory::instance())
+            new AfterNewChangesetHandler($artifact_factory, $fields_retriever, \WorkflowFactory::instance()),
+            ActionsRunner::build(\BackendLogger::getDefaultLogger())
         );
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(

@@ -840,6 +840,9 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         return $this->getArtifact()->getTracker();
     }
 
+    /**
+     * @deprecated Use \Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner::executePostCreationActions instead
+     */
     public function executePostCreationActions(bool $send_notifications)
     {
         ActionsRunner::build(BackendLogger::getDefaultLogger())->executePostCreationActions($this, $send_notifications);

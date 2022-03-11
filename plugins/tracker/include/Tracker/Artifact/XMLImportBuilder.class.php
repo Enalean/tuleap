@@ -27,6 +27,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
@@ -96,7 +97,8 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
                 $artifact_factory
             ),
             new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-            $after_new_changeset_handler
+            $after_new_changeset_handler,
+            ActionsRunner::build($logger)
         );
 
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();

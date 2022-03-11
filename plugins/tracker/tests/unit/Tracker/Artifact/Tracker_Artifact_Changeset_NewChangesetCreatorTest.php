@@ -35,6 +35,7 @@ use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
@@ -89,7 +90,6 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends \Tuleap\T
 
         $new_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $new_changeset->shouldReceive("getId")->andReturn(12);
-        $new_changeset->shouldReceive("executePostCreationActions")->andReturn(12);
 
         $changeset = new Tracker_Artifact_Changeset_Null();
         $factory   = \Mockery::spy(\Tracker_FormElementFactory::class);
@@ -99,12 +99,10 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends \Tuleap\T
         $this->workflow = \Mockery::spy(\Workflow::class);
 
         $tracker = Mockery::spy(\Tracker::class);
-        $tracker->shouldReceive('getWorkflow')->andReturn($this->workflow);
         $tracker->shouldReceive('getProject')->andReturn(new \Project(['group_id' => 101]));
         $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial(
         )->shouldAllowMockingProtectedMethods();
         $this->artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
-        $this->artifact->shouldReceive('getChangeset')->andReturn($new_changeset);
         $this->artifact->shouldReceive('getWorkflow')->andReturn($this->workflow);
         $this->artifact->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -145,7 +143,8 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends \Tuleap\T
                 $this->artifact_saver,
                 $field_retriever,
                 RetrieveWorkflowStub::withWorkflow($this->workflow)
-            )
+            ),
+            Mockery::spy(ActionsRunner::class)
         );
 
         $creator->create(
