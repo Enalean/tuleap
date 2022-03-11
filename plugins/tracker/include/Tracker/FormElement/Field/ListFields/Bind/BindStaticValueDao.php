@@ -146,8 +146,12 @@ class BindStaticValueDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function delete($id)
+    public function delete(Tracker_FormElement_Field $field, int $id): bool
     {
+        if (! $this->canValueBeDeleted($field, $id)) {
+            return false;
+        }
+
         $id  = $this->da->escapeInt($id);
         $sql = "DELETE FROM tracker_field_list_bind_static_value
                 WHERE id = $id
@@ -177,7 +181,7 @@ class BindStaticValueDao extends DataAccessObject
         return $this->isValueHiddenable($field->getId(), $value_id, "");
     }
 
-    public function canValueBeHidden(Tracker_FormElement_Field $field, $value_id)
+    public function canValueBeHidden(Tracker_FormElement_Field $field, $value_id): bool
     {
         $field_id   = $this->da->escapeInt($field->getId());
         $tracker_id = $this->da->escapeInt($field->getTracker()->getId());
@@ -198,6 +202,7 @@ class BindStaticValueDao extends DataAccessObject
                 WHERE semantic_done.tracker_id = $tracker_id
                 AND static_value.field_id = $field_id";
 
+
         return $this->isValueHiddenable(
             $field_id,
             $value_id,
@@ -205,11 +210,11 @@ class BindStaticValueDao extends DataAccessObject
         );
     }
 
-    private function isValueHiddenable($field_id, $value_id, string $additionnal_unions)
+    private function isValueHiddenable($field_id, $value_id, string $additionnal_unions): bool
     {
         $field_id = $this->da->escapeInt($field_id);
 
-        if (! isset($this->cache_canbehidden_values[$field_id])) {
+        if (! isset($this->cache_canbehidden_values[$field_id][$value_id])) {
             $sql = "SELECT IF(v.original_value_id, v.original_value_id, v.id) AS id
                     FROM tracker_field_list_bind_static_value AS v
                         INNER JOIN tracker_workflow AS w ON (
@@ -263,6 +268,12 @@ class BindStaticValueDao extends DataAccessObject
                             tr.target_field_id = copied_field.id AND tr.target_value_id = copied_value.id
                         )
                     WHERE original.id = $field_id
+                    UNION SELECT rule_static.value_id  AS id
+                        FROM tracker_workflow_trigger_rule_static_value AS rule_static
+                        WHERE  rule_static.value_id = $value_id
+                    UNION SELECT rule_trg_static.value_id  AS id
+                        FROM tracker_workflow_trigger_rule_trg_field_static_value AS rule_trg_static
+                        WHERE  rule_trg_static.value_id = $value_id
                     $additionnal_unions
                     ";
 
@@ -275,7 +286,7 @@ class BindStaticValueDao extends DataAccessObject
         return ! isset($this->cache_canbehidden_values[$field_id][$value_id]);
     }
 
-    public function canValueBeDeleted(Tracker_FormElement_Field $field, $value_id)
+    public function canValueBeDeleted(Tracker_FormElement_Field $field, $value_id): bool
     {
         $field_id = $this->da->escapeInt($field->getId());
         $value_id = $this->da->escapeInt($value_id);
