@@ -22,7 +22,7 @@
     <div class="tlp-alert-danger" v-translate>An error occurred while loading the tests.</div>
 </template>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

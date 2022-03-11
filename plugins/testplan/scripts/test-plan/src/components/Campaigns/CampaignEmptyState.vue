@@ -31,7 +31,7 @@
             class="tlp-button-primary tlp-button-outline empty-state-action"
             v-if="user_can_create_campaign"
             data-test="new-campaign"
-            v-on:click="showCreateModal"
+            v-on:click="show_create_modal"
         >
             <i class="fa fa-plus tlp-button-icon"></i>
             <translate>Create new campaign</translate>
@@ -44,7 +44,7 @@ import { useState } from "vuex-composition-helpers";
 import type { State } from "../../store/type";
 
 defineProps<{
-    showCreateModal: () => void;
+    show_create_modal: () => void;
 }>();
 
 const { user_can_create_campaign } = useState<Pick<State, "user_can_create_campaign">>([
@@ -52,7 +52,7 @@ const { user_can_create_campaign } = useState<Pick<State, "user_can_create_campa
 ]);
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

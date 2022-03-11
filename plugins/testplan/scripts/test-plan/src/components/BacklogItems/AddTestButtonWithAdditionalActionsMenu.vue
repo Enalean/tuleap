@@ -55,7 +55,7 @@
 import type { BacklogItem } from "../../type";
 import { useState } from "vuex-composition-helpers";
 import type { State } from "../../store/type";
-import { computed, nextTick, ref, watch } from "@vue/composition-api";
+import { computed, nextTick, ref, watch } from "vue";
 import {
     buildCreateNewTestDefinitionLink,
     buildEditBacklogItemLink,
@@ -108,7 +108,7 @@ watch(can_add_button_be_displayed, (): void => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

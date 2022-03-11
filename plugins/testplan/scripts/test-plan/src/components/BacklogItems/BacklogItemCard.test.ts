@@ -20,15 +20,13 @@
 import { shallowMount } from "@vue/test-utils";
 import BacklogItemCard from "./BacklogItemCard.vue";
 import type { BacklogItem } from "../../type";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { RootState } from "../../store/type";
-import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("BacklogItemCard", () => {
-    it("Displays the backlog item as a card", async () => {
+    it("Displays the backlog item as a card", () => {
         const wrapper = shallowMount(BacklogItemCard, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 backlog_item: {
                     id: 123,
                     label: "A backlog item",
@@ -40,8 +38,8 @@ describe("BacklogItemCard", () => {
                     },
                 } as BacklogItem,
             },
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         milestone_id: 11,
                     } as RootState,
@@ -53,12 +51,7 @@ describe("BacklogItemCard", () => {
     });
 
     it("Expands the item when the user click on it", async () => {
-        const $store = createStoreMock({
-            state: {
-                backlog_item: {},
-            } as RootState,
-        });
-
+        const expand_backlog_item_spy = jest.fn();
         const backlog_item = {
             id: 123,
             label: "A backlog item",
@@ -71,26 +64,31 @@ describe("BacklogItemCard", () => {
         } as BacklogItem;
 
         const wrapper = shallowMount(BacklogItemCard, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 backlog_item,
             },
-            mocks: {
-                $store,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        backlog_item: {
+                            namespaced: true,
+                            state: {},
+                            mutations: {
+                                expandBacklogItem: expand_backlog_item_spy,
+                            },
+                        },
+                    },
+                }),
             },
         });
 
         await wrapper.trigger("click");
 
-        expect($store.commit).toHaveBeenCalledWith("backlog_item/expandBacklogItem", backlog_item);
+        expect(expand_backlog_item_spy).toHaveBeenCalledWith(expect.any(Object), backlog_item);
     });
 
     it("Collapses the item when the user reclick on it", async () => {
-        const $store = createStoreMock({
-            state: {
-                backlog_item: {},
-            } as RootState,
-        });
+        const collapse_backlog_item_spy = jest.fn();
 
         const backlog_item = {
             id: 123,
@@ -104,31 +102,32 @@ describe("BacklogItemCard", () => {
         } as BacklogItem;
 
         const wrapper = shallowMount(BacklogItemCard, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 backlog_item,
             },
-            mocks: {
-                $store,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        backlog_item: {
+                            namespaced: true,
+                            state: {},
+                            mutations: {
+                                collapseBacklogItem: collapse_backlog_item_spy,
+                            },
+                        },
+                    },
+                }),
             },
         });
 
         await wrapper.trigger("click");
 
-        expect($store.commit).toHaveBeenCalledWith(
-            "backlog_item/collapseBacklogItem",
-            backlog_item
-        );
+        expect(collapse_backlog_item_spy).toHaveBeenCalledWith(expect.any(Object), backlog_item);
     });
 
-    it("Marks a backlog item as just refreshed", async () => {
+    it("Marks a backlog item as just refreshed", () => {
         jest.useFakeTimers();
-
-        const $store = createStoreMock({
-            state: {
-                backlog_item: {},
-            } as RootState,
-        });
+        const remove_is_just_refreshed_flag_on_backlog_item_spy = jest.fn();
 
         const backlog_item = {
             id: 123,
@@ -136,12 +135,22 @@ describe("BacklogItemCard", () => {
         } as BacklogItem;
 
         const wrapper = shallowMount(BacklogItemCard, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 backlog_item,
             },
-            mocks: {
-                $store,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        backlog_item: {
+                            namespaced: true,
+                            state: {},
+                            mutations: {
+                                removeIsJustRefreshedFlagOnBacklogItem:
+                                    remove_is_just_refreshed_flag_on_backlog_item_spy,
+                            },
+                        },
+                    },
+                }),
             },
         });
 
@@ -149,8 +158,8 @@ describe("BacklogItemCard", () => {
 
         jest.advanceTimersByTime(1000);
 
-        expect($store.commit).toHaveBeenCalledWith(
-            "backlog_item/removeIsJustRefreshedFlagOnBacklogItem",
+        expect(remove_is_just_refreshed_flag_on_backlog_item_spy).toHaveBeenCalledWith(
+            expect.any(Object),
             backlog_item
         );
     });

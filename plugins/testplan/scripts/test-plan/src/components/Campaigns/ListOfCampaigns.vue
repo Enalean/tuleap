@@ -20,7 +20,7 @@
 
 <template>
     <section class="test-plan-list-of-campaigns">
-        <list-of-campaigns-header v-bind:show-create-modal="showCreateModal" />
+        <list-of-campaigns-header v-bind:show_create_modal="showCreateModal" />
         <global-error-message />
         <campaign-card
             v-for="campaign of campaigns"
@@ -30,10 +30,14 @@
         <campaign-skeleton v-if="is_loading" />
         <campaign-empty-state
             v-if="should_empty_state_be_displayed"
-            v-bind:show-create-modal="showCreateModal"
+            v-bind:show_create_modal="showCreateModal"
+            data-test="async-empty-state"
         />
-        <campaign-error-state v-if="should_error_state_be_displayed" />
-        <create-modal v-bind:is="show_create_modal" />
+        <campaign-error-state
+            v-if="should_error_state_be_displayed"
+            data-test="async-error-state"
+        />
+        <component v-bind:is="show_create_modal" />
     </section>
 </template>
 <script setup lang="ts">
@@ -41,10 +45,9 @@ import CampaignSkeleton from "./CampaignSkeleton.vue";
 import CampaignCard from "./CampaignCard.vue";
 import ListOfCampaignsHeader from "./ListOfCampaignsHeader.vue";
 import GlobalErrorMessage from "./GlobalErrorMessage.vue";
-import { computed, defineAsyncComponent, onMounted, ref } from "@vue/composition-api";
-import { useActions, useState } from "vuex-composition-helpers";
+import { computed, defineAsyncComponent, onMounted, shallowRef } from "vue";
+import { useNamespacedActions, useNamespacedState } from "vuex-composition-helpers";
 import type { CampaignActions } from "../../store/campaign/campaign-actions";
-import type { AsyncComponent } from "vue";
 import type { CampaignState } from "../../store/campaign/type";
 
 const CampaignEmptyState = defineAsyncComponent(
@@ -54,11 +57,11 @@ const CampaignErrorState = defineAsyncComponent(
     () => import(/* webpackChunkName: "testplan-campaigns-errorstate" */ "./CampaignErrorState.vue")
 );
 
-const { is_loading, has_loading_error, campaigns } = useState<
+const { is_loading, has_loading_error, campaigns } = useNamespacedState<
     Pick<CampaignState, "is_loading" | "has_loading_error" | "campaigns">
 >("campaign", ["is_loading", "has_loading_error", "campaigns"]);
 
-const show_create_modal = ref<"" | AsyncComponent>("");
+const show_create_modal = shallowRef<undefined | unknown>(undefined);
 
 function showCreateModal(): void {
     show_create_modal.value = defineAsyncComponent(
@@ -66,7 +69,7 @@ function showCreateModal(): void {
     );
 }
 
-const { loadCampaigns } = useActions<CampaignActions>("campaign", ["loadCampaigns"]);
+const { loadCampaigns } = useNamespacedActions<CampaignActions>("campaign", ["loadCampaigns"]);
 
 loadCampaigns();
 
@@ -89,9 +92,4 @@ const should_empty_state_be_displayed = computed((): boolean => {
 const should_error_state_be_displayed = computed((): boolean => {
     return has_loading_error.value;
 });
-</script>
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-
-export default defineComponent({});
 </script>

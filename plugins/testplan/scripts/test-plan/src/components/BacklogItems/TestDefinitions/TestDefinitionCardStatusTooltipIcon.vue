@@ -36,8 +36,8 @@
 import type { TestDefinition } from "../../../type";
 import { useState } from "vuex-composition-helpers";
 import type { State } from "../../../store/type";
-import { computed } from "@vue/composition-api";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{
     test_definition: TestDefinition;
@@ -80,7 +80,7 @@ const icon_status = computed((): string => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

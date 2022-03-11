@@ -91,7 +91,7 @@ import TestDefinitionCardStatus from "./TestDefinitionCardStatus.vue";
 import { useState } from "vuex-composition-helpers";
 import type { State } from "../../../store/type";
 import type { BacklogItem, TestDefinition } from "../../../type";
-import { computed, onMounted, ref } from "@vue/composition-api";
+import { computed, onMounted, ref } from "vue";
 import { createDropdown } from "tlp";
 import {
     buildEditTestDefinitionItemLink,
@@ -144,7 +144,7 @@ const automated_icon_status = computed((): string => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

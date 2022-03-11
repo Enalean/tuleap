@@ -26,7 +26,7 @@
             class="tlp-button-primary tlp-button-outline tlp-button-small test-plan-list-of-campaigns-new-button"
             v-if="should_button_be_displayed"
             data-test="new-campaign"
-            v-on:click="showCreateModal"
+            v-on:click="show_create_modal"
         >
             <i class="fa fa-plus tlp-button-icon"></i>
             <translate>New campaign</translate>
@@ -34,18 +34,18 @@
     </div>
 </template>
 <script setup lang="ts">
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState, useState } from "vuex-composition-helpers";
 import type { Campaign } from "../../type";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 
 defineProps<{
-    showCreateModal: () => void;
+    show_create_modal: () => void;
 }>();
 
 const { user_can_create_campaign } = useState<{ user_can_create_campaign: boolean }>([
     "user_can_create_campaign",
 ]);
-const { has_loading_error, campaigns } = useState<{
+const { has_loading_error, campaigns } = useNamespacedState<{
     has_loading_error: boolean;
     campaigns: Campaign[];
 }>("campaign", ["has_loading_error", "campaigns"]);
@@ -56,7 +56,7 @@ const should_button_be_displayed = computed(
 );
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

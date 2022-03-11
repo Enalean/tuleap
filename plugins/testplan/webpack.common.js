@@ -19,6 +19,7 @@
 
 const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
+const { VueLoaderPlugin } = require("vue-loader");
 const context = __dirname;
 const output = webpack_configurator.configureOutput(
     path.resolve(__dirname, "../../src/www/assets/testplan/"),
@@ -39,12 +40,7 @@ module.exports = [
             extensions: [".js", ".ts", ".vue"],
             alias: {
                 docx: path.resolve(__dirname, "node_modules", "docx"),
-                "@vue/composition-api": path.resolve(
-                    __dirname,
-                    "node_modules",
-                    "@vue",
-                    "composition-api"
-                ),
+                vue: path.resolve(__dirname, "node_modules", "@vue", "compat"),
             },
         },
         externals: {
@@ -54,16 +50,25 @@ module.exports = [
             rules: [
                 ...webpack_configurator.configureTypescriptRules(),
                 webpack_configurator.rule_easygettext_loader,
-                webpack_configurator.rule_vue_loader,
+                {
+                    test: /\.vue$/,
+                    exclude: /node_modules/,
+                    loader: "vue-loader",
+                    options: {
+                        compilerOptions: {
+                            compatConfig: {
+                                MODE: 2,
+                            },
+                        },
+                    },
+                },
                 webpack_configurator.rule_scss_loader,
             ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            require("unplugin-vue2-script-setup/webpack")(),
-            webpack_configurator.getVueLoaderPlugin(),
-            webpack_configurator.getTypescriptCheckerPlugin(true),
+            new VueLoaderPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
         resolveLoader: {

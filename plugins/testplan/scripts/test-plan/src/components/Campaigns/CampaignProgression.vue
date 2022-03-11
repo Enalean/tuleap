@@ -60,8 +60,8 @@
 </template>
 <script setup lang="ts">
 import type { Campaign } from "../../type";
-import { computed } from "@vue/composition-api";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{
     campaign: Campaign;
@@ -140,7 +140,7 @@ const notrun_title = computed((): string => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

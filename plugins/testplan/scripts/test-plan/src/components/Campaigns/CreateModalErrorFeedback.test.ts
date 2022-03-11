@@ -24,13 +24,13 @@ describe("CreateModalErrorFeedback", () => {
     it("does nothing when there is no error message", () => {
         const wrapper = shallowMount(CreateModalErrorFeedback);
 
-        expect(wrapper.html()).toBe("");
+        expect(wrapper.html()).toBe("<!--v-if-->");
     });
 
     it("displays the error message when one is provided", () => {
         const error_message = "My custom error message";
         const wrapper = shallowMount(CreateModalErrorFeedback, {
-            propsData: {
+            props: {
                 error_message,
             },
         });
@@ -42,7 +42,7 @@ describe("CreateModalErrorFeedback", () => {
         const error_message = "My custom error message";
         const error_message_details = "Full details";
         const wrapper = shallowMount(CreateModalErrorFeedback, {
-            propsData: {
+            props: {
                 error_message,
                 error_message_details,
             },

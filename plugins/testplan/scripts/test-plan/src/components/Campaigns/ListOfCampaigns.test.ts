@@ -17,31 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import type { RootState } from "../../store/type";
 import type { Campaign } from "../../type";
 import type { CampaignState } from "../../store/campaign/type";
 import ListOfCampaigns from "./ListOfCampaigns.vue";
 import CampaignSkeleton from "./CampaignSkeleton.vue";
 import CampaignCard from "./CampaignCard.vue";
-import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("ListOfCampaigns", () => {
-    async function createWrapper(campaign: CampaignState): Promise<Wrapper<ListOfCampaigns>> {
-        return shallowMount(ListOfCampaigns, {
-            localVue: await createTestPlanLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        campaign,
-                    } as RootState,
-                }),
+    const load_campaigns_spy = jest.fn();
+
+    function createWrapper(
+        campaign_state: CampaignState
+    ): VueWrapper<InstanceType<typeof ListOfCampaigns>> {
+        load_campaigns_spy.mockReset();
+        const campaign_module = {
+            namespaced: true,
+            state: campaign_state,
+            actions: {
+                loadCampaigns: load_campaigns_spy,
             },
-            stubs: {
-                "campaign-empty-state": true,
-                "campaign-error-state": true,
+        };
+
+        return shallowMount(ListOfCampaigns, {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        campaign: campaign_module,
+                    },
+                }),
             },
         });
     }
@@ -102,24 +108,14 @@ describe("ListOfCampaigns", () => {
     });
 
     it("Loads automatically the campaigns", async () => {
-        const $store = createStoreMock({
-            state: {
-                campaign: {
-                    has_refreshing_error: false,
-                    is_loading: true,
-                    has_loading_error: false,
-                    campaigns: [] as Campaign[],
-                },
-            } as RootState,
-        });
-        shallowMount(ListOfCampaigns, {
-            localVue: await createTestPlanLocalVue(),
-            mocks: {
-                $store,
-            },
+        await createWrapper({
+            has_refreshing_error: false,
+            is_loading: true,
+            has_loading_error: false,
+            campaigns: [] as Campaign[],
         });
 
-        expect($store.dispatch).toHaveBeenCalledWith("campaign/loadCampaigns");
+        expect(load_campaigns_spy).toHaveBeenCalled();
     });
 
     it("Displays empty state when there is no campaign", async () => {
@@ -130,7 +126,7 @@ describe("ListOfCampaigns", () => {
             campaigns: [] as Campaign[],
         });
 
-        expect(wrapper.find("campaign-empty-state-stub").exists()).toBe(true);
+        expect(wrapper.find("[data-test=async-empty-state]").exists()).toBe(true);
     });
 
     it("Does not display empty state when there is no campaign but it is still loading", async () => {
@@ -174,7 +170,7 @@ describe("ListOfCampaigns", () => {
             campaigns: [] as Campaign[],
         });
 
-        expect(wrapper.find("campaign-error-state-stub").exists()).toBe(true);
+        expect(wrapper.find("[data-test=async-error-state]").exists()).toBe(true);
     });
 
     it("Does not display error state when there is no error", async () => {

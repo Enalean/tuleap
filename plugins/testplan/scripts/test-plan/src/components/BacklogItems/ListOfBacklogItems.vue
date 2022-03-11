@@ -27,16 +27,22 @@
             v-bind:backlog_item="backlog_item"
         />
         <backlog-item-skeleton v-if="is_loading" />
-        <backlog-item-empty-state v-if="should_empty_state_be_displayed" />
-        <backlog-item-error-state v-if="should_error_state_be_displayed" />
+        <backlog-item-empty-state
+            v-if="should_empty_state_be_displayed"
+            data-test="async-empty-state"
+        />
+        <backlog-item-error-state
+            v-if="should_error_state_be_displayed"
+            data-test="async-error-state"
+        />
     </section>
 </template>
 <script setup lang="ts">
 import ListOfBacklogItemsHeader from "./ListOfBacklogItemsHeader.vue";
 import BacklogItemSkeleton from "./BacklogItemSkeleton.vue";
 import BacklogItemContainer from "./BacklogItemContainer.vue";
-import { computed, defineAsyncComponent } from "@vue/composition-api";
-import { useActions, useState } from "vuex-composition-helpers";
+import { computed, defineAsyncComponent } from "vue";
+import { useNamespacedActions, useNamespacedState } from "vuex-composition-helpers";
 import type { BacklogItemState } from "../../store/backlog-item/type";
 import type { BacklogItemActions } from "../../store/backlog-item/backlog-item-actions";
 
@@ -53,11 +59,11 @@ const BacklogItemErrorState = defineAsyncComponent(
         )
 );
 
-const { is_loading, has_loading_error, backlog_items } = useState<
+const { is_loading, has_loading_error, backlog_items } = useNamespacedState<
     Pick<BacklogItemState, "is_loading" | "has_loading_error" | "backlog_items">
 >("backlog_item", ["is_loading", "has_loading_error", "backlog_items"]);
 
-const { loadBacklogItems } = useActions<Pick<BacklogItemActions, "loadBacklogItems">>(
+const { loadBacklogItems } = useNamespacedActions<Pick<BacklogItemActions, "loadBacklogItems">>(
     "backlog_item",
     ["loadBacklogItems"]
 );
@@ -73,7 +79,7 @@ const should_error_state_be_displayed = computed((): boolean => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

@@ -42,9 +42,9 @@
     </a>
 </template>
 <script setup lang="ts">
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 import type { Campaign } from "../../type";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { useState } from "vuex-composition-helpers";
 import CampaignProgression from "./CampaignProgression.vue";
 
@@ -97,7 +97,7 @@ const classname = computed((): string => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

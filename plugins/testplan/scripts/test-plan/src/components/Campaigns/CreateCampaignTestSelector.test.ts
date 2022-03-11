@@ -18,25 +18,28 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { RootState } from "../../store/type";
-import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 import CreateCampaignTestSelector from "./CreateCampaignTestSelector.vue";
 import type { TrackerReport } from "../../helpers/Campaigns/tracker-reports-retriever";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("CreateCampaignTestSelector", () => {
-    it("displays the possible tests", async () => {
+    beforeEach(() => {
+        // To be removed once Vue 3 compat issues are resolved
+        jest.spyOn(global.console, "warn").mockImplementation();
+    });
+
+    it("displays the possible tests", () => {
         const testdefinition_tracker_reports: TrackerReport[] = [
             { id: 102, label: "Test def tracker report label" },
         ];
         const wrapper = shallowMount(CreateCampaignTestSelector, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 value: { test_selector: "report", report_id: 102 },
                 testdefinition_tracker_reports,
             },
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         milestone_title: "Milestone Title",
                         testdefinition_tracker_name: "Test def tracker name",
@@ -52,15 +55,14 @@ describe("CreateCampaignTestSelector", () => {
         expect(selector.find("optgroup").exists()).toBe(true);
     });
 
-    it("does not propose to select tests from the test definitions tracker reports when there is no tracker reports", async () => {
+    it("does not propose to select tests from the test definitions tracker reports when there is no tracker reports", () => {
         const wrapper = shallowMount(CreateCampaignTestSelector, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 value: { test_selector: "milestone" },
                 testdefinition_tracker_reports: [],
             },
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         milestone_title: "Milestone Title",
                         testdefinition_tracker_name: "Test def tracker name",
@@ -74,15 +76,14 @@ describe("CreateCampaignTestSelector", () => {
         expect(selector.find("optgroup").exists()).toBe(false);
     });
 
-    it("selects a new set of tests", async () => {
+    it("selects a new set of tests", () => {
         const wrapper = shallowMount(CreateCampaignTestSelector, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 value: { test_selector: "milestone" },
                 testdefinition_tracker_reports: [],
             },
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         milestone_title: "Milestone Title",
                         testdefinition_tracker_name: "Test def tracker name",

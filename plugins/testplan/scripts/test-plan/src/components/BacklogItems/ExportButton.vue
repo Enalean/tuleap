@@ -63,31 +63,29 @@
 </template>
 <script setup lang="ts">
 import ExportError from "./ExportError.vue";
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState, useState } from "vuex-composition-helpers";
 import type { State } from "../../store/type";
 import type { BacklogItemState } from "../../store/backlog-item/type";
 import type { CampaignState } from "../../store/campaign/type";
-import { computed, onMounted, ref } from "@vue/composition-api";
+import { computed, onMounted, ref } from "vue";
 import { createDropdown } from "tlp";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const {
     is_loading: backlog_items_is_loading,
     has_loading_error: backlog_items_has_loading_error,
     backlog_items,
-} = useState<Pick<BacklogItemState, "is_loading" | "has_loading_error" | "backlog_items">>(
-    "backlog_item",
-    ["is_loading", "has_loading_error", "backlog_items"]
-);
+} = useNamespacedState<
+    Pick<BacklogItemState, "is_loading" | "has_loading_error" | "backlog_items">
+>("backlog_item", ["is_loading", "has_loading_error", "backlog_items"]);
 const {
     is_loading: campains_is_loading,
     has_loading_error: campains_has_loading_error,
     campaigns,
-} = useState<Pick<CampaignState, "is_loading" | "has_loading_error" | "campaigns">>("campaign", [
-    "is_loading",
-    "has_loading_error",
-    "campaigns",
-]);
+} = useNamespacedState<Pick<CampaignState, "is_loading" | "has_loading_error" | "campaigns">>(
+    "campaign",
+    ["is_loading", "has_loading_error", "campaigns"]
+);
 const {
     project_name,
     milestone_title,
@@ -237,7 +235,7 @@ async function exportTestPlanAsDocx(): Promise<void> {
 }
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

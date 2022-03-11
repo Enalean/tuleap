@@ -36,16 +36,16 @@
 <script setup lang="ts">
 import TestDefinitionCardXrefCategoryStatus from "./TestDefinitionCardXrefCategoryStatus.vue";
 import type { BacklogItem, TestDefinition } from "../../../type";
-import { useMutations } from "vuex-composition-helpers";
+import { useNamespacedMutations } from "vuex-composition-helpers";
 import type { BacklogItemMutations } from "../../../store/backlog-item/backlog-item-mutations";
-import { onMounted } from "@vue/composition-api";
+import { onMounted } from "vue";
 
 const props = defineProps<{
     test_definition: TestDefinition;
     backlog_item: BacklogItem;
 }>();
 
-const { removeIsJustRefreshedFlagOnTestDefinition } = useMutations<
+const { removeIsJustRefreshedFlagOnTestDefinition } = useNamespacedMutations<
     Pick<BacklogItemMutations, "removeIsJustRefreshedFlagOnTestDefinition">
 >("backlog_item", ["removeIsJustRefreshedFlagOnTestDefinition"]);
 
@@ -61,7 +61,7 @@ onMounted((): void => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

@@ -19,12 +19,12 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CampaignErrorState from "./CampaignErrorState.vue";
-import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("CampaignErrorState", () => {
-    it("Displays empty state", async () => {
+    it("Displays empty state", () => {
         const wrapper = shallowMount(CampaignErrorState, {
-            localVue: await createTestPlanLocalVue(),
+            global: { ...getGlobalTestOptions({}) },
         });
 
         expect(wrapper.element).toMatchSnapshot();

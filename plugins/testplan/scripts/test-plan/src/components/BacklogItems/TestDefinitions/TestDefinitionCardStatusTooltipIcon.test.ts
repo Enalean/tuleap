@@ -20,9 +20,8 @@
 import { shallowMount } from "@vue/test-utils";
 import type { BacklogItem, TestDefinition } from "../../../type";
 import TestDefinitionCardStatusTooltipIcon from "./TestDefinitionCardStatusTooltipIcon.vue";
-import { createTestPlanLocalVue } from "../../../helpers/local-vue-for-test";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { RootState } from "../../../store/type";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("TestDefinitionCardStatusTooltipIcon", () => {
     it.each([
@@ -33,10 +32,9 @@ describe("TestDefinitionCardStatusTooltipIcon", () => {
         [null, "Not planned in release MyRelease", "fa-circle-thin"],
     ])(
         "Displays an icon for test with %s status with the appropriate tooltip",
-        async (test_status: string | null, expected_tooltip: string, expected_icon: string) => {
+        (test_status: string | null, expected_tooltip: string, expected_icon: string) => {
             const wrapper = shallowMount(TestDefinitionCardStatusTooltipIcon, {
-                localVue: await createTestPlanLocalVue(),
-                propsData: {
+                props: {
                     test_definition: {
                         id: 123,
                         short_type: "test_def",
@@ -45,8 +43,8 @@ describe("TestDefinitionCardStatusTooltipIcon", () => {
                     } as TestDefinition,
                     backlog_item: { id: 456 } as BacklogItem,
                 },
-                mocks: {
-                    $store: createStoreMock({
+                global: {
+                    ...getGlobalTestOptions({
                         state: {
                             milestone_title: "MyRelease",
                         } as RootState,

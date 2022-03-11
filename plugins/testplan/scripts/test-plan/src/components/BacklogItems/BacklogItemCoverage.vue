@@ -48,8 +48,8 @@ import {
     computeTestStats,
     getTestStatusFromStats,
 } from "../../helpers/BacklogItems/compute-test-stats";
-import { computed } from "@vue/composition-api";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{
     backlog_item: BacklogItem;
@@ -113,7 +113,7 @@ const stack_class = computed((): string => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

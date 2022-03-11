@@ -32,7 +32,7 @@
 import BacklogItemErrorStateSvg from "./BacklogItemErrorStateSvg.vue";
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>
