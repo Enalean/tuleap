@@ -60,9 +60,17 @@ final class ConfigKeyLegacyBool implements ConfigKeyType
 
     public function getSerializedRepresentation(string $name, string|int|bool $value): string
     {
-        if (! is_string($value) && ! in_array($value, [self::TRUE, self::FALSE], true)) {
-            throw new \LogicException('Cannot accept non strinb/bool values');
+        if (is_string($value) && ! in_array($value, [self::TRUE, self::FALSE], true)) {
+            throw new \LogicException(sprintf('%s cannot accept string value that is not "1" or "0" (%s given)', $name, print_r($value, true)));
         }
+        if (is_int($value) && ! in_array($value, [0, 1], true)) {
+            throw new \LogicException(sprintf('%s cannot accept int value that is not 1 or 0 (%d given)', $name, $value));
+        }
+        $value = match ($value) {
+            true    => '1',
+            false   => '0',
+            default => $value,
+        };
         return sprintf('$%s = \'%s\';%s', $name, $value, PHP_EOL);
     }
 }

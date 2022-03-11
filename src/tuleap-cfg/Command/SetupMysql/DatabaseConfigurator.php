@@ -25,6 +25,7 @@ namespace TuleapCfg\Command\SetupMysql;
 
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Tuleap\Config\ConfigSerializer;
+use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBConfig;
 
@@ -114,10 +115,13 @@ final class DatabaseConfigurator
             return;
         }
         $db->run('USE ' . $dbname);
-        $this->loadInitValues($db, $db_params->site_admin_password, $db_params->tuleap_fqdn);
+
+        $email_admin = \ForgeConfig::get(ConfigurationVariables::EMAIL_ADMIN);
+
+        $this->loadInitValues($db, $db_params->site_admin_password, $email_admin, $db_params->tuleap_fqdn);
     }
 
-    public function loadInitValues(DBWrapperInterface $db, ConcealedString $admin_password, string $domain_name): void
+    private function loadInitValues(DBWrapperInterface $db, ConcealedString $admin_password, string $admin_email, string $domain_name): void
     {
         $row = $db->run('SHOW TABLES');
         if (count($row) === 0) {
@@ -133,7 +137,7 @@ final class DatabaseConfigurator
                 'UPDATE user SET password=?, unix_pw=?, email=?, add_date=? WHERE user_id=101',
                 $this->password_handler->computeHashPassword($admin_password),
                 $this->password_handler->computeUnixPassword($admin_password),
-                'codendi-admin@' . $domain_name,
+                $admin_email,
                 time(),
             );
             $db->run('UPDATE user SET email=? WHERE user_id = 100', 'noreply@' . $domain_name);

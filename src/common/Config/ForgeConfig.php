@@ -22,11 +22,14 @@
  */
 
 use Tuleap\Config\ConfigDao;
+use Tuleap\Config\ConfigKeyLegacyBool;
+use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Config\ConfigValueDefaultValueAttributeProvider;
 use Tuleap\Config\ConfigValueEnvironmentProvider;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\ServerHostname;
 
 class ForgeConfig
 {
@@ -59,7 +62,44 @@ class ForgeConfig
         self::loadFromFile(self::get('redis_config_file'));
     }
 
-    public static function loadDatabaseConfig(): void
+    public static function loadForInitialSetup(string $fqdn): void
+    {
+        self::loadLocalInc();
+        self::initDefaultValues($fqdn);
+        self::load(new ConfigValueEnvironmentProvider(ServerHostname::class, ConfigurationVariables::class));
+        self::loadDatabaseConfig();
+    }
+
+    /**
+     * Default values for a new platform
+     *
+     * There are two kind of default values:
+     * - Variables with historical placeholders in `local.inc.dist`
+     * - Variables that have a default value that should stay for existing platforms (to avoid regression) but that
+     *   we want to push new defaults.
+     */
+    private static function initDefaultValues(string $fqdn): void
+    {
+        self::set(ServerHostname::DEFAULT_DOMAIN, $fqdn);
+        self::set(ServerHostname::LIST_HOST, 'lists.' . $fqdn);
+        self::set(ServerHostname::FULL_NAME, $fqdn);
+        self::set(ConfigurationVariables::EMAIL_ADMIN, 'codendi-admin@' . $fqdn);
+        self::set(ConfigurationVariables::EMAIL_CONTACT, 'codendi-contact@' . $fqdn);
+        self::set(ConfigurationVariables::NOREPLY, sprintf('"Tuleap" <noreply@%s>', $fqdn));
+        self::set(ConfigurationVariables::ORG_NAME, 'Tuleap');
+        self::set(ConfigurationVariables::LONG_ORG_NAME, 'Tuleap');
+        self::setNewDefault(ConfigurationVariables::HOMEDIR_PREFIX, '');
+        self::setNewDefault(ConfigurationVariables::GRPDIR_PREFIX, '');
+        self::setNewDefault(ConfigurationVariables::MAIL_SECURE_MODE, ConfigKeyLegacyBool::FALSE);
+        self::setNewDefault(ConfigurationVariables::DISABLE_SUBDOMAINS, ConfigKeyLegacyBool::TRUE);
+    }
+
+    private static function setNewDefault(string $key, mixed $value): void
+    {
+        self::set($key, $value);
+    }
+
+    private static function loadDatabaseConfig(): void
     {
         self::loadDatabaseDefaultValues();
         self::loadDatabaseInc();
@@ -69,8 +109,7 @@ class ForgeConfig
     private static function loadLocalInc(): void
     {
         self::loadFromFile(__DIR__ . '/../../etc/local.inc.dist');
-        $local_inc_file_path = (new Config_LocalIncFinder())->getLocalIncPath();
-        self::loadFromFile($local_inc_file_path);
+        self::loadFromFile((new Config_LocalIncFinder())->getLocalIncPath());
     }
 
     private static function loadDatabaseDefaultValues(): void

@@ -82,6 +82,7 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
             '--app-password'   => 'a complex password',
             '--app-user'       => 'tuleap',
             '--azure-suffix'   => 'some-id',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
@@ -100,6 +101,7 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
             '--admin-password' => 'welcome0',
             '--app-password'   => 'a complex password',
             '--app-user'       => 'tuleap',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
@@ -117,6 +119,7 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
             '--app-password'   => 'a complex password',
             '--app-user'       => 'tuleap',
             '--azure-suffix'   => 'some-id',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
@@ -132,6 +135,7 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
             '--nss-password'   => 'another complex password',
             '--nss-user'       => 'dbauthuser',
             '--azure-suffix'   => 'some-id',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
@@ -148,6 +152,7 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
             '--app-user'       => 'tuleap',
             '--mediawiki'      => 'per-project',
             '--azure-suffix'   => 'some-id',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
@@ -163,6 +168,7 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
             '--app-user'       => 'tuleap',
             '--mediawiki'      => 'central',
             '--azure-suffix'   => 'some-id',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
@@ -176,6 +182,7 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
             '--admin-password' => 'welcome0',
             '--nss-password'   => 'another complex password',
             '--azure-suffix'   => 'some-id',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());

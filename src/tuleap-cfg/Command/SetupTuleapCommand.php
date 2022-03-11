@@ -88,10 +88,10 @@ final class SetupTuleapCommand extends Command
         $forge_upgrade_callback = $this->forge_upgrade_provider;
         \ForgeConfig::wrapWithCleanConfig(function () use ($forge_upgrade_callback, $logger, $fqdn) {
             $logger->info("Configure local.inc");
-            (new SetupTuleap($this->base_directory))->setup($fqdn);
+            \ForgeConfig::loadForInitialSetup($fqdn);
+            (new SetupTuleap($this->base_directory))->setup();
 
             $logger->info("Register buckets in forgeupgrade");
-            \ForgeConfig::loadDatabaseConfig();
             $forge_upgrade_callback($logger)->recordOnlyCore();
         });
 

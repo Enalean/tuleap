@@ -62,6 +62,7 @@ final class Tuleap
             return $tuleap_fqdn;
         } else {
             $data_persistence->restore($output);
+            \ForgeConfig::loadInSequence();
             return $this->update($output);
         }
     }
@@ -72,31 +73,33 @@ final class Tuleap
 
         $fqdn = $variable_provider->get(self::TULEAP_FQDN);
 
-        ForgeConfig::loadDatabaseConfig();
-        if (ForgeConfig::get(DBConfig::CONF_DBPASSWORD) === false) {
-            throw new \RuntimeException(sprintf('No variable named `%s` found in environment', DBConfig::CONF_DBPASSWORD));
-        }
+        ForgeConfig::wrapWithCleanConfig(function () use ($output, $fqdn, $variable_provider) {
+            ForgeConfig::loadForInitialSetup($fqdn);
+            if (ForgeConfig::get(DBConfig::CONF_DBPASSWORD) === false) {
+                throw new \RuntimeException(sprintf('No variable named `%s` found in environment', DBConfig::CONF_DBPASSWORD));
+            }
 
-        $output->writeln("Setup database");
-        $this->database_configurator
-            ->setupDatabase(
-                $output,
-                DBSetupParameters::fromAdminCredentials(
-                    $variable_provider->get(self::DB_ADMIN_USER),
-                    $variable_provider->get(self::DB_ADMIN_PASSWORD)
-                )
-                ->withSiteAdminPassword(new ConcealedString($variable_provider->get(self::SITE_ADMIN_PASSWORD)))
-                ->withTuleapFQDN($fqdn)
-            );
+            $output->writeln("Setup database");
+            $this->database_configurator
+                ->setupDatabase(
+                    $output,
+                    DBSetupParameters::fromAdminCredentials(
+                        $variable_provider->get(self::DB_ADMIN_USER),
+                        $variable_provider->get(self::DB_ADMIN_PASSWORD)
+                    )
+                    ->withSiteAdminPassword(new ConcealedString($variable_provider->get(self::SITE_ADMIN_PASSWORD)))
+                    ->withTuleapFQDN($fqdn)
+                );
 
-        $output->writeln("Configure local.inc");
-        $logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
-        (new SetupTuleap())->setup($fqdn);
+            $output->writeln("Configure local.inc");
+            (new SetupTuleap())->setup();
+        });
 
+        \ForgeConfig::loadInSequence();
         $output->writeln("Register buckets in forgeupgrade");
         $forge_upgrade = new ForgeUpgrade(
             DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
-            $logger,
+            new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]),
         );
         $forge_upgrade->recordOnlyCore();
 
@@ -147,9 +150,7 @@ final class Tuleap
     private function regenerateConfigurations(OutputInterface $output): string
     {
         $logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
-        ForgeConfig::store();
 
-        ForgeConfig::loadInSequence();
         $server_name = ForgeConfig::get('sys_default_domain', null);
         if (! $server_name) {
             throw new \RuntimeException('No `sys_default_domain` defined, abort');
@@ -157,7 +158,6 @@ final class Tuleap
 
         $output->writeln('<info>Ensure Tuleap knows it\'s under supervisord control</info>');
         $this->process_factory->getProcess(['/usr/bin/tuleap', 'config-set', ServiceControl::FORGECONFIG_INIT_MODE, ServiceControl::SUPERVISORD])->mustRun();
-
 
         $output->writeln('<info>Regenerate configurations for nginx</info>');
         $site_deploy_nginx = new SiteDeployNginx(
@@ -185,15 +185,12 @@ final class Tuleap
         $configure_apache = new ConfigureApache('/');
         $configure_apache->configure();
 
-
         $output->writeln('<info>Run forgeupgrade</info>');
         $forge_upgrade = new ForgeUpgrade(
             DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
             $logger,
         );
         $forge_upgrade->runUpdate();
-
-        ForgeConfig::restore();
 
         return $server_name;
     }
