@@ -21,6 +21,10 @@
 @use "../../src/themes/common/css/project-background/background";
 
 .project-with-background {
+    .document-header {
+        padding: var(--tlp-large-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+    }
+
     .document-header-title {
         @include background.project-background-title-header-typography;
     }
