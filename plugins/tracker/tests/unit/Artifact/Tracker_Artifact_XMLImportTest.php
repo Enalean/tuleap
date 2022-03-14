@@ -24,6 +24,7 @@ use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
@@ -56,7 +57,7 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var TrackerArtifactCreator */
     protected $artifact_creator;
 
-    /** @var Tracker_Artifact_Changeset_NewChangesetCreatorBase */
+    /** @var NewChangesetCreator */
     protected $new_changeset_creator;
 
     /** @var  Tracker_FormElementFactory */
@@ -110,7 +111,7 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_xml_config = Mockery::mock(\Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig::class);
 
         $this->artifact_creator      = \Mockery::spy(TrackerArtifactCreator::class);
-        $this->new_changeset_creator = \Mockery::spy(\Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator::class);
+        $this->new_changeset_creator = \Mockery::spy(NewChangesetCreator::class);
 
         $this->summary_field_id    = 50;
         $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
@@ -2358,7 +2359,7 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCollectsChangesetIdsMapping()
     {
         $user_finder               = Mockery::mock(User\XML\Import\IFindUserFromXMLReference::class);
-        $new_changeset_creator     = Mockery::mock(Tracker_Artifact_Changeset_NewChangesetCreatorBase::class);
+        $new_changeset_creator     = Mockery::mock(NewChangesetCreator::class);
         $artifact_creator          = Mockery::mock(TrackerArtifactCreator::class);
         $private_comment_extractor = Mockery::mock(TrackerPrivateCommentUGroupExtractor::class);
 

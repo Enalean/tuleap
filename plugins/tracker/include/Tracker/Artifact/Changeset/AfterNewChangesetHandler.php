@@ -24,14 +24,12 @@ namespace Tuleap\Tracker\Artifact\Changeset;
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\SaveArtifact;
-use Tuleap\Tracker\Workflow\RetrieveWorkflow;
 
 final class AfterNewChangesetHandler
 {
     public function __construct(
         private SaveArtifact $artifact_saver,
         private FieldsToBeSavedInSpecificOrderRetriever $fields_retriever,
-        private RetrieveWorkflow $workflow_retriever,
     ) {
     }
 
@@ -39,6 +37,7 @@ final class AfterNewChangesetHandler
         Artifact $artifact,
         array $fields_data,
         \PFUser $submitter,
+        \Workflow $workflow,
         \Tracker_Artifact_Changeset $new_changeset,
         ?\Tracker_Artifact_Changeset $previous_changeset = null,
     ): bool {
@@ -48,7 +47,6 @@ final class AfterNewChangesetHandler
         foreach ($this->fields_retriever->getFields($artifact) as $field) {
             $field->postSaveNewChangeset($artifact, $submitter, $new_changeset, $fields_data, $previous_changeset);
         }
-        $workflow = $this->workflow_retriever->getNonNullWorkflow($artifact->getTracker());
         $workflow->after($fields_data, $new_changeset, $previous_changeset);
 
         ChangesetInstrumentation::increment();

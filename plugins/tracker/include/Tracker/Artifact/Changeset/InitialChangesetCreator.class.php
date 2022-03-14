@@ -109,7 +109,8 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator extends Tracker_Artifac
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
             $logger,
             \Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver::build(),
-            new AfterNewChangesetHandler(\Tracker_ArtifactFactory::instance(), $fields_retriever, \WorkflowFactory::instance())
+            new AfterNewChangesetHandler(\Tracker_ArtifactFactory::instance(), $fields_retriever),
+            \WorkflowFactory::instance()
         );
     }
 }

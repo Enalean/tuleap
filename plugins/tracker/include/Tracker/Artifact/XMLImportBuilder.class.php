@@ -27,7 +27,9 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaverIgnoringPermissions;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
@@ -62,11 +64,11 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
         $event_manager               = EventManager::instance();
         $after_new_changeset_handler = new AfterNewChangesetHandler(
             $artifact_factory,
-            $fields_retriever,
-            \WorkflowFactory::instance()
+            $fields_retriever
         );
         $field_initializator         = new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory);
         $artifact_changeset_saver    = ArtifactChangesetSaver::build();
+        $workflow_retriever          = \WorkflowFactory::instance();
 
         $send_notifications = false;
 
@@ -78,13 +80,14 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
                 $field_initializator,
                 $logger,
                 $artifact_changeset_saver,
-                $after_new_changeset_handler
+                $after_new_changeset_handler,
+                $workflow_retriever
             ),
             $fields_validator,
             $logger
         );
 
-        $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
+        $new_changeset_creator = new NewChangesetCreator(
             $fields_validator,
             $fields_retriever,
             $changeset_comment_dao,
@@ -98,7 +101,9 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
             ),
             new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
             $after_new_changeset_handler,
-            ActionsRunner::build($logger)
+            ActionsRunner::build($logger),
+            new ChangesetValueSaverIgnoringPermissions(),
+            $workflow_retriever
         );
 
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();

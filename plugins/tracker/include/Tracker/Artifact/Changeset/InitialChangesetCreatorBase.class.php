@@ -28,6 +28,7 @@ use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\Workflow\RetrieveWorkflow;
 
 /**
  * I am a Template Method to create an initial changeset.
@@ -50,6 +51,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase
      */
     private $artifact_changeset_saver;
     private AfterNewChangesetHandler $after_new_changeset_handler;
+    private RetrieveWorkflow $workflow_retriever;
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
@@ -59,6 +61,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase
         \Psr\Log\LoggerInterface $logger,
         ArtifactChangesetSaver $artifact_changeset_saver,
         AfterNewChangesetHandler $after_new_changeset_handler,
+        RetrieveWorkflow $workflow_retriever,
     ) {
         $this->fields_validator            = $fields_validator;
         $this->fields_retriever            = $fields_retriever;
@@ -67,6 +70,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase
         $this->logger                      = $logger;
         $this->artifact_changeset_saver    = $artifact_changeset_saver;
         $this->after_new_changeset_handler = $after_new_changeset_handler;
+        $this->workflow_retriever          = $workflow_retriever;
     }
 
     /**
@@ -104,8 +108,9 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase
         }
 
         $this->initializeAFakeChangesetSoThatListAndWorkflowEncounterAnEmptyState($artifact);
+        $workflow = $this->workflow_retriever->getNonNullWorkflow($artifact->getTracker());
 
-        if (! $this->askWorkflowToUpdateTheRequestAndCheckGlobalRules($artifact, $fields_data, $submitter)) {
+        if (! $this->askWorkflowToUpdateTheRequestAndCheckGlobalRules($artifact, $fields_data, $submitter, $workflow)) {
             $this->logger->debug(
                 sprintf(
                     'Creation of the first changeset of artifact #%d failed: workflow/global rules rejected it',
@@ -135,6 +140,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase
             $artifact,
             $fields_data,
             $submitter,
+            $workflow,
             $changeset,
             null
         );
@@ -190,9 +196,9 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase
         Artifact $artifact,
         array &$fields_data,
         PFUser $submitter,
+        \Workflow $workflow,
     ): bool {
         try {
-            $workflow = $artifact->getWorkflow();
             $workflow->validate($fields_data, $artifact, "", $submitter);
             $workflow->before($fields_data, $submitter, $artifact);
             $augmented_data = $this->field_initializator->process($artifact, $fields_data);

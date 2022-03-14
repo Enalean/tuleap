@@ -20,39 +20,61 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\Tracker\Artifact\Changeset\Value;
+
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-/**
- * I create a new changeset (update of an artifact) at a given date.
- *
- * This is used for import of history. This means that we cannot check
- * required fields or permissions as tracker structure has evolved between the
- * creation of the given artifact and now.
- */
-class Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator extends Tracker_Artifact_Changeset_NewChangesetCreatorBase
+final class ChangesetValueSaver implements SaveChangesetValue
 {
-    protected function saveNewChangesetForField(
-        Tracker_FormElement_Field $field,
+    public function saveNewChangesetForField(
+        \Tracker_FormElement_Field $field,
         Artifact $artifact,
-        $previous_changeset,
+        ?\Tracker_Artifact_Changeset $previous_changeset,
         array $fields_data,
-        PFUser $submitter,
-        $changeset_id,
+        \PFUser $submitter,
+        int $changeset_id,
+        \Workflow $workflow,
         CreatedFileURLMapping $url_mapping,
     ): bool {
         $is_submission = false;
         $bypass_perms  = true;
 
         if ($this->isFieldSubmitted($field, $fields_data)) {
+            if ($field->userCanUpdate($submitter)) {
+                return $field->saveNewChangeset(
+                    $artifact,
+                    $previous_changeset,
+                    $changeset_id,
+                    $fields_data[$field->getId()],
+                    $submitter,
+                    $is_submission,
+                    false,
+                    $url_mapping
+                );
+            }
+
+            if ($workflow->bypassPermissions($field)) {
+                return $field->saveNewChangeset(
+                    $artifact,
+                    $previous_changeset,
+                    $changeset_id,
+                    $fields_data[$field->getId()],
+                    $submitter,
+                    $is_submission,
+                    $bypass_perms,
+                    $url_mapping
+                );
+            }
+
             return $field->saveNewChangeset(
                 $artifact,
                 $previous_changeset,
                 $changeset_id,
-                $fields_data[$field->getId()],
+                null,
                 $submitter,
                 $is_submission,
-                $bypass_perms,
+                false,
                 $url_mapping
             );
         }
@@ -64,8 +86,13 @@ class Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator extends Tracker_
             null,
             $submitter,
             $is_submission,
-            $bypass_perms,
+            false,
             $url_mapping
         );
+    }
+
+    private function isFieldSubmitted(\Tracker_FormElement_Field $field, array $fields_data): bool
+    {
+        return isset($fields_data[$field->getId()]);
     }
 }

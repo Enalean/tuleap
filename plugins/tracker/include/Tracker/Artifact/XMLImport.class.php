@@ -23,6 +23,7 @@ use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
@@ -44,7 +45,7 @@ class Tracker_Artifact_XMLImport
     /** @var TrackerArtifactCreator */
     private $artifact_creator;
 
-    /** @var Tracker_Artifact_Changeset_NewChangesetCreatorBase */
+    /** @var NewChangesetCreator */
     private $new_changeset_creator;
 
     /** @var Tracker_FormElementFactory */
@@ -99,7 +100,7 @@ class Tracker_Artifact_XMLImport
     public function __construct(
         XML_RNGValidator $rng_validator,
         TrackerArtifactCreator $artifact_creator,
-        Tracker_Artifact_Changeset_NewChangesetCreatorBase $new_changeset_creator,
+        NewChangesetCreator $new_changeset_creator,
         Tracker_FormElementFactory $formelement_factory,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         BindStaticValueDao $static_value_dao,

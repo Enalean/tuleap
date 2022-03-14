@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Mirrore
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\NewChangesetCreationException;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\ArtifactLinkChangeset;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -42,7 +43,7 @@ final class ChangesetAdder implements AddChangeset, AddArtifactLinkChangeset
         private RetrieveFullArtifact $artifact_retriever,
         private RetrieveUser $user_retriever,
         private ChangesetValuesFormatter $formatter,
-        private \Tracker_Artifact_Changeset_NewChangesetCreator $new_changeset_creator,
+        private NewChangesetCreator $new_changeset_creator,
     ) {
     }
 

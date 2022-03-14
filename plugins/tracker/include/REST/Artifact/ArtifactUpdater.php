@@ -21,8 +21,8 @@
 namespace Tuleap\Tracker\REST\Artifact;
 
 use Luracast\Restler\RestException;
-use Tracker_Artifact_Changeset_NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
@@ -31,7 +31,7 @@ class ArtifactUpdater
 {
     public function __construct(
         private \Tracker_REST_Artifact_ArtifactValidator $artifact_validator,
-        private Tracker_Artifact_Changeset_NewChangesetCreator $changeset_creator,
+        private NewChangesetCreator $changeset_creator,
     ) {
     }
 

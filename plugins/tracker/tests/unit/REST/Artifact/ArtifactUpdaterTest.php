@@ -26,6 +26,7 @@ use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
@@ -40,14 +41,14 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $validator;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface & \Tracker_Artifact_Changeset_NewChangesetCreator
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface & NewChangesetCreator
      */
     private $changeset_creator;
 
     protected function setUp(): void
     {
         $this->validator         = \Mockery::mock(\Tracker_REST_Artifact_ArtifactValidator::class);
-        $this->changeset_creator = \Mockery::spy(\Tracker_Artifact_Changeset_NewChangesetCreator::class);
+        $this->changeset_creator = \Mockery::spy(NewChangesetCreator::class);
         $this->updater           = new ArtifactUpdater($this->validator, $this->changeset_creator);
     }
 

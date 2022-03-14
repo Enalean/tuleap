@@ -27,7 +27,6 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
 use Tracker_Artifact_Changeset_Comment;
-use Tracker_Artifact_Changeset_NewChangesetCreator;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_Workflow_GlobalRulesViolationException;
@@ -42,6 +41,8 @@ use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -221,7 +222,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact_saver->shouldReceive('saveChangeset')->once();
         $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($factory);
 
-        $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
+        $creator = new NewChangesetCreator(
             $fields_validator,
             $fields_retriever,
             $comment_dao,
@@ -235,9 +236,10 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
             new AfterNewChangesetHandler(
                 SaveArtifactStub::withSuccess(),
                 $fields_retriever,
-                RetrieveWorkflowStub::withWorkflow($workflow)
             ),
-            Mockery::spy(ActionsRunner::class)
+            Mockery::spy(ActionsRunner::class),
+            new ChangesetValueSaver(),
+            RetrieveWorkflowStub::withWorkflow($workflow)
         );
 
         $creator->create(
