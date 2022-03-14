@@ -27,7 +27,7 @@ use Docman_PermissionsManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
-use Tuleap\Docman\Settings\ITellIfWritersAreAllowedToUpdateProperties;
+use Tuleap\Docman\Settings\ITellIfWritersAreAllowedToUpdatePropertiesOrDelete;
 use Tuleap\Project\ProjectAccessChecker;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
@@ -39,7 +39,7 @@ class Docman_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Mockery\MockInterface|Docman_PermissionsManager $docmanPm;
     private Project|Mockery\LegacyMockInterface|Mockery\MockInterface $project;
     private ProjectAccessChecker|Mockery\LegacyMockInterface|Mockery\MockInterface $project_access_checker;
-    private ITellIfWritersAreAllowedToUpdateProperties|\PHPUnit\Framework\MockObject\MockObject $forbid_update_properties_settings;
+    private ITellIfWritersAreAllowedToUpdatePropertiesOrDelete|\PHPUnit\Framework\MockObject\MockObject $forbid_writers_settings;
 
     public function setUp(): void
     {
@@ -53,26 +53,40 @@ class Docman_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_access_checker = Mockery::mock(ProjectAccessChecker::class);
         $this->docmanPm->shouldReceive('getProjectAccessChecker')->andReturn($this->project_access_checker);
 
-        $this->forbid_update_properties_settings = $this->createMock(ITellIfWritersAreAllowedToUpdateProperties::class);
-        $this->docmanPm->shouldReceive('getForbidUpdatePropertiesSettings')->andReturn($this->forbid_update_properties_settings);
+        $this->forbid_writers_settings = $this->createMock(ITellIfWritersAreAllowedToUpdatePropertiesOrDelete::class);
+        $this->docmanPm->shouldReceive('getForbidWritersSettings')->andReturn($this->forbid_writers_settings);
+
+        $plugin_info = $this->createMock(\PluginFileInfo::class);
+        $plugin_info->method('getPropertyValueForName')
+            ->with(Docman_PermissionsManager::PLUGIN_OPTION_DELETE)
+            ->willReturn(false);
+
+        $plugin = $this->createMock(\Plugin::class);
+        $plugin->method('getPluginInfo')->willReturn($plugin_info);
+
+        $this->docmanPm->shouldReceive('getPlugin')->andReturn($plugin);
     }
 
     /**
-     * @testWith [false]
-     *           [true]
+     * @testWith [false, false]
+     *           [true, false]
+     *           [false, true]
+     *           [true, true]
      */
-    public function testSuperUserHasAllAccess(bool $forbid_writers_to_update): void
+    public function testSuperUserHasAllAccess(bool $forbid_writers_to_update, bool $forbid_writers_to_delete): void
     {
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         $this->user->shouldReceive('isSuperUser')->andReturns(true);
-        $this->forbid_update_properties_settings->method('areWritersAllowedToUpdateProperties')->willReturn($forbid_writers_to_update);
+        $this->forbid_writers_settings->method('areWritersAllowedToUpdateProperties')->willReturn($forbid_writers_to_update);
+        $this->forbid_writers_settings->method('areWritersAllowedToDelete')->willReturn($forbid_writers_to_delete);
 
         $this->assertTrue($this->docmanPm->userCanAdmin($this->user));
         $this->assertTrue($this->docmanPm->userCanRead($this->user, '2231'));
         $this->assertTrue($this->docmanPm->userCanWrite($this->user, '2112231'));
         $this->assertTrue($this->docmanPm->userCanManage($this->user, '2112231976'));
+        $this->assertTrue($this->docmanPm->userCanDelete($this->user, new \Docman_Item(['item_id' => 123])));
         $this->assertTrue($this->docmanPm->userCanUpdateItemProperties($this->user, new \Docman_Item(['item_id' => 123])));
     }
 
@@ -89,16 +103,20 @@ class Docman_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     /**
-     * @testWith [false]
-     *           [true]
+     * @testWith [false, false]
+     *           [true, false]
+     *           [false, true]
+     *           [true, true]
      */
-    public function testDocmanAdminHasAllAccess($forbid_writers_to_update): void
+    public function testDocmanAdminHasAllAccess(bool $forbid_writers_to_update, bool $forbid_writers_to_delete): void
     {
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(true);
         $this->user->shouldReceive('isSuperUser')->andReturns(false);
-        $this->forbid_update_properties_settings->method('areWritersAllowedToUpdateProperties')->willReturn($forbid_writers_to_update);
+        $this->forbid_writers_settings->method('areWritersAllowedToUpdateProperties')->willReturn($forbid_writers_to_update);
+        $this->forbid_writers_settings->method('areWritersAllowedToDelete')->willReturn($forbid_writers_to_delete);
+
 
         $this->assertTrue($this->docmanPm->userCanAdmin($this->user));
 
@@ -109,15 +127,20 @@ class Docman_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue($this->docmanPm->userCanRead($this->user, '42231'));
         $this->assertTrue($this->docmanPm->userCanWrite($this->user, '52112231'));
         $this->assertTrue($this->docmanPm->userCanManage($this->user, '82112231976'));
+        $this->assertTrue($this->docmanPm->userCanDelete($this->user, new \Docman_Item(['item_id' => 123])));
         $this->assertTrue($this->docmanPm->userCanUpdateItemProperties($this->user, new \Docman_Item(['item_id' => 123])));
     }
 
     /**
-     * @testWith [false]
-     *           [true]
+     * @testWith [false, false]
+     *           [true, false]
+     *           [false, true]
+     *           [true, true]
      */
-    public function testManageRightGivesReadAndWriteRights($forbid_writers_to_update): void
-    {
+    public function testManageRightGivesReadAndWriteRights(
+        bool $forbid_writers_to_update,
+        bool $forbid_writers_to_delete,
+    ): void {
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         // user is not docman admin
@@ -125,25 +148,39 @@ class Docman_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         // user is not super admin
         $this->user->shouldReceive('isSuperUser')->andReturns(false);
         $this->user->shouldReceive('getUgroups')->andReturns(['test']);
-        $this->forbid_update_properties_settings->method('areWritersAllowedToUpdateProperties')->willReturn($forbid_writers_to_update);
+        $this->forbid_writers_settings->method('areWritersAllowedToUpdateProperties')->willReturn($forbid_writers_to_update);
+        $this->forbid_writers_settings->method('areWritersAllowedToDelete')->willReturn($forbid_writers_to_delete);
 
-        $itemId = 1515;
+        $parent_id    = 1500;
+        $item_id      = 1515;
+        $item         = new \Docman_Item(['item_id' => $item_id, 'parent_id' => $parent_id]);
+        $another_item = new \Docman_Item(['item_id' => 123, 'parent_id' => $parent_id]);
 
         // Start Test
         $pm = \Mockery::spy(\PermissionsManager::class);
-        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test'])->andReturns(true);
+        $pm->shouldReceive('userHasPermission')
+            ->with($item->getId(), 'PLUGIN_DOCMAN_MANAGE', ['test'])
+            ->andReturns(true);
+        $pm->shouldReceive('userHasPermission')
+            ->with($item->getParentId(), 'PLUGIN_DOCMAN_WRITE', ['test'])
+            ->andReturns(true);
+        $pm->shouldReceive('userHasPermission')
+            ->with($another_item->getId(), 'PLUGIN_DOCMAN_READ', ['test'])
+            ->andReturns(false);
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm);
 
-        $this->assertTrue($this->docmanPm->userCanManage($this->user, $itemId));
-        $this->assertTrue($this->docmanPm->userCanWrite($this->user, $itemId));
-        $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
-        $this->assertTrue($this->docmanPm->userCanUpdateItemProperties($this->user, new \Docman_Item(['item_id' => $itemId])));
 
-        // Test with another value for item_id
-        $this->assertFalse($this->docmanPm->userCanManage($this->user, 123));
-        $this->assertFalse($this->docmanPm->userCanWrite($this->user, 123));
-        $this->assertFalse($this->docmanPm->userCanRead($this->user, 123));
-        $this->assertFalse($this->docmanPm->userCanUpdateItemProperties($this->user, new \Docman_Item(['item_id' => 123])));
+        $this->assertTrue($this->docmanPm->userCanManage($this->user, $item->getId()));
+        $this->assertTrue($this->docmanPm->userCanWrite($this->user, $item->getId()));
+        $this->assertTrue($this->docmanPm->userCanRead($this->user, $item->getId()));
+        $this->assertTrue($this->docmanPm->userCanDelete($this->user, $item));
+        $this->assertTrue($this->docmanPm->userCanUpdateItemProperties($this->user, $item));
+
+        $this->assertFalse($this->docmanPm->userCanManage($this->user, $another_item->getId()));
+        $this->assertFalse($this->docmanPm->userCanWrite($this->user, $another_item->getId()));
+        $this->assertFalse($this->docmanPm->userCanRead($this->user, $another_item->getId()));
+        $this->assertFalse($this->docmanPm->userCanDelete($this->user, $another_item));
+        $this->assertFalse($this->docmanPm->userCanUpdateItemProperties($this->user, $another_item));
     }
 
     // Functional test (should never change)
@@ -176,10 +213,12 @@ class Docman_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     /**
-     * @testWith [false]
-     *           [true]
+     * @testWith [false, false]
+     *           [true, false]
+     *           [false, true]
+     *           [true, true]
      */
-    public function testReadRight($forbid_writers_to_update): void
+    public function testReadRight(bool $forbid_writers_to_update, bool $forbid_writers_to_delete): void
     {
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
@@ -189,7 +228,8 @@ class Docman_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user->shouldReceive('isSuperUser')->andReturns(false);
 
         $this->user->shouldReceive('getUgroups')->andReturns(['test']);
-        $this->forbid_update_properties_settings->method('areWritersAllowedToUpdateProperties')->willReturn($forbid_writers_to_update);
+        $this->forbid_writers_settings->method('areWritersAllowedToUpdateProperties')->willReturn($forbid_writers_to_update);
+        $this->forbid_writers_settings->method('areWritersAllowedToDelete')->willReturn($forbid_writers_to_delete);
 
         $itemId = 1515;
 
@@ -201,6 +241,7 @@ class Docman_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($this->docmanPm->userCanManage($this->user, $itemId));
         $this->assertFalse($this->docmanPm->userCanWrite($this->user, $itemId));
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
+        $this->assertFalse($this->docmanPm->userCanDelete($this->user, new \Docman_Item(['item_id' => $itemId])));
         $this->assertFalse($this->docmanPm->userCanUpdateItemProperties($this->user, new \Docman_Item(['item_id' => $itemId])));
     }
 
@@ -783,7 +824,7 @@ class Docman_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user->shouldReceive('isSuperUser')->andReturns(false);
         $this->user->shouldReceive('getUgroups')->andReturns(['test']);
 
-        $this->forbid_update_properties_settings->method('areWritersAllowedToUpdateProperties')->willReturn($forbid_writers_to_update);
+        $this->forbid_writers_settings->method('areWritersAllowedToUpdateProperties')->willReturn($forbid_writers_to_update);
 
         $item_id = 1515;
 

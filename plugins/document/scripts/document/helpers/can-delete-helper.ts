@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
@@ -16,17 +15,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-declare(strict_types=1);
+import type { Item } from "../type";
 
-namespace Tuleap\Docman\Settings;
+export function canDelete(forbid_writers_to_delete: boolean, item: Item): boolean {
+    if (forbid_writers_to_delete) {
+        return item.can_user_manage;
+    }
 
-interface ForbidWritersToUpdateDAOSettings
-{
-    /**
-     * @return null|array{forbid_writers_to_update: int}
-     */
-    public function searchByProjectId(int $project_id): ?array;
+    return item.user_can_write;
 }

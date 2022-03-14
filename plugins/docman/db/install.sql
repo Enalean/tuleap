@@ -130,6 +130,7 @@ CREATE TABLE plugin_docman_project_settings (
   use_status TINYINT(4) DEFAULT 0 NOT NULL,
   filename_pattern VARCHAR(255) DEFAULT NULL,
   forbid_writers_to_update TINYINT(1) DEFAULT 0,
+  forbid_writers_to_delete TINYINT(1) DEFAULT 0,
   KEY group_id (group_id)
 );
 

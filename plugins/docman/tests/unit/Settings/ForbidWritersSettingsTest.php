@@ -24,7 +24,7 @@ namespace Tuleap\Docman\Settings;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class ForbidUpdatePropertiesSettingsTest extends TestCase
+final class ForbidWritersSettingsTest extends TestCase
 {
     /**
      * @testWith [null, true]
@@ -33,7 +33,7 @@ final class ForbidUpdatePropertiesSettingsTest extends TestCase
      */
     public function testAreWritersAllowedToUpdateProperties(?array $settings, bool $expected): void
     {
-        $dao = new class ($settings) implements ForbidWritersToUpdateDAOSettings {
+        $dao = new class ($settings) implements ForbidWritersDAOSettings {
             public function __construct(private ?array $settings)
             {
             }
@@ -46,7 +46,31 @@ final class ForbidUpdatePropertiesSettingsTest extends TestCase
 
         self::assertEquals(
             $expected,
-            (new ForbidUpdatePropertiesSettings($dao))->areWritersAllowedToUpdateProperties(102)
+            (new ForbidWritersSettings($dao))->areWritersAllowedToUpdateProperties(102)
+        );
+    }
+
+    /**
+     * @testWith [null, true]
+     *           [{"forbid_writers_to_delete": false}, true]
+     *           [{"forbid_writers_to_delete": true}, false]
+     */
+    public function testAreWritersAllowedToDelete(?array $settings, bool $expected): void
+    {
+        $dao = new class ($settings) implements ForbidWritersDAOSettings {
+            public function __construct(private ?array $settings)
+            {
+            }
+
+            public function searchByProjectId(int $project_id): ?array
+            {
+                return $this->settings;
+            }
+        };
+
+        self::assertEquals(
+            $expected,
+            (new ForbidWritersSettings($dao))->areWritersAllowedToDelete(102)
         );
     }
 }

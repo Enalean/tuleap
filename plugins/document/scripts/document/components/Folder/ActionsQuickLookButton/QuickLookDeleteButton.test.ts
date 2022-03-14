@@ -28,48 +28,55 @@ import emitter from "../../../helpers/emitter";
 jest.mock("../../../helpers/emitter");
 
 describe("QuickLookDeleteButton", () => {
-    let store = {
-        commit: jest.fn(),
-    };
     function createWrapper(
         user_can_write: boolean,
-        is_deletion_allowed: boolean
+        can_user_manage: boolean,
+        is_deletion_allowed: boolean,
+        forbid_writers_to_delete: boolean
     ): Wrapper<QuickLookDeleteButton> {
-        store = createStoreMock({
-            state: {
-                configuration: { is_deletion_allowed },
-            },
-        });
         return shallowMount(QuickLookDeleteButton, {
             mocks: {
-                $store: store,
+                $store: createStoreMock({
+                    state: {
+                        configuration: { is_deletion_allowed, forbid_writers_to_delete },
+                    },
+                }),
             },
             localVue,
-            propsData: { item: { id: 1, user_can_write: user_can_write } as Item },
+            propsData: { item: { id: 1, user_can_write, can_user_manage } as Item },
         });
     }
 
     it(`Displays the delete button because the user can write and has the right to delete items`, () => {
-        const wrapper = createWrapper(true, true);
+        const wrapper = createWrapper(true, false, true, false);
         expect(wrapper.find("[data-test=document-quick-look-delete-button]").exists()).toBeTruthy();
     });
     it(`Does not display the delete button if the user can't write but has the right to delete items`, () => {
-        const wrapper = createWrapper(false, true);
+        const wrapper = createWrapper(false, false, true, false);
         expect(wrapper.find("[data-test=document-quick-look-delete-button]").exists()).toBeFalsy();
     });
     it(`Does not display the delete button if the user can write but cannot to delete items`, () => {
-        const wrapper = createWrapper(true, false);
-        expect(wrapper.find("[data-test=quick-look-delete-button]").exists()).toBeFalsy();
+        const wrapper = createWrapper(true, false, false, false);
+        expect(wrapper.find("[data-test=document-quick-look-delete-button]").exists()).toBeFalsy();
+    });
+    it(`Does not display the delete button if deletion by Writers is forbidden and current user is writer`, () => {
+        const wrapper = createWrapper(true, false, true, true);
+        expect(wrapper.find("[data-test=document-quick-look-delete-button]").exists()).toBeFalsy();
+    });
+    it(`Displays the delete button if deletion by Writers is forbidden and current user is manager`, () => {
+        const wrapper = createWrapper(true, true, true, true);
+        expect(wrapper.find("[data-test=document-quick-look-delete-button]").exists()).toBeTruthy();
     });
 
     it(`When the user clicks the button, then it should trigger an event to open the confirmation modal`, () => {
-        const wrapper = createWrapper(true, true);
+        const wrapper = createWrapper(true, false, true, false);
         wrapper.get("[data-test=document-quick-look-delete-button]").trigger("click");
 
         expect(emitter.emit).toHaveBeenCalledWith("deleteItem", {
             item: {
                 id: 1,
                 user_can_write: true,
+                can_user_manage: false,
             },
         });
     });

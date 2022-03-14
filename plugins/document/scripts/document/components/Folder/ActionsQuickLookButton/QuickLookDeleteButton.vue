@@ -19,7 +19,7 @@
 
 <template>
     <button
-        v-if="item.user_can_write && is_deletion_allowed"
+        v-if="should_display_delete_button"
         type="button"
         class="tlp-button-small tlp-button-outline tlp-button-danger"
         v-on:click="processDeletion"
@@ -35,6 +35,7 @@ import { namespace } from "vuex-class";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import type { Item } from "../../../type";
 import emitter from "../../../helpers/emitter";
+import { canDelete } from "../../../helpers/can-delete-helper";
 
 const configuration = namespace("configuration");
 
@@ -46,8 +47,15 @@ export default class QuickLookDeleteButton extends Vue {
     @configuration.State
     readonly is_deletion_allowed!: boolean;
 
+    @configuration.State
+    readonly forbid_writers_to_delete!: boolean;
+
     processDeletion(): void {
         emitter.emit("deleteItem", { item: this.item });
+    }
+
+    get should_display_delete_button(): boolean {
+        return this.is_deletion_allowed && canDelete(this.forbid_writers_to_delete, this.item);
     }
 }
 </script>

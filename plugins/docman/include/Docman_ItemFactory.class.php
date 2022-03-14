@@ -1482,7 +1482,7 @@ class Docman_ItemFactory
             // Cannot delete one folder if at least on of the document inside
             // cannot be deleted
             $dPm              = Docman_PermissionsManager::instance($item->getGroupId());
-            $subItemsWritable = $dPm->userCanWriteSubItems($user, $item->getId());
+            $subItemsWritable = $dPm->userCanDeleteSubItems($user, $item);
             if ($subItemsWritable) {
                 $itemSubTree = $this->getItemSubTree($item, $user, false, true);
                 if ($itemSubTree) {

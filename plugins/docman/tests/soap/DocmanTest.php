@@ -324,4 +324,28 @@ class DocmanTest extends SOAPBase
         $this->assertEquals($response[1]->title, 'My Folder');
         $this->assertEquals($response[2]->title, 'Uploaded and updated document');
     }
+
+    /**
+     * @depends testCreateFile
+     * @depends testGetFirstFolder
+     */
+    public function testDeleteFile(int $file_id): int
+    {
+        $session_hash = $this->getSessionHash();
+
+        $this->soap_base->deleteDocmanItem(
+            $session_hash,
+            SOAP_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+            $file_id,
+        );
+
+        $this->expectException(SoapFault::class);
+
+        $this->soap_base->getDocmanFileContents(
+            $session_hash,
+            SOAP_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+            $file_id,
+            null
+        );
+    }
 }

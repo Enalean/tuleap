@@ -1243,6 +1243,9 @@ msgstr ""
 "<strong>Forcer la notification</strong> pour envoyer un email de "
 "notification indépendamment de l'état d'approbation.</li></ul></li></ul>"
 
+msgid "Forbid deletion of document & versions by Writers"
+msgstr "Interdire la suppression de document & versions par les Rédacteurs"
+
 msgid "Forbid modifications of document properties by Writers"
 msgstr ""
 "Interdire les modifications des propriétés de document par les Rédacteurs"
@@ -2540,6 +2543,13 @@ msgstr ""
 "Une fois activée, les Rédacteurs peuvent définir des propriétés lors de la "
 "création d'un nouveau document mais ne seront pas capable de les modifier "
 "après coup"
+
+msgid ""
+"When turned on, Writers will not be able to delete a document or a version "
+"of documents"
+msgstr ""
+"Une fois activée, les Rédacteurs ne peuvent pas supprimer des documents ou "
+"des versions de documents"
 
 msgid "Who"
 msgstr "Qui"

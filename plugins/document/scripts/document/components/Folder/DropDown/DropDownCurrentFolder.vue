@@ -71,6 +71,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import type { Folder } from "../../../type";
 import { namespace, State } from "vuex-class";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
+import { canDelete } from "../../../helpers/can-delete-helper";
 
 const configuration = namespace("configuration");
 
@@ -95,8 +96,15 @@ export default class DropDownCurrentFolder extends Vue {
     @configuration.State
     readonly forbid_writers_to_update!: boolean;
 
+    @configuration.State
+    readonly forbid_writers_to_delete!: boolean;
+
     get can_user_delete_item(): boolean {
-        return Boolean(this.current_folder.user_can_write && this.current_folder.parent_id);
+        return (
+            this.current_folder.user_can_write &&
+            canDelete(this.forbid_writers_to_delete, this.current_folder) &&
+            Boolean(this.current_folder.parent_id)
+        );
     }
 
     get should_display_update_properties(): boolean {

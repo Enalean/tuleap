@@ -1279,7 +1279,8 @@ class Docman_Actions extends Actions
             $settings_dao = new Tuleap\Docman\Settings\SettingsDAO();
             $settings_dao->saveForbidWriters(
                 $request->get('group_id'),
-                (bool) $request->get('forbid_writers_to_update')
+                (bool) $request->get('forbid_writers_to_update'),
+                (bool) $request->get('forbid_writers_to_delete'),
             );
         }
 
