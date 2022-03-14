@@ -36,7 +36,7 @@ export function transformItemPropertiesForCreation(
         return;
     }
 
-    const property = getStatusProperty(parent.metadata);
+    const property = getStatusProperty(parent.properties);
     if (!property) {
         return;
     }

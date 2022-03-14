@@ -46,7 +46,7 @@ describe("StatusPropertyWithCustomBindingForFolderUpdate", () => {
     it(`display status selectbox only when status property is enabled for project`, async () => {
         const wrapper = status_property({
             currentlyUpdatedItem: {
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [
@@ -73,7 +73,7 @@ describe("StatusPropertyWithCustomBindingForFolderUpdate", () => {
     it(`does not display status if property is not available`, () => {
         const wrapper = status_property({
             currentlyUpdatedItem: {
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [
@@ -99,7 +99,7 @@ describe("StatusPropertyWithCustomBindingForFolderUpdate", () => {
     it(`updates the status`, async () => {
         const wrapper = status_property({
             currentlyUpdatedItem: {
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [

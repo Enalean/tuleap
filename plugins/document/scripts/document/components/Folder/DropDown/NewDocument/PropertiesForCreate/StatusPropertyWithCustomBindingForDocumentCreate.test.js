@@ -55,7 +55,7 @@ describe("StatusPropertyWithCustomBindingForDocumentCreate", () => {
             },
             parent: {
                 id: 40,
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [
@@ -84,7 +84,7 @@ describe("StatusPropertyWithCustomBindingForDocumentCreate", () => {
             },
             parent: {
                 id: 40,
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [
@@ -113,7 +113,7 @@ describe("StatusPropertyWithCustomBindingForDocumentCreate", () => {
             },
             parent: {
                 id: 40,
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [
@@ -134,7 +134,7 @@ describe("StatusPropertyWithCustomBindingForDocumentCreate", () => {
     it(`Given status value is updated Then the props used for document creation is updated`, () => {
         const wrapper = status_property({
             currentlyUpdatedItem: {
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [
@@ -149,7 +149,7 @@ describe("StatusPropertyWithCustomBindingForDocumentCreate", () => {
             },
             parent: {
                 id: 40,
-                metadata: [
+                properties: [
                     {
                         short_name: "status",
                         list_value: [

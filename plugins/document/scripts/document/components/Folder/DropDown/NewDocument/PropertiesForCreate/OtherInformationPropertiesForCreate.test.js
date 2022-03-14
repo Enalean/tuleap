@@ -50,7 +50,7 @@ describe("OtherInformationPropertiesForCreate", () => {
         const wrapper = factory(
             {
                 currentlyUpdatedItem: {
-                    metadata: [
+                    properties: [
                         {
                             short_name: "obsolescence_date",
                             value: null,
@@ -82,7 +82,7 @@ describe("OtherInformationPropertiesForCreate", () => {
         Then obsolescence date component is not rendered`, async () => {
         const wrapper = factory({
             currentlyUpdatedItem: {
-                metadata: null,
+                properties: null,
                 status: 100,
                 type: TYPE_FILE,
                 title: "title",
@@ -106,7 +106,7 @@ describe("OtherInformationPropertiesForCreate", () => {
         Then it displays spinner`, async () => {
         const wrapper = factory({
             currentlyUpdatedItem: {
-                metadata: [],
+                properties: [],
                 status: 100,
                 type: TYPE_FILE,
                 title: "title",
@@ -135,7 +135,7 @@ describe("OtherInformationPropertiesForCreate", () => {
 
         const wrapper = factory({
             currentlyUpdatedItem: {
-                metadata: [],
+                properties: [],
                 status: 100,
                 type: TYPE_FILE,
                 title: "title",

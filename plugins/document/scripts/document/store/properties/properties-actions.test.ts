@@ -122,7 +122,7 @@ describe("Properties actions", () => {
                         id: 102,
                     },
                     status: "draft",
-                    metadata: properties,
+                    properties,
                 } as ItemFile;
 
                 const current_folder = {
@@ -226,7 +226,7 @@ describe("Properties actions", () => {
                     },
                     status: "draft",
                     obsolescence_date: null,
-                    metadata: properties,
+                    properties,
                 } as Embedded;
 
                 const current_folder = {
@@ -279,7 +279,7 @@ describe("Properties actions", () => {
                     },
                     status: "draft",
                     obsolescence_date: null,
-                    metadata: properties,
+                    properties,
                 } as Link;
 
                 getItem.mockReturnValue(Promise.resolve(item_to_update));
@@ -333,7 +333,7 @@ describe("Properties actions", () => {
                     },
                     status: "approved",
                     obsolescence_date: null,
-                    metadata: properties,
+                    properties,
                 } as Wiki;
 
                 const current_folder = {
@@ -386,7 +386,7 @@ describe("Properties actions", () => {
                     },
                     status: "rejected",
                     obsolescence_date: null,
-                    metadata: properties,
+                    properties,
                 } as Empty;
 
                 const current_folder = {
@@ -445,7 +445,7 @@ describe("Properties actions", () => {
                     owner: {
                         id: 102,
                     },
-                    metadata: properties,
+                    properties,
                     status: {
                         value: "rejected",
                         recursion: "none",
@@ -513,7 +513,7 @@ describe("Properties actions", () => {
                     },
                     // status: "draft",
                     obsolescence_date: null,
-                    metadata: properties,
+                    properties,
                 } as Folder;
 
                 const current_folder = {

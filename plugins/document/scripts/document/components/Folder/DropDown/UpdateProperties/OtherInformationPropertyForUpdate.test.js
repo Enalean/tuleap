@@ -50,7 +50,7 @@ describe("OtherInformationPropertiesForUpdate", () => {
         Then it displays spinner`, async () => {
             const wrapper = other_properties({
                 currentlyUpdatedItem: {
-                    metadata: [],
+                    properties: [],
                     status: 100,
                     type: TYPE_FILE,
                     title: "title",
@@ -80,7 +80,7 @@ describe("OtherInformationPropertiesForUpdate", () => {
 
             const wrapper = other_properties({
                 currentlyUpdatedItem: {
-                    metadata: [],
+                    properties: [],
                     status: 100,
                     type: TYPE_FILE,
                     title: "title",
@@ -103,7 +103,7 @@ describe("OtherInformationPropertiesForUpdate", () => {
             Then we should display the obsolescence date component`, async () => {
             const wrapper = other_properties({
                 currentlyUpdatedItem: {
-                    metadata: [
+                    properties: [
                         {
                             short_name: "obsolescence_date",
                             value: null,
@@ -132,7 +132,7 @@ describe("OtherInformationPropertiesForUpdate", () => {
             Then we should display the other information section`, () => {
             const wrapper = other_properties({
                 currentlyUpdatedItem: {
-                    metadata: [
+                    properties: [
                         {
                             short_name: "field_1234",
                             list_value: [
@@ -166,7 +166,7 @@ describe("OtherInformationPropertiesForUpdate", () => {
             Then other information section is not rendered`, async () => {
             const wrapper = other_properties({
                 currentlyUpdatedItem: {
-                    metadata: [],
+                    properties: [],
                     status: 100,
                     type: TYPE_FILE,
                     title: "title",

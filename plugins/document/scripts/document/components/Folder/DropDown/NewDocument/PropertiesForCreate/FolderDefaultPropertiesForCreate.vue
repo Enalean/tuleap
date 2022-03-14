@@ -39,7 +39,7 @@
                 v-bind:currently-updated-item="currentlyUpdatedItem"
                 v-bind:parent="parent"
             />
-            <custom-property v-bind:item-property="currentlyUpdatedItem.metadata" />
+            <custom-property v-bind:item-property="currentlyUpdatedItem.properties" />
         </template>
     </div>
 </template>
@@ -62,8 +62,8 @@ export default {
         has_recursion_property() {
             return (
                 this.is_status_property_used === true ||
-                (this.currentlyUpdatedItem.metadata &&
-                    this.currentlyUpdatedItem.metadata.length > 0)
+                (this.currentlyUpdatedItem.properties &&
+                    this.currentlyUpdatedItem.properties.length > 0)
             );
         },
     },

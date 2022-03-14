@@ -37,6 +37,11 @@ import type {
 } from "../type";
 import { SEARCH_LIMIT } from "../type";
 import { getRestBodyFromSearchParams } from "../helpers/get-rest-body-from-search-params";
+import {
+    convertArrayOfItems,
+    convertRestItemToItem,
+} from "../helpers/properties-helpers/metadata-to-properties";
+import type { FolderProperty, Property } from "../store/properties/module";
 
 export {
     getDocumentManagerServiceInformation,
@@ -69,6 +74,10 @@ export {
     searchInFolder,
 };
 
+export interface RestItem extends Omit<Item, "properties"> {
+    readonly metadata: Array<Property> | Array<FolderProperty>;
+}
+
 export interface ProjectService {
     permissions_for_groups: AdminPermissions;
     root_item: Folder;
@@ -89,7 +98,8 @@ async function getDocumentManagerServiceInformation(project_id: number): Promise
 async function getItem(id: number): Promise<Item> {
     const response = await get("/api/docman_items/" + encodeURIComponent(id));
 
-    return response.json();
+    const item: RestItem = await response.json();
+    return convertRestItemToItem(item);
 }
 
 async function addNewDocumentType(url: string, item: Item): Promise<CreatedItem> {
@@ -211,22 +221,33 @@ async function createNewVersion(
     return response.json();
 }
 
-function getFolderContent(folder_id: number): Promise<Array<Item>> {
-    return recursiveGet("/api/docman_items/" + encodeURIComponent(folder_id) + "/docman_items", {
-        params: {
-            limit: 50,
-            offset: 0,
-        },
-    });
+async function getFolderContent(folder_id: number): Promise<ReadonlyArray<Item>> {
+    const items: Array<RestItem> = await recursiveGet(
+        "/api/docman_items/" + encodeURIComponent(folder_id) + "/docman_items",
+        {
+            params: {
+                limit: 50,
+                offset: 0,
+            },
+        }
+    );
+
+    return convertArrayOfItems(items);
 }
 
-function getParents(folder_id: number): Promise<Array<Item>> {
-    return recursiveGet("/api/docman_items/" + encodeURIComponent(folder_id) + "/parents", {
-        params: {
-            limit: 50,
-            offset: 0,
-        },
-    });
+async function getParents(folder_id: number): Promise<Array<Item>> {
+    const parents = await recursiveGet(
+        "/api/docman_items/" + encodeURIComponent(folder_id) + "/parents",
+        {
+            params: {
+                limit: 50,
+                offset: 0,
+            },
+        }
+    );
+
+    const items: ReadonlyArray<RestItem> = JSON.parse(JSON.stringify(parents));
+    return convertArrayOfItems(items);
 }
 
 function postEmbeddedFile(
@@ -349,7 +370,7 @@ async function getItemsReferencingSameWikiPage(page_id: number): Promise<Item> {
     return response.json();
 }
 
-async function getProjectUserGroups(project_id: number): Promise<Array<UserGroup>> {
+async function getProjectUserGroups(project_id: number): Promise<ReadonlyArray<UserGroup>> {
     const response = await get(
         "/api/projects/" +
             encodeURIComponent(project_id) +

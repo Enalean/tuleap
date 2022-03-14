@@ -143,7 +143,7 @@ export default {
                 "update_date",
             ];
 
-            return this.item.metadata.filter(
+            return this.item.properties.filter(
                 ({ short_name }) => !hardcoded_properties.includes(short_name)
             );
         },

@@ -99,7 +99,7 @@ export default {
     mounted() {
         this.modal = createModal(this.$el);
 
-        this.formatted_item_properties = getCustomProperties(this.item.metadata);
+        this.formatted_item_properties = getCustomProperties(this.item.properties);
 
         transformCustomPropertiesForItemUpdate(this.formatted_item_properties);
 
@@ -126,7 +126,7 @@ export default {
             event.preventDefault();
             this.is_loading = true;
             this.$store.commit("error/resetModalError");
-            this.item_to_update.metadata = this.formatted_item_properties;
+            this.item_to_update.properties = this.formatted_item_properties;
             await this.$store.dispatch("properties/updateFolderProperties", {
                 item: this.item,
                 item_to_update: this.item_to_update,

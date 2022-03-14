@@ -174,7 +174,7 @@ export default {
                     content: "",
                 },
                 obsolescence_date: "",
-                metadata: null,
+                properties: null,
                 permissions_for_groups: {
                     can_read: [],
                     can_write: [],
@@ -228,20 +228,20 @@ export default {
             }
         },
         addParentPropertiesToDefaultItem() {
-            const parent_properties = getCustomProperties(this.parent.metadata);
+            const parent_properties = getCustomProperties(this.parent.properties);
 
             const formatted_properties =
                 transformCustomPropertiesForItemCreation(parent_properties);
 
             if (formatted_properties.length > 0) {
-                this.item.metadata = formatted_properties;
+                this.item.properties = formatted_properties;
             }
         },
         updateMultiplePropertiesListValue(event) {
-            if (!this.item.metadata) {
+            if (!this.item.properties) {
                 return;
             }
-            const item_properties = this.item.metadata.find(
+            const item_properties = this.item.properties.find(
                 (property) => property.short_name === event.detail.id
             );
             item_properties.list_value = event.detail.value;

@@ -68,7 +68,7 @@ export const updateProperties = async (
     payload: updatePropertiesPayload
 ): Promise<void> => {
     const item_to_update = payload.item_to_update;
-    const custom_properties = getCustomProperties(item_to_update.metadata);
+    const custom_properties = getCustomProperties(item_to_update.properties);
     const item_obsolescence_date = item_to_update.obsolescence_date;
     let obsolescence_date = null;
     if (item_obsolescence_date) {

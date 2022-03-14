@@ -36,7 +36,7 @@ describe("NewItemModal", () => {
                 current_folder: {
                     id: 42,
                     title: "My current folder",
-                    metadata: [
+                    properties: [
                         {
                             short_name: "title",
                             name: "title",
@@ -101,7 +101,7 @@ describe("NewItemModal", () => {
 
     it("inherit default values from parent properties", async () => {
         const item_to_create = {
-            metadata: [
+            properties: [
                 {
                     short_name: "custom property",
                     name: "custom",
@@ -121,6 +121,6 @@ describe("NewItemModal", () => {
         });
         await wrapper.vm.$nextTick().then(() => {});
 
-        expect(wrapper.vm.item.metadata).toEqual(item_to_create.metadata);
+        expect(wrapper.vm.item.properties).toEqual(item_to_create.properties);
     });
 });
