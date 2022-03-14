@@ -149,7 +149,7 @@ export class Modal {
     addBackdrop(): void {
         this.backdrop_element = this.doc.createElement("div");
         this.backdrop_element.id = BACKDROP_ID;
-        this.doc.body.appendChild(this.backdrop_element);
+        this.element.after(this.backdrop_element);
 
         this.backdrop_element.classList.add(BACKDROP_SHOWN_CLASS_NAME);
         this.backdrop_element.addEventListener("click", () => {
