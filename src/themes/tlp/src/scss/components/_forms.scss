@@ -758,8 +758,8 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 
             // stylelint-disable-next-line selector-class-pattern
             &.select2-results__option--highlighted {
-                background: var(--tlp-main-color);
-                color: var(--tlp-white-color);
+                background: var(--tlp-main-color-hover-background);
+                color: var(--tlp-main-color);
             }
 
             &[aria-selected="true"] {
@@ -776,15 +776,10 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
                     font-size: 12px;
                     font-weight: 900;
                 }
-
-                // stylelint-disable-next-line selector-class-pattern
-                &.select2-results__option--highlighted {
-                    color: var(--tlp-white-color);
-                }
             }
 
             &[aria-disabled] {
-                color: var(--tlp-dimmed-color);
+                color: var(--tlp-dimmed-color-transparent-50);
                 cursor: not-allowed;
             }
 

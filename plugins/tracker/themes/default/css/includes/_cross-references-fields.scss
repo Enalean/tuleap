@@ -44,6 +44,10 @@
     transition: color 150ms linear;
 }
 
+.tracker-cross-reference-card {
+    position: relative;
+}
+
 .tracker-cross-reference-card-main {
     display: flex;
     align-items: baseline;

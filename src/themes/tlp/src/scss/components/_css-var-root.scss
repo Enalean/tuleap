@@ -41,7 +41,7 @@ $fade-background-color: color.mix($tlp-background-color, $tlp-white-color, 50);
     --tlp-main-color: #{$tlp-main-color};
     --tlp-dark-color: #{$tlp-dark-color};
     --tlp-background-color: #{$tlp-background-color};
-    --tlp-main-color-hover-background: #{color.mix($tlp-main-color, $tlp-white-color, 7)};
+    --tlp-main-color-hover-background: #{color.adjust($tlp-main-color, $alpha: - 0.9)};
     --tlp-fade-background-color: #{$fade-background-color};
     --tlp-typo-default-text-color: #{$tlp-typo-default-text-color};
     --tlp-table-row-background-odd: #{$tlp-white-color};

@@ -304,7 +304,7 @@ legend {
             &:hover,
             &:focus {
                 border-color: transparent;
-                background: var(--tlp-main-color-transparent-90);
+                background: var(--tlp-main-color-hover-background);
                 color: var(--tlp-main-color);
             }
 
@@ -321,7 +321,7 @@ legend {
 
         &.dropdown-submenu:hover > a {
             border-color: transparent;
-            background: var(--tlp-main-color-transparent-90);
+            background: var(--tlp-main-color-hover-background);
             color: var(--tlp-main-color);
 
             &::after {
@@ -655,15 +655,15 @@ select.input-small {
         }
 
         > tr:nth-child(even) > td {
-            background: #fcfcfc;
+            background: var(--tlp-table-row-background-even);
         }
 
         > tr:nth-child(odd) > td {
-            background: #ffffff;
+            background: var(--tlp-table-row-background-odd);
         }
 
         > tr:hover > td {
-            background: var(--tlp-main-color-transparent-90);
+            background: var(--tlp-main-color-hover-background);
         }
 
         /* stylelint-disable selector-no-qualifying-type */
