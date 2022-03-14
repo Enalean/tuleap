@@ -80,6 +80,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
@@ -720,18 +721,20 @@ class ArtifactsResource extends AuthenticatedResource
                 )
             ),
             $fields_retriever,
-            new \Tracker_Artifact_Changeset_CommentDao(),
             $this->event_manager,
-            \ReferenceManager::instance(),
             new \Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             ArtifactChangesetSaver::build(),
             new ParentLinkAction($this->artifact_factory),
-            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
             new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever),
             ActionsRunner::build(\BackendLogger::getDefaultLogger()),
             new ChangesetValueSaver(),
-            \WorkflowFactory::instance()
+            \WorkflowFactory::instance(),
+            new CommentCreator(
+                new \Tracker_Artifact_Changeset_CommentDao(),
+                \ReferenceManager::instance(),
+                new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+            )
         );
 
         $this->sendAllowHeadersForArtifact();

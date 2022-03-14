@@ -37,6 +37,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
@@ -100,18 +101,20 @@ class CardPatcher
                 )
             ),
             $fields_retriever,
-            new \Tracker_Artifact_Changeset_CommentDao(),
             \EventManager::instance(),
-            \ReferenceManager::instance(),
             new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             ArtifactChangesetSaver::build(),
             new ParentLinkAction($artifact_factory),
-            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
             new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
             ActionsRunner::build(\BackendLogger::getDefaultLogger()),
             new ChangesetValueSaver(),
-            \WorkflowFactory::instance()
+            \WorkflowFactory::instance(),
+            new CommentCreator(
+                new \Tracker_Artifact_Changeset_CommentDao(),
+                \ReferenceManager::instance(),
+                new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+            )
         );
 
         $updater = new ArtifactUpdater(

@@ -106,6 +106,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
@@ -2169,20 +2170,22 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return new NewChangesetCreator(
             $fields_validator,
             $fields_retriever,
-            $this->getChangesetCommentDao(),
             $this->getEventManager(),
-            $this->getReferenceManager(),
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
             $this->getTransactionExecutor(),
             $this->getChangesetSaver(),
             new Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction(
                 $tracker_artifact_factory
             ),
-            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
             new AfterNewChangesetHandler($tracker_artifact_factory, $fields_retriever),
             $this->getActionsRunner(),
             new ChangesetValueSaver(),
-            $this->getWorkflowRetriever()
+            $this->getWorkflowRetriever(),
+            new CommentCreator(
+                $this->getChangesetCommentDao(),
+                $this->getReferenceManager(),
+                new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+            )
         );
     }
 

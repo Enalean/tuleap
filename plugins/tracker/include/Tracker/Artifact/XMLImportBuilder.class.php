@@ -22,6 +22,7 @@ use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
@@ -90,20 +91,22 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
         $new_changeset_creator = new NewChangesetCreator(
             $fields_validator,
             $fields_retriever,
-            $changeset_comment_dao,
             $event_manager,
-            ReferenceManager::instance(),
             $field_initializator,
             new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
             $artifact_changeset_saver,
             new \Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction(
                 $artifact_factory
             ),
-            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
             $after_new_changeset_handler,
             ActionsRunner::build($logger),
             new ChangesetValueSaverIgnoringPermissions(),
-            $workflow_retriever
+            $workflow_retriever,
+            new CommentCreator(
+                $changeset_comment_dao,
+                \ReferenceManager::instance(),
+                new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+            )
         );
 
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();

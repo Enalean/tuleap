@@ -38,6 +38,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
@@ -225,21 +226,23 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $creator = new NewChangesetCreator(
             $fields_validator,
             $fields_retriever,
-            $comment_dao,
             \Mockery::spy(\EventManager::class),
-            $reference_manager,
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($factory),
             new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
             $artifact_saver,
             Mockery::mock(ParentLinkAction::class),
-            Mockery::mock(TrackerPrivateCommentUGroupPermissionInserter::class),
             new AfterNewChangesetHandler(
                 SaveArtifactStub::withSuccess(),
                 $fields_retriever,
             ),
             Mockery::spy(ActionsRunner::class),
             new ChangesetValueSaver(),
-            RetrieveWorkflowStub::withWorkflow($workflow)
+            RetrieveWorkflowStub::withWorkflow($workflow),
+            new CommentCreator(
+                $comment_dao,
+                $reference_manager,
+                Mockery::spy(TrackerPrivateCommentUGroupPermissionInserter::class),
+            )
         );
 
         $creator->create(
