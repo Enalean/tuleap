@@ -5,6 +5,7 @@ specifiers:
   '@tuleap/plugin-docgen-docx': file:./scripts/lib/docx
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-modal': link:../../src/scripts/lib/tlp-modal
   '@tuleap/vue3-gettext-init': link:../../src/scripts/lib/vue3-gettext-init
   '@types/sprintf-js': ^1.1.2
   '@vue/test-utils': ^2.0.0-rc.17
@@ -19,6 +20,7 @@ dependencies:
   '@tuleap/plugin-docgen-docx': link:scripts/lib/docx
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-modal': link:../../src/scripts/lib/tlp-modal
   '@tuleap/vue3-gettext-init': link:../../src/scripts/lib/vue3-gettext-init
   docx: 7.3.0
   sprintf-js: 1.1.2

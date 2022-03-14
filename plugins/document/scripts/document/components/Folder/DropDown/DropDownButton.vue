@@ -41,8 +41,12 @@
 
 <script lang="ts">
 import type { Dropdown } from "tlp";
-import { createDropdown, EVENT_TLP_DROPDOWN_SHOWN, EVENT_TLP_DROPDOWN_HIDDEN } from "tlp";
-import { EVENT_TLP_MODAL_SHOWN } from "../../../../../../../src/themes/tlp/src/js/modal";
+import {
+    createDropdown,
+    EVENT_TLP_DROPDOWN_SHOWN,
+    EVENT_TLP_DROPDOWN_HIDDEN,
+    EVENT_TLP_MODAL_SHOWN,
+} from "tlp";
 import emitter from "../../../helpers/emitter";
 import { Component, Prop, Vue } from "vue-property-decorator";
 

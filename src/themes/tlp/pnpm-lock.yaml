@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/tlp-fetch': file:../../scripts/lib/tlp-fetch
+  '@tuleap/tlp-modal': link:../../scripts/lib/tlp-modal
   '@tuleap/tlp-popovers': file:../../scripts/lib/tlp-popovers
   '@types/jquery': ^3.5.5
   flatpickr: ^4.6.9
@@ -10,6 +11,7 @@ specifiers:
 
 dependencies:
   '@tuleap/tlp-fetch': link:../../scripts/lib/tlp-fetch
+  '@tuleap/tlp-modal': link:../../scripts/lib/tlp-modal
   '@tuleap/tlp-popovers': link:../../scripts/lib/tlp-popovers
   flatpickr: 4.6.9
   jquery: 3.6.0

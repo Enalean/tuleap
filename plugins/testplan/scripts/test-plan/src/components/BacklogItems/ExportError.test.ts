@@ -23,6 +23,8 @@ import ExportError from "./ExportError.vue";
 import * as tlp from "tlp";
 import type { Modal } from "tlp";
 
+jest.mock("tlp");
+
 describe("ExportError", () => {
     it("shows the modal on mount", async () => {
         const modal_show_spy = jest.fn();
