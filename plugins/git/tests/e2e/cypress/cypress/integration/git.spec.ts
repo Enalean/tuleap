@@ -19,11 +19,13 @@
 
 describe("Git", function () {
     let project_id: string;
+    let now: number;
     context("Project administrators", function () {
         before(() => {
             cy.clearSessionCookie();
             cy.projectAdministratorLogin();
             cy.getProjectId("git-project").as("project_id");
+            now = Date.now();
         });
 
         beforeEach(() => {
@@ -38,18 +40,16 @@ describe("Git", function () {
         context("Git repository list", function () {
             it("can create a new repository", function () {
                 cy.visit("/plugins/git/git-project/");
-                cy.get("[data-test=empty_state_create_repository]").click();
-                cy.get("[data-test=create_repository_name]").type("Aquali");
+                cy.get("[data-test=create-repository-button]").click();
+                cy.get("[data-test=create_repository_name]").type(`Aquali-${now}`);
                 cy.get("[data-test=create_repository]").click();
 
-                cy.get("[data-test=git_repo_name]").contains("Aquali", {
+                cy.get("[data-test=git_repo_name]").contains(`Aquali-${now}`, {
                     timeout: 20000,
                 });
-            });
-
-            it("shows the new repository in the list", function () {
+                cy.log("shows the new repository in the list");
                 cy.visit("/plugins/git/git-project/");
-                cy.get("[data-test=repository_name]").contains("Aquali", {
+                cy.get("[data-test=repository_name]").contains(`Aquali-${now}`, {
                     timeout: 20000,
                 });
             });
@@ -59,19 +59,22 @@ describe("Git", function () {
                 cy.visit("/plugins/git/git-project/");
                 cy.get("[data-test=create-repository-button]").click();
                 cy.get("[data-test=create-repository-modal-form]").within(() => {
-                    cy.get("[data-test=create_repository_name]").type("Mazda/MX5");
+                    cy.get("[data-test=create_repository_name]").type(`Mazda/MX5-${now}`);
                     cy.root().submit();
                 });
-                cy.get("[data-test=git_repo_name]").contains("MX5");
+                cy.get("[data-test=git_repo_name]").contains(`MX5-${now}`);
 
-                // return to the git repositories list page
+                cy.log("return to the git repositories list page");
                 cy.visit("/plugins/git/git-project/");
+
+                cy.log("Be sure to display repositories by date");
+                cy.get("[data-test=git-repository-list-switch-last-update]").click();
                 cy.get("[data-test=git-repository-card-path]").contains("Mazda/");
-                cy.get("[data-test=repository_name]").contains("MX5");
+                cy.get("[data-test=repository_name]").contains(`MX5-${now}`);
 
                 cy.get("[data-test=git-repository-list-switch-path]").click();
                 cy.get("[data-test=git-repository-list-folder-label").contains("Mazda");
-                cy.get("[data-test=repository_name]").contains("MX5");
+                cy.get("[data-test=repository_name]").contains(`MX5-${now}`);
             });
             it("cannot create repository", function () {
                 cy.visit("/plugins/git/git-project/");
@@ -96,28 +99,23 @@ describe("Git", function () {
 
                 cy.get("[data-test=git-repository-card-description]").should("have.length", 0);
                 cy.get("[data-test=repository_name]")
-                    .contains("MX5")
+                    .contains(`MX5-${now}`)
                     .parent()
                     .within(() => {
                         cy.get("[data-test=git-repository-card-admin-link]").click();
                     });
                 cy.get("[data-test=repository-general-settings-form]").within(() => {
-                    cy.get("[data-test=repository-description]").contains(
-                        "-- Default description --"
-                    );
                     cy.get("[data-test=repository-description]")
                         .clear()
-                        .type("This is a lightweight two-passenger roadster sports car");
+                        .type(`description - ${now}`);
                     cy.root().submit();
                 });
-                cy.get("[data-test=repository-description]").contains(
-                    "This is a lightweight two-passenger roadster sports car"
-                );
+                cy.get("[data-test=repository-description]").contains(`description - ${now}`);
 
                 cy.visit("/plugins/git/git-project/");
 
                 cy.get("[data-test=repository_name]")
-                    .contains("MX5")
+                    .contains(`MX5-${now}`)
                     .parent()
                     .siblings()
                     .within(() => {
@@ -126,7 +124,7 @@ describe("Git", function () {
                             1
                         );
                         cy.get("[data-test=git-repository-card-description]").contains(
-                            "This is a lightweight two-passenger roadster sports car"
+                            `description - ${now}`
                         );
                     });
             });

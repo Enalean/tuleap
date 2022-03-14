@@ -30,6 +30,7 @@
             />
             <label
                 for="git-repository-list-switch-last-update"
+                data-test="git-repository-list-switch-last-update"
                 class="tlp-button-primary tlp-button-outline"
                 v-bind:class="{ disabled: isLoading }"
                 v-bind:title="$gettext('Sort repositories by their last update date')"

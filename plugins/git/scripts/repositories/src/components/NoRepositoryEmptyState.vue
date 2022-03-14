@@ -31,7 +31,7 @@
                     class="tlp-button-primary"
                     v-else
                     v-on:click="showAddRepositoryModal()"
-                    data-test="empty_state_create_repository"
+                    data-test="create-repository-button"
                 >
                     <i class="fa fa-plus tlp-button-icon"></i>
                     <translate>Add project repository</translate>

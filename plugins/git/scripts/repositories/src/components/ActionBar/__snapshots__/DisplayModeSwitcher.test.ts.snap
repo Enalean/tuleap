@@ -17,6 +17,7 @@ exports[`DisplayModeSwitcher displays folders sorted by date 1`] = `
      
     <label
       class="tlp-button-primary tlp-button-outline"
+      data-test="git-repository-list-switch-last-update"
       for="git-repository-list-switch-last-update"
       title="Sort repositories by their last update date"
     >
@@ -76,6 +77,7 @@ exports[`DisplayModeSwitcher displays folders sorted by path 1`] = `
      
     <label
       class="tlp-button-primary tlp-button-outline"
+      data-test="git-repository-list-switch-last-update"
       for="git-repository-list-switch-last-update"
       title="Sort repositories by their last update date"
     >
