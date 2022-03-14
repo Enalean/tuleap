@@ -55,4 +55,12 @@ class Tracker_Artifact_PaginatedArtifacts
     {
         return $this->artifacts;
     }
+
+    /**
+     * @param Artifact[] $artifacts
+     */
+    public function addArtifacts(array $artifacts): void
+    {
+        $this->artifacts = array_merge($this->artifacts, $artifacts);
+    }
 }

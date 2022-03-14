@@ -80,7 +80,7 @@ final class PossibleParentSelectorProxy implements PossibleParentSelectorEvent
             $artifact->setTitle($feature->title);
             $artifacts[] = $artifact;
         }
-        $this->inner_event->setPossibleParents(
+        $this->inner_event->addPossibleParents(
             new \Tracker_Artifact_PaginatedArtifacts($artifacts, $total_size)
         );
     }

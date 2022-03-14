@@ -70,8 +70,12 @@ final class PossibleParentSelector implements Dispatchable
         return $this->display_selector;
     }
 
-    public function setPossibleParents(Tracker_Artifact_PaginatedArtifacts $possible_parents): void
+    public function addPossibleParents(Tracker_Artifact_PaginatedArtifacts $possible_parents): void
     {
+        if ($this->possible_parents) {
+            $this->possible_parents->addArtifacts($possible_parents->getArtifacts());
+            return;
+        }
         $this->possible_parents = $possible_parents;
     }
 
