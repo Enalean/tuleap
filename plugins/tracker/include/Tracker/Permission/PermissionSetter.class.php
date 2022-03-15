@@ -55,25 +55,17 @@ class Tracker_Permission_PermissionSetter
 
     /**
      * Clean set of one permission (will revoke all other perms before granting)
-     *
-     * @param String  $permission_type
-     * @param int $ugroup_id
      */
-    public function grant($permission_type, $ugroup_id)
+    public function grant(string $permission_type, int $ugroup_id): void
     {
-        if (! $this->groupHasPermission($permission_type, $ugroup_id)) {
-            $this->revokeAll($ugroup_id);
-            $this->grantAccess($permission_type, $ugroup_id);
-        }
+        $this->revokeAll($ugroup_id);
+        $this->grantAccess($permission_type, $ugroup_id);
     }
 
     /**
      * Only grant a permission, no revoke before hand
-     *
-     * @param type $permission_type
-     * @param type $ugroup_id
      */
-    public function grantAccess($permission_type, $ugroup_id)
+    public function grantAccess(string $permission_type, int $ugroup_id): void
     {
         if (! $this->groupHasPermission($permission_type, $ugroup_id)) {
             $this->permissions_manager->addPermission($permission_type, $this->atid, $ugroup_id);

@@ -42,35 +42,35 @@ class Tracker_Permission_ChainOfResponsibility_PermissionsOfAllGroups extends Tr
     {
         switch ($permission_type) {
             case Tracker_Permission_Command::PERMISSION_FULL:
-                $permission_setter->grant(Tracker::PERMISSION_FULL, $ugroup_id);
+                $permission_setter->grant(Tracker::PERMISSION_FULL, (int) $ugroup_id);
                 break;
 
             case Tracker_Permission_Command::PERMISSION_ASSIGNEE:
                 if ($this->canSetAssignee($permission_setter, $ugroup_id)) {
-                    $permission_setter->grant(Tracker::PERMISSION_ASSIGNEE, $ugroup_id);
+                    $permission_setter->grant(Tracker::PERMISSION_ASSIGNEE, (int) $ugroup_id);
                 }
                 break;
 
             case Tracker_Permission_Command::PERMISSION_SUBMITTER:
                 if ($this->canSetSubmitter($permission_setter, $ugroup_id)) {
-                    $permission_setter->grant(Tracker::PERMISSION_SUBMITTER, $ugroup_id);
+                    $permission_setter->grant(Tracker::PERMISSION_SUBMITTER, (int) $ugroup_id);
                 }
                 break;
 
             case Tracker_Permission_Command::PERMISSION_ASSIGNEE_AND_SUBMITTER:
                 if ($this->canSetSubmitterAndAssignee($permission_setter, $ugroup_id)) {
                     $permission_setter->revokeAll($ugroup_id);
-                    $permission_setter->grantAccess(Tracker::PERMISSION_ASSIGNEE, $ugroup_id);
-                    $permission_setter->grantAccess(Tracker::PERMISSION_SUBMITTER, $ugroup_id);
+                    $permission_setter->grantAccess(Tracker::PERMISSION_ASSIGNEE, (int) $ugroup_id);
+                    $permission_setter->grantAccess(Tracker::PERMISSION_SUBMITTER, (int) $ugroup_id);
                 }
                 break;
 
             case Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY:
-                $permission_setter->grant(Tracker::PERMISSION_SUBMITTER_ONLY, $ugroup_id);
+                $permission_setter->grant(Tracker::PERMISSION_SUBMITTER_ONLY, (int) $ugroup_id);
                 break;
 
             case Tracker_Permission_Command::PERMISSION_ADMIN:
-                $permission_setter->grant(Tracker::PERMISSION_ADMIN, $ugroup_id);
+                $permission_setter->grant(Tracker::PERMISSION_ADMIN, (int) $ugroup_id);
                 break;
 
             case Tracker_Permission_Command::PERMISSION_NONE:
