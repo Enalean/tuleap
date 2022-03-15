@@ -39,7 +39,6 @@ use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\OAuth2Server\Administration\OAuth2AppProjectVerifier;
 use Tuleap\OAuth2Server\Administration\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\Administration\SiteAdmin\SiteAdminListAppsController;
@@ -65,7 +64,6 @@ use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectEmailScope;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2OfflineAccessScope;
 use Tuleap\OAuth2Server\REST\Specification\Swagger\SwaggerJsonOAuth2SecurityDefinition;
-use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeRetriever;
 use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
 use Tuleap\OAuth2ServerCore\Scope\ScopeExtractor;
 use Tuleap\OAuth2Server\User\Account\AccountAppsController;
@@ -80,7 +78,6 @@ use Tuleap\Request\ProjectRetriever;
 use Tuleap\REST\Specification\Swagger\SwaggerJsonSecurityDefinitionsCollection;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Account\PasswordUserPostUpdateEvent;
-use Tuleap\User\OAuth2\AccessToken\VerifyOAuth2AccessTokenEvent;
 use Tuleap\User\OAuth2\Scope\CoreOAuth2ScopeBuilderFactory;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
 
@@ -104,7 +101,6 @@ final class oauth2_serverPlugin extends Plugin
         $this->addHook(NavigationPresenter::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(AccountTabPresenterCollection::NAME);
-        $this->addHook(VerifyOAuth2AccessTokenEvent::NAME);
         $this->addHook(OAuth2ScopeBuilderCollector::NAME);
         $this->addHook(SwaggerJsonSecurityDefinitionsCollection::NAME);
         $this->addHook(PasswordUserPostUpdateEvent::NAME);
@@ -566,25 +562,6 @@ final class oauth2_serverPlugin extends Plugin
     public function accountTabPresenterCollection(AccountTabPresenterCollection $collection): void
     {
         (new \Tuleap\OAuth2Server\User\Account\AppsTabAdder())->addTabs($collection);
-    }
-
-    public function verifyAccessToken(VerifyOAuth2AccessTokenEvent $event): void
-    {
-        $verifier = new OAuth2AccessTokenVerifier(
-            new OAuth2AccessTokenDAO(),
-            new OAuth2ScopeRetriever(
-                new Tuleap\OAuth2ServerCore\AccessToken\Scope\OAuth2AccessTokenScopeDAO(),
-                $this->buildScopeBuilder()
-            ),
-            UserManager::instance(),
-            new SplitTokenVerificationStringHasher()
-        );
-
-        $granted_authorization = $verifier->getGrantedAuthorization(
-            $event->getAccessToken(),
-            $event->getRequiredScope()
-        );
-        $event->setGrantedAuthorization($granted_authorization);
     }
 
     public function collectOAuth2ScopeBuilder(OAuth2ScopeBuilderCollector $collector): void
