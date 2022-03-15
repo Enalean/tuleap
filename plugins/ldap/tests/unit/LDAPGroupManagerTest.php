@@ -108,12 +108,15 @@ class LDAPGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $grpManager->bindWithLdap();
     }
 
-    public function testLdapGroupContainsOtherLdapGroups()
+    public function testLdapGroupContainsOtherLdapGroupsWillSearchEachUserOnce()
     {
         // Search for umbrella group
         $ldapResIterABCDEF = $this->getLdapResult('getGroupMembers', ['cn=ABC,ou=groups,dc=codendi,dc=com', 'cn=DEF,ou=groups,dc=codendi,dc=com']);
         // Search for first sub-group
-        $ldapResIterABC = $this->getLdapResult('getGroupMembers', ['eduid=edA,ou=people,dc=codendi,dc=com']);
+        $ldapResIterABC = $this->getLdapResult('getGroupMembers', [
+            'eduid=edA,ou=people,dc=codendi,dc=com',
+            'eduid=edE,ou=people,dc=codendi,dc=com',
+        ]);
         // Search for second sub-group
         $ldapResIterDEF = $this->getLdapResult('getGroupMembers', ['eduid=edE,ou=people,dc=codendi,dc=com']);
         // Search for first user
