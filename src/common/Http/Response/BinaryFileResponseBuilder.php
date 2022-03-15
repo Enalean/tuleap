@@ -71,9 +71,11 @@ final class BinaryFileResponseBuilder
 
     private function build(ServerRequestInterface $request, StreamInterface $stream, string $name, string $content_type): ResponseInterface
     {
+        $disposition = $this->getDisposition($name);
+
         $response = $this->response_factory->createResponse()
             ->withHeader('Content-Type', $content_type)
-            ->withHeader('Content-Disposition', 'attachment; filename="' . $this->getNameForContentDispositionHeader($name) . '"')
+            ->withHeader('Content-Disposition', $disposition)
             ->withHeader('X-DNS-Prefetch-Control', 'off')
             ->withHeader('Cache-Control', 'private')
             ->withHeader('Pragma', 'no-cache')
@@ -87,14 +89,33 @@ final class BinaryFileResponseBuilder
         return $this->handleRange($request, $response);
     }
 
-    private function getNameForContentDispositionHeader(string $name): string
+    private function getDisposition(string $name): string
     {
-        return str_replace('"', '\\"', $this->removeNonPrintableASCIIChars($name));
+        $filename          = $this->removeSlashAndBackslash($name);
+        $filename_fallback = $this->removeNonPrintableASCIIChars($filename);
+
+        $disposition  = 'attachment; ';
+        $disposition .= 'filename="' . $this->quoteFilename($filename_fallback) . '"';
+        if ($filename !== $filename_fallback) {
+            $disposition .= '; filename*="utf-8\'\'' . rawurlencode($filename) . '"';
+        }
+
+        return $disposition;
+    }
+
+    private function quoteFilename(string $filename): string
+    {
+        return addcslashes($filename, '"');
     }
 
     private function removeNonPrintableASCIIChars(string $str): string
     {
         return preg_replace('/[^(\x20-\x7F)]*/', '', $str);
+    }
+
+    private function removeSlashAndBackslash(string $str): string
+    {
+        return str_replace(['/', '\\'], '-', $str);
     }
 
     private function handleRange(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
