@@ -8,7 +8,6 @@ specifiers:
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
   '@tuleap/vue3-gettext-init': link:../../src/scripts/lib/vue3-gettext-init
   '@types/sprintf-js': ^1.1.2
-  '@vue/compat': ^3.2.31
   '@vue/test-utils': ^2.0.0-rc.17
   docx: ^7.3.0
   sprintf-js: ^1.1.2
@@ -24,7 +23,6 @@ dependencies:
   '@tuleap/plugin-docgen-docx': link:../document_generation/scripts/lib/docx
   '@tuleap/plugin-testmanagement': link:../testmanagement
   '@tuleap/vue3-gettext-init': link:../../src/scripts/lib/vue3-gettext-init
-  '@vue/compat': 3.2.31_vue@3.2.31
   docx: 7.3.0
   sprintf-js: 1.1.2
   vue: 3.2.31
@@ -95,14 +93,6 @@ packages:
   /@types/sprintf-js/1.1.2:
     resolution: {integrity: sha512-hkgzYF+qnIl8uTO8rmUSVSfQ8BIfMXC4yJAF4n8BE758YsKBZvFC4NumnAegj7KmylP0liEZNpb9RRGFMbFejA==}
     dev: true
-
-  /@vue/compat/3.2.31_vue@3.2.31:
-    resolution: {integrity: sha512-hhwJk/SRwpT2OADctj+t7QZCRIgh04AcelGpe6gdj0OxA75xpHnPrG+fmG37U3Z6WDrNHZpGvu2eXBzWXM4OVA==}
-    peerDependencies:
-      vue: 3.2.31
-    dependencies:
-      vue: 3.2.31
-    dev: false
 
   /@vue/compiler-core/3.2.31:
     resolution: {integrity: sha512-aKno00qoA4o+V/kR6i/pE+aP+esng5siNAVQ422TkBNM6qA4veXiZbSe8OTXHXquEi/f6Akc+nLfB4JGfe4/WQ==}

@@ -24,18 +24,13 @@ import type { TrackerReport } from "../../helpers/Campaigns/tracker-reports-retr
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("CreateCampaignTestSelector", () => {
-    beforeEach(() => {
-        // To be removed once Vue 3 compat issues are resolved
-        jest.spyOn(global.console, "warn").mockImplementation();
-    });
-
     it("displays the possible tests", () => {
         const testdefinition_tracker_reports: TrackerReport[] = [
             { id: 102, label: "Test def tracker report label" },
         ];
         const wrapper = shallowMount(CreateCampaignTestSelector, {
             props: {
-                value: { test_selector: "report", report_id: 102 },
+                initial_tests: { test_selector: "report", report_id: 102 },
                 testdefinition_tracker_reports,
             },
             global: {
@@ -58,7 +53,7 @@ describe("CreateCampaignTestSelector", () => {
     it("does not propose to select tests from the test definitions tracker reports when there is no tracker reports", () => {
         const wrapper = shallowMount(CreateCampaignTestSelector, {
             props: {
-                value: { test_selector: "milestone" },
+                initial_tests: { test_selector: "milestone" },
                 testdefinition_tracker_reports: [],
             },
             global: {
@@ -79,7 +74,7 @@ describe("CreateCampaignTestSelector", () => {
     it("selects a new set of tests", () => {
         const wrapper = shallowMount(CreateCampaignTestSelector, {
             props: {
-                value: { test_selector: "milestone" },
+                initial_tests: { test_selector: "milestone" },
                 testdefinition_tracker_reports: [],
             },
             global: {
@@ -93,10 +88,10 @@ describe("CreateCampaignTestSelector", () => {
         });
 
         wrapper.get("select").setValue("none");
-        const emitted_input = wrapper.emitted("input");
+        const emitted_input = wrapper.emitted("update:initial_tests");
         expect(emitted_input).toBeDefined();
         if (emitted_input === undefined) {
-            throw new Error("Expected an input event to be emitted");
+            throw new Error("Expected an update:modelValue event to be emitted");
         }
         expect(emitted_input.length).toBe(1);
         expect(emitted_input[0]).toEqual([{ test_selector: "none" }]);

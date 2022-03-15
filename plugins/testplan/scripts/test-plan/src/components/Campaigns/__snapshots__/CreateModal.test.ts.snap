@@ -58,9 +58,8 @@ exports[`CreateModal Display the modal when mounted 1`] = `
         />
       </div>
       <create-campaign-test-selector-stub
-        modelvalue="[object Object]"
+        initial_tests="[object Object]"
         testdefinition_tracker_reports=""
-        value="[object Object]"
       />
     </div>
   </div>
