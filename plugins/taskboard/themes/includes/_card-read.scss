@@ -18,19 +18,46 @@
  */
 
 @use "../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "sass:color";
 @use "sass:map";
+
+$accessibility-pattern-width: 20px;
+$accessibility-pattern-right-margin: 1px;
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .taskboard-card-#{$color-name} {
-        --card-color: #{map.get($colors, "primary")};
-        --card-text-color: #{map.get($colors, "text")};
+        --card-border-left-color: #{map.get($colors, "primary")};
+        --card-progress-color: #{map.get($colors, "primary")};
+        --card-shadow: var(--tlp-card-shadow);
+        --card-colored-text-color: #{map.get($colors, "text")};
+        --card-initial-effort-background: #{map.get($colors, "secondary")};
+        --card-initial-effort-text-color: #{map.get($colors, "text")};
+        --card-edit-button-background: var(--tlp-white-color);
+        --card-edit-button-hover-background: #{map.get($colors, "secondary")};
+        --card-edit-button-text-color: #{map.get($colors, "text")};
     }
 
-    .taskboard-card-background-#{$color-name} {
-        --secondary-color: #{map.get($colors, "secondary")};
-        --border-color: #{map.get($colors, "border")};
-        --text-color: #{map.get($colors, "text")};
-        --accessibility-pattern: url("#{map.get($colors, 'pattern')}");
+    .taskboard-card.taskboard-card-background-#{$color-name} {
+        --card-border-color: #{map.get($colors, "border")};
+        --card-progress-color: #{map.get($colors, "primary")};
+        --card-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+        --card-background: #{map.get($colors, "secondary")};
+        --card-colored-text-color: #{map.get($colors, "text")};
+        --card-initial-effort-background: #{color.adjust(
+                map.get($colors, "secondary"),
+                $lightness: - 7%
+            )};
+        --card-initial-effort-text-color: #{color.adjust(
+                map.get($colors, "text"),
+                $lightness: - 7%
+            )};
+        --card-accessibility-pattern: url("#{map.get($colors, 'pattern')}");
+        --card-edit-button-background: #{map.get($colors, "secondary")};
+        --card-edit-button-hover-background: #{color.adjust(
+                map.get($colors, "secondary"),
+                $lightness: - 7%
+            )};
+        --card-edit-button-text-color: #{color.adjust(map.get($colors, "text"), $lightness: - 7%)};
     }
 }
 
@@ -39,29 +66,26 @@
     margin: 0 0 var(--tlp-small-spacing);
     padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing)
         calc(var(--tlp-small-spacing) + 2px);
-    border: 1px solid var(--border-color, transparent);
+    border: 1px solid var(--card-border-color, transparent);
     border-radius: var(--tlp-medium-radius);
-    background: var(--secondary-color, var(--tlp-white-color));
-    box-shadow: var(--tlp-pane-shadow);
+    background: var(--card-background, var(--tlp-white-color));
+    box-shadow: var(--card-shadow);
 
     &.taskboard-card-with-accessibility {
         &[class*="taskboard-card-background-"] {
-            padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing)
-                calc(var(--tlp-small-spacing) + 2px);
+            padding: var(--tlp-small-spacing)
+                calc(#{$accessibility-pattern-width} + #{$accessibility-pattern-right-margin} + 4px)
+                var(--tlp-small-spacing) var(--tlp-small-spacing);
 
             > .taskboard-card-accessibility {
                 opacity: 0.5;
-                background-color: var(--text-color);
-                mask-image: var(--accessibility-pattern);
+                background-color: var(--card-colored-text-color);
+                mask-image: var(--card-accessibility-pattern);
             }
         }
 
         &:not([class*="taskboard-card-background-"]) > .taskboard-card-accessibility {
             display: none;
-        }
-
-        > .taskboard-card-content > .taskboard-card-info {
-            margin: 0 5px 0 0;
         }
     }
 
@@ -97,7 +121,7 @@
         width: 4px;
         height: calc(100% + 2px);
         border-radius: var(--tlp-medium-radius) 0 0 var(--tlp-medium-radius);
-        background: var(--card-color);
+        background: var(--card-border-left-color);
     }
 }
 
@@ -138,8 +162,8 @@
 }
 
 .taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card {
-    border: 1px solid var(--border-color, var(--tlp-neutral-normal-color));
-    background: var(--secondary-color, var(--tlp-background-color));
+    border: 1px solid var(--card-border-color, var(--tlp-neutral-normal-color));
+    background: var(--card-background, var(--tlp-background-color));
 
     &.taskboard-card-collapsed {
         border: 0;
@@ -165,15 +189,18 @@
     white-space: nowrap;
 }
 
+.taskboard-card-xref-label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 /* stylelint-disable-next-line selector-no-qualifying-type */
 a.taskboard-card-xref {
-    margin: 0 4px 0 0;
-    color: var(--text-color, var(--tlp-dimmed-color));
-    font-size: 0.65rem;
-
-    &:hover {
-        text-decoration: none;
-    }
+    margin: 0 0 2px;
+    color: var(--card-colored-text-color);
+    font-size: 0.625rem;
+    line-height: 0.8125rem;
 }
 
 .taskboard-card-label {
@@ -185,8 +212,8 @@ a.taskboard-card-xref {
 .taskboard-card-accessibility {
     position: absolute;
     top: 0;
-    right: 0;
-    width: var(--tlp-medium-spacing);
+    right: $accessibility-pattern-right-margin;
+    width: $accessibility-pattern-width;
     height: 100%;
 }
 
@@ -196,6 +223,7 @@ a.taskboard-card-xref {
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: flex-end;
+    transition: opacity 100ms ease-in-out;
 }
 
 .taskboard-card-assignees {
@@ -203,8 +231,9 @@ a.taskboard-card-xref {
     flex-direction: column;
 }
 
-.taskboard-card-inital-effort {
-    transition: opacity 100ms ease-in-out;
+.tlp-badge-outline.taskboard-card-inital-effort {
+    background: var(--card-initial-effort-background);
+    color: var(--card-initial-effort-text-color);
     cursor: default;
 }
 
@@ -221,10 +250,10 @@ a.taskboard-card-xref {
     position: absolute;
     z-index: 1;
     bottom: -1px;
-    left: 0;
-    height: 2px;
-    border-radius: 1px;
-    background: var(--card-color);
+    left: 3px;
+    height: 3px;
+    border-radius: 0 var(--tlp-medium-radius) var(--tlp-medium-radius) 0;
+    background: var(--card-progress-color);
 }
 
 $arrow-after-width: 12px;
@@ -244,7 +273,7 @@ $arrow-after-width: 12px;
         right: -$arrow-after-width;
         width: $arrow-after-width;
         height: 100%;
-        background-color: var(--text-color);
+        background-color: inherit;
         clip-path: polygon(0 0, 100% 50%, 0 100%);
     }
 }
