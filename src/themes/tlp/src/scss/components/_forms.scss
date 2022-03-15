@@ -925,11 +925,7 @@ span.select2-container--tlp-select2-large {
 }
 
 /* stylelint-disable selector-class-pattern */
-.tlp-modal-backdrop-shown + span.select2-container--open,
-    /* The rule below takes care of the flatpickr + select2 combination that occurs in the artifact modal  */
-.flatpickr-calendar + span.select2-container--open,
-    /* The rule below takes care of the listpicker + select2 combination that occurs in the artifact modal  */
-.list-picker-dropdown + span.select2-container--open {
+span.select2-container--open {
     z-index: 2007; // Prevent the dropdown to be hidden behind the modal when it is open
 }
 /* stylelint-enable */
