@@ -30,6 +30,7 @@ use Tracker_Artifact_Changeset_Comment;
 use Tracker_Artifact_Changeset_Null;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaver;
@@ -125,18 +126,20 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $creator = new NewChangesetCreator(
             $fields_validator,
             $field_retriever,
-            $this->comment_dao,
             \Mockery::spy(\EventManager::class),
-            \Mockery::spy(\ReferenceManager::class),
             $field_initializator,
             new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
             $this->changeset_saver,
             $this->parent_link_action,
-            $this->ugroup_private_comment_inserter,
             new AfterNewChangesetHandler($this->artifact_saver, $field_retriever),
             Mockery::spy(ActionsRunner::class),
             new ChangesetValueSaver(),
-            RetrieveWorkflowStub::withWorkflow($this->workflow)
+            RetrieveWorkflowStub::withWorkflow($this->workflow),
+            new CommentCreator(
+                $this->comment_dao,
+                \Mockery::spy(\ReferenceManager::class),
+                $this->ugroup_private_comment_inserter
+            )
         );
 
         $creator->create(

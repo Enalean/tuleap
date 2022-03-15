@@ -25,7 +25,8 @@ namespace Tuleap\Tracker\Artifact\Changeset;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
-use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
+use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\Value\SaveChangesetValue;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
@@ -41,74 +42,20 @@ use Tuleap\Tracker\Workflow\RetrieveWorkflow;
  */
 class NewChangesetCreator
 {
-    /** @var \Tracker_Artifact_Changeset_CommentDao */
-    private $changeset_comment_dao;
-    /** @var \Tracker_Artifact_Changeset_ChangesetDataInitializator */
-    private $field_initializator;
-    /**
-     * @var FieldsToBeSavedInSpecificOrderRetriever
-     */
-    private $fields_retriever;
-    /** @var \Tracker_Artifact_Changeset_FieldsValidator */
-    private $fields_validator;
-    /** @var \EventManager */
-    private $event_manager;
-    /**
-     * @var \ReferenceManager
-     */
-    private $reference_manager;
-    /**
-     * @var DBTransactionExecutor
-     */
-    private $transaction_executor;
-    /**
-     * @var \Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver
-     */
-    private $artifact_changeset_saver;
-
-    /**
-     * @var ParentLinkAction
-     */
-    private $parent_link_action;
-    /**
-     * @var TrackerPrivateCommentUGroupPermissionInserter
-     */
-    private $comment_ugroup_permission_inserter;
-    private AfterNewChangesetHandler $after_new_changeset_handler;
-    private ActionsRunner $post_creation_runner;
-    private SaveChangesetValue $changeset_value_saver;
-    private RetrieveWorkflow $workflow_retriever;
-
     public function __construct(
-        \Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
-        FieldsToBeSavedInSpecificOrderRetriever $fields_retriever,
-        \Tracker_Artifact_Changeset_CommentDao $changeset_comment_dao,
-        \EventManager $event_manager,
-        \ReferenceManager $reference_manager,
-        \Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
-        DBTransactionExecutor $transaction_executor,
-        ArtifactChangesetSaver $artifact_changeset_saver,
-        ParentLinkAction $parent_link_action,
-        TrackerPrivateCommentUGroupPermissionInserter $comment_ugroup_permission_inserter,
-        AfterNewChangesetHandler $after_new_changeset_handler,
-        ActionsRunner $post_creation_runner,
-        SaveChangesetValue $changeset_value_saver,
-        RetrieveWorkflow $workflow_retriever,
+        private \Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
+        private FieldsToBeSavedInSpecificOrderRetriever $fields_retriever,
+        private \EventManager $event_manager,
+        private \Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
+        private DBTransactionExecutor $transaction_executor,
+        private ArtifactChangesetSaver $artifact_changeset_saver,
+        private ParentLinkAction $parent_link_action,
+        private AfterNewChangesetHandler $after_new_changeset_handler,
+        private ActionsRunner $post_creation_runner,
+        private SaveChangesetValue $changeset_value_saver,
+        private RetrieveWorkflow $workflow_retriever,
+        private CommentCreator $comment_creator,
     ) {
-        $this->fields_validator                   = $fields_validator;
-        $this->event_manager                      = $event_manager;
-        $this->field_initializator                = $field_initializator;
-        $this->fields_retriever                   = $fields_retriever;
-        $this->changeset_comment_dao              = $changeset_comment_dao;
-        $this->reference_manager                  = $reference_manager;
-        $this->transaction_executor               = $transaction_executor;
-        $this->artifact_changeset_saver           = $artifact_changeset_saver;
-        $this->parent_link_action                 = $parent_link_action;
-        $this->comment_ugroup_permission_inserter = $comment_ugroup_permission_inserter;
-        $this->after_new_changeset_handler        = $after_new_changeset_handler;
-        $this->post_creation_runner               = $post_creation_runner;
-        $this->changeset_value_saver              = $changeset_value_saver;
-        $this->workflow_retriever                 = $workflow_retriever;
     }
 
     /**
@@ -189,20 +136,16 @@ class NewChangesetCreator
                         $url_mapping
                     );
 
-                    if (
-                        ! $this->storeComment(
-                            $artifact,
-                            $comment,
-                            $submitter,
-                            $submitted_on,
-                            $comment_format,
-                            $changeset_id,
-                            $url_mapping,
-                            $ugroups
-                        )
-                    ) {
-                        throw new \Tracker_CommentNotStoredException();
-                    }
+                    $new_comment = $this->createNewComment(
+                        $changeset_id,
+                        $comment,
+                        $comment_format,
+                        $submitter,
+                        $submitted_on,
+                        $ugroups,
+                        $url_mapping
+                    );
+                    $this->comment_creator->createComment($artifact, $new_comment);
 
                     $new_changeset = new \Tracker_Artifact_Changeset(
                         $changeset_id,
@@ -236,7 +179,6 @@ class NewChangesetCreator
                 }
             });
 
-
             if (! $new_changeset) {
                 return null;
             }
@@ -250,6 +192,47 @@ class NewChangesetCreator
         } catch (\PDOException $exception) {
             throw new \Tracker_ChangesetCommitException($exception);
         }
+    }
+
+    /**
+     * @param \ProjectUGroup[] $user_groups_that_are_allowed_to_see
+     */
+    private function createNewComment(
+        int $changeset_id,
+        string $comment,
+        string $comment_format,
+        \PFUser $submitter,
+        int $submission_timestamp,
+        array $user_groups_that_are_allowed_to_see,
+        CreatedFileURLMapping $url_mapping,
+    ): NewComment {
+        if ($comment_format === \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
+            return NewComment::fromText(
+                $changeset_id,
+                $comment,
+                $submitter,
+                $submission_timestamp,
+                $user_groups_that_are_allowed_to_see
+            );
+        }
+        if ($comment_format === \Tracker_Artifact_Changeset_Comment::HTML_COMMENT) {
+            return NewComment::fromHTML(
+                $changeset_id,
+                $comment,
+                $submitter,
+                $submission_timestamp,
+                $user_groups_that_are_allowed_to_see,
+                $url_mapping
+            );
+        }
+        // Default to CommonMark
+        return NewComment::fromCommonMark(
+            $changeset_id,
+            $comment,
+            $submitter,
+            $submission_timestamp,
+            $user_groups_that_are_allowed_to_see
+        );
     }
 
     /**
@@ -286,54 +269,6 @@ class NewChangesetCreator
                 );
             }
         }
-    }
-
-    /**
-     * @param \ProjectUGroup[] $ugroups
-     */
-    private function storeComment(
-        Artifact $artifact,
-        string $comment,
-        \PFUser $submitter,
-        int $submitted_on,
-        string $comment_format,
-        int $changeset_id,
-        CreatedFileURLMapping $url_mapping,
-        array $ugroups,
-    ): bool {
-        $comment_format = \Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
-
-        if ($comment_format === \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
-            $substitutor = new \Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor();
-            $comment     = $substitutor->substituteURLsInHTML($comment, $url_mapping);
-        }
-
-        $comment_added = $this->changeset_comment_dao->createNewVersion(
-            $changeset_id,
-            $comment,
-            $submitter->getId(),
-            $submitted_on,
-            0,
-            $comment_format
-        );
-        if (! $comment_added) {
-            return false;
-        }
-
-        if (is_int($comment_added)) {
-            $this->comment_ugroup_permission_inserter->insertUGroupsOnPrivateComment($comment_added, $ugroups);
-        }
-
-        $this->reference_manager->extractCrossRef(
-            $comment,
-            $artifact->getId(),
-            Artifact::REFERENCE_NATURE,
-            (int) $artifact->getTracker()->getGroupID(),
-            (int) $submitter->getId(),
-            $artifact->getTracker()->getItemName()
-        );
-
-        return true;
     }
 
     /**

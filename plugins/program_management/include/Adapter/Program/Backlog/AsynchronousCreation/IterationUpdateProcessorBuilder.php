@@ -47,6 +47,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
@@ -113,9 +114,7 @@ final class IterationUpdateProcessorBuilder implements BuildIterationUpdateProce
                 ),
             ),
             $fields_retriever,
-            new \Tracker_Artifact_Changeset_CommentDao(),
             \EventManager::instance(),
-            \ReferenceManager::instance(),
             new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
             $transaction_executor,
             new ArtifactChangesetSaver(
@@ -125,11 +124,15 @@ final class IterationUpdateProcessorBuilder implements BuildIterationUpdateProce
                 new ChangesetFromXmlDao()
             ),
             new ParentLinkAction($artifact_factory),
-            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
             new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
             ActionsRunner::build(\BackendLogger::getDefaultLogger()),
             new ChangesetValueSaver(),
-            \WorkflowFactory::instance()
+            \WorkflowFactory::instance(),
+            new CommentCreator(
+                new \Tracker_Artifact_Changeset_CommentDao(),
+                \ReferenceManager::instance(),
+                new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+            )
         );
 
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
