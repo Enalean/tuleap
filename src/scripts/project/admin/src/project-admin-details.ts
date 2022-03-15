@@ -17,9 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createModal } from "tlp";
+import { createModal, openTargetModalIdOnClick } from "tlp";
 import { autocomplete_projects_for_select2 as autocomplete } from "../../../tuleap/autocomplete-for-select2";
-import { openTargetModalIdOnClick } from "../../../tuleap/modals/modal-opener";
 import { getPOFileFromLocale, initGettext } from "../../../tuleap/gettext/gettext-init";
 import type GetText from "node-gettext";
 import { initIconPicker } from "./helpers/icon-picker-initializer";

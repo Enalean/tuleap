@@ -7,6 +7,7 @@ specifiers:
   '@tuleap/mention': file:../../src/scripts/lib/mention
   '@tuleap/plugin-tracker-artifact-ckeditor-image-upload': file:scripts/lib/artifact-ckeditor-image-upload
   '@tuleap/plugin-tracker-rich-text-editor': file:scripts/lib/rich-text-editor
+  '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
   '@tuleap/tooltip': file:../../src/scripts/lib/tooltip
   '@types/bootstrap': ^4.5.1
@@ -67,6 +68,7 @@ dependencies:
   vuex: 3.6.2_vue@2.6.14
 
 devDependencies:
+  '@tuleap/tlp': link:../../src/themes/tlp
   '@types/bootstrap': 4.5.1
   '@types/ckeditor': 4.9.10
   '@types/codemirror': 5.60.1

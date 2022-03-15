@@ -17,10 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    openAllTargetModalsOnClick,
-    openTargetModalIdOnClick,
-} from "../tuleap/modals/modal-opener";
+import { openAllTargetModalsOnClick, openTargetModalIdOnClick } from "tlp";
 import { autoSubmitSwitches } from "../tuleap/switches/switch-autosubmitter";
 
 const ADD_BUTTON_ID = "add-description-field-button";

@@ -17,20 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as modal from "./modal";
 import {
     openModalAndReplacePlaceholders,
     openTargetModalIdOnClick,
     openAllTargetModalsOnClick,
 } from "./modal-opener";
 
-jest.mock("tlp");
-
 describe(`Modal Opener`, () => {
     let doc: Document, createModal: jest.SpyInstance;
     beforeEach(() => {
         doc = createLocalDocument();
-        createModal = jest.spyOn(tlp, "createModal");
+        createModal = jest.spyOn(modal, "createModal");
         jest.resetAllMocks();
     });
 
@@ -227,6 +225,7 @@ describe(`Modal Opener`, () => {
                 replaceModalWithOptions();
 
                 expect(createModal).toHaveBeenCalledWith(
+                    doc,
                     modal_element,
                     expect.objectContaining({ destroy_on_hide: true })
                 );

@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Modal } from "tlp";
-import { createModal } from "tlp";
+import type { Modal } from "./modal";
+import { createModal } from "./modal";
 
 export function openTargetModalIdOnClick(
     doc: Document,
@@ -61,7 +61,7 @@ function getTargetModal(doc: Document, button: HTMLElement): Modal {
     if (!modal_element) {
         throw new Error("Could not find the element referenced by data-target-modal-id");
     }
-    return createModal(modal_element);
+    return createModal(doc, modal_element);
 }
 
 export interface HiddenInputReplacement {
@@ -126,6 +126,6 @@ function createAndShowModal(doc: Document, modal_element_id: string): void {
         throw new Error("Missing modal element " + modal_element_id);
     }
 
-    const modal = createModal(modal_element, { destroy_on_hide: true, keyboard: true });
+    const modal = createModal(doc, modal_element, { destroy_on_hide: true, keyboard: true });
     modal.show();
 }

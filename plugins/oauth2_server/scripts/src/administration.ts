@@ -22,7 +22,7 @@ import {
     openModalAndReplacePlaceholders,
     openTargetModalIdOnClick,
     openAllTargetModalsOnClick,
-} from "@tuleap/core/scripts/tuleap/modals/modal-opener";
+} from "tlp";
 import {
     buildDeletionReplaceCallback,
     buildRegenerationReplaceBallback,

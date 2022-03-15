@@ -27,3 +27,4 @@ export const createModal = (element: Element, options?: ModalOptions): Modal =>
     createModalImplementation(document, element, options);
 
 export { Modal, EVENT_TLP_MODAL_HIDDEN, EVENT_TLP_MODAL_SHOWN } from "./modal";
+export * from "./modal-opener";

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openAllTargetModalsOnClick } from "@tuleap/core/scripts/tuleap/modals/modal-opener";
+import { openAllTargetModalsOnClick } from "tlp";
 import { extractAggregatedTeamIds } from "../helper/aggregated-team-ids-extractor";
 import { handleTeamRemove } from "../helper/button-to-remove-team-handler";
 

@@ -19,6 +19,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "@tuleap/tlp": "link:../../src/themes/tlp",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "@types/javascript-time-ago": "^2.0.1",
     "@types/sprintf-js": "^1.1.2",

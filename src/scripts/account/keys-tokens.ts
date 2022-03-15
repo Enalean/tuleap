@@ -18,8 +18,7 @@
  */
 
 import type { Modal } from "tlp";
-import { datePicker } from "tlp";
-import { openTargetModalIdOnClick } from "../tuleap/modals/modal-opener";
+import { datePicker, openTargetModalIdOnClick } from "tlp";
 import "../tuleap/custom-elements/copy-to-clipboard";
 
 document.addEventListener("DOMContentLoaded", () => {

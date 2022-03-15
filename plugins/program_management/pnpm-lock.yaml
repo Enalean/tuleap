@@ -6,6 +6,7 @@ specifiers:
   '@tuleap/drag-and-drop': file:../../src/scripts/lib/drag-and-drop
   '@tuleap/list-picker': file:../../src/scripts/lib/list-picker
   '@tuleap/project-privacy-helper': link:../../src/scripts/lib/project-privacy-helper
+  '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
   '@tuleap/vue-breadcrumb-privacy': file:../../src/scripts/lib/vue-breadcrumb-privacy
   '@types/sprintf-js': ^1.1.2
@@ -33,6 +34,7 @@ dependencies:
 
 devDependencies:
   '@tuleap/list-picker': link:../../src/scripts/lib/list-picker
+  '@tuleap/tlp': link:../../src/themes/tlp
   '@types/sprintf-js': 1.1.2
   '@vue/test-utils': 1.3.0_vue@2.6.14
   vue-class-component: 7.2.6_vue@2.6.14

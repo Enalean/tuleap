@@ -19,7 +19,7 @@
 
 import { loadAvatarReset } from "./avatar/reset";
 import { loadAvatarPreview } from "./avatar/preview";
-import { openTargetModalIdOnClick } from "../tuleap/modals/modal-opener";
+import { openTargetModalIdOnClick } from "tlp";
 
 const AVATAR_BUTTON_ID = "account-information-avatar-button";
 openTargetModalIdOnClick(document, AVATAR_BUTTON_ID);

@@ -33,6 +33,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "@tuleap/tlp": "link:../../src/themes/tlp",
     "@types/bootstrap": "^4.5.1",
     "@types/ckeditor": "^4.9.10",
     "@types/codemirror": "^5.60.1",

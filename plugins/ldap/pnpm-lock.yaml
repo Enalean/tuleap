@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@tuleap/core': link:../../src
   '@tuleap/html-escaper': file:../../src/scripts/lib/html-escaper
+  '@tuleap/tlp': link:../../src/themes/tlp
   mustache: ^4.2.0
   sprintf-js: ^1.1.2
 
@@ -11,6 +12,9 @@ dependencies:
   '@tuleap/html-escaper': link:../../src/scripts/lib/html-escaper
   mustache: 4.2.0
   sprintf-js: 1.1.2
+
+devDependencies:
+  '@tuleap/tlp': link:../../src/themes/tlp
 
 packages:
 

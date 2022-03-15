@@ -9,6 +9,7 @@
         "sprintf-js": "^1.1.2"
     },
     "devDependencies": {
+        "@tuleap/tlp": "link:../../src/themes/tlp",
         "@types/sprintf-js": "^1.1.2"
     },
     "scripts": {
