@@ -24,7 +24,7 @@
             <select
                 v-bind:id="format_select_id"
                 ref="format"
-                class="input-small ttm-definition-step-description-format"
+                class="small ttm-definition-step-description-format"
                 v-on:change="input($event)"
                 v-bind:disabled="disabled_format_selectbox"
                 data-test="ttm-definition-step-description-format"

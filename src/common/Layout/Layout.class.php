@@ -638,39 +638,39 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         bool $is_time_displayed,
         string $data_test,
     ): string {
-        $hp    = Codendi_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
+
+        $format     = "yyyy-MM-dd";
+        $date_class = 'tuleap_field_date';
+
+        if ($is_time_displayed) {
+            $format     = "yyyy-MM-dd hh:mm";
+            $date_class = 'tuleap_field_datetime';
+        }
+
+        $classes[] = $date_class;
+
         $html  = '';
         $html .= '<div class="input-prepend dropdown input-append date ' . implode(' ', $classes) . '">';
 
         if (count($criteria_selector) > 0) {
-            $html .= '<select id="add-on-select" name="' . $criteria_selector['name'] . '" class="add-on add-on-select selectpicker">';
+            $html .= '<select id="add-on-select" name="' . $criteria_selector['name'] . '" class="add-on-select selectpicker">';
             foreach ($criteria_selector['criterias'] as $criteria_value => $criteria) {
                 $html .= '<option value="' . $criteria_value . '" ' . $criteria['selected'] . '>' . $criteria['html_value'] . '</option>';
             }
-
             $html .= '</select>';
         }
 
-        $format     = "yyyy-MM-dd";
-        $span_class = 'tuleap_field_date';
-
-        if ($is_time_displayed) {
-            $format     = "yyyy-MM-dd hh:mm";
-            $span_class = 'tuleap_field_datetime';
-        }
-
         $html .= '
-            <span class="' . $span_class . '">
-                <input name="' . $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) . '"
-                       id="' . $hp->purify($id, CODENDI_PURIFIER_CONVERT_HTML) . '"
-                       data-format="' . $format . '"
-                       type="text"
-                       value="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '"
-                       data-test="' . $hp->purify($data_test, CODENDI_PURIFIER_CONVERT_HTML) . '">
-                </input>
-                <span class="add-on add-on-calendar">
-                  <i class="fas fa-calendar-alt" data-time-icon="fa-clock-o" data-date-icon="fa-calendar"></i>
-                </span>
+            <input name="' . $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) . '"
+                    id="' . $hp->purify($id, CODENDI_PURIFIER_CONVERT_HTML) . '"
+                    data-format="' . $format . '"
+                    type="text"
+                    value="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '"
+                    data-test="' . $hp->purify($data_test, CODENDI_PURIFIER_CONVERT_HTML) . '">
+            </input>
+            <span class="add-on add-on-calendar">
+                <i class="fas fa-calendar-alt" data-time-icon="fa-clock-o" data-date-icon="fa-calendar"></i>
             </span>
         </div>';
 

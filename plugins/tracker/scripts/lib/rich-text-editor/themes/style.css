@@ -23,6 +23,10 @@
     align-items: baseline;
 }
 
+.rte_format > select { /* stylelint-disable-line selector-class-pattern */
+    width: auto;
+}
+
 .rte-button {
     margin: 0 0 0 5px;
 }

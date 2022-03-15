@@ -299,6 +299,7 @@ $fade-background-color: color.mix($tlp-background-color, $tlp-white-color, 50);
     --tlp-button-shadow-hover: 0 1px 1px rgb(0 0 0 / 8%), 0 0 1px rgb(0 0 0 / 8%),
         0 -1px 0 rgb(0 0 0 / 3%);
     --tlp-shadow-focus: 0 0 0 2px #{color.adjust($tlp-main-color, $alpha: - 0.65)};
+    --tlp-shadow-focus-error: 0 0 0 2px #{color.adjust($tlp-danger-color, $alpha: - 0.65)};
 
     // radius
     --tlp-small-radius: 3px;
