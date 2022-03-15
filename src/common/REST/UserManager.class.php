@@ -20,11 +20,14 @@
 namespace Tuleap\REST;
 
 use Luracast\Restler\Data\ApiMethodInfo;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenDAO;
+use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenVerifier;
+use Tuleap\OAuth2ServerCore\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
+use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeRetriever;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
 use Tuleap\User\AccessKey\PrefixAccessKey;
@@ -34,7 +37,6 @@ use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
 use Tuleap\User\AccessKey\Scope\RESTAccessKeyScope;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminUserBuilder;
 use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
-use Tuleap\User\OAuth2\AccessToken\VerifyOAuth2AccessTokenEvent;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
 use Tuleap\User\OAuth2\Scope\CoreOAuth2ScopeBuilderFactory;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
@@ -87,10 +89,6 @@ class UserManager
      */
     private $read_only_admin_user_builder;
     /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
-    /**
      * @var SplitTokenIdentifierTranslator
      */
     private $access_token_identifier_unserializer;
@@ -107,7 +105,7 @@ class UserManager
         BearerTokenHeaderParser $bearer_token_header_parser,
         SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
         OAuth2ScopeExtractorRESTEndpoint $oauth2_scope_extractor_endpoint,
-        EventDispatcherInterface $event_dispatcher,
+        private OAuth2AccessTokenVerifier $oauth2_access_token_verifier,
         RestReadOnlyAdminUserBuilder $read_only_admin_user_builder,
     ) {
         $this->user_manager                         = $user_manager;
@@ -117,7 +115,6 @@ class UserManager
         $this->bearer_token_header_parser           = $bearer_token_header_parser;
         $this->access_token_identifier_unserializer = $access_token_identifier_unserializer;
         $this->oauth2_scope_extractor_endpoint      = $oauth2_scope_extractor_endpoint;
-        $this->event_dispatcher                     = $event_dispatcher;
         $this->read_only_admin_user_builder         = $read_only_admin_user_builder;
     }
 
@@ -154,7 +151,18 @@ class UserManager
             new BearerTokenHeaderParser(),
             new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
             new OAuth2ScopeExtractorRESTEndpoint($oauth2_scope_builder),
-            $event_manager,
+            new OAuth2AccessTokenVerifier(
+                new OAuth2AccessTokenDAO(),
+                new OAuth2ScopeRetriever(
+                    new OAuth2AccessTokenScopeDAO(),
+                    AggregateAuthenticationScopeBuilder::fromBuildersList(
+                        CoreOAuth2ScopeBuilderFactory::buildCoreOAuth2ScopeBuilder(),
+                        AggregateAuthenticationScopeBuilder::fromEventDispatcher($event_manager, new OAuth2ScopeBuilderCollector())
+                    )
+                ),
+                $user_manager,
+                new SplitTokenVerificationStringHasher()
+            ),
             new RestReadOnlyAdminUserBuilder(
                 new User_ForgeUserGroupPermissionsManager(
                     new User_ForgeUserGroupPermissionsDao()
@@ -275,12 +283,12 @@ class UserManager
 
         $required_scope = $this->oauth2_scope_extractor_endpoint->extractRequiredScope($api_method_info);
 
-        $event = new VerifyOAuth2AccessTokenEvent(
+        $granted_authorization = $this->oauth2_access_token_verifier->getGrantedAuthorization(
             $this->access_token_identifier_unserializer->getSplitToken($access_token),
             $required_scope
         );
 
-        return $this->event_dispatcher->dispatch($event)->getGrantedAuthorization()->getUser();
+        return $granted_authorization->getUser();
     }
 
     /**

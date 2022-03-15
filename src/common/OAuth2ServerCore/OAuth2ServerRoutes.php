@@ -40,6 +40,7 @@ use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
+use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\OAuth2ServerCore\Grant\AccessTokenGrantController;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\PrefixOAuth2AuthCode;
 use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenCreator;
@@ -98,6 +99,7 @@ final class OAuth2ServerRoutes
         $stream_factory   = HTTPFactoryBuilder::streamFactory();
         $password_handler = \PasswordHandlerFactory::getPasswordHandler();
         $event_manager    = EventManager::instance();
+        $user_manager     = UserManager::instance();
 
         return new \Tuleap\OAuth2ServerCore\User\UserInfoController(
             new JSONResponseBuilder($response_factory, $stream_factory),
@@ -108,11 +110,22 @@ final class OAuth2ServerRoutes
                 $response_factory,
                 new BearerTokenHeaderParser(),
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
-                $event_manager,
+                new OAuth2AccessTokenVerifier(
+                    new OAuth2AccessTokenDAO(),
+                    new OAuth2ScopeRetriever(
+                        new OAuth2AccessTokenScopeDAO(),
+                        AggregateAuthenticationScopeBuilder::fromBuildersList(
+                            CoreOAuth2ScopeBuilderFactory::buildCoreOAuth2ScopeBuilder(),
+                            AggregateAuthenticationScopeBuilder::fromEventDispatcher($event_manager, new OAuth2ScopeBuilderCollector())
+                        )
+                    ),
+                    $user_manager,
+                    new SplitTokenVerificationStringHasher()
+                ),
                 OAuth2SignInScope::fromItself(),
                 new User_LoginManager(
                     $event_manager,
-                    \UserManager::instance(),
+                    $user_manager,
                     new \Tuleap\User\PasswordVerifier($password_handler),
                     new User_PasswordExpirationChecker(),
                     $password_handler

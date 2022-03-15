@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2\ResourceServer;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -31,9 +30,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
+use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDoesNotHaveRequiredScopeException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenExpiredException;
-use Tuleap\User\OAuth2\AccessToken\VerifyOAuth2AccessTokenEvent;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
 use Tuleap\User\OAuth2\OAuth2Exception;
 use User_LoginException;
@@ -58,10 +57,6 @@ final class OAuth2ResourceServerMiddleware implements MiddlewareInterface
      */
     private $access_token_identifier_unserializer;
     /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
-    /**
      * @var AuthenticationScope
      */
     private $required_scope;
@@ -74,14 +69,13 @@ final class OAuth2ResourceServerMiddleware implements MiddlewareInterface
         ResponseFactoryInterface $response_factory,
         BearerTokenHeaderParser $bearer_token_header_parser,
         SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
-        EventDispatcherInterface $event_dispatcher,
+        private OAuth2AccessTokenVerifier $oauth2_access_token_verifier,
         AuthenticationScope $required_scope,
         \User_LoginManager $login_manager,
     ) {
         $this->response_factory                     = $response_factory;
         $this->bearer_token_header_parser           = $bearer_token_header_parser;
         $this->access_token_identifier_unserializer = $access_token_identifier_unserializer;
-        $this->event_dispatcher                     = $event_dispatcher;
         $this->required_scope                       = $required_scope;
         $this->login_manager                        = $login_manager;
     }
@@ -98,11 +92,10 @@ final class OAuth2ResourceServerMiddleware implements MiddlewareInterface
         }
 
         try {
-            $event                 = new VerifyOAuth2AccessTokenEvent(
+            $granted_authorization = $this->oauth2_access_token_verifier->getGrantedAuthorization(
                 $this->access_token_identifier_unserializer->getSplitToken($serialized_access_token_identifier),
                 $this->required_scope
             );
-            $granted_authorization = $this->event_dispatcher->dispatch($event)->getGrantedAuthorization();
         } catch (SplitTokenException $exception) {
             return $this->response_factory->createResponse(401)
                 ->withHeader(
