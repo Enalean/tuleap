@@ -19,7 +19,7 @@
 
 import { utils, writeFile } from "xlsx";
 import type { GlobalExportProperties } from "../../type";
-import type { ArtifactResponse } from "../../type";
+import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 
 export function downloadXLSX(
     global_properties: GlobalExportProperties,

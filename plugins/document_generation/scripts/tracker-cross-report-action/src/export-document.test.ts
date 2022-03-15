@@ -20,7 +20,7 @@
 import { downloadXLSXDocument } from "./export-document";
 import type { GlobalExportProperties } from "./type";
 import * as rest_querier from "./rest-querier";
-import type { ArtifactResponse } from "./type";
+import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 describe("export-document", () => {
@@ -31,10 +31,10 @@ describe("export-document", () => {
         const artifacts_report_response: ArtifactResponse[] = [
             {
                 id: 74,
-            },
+            } as ArtifactResponse,
             {
                 id: 4,
-            },
+            } as ArtifactResponse,
         ];
         mockFetchSuccess(getReportArtifactsMock, {
             return_json: {

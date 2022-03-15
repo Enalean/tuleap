@@ -18,7 +18,7 @@
  */
 
 import { recursiveGet } from "@tuleap/tlp-fetch";
-import type { ArtifactResponse } from "./type";
+import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 
 export async function getReportArtifacts(
     report_id: number,
