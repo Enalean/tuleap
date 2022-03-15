@@ -31,7 +31,6 @@ use ProjectManager;
 use SVNAccessFile;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBAuthUserConfig;
-use Tuleap\ForgeConfigSandbox;
 
 final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -39,7 +38,10 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
     use \Tuleap\TemporaryTestDirectory;
     use \Tuleap\GlobalSVNPollution;
     use \Tuleap\GlobalLanguageMock;
-    use ForgeConfigSandbox;
+
+    // Cannot use ForgeConfigSandbox here, you will generate an instance of CodendiDataAccess with invalid DB creds.
+    // It will break in other tests as soon as you try to access something with CodendiDataAccess
+    // use ForgeConfigSandbox;
 
     private $tmp_dir;
     private $bin_dir;
