@@ -126,7 +126,7 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             "",
             15
         );
-        self::assertSame("Brand-Mercedes", $update_filename);
+        self::assertSame("Brand-Mercedes.jpg", $update_filename);
     }
 
     public function testItThrowsExceptionWhenTheNewFilenameDoesNotHaveTheMandatoryVariable(): void
@@ -173,7 +173,7 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             "Not a Mercredes wow",
             15
         );
-        self::assertSame("Brand-Mercedes-rejected-Not a Mercredes wow-#15", $update_filename);
+        self::assertSame("Brand-Mercedes-rejected-Not a Mercredes wow-#15.jpg", $update_filename);
     }
 
     public function testItReturnsTheNewFilenameUsingSomeVariable(): void
@@ -187,6 +187,29 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $original_filename = "M2 CS.jpg";
+
+        $update_filename = $filename_builder->buildFilename(
+            $original_filename,
+            111,
+            "BMW",
+            103,
+            "Not a Mercredes wow",
+            15
+        );
+        self::assertSame("Brand-BMW-rejected-Not a Mercredes wow-#15.jpg", $update_filename);
+    }
+
+    public function testItReturnsTheNewFilenameWithoutExtension(): void
+    {
+        $this->docman_settings_bo->expects(self::once())->method('getMetadataUsage')->willReturn("1");
+
+        $pattern          = "Brand-\${TITLE}-\${STATUS}-Not a Mercredes wow-#\${ID}";
+        $filename_builder = new FilenameBuilder(
+            FilenamePatternRetrieverStub::buildWithPattern($pattern),
+            new ItemStatusMapper($this->docman_settings_bo)
+        );
+
+        $original_filename = "M2 CS";
 
         $update_filename = $filename_builder->buildFilename(
             $original_filename,
