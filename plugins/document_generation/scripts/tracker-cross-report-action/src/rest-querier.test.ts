@@ -20,7 +20,7 @@
 import * as tlp from "@tuleap/tlp-fetch";
 import { getReportArtifacts } from "./rest-querier";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import type { ArtifactResponse } from "./type";
+import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 
 jest.mock("tlp");
 
@@ -34,7 +34,7 @@ describe("API querier", () => {
             const artifacts_report_response: ArtifactResponse[] = [
                 {
                     id: 74,
-                },
+                } as ArtifactResponse,
             ];
             mockFetchSuccess(tlpRecursiveGet, {
                 return_json: {

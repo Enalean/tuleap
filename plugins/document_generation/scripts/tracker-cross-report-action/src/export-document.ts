@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GlobalExportProperties, ArtifactResponse } from "./type";
+import type { GlobalExportProperties } from "./type";
+import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import { getReportArtifacts } from "./rest-querier";
 
 export async function downloadXLSXDocument(
