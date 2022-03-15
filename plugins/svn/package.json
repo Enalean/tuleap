@@ -9,7 +9,9 @@
     "vue": "^2.6.14",
     "vue-gettext": "^2.1.12"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@tuleap/tlp": "link:../../src/themes/tlp"
+  },
   "scripts": {
     "build": "rm -rf ../../src/www/assets/svn && webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch"

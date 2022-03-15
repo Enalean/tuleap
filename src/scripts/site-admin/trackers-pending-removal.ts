@@ -15,7 +15,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openAllTargetModalsOnClick } from "../tuleap/modals/modal-opener";
+import { openAllTargetModalsOnClick } from "tlp";
 
 document.addEventListener("DOMContentLoaded", () => {
     openAllTargetModalsOnClick(document, ".delete-tv3-button");

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openTargetModalIdOnClick } from "@tuleap/core/scripts/tuleap/modals/modal-opener";
+import { openTargetModalIdOnClick } from "tlp";
 import App from "./new-thread/src/components/App.vue";
 import Vue from "vue";
 import {

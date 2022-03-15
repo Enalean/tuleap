@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openTargetModalIdOnClick } from "../../tuleap/modals/modal-opener";
-import { EVENT_TLP_MODAL_HIDDEN, EVENT_TLP_MODAL_SHOWN } from "tlp";
+import { openTargetModalIdOnClick, EVENT_TLP_MODAL_HIDDEN, EVENT_TLP_MODAL_SHOWN } from "tlp";
 import { initFeedbacks } from "../../invite-buddies/feedback-display";
 import { initNotificationsOnFormSubmit } from "../../invite-buddies/send-notifications";
 

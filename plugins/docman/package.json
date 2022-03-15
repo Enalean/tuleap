@@ -5,8 +5,8 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/core": "file:../../src",
     "@tuleap/html-escaper": "file:../../src/scripts/lib/html-escaper",
+    "@tuleap/tlp-modal": "link:../../src/scripts/lib/tlp-modal",
     "@tuleap/tlp-popovers": "link:../../src/scripts/lib/tlp-popovers"
   },
   "config": {

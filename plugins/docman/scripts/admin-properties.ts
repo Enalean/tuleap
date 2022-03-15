@@ -18,7 +18,7 @@
  */
 
 import { createPopover } from "@tuleap/tlp-popovers";
-import { openAllTargetModalsOnClick } from "@tuleap/core/scripts/tuleap/modals/modal-opener";
+import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
 import { bindTypeSelectorToMultipleValuesCheckbox } from "./admin/bind-type-selector-to-multiple-values-checkbox";
 
 document.addEventListener("DOMContentLoaded", () => {

@@ -18,7 +18,7 @@
  */
 
 import { getPOFileFromLocale, initGettext } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
-import { openModalAndReplacePlaceholders } from "@tuleap/core/scripts/tuleap/modals/modal-opener";
+import { openModalAndReplacePlaceholders } from "tlp";
 import { buildRevocationReplaceCallback, hiddenInputReplaceCallback } from "./replacers";
 
 const REVOKE_BUTTONS_SELECTOR = ".oauth2-server-revoke-authorization-button";

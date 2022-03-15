@@ -17,9 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "tlp";
+import { get, openTargetModalIdOnClick } from "tlp";
 import { initLdapBindingPreview } from "./preview-for-select2.js";
-import { openTargetModalIdOnClick } from "@tuleap/core/scripts/tuleap/modals/modal-opener.ts";
 
 const ADD_MODAL_BINDING_BUTTON_ID = "project-admin-ugroup-add-ldap-binding";
 

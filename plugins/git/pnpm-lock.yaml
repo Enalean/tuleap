@@ -5,6 +5,7 @@ specifiers:
   '@tuleap/filter-inline-table': file:../../src/scripts/lib/filter-table
   '@tuleap/html-escaper': file:../../src/scripts/lib/html-escaper
   '@tuleap/project-privacy-helper': link:../../src/scripts/lib/project-privacy-helper
+  '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
   '@tuleap/vue-breadcrumb-privacy': file:../../src/scripts/lib/vue-breadcrumb-privacy
   '@types/javascript-time-ago': ^2.0.1
@@ -37,6 +38,7 @@ dependencies:
   vuex: 3.6.2_vue@2.6.14
 
 devDependencies:
+  '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
   '@types/javascript-time-ago': 2.0.1
   '@types/sprintf-js': 1.1.2

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openTargetModalIdOnClick } from "../../../src/scripts/tuleap/modals/modal-opener";
+import { openTargetModalIdOnClick } from "tlp";
 
 document.addEventListener("DOMContentLoaded", () => {
     openTargetModalIdOnClick(document, "create-repository-button");
