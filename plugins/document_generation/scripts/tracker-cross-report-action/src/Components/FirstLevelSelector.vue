@@ -19,25 +19,23 @@
   -->
 
 <template>
-    <Teleport to="#main-content">
-        <div class="tracker-cross-report-document-modal">
-            <modal-content v-bind:properties="properties" />
+    <div>
+        <h2 class="tlp-modal-subtitle">
+            {{ $gettext("First level") }}
+        </h2>
+        <div class="tlp-form-element">
+            <label class="tlp-label">
+                {{ $gettext("Link type") }}
+                <select class="tlp-select" disabled>
+                    <option>{{ $gettext("All link types") }}</option>
+                </select>
+            </label>
         </div>
-    </Teleport>
+        <div class="tlp-form-element">
+            <label class="tlp-label">
+                {{ $gettext("Report") }}
+                <select class="tlp-select" disabled></select>
+            </label>
+        </div>
+    </div>
 </template>
-<script setup lang="ts">
-import type { GlobalExportProperties } from "../type";
-import ModalContent from "./ModalContent.vue";
-
-defineProps<{ properties: GlobalExportProperties }>();
-</script>
-<style lang="scss" scoped>
-@use "sass:meta";
-
-/* stylelint-disable-next-line selector-pseudo-class-no-unknown -- Stylelint does not know about the Vue :deep() selector */
-.tracker-cross-report-document-modal :deep() {
-    @include meta.load-css("@tuleap/tlp/src/scss/components/typography");
-    @include meta.load-css("@tuleap/tlp/src/scss/components/buttons");
-    @include meta.load-css("@tuleap/tlp-modal");
-}
-</style>

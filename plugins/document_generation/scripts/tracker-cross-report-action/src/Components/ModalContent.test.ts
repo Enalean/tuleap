@@ -17,26 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { GlobalExportProperties } from "../type";
-import Main from "./Main.vue";
-import { mount } from "@vue/test-utils";
 
-describe("Main", () => {
-    it("mounts modal content", () => {
-        const main_content = document.createElement("div");
-        main_content.id = "main-content";
-        document.body.append(main_content);
+const downloadXLSXDocument = jest.fn();
+jest.mock("../export-document", () => {
+    return {
+        downloadXLSXDocument: downloadXLSXDocument,
+    };
+});
 
-        mount(Main, {
+import ModalContent from "./ModalContent.vue";
+import { shallowMount } from "@vue/test-utils";
+import { createGettext } from "vue3-gettext";
+
+describe("ModalContent", () => {
+    beforeEach(() => {
+        downloadXLSXDocument.mockReset();
+    });
+
+    it("starts document export", async () => {
+        const wrapper = shallowMount(ModalContent, {
             global: {
-                stubs: {
-                    ModalContent: true,
-                },
+                plugins: [createGettext({ silent: true })],
             },
             props: {
                 properties: {} as GlobalExportProperties,
             },
         });
 
-        expect(main_content.innerHTML).not.toStrictEqual("");
+        const download_button = wrapper.find("[data-test=download-button]");
+
+        await download_button.trigger("click");
+
+        expect(downloadXLSXDocument).toHaveBeenCalled();
     });
 });
