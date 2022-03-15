@@ -20,17 +20,14 @@
 import { shallowMount } from "@vue/test-utils";
 import TestDefinitionCard from "./TestDefinitionCard.vue";
 import type { BacklogItem, TestDefinition } from "../../../type";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import type { RootState } from "../../../store/type";
-import { createTestPlanLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 jest.useFakeTimers();
 
 describe("TestDefinitionCard", () => {
-    it("Display a test definition as a card", async () => {
+    it("Display a test definition as a card", () => {
         const wrapper = shallowMount(TestDefinitionCard, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 test_definition: {
                     id: 123,
                     short_type: "test_def",
@@ -40,35 +37,46 @@ describe("TestDefinitionCard", () => {
                 } as TestDefinition,
                 backlog_item: { id: 456 } as BacklogItem,
             },
+            global: {
+                ...getGlobalTestOptions({}),
+            },
         });
 
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Marks the test as just refreshed", async () => {
-        const $store = createStoreMock({
-            state: {
-                backlog_item: {},
-            } as RootState,
-        });
+    it("Marks the test as just refreshed", () => {
+        const remove_is_just_refreshed_flag_on_test_definition_spy = jest.fn();
         const wrapper = shallowMount(TestDefinitionCard, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 test_definition: {
                     id: 123,
                     is_just_refreshed: true,
                 } as TestDefinition,
                 backlog_item: { id: 456 } as BacklogItem,
             },
-            mocks: { $store },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        backlog_item: {
+                            namespaced: true,
+                            state: {},
+                            mutations: {
+                                removeIsJustRefreshedFlagOnTestDefinition:
+                                    remove_is_just_refreshed_flag_on_test_definition_spy,
+                            },
+                        },
+                    },
+                }),
+            },
         });
 
         expect(wrapper.classes("test-plan-test-definition-is-just-refreshed")).toBe(true);
 
         jest.advanceTimersByTime(1000);
 
-        expect($store.commit).toHaveBeenCalledWith(
-            "backlog_item/removeIsJustRefreshedFlagOnTestDefinition",
+        expect(remove_is_just_refreshed_flag_on_test_definition_spy).toHaveBeenCalledWith(
+            expect.any(Object),
             {
                 backlog_item: { id: 456 },
                 test_definition: { id: 123, is_just_refreshed: true },

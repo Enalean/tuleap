@@ -19,16 +19,20 @@
 
 import type { BacklogItem, TestDefinition } from "../../type";
 import BacklogItemCoverage from "./BacklogItemCoverage.vue";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("BacklogItemCoverage", () => {
-    async function createWrapper(backlog_item: BacklogItem): Promise<Wrapper<BacklogItemCoverage>> {
+    function createWrapper(
+        backlog_item: BacklogItem
+    ): VueWrapper<InstanceType<typeof BacklogItemCoverage>> {
         return shallowMount(BacklogItemCoverage, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 backlog_item,
+            },
+            global: {
+                ...getGlobalTestOptions({}),
             },
         });
     }

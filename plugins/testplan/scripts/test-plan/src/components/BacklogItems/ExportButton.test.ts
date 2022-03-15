@@ -33,14 +33,14 @@ jest.mock("../../helpers/ExportAsDocument/download-export-document", () => {
     };
 });
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { RootState } from "../../store/type";
 import ExportButton from "./ExportButton.vue";
 import type { BacklogItemState } from "../../store/backlog-item/type";
 import type { CampaignState } from "../../store/campaign/type";
-import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 describe("ExportButton", () => {
     beforeEach(() => {
@@ -48,21 +48,34 @@ describe("ExportButton", () => {
         downloadDocxExportDocument.mockReset();
     });
 
-    async function createWrapper(
+    function createWrapper(
         backlog_item: BacklogItemState,
-        campaign: CampaignState
-    ): Promise<Wrapper<ExportButton>> {
+        campaign: CampaignState,
+        error_handler: (e: unknown) => void = (e): void => {
+            throw e;
+        }
+    ): VueWrapper<InstanceType<typeof ExportButton>> {
         return shallowMount(ExportButton, {
-            localVue: await createTestPlanLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        project_name: "Project",
-                        milestone_title: "My milestone",
-                        backlog_item,
-                        campaign,
-                    } as RootState,
-                }),
+            global: {
+                ...getGlobalTestOptions(
+                    {
+                        state: {
+                            project_name: "Project",
+                            milestone_title: "My milestone",
+                        } as RootState,
+                        modules: {
+                            campaign: {
+                                namespaced: true,
+                                state: campaign,
+                            },
+                            backlog_item: {
+                                namespaced: true,
+                                state: backlog_item,
+                            },
+                        },
+                    },
+                    error_handler
+                ),
             },
         });
     }
@@ -176,8 +189,6 @@ describe("ExportButton", () => {
     it("Export button icon does not stay in loading mode in case of xlsx failure", async () => {
         const error = new Error("Something bad happened");
         downloadXlsxExportDocument.mockRejectedValue(error);
-        const consoleErrorSpy = jest.spyOn(global.console, "error").mockImplementation();
-
         const wrapper = await createWrapper(
             {
                 is_loading: false,
@@ -186,36 +197,30 @@ describe("ExportButton", () => {
             {
                 is_loading: false,
                 has_loading_error: false,
-            } as CampaignState
+            } as CampaignState,
+            (e): void => {
+                expect(e).toBe(error);
+            }
         );
 
         const download_button = wrapper.get("[data-test=testplan-export-xlsx-button]");
 
         await download_button.trigger("click");
 
-        try {
-            // Needs 4 ticks so the component can be rendered after the error in the async v-on handler
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
-        } finally {
-            expect(consoleErrorSpy).toHaveBeenCalled();
-            consoleErrorSpy.mockRestore();
+        // Needs 5 ticks so the component can be rendered after the error in the async v-on handler
+        for (let i = 0; i < 5; i++) {
+            await nextTick();
         }
 
-        expect(
-            wrapper
-                .get("[data-test=download-export-button-icon]")
-                .element.classList.contains("fa-spin")
-        ).toBe(false);
+        expect(wrapper.get("[data-test=download-export-button-icon]").classes()).not.toContain(
+            "fa-spin"
+        );
         expect(wrapper.findComponent(ExportError).exists()).toBe(true);
     });
 
     it("Export button icon does not stay in loading mode in case of docx failure", async () => {
         const error = new Error("Something bad happened");
         downloadDocxExportDocument.mockRejectedValue(error);
-        const consoleErrorSpy = jest.spyOn(global.console, "error").mockImplementation();
 
         const wrapper = await createWrapper(
             {
@@ -225,29 +230,24 @@ describe("ExportButton", () => {
             {
                 is_loading: false,
                 has_loading_error: false,
-            } as CampaignState
+            } as CampaignState,
+            (e): void => {
+                expect(e).toBe(error);
+            }
         );
 
         const download_button = wrapper.get("[data-test=testplan-export-docx-button]");
 
         await download_button.trigger("click");
 
-        try {
-            // Needs 4 ticks so the component can be rendered after the error in the async v-on handler
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
-        } finally {
-            expect(consoleErrorSpy).toHaveBeenCalled();
-            consoleErrorSpy.mockRestore();
+        // Needs 5 ticks so the component can be rendered after the error in the async v-on handler
+        for (let i = 0; i < 5; i++) {
+            await nextTick();
         }
 
-        expect(
-            wrapper
-                .get("[data-test=download-export-button-icon]")
-                .element.classList.contains("fa-spin")
-        ).toBe(false);
+        expect(wrapper.get("[data-test=download-export-button-icon]").classes()).not.toContain(
+            "fa-spin"
+        );
         expect(wrapper.findComponent(ExportError).exists()).toBe(true);
     });
 });

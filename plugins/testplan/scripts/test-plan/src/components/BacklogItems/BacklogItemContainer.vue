@@ -24,14 +24,15 @@
         <list-of-test-definitions
             v-if="backlog_item.is_expanded"
             v-bind:backlog_item="backlog_item"
+            data-test="async-list-test-defs"
         />
     </div>
 </template>
 <script setup lang="ts">
 import BacklogItemCard from "./BacklogItemCard.vue";
-import { defineAsyncComponent, onMounted } from "@vue/composition-api";
+import { defineAsyncComponent, onMounted } from "vue";
 import type { BacklogItem } from "../../type";
-import { useActions } from "vuex-composition-helpers";
+import { useNamespacedActions } from "vuex-composition-helpers";
 import type { BacklogItemActions } from "../../store/backlog-item/backlog-item-actions";
 
 const ListOfTestDefinitions = defineAsyncComponent(
@@ -45,10 +46,9 @@ const props = defineProps<{
     backlog_item: BacklogItem;
 }>();
 
-const { loadTestDefinitions } = useActions<Pick<BacklogItemActions, "loadTestDefinitions">>(
-    "backlog_item",
-    ["loadTestDefinitions"]
-);
+const { loadTestDefinitions } = useNamespacedActions<
+    Pick<BacklogItemActions, "loadTestDefinitions">
+>("backlog_item", ["loadTestDefinitions"]);
 
 onMounted((): void => {
     if (!props.backlog_item.are_test_definitions_loaded) {
@@ -57,7 +57,7 @@ onMounted((): void => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

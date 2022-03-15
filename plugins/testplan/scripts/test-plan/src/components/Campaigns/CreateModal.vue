@@ -97,26 +97,27 @@
 <script setup lang="ts">
 import CreateCampaignTestSelector from "./CreateCampaignTestSelector.vue";
 import CreateModalErrorFeedback from "./CreateModalErrorFeedback.vue";
-import { useActions, useState } from "vuex-composition-helpers";
+import { useNamespacedActions, useState } from "vuex-composition-helpers";
 import type { State } from "../../store/type";
 import type { CampaignActions } from "../../store/campaign/campaign-actions";
 import type { BacklogItemActions } from "../../store/backlog-item/backlog-item-actions";
-import { computed, onMounted, ref } from "@vue/composition-api";
+import { computed, onMounted, ref } from "vue";
 import type { Modal } from "tlp";
 import { createModal, FetchWrapperError } from "tlp";
 import type { TrackerReport } from "../../helpers/Campaigns/tracker-reports-retriever";
 import { getTrackerReports } from "../../helpers/Campaigns/tracker-reports-retriever";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import type { CampaignInitialTests } from "../../helpers/Campaigns/campaign-initial-tests";
 
 const { testdefinition_tracker_id } = useState<Pick<State, "testdefinition_tracker_id">>([
     "testdefinition_tracker_id",
 ]);
 
-const { createCampaign } = useActions<Pick<CampaignActions, "createCampaign">>("campaign", [
-    "createCampaign",
-]);
-const { loadBacklogItems } = useActions<Pick<BacklogItemActions, "loadBacklogItems">>(
+const { createCampaign } = useNamespacedActions<Pick<CampaignActions, "createCampaign">>(
+    "campaign",
+    ["createCampaign"]
+);
+const { loadBacklogItems } = useNamespacedActions<Pick<BacklogItemActions, "loadBacklogItems">>(
     "backlog_item",
     ["loadBacklogItems"]
 );
@@ -206,7 +207,7 @@ const icon_class = computed((): string => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

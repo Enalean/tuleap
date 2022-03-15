@@ -37,7 +37,7 @@ import TestDefinitionCard from "./TestDefinitionCard.vue";
 import TestDefinitionEmptyState from "./TestDefinitionEmptyState.vue";
 import TestDefinitionErrorState from "./TestDefinitionErrorState.vue";
 import type { BacklogItem } from "../../../type";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 
 const props = defineProps<{
     backlog_item: BacklogItem;
@@ -56,7 +56,7 @@ const should_error_state_be_displayed = computed((): boolean => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

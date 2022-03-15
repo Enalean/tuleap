@@ -9,17 +9,13 @@ exports[`CampaignEmptyState Displays empty state with new campaign creation butt
   >
     <campaign-empty-state-svg-stub />
   </div>
-   
   <p
     class="empty-state-text"
   >
     <translate-stub
       tag="span"
-    >
-      There is no test campaign yet
-    </translate-stub>
+    />
   </p>
-   
   <button
     class="tlp-button-primary tlp-button-outline empty-state-action"
     data-test="new-campaign"
@@ -28,12 +24,9 @@ exports[`CampaignEmptyState Displays empty state with new campaign creation butt
     <i
       class="fa fa-plus tlp-button-icon"
     />
-     
     <translate-stub
       tag="span"
-    >
-      Create new campaign
-    </translate-stub>
+    />
   </button>
 </section>
 `;

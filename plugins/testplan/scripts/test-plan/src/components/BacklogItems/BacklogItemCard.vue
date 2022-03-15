@@ -50,9 +50,9 @@ import BacklogItemCoverage from "./BacklogItemCoverage.vue";
 import AddTestButton from "./AddTestButtonWithAdditionalActionsMenu.vue";
 import type { BacklogItem } from "../../type";
 import type { State } from "../../store/type";
-import { useMutations, useState } from "vuex-composition-helpers";
+import { useNamespacedMutations, useState } from "vuex-composition-helpers";
 import type { BacklogItemMutations } from "../../store/backlog-item/backlog-item-mutations";
-import { computed, onMounted } from "@vue/composition-api";
+import { computed, onMounted } from "vue";
 import { buildEditBacklogItemLink } from "../../helpers/BacklogItems/url-builder";
 
 const { milestone_id } = useState<Pick<State, "milestone_id">>(["milestone_id"]);
@@ -62,7 +62,7 @@ const props = defineProps<{
 }>();
 
 const { removeIsJustRefreshedFlagOnBacklogItem, expandBacklogItem, collapseBacklogItem } =
-    useMutations<
+    useNamespacedMutations<
         Pick<
             BacklogItemMutations,
             "removeIsJustRefreshedFlagOnBacklogItem" | "expandBacklogItem" | "collapseBacklogItem"
@@ -106,7 +106,7 @@ const edit_backlog_item_href = computed(() => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

@@ -18,16 +18,12 @@
  *
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
-import VueCompositionAPI from "@vue/composition-api";
-import {
-    getPOFileFromLocale,
-    initVueGettext,
-} from "../../../../src/scripts/tuleap/gettext/vue-gettext-init";
 import App from "./src/components/App.vue";
-import { createStore } from "./src/store";
 import type { RootState } from "./src/store/type";
+import { createApp } from "vue";
+import { createInitializedStore } from "./src/store";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("test-plan");
@@ -72,15 +68,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             ? JSON.parse(vue_mount_point.dataset.artifactLinksTypes)
             : [];
 
-    await initVueGettext(
-        Vue,
-        (locale: string) =>
-            import(/* webpackChunkName: "testplan-po-" */ "./po/" + getPOFileFromLocale(locale))
+    const app = createApp(App);
+    app.use(
+        await initVueGettext(
+            createGettext,
+            (locale: string) =>
+                import(/* webpackChunkName: "testplan-po-" */ "./po/" + getPOFileFromLocale(locale))
+        )
     );
-    Vue.use(Vuex);
-    Vue.use(VueCompositionAPI);
-
-    const AppComponent = Vue.extend(App);
 
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const initial_state = {
@@ -104,7 +99,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         artifact_links_types,
     } as unknown as RootState;
 
-    new AppComponent({
-        store: createStore(initial_state),
-    }).$mount(vue_mount_point);
+    app.use(createInitializedStore(initial_state));
+    app.mount(vue_mount_point);
 });

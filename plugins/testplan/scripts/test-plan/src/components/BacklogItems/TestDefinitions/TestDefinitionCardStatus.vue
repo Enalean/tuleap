@@ -29,7 +29,7 @@ import TestDefinitionCardStatusTooltipIcon from "./TestDefinitionCardStatusToolt
 import type { TestDefinition } from "../../../type";
 import { useState } from "vuex-composition-helpers";
 import type { State } from "../../../store/type";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 import { buildGoToTestExecutionLink } from "../../../helpers/BacklogItems/url-builder";
 
 const props = defineProps<{
@@ -46,7 +46,7 @@ const go_to_test_exec_link = computed((): string | null => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

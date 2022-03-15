@@ -17,33 +17,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import BacklogItemContainer from "./BacklogItemContainer.vue";
 import BacklogItemCard from "./BacklogItemCard.vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import type { RootState } from "../../store/type";
 import type { BacklogItem } from "../../type";
-import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("BacklogItemContainer", () => {
-    async function createWrapper(
+    const load_test_defs = jest.fn();
+
+    function createWrapper(
         backlog_item: BacklogItem
-    ): Promise<Wrapper<BacklogItemContainer>> {
+    ): VueWrapper<InstanceType<typeof BacklogItemContainer>> {
+        load_test_defs.mockReset();
         return shallowMount(BacklogItemContainer, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 backlog_item,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        backlog_item: {},
-                    } as RootState,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        backlog_item: {
+                            namespaced: true,
+                            state: backlog_item,
+                            actions: {
+                                loadTestDefinitions: load_test_defs,
+                            },
+                        },
+                    },
                 }),
-            },
-            stubs: {
-                "list-of-test-definitions": true,
             },
         });
     }
@@ -65,7 +68,7 @@ describe("BacklogItemContainer", () => {
             are_test_definitions_loaded: false,
         } as BacklogItem);
 
-        expect(wrapper.find("list-of-test-definitions-stub").exists()).toBe(true);
+        expect(wrapper.find("[data-test=async-list-test-defs]").exists()).toBe(true);
     });
 
     it("Hides the corresponding test definitions if backlog item is collapsed", async () => {
@@ -84,11 +87,8 @@ describe("BacklogItemContainer", () => {
             is_expanded: false,
             are_test_definitions_loaded: false,
         } as BacklogItem;
-        const wrapper = await createWrapper(backlog_item);
+        await createWrapper(backlog_item);
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
-            "backlog_item/loadTestDefinitions",
-            backlog_item
-        );
+        expect(load_test_defs).toHaveBeenCalledWith(expect.any(Object), backlog_item);
     });
 });

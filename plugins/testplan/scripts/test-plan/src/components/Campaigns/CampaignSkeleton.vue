@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <div class="tlp-card tlp-skeleton-card">
         <h3><span class="tlp-skeleton-text"></span></h3>
         <span class="tlp-skeleton-text test-plan-campaign-progress-skeleton"></span>

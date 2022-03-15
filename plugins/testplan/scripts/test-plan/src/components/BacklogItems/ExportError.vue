@@ -55,7 +55,7 @@
 </template>
 <script setup lang="ts">
 import { createModal } from "tlp";
-import { onMounted, ref } from "@vue/composition-api";
+import { onMounted, ref } from "vue";
 
 const root = ref<InstanceType<typeof Element>>();
 
@@ -65,9 +65,4 @@ onMounted((): void => {
         createModal(modal_element, { destroy_on_hide: true }).show();
     }
 });
-</script>
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-
-export default defineComponent({});
 </script>

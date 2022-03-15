@@ -17,30 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 import type { RootState } from "../../store/type";
 import type { BacklogItem } from "../../type";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import AddTestButtonWithAdditionalActionsMenu from "./AddTestButtonWithAdditionalActionsMenu.vue";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("AddTestButtonWithAdditionalActionsMenu", () => {
-    async function createWrapper(
+    function createWrapper(
         state: RootState,
         backlog_item: BacklogItem,
         should_empty_state_be_displayed: boolean
-    ): Promise<Wrapper<AddTestButtonWithAdditionalActionsMenu>> {
+    ): VueWrapper<InstanceType<typeof AddTestButtonWithAdditionalActionsMenu>> {
         return shallowMount(AddTestButtonWithAdditionalActionsMenu, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            global: {
+                ...getGlobalTestOptions({ state }),
+            },
+            props: {
                 backlog_item,
                 should_empty_state_be_displayed,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state,
-                }),
             },
         });
     }
@@ -52,7 +48,7 @@ describe("AddTestButtonWithAdditionalActionsMenu", () => {
             false
         );
 
-        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+        expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
 
     it("Does not display the button if there is no test definition tracker id", async () => {
@@ -62,7 +58,7 @@ describe("AddTestButtonWithAdditionalActionsMenu", () => {
             false
         );
 
-        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+        expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
 
     it("Does not display the button if the test definitions are still loading", async () => {
@@ -77,7 +73,7 @@ describe("AddTestButtonWithAdditionalActionsMenu", () => {
             false
         );
 
-        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+        expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
 
     it("Does not display the button if an error occurred during the load of the test definitions", async () => {
@@ -93,7 +89,7 @@ describe("AddTestButtonWithAdditionalActionsMenu", () => {
             false
         );
 
-        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+        expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
 
     it("Displays the button if conditions are ok", async () => {

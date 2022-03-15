@@ -19,16 +19,14 @@
 
 import { shallowMount } from "@vue/test-utils";
 import TestDefinitionCardStatus from "./TestDefinitionCardStatus.vue";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { RootState } from "../../../store/type";
 import type { TestDefinition } from "../../../type";
-import { createTestPlanLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("TestDefinitionCardStatus", () => {
-    it("has a link to go to the test exec in TTM when the test definition is planned", async () => {
+    it("has a link to go to the test exec in TTM when the test definition is planned", () => {
         const wrapper = shallowMount(TestDefinitionCardStatus, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 test_definition: {
                     id: 123,
                     test_status: "notrun",
@@ -40,8 +38,8 @@ describe("TestDefinitionCardStatus", () => {
                     },
                 } as TestDefinition,
             },
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         project_id: 102,
                         milestone_id: 11,
@@ -50,17 +48,20 @@ describe("TestDefinitionCardStatus", () => {
             },
         });
 
-        expect(wrapper).toMatchInlineSnapshot(`
-            <a href="/plugins/testmanagement/?group_id=102&amp;milestone_id=11#!/campaigns/41/123/123">
-              <test-definition-card-status-tooltip-icon-stub test_definition="[object Object]"></test-definition-card-status-tooltip-icon-stub>
+        expect(wrapper.element).toMatchInlineSnapshot(`
+            <a
+              href="/plugins/testmanagement/?group_id=102&milestone_id=11#!/campaigns/41/123/123"
+            >
+              <test-definition-card-status-tooltip-icon-stub
+                test_definition="[object Object]"
+              />
             </a>
         `);
     });
 
-    it("only shows the icon when the test definition is not planned", async () => {
+    it("only shows the icon when the test definition is not planned", () => {
         const wrapper = shallowMount(TestDefinitionCardStatus, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 test_definition: {
                     id: 123,
                     test_status: null,
@@ -68,8 +69,8 @@ describe("TestDefinitionCardStatus", () => {
                     test_campaign_defining_status: null,
                 } as TestDefinition,
             },
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         project_id: 102,
                         milestone_id: 11,
@@ -78,8 +79,10 @@ describe("TestDefinitionCardStatus", () => {
             },
         });
 
-        expect(wrapper).toMatchInlineSnapshot(
-            `<test-definition-card-status-tooltip-icon-stub test_definition="[object Object]"></test-definition-card-status-tooltip-icon-stub>`
-        );
+        expect(wrapper.element).toMatchInlineSnapshot(`
+            <test-definition-card-status-tooltip-icon-stub
+              test_definition="[object Object]"
+            />
+        `);
     });
 });

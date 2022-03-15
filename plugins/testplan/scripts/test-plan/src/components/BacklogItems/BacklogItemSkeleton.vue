@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <div class="tlp-card tlp-skeleton-card">
         <span class="tlp-skeleton-text test-plan-backlog-item-skeleton-xref"></span>
         <span class="tlp-skeleton-text test-plan-backlog-item-skeleton-title"></span>

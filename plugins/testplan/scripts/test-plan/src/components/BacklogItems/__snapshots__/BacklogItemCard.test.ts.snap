@@ -10,28 +10,20 @@ exports[`BacklogItemCard Displays the backlog item as a card 1`] = `
       aria-hidden="true"
       class="fa fa-fw test-plan-backlog-item-caret fa-caret-right"
     />
-     
     <span
       class="cross-ref-badge cross-ref-badge-fiesta-red"
     >
-      
-            bug #123
-        
+      bug #123
     </span>
-     
     <span
       class="test-plan-backlog-item-title"
     >
-      
-            A backlog item
-        
+      A backlog item
     </span>
-     
     <add-test-button-stub
       backlog_item="[object Object]"
     />
   </div>
-   
   <backlog-item-coverage-stub
     backlog_item="[object Object]"
   />

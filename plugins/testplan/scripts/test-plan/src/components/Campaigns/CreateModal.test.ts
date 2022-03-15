@@ -17,17 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
-import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 import * as tlp from "tlp";
 import type { Modal } from "tlp";
 import CreateModal from "./CreateModal.vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { RootState } from "../../store/type";
-import type { CampaignState } from "../../store/campaign/type";
 import * as tracker_report_retriever from "../../helpers/Campaigns/tracker-reports-retriever";
-import type { BacklogItemState } from "../../store/backlog-item/type";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 jest.mock("tlp", () => {
     return {
@@ -37,10 +34,9 @@ jest.mock("tlp", () => {
 });
 
 describe("CreateModal", () => {
-    let local_vue: typeof Vue;
-
-    beforeEach(async () => {
-        local_vue = await createTestPlanLocalVue();
+    beforeEach(() => {
+        // To be removed once Vue 3 compat issues are resolved
+        jest.spyOn(global.console, "warn").mockImplementation();
     });
 
     it("Display the modal when mounted", async () => {
@@ -52,9 +48,8 @@ describe("CreateModal", () => {
         });
 
         const wrapper = shallowMount(CreateModal, {
-            localVue: local_vue,
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         milestone_title: "Milestone Title",
                         testdefinition_tracker_id: null,
@@ -63,7 +58,7 @@ describe("CreateModal", () => {
             },
         });
         // We need to wait for the loading state to be rendered and the tracker reports status to be resolved
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         expect(modal_show).toHaveBeenCalledTimes(1);
         expect(wrapper.element).toMatchSnapshot();
@@ -78,37 +73,50 @@ describe("CreateModal", () => {
             } as unknown as Modal;
         });
 
-        const $store = createStoreMock({
-            state: {
-                milestone_title: "Milestone Title",
-                testdefinition_tracker_id: null,
-                campaign: {} as CampaignState,
-                backlog_item: {} as BacklogItemState,
-            } as RootState,
-        });
+        const create_campaign_spy = jest.fn();
+        const load_backlog_items_spy = jest.fn();
 
         const wrapper = shallowMount(CreateModal, {
-            localVue: local_vue,
-            mocks: {
-                $store,
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        milestone_title: "Milestone Title",
+                        testdefinition_tracker_id: null,
+                    } as RootState,
+                    modules: {
+                        campaign: {
+                            namespaced: true,
+                            state: {},
+                            actions: {
+                                createCampaign: create_campaign_spy,
+                            },
+                        },
+                        backlog_item: {
+                            namespaced: true,
+                            state: {},
+                            actions: {
+                                loadBacklogItems: load_backlog_items_spy,
+                            },
+                        },
+                    },
+                }),
             },
         });
 
         // We need to wait for the loading state to be rendered and the tracker reports status to be resolved
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         wrapper.find("[data-test=new-campaign-label]").setValue("My new campaign");
-        wrapper.vm.$data.test_selector = "milestone";
 
         await wrapper.trigger("submit");
 
-        expect($store.dispatch).toHaveBeenCalledWith("campaign/createCampaign", {
+        expect(create_campaign_spy).toHaveBeenCalledWith(expect.any(Object), {
             label: "My new campaign",
             initial_tests: {
                 test_selector: "milestone",
             },
         });
-        expect($store.dispatch).toHaveBeenCalledWith("backlog_item/loadBacklogItems");
+        expect(load_backlog_items_spy).toHaveBeenCalled();
         expect(modal_hide).toHaveBeenCalledTimes(1);
     });
 
@@ -120,36 +128,32 @@ describe("CreateModal", () => {
                 hide: modal_hide,
             } as unknown as Modal;
         });
+        const expected_error = new Error("Something bad happened");
         jest.spyOn(tracker_report_retriever, "getTrackerReports").mockRejectedValueOnce(
-            new Error("Something bad happened")
+            expected_error
         );
 
-        const $store = createStoreMock({
-            state: {
-                milestone_title: "Milestone Title",
-                testdefinition_tracker_id: 12,
-            } as RootState,
-        });
-
         const wrapper = shallowMount(CreateModal, {
-            localVue: local_vue,
-            mocks: {
-                $store,
+            global: {
+                ...getGlobalTestOptions(
+                    {
+                        state: {
+                            milestone_title: "Milestone Title",
+                            testdefinition_tracker_id: 12,
+                        } as RootState,
+                    },
+                    (e): void => {
+                        expect(e).toBe(expected_error);
+                    }
+                ),
             },
         });
-        // We need to wait for the loading state to be rendered and then to fail to retrieve the tracker reports
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
 
-        // We need to mock console.error otherwise vue-test-utils tell us something has gone wrong when mounting the
-        // component because we re-throw the error which ends up failing the test
-        const consoleErrorSpy = jest.spyOn(global.console, "error").mockImplementation();
-        try {
-            await wrapper.vm.$nextTick();
-        } finally {
-            expect(consoleErrorSpy).toHaveBeenCalled();
-            consoleErrorSpy.mockRestore();
-        }
+        // We need to wait for the loading state to be rendered and then to fail to retrieve the tracker reports
+        await nextTick();
+        await nextTick();
+        await nextTick();
+        await nextTick();
 
         expect(wrapper.find("[data-test=new-campaign-error-message]").exists()).toBe(true);
     });

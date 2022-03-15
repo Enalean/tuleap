@@ -57,8 +57,8 @@ import { useState } from "vuex-composition-helpers";
 import type { State } from "../../store/type";
 import type { CampaignInitialTests } from "../../helpers/Campaigns/campaign-initial-tests";
 import type { TrackerReport } from "../../helpers/Campaigns/tracker-reports-retriever";
-import { computed, ref } from "@vue/composition-api";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { computed, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 
 const { milestone_title, testdefinition_tracker_name } = useState<
     Pick<State, "milestone_title" | "testdefinition_tracker_name">
@@ -128,7 +128,7 @@ function updateSelectedTests(): void {
 }
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

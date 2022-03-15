@@ -19,16 +19,14 @@
 
 import { shallowMount } from "@vue/test-utils";
 import type { BacklogItem, TestDefinition } from "../../../type";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { RootState } from "../../../store/type";
 import TestDefinitionCardXrefCategoryStatus from "./TestDefinitionCardXrefCategoryStatus.vue";
-import { createTestPlanLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("TestDefinitionCardXrefCategoryStatus", () => {
-    it("has a link to go to the test def and a link to to the test exec in a dropdown menu when the element is planned", async () => {
+    it("has a link to go to the test def and a link to to the test exec in a dropdown menu when the element is planned", () => {
         const wrapper = shallowMount(TestDefinitionCardXrefCategoryStatus, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 test_definition: {
                     id: 123,
                     short_type: "test_def",
@@ -45,8 +43,8 @@ describe("TestDefinitionCardXrefCategoryStatus", () => {
                     id: 741,
                 } as BacklogItem,
             },
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         project_id: 102,
                         milestone_id: 11,
@@ -56,37 +54,88 @@ describe("TestDefinitionCardXrefCategoryStatus", () => {
             },
         });
 
-        expect(wrapper).toMatchInlineSnapshot(`
-            <div class="test-plan-test-definition-metadata">
-              <div class="tlp-dropdown"><a href="/plugins/tracker/?aid=123&amp;ttm_backlog_item_id=741&amp;ttm_milestone_id=11" class="test-plan-test-definition-xref" data-dropdown="trigger"><span class="test-plan-test-definition-xref-text">
-                            test_def #123
-                        </span> <i class="fa fa-caret-down test-plan-test-definition-xref-icon"></i></a>
-                <div role="menu" class="tlp-dropdown-menu tlp-dropdown-menu-left" data-dropdown="menu"><a href="/plugins/tracker/?aid=123&amp;ttm_backlog_item_id=741&amp;ttm_milestone_id=11" role="menuitem" class="tlp-dropdown-menu-item"><i class="fas fa-fw tlp-dropdown-menu-item-icon fa-pencil-alt"></i>
-                    <translate-stub tag="span" translateparams="[object Object]">
-                      Edit %{ item_type } #%{ item_id }
-                    </translate-stub>
-                  </a> <span role="separator" class="tlp-dropdown-menu-separator"></span> <a href="/plugins/testmanagement/?group_id=102&amp;milestone_id=11#!/campaigns/41/123/123" role="menuitem" data-test="go-to-last-test-exec" class="tlp-dropdown-menu-item"><i class="fas fa-fw tlp-dropdown-menu-item-icon fa-long-arrow-alt-right"></i>
-                    <translate-stub tag="span" translateparams="[object Object]">
-                      Go to the last execution in release %{ release_name }
-                    </translate-stub>
-                  </a></div>
+        expect(wrapper.element).toMatchInlineSnapshot(`
+            <div
+              class="test-plan-test-definition-metadata"
+            >
+              <div
+                class="tlp-dropdown"
+              >
+                <a
+                  class="test-plan-test-definition-xref"
+                  data-dropdown="trigger"
+                  href="/plugins/tracker/?aid=123&ttm_backlog_item_id=741&ttm_milestone_id=11"
+                >
+                  <span
+                    class="test-plan-test-definition-xref-text"
+                  >
+                    test_def #123
+                  </span>
+                  <i
+                    class="fa fa-caret-down test-plan-test-definition-xref-icon"
+                  />
+                </a>
+                <div
+                  class="tlp-dropdown-menu tlp-dropdown-menu-left"
+                  data-dropdown="menu"
+                  role="menu"
+                >
+                  <a
+                    class="tlp-dropdown-menu-item"
+                    href="/plugins/tracker/?aid=123&ttm_backlog_item_id=741&ttm_milestone_id=11"
+                    role="menuitem"
+                  >
+                    <i
+                      class="fas fa-fw tlp-dropdown-menu-item-icon fa-pencil-alt"
+                    />
+                    <translate-stub
+                      tag="span"
+                      translateparams="[object Object]"
+                    />
+                  </a>
+                  <span
+                    class="tlp-dropdown-menu-separator"
+                    role="separator"
+                  />
+                  <a
+                    class="tlp-dropdown-menu-item"
+                    data-test="go-to-last-test-exec"
+                    href="/plugins/testmanagement/?group_id=102&milestone_id=11#!/campaigns/41/123/123"
+                    role="menuitem"
+                  >
+                    <i
+                      class="fas fa-fw tlp-dropdown-menu-item-icon fa-long-arrow-alt-right"
+                    />
+                    <translate-stub
+                      tag="span"
+                      translateparams="[object Object]"
+                    />
+                  </a>
+                </div>
               </div>
-              <div class="test-plan-test-definition-card-category-status"><span data-test="test-category" class="tlp-badge-secondary tlp-badge-outline test-plan-test-definition-category">
-
-                    </span>
-                <div class="test-plan-test-definition-icons">
-                  <!---->
-                  <test-definition-card-status-stub test_definition="[object Object]"></test-definition-card-status-stub>
+              <div
+                class="test-plan-test-definition-card-category-status"
+              >
+                <span
+                  class="tlp-badge-secondary tlp-badge-outline test-plan-test-definition-category"
+                  data-test="test-category"
+                />
+                <div
+                  class="test-plan-test-definition-icons"
+                >
+                  <!--v-if-->
+                  <test-definition-card-status-stub
+                    test_definition="[object Object]"
+                  />
                 </div>
               </div>
             </div>
         `);
     });
 
-    it("does not have a link to the last test exec when the item is not planned", async () => {
+    it("does not have a link to the last test exec when the item is not planned", () => {
         const wrapper = shallowMount(TestDefinitionCardXrefCategoryStatus, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 test_definition: {
                     id: 124,
                     short_type: "test_def",
@@ -99,8 +148,8 @@ describe("TestDefinitionCardXrefCategoryStatus", () => {
                     id: 741,
                 } as BacklogItem,
             },
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         project_id: 102,
                         milestone_id: 11,
@@ -113,10 +162,9 @@ describe("TestDefinitionCardXrefCategoryStatus", () => {
         expect(wrapper.find("[data-test=go-to-last-test-exec]").exists()).toBe(false);
     });
 
-    it("Display an icon for automated tests", async () => {
+    it("Display an icon for automated tests", () => {
         const wrapper = shallowMount(TestDefinitionCardXrefCategoryStatus, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 test_definition: {
                     id: 123,
                     short_type: "test_def",
@@ -130,8 +178,8 @@ describe("TestDefinitionCardXrefCategoryStatus", () => {
                     id: 741,
                 } as BacklogItem,
             },
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         project_id: 102,
                         milestone_id: 11,
@@ -144,10 +192,9 @@ describe("TestDefinitionCardXrefCategoryStatus", () => {
         expect(wrapper.find("[data-test=automated-test-icon]").exists()).toBe(true);
     });
 
-    it("does not display a category when none is set for the test", async () => {
+    it("does not display a category when none is set for the test", () => {
         const wrapper = shallowMount(TestDefinitionCardXrefCategoryStatus, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 test_definition: {
                     id: 125,
                     short_type: "test_def",
@@ -161,8 +208,8 @@ describe("TestDefinitionCardXrefCategoryStatus", () => {
                     id: 741,
                 } as BacklogItem,
             },
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         project_id: 102,
                         milestone_id: 11,

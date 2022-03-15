@@ -20,23 +20,13 @@
 import { shallowMount } from "@vue/test-utils";
 import CampaignCard from "./CampaignCard.vue";
 import type { Campaign } from "../../type";
-import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { RootState } from "../../store/type";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("CampaignCard", () => {
-    it("Displays a campaign as a card", async () => {
+    it("Displays a campaign as a card", () => {
         const wrapper = shallowMount(CampaignCard, {
-            localVue: await createTestPlanLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        milestone_id: 74,
-                        project_id: 102,
-                    } as RootState,
-                }),
-            },
-            propsData: {
+            props: {
                 campaign: {
                     id: 470,
                     label: "My campaign",
@@ -46,23 +36,22 @@ describe("CampaignCard", () => {
                     nb_of_passed: 10,
                 } as Campaign,
             },
-        });
-
-        expect(wrapper.element).toMatchSnapshot();
-    });
-
-    it("Displays a being refreshed campaign", async () => {
-        const wrapper = shallowMount(CampaignCard, {
-            localVue: await createTestPlanLocalVue(),
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         milestone_id: 74,
                         project_id: 102,
                     } as RootState,
                 }),
             },
-            propsData: {
+        });
+
+        expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("Displays a being refreshed campaign", () => {
+        const wrapper = shallowMount(CampaignCard, {
+            props: {
                 campaign: {
                     id: 470,
                     label: "My campaign",
@@ -75,6 +64,14 @@ describe("CampaignCard", () => {
                     is_error: false,
                 } as Campaign,
             },
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        milestone_id: 74,
+                        project_id: 102,
+                    } as RootState,
+                }),
+            },
         });
 
         expect(wrapper.classes("test-plan-campaign-is-error")).toBe(false);
@@ -82,18 +79,9 @@ describe("CampaignCard", () => {
         expect(wrapper.classes("test-plan-campaign-is-just-refreshed")).toBe(false);
     });
 
-    it("Displays a just refreshed campaign", async () => {
+    it("Displays a just refreshed campaign", () => {
         const wrapper = shallowMount(CampaignCard, {
-            localVue: await createTestPlanLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        milestone_id: 74,
-                        project_id: 102,
-                    } as RootState,
-                }),
-            },
-            propsData: {
+            props: {
                 campaign: {
                     id: 470,
                     label: "My campaign",
@@ -106,6 +94,14 @@ describe("CampaignCard", () => {
                     is_error: false,
                 } as Campaign,
             },
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        milestone_id: 74,
+                        project_id: 102,
+                    } as RootState,
+                }),
+            },
         });
 
         expect(wrapper.classes("test-plan-campaign-is-error")).toBe(false);
@@ -113,18 +109,9 @@ describe("CampaignCard", () => {
         expect(wrapper.classes("test-plan-campaign-is-just-refreshed")).toBe(true);
     });
 
-    it("Displays a campaign in error", async () => {
+    it("Displays a campaign in error", () => {
         const wrapper = shallowMount(CampaignCard, {
-            localVue: await createTestPlanLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        milestone_id: 74,
-                        project_id: 102,
-                    } as RootState,
-                }),
-            },
-            propsData: {
+            props: {
                 campaign: {
                     id: 470,
                     label: "My campaign",
@@ -136,6 +123,14 @@ describe("CampaignCard", () => {
                     is_just_refreshed: false,
                     is_error: true,
                 } as Campaign,
+            },
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        milestone_id: 74,
+                        project_id: 102,
+                    } as RootState,
+                }),
             },
         });
 

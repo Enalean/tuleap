@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { Store } from "vuex";
+import { createStore } from "vuex";
+import type { Store } from "vuex";
 import type { RootState } from "./type";
 import campaign from "./campaign";
 import backlog_item from "./backlog-item";
 
-export function createStore(initial_state: RootState): Store<RootState> {
-    return new Store({
+export function createInitializedStore(initial_state: RootState): Store<RootState> {
+    return createStore({
         state: initial_state,
         modules: {
             campaign,

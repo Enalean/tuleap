@@ -17,22 +17,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import type { RootState } from "../../store/type";
 import type { BacklogItem } from "../../type";
 import type { BacklogItemState } from "../../store/backlog-item/type";
 import ListOfBacklogItems from "./ListOfBacklogItems.vue";
 import BacklogItemSkeleton from "./BacklogItemSkeleton.vue";
 import BacklogItemContainer from "./BacklogItemContainer.vue";
-import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("ListOfBacklogItems", () => {
-    async function createWrapper(
-        backlog_item: BacklogItemState
-    ): Promise<Wrapper<ListOfBacklogItems>> {
+    const load_backlog_items_spy = jest.fn();
+
+    function createWrapper(
+        backlog_item_state: BacklogItemState
+    ): VueWrapper<InstanceType<typeof ListOfBacklogItems>> {
+        load_backlog_items_spy.mockReset();
+        const backlog_item_module = {
+            namespaced: true,
+            state: backlog_item_state,
+            actions: {
+                loadBacklogItems: load_backlog_items_spy,
+            },
+        };
         return shallowMount(ListOfBacklogItems, {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        backlog_item: backlog_item_module,
+                    },
+                }),
+            },
+        });
+        /*return shallowMount(ListOfBacklogItems, {
             localVue: await createTestPlanLocalVue(),
             mocks: {
                 $store: createStoreMock({
@@ -45,7 +62,7 @@ describe("ListOfBacklogItems", () => {
                 "backlog-item-empty-state": true,
                 "backlog-item-error-state": true,
             },
-        });
+        });*/
     }
 
     it("Displays skeletons while loading", async () => {
@@ -99,23 +116,13 @@ describe("ListOfBacklogItems", () => {
     });
 
     it("Loads automatically the backlog_items", async () => {
-        const $store = createStoreMock({
-            state: {
-                backlog_item: {
-                    is_loading: true,
-                    has_loading_error: false,
-                    backlog_items: [] as BacklogItem[],
-                },
-            } as RootState,
-        });
-        shallowMount(ListOfBacklogItems, {
-            localVue: await createTestPlanLocalVue(),
-            mocks: {
-                $store,
-            },
+        await createWrapper({
+            is_loading: true,
+            has_loading_error: false,
+            backlog_items: [] as BacklogItem[],
         });
 
-        expect($store.dispatch).toHaveBeenCalledWith("backlog_item/loadBacklogItems");
+        expect(load_backlog_items_spy).toHaveBeenCalled();
     });
 
     it("Displays empty state when there is no backlog_item", async () => {
@@ -125,7 +132,7 @@ describe("ListOfBacklogItems", () => {
             backlog_items: [] as BacklogItem[],
         });
 
-        expect(wrapper.find("backlog-item-empty-state-stub").exists()).toBe(true);
+        expect(wrapper.find("[data-test=async-empty-state]").exists()).toBe(true);
     });
 
     it("Does not display empty state when there is no backlog_item but it is still loading", async () => {
@@ -165,7 +172,7 @@ describe("ListOfBacklogItems", () => {
             backlog_items: [] as BacklogItem[],
         });
 
-        expect(wrapper.find("backlog-item-error-state-stub").exists()).toBe(true);
+        expect(wrapper.find("[data-test=async-error-state]").exists()).toBe(true);
     });
 
     it("Does not display error state when there is no error", async () => {

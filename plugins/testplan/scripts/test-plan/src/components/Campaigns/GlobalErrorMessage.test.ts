@@ -17,23 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 import GlobalErrorMessage from "./GlobalErrorMessage.vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import type { RootState } from "../../store/type";
 import type { CampaignState } from "../../store/campaign/type";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("GlobalErrorMessage", () => {
-    async function createWrapper(campaign: CampaignState): Promise<Wrapper<GlobalErrorMessage>> {
+    function createWrapper(
+        campaign: CampaignState
+    ): VueWrapper<InstanceType<typeof GlobalErrorMessage>> {
         return shallowMount(GlobalErrorMessage, {
-            localVue: await createTestPlanLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        campaign,
-                    } as RootState,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        campaign: {
+                            state: campaign,
+                        },
+                    },
                 }),
             },
         });
@@ -44,7 +45,7 @@ describe("GlobalErrorMessage", () => {
             has_refreshing_error: false,
         } as CampaignState);
 
-        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+        expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
 
     it("displays error message when a campaign cannot be refreshed", async () => {

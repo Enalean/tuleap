@@ -18,15 +18,15 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 import ExportError from "./ExportError.vue";
 import * as tlp from "tlp";
 import type { Modal } from "tlp";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 jest.mock("tlp");
 
 describe("ExportError", () => {
-    it("shows the modal on mount", async () => {
+    it("shows the modal on mount", () => {
         const modal_show_spy = jest.fn();
         jest.spyOn(tlp, "createModal").mockImplementation(() => {
             return {
@@ -35,7 +35,9 @@ describe("ExportError", () => {
         });
 
         shallowMount(ExportError, {
-            localVue: await createTestPlanLocalVue(),
+            global: {
+                ...getGlobalTestOptions({}),
+            },
         });
 
         expect(modal_show_spy).toHaveBeenCalledTimes(1);

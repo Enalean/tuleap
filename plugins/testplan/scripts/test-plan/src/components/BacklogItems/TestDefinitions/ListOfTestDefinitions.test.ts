@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { BacklogItem, TestDefinition } from "../../../type";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
@@ -27,16 +27,25 @@ import TestDefinitionSkeleton from "./TestDefinitionSkeleton.vue";
 import TestDefinitionCard from "./TestDefinitionCard.vue";
 import TestDefinitionEmptyState from "./TestDefinitionEmptyState.vue";
 import TestDefinitionErrorState from "./TestDefinitionErrorState.vue";
-import { createTestPlanLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("ListOfTestDefinitions", () => {
-    async function createWrapper(
+    function createWrapper(
         backlog_item: BacklogItem
-    ): Promise<Wrapper<ListOfTestDefinitions>> {
+    ): VueWrapper<InstanceType<typeof ListOfTestDefinitions>> {
         return shallowMount(ListOfTestDefinitions, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 backlog_item,
+            },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        backlog_item: {
+                            namespaced: true,
+                            state: backlog_item,
+                        },
+                    },
+                }),
             },
             mocks: {
                 $store: createStoreMock({

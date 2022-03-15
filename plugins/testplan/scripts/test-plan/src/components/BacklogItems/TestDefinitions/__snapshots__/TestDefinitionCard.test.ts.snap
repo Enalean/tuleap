@@ -8,7 +8,6 @@ exports[`TestDefinitionCard Display a test definition as a card 1`] = `
     backlog_item="[object Object]"
     test_definition="[object Object]"
   />
-   
   <p
     class="test-plan-test-definition-title"
   >

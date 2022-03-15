@@ -17,23 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { RootState } from "../../store/type";
 import type { Campaign } from "../../type";
 import type { CampaignState } from "../../store/campaign/type";
 import ListOfCampaignsHeader from "./ListOfCampaignsHeader.vue";
-import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("ListOfCampaignsHeader", () => {
-    async function createWrapper(
+    function createWrapper(
         user_can_create_campaign: boolean,
         campaign: CampaignState,
         show_create_modal = jest.fn()
-    ): Promise<Wrapper<ListOfCampaignsHeader>> {
+    ): VueWrapper<InstanceType<typeof ListOfCampaignsHeader>> {
         return shallowMount(ListOfCampaignsHeader, {
-            localVue: await createTestPlanLocalVue(),
             mocks: {
                 $store: createStoreMock({
                     state: {
@@ -42,8 +41,21 @@ describe("ListOfCampaignsHeader", () => {
                     } as RootState,
                 }),
             },
-            propsData: {
-                showCreateModal: show_create_modal,
+            props: {
+                show_create_modal,
+            },
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        user_can_create_campaign,
+                    } as RootState,
+                    modules: {
+                        campaign: {
+                            namespaced: true,
+                            state: campaign,
+                        },
+                    },
+                }),
             },
         });
     }

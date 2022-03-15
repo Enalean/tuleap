@@ -11,14 +11,12 @@ exports[`CampaignProgression Displays a campaign as a card 1`] = `
     <div
       class="test-plan-campaign-progression-bar"
     />
-     
     <div
       class="test-plan-campaign-progression-value"
     >
       10
     </div>
   </div>
-   
   <div
     aria-label="2 failed"
     class="test-plan-campaign-progression failed test-plan-campaign-progression-width-4"
@@ -26,14 +24,12 @@ exports[`CampaignProgression Displays a campaign as a card 1`] = `
     <div
       class="test-plan-campaign-progression-bar"
     />
-     
     <div
       class="test-plan-campaign-progression-value"
     >
       2
     </div>
   </div>
-   
   <div
     aria-label="1 blocked"
     class="test-plan-campaign-progression blocked test-plan-campaign-progression-width-2"
@@ -41,14 +37,12 @@ exports[`CampaignProgression Displays a campaign as a card 1`] = `
     <div
       class="test-plan-campaign-progression-bar"
     />
-     
     <div
       class="test-plan-campaign-progression-value"
     >
       1
     </div>
   </div>
-   
   <div
     aria-label="34 not run"
     class="test-plan-campaign-progression notrun test-plan-campaign-progression-width-72"
@@ -57,7 +51,6 @@ exports[`CampaignProgression Displays a campaign as a card 1`] = `
     <div
       class="test-plan-campaign-progression-bar"
     />
-     
     <div
       class="test-plan-campaign-progression-value"
     >

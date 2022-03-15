@@ -28,15 +28,16 @@
     </div>
 </template>
 <script setup lang="ts">
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState } from "vuex-composition-helpers";
 import type { CampaignState } from "../../store/campaign/type";
 
-const { has_refreshing_error } = useState<Pick<CampaignState, "has_refreshing_error">>("campaign", [
-    "has_refreshing_error",
-]);
+const { has_refreshing_error } = useNamespacedState<Pick<CampaignState, "has_refreshing_error">>(
+    "campaign",
+    ["has_refreshing_error"]
+);
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

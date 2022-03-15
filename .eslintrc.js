@@ -253,6 +253,7 @@ module.exports = {
             files: [
                 "src/scripts/lib/project-sidebar-internal/**/*.vue",
                 "plugins/document_generation/scripts/**/*.vue",
+                "plugins/testplan/scripts/**/*.vue",
             ],
             extends: ["plugin:vue/vue3-recommended"],
             rules: {

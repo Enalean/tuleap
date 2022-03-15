@@ -3,10 +3,10 @@
     "compilerOptions": {
         "module": "esnext",
         "types": [
-            "unplugin-vue2-script-setup/types",
             "jest"
         ],
-        "incremental": false
+        "incremental": false,
+        "skipLibCheck": true
     },
     "include": [
         "scripts/test-plan/**/*"

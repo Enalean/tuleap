@@ -4,21 +4,14 @@ exports[`BacklogItemCoverage Display a skeleton when the tests are being loaded 
 <div
   class="test-plan-backlog-item-coverage"
 >
+  
   <span
     class="tlp-skeleton-text test-plan-backlog-item-coverage-text-skeleton"
   />
-   
   <span
     class="tlp-skeleton-text test-plan-backlog-item-coverage-icon-skeleton"
   />
-</div>
-`;
-
-exports[`BacklogItemCoverage Does not display anything if there is only tests not planned in any campaigns 1`] = `
-<div
-  class="test-plan-backlog-item-coverage"
->
-  <!---->
+  
 </div>
 `;
 
@@ -26,6 +19,14 @@ exports[`BacklogItemCoverage Does not display anything if there is no tests 1`] 
 <div
   class="test-plan-backlog-item-coverage"
 >
-  <!---->
+  <!--v-if-->
+</div>
+`;
+
+exports[`BacklogItemCoverage Does not display anything if there is only tests not planned in any campaigns 1`] = `
+<div
+  class="test-plan-backlog-item-coverage"
+>
+  <!--v-if-->
 </div>
 `;

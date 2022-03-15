@@ -20,13 +20,12 @@
 import { shallowMount } from "@vue/test-utils";
 import CampaignProgression from "./CampaignProgression.vue";
 import type { Campaign } from "../../type";
-import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("CampaignProgression", () => {
-    it("Displays a campaign as a card", async () => {
+    it("Displays a campaign as a card", () => {
         const wrapper = shallowMount(CampaignProgression, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 campaign: {
                     label: "My campaign",
                     nb_of_blocked: 1,
@@ -35,15 +34,15 @@ describe("CampaignProgression", () => {
                     nb_of_passed: 10,
                 } as Campaign,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Display a progress bar even if there is no test in the campaign", async () => {
+    it("Display a progress bar even if there is no test in the campaign", () => {
         const wrapper = shallowMount(CampaignProgression, {
-            localVue: await createTestPlanLocalVue(),
-            propsData: {
+            props: {
                 campaign: {
                     label: "My campaign",
                     nb_of_blocked: 0,
@@ -52,6 +51,7 @@ describe("CampaignProgression", () => {
                     nb_of_passed: 0,
                 } as Campaign,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
         const progress = wrapper.find("[data-test=progress-not-run]");
