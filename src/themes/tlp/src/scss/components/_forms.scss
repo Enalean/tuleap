@@ -19,6 +19,8 @@
 
 @use "sass:map";
 @use "../variables/colors/swatch-colors";
+@use "badges";
+@use "avatars";
 
 $tlp-form-element-font-size: 0.875rem;
 $tlp-form-element-height: 40px;

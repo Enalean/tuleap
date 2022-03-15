@@ -26,8 +26,8 @@ $tlp-pagination-margin: 2px;
 }
 
 .tlp-pagination-button[class*="tlp-button"] {
-    width: $tlp-button-normal-height;
-    height: $tlp-button-normal-height;
+    width: buttons.$tlp-button-normal-height;
+    height: buttons.$tlp-button-normal-height;
     margin: 0 $tlp-pagination-margin;
     border-radius: 50%;
 

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "./reset";
-@import "./variables/colors/color-classes";
-@import "./vendor";
-@import "./components";
+@use "./reset";
+@use "./variables/colors/color-classes";
+@use "./vendor";
+@use "./components";

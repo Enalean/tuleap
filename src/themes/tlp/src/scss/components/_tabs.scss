@@ -63,7 +63,7 @@ $inactive-tab-right-margin: calc(
     border-bottom: 0;
     border-radius: 0 0 var(--tlp-large-radius) var(--tlp-large-radius);
     opacity: 0;
-    background: $tlp-white-color;
+    background: var(--tlp-white-color);
     box-shadow: none;
     pointer-events: none;
 }
