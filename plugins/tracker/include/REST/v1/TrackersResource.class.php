@@ -24,6 +24,7 @@ use Luracast\Restler\RestException;
 use PermissionsManager;
 use PFUser;
 use Tracker;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
@@ -54,6 +55,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
@@ -175,52 +177,7 @@ class TrackersResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        $transition_retriever = new TransitionRetriever(
-            new StateFactory(
-                TransitionFactory::instance(),
-                new SimpleWorkflowDao()
-            ),
-            new TransitionExtractor()
-        );
-
-        $frozen_fields_detector = new FrozenFieldDetector(
-            $transition_retriever,
-            new FrozenFieldsRetriever(
-                new FrozenFieldsDao(),
-                Tracker_FormElementFactory::instance()
-            )
-        );
-
-        $builder = new Tracker_REST_TrackerRestBuilder(
-            $this->formelement_factory,
-            new FormElementRepresentationsBuilder(
-                $this->formelement_factory,
-                new PermissionsExporter(
-                    $frozen_fields_detector
-                ),
-                new HiddenFieldsetChecker(
-                    new HiddenFieldsetsDetector(
-                        $transition_retriever,
-                        new HiddenFieldsetsRetriever(
-                            new HiddenFieldsetsDao(),
-                            $this->formelement_factory
-                        ),
-                        Tracker_FormElementFactory::instance()
-                    ),
-                    new FieldsExtractor()
-                ),
-                new PermissionsForGroupsBuilder(
-                    new \UGroupManager(),
-                    $frozen_fields_detector,
-                    new PermissionsFunctionsWrapper()
-                )
-            ),
-            new PermissionsRepresentationBuilder(
-                new \UGroupManager(),
-                new PermissionsFunctionsWrapper()
-            )
-        );
-
+        $builder = $this->getTrackerRepresentationBuilder();
         $user    = $this->user_manager->getCurrentUser();
         $tracker = $this->getTrackerById($user, $id);
 
@@ -685,52 +642,7 @@ class TrackersResource extends AuthenticatedResource
             $this->getWorkflowFactory()->clearTrackerWorkflowFromCache($tracker);
             $tracker->workflow = null;
 
-            $transition_retriever = new TransitionRetriever(
-                new StateFactory(
-                    TransitionFactory::instance(),
-                    new SimpleWorkflowDao()
-                ),
-                new TransitionExtractor()
-            );
-
-            $frozen_fields_detector = new FrozenFieldDetector(
-                $transition_retriever,
-                new FrozenFieldsRetriever(
-                    new FrozenFieldsDao(),
-                    Tracker_FormElementFactory::instance()
-                )
-            );
-
-            $builder = new Tracker_REST_TrackerRestBuilder(
-                $this->formelement_factory,
-                new FormElementRepresentationsBuilder(
-                    $this->formelement_factory,
-                    new PermissionsExporter(
-                        $frozen_fields_detector
-                    ),
-                    new HiddenFieldsetChecker(
-                        new HiddenFieldsetsDetector(
-                            $transition_retriever,
-                            new HiddenFieldsetsRetriever(
-                                new HiddenFieldsetsDao(),
-                                $this->formelement_factory
-                            ),
-                            Tracker_FormElementFactory::instance()
-                        ),
-                        new FieldsExtractor()
-                    ),
-                    new PermissionsForGroupsBuilder(
-                        new \UGroupManager(),
-                        $frozen_fields_detector,
-                        new PermissionsFunctionsWrapper()
-                    )
-                ),
-                new PermissionsRepresentationBuilder(
-                    new \UGroupManager(),
-                    new PermissionsFunctionsWrapper()
-                )
-            );
-
+            $builder = $this->getTrackerRepresentationBuilder();
             return $builder->getTrackerRepresentationInTrackerContext($user, $tracker);
         } catch (InvalidParameterTypeException $e) {
             throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
@@ -909,6 +821,59 @@ class TrackersResource extends AuthenticatedResource
     private function getWorkflowFactory()
     {
         return WorkflowFactory::instance();
+    }
+
+    private function getTrackerRepresentationBuilder(): Tracker_REST_TrackerRestBuilder
+    {
+        $transition_retriever = new TransitionRetriever(
+            new StateFactory(
+                TransitionFactory::instance(),
+                new SimpleWorkflowDao()
+            ),
+            new TransitionExtractor()
+        );
+
+        $frozen_fields_detector = new FrozenFieldDetector(
+            $transition_retriever,
+            new FrozenFieldsRetriever(
+                new FrozenFieldsDao(),
+                Tracker_FormElementFactory::instance()
+            )
+        );
+
+        return new Tracker_REST_TrackerRestBuilder(
+            $this->formelement_factory,
+            new FormElementRepresentationsBuilder(
+                $this->formelement_factory,
+                new PermissionsExporter(
+                    $frozen_fields_detector
+                ),
+                new HiddenFieldsetChecker(
+                    new HiddenFieldsetsDetector(
+                        $transition_retriever,
+                        new HiddenFieldsetsRetriever(
+                            new HiddenFieldsetsDao(),
+                            $this->formelement_factory
+                        ),
+                        Tracker_FormElementFactory::instance()
+                    ),
+                    new FieldsExtractor()
+                ),
+                new PermissionsForGroupsBuilder(
+                    new \UGroupManager(),
+                    $frozen_fields_detector,
+                    new PermissionsFunctionsWrapper()
+                ),
+                new TypePresenterFactory(
+                    new TypeDao(),
+                    new ArtifactLinksUsageDao()
+                )
+            ),
+            new PermissionsRepresentationBuilder(
+                new \UGroupManager(),
+                new PermissionsFunctionsWrapper()
+            )
+        );
     }
 
     private function getParentTracker(\PFUser $user, Tracker $tracker)

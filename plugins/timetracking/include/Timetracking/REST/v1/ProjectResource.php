@@ -36,8 +36,11 @@ use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimeRetriever;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\PermissionsExporter;
@@ -131,6 +134,10 @@ class ProjectResource
                         new \UGroupManager(),
                         $frozen_fields_detector,
                         new PermissionsFunctionsWrapper()
+                    ),
+                    new TypePresenterFactory(
+                        new TypeDao(),
+                        new ArtifactLinksUsageDao()
                     )
                 ),
                 new PermissionsRepresentationBuilder(

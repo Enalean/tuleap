@@ -33,8 +33,11 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
@@ -241,6 +244,10 @@ class ProjectTrackersResource extends AuthenticatedResource
                     new \UGroupManager(),
                     $frozen_fields_detector,
                     new PermissionsFunctionsWrapper()
+                ),
+                new TypePresenterFactory(
+                    new TypeDao(),
+                    new ArtifactLinksUsageDao()
                 )
             ),
             new PermissionsRepresentationBuilder(
