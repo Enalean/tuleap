@@ -22,17 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor;
+
 /**
- * I hold the information needed to create a new Changeset Comment. I go together with a NewChangeset
- * @see \Tuleap\Tracker\Artifact\Changeset\NewChangeset
+ * I hold all the information needed to store a new comment, including the new changeset ID.
+ * I am built from NewComment.
+ * @see NewComment
  * @psalm-immutable
  */
-final class NewComment
+final class CommentCreation
 {
     /**
      * @param \ProjectUGroup[] $user_groups_that_are_allowed_to_see
      */
     private function __construct(
+        private int $changeset_id,
         private string $body,
         private CommentFormatIdentifier $format,
         private \PFUser $submitter,
@@ -41,31 +46,29 @@ final class NewComment
     ) {
     }
 
-    public static function fromParts(
-        string $body,
-        CommentFormatIdentifier $format,
-        \PFUser $submitter,
-        int $submission_timestamp,
-        array $user_groups_that_are_allowed_to_see,
+    public static function fromNewComment(
+        NewComment $comment,
+        int $changeset_id,
+        CreatedFileURLMapping $url_mapping,
     ): self {
+        $body = $comment->getBody();
+        if ($comment->getFormat()->isHTML()) {
+            $substitutor = new FileURLSubstitutor();
+            $body        = $substitutor->substituteURLsInHTML($comment->getBody(), $url_mapping);
+        }
         return new self(
-            trim($body),
-            $format,
-            $submitter,
-            $submission_timestamp,
-            $user_groups_that_are_allowed_to_see
+            $changeset_id,
+            $body,
+            $comment->getFormat(),
+            $comment->getSubmitter(),
+            $comment->getSubmissionTimestamp(),
+            $comment->getUserGroupsThatAreAllowedToSee()
         );
     }
 
-    public static function buildEmpty(\PFUser $submitter, int $submission_timestamp): self
+    public function getChangesetId(): int
     {
-        return new self(
-            '',
-            CommentFormatIdentifier::buildCommonMark(),
-            $submitter,
-            $submission_timestamp,
-            []
-        );
+        return $this->changeset_id;
     }
 
     public function getBody(): string
@@ -88,9 +91,6 @@ final class NewComment
         return $this->submission_timestamp;
     }
 
-    /**
-     * @return \ProjectUGroup[]
-     */
     public function getUserGroupsThatAreAllowedToSee(): array
     {
         return $this->user_groups_that_are_allowed_to_see;

@@ -24,6 +24,7 @@ use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
@@ -425,7 +426,16 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
 
         $this->new_changeset_creator->shouldReceive('create')
-            ->with(Mockery::any(), Mockery::any(), 'Some text', Mockery::any(), Mockery::any(), Mockery::any(), Tracker_Artifact_Changeset_Comment::TEXT_COMMENT, Mockery::any(), Mockery::type(TrackerXmlImportConfig::class), [])
+            ->withArgs(function (NewChangeset $new_changeset) {
+                $comment = $new_changeset->getComment();
+                if ($comment->getBody() !== 'Some text') {
+                    return false;
+                }
+                if ((string) $comment->getFormat() !== \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
+                    return false;
+                }
+                return true;
+            })
             ->once()
             ->andReturn($changeset);
 
@@ -529,17 +539,20 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
 
         $this->new_changeset_creator->shouldReceive('create')
-            ->with(
-                Mockery::any(),
-                Mockery::any(),
-                'Some text',
-                Mockery::any(),
-                Mockery::any(),
-                Mockery::any(),
-                Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
-                Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class),
-                [$my_group, $my_other_group]
+            ->withArgs(
+                function (NewChangeset $new_changeset) use ($my_other_group, $my_group) {
+                    $comment = $new_changeset->getComment();
+                    if ($comment->getBody() !== 'Some text') {
+                        return false;
+                    }
+                    if ((string) $comment->getFormat() !== \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
+                        return false;
+                    }
+                    if ($comment->getUserGroupsThatAreAllowedToSee() !== [$my_group, $my_other_group]) {
+                        return false;
+                    }
+                    return true;
+                }
             )
             ->once()
             ->andReturn($changeset);
@@ -883,7 +896,12 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->new_changeset_creator->shouldReceive('create')
             ->once()
-            ->with($this->artifact, $data, Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::type(TrackerXmlImportConfig::class), [])
+            ->withArgs(function (NewChangeset $new_changeset) use ($data) {
+                if ($new_changeset->getFieldsData() !== $data) {
+                    return false;
+                }
+                return true;
+            })
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
         $this->importer->importFromXML(
@@ -913,7 +931,12 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->new_changeset_creator->shouldReceive('create')
             ->once()
-            ->with($this->artifact, Mockery::any(), Mockery::any(), $this->john_doe, Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::type(TrackerXmlImportConfig::class), [])
+            ->withArgs(function (NewChangeset $new_changeset) {
+                if ($new_changeset->getSubmitter() !== $this->john_doe) {
+                    return false;
+                }
+                return true;
+            })
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
         $this->importer->importFromXML(
@@ -943,7 +966,6 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->new_changeset_creator->shouldReceive('create')
             ->once()
-            ->with($this->artifact, Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::type(TrackerXmlImportConfig::class), [])
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
         $this->importer->importFromXML(
@@ -976,7 +998,12 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->new_changeset_creator->shouldReceive('create')
             ->once()
-            ->with($this->artifact, Mockery::any(), Mockery::any(), Mockery::any(), strtotime('2014-01-15T11:03:50+01:00'), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::type(TrackerXmlImportConfig::class), [])
+            ->withArgs(function (NewChangeset $new_changeset) {
+                if ($new_changeset->getSubmissionTimestamp() !== strtotime('2014-01-15T11:03:50+01:00')) {
+                    return false;
+                }
+                return true;
+            })
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
         $this->importer->importFromXML(
@@ -1029,7 +1056,12 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->new_changeset_creator->shouldReceive('create')
             ->once()
-            ->with($this->artifact, Mockery::any(), Mockery::any(), Mockery::any(), strtotime('2014-01-15T11:03:50+01:00'), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::type(TrackerXmlImportConfig::class), [])
+            ->withArgs(function (NewChangeset $new_changeset) {
+                if ($new_changeset->getSubmissionTimestamp() !== strtotime('2014-01-15T11:03:50+01:00')) {
+                    return false;
+                }
+                return true;
+            })
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
         $this->importer->importFromXML(

@@ -22,8 +22,11 @@ use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
@@ -622,18 +625,20 @@ class Tracker_Artifact_XMLImport
                 ->extractUGroupsFromXML($artifact, $xml_changeset->comments->comment[0]);
         }
 
-        $submitted_by = $this->getSubmittedBy($xml_changeset);
-        $changeset    = $this->new_changeset_creator->create(
+        $submitted_by  = $this->getSubmittedBy($xml_changeset);
+        $new_changeset = NewChangeset::fromFieldsDataArray(
             $artifact,
             $fields_data_builder->getFieldsData($xml_changeset, $submitted_by, $artifact),
             $initial_comment_body,
+            CommentFormatIdentifier::fromFormatString($initial_comment_format),
+            $ugroups_for_private_comment,
             $submitted_by,
             $this->getSubmittedOn($xml_changeset),
-            $this->send_notifications,
-            $initial_comment_format,
             $url_mapping,
-            $tracker_xml_import_config,
-            $ugroups_for_private_comment
+        );
+        $changeset     = $this->new_changeset_creator->create(
+            $new_changeset,
+            PostCreationContext::withConfig($tracker_xml_import_config, $this->send_notifications)
         );
         if ($changeset) {
             if ((string) $xml_changeset['id']) {

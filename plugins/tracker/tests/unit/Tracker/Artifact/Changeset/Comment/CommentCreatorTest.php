@@ -48,18 +48,24 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject & TrackerPrivateCommentUGroupPermissionInserter
      */
     private $ugroup_inserter;
+    /**
+     * @var \ProjectUGroup[]
+     */
+    private array $user_groups_that_are_allowed_to_see;
 
     protected function setUp(): void
     {
         $this->dao               = $this->createMock(\Tracker_Artifact_Changeset_CommentDao::class);
         $this->reference_manager = $this->createMock(\ReferenceManager::class);
         $this->ugroup_inserter   = $this->createMock(TrackerPrivateCommentUGroupPermissionInserter::class);
+
+        $this->user_groups_that_are_allowed_to_see = [];
     }
 
     /**
      * @throws \Tracker_CommentNotStoredException
      */
-    private function createComment(NewComment $comment): void
+    private function create(CommentCreation $comment): void
     {
         $project  = ProjectTestBuilder::aProject()->withId(123)->build();
         $tracker  = TrackerTestBuilder::aTracker()
@@ -79,39 +85,67 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $creator->createComment($artifact, $comment);
     }
 
+    public function createWithComment(): void
+    {
+        $submitter = UserTestBuilder::aUser()->withId(self::SUBMITTER_USER_ID)->build();
+        $comment   = CommentCreation::fromNewComment(
+            NewComment::fromParts(
+                'metavoltine huggermugger',
+                CommentFormatIdentifier::buildText(),
+                $submitter,
+                self::SUBMISSION_TIMESTAMP,
+                $this->user_groups_that_are_allowed_to_see
+            ),
+            self::CHANGESET_ID,
+            new CreatedFileURLMapping()
+        );
+        $this->create($comment);
+    }
+
     public function commentDataProvider(): array
     {
         $submitter = UserTestBuilder::aUser()->withId(self::SUBMITTER_USER_ID)->build();
         return [
-            'Text comment'     => [NewComment::fromText(
+            'Text comment'     => [CommentCreation::fromNewComment(
+                NewComment::fromParts(
+                    'metavoltine huggermugger',
+                    CommentFormatIdentifier::buildText(),
+                    $submitter,
+                    self::SUBMISSION_TIMESTAMP,
+                    []
+                ),
                 self::CHANGESET_ID,
-                'metavoltine huggermugger',
-                $submitter,
-                self::SUBMISSION_TIMESTAMP,
-                []
-            ), \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT],
-            'HTML comment'     => [NewComment::fromHTML(
-                self::CHANGESET_ID,
-                '<p>wane demipomada</p>',
-                $submitter,
-                self::SUBMISSION_TIMESTAMP,
-                [],
                 new CreatedFileURLMapping()
-            ), \Tracker_Artifact_Changeset_Comment::HTML_COMMENT],
-            'Markdown comment' => [NewComment::fromCommonMark(
+            )],
+            'HTML comment'     => [CommentCreation::fromNewComment(
+                NewComment::fromParts(
+                    '<p>wane demipomada</p>',
+                    CommentFormatIdentifier::buildHTML(),
+                    $submitter,
+                    self::SUBMISSION_TIMESTAMP,
+                    []
+                ),
                 self::CHANGESET_ID,
-                '*appraising* wheedle',
-                $submitter,
-                self::SUBMISSION_TIMESTAMP,
-                []
-            ), \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT],
+                new CreatedFileURLMapping()
+            )],
+            'Markdown comment' => [CommentCreation::fromNewComment(
+                NewComment::fromParts(
+                    '*appraising* wheedle',
+                    CommentFormatIdentifier::buildCommonMark(),
+                    $submitter,
+                    self::SUBMISSION_TIMESTAMP,
+                    []
+                ),
+                self::CHANGESET_ID,
+                new CreatedFileURLMapping()
+            )],
         ];
     }
 
     /**
      * @dataProvider commentDataProvider
      */
-    public function testItSavesCommentAndExtractsCrossReferences(NewComment $comment, string $expected_format): void
+    public function testItSavesCommentAndExtractsCrossReferences(CommentCreation $comment): void
     {
         $this->dao->expects(self::once())
             ->method('createNewVersion')
@@ -121,53 +155,36 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::SUBMITTER_USER_ID,
                 self::SUBMISSION_TIMESTAMP,
                 0,
-                $expected_format
+                (string) $comment->getFormat()
             )->willReturn(6903);
         $this->reference_manager->expects(self::once())->method('extractCrossRef');
         $this->ugroup_inserter->method('insertUGroupsOnPrivateComment');
 
-        $this->createComment($comment);
+        $this->create($comment);
     }
 
     public function testItThrowsIfThereIsAProblemWhenSavingTheComment(): void
     {
-        $submitter = UserTestBuilder::aUser()->withId(self::SUBMITTER_USER_ID)->build();
-        $comment   = NewComment::fromText(
-            self::CHANGESET_ID,
-            'metavoltine huggermugger',
-            $submitter,
-            self::SUBMISSION_TIMESTAMP,
-            []
-        );
-
         $this->expectException(\Tracker_CommentNotStoredException::class);
         $this->dao->method('createNewVersion')->willReturn(false);
 
-        $this->createComment($comment);
+        $this->createWithComment();
     }
 
     public function testItSavesUserGroupsAllowedToSeePrivateComment(): void
     {
-        $ugroups   = [
+        $this->user_groups_that_are_allowed_to_see = [
             ProjectUGroupTestBuilder::aCustomUserGroup(121)->build(),
             ProjectUGroupTestBuilder::aCustomUserGroup(181)->build(),
         ];
-        $submitter = UserTestBuilder::aUser()->withId(self::SUBMITTER_USER_ID)->build();
-        $comment   = NewComment::fromText(
-            self::CHANGESET_ID,
-            'metavoltine huggermugger',
-            $submitter,
-            self::SUBMISSION_TIMESTAMP,
-            $ugroups
-        );
 
         $comment_id = 7905;
         $this->dao->method('createNewVersion')->willReturn($comment_id);
         $this->reference_manager->method('extractCrossRef');
         $this->ugroup_inserter->expects(self::once())
             ->method('insertUGroupsOnPrivateComment')
-            ->with($comment_id, $ugroups);
+            ->with($comment_id, $this->user_groups_that_are_allowed_to_see);
 
-        $this->createComment($comment);
+        $this->createWithComment();
     }
 }

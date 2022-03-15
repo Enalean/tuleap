@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
+use PHPUnit\Framework\Constraint\Callback;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkTypeProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueFormatter;
@@ -41,10 +42,10 @@ use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
-use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -140,29 +141,26 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->changeset_creator->expects(self::once())
             ->method('create')
             ->with(
-                $this->artifact,
-                [
-                    self::ARTIFACT_LINK_ID => [
-                        'new_values' => '',
-                        'types'      => [],
+                NewChangeset::fromFieldsDataArrayWithEmptyComment(
+                    $this->artifact,
+                    [
+                        self::ARTIFACT_LINK_ID => [
+                            'new_values' => '',
+                            'types'      => [],
+                        ],
+                        self::TITLE_ID         => self::TITLE_VALUE,
+                        self::DESCRIPTION_ID   => [
+                            'content' => self::DESCRIPTION_VALUE,
+                            'format'  => self::DESCRIPTION_FORMAT,
+                        ],
+                        self::STATUS_ID        => [self::MAPPED_STATUS_BIND_VALUE_ID],
+                        self::START_DATE_ID    => '2011-02-21',
+                        self::END_PERIOD_ID    => '2022-05-21',
                     ],
-                    self::TITLE_ID         => self::TITLE_VALUE,
-                    self::DESCRIPTION_ID   => [
-                        'content' => self::DESCRIPTION_VALUE,
-                        'format'  => self::DESCRIPTION_FORMAT,
-                    ],
-                    self::STATUS_ID        => [self::MAPPED_STATUS_BIND_VALUE_ID],
-                    self::START_DATE_ID    => '2011-02-21',
-                    self::END_PERIOD_ID    => '2022-05-21',
-                ],
-                '',
-                $this->pfuser,
-                self::SUBMISSION_DATE,
-                false,
-                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
-                self::isInstanceOf(CreatedFileURLMapping::class),
-                self::isInstanceOf(TrackerImportConfig::class),
-                []
+                    $this->pfuser,
+                    self::SUBMISSION_DATE,
+                ),
+                PostCreationContext::withNoConfig(false)
             );
 
         $this->getAdder()->addChangeset($this->changeset);
@@ -202,23 +200,27 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->changeset_creator->expects(self::once())
             ->method('create')
             ->with(
-                $this->artifact,
-                [
-                    self::ARTIFACT_LINK_ID => [
-                        'new_values' => (string) self::MIRRORED_ITERATION_ID,
-                        'types'      => [
-                            (string) self::MIRRORED_ITERATION_ID => \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+                new Callback(function (NewChangeset $new_changeset) {
+                    if ($new_changeset->getArtifact() !== $this->artifact) {
+                        return false;
+                    }
+                    $expected_fields_data = [
+                        self::ARTIFACT_LINK_ID => [
+                            'new_values' => (string) self::MIRRORED_ITERATION_ID,
+                            'types'      => [
+                                (string) self::MIRRORED_ITERATION_ID => \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
+                            ],
                         ],
-                    ],
-                ],
-                '',
-                $this->pfuser,
-                self::isType('int'),
-                false,
-                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
-                self::isInstanceOf(CreatedFileURLMapping::class),
-                self::isInstanceOf(TrackerImportConfig::class),
-                []
+                    ];
+                    if ($new_changeset->getFieldsData() !== $expected_fields_data) {
+                        return false;
+                    }
+                    if ($new_changeset->getSubmitter() !== $this->pfuser) {
+                        return false;
+                    }
+                    return true;
+                }),
+                PostCreationContext::withNoConfig(false)
             );
 
         $this->getAdder()->addArtifactLinkChangeset($this->artifact_link_changeset);
