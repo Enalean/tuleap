@@ -57,6 +57,7 @@ abstract class LDAP_GroupManager
     protected $usersToAdd;
     protected $usersToRemove;
     protected $usersNotImpacted;
+    protected array $cached_users = [];
 
     /**
      * @var GroupSyncNotificationsManager
@@ -360,6 +361,10 @@ abstract class LDAP_GroupManager
         $ldap_group    = $group_definition->current();
         $base_group_dn = strtolower($this->ldap->getLDAPParam('grp_dn'));
         foreach ($ldap_group->getGroupMembers() as $member_dn) {
+            if (isset($this->cached_users[strtolower($member_dn)])) {
+                continue;
+            }
+
             $member_dn = strtolower($member_dn);
             if (strpos($member_dn, $base_group_dn) !== false) {
                 $this->addGroupToLdapIds($member_dn, $ldap_ids);
@@ -373,7 +378,8 @@ abstract class LDAP_GroupManager
     {
         $result = $this->getLdapEntryForUser($member_dn);
         if ($result) {
-            $ldap_ids[$result->getEdUid()] = $result;
+            $this->cached_users[$member_dn] = $result->getEdUid();
+            $ldap_ids[$result->getEdUid()]  = $result;
         }
     }
 
