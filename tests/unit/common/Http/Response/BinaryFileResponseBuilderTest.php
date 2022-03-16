@@ -55,6 +55,28 @@ final class BinaryFileResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals('no-cache', $response->getHeaderLine('Pragma'));
     }
 
+    /**
+     * @testWith ["archive.zip", "attachment; filename=\"archive.zip\""]
+     *           ["bépo.zip", "attachment; filename=\"bpo.zip\"; filename*=\"utf-8''b%C3%A9po.zip\""]
+     *           ["playa-🌴.zip", "attachment; filename=\"playa-.zip\"; filename*=\"utf-8''playa-%F0%9F%8C%B4.zip\""]
+     *           ["per%cent.zip", "attachment; filename=\"per%cent.zip\""]
+     *           ["sl/ash.zip", "attachment; filename=\"sl-ash.zip\""]
+     *           ["back\\slash.zip", "attachment; filename=\"back-slash.zip\""]
+     *           ["qu\"o”te.zip", "attachment; filename=\"qu\\\"ote.zip\"; filename*=\"utf-8''qu%22o%E2%80%9Dte.zip\""]
+     */
+    public function testFilenameIsSentInBothISO88691AndUTF8(string $name, string $expected): void
+    {
+        $builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
+
+        $callback = static function (): void {
+            echo 'Foo';
+        };
+
+        $response = $builder->fromCallback(Mockery::mock(ServerRequestInterface::class), $callback, $name, 'application/zip');
+
+        self::assertEquals($expected, $response->getHeaderLine('Content-Disposition'));
+    }
+
     public function testFileResponseCanBeBuiltFromACallback(): void
     {
         $builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
