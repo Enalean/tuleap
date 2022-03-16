@@ -170,27 +170,27 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
     {
         $offset                    = 0;
         $limit                     = 50;
-        $query_for_active_projects = http_build_query([
+        $query_for_active_projects = [
             'limit' => $limit, 'offset' => $offset,
-        ]);
+        ];
 
         $this->getProjectsIdsWithQuery($query_for_active_projects, $limit);
 
         $deleted_status_label       = 'deleted';
-        $query_for_deleted_projects = http_build_query([
+        $query_for_deleted_projects = [
             'limit'  => $limit,
             'offset' => $offset,
             'query'  => json_encode(["with_status" => $deleted_status_label]),
-        ]);
+        ];
 
         $this->getProjectsIdsWithQuery($query_for_deleted_projects, $limit);
 
         $suspended_status_label       = 'suspended';
-        $query_for_suspended_projects = http_build_query([
+        $query_for_suspended_projects = [
             'limit'  => $limit,
             'offset' => $offset,
             'query'  => json_encode(["with_status" => $suspended_status_label]),
-        ]);
+        ];
 
         $this->getProjectsIdsWithQuery($query_for_suspended_projects, $limit);
     }
@@ -399,23 +399,24 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
         return $ids;
     }
 
-    private function getProjectsIdsWithQuery($query, $limit)
+    private function getProjectsIdsWithQuery(array $query, int $limit)
     {
         $offset = 0;
 
         do {
+            $uri      = "projects/?" . http_build_query($query);
             $response = $this->getResponseByName(
                 REST_TestDataBuilder::ADMIN_USER_NAME,
-                $this->request_factory->createRequest('GET', "projects/?$query")
+                $this->request_factory->createRequest('GET', $uri)
             );
 
             $projects = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
             $number_of_project = (int) $response->getHeaderLine('X-Pagination-Size');
-
             $this->addProjectIdFromRequestData($projects);
 
-            $offset += $limit;
+            $offset         += $limit;
+            $query['offset'] = $offset;
         } while ($offset < $number_of_project);
     }
 
