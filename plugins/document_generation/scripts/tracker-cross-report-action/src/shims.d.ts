@@ -17,20 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { createGettext } from "vue3-gettext";
-
 declare module "*.vue" {
     import type { DefineComponent } from "vue";
     const component: DefineComponent;
     export default component;
 }
-
-type Language = ReturnType<typeof createGettext>;
-declare module "vue" {
-    interface ComponentCustomProperties
-        extends Pick<Language, "$gettext" | "$pgettext" | "$ngettext" | "$npgettext"> {
-        $gettextInterpolate: Language["interpolate"];
-    }
-}
-
-export {};
