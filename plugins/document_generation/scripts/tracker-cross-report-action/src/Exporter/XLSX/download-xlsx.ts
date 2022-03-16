@@ -18,15 +18,18 @@
  */
 
 import { utils, writeFile } from "xlsx";
-import type { GlobalExportProperties } from "../../type";
+import type { GlobalExportProperties, ReportFieldColumn } from "../../type";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 
 export function downloadXLSX(
     global_properties: GlobalExportProperties,
+    report_field_columns: ReportFieldColumn[],
     report_artifacts: ArtifactResponse[]
 ): void {
     const book = utils.book_new();
-    const sheet = utils.aoa_to_sheet(buildContent(global_properties, report_artifacts));
+    const sheet = utils.aoa_to_sheet(
+        buildContent(global_properties, report_field_columns, report_artifacts)
+    );
     utils.book_append_sheet(book, sheet);
     writeFile(
         book,
@@ -39,9 +42,15 @@ export function downloadXLSX(
 
 function buildContent(
     global_properties: GlobalExportProperties,
+    report_field_columns: ReportFieldColumn[],
     report_artifacts: ArtifactResponse[]
 ): Array<Array<string | number>> {
     const content: Array<Array<string | number>> = [["report_id", global_properties.report_id]];
+    const report_columns_label: string[] = [];
+    for (const column of report_field_columns) {
+        report_columns_label.push(column.field_label);
+    }
+    content.push(report_columns_label);
     for (const artifact of report_artifacts) {
         content.push(["artifact_id", artifact.id]);
     }
