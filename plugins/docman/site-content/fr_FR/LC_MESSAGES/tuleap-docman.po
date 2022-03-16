@@ -1366,12 +1366,6 @@ msgstr ""
 "Modèle invalide: le modèle doit contenir au moins la variable ${TITLE}' or "
 "'${ID} variable"
 
-msgid ""
-"Invalid pattern: filename pattern cannot be applied to the uploaded file."
-msgstr ""
-"Modèle invalide: le modèle de nom de fichier ne peut pas être appliqué pour "
-"le fichier téléversé."
-
 msgid "Invalid property"
 msgstr "Propriété invalide"
 

@@ -27,7 +27,6 @@ use Tuleap\Docman\FilenamePattern\FilenameBuilder;
 use Tuleap\Docman\FilenamePattern\FilenamePatternFeedbackHandler;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
 use Tuleap\Docman\FilenamePattern\FilenamePatternUpdater;
-use Tuleap\Docman\FilenamePattern\InvalidMinimalPatternException;
 use Tuleap\Docman\Metadata\ItemImpactedByMetadataChangeCollection;
 use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
@@ -142,6 +141,7 @@ class Docman_Actions extends Actions
 
         $uploadSucceded = false;
         $newVersion     = null;
+        $filename       = '';
 
         $_label     = '';
         $_changelog = '';
@@ -180,9 +180,9 @@ class Docman_Actions extends Actions
                         $uploadSucceded = true;
 
                         if ($request->exist('file_name')) {
-                            $_filename = basename($request->get('file_name'));
+                            $filename = basename($request->get('file_name'));
                         } else {
-                            $_filename = basename($path);
+                            $filename = basename($path);
                         }
 
                         $_filesize = filesize($path);
@@ -196,44 +196,19 @@ class Docman_Actions extends Actions
                 } else {
                     $project_id = $item->getGroupId();
 
-                    $filename_builder = new FilenameBuilder(
-                        new FilenamePatternRetriever(new SettingsDAO()),
-                        new ItemStatusMapper(new Docman_SettingsBo($project_id))
-                    );
-                    $final_filename   = $_FILES['file']['name'];
+                    $filename = $_FILES['file']['name'];
 
-                    try {
-                        $final_filename = $filename_builder->buildFilename(
-                            $_FILES['file']['name'],
-                            $project_id,
-                            $item->getTitle(),
-                            $item->getStatus(),
-                            $_label,
-                            $item->getId()
-                        );
-                    } catch (InvalidMinimalPatternException $e) {
-                        // Do not stop execution to avoid inconsistency between the already created item and the associated file.
-                        $this->_controler->feedback->log(
-                            Feedback::WARN,
-                            dgettext(
-                                'tuleap-docman',
-                                "Invalid pattern: filename pattern cannot be applied to the uploaded file."
-                            )
-                        );
-                    }
-
-                    $path = $fs->upload($_FILES['file'], $final_filename, $project_id, $item->getId(), $number);
+                    $path = $fs->upload($_FILES['file'], $filename, $project_id, $item->getId(), $number);
                     if ($path) {
                         $uploadSucceded = true;
-                        $_filename      = $final_filename;
                         $_filesize      = $_FILES['file']['size'];
                         $_filetype      = $_FILES['file']['type']; //TODO detect mime type server side
                     }
                 }
 
                 $mime_type_detector = new Docman_MIMETypeDetector();
-                if ($path && $mime_type_detector->isAnOfficeFile($_filename)) {
-                    $_filetype = $mime_type_detector->getRightOfficeType($_filename);
+                if ($path && $mime_type_detector->isAnOfficeFile($filename)) {
+                    $_filetype = $mime_type_detector->getRightOfficeType($filename);
                 }
 
                 break;
@@ -242,7 +217,7 @@ class Docman_Actions extends Actions
                     $uploadSucceded = true;
 
                     //TODO take mimetype once the file has been written ?
-                    $_filename = basename($path);
+                    $filename  = basename($path);
                     $_filesize = filesize($path);
                     $_filetype = 'text/html';
                 }
@@ -252,6 +227,19 @@ class Docman_Actions extends Actions
         }
 
         if ($uploadSucceded) {
+            $filename_builder = new FilenameBuilder(
+                new FilenamePatternRetriever(new SettingsDAO()),
+                new ItemStatusMapper(new Docman_SettingsBo($item->getGroupId()))
+            );
+            $final_filename   = $filename_builder->buildFilename(
+                $filename,
+                $item->getGroupId(),
+                $item->getTitle(),
+                $item->getStatus(),
+                $_label,
+                $item->getId()
+            );
+
             $userId        = $user->getId();
             $versionAuthor = $userId;
             if ($request->exist('author') && ($request->get('author') != $userId)) {
@@ -291,7 +279,7 @@ class Docman_Actions extends Actions
                             'user_id'   => $versionAuthor,
                             'label'     => $_label,
                             'changelog' => $_changelog,
-                            'filename'  => $_filename ?? '',
+                            'filename'  => $final_filename,
                             'filesize'  => $_filesize ?? 0,
                             'filetype'  => $_filetype ?? '',
                             'path'      => $path ?? '',
