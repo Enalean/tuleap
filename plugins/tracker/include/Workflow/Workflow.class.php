@@ -194,7 +194,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         foreach ($this->getTransitions() as $transition) {
             $from = $transition->getFieldValueFrom();
             if ($from === null && $field_value_id_from === null || $from !== null && $from->getId() == $field_value_id_from) {
-                if ($transition->getFieldValueTo()->getId() == $field_value_id_to) {
+                if ($transition->getFieldValueTo()?->getId() == $field_value_id_to) {
                     return $transition;
                 }
             }
