@@ -400,7 +400,7 @@ class SimpleModeTest extends TrackerBase
         return $transition_id;
     }
 
-    public function testGETWorkflowImportedFromXML()
+    public function testGETWorkflowImportedFromXML(): void
     {
         $tracker = $this->tracker_representations[$this->simple_mode_from_xml_tracker_id];
 

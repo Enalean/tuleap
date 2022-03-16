@@ -118,6 +118,7 @@ use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
+use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -290,7 +291,8 @@ class ArtifactsResource extends AuthenticatedResource
             new PermissionsRepresentationBuilder(
                 new \UGroupManager(),
                 new PermissionsFunctionsWrapper()
-            )
+            ),
+            new WorkflowRestBuilder()
         );
     }
 
