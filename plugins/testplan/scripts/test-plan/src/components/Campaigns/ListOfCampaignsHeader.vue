@@ -55,8 +55,3 @@ const should_button_be_displayed = computed(
         !has_loading_error.value && campaigns.value.length > 0 && user_can_create_campaign.value
 );
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

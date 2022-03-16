@@ -78,8 +78,3 @@ const should_error_state_be_displayed = computed((): boolean => {
     return has_loading_error.value;
 });
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

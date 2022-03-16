@@ -33,8 +33,3 @@ defineProps<{
     error_message_details?: string | undefined;
 }>();
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

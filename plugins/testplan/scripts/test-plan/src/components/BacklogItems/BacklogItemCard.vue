@@ -105,8 +105,3 @@ const edit_backlog_item_href = computed(() => {
     return buildEditBacklogItemLink(milestone_id.value, props.backlog_item);
 });
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

@@ -55,8 +55,3 @@ const should_error_state_be_displayed = computed((): boolean => {
     return props.backlog_item.has_test_definitions_loading_error;
 });
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

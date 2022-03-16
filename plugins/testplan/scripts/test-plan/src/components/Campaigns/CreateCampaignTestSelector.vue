@@ -131,8 +131,3 @@ function updateSelectedTests(): void {
     emit("update:initial_tests", initial_tests);
 }
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

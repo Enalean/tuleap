@@ -27,8 +27,3 @@
 <script setup lang="ts">
 import ExportButton from "./ExportButton.vue";
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

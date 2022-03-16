@@ -206,8 +206,3 @@ const icon_class = computed((): string => {
     return "fa-save";
 });
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

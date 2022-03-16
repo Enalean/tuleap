@@ -36,8 +36,3 @@ const { has_refreshing_error } = useNamespacedState<Pick<CampaignState, "has_ref
     ["has_refreshing_error"]
 );
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

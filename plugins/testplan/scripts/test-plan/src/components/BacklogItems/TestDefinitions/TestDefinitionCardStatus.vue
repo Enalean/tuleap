@@ -45,8 +45,3 @@ const go_to_test_exec_link = computed((): string | null => {
     return buildGoToTestExecutionLink(project_id.value, milestone_id.value, props.test_definition);
 });
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>
