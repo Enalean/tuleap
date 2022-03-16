@@ -51,8 +51,3 @@ const { user_can_create_campaign } = useState<Pick<State, "user_can_create_campa
     "user_can_create_campaign",
 ]);
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

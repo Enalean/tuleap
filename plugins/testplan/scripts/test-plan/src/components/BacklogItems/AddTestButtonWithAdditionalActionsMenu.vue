@@ -107,8 +107,3 @@ watch(can_add_button_be_displayed, (): void => {
     });
 });
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

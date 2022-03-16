@@ -31,8 +31,3 @@
 <script setup lang="ts">
 import BacklogItemEmptyStateSvg from "./BacklogItemEmptyStateSvg.vue";
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

@@ -28,8 +28,3 @@
 import ListOfBacklogItems from "./BacklogItems/ListOfBacklogItems.vue";
 import ListOfCampaigns from "./Campaigns/ListOfCampaigns.vue";
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>
