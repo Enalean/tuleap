@@ -9,3 +9,5 @@ benjamin.dauton@enalean.com valid-after="20220313" ecdsa-sha2-nistp256 AAAAE2VjZ
 marie-ange.garnier@enalean.com valid-after="20220314" ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBOND0k8z5ONscCSgrg0EW7T0OBghMRmjCri99pyLB0DY2JBNNfV847I8bcrJnxGaA51ySRHeQEdQpVHPP7hLwGk=
 # Manuel VACELET
 manuel.vacelet@enalean.com valid-after="20220315" sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBM7LtvEefsbj952dW6ol8biE3LI0rGaP7CeAQUbbw800xlJ6KWYDTrXNLxHGaEfd5B64JIJc/FBeLqJzvgaq1Q8AAAAEc3NoOg==
+# Yannis ROSSETTO
+yannis.rossetto@enalean.com valid-after="20220316" sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBGiWz+MOn2ejhS6Kr6/TwCvD4eaiPD2DMQP2G3wTSg307+Lo8CVw8IL6wng8D4oEMwIuzEhM1/6a7l2JcLdnI6YAAAAEc3NoOg==
