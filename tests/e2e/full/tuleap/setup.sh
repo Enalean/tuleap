@@ -29,18 +29,7 @@ setup_lhs() {
 setup_tuleap() {
     echo "Setup Tuleap"
 
-    cat /usr/share/tuleap/src/etc/local.inc.dist | \
-    sed \
-    -e "s#/var/lib/tuleap/ftp/codendi#/var/lib/tuleap/ftp/tuleap#g" \
-    -e "s#%sys_default_domain%#tuleap#g" \
-    -e "s#%sys_fullname%#tuleap#g" \
-    -e "s#%sys_org_name%#Tuleap#g" \
-    -e "s#%sys_long_org_name%#Tuleap#g" \
-    -e 's#\$sys_logger_level =.*#\$sys_logger_level = "debug";#' \
-    -e 's#/home/users##' \
-    -e 's#/home/groups##' \
-    > /etc/tuleap/conf/local.inc
-
+    install -m 00755 -o codendiadm -g codendiadm /usr/share/tuleap/src/utils/tuleap /usr/bin/tuleap
     cp /usr/share/tuleap/src/utils/svn/Tuleap.pm /usr/share/perl5/vendor_perl/Apache/Tuleap.pm
     cp /usr/share/tuleap/src/utils/fileforge.pl /usr/lib/tuleap/bin/fileforge
 }
@@ -60,8 +49,11 @@ setup_database() {
         --app-user="$MYSQL_USER" \
         --app-password="$MYSQL_PASSWORD" \
         --mediawiki="per-project" \
-        --tuleap-fqdn="localhost" \
+        --tuleap-fqdn="tuleap" \
         --site-admin-password="welcome0"
+
+    TLP_SYSTEMCTL=docker-centos7 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="tuleap"
+    echo '$sys_logger_level = "debug";' >> /etc/tuleap/conf/local.inc
 
     $MYSQLROOT -e "DELETE FROM tuleap.password_configuration"
     $MYSQLROOT -e "INSERT INTO tuleap.password_configuration values (0)"

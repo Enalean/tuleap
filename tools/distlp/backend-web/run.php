@@ -61,12 +61,4 @@ if (isset($argv[1]) && $argv[1] === 'test') {
     } catch (Exception $e) {
         die($e->getMessage());
     }
-    file_put_contents(
-        '/etc/tuleap/conf/local.inc',
-        preg_replace(
-            '/\$sys_trusted_proxies = \'\'/',
-            '$sys_trusted_proxies = \'10.0.0.0/8,172.16.0.0/12,192.168.0.0/16\'',
-            file_get_contents('/etc/tuleap/conf/local.inc')
-        )
-    );
 }

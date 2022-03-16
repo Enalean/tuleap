@@ -169,6 +169,7 @@ _pluginGit() {
 _pluginSVN() {
     local -r httpd_vhost="/etc/httpd/conf.d/tuleap-vhost.conf"
     local plugin_svn_configured="false"
+    local server_name=$(/usr/bin/tuleap config-get sys_default_domain)
 
     if ! $(/usr/bin/tuleap config-get sys_dbauth_passwd 2>/dev/null); then
         if [ ${mysql_user:-NULL} != "NULL" ] && \
@@ -190,8 +191,6 @@ _pluginSVN() {
     fi
 
     if [ ! -f ${httpd_vhost} ]; then
-        server_name=$(${awk} --field-separator="'" \
-            '/^\$sys_default_domain/ {print $2}' ${tuleap_conf}/local.inc)
         ${awk} '{ gsub("%sys_default_domain%", "'"${server_name}"'");
                   gsub("*:80$", "127.0.0.1:8080");
                   gsub("*:80>", "127.0.0.1:8080>");

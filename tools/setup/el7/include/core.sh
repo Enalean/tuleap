@@ -24,8 +24,7 @@ function _configureMailman() {
     fi
 
     local mailman_conf="/etc/mailman/mm_cfg.py"
-    local server_name=$(${awk} --field-separator="'" \
-            '/^\$sys_default_domain/ {print $2}' ${tuleap_conf}/local.inc)
+    local server_name=$(/usr/bin/tuleap config-get sys_default_domain)
 
     local has_mailman_been_configured="false"
 

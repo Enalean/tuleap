@@ -76,10 +76,9 @@ else
     update-ca-trust extract
 
     replacement=`echo $REALTIME_KEY | sed "s|/|\\\\\/|g"`
-    sed -e "s/\$nodejs_server_jwt_private_key = '';/\$nodejs_server_jwt_private_key = '$replacement';/" \
-        -e "s/\$nodejs_server = '';/\$nodejs_server = 'tuleap-web.tuleap-aio-dev.docker:443';/" \
-        -e "s/\$nodejs_server_int = '';/\$nodejs_server_int = 'realtime';/" \
-        -i /etc/tuleap/conf/local.inc
+    echo "\$nodejs_server_jwt_private_key = '$replacement';" >> /etc/tuleap/conf/local.inc
+    echo "\$nodejs_server = 'tuleap-web.tuleap-aio-dev.docker:443';" >> /etc/tuleap/conf/local.inc
+    echo "\$nodejs_server_int = 'realtime';" >> /etc/tuleap/conf/local.inc
 
     if [ -f /usr/share/tuleap/.metrics_secret.key ]; then
         mkdir -p /etc/tuleap/plugins/prometheus_metrics/etc/

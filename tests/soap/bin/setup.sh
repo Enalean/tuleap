@@ -4,6 +4,9 @@ set -ex
 
 setup_tuleap() {
     echo "Setup Tuleap"
+
+    install -m 00755 -o codendiadm -g codendiadm /usr/share/tuleap/src/utils/tuleap /usr/bin/tuleap
+
     mkdir -p \
         /etc/tuleap/conf \
         /etc/tuleap/plugins \
@@ -13,19 +16,6 @@ setup_tuleap() {
     chgrp codendiadm /var/log/tuleap/codendi_syslog
     chmod g+w /var/log/tuleap/codendi_syslog
     chown -R codendiadm:codendiadm /var/tmp/tuleap_cache /etc/tuleap/plugins
-
-    cat /usr/share/tuleap/src/etc/local.inc.dist | \
-	sed \
-	-e "s#/var/lib/tuleap/ftp/codendi#/var/lib/tuleap/ftp/tuleap#g" \
-	-e "s#%sys_default_domain%#localhost#g" \
-	-e "s#%sys_fullname%#localhost#g" \
-	-e "s#%sys_org_name%#Tuleap#g" \
-	-e "s#%sys_long_org_name%#Tuleap#g" \
-	-e 's#\$sys_logger_level =.*#\$sys_logger_level = "debug";#' \
-	-e 's#\$sys_use_unsecure_ssl_certificate =.*#\$sys_use_unsecure_ssl_certificate = true;#' \
-	-e 's#/home/users##' \
-	-e 's#/home/groups##' \
-	> /etc/tuleap/conf/local.inc
 
     mkdir -p /etc/tuleap/plugins/docman/etc
 	cat /usr/share/tuleap/plugins/docman/etc/docman.inc.dist | \
@@ -63,6 +53,10 @@ setup_database() {
         --app-password="${MYSQL_PASSWORD}" \
         --tuleap-fqdn="localhost" \
         --site-admin-password="welcome0"
+
+    TLP_SYSTEMCTL=docker-centos7 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="localhost"
+    echo '$sys_logger_level = "debug";' >> /etc/tuleap/conf/local.inc
+    echo '$sys_use_unsecure_ssl_certificate = true;' >> /etc/tuleap/conf/local.inc
 
     $MYSQLROOT $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3structure.sql"
     $MYSQLROOT $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3values.sql"
