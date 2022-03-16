@@ -58,6 +58,7 @@ final class FilenameBuilder
         if (! FilenamePatternValidator::isPatternValid($pattern)) {
             throw new InvalidMinimalPatternException();
         }
+        $file_info = pathinfo($original_filename);
 
         $new_filename = $pattern;
         if (str_contains($pattern, self::TITLE_VARIABLE)) {
@@ -79,6 +80,11 @@ final class FilenameBuilder
 
         if (str_contains($pattern, self::ITEM_ID_VARIABLE)) {
             $new_filename = str_replace(self::ITEM_ID_VARIABLE, (string) $item_id, $new_filename);
+        }
+
+
+        if (array_key_exists('extension', $file_info)) {
+            $new_filename .=  '.' . $file_info['extension'];
         }
 
         return $new_filename;
