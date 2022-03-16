@@ -165,6 +165,9 @@ msgstr "Créer un nouveau document"
 msgid "Create a new empty approval table."
 msgstr "Créer une nouvelle table d'approbation vide."
 
+msgid "Create a new file"
+msgstr "Créer un nouveau fichier"
+
 msgid "Create a new folder"
 msgstr "Créer un nouveau dossier"
 
@@ -706,6 +709,13 @@ msgstr "Nom de version"
 
 msgid "We detect you are using OSX"
 msgstr "Nous détectons que vous utilisez OSX"
+
+msgid ""
+"When a filename pattern is set, you are not allowed to drag 'n drop more "
+"than 1 file at\n"
+"        once."
+msgstr ""
+"Quand un modèle de nom de fichier est configuré, vous n'êtes pas autorisé à glisser-déposer plus d'un fichier à la fois."
 
 msgid ""
 "When you delete a folder, all its content is also deleted. Please think "

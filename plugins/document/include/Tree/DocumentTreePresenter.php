@@ -137,6 +137,8 @@ class DocumentTreePresenter
 
     public string $project_icon;
 
+    public string $filename_pattern;
+
     public function __construct(
         \Project $project,
         int $root_id,
@@ -153,6 +155,7 @@ class DocumentTreePresenter
         array $project_flags,
         array $criteria,
         array $columns,
+        ?string $filename_pattern,
     ) {
         $this->project_id                         = $project->getID();
         $this->root_id                            = $root_id;
@@ -182,5 +185,7 @@ class DocumentTreePresenter
         $this->project_icon  = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint());
         $this->criteria      = json_encode($criteria, JSON_THROW_ON_ERROR);
         $this->columns       = json_encode($columns, JSON_THROW_ON_ERROR);
+
+        $this->filename_pattern = $filename_pattern ?: '';
     }
 }

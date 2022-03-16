@@ -53,6 +53,7 @@ export default {
             ALREADY_EXISTS_ERROR: "already_exists",
             EDITION_LOCKED: "edition_locked",
             DROPPED_ITEM_IS_NOT_A_FILE: "dropped_item_is_not_a_file",
+            FILENAME_PATTERN_IS_SET_ERROR: "filename_pattern_is_set",
             highlighted_item_id: null,
         };
     },
@@ -64,6 +65,7 @@ export default {
             "max_files_dragndrop",
             "max_size_upload",
             "is_changelog_proposed_after_dnd",
+            "filename_pattern",
         ]),
         user_can_dragndrop_in_current_folder() {
             return (
@@ -109,7 +111,12 @@ export default {
                         /* webpackChunkName: "document-droppped-item-is-folder-error" */ "./DroppedItemIsAFolderErrorModal.vue"
                     );
             }
-
+            if (this.error_modal_shown === this.FILENAME_PATTERN_IS_SET_ERROR) {
+                return () =>
+                    import(
+                        /* webpackChunkName: "document-filename-pattern-set-error-modal" */ "./FilenamePatternSetErrorModal.vue"
+                    );
+            }
             return () =>
                 import(
                     /* webpackChunkName: "document-max-files-dragndrop-error-modal" */ "./MaxFilesDragndropErrorModal.vue"
@@ -184,6 +191,21 @@ export default {
 
             if (files.length > this.max_files_dragndrop) {
                 this.error_modal_shown = this.MAX_FILES_ERROR;
+                return;
+            }
+
+            if (this.isFilenamePatternSet() && files.length > 1) {
+                this.error_modal_shown = this.FILENAME_PATTERN_IS_SET_ERROR;
+                return;
+            }
+
+            if (this.isFilenamePatternSet() && files.length === 1) {
+                emitter.emit("show-file-creation-modal", {
+                    detail: {
+                        parent: dropzone_item,
+                        dropped_file: files[0],
+                    },
+                });
                 return;
             }
 
@@ -356,6 +378,9 @@ export default {
         },
         isDroppedItemAFile(file) {
             return file.size % 4096 !== 0 || file.type !== "";
+        },
+        isFilenamePatternSet() {
+            return this.filename_pattern && this.filename_pattern !== "";
         },
     },
 };

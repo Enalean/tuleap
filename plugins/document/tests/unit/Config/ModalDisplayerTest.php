@@ -26,35 +26,35 @@ namespace Tuleap\Document\Config;
 use Tuleap\Document\Tests\Stubs\FilenamePatternRetrieverStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class ChangelogModalDisplayerTest extends TestCase
+final class ModalDisplayerTest extends TestCase
 {
     public function testItReturnsTrueWhenHistoryEnforcementSettingsAllowsChangelogModal(): void
     {
-        $changelog_modal_proposer = new ChangeLogModalDisplayer(
+        $changelog_modal_displayer = new ModalDisplayer(
             FilenamePatternRetrieverStub::buildWithNoPattern(),
             new HistoryEnforcementSettings(true)
         );
 
-        self::assertTrue($changelog_modal_proposer->isChangelogModalDisplayedAfterDragAndDrop(101));
+        self::assertTrue($changelog_modal_displayer->isChangelogModalDisplayedAfterDragAndDrop(101));
     }
 
     public function testItReturnsTrueWhenAFilenamePatternExists(): void
     {
-        $changelog_modal_proposer = new ChangeLogModalDisplayer(
+        $changelog_modal_displayer = new ModalDisplayer(
             FilenamePatternRetrieverStub::buildWithPattern("\${TITLE}-Andale"),
             new HistoryEnforcementSettings(false)
         );
 
-        self::assertTrue($changelog_modal_proposer->isChangelogModalDisplayedAfterDragAndDrop(101));
+        self::assertTrue($changelog_modal_displayer->isChangelogModalDisplayedAfterDragAndDrop(101));
     }
 
     public function testItReturnsFalseWhenThereIsNoPatternOrTheSettingsDoesNotAllowChangelogModal(): void
     {
-        $changelog_modal_proposer = new ChangeLogModalDisplayer(
+        $changelog_modal_displayer = new ModalDisplayer(
             FilenamePatternRetrieverStub::buildWithNoPattern(),
             new HistoryEnforcementSettings(false)
         );
 
-        self::assertFalse($changelog_modal_proposer->isChangelogModalDisplayedAfterDragAndDrop(101));
+        self::assertFalse($changelog_modal_displayer->isChangelogModalDisplayedAfterDragAndDrop(101));
     }
 }

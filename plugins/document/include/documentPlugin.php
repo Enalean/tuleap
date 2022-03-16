@@ -31,7 +31,7 @@ use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminController;
 use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminSaveController;
 use Tuleap\Document\Config\Admin\HistoryEnforcementAdminController;
 use Tuleap\Document\Config\Admin\HistoryEnforcementAdminSaveController;
-use Tuleap\Document\Config\ChangeLogModalDisplayer;
+use Tuleap\Document\Config\ModalDisplayer;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Config\HistoryEnforcementSettingsBuilder;
 use Tuleap\Document\DocumentUsageRetriever;
@@ -111,15 +111,17 @@ class documentPlugin extends Plugin // phpcs:ignore
     {
         $history_enforcement_settings_builder = new HistoryEnforcementSettingsBuilder();
         $settings_DAO                         = new SettingsDAO();
+        $filename_pattern_retriever           = new FilenamePatternRetriever($settings_DAO);
 
         return new DocumentTreeController(
             $this->getProjectExtractor(),
             $this->getOldPluginInfo(),
             new FileDownloadLimitsBuilder(),
-            new ChangeLogModalDisplayer(
-                new FilenamePatternRetriever($settings_DAO),
+            new ModalDisplayer(
+                $filename_pattern_retriever,
                 $history_enforcement_settings_builder->build()
             ),
+            $filename_pattern_retriever,
             new ProjectFlagsBuilder(new ProjectFlagsDao()),
             new \Docman_ItemDao(),
             new \Tuleap\Document\Tree\ListOfSearchCriterionPresenterBuilder(),

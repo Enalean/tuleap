@@ -45,7 +45,7 @@ describe("DragNDropHandler", () => {
         endings: "native",
     });
 
-    function getWrapper(is_changelog_proposed_after_dnd = false) {
+    function getWrapper(is_changelog_proposed_after_dnd = false, filename_pattern = null) {
         store_options = {
             state: {
                 folder_content: [],
@@ -60,6 +60,7 @@ describe("DragNDropHandler", () => {
                     max_files_dragndrop: 10,
                     max_size_upload: 1000000000,
                     is_changelog_proposed_after_dnd,
+                    filename_pattern,
                 },
             },
             getters: {
@@ -107,6 +108,18 @@ describe("DragNDropHandler", () => {
                 await wrapper.vm.ondrop(drop_event);
 
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.MAX_FILES_ERROR);
+                expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile");
+            });
+
+            it("Shows an error modal if there are more than 1 item dropped and if the filename pattern has been set", async () => {
+                const wrapper = getWrapper(false, "some-pattern");
+                drop_event.dataTransfer.files.push(file1, file2);
+
+                await wrapper.vm.ondrop(drop_event);
+
+                expect(wrapper.vm.error_modal_shown).toEqual(
+                    wrapper.vm.FILENAME_PATTERN_IS_SET_ERROR
+                );
                 expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile");
             });
 
@@ -446,6 +459,20 @@ describe("DragNDropHandler", () => {
                 detail: {
                     updated_file: target_file,
                     dropped_file: file1,
+                },
+            });
+        });
+        it("Should open the file creation modal when user uploads a new file and if a filename pattern is set", async () => {
+            const wrapper = getWrapper(false, "pattern-set");
+            drop_event.dataTransfer.files.push(file1);
+
+            await wrapper.vm.ondrop(drop_event);
+
+            expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile");
+            expect(emitter.emit).toHaveBeenCalledWith("show-file-creation-modal", {
+                detail: {
+                    dropped_file: file1,
+                    parent: store.state.current_folder,
                 },
             });
         });

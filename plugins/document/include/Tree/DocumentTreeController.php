@@ -27,9 +27,10 @@ use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\Settings\ITellIfWritersAreAllowedToUpdatePropertiesOrDelete;
-use Tuleap\Document\Config\ChangeLogModalDisplayer;
+use Tuleap\Document\Config\ModalDisplayer;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
@@ -47,7 +48,8 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         private DocumentTreeProjectExtractor $project_extractor,
         private \DocmanPluginInfo $docman_plugin_info,
         private FileDownloadLimitsBuilder $file_download_limits_builder,
-        private ChangeLogModalDisplayer $changelog_modal_display_handler,
+        private ModalDisplayer $modal_display_handler,
+        private FilenamePatternRetriever $filename_pattern_retriever,
         private ProjectFlagsBuilder $project_flags_builder,
         private \Docman_ItemDao $dao,
         private ListOfSearchCriterionPresenterBuilder $criteria_builder,
@@ -96,7 +98,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 $forbid_writers_to_delete,
                 new CSRFSynchronizerToken('plugin-document'),
                 $this->file_download_limits_builder->build(),
-                $this->changelog_modal_display_handler->isChangelogModalDisplayedAfterDragAndDrop((int) $project->getID()),
+                $this->modal_display_handler->isChangelogModalDisplayedAfterDragAndDrop((int) $project->getID()),
                 $this->project_flags_builder->buildProjectFlags($project),
                 $this->criteria_builder->getCriteria(
                     $metadata_factory,
@@ -104,6 +106,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                     $project
                 ),
                 $this->column_builder->getColumns($metadata_factory),
+                $this->filename_pattern_retriever->getPattern((int) $project->getID())
             )
         );
 

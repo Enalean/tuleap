@@ -122,6 +122,17 @@ export interface Item {
     properties: Array<Property> | Array<FolderProperty>;
 }
 
+export interface DefaultFileProperties {
+    file: File | Record<string, never>;
+}
+
+export interface DefaultFileItem {
+    title: string;
+    description: string;
+    type: "file";
+    file_properties: DefaultFileProperties;
+}
+
 export interface FakeItem extends Item {
     progress: number | null;
     level: number;

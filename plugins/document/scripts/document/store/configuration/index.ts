@@ -52,6 +52,7 @@ export interface ConfigurationState {
     readonly columns: ListOfSearchResultColumnDefinition;
     readonly forbid_writers_to_update: boolean;
     readonly forbid_writers_to_delete: boolean;
+    readonly filename_pattern: string | null;
 }
 
 export function createConfigurationModule(
