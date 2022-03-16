@@ -45,9 +45,16 @@ class Docman_View_Admin_FilenamePattern extends AdminView
         $project_id = (int) $params['group_id'];
 
         $pattern_retriever = new FilenamePatternRetriever(new SettingsDAO());
+        $pattern           = $pattern_retriever->getPattern($project_id);
+
+        $warning_collector = EventManager::instance()->dispatch(
+            new \Tuleap\Docman\View\Admin\FilenamePatternWarningsCollector($project_id, $pattern)
+        );
+
         $renderer->renderToPage('admin/pattern-filename', [
-            'pattern' => $pattern_retriever->getPattern($project_id),
-            'csrf' => self::getCSRFToken($project_id),
+            'pattern'  => $pattern,
+            'csrf'     => self::getCSRFToken($project_id),
+            'warnings' => $warning_collector->getWarnings(),
         ]);
     }
 
@@ -55,9 +62,9 @@ class Docman_View_Admin_FilenamePattern extends AdminView
     {
         return new CSRFSynchronizerToken(
             DOCMAN_BASE_URL . '/?' . http_build_query([
-                                                          'group_id' => $project_id,
-                                                          'action'   => self::IDENTIFIER,
-                                                      ])
+                'group_id' => $project_id,
+                'action'   => self::IDENTIFIER,
+            ])
         );
     }
 

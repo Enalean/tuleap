@@ -23,6 +23,7 @@
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Docman\View\Admin\FilenamePatternWarningsCollector;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\User\AccessKey\AccessKeyDAO;
@@ -50,6 +51,7 @@ class WebDAVPlugin extends Plugin
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->addHook(AccessKeyScopeBuilderCollector::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
+        $this->addHook(FilenamePatternWarningsCollector::NAME);
     }
 
     public function getPluginInfo(): WebDAVPluginInfo
@@ -63,6 +65,29 @@ class WebDAVPlugin extends Plugin
     public function getDependencies()
     {
         return ['docman'];
+    }
+
+    public function filenamePatternWarningsCollector(FilenamePatternWarningsCollector $collector): void
+    {
+        if (! $this->isAllowed($collector->getProjectId())) {
+            return;
+        }
+
+        if ($collector->getPattern()) {
+            $collector->addWarning(
+                dgettext(
+                    'tuleap-webdav',
+                    'WebDAV is currently activated and is not compatible with filename pattern usage. Since you are currently enforcing a filename pattern, you are not able to interact with your documents via WebDAV.'
+                )
+            );
+        } else {
+            $collector->addWarning(
+                dgettext(
+                    'tuleap-webdav',
+                    'WebDAV is currently activated and is not compatible with filename pattern usage. If you choose to enforce a filename pattern, you will not be able to interact with your documents via WebDAV.'
+                )
+            );
+        }
     }
 
     public function collectRoutesEvent(CollectRoutesEvent $event): void

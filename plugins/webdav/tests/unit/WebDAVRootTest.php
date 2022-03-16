@@ -89,6 +89,8 @@ final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->plugin_manager,
             $this->project_access_checker,
         );
+
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     /**

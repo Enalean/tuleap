@@ -61,6 +61,8 @@ final class WebDAVProjectTest extends \Tuleap\Test\PHPUnit\TestCase
             12,
             $this->utils
         );
+
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     /**
