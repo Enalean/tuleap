@@ -25,21 +25,25 @@
             <i class="fa fa-asterisk" aria-hidden="true"></i>
         </label>
         <select
-            class="tlp-select"
             id="new-campaign-tests-selector"
-            v-on:change="updateSelectedTests"
             v-model="selected_value"
+            class="tlp-select"
             required
             data-test="new-campaign-tests"
+            v-on:change="updateSelectedTests"
         >
-            <option value="none" v-translate>No tests</option>
-            <option value="all" v-translate>All tests</option>
-            <option value="milestone" v-translate="{ milestone_title }" selected>
-                All tests in %{ milestone_title }
+            <option v-translate value="none">No tests</option>
+            <option v-translate value="all">All tests</option>
+            <option value="milestone" selected>
+                {{
+                    $gettext("All tests in %{ milestone_title }", {
+                        milestone_title: milestone_title,
+                    })
+                }}
             </option>
             <optgroup
-                v-bind:label="test_definitions_tracker_reports_group_label"
                 v-if="display_test_definitions_tracker_reports_group_selector"
+                v-bind:label="test_definitions_tracker_reports_group_label"
             >
                 <option
                     v-for="tracker_report in testdefinition_tracker_reports"
@@ -66,11 +70,11 @@ const { milestone_title, testdefinition_tracker_name } = useState<
 
 const props = withDefaults(
     defineProps<{
-        value: CampaignInitialTests;
+        initial_tests: CampaignInitialTests;
         testdefinition_tracker_reports: TrackerReport[] | null;
     }>(),
     {
-        value: () => {
+        initial_tests: () => {
             return { test_selector: "milestone" };
         },
     }
@@ -83,7 +87,7 @@ function transformCampaignInitialTestToStringValue(initial_tests: CampaignInitia
     return initial_tests.test_selector;
 }
 
-const selected_value = ref(transformCampaignInitialTestToStringValue(props.value));
+const selected_value = ref(transformCampaignInitialTestToStringValue(props.initial_tests));
 
 function getNbTrackerReports(): number {
     return props.testdefinition_tracker_reports === null
@@ -108,7 +112,7 @@ const display_test_definitions_tracker_reports_group_selector = computed((): boo
 });
 
 const emit = defineEmits<{
-    (e: "input", value: CampaignInitialTests): void;
+    (e: "update:initial_tests", value: CampaignInitialTests): void;
 }>();
 function updateSelectedTests(): void {
     let initial_tests: CampaignInitialTests;
@@ -124,7 +128,7 @@ function updateSelectedTests(): void {
             report_id: Number.parseInt(selected_value.value, 10),
         };
     }
-    emit("input", initial_tests);
+    emit("update:initial_tests", initial_tests);
 }
 </script>
 <script lang="ts">

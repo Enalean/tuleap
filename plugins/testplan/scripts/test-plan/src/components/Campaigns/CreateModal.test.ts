@@ -34,11 +34,6 @@ jest.mock("tlp", () => {
 });
 
 describe("CreateModal", () => {
-    beforeEach(() => {
-        // To be removed once Vue 3 compat issues are resolved
-        jest.spyOn(global.console, "warn").mockImplementation();
-    });
-
     it("Display the modal when mounted", async () => {
         const modal_show = jest.fn();
         jest.spyOn(tlp, "createModal").mockImplementation(() => {

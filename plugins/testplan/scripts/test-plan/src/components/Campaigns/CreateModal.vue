@@ -68,7 +68,7 @@
                     />
                 </div>
                 <create-campaign-test-selector
-                    v-model="initial_tests"
+                    v-model:initial_tests="initial_tests"
                     v-bind:testdefinition_tracker_reports="testdefinition_tracker_reports"
                 />
             </div>

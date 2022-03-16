@@ -40,7 +40,6 @@ module.exports = [
             extensions: [".js", ".ts", ".vue"],
             alias: {
                 docx: path.resolve(__dirname, "node_modules", "docx"),
-                vue: path.resolve(__dirname, "node_modules", "@vue", "compat"),
             },
         },
         externals: {
@@ -54,13 +53,6 @@ module.exports = [
                     test: /\.vue$/,
                     exclude: /node_modules/,
                     loader: "vue-loader",
-                    options: {
-                        compilerOptions: {
-                            compatConfig: {
-                                MODE: 2,
-                            },
-                        },
-                    },
                 },
                 webpack_configurator.rule_scss_loader,
             ],
