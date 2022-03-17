@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/gettext': file:../../../../../src/scripts/lib/gettext
+  '@tuleap/po-gettext-plugin': link:../../../../../src/scripts/lib/po-gettext-plugin
   '@tuleap/tlp-fetch': file:../../../../../src/scripts/lib/tlp-fetch
   '@types/bootstrap': ^3.4.0
   '@types/ckeditor': ^4.9.10
@@ -22,6 +23,7 @@ dependencies:
   turndown: 7.1.1
 
 devDependencies:
+  '@tuleap/po-gettext-plugin': link:../../../../../src/scripts/lib/po-gettext-plugin
   '@types/bootstrap': 3.4.0
   '@types/ckeditor': 4.9.10
   '@types/dompurify': 2.3.2

@@ -48,7 +48,6 @@ module.exports = [
         module: {
             rules: [
                 ...webpack_configurator.configureTypescriptRules(),
-                webpack_configurator.rule_easygettext_loader,
                 {
                     test: /\.vue$/,
                     exclude: /node_modules/,
@@ -60,11 +59,9 @@ module.exports = [
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
+            require("@tuleap/po-gettext-plugin").default.webpack(),
             new VueLoaderPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
-        resolveLoader: {
-            alias: webpack_configurator.easygettext_loader_alias,
-        },
     },
 ];

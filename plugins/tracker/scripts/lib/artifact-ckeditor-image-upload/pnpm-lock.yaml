@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@tuleap/ckeditor-image-upload': file:../../../../../src/scripts/lib/ckeditor-image-upload
   '@tuleap/gettext': file:../../../../../src/scripts/lib/gettext
+  '@tuleap/po-gettext-plugin': link:../../../../../src/scripts/lib/po-gettext-plugin
   css.escape: ^1.5.1
   pretty-kibibytes: ^4.0.4
   sprintf-js: ^1.1.2
@@ -14,6 +15,7 @@ dependencies:
   sprintf-js: 1.1.2
 
 devDependencies:
+  '@tuleap/po-gettext-plugin': link:../../../../../src/scripts/lib/po-gettext-plugin
   css.escape: 1.5.1
 
 packages:

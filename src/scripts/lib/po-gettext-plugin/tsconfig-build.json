@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "umd",
+    "types": ["jest"],
+    "outDir": "dist",
+    "sourceMap": false
+  },
+  "include": ["src/po-gettext-plugin.ts"]
+}

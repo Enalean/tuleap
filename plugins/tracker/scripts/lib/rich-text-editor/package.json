@@ -18,6 +18,7 @@
     "turndown": "^7.0.0"
   },
   "devDependencies": {
+    "@tuleap/po-gettext-plugin": "link:../../../../../src/scripts/lib/po-gettext-plugin",
     "@types/bootstrap": "^3.4.0",
     "@types/ckeditor": "^4.9.10",
     "@types/dompurify": "^2.3.2",

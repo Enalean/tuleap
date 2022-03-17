@@ -17,21 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Plugin, TransformResult } from "rollup";
+import type { TransformResult } from "unplugin";
+import { createUnplugin } from "unplugin";
 import { dataToEsm } from "@rollup/pluginutils";
 import { po } from "gettext-parser";
 
-export function createPOGettextPlugin(): Plugin {
+const plugin = createUnplugin(() => {
     return {
         name: "po-gettext",
-        transform(source: string, id: string): TransformResult {
-            if (id.slice(-3) !== ".po") {
-                return null;
-            }
-
+        transformInclude(id: string): boolean {
+            return id.endsWith(".po");
+        },
+        transform(source: string): TransformResult {
             return {
                 code: dataToEsm(po.parse(source, "utf-8")),
             };
         },
     };
-}
+});
+
+export default plugin;

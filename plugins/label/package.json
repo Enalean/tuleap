@@ -11,6 +11,7 @@
     "vue-gettext": "^2.1.12"
   },
   "devDependencies": {
+    "@tuleap/po-gettext-plugin": "link:../../src/scripts/lib/po-gettext-plugin",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch"
   },
   "scripts": {
