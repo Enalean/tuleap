@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:math";
+
 $tlp-popover-radius: var(--tlp-large-radius);
 $tlp-popover-arrow-size: 10px;
 $tlp-popover-hover-transition-show: 75ms ease-out 500ms;
@@ -159,22 +161,22 @@ $tlp-popover-click-transition: 75ms ease-out;
 
 .tlp-popover[data-popper-placement^="top"] {
     > .tlp-popover-arrow {
-        bottom: -($tlp-popover-arrow-size / 2);
+        bottom: -(math.div($tlp-popover-arrow-size, 2));
         background: var(--tlp-white-color);
     }
 
     &.tlp-popover-shown {
-        transform: translateY(-#{$tlp-popover-arrow-size / 2});
+        transform: translateY(-#{math.div($tlp-popover-arrow-size, 2)});
     }
 }
 
 .tlp-popover[data-popper-placement^="bottom"] {
     > .tlp-popover-arrow {
-        top: -($tlp-popover-arrow-size / 2);
+        top: -(math.div($tlp-popover-arrow-size, 2));
     }
 
     &.tlp-popover-shown {
-        transform: translateY(#{$tlp-popover-arrow-size / 2});
+        transform: translateY(#{math.div($tlp-popover-arrow-size, 2)});
     }
 }
 
@@ -187,11 +189,11 @@ $tlp-popover-click-transition: 75ms ease-out;
     }
 
     > .tlp-popover-arrow {
-        left: -($tlp-popover-arrow-size / 2);
+        left: -(math.div($tlp-popover-arrow-size, 2));
     }
 
     &.tlp-popover-shown {
-        transform: translateX(#{$tlp-popover-arrow-size / 2});
+        transform: translateX(#{math.div($tlp-popover-arrow-size, 2)});
     }
 }
 
@@ -204,10 +206,10 @@ $tlp-popover-click-transition: 75ms ease-out;
     }
 
     > .tlp-popover-arrow {
-        right: -($tlp-popover-arrow-size / 2);
+        right: -(math.div($tlp-popover-arrow-size, 2));
     }
 
     &.tlp-popover-shown {
-        transform: translateX(-#{$tlp-popover-arrow-size / 2});
+        transform: translateX(-#{math.div($tlp-popover-arrow-size, 2)});
     }
 }

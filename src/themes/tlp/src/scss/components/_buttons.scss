@@ -18,6 +18,7 @@
  */
 
 @use "sass:color";
+@use "sass:math";
 
 $tlp-button-box-shadow-timing: 75ms;
 $tlp-button-background-timing: 75ms;
@@ -96,7 +97,7 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
     &.tlp-button-round {
         width: $tlp-button-normal-height;
         padding: 0;
-        border-radius: $tlp-button-normal-height / 2;
+        border-radius: math.div($tlp-button-normal-height, 2);
     }
 
     > .tlp-button-icon {
