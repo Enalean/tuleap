@@ -18,15 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\REST\Artifact\Changeset\Value;
+
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
-class Tracker_REST_Artifact_ArtifactValidator
+class FieldsDataBuilder
 {
-    /** @var Tracker_FormElementFactory */
+    /** @var \Tracker_FormElementFactory */
     private $formelement_factory;
 
-    public function __construct(Tracker_FormElementFactory $formelement_factory)
+    public function __construct(\Tracker_FormElementFactory $formelement_factory)
     {
         $this->formelement_factory = $formelement_factory;
     }
@@ -34,7 +36,7 @@ class Tracker_REST_Artifact_ArtifactValidator
     /**
      * @param ArtifactValuesRepresentation[] $values
      */
-    public function getFieldsDataOnCreate(array $values, Tracker $tracker)
+    public function getFieldsDataOnCreate(array $values, \Tracker $tracker): array
     {
         $new_values     = [];
         $indexed_fields = $this->getIndexedFields($tracker);
@@ -47,7 +49,7 @@ class Tracker_REST_Artifact_ArtifactValidator
         return $new_values;
     }
 
-    public function getFieldsDataOnCreateFromValuesByField(array $values, Tracker $tracker)
+    public function getFieldsDataOnCreateFromValuesByField(array $values, \Tracker $tracker): array
     {
         $new_values = [];
         foreach ($values as $field_name => $value) {
@@ -59,11 +61,11 @@ class Tracker_REST_Artifact_ArtifactValidator
         return $new_values;
     }
 
-    private function getFieldByName(Tracker $tracker, $field_name)
+    private function getFieldByName(\Tracker $tracker, string $field_name): \Tracker_FormElement_Field
     {
         $field = $this->formelement_factory->getUsedFieldByName($tracker->getId(), $field_name);
         if (! $field) {
-            throw new Tracker_FormElement_InvalidFieldException("Field $field_name does not exist in the tracker");
+            throw new \Tracker_FormElement_InvalidFieldException("Field $field_name does not exist in the tracker");
         }
 
         return $field;
@@ -72,7 +74,7 @@ class Tracker_REST_Artifact_ArtifactValidator
     /**
      * @param ArtifactValuesRepresentation[] $values
      */
-    public function getFieldsDataOnUpdate(array $values, Artifact $artifact)
+    public function getFieldsDataOnUpdate(array $values, Artifact $artifact): array
     {
         $new_values     = [];
         $indexed_fields = $this->getIndexedFields($artifact->getTracker());
@@ -85,24 +87,26 @@ class Tracker_REST_Artifact_ArtifactValidator
         return $new_values;
     }
 
-    public function getUsedFieldsWithDefaultValue(Tracker $tracker, array $fields_data, PFUser $user)
+    public function getUsedFieldsWithDefaultValue(\Tracker $tracker, array $fields_data, \PFUser $user): array
     {
         $fields_data = $this->formelement_factory->getUsedFieldsWithDefaultValue($tracker, $fields_data, $user);
         return $fields_data;
     }
 
-    private function getField(array $indexed_fields, array $value)
+    private function getField(array $indexed_fields, array $value): \Tracker_FormElement_Field
     {
         if (! isset($value['field_id']) || (isset($value['field_id']) && ! is_int($value['field_id']))) {
-            throw new Tracker_FormElement_InvalidFieldException('No \'field_id\' or invalid id in submitted value. Field IDs must be integers');
+            throw new \Tracker_FormElement_InvalidFieldException(
+                'No \'field_id\' or invalid id in submitted value. Field IDs must be integers'
+            );
         }
         if (! isset($indexed_fields[$value['field_id']])) {
-            throw new Tracker_FormElement_InvalidFieldException('Unknown field ' . $value['field_id']);
+            throw new \Tracker_FormElement_InvalidFieldException('Unknown field ' . $value['field_id']);
         }
         return $indexed_fields[$value['field_id']];
     }
 
-    private function getIndexedFields(Tracker $tracker)
+    private function getIndexedFields(\Tracker $tracker): array
     {
         $indexed_fields = [];
         foreach ($this->formelement_factory->getUsedFields($tracker) as $field) {

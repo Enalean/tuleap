@@ -50,14 +50,15 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaver;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
+use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
@@ -130,7 +131,7 @@ class CardMappedFieldUpdater
             new Cardwall_OnTop_Config_ColumnFactory($column_dao),
             new MilestoneTrackerRetriever($column_dao, TrackerFactory::instance()),
             new AddValidator(),
-            new ArtifactUpdater(new \Tracker_REST_Artifact_ArtifactValidator($form_element_factory), $changeset_creator),
+            new ArtifactUpdater(new FieldsDataBuilder($form_element_factory), $changeset_creator),
             MappedFieldRetriever::build(),
             MappedValuesRetriever::build(),
             new FirstPossibleValueInListRetriever(

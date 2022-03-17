@@ -34,7 +34,6 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactCreator as ArtifactCreator;
-use Tracker_REST_Artifact_ArtifactValidator as ArtifactValidator;
 use Tracker_Semantic_Status;
 use TrackerFactory;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
@@ -42,6 +41,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use UserManager;
@@ -143,7 +143,7 @@ class KanbanItemsResource extends AuthenticatedResource
         );
 
         $updater = new ArtifactCreator(
-            new ArtifactValidator(
+            new FieldsDataBuilder(
                 $this->form_element_factory
             ),
             $this->artifact_factory,

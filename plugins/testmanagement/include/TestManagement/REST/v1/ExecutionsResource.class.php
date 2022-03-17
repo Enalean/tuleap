@@ -34,7 +34,6 @@ use Tracker_NoChangeException;
 use Tracker_Permission_PermissionRetrieveAssignee;
 use Tracker_Permission_PermissionsSerializer;
 use Tracker_REST_Artifact_ArtifactCreator;
-use Tracker_REST_Artifact_ArtifactValidator;
 use Tracker_URLVerification;
 use TrackerFactory;
 use TransitionFactory;
@@ -73,8 +72,8 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
@@ -84,6 +83,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -239,7 +239,7 @@ class ExecutionsResource
         );
 
         $this->artifact_updater = new ArtifactUpdater(
-            new \Tracker_REST_Artifact_ArtifactValidator($this->formelement_factory),
+            new FieldsDataBuilder($this->formelement_factory),
             $changeset_creator
         );
 
@@ -357,7 +357,7 @@ class ExecutionsResource
         try {
             $user    = $this->getCurrentUser();
             $creator = new Tracker_REST_Artifact_ArtifactCreator(
-                new Tracker_REST_Artifact_ArtifactValidator(
+                new FieldsDataBuilder(
                     $this->formelement_factory
                 ),
                 $this->artifact_factory,
