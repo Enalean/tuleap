@@ -23,26 +23,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Tests\Stub;
 
+use Tuleap\Docman\FilenamePattern\FilenamePattern;
 use Tuleap\Docman\FilenamePattern\RetrieveFilenamePattern;
 
 final class FilenamePatternRetrieverStub implements RetrieveFilenamePattern
 {
-    private function __construct(private ?string $pattern)
+    private function __construct(private FilenamePattern $pattern)
     {
     }
 
-    public function getPattern(int $project_id): ?string
+    public function getPattern(int $project_id): FilenamePattern
     {
         return $this->pattern;
     }
 
     public static function buildWithPattern(string $pattern): self
     {
-        return new self($pattern);
+        return new self(new FilenamePattern($pattern, true));
     }
 
     public static function buildWithNoPattern(): self
     {
-        return new self(null);
+        return new self(new FilenamePattern('', false));
     }
 }

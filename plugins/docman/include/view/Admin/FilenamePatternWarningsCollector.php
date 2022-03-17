@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\View\Admin;
 
+use Tuleap\Docman\FilenamePattern\FilenamePattern;
+
 class FilenamePatternWarningsCollector implements \Tuleap\Event\Dispatchable
 {
     public const NAME = 'filenamePatternWarningsCollector';
@@ -31,7 +33,7 @@ class FilenamePatternWarningsCollector implements \Tuleap\Event\Dispatchable
      */
     private array $warnings = [];
 
-    public function __construct(private int $project_id, private string|null $pattern)
+    public function __construct(private int $project_id, private FilenamePattern $filename_pattern)
     {
     }
 
@@ -48,9 +50,9 @@ class FilenamePatternWarningsCollector implements \Tuleap\Event\Dispatchable
         $this->warnings[] = $warning;
     }
 
-    public function getPattern(): ?string
+    public function getFilenamePattern(): FilenamePattern
     {
-        return $this->pattern;
+        return $this->filename_pattern;
     }
 
     public function getProjectId(): int

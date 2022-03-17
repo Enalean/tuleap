@@ -25,5 +25,5 @@ namespace Tuleap\Docman\FilenamePattern;
 
 interface RetrieveFilenamePattern
 {
-    public function getPattern(int $project_id): ?string;
+    public function getPattern(int $project_id): FilenamePattern;
 }

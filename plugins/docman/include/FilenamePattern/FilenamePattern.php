@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,33 +16,33 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Document\Tests\Stubs;
+namespace Tuleap\Docman\FilenamePattern;
 
-use Tuleap\Docman\FilenamePattern\RetrieveFilenamePattern;
-
-final class FilenamePatternRetrieverStub implements RetrieveFilenamePattern
+/**
+ * @psalm-immutable
+ */
+final class FilenamePattern
 {
-    private function __construct(private ?string $pattern)
+    public function __construct(private string $pattern, private bool $is_enforced)
     {
     }
 
-    public function getPattern(int $project_id): ?string
+    public function getPattern(): string
     {
         return $this->pattern;
     }
 
-    public static function buildWithPattern(string $pattern): self
+    public function isEnforced(): bool
     {
-        return new self($pattern);
+        return $this->is_enforced;
     }
 
-    public static function buildWithNoPattern(): self
+    public function isEnforcedAndNonEmpty(): bool
     {
-        return new self(null);
+        return $this->is_enforced && ! empty($this->pattern);
     }
 }
