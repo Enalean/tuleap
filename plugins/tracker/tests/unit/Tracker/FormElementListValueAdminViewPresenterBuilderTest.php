@@ -104,7 +104,7 @@ class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Test\PHP
             false,
             false,
             "/plugins/tracker/?tracker=5&func=admin-formElement-update&formElement=111&bind-update=1&bind%5Bdelete%5D=100",
-            "You can't hide this value since it is used in a semantic, in workflow or in field dependency",
+            "You can't hide this value since it is used in a semantic, in workflow, in transitions or in field dependency",
             'cannot hide',
             '--exclamation-hidden',
             false

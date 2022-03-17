@@ -65,7 +65,7 @@ class FormElementListValueAdminViewPresenterBuilder
             'Show/hide this value'
         ) : dgettext(
             'tuleap-tracker',
-            'You can\'t hide this value since it is used in a semantic, in workflow or in field dependency'
+            'You can\'t hide this value since it is used in a semantic, in workflow, in transitions or in field dependency'
         );
 
         $image_hidden_alt = $value_can_be_hidden ? dgettext(

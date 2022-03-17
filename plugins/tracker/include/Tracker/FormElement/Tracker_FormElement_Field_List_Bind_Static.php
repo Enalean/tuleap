@@ -655,9 +655,15 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     }
                     break;
                 case 'delete':
-                    if (($row = $value_dao->searchById((int) $value)->getRow()) && $value_dao->delete((int) $value)) {
+                    if (($row = $value_dao->searchById((int) $value)->getRow()) && $value_dao->delete($this->field, (int) $value)) {
                         $params['decorator'] = [(int) $value => null];
-                        $GLOBALS['Response']->addFeedback('info', 'Value ' .  $hp->purify($row['label'], CODENDI_PURIFIER_CONVERT_HTML)  . ' deleted');
+                        $GLOBALS['Response']->addFeedback(
+                            Feedback::INFO,
+                            sprintf(
+                                dgettext('tuleap-tracker', 'Value %s deleted'),
+                                $hp->purify($row['label'], CODENDI_PURIFIER_CONVERT_HTML),
+                            )
+                        );
                     }
                     break;
                 case 'order':
@@ -688,7 +694,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                                 $new_description = trim($info['description']);
                             }
 
-                            if ($value_dao->canValueBeHidden($this->field, $value_id)) {
+                            if ($value_dao->canValueBeHidden($this->field, (int) $value_id)) {
                                 $new_is_hidden = ! isset($info['is_hidden']);
                             }
 
@@ -698,10 +704,10 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                                 $value_dao->save(
                                     $value_id,
                                     $this->field->getId(),
-                                    isset($new_label)       ? $new_label       : $bind_static_value->getLabel(),
+                                    isset($new_label) ? $new_label : $bind_static_value->getLabel(),
                                     isset($new_description) ? $new_description : $bind_static_value->getDescription(),
                                     $original_value['rank'],
-                                    isset($new_is_hidden)   ? $new_is_hidden   : $bind_static_value->isHidden()
+                                    isset($new_is_hidden) ? $new_is_hidden : $bind_static_value->isHidden()
                                 );
                                 unset($new_label, $new_description);
                             }
