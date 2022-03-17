@@ -117,6 +117,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
@@ -277,14 +278,14 @@ class CampaignsResource
             new TestExecutionTestStatusDAO()
         );
 
-        $artifact_validator = new FieldsDataBuilder(
-            $this->formelement_factory
-        );
+        $fields_data_builder = new FieldsDataBuilder($this->formelement_factory);
 
         $artifact_creator = new Tracker_REST_Artifact_ArtifactCreator(
-            $artifact_validator,
+            $fields_data_builder,
             $this->artifact_factory,
-            $tracker_factory
+            $tracker_factory,
+            new FieldsDataFromValuesByFieldBuilder($this->formelement_factory),
+            $this->formelement_factory
         );
 
         $this->execution_creator = new ExecutionCreator(
@@ -345,7 +346,7 @@ class CampaignsResource
             )
         );
 
-        $this->artifact_updater = new ArtifactUpdater($artifact_validator, $changeset_creator);
+        $this->artifact_updater = new ArtifactUpdater($fields_data_builder, $changeset_creator);
 
         $this->campaign_updater = new CampaignUpdater(
             $this->artifact_updater,

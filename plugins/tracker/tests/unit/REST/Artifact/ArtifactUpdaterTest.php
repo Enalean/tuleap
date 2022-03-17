@@ -31,26 +31,53 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    private ArtifactUpdater $updater;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface & FieldsDataBuilder
-     */
-    private $validator;
+    private const TRACKER_ID  = 34;
+    private const FIELD_ID    = 652;
+    private const FIELD_VALUE = 'osteolite';
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface & NewChangesetCreator
      */
     private $changeset_creator;
+    private RetrieveUsedFieldsStub $fields_retriever;
+    private \PFUser $user;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface & Artifact
+     */
+    private $artifact;
 
     protected function setUp(): void
     {
-        $this->validator         = \Mockery::mock(FieldsDataBuilder::class);
+        $this->user     = UserTestBuilder::aUser()->build();
+        $tracker        = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
+        $this->artifact = \Mockery::spy(Artifact::class);
+        $this->artifact->shouldReceive('userCanUpdate')->andReturnTrue();
+        $this->artifact->shouldReceive('getTracker')->andReturns($tracker);
+
         $this->changeset_creator = \Mockery::spy(NewChangesetCreator::class);
-        $this->updater           = new ArtifactUpdater($this->validator, $this->changeset_creator);
+        $this->fields_retriever  = RetrieveUsedFieldsStub::withFields(
+            new \Tracker_FormElement_Field_String(
+                self::FIELD_ID,
+                34,
+                0,
+                'irrelevant',
+                'Irrelevant',
+                'Irrelevant',
+                true,
+                'P',
+                false,
+                '',
+                1
+            )
+        );
     }
 
     protected function tearDown(): void
@@ -58,35 +85,31 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         unset($_SERVER['HTTP_IF_UNMODIFIED_SINCE']);
     }
 
+    private function update(?NewChangesetCommentRepresentation $comment): void
+    {
+        $string_representation           = new ArtifactValuesRepresentation();
+        $string_representation->field_id = self::FIELD_ID;
+        $string_representation->value    = self::FIELD_VALUE;
+        $values                          = [$string_representation];
+
+        $updater = new ArtifactUpdater(new FieldsDataBuilder($this->fields_retriever), $this->changeset_creator);
+        $updater->update($this->user, $this->artifact, $values, $comment);
+    }
+
     public function testUpdateDefaultsCommentToEmptyCommonmarkFormat(): void
     {
-        $artifact = \Mockery::spy(Artifact::class);
-        $artifact->shouldReceive('userCanUpdate')->andReturnTrue();
-        $user = UserTestBuilder::aUser()->build();
-
-        $values      = ['Irrelevant field values'];
-        $fields_data = [1000 => 'Some value'];
-        $this->validator->shouldReceive('getFieldsDataOnUpdate')
-            ->once()
-            ->with($values, $artifact)
-            ->andReturn($fields_data);
-
         $this->changeset_creator->shouldReceive('create')->withArgs(
             function (
                 NewChangeset $new_changeset,
                 PostCreationContext $context,
-            ) use (
-                $user,
-                $fields_data,
-                $artifact
             ) {
-                if ($new_changeset->getArtifact() !== $artifact) {
+                if ($new_changeset->getArtifact() !== $this->artifact) {
                     return false;
                 }
-                if ($new_changeset->getFieldsData() !== $fields_data) {
+                if ($new_changeset->getFieldsData() !== [self::FIELD_ID => self::FIELD_VALUE]) {
                     return false;
                 }
-                if ($new_changeset->getSubmitter() !== $user) {
+                if ($new_changeset->getSubmitter() !== $this->user) {
                     return false;
                 }
                 if ($context->getImportConfig()->isFromXml()) {
@@ -105,23 +128,11 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 return true;
             }
         )->once();
-
-        $this->updater->update($user, $artifact, $values, null);
+        $this->update(null);
     }
 
     public function testUpdatePassesComment(): void
     {
-        $artifact = \Mockery::spy(Artifact::class);
-        $artifact->shouldReceive('userCanUpdate')->andReturnTrue();
-        $user = UserTestBuilder::aUser()->build();
-
-        $values      = ['Irrelevant field values'];
-        $fields_data = [1000 => 'Some value'];
-        $this->validator->shouldReceive('getFieldsDataOnUpdate')
-            ->once()
-            ->with($values, $artifact)
-            ->andReturn($fields_data);
-
         $comment_body   = '<p>An HTML comment</p>';
         $comment_format = 'html';
         $comment        = new NewChangesetCommentRepresentation($comment_body, $comment_format);
@@ -130,22 +141,17 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             function (
                 NewChangeset $new_changeset,
                 PostCreationContext $context,
-            ) use (
-                $comment_body,
-                $user,
-                $fields_data,
-                $artifact
-            ) {
-                if ($new_changeset->getArtifact() !== $artifact) {
+            ) use ($comment_body) {
+                if ($new_changeset->getArtifact() !== $this->artifact) {
                     return false;
                 }
-                if ($new_changeset->getFieldsData() !== $fields_data) {
-                    return false;
-                }
-                if ($new_changeset->getSubmitter() !== $user) {
+                if ($new_changeset->getSubmitter() !== $this->user) {
                     return false;
                 }
                 if ($context->getImportConfig()->isFromXml()) {
+                    return false;
+                }
+                if ($context->shouldSendNotifications() !== true) {
                     return false;
                 }
                 $comment = $new_changeset->getComment();
@@ -155,39 +161,30 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 if ((string) $comment->getFormat() !== \Tracker_Artifact_Changeset_Comment::HTML_COMMENT) {
                     return false;
                 }
-                if ($context->shouldSendNotifications() !== true) {
-                    return false;
-                }
                 return true;
             }
         )->once();
-
-        $this->updater->update($user, $artifact, $values, $comment);
+        $this->update($comment);
     }
 
     public function testUpdateThrowsWhenUserCannotUpdate(): void
     {
+        $this->user     = UserTestBuilder::anAnonymousUser()->build();
+        $this->artifact = new Artifact(1, 10, 101, 1234567890, true);
+
         $this->expectException(RestException::class);
         $this->expectExceptionCode(403);
-
-        $user     = UserTestBuilder::anAnonymousUser()->build();
-        $artifact = new Artifact(1, 10, 101, 1234567890, true);
-
-        $this->updater->update($user, $artifact, []);
+        $this->update(null);
     }
 
     public function testUpdateThrowsWhenThereWasAConcurrentModification(): void
     {
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(412);
-
-        $user     = UserTestBuilder::aUser()->build();
-        $artifact = \Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('userCanUpdate')->andReturnTrue();
-        $artifact->shouldReceive('getLastUpdateDate')->andReturn(1500000000);
+        $this->artifact->shouldReceive('getLastUpdateDate')->andReturn(1500000000);
 
         $_SERVER['HTTP_IF_UNMODIFIED_SINCE'] = '1234567890';
 
-        $this->updater->update($user, $artifact, []);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(412);
+        $this->update(null);
     }
 }

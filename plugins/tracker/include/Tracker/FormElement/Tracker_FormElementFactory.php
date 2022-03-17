@@ -19,8 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tracker\Artifact\Changeset\Value\AddDefaultValuesToFieldsData;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
+use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
@@ -29,7 +31,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 require_once __DIR__ . '/../../tracker_permissions.php';
 
-class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValuesToFieldsData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const FIELD_STRING_TYPE           = 'string';
     public const FIELD_TEXT_TYPE             = 'text';
@@ -533,12 +535,9 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
     /**
      * All fields used by the tracker
-     *
-     * @param Tracker $tracker
-     *
      * @return Tracker_FormElement_Field[]
      */
-    public function getUsedFields($tracker)
+    public function getUsedFields(\Tracker $tracker): array
     {
         return $this->getUsedFormElementsByType($tracker, $this->getFieldsSQLTypes());
     }
@@ -560,7 +559,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      *
      * @return Array $fields_data
      */
-    public function getUsedFieldsWithDefaultValue(Tracker $tracker, array $fields_data, PFUser $user)
+    public function getUsedFieldsWithDefaultValue(Tracker $tracker, array $fields_data, PFUser $user): array
     {
         $fields = $this->getUsedFields($tracker);
         foreach ($fields as $field) {

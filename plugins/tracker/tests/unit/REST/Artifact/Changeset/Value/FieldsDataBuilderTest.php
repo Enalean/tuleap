@@ -20,41 +20,34 @@
 
 namespace Tuleap\Tracker\REST\Artifact\Changeset\Value;
 
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID = 101;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub & \Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    private array $values;
-    private \Tracker_FormElement_Field_MultiSelectbox $field_msb;
+    private const TRACKER_ID      = 101;
+    private const INT_FIELD_ID    = 395;
+    private const INT_VALUE       = 54;
+    private const FLOAT_FIELD_ID  = 425;
+    private const FLOAT_VALUE     = 14.03;
+    private const STRING_FIELD_ID = 40;
+    private const STRING_VALUE    = 'untrampled';
+    private const TEXT_FIELD_ID   = 283;
+    private const TEXT_VALUE      = 'fluttery Azerbaijanese';
+    private const TEXT_FORMAT     = 'text';
+    private \Tracker_FormElement_Field_Integer $int_field;
+    private \Tracker_FormElement_Field_Float $float_field;
+    private \Tracker_FormElement_Field_String $string_field;
+    private \Tracker_FormElement_Field_Text $text_field;
+    private array $values_by_field;
+    private RetrieveUsedFieldsStub $fields_retriever;
 
     protected function setUp(): void
     {
-        $this->field_msb = new \Tracker_FormElement_Field_MultiSelectbox(
-            5,
-            self::TRACKER_ID,
-            null,
-            'field_msb',
-            'Field MSB',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
-
-        $this->form_element_factory = $this->createStub(\Tracker_FormElementFactory::class);
-    }
-
-    public function returnFields(int $tracker_id, string $field_shortname)
-    {
-        $int_field = new \Tracker_FormElement_Field_Integer(
-            1,
+        $this->int_field = new \Tracker_FormElement_Field_Integer(
+            self::INT_FIELD_ID,
             self::TRACKER_ID,
             null,
             'field_int',
@@ -67,8 +60,8 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             1
         );
 
-        $float_field = new \Tracker_FormElement_Field_Float(
-            2,
+        $this->float_field = new \Tracker_FormElement_Field_Float(
+            self::FLOAT_FIELD_ID,
             self::TRACKER_ID,
             null,
             'field_float',
@@ -81,8 +74,8 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             1
         );
 
-        $string_field = new \Tracker_FormElement_Field_String(
-            3,
+        $this->string_field = new \Tracker_FormElement_Field_String(
+            self::STRING_FIELD_ID,
             self::TRACKER_ID,
             null,
             'field_string',
@@ -95,8 +88,8 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             1
         );
 
-        $text_field = new \Tracker_FormElement_Field_Text(
-            4,
+        $this->text_field = new \Tracker_FormElement_Field_Text(
+            self::TEXT_FIELD_ID,
             self::TRACKER_ID,
             null,
             'field_text',
@@ -109,97 +102,181 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             1
         );
 
-        if ($field_shortname === 'integer') {
-            return $int_field;
-        }
-        if ($field_shortname === 'floatibulle') {
-            return $float_field;
-        }
-        if ($field_shortname === 'string') {
-            return $string_field;
-        }
-        if ($field_shortname === 'text') {
-            return $text_field;
-        }
-        return null;
+        $this->fields_retriever = RetrieveUsedFieldsStub::withNoFields();
     }
 
-    private function buildFromValuesByField(): array
+    /**
+     * @param ArtifactValuesRepresentation[] $payload
+     */
+    private function getFieldsDataOnUpdate(array $payload): array
+    {
+        $tracker  = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(2)->inTracker($tracker)->build();
+
+        $builder = new FieldsDataBuilder($this->fields_retriever);
+        return $builder->getFieldsDataOnUpdate($payload, $artifact);
+    }
+
+    public function testItAsksEachFieldToBuildFieldsDataFromRESTUpdatePayload(): void
+    {
+        $int_representation              = new ArtifactValuesRepresentation();
+        $int_representation->field_id    = self::INT_FIELD_ID;
+        $int_representation->value       = self::INT_VALUE;
+        $float_representation            = new ArtifactValuesRepresentation();
+        $float_representation->field_id  = self::FLOAT_FIELD_ID;
+        $float_representation->value     = self::FLOAT_VALUE;
+        $string_representation           = new ArtifactValuesRepresentation();
+        $string_representation->field_id = self::STRING_FIELD_ID;
+        $string_representation->value    = self::STRING_VALUE;
+        $text_representation             = new ArtifactValuesRepresentation();
+        $text_representation->field_id   = self::TEXT_FIELD_ID;
+        $text_representation->value      = ['format' => self::TEXT_FORMAT, 'content' => self::TEXT_VALUE];
+        $this->fields_retriever          = RetrieveUsedFieldsStub::withFields(
+            $this->int_field,
+            $this->float_field,
+            $this->string_field,
+            $this->text_field,
+        );
+
+        $fields_data = $this->getFieldsDataOnUpdate([
+            $int_representation,
+            $float_representation,
+            $string_representation,
+            $text_representation,
+        ]);
+        self::assertSame([
+            self::INT_FIELD_ID    => self::INT_VALUE,
+            self::FLOAT_FIELD_ID  => self::FLOAT_VALUE,
+            self::STRING_FIELD_ID => self::STRING_VALUE,
+            self::TEXT_FIELD_ID   => ['format' => self::TEXT_FORMAT, 'content' => self::TEXT_VALUE],
+        ], $fields_data);
+    }
+
+    public function testItThrowsWhenUpdateRepresentationDoesNotHaveAFieldID(): void
+    {
+        $representation = new ArtifactValuesRepresentation();
+        $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
+        $this->getFieldsDataOnUpdate([$representation]);
+    }
+
+    public function testItThrowsWhenUpdateRepresentationFieldIDIsNotInt(): void
+    {
+        $representation           = new ArtifactValuesRepresentation();
+        $representation->field_id = null;
+
+        $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
+        $this->getFieldsDataOnUpdate([$representation]);
+    }
+
+    public function testItThrowsAtUpdateWhenFieldIDCantBeFoundInTracker(): void
+    {
+        $representation           = new ArtifactValuesRepresentation();
+        $representation->field_id = 404;
+
+        $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
+        $this->getFieldsDataOnUpdate([$representation]);
+    }
+
+    public function testItThrowsAtUpdateWhenIntFieldHasNoValue(): void
+    {
+        $representation           = new ArtifactValuesRepresentation();
+        $representation->field_id = self::INT_FIELD_ID;
+        $this->fields_retriever   = RetrieveUsedFieldsStub::withFields($this->int_field);
+
+        $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
+        $this->getFieldsDataOnUpdate([$representation]);
+    }
+
+    public function testWhenRESTUpdatePayloadIsEmptyItReturnsEmptyArray(): void
+    {
+        $fields_data = $this->getFieldsDataOnUpdate([]);
+        self::assertEmpty($fields_data);
+    }
+
+    /**
+     * @param ArtifactValuesRepresentation[] $payload
+     */
+    private function getFieldsDataOnCreate(array $payload): array
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
 
-        $builder = new FieldsDataBuilder($this->form_element_factory);
-        return $builder->getFieldsDataOnCreateFromValuesByField($this->values, $tracker);
+        $builder = new FieldsDataBuilder($this->fields_retriever);
+        return $builder->getFieldsDataOnCreate($payload, $tracker);
     }
 
-    public function testItGeneratesFieldDataFromRestValuesByField(): void
+    public function testItAsksEachFieldToBuildFieldsDataFromRESTCreatePayload(): void
     {
-        $this->values = [
-            'integer'     => [
-                'value' => 42,
-            ],
-            'floatibulle' => [
-                'value' => 3.14,
-            ],
-            'string'      => [
-                'value' => 'My text',
-            ],
-            'text'        => [
-                'value' => [
-                    'format'  => 'text',
-                    'content' => 'My awesome text',
-                ],
-            ],
-        ];
+        $int_representation              = new ArtifactValuesRepresentation();
+        $int_representation->field_id    = self::INT_FIELD_ID;
+        $int_representation->value       = self::INT_VALUE;
+        $float_representation            = new ArtifactValuesRepresentation();
+        $float_representation->field_id  = self::FLOAT_FIELD_ID;
+        $float_representation->value     = self::FLOAT_VALUE;
+        $string_representation           = new ArtifactValuesRepresentation();
+        $string_representation->field_id = self::STRING_FIELD_ID;
+        $string_representation->value    = self::STRING_VALUE;
+        $text_representation             = new ArtifactValuesRepresentation();
+        $text_representation->field_id   = self::TEXT_FIELD_ID;
+        $text_representation->value      = ['format' => self::TEXT_FORMAT, 'content' => self::TEXT_VALUE];
+        $this->fields_retriever          = RetrieveUsedFieldsStub::withFields(
+            $this->int_field,
+            $this->float_field,
+            $this->string_field,
+            $this->text_field,
+        );
 
-        $this->form_element_factory->method('getUsedFieldByName')
-            ->willReturnCallback([$this, 'returnFields']);
-
-        $fields_data = $this->buildFromValuesByField();
-
-        $expected = [
-            1 => 42,
-            2 => 3.14,
-            3 => 'My text',
-            4 => [
-                'format'  => 'text',
-                'content' => 'My awesome text',
-            ],
-        ];
-
-        $this->assertSame($expected, $fields_data);
+        $fields_data = $this->getFieldsDataOnCreate([
+            $int_representation,
+            $float_representation,
+            $string_representation,
+            $text_representation,
+        ]);
+        self::assertSame([
+            self::INT_FIELD_ID    => self::INT_VALUE,
+            self::FLOAT_FIELD_ID  => self::FLOAT_VALUE,
+            self::STRING_FIELD_ID => self::STRING_VALUE,
+            self::TEXT_FIELD_ID   => ['format' => self::TEXT_FORMAT, 'content' => self::TEXT_VALUE],
+        ], $fields_data);
     }
 
-    public function testItThrowsAnExceptionIfFieldIsNotUsedInTracker(): void
+    public function testItThrowsWhenCreateRepresentationDoesNotHaveAFieldID(): void
     {
-        $this->values = [
-            'integerV2'   => 42,
-            'floatibulle' => 3.14,
-            'string'      => 'My text',
-            'text'        => [
-                'format'  => 'text',
-                'content' => 'My awesome text',
-            ],
-        ];
+        $representation = new ArtifactValuesRepresentation();
+        $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
+        $this->getFieldsDataOnCreate([$representation]);
+    }
 
-        $this->form_element_factory->method('getUsedFieldByName')
-            ->willReturnCallback([$this, 'returnFields']);
+    public function testItThrowsWhenCreateRepresentationFieldIDIsNotInt(): void
+    {
+        $representation           = new ArtifactValuesRepresentation();
+        $representation->field_id = null;
 
         $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
-        $this->buildFromValuesByField();
+        $this->getFieldsDataOnCreate([$representation]);
     }
 
-    public function testItThrowsAnExceptionIfFieldIsNotAlphaNumeric(): void
+    public function testItThrowsAtCreateWhenFieldIDCantBeFoundInTracker(): void
     {
-        $this->values = [
-            'msb' => ['whatever'],
-        ];
+        $representation           = new ArtifactValuesRepresentation();
+        $representation->field_id = 404;
 
-        $this->form_element_factory->method('getUsedFieldByName')
-            ->with(self::TRACKER_ID, 'msb')
-            ->willReturn($this->field_msb);
+        $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
+        $this->getFieldsDataOnCreate([$representation]);
+    }
 
-        $this->expectException(\Tracker_FormElement_RESTValueByField_NotImplementedException::class);
-        $this->buildFromValuesByField();
+    public function testItThrowsAtCreateWhenIntFieldHasNoValue(): void
+    {
+        $representation           = new ArtifactValuesRepresentation();
+        $representation->field_id = self::INT_FIELD_ID;
+        $this->fields_retriever   = RetrieveUsedFieldsStub::withFields($this->int_field);
+
+        $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
+        $this->getFieldsDataOnCreate([$representation]);
+    }
+
+    public function testWhenRESTCreatePayloadIsEmptyItReturnsEmptyArray(): void
+    {
+        $fields_data = $this->getFieldsDataOnCreate([]);
+        self::assertEmpty($fields_data);
     }
 }
