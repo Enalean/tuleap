@@ -19,12 +19,8 @@
   -->
 
 <template>
-    <div
-        class="tlp-alert-danger test-plan-list-of-campaigns-error"
-        v-translate
-        v-if="has_refreshing_error"
-    >
-        An error occurred while retrieving information of the new campaign.
+    <div v-if="has_refreshing_error" class="tlp-alert-danger test-plan-list-of-campaigns-error">
+        {{ $gettext("An error occurred while retrieving information of the new campaign.") }}
     </div>
 </template>
 <script setup lang="ts">

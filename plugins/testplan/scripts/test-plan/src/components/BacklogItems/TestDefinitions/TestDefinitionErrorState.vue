@@ -19,5 +19,7 @@
   -->
 
 <template>
-    <div class="tlp-alert-danger" v-translate>An error occurred while loading the tests.</div>
+    <div class="tlp-alert-danger">
+        {{ $gettext("An error occurred while loading the tests.") }}
+    </div>
 </template>

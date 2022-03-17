@@ -22,10 +22,10 @@
     <div class="test-plan-test-definition-metadata">
         <div class="tlp-dropdown">
             <a
+                ref="dropdownTrigger"
                 v-bind:href="go_to_test_def_link"
                 class="test-plan-test-definition-xref"
                 v-on:click.prevent
-                ref="dropdownTrigger"
             >
                 <span class="test-plan-test-definition-xref-text">
                     {{ test_definition.short_type }} #{{ test_definition.id }}
@@ -33,52 +33,52 @@
                 <i class="fa fa-caret-down test-plan-test-definition-xref-icon"></i>
             </a>
 
-            <div class="tlp-dropdown-menu tlp-dropdown-menu-left" role="menu" ref="dropdownMenu">
+            <div ref="dropdownMenu" class="tlp-dropdown-menu tlp-dropdown-menu-left" role="menu">
                 <a v-bind:href="go_to_test_def_link" class="tlp-dropdown-menu-item" role="menuitem">
                     <i class="fas fa-fw tlp-dropdown-menu-item-icon fa-pencil-alt"></i>
-                    <translate
-                        v-bind:translate-params="{
+                    {{
+                        $gettext("Edit %{ item_type } #%{ item_id }", {
                             item_type: test_definition.short_type,
-                            item_id: test_definition.id,
-                        }"
-                    >
-                        Edit %{ item_type } #%{ item_id }
-                    </translate>
+                            item_id: String(test_definition.id),
+                        })
+                    }}
                 </a>
                 <span
+                    v-if="go_to_last_test_exec_link !== null"
                     class="tlp-dropdown-menu-separator"
                     role="separator"
-                    v-if="go_to_last_test_exec_link !== null"
                 ></span>
                 <a
+                    v-if="go_to_last_test_exec_link !== null"
                     v-bind:href="go_to_last_test_exec_link"
                     class="tlp-dropdown-menu-item"
                     role="menuitem"
-                    v-if="go_to_last_test_exec_link !== null"
                     data-test="go-to-last-test-exec"
                 >
                     <i class="fas fa-fw tlp-dropdown-menu-item-icon fa-long-arrow-alt-right"></i>
-                    <translate v-bind:translate-params="{ release_name: milestone_title }">
-                        Go to the last execution in release %{ release_name }
-                    </translate>
+                    {{
+                        $gettext("Go to the last execution in release %{ release_name }", {
+                            release_name: milestone_title,
+                        })
+                    }}
                 </a>
             </div>
         </div>
 
         <div class="test-plan-test-definition-card-category-status">
             <span
-                class="tlp-badge-secondary tlp-badge-outline test-plan-test-definition-category"
                 v-if="test_definition.category !== null"
+                class="tlp-badge-secondary tlp-badge-outline test-plan-test-definition-category"
                 data-test="test-category"
             >
                 {{ test_definition.category }}
             </span>
             <div class="test-plan-test-definition-icons">
                 <i
+                    v-if="test_definition.automated_tests"
                     class="fa test-plan-test-definition-icon-automated-tests"
                     v-bind:class="automated_icon_status"
                     aria-hidden="true"
-                    v-if="test_definition.automated_tests"
                     data-test="automated-test-icon"
                 ></i>
                 <test-definition-card-status v-bind:test_definition="test_definition" />

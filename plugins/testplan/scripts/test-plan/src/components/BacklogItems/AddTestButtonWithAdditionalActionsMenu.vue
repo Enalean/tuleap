@@ -19,34 +19,31 @@
   -->
 
 <template>
-    <div class="tlp-dropdown" v-if="can_add_button_be_displayed" v-on:click.stop>
+    <div v-if="can_add_button_be_displayed" class="tlp-dropdown" v-on:click.stop>
         <div class="tlp-dropdown-split-button test-plan-add-test-dropdown">
             <a
                 v-bind:href="add_button_href"
                 class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
                 data-test="add-test-button"
-                v-translate
             >
-                Create a new test
+                {{ $gettext("Create a new test") }}
             </a>
             <button
-                class="tlp-button-primary tlp-button-outline tlp-append tlp-dropdown-split-button-caret tlp-button-small"
                 ref="dropdownTrigger"
+                class="tlp-button-primary tlp-button-outline tlp-append tlp-dropdown-split-button-caret tlp-button-small"
             >
                 <i class="fa fa-caret-down"></i>
             </button>
         </div>
-        <div class="tlp-dropdown-menu tlp-dropdown-menu-left" role="menu" ref="dropdownMenu">
+        <div ref="dropdownMenu" class="tlp-dropdown-menu tlp-dropdown-menu-left" role="menu">
             <a v-bind:href="edit_backlog_item_href" class="tlp-dropdown-menu-item" role="menuitem">
                 <i class="fas fa-fw fa-pencil-alt"></i>
-                <translate
-                    v-bind:translate-params="{
+                {{
+                    $gettext("Edit %{ item_type } #%{ item_id }", {
                         item_type: backlog_item.short_type,
-                        item_id: backlog_item.id,
-                    }"
-                >
-                    Edit %{ item_type } #%{ item_id }
-                </translate>
+                        item_id: String(backlog_item.id),
+                    })
+                }}
             </a>
         </div>
     </div>

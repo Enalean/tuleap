@@ -13,9 +13,7 @@ exports[`CreateModal Display the modal when mounted 1`] = `
       class="tlp-modal-title"
       id="test-plan-create-campaign-modal-title"
     >
-      <translate-stub
-        tag="span"
-      />
+      Create new campaign
     </h1>
     <button
       aria-label="Close"
@@ -41,9 +39,7 @@ exports[`CreateModal Display the modal when mounted 1`] = `
           class="tlp-label"
           for="new-campaign-label"
         >
-          <translate-stub
-            tag="span"
-          />
+          Name 
           <i
             aria-hidden="true"
             class="fa fa-asterisk"
@@ -68,12 +64,10 @@ exports[`CreateModal Display the modal when mounted 1`] = `
   >
     <button
       class="tlp-button-primary tlp-button-outline tlp-modal-action"
-      data-current-language="en"
       data-dismiss="modal"
-      data-msgid=" Cancel "
       type="button"
     >
-       Cancel 
+      Cancel
     </button>
     <button
       class="tlp-button-primary tlp-modal-action"
@@ -84,9 +78,7 @@ exports[`CreateModal Display the modal when mounted 1`] = `
         aria-hidden="true"
         class="fa tlp-button-icon fa-save"
       />
-      <translate-stub
-        tag="span"
-      />
+       Create campaign
     </button>
   </div>
 </form>

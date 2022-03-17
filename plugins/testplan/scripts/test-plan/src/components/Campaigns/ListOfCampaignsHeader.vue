@@ -20,16 +20,18 @@
 
 <template>
     <div class="test-plan-list-of-campaigns-header">
-        <translate tag="h2" class="test-plan-list-of-campaigns-title">Test campaigns</translate>
+        <h2 class="test-plan-list-of-campaigns-title">
+            {{ $gettext("Test campaigns") }}
+        </h2>
         <button
+            v-if="should_button_be_displayed"
             type="button"
             class="tlp-button-primary tlp-button-outline tlp-button-small test-plan-list-of-campaigns-new-button"
-            v-if="should_button_be_displayed"
             data-test="new-campaign"
             v-on:click="show_create_modal"
         >
             <i class="fa fa-plus tlp-button-icon"></i>
-            <translate>New campaign</translate>
+            {{ $gettext("New campaign") }}
         </button>
     </div>
 </template>

@@ -88,10 +88,7 @@ describe("TestDefinitionCardXrefCategoryStatus", () => {
                     <i
                       class="fas fa-fw tlp-dropdown-menu-item-icon fa-pencil-alt"
                     />
-                    <translate-stub
-                      tag="span"
-                      translateparams="[object Object]"
-                    />
+                     Edit test_def #123
                   </a>
                   <span
                     class="tlp-dropdown-menu-separator"
@@ -106,10 +103,7 @@ describe("TestDefinitionCardXrefCategoryStatus", () => {
                     <i
                       class="fas fa-fw tlp-dropdown-menu-item-icon fa-long-arrow-alt-right"
                     />
-                    <translate-stub
-                      tag="span"
-                      translateparams="[object Object]"
-                    />
+                     Go to the last execution in release Milestone Title
                   </a>
                 </div>
               </div>

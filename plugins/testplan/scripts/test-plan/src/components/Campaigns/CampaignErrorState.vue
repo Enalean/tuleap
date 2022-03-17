@@ -24,7 +24,7 @@
             <campaign-error-state-svg />
         </div>
         <div class="empty-state-text">
-            <translate>An error occurred while loading the campaigns.</translate>
+            {{ $gettext("An error occurred while loading the campaigns.") }}
         </div>
     </section>
 </template>

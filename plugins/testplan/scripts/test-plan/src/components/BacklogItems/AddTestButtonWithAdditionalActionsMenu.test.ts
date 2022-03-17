@@ -97,6 +97,7 @@ describe("AddTestButtonWithAdditionalActionsMenu", () => {
             { milestone_id: 69, testdefinition_tracker_id: 42 } as RootState,
             {
                 id: 123,
+                short_type: "item_type",
                 is_loading_test_definitions: false,
                 has_test_definitions_loading_error: false,
                 can_add_a_test: true,

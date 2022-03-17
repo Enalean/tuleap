@@ -24,7 +24,7 @@
             <backlog-item-empty-state-svg />
         </div>
         <p class="empty-state-text">
-            <translate>There is no backlog item yet</translate>
+            {{ $gettext("There is no backlog item yet") }}
         </p>
     </section>
 </template>

@@ -20,14 +20,14 @@
 
 <template>
     <div
+        ref="root"
         class="tlp-modal tlp-modal-danger"
         role="dialog"
         aria-labelledby="testplan-export-error-modal-title"
-        ref="root"
     >
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="testplan-export-error-modal-title">
-                <translate>Oops, there's an issue</translate>
+            <h1 id="testplan-export-error-modal-title" class="tlp-modal-title">
+                {{ $gettext("Oops, there's an issue") }}
             </h1>
             <button
                 class="tlp-modal-close"
@@ -39,16 +39,15 @@
             </button>
         </div>
         <div class="tlp-modal-body">
-            <p v-translate>The export did not succeed, please try again.</p>
+            <p>{{ $gettext("The export did not succeed, please try again.") }}</p>
         </div>
         <div class="tlp-modal-footer">
             <button
                 type="button"
                 class="tlp-button-danger tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
-                v-translate
             >
-                Close
+                {{ $gettext("Close") }}
             </button>
         </div>
     </div>

@@ -1,6 +1,6 @@
 {
     "name": "testplan",
-    "gettext-vue": {
+    "gettext-vue3": {
         "test-plan": {
             "src": "scripts/test-plan",
             "po": "scripts/test-plan/po"

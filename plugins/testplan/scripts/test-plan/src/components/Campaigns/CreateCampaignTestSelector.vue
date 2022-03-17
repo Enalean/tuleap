@@ -21,7 +21,7 @@
 <template>
     <div class="tlp-form-element">
         <label class="tlp-label" for="new-campaign-tests-selector">
-            <translate>Tests</translate>
+            {{ $gettext("Tests") }}
             <i class="fa fa-asterisk" aria-hidden="true"></i>
         </label>
         <select
@@ -32,8 +32,12 @@
             data-test="new-campaign-tests"
             v-on:change="updateSelectedTests"
         >
-            <option v-translate value="none">No tests</option>
-            <option v-translate value="all">All tests</option>
+            <option value="none">
+                {{ $gettext("No tests") }}
+            </option>
+            <option value="all">
+                {{ $gettext("All tests") }}
+            </option>
             <option value="milestone" selected>
                 {{
                     $gettext("All tests in %{ milestone_title }", {

@@ -24,7 +24,7 @@
             <backlog-item-error-state-svg />
         </div>
         <p class="empty-state-text">
-            <translate>An error occurred while loading the backlog items</translate>
+            {{ $gettext("An error occurred while loading the backlog items") }}
         </p>
     </section>
 </template>

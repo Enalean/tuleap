@@ -22,11 +22,11 @@
     <div>
         <div class="tlp-dropdown test-plan-export-button">
             <button
+                ref="trigger"
                 type="button"
                 v-bind:disabled="!can_export"
                 class="tlp-button-primary tlp-button-outline tlp-button-small"
                 data-test="testplan-export-button"
-                ref="trigger"
             >
                 <i
                     class="fa tlp-button-icon"
@@ -34,27 +34,27 @@
                     aria-hidden="true"
                     data-test="download-export-button-icon"
                 ></i>
-                <translate>Export</translate>
+                {{ $gettext("Export") }}
                 <i class="fas fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
             </button>
             <div class="tlp-dropdown-menu" role="menu">
                 <a
                     href="#"
-                    v-on:click.prevent="exportTestPlanAsDocx"
                     class="tlp-dropdown-menu-item"
                     role="menuitem"
                     data-test="testplan-export-docx-button"
+                    v-on:click.prevent="exportTestPlanAsDocx"
                 >
-                    <translate>Export as document</translate>
+                    {{ $gettext("Export as document") }}
                 </a>
                 <a
                     href="#"
-                    v-on:click.prevent="exportTestPlanAsXlsx"
                     class="tlp-dropdown-menu-item"
                     role="menuitem"
                     data-test="testplan-export-xlsx-button"
+                    v-on:click.prevent="exportTestPlanAsXlsx"
                 >
-                    <translate>Export as spreadsheet</translate>
+                    {{ $gettext("Export as spreadsheet") }}
                 </a>
             </div>
         </div>

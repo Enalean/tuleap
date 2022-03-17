@@ -20,8 +20,8 @@
 
 <template>
     <section class="empty-state-pane">
-        <p class="empty-state-text empty-state-text-smaller" v-translate>
-            This item isn't covered yet
+        <p class="empty-state-text empty-state-text-smaller">
+            {{ $gettext("This item isn't covered yet") }}
         </p>
     </section>
 </template>

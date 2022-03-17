@@ -20,15 +20,15 @@
 
 <template>
     <form
+        ref="modal_element"
         class="tlp-modal"
         role="dialog"
         aria-labelledby="test-plan-create-campaign-modal-title"
         v-on:submit.stop.prevent="submit"
-        ref="modal_element"
     >
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="test-plan-create-campaign-modal-title">
-                <translate>Create new campaign</translate>
+            <h1 id="test-plan-create-campaign-modal-title" class="tlp-modal-title">
+                {{ $gettext("Create new campaign") }}
             </h1>
             <button
                 class="tlp-modal-close"
@@ -55,14 +55,14 @@
             <div v-else>
                 <div class="tlp-form-element">
                     <label class="tlp-label" for="new-campaign-label">
-                        <translate>Name</translate>
+                        {{ $gettext("Name") }}
                         <i class="fa fa-asterisk" aria-hidden="true"></i>
                     </label>
                     <input
-                        type="text"
-                        class="tlp-input"
                         id="new-campaign-label"
                         v-model="campaign_label"
+                        type="text"
+                        class="tlp-input"
                         required
                         data-test="new-campaign-label"
                     />
@@ -78,9 +78,8 @@
                 type="button"
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
-                v-translate
             >
-                Cancel
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 type="submit"
@@ -89,7 +88,7 @@
                 data-test="new-campaign-submit-button"
             >
                 <i class="fa tlp-button-icon" v-bind:class="icon_class" aria-hidden="true"></i>
-                <translate>Create campaign</translate>
+                {{ $gettext("Create campaign") }}
             </button>
         </div>
     </form>
