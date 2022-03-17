@@ -273,9 +273,9 @@ function checkThatMirrorsAreSynchronized(team_project_name: string): void {
     cy.get("[data-test=home-sprint-title]").contains("Iteration One updated");
 }
 
-type CypressWrapper = Cypress.Chainable<JQuery<HTMLElement>>;
-
-function selectLabelInListPickerDropdown(label: string): CypressWrapper {
+function selectLabelInListPickerDropdown(
+    label: string
+): Cypress.Chainable<JQuery<HTMLHtmlElement>> {
     cy.get("[data-test=list-picker-selection]").click();
     return cy.root().within(() => {
         cy.get("[data-test-list-picker-dropdown-open]").within(() => {

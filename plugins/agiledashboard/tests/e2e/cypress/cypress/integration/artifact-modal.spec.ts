@@ -426,7 +426,9 @@ function uncheckBoxWithLabel(label: string): void {
         });
 }
 
-function selectLabelInListPickerDropdown(label: string): CypressWrapper {
+function selectLabelInListPickerDropdown(
+    label: string
+): Cypress.Chainable<JQuery<HTMLBodyElement>> {
     cy.get("[data-test=list-picker-selection]").click();
     return cy
         .root()
@@ -438,7 +440,7 @@ function selectLabelInListPickerDropdown(label: string): CypressWrapper {
         });
 }
 
-function selectLabelInSelect2Dropdown(label: string): CypressWrapper {
+function selectLabelInSelect2Dropdown(label: string): Cypress.Chainable<JQuery<HTMLBodyElement>> {
     // eslint-disable-next-line cypress/require-data-selectors
     cy.get(".select2-selection").click();
     return cy
