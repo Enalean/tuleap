@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
 
-set -ex
+set -euxo pipefail
+
+export DISPLAY_ERRORS=true
 
 setup_tuleap() {
     echo "Setup Tuleap"
 
     install -m 00755 -o codendiadm -g codendiadm /usr/share/tuleap/src/utils/tuleap /usr/bin/tuleap
 
+    install -m 00750 -o codendiadm -g codendiadm -d /etc/tuleap
+    install -m 00750 -o codendiadm -g codendiadm -d /etc/tuleap/conf
+
     mkdir -p \
-        /etc/tuleap/conf \
         /etc/tuleap/plugins \
         /var/log/tuleap \
         /var/tmp/tuleap_cache

@@ -24,16 +24,23 @@ declare(strict_types=1);
 namespace TuleapCfg\Command;
 
 use org\bovigo\vfs\vfsStream;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Process\Process;
+use Tuleap\Config\ConfigDao;
+use Tuleap\Cryptography\SecretKeyFile;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\ForgeUpgrade\ForgeUpgradeRecordOnly;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class SetupTuleapCommandTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
     private string $base_dir;
     private CommandTester $command_tester;
     private \PHPUnit\Framework\MockObject\MockObject|ProcessFactory $process_factory;
+    private SecretKeyFile $key_factory;
 
     protected function setUp(): void
     {
@@ -43,6 +50,26 @@ final class SetupTuleapCommandTest extends TestCase
         $this->process_factory = $this->createMock(ProcessFactory::class);
         $this->process_factory->method('getProcessWithoutTimeout')->willReturn(new Process(['/bin/true']));
 
+        $dao = $this->createMock(ConfigDao::class);
+        $dao->method('searchAll')->willReturn([]);
+        \ForgeConfig::setDatabaseConfigDao($dao);
+
+        $this->key_factory = new class implements SecretKeyFile {
+            public bool $key_created     = false;
+            public bool $permissions_set = false;
+
+            public function initAndGetEncryptionKeyPath(): string
+            {
+                $this->key_created = true;
+                return '';
+            }
+
+            public function restoreOwnership(LoggerInterface $logger): void
+            {
+                $this->permissions_set = true;
+            }
+        };
+
         $forge_upgrade = new class implements ForgeUpgradeRecordOnly {
             public function recordOnlyCore(): void
             {
@@ -50,7 +77,7 @@ final class SetupTuleapCommandTest extends TestCase
         };
 
         $this->command_tester = new CommandTester(
-            new SetupTuleapCommand($this->process_factory, fn () => $forge_upgrade, $this->base_dir)
+            new SetupTuleapCommand($this->process_factory, $this->key_factory, fn () => $forge_upgrade, $this->base_dir)
         );
     }
 
@@ -116,7 +143,6 @@ final class SetupTuleapCommandTest extends TestCase
         $this->command_tester->execute(['--tuleap-fqdn' => 'tuleap.example.com']);
         self::assertEquals(0, $this->command_tester->getStatusCode());
 
-
         $full_content = file_get_contents($this->base_dir . '/etc/tuleap/conf/local.inc');
 
         $needle     = '$sys_default_domain = \'tuleap.example.com\';';
@@ -136,5 +162,13 @@ final class SetupTuleapCommandTest extends TestCase
         EOT,
             $first_part
         );
+    }
+
+    public function testItGenerateSecretKey(): void
+    {
+        $this->command_tester->execute(['--tuleap-fqdn' => 'tuleap.example.com']);
+
+        self::assertTrue($this->key_factory->key_created);
+        self::assertTrue($this->key_factory->permissions_set);
     }
 }

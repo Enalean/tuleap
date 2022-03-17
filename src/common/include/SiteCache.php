@@ -105,7 +105,7 @@ class SiteCache
     /**
      * Some files might have been generated as root but should be owned by codendiadm
      */
-    public function restoreOwnership()
+    public function restoreOwnership(): void
     {
         $backend = Backend::instance();
 
@@ -134,6 +134,8 @@ class SiteCache
         \Tuleap\Request\FrontRouter::restoreOwnership($this->logger, $backend);
 
         PluginLoader::restoreOwnershipOnCacheFile($this->logger, $backend);
+
+        (new \Tuleap\Cryptography\SecretKeyFileOnFileSystem())->restoreOwnership($this->logger);
     }
 
     private function invalidateCustomizedLogoCache(): void
