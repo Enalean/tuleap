@@ -42,6 +42,6 @@ final class ModalDisplayer
     private function isFilenamePatternSet(int $project_id): bool
     {
         $filename_pattern =  $this->pattern_retriever->getPattern($project_id);
-        return isset($filename_pattern) && $filename_pattern !== "";
+        return $filename_pattern->isEnforcedAndNonEmpty();
     }
 }

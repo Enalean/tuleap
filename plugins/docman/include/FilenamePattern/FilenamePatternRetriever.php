@@ -31,8 +31,13 @@ final class FilenamePatternRetriever implements RetrieveFilenamePattern
     {
     }
 
-    public function getPattern(int $project_id): ?string
+    public function getPattern(int $project_id): FilenamePattern
     {
-        return $this->settings_DAO->searchFileNamePatternFromProjectId($project_id);
+        $pattern = $this->settings_DAO->searchFileNamePatternFromProjectId($project_id);
+
+        return new FilenamePattern(
+            (string) $pattern,
+            (bool) $pattern
+        );
     }
 }

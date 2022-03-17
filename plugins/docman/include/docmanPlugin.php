@@ -689,7 +689,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         }
 
         $pattern_retriever = new FilenamePatternRetriever(new SettingsDAO());
-        if ($pattern_retriever->getPattern($project_id)) {
+        if ($pattern_retriever->getPattern($project_id)->isEnforcedAndNonEmpty()) {
             return;
         }
 

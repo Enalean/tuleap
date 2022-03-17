@@ -45,14 +45,14 @@ class Docman_View_Admin_FilenamePattern extends AdminView
         $project_id = (int) $params['group_id'];
 
         $pattern_retriever = new FilenamePatternRetriever(new SettingsDAO());
-        $pattern           = $pattern_retriever->getPattern($project_id);
+        $filename_pattern  = $pattern_retriever->getPattern($project_id);
 
         $warning_collector = EventManager::instance()->dispatch(
-            new \Tuleap\Docman\View\Admin\FilenamePatternWarningsCollector($project_id, $pattern)
+            new \Tuleap\Docman\View\Admin\FilenamePatternWarningsCollector($project_id, $filename_pattern)
         );
 
         $renderer->renderToPage('admin/pattern-filename', [
-            'pattern'  => $pattern,
+            'pattern'  => $filename_pattern->getPattern(),
             'csrf'     => self::getCSRFToken($project_id),
             'warnings' => $warning_collector->getWarnings(),
         ]);

@@ -73,7 +73,7 @@ class WebDAVPlugin extends Plugin
             return;
         }
 
-        if ($collector->getPattern()) {
+        if ($collector->getFilenamePattern()->isEnforced()) {
             $collector->addWarning(
                 dgettext(
                     'tuleap-webdav',

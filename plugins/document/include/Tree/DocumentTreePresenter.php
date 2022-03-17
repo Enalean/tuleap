@@ -25,6 +25,7 @@ namespace Tuleap\Document\Tree;
 use CSRFSynchronizerToken;
 use DocmanPlugin;
 use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
+use Tuleap\Docman\FilenamePattern\FilenamePattern;
 use Tuleap\Document\Config\FileDownloadLimits;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
@@ -155,7 +156,7 @@ class DocumentTreePresenter
         array $project_flags,
         array $criteria,
         array $columns,
-        ?string $filename_pattern,
+        FilenamePattern $filename_pattern,
     ) {
         $this->project_id                         = $project->getID();
         $this->root_id                            = $root_id;
@@ -186,6 +187,6 @@ class DocumentTreePresenter
         $this->criteria      = json_encode($criteria, JSON_THROW_ON_ERROR);
         $this->columns       = json_encode($columns, JSON_THROW_ON_ERROR);
 
-        $this->filename_pattern = $filename_pattern ?: '';
+        $this->filename_pattern = $filename_pattern->isEnforced() ? $filename_pattern->getPattern() : '';
     }
 }

@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Config;
 
-use Tuleap\Document\Tests\Stubs\FilenamePatternRetrieverStub;
+use Tuleap\Docman\Tests\Stub\FilenamePatternRetrieverStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ModalDisplayerTest extends TestCase

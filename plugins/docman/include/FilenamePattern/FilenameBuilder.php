@@ -47,10 +47,12 @@ final class FilenameBuilder
         string $version_name,
         int $item_id,
     ): string {
-        $pattern = $this->filename_pattern_retriever->getPattern($project_id);
-        if (! $pattern) {
+        $filename_pattern = $this->filename_pattern_retriever->getPattern($project_id);
+        if (! $filename_pattern->isEnforcedAndNonEmpty()) {
             return $original_filename;
         }
+
+        $pattern = $filename_pattern->getPattern();
 
         $file_info = pathinfo($original_filename);
 
