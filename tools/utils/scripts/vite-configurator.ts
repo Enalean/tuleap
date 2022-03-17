@@ -19,7 +19,6 @@
 
 import type { BuildOptions, CSSOptions, ServerOptions, UserConfig, UserConfigExport } from "vite";
 import { defineConfig as viteDefineConfig } from "vite";
-export { createPOGettextPlugin } from "./rollup-plugin-po-gettext";
 import { browserlist_config, esbuild_target } from "./browserslist_config";
 import autoprefixer from "autoprefixer";
 

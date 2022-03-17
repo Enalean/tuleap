@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineConfig } from "../../../../../tools/utils/scripts/vite-configurator";
-import * as path from "path";
-import POGettextPlugin from "@tuleap/po-gettext-plugin";
+process.env.DISABLE_TS_TYPECHECK = "true";
 
-export default defineConfig({
-    plugins: [POGettextPlugin.vite()],
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/index.js"),
-            name: "TuleapCkeditorImageUploadForm",
-        },
-    },
-});
+const base_config = require("../../../../tests/jest/jest.base.config.js");
+module.exports = {
+    ...base_config,
+    displayName: "@tuleap/po-gettext-plugin",
+};

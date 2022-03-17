@@ -3,8 +3,6 @@ lockfileVersion: 5.3
 specifiers:
   '@babel/core': ^7.11.6
   '@babel/preset-env': ^7.11.5
-  '@rollup/pluginutils': ^4.1.0
-  '@types/gettext-parser': ^4.0.0
   '@types/jest': ^27.0.2
   '@typescript-eslint/eslint-plugin': ^5.15.0
   '@typescript-eslint/parser': ^5.15.0
@@ -36,7 +34,6 @@ specifiers:
   eslint-plugin-you-dont-need-lodash-underscore: ^6.12.0
   fork-ts-checker-webpack-plugin: ^5.2.0
   gettext-extractor: ^3.5.2
-  gettext-parser: ^4.0.4
   identity-obj-proxy: ^3.0.0
   jest: ^27.2.4
   jest-each: ^27.2.4
@@ -88,8 +85,6 @@ specifiers:
 devDependencies:
   '@babel/core': 7.11.6
   '@babel/preset-env': 7.11.5_@babel+core@7.11.6
-  '@rollup/pluginutils': 4.1.0
-  '@types/gettext-parser': 4.0.0
   '@types/jest': 27.0.2
   '@typescript-eslint/eslint-plugin': 5.15.0_0daba1b9978d21b3479752e26a64879c
   '@typescript-eslint/parser': 5.15.0_eslint@8.1.0+typescript@4.5.2
@@ -121,7 +116,6 @@ devDependencies:
   eslint-plugin-you-dont-need-lodash-underscore: 6.12.0
   fork-ts-checker-webpack-plugin: 5.2.0
   gettext-extractor: 3.5.2
-  gettext-parser: 4.0.4
   identity-obj-proxy: 3.0.0
   jest: 27.2.4
   jest-each: 27.2.4
@@ -2276,16 +2270,6 @@ packages:
       fastq: 1.13.0
     dev: true
 
-  /@rollup/pluginutils/4.1.0:
-    resolution: {integrity: sha512-TrBhfJkFxA+ER+ew2U2/fHbebhLT/l/2pRk0hfj9KusXUuRXd2v0R58AfaZK9VXDQ4TogOSEmICVrQAA3zFnHQ==}
-    engines: {node: '>= 8.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0
-    dependencies:
-      estree-walker: 2.0.2
-      picomatch: 2.3.0
-    dev: true
-
   /@rollup/pluginutils/4.1.1:
     resolution: {integrity: sha512-clDjivHqWGXi7u+0d2r2sBi4Ie6VLEAzWMIkvJLnDmxoOhBYOTfzGbOQBA32THHm11/LiJbd01tJUpJsbshSWQ==}
     engines: {node: '>= 8.0.0'}
@@ -2377,12 +2361,6 @@ packages:
 
   /@types/events/3.0.0:
     resolution: {integrity: sha512-EaObqwIvayI5a8dCzhFrjKzVwKLxjoG9T6Ppd5CEo07LRKfQ8Yokw54r5+Wq7FaBQ+yXRvQAYPrHwya1/UFt9g==}
-    dev: true
-
-  /@types/gettext-parser/4.0.0:
-    resolution: {integrity: sha512-I/wvhr+l5M7IwBF1ADBfNQ6qGfUg85UTjj/AZWn09Y+POqyLe1cfbdJSMWzCobiJ3EJNY23MQCbP6jxQT81OTQ==}
-    dependencies:
-      '@types/node': 14.17.9
     dev: true
 
   /@types/glob/7.1.1:
@@ -7758,11 +7736,6 @@ packages:
 
   /picocolors/1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
-    dev: true
-
-  /picomatch/2.3.0:
-    resolution: {integrity: sha512-lY1Q/PiJGC2zOv/z391WOTD+Z02bCgsFfvxoXXf6h7kv9o+WmsmzYqrAwY63sNgOxE4xEdq0WyUnXfKeBrSvYw==}
-    engines: {node: '>=8.6'}
     dev: true
 
   /picomatch/2.3.1:

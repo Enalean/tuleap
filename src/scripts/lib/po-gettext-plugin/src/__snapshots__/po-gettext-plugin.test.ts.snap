@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`plugin-po-gettext transform converts .PO files 1`] = `
+Object {
+  "code": "export var charset = \\"utf-8\\";
+export var headers = undefined;
+export var translations = {
+	\\"\\": {
+		Cancel: {
+			msgid: \\"Cancel\\",
+			msgstr: [
+				\\"Annuler\\"
+			]
+		}
+	}
+};
+export default {
+	charset: charset,
+	headers: headers,
+	translations: translations
+};
+",
+}
+`;

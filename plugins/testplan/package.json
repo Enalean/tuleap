@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@tuleap/gettext": "file:../../src/scripts/lib/gettext",
+    "@tuleap/po-gettext-plugin": "link:../../src/scripts/lib/po-gettext-plugin",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^2.0.0-rc.17",

@@ -2,11 +2,15 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/gettext': file:../gettext
+  '@tuleap/po-gettext-plugin': link:../po-gettext-plugin
   lit: ^2.0.2
 
 dependencies:
   '@tuleap/gettext': link:../gettext
   lit: 2.0.2
+
+devDependencies:
+  '@tuleap/po-gettext-plugin': link:../po-gettext-plugin
 
 packages:
 

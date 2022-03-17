@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/po-gettext-plugin': link:../../src/scripts/lib/po-gettext-plugin
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
   mustache: ^4.2.0
   vue: ^2.6.14
@@ -14,6 +15,7 @@ dependencies:
   vue-gettext: 2.1.12
 
 devDependencies:
+  '@tuleap/po-gettext-plugin': link:../../src/scripts/lib/po-gettext-plugin
   '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
 
 packages:

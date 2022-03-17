@@ -18,5 +18,8 @@
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
     "test": "jest"
+  },
+  "devDependencies": {
+    "@tuleap/po-gettext-plugin": "link:../po-gettext-plugin"
   }
 }
