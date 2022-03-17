@@ -68,7 +68,7 @@ class Docman_View_Admin_FilenamePattern extends AdminView
 
     public static function getTabTitle(): string
     {
-        return dgettext('tuleap-docman', 'File Pattern');
+        return dgettext('tuleap-docman', 'Filename pattern');
     }
 
     public static function getTabDescription(): string

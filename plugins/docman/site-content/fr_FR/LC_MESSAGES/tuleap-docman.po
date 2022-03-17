@@ -1157,12 +1157,6 @@ msgstr "Date de l'export"
 msgid "File"
 msgstr "Fichier"
 
-msgid "File Pattern"
-msgstr "Modèle de fichier"
-
-msgid "File pattern"
-msgstr "Modèle de fichier"
-
 #, php-format
 msgid "File upload error(%1$s). Failed to write file to disk."
 msgstr ""
@@ -1205,6 +1199,9 @@ msgstr "Erreur de chargement de fichier."
 
 msgid "File upload limits"
 msgstr "Limites de téléversement"
+
+msgid "Filename pattern"
+msgstr "Modèle de nom de fichier"
 
 msgid "Files:"
 msgstr "Fichiers :"
