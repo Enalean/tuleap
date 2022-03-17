@@ -8,10 +8,8 @@ specifiers:
   '@tuleap/po-gettext-plugin': link:../../src/scripts/lib/po-gettext-plugin
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
   '@tuleap/vue3-gettext-init': link:../../src/scripts/lib/vue3-gettext-init
-  '@types/sprintf-js': ^1.1.2
   '@vue/test-utils': ^2.0.0-rc.17
   docx: ^7.3.0
-  sprintf-js: ^1.1.2
   vue: ^3.2.31
   vue-loader: ^17.0.0
   vue3-gettext: ^2.2.1
@@ -25,7 +23,6 @@ dependencies:
   '@tuleap/plugin-testmanagement': link:../testmanagement
   '@tuleap/vue3-gettext-init': link:../../src/scripts/lib/vue3-gettext-init
   docx: 7.3.0
-  sprintf-js: 1.1.2
   vue: 3.2.31
   vue3-gettext: 2.2.1_vue@3.2.31
   vuex: 4.0.2_vue@3.2.31
@@ -36,7 +33,6 @@ devDependencies:
   '@tuleap/gettext': link:../../src/scripts/lib/gettext
   '@tuleap/po-gettext-plugin': link:../../src/scripts/lib/po-gettext-plugin
   '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
-  '@types/sprintf-js': 1.1.2
   '@vue/test-utils': 2.0.0-rc.17_vue@3.2.31
   vue-loader: 17.0.0
 
@@ -91,10 +87,6 @@ packages:
   /@types/parse5/5.0.3:
     resolution: {integrity: sha512-kUNnecmtkunAoQ3CnjmMkzNU/gtxG8guhi+Fk2U/kOpIKjIMKnXGp4IJCgQJrXSgMsWYimYG4TGjz/UzbGEBTw==}
     dev: false
-
-  /@types/sprintf-js/1.1.2:
-    resolution: {integrity: sha512-hkgzYF+qnIl8uTO8rmUSVSfQ8BIfMXC4yJAF4n8BE758YsKBZvFC4NumnAegj7KmylP0liEZNpb9RRGFMbFejA==}
-    dev: true
 
   /@vue/compiler-core/3.2.31:
     resolution: {integrity: sha512-aKno00qoA4o+V/kR6i/pE+aP+esng5siNAVQ422TkBNM6qA4veXiZbSe8OTXHXquEi/f6Akc+nLfB4JGfe4/WQ==}
@@ -647,10 +639,6 @@ packages:
 
   /sourcemap-codec/1.4.8:
     resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
-    dev: false
-
-  /sprintf-js/1.1.2:
-    resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
     dev: false
 
   /ssf/0.11.2:

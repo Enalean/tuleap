@@ -10,7 +10,6 @@
     "@tuleap/plugin-testmanagement": "link:../testmanagement",
     "@tuleap/vue3-gettext-init": "link:../../src/scripts/lib/vue3-gettext-init",
     "docx": "^7.3.0",
-    "sprintf-js": "^1.1.2",
     "vue": "^3.2.31",
     "vue3-gettext": "^2.2.1",
     "vuex": "^4.0.2",
@@ -21,7 +20,6 @@
     "@tuleap/gettext": "file:../../src/scripts/lib/gettext",
     "@tuleap/po-gettext-plugin": "link:../../src/scripts/lib/po-gettext-plugin",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
-    "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^2.0.0-rc.17",
     "vue-loader": "^17.0.0"
   },
