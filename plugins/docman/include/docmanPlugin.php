@@ -53,6 +53,7 @@ use Tuleap\Docman\ExternalLinks\DocmanLinkProvider;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
 use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
 use Tuleap\Docman\ExternalLinks\LegacyLinkProvider;
+use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
 use Tuleap\Docman\LegacyRestoreDocumentsController;
 use Tuleap\Docman\LegacySendMessageController;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
@@ -70,6 +71,7 @@ use Tuleap\Docman\Reference\DocumentFromReferenceValueFinder;
 use Tuleap\Docman\Reference\DocumentIconPresenterBuilder;
 use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
+use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Docman\Upload\UploadPathAllocatorBuilder;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionBeingUploadedInformationProvider;
@@ -681,15 +683,23 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
      */
     public function webdav_root_for_service($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $groupId = $params['project']->getId();
-        if ($params['project']->usesService('docman')) {
-            if (! isset($this->rootItems[$groupId])) {
-                include_once 'Docman_ItemFactory.class.php';
-                $docmanItemFactory         = new Docman_ItemFactory();
-                $this->rootItems[$groupId] = $docmanItemFactory->getRoot($groupId);
-            }
-            $params['roots']['docman'] = $this->rootItems[$groupId];
+        $project_id = (int) $params['project']->getId();
+        if (! $params['project']->usesService('docman')) {
+            return;
         }
+
+        $pattern_retriever = new FilenamePatternRetriever(new SettingsDAO());
+        if ($pattern_retriever->getPattern($project_id)) {
+            return;
+        }
+
+        if (! isset($this->rootItems[$project_id])) {
+            include_once 'Docman_ItemFactory.class.php';
+            $docmanItemFactory            = new Docman_ItemFactory();
+            $this->rootItems[$project_id] = $docmanItemFactory->getRoot($project_id);
+        }
+
+        $params['roots']['docman'] = $this->rootItems[$project_id];
     }
 
     /**

@@ -8,6 +8,9 @@
                 <h1 class="tlp-pane-title">{{# dgettext }}tuleap-docman | File pattern{{/dgettext}}</h1>
             </div>
             <section class="tlp-pane-section">
+                {{# warnings }}
+                    <div class="tlp-alert-warning">{{ . }}</div>
+                {{/ warnings }}
                 <p> {{# dgettext }} tuleap-docman | Apply a naming pattern on files.{{/dgettext}}<br/>
                     {{# dgettext }}
                         tuleap-docman | Pattern is defined with variables that comes from Tuleap. There are 4 variables
