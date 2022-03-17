@@ -83,29 +83,6 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame($original_filename, $update_filename);
     }
 
-    public function testItThrowsExceptionWhenThereIsNoVariable(): void
-    {
-        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
-
-        $filename_builder = new FilenameBuilder(
-            FilenamePatternRetrieverStub::buildWithPattern("Mercedes"),
-            new ItemStatusMapper($this->docman_settings_bo)
-        );
-
-        $original_filename = "M2 CS.jpg";
-
-        self::expectException(InvalidMinimalPatternException::class);
-
-        $filename_builder->buildFilename(
-            $original_filename,
-            101,
-            'From The Window To the Hood',
-            100,
-            "",
-            15
-        );
-    }
-
     public function testItReturnsTheNewFilenameWithTheTitleVariable(): void
     {
         $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
@@ -127,30 +104,6 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             15
         );
         self::assertSame("Brand-Mercedes.jpg", $update_filename);
-    }
-
-    public function testItThrowsExceptionWhenTheNewFilenameDoesNotHaveTheMandatoryVariable(): void
-    {
-        $this->docman_settings_bo->expects(self::never())->method('getMetadataUsage');
-
-        $pattern          = "Brand-Mercedes-\${STATUS}-\${VERSION_NAME}";
-        $filename_builder = new FilenameBuilder(
-            FilenamePatternRetrieverStub::buildWithPattern($pattern),
-            new ItemStatusMapper($this->docman_settings_bo)
-        );
-
-        $original_filename = "M2 CS.jpg";
-
-        self::expectException(InvalidMinimalPatternException::class);
-
-        $filename_builder->buildFilename(
-            $original_filename,
-            111,
-            "Mercedes",
-            103,
-            "Fail",
-            15
-        );
     }
 
     public function testItReturnsTheNewFilenameWithTheItemIdVariable(): void

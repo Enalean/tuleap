@@ -39,7 +39,6 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\FilenamePattern\FilenameBuilder;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
-use Tuleap\Docman\FilenamePattern\InvalidMinimalPatternException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
@@ -527,7 +526,7 @@ class DocmanFilesResource extends AuthenticatedResource
                 $status,
                 $obsolesence_date
             );
-        } catch (UploadMaxSizeExceededException | InvalidMinimalPatternException $exception) {
+        } catch (UploadMaxSizeExceededException $exception) {
             throw new RestException(
                 400,
                 $exception->getMessage()

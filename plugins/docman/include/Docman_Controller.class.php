@@ -20,14 +20,10 @@
  */
 
 use Tuleap\Docman\DestinationCloneItem;
-use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
-use Tuleap\Docman\FilenamePattern\FilenamePatternValidator;
-use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Log\LogEventAdder;
 use Tuleap\Docman\Notifications\NotificationBuilders;
 use Tuleap\Docman\Notifications\NotificationEventAdder;
 use Tuleap\Docman\ResponseFeedbackWrapper;
-use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
@@ -1358,22 +1354,6 @@ class Docman_Controller extends Controler
                                 }
                             }
 
-                            $pattern_retriever = new FilenamePatternRetriever(new SettingsDAO());
-                            $pattern           = $pattern_retriever->getPattern($this->getGroupId());
-                            if (
-                                $new_item->accept(new DoesItemHasExpectedTypeVisitor(Docman_File::class))
-                                && ! FilenamePatternValidator::isPatternValid($pattern)
-                            ) {
-                                $valid = false;
-                                $this->feedback->log(
-                                    Feedback::ERROR,
-                                    dgettext(
-                                        'tuleap-docman',
-                                        "Invalid pattern, filename pattern must contains at least '\${TITLE}' or '\${ID} variable"
-                                    )
-                                );
-                            }
-
                             if ($valid && $new_item !== null) {
                                 $document_retriever         = new DocumentOngoingUploadRetriever(
                                     new DocumentOngoingUploadDAO()
@@ -1453,22 +1433,6 @@ class Docman_Controller extends Controler
 
                     $valid = true;
                     if ($this->request->exist('confirm')) {
-                        $pattern_retriever = new FilenamePatternRetriever(new SettingsDAO());
-                        $pattern           = $pattern_retriever->getPattern($this->getGroupId());
-                        if (
-                            $item->accept(new DoesItemHasExpectedTypeVisitor(Docman_File::class))
-                            && ! FilenamePatternValidator::isPatternValid($pattern)
-                        ) {
-                            $valid = false;
-                            $this->feedback->log(
-                                Feedback::ERROR,
-                                dgettext(
-                                    'tuleap-docman',
-                                    "Invalid pattern, filename pattern must contains at least '\${TITLE}' or '\${ID} variable"
-                                )
-                            );
-                        }
-
                         $retriever = new VersionOngoingUploadRetriever(new DocumentOnGoingVersionToUploadDAO());
                         if ($retriever->isThereAlreadyAnUploadOngoing($item, new DateTimeImmutable())) {
                             $valid = false;
