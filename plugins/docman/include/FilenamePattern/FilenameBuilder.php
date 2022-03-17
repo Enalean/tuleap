@@ -39,9 +39,6 @@ final class FilenameBuilder
     ) {
     }
 
-    /**
-     * @throws InvalidMinimalPatternException
-     */
     public function buildFilename(
         string $original_filename,
         int $project_id,
@@ -55,9 +52,6 @@ final class FilenameBuilder
             return $original_filename;
         }
 
-        if (! FilenamePatternValidator::isPatternValid($pattern)) {
-            throw new InvalidMinimalPatternException();
-        }
         $file_info = pathinfo($original_filename);
 
         $new_filename = $pattern;

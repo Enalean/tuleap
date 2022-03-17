@@ -26,7 +26,6 @@ namespace Tuleap\Docman\REST\v1\Files;
 
 use Luracast\Restler\RestException;
 use Tuleap\Docman\FilenamePattern\FilenameBuilder;
-use Tuleap\Docman\FilenamePattern\InvalidMinimalPatternException;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
 use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
@@ -43,7 +42,6 @@ class DocmanFileVersionCreator
 
     /**
      * @throws RestException
-     * @throws InvalidMinimalPatternException
      */
     public function createFileVersion(
         \Docman_Item $item,
