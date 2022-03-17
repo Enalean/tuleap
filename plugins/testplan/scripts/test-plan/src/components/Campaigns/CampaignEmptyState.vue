@@ -24,17 +24,17 @@
             <campaign-empty-state-svg />
         </div>
         <p class="empty-state-text">
-            <translate>There is no test campaign yet</translate>
+            {{ $gettext("There is no test campaign yet") }}
         </p>
         <button
+            v-if="user_can_create_campaign"
             type="button"
             class="tlp-button-primary tlp-button-outline empty-state-action"
-            v-if="user_can_create_campaign"
             data-test="new-campaign"
             v-on:click="show_create_modal"
         >
             <i class="fa fa-plus tlp-button-icon"></i>
-            <translate>Create new campaign</translate>
+            {{ $gettext("Create new campaign") }}
         </button>
     </section>
 </template>

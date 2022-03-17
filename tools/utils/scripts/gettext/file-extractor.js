@@ -115,6 +115,8 @@ function extractFromVueFile(file, file_path, gettext_extractor, gettext_parser, 
             compiled.errors.forEach((error) => log(error));
             throw new Error(`Error during Vue template compilation for file: ${file_path}`);
         }
+        // vue3-gettext deprecates the usage of the translate component and the v-translate directive
+        // so when parsing Vue 3 code we skip the parsing the template AST and just look at the generated JS code
         if (compiled.code !== undefined) {
             const scriptKind = ts.ScriptKind.JS;
             gettext_parser.parseString(
@@ -124,8 +126,9 @@ function extractFromVueFile(file, file_path, gettext_extractor, gettext_parser, 
                     scriptKind,
                 }
             );
+        } else {
+            parseNode(compiled.ast);
         }
-        parseNode(compiled.ast);
     }
 
     function parseNode(node) {

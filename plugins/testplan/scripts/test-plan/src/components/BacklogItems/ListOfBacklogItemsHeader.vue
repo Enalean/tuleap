@@ -20,7 +20,9 @@
 
 <template>
     <div class="test-plan-list-of-backlogitems-header">
-        <translate tag="h2" class="test-plan-list-of-backlogitems-title">Test plan</translate>
+        <h2 class="test-plan-list-of-backlogitems-title">
+            {{ $gettext("Test plan") }}
+        </h2>
         <export-button />
     </div>
 </template>

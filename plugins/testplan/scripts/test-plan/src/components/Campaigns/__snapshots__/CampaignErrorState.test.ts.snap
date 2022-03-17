@@ -12,9 +12,7 @@ exports[`CampaignErrorState Displays empty state 1`] = `
   <div
     class="empty-state-text"
   >
-    <translate-stub
-      tag="span"
-    />
+    An error occurred while loading the campaigns.
   </div>
 </section>
 `;
