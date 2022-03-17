@@ -34,7 +34,7 @@ services:
 #      - TULEAP_REDIS_USE_TLS=1
       - TULEAP_EMAIL_RELAYHOST=mailhog:1025
 #      - TULEAP_EMAIL_ADMIN=someone@example.com
-      - TULEAP_LOGGER=syslog
+#      - TULEAP_LOGGER=syslog
 #      - TULEAP_LOG_SERVER=some-server:514
 
   db:

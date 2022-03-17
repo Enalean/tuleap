@@ -37,6 +37,6 @@ systemctl enable tuleap \
     tuleap-process-system-events-default.timer \
     tuleap-launch-system-check.timer
 
-sed -i -e 's%// $sys_nb_backend_workers = 0;%$sys_nb_backend_workers = 1;%' /data/etc/tuleap/conf/local.inc
+echo '$sys_nb_backend_workers = 1;' >> /data/etc/tuleap/conf/local.inc
 
 exec /usr/sbin/init

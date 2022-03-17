@@ -105,20 +105,35 @@ final class Realtime
         $this->logger->debug('Update local.inc');
         $local_inc_path    = '/etc/tuleap/conf/local.inc';
         $local_inc_content = file_get_contents('/etc/tuleap/conf/local.inc');
-        $conf_string       = preg_replace(
-            [
-                '/\$nodejs_server .*/',
-                '/\$nodejs_server_int .*/',
-                '/\$nodejs_server_jwt_private_key .*/',
-            ],
-            [
-                sprintf('$nodejs_server = \'%s\';', $tuleap_fqdn),
-                sprintf('$nodejs_server_int = \'%s:%d\';', self::INTERNAL_NODEJS_SERVER, self::PORT),
-                sprintf('$nodejs_server_jwt_private_key = \'%s\';', $jwt_private_key),
-            ],
-            $local_inc_content,
-        );
-        FileWriter::writeFile($local_inc_path, $conf_string);
+        if (str_contains($local_inc_content, 'nodejs_server')) {
+            $conf_string = preg_replace(
+                [
+                    '/\$nodejs_server .*/',
+                    '/\$nodejs_server_int .*/',
+                    '/\$nodejs_server_jwt_private_key .*/',
+                ],
+                [
+                    sprintf('$nodejs_server = \'%s\';', $tuleap_fqdn),
+                    sprintf('$nodejs_server_int = \'%s:%d\';', self::INTERNAL_NODEJS_SERVER, self::PORT),
+                    sprintf('$nodejs_server_jwt_private_key = \'%s\';', $jwt_private_key),
+                ],
+                $local_inc_content,
+            );
+            FileWriter::writeFile($local_inc_path, $conf_string);
+        } else {
+            $internal_nodejs_server = self::INTERNAL_NODEJS_SERVER;
+            $port                   = self::PORT;
+            $node_config            = <<<EOT
+
+            \$nodejs_server = '$tuleap_fqdn';
+            \$nodejs_server_int = '$internal_nodejs_server:$port';
+            \$nodejs_server_jwt_private_key = '$jwt_private_key';
+
+            EOT;
+            $fd                     = fopen($local_inc_path, 'ab+');
+            fwrite($fd, $node_config);
+            fclose($fd);
+        }
     }
 
     private function deployNginx(): void

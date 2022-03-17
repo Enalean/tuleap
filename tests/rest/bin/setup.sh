@@ -15,18 +15,6 @@ fi
 setup_tuleap() {
     echo "Setup Tuleap"
 
-    cat /usr/share/tuleap/src/etc/local.inc.dist | \
-	sed \
-	-e "s#/var/lib/tuleap/ftp/codendi#/var/lib/tuleap/ftp/tuleap#g" \
-	-e "s#%sys_default_domain%#localhost#g" \
-	-e "s#%sys_fullname%#localhost#g" \
-	-e "s#%sys_org_name%#Tuleap#g" \
-	-e "s#%sys_long_org_name%#Tuleap#g" \
-	-e 's#\$sys_logger_level =.*#\$sys_logger_level = "debug";#' \
-	-e 's#/home/users##' \
-	-e 's#/home/groups##' \
-	> /etc/tuleap/conf/local.inc
-
 	install -m 00755 -o codendiadm -g codendiadm /usr/share/tuleap/src/utils/tuleap /usr/bin/tuleap
 	ln -s /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php /usr/bin/tuleap-cfg
 
@@ -58,6 +46,9 @@ setup_database() {
         --tuleap-fqdn="localhost.localdomain" \
         --site-admin-password="$MYSQL_PASSWORD"
 
+    TLP_SYSTEMCTL=docker-centos7 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="localhost"
+    echo '$sys_logger_level = "debug";' >> /etc/tuleap/conf/local.inc
+
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-group-list' INTO TABLE wiki_group_list CHARACTER SET ascii"
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-page' INTO TABLE wiki_page CHARACTER SET ascii"
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-nonempty' INTO TABLE wiki_nonempty CHARACTER SET ascii"
@@ -71,8 +62,6 @@ setup_database() {
             $setup_script "$MYSQL" "$MYSQL_DBNAME"
         fi
     done
-
-    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:forgeupgrade
 }
 
 tuleap_db_config() {

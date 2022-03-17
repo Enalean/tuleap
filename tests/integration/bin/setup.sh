@@ -10,18 +10,6 @@ fi
 setup_tuleap() {
     echo "Setup Tuleap"
 
-    cat /usr/share/tuleap/src/etc/local.inc.dist | \
-	sed \
-	-e "s#/var/lib/tuleap/ftp/codendi#/var/lib/tuleap/ftp/tuleap#g" \
-	-e "s#%sys_default_domain%#localhost#g" \
-	-e "s#%sys_fullname%#localhost#g" \
-	-e "s#%sys_org_name%#Tuleap#g" \
-	-e "s#%sys_long_org_name%#Tuleap#g" \
-	-e 's#\$sys_logger_level =.*#\$sys_logger_level = "debug";#' \
-	-e 's#/home/users##' \
-	-e 's#/home/groups##' \
-	> /etc/tuleap/conf/local.inc
-
 	install -m 00755 -o codendiadm -g codendiadm /usr/share/tuleap/src/utils/tuleap /usr/bin/tuleap
 	ln -s /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php /usr/bin/tuleap-cfg
 
@@ -47,6 +35,9 @@ setup_database() {
         --tuleap-fqdn="localhost" \
         --site-admin-password="welcome0" \
         --nss-password="welcome0"
+
+    TLP_SYSTEMCTL=docker-centos7 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="localhost"
+    echo '$sys_logger_level = "debug";' >> /etc/tuleap/conf/local.inc
 
     # Allow all privileges on DB starting with 'testdb_' so we can create and drop database during the tests
     $MYSQL_CLI -h"$DB_HOST" -uroot -pwelcome0 -e 'GRANT ALL PRIVILEGES ON `testdb_%` . * TO "'$MYSQL_USER'"@"%";'

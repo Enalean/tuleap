@@ -29,10 +29,10 @@ popd > /dev/null
 # Activate LDAP plugin
 sudo -u codendiadm /usr/bin/tuleap plugin:install ldap
 cp /usr/share/tuleap/tools/docker/tuleap-aio-dev/ldap.inc /etc/tuleap/plugins/ldap/etc/ldap.inc
-sed -i "s/^\$sys_auth_type.*/\$sys_auth_type = 'ldap';/" /etc/tuleap/conf/local.inc
+echo '$sys_auth_type = "ldap";' >> /etc/tuleap/conf/local.inc
 
 # Log level debug
-sed -i "s/^\$sys_logger_level.*/\$sys_logger_level = 'debug';/" /etc/tuleap/conf/local.inc
+echo '$sys_logger_level = "debug";' >> /etc/tuleap/conf/local.inc
 
 chown -R codendiadm:codendiadm /etc/tuleap
 
