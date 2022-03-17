@@ -13,7 +13,7 @@ specifiers:
   sprintf-js: ^1.1.2
   vue: ^3.2.31
   vue-loader: ^17.0.0
-  vue3-gettext: ^2.1.0
+  vue3-gettext: ^2.2.1
   vuex: ^4.0.2
   vuex-composition-helpers: ^2.0.1
   xlsx: ^0.18.3
@@ -26,7 +26,7 @@ dependencies:
   docx: 7.3.0
   sprintf-js: 1.1.2
   vue: 3.2.31
-  vue3-gettext: 2.1.0_vue@3.2.31
+  vue3-gettext: 2.2.1_vue@3.2.31
   vuex: 4.0.2_vue@3.2.31
   vuex-composition-helpers: 2.0.1_vue@3.2.31+vuex@4.0.2
   xlsx: 0.18.3
@@ -716,8 +716,8 @@ packages:
       '@vue/shared': 3.2.31
     dev: false
 
-  /vue3-gettext/2.1.0_vue@3.2.31:
-    resolution: {integrity: sha512-kAD2LN2CjUPEJXHkKa7IR+uvPM0wx/5BlIzvfF2Vu73VC6lBkniuJ4r15Lbayk+PSz+Xpf/0K3Kg/7BVCgwCxg==}
+  /vue3-gettext/2.2.1_vue@3.2.31:
+    resolution: {integrity: sha512-/EOY/j1qR2PbTqTHanZ+utYEMnyYFj1jvDFHeBwuer7stiia9V4oSpD9g/pgxpHzDg0mYkg/4/V96dLTS0mJXA==}
     engines: {node: '>= 12.0.0'}
     hasBin: true
     peerDependencies:
