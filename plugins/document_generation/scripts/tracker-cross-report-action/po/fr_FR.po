@@ -10,6 +10,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "All link types"
+msgstr "Tous les types de lien"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -21,3 +24,29 @@ msgstr "Exporter"
 
 msgid "Export a cross tracker report document as .xlsx"
 msgstr "Exporter un document de rapport multi trackers au format .xlsx"
+
+msgid "First level"
+msgstr "Premier niveau"
+
+msgid "For each levels: "
+msgstr "Pour chaque niveau : "
+
+msgid "Link type"
+msgstr "Type de lien"
+
+msgid "Report"
+msgstr "Rapport"
+
+msgid ""
+"The columns exported are the ones used of the first table of the selected "
+"report."
+msgstr ""
+"Les colonnes exportées sont celles utilisées dans le premier tableau du "
+"rapport sélectionné."
+
+msgid ""
+"The selected artifacts will be the linked ones that are not filtered by a "
+"criteria of the selected report."
+msgstr ""
+"Les artefacts sélectionnés seront les artefacts liés qui ne sont pas "
+"filtrés par un critère du rapport sélectionné."

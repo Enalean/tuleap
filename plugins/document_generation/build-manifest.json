@@ -6,7 +6,7 @@
             "po": "scripts/tracker-report-action/po"
         }
     },
-    "gettext-vue": {
+    "gettext-vue3": {
         "tracker-cross-report-action": {
             "src": "scripts/tracker-cross-report-action/src",
             "po": "scripts/tracker-cross-report-action/po"

@@ -115,11 +115,15 @@ function extractFromVueFile(file, file_path, gettext_extractor, gettext_parser, 
             compiled.errors.forEach((error) => log(error));
             throw new Error(`Error during Vue template compilation for file: ${file_path}`);
         }
-        if (compiled.render !== undefined) {
+        if (compiled.code !== undefined) {
             const scriptKind = ts.ScriptKind.JS;
-            gettext_parser.parseString(compiled.render, undefined, {
-                scriptKind,
-            });
+            gettext_parser.parseString(
+                compiled.code.replaceAll("_ctx.", "gettext_provider."),
+                undefined,
+                {
+                    scriptKind,
+                }
+            );
         }
         parseNode(compiled.ast);
     }
