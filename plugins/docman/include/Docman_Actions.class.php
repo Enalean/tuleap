@@ -2122,14 +2122,17 @@ class Docman_Actions extends Actions
     {
         $request = HTTPRequest::instance();
 
-        $project_id = (int) $request->get('group_id');
-        $pattern    = $request->get('filename_pattern');
+        $project_id       = (int) $request->get('group_id');
+        $filename_pattern = new Tuleap\Docman\FilenamePattern\FilenamePattern(
+            (string) $request->get('filename_pattern'),
+            (bool) $request->get('is_enforced'),
+        );
 
         $updater_feedback = new FilenamePatternFeedbackHandler(
             new FilenamePatternUpdater(new SettingsDAO()),
             $this->_controler->feedback
         );
-        $updater_feedback->getFilenamePatternUpdateFeedback($project_id, $pattern);
+        $updater_feedback->getFilenamePatternUpdateFeedback($project_id, $filename_pattern);
     }
 
     private function removeNotificationUsersByItem(Docman_Item $item, array $users_to_delete)

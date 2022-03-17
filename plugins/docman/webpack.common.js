@@ -33,6 +33,7 @@ module.exports = [
             "admin-style": "./themes/BurningParrot/css/admin.scss",
             "admin-permissions": "./scripts/admin-permissions.ts",
             "admin-properties": "./scripts/admin-properties.ts",
+            "admin-filename-pattern": "./scripts/admin-filename-pattern.ts",
         },
         resolve: {
             extensions: [".ts", ".js"],

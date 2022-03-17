@@ -23,21 +23,24 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\FilenamePattern;
 
-use Tuleap\Docman\Settings\SettingsDAO;
+use Tuleap\Docman\Settings\SearchFilenamePatternInSettings;
 
 final class FilenamePatternRetriever implements RetrieveFilenamePattern
 {
-    public function __construct(private SettingsDAO $settings_DAO)
+    public function __construct(private SearchFilenamePatternInSettings $settings_dao)
     {
     }
 
     public function getPattern(int $project_id): FilenamePattern
     {
-        $pattern = $this->settings_DAO->searchFileNamePatternFromProjectId($project_id);
+        $row = $this->settings_dao->searchFileNamePatternFromProjectId($project_id);
+        if (! $row) {
+            return new FilenamePattern('', false);
+        }
 
         return new FilenamePattern(
-            (string) $pattern,
-            (bool) $pattern
+            $row['filename_pattern'],
+            (bool) $row['is_filename_pattern_enforced']
         );
     }
 }

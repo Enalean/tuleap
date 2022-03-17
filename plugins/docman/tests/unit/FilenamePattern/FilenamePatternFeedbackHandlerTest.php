@@ -38,7 +38,7 @@ final class FilenamePatternFeedbackHandlerTest extends TestCase
             $feedback_wrapper
         );
 
-        $filename_pattern_feedback->getFilenamePatternUpdateFeedback(101, "Athena#\${ID}");
+        $filename_pattern_feedback->getFilenamePatternUpdateFeedback(101, new FilenamePattern("Athena#\${ID}", false));
         self::assertEquals('info', $feedback_wrapper->getLevel());
     }
 
@@ -51,7 +51,7 @@ final class FilenamePatternFeedbackHandlerTest extends TestCase
             $feedback_wrapper
         );
 
-        $filename_pattern_feedback->getFilenamePatternUpdateFeedback(101, "I'm sellin'#\${STATUS}");
+        $filename_pattern_feedback->getFilenamePatternUpdateFeedback(101, new FilenamePattern("I'm sellin'#\${STATUS}", false));
         self::assertEquals('error', $feedback_wrapper->getLevel());
     }
 }

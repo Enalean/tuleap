@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,22 +16,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\FilenamePattern;
+namespace Tuleap\Docman\Settings;
 
-final class FilenamePatternValidator
+interface SearchFilenamePatternInSettings
 {
-    public static function isPatternValid(string $pattern): bool
-    {
-        if (! $pattern) {
-            return true;
-        }
-
-        return str_contains($pattern, FilenameBuilder::ITEM_ID_VARIABLE)
-            || str_contains($pattern, FilenameBuilder::TITLE_VARIABLE);
-    }
+    /**
+     * @return null|array{filename_pattern: string, is_filename_pattern_enforced: int}
+     */
+    public function searchFileNamePatternFromProjectId(int $project_id): ?array;
 }

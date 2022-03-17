@@ -1093,6 +1093,9 @@ msgstr "Fin"
 msgid "End:"
 msgstr "Fin :"
 
+msgid "Enforce filename pattern"
+msgstr "Forcer l’application du modèle de nom de fichier"
+
 msgid "Enter a project shortname or identifier here."
 msgstr "Entrez le nom ou l'identificateur d'un project ici."
 
@@ -2845,6 +2848,9 @@ msgstr "Vous ne pouvez pas supprimer ce document."
 
 msgid "You cannot delete this folder."
 msgstr "Vous ne pouvez pas supprimer ce dossier."
+
+msgid "You cannot enforce an empty filename pattern"
+msgstr "Vous ne pouvez pas forcer l'application d'un modèle de nom de fichier vide"
 
 msgid ""
 "You cannot modify it until the lock owner or a document manager release the "

@@ -41,12 +41,28 @@ final class FilenamePatternUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::expectException(InvalidMinimalPatternException::class);
 
-        $this->filename_pattern_updater->updatePattern(101, "oseille#\${VERSION_NAME}");
+        $this->filename_pattern_updater->updatePattern(
+            101,
+            new FilenamePattern('oseille#${VERSION_NAME}', false)
+        );
+    }
+
+    public function testItThrowsAnExceptionWhenThePatternIsEnforcedButEmpty(): void
+    {
+        self::expectException(EnforcedEmptyPatternException::class);
+
+        $this->filename_pattern_updater->updatePattern(
+            101,
+            new FilenamePattern('', true)
+        );
     }
 
     public function testItSaveTheGivenPattern(): void
     {
-        $this->filename_pattern_updater->updatePattern(101, "thune#\${ID}");
+        $this->filename_pattern_updater->updatePattern(
+            101,
+            new FilenamePattern('thune#${ID}', false)
+        );
         self::assertEquals(1, $this->save_filename_counter->getCountSaveFilenamePattern());
     }
 }

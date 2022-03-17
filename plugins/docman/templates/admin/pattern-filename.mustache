@@ -37,9 +37,33 @@
                     {{/dgettext}}
                 </p>
                 <div class="tlp-form-element">
-                    <label class="tlp-label" for="pattern">{{# dgettext }}tuleap-docman | Pattern {{/dgettext}}</label>
-                    <input type="text" class="tlp-input" id="pattern" name="filename_pattern" placeholder="tuleap-doc#{ID}"
-                           value="{{pattern}}" pattern=".*\$\{(TITLE|ID)\}.*" />
+                    <input type="hidden" name="is_enforced" value="0">
+                    <label class="tlp-label tlp-checkbox">
+                        <input type="checkbox"
+                               name="is_enforced"
+                               value="1"
+                               {{# is_enforced }}checked{{/ is_enforced }}
+                               id="docman-admin-filename-pattern-enforce"
+                        >
+                        {{# dgettext }}tuleap-docman | Enforce filename pattern{{/dgettext}}
+                    </label>
+                </div>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="docman-admin-filename-pattern">
+                        {{# dgettext }}tuleap-docman | Pattern {{/dgettext}}
+                        <i class="fas fa-asterisk"
+                           id="docman-admin-filename-pattern-mandatory-marker"
+                           aria-hidden="true"
+                        ></i>
+                    </label>
+                    <input type="text"
+                           class="tlp-input"
+                           id="docman-admin-filename-pattern"
+                           name="filename_pattern"
+                           placeholder="tuleap-doc#{ID}"
+                           value="{{pattern}}"
+                           pattern=".*\$\{(TITLE|ID)\}.*"
+                    />
                 </div>
                 <input type="hidden" name="action" value="admin_change_filename_pattern" />
             </section>
