@@ -24,20 +24,6 @@ msgstr "\"%1$s\" est requis, merci de remplir le champ."
 msgid "\"%1$s\" successfully deleted"
 msgstr "\"%1$s\" supprimée"
 
-msgid "${ID}: the document internal id."
-msgstr "${ID} : l'ID interne du document."
-
-msgid ""
-"${STATUS}: the document status (\"Draft\", \"Approved\" or \"Rejected\")."
-msgstr ""
-"${STATUS}: le statut du document (\"Brouillon\",\"Approuvé\" ou \"Rejeté\")."
-
-msgid "${TITLE}: the document title."
-msgstr "${TITLE} : Le titre du document."
-
-msgid "${VERSION_NAME}: the latest version name of the document."
-msgstr "${VERSION_NAME} : Le dernier nom de version du document."
-
 #, php-format
 msgid "%1$s <strong>locked</strong> this document on %2$s."
 msgstr "Ce document est <strong>réservé</strong> par %1$s depuis le %2$s."
@@ -1243,6 +1229,20 @@ msgstr ""
 "<strong>Forcer la notification</strong> pour envoyer un email de "
 "notification indépendamment de l'état d'approbation.</li></ul></li></ul>"
 
+msgid ""
+"For example, if enforced pattern is <code>${ID}-${TITLE}</code> and user "
+"creates a new document (or version) with title <code>MyFooBar</code>\n"
+"                        and id <code>123</code> from uploaded file "
+"<code>output.32.pdf</code>, then generated filename will be <code>123-"
+"MyFooBar.pdf</code>."
+msgstr ""
+"Par exemple, si le modèle est <code>${ID}-${TITLE}</code> et que "
+"l'utilisateur crée un nouveau document (ou une version) avec pour titre "
+"<code>MonDocument</code>\n"
+"et pour id <code>123</code> depuis un fichier téléversé <code>impression.32."
+"pdf</code>, alors le nom de fichier généré sera <code>123-MonDocument.pdf</"
+"code>."
+
 msgid "Forbid deletion of document & versions by Writers"
 msgstr "Interdire la suppression de document & versions par les Rédacteurs"
 
@@ -1739,13 +1739,8 @@ msgstr "Chemin"
 msgid "Pattern"
 msgstr "Modèle"
 
-msgid ""
-"Pattern is defined with variables that comes from Tuleap. There are 4 "
-"variables\n"
-"                        available:"
-msgstr ""
-"Le modèle est défini avec des variables venant de Tuleap. Il y a 4 variables "
-"disponibles :"
+msgid "Pattern must contain at least ${TITLE} or ${ID}"
+msgstr "Le modèle doit contenir au moins la variable ${TITLE} ou ${ID}"
 
 msgid "Permanent"
 msgstr "Permanent"
@@ -2163,6 +2158,15 @@ msgid "The date format is incorrect. The format must be \"YYYY-MM-DD\""
 msgstr ""
 "Le format de la date est incorrecte. Le format doit être \"YYYY-MM-DD\""
 
+msgid "The document internal id"
+msgstr "L'id interne du document"
+
+msgid "The document status (\"Draft\", \"Approved\" or \"Rejected\")"
+msgstr "Le statut du document (\"Brouillon\",\"Approuvé\" ou \"Rejeté\")"
+
+msgid "The document title"
+msgstr "Le titre du document"
+
 msgid "The file cannot be found."
 msgstr "Le fichier ne peut être trouvé."
 
@@ -2184,6 +2188,9 @@ msgstr "L'élément %1$s n'existe pas ou ne fait pas parti du projet %2$s."
 msgid "The item %d is not a folder."
 msgstr "L'objet %d n'est pas un dossier."
 
+msgid "The latest version name of the document"
+msgstr "Le dernier nom de version du document"
+
 #, php-format
 msgid "The list type property %s can accept only one value."
 msgstr "La propriété de type liste %s accepte une seule valeur."
@@ -2203,6 +2210,12 @@ msgstr "La date d'obsolescence est antérieur à la date actuelle"
 
 msgid "The page name is required."
 msgstr "Le nom de la page wiki est requis."
+
+msgid ""
+"The pattern contains variables whose values are specific to each document."
+msgstr ""
+"Le modèle comporte des variables dont les valeurs seront propres à chaque "
+"document."
 
 msgid "The pattern has been successfully updated."
 msgstr "Le modèle a été mis à jour avec succès."
@@ -2318,12 +2331,6 @@ msgstr "Il n'y a pas encore d'historique"
 
 msgid "There is no version yet"
 msgstr "Il n'y a pas encore de versions"
-
-msgid ""
-"There must be at least either ${TITLE} or ${ID} variable in the pattern."
-msgstr ""
-"Il doit avoir au moins la variable ${TITLE} ou la variable ${ID} dans le "
-"modèle."
 
 msgid "This is an automatic message. Please do not reply to this email"
 msgstr ""
@@ -2477,6 +2484,9 @@ msgstr "Valeur"
 
 msgid "Value \"%2$s\" in \"%1$s\" property"
 msgstr "Valeur \"%2$s\" de la propriété \"%1$s\""
+
+msgid "Variable"
+msgstr "Variable"
 
 msgid "Version"
 msgstr "Version"
@@ -2772,6 +2782,16 @@ msgid ""
 msgstr ""
 "Vous pouvez soit créer un nouveau document (fichier, lien, wiki, etc) ou un "
 "nouveau dossier."
+
+msgid ""
+"You can enforce the filename to follow a pattern. This filename will be "
+"automatically updated during the upload (filename of already existing "
+"documents are not affected by the configuration, only new ones will be)."
+msgstr ""
+"Vous pouvez forcer le nom des fichiers à suivre un modèle défini. Ce nom "
+"sera modifié automatiquement lors du téléversement (les noms des fichiers "
+"existants ne seront pas affectés par cette configuration, seuls les nouveaux "
+"le seront)."
 
 msgid ""
 "You can import in this project a report defined in another project (either "

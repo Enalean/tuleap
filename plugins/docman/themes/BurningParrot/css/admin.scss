@@ -17,6 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.tlp-pane-section .docman-admin-filename-pattern-variables {
+    margin: 0 calc(-1 * var(--tlp-medium-spacing)) var(--tlp-x-large-spacing);
+}
+
+.docman-admin-filename-pattern-variable-name {
+    white-space: nowrap;
+}
+
+.docman-admin-filename-pattern-variable-description {
+    width: 100%;
+}
+
 #docman-admin-filename-pattern-mandatory-marker {
     display: none;
 

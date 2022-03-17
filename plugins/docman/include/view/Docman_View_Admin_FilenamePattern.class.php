@@ -70,6 +70,7 @@ class Docman_View_Admin_FilenamePattern extends AdminView
             'is_enforced' => $filename_pattern->isEnforced(),
             'csrf'        => self::getCSRFToken($project_id),
             'warnings'    => $warning_collector->getWarnings(),
+            'info'        => $warning_collector->getInfo(),
         ]);
     }
 
