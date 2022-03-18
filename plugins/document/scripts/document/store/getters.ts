@@ -17,6 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export interface RootGetter {
+    is_folder_empty: boolean;
+    current_folder_title: string;
+    global_upload_progress: number;
+    is_uploading: boolean;
+}
+
 import type { FakeItem, Item, State } from "../type";
 import { isFakeItem } from "../helpers/type-check-helper";
 

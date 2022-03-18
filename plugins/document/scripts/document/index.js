@@ -82,6 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const project_icon = vue_mount_point.dataset.projectIcon;
     const search_for_document_with_criteria = isFeatureFlagNewSearchEnabled(document);
     const filename_pattern = vue_mount_point.dataset.filenamePattern;
+    const is_filename_pattern_enforced = Boolean(vue_mount_point.dataset.isFilenamePatternEnforced);
 
     const consider_string_criteria_as_text = (criterion) => ({
         ...criterion,
@@ -129,6 +130,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         forbid_writers_to_update,
         forbid_writers_to_delete,
         filename_pattern,
+        is_filename_pattern_enforced,
     };
 
     const AppComponent = Vue.extend(App);

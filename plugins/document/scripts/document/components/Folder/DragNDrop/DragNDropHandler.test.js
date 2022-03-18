@@ -28,7 +28,7 @@ import emitter from "../../../helpers/emitter";
 jest.mock("../../../helpers/emitter");
 
 describe("DragNDropHandler", () => {
-    let main, store, component_options, store_options, drop_event;
+    let main, store, component_options, store_options, drop_event, drag_event;
 
     const file1 = new File([new Blob(["Some text in a file"])], "file.txt", {
         type: "plain/text",
@@ -45,7 +45,10 @@ describe("DragNDropHandler", () => {
         endings: "native",
     });
 
-    function getWrapper(is_changelog_proposed_after_dnd = false, filename_pattern = null) {
+    function getWrapper(
+        is_changelog_proposed_after_dnd = false,
+        is_filename_pattern_enforced = false
+    ) {
         store_options = {
             state: {
                 folder_content: [],
@@ -60,12 +63,11 @@ describe("DragNDropHandler", () => {
                     max_files_dragndrop: 10,
                     max_size_upload: 1000000000,
                     is_changelog_proposed_after_dnd,
-                    filename_pattern,
+                    is_filename_pattern_enforced,
                 },
             },
             getters: {
                 "configuration/user_can_dragndrop": true,
-                current_folder_title: "workdir",
             },
         };
         store = createStoreMock(store_options);
@@ -89,6 +91,16 @@ describe("DragNDropHandler", () => {
             preventDefault: () => {},
             dataTransfer: {
                 files: [],
+            },
+        };
+        drag_event = {
+            stopPropagation: () => {},
+            preventDefault: () => {},
+            dataTransfer: {
+                items: [],
+            },
+            target: {
+                closest: () => {},
             },
         };
 
@@ -463,7 +475,7 @@ describe("DragNDropHandler", () => {
             });
         });
         it("Should open the file creation modal when user uploads a new file and if a filename pattern is set", async () => {
-            const wrapper = getWrapper(false, "pattern-set");
+            const wrapper = getWrapper(false, true);
             drop_event.dataTransfer.files.push(file1);
 
             await wrapper.vm.ondrop(drop_event);
@@ -545,6 +557,46 @@ describe("DragNDropHandler", () => {
             await wrapper.vm.ondrop(drop_event);
 
             expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile", expect.any(Array));
+        });
+    });
+    describe("Error handling on file dragover", () => {
+        it("Set an error when the user has not the right in the folder", () => {
+            const wrapper = getWrapper();
+            drag_event.dataTransfer.items.push(file1);
+            store.getters["configuration/user_can_dragndrop"] = false;
+
+            wrapper.vm.ondragover(drag_event);
+
+            expect(wrapper.vm.is_drop_possible).toBe(false);
+            expect(wrapper.vm.dragover_error_reason).toBe(
+                "Dropping files in workdir is forbidden."
+            );
+        });
+
+        it("Set an error when the filename pattern is used and the user dragover more than one file", () => {
+            const is_filename_patern_enforced = true;
+            const wrapper = getWrapper(false, is_filename_patern_enforced);
+            drag_event.dataTransfer.items.push(file1, file2);
+            store.getters["configuration/user_can_dragndrop"] = true;
+
+            wrapper.vm.ondragover(drag_event);
+
+            expect(wrapper.vm.is_drop_possible).toBe(false);
+            expect(wrapper.vm.dragover_error_reason).toBe(
+                "When a filename pattern is set, you are not allowed to drag 'n drop more than 1 file at once."
+            );
+        });
+
+        it("not display error if everything is ok", () => {
+            const is_filename_patern_enforced = true;
+            const wrapper = getWrapper(false, is_filename_patern_enforced);
+            drag_event.dataTransfer.items.push(file1);
+            store.getters["configuration/user_can_dragndrop"] = true;
+
+            wrapper.vm.ondragover(drag_event);
+
+            expect(wrapper.vm.is_drop_possible).toBe(true);
+            expect(wrapper.vm.dragover_error_reason).toBe("");
         });
     });
 });

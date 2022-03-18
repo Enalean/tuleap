@@ -17,13 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import CurrentFolderDropZone from "./CurrentFolderDropZone.vue";
 
 describe("CurrentFolderDropZone", () => {
-    let current_folder_drop_zone_factory, store;
+    let current_folder_drop_zone_factory: (
+        props: Record<string, unknown>
+    ) => Wrapper<CurrentFolderDropZone>;
+
     beforeEach(() => {
         const state = {
             configuration: {
@@ -32,15 +36,18 @@ describe("CurrentFolderDropZone", () => {
             },
         };
 
-        const store_options = {
-            state,
+        const getters = {
+            current_folder_title: "My folder",
         };
 
-        store = createStoreMock(store_options);
+        const store_options = {
+            state,
+            getters,
+        };
 
-        store.getters.current_folder_title = "My folder";
+        const store = createStoreMock(store_options);
 
-        current_folder_drop_zone_factory = (props = {}) => {
+        current_folder_drop_zone_factory = (props = {}): Wrapper<CurrentFolderDropZone> => {
             return shallowMount(CurrentFolderDropZone, {
                 localVue,
                 propsData: { ...props },
@@ -55,6 +62,8 @@ describe("CurrentFolderDropZone", () => {
             Then user should have a success message`, () => {
             const wrapper = current_folder_drop_zone_factory({
                 user_can_dragndrop_in_current_folder: true,
+                is_dropzone_highlighted: false,
+                error_reason: "",
             });
 
             expect(
@@ -63,21 +72,25 @@ describe("CurrentFolderDropZone", () => {
             expect(
                 wrapper.find("[data-test=document-current-folder-error-dropzone]").exists()
             ).toBeFalsy();
+            expect(wrapper.props("error_reason")).toBe("");
         });
 
-        it(`Given user is document reader
+        it(`Given user cannot drop files
             When we display the drop zone
             Then user should have an error message`, () => {
             const wrapper = current_folder_drop_zone_factory({
                 user_can_dragndrop_in_current_folder: false,
+                is_dropzone_highlighted: false,
+                error_reason: "Some error reason",
             });
 
             expect(
                 wrapper.find("[data-test=document-current-folder-success-dropzone]").exists()
-            ).toBeFalsy();
+            ).toBe(false);
             expect(
                 wrapper.find("[data-test=document-current-folder-error-dropzone]").exists()
-            ).toBeTruthy();
+            ).toBe(true);
+            expect(wrapper.props("error_reason")).toBe("Some error reason");
         });
     });
 
@@ -88,6 +101,7 @@ describe("CurrentFolderDropZone", () => {
             const wrapper = current_folder_drop_zone_factory({
                 is_dropzone_highlighted: true,
                 user_can_dragndrop_in_current_folder: true,
+                error_reason: "",
             });
 
             const current_folder_drop_zone = wrapper.get(
@@ -102,6 +116,7 @@ describe("CurrentFolderDropZone", () => {
             const wrapper = current_folder_drop_zone_factory({
                 is_dropzone_highlighted: true,
                 user_can_dragndrop_in_current_folder: false,
+                error_reason: "",
             });
 
             const current_folder_drop_zone = wrapper.get(
@@ -116,6 +131,7 @@ describe("CurrentFolderDropZone", () => {
             const wrapper = current_folder_drop_zone_factory({
                 is_dropzone_highlighted: false,
                 user_can_dragndrop_in_current_folder: true,
+                error_reason: "",
             });
 
             const current_folder_drop_zone = wrapper.get(
@@ -132,6 +148,7 @@ describe("CurrentFolderDropZone", () => {
             const wrapper = current_folder_drop_zone_factory({
                 is_dropzone_highlighted: false,
                 user_can_dragndrop_in_current_folder: false,
+                error_reason: "",
             });
 
             const current_folder_drop_zone = wrapper.get(

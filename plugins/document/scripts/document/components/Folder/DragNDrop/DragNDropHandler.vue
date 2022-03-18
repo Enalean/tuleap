@@ -21,8 +21,9 @@
     <div>
         <current-folder-drop-zone
             ref="dropzone"
-            v-bind:user_can_dragndrop_in_current_folder="user_can_dragndrop_in_current_folder"
+            v-bind:user_can_dragndrop_in_current_folder="is_drop_possible"
             v-bind:is_dropzone_highlighted="is_dropzone_highlighted"
+            v-bind:error_reason="dragover_error_reason"
         />
         <component
             v-bind:is="error_modal_name"
@@ -38,6 +39,7 @@ import CurrentFolderDropZone from "./CurrentFolderDropZone.vue";
 import { highlightItem } from "../../../helpers/highlight-items-helper";
 import { isFile, isFolder } from "../../../helpers/type-check-helper";
 import emitter from "../../../helpers/emitter";
+import { sprintf } from "sprintf-js";
 
 export default {
     components: { CurrentFolderDropZone },
@@ -55,6 +57,9 @@ export default {
             DROPPED_ITEM_IS_NOT_A_FILE: "dropped_item_is_not_a_file",
             FILENAME_PATTERN_IS_SET_ERROR: "filename_pattern_is_set",
             highlighted_item_id: null,
+            number_of_dragged_files: 0,
+            is_drop_possible: true,
+            dragover_error_reason: "",
         };
     },
     computed: {
@@ -65,7 +70,7 @@ export default {
             "max_files_dragndrop",
             "max_size_upload",
             "is_changelog_proposed_after_dnd",
-            "filename_pattern",
+            "is_filename_pattern_enforced",
         ]),
         user_can_dragndrop_in_current_folder() {
             return (
@@ -141,7 +146,13 @@ export default {
             if (this.isDragNDropingOnAModal(event)) {
                 return;
             }
-
+            this.number_of_dragged_files = event.dataTransfer.items.length;
+            this.is_drop_possible =
+                this.isDropPossibleAccordingFilenamePattern() &&
+                this.user_can_dragndrop_in_current_folder;
+            if (!this.is_drop_possible) {
+                this.dragover_error_reason = this.getDragErrorReason();
+            }
             this.highlightFolderDropZone(event);
         },
         ondragleave(event) {
@@ -151,7 +162,9 @@ export default {
             if (this.isInQuickLookPane()) {
                 return;
             }
-
+            this.is_drop_possible = true;
+            this.number_of_dragged_files = 0;
+            this.drag_error_reason = "";
             this.clearHighlight();
         },
         isInQuickLookPane() {
@@ -194,12 +207,12 @@ export default {
                 return;
             }
 
-            if (this.isFilenamePatternSet() && files.length > 1) {
+            if (this.is_filename_pattern_enforced && files.length > 1) {
                 this.error_modal_shown = this.FILENAME_PATTERN_IS_SET_ERROR;
                 return;
             }
 
-            if (this.isFilenamePatternSet() && files.length === 1) {
+            if (this.is_filename_pattern_enforced && files.length === 1) {
                 emitter.emit("show-file-creation-modal", {
                     detail: {
                         parent: dropzone_item,
@@ -379,8 +392,22 @@ export default {
         isDroppedItemAFile(file) {
             return file.size % 4096 !== 0 || file.type !== "";
         },
-        isFilenamePatternSet() {
-            return this.filename_pattern && this.filename_pattern !== "";
+        isDropPossibleAccordingFilenamePattern() {
+            return (
+                (this.is_filename_pattern_enforced && this.number_of_dragged_files === 1) ||
+                !this.is_filename_pattern_enforced
+            );
+        },
+        getDragErrorReason() {
+            if (this.is_filename_pattern_enforced && this.number_of_dragged_files > 1) {
+                return this.$gettext(
+                    "When a filename pattern is set, you are not allowed to drag 'n drop more than 1 file at once."
+                );
+            }
+            return sprintf(
+                this.$gettext("Dropping files in %s is forbidden."),
+                this.current_folder.title
+            );
         },
     },
 };
