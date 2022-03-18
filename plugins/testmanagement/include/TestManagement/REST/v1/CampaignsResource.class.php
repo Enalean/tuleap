@@ -284,7 +284,11 @@ class CampaignsResource
             $this->testmanagement_artifact_factory,
             $this->campaign_retriever,
             $this->config,
-            new TestExecutionTestStatusDAO()
+            new TestExecutionTestStatusDAO(),
+            new StatusValueRetriever(
+                new Tracker_Semantic_StatusFactory(),
+                $this->getFirstPossibleValueInListRetriever()
+            )
         );
 
         $fields_data_builder = new FieldsDataBuilder(
@@ -376,14 +380,7 @@ class CampaignsResource
                 $this->formelement_factory,
                 new StatusValueRetriever(
                     Tracker_Semantic_StatusFactory::instance(),
-                    new FirstPossibleValueInListRetriever(
-                        new FirstValidValueAccordingToDependenciesRetriever(
-                            $this->formelement_factory
-                        ),
-                        new ValidValuesAccordingToTransitionsRetriever(
-                            Workflow_Transition_ConditionFactory::build()
-                        )
-                    )
+                    $this->getFirstPossibleValueInListRetriever()
                 )
             )
         );
@@ -1068,6 +1065,18 @@ class CampaignsResource
     {
         return new DefinitionForExecutionRetriever(
             new ConfigConformanceValidator($this->config)
+        );
+    }
+
+    private function getFirstPossibleValueInListRetriever(): FirstPossibleValueInListRetriever
+    {
+        return new FirstPossibleValueInListRetriever(
+            new FirstValidValueAccordingToDependenciesRetriever(
+                $this->formelement_factory
+            ),
+            new ValidValuesAccordingToTransitionsRetriever(
+                Workflow_Transition_ConditionFactory::build()
+            )
         );
     }
 }

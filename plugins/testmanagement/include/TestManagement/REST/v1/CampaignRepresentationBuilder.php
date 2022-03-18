@@ -31,50 +31,19 @@ use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Criterion\ISearchOnMilestone;
 use Tuleap\TestManagement\Criterion\ISearchOnStatus;
 use Tuleap\TestManagement\PaginatedCampaignsRepresentations;
+use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 
 class CampaignRepresentationBuilder
 {
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $tracker_form_element_factory;
-
-    /**
-     * @var ArtifactFactory
-     */
-    private $testmanagement_artifact_factory;
-    /**
-     * @var CampaignRetriever
-     */
-    private $campaign_retriever;
-    /**
-     * @var Config
-     */
-    private $test_management_config;
-    /**
-     * @var TestExecutionTestStatusDAO
-     */
-    private $test_execution_test_status_dao;
-
     public function __construct(
-        TrackerFactory $tracker_factory,
-        Tracker_FormElementFactory $tracker_form_element_factory,
-        ArtifactFactory $testmanagement_artifact_factory,
-        CampaignRetriever $campaign_retriever,
-        Config $test_management_config,
-        TestExecutionTestStatusDAO $test_execution_test_status_dao,
+        private TrackerFactory $tracker_factory,
+        private Tracker_FormElementFactory $tracker_form_element_factory,
+        private ArtifactFactory $testmanagement_artifact_factory,
+        private CampaignRetriever $campaign_retriever,
+        private Config $test_management_config,
+        private TestExecutionTestStatusDAO $test_execution_test_status_dao,
+        private StatusValueRetriever $status_value_retriever,
     ) {
-        $this->tracker_factory                 = $tracker_factory;
-        $this->tracker_form_element_factory    = $tracker_form_element_factory;
-        $this->testmanagement_artifact_factory = $testmanagement_artifact_factory;
-        $this->campaign_retriever              = $campaign_retriever;
-        $this->test_management_config          = $test_management_config;
-        $this->test_execution_test_status_dao  = $test_execution_test_status_dao;
     }
 
     public function getCampaignRepresentation(PFUser $user, Campaign $campaign): CampaignRepresentation
@@ -85,6 +54,7 @@ class CampaignRepresentationBuilder
             $this->tracker_factory,
             $this->tracker_form_element_factory,
             $this->test_execution_test_status_dao,
+            $this->status_value_retriever,
             $user
         );
     }

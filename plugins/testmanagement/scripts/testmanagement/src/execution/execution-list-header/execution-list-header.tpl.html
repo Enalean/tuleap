@@ -76,7 +76,9 @@
                         <i ng-if="! $ctrl.is_preparing_the_download" class="fas fa-fw fa-file-word tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
                         {{ ::'Export as document' | translate }}
                     </button>
-                    <span class="tlp-dropdown-menu-separator" role="separator"></span>
+                    <span class="tlp-dropdown-menu-separator" role="separator"
+                          ng-if="$ctrl.campaign_state.campaign.is_open && $ctrl.campaign_state.campaign.user_can_close || ! $ctrl.campaign_state.campaign.is_open && $ctrl.campaign_state.campaign.user_can_open"
+                    ></span>
                     <form method="post" action="{{ $ctrl.getCloseFormURL() }}">
                         <input type="hidden" name="challenge" value="{{ $ctrl.getCSRFTokenCampaignStatus() }}" />
                         <input type="hidden"
@@ -88,7 +90,7 @@
                             type="submit"
                             class="tlp-dropdown-menu-item testmanagement-button-update-status"
                             role="menuitem"
-                            ng-if="$ctrl.campaign_state.campaign.is_open"
+                            ng-if="$ctrl.campaign_state.campaign.is_open && $ctrl.campaign_state.campaign.user_can_close"
                             data-test="test-campaign-close-campaign"
                         >
                             <i class="fas fa-fw fa-times tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
@@ -106,7 +108,7 @@
                             type="submit"
                             class="tlp-dropdown-menu-item testmanagement-button-update-status"
                             role="menuitem"
-                            ng-if="! $ctrl.campaign_state.campaign.is_open"
+                            ng-if="! $ctrl.campaign_state.campaign.is_open && $ctrl.campaign_state.campaign.user_can_open"
                             data-test="test-campaign-open-campaign"
                         >
                             <i class="fas fa-fw fa-check tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
