@@ -23,24 +23,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\FilenamePattern;
 
-use Tuleap\Docman\Settings\DAOSettings;
-
-final class FilenamePatternUpdater
+final class EnforcedEmptyPatternException extends FilenamePatternException
 {
-    public function __construct(private DAOSettings $settings_DAO)
+    public function __construct()
     {
-    }
-
-    public function updatePattern(int $project_id, FilenamePattern $filename_pattern): void
-    {
-        if (! FilenamePatternValidator::isPatternValid($filename_pattern->getPattern())) {
-            throw new InvalidMinimalPatternException();
-        }
-
-        if ($filename_pattern->isEnforced() && empty($filename_pattern->getPattern())) {
-            throw new EnforcedEmptyPatternException();
-        }
-
-        $this->settings_DAO->saveFilenamePattern($project_id, $filename_pattern);
+        parent::__construct(
+            dgettext(
+                'tuleap-docman',
+                "You cannot enforce an empty filename pattern"
+            )
+        );
     }
 }

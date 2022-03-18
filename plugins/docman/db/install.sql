@@ -128,7 +128,8 @@ CREATE TABLE plugin_docman_project_settings (
   view      VARCHAR(255),
   use_obsolescence_date TINYINT(4) DEFAULT 0 NOT NULL,
   use_status TINYINT(4) DEFAULT 0 NOT NULL,
-  filename_pattern VARCHAR(255) DEFAULT NULL,
+  filename_pattern VARCHAR(255) DEFAULT '',
+  is_filename_pattern_enforced TINYINT(1) DEFAULT 0,
   forbid_writers_to_update TINYINT(1) DEFAULT 0,
   forbid_writers_to_delete TINYINT(1) DEFAULT 0,
   KEY group_id (group_id)

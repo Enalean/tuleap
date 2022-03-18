@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\FilenamePattern;
 
-
-final class InvalidMinimalPatternException extends \RuntimeException
+final class InvalidMinimalPatternException extends FilenamePatternException
 {
     public function __construct()
     {

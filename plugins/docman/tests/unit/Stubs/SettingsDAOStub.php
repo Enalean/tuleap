@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Tests\Stub;
 
+use Tuleap\Docman\FilenamePattern\FilenamePattern;
 use Tuleap\Docman\Settings\DAOSettings;
 
 final class SettingsDAOStub implements DAOSettings
@@ -37,7 +38,7 @@ final class SettingsDAOStub implements DAOSettings
         return new self(0);
     }
 
-    public function saveFilenamePattern(int $project_id, ?string $pattern): void
+    public function saveFilenamePattern(int $project_id, FilenamePattern $filename_pattern): void
     {
         $this->count_save_filename_pattern++;
     }

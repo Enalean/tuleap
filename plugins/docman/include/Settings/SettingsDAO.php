@@ -23,21 +23,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Settings;
 
-final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements DAOSettings, ForbidWritersDAOSettings
+use Tuleap\Docman\FilenamePattern\FilenamePattern;
+
+final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements SearchFilenamePatternInSettings, DAOSettings, ForbidWritersDAOSettings
 {
-    public function searchFileNamePatternFromProjectId(int $project_id): ?string
+    /**
+     * @return null|array{filename_pattern: string, is_filename_pattern_enforced: int}
+     */
+    public function searchFileNamePatternFromProjectId(int $project_id): ?array
     {
-        $sql = "SELECT filename_pattern FROM plugin_docman_project_settings WHERE group_id=?";
-        $row = $this->getDB()->first($sql, $project_id);
-        return $row[0];
+        $sql = "SELECT filename_pattern, is_filename_pattern_enforced
+                FROM plugin_docman_project_settings
+                WHERE group_id = ?";
+
+        return $this->getDB()->row($sql, $project_id);
     }
 
-    public function saveFilenamePattern(int $project_id, ?string $pattern): void
+    public function saveFilenamePattern(int $project_id, FilenamePattern $filename_pattern): void
     {
         $this->getDB()->update(
             'plugin_docman_project_settings',
             [
-                'filename_pattern' => $pattern,
+                'filename_pattern'             => $filename_pattern->getPattern(),
+                'is_filename_pattern_enforced' => $filename_pattern->isEnforced(),
             ],
             ['group_id' => $project_id]
         );

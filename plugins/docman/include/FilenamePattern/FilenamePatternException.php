@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,31 +16,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Docman\FilenamePattern;
 
-use Tuleap\Docman\Settings\DAOSettings;
-
-final class FilenamePatternUpdater
+abstract class FilenamePatternException extends \RuntimeException
 {
-    public function __construct(private DAOSettings $settings_DAO)
-    {
-    }
-
-    public function updatePattern(int $project_id, FilenamePattern $filename_pattern): void
-    {
-        if (! FilenamePatternValidator::isPatternValid($filename_pattern->getPattern())) {
-            throw new InvalidMinimalPatternException();
-        }
-
-        if ($filename_pattern->isEnforced() && empty($filename_pattern->getPattern())) {
-            throw new EnforcedEmptyPatternException();
-        }
-
-        $this->settings_DAO->saveFilenamePattern($project_id, $filename_pattern);
-    }
 }

@@ -27,7 +27,6 @@ final class FilenamePatternValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnTrueWhenThereIsNoPattern(): void
     {
-        self::assertTrue(FilenamePatternValidator::isPatternValid(null));
         self::assertTrue(FilenamePatternValidator::isPatternValid(""));
     }
     public function testItReturnTrueWhenThePatternContainsTheTitleVariable(): void

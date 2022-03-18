@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Settings;
 
+use Tuleap\Docman\FilenamePattern\FilenamePattern;
+
 interface DAOSettings
 {
-    public function saveFilenamePattern(int $project_id, ?string $pattern): void;
+    public function saveFilenamePattern(int $project_id, FilenamePattern $filename_pattern): void;
 }

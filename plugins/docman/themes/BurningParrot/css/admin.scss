@@ -17,6 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#docman-admin-filename-pattern-mandatory-marker {
+    display: none;
+
+    &.shown {
+        display: inline;
+    }
+}
+
 /* stylelint-disable selector-no-qualifying-type */
 .tlp-pane-section .tlp-table > tbody > tr > th.document-icon,
 .tlp-pane-section .tlp-table > tbody > tr > td.document-icon {

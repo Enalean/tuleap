@@ -32,15 +32,15 @@ final class FilenamePatternFeedbackHandler
     {
     }
 
-    public function getFilenamePatternUpdateFeedback(int $project_id, ?string $pattern): void
+    public function getFilenamePatternUpdateFeedback(int $project_id, FilenamePattern $filename_pattern): void
     {
         try {
-            $this->filename_pattern_updater->updatePattern($project_id, $pattern);
+            $this->filename_pattern_updater->updatePattern($project_id, $filename_pattern);
             $this->feedback->log(
                 Feedback::INFO,
                 dgettext("tuleap-docman", "The pattern has been successfully updated.")
             );
-        } catch (InvalidMinimalPatternException $exception) {
+        } catch (FilenamePatternException $exception) {
             $this->feedback->log(
                 Feedback::ERROR,
                 $exception->getMessage()

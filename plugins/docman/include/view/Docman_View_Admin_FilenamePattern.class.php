@@ -40,6 +40,20 @@ class Docman_View_Admin_FilenamePattern extends AdminView
         return self::getTabTitle();
     }
 
+    protected function includeStylesheets(\Tuleap\Layout\IncludeAssets $include_assets): void
+    {
+        $GLOBALS['Response']->addCssAsset(
+            new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'admin-style')
+        );
+    }
+
+    protected function includeJavascript(\Tuleap\Layout\IncludeAssets $include_assets): void
+    {
+        $GLOBALS['Response']->addJavascriptAsset(
+            new \Tuleap\Layout\JavascriptAsset($include_assets, 'admin-filename-pattern.js')
+        );
+    }
+
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $project_id = (int) $params['group_id'];
@@ -52,9 +66,10 @@ class Docman_View_Admin_FilenamePattern extends AdminView
         );
 
         $renderer->renderToPage('admin/pattern-filename', [
-            'pattern'  => $filename_pattern->getPattern(),
-            'csrf'     => self::getCSRFToken($project_id),
-            'warnings' => $warning_collector->getWarnings(),
+            'pattern'     => $filename_pattern->getPattern(),
+            'is_enforced' => $filename_pattern->isEnforced(),
+            'csrf'        => self::getCSRFToken($project_id),
+            'warnings'    => $warning_collector->getWarnings(),
         ]);
     }
 
