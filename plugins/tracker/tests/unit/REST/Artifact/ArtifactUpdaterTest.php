@@ -30,6 +30,7 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
 
 final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -37,7 +38,7 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private ArtifactUpdater $updater;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface & \Tracker_REST_Artifact_ArtifactValidator
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface & FieldsDataBuilder
      */
     private $validator;
     /**
@@ -47,7 +48,7 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->validator         = \Mockery::mock(\Tracker_REST_Artifact_ArtifactValidator::class);
+        $this->validator         = \Mockery::mock(FieldsDataBuilder::class);
         $this->changeset_creator = \Mockery::spy(NewChangesetCreator::class);
         $this->updater           = new ArtifactUpdater($this->validator, $this->changeset_creator);
     }

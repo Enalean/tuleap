@@ -26,11 +26,12 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
 
 class ArtifactUpdater
 {
     public function __construct(
-        private \Tracker_REST_Artifact_ArtifactValidator $artifact_validator,
+        private FieldsDataBuilder $fields_data_builder,
         private NewChangesetCreator $changeset_creator,
     ) {
     }
@@ -47,7 +48,7 @@ class ArtifactUpdater
         ?NewChangesetCommentRepresentation $comment = null,
     ): void {
         $this->checkArtifact($user, $artifact);
-        $fields_data = $this->artifact_validator->getFieldsDataOnUpdate($values, $artifact);
+        $fields_data = $this->fields_data_builder->getFieldsDataOnUpdate($values, $artifact);
 
         $comment_body   = '';
         $comment_format = \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT;

@@ -18,82 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-final class Tracker_REST_Artifact_ArtifactValidator_Test extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Tracker\REST\Artifact\Changeset\Value;
 
-    private $field_int;
-    private $field_float;
-    private $field_string;
-    private $field_text;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+{
+    private const TRACKER_ID = 101;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub & \Tracker_FormElementFactory
+     */
     private $form_element_factory;
-    private $validator;
-    private $tracker;
+    private array $values;
+    private \Tracker_FormElement_Field_MultiSelectbox $field_msb;
 
     protected function setUp(): void
     {
-        $this->tracker = Mockery::spy(Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturn(101);
-
-        $this->field_int = new Tracker_FormElement_Field_Integer(
-            1,
-            101,
-            null,
-            'field_int',
-            'Field Integer',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
-
-        $this->field_float = new Tracker_FormElement_Field_Float(
-            2,
-            101,
-            null,
-            'field_float',
-            'Field Float',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
-
-        $this->field_string = new Tracker_FormElement_Field_String(
-            3,
-            101,
-            null,
-            'field_string',
-            'Field String',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
-
-        $this->field_text = new Tracker_FormElement_Field_Text(
-            4,
-            101,
-            null,
-            'field_text',
-            'Field Text',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
-
-        $this->field_msb = new Tracker_FormElement_Field_MultiSelectbox(
+        $this->field_msb = new \Tracker_FormElement_Field_MultiSelectbox(
             5,
-            101,
+            self::TRACKER_ID,
             null,
             'field_msb',
             'Field MSB',
@@ -105,24 +48,103 @@ final class Tracker_REST_Artifact_ArtifactValidator_Test extends \Tuleap\Test\PH
             1
         );
 
-        $this->form_element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->form_element_factory = $this->createStub(\Tracker_FormElementFactory::class);
+    }
 
-        $this->validator = new Tracker_REST_Artifact_ArtifactValidator($this->form_element_factory);
+    public function returnFields(int $tracker_id, string $field_shortname)
+    {
+        $int_field = new \Tracker_FormElement_Field_Integer(
+            1,
+            self::TRACKER_ID,
+            null,
+            'field_int',
+            'Field Integer',
+            '',
+            1,
+            'P',
+            true,
+            '',
+            1
+        );
+
+        $float_field = new \Tracker_FormElement_Field_Float(
+            2,
+            self::TRACKER_ID,
+            null,
+            'field_float',
+            'Field Float',
+            '',
+            1,
+            'P',
+            true,
+            '',
+            1
+        );
+
+        $string_field = new \Tracker_FormElement_Field_String(
+            3,
+            self::TRACKER_ID,
+            null,
+            'field_string',
+            'Field String',
+            '',
+            1,
+            'P',
+            true,
+            '',
+            1
+        );
+
+        $text_field = new \Tracker_FormElement_Field_Text(
+            4,
+            self::TRACKER_ID,
+            null,
+            'field_text',
+            'Field Text',
+            '',
+            1,
+            'P',
+            true,
+            '',
+            1
+        );
+
+        if ($field_shortname === 'integer') {
+            return $int_field;
+        }
+        if ($field_shortname === 'floatibulle') {
+            return $float_field;
+        }
+        if ($field_shortname === 'string') {
+            return $string_field;
+        }
+        if ($field_shortname === 'text') {
+            return $text_field;
+        }
+        return null;
+    }
+
+    private function buildFromValuesByField(): array
+    {
+        $tracker = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
+
+        $builder = new FieldsDataBuilder($this->form_element_factory);
+        return $builder->getFieldsDataOnCreateFromValuesByField($this->values, $tracker);
     }
 
     public function testItGeneratesFieldDataFromRestValuesByField(): void
     {
-        $values = [
-            'integer' => [
-               'value' => 42,
+        $this->values = [
+            'integer'     => [
+                'value' => 42,
             ],
             'floatibulle' => [
                 'value' => 3.14,
             ],
-            'string' => [
+            'string'      => [
                 'value' => 'My text',
             ],
-            'text' => [
+            'text'        => [
                 'value' => [
                     'format'  => 'text',
                     'content' => 'My awesome text',
@@ -130,12 +152,10 @@ final class Tracker_REST_Artifact_ArtifactValidator_Test extends \Tuleap\Test\PH
             ],
         ];
 
-        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'integer')->andReturns($this->field_int);
-        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'floatibulle')->andReturns($this->field_float);
-        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'string')->andReturns($this->field_string);
-        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'text')->andReturns($this->field_text);
+        $this->form_element_factory->method('getUsedFieldByName')
+            ->willReturnCallback([$this, 'returnFields']);
 
-        $fields_data = $this->validator->getFieldsDataOnCreateFromValuesByField($values, $this->tracker);
+        $fields_data = $this->buildFromValuesByField();
 
         $expected = [
             1 => 42,
@@ -147,12 +167,12 @@ final class Tracker_REST_Artifact_ArtifactValidator_Test extends \Tuleap\Test\PH
             ],
         ];
 
-        $this->assertEquals($expected, $fields_data);
+        $this->assertSame($expected, $fields_data);
     }
 
     public function testItThrowsAnExceptionIfFieldIsNotUsedInTracker(): void
     {
-        $values = [
+        $this->values = [
             'integerV2'   => 42,
             'floatibulle' => 3.14,
             'string'      => 'My text',
@@ -162,26 +182,24 @@ final class Tracker_REST_Artifact_ArtifactValidator_Test extends \Tuleap\Test\PH
             ],
         ];
 
-        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'integer')->andReturns($this->field_int);
-        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'floatibulle')->andReturns($this->field_float);
-        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'string')->andReturns($this->field_string);
-        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'text')->andReturns($this->field_text);
+        $this->form_element_factory->method('getUsedFieldByName')
+            ->willReturnCallback([$this, 'returnFields']);
 
         $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
-
-        $this->validator->getFieldsDataOnCreateFromValuesByField($values, $this->tracker);
+        $this->buildFromValuesByField();
     }
 
     public function testItThrowsAnExceptionIfFieldIsNotAlphaNumeric(): void
     {
-        $values = [
+        $this->values = [
             'msb' => ['whatever'],
         ];
 
-        $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'msb')->andReturns($this->field_msb);
+        $this->form_element_factory->method('getUsedFieldByName')
+            ->with(self::TRACKER_ID, 'msb')
+            ->willReturn($this->field_msb);
 
         $this->expectException(\Tracker_FormElement_RESTValueByField_NotImplementedException::class);
-
-        $this->validator->getFieldsDataOnCreateFromValuesByField($values, $this->tracker);
+        $this->buildFromValuesByField();
     }
 }

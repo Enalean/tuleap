@@ -42,7 +42,6 @@ use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
 use Tracker_REST_Artifact_ArtifactCreator;
-use Tracker_REST_Artifact_ArtifactValidator;
 use Tracker_URLVerification;
 use Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
 use Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter;
@@ -88,8 +87,8 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaver;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
@@ -110,6 +109,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
@@ -746,7 +746,7 @@ class ArtifactsResource extends AuthenticatedResource
         $this->sendAllowHeadersForArtifact();
         try {
             $updater = new ArtifactUpdater(
-                new Tracker_REST_Artifact_ArtifactValidator($this->formelement_factory),
+                new FieldsDataBuilder($this->formelement_factory),
                 $changeset_creator
             );
             $updater->update($user, $artifact, $values, $comment);
@@ -890,7 +890,7 @@ class ArtifactsResource extends AuthenticatedResource
             }
 
             $creator = new Tracker_REST_Artifact_ArtifactCreator(
-                new Tracker_REST_Artifact_ArtifactValidator(
+                new FieldsDataBuilder(
                     $this->formelement_factory
                 ),
                 $this->artifact_factory,
