@@ -26,7 +26,6 @@ use PFUser;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
-use Tracker_Artifact_Changeset_Comment;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_Workflow_GlobalRulesViolationException;
@@ -41,8 +40,10 @@ use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
@@ -121,7 +122,6 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
 
     public function testCreateNewChangesetWithWorkflowAndNoPermsOnPostActionField(): void
     {
-        $email   = null; //not anonymous user
         $comment = '';
 
         $comment_dao = \Mockery::spy(\Tracker_Artifact_Changeset_CommentDao::class);
@@ -214,7 +214,13 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
 
         $submitted_on      = $_SERVER['REQUEST_TIME'];
         $send_notification = false;
-        $comment_format    = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+
+        $changeset_creation = NewChangeset::fromFieldsDataArrayWithEmptyComment(
+            $artifact,
+            $fields_data,
+            $user,
+            $submitted_on,
+        );
 
         $fields_validator = \Mockery::spy(\Tracker_Artifact_Changeset_NewChangesetFieldsValidator::class);
         $fields_validator->shouldReceive('validate')->andReturns(true);
@@ -244,19 +250,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
                 Mockery::spy(TrackerPrivateCommentUGroupPermissionInserter::class),
             )
         );
-
-        $creator->create(
-            $artifact,
-            $fields_data,
-            $comment,
-            $user,
-            $submitted_on,
-            $send_notification,
-            $comment_format,
-            \Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
-            new TrackerNoXMLImportLoggedConfig(),
-            []
-        );
+        $creator->create($changeset_creation, PostCreationContext::withNoConfig(false));
     }
 
     public function testDontCreateNewChangesetIfNoCommentOrNoChanges(): void

@@ -37,7 +37,7 @@ final class CommentCreator
     /**
      * @throws \Tracker_CommentNotStoredException
      */
-    public function createComment(Artifact $artifact, NewComment $comment): void
+    public function createComment(Artifact $artifact, CommentCreation $comment): void
     {
         $comment_added = $this->changeset_comment_dao->createNewVersion(
             $comment->getChangesetId(),
@@ -45,7 +45,7 @@ final class CommentCreator
             $comment->getSubmitter()->getId(),
             $comment->getSubmissionTimestamp(),
             0,
-            $comment->getFormat()
+            (string) $comment->getFormat()
         );
         if (! $comment_added) {
             throw new \Tracker_CommentNotStoredException();

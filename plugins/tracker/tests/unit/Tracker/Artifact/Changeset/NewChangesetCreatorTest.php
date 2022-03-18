@@ -26,16 +26,17 @@ namespace Tuleap\Tracker\Artifact\Changeset;
 use Mockery;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
-use Tracker_Artifact_Changeset_Comment;
 use Tracker_Artifact_Changeset_Null;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaver;
-use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
 use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
 
@@ -44,7 +45,8 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
-    private const NEW_CHANGESET_ID = 456;
+    private const NEW_CHANGESET_ID     = 456;
+    private const SUBMISSION_TIMESTAMP = 1234567890;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactChangesetSaver
@@ -115,7 +117,18 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function create(): void
     {
-        $submitter        = UserTestBuilder::aUser()->withId(120)->build();
+        $submitter     = UserTestBuilder::aUser()->withId(120)->build();
+        $new_changeset = NewChangeset::fromFieldsDataArray(
+            $this->artifact,
+            $this->fields_data,
+            '',
+            CommentFormatIdentifier::buildText(),
+            $this->ugroups_array,
+            $submitter,
+            self::SUBMISSION_TIMESTAMP,
+            new CreatedFileURLMapping()
+        );
+
         $fields_validator = \Mockery::spy(\Tracker_Artifact_Changeset_NewChangesetFieldsValidator::class);
         $fields_validator->shouldReceive('validate')->andReturn(true);
         $field_retriever = Mockery::mock(FieldsToBeSavedInSpecificOrderRetriever::class);
@@ -141,19 +154,7 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->ugroup_private_comment_inserter
             )
         );
-
-        $creator->create(
-            $this->artifact,
-            $this->fields_data,
-            '',
-            $submitter,
-            1234567890,
-            false,
-            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
-            Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
-            new TrackerNoXMLImportLoggedConfig(),
-            $this->ugroups_array
-        );
+        $creator->create($new_changeset, PostCreationContext::withNoConfig(false));
     }
 
     public function testItCallsTheAfterMethodOnWorkflowWhenCreateNewChangeset(): void

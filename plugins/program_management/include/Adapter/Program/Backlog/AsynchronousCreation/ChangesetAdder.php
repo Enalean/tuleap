@@ -32,10 +32,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Mirrore
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\NewChangesetCreationException;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\ArtifactLinkChangeset;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
-use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 final class ChangesetAdder implements AddChangeset, AddArtifactLinkChangeset
 {
@@ -86,19 +86,14 @@ final class ChangesetAdder implements AddChangeset, AddArtifactLinkChangeset
      */
     private function createChangeset(Artifact $artifact, \PFUser $user, int $timestamp, array $formatted_values): void
     {
+        $new_changeset = NewChangeset::fromFieldsDataArrayWithEmptyComment(
+            $artifact,
+            $formatted_values,
+            $user,
+            $timestamp
+        );
         try {
-            $this->new_changeset_creator->create(
-                $artifact,
-                $formatted_values,
-                '',
-                $user,
-                $timestamp,
-                false,
-                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
-                new CreatedFileURLMapping(),
-                new TrackerNoXMLImportLoggedConfig(),
-                []
-            );
+            $this->new_changeset_creator->create($new_changeset, PostCreationContext::withNoConfig(false));
         } catch (\Tracker_NoChangeException $e) {
             // Ignore the exception if there is no new change in the changeset. It means the changes are already done.
         }

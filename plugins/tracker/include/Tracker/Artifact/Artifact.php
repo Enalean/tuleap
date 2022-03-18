@@ -107,16 +107,18 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
-use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
-use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -128,6 +130,7 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
 use Tuleap\Tracker\Semantic\Status\StatusValueProvider;
@@ -1192,25 +1195,27 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $send_notification = true,
         $comment_format = Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
     ) {
-        $submitted_on = $_SERVER['REQUEST_TIME'];
-        $validator    = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+        $submitted_on  = $_SERVER['REQUEST_TIME'];
+        $validator     = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
             $this->getFormElementFactory(),
             $this->getArtifactLinkValidator(),
             $this->getWorkflowUpdateChecker()
         );
-        $creator      = $this->getNewChangesetCreator($validator);
-
-        return $creator->create(
+        $new_changeset = NewChangeset::fromFieldsDataArray(
             $this,
             $fields_data,
             (string) $comment,
+            CommentFormatIdentifier::fromFormatString((string) $comment_format),
+            [],
             $submitter,
             (int) $submitted_on,
-            (bool) $send_notification,
-            (string) $comment_format,
-            new \Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping(),
-            new TrackerNoXMLImportLoggedConfig(),
-            []
+            new CreatedFileURLMapping()
+        );
+
+        $creator = $this->getNewChangesetCreator($validator);
+        return $creator->create(
+            $new_changeset,
+            PostCreationContext::withNoConfig((bool) $send_notification)
         );
     }
 
@@ -1221,24 +1226,26 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $send_notification,
         $comment_format,
     ): ?Tracker_Artifact_Changeset {
-        $submitted_on = $_SERVER['REQUEST_TIME'];
-        $validator    = new NewChangesetFieldsWithoutRequiredValidationValidator(
+        $submitted_on  = $_SERVER['REQUEST_TIME'];
+        $validator     = new NewChangesetFieldsWithoutRequiredValidationValidator(
             $this->getFormElementFactory(),
             $this->getArtifactLinkValidator()
         );
-        $creator      = $this->getNewChangesetCreator($validator);
-
-        return $creator->create(
+        $new_changeset = NewChangeset::fromFieldsDataArray(
             $this,
             $fields_data,
             (string) $comment,
+            CommentFormatIdentifier::fromFormatString((string) $comment_format),
+            [],
             $submitter,
             (int) $submitted_on,
-            (bool) $send_notification,
-            (string) $comment_format,
-            new \Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping(),
-            new TrackerNoXMLImportLoggedConfig(),
-            []
+            new CreatedFileURLMapping()
+        );
+
+        $creator = $this->getNewChangesetCreator($validator);
+        return $creator->create(
+            $new_changeset,
+            PostCreationContext::withNoConfig((bool) $send_notification)
         );
     }
 

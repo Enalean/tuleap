@@ -44,7 +44,9 @@ use TrackerXmlFieldsMapping_FromAnotherPlatform;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
@@ -270,47 +272,33 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($changeset_1)
             ->once();
 
-        $data = [
-            $this->summary_field_id => 'Again',
-        ];
-
         $this->new_changeset_creator
             ->shouldReceive('create')
-            ->with(
-                $artifact,
-                $data,
-                Mockery::any(),
-                $this->john_doe,
-                Mockery::any(),
-                false,
-                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
-                $this->url_mapping,
-                $this->import_config,
-                []
-            )
-            ->andReturn($changeset_2)
-            ->once();
-
-        $data = [
-            $this->summary_field_id => 'Value',
-        ];
-
-        $this->new_changeset_creator
-            ->shouldReceive('create')
-            ->with(
-                $artifact,
-                $data,
-                Mockery::any(),
-                $this->john_doe,
-                Mockery::any(),
-                false,
-                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
-                $this->url_mapping,
-                $this->import_config,
-                []
-            )
-            ->andReturn($changeset_3)
-            ->once();
+            ->withArgs(function (NewChangeset $new_changeset, PostCreationContext $context) use ($artifact) {
+                if ($new_changeset->getArtifact() !== $artifact) {
+                    return false;
+                }
+                $first  = [$this->summary_field_id => 'Again'];
+                $second = [$this->summary_field_id => 'Value'];
+                if ($new_changeset->getFieldsData() !== $first && $new_changeset->getFieldsData() !== $second) {
+                    return false;
+                }
+                if ($new_changeset->getSubmitter() !== $this->john_doe) {
+                    return false;
+                }
+                if ($new_changeset->getUrlMapping() !== $this->url_mapping) {
+                    return false;
+                }
+                if ($context->getImportConfig() !== $this->import_config) {
+                    return false;
+                }
+                if ($context->shouldSendNotifications() !== false) {
+                    return false;
+                }
+                return true;
+            })
+            ->twice()
+            ->andReturn($changeset_2, $changeset_3);
 
         $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($artifact);
 
@@ -376,47 +364,33 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($changeset_1)
             ->once();
 
-        $data = [
-            $this->summary_field_id => 'Again',
-        ];
-
         $this->new_changeset_creator
             ->shouldReceive('create')
-            ->with(
-                $artifact,
-                $data,
-                Mockery::any(),
-                $this->john_doe,
-                Mockery::any(),
-                false,
-                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
-                $this->url_mapping,
-                Mockery::type(TrackerXmlImportConfig::class),
-                []
-            )
-            ->andReturn($changeset_2)
-            ->once();
-
-        $data = [
-            $this->summary_field_id => 'Value',
-        ];
-
-        $this->new_changeset_creator
-            ->shouldReceive('create')
-            ->with(
-                $artifact,
-                $data,
-                Mockery::any(),
-                $this->john_doe,
-                Mockery::any(),
-                false,
-                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
-                $this->url_mapping,
-                Mockery::type(TrackerXmlImportConfig::class),
-                []
-            )
-            ->andReturn($changeset_3)
-            ->once();
+            ->withArgs(function (NewChangeset $new_changeset, PostCreationContext $context) use ($artifact) {
+                if ($new_changeset->getArtifact() !== $artifact) {
+                    return false;
+                }
+                $first  = [$this->summary_field_id => 'Again'];
+                $second = [$this->summary_field_id => 'Value'];
+                if ($new_changeset->getFieldsData() !== $first && $new_changeset->getFieldsData() !== $second) {
+                    return false;
+                }
+                if ($new_changeset->getSubmitter() !== $this->john_doe) {
+                    return false;
+                }
+                if ($new_changeset->getUrlMapping() !== $this->url_mapping) {
+                    return false;
+                }
+                if ($context->getImportConfig() !== $this->import_config) {
+                    return false;
+                }
+                if ($context->shouldSendNotifications() !== false) {
+                    return false;
+                }
+                return true;
+            })
+            ->twice()
+            ->andReturn($changeset_2, $changeset_3);
 
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->withArgs([$this->tracker_id, 'summary'])->andReturn($this->tracker_formelement_field_string);
 
@@ -473,47 +447,33 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($changeset_1)
             ->once();
 
-        $data = [
-            $this->summary_field_id => 'Again',
-        ];
-
         $this->new_changeset_creator
             ->shouldReceive('create')
-            ->with(
-                $artifact,
-                $data,
-                Mockery::any(),
-                $this->john_doe,
-                Mockery::any(),
-                false,
-                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
-                $this->url_mapping,
-                Mockery::type(TrackerXmlImportConfig::class),
-                []
-            )
-            ->andReturn($changeset_2)
-            ->once();
-
-        $data = [
-            $this->summary_field_id => 'Value',
-        ];
-
-        $this->new_changeset_creator
-            ->shouldReceive('create')
-            ->with(
-                $artifact,
-                $data,
-                Mockery::any(),
-                $this->john_doe,
-                Mockery::any(),
-                false,
-                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
-                $this->url_mapping,
-                Mockery::type(TrackerXmlImportConfig::class),
-                []
-            )
-            ->andReturn($changeset_3)
-            ->once();
+            ->withArgs(function (NewChangeset $new_changeset, PostCreationContext $context) use ($artifact) {
+                if ($new_changeset->getArtifact() !== $artifact) {
+                    return false;
+                }
+                $first  = [$this->summary_field_id => 'Again'];
+                $second = [$this->summary_field_id => 'Value'];
+                if ($new_changeset->getFieldsData() !== $first && $new_changeset->getFieldsData() !== $second) {
+                    return false;
+                }
+                if ($new_changeset->getSubmitter() !== $this->john_doe) {
+                    return false;
+                }
+                if ($new_changeset->getUrlMapping() !== $this->url_mapping) {
+                    return false;
+                }
+                if ($context->getImportConfig() !== $this->import_config) {
+                    return false;
+                }
+                if ($context->shouldSendNotifications() !== false) {
+                    return false;
+                }
+                return true;
+            })
+            ->twice()
+            ->andReturn($changeset_2, $changeset_3);
 
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->withArgs([$this->tracker_id, 'summary'])->andReturn($this->tracker_formelement_field_string);
 
@@ -586,47 +546,33 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($changeset_1)
             ->once();
 
-        $data = [
-            $this->summary_field_id => 'Again',
-        ];
-
         $this->new_changeset_creator
             ->shouldReceive('create')
-            ->with(
-                $artifact,
-                $data,
-                Mockery::any(),
-                $this->john_doe,
-                Mockery::any(),
-                false,
-                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
-                $this->url_mapping,
-                Mockery::type(TrackerXmlImportConfig::class),
-                []
-            )
-            ->andReturn($changeset_2)
-            ->once();
-
-        $data = [
-            $this->summary_field_id => 'Value',
-        ];
-
-        $this->new_changeset_creator
-            ->shouldReceive('create')
-            ->with(
-                $artifact,
-                $data,
-                Mockery::any(),
-                $this->john_doe,
-                Mockery::any(),
-                false,
-                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
-                $this->url_mapping,
-                Mockery::type(TrackerXmlImportConfig::class),
-                []
-            )
-            ->andReturn($changeset_3)
-            ->once();
+            ->withArgs(function (NewChangeset $new_changeset, PostCreationContext $context) use ($artifact) {
+                if ($new_changeset->getArtifact() !== $artifact) {
+                    return false;
+                }
+                $first  = [$this->summary_field_id => 'Again'];
+                $second = [$this->summary_field_id => 'Value'];
+                if ($new_changeset->getFieldsData() !== $first && $new_changeset->getFieldsData() !== $second) {
+                    return false;
+                }
+                if ($new_changeset->getSubmitter() !== $this->john_doe) {
+                    return false;
+                }
+                if ($new_changeset->getUrlMapping() !== $this->url_mapping) {
+                    return false;
+                }
+                if ($context->getImportConfig() !== $this->import_config) {
+                    return false;
+                }
+                if ($context->shouldSendNotifications() !== false) {
+                    return false;
+                }
+                return true;
+            })
+            ->twice()
+            ->andReturn($changeset_2, $changeset_3);
 
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->withArgs([$this->tracker_id, 'summary'])->andReturn($this->tracker_formelement_field_string);
 
@@ -672,68 +618,38 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset_2 = $this->mockAChangeset($this->john_doe->getId(), strtotime("102030"), "un com", $this->john_doe->getId(), strtotime("102030"), $this->tracker_id, "stuff", 'Again', 1);
         $changeset_3 = $this->mockAChangeset($this->john_doe->getId(), strtotime("102030"), "un com", $this->john_doe->getId(), strtotime("102030"), $this->tracker_id, "stuff", 'Value', 2);
 
-        $data = [
-            $this->summary_field_id => 'OK',
-        ];
-
         $this->new_changeset_creator
             ->shouldReceive('create')
-            ->with(
-                $artifact,
-                $data,
-                Mockery::any(),
-                $this->john_doe,
-                Mockery::any(),
-                false,
-                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
-                $this->url_mapping,
-                Mockery::type(TrackerXmlImportConfig::class),
-                []
-            )
-            ->once()
-            ->andReturn($changeset_1);
-
-        $data = [
-            $this->summary_field_id => 'Again',
-        ];
-
-        $this->new_changeset_creator
-            ->shouldReceive('create')
-            ->with(
-                $artifact,
-                $data,
-                Mockery::any(),
-                $this->john_doe,
-                Mockery::any(),
-                false,
-                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
-                $this->url_mapping,
-                Mockery::type(TrackerXmlImportConfig::class),
-                []
-            )
-            ->andReturn($changeset_2)
-            ->once();
-
-        $data = [
-            $this->summary_field_id => 'Value',
-        ];
-
-        $this->new_changeset_creator
-            ->shouldReceive('create')
-            ->with(
-                $artifact,
-                $data,
-                Mockery::any(),
-                $this->john_doe,
-                Mockery::any(),
-                false,
-                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
-                $this->url_mapping,
-                Mockery::type(TrackerXmlImportConfig::class),
-                []
-            )
-            ->andReturn($changeset_3)
-            ->once();
+            ->withArgs(function (NewChangeset $new_changeset, PostCreationContext $context) use ($artifact) {
+                if ($new_changeset->getArtifact() !== $artifact) {
+                    return false;
+                }
+                $first  = [$this->summary_field_id => 'OK'];
+                $second = [$this->summary_field_id => 'Again'];
+                $third  = [$this->summary_field_id => 'Value'];
+                if (
+                    $new_changeset->getFieldsData() !== $first
+                    && $new_changeset->getFieldsData() !== $second
+                    && $new_changeset->getFieldsData() !== $third
+                ) {
+                    return false;
+                }
+                if ($new_changeset->getSubmitter() !== $this->john_doe) {
+                    return false;
+                }
+                if ($new_changeset->getUrlMapping() !== $this->url_mapping) {
+                    return false;
+                }
+                if ($context->getImportConfig() !== $this->import_config) {
+                    return false;
+                }
+                if ($context->shouldSendNotifications() !== false) {
+                    return false;
+                }
+                return true;
+            })
+            ->times(3)
+            ->andReturn($changeset_1, $changeset_2, $changeset_3);
 
         $this->external_field_extractor->shouldReceive('extractExternalFieldsFromArtifact')->once();
 
@@ -780,31 +696,48 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->private_comment_extractor
             ->shouldReceive("extractUGroupsFromXML")
-            ->with($artifact, Mockery::on(
-                function (\SimpleXMLElement $comment): bool {
-                    return (string) $comment->body === "My First Comment" &&
-                           (string) $comment->private_ugroups->ugroup[0] === "my_group";
-                }
-            ))
+            ->with(
+                $artifact,
+                Mockery::on(
+                    function (\SimpleXMLElement $comment): bool {
+                        return (string) $comment->body === "My First Comment" &&
+                            (string) $comment->private_ugroups->ugroup[0] === "my_group";
+                    }
+                )
+            )
             ->once()
             ->andReturn([$ugroup_2]);
 
         $this->new_changeset_creator
             ->shouldReceive('create')
-            ->with(
-                $artifact,
-                [$this->summary_field_id => 'Again'],
-                Mockery::any(),
-                $this->john_doe,
-                Mockery::any(),
-                false,
-                "text",
-                $this->url_mapping,
-                $this->import_config,
-                [$ugroup_2]
-            )
-            ->andReturn($changeset_2)
-            ->once();
+            ->withArgs(function (NewChangeset $new_changeset, PostCreationContext $context) use ($artifact, $ugroup_2) {
+                if ($new_changeset->getArtifact() !== $artifact) {
+                    return false;
+                }
+                $first = [$this->summary_field_id => 'Again'];
+                if ($new_changeset->getFieldsData() !== $first) {
+                    return false;
+                }
+                if ($new_changeset->getSubmitter() !== $this->john_doe) {
+                    return false;
+                }
+                if ($new_changeset->getUrlMapping() !== $this->url_mapping) {
+                    return false;
+                }
+                if ($context->getImportConfig() !== $this->import_config) {
+                    return false;
+                }
+                if ($context->shouldSendNotifications() !== false) {
+                    return false;
+                }
+                $comment = $new_changeset->getComment();
+                if ($comment->getUserGroupsThatAreAllowedToSee() !== [$ugroup_2]) {
+                    return false;
+                }
+                return true;
+            })
+            ->once()
+            ->andReturn($changeset_2);
 
         $ugroup_3 = Mockery::mock(\ProjectUGroup::class);
 

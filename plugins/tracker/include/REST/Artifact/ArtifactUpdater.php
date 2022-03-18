@@ -22,8 +22,10 @@ namespace Tuleap\Tracker\REST\Artifact;
 
 use Luracast\Restler\RestException;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
-use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
@@ -57,18 +59,20 @@ class ArtifactUpdater
             $comment_format = $comment->format;
         }
 
-        $submitted_on = $_SERVER['REQUEST_TIME'];
-        $this->changeset_creator->create(
+        $submitted_on  = $_SERVER['REQUEST_TIME'];
+        $new_changeset = NewChangeset::fromFieldsDataArray(
             $artifact,
             $fields_data,
             $comment_body,
+            CommentFormatIdentifier::fromFormatString($comment_format),
+            [],
             $user,
             $submitted_on,
-            true,
-            $comment_format,
-            new CreatedFileURLMapping(),
-            new TrackerNoXMLImportLoggedConfig(),
-            []
+            new CreatedFileURLMapping()
+        );
+        $this->changeset_creator->create(
+            $new_changeset,
+            PostCreationContext::withNoConfig(true)
         );
     }
 

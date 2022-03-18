@@ -24,82 +24,66 @@ namespace Tracker\Artifact\Changeset\Comment;
 
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 final class NewCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const CHANGESET_ID         = 4950;
     private const SUBMISSION_TIMESTAMP = 1680808942;
     private \PFUser $submitter;
     /**
      * @var \ProjectUGroup[]
      */
     private array $ugroups_that_are_allowed_to_see;
+    private CommentFormatIdentifier $format;
 
     protected function setUp(): void
     {
-        $this->submitter                       = UserTestBuilder::aUser()->withId(133)->build();
+        $this->submitter = UserTestBuilder::aUser()->withId(133)->build();
+
         $this->ugroups_that_are_allowed_to_see = [
-            ProjectUGroupTestBuilder::aCustomUserGroup(291),
-            ProjectUGroupTestBuilder::aCustomUserGroup(241),
+            ProjectUGroupTestBuilder::aCustomUserGroup(291)->build(),
+            ProjectUGroupTestBuilder::aCustomUserGroup(241)->build(),
         ];
+
+        $this->format = CommentFormatIdentifier::buildText();
     }
 
-    public function testItBuildsWithTextFormat(): void
+    private function create(string $body): NewComment
+    {
+        return NewComment::fromParts(
+            $body,
+            $this->format,
+            $this->submitter,
+            self::SUBMISSION_TIMESTAMP,
+            $this->ugroups_that_are_allowed_to_see
+        );
+    }
+
+    public function testItBuildsFromParts(): void
     {
         $body    = 'pseudotribal comet';
-        $comment = NewComment::fromText(
-            self::CHANGESET_ID,
-            $body,
-            $this->submitter,
-            self::SUBMISSION_TIMESTAMP,
-            $this->ugroups_that_are_allowed_to_see
-        );
-        self::assertSame(self::CHANGESET_ID, $comment->getChangesetId());
+        $comment = $this->create($body);
         self::assertSame($body, $comment->getBody());
-        self::assertSame(\Tracker_Artifact_Changeset_Comment::TEXT_COMMENT, $comment->getFormat());
+        self::assertSame($this->format, $comment->getFormat());
         self::assertSame($this->submitter, $comment->getSubmitter());
         self::assertSame(self::SUBMISSION_TIMESTAMP, $comment->getSubmissionTimestamp());
         self::assertSame($this->ugroups_that_are_allowed_to_see, $comment->getUserGroupsThatAreAllowedToSee());
     }
 
-    public function testItBuildsWithCommonMarkFormat(): void
+    public function testItTrimsCommentBody(): void
     {
-        $body    = 'carnivorism _Lowville_';
-        $comment = NewComment::fromCommonMark(
-            self::CHANGESET_ID,
-            $body,
-            $this->submitter,
-            self::SUBMISSION_TIMESTAMP,
-            $this->ugroups_that_are_allowed_to_see
-        );
-        self::assertSame(self::CHANGESET_ID, $comment->getChangesetId());
-        self::assertSame($body, $comment->getBody());
-        self::assertSame(\Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT, $comment->getFormat());
-        self::assertSame($this->submitter, $comment->getSubmitter());
-        self::assertSame(self::SUBMISSION_TIMESTAMP, $comment->getSubmissionTimestamp());
-        self::assertSame($this->ugroups_that_are_allowed_to_see, $comment->getUserGroupsThatAreAllowedToSee());
+        $comment = $this->create('  chief dorsicollar ');
+        self::assertSame('chief dorsicollar', $comment->getBody());
     }
 
-    public function testItReplacesURLsInHTMLComment(): void
+    public function testItBuildsEmptyCommonMarkComment(): void
     {
-        $body    = '<p>aldime cashkeeper<img src="/replace-me.png"/></p>';
-        $mapping = new CreatedFileURLMapping();
-        $mapping->add('/replace-me.png', '/replaced.png');
-        $comment = NewComment::fromHTML(
-            self::CHANGESET_ID,
-            $body,
-            $this->submitter,
-            self::SUBMISSION_TIMESTAMP,
-            $this->ugroups_that_are_allowed_to_see,
-            $mapping
-        );
-        self::assertSame(self::CHANGESET_ID, $comment->getChangesetId());
-        self::assertStringContainsString('/replaced.png', $comment->getBody());
-        self::assertSame(\Tracker_Artifact_Changeset_Comment::HTML_COMMENT, $comment->getFormat());
+        $comment = NewComment::buildEmpty($this->submitter, self::SUBMISSION_TIMESTAMP);
+        self::assertEmpty($comment->getBody());
+        self::assertSame(\Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT, (string) $comment->getFormat());
         self::assertSame($this->submitter, $comment->getSubmitter());
         self::assertSame(self::SUBMISSION_TIMESTAMP, $comment->getSubmissionTimestamp());
-        self::assertSame($this->ugroups_that_are_allowed_to_see, $comment->getUserGroupsThatAreAllowedToSee());
+        self::assertCount(0, $comment->getUserGroupsThatAreAllowedToSee());
     }
 }

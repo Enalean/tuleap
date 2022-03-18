@@ -26,9 +26,9 @@ use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
-use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
 
@@ -71,24 +71,42 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($values, $artifact)
             ->andReturn($fields_data);
 
-        $this->updater->update($user, $artifact, $values, null);
-
-        $expected_comment_body = '';
-        $this->changeset_creator->shouldHaveReceived(
-            'create',
-            [
-                $artifact,
-                $fields_data,
-                $expected_comment_body,
+        $this->changeset_creator->shouldReceive('create')->withArgs(
+            function (
+                NewChangeset $new_changeset,
+                PostCreationContext $context,
+            ) use (
                 $user,
-                \Mockery::type('int'),
-                true,
-                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
-                \Mockery::type(CreatedFileURLMapping::class),
-                \Mockery::type(TrackerNoXMLImportLoggedConfig::class),
-                [],
-            ]
-        );
+                $fields_data,
+                $artifact
+            ) {
+                if ($new_changeset->getArtifact() !== $artifact) {
+                    return false;
+                }
+                if ($new_changeset->getFieldsData() !== $fields_data) {
+                    return false;
+                }
+                if ($new_changeset->getSubmitter() !== $user) {
+                    return false;
+                }
+                if ($context->getImportConfig()->isFromXml()) {
+                    return false;
+                }
+                if ($context->shouldSendNotifications() !== true) {
+                    return false;
+                }
+                $comment = $new_changeset->getComment();
+                if ($comment->getBody() !== '') {
+                    return false;
+                }
+                if ((string) $comment->getFormat() !== \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT) {
+                    return false;
+                }
+                return true;
+            }
+        )->once();
+
+        $this->updater->update($user, $artifact, $values, null);
     }
 
     public function testUpdatePassesComment(): void
@@ -108,23 +126,43 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $comment_format = 'html';
         $comment        = new NewChangesetCommentRepresentation($comment_body, $comment_format);
 
-        $this->updater->update($user, $artifact, $values, $comment);
-
-        $this->changeset_creator->shouldHaveReceived(
-            'create',
-            [
-                $artifact,
-                $fields_data,
+        $this->changeset_creator->shouldReceive('create')->withArgs(
+            function (
+                NewChangeset $new_changeset,
+                PostCreationContext $context,
+            ) use (
                 $comment_body,
                 $user,
-                \Mockery::type('int'),
-                true,
-                $comment_format,
-                \Mockery::type(CreatedFileURLMapping::class),
-                \Mockery::type(TrackerNoXMLImportLoggedConfig::class),
-                [],
-            ]
-        );
+                $fields_data,
+                $artifact
+            ) {
+                if ($new_changeset->getArtifact() !== $artifact) {
+                    return false;
+                }
+                if ($new_changeset->getFieldsData() !== $fields_data) {
+                    return false;
+                }
+                if ($new_changeset->getSubmitter() !== $user) {
+                    return false;
+                }
+                if ($context->getImportConfig()->isFromXml()) {
+                    return false;
+                }
+                $comment = $new_changeset->getComment();
+                if ($comment->getBody() !== $comment_body) {
+                    return false;
+                }
+                if ((string) $comment->getFormat() !== \Tracker_Artifact_Changeset_Comment::HTML_COMMENT) {
+                    return false;
+                }
+                if ($context->shouldSendNotifications() !== true) {
+                    return false;
+                }
+                return true;
+            }
+        )->once();
+
+        $this->updater->update($user, $artifact, $values, $comment);
     }
 
     public function testUpdateThrowsWhenUserCannotUpdate(): void
