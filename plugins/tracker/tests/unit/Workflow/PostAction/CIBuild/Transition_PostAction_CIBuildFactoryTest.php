@@ -23,33 +23,16 @@ final class Transition_PostAction_CIBuildFactoryTest extends \Tuleap\Test\PHPUni
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    /**
-     * @var Transition
-     */
-    private $transition;
 
-    /**
-     * @var int
-     */
-    private $post_action_id;
-
-    /**
-     * @var int
-     */
-    private $transition_id;
-
-    /**
-     * @var Transition_PostAction_CIBuildFactory
-     */
-    private $factory;
+    private Transition $transition;
+    private int $post_action_id;
+    private int $transition_id;
+    private Transition_PostAction_CIBuildFactory $factory;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Transition_PostAction_CIBuildDao
      */
     private $dao;
-    /**
-     * @var Workflow
-     */
-    private $workflow;
+    private Workflow $workflow;
 
     protected function setUp(): void
     {
@@ -63,7 +46,7 @@ final class Transition_PostAction_CIBuildFactoryTest extends \Tuleap\Test\PHPUni
             $this->transition_id,
             $workflow_id,
             null,
-            null
+            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false)
         );
         $this->transition->setWorkflow($this->workflow);
 

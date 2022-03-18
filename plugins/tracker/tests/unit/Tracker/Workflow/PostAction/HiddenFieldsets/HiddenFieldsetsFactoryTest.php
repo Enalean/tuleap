@@ -26,7 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
 
-class HiddenFieldsetsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HiddenFieldsetsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -52,9 +52,9 @@ class HiddenFieldsetsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testLoadPostActionsReturnsASinglePostAction()
+    public function testLoadPostActionsReturnsASinglePostAction(): void
     {
-        $transition = new \Transition(null, null, null, null);
+        $transition = new \Transition(null, null, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false));
 
         $expected_post_action = new HiddenFieldsets($transition, 0, []);
 
@@ -67,9 +67,9 @@ class HiddenFieldsetsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals([$expected_post_action], $result);
     }
 
-    public function testLoadPostActionsReturnsEmptyArray()
+    public function testLoadPostActionsReturnsEmptyArray(): void
     {
-        $transition = new \Transition(null, null, null, null);
+        $transition = new \Transition(null, null, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false));
         $this->hidden_fieldsets_retriever
             ->shouldReceive('getHiddenFieldsets')
             ->with($transition)
@@ -79,7 +79,7 @@ class HiddenFieldsetsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals([], $result);
     }
 
-    public function testItImportsActionFromXML()
+    public function testItImportsActionFromXML(): void
     {
         $xml_content = <<<XML
             <postaction_hidden_fieldsets>
@@ -108,7 +108,7 @@ XML;
         $this->assertCount(2, $action->getFieldsets());
     }
 
-    public function testItSkipsNonExistingFieldsDuringXMLImport()
+    public function testItSkipsNonExistingFieldsDuringXMLImport(): void
     {
         $xml_content = <<<XML
             <postaction_hidden_fieldsets>

@@ -91,7 +91,7 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
             $this->transition_id,
             $workflow_id,
             null,
-            null
+            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false)
         );
         $this->transition->setWorkflow($this->workflow);
 

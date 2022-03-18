@@ -27,7 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElementFactory;
 
-class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -63,7 +63,7 @@ class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testGetHiddenFieldsetsReturnsASinglePostAction()
+    public function testGetHiddenFieldsetsReturnsASinglePostAction(): void
     {
         $postaction_id = 72;
         $transition_id = '97';
@@ -81,7 +81,7 @@ class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->shouldReceive('getFieldsetById')->with(331)->andReturn($fieldset_01);
         $this->form_element_factory->shouldReceive('getFieldsetById')->with(651)->andReturn($fieldset_02);
 
-        $transition = new \Transition($transition_id, $this->workflow_id, null, null);
+        $transition = new \Transition($transition_id, $this->workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false));
         $transition->setWorkflow($this->workflow);
         $expected_post_action = new HiddenFieldsets($transition, $postaction_id, [$fieldset_01, $fieldset_02]);
 
@@ -90,18 +90,18 @@ class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_post_action, $result);
     }
 
-    public function testGetHiddenFieldsetsThrowsWhenNoPostAction()
+    public function testGetHiddenFieldsetsThrowsWhenNoPostAction(): void
     {
         $this->hidden_dao->shouldReceive('searchByWorkflow')->andReturn([]);
 
-        $transition = new \Transition('97', $this->workflow_id, null, null);
+        $transition = new \Transition('97', $this->workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false));
         $transition->setWorkflow($this->workflow);
 
         $this->expectException(NoHiddenFieldsetsPostActionException::class);
         $this->hidden_fieldsets_retriever->getHiddenFieldsets($transition);
     }
 
-    public function testGetAllHiddenFieldsetsPostActionsOfAllTransitionsReturnsASinglePostAction()
+    public function testGetAllHiddenFieldsetsPostActionsOfAllTransitionsReturnsASinglePostAction(): void
     {
         $postaction_id = 72;
         $transition_id = '97';
@@ -117,7 +117,7 @@ class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->form_element_factory->shouldReceive('getFieldsetById')->with(331)->andReturn($fieldset_01);
 
-        $transition = new \Transition($transition_id, $this->workflow_id, null, null);
+        $transition = new \Transition($transition_id, $this->workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false));
         $transition->setWorkflow($this->workflow);
         $expected_post_action = new HiddenFieldsets($transition, $postaction_id, [$fieldset_01]);
 

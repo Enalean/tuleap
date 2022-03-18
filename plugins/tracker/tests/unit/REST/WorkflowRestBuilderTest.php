@@ -71,26 +71,6 @@ final class WorkflowRestBuilderTest extends TestCase
         self::assertEmpty($representation->transitions);
     }
 
-    public function testItReturnsEmptyTransitionsWhenTransitionIsMalformed(): void
-    {
-        $this->mockWorkflow();
-        $this->field->method('userCanRead')->willReturn(true);
-
-        $this->workflow->method('getTransitions')->willReturn(
-            [
-                new \Transition(
-                    1,
-                    2,
-                    new Tracker_FormElement_Field_List_Bind_StaticValue(10, 'label', '', 1, false),
-                    null
-                ),
-            ]
-        );
-
-        $representation = $this->builder->getWorkflowRepresentation($this->workflow, $this->user);
-        self::assertEmpty($representation->transitions);
-    }
-
     public function testItReturnsTransitionsForNewArtifact(): void
     {
         $this->mockWorkflow();

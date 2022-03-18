@@ -56,7 +56,7 @@ final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\Te
         );
 
         $this->transition_id = 923;
-        $this->transition    = new Transition((string) $this->transition_id, (string) $workflow_id, null, null);
+        $this->transition    = new Transition((string) $this->transition_id, (string) $workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false));
         $this->transition->setWorkflow($this->workflow);
     }
 

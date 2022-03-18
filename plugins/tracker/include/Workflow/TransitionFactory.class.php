@@ -104,9 +104,12 @@ class TransitionFactory
      * @param array    $row      The data describing the transition
      * @param Workflow $workflow Workflow the transition belongs to
      */
-    public function getInstanceFromRow(array $row, Workflow $workflow): Transition
+    public function getInstanceFromRow(array $row, Workflow $workflow): ?Transition
     {
         $transition = $this->buildTransition($row['from_id'], $row['to_id'], $workflow, $row['transition_id']);
+        if (! $transition) {
+            return null;
+        }
         $this->transition_post_action_factory->loadPostActions($transition);
         return $transition;
     }
@@ -118,7 +121,7 @@ class TransitionFactory
      * @param Workflow  $workflow
      *
      */
-    private function buildTransition($from_id, $to_id, $workflow, $transition_id = null): Transition
+    private function buildTransition($from_id, $to_id, $workflow, $transition_id = null): ?Transition
     {
         $field_values = $workflow->getAllFieldValues();
         $from         = null;
@@ -128,6 +131,10 @@ class TransitionFactory
         }
         if (isset($field_values[$to_id])) {
             $to = $field_values[$to_id];
+        }
+
+        if (! $to) {
+            return null;
         }
 
         return new Transition(
@@ -318,8 +325,10 @@ class TransitionFactory
             $this->workflow_cache[$workflow_id] = [];
             $this->transition_post_action_factory->warmUpCacheForWorkflow($workflow);
             foreach ($this->dao->searchByWorkflow($workflow->getId()) as $row) {
-                $transition                                                     = $this->getInstanceFromRow($row, $workflow);
-                $this->workflow_cache[$workflow_id][(int) $transition->getId()] = $transition;
+                $transition = $this->getInstanceFromRow($row, $workflow);
+                if ($transition) {
+                    $this->workflow_cache[$workflow_id][(int) $transition->getId()] = $transition;
+                }
             }
         }
         return $this->workflow_cache[$workflow_id];
@@ -356,7 +365,7 @@ class TransitionFactory
         } else {
             $from_id = $transition_from->getId();
         }
-        $to_id         = $transition->getFieldValueTo()?->getId();
+        $to_id         = $transition->getFieldValueTo()->getId();
         $transition_id = $this->dao->addTransition($workflow_id, $from_id, $to_id);
         $transition->setTransitionId($transition_id);
 
@@ -373,9 +382,12 @@ class TransitionFactory
     /**
      * Generate transition object and save it in database.
      */
-    public function createAndSaveTransition(Workflow $workflow, TransitionCreationParameters $parameters)
+    public function createAndSaveTransition(Workflow $workflow, TransitionCreationParameters $parameters): ?Transition
     {
         $new_transition = $this->buildTransition($parameters->getFromId(), $parameters->getToId(), $workflow, null);
+        if (! $new_transition) {
+            return null;
+        }
         $this->saveObject((int) $workflow->getId(), $new_transition);
 
         return $new_transition;
@@ -418,7 +430,7 @@ class TransitionFactory
             foreach ($transitions as $transition) {
                 if ($transition->getFieldValueFrom() == null) {
                     $from_id = 'null';
-                    $to      = $transition->getFieldValueTo()?->getId();
+                    $to      = $transition->getFieldValueTo()->getId();
                     foreach ($values as $value => $id_value) {
                         if ($value == $to) {
                             $to_id = $id_value;
@@ -426,7 +438,7 @@ class TransitionFactory
                     }
                 } else {
                     $from = $transition->getFieldValueFrom()?->getId();
-                    $to   = $transition->getFieldValueTo()?->getId();
+                    $to   = $transition->getFieldValueTo()->getId();
                     foreach ($values as $value => $id_value) {
                         if ($value == $from) {
                             $from_id = $id_value;

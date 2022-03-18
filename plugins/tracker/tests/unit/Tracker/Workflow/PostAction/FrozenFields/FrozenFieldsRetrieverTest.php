@@ -55,7 +55,7 @@ final class FrozenFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testGetFrozenFieldsReturnsASinglePostAction()
+    public function testGetFrozenFieldsReturnsASinglePostAction(): void
     {
         $postaction_id = 72;
         $transition_id = '97';
@@ -74,7 +74,12 @@ final class FrozenFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->shouldReceive('getFieldById')->with(651)->andReturn($float_field);
         $this->form_element_factory->shouldReceive('getFieldById')->with(987)->andReturn($string_field);
 
-        $transition = new \Transition($transition_id, $this->workflow_id, null, null);
+        $transition = new \Transition(
+            $transition_id,
+            $this->workflow_id,
+            null,
+            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false)
+        );
         $transition->setWorkflow($this->workflow);
         $expected_post_action = new FrozenFields($transition, $postaction_id, [$int_field, $float_field, $string_field]);
 
@@ -82,18 +87,18 @@ final class FrozenFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_post_action, $result);
     }
 
-    public function testGetFrozenFieldsThrowsWhenNoPostAction()
+    public function testGetFrozenFieldsThrowsWhenNoPostAction(): void
     {
         $this->frozen_dao->shouldReceive('searchByWorkflow')->andReturn([]);
 
-        $transition = new \Transition('97', $this->workflow_id, null, null);
+        $transition = new \Transition('97', $this->workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false));
         $transition->setWorkflow($this->workflow);
 
         $this->expectException(NoFrozenFieldsPostActionException::class);
         $this->frozen_retriever->getFrozenFields($transition);
     }
 
-    public function testGetFrozenFieldsFromSeveralTransitionsReturnsASinglePostAction()
+    public function testGetFrozenFieldsFromSeveralTransitionsReturnsASinglePostAction(): void
     {
         $postaction_id = 72;
         $transition_id = '97';
@@ -108,7 +113,7 @@ final class FrozenFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->form_element_factory->shouldReceive('getFieldById')->with(331)->andReturn($int_field);
 
-        $transition = new \Transition($transition_id, $this->workflow_id, null, null);
+        $transition = new \Transition($transition_id, $this->workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false));
         $transition->setWorkflow($this->workflow);
         $expected_post_action = new FrozenFields($transition, $postaction_id, [$int_field]);
 

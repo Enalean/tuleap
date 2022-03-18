@@ -173,7 +173,12 @@ final class InitialChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotCreateTheChangesetIfTheWorkflowValidationFailed(): void
     {
         $this->setFields([]);
-        $transition = \Mockery::spy(Transition::class);
+        $transition = new Transition(
+            1,
+            $this->workflow->getId(),
+            null,
+            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false)
+        );
 
         $this->workflow->shouldReceive('validate')->andThrows(
             new Tracker_Workflow_Transition_InvalidConditionForTransitionException($transition)

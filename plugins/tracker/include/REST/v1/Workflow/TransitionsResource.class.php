@@ -124,7 +124,7 @@ class TransitionsResource extends AuthenticatedResource
      * @param int $from_id Transition source as a field value id
      * @param int $to_id Transition destination as a field value id
      *
-     * @return WorkflowTransitionPOSTRepresentation {@type WorkflowTransitionPOSTRepresentation}
+     * @return ?WorkflowTransitionPOSTRepresentation {@type ?WorkflowTransitionPOSTRepresentation}
      *
      * @throws I18NRestException 400
      * @throws I18NRestException 404
