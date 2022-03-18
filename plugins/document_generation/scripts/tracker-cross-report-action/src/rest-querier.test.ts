@@ -45,7 +45,7 @@ describe("API querier", () => {
             await getReportArtifacts(report_id, report_has_changed);
 
             expect(tlpRecursiveGet).toHaveBeenCalledWith("/api/v1/tracker_reports/101/artifacts", {
-                params: { limit: 50, values: "all", with_unsaved_changes: true },
+                params: { limit: 50, values: "from_table_renderer", with_unsaved_changes: true },
             });
         });
     });

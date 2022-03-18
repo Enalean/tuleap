@@ -28,7 +28,7 @@ export async function getReportArtifacts(
         `/api/v1/tracker_reports/${encodeURIComponent(report_id)}/artifacts`,
         {
             params: {
-                values: "all",
+                values: "from_table_renderer",
                 with_unsaved_changes: report_has_changed,
                 limit: 50,
             },

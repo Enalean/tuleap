@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GlobalExportProperties } from "./type";
+import type { GlobalExportProperties, ReportFieldColumn } from "./type";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import { getReportArtifacts } from "./rest-querier";
 
@@ -25,6 +25,7 @@ export async function downloadXLSXDocument(
     global_properties: GlobalExportProperties,
     download_document: (
         global_properties: GlobalExportProperties,
+        report_field_columns: ReportFieldColumn[],
         report_artifacts: ArtifactResponse[]
     ) => void
 ): Promise<void> {
@@ -33,5 +34,18 @@ export async function downloadXLSXDocument(
         true
     );
 
-    download_document(global_properties, report_artifacts);
+    if (report_artifacts.length === 0) {
+        return;
+    }
+
+    const first_artifact_found: ArtifactResponse = report_artifacts[0];
+    const report_field_columns: Array<ReportFieldColumn> = [];
+
+    for (const field_value of first_artifact_found.values) {
+        report_field_columns.push({
+            field_label: field_value.label,
+        });
+    }
+
+    download_document(global_properties, report_field_columns, report_artifacts);
 }

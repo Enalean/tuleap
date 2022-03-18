@@ -21,26 +21,58 @@ import { downloadXLSXDocument } from "./export-document";
 import type { GlobalExportProperties } from "./type";
 import * as rest_querier from "./rest-querier";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 describe("export-document", () => {
     it("generates the export document and then trigger the download", async (): Promise<void> => {
         const document_exporter = jest.fn();
-        const getReportArtifactsMock = jest.spyOn(rest_querier, "getReportArtifacts");
-
         const artifacts_report_response: ArtifactResponse[] = [
             {
                 id: 74,
+                title: null,
+                xref: "bug #74",
+                tracker: { id: 14 },
+                html_url: "/plugins/tracker/?aid=74",
+                values: [
+                    {
+                        field_id: 1,
+                        type: "string",
+                        label: "Field01",
+                        value: "value01",
+                    },
+                    {
+                        field_id: 2,
+                        type: "string",
+                        label: "Field02",
+                        value: "value02",
+                    },
+                ],
             } as ArtifactResponse,
             {
                 id: 4,
+                title: null,
+                xref: "bug #4",
+                tracker: { id: 14 },
+                html_url: "/plugins/tracker/?aid=4",
+                values: [
+                    {
+                        field_id: 1,
+                        type: "string",
+                        label: "Field01",
+                        value: "value03",
+                    },
+                    {
+                        field_id: 2,
+                        type: "string",
+                        label: "Field02",
+                        value: "value04",
+                    },
+                ],
             } as ArtifactResponse,
         ];
-        mockFetchSuccess(getReportArtifactsMock, {
-            return_json: {
-                artifacts_report_response,
-            },
-        });
+
+        const getReportArtifactsMock = jest
+            .spyOn(rest_querier, "getReportArtifacts")
+            .mockResolvedValue(artifacts_report_response);
 
         await downloadXLSXDocument({ report_id: 1 } as GlobalExportProperties, document_exporter);
 
