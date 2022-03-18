@@ -114,6 +114,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalServiceEvent;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
+use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
@@ -255,11 +256,7 @@ class gitlabPlugin extends Plugin
             TemplateRendererFactory::build(),
         );
 
-        $first_possible_value_retriever = new FirstPossibleValueInListRetriever(
-            new FirstValidValueAccordingToDependenciesRetriever(
-                Tracker_FormElementFactory::instance()
-            )
-        );
+        $first_possible_value_retriever = $this->getFirstPossibleValueInListRetriever();
 
         return new GitlabRepositoryWebhookController(
             new WebhookDataExtractor(
@@ -425,11 +422,7 @@ class gitlabPlugin extends Plugin
             TemplateRendererFactory::build(),
         );
 
-        $first_possible_value_retriever = new FirstPossibleValueInListRetriever(
-            new FirstValidValueAccordingToDependenciesRetriever(
-                Tracker_FormElementFactory::instance()
-            )
-        );
+        $first_possible_value_retriever = $this->getFirstPossibleValueInListRetriever();
         return new IntegrationWebhookController(
             new WebhookDataExtractor(
                 new PostPushWebhookDataBuilder(
@@ -771,6 +764,18 @@ class gitlabPlugin extends Plugin
         return new IncludeAssets(
             __DIR__ . '/../../../src/www/assets/gitlab',
             '/assets/gitlab'
+        );
+    }
+
+    private function getFirstPossibleValueInListRetriever(): FirstPossibleValueInListRetriever
+    {
+        return new FirstPossibleValueInListRetriever(
+            new FirstValidValueAccordingToDependenciesRetriever(
+                Tracker_FormElementFactory::instance()
+            ),
+            new ValidValuesAccordingToTransitionsRetriever(
+                Workflow_Transition_ConditionFactory::build()
+            )
         );
     }
 }

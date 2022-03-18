@@ -187,9 +187,8 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      * @param int|null $field_value_id_from
      * @param int|null $field_value_id_to
      *
-     * @return Transition|null Transition or null if no transition match
      */
-    public function getTransition($field_value_id_from, $field_value_id_to)
+    public function getTransition($field_value_id_from, $field_value_id_to): ?Transition
     {
         foreach ($this->getTransitions() as $transition) {
             $from = $transition->getFieldValueFrom();
@@ -199,6 +198,8 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                 }
             }
         }
+
+        return null;
     }
 
     /**

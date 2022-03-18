@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow;
 
+use PFUser;
 use Tracker_FormElement_Field_List;
 use Tracker_Rule_List;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -32,6 +33,7 @@ class FirstPossibleValueInListRetriever
 {
     public function __construct(
         private FirstValidValueAccordingToDependenciesRetriever $first_valid_value_according_to_dependencies_retriever,
+        private ValidValuesAccordingToTransitionsRetriever $valid_values_according_to_transitions_retriever,
     ) {
     }
 
@@ -42,6 +44,7 @@ class FirstPossibleValueInListRetriever
         Artifact $artifact,
         Tracker_FormElement_Field_List $field,
         BindValueIdCollection $list_of_values,
+        PFUser $user,
     ): int {
         $workflow = $artifact->getWorkflow();
 
@@ -49,11 +52,12 @@ class FirstPossibleValueInListRetriever
             return $list_of_values->getFirstValue();
         }
 
-        ValidValuesAccordingToTransitionsRetriever::getValidValuesAccordingToTransitions(
+        $this->valid_values_according_to_transitions_retriever->getValidValuesAccordingToTransitions(
             $artifact,
             $field,
             $list_of_values,
-            $workflow
+            $workflow,
+            $user
         );
 
         $rules_for_tracker = $this->getRulesForTracker($workflow, $artifact);

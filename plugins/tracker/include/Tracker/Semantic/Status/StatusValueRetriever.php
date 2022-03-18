@@ -65,7 +65,7 @@ class StatusValueRetriever
 
         $collection = new StatusValuesCollection(array_keys($values));
 
-        $bind_value_id = $this->first_possible_value_retriever->getFirstPossibleValue($artifact, $status_field, $collection);
+        $bind_value_id = $this->first_possible_value_retriever->getFirstPossibleValue($artifact, $status_field, $collection, $user);
 
         return $values[$bind_value_id];
     }
@@ -93,7 +93,7 @@ class StatusValueRetriever
 
         $collection = new StatusValuesCollection(array_keys($values));
 
-        $bind_value_id = $this->first_possible_value_retriever->getFirstPossibleValue($artifact, $status_field, $collection);
+        $bind_value_id = $this->first_possible_value_retriever->getFirstPossibleValue($artifact, $status_field, $collection, $user);
 
         return $values[$bind_value_id];
     }

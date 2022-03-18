@@ -103,7 +103,9 @@ use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
+use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
 use UserManager;
+use Workflow_Transition_ConditionFactory;
 
 class KanbanResource extends AuthenticatedResource
 {
@@ -1628,6 +1630,9 @@ class KanbanResource extends AuthenticatedResource
             new FirstPossibleValueInListRetriever(
                 new FirstValidValueAccordingToDependenciesRetriever(
                     Tracker_FormElementFactory::instance()
+                ),
+                new ValidValuesAccordingToTransitionsRetriever(
+                    Workflow_Transition_ConditionFactory::build()
                 )
             )
         );

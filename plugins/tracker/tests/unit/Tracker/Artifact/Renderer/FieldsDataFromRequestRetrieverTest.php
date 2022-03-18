@@ -26,6 +26,7 @@ use ProjectManager;
 use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\StatusValuesCollection;
@@ -43,6 +44,8 @@ final class FieldsDataFromRequestRetrieverTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->user = UserTestBuilder::anActiveUser()->withId(114)->build();
+
         $this->field = $this->createStub(Tracker_FormElement_Field_List::class);
         $this->field->method("getId")->willReturn(123);
 
@@ -84,7 +87,8 @@ final class FieldsDataFromRequestRetrieverTest extends TestCase
             $expected_result,
             $this->fields_data_from_request_retriever->getAugmentedDataFromRequest(
                 $this->artifact,
-                $request
+                $request,
+                $this->user
             )
         );
     }
@@ -109,7 +113,8 @@ final class FieldsDataFromRequestRetrieverTest extends TestCase
             $expected_result,
             $this->fields_data_from_request_retriever->getAugmentedDataFromRequest(
                 $this->artifact,
-                $request
+                $request,
+                $this->user
             )
         );
     }

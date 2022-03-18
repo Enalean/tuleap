@@ -131,8 +131,10 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use UserManager;
+use Workflow_Transition_ConditionFactory;
 
 /**
  * @psalm-import-type StatusAcceptableValue from CampaignArtifactUpdateFieldValuesBuilder
@@ -358,6 +360,9 @@ class CampaignsResource
                     new FirstPossibleValueInListRetriever(
                         new FirstValidValueAccordingToDependenciesRetriever(
                             $this->formelement_factory
+                        ),
+                        new ValidValuesAccordingToTransitionsRetriever(
+                            Workflow_Transition_ConditionFactory::build()
                         )
                     )
                 )

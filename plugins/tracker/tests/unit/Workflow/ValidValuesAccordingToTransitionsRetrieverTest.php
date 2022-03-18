@@ -23,10 +23,14 @@ namespace Tuleap\Tracker\Workflow;
 use PHPUnit\Framework\MockObject\Stub;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field_Selectbox;
+use Transition;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\BindValueIdCollectionStub;
 use Workflow;
+use Workflow_Transition_ConditionFactory;
 
 final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
 {
@@ -46,6 +50,8 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->user = UserTestBuilder::anActiveUser()->withId(114)->build();
+
         $this->field_changed = $this->createStub(Tracker_FormElement_Field_Selectbox::class);
         $this->field_changed->method('getId')->willReturn(201);
 
@@ -62,6 +68,15 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
         $changeset_value_field_changed->method('getValue')->willReturn([self::ORIGINAL_FIELD_CHANGED_VALUE_ID]);
 
         $this->artifact->method('getValue')->willReturn($changeset_value_field_changed);
+        $this->artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+
+        $this->condition_factory = $this->createStub(
+            Workflow_Transition_ConditionFactory::class
+        );
+
+        $this->first_valid_value_according_to_dependencies_retriever = new ValidValuesAccordingToTransitionsRetriever(
+            $this->condition_factory
+        );
 
         $this->setUpTestValues();
     }
@@ -75,8 +90,16 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
         );
 
         $this->workflow->method('isUsed')->willReturn(true);
-        $this->field_changed->expects(self::exactly(1))->method('getListValueById')->willReturn(null);
-        $this->getValidValues();
+        $this->field_changed->expects(self::once())->method('getListValueById')->willReturn(null);
+
+        $this->first_valid_value_according_to_dependencies_retriever->getValidValuesAccordingToTransitions(
+            $this->artifact,
+            $this->field_changed,
+            $this->values_collection,
+            $this->workflow,
+            $this->user
+        );
+
         $this->assertEquals($expected_result, $this->values_collection);
 
         $ids = $this->values_collection->getValueIds();
@@ -95,11 +118,17 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
         );
 
         $this->workflow->method('isUsed')->willReturn(false);
-        $this->field_changed->expects(self::exactly(1))->method('getListValueById')->willReturn(
+        $this->field_changed->expects(self::once())->method('getListValueById')->willReturn(
             $this->value_from_artifact
         );
 
-        $this->getValidValues();
+        $this->first_valid_value_according_to_dependencies_retriever->getValidValuesAccordingToTransitions(
+            $this->artifact,
+            $this->field_changed,
+            $this->values_collection,
+            $this->workflow,
+            $this->user
+        );
         $this->assertEquals($expected_result, $this->values_collection);
 
         $ids = $this->values_collection->getValueIds();
@@ -109,7 +138,7 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
         $this->assertContains(self::THIRD_VALUE_ID, $ids);
     }
 
-    public function testItRemoveInvalidValueWhenTransitionsExist(): void
+    public function testItRemoveInvalidValueWhenTransitionsDoesntExistOrUserCantSeeThem(): void
     {
         $expected_result = BindValueIdCollectionStub::withValues(
             self::FIRST_VALUE_ID,
@@ -117,31 +146,45 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
             self::THIRD_VALUE_ID
         );
         $expected_result->removeValue(self::SECOND_VALUE_ID);
+        $expected_result->removeValue(self::THIRD_VALUE_ID);
 
-        $this->field_changed->expects(self::exactly(4))->method('getListValueById')->withConsecutive(
-            [self::ORIGINAL_FIELD_CHANGED_VALUE_ID],
-            [self::FIRST_VALUE_ID],
-            [self::SECOND_VALUE_ID],
-            [self::THIRD_VALUE_ID]
+        $this->field_changed->expects(self::once())->method('getListValueById')->with(
+            self::ORIGINAL_FIELD_CHANGED_VALUE_ID
+        )->willReturn(
+            $this->value_from_artifact
+        );
+
+        $transition_1 = $this->createStub(Transition::class);
+        $transition_2 = $this->createStub(Transition::class);
+
+        $condition_1 = $this->createStub(\Workflow_Transition_Condition_Permissions::class);
+        $condition_2 = $this->createStub(\Workflow_Transition_Condition_Permissions::class);
+
+        $condition_1->method('isUserAllowedToSeeTransition')->willReturn(true);
+        $condition_2->method('isUserAllowedToSeeTransition')->willReturn(false);
+
+        $this->condition_factory->expects(self::exactly(2))->method("getPermissionsCondition")->withConsecutive(
+            [$transition_1],
+            [$transition_2]
         )->willReturnOnConsecutiveCalls(
-            $this->value_from_artifact,
-            $this->test_value_1,
-            $this->test_value_2,
-            $this->test_value_3
+            $condition_1,
+            $condition_2
         );
 
         $this->workflow->method('isUsed')->willReturn(true);
-        $this->workflow->method('isTransitionExist')->withConsecutive(
-            [$this->value_from_artifact, $this->test_value_1],
-            [$this->value_from_artifact, $this->test_value_2],
-            [$this->value_from_artifact, $this->test_value_3]
-        )->willReturnOnConsecutiveCalls(
-            true,
-            false,
-            true
-        );
+        $this->workflow->method('getTransition')->withConsecutive(
+            [$this->value_from_artifact->getId(), $this->test_value_1->getId()],
+            [$this->value_from_artifact->getId(), $this->test_value_2->getId()],
+            [$this->value_from_artifact->getId(), $this->test_value_3->getId()]
+        )->willReturnOnConsecutiveCalls($transition_1, null, $transition_2);
 
-        $this->getValidValues();
+        $this->first_valid_value_according_to_dependencies_retriever->getValidValuesAccordingToTransitions(
+            $this->artifact,
+            $this->field_changed,
+            $this->values_collection,
+            $this->workflow,
+            $this->user
+        );
 
         $this->assertEquals($expected_result, $this->values_collection);
 
@@ -149,7 +192,7 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
 
         $this->assertContains(self::FIRST_VALUE_ID, $ids);
         $this->assertNotContains(self::SECOND_VALUE_ID, $ids);
-        $this->assertContains(self::THIRD_VALUE_ID, $ids);
+        $this->assertNotContains(self::THIRD_VALUE_ID, $ids);
     }
 
     private function setUpTestValues(): void
@@ -181,16 +224,6 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
             'description',
             12,
             0
-        );
-    }
-
-    private function getValidValues(): void
-    {
-        ValidValuesAccordingToTransitionsRetriever::getValidValuesAccordingToTransitions(
-            $this->artifact,
-            $this->field_changed,
-            $this->values_collection,
-            $this->workflow
         );
     }
 }
