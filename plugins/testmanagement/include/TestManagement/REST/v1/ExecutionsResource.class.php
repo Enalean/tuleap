@@ -84,6 +84,7 @@ use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -357,11 +358,11 @@ class ExecutionsResource
         try {
             $user    = $this->getCurrentUser();
             $creator = new Tracker_REST_Artifact_ArtifactCreator(
-                new FieldsDataBuilder(
-                    $this->formelement_factory
-                ),
+                new FieldsDataBuilder($this->formelement_factory),
                 $this->artifact_factory,
-                $this->tracker_factory
+                $this->tracker_factory,
+                new FieldsDataFromValuesByFieldBuilder($this->formelement_factory),
+                $this->formelement_factory
             );
 
             $values = $this->getValuesByFieldsName(

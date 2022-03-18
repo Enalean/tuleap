@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tracker\Artifact\Changeset\Value\AddDefaultValuesToFieldsData;
 use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataFromValuesByFieldBuilder;
 
 class Tracker_REST_Artifact_ArtifactCreator
 {
@@ -30,15 +32,21 @@ class Tracker_REST_Artifact_ArtifactCreator
 
     /** @var TrackerFactory */
     private $tracker_factory;
+    private FieldsDataFromValuesByFieldBuilder $values_by_field_builder;
+    private AddDefaultValuesToFieldsData $default_values_adder;
 
     public function __construct(
         FieldsDataBuilder $fields_data_builder,
         Tracker_ArtifactFactory $artifact_factory,
         TrackerFactory $tracker_factory,
+        FieldsDataFromValuesByFieldBuilder $values_by_field_builder,
+        AddDefaultValuesToFieldsData $default_values_adder,
     ) {
-        $this->fields_data_builder = $fields_data_builder;
-        $this->artifact_factory    = $artifact_factory;
-        $this->tracker_factory     = $tracker_factory;
+        $this->fields_data_builder     = $fields_data_builder;
+        $this->artifact_factory        = $artifact_factory;
+        $this->tracker_factory         = $tracker_factory;
+        $this->values_by_field_builder = $values_by_field_builder;
+        $this->default_values_adder    = $default_values_adder;
     }
 
     /**
@@ -51,7 +59,7 @@ class Tracker_REST_Artifact_ArtifactCreator
     {
         $tracker     = $this->getTracker($tracker_reference);
         $fields_data = $this->fields_data_builder->getFieldsDataOnCreate($values, $tracker);
-        $fields_data = $this->fields_data_builder->getUsedFieldsWithDefaultValue($tracker, $fields_data, $user);
+        $fields_data = $this->default_values_adder->getUsedFieldsWithDefaultValue($tracker, $fields_data, $user);
         $this->checkUserCanSubmit($user, $tracker);
 
         return $this->returnReferenceOrError(
@@ -69,8 +77,8 @@ class Tracker_REST_Artifact_ArtifactCreator
     public function createWithValuesIndexedByFieldName(PFUser $user, Tuleap\Tracker\REST\TrackerReference $tracker_reference, array $values)
     {
         $tracker     = $this->getTracker($tracker_reference);
-        $fields_data = $this->fields_data_builder->getFieldsDataOnCreateFromValuesByField($values, $tracker);
-        $fields_data = $this->fields_data_builder->getUsedFieldsWithDefaultValue($tracker, $fields_data, $user);
+        $fields_data = $this->values_by_field_builder->getFieldsDataOnCreate($values, $tracker);
+        $fields_data = $this->default_values_adder->getUsedFieldsWithDefaultValue($tracker, $fields_data, $user);
         $this->checkUserCanSubmit($user, $tracker);
 
         return $this->returnReferenceOrError(

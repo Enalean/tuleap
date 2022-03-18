@@ -110,6 +110,7 @@ use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
@@ -890,11 +891,11 @@ class ArtifactsResource extends AuthenticatedResource
             }
 
             $creator = new Tracker_REST_Artifact_ArtifactCreator(
-                new FieldsDataBuilder(
-                    $this->formelement_factory
-                ),
+                new FieldsDataBuilder($this->formelement_factory),
                 $this->artifact_factory,
-                $this->tracker_factory
+                $this->tracker_factory,
+                new FieldsDataFromValuesByFieldBuilder($this->formelement_factory),
+                $this->formelement_factory
             );
 
             $artifact_reference = null;

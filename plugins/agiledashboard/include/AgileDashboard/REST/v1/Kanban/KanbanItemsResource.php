@@ -42,6 +42,7 @@ use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use UserManager;
@@ -143,11 +144,11 @@ class KanbanItemsResource extends AuthenticatedResource
         );
 
         $updater = new ArtifactCreator(
-            new FieldsDataBuilder(
-                $this->form_element_factory
-            ),
+            new FieldsDataBuilder($this->form_element_factory),
             $this->artifact_factory,
-            $this->tracker_factory
+            $this->tracker_factory,
+            new FieldsDataFromValuesByFieldBuilder($this->form_element_factory),
+            $this->form_element_factory
         );
 
         $tracker_reference = TrackerReference::build($tracker);

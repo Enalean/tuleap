@@ -21,16 +21,13 @@
 namespace Tuleap\Tracker\REST\Artifact\Changeset\Value;
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
-class FieldsDataBuilder
+final class FieldsDataBuilder
 {
-    /** @var \Tracker_FormElementFactory */
-    private $formelement_factory;
-
-    public function __construct(\Tracker_FormElementFactory $formelement_factory)
+    public function __construct(private RetrieveUsedFields $fields_retriever)
     {
-        $this->formelement_factory = $formelement_factory;
     }
 
     /**
@@ -49,28 +46,6 @@ class FieldsDataBuilder
         return $new_values;
     }
 
-    public function getFieldsDataOnCreateFromValuesByField(array $values, \Tracker $tracker): array
-    {
-        $new_values = [];
-        foreach ($values as $field_name => $value) {
-            $field = $this->getFieldByName($tracker, $field_name);
-
-            $new_values[$field->getId()] = $field->getFieldDataFromRESTValueByfield($value);
-        }
-
-        return $new_values;
-    }
-
-    private function getFieldByName(\Tracker $tracker, string $field_name): \Tracker_FormElement_Field
-    {
-        $field = $this->formelement_factory->getUsedFieldByName($tracker->getId(), $field_name);
-        if (! $field) {
-            throw new \Tracker_FormElement_InvalidFieldException("Field $field_name does not exist in the tracker");
-        }
-
-        return $field;
-    }
-
     /**
      * @param ArtifactValuesRepresentation[] $values
      */
@@ -87,12 +62,9 @@ class FieldsDataBuilder
         return $new_values;
     }
 
-    public function getUsedFieldsWithDefaultValue(\Tracker $tracker, array $fields_data, \PFUser $user): array
-    {
-        $fields_data = $this->formelement_factory->getUsedFieldsWithDefaultValue($tracker, $fields_data, $user);
-        return $fields_data;
-    }
-
+    /**
+     * @throws \Tracker_FormElement_InvalidFieldException
+     */
     private function getField(array $indexed_fields, array $value): \Tracker_FormElement_Field
     {
         if (! isset($value['field_id']) || (isset($value['field_id']) && ! is_int($value['field_id']))) {
@@ -109,7 +81,7 @@ class FieldsDataBuilder
     private function getIndexedFields(\Tracker $tracker): array
     {
         $indexed_fields = [];
-        foreach ($this->formelement_factory->getUsedFields($tracker) as $field) {
+        foreach ($this->fields_retriever->getUsedFields($tracker) as $field) {
             $indexed_fields[$field->getId()] = $field;
         }
         return $indexed_fields;
