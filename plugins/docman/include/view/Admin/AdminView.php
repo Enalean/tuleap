@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Docman\View\Admin;
 
 use Docman_View_Admin_FilenamePattern;
-use DocmanPlugin;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
@@ -243,9 +242,7 @@ abstract class AdminView
                     false,
                 ),
             ],
-        ];
-        if ((int) \ForgeConfig::getFeatureFlag(DocmanPlugin::PLUGIN_DOCMAN_APPLY_NAMING_PATTERN) === 1) {
-            $tab[] = [
+            [
                 'title' => Docman_View_Admin_FilenamePattern::getTabTitle(),
                 'description' => Docman_View_Admin_FilenamePattern::getTabDescription(),
                 'url' => DocmanViewURLBuilder::buildUrl(
@@ -253,8 +250,8 @@ abstract class AdminView
                     ['action' => \Docman_View_Admin_FilenamePattern::IDENTIFIER],
                     false,
                 ),
-            ];
-        }
+            ],
+        ];
 
         return [
             'is_active' => $this->getIdentifier() === \Docman_View_Admin_View::IDENTIFIER,
