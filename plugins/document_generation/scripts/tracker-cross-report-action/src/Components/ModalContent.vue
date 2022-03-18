@@ -101,9 +101,20 @@ async function startExport(): Promise<void> {
     const export_document_module = import("../export-document");
     const download_xlsx_module = import("../Exporter/XLSX/download-xlsx");
 
+    const search_params = new URLSearchParams(location.search);
+
     const { downloadXLSXDocument } = await export_document_module;
     const { downloadXLSX } = await download_xlsx_module;
-    downloadXLSXDocument(props.properties, downloadXLSX);
+    downloadXLSXDocument(
+        {
+            ...props.properties,
+            report_id: parseInt(
+                search_params.get("export_report_id_1") ?? String(props.properties.report_id),
+                10
+            ),
+        },
+        downloadXLSX
+    );
 
     modal?.hide();
 }
