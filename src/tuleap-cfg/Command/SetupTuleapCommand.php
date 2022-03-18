@@ -29,6 +29,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tuleap\Cryptography\SecretKeyFile;
 use TuleapCfg\Command\SetupTuleap\SetupTuleap;
 
 final class SetupTuleapCommand extends Command
@@ -52,7 +53,7 @@ final class SetupTuleapCommand extends Command
     /**
      * @param \Closure(\Psr\Log\LoggerInterface): \Tuleap\ForgeUpgrade\ForgeUpgradeRecordOnly $forge_upgrade_provider
      */
-    public function __construct(private ProcessFactory $process_factory, private \Closure $forge_upgrade_provider, ?string $base_directory = null)
+    public function __construct(private ProcessFactory $process_factory, private SecretKeyFile $secret_key_file, private \Closure $forge_upgrade_provider, ?string $base_directory = null)
     {
         $this->base_directory = $base_directory ?: '/';
         parent::__construct('setup:tuleap');
@@ -94,6 +95,12 @@ final class SetupTuleapCommand extends Command
             \ForgeConfig::loadDatabaseConfig();
             $forge_upgrade_callback($logger)->recordOnlyCore();
         });
+
+        \ForgeConfig::loadInSequence();
+
+        $logger->info("Generate Secret");
+        $this->secret_key_file->initAndGetEncryptionKeyPath();
+        $this->secret_key_file->restoreOwnership($logger);
 
         $logger->info("Install and activate tracker plugin");
         $this->process_factory->getProcessWithoutTimeout([

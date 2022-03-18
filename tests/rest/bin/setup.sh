@@ -2,6 +2,8 @@
 
 set -euxo pipefail
 
+export DISPLAY_ERRORS=true
+
 if [ -z "${PHP_FPM:-}" ]; then
     echo 'PHP_FPM environment variable must be specified' 1>&2
     exit 1
@@ -20,6 +22,8 @@ setup_tuleap() {
 
 	install -m 00755 -o codendiadm -g codendiadm -d /var/lib/tuleap/tracker
 	install -m 00755 -o codendiadm -g codendiadm -d /var/lib/tuleap/gitolite/admin
+	install -m 00750 -o codendiadm -g codendiadm -d /etc/tuleap
+	install -m 00750 -o codendiadm -g codendiadm -d /etc/tuleap/conf
 }
 
 setup_database() {

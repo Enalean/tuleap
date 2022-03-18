@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,37 +16,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Cryptography;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
-use Tuleap\Cryptography\Symmetric\EncryptionKey;
 
-class KeyFactory
+interface SecretKeyFile
 {
     /**
      * @throws CannotPerformIOOperationException
+     * @throws Exception\InvalidKeyException
+     * @throws \SodiumException
      */
-    public function getEncryptionKey(): EncryptionKey
-    {
-        $encryption_key_file_path = (new SecretKeyFileOnFileSystem())->initAndGetEncryptionKeyPath();
-        $file_data                = \file_get_contents($encryption_key_file_path);
-        if ($file_data === false) {
-            throw new CannotPerformIOOperationException("Cannot read the encryption key $encryption_key_file_path");
-        }
+    public function initAndGetEncryptionKeyPath(): string;
 
-        $file_data_hex = sodium_hex2bin($file_data);
-        \sodium_memzero($file_data);
-
-        $encryption_key = new EncryptionKey(
-            new ConcealedString($file_data_hex)
-        );
-
-        \sodium_memzero($file_data_hex);
-
-        return $encryption_key;
-    }
+    public function restoreOwnership(LoggerInterface $logger): void;
 }

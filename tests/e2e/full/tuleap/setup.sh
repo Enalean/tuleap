@@ -2,6 +2,8 @@
 
 set -euxo pipefail
 
+export DISPLAY_ERRORS=true
+
 setup_lhs() {
     touch /etc/aliases.codendi
 

@@ -2,6 +2,8 @@
 
 set -euxo pipefail
 
+export DISPLAY_ERRORS=true
+
 if [ -z "$PHP_CLI" ]; then
     echo 'PHP_CLI environment variable must be specified' 1>&2
     exit 1
@@ -14,6 +16,8 @@ setup_tuleap() {
 	ln -s /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php /usr/bin/tuleap-cfg
 
 	install -m 00755 -o codendiadm -g codendiadm -d /var/lib/tuleap/tracker
+	install -m 00750 -o codendiadm -g codendiadm -d /etc/tuleap
+	install -m 00750 -o codendiadm -g codendiadm -d /etc/tuleap/conf
 }
 
 setup_database() {
