@@ -77,10 +77,10 @@ final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestC
         $value_triggering_build = 'the fat field';
 
         $this->expected_parameters = [
-            Transition_PostAction_CIBuild::BUILD_PARAMETER_USER                => $build_user,
-            Transition_PostAction_CIBuild::BUILD_PARAMETER_PROJECT_ID          => $project_id,
-            Transition_PostAction_CIBuild::BUILD_PARAMETER_ARTIFACT_ID         => $artifact_id,
-            Transition_PostAction_CIBuild::BUILD_PARAMETER_TRACKER_ID          => $tracker_id,
+            Transition_PostAction_CIBuild::BUILD_PARAMETER_USER => $build_user,
+            Transition_PostAction_CIBuild::BUILD_PARAMETER_PROJECT_ID => $project_id,
+            Transition_PostAction_CIBuild::BUILD_PARAMETER_ARTIFACT_ID => $artifact_id,
+            Transition_PostAction_CIBuild::BUILD_PARAMETER_TRACKER_ID => $tracker_id,
             Transition_PostAction_CIBuild::BUILD_PARAMETER_TRIGGER_FIELD_VALUE => $value_triggering_build,
         ];
 
@@ -101,6 +101,7 @@ final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestC
         $this->artifact  = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $this->field     = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
+        $field_value     = new Tracker_FormElement_Field_List_Bind_StaticValue(1, $value_triggering_build, '', '', false);
 
         $this->changeset->shouldReceive('getSubmittedBy')->andReturns($build_user);
 
@@ -113,7 +114,7 @@ final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestC
 
         $this->tracker->shouldReceive('getId')->andReturns($tracker_id);
 
-        $this->transition->shouldReceive('getFieldValueTo')->andReturns($this->field);
+        $this->transition->shouldReceive('getFieldValueTo')->andReturns($field_value);
         $this->field->shouldReceive('getLabel')->andReturns($value_triggering_build);
     }
 

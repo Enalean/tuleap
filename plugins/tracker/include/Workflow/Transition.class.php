@@ -30,15 +30,8 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public $transition_id;
     public $workflow_id;
 
-    /**
-     * @var Tracker_FormElement_Field_List_Value
-     */
-    protected $from = null;
-
-    /**
-     * @var Tracker_FormElement_Field_List_Value
-     */
-    protected $to = null;
+    protected ?Tracker_FormElement_Field_List_Value $from = null;
+    protected ?Tracker_FormElement_Field_List_Value $to   = null;
 
     /**
      * @var Array of Transition_PostAction
@@ -73,7 +66,7 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      * @param Tracker_FormElement_Field_List_Value|null $from          Source value
      * @param Tracker_FormElement_Field_List_Value|null $to            Destination value
      */
-    public function __construct($transition_id, $workflow_id, $from, $to)
+    public function __construct($transition_id, $workflow_id, ?Tracker_FormElement_Field_List_Value $from, ?Tracker_FormElement_Field_List_Value $to)
     {
         $this->transition_id = $transition_id;
         $this->workflow_id   = $workflow_id;
@@ -95,22 +88,12 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $this->workflow = $workflow;
     }
 
-    /**
-     * Access From field value
-     *
-     * @return Tracker_FormElement_Field_List_Value
-     */
-    public function getFieldValueFrom()
+    public function getFieldValueFrom(): ?Tracker_FormElement_Field_List_Value
     {
         return $this->from;
     }
 
-    /**
-     * Access To field value
-     *
-     * @return Tracker_FormElement_Field_List_Value
-     */
-    public function getFieldValueTo()
+    public function getFieldValueTo(): ?Tracker_FormElement_Field_List_Value
     {
         return $this->to;
     }
@@ -317,13 +300,14 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
-        $child = $root->addChild('transition');
-        if ($this->getFieldValueFrom() == null) {
+        $child           = $root->addChild('transition');
+        $transition_form = $this->getFieldValueFrom();
+        if ($transition_form === null) {
             $child->addChild('from_id')->addAttribute('REF', self::EXPORT_XML_FROM_NEW_VALUE);
         } else {
-            $child->addChild('from_id')->addAttribute('REF', array_search($this->getFieldValueFrom()->getId(), $xmlMapping['values']));
+            $child->addChild('from_id')->addAttribute('REF', array_search($transition_form->getId(), $xmlMapping['values']));
         }
-        $child->addChild('to_id')->addAttribute('REF', array_search($this->getFieldValueTo()->getId(), $xmlMapping['values']));
+        $child->addChild('to_id')->addAttribute('REF', array_search($this->getFieldValueTo()?->getId(), $xmlMapping['values']));
 
         $postactions = $this->getPostActions();
         if ($postactions) {

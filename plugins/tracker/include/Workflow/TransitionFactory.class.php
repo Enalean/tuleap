@@ -350,12 +350,13 @@ class TransitionFactory
      */
     public function saveObject($workflow_id, $transition)
     {
-        if ($transition->getFieldValueFrom() == null) {
+        $transition_from = $transition->getFieldValueFrom();
+        if ($transition_from == null) {
             $from_id = null;
         } else {
-            $from_id = $transition->getFieldValueFrom()->getId();
+            $from_id = $transition_from->getId();
         }
-        $to_id         = $transition->getFieldValueTo()->getId();
+        $to_id         = $transition->getFieldValueTo()?->getId();
         $transition_id = $this->dao->addTransition($workflow_id, $from_id, $to_id);
         $transition->setTransitionId($transition_id);
 
@@ -404,29 +405,28 @@ class TransitionFactory
      * Duplicate the transitions
      *
      * @param array $values array of old and new values of the field
-     * @param int   $workflow_id the workflow id
-     * @param array $transitions the transitions to duplicate
+     * @param int $workflow_id the workflow id
+     * @param Transition[] $transitions the transitions to duplicate
      * @param array $field_mapping the field mapping
      * @param array $ugroup_mapping the ugroup mapping
-     * @param bool  $duplicate_type true if duplicate static perms, false otherwise
+     * @param bool $duplicate_type true if duplicate static perms, false otherwise
      *
-     * @return void
      */
-    public function duplicate($values, $workflow_id, $transitions, $field_mapping, $ugroup_mapping, $duplicate_type)
+    public function duplicate($values, $workflow_id, array $transitions, $field_mapping, $ugroup_mapping, $duplicate_type): void
     {
         if ($transitions != null) {
             foreach ($transitions as $transition) {
                 if ($transition->getFieldValueFrom() == null) {
                     $from_id = 'null';
-                    $to      = $transition->getFieldValueTo()->getId();
+                    $to      = $transition->getFieldValueTo()?->getId();
                     foreach ($values as $value => $id_value) {
                         if ($value == $to) {
                             $to_id = $id_value;
                         }
                     }
                 } else {
-                    $from = $transition->getFieldValueFrom()->getId();
-                    $to   = $transition->getFieldValueTo()->getId();
+                    $from = $transition->getFieldValueFrom()?->getId();
+                    $to   = $transition->getFieldValueTo()?->getId();
                     foreach ($values as $value => $id_value) {
                         if ($value == $from) {
                             $from_id = $id_value;
