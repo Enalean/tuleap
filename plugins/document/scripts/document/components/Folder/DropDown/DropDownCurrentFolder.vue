@@ -18,11 +18,7 @@
   -->
 
 <template>
-    <drop-down-menu
-        v-bind:is-in-folder-empty-state="isInFolderEmptyState"
-        v-bind:is-in-quick-look-mode="false"
-        v-bind:item="current_folder"
-    >
+    <drop-down-menu v-bind:item="current_folder">
         <drop-down-item-title
             slot="display-item-title"
             v-bind:item="current_folder"
@@ -67,7 +63,7 @@ import DeleteItem from "./Delete/DeleteItem.vue";
 import UpdateProperties from "./UpdateProperties/UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import DropDownItemTitle from "./DropDownItemTitle.vue";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import type { Folder } from "../../../type";
 import { namespace, State } from "vuex-class";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
@@ -87,9 +83,6 @@ const configuration = namespace("configuration");
     },
 })
 export default class DropDownCurrentFolder extends Vue {
-    @Prop({ required: true })
-    readonly isInFolderEmptyState!: boolean;
-
     @State
     readonly current_folder!: Folder;
 

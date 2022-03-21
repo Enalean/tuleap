@@ -40,6 +40,7 @@ import type { PermissionsState } from "./permissions-default-state";
 import type { State } from "../../type";
 import { getItem } from "../../api/rest-querier";
 import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "../../helpers/permissions/ugroups";
+import emitter from "../../helpers/emitter";
 
 interface PermissionUpdatePayload {
     item: Item;
@@ -74,6 +75,8 @@ export const updatePermissions = async (
                 break;
         }
         const updated_item = await getItem(item_id);
+
+        emitter.emit("item-permissions-have-just-been-updated");
 
         if (context.rootState.current_folder && item_id === context.rootState.current_folder.id) {
             context.commit("replaceCurrentFolder", updated_item, { root: true });

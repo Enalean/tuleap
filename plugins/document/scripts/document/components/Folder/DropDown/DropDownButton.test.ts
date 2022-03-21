@@ -44,18 +44,19 @@ describe("DropDownButton", () => {
     function createWrapper(
         isAppended: boolean,
         isInQuickLookMode: boolean,
-        isInLargeMode: boolean
+        isInLargeMode: boolean,
+        isInFolderEmptyState: boolean
     ): Wrapper<DropDownButton> {
         return shallowMount(DropDownButton, {
             localVue,
-            propsData: { isAppended, isInQuickLookMode, isInLargeMode },
+            propsData: { isAppended, isInQuickLookMode, isInLargeMode, isInFolderEmptyState },
         });
     }
 
     it(`Given drop down button is appended (aka user has write permissions)
         When we display the button
         Then it should display the button action and the dropdown option ( | update | v |)`, () => {
-        const wrapper = createWrapper(true, false, false);
+        const wrapper = createWrapper(true, false, false, false);
 
         expect(fake_dropdown_object.addEventListener).toHaveBeenCalledTimes(2);
         expect(document.addEventListener).toHaveBeenCalledTimes(1);
@@ -68,7 +69,7 @@ describe("DropDownButton", () => {
     it(`Given drop down button is not appended (aka user has read permissions)
         When we display the button
         Then it should display an ellipsis and the dropdown option (|... v|)`, () => {
-        const wrapper = createWrapper(false, false, false);
+        const wrapper = createWrapper(false, false, false, false);
 
         expect(fake_dropdown_object.addEventListener).toHaveBeenCalledTimes(2);
         expect(document.addEventListener).toHaveBeenCalledTimes(1);
@@ -81,7 +82,7 @@ describe("DropDownButton", () => {
     it(`Given drop down button is in quick look mode
         When we display the button
         Then it should be displayed outlined`, () => {
-        const wrapper = createWrapper(true, true, false);
+        const wrapper = createWrapper(true, true, false, false);
 
         expect(fake_dropdown_object.addEventListener).toHaveBeenCalledTimes(2);
         expect(document.addEventListener).toHaveBeenCalledTimes(1);
@@ -92,7 +93,7 @@ describe("DropDownButton", () => {
     it(`Given drop down button is in large mode
         When we display the button
         Then it should be displayed large`, () => {
-        const wrapper = createWrapper(true, true, true);
+        const wrapper = createWrapper(true, true, true, false);
 
         expect(fake_dropdown_object.addEventListener).toHaveBeenCalledTimes(2);
         expect(document.addEventListener).toHaveBeenCalledTimes(1);
@@ -102,7 +103,7 @@ describe("DropDownButton", () => {
 
     it(`Hide the dropdown
         When component is destroyed`, () => {
-        const wrapper = createWrapper(true, true, true);
+        const wrapper = createWrapper(true, true, true, false);
         wrapper.destroy();
 
         expect(fake_dropdown_object.addEventListener).toHaveBeenCalledTimes(2);

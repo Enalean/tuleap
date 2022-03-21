@@ -33,6 +33,8 @@ import type { AdvancedSearchParams } from "../../type";
 import VueRouter from "vue-router";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
+import type { Events } from "../../helpers/emitter";
+import emitter from "../../helpers/emitter";
 
 describe("SearchContainer", () => {
     beforeEach(() => {
@@ -408,5 +410,38 @@ describe("SearchContainer", () => {
 
         expect(wrapper.findComponent(SearchResultTable).exists()).toBe(false);
         expect(wrapper.findComponent(SearchResultError).exists()).toBe(true);
+    });
+
+    it.each<[keyof Events]>([
+        ["new-item-has-just-been-created"],
+        ["item-properties-have-just-been-updated"],
+        ["item-permissions-have-just-been-updated"],
+        ["item-has-just-been-deleted"],
+        ["item-has-just-been-updated"],
+    ])("should reload the page whenever %s", (event) => {
+        const reload = jest.fn();
+        Object.defineProperty(window, "location", {
+            value: {
+                reload,
+            },
+        });
+
+        shallowMount(SearchContainer, {
+            localVue: createLocalVue().use(VueRouter),
+            propsData: {
+                query: buildAdvancedSearchParams(),
+                folder_id: 101,
+                offset: 0,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {},
+                }),
+            },
+        });
+
+        emitter.emit(event);
+
+        expect(location.reload).toHaveBeenCalled();
     });
 });

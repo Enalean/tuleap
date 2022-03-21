@@ -45,6 +45,7 @@ import { adjustItemToContentAfterItemCreationInAFolder } from "../actions-helper
 import type { Folder, Item, State } from "../../type";
 import type { ActionContext } from "vuex";
 import type { ClipboardState } from "./module";
+import emitter from "../../helpers/emitter";
 
 export interface PastePayload {
     destination_folder: Folder;
@@ -77,6 +78,7 @@ export const pasteItem = async (
                 );
         }
         context.commit("emptyClipboard");
+        emitter.emit("new-item-has-just-been-created");
         if (!pasted_item_id) {
             throw new Error("Paste item id is unknown");
         }

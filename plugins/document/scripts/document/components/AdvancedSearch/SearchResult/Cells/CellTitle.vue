@@ -23,26 +23,41 @@
         <td class="document-search-result-icon">
             <i class="fa fa-fw" v-bind:class="icon_classes" aria-hidden="true"></i>
         </td>
-        <td class="document-search-result-title">
-            <a v-if="href" v-bind:href="href" class="document-folder-subitem-link" data-test="link">
-                {{ item.title }}
-            </a>
-            <router-link
-                v-else-if="in_app_link"
-                v-bind:to="in_app_link"
-                class="document-folder-subitem-link"
-                data-test="router-link"
-            >
-                {{ item.title }}
-            </router-link>
-            <template v-else>{{ item.title }}</template>
+        <td
+            class="document-search-result-title-cell"
+            v-bind:class="{ 'document-search-result-title-cell-dropdown-shown': is_dropdown_shown }"
+        >
+            <div class="document-search-result-title">
+                <a
+                    v-if="href"
+                    v-bind:href="href"
+                    class="document-folder-subitem-link"
+                    data-test="link"
+                >
+                    {{ item.title }}
+                </a>
+                <router-link
+                    v-else-if="in_app_link"
+                    v-bind:to="in_app_link"
+                    class="document-folder-subitem-link"
+                    data-test="router-link"
+                >
+                    {{ item.title }}
+                </router-link>
+                <template v-else>{{ item.title }}</template>
+            </div>
+            <search-item-dropdown
+                v-bind:item="item"
+                v-on:dropdown-shown="onDropdownShown"
+                v-on:dropdown-hidden="onDropdownHidden"
+            />
         </td>
     </fragment>
 </template>
 <script setup lang="ts">
-import type { ItemSearchResult } from "../../../../type";
+import type { Folder, ItemSearchResult } from "../../../../type";
 import { Fragment } from "vue-frag";
-import { computed } from "@vue/composition-api";
+import { computed, ref } from "@vue/composition-api";
 import {
     ICON_EMBEDDED,
     ICON_EMPTY,
@@ -58,8 +73,8 @@ import {
 import { iconForMimeType } from "../../../../helpers/icon-for-mime-type";
 import type { Route } from "vue-router/types/router";
 import { useState } from "vuex-composition-helpers";
-import type { Folder } from "../../../../type";
 import type { ConfigurationState } from "../../../../store/configuration";
+import SearchItemDropdown from "./SearchItemDropdown.vue";
 
 const { current_folder } = useState<{ current_folder: Folder }>(["current_folder"]);
 
@@ -130,6 +145,16 @@ const in_app_link = computed((): Partial<Route> | null => {
 
     return null;
 });
+
+const is_dropdown_shown = ref(false);
+
+function onDropdownShown(): void {
+    is_dropdown_shown.value = true;
+}
+
+function onDropdownHidden(): void {
+    is_dropdown_shown.value = false;
+}
 </script>
 
 <script lang="ts">

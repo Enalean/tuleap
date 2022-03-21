@@ -35,14 +35,11 @@
             />
             <drop-down-button
                 v-bind:is-in-quick-look-mode="true"
+                v-bind:is-in-folder-empty-state="false"
                 v-bind:is-in-large-mode="false"
                 v-bind:is-appended="item.user_can_write && !is_item_a_wiki_with_approval_table"
             >
-                <drop-down-menu
-                    v-bind:item="item"
-                    v-bind:is-in-quick-look-mode="true"
-                    v-bind:is-in-folder-empty-state="false"
-                >
+                <drop-down-menu v-bind:item="item">
                     <template v-if="!is_item_a_folder && item.user_can_write">
                         <lock-item
                             v-bind:item="item"

@@ -17,6 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const createNewVersion = jest.fn();
+const uploadVersion = jest.fn();
+const postEmbeddedFile = jest.fn();
+const postWiki = jest.fn();
+const postNewLinkVersionFromEmpty = jest.fn();
+const postNewEmbeddedFileVersionFromEmpty = jest.fn();
+const postNewFileVersionFromEmpty = jest.fn();
+const postLinkVersion = jest.fn();
+const getItem = jest.fn();
+
+jest.mock("../api/rest-querier", () => {
+    return {
+        createNewVersion,
+        uploadVersion,
+        postEmbeddedFile,
+        postWiki,
+        postNewLinkVersionFromEmpty,
+        postNewEmbeddedFileVersionFromEmpty,
+        postNewFileVersionFromEmpty,
+        postLinkVersion,
+        getItem,
+    };
+});
+
 import type { NewVersionFromEmptyInformation } from "./actions-update";
 import {
     createNewEmbeddedFileVersionFromModal,
@@ -26,7 +50,6 @@ import {
     createNewVersionFromEmpty,
     createNewWikiVersionFromModal,
 } from "./actions-update";
-import * as rest_querier from "../api/rest-querier";
 import * as upload_file from "./actions-helpers/upload-file";
 import type { ActionContext } from "vuex";
 import type { Embedded, Empty, Folder, ItemFile, Link, RootState, Wiki } from "../type";
@@ -34,9 +57,10 @@ import type { ConfigurationState } from "./configuration";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK } from "../constants";
 import type { Upload } from "tus-js-client";
+import emitter from "../helpers/emitter";
 
 describe("actions-update", () => {
-    let context: ActionContext<RootState, RootState>;
+    let context: ActionContext<RootState, RootState>, emit: jest.SpyInstance;
 
     beforeEach(() => {
         const project_id = "101";
@@ -48,13 +72,17 @@ describe("actions-update", () => {
                 current_folder_ascendant_hierarchy: [],
             } as unknown as RootState,
         } as unknown as ActionContext<RootState, RootState>;
+        emit = jest.spyOn(emitter, "emit");
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     describe("createNewFileVersion", () => {
-        let createNewVersion: jest.SpyInstance, uploadVersion: jest.SpyInstance;
+        let uploadVersion: jest.SpyInstance;
 
         beforeEach(() => {
-            createNewVersion = jest.spyOn(rest_querier, "createNewVersion");
             uploadVersion = jest.spyOn(upload_file, "uploadVersion");
         });
 
@@ -81,7 +109,7 @@ describe("actions-update", () => {
             const dropped_file = { name: "filename.txt", size: 123, type: "text/plain" } as File;
 
             const new_version = { upload_href: "/uploads/docman/version/42" };
-            createNewVersion.mockReturnValue(Promise.resolve(new_version));
+            createNewVersion.mockResolvedValue(new_version);
 
             const uploader = {};
             uploadVersion.mockReturnValue(uploader);
@@ -101,10 +129,9 @@ describe("actions-update", () => {
     });
 
     describe("createNewFileVersionFromModal", () => {
-        let createNewVersion: jest.SpyInstance, uploadVersion: jest.SpyInstance;
+        let uploadVersion: jest.SpyInstance;
 
         beforeEach(() => {
-            createNewVersion = jest.spyOn(rest_querier, "createNewVersion");
             uploadVersion = jest.spyOn(upload_file, "uploadVersion");
         });
 
@@ -128,6 +155,8 @@ describe("actions-update", () => {
                 null,
             ]);
 
+            expect(emit).not.toHaveBeenCalledWith("item-has-just-been-updated");
+            expect(emit).toHaveBeenCalledWith("item-is-being-uploaded");
             expect(createNewVersion).toHaveBeenCalled();
             expect(uploadVersion).toHaveBeenCalled();
         });
@@ -185,12 +214,6 @@ describe("actions-update", () => {
     });
 
     describe("createNewEmbeddedFileVersionFromModal", () => {
-        let postEmbeddedFile: jest.SpyInstance;
-
-        beforeEach(() => {
-            postEmbeddedFile = jest.spyOn(rest_querier, "postEmbeddedFile");
-        });
-
         it("updates an embedded file", async () => {
             const item = { id: 45 } as Embedded;
             context.state.folder_content = [{ id: 45 } as Embedded];
@@ -205,6 +228,7 @@ describe("actions-update", () => {
             ]);
 
             expect(postEmbeddedFile).toHaveBeenCalled();
+            expect(emit).toHaveBeenCalledWith("item-has-just-been-updated");
         });
         it("handles error when there is a problem with the update", async () => {
             const item = { id: 45 } as Embedded;
@@ -231,12 +255,6 @@ describe("actions-update", () => {
     });
 
     describe("createNewWikiVersionFromModal", () => {
-        let postWiki: jest.SpyInstance;
-
-        beforeEach(() => {
-            postWiki = jest.spyOn(rest_querier, "postWiki");
-        });
-
         it("updates a wiki page name", async () => {
             const item = { id: 45 } as Wiki;
             context.state.folder_content = [{ id: 45 } as Wiki];
@@ -250,6 +268,7 @@ describe("actions-update", () => {
             ]);
 
             expect(postWiki).toHaveBeenCalled();
+            expect(emit).toHaveBeenCalledWith("item-has-just-been-updated");
         });
         it("throws an error when there is a problem with the update", async () => {
             const item = { id: 45 } as Wiki;
@@ -276,12 +295,6 @@ describe("actions-update", () => {
     });
 
     describe("createNewLinkVersionFromModal", () => {
-        let postLinkVersion: jest.SpyInstance;
-
-        beforeEach(() => {
-            postLinkVersion = jest.spyOn(rest_querier, "postLinkVersion");
-        });
-
         it("updates a link url", async () => {
             const item = { id: 45 } as Link;
             context.state.folder_content = [{ id: 45 } as Link];
@@ -296,6 +309,7 @@ describe("actions-update", () => {
             ]);
 
             expect(postLinkVersion).toHaveBeenCalled();
+            expect(emit).toHaveBeenCalledWith("item-has-just-been-updated");
         });
         it("throws an error when there is a problem with the update", async () => {
             const item = { id: 45 } as Link;
@@ -323,10 +337,7 @@ describe("actions-update", () => {
     });
 
     describe("createNewVersionFromEmpty -", () => {
-        let context: ActionContext<RootState, RootState>,
-            postNewLinkVersionFromEmpty: jest.SpyInstance,
-            postNewEmbeddedFileVersionFromEmpty: jest.SpyInstance,
-            postNewFileVersionFromEmpty: jest.SpyInstance;
+        let context: ActionContext<RootState, RootState>;
 
         beforeEach(() => {
             context = {
@@ -336,13 +347,6 @@ describe("actions-update", () => {
                     folder_content: [{ id: 123, type: TYPE_EMPTY } as Empty],
                 } as unknown as RootState,
             } as unknown as ActionContext<RootState, RootState>;
-
-            postNewLinkVersionFromEmpty = jest.spyOn(rest_querier, "postNewLinkVersionFromEmpty");
-            postNewEmbeddedFileVersionFromEmpty = jest.spyOn(
-                rest_querier,
-                "postNewEmbeddedFileVersionFromEmpty"
-            );
-            postNewFileVersionFromEmpty = jest.spyOn(rest_querier, "postNewFileVersionFromEmpty");
         });
 
         it("should update the empty document to link document", async () => {
@@ -360,7 +364,7 @@ describe("actions-update", () => {
                 id: 123,
                 type: TYPE_LINK,
             } as Link;
-            jest.spyOn(rest_querier, "getItem").mockResolvedValue(updated_item);
+            getItem.mockResolvedValue(updated_item);
             postNewLinkVersionFromEmpty.mockReturnValue(Promise.resolve());
 
             await createNewVersionFromEmpty(context, [TYPE_LINK, item, item_to_update]);
@@ -369,6 +373,7 @@ describe("actions-update", () => {
             expect(postNewEmbeddedFileVersionFromEmpty).not.toHaveBeenCalled();
             expect(postNewFileVersionFromEmpty).not.toHaveBeenCalled();
 
+            expect(emit).toHaveBeenCalledWith("item-has-just-been-updated");
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
                 updated_item
@@ -400,7 +405,7 @@ describe("actions-update", () => {
                 type: TYPE_EMBEDDED,
             } as Embedded;
 
-            jest.spyOn(rest_querier, "getItem").mockResolvedValue(updated_item);
+            getItem.mockResolvedValue(updated_item);
             postNewEmbeddedFileVersionFromEmpty.mockReturnValue(Promise.resolve());
 
             await createNewVersionFromEmpty(context, [TYPE_EMBEDDED, item, item_to_update]);
@@ -408,6 +413,7 @@ describe("actions-update", () => {
             expect(postNewLinkVersionFromEmpty).not.toHaveBeenCalled();
             expect(postNewEmbeddedFileVersionFromEmpty).toHaveBeenCalled();
             expect(postNewFileVersionFromEmpty).not.toHaveBeenCalled();
+            expect(emit).toHaveBeenCalledWith("item-has-just-been-updated");
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
                 updated_item
@@ -442,7 +448,7 @@ describe("actions-update", () => {
                 .spyOn(upload_file, "uploadVersionFromEmpty")
                 .mockReturnValue({} as Upload);
             postNewFileVersionFromEmpty.mockReturnValue(Promise.resolve());
-            jest.spyOn(rest_querier, "getItem").mockResolvedValue(updated_item);
+            getItem.mockResolvedValue(updated_item);
 
             await createNewVersionFromEmpty(context, [TYPE_FILE, item, item_to_update]);
 
@@ -450,6 +456,8 @@ describe("actions-update", () => {
             expect(postNewEmbeddedFileVersionFromEmpty).not.toHaveBeenCalled();
             expect(postNewFileVersionFromEmpty).toHaveBeenCalled();
             expect(uploadVersionFromEmpty).toHaveBeenCalled();
+            expect(emit).not.toHaveBeenCalledWith("item-has-just-been-updated");
+            expect(emit).toHaveBeenCalledWith("item-is-being-uploaded");
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
                 updated_item
@@ -481,7 +489,6 @@ describe("actions-update", () => {
                 type: TYPE_LINK,
             } as Link;
 
-            const getItem = jest.spyOn(rest_querier, "getItem");
             postNewLinkVersionFromEmpty.mockImplementation(() => {
                 throw new Error("Failed to update");
             });

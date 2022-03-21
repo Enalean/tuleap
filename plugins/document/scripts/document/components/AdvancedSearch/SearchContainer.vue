@@ -21,6 +21,7 @@
 <template>
     <div class="document-search-container">
         <search-header />
+        <search-item-modals />
         <div class="document-search-container-criteria-table">
             <search-criteria-panel
                 v-bind:query="query"
@@ -49,9 +50,17 @@ import { Action } from "vuex-class";
 import SearchResultError from "./SearchResult/SearchResultError.vue";
 import { isQueryEmpty } from "../../helpers/is-query-empty";
 import { getRouterQueryFromSearchParams } from "../../helpers/get-router-query-from-search-params";
+import SearchItemModals from "./SearchItemModals.vue";
+import emitter from "../../helpers/emitter";
 
 @Component({
-    components: { SearchResultError, SearchHeader, SearchResultTable, SearchCriteriaPanel },
+    components: {
+        SearchItemModals,
+        SearchResultError,
+        SearchHeader,
+        SearchResultTable,
+        SearchCriteriaPanel,
+    },
 })
 export default class SearchContainer extends Vue {
     @Prop({ required: true })
@@ -74,10 +83,26 @@ export default class SearchContainer extends Vue {
     mounted(): void {
         this.loadFolder(this.folder_id);
         document.body.classList.add(this.reduce_help_button_class);
+
+        emitter.on("new-item-has-just-been-created", this.reload);
+        emitter.on("item-properties-have-just-been-updated", this.reload);
+        emitter.on("item-permissions-have-just-been-updated", this.reload);
+        emitter.on("item-has-just-been-deleted", this.reload);
+        emitter.on("item-has-just-been-updated", this.reload);
     }
 
     beforeUnmount(): void {
         document.body.classList.remove(this.reduce_help_button_class);
+
+        emitter.off("new-item-has-just-been-created", this.reload);
+        emitter.off("item-properties-have-just-been-updated", this.reload);
+        emitter.off("item-permissions-have-just-been-updated", this.reload);
+        emitter.off("item-has-just-been-deleted", this.reload);
+        emitter.off("item-has-just-been-updated", this.reload);
+    }
+
+    reload(): void {
+        window.location.reload();
     }
 
     @Watch("query", { immediate: true, deep: true })

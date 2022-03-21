@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchItemDropdown should render the dropdown with the menu detached 1`] = `
+<body>
+  <div
+    class="document-search-table-container"
+  >
+    <div
+      class="tlp-dropdown document-search-dropdown"
+    >
+      <button
+        aria-label="Open dropdown menu"
+        class="tlp-button-primary tlp-button-small"
+        data-dropdown="trigger"
+        data-test="trigger"
+        id="document-search-dropdown-trigger-111"
+        type="button"
+      >
+        <i
+          class="fa fa-ellipsis-h"
+        />
+         
+        <i
+          class="fa fa-caret-down tlp-button-icon-right"
+        />
+      </button>
+       
+    </div>
+  </div>
+  <div
+    class="tlp-dropdown-menu document-dropdown-menu tlp-dropdown-menu-right"
+    data-dropdown="menu"
+    data-triggered-by="document-search-dropdown-trigger-111"
+    role="menu"
+  >
+    <div
+      class="document-search-dropdown-spinner"
+      data-test="spinner"
+    >
+      <i
+        aria-hidden="true"
+        class="fas fa-circle-notch fa-spin"
+      />
+    </div>
+  </div>
+</body>
+`;

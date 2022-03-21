@@ -18,14 +18,7 @@
   -->
 
 <template>
-    <div
-        class="tlp-dropdown-menu document-dropdown-menu"
-        v-bind:class="{
-            'tlp-dropdown-menu-large tlp-dropdown-menu-top': isInFolderEmptyState,
-            'tlp-dropdown-menu-right': isInQuickLookMode,
-        }"
-        role="menu"
-    >
+    <fragment>
         <slot name="new-folder-secondary-action" />
 
         <slot name="new-item-version" />
@@ -87,9 +80,10 @@
 
         <slot name="delete-item-separator" v-if="is_deletion_allowed" />
         <slot name="delete-item" />
-    </div>
+    </fragment>
 </template>
 <script lang="ts">
+import { Fragment } from "vue-frag";
 import CutItem from "./CutItem.vue";
 import CopyItem from "./CopyItem.vue";
 import PasteItem from "./PasteItem.vue";
@@ -104,6 +98,7 @@ const configuration = namespace("configuration");
 
 @Component({
     components: {
+        Fragment,
         DropDownSeparator,
         CutItem,
         CopyItem,
@@ -112,12 +107,6 @@ const configuration = namespace("configuration");
     },
 })
 export default class DropDownMenu extends Vue {
-    @Prop({ required: true })
-    readonly isInFolderEmptyState!: boolean;
-
-    @Prop({ required: true })
-    readonly isInQuickLookMode!: boolean;
-
     @Prop({ required: true })
     readonly item!: Item;
 

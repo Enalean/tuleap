@@ -32,6 +32,9 @@ import { loadProjectUserGroupsIfNeeded, updatePermissions } from "./permissions-
 import type { Empty, Folder, Item, RootState } from "../../type";
 import type { ActionContext } from "vuex";
 import type { PermissionsState } from "./permissions-default-state";
+import emitter from "../../helpers/emitter";
+
+jest.mock("../../helpers/emitter");
 
 describe("UpdatePermissions()", () => {
     const updated_permissions = {
@@ -51,6 +54,7 @@ describe("UpdatePermissions()", () => {
                 current_folder: { id: 999, type: TYPE_FOLDER } as Folder,
             } as RootState,
         } as unknown as ActionContext<PermissionsState, RootState>;
+        jest.clearAllMocks();
     });
 
     const testPermissionsUpdateSuccess = async (type: string): Promise<void> => {
@@ -72,6 +76,7 @@ describe("UpdatePermissions()", () => {
         await testPermissionsUpdateSuccess(TYPE_FILE);
 
         expect(putFilePermissions).toHaveBeenCalled();
+        expect(emitter.emit).toHaveBeenCalledWith("item-permissions-have-just-been-updated");
         expect(context.commit).toHaveBeenCalledWith(
             "removeItemFromFolderContent",
             expect.any(Object),
@@ -97,6 +102,7 @@ describe("UpdatePermissions()", () => {
         await testPermissionsUpdateSuccess(TYPE_EMBEDDED);
 
         expect(putEmbeddedFilePermissions).toHaveBeenCalled();
+        expect(emitter.emit).toHaveBeenCalledWith("item-permissions-have-just-been-updated");
         expect(context.commit).toHaveBeenCalledWith(
             "removeItemFromFolderContent",
             expect.any(Object),
@@ -122,6 +128,7 @@ describe("UpdatePermissions()", () => {
         await testPermissionsUpdateSuccess(TYPE_LINK);
 
         expect(putLinkPermissions).toHaveBeenCalled();
+        expect(emitter.emit).toHaveBeenCalledWith("item-permissions-have-just-been-updated");
         expect(context.commit).toHaveBeenCalledWith(
             "removeItemFromFolderContent",
             expect.any(Object),
@@ -147,6 +154,7 @@ describe("UpdatePermissions()", () => {
         await testPermissionsUpdateSuccess(TYPE_WIKI);
 
         expect(putWikiPermissions).toHaveBeenCalled();
+        expect(emitter.emit).toHaveBeenCalledWith("item-permissions-have-just-been-updated");
         expect(context.commit).toHaveBeenCalledWith(
             "removeItemFromFolderContent",
             expect.any(Object),
@@ -172,6 +180,7 @@ describe("UpdatePermissions()", () => {
         await testPermissionsUpdateSuccess(TYPE_EMPTY);
 
         expect(putEmptyDocumentPermissions).toHaveBeenCalled();
+        expect(emitter.emit).toHaveBeenCalledWith("item-permissions-have-just-been-updated");
         expect(context.commit).toHaveBeenCalledWith(
             "removeItemFromFolderContent",
             expect.any(Object),
@@ -197,6 +206,7 @@ describe("UpdatePermissions()", () => {
         await testPermissionsUpdateSuccess(TYPE_FOLDER);
 
         expect(putFolderPermissions).toHaveBeenCalled();
+        expect(emitter.emit).toHaveBeenCalledWith("item-permissions-have-just-been-updated");
         expect(context.commit).toHaveBeenCalledWith(
             "removeItemFromFolderContent",
             expect.any(Object),
@@ -227,6 +237,7 @@ describe("UpdatePermissions()", () => {
         await updatePermissions(context, { item: folder, updated_permissions });
 
         expect(putFolderPermissions).toHaveBeenCalled();
+        expect(emitter.emit).toHaveBeenCalledWith("item-permissions-have-just-been-updated");
         expect(context.dispatch).toHaveBeenCalledWith("loadFolder", folder.id, { root: true });
         expect(context.commit).toHaveBeenCalledWith("replaceCurrentFolder", expect.any(Object), {
             root: true,

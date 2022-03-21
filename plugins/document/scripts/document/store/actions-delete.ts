@@ -36,6 +36,7 @@ import {
     isLink,
     isWiki,
 } from "../helpers/type-check-helper";
+import emitter from "../helpers/emitter";
 
 export const deleteItem = async (
     context: ActionContext<RootState, RootState>,
@@ -60,6 +61,8 @@ export const deleteItem = async (
         } else if (isFolder(item)) {
             await deleteFolder(item);
         }
+
+        emitter.emit("item-has-just-been-deleted");
 
         context.commit("clipboard/emptyClipboardAfterItemDeletion", item);
         context.commit("removeItemFromFolderContent", item);

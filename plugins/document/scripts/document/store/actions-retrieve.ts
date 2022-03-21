@@ -36,6 +36,15 @@ import type { ItemPath } from "./actions-helpers/build-parent-paths";
 import { buildItemPath } from "./actions-helpers/build-parent-paths";
 import { USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE } from "../constants";
 
+export interface RootActionsRetrieve {
+    readonly loadRootFolder: typeof loadRootFolder;
+    readonly getSubfolderContent: typeof getSubfolderContent;
+    readonly loadDocumentWithAscendentHierarchy: typeof loadDocumentWithAscendentHierarchy;
+    readonly loadDocument: typeof loadDocument;
+    readonly loadFolder: typeof loadFolder;
+    readonly getWikisReferencingSameWikiPage: typeof getWikisReferencingSameWikiPage;
+}
+
 export const loadRootFolder = async (
     context: ActionContext<RootState, RootState>
 ): Promise<void> => {

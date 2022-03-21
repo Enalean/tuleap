@@ -20,12 +20,23 @@
 
 <template>
     <div class="document-header document-header-search">
-        <h1 class="document-header-title" v-translate>Search</h1>
+        <h1 class="document-header-title">
+            {{ title }}
+        </h1>
     </div>
 </template>
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 
-@Component
-export default class SearchHeader extends Vue {}
+<script setup lang="ts">
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { ref } from "@vue/composition-api";
+
+const { $gettext } = useGettext();
+
+const title = ref($gettext("Search"));
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>
