@@ -32,7 +32,6 @@ use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\Config\ConfigDao;
 use Tuleap\Config\ConfigKey;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -138,9 +137,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     #[ConfigKey("Max number of files that can be uploaded with a drag'n drop in interface")]
     public const PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING = 'plugin_docman_max_number_of_files';
-
-    #[FeatureFlagConfigKey("Feature flag for story #24166 apply a naming pattern on files to enforce a convention")]
-    public const PLUGIN_DOCMAN_APPLY_NAMING_PATTERN = 'apply_naming_pattern';
 
     /**
      * Store docman root items indexed by groupId
