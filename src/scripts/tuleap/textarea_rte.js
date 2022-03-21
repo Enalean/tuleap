@@ -44,7 +44,7 @@ tuleap.textarea.RTE = Class.create(window.codendi.RTE, {
         var selectbox = Builder.node("select", {
             id: "rte_format_selectbox" + this.options.id,
             name: this.options.name,
-            class: "input-small",
+            class: "small",
         });
         select_container.appendChild(selectbox);
 

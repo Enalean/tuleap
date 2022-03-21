@@ -551,7 +551,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $classes         = implode(" ", $additional_classes);
             $html           .= '<section class="tracker_formelement_read_and_edit_edition_section tracker-form-element-artifactlink-section ' . $hp->purify($classes) . '">';
             $html           .= '<div>';
-            $html           .= '<div><span class="input-append" style="display:inline;"><input type="text"
+            $html           .= '<div><span class="input-append"><input type="text"
                              ' . $html_name_new . '
                              class="tracker-form-element-artifactlink-new"
                              size="40"

@@ -90,7 +90,7 @@ export function createSelect(
         <select
             id="${presenter.id}"
             name="${presenter.name}"
-            class="input-small"
+            class="small"
             ?disabled="${presenter.is_disabled}"
             @input="${inputHandler}"
             data-test="format-select"

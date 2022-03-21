@@ -101,12 +101,20 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
         .select2-container--tlp-select2 .select2-selection--multiple,
         .select2-container--tlp-select2-small .select2-selection--multiple,
         .select2-container--tlp-select2-large .select2-selection--multiple,
+        .list-picker-selection {
+            border-color: var(--tlp-danger-color);
+            color: var(--tlp-danger-dark-color);
+
+            &:focus {
+                box-shadow: var(--tlp-shadow-focus-error);
+            }
+        }
+
         .select2-container--tlp-select2
             .select2-selection--multiple
             .select2-selection__rendered
             .select2-selection__choice
-            .select2-selection__choice__remove:hover::before,
-        .list-picker-selection {
+            .select2-selection__choice__remove:hover::before {
             border-color: var(--tlp-danger-color);
             color: var(--tlp-danger-dark-color);
         }
@@ -119,6 +127,10 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
             border-color: var(--tlp-danger-color);
             background-color: var(--tlp-danger-color-transparent-90);
             color: var(--tlp-danger-dark-color);
+
+            &:focus {
+                box-shadow: var(--tlp-shadow-focus-error);
+            }
         }
         /* stylelint-enable */
     }

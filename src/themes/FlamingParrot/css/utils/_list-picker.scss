@@ -78,7 +78,8 @@ $form-element-small-font-size: 0.8125rem;
             height: $form-element-height;
             padding: 0 ($form-element-padding-horizontal * 2 + $form-element-select-background-size)
                 0 $form-element-padding-horizontal;
-            background: var(--tlp-white-color) url("../images/list-picker-background.png") no-repeat;
+            background: var(--tlp-white-color) url("../../tlp/src/images/field-double-arrows.svg")
+                no-repeat;
             background-position: right $form-element-padding-horizontal center;
         }
 
@@ -86,7 +87,7 @@ $form-element-small-font-size: 0.8125rem;
             position: relative;
             min-height: $form-element-height;
             padding: 0 52px 5px 6px;
-            background: var(--tlp-white-color) url("../images/list-picker-multi-background.svg")
+            background: var(--tlp-white-color) url("../../tlp/src/images/field-ellipsis.svg")
                 no-repeat;
             background-position: right 10px top 17px;
             background-size: 15px 5px;
@@ -164,9 +165,11 @@ $form-element-small-font-size: 0.8125rem;
     }
 }
 
-.list-picker-search-field {
+/* stylelint-disable-next-line selector-no-qualifying-type */
+input.list-picker-search-field {
     height: 32px;
     padding: 0;
+    border-radius: 0;
     box-shadow: none;
     font-size: $form-element-small-font-size;
     appearance: none;
@@ -192,6 +195,7 @@ $form-element-small-font-size: 0.8125rem;
     > .list-picker-search-field {
         width: 100%;
         padding: 0 4px;
+        border-radius: var(--tlp-medium-radius);
 
         &:focus {
             border-color: var(--tlp-main-color);
