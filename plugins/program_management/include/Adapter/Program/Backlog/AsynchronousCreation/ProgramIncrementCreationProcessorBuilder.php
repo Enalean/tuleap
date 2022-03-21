@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Tracker_Artifact_Changeset_InitialChangesetCreator;
+use Tracker_Artifact_Changeset_ChangesetDataInitializator;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -54,6 +54,11 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Process
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessor;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
@@ -93,9 +98,21 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
             $artifacts_linked_to_parent_dao
         );
 
+        $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+        $event_manager    = \EventManager::instance();
         $artifact_creator = new ArtifactCreatorAdapter(
             TrackerArtifactCreator::build(
-                Tracker_Artifact_Changeset_InitialChangesetCreator::build($logger),
+                new InitialChangesetCreator(
+                    Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
+                    $fields_retriever,
+                    $event_manager,
+                    new Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+                    $logger,
+                    ArtifactChangesetSaver::build(),
+                    new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
+                    \WorkflowFactory::instance(),
+                    new InitialChangesetValueSaver()
+                ),
                 Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
                 $logger
             ),
@@ -134,7 +151,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
 
         $project_access_checker = new ProjectAccessChecker(
             new RestrictedUserCanAccessProjectVerifier(),
-            \EventManager::instance()
+            $event_manager
         );
 
         return new ProgramIncrementCreationProcessor(

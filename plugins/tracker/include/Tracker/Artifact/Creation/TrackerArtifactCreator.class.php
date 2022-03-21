@@ -27,7 +27,6 @@ use Psr\Log\LoggerInterface;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_FieldsValidator;
-use Tracker_Artifact_Changeset_InitialChangesetCreatorBase;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tuleap\DB\DBFactory;
@@ -35,6 +34,8 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
+use Tuleap\Tracker\Artifact\Changeset\CreateInitialChangeset;
+use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
@@ -57,7 +58,7 @@ class TrackerArtifactCreator
     /** @var Tracker_Artifact_Changeset_FieldsValidator */
     private $fields_validator;
 
-    /** @var Tracker_Artifact_Changeset_InitialChangesetCreatorBase */
+    /** @var CreateInitialChangeset */
     private $changeset_creator;
     /**
      * @var VisitRecorder
@@ -75,7 +76,7 @@ class TrackerArtifactCreator
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
-        Tracker_Artifact_Changeset_InitialChangesetCreatorBase $changeset_creator,
+        CreateInitialChangeset $changeset_creator,
         VisitRecorder $visit_recorder,
         \Psr\Log\LoggerInterface $logger,
         DBTransactionExecutor $db_transaction_executor,
@@ -90,7 +91,7 @@ class TrackerArtifactCreator
     }
 
     public static function build(
-        Tracker_Artifact_Changeset_InitialChangesetCreatorBase $changeset_creator_base,
+        InitialChangesetCreator $changeset_creator_base,
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
         LoggerInterface $logger,
     ): self {
