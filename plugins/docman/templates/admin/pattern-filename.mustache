@@ -5,37 +5,86 @@
                 {{> csrf_token_input }}
             {{/ csrf }}
             <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title">{{# dgettext }}tuleap-docman | Filename pattern{{/dgettext}}</h1>
+                <h1 class="tlp-pane-title">{{# dgettext }}tuleap-docman | Filename pattern{{/ dgettext }}</h1>
             </div>
             <section class="tlp-pane-section">
+                {{# info }}
+                    <div class="tlp-alert-info">{{ . }}</div>
+                {{/ info }}
                 {{# warnings }}
                     <div class="tlp-alert-warning">{{ . }}</div>
                 {{/ warnings }}
-                <p> {{# dgettext }} tuleap-docman | Apply a naming pattern on files.{{/dgettext}}<br/>
+                <p>
                     {{# dgettext }}
-                        tuleap-docman | Pattern is defined with variables that comes from Tuleap. There are 4 variables
-                        available:
-                    {{/dgettext}}
+                        tuleap-docman |
+                        You can enforce the filename to follow a pattern. This filename will be automatically updated during the upload (filename of already existing documents are not affected by the configuration, only new ones will be).
+                    {{/ dgettext }}
                 </p>
-                <ul>
-                    <li> {{# dgettext }} tuleap-docman | ${ID}: the document internal id. {{/dgettext}}</li>
-                    <li> {{# dgettext }} tuleap-docman | ${TITLE}: the document title. {{/dgettext}}</li>
-                    <li>
-                        {{# dgettext }}
-                            tuleap-docman | ${STATUS}: the document status ("Draft", "Approved" or "Rejected").
-                        {{/dgettext}}
-                    </li>
-                    <li>
-                        {{# dgettext }}
-                            tuleap-docman | ${VERSION_NAME}: the latest version name of the document.
-                        {{/dgettext}}
-                    </li>
-                </ul>
-                <p class="tlp-text-danger">
+                <p>
                     {{# dgettext }}
-                        tuleap-docman | There must be at least either ${TITLE} or ${ID} variable in the pattern.
-                    {{/dgettext}}
+                        tuleap-docman |
+                        The pattern contains variables whose values are specific to each document.
+                    {{/ dgettext }}
                 </p>
+                <p>
+                    {{# dgettext }}
+                        tuleap-docman |
+                        For example, if enforced pattern is <code>${ID}-${TITLE}</code> and user creates a new document (or version) with title <code>MyFooBar</code>
+                        and id <code>123</code> from uploaded file <code>output.32.pdf</code>, then generated filename will be <code>123-MyFooBar.pdf</code>.
+                    {{/ dgettext }}
+                </p>
+
+                <table class="tlp-table docman-admin-filename-pattern-variables">
+                    <thead>
+                        <tr>
+                            <th class="docman-admin-filename-pattern-variable-name">
+                                {{# dgettext }} tuleap-docman | Variable {{/ dgettext }}
+                            </th>
+                            <th class="docman-admin-filename-pattern-variable-description">
+                                {{# dgettext }} tuleap-docman | Description {{/ dgettext }}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="docman-admin-filename-pattern-variable-name">
+                                <code>${ID}</code>
+                            </td>
+                            <td>
+                                {{# dgettext }} tuleap-docman | The document internal id {{/ dgettext }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="docman-admin-filename-pattern-variable-name">
+                                <code>${TITLE}</code>
+                            </td>
+                            <td>
+                                {{# dgettext }} tuleap-docman | The document title {{/ dgettext }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="docman-admin-filename-pattern-variable-name">
+                                <code>${STATUS}</code>
+                            </td>
+                            <td>
+                                {{# dgettext }}
+                                    tuleap-docman | The document status ("Draft", "Approved" or "Rejected")
+                                {{/ dgettext }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="docman-admin-filename-pattern-variable-name">
+                                <code>${VERSION_NAME}</code>
+                            </td>
+                            <td>
+                                {{# dgettext }}
+                                    tuleap-docman | The latest version name of the document
+                                {{/ dgettext }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
                 <div class="tlp-form-element">
                     <input type="hidden" name="is_enforced" value="0">
                     <label class="tlp-label tlp-checkbox">
@@ -45,12 +94,13 @@
                                {{# is_enforced }}checked{{/ is_enforced }}
                                id="docman-admin-filename-pattern-enforce"
                         >
-                        {{# dgettext }}tuleap-docman | Enforce filename pattern{{/dgettext}}
+                        {{# dgettext }}tuleap-docman | Enforce filename pattern{{/ dgettext }}
                     </label>
                 </div>
+
                 <div class="tlp-form-element">
                     <label class="tlp-label" for="docman-admin-filename-pattern">
-                        {{# dgettext }}tuleap-docman | Pattern {{/dgettext}}
+                        {{# dgettext }}tuleap-docman | Pattern {{/ dgettext }}
                         <i class="fas fa-asterisk"
                            id="docman-admin-filename-pattern-mandatory-marker"
                            aria-hidden="true"
@@ -61,9 +111,15 @@
                            id="docman-admin-filename-pattern"
                            name="filename_pattern"
                            placeholder="tuleap-doc#{ID}"
-                           value="{{pattern}}"
+                           value="{{ pattern }}"
                            pattern=".*\$\{(TITLE|ID)\}.*"
+                           title="{{# dgettext }}tuleap-docman | Pattern must contain at least ${TITLE} or ${ID}{{/ dgettext }}"
                     />
+                    <p class="tlp-text-info">
+                        {{# dgettext }}
+                            tuleap-docman | Pattern must contain at least ${TITLE} or ${ID}
+                        {{/ dgettext }}
+                    </p>
                 </div>
                 <input type="hidden" name="action" value="admin_change_filename_pattern" />
             </section>

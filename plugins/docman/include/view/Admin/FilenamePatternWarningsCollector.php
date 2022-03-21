@@ -32,6 +32,10 @@ class FilenamePatternWarningsCollector implements \Tuleap\Event\Dispatchable
      * @var string[]
      */
     private array $warnings = [];
+    /**
+     * @var string[]
+     */
+    private array $info = [];
 
     public function __construct(private int $project_id, private FilenamePattern $filename_pattern)
     {
@@ -45,9 +49,22 @@ class FilenamePatternWarningsCollector implements \Tuleap\Event\Dispatchable
         return $this->warnings;
     }
 
+    /**
+     * @return string[]
+     */
+    public function getInfo(): array
+    {
+        return $this->info;
+    }
+
     public function addWarning(string $warning): void
     {
         $this->warnings[] = $warning;
+    }
+
+    public function addInfo(string $info): void
+    {
+        $this->info[] = $info;
     }
 
     public function getFilenamePattern(): FilenamePattern

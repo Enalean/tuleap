@@ -81,7 +81,7 @@ class WebDAVPlugin extends Plugin
                 )
             );
         } else {
-            $collector->addWarning(
+            $collector->addInfo(
                 dgettext(
                     'tuleap-webdav',
                     'WebDAV is currently activated and is not compatible with filename pattern usage. If you choose to enforce a filename pattern, you will not be able to interact with your documents via WebDAV.'
