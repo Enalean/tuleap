@@ -20,6 +20,11 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
@@ -590,11 +595,22 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
 
     private function getArtifactCreator(): TrackerArtifactCreator
     {
-        $fields_validator = Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build();
+        $fields_validator     = Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build();
+        $logger               = new WrapperLogger(BackendLogger::getDefaultLogger(), self::class);
+        $form_element_factory = \Tracker_FormElementFactory::instance();
+        $fields_retriever     = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
 
-        $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), self::class);
-
-        $changeset_creator = Tracker_Artifact_Changeset_InitialChangesetCreator::build($logger);
+        $changeset_creator = new InitialChangesetCreator(
+            Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
+            $fields_retriever,
+            EventManager::instance(),
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+            $logger,
+            ArtifactChangesetSaver::build(),
+            new AfterNewChangesetHandler($this, $fields_retriever),
+            \WorkflowFactory::instance(),
+            new InitialChangesetValueSaver()
+        );
 
         return TrackerArtifactCreator::build($changeset_creator, $fields_validator, $logger);
     }

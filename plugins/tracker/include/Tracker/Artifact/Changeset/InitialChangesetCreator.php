@@ -20,10 +20,18 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\Tracker\Artifact\Changeset;
+
+use EventManager;
+use PFUser;
+use Psr\Log\LoggerInterface;
+use Tracker_Artifact_Changeset_ChangesetDataInitializator;
+use Tracker_Artifact_Changeset_FieldsValidator;
+use Tracker_Artifact_Changeset_Null;
+use Tracker_Artifact_Exception_CannotCreateNewChangeset;
+use Tracker_Workflow_GlobalRulesViolationException;
+use Tracker_Workflow_Transition_InvalidConditionForTransitionException;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
-use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
-use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
@@ -31,57 +39,23 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Workflow\RetrieveWorkflow;
 
 /**
- * I am a Template Method to create an initial changeset.
+ * I create initial changesets.
  */
-abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase
+final class InitialChangesetCreator implements CreateInitialChangeset
 {
-    /** @var Tracker_Artifact_Changeset_FieldsValidator */
-    private $fields_validator;
-    private FieldsToBeSavedInSpecificOrderRetriever $fields_retriever;
-    /** @var EventManager */
-    private $event_manager;
-    /** @var Tracker_Artifact_Changeset_ChangesetDataInitializator */
-    private $field_initializator;
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var ArtifactChangesetSaver
-     */
-    private $artifact_changeset_saver;
-    private AfterNewChangesetHandler $after_new_changeset_handler;
-    private RetrieveWorkflow $workflow_retriever;
-
     public function __construct(
-        Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
-        FieldsToBeSavedInSpecificOrderRetriever $fields_retriever,
-        EventManager $event_manager,
-        Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
-        \Psr\Log\LoggerInterface $logger,
-        ArtifactChangesetSaver $artifact_changeset_saver,
-        AfterNewChangesetHandler $after_new_changeset_handler,
-        RetrieveWorkflow $workflow_retriever,
+        private Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
+        private FieldsToBeSavedInSpecificOrderRetriever $fields_retriever,
+        private EventManager $event_manager,
+        private Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
+        private LoggerInterface $logger,
+        private ArtifactChangesetSaver $artifact_changeset_saver,
+        private AfterNewChangesetHandler $after_new_changeset_handler,
+        private RetrieveWorkflow $workflow_retriever,
+        private SaveInitialChangesetValue $save_initial_changeset_value,
     ) {
-        $this->fields_validator            = $fields_validator;
-        $this->fields_retriever            = $fields_retriever;
-        $this->event_manager               = $event_manager;
-        $this->field_initializator         = $field_initializator;
-        $this->logger                      = $logger;
-        $this->artifact_changeset_saver    = $artifact_changeset_saver;
-        $this->after_new_changeset_handler = $after_new_changeset_handler;
-        $this->workflow_retriever          = $workflow_retriever;
     }
 
-    /**
-     * Create the initial changeset of an artifact
-     *
-     * @param array   $fields_data The artifact fields values
-     * @param PFUser  $submitter   The user who did the artifact submission
-     * @param int $submitted_on When the changeset is created
-     *
-     * @return int The Id of the initial changeset, or null if fields were not valid
-     */
     public function create(
         Artifact $artifact,
         array $fields_data,
@@ -132,7 +106,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase
             return null;
         }
 
-        $this->storeFieldsValues($artifact, $fields_data, $submitter, $changeset_id, $url_mapping);
+        $this->storeFieldsValues($artifact, $fields_data, $submitter, $changeset_id, $url_mapping, $workflow);
 
         $changeset = $artifact->getChangeset($changeset_id);
         assert($changeset !== null);
@@ -152,29 +126,24 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase
         return $changeset_id;
     }
 
-    abstract protected function saveNewChangesetForField(
-        Tracker_FormElement_Field $field,
-        Artifact $artifact,
-        array $fields_data,
-        PFUser $submitter,
-        int $changeset_id,
-        CreatedFileURLMapping $url_mapping,
-    ): void;
-
-    protected function isFieldSubmitted(Tracker_FormElement_Field $field, array $fields_data): bool
-    {
-        return isset($fields_data[$field->getId()]);
-    }
-
     private function storeFieldsValues(
         Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
         int $changeset_id,
         CreatedFileURLMapping $url_mapping,
+        \Workflow $workflow,
     ): void {
         foreach ($this->fields_retriever->getFields($artifact) as $field) {
-            $this->saveNewChangesetForField($field, $artifact, $fields_data, $submitter, $changeset_id, $url_mapping);
+            $this->save_initial_changeset_value->saveNewChangesetForField(
+                $field,
+                $artifact,
+                $fields_data,
+                $submitter,
+                $changeset_id,
+                $url_mapping,
+                $workflow
+            );
         }
     }
 

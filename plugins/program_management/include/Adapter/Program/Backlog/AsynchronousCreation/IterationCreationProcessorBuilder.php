@@ -58,6 +58,8 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaver;
@@ -123,10 +125,32 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
             new DateValueFormatter()
         );
 
-        $artifact_creator = new ArtifactCreatorAdapter(
+        $artifact_changeset_saver = new ArtifactChangesetSaver(
+            $artifact_changeset_dao,
+            $transaction_executor,
+            new \Tracker_ArtifactDao(),
+            new ChangesetFromXmlDao()
+        );
+
+        $retrieve_workflow           = \WorkflowFactory::instance();
+        $fields_validator            = \Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build();
+        $field_initializator         = new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory);
+        $fields_retriever            = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+        $after_new_changeset_handler = new AfterNewChangesetHandler($artifact_factory, $fields_retriever);
+        $artifact_creator            = new ArtifactCreatorAdapter(
             TrackerArtifactCreator::build(
-                \Tracker_Artifact_Changeset_InitialChangesetCreator::build($logger),
-                \Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
+                new InitialChangesetCreator(
+                    $fields_validator,
+                    $fields_retriever,
+                    $event_manager,
+                    $field_initializator,
+                    $logger,
+                    $artifact_changeset_saver,
+                    $after_new_changeset_handler,
+                    \WorkflowFactory::instance(),
+                    new InitialChangesetValueSaver()
+                ),
+                $fields_validator,
                 $logger
             ),
             $tracker_retriever,
@@ -134,8 +158,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
             $changeset_values_formatter
         );
 
-        $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
-
+        $fields_retriever  = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
         $changeset_creator = new NewChangesetCreator(
             new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
                 $form_element_factory,
@@ -162,19 +185,14 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
             ),
             $fields_retriever,
             \EventManager::instance(),
-            new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+            $field_initializator,
             $transaction_executor,
-            new ArtifactChangesetSaver(
-                $artifact_changeset_dao,
-                $transaction_executor,
-                new \Tracker_ArtifactDao(),
-                new ChangesetFromXmlDao()
-            ),
+            $artifact_changeset_saver,
             new ParentLinkAction($artifact_factory),
-            new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
+            $after_new_changeset_handler,
             ActionsRunner::build(\BackendLogger::getDefaultLogger()),
             new ChangesetValueSaver(),
-            \WorkflowFactory::instance(),
+            $retrieve_workflow,
             new CommentCreator(
                 new \Tracker_Artifact_Changeset_CommentDao(),
                 \ReferenceManager::instance(),

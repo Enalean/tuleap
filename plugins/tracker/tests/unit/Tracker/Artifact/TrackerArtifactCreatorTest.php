@@ -25,16 +25,16 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
 use Tracker_Artifact_Changeset;
-use Tracker_Artifact_Changeset_InitialChangesetCreator;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\CreateInitialChangeset;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
-use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
 use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
+use Tuleap\Tracker\Test\Stub\CreateInitialChangesetStub;
 use Tuleap\Tracker\TrackerColor;
 
 final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -42,17 +42,11 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /** @var \Tracker_Artifact_Changeset_InitialChangesetCreatorBase */
-    private $changeset_creator;
-
     /** @var \Tracker_Artifact_Changeset_FieldsValidator */
     private $fields_validator;
 
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
-
-    /** @var TrackerArtifactCreator */
-    private $creator;
 
     /** @var \Tracker */
     private $tracker;
@@ -77,18 +71,14 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function setUp(): void
     {
         Tracker_ArtifactFactory::clearInstance();
-        $this->artifact_factory  = Tracker_ArtifactFactory::instance();
-        $this->changeset_creator = \Mockery::spy(Tracker_Artifact_Changeset_InitialChangesetCreator::class);
-        $this->fields_validator  = \Mockery::spy(Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::class);
-        $this->dao               = \Mockery::spy(Tracker_ArtifactDao::class);
-        $this->visit_recorder    = \Mockery::spy(VisitRecorder::class);
-
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $changeset->shouldReceive("executePostCreationActions");
+        $this->artifact_factory = Tracker_ArtifactFactory::instance();
+        $this->fields_validator = \Mockery::spy(Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::class);
+        $this->dao              = \Mockery::spy(Tracker_ArtifactDao::class);
+        $this->visit_recorder   = \Mockery::spy(VisitRecorder::class);
 
         $this->artifact_factory->setDao($this->dao);
 
-        $this->tracker       = new Tracker(
+        $this->tracker = new Tracker(
             123,
             null,
             null,
@@ -105,24 +95,39 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             TrackerColor::default(),
             null
         );
+
         $this->user          = new \PFUser(['user_id' => 101, 'language_id' => 'en_US']);
         $this->bare_artifact = new Artifact(0, 123, 101, 1234567890, 0);
-
-        $this->creator = Mockery::mock(TrackerArtifactCreator::class, [
-            $this->artifact_factory,
-            $this->fields_validator,
-            $this->changeset_creator,
-            $this->visit_recorder,
-            new \Psr\Log\NullLogger(),
-            new DBTransactionExecutorPassthrough(),
-        ])->makePartial()->shouldAllowMockingProtectedMethods();
-
-        $this->creator->shouldReceive("createNewChangeset")->andReturn($changeset);
     }
 
     public function tearDown(): void
     {
         Tracker_ArtifactFactory::clearInstance();
+    }
+
+    /**
+     * @return Mockery\Mock & TrackerArtifactCreator
+     */
+    private function getCreator(CreateInitialChangeset $create_initial_changeset_stub)
+    {
+        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive("executePostCreationActions");
+
+        $creator = Mockery::mock(TrackerArtifactCreator::class, [
+            $this->artifact_factory,
+            $this->fields_validator,
+            $create_initial_changeset_stub,
+            $this->visit_recorder,
+            new \Psr\Log\NullLogger(),
+            new DBTransactionExecutorPassthrough(),
+        ])->makePartial()->shouldAllowMockingProtectedMethods();
+
+
+        $creator->shouldReceive("createNewChangeset")->andReturn(
+            $changeset
+        );
+
+        return $creator;
     }
 
     public function testItValidateFields(): void
@@ -143,7 +148,8 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->once();
 
-        $this->creator->create(
+        $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withChangesetCreationExpected());
+        $artifact_creator->create(
             $this->tracker,
             $this->fields_data,
             $this->user,
@@ -159,9 +165,9 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->fields_validator->shouldReceive('validate')->andReturns(false);
 
         $this->dao->shouldNotReceive('create');
-        $this->changeset_creator->shouldNotReceive('create');
 
-        $result = $this->creator->create(
+        $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withNoChangesetCreationExpected());
+        $result           = $artifact_creator->create(
             $this->tracker,
             $this->fields_data,
             $this->user,
@@ -180,7 +186,8 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('create')->with(123, 101, 1234567890, 0)->once();
 
-        $this->creator->create(
+        $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withChangesetCreationExpected());
+        $artifact_creator->create(
             $this->tracker,
             $this->fields_data,
             $this->user,
@@ -196,9 +203,8 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->fields_validator->shouldReceive('validate')->andReturns(true);
         $this->dao->shouldReceive('create')->andReturn(false);
 
-        $this->changeset_creator->shouldNotReceive('create');
-
-        $result = $this->creator->create(
+        $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withNoChangesetCreationExpected());
+        $result           = $artifact_creator->create(
             $this->tracker,
             $this->fields_data,
             $this->user,
@@ -219,23 +225,8 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->bare_artifact->setId(1001);
 
-        $this->changeset_creator->shouldReceive('create')
-            ->with(
-                Mockery::on(function ($artifact) {
-                    return $artifact->getId() === $this->bare_artifact->getId() &&
-                        $artifact->getSubmittedOn() === $this->bare_artifact->getSubmittedOn() &&
-                        $artifact->getSubmittedBy() === $this->bare_artifact->getSubmittedBy();
-                }),
-                $this->fields_data,
-                $this->user,
-                $this->submitted_on,
-                Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
-                Mockery::type(\Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig::class),
-                Mockery::type(ChangesetValidationContext::class)
-            )
-            ->once();
-
-        $this->creator->create(
+        $create_initial_changeset_stub = CreateInitialChangesetStub::withChangesetCreationExpected();
+        $this->getCreator($create_initial_changeset_stub)->create(
             $this->tracker,
             $this->fields_data,
             $this->user,
@@ -244,20 +235,22 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             true,
             new NullChangesetValidationContext()
         );
+
+        self::assertEquals(1, $create_initial_changeset_stub->getCallCount());
     }
 
     public function testItMarksTheArtifactAsVisitedWhenSuccessfullyCreated(): void
     {
         $this->fields_validator->shouldReceive('validate')->andReturns(true);
         $this->dao->shouldReceive('create')->andReturn(1001);
-        $this->changeset_creator->shouldReceive('create')->andReturn(1);
 
         $this->send_notification = false;
         $this->bare_artifact->setId(1001);
 
         $this->visit_recorder->shouldReceive('record')->once();
 
-        $this->creator->create(
+        $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withChangesetCreationExpected());
+        $artifact_creator->create(
             $this->tracker,
             $this->fields_data,
             $this->user,
@@ -272,14 +265,14 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->fields_validator->shouldReceive('validate')->andReturns(true);
         $this->dao->shouldReceive('create')->andReturn(1001);
-        $this->changeset_creator->shouldReceive('create')->andReturn(1);
 
         $this->send_notification = false;
         $this->bare_artifact->setId(1001);
 
         $this->visit_recorder->shouldReceive('record')->never();
 
-        $this->creator->create(
+        $artifact_creator = $this->getCreator(CreateInitialChangesetStub::withChangesetCreationExpected());
+        $artifact_creator->create(
             $this->tracker,
             $this->fields_data,
             $this->user,

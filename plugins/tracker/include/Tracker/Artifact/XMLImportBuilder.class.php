@@ -28,7 +28,9 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\InitialChangesetValueSaverIgnoringPermissions;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaverIgnoringPermissions;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -74,7 +76,7 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
         $send_notifications = false;
 
         $artifact_creator = TrackerArtifactCreator::build(
-            new Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator(
+            new InitialChangesetCreator(
                 $fields_validator,
                 $fields_retriever,
                 $event_manager,
@@ -82,7 +84,8 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
                 $logger,
                 $artifact_changeset_saver,
                 $after_new_changeset_handler,
-                $workflow_retriever
+                $workflow_retriever,
+                new InitialChangesetValueSaverIgnoringPermissions()
             ),
             $fields_validator,
             $logger

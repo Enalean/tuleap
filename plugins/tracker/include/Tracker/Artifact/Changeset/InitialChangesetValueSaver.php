@@ -20,30 +20,29 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\Tracker\Artifact\Changeset;
+
+use PFUser;
+use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
-use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 /**
- * I create an initial changeset
+ * I save the initial changeset of an artifact for a given field
  */
-class Tracker_Artifact_Changeset_InitialChangesetCreator extends Tracker_Artifact_Changeset_InitialChangesetCreatorBase
+final class InitialChangesetValueSaver implements SaveInitialChangesetValue
 {
-    /**
-     * @see parent::saveNewChangesetForField()
-     */
-    protected function saveNewChangesetForField(
+    public function saveNewChangesetForField(
         Tracker_FormElement_Field $field,
         Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
         int $changeset_id,
         CreatedFileURLMapping $url_mapping,
+        \Workflow $workflow,
     ): void {
         $is_submission = true;
         $bypass_perms  = true;
-        $workflow      = $artifact->getWorkflow();
 
         if ($this->isFieldSubmitted($field, $fields_data)) {
             if ($field->userCanSubmit($submitter)) {
@@ -61,7 +60,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator extends Tracker_Artifac
                 return;
             }
 
-            if ($workflow && $workflow->bypassPermissions($field)) {
+            if ($workflow->bypassPermissions($field)) {
                 $field->saveNewChangeset(
                     $artifact,
                     null,
@@ -97,20 +96,8 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator extends Tracker_Artifac
         $fields_data[$field->getId()] = $field->getDefaultValue();
     }
 
-    public static function build(\Psr\Log\LoggerInterface $logger): self
+    private function isFieldSubmitted(Tracker_FormElement_Field $field, array $fields_data): bool
     {
-        $form_element_factory = \Tracker_FormElementFactory::instance();
-        $fields_retriever     = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
-
-        return new Tracker_Artifact_Changeset_InitialChangesetCreator(
-            Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
-            $fields_retriever,
-            EventManager::instance(),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
-            $logger,
-            \Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver::build(),
-            new AfterNewChangesetHandler(\Tracker_ArtifactFactory::instance(), $fields_retriever),
-            \WorkflowFactory::instance()
-        );
+        return isset($fields_data[$field->getId()]);
     }
 }

@@ -19,17 +19,26 @@
  *
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Artifact\Changeset;
+
+use Mockery;
+use Tracker_Artifact_Changeset_ChangesetDataInitializator;
+use Tracker_Artifact_Changeset_Null;
+use Tracker_FormElement_Field_Selectbox;
+use Tracker_FormElementFactory;
+use Tracker_Workflow_Transition_InvalidConditionForTransitionException;
+use Transition;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
-use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
-use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
 use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
 use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
+use Workflow;
 
-final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class InitialChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
@@ -52,7 +61,7 @@ final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \Tule
      */
     private $factory;
     /**
-     * @var Tracker_Artifact_Changeset_InitialChangesetCreator
+     * @var InitialChangesetValueSaver
      */
     private $creator;
     /**
@@ -98,7 +107,8 @@ final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \Tule
         $fields_validator->shouldReceive('validate')->andReturns(true);
         $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($this->factory);
 
-        $creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
+        $workflow_retriever = RetrieveWorkflowStub::withWorkflow($this->workflow);
+        $creator            = new InitialChangesetCreator(
             $fields_validator,
             $fields_retriever,
             \Mockery::spy(\EventManager::class),
@@ -109,7 +119,8 @@ final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \Tule
                 $this->artifact_saver,
                 $fields_retriever
             ),
-            RetrieveWorkflowStub::withWorkflow($this->workflow)
+            $workflow_retriever,
+            new InitialChangesetValueSaver()
         );
 
         return $creator->create(
