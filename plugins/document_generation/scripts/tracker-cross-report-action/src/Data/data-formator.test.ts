@@ -18,7 +18,7 @@
  */
 
 import type { GlobalExportProperties } from "../type";
-import { formatData, TextCell } from "./data-formator";
+import { formatData, TextCell, NumberCell, EmptyCell } from "./data-formator";
 import * as rest_querier from "../rest-querier";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 
@@ -34,15 +34,21 @@ describe("data-formator", () => {
                 values: [
                     {
                         field_id: 1,
-                        type: "string",
-                        label: "Field01",
-                        value: "value01",
+                        type: "aid",
+                        label: "Artifact ID",
+                        value: 74,
                     },
                     {
                         field_id: 2,
                         type: "string",
                         label: "Field02",
                         value: "value02",
+                    },
+                    {
+                        field_id: 3,
+                        type: "sb",
+                        label: "Assigned to",
+                        values: null,
                     },
                 ],
             } as ArtifactResponse,
@@ -55,15 +61,21 @@ describe("data-formator", () => {
                 values: [
                     {
                         field_id: 1,
-                        type: "string",
-                        label: "Field01",
-                        value: "value03",
+                        type: "aid",
+                        label: "Artifact ID",
+                        value: 4,
                     },
                     {
                         field_id: 2,
                         type: "string",
                         label: "Field02",
                         value: "value04",
+                    },
+                    {
+                        field_id: 3,
+                        type: "sb",
+                        label: "Assigned to",
+                        values: null,
                     },
                 ],
             } as ArtifactResponse,
@@ -74,7 +86,15 @@ describe("data-formator", () => {
         const formatted_data = await formatData({ report_id: 1 } as GlobalExportProperties);
 
         expect(formatted_data).toStrictEqual({
-            headers: [new TextCell("Field01"), new TextCell("Field02")],
+            headers: [
+                new TextCell("Artifact ID"),
+                new TextCell("Field02"),
+                new TextCell("Assigned to"),
+            ],
+            rows: [
+                [new NumberCell(74), new TextCell("value02"), new EmptyCell()],
+                [new NumberCell(4), new TextCell("value04"), new EmptyCell()],
+            ],
         });
     });
     it("generates empty formatted data if no artifact found", async (): Promise<void> => {
