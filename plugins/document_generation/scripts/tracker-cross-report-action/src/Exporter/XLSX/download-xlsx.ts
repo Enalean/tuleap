@@ -17,19 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { CellObject } from "xlsx";
 import { utils, writeFile } from "xlsx";
-import type { GlobalExportProperties, ReportFieldColumn } from "../../type";
-import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
+import type { GlobalExportProperties } from "../../type";
+import type { ReportSection, TextCell } from "../../Data/data-formator";
 
 export function downloadXLSX(
     global_properties: GlobalExportProperties,
-    report_field_columns: ReportFieldColumn[],
-    report_artifacts: ArtifactResponse[]
+    formatted_data: ReportSection
 ): void {
     const book = utils.book_new();
-    const sheet = utils.aoa_to_sheet(
-        buildContent(global_properties, report_field_columns, report_artifacts)
-    );
+    const sheet = utils.aoa_to_sheet(buildContent(global_properties, formatted_data));
     utils.book_append_sheet(book, sheet);
     writeFile(
         book,
@@ -42,18 +40,23 @@ export function downloadXLSX(
 
 function buildContent(
     global_properties: GlobalExportProperties,
-    report_field_columns: ReportFieldColumn[],
-    report_artifacts: ArtifactResponse[]
-): Array<Array<string | number>> {
-    const content: Array<Array<string | number>> = [["report_id", global_properties.report_id]];
-    const report_columns_label: string[] = [];
-    for (const column of report_field_columns) {
-        report_columns_label.push(column.field_label);
-    }
-    content.push(report_columns_label);
-    for (const artifact of report_artifacts) {
-        content.push(["artifact_id", artifact.id]);
+    formatted_data: ReportSection
+): Array<Array<CellObject>> {
+    const content: CellObject[][] = [];
+    const report_columns_label: CellObject[] = [];
+    if (formatted_data.headers && formatted_data.headers.length > 0) {
+        for (const header of formatted_data.headers) {
+            report_columns_label.push(transformFormattedTextCellIntoASheetCell(header));
+        }
+        content.push(report_columns_label);
     }
 
     return content;
+}
+
+function transformFormattedTextCellIntoASheetCell(report_cell: TextCell): CellObject {
+    return {
+        t: "s",
+        v: report_cell.value,
+    };
 }
