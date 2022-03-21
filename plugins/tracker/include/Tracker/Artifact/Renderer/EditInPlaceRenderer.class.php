@@ -23,24 +23,18 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Renderer\FieldsDataFromRequestRetriever;
+use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 class Tracker_Artifact_Renderer_EditInPlaceRenderer
 {
-    /** @var Artifact */
-    private $artifact;
-
-    /** @var MustacheRenderer */
-    private $renderer;
-
-    /** @var HiddenFieldsetsDetector */
-    private $hidden_fieldsets_detector;
-
-    public function __construct(Artifact $artifact, MustacheRenderer $renderer, HiddenFieldsetsDetector $hidden_fieldsets_detector)
-    {
-        $this->renderer                  = $renderer;
-        $this->artifact                  = $artifact;
-        $this->hidden_fieldsets_detector = $hidden_fieldsets_detector;
+    public function __construct(
+        private Artifact $artifact,
+        private MustacheRenderer $renderer,
+        private HiddenFieldsetsDetector $hidden_fieldsets_detector,
+        private FieldsDataFromRequestRetriever $fields_data_from_request_retriever,
+    ) {
     }
 
     public function display(PFUser $current_user, Codendi_Request $request)
@@ -134,9 +128,10 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
     public function updateArtifact(Codendi_Request $request, PFUser $current_user)
     {
         $comment_format = $this->artifact->validateCommentFormat($request, 'comment_formatnew');
-        $fields_data    =  $this->getAugmentedDataFromRequest($request);
 
         try {
+            $fields_data =  $this->fields_data_from_request_retriever->getAugmentedDataFromRequest($this->artifact, $request);
+
             $this->artifact->createNewChangeset(
                 $fields_data,
                 $request->get('artifact_followup_comment'),
@@ -145,20 +140,9 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
                 $comment_format
             );
         } catch (Tracker_NoChangeException $e) {
-        } catch (Tracker_Exception $e) {
+        } catch (NoPossibleValueException | Tracker_Exception $e) {
             $this->sendErrorsAsJson($e->getMessage());
         }
-    }
-
-    private function getAugmentedDataFromRequest(Codendi_Request $request)
-    {
-        //this handles the 100 value on multi-select boxes
-        $fields_data                          = $request->get('artifact');
-        $fields_data['request_method_called'] = 'artifact-update';
-        $this->artifact->getTracker()->augmentDataFromRequest($fields_data);
-        unset($fields_data['request_method_called']);
-
-        return $fields_data;
     }
 
     private function sendErrorsAsJson($exception_message)

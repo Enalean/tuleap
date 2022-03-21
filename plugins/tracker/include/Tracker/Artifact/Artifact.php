@@ -119,6 +119,7 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\Renderer\FieldsDataFromRequestRetriever;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -132,9 +133,11 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForRES
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
+use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
 use Tuleap\Tracker\Semantic\Status\StatusValueProvider;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
@@ -887,19 +890,11 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $GLOBALS['Response']->redirect($this->getUri());
                 break;
             case 'get-edit-in-place':
-                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer(
-                    $this,
-                    $this->getMustacheRenderer(),
-                    $this->getHiddenFieldsetsDetector()
-                );
+                $renderer = $this->getTrackerArtifactRendererEditInPlaceRenderer();
                 $renderer->display($current_user, $request);
                 break;
             case 'update-in-place':
-                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer(
-                    $this,
-                    $this->getMustacheRenderer(),
-                    $this->getHiddenFieldsetsDetector()
-                );
+                $renderer = $this->getTrackerArtifactRendererEditInPlaceRenderer();
                 $renderer->updateArtifact($request, $current_user);
                 break;
             case 'copy-artifact':
@@ -1517,6 +1512,15 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     private function getMustacheRenderer()
     {
         return TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR) . '/templates');
+    }
+
+    private function getFirstPossibleValueInListRetriever(): FirstPossibleValueInListRetriever
+    {
+        return new FirstPossibleValueInListRetriever(
+            new FirstValidValueAccordingToDependenciesRetriever(
+                $this->getFormElementFactory()
+            )
+        );
     }
 
     /**
@@ -2231,7 +2235,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             Tracker_FormElement_Field_Burndown::LOG_IDENTIFIER
         );
         $computed_dao               = new ComputedFieldDao();
-        $form_element_factory       = Tracker_FormElementFactory::instance();
         $semantic_timeframe_builder = SemanticTimeframeBuilder::build();
         $field_retriever            = new ChartConfigurationFieldRetriever(
             $this->getFormElementFactory(),
@@ -2336,6 +2339,19 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $usage_dao
             ),
             $usage_dao
+        );
+    }
+
+    private function getTrackerArtifactRendererEditInPlaceRenderer(): Tracker_Artifact_Renderer_EditInPlaceRenderer
+    {
+        return new Tracker_Artifact_Renderer_EditInPlaceRenderer(
+            $this,
+            $this->getMustacheRenderer(),
+            $this->getHiddenFieldsetsDetector(),
+            new FieldsDataFromRequestRetriever(
+                $this->getFormElementFactory(),
+                $this->getFirstPossibleValueInListRetriever()
+            )
         );
     }
 }
