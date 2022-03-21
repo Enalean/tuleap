@@ -63,6 +63,8 @@ export const CrossReferencesField = define<CrossReferencesField>({
                                 <a
                                     href="${value.url}"
                                     data-test="cross-references-field-cross-reference-link"
+                                    title=""
+                                    class="cross-reference"
                                 >
                                     ${value.ref}
                                 </a>
