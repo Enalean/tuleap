@@ -20,21 +20,13 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue;
 
-use Tracker_FormElement_InvalidFieldValueException;
+use Tuleap\Tracker\Artifact\Artifact;
 
-final class ArtifactLinkTest extends \Tuleap\Test\PHPUnit\TestCase
+interface RetrieveForwardLinks
 {
-    public function testFromPayload()
-    {
-        $link_payload = ['id' => 101, 'type' => '_is_child'];
-        self::assertEquals(101, ArtifactLink::fromPayload($link_payload)->id);
-    }
-
-    public function testItThrowsWhenThereIsNoArtifactIdInPayload(): void
-    {
-        $link_payload = ['type' => '_is_child'];
-        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
-
-        ArtifactLink::fromPayload($link_payload);
-    }
+    public function retrieve(
+        \PFUser $submitter,
+        \Tracker_FormElement_Field_ArtifactLink $link_field,
+        ?Artifact $artifact,
+    ): CollectionOfArtifactLinks;
 }

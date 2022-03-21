@@ -23,19 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue;
 
 /**
+ * I hold a collection of Links
+ * @see Link
  * @psalm-immutable
  */
 final class CollectionOfArtifactLinks
 {
     /**
-     * @param ArtifactLink[] $artifact_links
+     * @param Link[] $artifact_links
      */
     public function __construct(private array $artifact_links)
     {
     }
 
     /**
-     * @return ArtifactLink[]
+     * @return Link[]
      */
     public function getArtifactLinks(): array
     {
@@ -45,20 +47,23 @@ final class CollectionOfArtifactLinks
     /**
      * @return int[]
      */
-    public function getArtifactLinksIds(): array
+    public function getTargetArtifactIds(): array
     {
-        return array_map(static fn(ArtifactLink $artifact_link) => $artifact_link->id, $this->artifact_links);
+        return array_map(
+            static fn(Link $artifact_link) => $artifact_link->getTargetArtifactId(),
+            $this->artifact_links
+        );
     }
 
     public function getArtifactTypesByIds(): array
     {
         $types_by_links = [];
         foreach ($this->artifact_links as $artifact_link) {
-            if ($artifact_link->type === null) {
+            if ($artifact_link->getType() === null) {
                 continue;
             }
 
-            $types_by_links[$artifact_link->id] = $artifact_link->type;
+            $types_by_links[$artifact_link->getTargetArtifactId()] = $artifact_link->getType();
         }
         return $types_by_links;
     }

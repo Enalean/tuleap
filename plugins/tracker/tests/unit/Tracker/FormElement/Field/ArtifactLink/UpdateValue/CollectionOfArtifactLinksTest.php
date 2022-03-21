@@ -20,20 +20,22 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue;
 
+use Tuleap\Tracker\Test\Stub\LinkStub;
+
 final class CollectionOfArtifactLinksTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var ArtifactLink[]
+     * @var LinkStub[]
      */
     private array $artifact_links;
 
     protected function setUp(): void
     {
         $this->artifact_links = [
-            ArtifactLink::fromPayload(['id' => 101, 'type' => '_is_child']),
-            ArtifactLink::fromPayload(['id' => 102, 'type' => '_depends_on']),
-            ArtifactLink::fromPayload(['id' => 103, 'type' => '']),
-            ArtifactLink::fromPayload(['id' => 104]),
+            LinkStub::withType(101, '_is_child'),
+            LinkStub::withType(102, '_depends_on'),
+            LinkStub::withType(103, ''),
+            LinkStub::withNoType(104),
         ];
     }
 
@@ -48,7 +50,7 @@ final class CollectionOfArtifactLinksTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $collection = new CollectionOfArtifactLinks($this->artifact_links);
 
-        self::assertEquals([101, 102, 103, 104], $collection->getArtifactLinksIds());
+        self::assertEquals([101, 102, 103, 104], $collection->getTargetArtifactIds());
     }
 
     public function testItReturnsTheTypesByArtifactLinks(): void

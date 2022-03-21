@@ -22,34 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue;
 
-use Tracker_Artifact_Changeset;
-use Tracker_ArtifactFactory;
-use Tracker_ArtifactLinkInfo;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
+use Tuleap\Tracker\Artifact\RetrieveArtifact;
 
-final class ArtifactForwardLinksInfoRetriever implements RetrieveForwardLinksInfo
+final class ArtifactForwardLinksRetriever implements RetrieveForwardLinks
 {
     public function __construct(
         private ArtifactLinksByChangesetCache $cache,
         private ChangesetValueArtifactLinkDao $dao,
-        private Tracker_ArtifactFactory $tracker_artifact_factory,
+        private RetrieveArtifact $artifact_retriever,
     ) {
     }
 
     public function retrieve(
         \PFUser $submitter,
-        Tracker_FormElement_Field_ArtifactLink $link_field,
+        \Tracker_FormElement_Field_ArtifactLink $link_field,
         ?Artifact $artifact,
-    ): CollectionOfArtifactLinksInfo {
+    ): CollectionOfArtifactLinks {
         if (! $artifact) {
-            return new CollectionOfArtifactLinksInfo([]);
+            return new CollectionOfArtifactLinks([]);
         }
 
         $last_changeset = $artifact->getLastChangeset();
         if (! $last_changeset) {
-            return new CollectionOfArtifactLinksInfo([]);
+            return new CollectionOfArtifactLinks([]);
         }
 
         return $this->getLinksInfo($submitter, $link_field, $last_changeset);
@@ -57,35 +54,26 @@ final class ArtifactForwardLinksInfoRetriever implements RetrieveForwardLinksInf
 
     protected function getLinksInfo(
         \PFUser $submitter,
-        Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
-        Tracker_Artifact_Changeset $last_changeset,
-    ): CollectionOfArtifactLinksInfo {
+        \Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
+        \Tracker_Artifact_Changeset $last_changeset,
+    ): CollectionOfArtifactLinks {
         $last_changeset_id = (int) $last_changeset->getId();
 
         if ($this->cache->hasCachedLinksInfoForChangeset($last_changeset)) {
             return $this->cache->getCachedLinksInfoForChangeset($last_changeset);
         }
 
-        $links_info       = [];
         $changeset_values = $this->dao->searchChangesetValues($artifact_link_field->getId(), $last_changeset_id);
 
-        foreach ($changeset_values as $row) {
-            $artifact = $this->tracker_artifact_factory->getArtifactById($row['artifact_id']);
-            if (! $artifact) {
-                continue;
-            }
+        $links          = array_map(
+            fn(array $row) => StoredLink::fromRow($this->artifact_retriever, $submitter, $row),
+            $changeset_values
+        );
+        $non_null_links = array_filter($links, static fn(?StoredLink $link) => $link !== null);
 
-            $artifact_link_info = Tracker_ArtifactLinkInfo::buildFromArtifact($artifact, $row['nature'] ?? Tracker_FormElement_Field_ArtifactLink::NO_TYPE);
-            if (! $artifact_link_info->userCanView($submitter)) {
-                continue;
-            }
+        $collection = new CollectionOfArtifactLinks($non_null_links);
+        $this->cache->cacheLinksInfoForChangeset($last_changeset, $collection);
 
-            $links_info[] = $artifact_link_info;
-        }
-
-        $collection_of_links_info = new CollectionOfArtifactLinksInfo($links_info);
-        $this->cache->cacheLinksInfoForChangeset($last_changeset, $collection_of_links_info);
-
-        return $collection_of_links_info;
+        return $collection;
     }
 }

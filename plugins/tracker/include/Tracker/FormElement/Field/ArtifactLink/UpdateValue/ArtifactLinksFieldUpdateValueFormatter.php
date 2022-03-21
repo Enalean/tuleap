@@ -40,7 +40,7 @@ final class ArtifactLinksFieldUpdateValueFormatter
 
         $parent_link = $update_value->getParentArtifactLink();
         if ($parent_link !== null) {
-            $field_data['parent'] = [$parent_link->id];
+            $field_data['parent'] = [$parent_link->getTargetArtifactId()];
         }
 
         return $field_data;

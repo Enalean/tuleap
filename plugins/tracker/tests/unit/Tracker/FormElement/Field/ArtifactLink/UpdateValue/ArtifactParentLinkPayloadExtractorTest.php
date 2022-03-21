@@ -26,16 +26,14 @@ final class ArtifactParentLinkPayloadExtractorTest extends \Tuleap\Test\PHPUnit\
     {
         $parent  = ['id' => 101, 'direction' => 'reverse', 'type' => '_is_child'];
         $payload = [
-            'links' => [],
+            'links'  => [],
             'parent' => $parent,
         ];
 
         $parent_link = (new ArtifactParentLinkPayloadExtractor())->extractParentLinkFromPayload($payload);
 
-        self::assertEquals(
-            ArtifactLink::fromPayload($parent),
-            $parent_link
-        );
+        self::assertSame(101, $parent_link->getTargetArtifactId());
+        self::assertSame('_is_child', $parent_link->getType());
     }
 
     public function testItReturnsNullWhenNoParent(): void

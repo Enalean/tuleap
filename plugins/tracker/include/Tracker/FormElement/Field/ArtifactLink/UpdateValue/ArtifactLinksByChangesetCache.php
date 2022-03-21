@@ -27,7 +27,7 @@ use Tracker_Artifact_Changeset;
 final class ArtifactLinksByChangesetCache
 {
     /**
-     * @psalm-var array<string, CollectionOfArtifactLinksInfo>
+     * @psalm-var array<string, CollectionOfArtifactLinks>
      */
     private array $artifact_links_by_changeset = [];
 
@@ -36,12 +36,12 @@ final class ArtifactLinksByChangesetCache
         return isset($this->artifact_links_by_changeset[$changeset->getId()]);
     }
 
-    public function cacheLinksInfoForChangeset(Tracker_Artifact_Changeset $changeset, CollectionOfArtifactLinksInfo $artifact_links_info): void
+    public function cacheLinksInfoForChangeset(Tracker_Artifact_Changeset $changeset, CollectionOfArtifactLinks $links): void
     {
-        $this->artifact_links_by_changeset[$changeset->getId()] = $artifact_links_info;
+        $this->artifact_links_by_changeset[$changeset->getId()] = $links;
     }
 
-    public function getCachedLinksInfoForChangeset(Tracker_Artifact_Changeset $changeset): CollectionOfArtifactLinksInfo
+    public function getCachedLinksInfoForChangeset(Tracker_Artifact_Changeset $changeset): CollectionOfArtifactLinks
     {
         return $this->artifact_links_by_changeset[$changeset->getId()];
     }
