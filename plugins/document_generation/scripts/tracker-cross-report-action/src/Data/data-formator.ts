@@ -20,6 +20,7 @@
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import { getReportArtifacts } from "../rest-querier";
 import type { GlobalExportProperties } from "../type";
+import { transformFieldValueIntoAFormattedCell } from "./transform-field-value-into-formatted-cell";
 
 export type FormattedCell = TextCell | NumberCell | EmptyCell;
 
@@ -68,28 +69,7 @@ export async function formatData(
                 report_field_columns.push(new TextCell(field_value.label));
             }
 
-            switch (field_value.type) {
-                case "string":
-                    artifact_value_rows.push(new TextCell(field_value.value ?? ""));
-                    break;
-                case "int":
-                case "float":
-                case "aid":
-                    artifact_value_rows.push(getCellFromPossibleNumber(field_value.value));
-                    break;
-                case "computed": {
-                    let value;
-                    if (field_value.is_autocomputed) {
-                        value = field_value.value;
-                    } else {
-                        value = field_value.manual_value;
-                    }
-                    artifact_value_rows.push(getCellFromPossibleNumber(value));
-                    break;
-                }
-                default:
-                    artifact_value_rows.push(new EmptyCell());
-            }
+            artifact_value_rows.push(transformFieldValueIntoAFormattedCell(field_value));
         }
         artifact_rows.push(artifact_value_rows);
         first_row_processed = true;
@@ -99,12 +79,4 @@ export async function formatData(
         headers: report_field_columns,
         rows: artifact_rows,
     };
-}
-
-function getCellFromPossibleNumber(n: number | null): NumberCell | EmptyCell {
-    if (n === null) {
-        return new EmptyCell();
-    }
-
-    return new NumberCell(n);
 }
