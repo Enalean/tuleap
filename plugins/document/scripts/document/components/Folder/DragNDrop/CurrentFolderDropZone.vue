@@ -29,7 +29,7 @@
             data-test="document-current-folder-success-dropzone"
         >
             <i class="fa fa-rotate-90 fa-mail-forward document-upload-to-current-folder-icon"></i>
-            <p>{{ message_success }}</p>
+            <p>{{ success_message }}</p>
         </div>
         <div
             v-else
@@ -37,50 +37,61 @@
             data-test="document-current-folder-error-dropzone"
         >
             <i class="fa fa-ban document-upload-to-current-folder-icon"></i>
-            <p>{{ message_error }}</p>
+            <p data-test="document-current-folder-error-dropzone-message">{{ error_reason }}</p>
         </div>
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import prettyKibibytes from "pretty-kibibytes";
-import { mapState, mapGetters } from "vuex";
-import { sprintf } from "sprintf-js";
+import { useGetters, useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
+import type { RootGetter } from "../../../store/getters";
+import { computed } from "@vue/composition-api";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-export default {
-    props: {
-        user_can_dragndrop_in_current_folder: Boolean,
-        is_dropzone_highlighted: Boolean,
-    },
-    computed: {
-        ...mapGetters(["current_folder_title"]),
-        ...mapState("configuration", ["max_files_dragndrop", "max_size_upload"]),
-        message_success() {
-            return sprintf(
-                this.$ngettext(
-                    "Drop one file to upload it to %(folder)s (max size is %(size)s).",
-                    "Drop up to %(nb_files)s files to upload them to %(folder)s (max size is %(size)s).",
-                    this.max_files_dragndrop
-                ),
-                {
-                    nb_files: this.max_files_dragndrop,
-                    folder: this.current_folder_title,
-                    size: prettyKibibytes(this.max_size_upload),
-                }
-            );
-        },
-        message_error() {
-            return sprintf(
-                this.$gettext("Dropping files in %s is forbidden."),
-                this.current_folder_title
-            );
-        },
-        upload_current_folder_class() {
-            return this.user_can_dragndrop_in_current_folder ? "shown-success" : "shown-error";
-        },
-        classes() {
-            return this.is_dropzone_highlighted ? this.upload_current_folder_class : "";
-        },
-    },
-};
+const props = defineProps({
+    user_can_dragndrop_in_current_folder: { type: Boolean, required: true },
+    is_dropzone_highlighted: { type: Boolean, required: true },
+    error_reason: { type: String, required: true },
+});
+
+const { max_files_dragndrop, max_size_upload } = useNamespacedState<
+    Pick<ConfigurationState, "max_files_dragndrop" | "max_size_upload">
+>("configuration", ["max_files_dragndrop", "max_size_upload"]);
+
+const { current_folder_title } = useGetters<Pick<RootGetter, "current_folder_title">>([
+    "current_folder_title",
+]);
+
+const { interpolate, $ngettext } = useGettext();
+
+const success_message = computed((): string => {
+    return interpolate(
+        $ngettext(
+            "Drop one file to upload it to %{folder}s (max size is %{size}s).",
+            "Drop up to %{nb_files}s files to upload them to %{folder}s (max size is %{size}s).",
+            max_files_dragndrop.value
+        ),
+        {
+            nb_files: max_files_dragndrop.value,
+            folder: current_folder_title.value,
+            size: prettyKibibytes(max_size_upload.value),
+        }
+    );
+});
+
+const upload_current_folder_class = computed((): string => {
+    return props.user_can_dragndrop_in_current_folder ? "shown-success" : "shown-error";
+});
+
+const classes = computed((): string => {
+    return props.is_dropzone_highlighted ? upload_current_folder_class.value : "";
+});
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

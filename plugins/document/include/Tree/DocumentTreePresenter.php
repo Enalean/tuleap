@@ -140,6 +140,8 @@ class DocumentTreePresenter
 
     public string $filename_pattern;
 
+    public bool $is_filename_pattern_enforced;
+
     public function __construct(
         \Project $project,
         int $root_id,
@@ -187,6 +189,7 @@ class DocumentTreePresenter
         $this->criteria      = json_encode($criteria, JSON_THROW_ON_ERROR);
         $this->columns       = json_encode($columns, JSON_THROW_ON_ERROR);
 
-        $this->filename_pattern = $filename_pattern->isEnforced() ? $filename_pattern->getPattern() : '';
+        $this->filename_pattern             = $filename_pattern->getPattern();
+        $this->is_filename_pattern_enforced = $filename_pattern->isEnforced();
     }
 }
