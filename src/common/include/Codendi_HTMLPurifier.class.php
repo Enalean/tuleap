@@ -295,6 +295,7 @@ class Codendi_HTMLPurifier
 
                 $config = $this->getHPConfig($level);
                 $clean  = $hp->purify($html, $config);
+                $this->insertReferences($clean, $groupId);
                 break;
 
             case self::CONFIG_BASIC:
