@@ -31,7 +31,7 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public $workflow_id;
 
     protected ?Tracker_FormElement_Field_List_Value $from = null;
-    protected ?Tracker_FormElement_Field_List_Value $to   = null;
+    protected Tracker_FormElement_Field_List_Value $to;
 
     /**
      * @var Array of Transition_PostAction
@@ -64,9 +64,8 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      * @param int|null|string $transition_id Id of the transition
      * @param int|string $workflow_id Id of the workflow
      * @param Tracker_FormElement_Field_List_Value|null $from          Source value
-     * @param Tracker_FormElement_Field_List_Value|null $to            Destination value
      */
-    public function __construct($transition_id, $workflow_id, ?Tracker_FormElement_Field_List_Value $from, ?Tracker_FormElement_Field_List_Value $to)
+    public function __construct($transition_id, $workflow_id, ?Tracker_FormElement_Field_List_Value $from, Tracker_FormElement_Field_List_Value $to)
     {
         $this->transition_id = $transition_id;
         $this->workflow_id   = $workflow_id;
@@ -93,7 +92,7 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $this->from;
     }
 
-    public function getFieldValueTo(): ?Tracker_FormElement_Field_List_Value
+    public function getFieldValueTo(): Tracker_FormElement_Field_List_Value
     {
         return $this->to;
     }
@@ -112,16 +111,11 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $target_from = $transition->getFieldValueFrom();
         $target_to   = $transition->getFieldValueTo();
 
-        return is_null($source_from) && is_null($target_from) && is_null($source_to) && is_null($target_to)
+        return is_null($source_from) && is_null($target_from)
+            && $source_to->getId() === $target_to->getId()
 
-            || is_null($source_from) && is_null($target_from) && ! is_null($source_to) && ! is_null($target_to)
-                && $source_to->getId() === $target_to->getId()
-
-            || ! is_null($source_from) && ! is_null($target_from) && is_null($source_to) && is_null($target_to)
-                && $source_from->getId() === $target_from->getId()
-
-            || ! is_null($source_from) && ! is_null($target_from) && ! is_null($source_to) && ! is_null($target_to)
-                && $source_from->getId() === $target_from->getId() && $source_to->getId() === $target_to->getId();
+            || ! is_null($source_from) && ! is_null($target_from)
+            && $source_from->getId() === $target_from->getId() && $source_to->getId() === $target_to->getId();
     }
 
     /**
@@ -307,7 +301,7 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         } else {
             $child->addChild('from_id')->addAttribute('REF', array_search($transition_form->getId(), $xmlMapping['values']));
         }
-        $child->addChild('to_id')->addAttribute('REF', array_search($this->getFieldValueTo()?->getId(), $xmlMapping['values']));
+        $child->addChild('to_id')->addAttribute('REF', array_search($this->getFieldValueTo()->getId(), $xmlMapping['values']));
 
         $postactions = $this->getPostActions();
         if ($postactions) {

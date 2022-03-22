@@ -93,7 +93,7 @@ class TransitionPOSTHandler
      * @throws \Rest_Exception_InvalidTokenException
      * @throws \User_LoginException
      */
-    public function handle(int $tracker_id, int $from_id, int $to_id): WorkflowTransitionPOSTRepresentation
+    public function handle(int $tracker_id, int $from_id, int $to_id): ?WorkflowTransitionPOSTRepresentation
     {
         $current_user = $this->user_manager->getCurrentUser();
         $tracker      = $this->getTrackerByTrackerId($tracker_id);
@@ -113,9 +113,9 @@ class TransitionPOSTHandler
                         $transition = $this->transition_creator->createTransitionInState($state, $workflow, $params);
                     }
 
-                    $representation = $this->buildRepresentation($transition);
-
-                    return;
+                    if ($transition) {
+                        $representation = $this->buildRepresentation($transition);
+                    }
                 }
             );
             return $representation;

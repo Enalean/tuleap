@@ -54,9 +54,14 @@ final class FrozenFieldsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testLoadPostActionsReturnsASinglePostAction()
+    public function testLoadPostActionsReturnsASinglePostAction(): void
     {
-        $transition           = new \Transition(null, null, null, null);
+        $transition           = new \Transition(
+            null,
+            null,
+            null,
+            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false)
+        );
         $expected_post_action = new FrozenFields($transition, 0, []);
         $this->frozen_fields_retriever->shouldReceive('getFrozenFields')->with($transition)->andReturn(
             $expected_post_action
@@ -66,17 +71,22 @@ final class FrozenFieldsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals([$expected_post_action], $result);
     }
 
-    public function testLoadPostActionsReturnsEmptyArray()
+    public function testLoadPostActionsReturnsEmptyArray(): void
     {
         $this->frozen_fields_retriever->shouldReceive('getFrozenFields')->andThrow(new NoFrozenFieldsPostActionException());
 
-        $transition = new \Transition(null, null, null, null);
+        $transition = new \Transition(
+            null,
+            null,
+            null,
+            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false)
+        );
 
         $result = $this->frozen_fields_factory->loadPostActions($transition);
         $this->assertEquals([], $result);
     }
 
-    public function testItImportsActionFromXML()
+    public function testItImportsActionFromXML(): void
     {
         $xml_content = <<<XML
             <postaction_frozen_fields>
@@ -105,7 +115,7 @@ XML;
         $this->assertCount(2, $action->getFieldIds());
     }
 
-    public function testItSkipsNonExistingFieldsDuringXMLImport()
+    public function testItSkipsNonExistingFieldsDuringXMLImport(): void
     {
         $xml_content = <<<XML
             <postaction_frozen_fields>

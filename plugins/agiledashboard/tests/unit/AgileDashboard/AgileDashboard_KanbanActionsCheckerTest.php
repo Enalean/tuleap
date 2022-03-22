@@ -112,8 +112,8 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
 
         $this->expectException(\Kanban_UserCantAddInPlaceException::class);
 
-        $checker      = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
-        $add_in_place = $checker->checkUserCanAddInPlace($this->user, $kanban);
+        $checker = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
+        $checker->checkUserCanAddInPlace($this->user, $kanban);
     }
 
     public function testItRaisesAnExceptionIfNoSemanticTitle(): void
@@ -135,8 +135,8 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
 
         $this->expectException(\Kanban_SemanticTitleNotDefinedException::class);
 
-        $checker      = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
-        $add_in_place = $checker->checkUserCanAddInPlace($this->user, $kanban);
+        $checker = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
+        $checker->checkUserCanAddInPlace($this->user, $kanban);
     }
 
     public function testItRaisesAnExceptionIfTheMandatoryFieldIsNotTheSemanticTitle(): void
@@ -158,8 +158,8 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
 
         $this->expectException(\Kanban_UserCantAddInPlaceException::class);
 
-        $checker      = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
-        $add_in_place = $checker->checkUserCanAddInPlace($this->user, $kanban);
+        $checker = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
+        $checker->checkUserCanAddInPlace($this->user, $kanban);
     }
 
     public function testItRaisesAnExceptionIfTheUserCannotSubmitArtifact(): void
@@ -181,8 +181,8 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
 
         $this->expectException(KanbanUserCantAddArtifactException::class);
 
-        $checker      = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
-        $add_in_place = $checker->checkUserCanAddInPlace($this->user, $kanban);
+        $checker = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
+        $checker->checkUserCanAddInPlace($this->user, $kanban);
     }
 
     public function testItRaisesAnExceptionIfTheUserCannotSubmitStatusField(): void
@@ -204,7 +204,7 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
 
         $this->expectException(KanbanUserCantAddArtifactException::class);
 
-        $checker      = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
-        $add_in_place = $checker->checkUserCanAddInPlace($this->user, $kanban);
+        $checker = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
+        $checker->checkUserCanAddInPlace($this->user, $kanban);
     }
 }

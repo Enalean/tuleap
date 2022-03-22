@@ -54,7 +54,7 @@ final class AddToTopBacklogPostActionValueUpdaterTest extends \Tuleap\Test\PHPUn
     {
         $actions = new PostActionCollection(new AddToTopBacklogPostActionValue(), self::buildOtherPostAction());
 
-        $this->updater->updateByTransition($actions, new \Transition(14, 321, null, null));
+        $this->updater->updateByTransition($actions, new \Transition(14, 321, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false)));
         self::assertEquals(1, $this->delete_post_action->getCallCount());
         self::assertEquals(1, $this->create_post_action->getCallCount());
     }
@@ -63,7 +63,7 @@ final class AddToTopBacklogPostActionValueUpdaterTest extends \Tuleap\Test\PHPUn
     {
         $actions = new PostActionCollection(self::buildOtherPostAction());
 
-        $this->updater->updateByTransition($actions, new \Transition(15, 321, null, null));
+        $this->updater->updateByTransition($actions, new \Transition(15, 321, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', "", 1, false)));
 
         self::assertEquals(1, $this->delete_post_action->getCallCount());
         self::assertEquals(0, $this->create_post_action->getCallCount());
