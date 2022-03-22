@@ -251,6 +251,7 @@ a.taskboard-card-xref {
     z-index: 1;
     bottom: -1px;
     left: 3px;
+    max-width: calc(100% - 3px);
     height: 3px;
     border-radius: 0 var(--tlp-medium-radius) var(--tlp-medium-radius) 0;
     background: var(--card-progress-color);
