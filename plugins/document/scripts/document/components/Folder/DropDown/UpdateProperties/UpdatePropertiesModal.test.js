@@ -109,8 +109,16 @@ describe("UpdatePropertiesModal", () => {
             ],
         };
 
+        const properties_in_rest_format = {
+            short_name: "field_1234",
+            list_value: null,
+            type: "list",
+            is_multiple_value_allowed: false,
+            value: 103,
+        };
+
         const wrapper = factory({ item });
 
-        expect(wrapper.vm.formatted_item_properties).toEqual([properties_to_update]);
+        expect(wrapper.vm.formatted_item_properties).toEqual([properties_in_rest_format]);
     });
 });
