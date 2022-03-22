@@ -21,14 +21,27 @@ import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import { getReportArtifacts } from "../rest-querier";
 import type { GlobalExportProperties } from "../type";
 
+export type FormattedCell = TextCell | NumberCell | EmptyCell;
+
 export class TextCell {
     readonly type = "text";
 
     constructor(readonly value: string) {}
 }
 
+export class NumberCell {
+    readonly type = "number";
+
+    constructor(readonly value: number) {}
+}
+
+export class EmptyCell {
+    readonly type = "empty";
+}
+
 export interface ReportSection {
     readonly headers?: ReadonlyArray<TextCell>;
+    readonly rows?: ReadonlyArray<ReadonlyArray<FormattedCell>>;
 }
 
 export async function formatData(
@@ -43,14 +56,55 @@ export async function formatData(
         return {};
     }
 
-    const first_artifact_found: ArtifactResponse = report_artifacts[0];
     const report_field_columns: Array<TextCell> = [];
+    const artifact_rows: Array<Array<FormattedCell>> = [];
+    let first_row_processed = false;
+    let artifact_value_rows: Array<FormattedCell> = [];
 
-    for (const field_value of first_artifact_found.values) {
-        report_field_columns.push(new TextCell(field_value.label));
+    for (const artifact of report_artifacts) {
+        artifact_value_rows = [];
+        for (const field_value of artifact.values) {
+            if (!first_row_processed) {
+                report_field_columns.push(new TextCell(field_value.label));
+            }
+
+            switch (field_value.type) {
+                case "string":
+                    artifact_value_rows.push(new TextCell(field_value.value ?? ""));
+                    break;
+                case "int":
+                case "float":
+                case "aid":
+                    artifact_value_rows.push(getCellFromPossibleNumber(field_value.value));
+                    break;
+                case "computed": {
+                    let value;
+                    if (field_value.is_autocomputed) {
+                        value = field_value.value;
+                    } else {
+                        value = field_value.manual_value;
+                    }
+                    artifact_value_rows.push(getCellFromPossibleNumber(value));
+                    break;
+                }
+                default:
+                    artifact_value_rows.push(new EmptyCell());
+            }
+        }
+        artifact_rows.push(artifact_value_rows);
+        first_row_processed = true;
     }
 
     return {
         headers: report_field_columns,
+        rows: artifact_rows,
     };
+}
+
+function getCellFromPossibleNumber(n: number | null): NumberCell | EmptyCell {
+    if (n === null) {
+        return new EmptyCell();
+    }
+
+    return new NumberCell(n);
 }

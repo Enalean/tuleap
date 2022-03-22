@@ -20,7 +20,7 @@
 import type { CellObject } from "xlsx";
 import { utils, writeFile } from "xlsx";
 import type { GlobalExportProperties } from "../../type";
-import type { ReportSection, TextCell } from "../../Data/data-formator";
+import type { FormattedCell, ReportSection } from "../../Data/data-formator";
 
 export function downloadXLSX(
     global_properties: GlobalExportProperties,
@@ -46,17 +46,42 @@ function buildContent(
     const report_columns_label: CellObject[] = [];
     if (formatted_data.headers && formatted_data.headers.length > 0) {
         for (const header of formatted_data.headers) {
-            report_columns_label.push(transformFormattedTextCellIntoASheetCell(header));
+            report_columns_label.push(transformFormattedCellIntoASheetCell(header));
         }
         content.push(report_columns_label);
+    }
+
+    let artifact_value_rows: CellObject[] = [];
+    if (formatted_data.rows && formatted_data.rows.length > 0) {
+        for (const row of formatted_data.rows) {
+            artifact_value_rows = [];
+            for (const cell of row) {
+                artifact_value_rows.push(transformFormattedCellIntoASheetCell(cell));
+            }
+            content.push(artifact_value_rows);
+        }
     }
 
     return content;
 }
 
-function transformFormattedTextCellIntoASheetCell(report_cell: TextCell): CellObject {
-    return {
-        t: "s",
-        v: report_cell.value,
-    };
+function transformFormattedCellIntoASheetCell(formatted_cell: FormattedCell): CellObject {
+    switch (formatted_cell.type) {
+        case "text":
+            return {
+                t: "s",
+                v: formatted_cell.value,
+            };
+        case "number": {
+            return {
+                t: "n",
+                v: formatted_cell.value,
+            };
+        }
+        case "empty":
+        default:
+            return {
+                t: "z",
+            };
+    }
 }
