@@ -42,13 +42,14 @@ final class ArtifactLinksFieldUpdateValueBuilder
         \PFUser $submitter,
         Tracker_FormElement_Field_ArtifactLink $link_field,
         array $payload,
-        ?Artifact $artifact = null,
+        ?Artifact $artifact,
     ): ArtifactLinksFieldUpdateValue {
         $this->payload_structure_checker->checkPayloadStructure($payload);
 
         $extracted_links = $this->links_extractor->extractValuesFromPayload($payload);
 
         return ArtifactLinksFieldUpdateValue::build(
+            $link_field->getId(),
             $this->forward_links_retriever->retrieve($submitter, $link_field, $artifact),
             $extracted_links,
             $this->parent_link_extractor->extractParentLinkFromPayload($payload)

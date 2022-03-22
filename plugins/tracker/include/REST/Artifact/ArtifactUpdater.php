@@ -50,7 +50,7 @@ class ArtifactUpdater
         ?NewChangesetCommentRepresentation $comment = null,
     ): void {
         $this->checkArtifact($user, $artifact);
-        $fields_data = $this->fields_data_builder->getFieldsDataOnUpdate($values, $artifact);
+        $changeset_values = $this->fields_data_builder->getFieldsDataOnUpdate($values, $artifact, $user);
 
         $comment_body   = '';
         $comment_format = \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT;
@@ -62,7 +62,7 @@ class ArtifactUpdater
         $submitted_on  = $_SERVER['REQUEST_TIME'];
         $new_changeset = NewChangeset::fromFieldsDataArray(
             $artifact,
-            $fields_data,
+            $changeset_values->getFieldsData(),
             $comment_body,
             CommentFormatIdentifier::fromFormatString($comment_format),
             [],

@@ -32,6 +32,7 @@ final class ArtifactLinksFieldUpdateValueBuilderTest extends \Tuleap\Test\PHPUni
     private const SECOND_UNCHANGED_ARTIFACT_ID = 102;
     private const FIRST_UNCHANGED_ARTIFACT_ID  = 101;
     private const PARENT_ARTIFACT_ID           = 100;
+    private const FIELD_ID                     = 242;
 
     private function buildUpdateValue(array $payload)
     {
@@ -49,7 +50,7 @@ final class ArtifactLinksFieldUpdateValueBuilderTest extends \Tuleap\Test\PHPUni
         );
 
         $link_field = new \Tracker_FormElement_Field_ArtifactLink(
-            242,
+            self::FIELD_ID,
             55,
             1,
             'irrelevant',
@@ -83,6 +84,7 @@ final class ArtifactLinksFieldUpdateValueBuilderTest extends \Tuleap\Test\PHPUni
 
         $update_value = $this->buildUpdateValue($payload);
 
+        self::assertSame(self::FIELD_ID, $update_value->getFieldId());
         self::assertSame(self::PARENT_ARTIFACT_ID, $update_value->getParentArtifactLink()->getTargetArtifactId());
         self::assertSame([self::ADDED_ARTIFACT_ID], $update_value->getArtifactLinksDiff()->getNewValues());
         self::assertSame([self::REMOVED_ARTIFACT_ID], $update_value->getArtifactLinksDiff()->getRemovedValues());
@@ -96,6 +98,7 @@ final class ArtifactLinksFieldUpdateValueBuilderTest extends \Tuleap\Test\PHPUni
 
         $update_value = $this->buildUpdateValue($payload);
 
+        self::assertSame(self::FIELD_ID, $update_value->getFieldId());
         self::assertSame(self::PARENT_ARTIFACT_ID, $update_value->getParentArtifactLink()->getTargetArtifactId());
         self::assertNull($update_value->getArtifactLinksDiff());
         self::assertNull($update_value->getSubmittedValues());
@@ -113,6 +116,7 @@ final class ArtifactLinksFieldUpdateValueBuilderTest extends \Tuleap\Test\PHPUni
 
         $update_value = $this->buildUpdateValue($payload);
 
+        self::assertSame(self::FIELD_ID, $update_value->getFieldId());
         self::assertNull($update_value->getParentArtifactLink());
         self::assertSame([self::ADDED_ARTIFACT_ID], $update_value->getArtifactLinksDiff()->getNewValues());
         self::assertSame([self::REMOVED_ARTIFACT_ID], $update_value->getArtifactLinksDiff()->getRemovedValues());

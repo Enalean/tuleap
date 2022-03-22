@@ -20,9 +20,17 @@
 
 namespace Tuleap\Tracker\REST\Artifact\Changeset\Value;
 
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksFieldUpdateValueBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksPayloadExtractor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksPayloadStructureChecker;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactParentLinkPayloadExtractor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ChangesetValuesContainer;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\CollectionOfArtifactLinks;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -37,11 +45,11 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private const TEXT_FIELD_ID   = 283;
     private const TEXT_VALUE      = 'fluttery Azerbaijanese';
     private const TEXT_FORMAT     = 'text';
+    private const LINK_FIELD_ID   = 514;
     private \Tracker_FormElement_Field_Integer $int_field;
     private \Tracker_FormElement_Field_Float $float_field;
     private \Tracker_FormElement_Field_String $string_field;
     private \Tracker_FormElement_Field_Text $text_field;
-    private array $values_by_field;
     private RetrieveUsedFieldsStub $fields_retriever;
 
     protected function setUp(): void
@@ -108,13 +116,22 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @param ArtifactValuesRepresentation[] $payload
      */
-    private function getFieldsDataOnUpdate(array $payload): array
+    private function getFieldsDataOnUpdate(array $payload): ChangesetValuesContainer
     {
         $tracker  = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
         $artifact = ArtifactTestBuilder::anArtifact(2)->inTracker($tracker)->build();
+        $user     = UserTestBuilder::buildWithDefaults();
 
-        $builder = new FieldsDataBuilder($this->fields_retriever);
-        return $builder->getFieldsDataOnUpdate($payload, $artifact);
+        $builder = new FieldsDataBuilder(
+            $this->fields_retriever,
+            new ArtifactLinksFieldUpdateValueBuilder(
+                new ArtifactLinksPayloadStructureChecker(),
+                new ArtifactLinksPayloadExtractor(),
+                new ArtifactParentLinkPayloadExtractor(),
+                RetrieveForwardLinksStub::withLinks(new CollectionOfArtifactLinks([]))
+            )
+        );
+        return $builder->getFieldsDataOnUpdate($payload, $artifact, $user);
     }
 
     public function testItAsksEachFieldToBuildFieldsDataFromRESTUpdatePayload(): void
@@ -138,7 +155,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->text_field,
         );
 
-        $fields_data = $this->getFieldsDataOnUpdate([
+        $changeset_values = $this->getFieldsDataOnUpdate([
             $int_representation,
             $float_representation,
             $string_representation,
@@ -149,7 +166,44 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             self::FLOAT_FIELD_ID  => self::FLOAT_VALUE,
             self::STRING_FIELD_ID => self::STRING_VALUE,
             self::TEXT_FIELD_ID   => ['format' => self::TEXT_FORMAT, 'content' => self::TEXT_VALUE],
-        ], $fields_data);
+        ], $changeset_values->getFieldsData());
+    }
+
+    public function testItBuildsArtifactLinkChangesetValueSeparately(): void
+    {
+        $link_field             = new \Tracker_FormElement_Field_ArtifactLink(
+            self::LINK_FIELD_ID,
+            self::TRACKER_ID,
+            null,
+            'irrelevant',
+            'Irrelevant',
+            'Irrelevant',
+            true,
+            'P',
+            false,
+            '',
+            1
+        );
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields($link_field);
+
+        $first_linked_artifact_id      = 40;
+        $second_linked_artifact_id     = 87;
+        $link_representation           = new ArtifactValuesRepresentation();
+        $link_representation->field_id = self::LINK_FIELD_ID;
+        $link_representation->links    = [
+            ['id' => $first_linked_artifact_id, 'type' => null],
+            ['id' => $second_linked_artifact_id, 'type' => 'custom_type'],
+        ];
+
+        $changeset_values = $this->getFieldsDataOnUpdate([$link_representation]);
+        $artifact_link    = $changeset_values->getArtifactLinkValue();
+        self::assertNotNull($artifact_link);
+        $links_diff = $artifact_link->getArtifactLinksDiff();
+        self::assertNotNull($links_diff);
+        $new_links = $links_diff->getNewValues();
+        self::assertCount(2, $new_links);
+        self::assertContains($first_linked_artifact_id, $new_links);
+        self::assertContains($second_linked_artifact_id, $new_links);
     }
 
     public function testItThrowsWhenUpdateRepresentationDoesNotHaveAFieldID(): void
@@ -189,8 +243,8 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testWhenRESTUpdatePayloadIsEmptyItReturnsEmptyArray(): void
     {
-        $fields_data = $this->getFieldsDataOnUpdate([]);
-        self::assertEmpty($fields_data);
+        $changeset_values = $this->getFieldsDataOnUpdate([]);
+        self::assertEmpty($changeset_values->getFieldsData());
     }
 
     /**
@@ -200,7 +254,15 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
 
-        $builder = new FieldsDataBuilder($this->fields_retriever);
+        $builder = new FieldsDataBuilder(
+            $this->fields_retriever,
+            new ArtifactLinksFieldUpdateValueBuilder(
+                new ArtifactLinksPayloadStructureChecker(),
+                new ArtifactLinksPayloadExtractor(),
+                new ArtifactParentLinkPayloadExtractor(),
+                RetrieveForwardLinksStub::withLinks(new CollectionOfArtifactLinks([])),
+            )
+        );
         return $builder->getFieldsDataOnCreate($payload, $tracker);
     }
 

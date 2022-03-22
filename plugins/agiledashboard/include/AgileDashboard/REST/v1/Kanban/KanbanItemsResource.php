@@ -40,6 +40,13 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactForwardLinksRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksByChangesetCache;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksFieldUpdateValueBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksPayloadExtractor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksPayloadStructureChecker;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactParentLinkPayloadExtractor;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataFromValuesByFieldBuilder;
@@ -144,7 +151,19 @@ class KanbanItemsResource extends AuthenticatedResource
         );
 
         $updater = new ArtifactCreator(
-            new FieldsDataBuilder($this->form_element_factory),
+            new FieldsDataBuilder(
+                $this->form_element_factory,
+                new ArtifactLinksFieldUpdateValueBuilder(
+                    new ArtifactLinksPayloadStructureChecker(),
+                    new ArtifactLinksPayloadExtractor(),
+                    new ArtifactParentLinkPayloadExtractor(),
+                    new ArtifactForwardLinksRetriever(
+                        new ArtifactLinksByChangesetCache(),
+                        new ChangesetValueArtifactLinkDao(),
+                        $this->artifact_factory
+                    )
+                )
+            ),
             $this->artifact_factory,
             $this->tracker_factory,
             new FieldsDataFromValuesByFieldBuilder($this->form_element_factory),
