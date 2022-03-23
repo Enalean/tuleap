@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,24 +20,36 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue;
+namespace Tuleap\Tracker\Test\Stub;
 
-use Tuleap\Tracker\REST\Artifact\Changeset\Value\ArtifactLink\RESTLinkProxy;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\Link;
 
-final class ArtifactParentLinkPayloadExtractor
+/**
+ * @psalm-immutable
+ */
+final class LinkStub implements Link
 {
-    public const FIELDS_DATA_PARENT_KEY = 'parent';
-
-    /**
-     * @throws \Tracker_FormElement_InvalidFieldValueException
-     */
-    public function extractParentLinkFromPayload(array $payload): ?RESTLinkProxy
+    private function __construct(private int $id, private ?string $type)
     {
-        return $this->hasPayloadAParentKey($payload) ? RESTLinkProxy::fromPayload($payload[self::FIELDS_DATA_PARENT_KEY]) : null;
     }
 
-    private function hasPayloadAParentKey(array $payload): bool
+    public static function withNoType(int $id): self
     {
-        return array_key_exists(self::FIELDS_DATA_PARENT_KEY, $payload);
+        return new self($id, null);
+    }
+
+    public static function withType(int $id, string $type): self
+    {
+        return new self($id, $type);
+    }
+
+    public function getTargetArtifactId(): int
+    {
+        return $this->id;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
     }
 }

@@ -40,7 +40,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\PossibleParentSelectorRenderer
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\PostSaveNewChangesetLinkParentArtifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RequestDataAugmentor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactForwardLinksInfoRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactForwardLinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksByChangesetCache;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksFieldUpdateValueBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksFieldUpdateValueFormatter;
@@ -257,7 +257,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 new ArtifactLinksPayloadStructureChecker(),
                 new ArtifactLinksPayloadExtractor(),
                 new ArtifactParentLinkPayloadExtractor(),
-                new ArtifactForwardLinksInfoRetriever(
+                new ArtifactForwardLinksRetriever(
                     new ArtifactLinksByChangesetCache(),
                     $this->getChangesetValueArtifactLinkDao(),
                     Tracker_ArtifactFactory::instance()

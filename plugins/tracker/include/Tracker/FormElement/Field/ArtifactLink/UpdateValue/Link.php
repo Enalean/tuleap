@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,34 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue;
 
-use Tracker_ArtifactLinkInfo;
 
-final class CollectionOfArtifactLinksInfo
+/**
+ * I hold a link from the current Artifact to another Artifact
+ * @psalm-immutable
+ */
+interface Link
 {
-    /**
-     * @param Tracker_ArtifactLinkInfo[] $links_info
-     */
-    public function __construct(private array $links_info)
-    {
-    }
-
-    /**
-     * @return Tracker_ArtifactLinkInfo[]
-     */
-    public function getLinksInfo(): array
-    {
-        return $this->links_info;
-    }
-
-    /**
-     * @return int[]
-     */
-    public function getLinksInfoArtifactsIds(): array
-    {
-        return array_map(static fn(Tracker_ArtifactLinkInfo $link_info) => $link_info->getArtifactId(), $this->links_info);
-    }
+    public function getTargetArtifactId(): int;
+    public function getType(): ?string;
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,30 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue;
 
-use Tracker_FormElement_InvalidFieldValueException;
-use Tuleap\Tracker\REST\Artifact\Changeset\Value\ArtifactLink\RESTLinkProxy;
+use Tuleap\Tracker\Artifact\RetrieveArtifact;
 
-final class ArtifactLinksPayloadExtractor
+/**
+ * I hold a link retrieved from database storage
+ * @psalm-immutable
+ */
+final class StoredLink implements Link
 {
-    public const FIELDS_DATA_LINKS_KEY = 'links';
-
-    /**
-     * @throws Tracker_FormElement_InvalidFieldValueException
-     */
-    public function extractValuesFromPayload(array $payload): ?CollectionOfArtifactLinks
+    private function __construct(private int $id, private ?string $type)
     {
-        if (! $this->hasPayloadALinksKey($payload)) {
-            return null;
-        }
-
-        return new CollectionOfArtifactLinks(array_map(
-            static fn(array $payload_link) => RESTLinkProxy::fromPayload($payload_link),
-            $payload[self::FIELDS_DATA_LINKS_KEY]
-        ));
     }
 
-    private function hasPayloadALinksKey(array $payload): bool
+    /**
+     * @param array{artifact_id: int, nature: string|null} $row
+     */
+    public static function fromRow(RetrieveArtifact $artifact_retriever, \PFUser $user, array $row): ?self
     {
-        return array_key_exists(self::FIELDS_DATA_LINKS_KEY, $payload);
+        $artifact = $artifact_retriever->getArtifactById($row['artifact_id']);
+        if (! $artifact || ! $artifact->userCanView($user)) {
+            return null;
+        }
+        return new self($artifact->getId(), $row['nature']);
+    }
+
+    public function getTargetArtifactId(): int
+    {
+        return $this->id;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
     }
 }

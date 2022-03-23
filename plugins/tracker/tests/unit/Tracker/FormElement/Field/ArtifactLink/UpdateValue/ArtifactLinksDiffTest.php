@@ -20,50 +20,42 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue;
 
+use Tuleap\Tracker\Test\Stub\LinkStub;
+
 final class ArtifactLinksDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsADiffOfAddedAndRemovedLinks(): void
     {
-        $link_1 = $this->createMock(\Tracker_ArtifactLinkInfo::class);
-        $link_2 = $this->createMock(\Tracker_ArtifactLinkInfo::class);
-        $link_3 = $this->createMock(\Tracker_ArtifactLinkInfo::class);
-
-        $link_1->method('getArtifactId')->willReturn(101);
-        $link_2->method('getArtifactId')->willReturn(102);
-        $link_3->method('getArtifactId')->willReturn(103);
-
-        $submitted_links = new CollectionOfArtifactLinks([
-            ArtifactLink::fromPayload(['id' => 101, 'type' => '_is_child']),
-            ArtifactLink::fromPayload(['id' => 102, 'type' => '_is_child']),
-            ArtifactLink::fromPayload(['id' => 104, 'type' => '_is_child']),
+        $current_forward_links = new CollectionOfArtifactLinks([
+            LinkStub::withType(101, '_is_child'),
+            LinkStub::withNoType(102),
+            LinkStub::withNoType(103),
         ]);
 
-        $current_forward_links = new CollectionOfArtifactLinksInfo([
-            $link_1,
-            $link_2,
-            $link_3,
+        $submitted_links = new CollectionOfArtifactLinks([
+            LinkStub::withType(101, '_is_child'),
+            LinkStub::withType(102, '_is_child'),
+            LinkStub::withType(104, '_is_child'),
         ]);
 
         $diff = ArtifactLinksDiff::build($submitted_links, $current_forward_links);
 
-        self::assertEquals([104], $diff->getNewValues());
-        self::assertEquals([103], $diff->getRemovedValues());
+        $new_values = $diff->getNewValues();
+        self::assertCount(1, $new_values);
+        self::assertContains(104, $new_values);
+        $removed_values = $diff->getRemovedValues();
+        self::assertCount(1, $removed_values);
+        self::assertContains(103, $removed_values);
     }
 
     public function testItBuildsAnEmptyDiffWhenThereIsNoChange(): void
     {
-        $link_1 = $this->createMock(\Tracker_ArtifactLinkInfo::class);
-        $link_1->method('getArtifactId')->willReturn(101);
-
-        $submitted_links = new CollectionOfArtifactLinks([
-            ArtifactLink::fromPayload(['id' => 101, 'type' => '_is_child']),
-        ]);
-
-        $current_forward_links = new CollectionOfArtifactLinksInfo([$link_1]);
+        $submitted_links       = new CollectionOfArtifactLinks([LinkStub::withType(101, '_is_child')]);
+        $current_forward_links = new CollectionOfArtifactLinks([LinkStub::withType(101, '_is_child')]);
 
         $diff = ArtifactLinksDiff::build($submitted_links, $current_forward_links);
 
-        self::assertEquals([], $diff->getNewValues());
-        self::assertEquals([], $diff->getRemovedValues());
+        self::assertEmpty($diff->getNewValues());
+        self::assertEmpty($diff->getRemovedValues());
     }
 }

@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue;
 
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Stub\LinkStub;
 
 final class ArtifactLinksByChangesetCacheTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -30,9 +31,7 @@ final class ArtifactLinksByChangesetCacheTest extends \Tuleap\Test\PHPUnit\TestC
         $changeset_1 = ChangesetTestBuilder::aChangeset(101)->build();
         $changeset_2 = ChangesetTestBuilder::aChangeset(102)->build();
 
-        $a_link_info = $this->createMock(\Tracker_ArtifactLinkInfo::class);
-
-        $links_of_changeset_1 = new CollectionOfArtifactLinksInfo([$a_link_info]);
+        $links_of_changeset_1 = new CollectionOfArtifactLinks([LinkStub::withNoType(28)]);
         $cache->cacheLinksInfoForChangeset(
             $changeset_1,
             $links_of_changeset_1
@@ -41,6 +40,6 @@ final class ArtifactLinksByChangesetCacheTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertTrue($cache->hasCachedLinksInfoForChangeset($changeset_1));
         self::assertFalse($cache->hasCachedLinksInfoForChangeset($changeset_2));
 
-        self::assertEquals($links_of_changeset_1, $cache->getCachedLinksInfoForChangeset($changeset_1));
+        self::assertSame($links_of_changeset_1, $cache->getCachedLinksInfoForChangeset($changeset_1));
     }
 }

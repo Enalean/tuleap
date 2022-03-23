@@ -30,17 +30,18 @@ final class ArtifactLinksFieldUpdateValue
     private function __construct(
         private ?ArtifactLinksDiff $artifact_links_diff,
         private ?CollectionOfArtifactLinks $submitted_values,
-        private ?ArtifactLink $parent_artifact_link,
+        private ?Link $parent_artifact_link,
     ) {
     }
 
     public static function build(
-        ?ArtifactLinksDiff $artifact_links_diff,
+        CollectionOfArtifactLinks $existing_links,
         ?CollectionOfArtifactLinks $submitted_values,
-        ?ArtifactLink $parent_artifact_link,
+        ?Link $parent_artifact_link,
     ): self {
+        $diff = $submitted_values !== null ? ArtifactLinksDiff::build($submitted_values, $existing_links) : null;
         return new self(
-            $artifact_links_diff,
+            $diff,
             $submitted_values,
             $parent_artifact_link
         );
@@ -51,7 +52,7 @@ final class ArtifactLinksFieldUpdateValue
         return $this->artifact_links_diff;
     }
 
-    public function getParentArtifactLink(): ?ArtifactLink
+    public function getParentArtifactLink(): ?Link
     {
         return $this->parent_artifact_link;
     }

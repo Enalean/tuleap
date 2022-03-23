@@ -20,19 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue;
+namespace Tuleap\Tracker\REST\Artifact\Changeset\Value\ArtifactLink;
 
 use Tracker_FormElement_InvalidFieldValueException;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\Link;
 
 /**
  * @psalm-immutable
  */
-final class ArtifactLink
+final class RESTLinkProxy implements Link
 {
     private const PAYLOAD_KEY_ID   = 'id';
     private const PAYLOAD_KEY_TYPE = 'type';
 
-    private function __construct(public int $id, public ?string $type)
+    private function __construct(private int $id, private ?string $type)
     {
     }
 
@@ -49,6 +50,9 @@ final class ArtifactLink
         );
     }
 
+    /**
+     * @throws Tracker_FormElement_InvalidFieldValueException
+     */
     private static function checkLinkPayloadStructure(array $link_payload): void
     {
         if (! array_key_exists(self::PAYLOAD_KEY_ID, $link_payload)) {
@@ -65,5 +69,15 @@ final class ArtifactLink
         }
 
         return $link_payload[self::PAYLOAD_KEY_TYPE];
+    }
+
+    public function getTargetArtifactId(): int
+    {
+        return $this->id;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
     }
 }

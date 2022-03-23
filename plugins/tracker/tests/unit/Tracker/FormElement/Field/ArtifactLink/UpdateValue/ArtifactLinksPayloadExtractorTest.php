@@ -36,14 +36,19 @@ final class ArtifactLinksPayloadExtractorTest extends \Tuleap\Test\PHPUnit\TestC
         ];
 
         $collection = (new ArtifactLinksPayloadExtractor())->extractValuesFromPayload($payload);
+        $links      = $collection->getArtifactLinks();
+        self::assertCount(3, $links);
+        self::assertSame(101, $links[0]->getTargetArtifactId());
+        self::assertSame('_is_child', $links[0]->getType());
+        self::assertSame(102, $links[1]->getTargetArtifactId());
+        self::assertSame('_depends_on', $links[1]->getType());
+        self::assertSame(103, $links[2]->getTargetArtifactId());
+        self::assertSame('_duplicates', $links[2]->getType());
+    }
 
-        self::assertEquals(
-            [
-                ArtifactLink::fromPayload($link_1),
-                ArtifactLink::fromPayload($link_2),
-                ArtifactLink::fromPayload($link_3),
-            ],
-            $collection->getArtifactLinks()
-        );
+    public function testItReturnsNullWhenPayloadHasNoLinksProperty(): void
+    {
+        $collection = (new ArtifactLinksPayloadExtractor())->extractValuesFromPayload(['invalid' => 'payload']);
+        self::assertNull($collection);
     }
 }

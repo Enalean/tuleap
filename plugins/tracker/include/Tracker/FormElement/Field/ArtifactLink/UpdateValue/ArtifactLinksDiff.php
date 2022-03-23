@@ -37,10 +37,12 @@ final class ArtifactLinksDiff
     ) {
     }
 
-    public static function build(CollectionOfArtifactLinks $submitted_links, CollectionOfArtifactLinksInfo $currently_linked_artifacts): self
-    {
-        $existing_links_ids  = $currently_linked_artifacts->getLinksInfoArtifactsIds();
-        $submitted_links_ids = $submitted_links->getArtifactLinksIds();
+    public static function build(
+        CollectionOfArtifactLinks $submitted_links,
+        CollectionOfArtifactLinks $currently_linked_artifacts,
+    ): self {
+        $existing_links_ids  = $currently_linked_artifacts->getTargetArtifactIds();
+        $submitted_links_ids = $submitted_links->getTargetArtifactIds();
 
         $new_values     = array_diff($submitted_links_ids, $existing_links_ids);
         $removed_values = array_diff($existing_links_ids, $submitted_links_ids);

@@ -31,7 +31,7 @@ final class ArtifactLinksFieldUpdateValueBuilder
         private ArtifactLinksPayloadStructureChecker $payload_structure_checker,
         private ArtifactLinksPayloadExtractor $links_extractor,
         private ArtifactParentLinkPayloadExtractor $parent_link_extractor,
-        private RetrieveForwardLinksInfo $forward_links_retriever,
+        private RetrieveForwardLinks $forward_links_retriever,
     ) {
     }
 
@@ -46,16 +46,10 @@ final class ArtifactLinksFieldUpdateValueBuilder
     ): ArtifactLinksFieldUpdateValue {
         $this->payload_structure_checker->checkPayloadStructure($payload);
 
-        $extracted_links     = $this->links_extractor->extractValuesFromPayload($payload);
-        $artifact_links_diff = ($extracted_links !== null)
-            ? ArtifactLinksDiff::build(
-                $extracted_links,
-                $this->forward_links_retriever->retrieve($submitter, $link_field, $artifact)
-            )
-            : null;
+        $extracted_links = $this->links_extractor->extractValuesFromPayload($payload);
 
         return ArtifactLinksFieldUpdateValue::build(
-            $artifact_links_diff,
+            $this->forward_links_retriever->retrieve($submitter, $link_field, $artifact),
             $extracted_links,
             $this->parent_link_extractor->extractParentLinkFromPayload($payload)
         );
