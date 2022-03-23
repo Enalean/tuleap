@@ -27,48 +27,68 @@
     </div>
 </template>
 
-<script>
-import { mapActions, mapGetters } from "vuex";
+<script setup lang="ts">
 import DisplayEmbeddedSpinner from "./DisplayEmbeddedSpinner.vue";
 import DisplayEmbeddedContent from "./DisplayEmbeddedContent.vue";
+import { computed, onBeforeMount, onUnmounted, ref } from "@vue/composition-api";
+import type { Item } from "../../type";
+import {
+    useActions,
+    useMutations,
+    useNamespacedActions,
+    useNamespacedGetters,
+    useNamespacedMutations,
+} from "vuex-composition-helpers";
+import type { ErrorGetters } from "../../store/error/error-getters";
+import type { PreferenciesActions } from "../../store/preferencies/preferencies-actions";
+import { useRoute } from "../../helpers/use-router";
 
-export default {
-    name: "DisplayEmbedded",
-    components: { DisplayEmbeddedContent, DisplayEmbeddedSpinner },
-    data() {
-        return {
-            embedded_file: {},
-            is_loading: false,
-        };
-    },
-    computed: {
-        ...mapGetters("error", ["does_document_have_any_error"]),
-        has_loaded_without_error() {
-            return !this.does_document_have_any_error && !this.is_loading;
-        },
-    },
-    async beforeMount() {
-        this.is_loading = true;
-        this.embedded_file = await this.$store.dispatch(
-            "loadDocumentWithAscendentHierarchy",
-            parseInt(this.$route.params.item_id, 10)
-        );
-        this.$store.commit("updateCurrentlyPreviewedItem", this.embedded_file);
-        const preference = await this.$store.dispatch(
-            "preferencies/getEmbeddedFileDisplayPreference",
-            this.embedded_file
-        );
-        this.$store.commit(
-            "preferencies/shouldDisplayEmbeddedInLargeMode",
-            preference && preference.value === false
-        );
-        this.is_loading = false;
-    },
-    destroyed() {
-        this.$store.commit("updateCurrentlyPreviewedItem", null);
-    },
-    methods: {
-        ...mapActions(["loadDocumentWithAscendentHierarchy"]),
-    },
-};
+const embedded_file = ref<Item | null>(null);
+const is_loading = ref(false);
+
+const { does_document_have_any_error } = useNamespacedGetters<
+    Pick<ErrorGetters, "does_document_have_any_error">
+>("error", ["does_document_have_any_error"]);
+
+const has_loaded_without_error = computed((): boolean => {
+    return !does_document_have_any_error.value && !is_loading.value;
+});
+
+const { loadDocumentWithAscendentHierarchy } = useActions(["loadDocumentWithAscendentHierarchy"]);
+const { updateCurrentlyPreviewedItem } = useMutations(["updateCurrentlyPreviewedItem"]);
+const { getEmbeddedFileDisplayPreference } = useNamespacedActions<PreferenciesActions>(
+    "preferencies",
+    ["getEmbeddedFileDisplayPreference"]
+);
+const { shouldDisplayEmbeddedInLargeMode } = useNamespacedMutations("preferencies", [
+    "shouldDisplayEmbeddedInLargeMode",
+]);
+
+const route = useRoute();
+
+onBeforeMount(async () => {
+    is_loading.value = true;
+    embedded_file.value = await loadDocumentWithAscendentHierarchy(
+        parseInt(route.params.item_id, 10)
+    );
+
+    if (!embedded_file.value) {
+        return;
+    }
+
+    updateCurrentlyPreviewedItem(embedded_file.value);
+    const preference = await getEmbeddedFileDisplayPreference(embedded_file.value);
+    shouldDisplayEmbeddedInLargeMode(!preference);
+    is_loading.value = false;
+});
+
+onUnmounted(() => {
+    updateCurrentlyPreviewedItem(null);
+});
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

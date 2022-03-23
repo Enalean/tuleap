@@ -18,39 +18,29 @@
  *
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ActionsHeader from "./ActionsHeader.vue";
-
 import localVue from "../../helpers/local-vue";
-import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import type { Item } from "../../type";
 
-describe("QuickLookDocumentPreview", () => {
-    let action_header_factory;
-    beforeEach(() => {
-        const store_options = {};
-
-        const store = createStoreMock(store_options);
-
-        action_header_factory = (props = {}) => {
-            return shallowMount(ActionsHeader, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-    });
+describe("ActionsHeader", () => {
+    function getWrapper(item: Item): Wrapper<ActionsHeader> {
+        return shallowMount(ActionsHeader, {
+            localVue,
+            propsData: { item },
+        });
+    }
 
     it(`Given user can write
         When he displays item actions
         Then the default action is Update`, () => {
-        const wrapper = action_header_factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "file",
-                user_can_write: true,
-            },
-        });
+        const wrapper = getWrapper({
+            id: 1,
+            title: "my item title",
+            type: "file",
+            user_can_write: true,
+        } as Item);
 
         expect(
             wrapper.find("[data-test=item-action-create-new-version-button]").exists()
@@ -61,14 +51,12 @@ describe("QuickLookDocumentPreview", () => {
     it(`Given user can read item
         When he displays item actions
         Then the default action is Details`, () => {
-        const wrapper = action_header_factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "file",
-                user_can_write: false,
-            },
-        });
+        const wrapper = getWrapper({
+            id: 1,
+            title: "my item title",
+            type: "file",
+            user_can_write: false,
+        } as Item);
 
         expect(
             wrapper.find("[data-test=item-action-create-new-version-button]").exists()

@@ -72,17 +72,94 @@
     </div>
 </template>
 
-<script>
-import ActionsHeader from "./ActionsHeader.vue";
-import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
-import ApprovalBadge from "../Folder/ApprovalTables/ApprovalBadge.vue";
-import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
-import UpdatePropertiesModal from "../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue";
-import { mapState } from "vuex";
+<script setup lang="ts">
 import emitter from "../../helpers/emitter";
+import { computed, onBeforeMount, onUnmounted, ref } from "@vue/composition-api";
+import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
+import { useNamespacedState, useState } from "vuex-composition-helpers";
+import type { Embedded, Item, RootState } from "../../type";
 
-export default {
-    name: "DisplayEmbeddedContent",
+const is_modal_shown = ref(false);
+const show_confirm_deletion_modal = ref(false);
+const show_update_properties_modal = ref(false);
+const show_update_permissions_modal = ref(false);
+
+const { currently_previewed_item } = useState<RootState>(["currently_previewed_item"]);
+const { is_embedded_in_large_view } = useNamespacedState<PreferenciesState>("preferencies", [
+    "is_embedded_in_large_view",
+]);
+
+const embedded_content = computed((): string => {
+    const item = currently_previewed_item.value;
+    if (!item) {
+        return "";
+    }
+
+    if (!isEmbedded(item)) {
+        return "";
+    }
+
+    if (!item.embedded_file_properties) {
+        return "";
+    }
+
+    if (!item.embedded_file_properties.content) {
+        return "";
+    }
+
+    return item.embedded_file_properties.content;
+});
+
+function isEmbedded(item: Item): item is Embedded {
+    return "embedded_file_properties" in item;
+}
+
+onBeforeMount(() => {
+    emitter.on("deleteItem", showDeleteItemModal);
+    emitter.on("show-create-new-item-version-modal", showCreateNewItemVersionModal);
+    emitter.on("show-update-item-properties-modal", showUpdatePropertiesModal);
+    emitter.on("show-update-permissions-modal", showUpdateItemPermissionsModal);
+});
+
+onUnmounted(() => {
+    emitter.off("deleteItem", showDeleteItemModal);
+    emitter.off("show-create-new-item-version-modal", showCreateNewItemVersionModal);
+    emitter.off("show-update-item-properties-modal", showUpdatePropertiesModal);
+    emitter.off("show-update-permissions-modal", showUpdateItemPermissionsModal);
+});
+
+function showCreateNewItemVersionModal(): void {
+    is_modal_shown.value = true;
+}
+function hideModal(): void {
+    is_modal_shown.value = false;
+}
+function showUpdatePropertiesModal(): void {
+    show_update_properties_modal.value = true;
+}
+function hideUpdatePropertiesModal(): void {
+    show_update_properties_modal.value = false;
+}
+function showUpdateItemPermissionsModal(): void {
+    show_update_permissions_modal.value = true;
+}
+function showDeleteItemModal(): void {
+    show_confirm_deletion_modal.value = true;
+}
+function hideDeleteItemModal(): void {
+    show_confirm_deletion_modal.value = false;
+}
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+import UpdatePropertiesModal from "../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue";
+import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
+import ApprovalBadge from "../Folder/ApprovalTables/ApprovalBadge.vue";
+import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
+import ActionsHeader from "./ActionsHeader.vue";
+
+export default defineComponent({
     components: {
         UpdatePropertiesModal,
         EmbeddedFileEditionSwitcher,
@@ -106,60 +183,5 @@ export default {
                 /* webpackChunkName: "update-properties-modal" */ "../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue"
             ),
     },
-    data() {
-        return {
-            is_modal_shown: false,
-            show_confirm_deletion_modal: false,
-            show_update_properties_modal: false,
-            show_update_permissions_modal: false,
-            is_in_large_view: false,
-        };
-    },
-    computed: {
-        ...mapState(["currently_previewed_item"]),
-        ...mapState("preferencies", ["is_embedded_in_large_view"]),
-        embedded_content() {
-            if (!this.currently_previewed_item.embedded_file_properties) {
-                return "";
-            }
-
-            return this.currently_previewed_item.embedded_file_properties.content;
-        },
-    },
-    created() {
-        emitter.on("deleteItem", this.showDeleteItemModal);
-        emitter.on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
-        emitter.on("show-update-item-properties-modal", this.showUpdatePropertiesModal);
-        emitter.on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
-    },
-    beforeDestroy() {
-        emitter.off("deleteItem", this.showDeleteItemModal);
-        emitter.off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
-        emitter.off("show-update-item-properties-modal", this.showUpdatePropertiesModal);
-        emitter.off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
-    },
-    methods: {
-        showCreateNewItemVersionModal() {
-            this.is_modal_shown = true;
-        },
-        hideModal() {
-            this.is_modal_shown = false;
-        },
-        showUpdatePropertiesModal() {
-            this.show_update_properties_modal = true;
-        },
-        hideUpdatePropertiesModal() {
-            this.show_update_properties_modal = false;
-        },
-        showUpdateItemPermissionsModal() {
-            this.show_update_permissions_modal = true;
-        },
-        showDeleteItemModal() {
-            this.show_confirm_deletion_modal = true;
-        },
-        hideDeleteItemModal() {
-            this.show_confirm_deletion_modal = false;
-        },
-    },
-};
+});
 </script>

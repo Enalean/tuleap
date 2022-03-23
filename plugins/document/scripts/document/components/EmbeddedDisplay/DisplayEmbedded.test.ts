@@ -27,7 +27,11 @@ import DisplayEmbeddedContent from "./DisplayEmbeddedContent.vue";
 import DisplayEmbeddedSpinner from "./DisplayEmbeddedSpinner.vue";
 
 describe("DisplayEmbedded", () => {
-    let router, component_options, store;
+    let router: VueRouter;
+    let store = {
+        dispatch: jest.fn(),
+        commit: jest.fn(),
+    };
 
     beforeEach(() => {
         router = new VueRouter({
@@ -38,11 +42,6 @@ describe("DisplayEmbedded", () => {
                 },
             ],
         });
-
-        component_options = {
-            localVue,
-            router,
-        };
     });
 
     it(`Given user display an embedded file content
@@ -61,9 +60,13 @@ describe("DisplayEmbedded", () => {
         };
         store = createStoreMock(store_options);
 
-        const wrapper = shallowMount(DisplayEmbedded, { store, ...component_options });
+        const wrapper = shallowMount(DisplayEmbedded, {
+            localVue,
+            router,
+            mocks: { $store: store },
+        });
 
-        await wrapper.vm.$nextTick().then(() => {});
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(DisplayEmbeddedContent).exists()).toBeFalsy();
         expect(wrapper.findComponent(DisplayEmbeddedSpinner).exists()).toBeFalsy();
@@ -85,9 +88,13 @@ describe("DisplayEmbedded", () => {
         };
         store = createStoreMock(store_options);
 
-        const wrapper = shallowMount(DisplayEmbedded, { store, ...component_options });
+        const wrapper = shallowMount(DisplayEmbedded, {
+            localVue,
+            router,
+            mocks: { $store: store },
+        });
 
-        await wrapper.vm.$nextTick().then(() => {});
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(DisplayEmbeddedContent).exists()).toBeFalsy();
         expect(wrapper.findComponent(DisplayEmbeddedSpinner).exists()).toBeFalsy();
@@ -107,15 +114,26 @@ describe("DisplayEmbedded", () => {
 
         store = createStoreMock(store_options);
 
-        const wrapper = shallowMount(DisplayEmbedded, { store, ...component_options });
+        store.dispatch.mockImplementation((action_name) => {
+            if (action_name === "loadDocumentWithAscendentHierarchy") {
+                return {
+                    id: 10,
+                    embedded_properties: {
+                        content: "<p>my custom content </p>",
+                    },
+                };
+            }
+
+            return null;
+        });
+
+        const wrapper = shallowMount(DisplayEmbedded, {
+            localVue,
+            router,
+            mocks: { $store: store },
+        });
 
         await wrapper.vm.$nextTick();
-        jest.spyOn(wrapper.vm, "loadDocumentWithAscendentHierarchy").mockReturnValue({
-            id: 10,
-            embedded_properties: {
-                content: "<p>my custom content </p>",
-            },
-        });
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(DisplayEmbeddedContent).exists()).toBeTruthy();
@@ -135,7 +153,11 @@ describe("DisplayEmbedded", () => {
 
         store = createStoreMock(store_options);
 
-        const wrapper = shallowMount(DisplayEmbedded, { store, ...component_options });
+        const wrapper = shallowMount(DisplayEmbedded, {
+            localVue,
+            router,
+            mocks: { $store: store },
+        });
 
         wrapper.destroy();
         expect(store.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", null);

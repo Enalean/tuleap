@@ -26,8 +26,16 @@ import {
     setNarrowModeForEmbeddedDisplay,
 } from "../../api/preferencies-rest-querier";
 import type { PreferenciesState } from "./preferencies-default-state";
-import type { ActionContext } from "vuex";
+import type { ActionContext, ActionTree } from "vuex";
 import type { Item, RootState } from "../../type";
+
+export interface PreferenciesActions extends ActionTree<PreferenciesState, RootState> {
+    readonly setUserPreferenciesForFolder: typeof setUserPreferenciesForFolder;
+    readonly setUserPreferenciesForUI: typeof setUserPreferenciesForUI;
+    readonly displayEmbeddedInNarrowMode: typeof displayEmbeddedInNarrowMode;
+    readonly displayEmbeddedInLargeMode: typeof displayEmbeddedInLargeMode;
+    readonly getEmbeddedFileDisplayPreference: typeof getEmbeddedFileDisplayPreference;
+}
 
 export interface UserPreferenciesFolderSetPayload {
     folder_id: number;
@@ -99,7 +107,7 @@ export const displayEmbeddedInLargeMode = async (
 export const getEmbeddedFileDisplayPreference = async (
     context: ActionContext<PreferenciesState, RootState>,
     item: Item
-): Promise<string | null> => {
+): Promise<"narrow" | false | null> => {
     try {
         const user_id = parseInt(context.rootState.configuration.user_id, 10);
         const project_id = parseInt(context.rootState.configuration.project_id, 10);

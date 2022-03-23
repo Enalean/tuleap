@@ -48,21 +48,18 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import CreateNewItemVersionButton from "../Folder/DropDown/NewVersion/NewItemVersionButton.vue";
 import DetailsItemButton from "../Folder/ActionsButton/DetailsItemButton.vue";
 import DropDownButton from "../Folder/DropDown/DropDownButton.vue";
 import DropDownDisplayedEmbedded from "../Folder/DropDown/DropDownDisplayedEmbedded.vue";
-export default {
-    name: "ActionsHeader",
-    components: {
-        DropDownDisplayedEmbedded,
-        DropDownButton,
-        DetailsItemButton,
-        CreateNewItemVersionButton,
-    },
-    props: {
-        item: Object,
-    },
-};
+import type { Item } from "../../type";
+
+defineProps<{ item: Item }>();
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

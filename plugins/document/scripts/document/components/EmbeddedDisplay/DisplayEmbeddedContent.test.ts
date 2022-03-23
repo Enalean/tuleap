@@ -18,82 +18,72 @@
  *
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../helpers/local-vue";
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import DisplayEmbeddedContent from "./DisplayEmbeddedContent.vue";
+import type { RootState } from "../../type";
+import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
 
 describe("DisplayEmbeddedContent", () => {
-    let factory, store;
-
-    beforeEach(() => {
-        const store_options = {
-            state: {},
-        };
-
-        store = createStoreMock(store_options);
-
-        factory = (props = {}) => {
-            return shallowMount(DisplayEmbeddedContent, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-    });
+    function getWrapper(state: RootState): Wrapper<DisplayEmbeddedContent> {
+        return shallowMount(DisplayEmbeddedContent, {
+            localVue,
+            mocks: {
+                $store: createStoreMock({
+                    state,
+                }),
+            },
+        });
+    }
 
     it(`renders an embedded document in narrow view`, () => {
-        store.state.is_embedded_in_large_view = false;
-        store.state.currently_previewed_item = {
-            id: 42,
-            title: "My embedded content",
-            embedded_file_properties: {
-                content: "My content",
+        const wrapper = getWrapper({
+            currently_previewed_item: {
+                id: 42,
+                title: "My embedded content",
+                embedded_file_properties: {
+                    content: "My content",
+                },
             },
-        };
-        store.state.preferencies = {
-            is_embedded_in_large_view: false,
-        };
-        const wrapper = factory({
-            isInLargeView: false,
-        });
+            preferencies: {
+                is_embedded_in_large_view: false,
+            } as PreferenciesState,
+        } as unknown as RootState);
 
         const element = wrapper.get("[data-test=display-embedded-content]");
         expect(element.classes()).toEqual(["tlp-pane", "embedded-document", "narrow"]);
     });
 
     it(`renders an embedded document in large view`, () => {
-        store.state.is_embedded_in_large_view = true;
-        store.state.currently_previewed_item = {
-            id: 42,
-            title: "My embedded content",
-            embedded_file_properties: {
-                content: "My content",
+        const wrapper = getWrapper({
+            currently_previewed_item: {
+                id: 42,
+                title: "My embedded content",
+                embedded_file_properties: {
+                    content: "My content",
+                },
             },
-        };
-        store.state.preferencies = {
-            is_embedded_in_large_view: true,
-        };
-        const wrapper = factory({
-            isInLargeView: true,
-        });
+            preferencies: {
+                is_embedded_in_large_view: true,
+            } as PreferenciesState,
+        } as unknown as RootState);
 
         const element = wrapper.get("[data-test=display-embedded-content]");
         expect(element.classes()).toEqual(["tlp-pane", "embedded-document"]);
     });
 
     it(`does not throw error if embedded_file_properties key is missing`, () => {
-        store.state.is_embedded_in_large_view = true;
-        store.state.currently_previewed_item = {
-            id: 42,
-            title: "My embedded content",
-        };
-        store.state.preferencies = {
-            is_embedded_in_large_view: true,
-        };
-        const wrapper = factory({
-            isInLargeView: true,
-        });
+        const wrapper = getWrapper({
+            currently_previewed_item: {
+                id: 42,
+                title: "My embedded content",
+            },
+            preferencies: {
+                is_embedded_in_large_view: true,
+            } as PreferenciesState,
+        } as unknown as RootState);
 
         const element = wrapper.get("[data-test=display-embedded-content]");
         expect(element.classes()).toEqual(["tlp-pane", "embedded-document"]);
