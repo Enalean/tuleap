@@ -1,0 +1,108 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Tuleap\Tracker\REST\Artifact\ChangesetValue;
+
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
+use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldUpdateValueBuilder;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+
+final class FieldsDataBuilder
+{
+    public function __construct(
+        private RetrieveUsedFields $fields_retriever,
+        private ArtifactLinksFieldUpdateValueBuilder $artifact_link_builder,
+    ) {
+    }
+
+    /**
+     * @param ArtifactValuesRepresentation[] $values
+     */
+    public function getFieldsDataOnCreate(array $values, \Tracker $tracker): array
+    {
+        $new_values     = [];
+        $indexed_fields = $this->getIndexedFields($tracker);
+        foreach ($values as $value) {
+            $array_representation = $value->toArray();
+
+            $field                       = $this->getField($indexed_fields, $array_representation);
+            $new_values[$field->getId()] = $field->getFieldDataFromRESTValue($array_representation);
+        }
+        return $new_values;
+    }
+
+    /**
+     * @param ArtifactValuesRepresentation[] $values
+     * @throws \Tracker_FormElement_InvalidFieldException
+     * @throws \Tracker_FormElement_InvalidFieldValueException
+     */
+    public function getFieldsDataOnUpdate(
+        array $values,
+        Artifact $artifact,
+        \PFUser $submitter,
+    ): ChangesetValuesContainer {
+        $new_values     = [];
+        $artifact_link  = null;
+        $indexed_fields = $this->getIndexedFields($artifact->getTracker());
+        foreach ($values as $value) {
+            $array_representation = $value->toArray();
+
+            $field = $this->getField($indexed_fields, $array_representation);
+            if ($field instanceof \Tracker_FormElement_Field_ArtifactLink) {
+                $artifact_link = $this->artifact_link_builder->buildArtifactLinksFieldUpdateValue(
+                    $submitter,
+                    $field,
+                    $array_representation,
+                    $artifact
+                );
+                continue;
+            }
+            $new_values[$field->getId()] = $field->getFieldDataFromRESTValue($array_representation, $artifact);
+        }
+        return new ChangesetValuesContainer($new_values, $artifact_link);
+    }
+
+    /**
+     * @throws \Tracker_FormElement_InvalidFieldException
+     */
+    private function getField(array $indexed_fields, array $value): \Tracker_FormElement_Field
+    {
+        if (! isset($value['field_id']) || (isset($value['field_id']) && ! is_int($value['field_id']))) {
+            throw new \Tracker_FormElement_InvalidFieldException(
+                'No \'field_id\' or invalid id in submitted value. Field IDs must be integers'
+            );
+        }
+        if (! isset($indexed_fields[$value['field_id']])) {
+            throw new \Tracker_FormElement_InvalidFieldException('Unknown field ' . $value['field_id']);
+        }
+        return $indexed_fields[$value['field_id']];
+    }
+
+    private function getIndexedFields(\Tracker $tracker): array
+    {
+        $indexed_fields = [];
+        foreach ($this->fields_retriever->getUsedFields($tracker) as $field) {
+            $indexed_fields[$field->getId()] = $field;
+        }
+        return $indexed_fields;
+    }
+}
