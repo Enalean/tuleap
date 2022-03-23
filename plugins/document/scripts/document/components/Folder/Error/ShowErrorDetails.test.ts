@@ -17,24 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import localVue from "../../../helpers/local-vue";
 import ShowErrorDetails from "./ShowErrorDetails.vue";
 
 describe("ShowErrorDetails", () => {
-    let show_error_details_factory,
-        state,
-        folder_loading_error,
-        document_loading_error,
-        store,
-        document_lock_error;
+    let show_error_details_factory: () => Wrapper<ShowErrorDetails>,
+        folder_loading_error: string,
+        document_loading_error: string,
+        document_lock_error: string;
 
     describe("folder has a loading error", () => {
         beforeEach(() => {
             folder_loading_error = "Error during folder load.";
 
-            state = {
+            const state = {
                 error: {
                     has_folder_loading_error: true,
                     folder_loading_error,
@@ -47,12 +46,12 @@ describe("ShowErrorDetails", () => {
                 },
             };
 
-            store = createStoreMock(store_options);
+            const store = createStoreMock(store_options);
 
-            show_error_details_factory = (props = {}) => {
+            show_error_details_factory = (): Wrapper<ShowErrorDetails> => {
                 return shallowMount(ShowErrorDetails, {
                     localVue,
-                    propsData: { ...props },
+                    propsData: {},
                     mocks: { $store: store },
                 });
             };
@@ -95,7 +94,7 @@ describe("ShowErrorDetails", () => {
         beforeEach(() => {
             document_loading_error = "Error during folder load.";
 
-            state = {
+            const state = {
                 error: {
                     has_document_loading_error: true,
                     document_loading_error: document_loading_error,
@@ -110,10 +109,10 @@ describe("ShowErrorDetails", () => {
 
             const store = createStoreMock(store_options);
 
-            show_error_details_factory = (props = {}) => {
+            show_error_details_factory = (): Wrapper<ShowErrorDetails> => {
                 return shallowMount(ShowErrorDetails, {
                     localVue,
-                    propsData: { ...props },
+                    propsData: {},
                     mocks: { $store: store },
                 });
             };
@@ -122,7 +121,6 @@ describe("ShowErrorDetails", () => {
         it(`Given error concerns an item and is_more_shown is true
         When we display the error
         Then the message displayed is the item one`, async () => {
-            store.getters.has_any_loading_error = true;
             const wrapper = show_error_details_factory();
             wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
             await wrapper.vm.$nextTick();
@@ -136,7 +134,7 @@ describe("ShowErrorDetails", () => {
         beforeEach(() => {
             document_lock_error = "Error during lock document.";
 
-            state = {
+            const state = {
                 error: {
                     has_document_lock_error: true,
                     document_lock_error,
@@ -149,12 +147,12 @@ describe("ShowErrorDetails", () => {
                 },
             };
 
-            store = createStoreMock(store_options);
+            const store = createStoreMock(store_options);
 
-            show_error_details_factory = (props = {}) => {
+            show_error_details_factory = (): Wrapper<ShowErrorDetails> => {
                 return shallowMount(ShowErrorDetails, {
                     localVue,
-                    propsData: { ...props },
+                    propsData: {},
                     mocks: { $store: store },
                 });
             };

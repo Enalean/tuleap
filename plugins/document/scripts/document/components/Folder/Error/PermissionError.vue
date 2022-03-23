@@ -35,11 +35,10 @@
     </section>
 </template>
 
-<script>
+<script setup lang="ts">
 import PermissionErrorSvg from "../../svg/error/PermissionErrorSvg.vue";
-
-export default {
-    name: "PermissionError",
-    components: { PermissionErrorSvg },
-};
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>
