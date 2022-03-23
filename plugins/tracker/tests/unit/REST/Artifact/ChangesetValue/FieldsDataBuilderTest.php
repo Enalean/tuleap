@@ -24,10 +24,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldUpdateValueBuilder;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadExtractor;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadStructureChecker;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactParentLinkPayloadExtractor;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -126,10 +123,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $builder = new FieldsDataBuilder(
             $this->fields_retriever,
-            new ArtifactLinksFieldUpdateValueBuilder(
-                new ArtifactLinksPayloadStructureChecker(),
-                new ArtifactLinksPayloadExtractor(),
-                new ArtifactParentLinkPayloadExtractor(),
+            new NewArtifactLinkChangesetValueBuilder(
                 RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([]))
             ),
             new NewArtifactLinkInitialChangesetValueBuilder()
@@ -260,10 +254,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $builder = new FieldsDataBuilder(
             $this->fields_retriever,
-            new ArtifactLinksFieldUpdateValueBuilder(
-                new ArtifactLinksPayloadStructureChecker(),
-                new ArtifactLinksPayloadExtractor(),
-                new ArtifactParentLinkPayloadExtractor(),
+            new NewArtifactLinkChangesetValueBuilder(
                 RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([])),
             ),
             new NewArtifactLinkInitialChangesetValueBuilder()

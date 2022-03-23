@@ -23,30 +23,31 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
 /**
+ * I hold a new changeset value for the Artifact Link field.
  * @psalm-immutable
  */
-final class ArtifactLinksFieldUpdateValue
+final class NewArtifactLinkChangesetValue
 {
     private function __construct(
         private int $field_id,
         private ?ArtifactLinksDiff $artifact_links_diff,
         private ?CollectionOfForwardLinks $submitted_values,
-        private ?ForwardLink $parent_artifact_link,
+        private ?NewParentLink $parent,
     ) {
     }
 
-    public static function build(
+    public static function fromParts(
         int $field_id,
         CollectionOfForwardLinks $existing_links,
         ?CollectionOfForwardLinks $submitted_values,
-        ?ForwardLink $parent_artifact_link,
+        ?NewParentLink $parent,
     ): self {
         $diff = $submitted_values !== null ? ArtifactLinksDiff::build($submitted_values, $existing_links) : null;
         return new self(
             $field_id,
             $diff,
             $submitted_values,
-            $parent_artifact_link
+            $parent
         );
     }
 
@@ -60,9 +61,9 @@ final class ArtifactLinksFieldUpdateValue
         return $this->artifact_links_diff;
     }
 
-    public function getParentArtifactLink(): ?ForwardLink
+    public function getParent(): ?NewParentLink
     {
-        return $this->parent_artifact_link;
+        return $this->parent;
     }
 
     public function getSubmittedValues(): ?CollectionOfForwardLinks

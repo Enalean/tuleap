@@ -24,7 +24,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldUpdateValueBuilder;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
@@ -32,7 +32,7 @@ final class FieldsDataBuilder
 {
     public function __construct(
         private RetrieveUsedFields $fields_retriever,
-        private ArtifactLinksFieldUpdateValueBuilder $artifact_link_builder,
+        private NewArtifactLinkChangesetValueBuilder $artifact_link_builder,
         private NewArtifactLinkInitialChangesetValueBuilder $artifact_link_initial_builder,
     ) {
     }
@@ -78,7 +78,7 @@ final class FieldsDataBuilder
 
             $field = $this->getField($indexed_fields, $array_representation);
             if ($field instanceof \Tracker_FormElement_Field_ArtifactLink) {
-                $artifact_link = $this->artifact_link_builder->buildArtifactLinksFieldUpdateValue(
+                $artifact_link = $this->artifact_link_builder->buildFromPayload(
                     $artifact,
                     $field,
                     $submitter,

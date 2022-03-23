@@ -44,10 +44,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetr
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldUpdateValueBuilder;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadExtractor;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadStructureChecker;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactParentLinkPayloadExtractor;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
@@ -154,10 +151,7 @@ class KanbanItemsResource extends AuthenticatedResource
         $updater = new ArtifactCreator(
             new FieldsDataBuilder(
                 $this->form_element_factory,
-                new ArtifactLinksFieldUpdateValueBuilder(
-                    new ArtifactLinksPayloadStructureChecker(),
-                    new ArtifactLinksPayloadExtractor(),
-                    new ArtifactParentLinkPayloadExtractor(),
+                new NewArtifactLinkChangesetValueBuilder(
                     new ArtifactForwardLinksRetriever(
                         new ArtifactLinksByChangesetCache(),
                         new ChangesetValueArtifactLinkDao(),

@@ -23,8 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
+use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
 
-final class ArtifactLinksFieldUpdateValueTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NewArtifactLinkChangesetValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIELD_ID = 989;
     private ?CollectionOfForwardLinks $submitted_links;
@@ -37,14 +38,19 @@ final class ArtifactLinksFieldUpdateValueTest extends \Tuleap\Test\PHPUnit\TestC
         ]);
     }
 
-    private function build(?ForwardLink $parent): ArtifactLinksFieldUpdateValue
+    private function build(?NewParentLink $parent): NewArtifactLinkChangesetValue
     {
         $existing_links = new CollectionOfForwardLinks([
             ForwardLinkStub::withType(191, '_is_child'),
             ForwardLinkStub::withNoType(274),
         ]);
 
-        return ArtifactLinksFieldUpdateValue::build(self::FIELD_ID, $existing_links, $this->submitted_links, $parent);
+        return NewArtifactLinkChangesetValue::fromParts(
+            self::FIELD_ID,
+            $existing_links,
+            $this->submitted_links,
+            $parent
+        );
     }
 
     public function testItBuildsADiffBetweenExistingLinksAndSubmittedLinks(): void
@@ -58,7 +64,7 @@ final class ArtifactLinksFieldUpdateValueTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertNotNull($diff);
         self::assertCount(2, $diff->getNewValues());
         self::assertCount(2, $diff->getRemovedValues());
-        self::assertNull($value->getParentArtifactLink());
+        self::assertNull($value->getParent());
     }
 
     public function testItSetsDiffToNullToAvoidRemovingValuesWhenSubmittedValuesAreNull(): void
@@ -72,9 +78,9 @@ final class ArtifactLinksFieldUpdateValueTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItBuildsWithAParent(): void
     {
-        $value = $this->build(ForwardLinkStub::withNoType(3));
+        $value = $this->build(NewParentLinkStub::withId(3));
 
-        self::assertNotNull($value->getParentArtifactLink());
-        self::assertSame(3, $value->getParentArtifactLink()->getTargetArtifactId());
+        self::assertNotNull($value->getParent());
+        self::assertSame(3, $value->getParent()->getParentArtifactId());
     }
 }

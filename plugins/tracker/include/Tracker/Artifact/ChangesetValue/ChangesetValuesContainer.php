@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldUpdateValue;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldUpdateValueFormatter;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueFormatter;
 
 /**
  * I hold the new values for all modified fields, for a new changeset of an artifact.
@@ -33,11 +33,11 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldUpdate
  */
 final class ChangesetValuesContainer
 {
-    public function __construct(private array $fields_data, private ?ArtifactLinksFieldUpdateValue $artifact_links)
+    public function __construct(private array $fields_data, private ?NewArtifactLinkChangesetValue $artifact_links)
     {
         if ($artifact_links !== null) {
             // We must still add forward artifact links to $fields_data so that it can be saved and processed like normal
-            $this->fields_data[$artifact_links->getFieldId()] = ArtifactLinksFieldUpdateValueFormatter::formatForWebUI(
+            $this->fields_data[$artifact_links->getFieldId()] = NewArtifactLinkChangesetValueFormatter::formatForWebUI(
                 $artifact_links
             );
         }
@@ -48,7 +48,7 @@ final class ChangesetValuesContainer
         return $this->fields_data;
     }
 
-    public function getArtifactLinkValue(): ?ArtifactLinksFieldUpdateValue
+    public function getArtifactLinkValue(): ?NewArtifactLinkChangesetValue
     {
         return $this->artifact_links;
     }

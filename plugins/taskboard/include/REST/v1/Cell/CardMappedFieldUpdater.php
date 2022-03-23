@@ -61,10 +61,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldUpdateValueBuilder;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadExtractor;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadStructureChecker;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactParentLinkPayloadExtractor;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
@@ -141,10 +138,7 @@ class CardMappedFieldUpdater
             new AddValidator(),
             new ArtifactUpdater(new FieldsDataBuilder(
                 $form_element_factory,
-                new ArtifactLinksFieldUpdateValueBuilder(
-                    new ArtifactLinksPayloadStructureChecker(),
-                    new ArtifactLinksPayloadExtractor(),
-                    new ArtifactParentLinkPayloadExtractor(),
+                new NewArtifactLinkChangesetValueBuilder(
                     new ArtifactForwardLinksRetriever(
                         new ArtifactLinksByChangesetCache(),
                         new ChangesetValueArtifactLinkDao(),
