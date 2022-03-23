@@ -23,6 +23,7 @@ import type { Identifier } from "../../Identifier";
 export type LinkedArtifactIdentifier = Identifier<"LinkedArtifactIdentifier">;
 
 export const FORWARD_DIRECTION = "forward";
+export const REVERSE_DIRECTION = "reverse";
 
 export interface LinkType {
     readonly shortname: string;

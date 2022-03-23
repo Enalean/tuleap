@@ -62,6 +62,8 @@ import { FileUploadQuotaController } from "./adapters/UI/footer/FileUploadQuotaC
 import { UserTemporaryFileQuotaStore } from "./adapters/Memory/UserTemporaryFileQuotaStore";
 import { LinkFieldValueFormatter } from "./domain/fields/link-field-v2/LinkFieldValueFormatter";
 import { FileFieldController } from "./adapters/UI/fields/file-field/FileFieldController";
+import { TrackerArtifactCrossReferenceProxy } from "./adapters/Caller/TrackerArtifactCrossReferenceProxy";
+import { TrackerShortnameProxy } from "./adapters/Caller/TrackerShortnameProxy";
 
 export default ArtifactModalController;
 
@@ -94,13 +96,19 @@ function ArtifactModalController(
     const api_client = TuleapAPIClient();
     const links_store = LinksStore();
     const links_marked_for_removal_store = LinksMarkedForRemovalStore();
+    const current_artifact_identifier = CurrentArtifactIdentifierProxy.fromModalArtifactId(
+        modal_model.artifact_id
+    );
 
     Object.assign(self, {
         $onInit: init,
         artifact_id: modal_model.artifact_id,
-        current_artifact_identifier: CurrentArtifactIdentifierProxy.fromModalArtifactId(
-            modal_model.artifact_id
-        ),
+        artifact_cross_reference:
+            TrackerArtifactCrossReferenceProxy.fromArtifactIdentifierAndTracker(
+                current_artifact_identifier,
+                TrackerShortnameProxy.fromString(modal_model.tracker.item_name)
+            ),
+        current_artifact_identifier,
         color: formatColor(modal_model.color),
         creation_mode: isInCreationMode(),
         ordered_fields: modal_model.ordered_fields,

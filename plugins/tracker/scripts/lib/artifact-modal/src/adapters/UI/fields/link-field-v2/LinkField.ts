@@ -30,12 +30,17 @@ import {
 import type { LinkFieldControllerType } from "./LinkFieldController";
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import { getLinkedArtifactTemplate } from "./LinkedArtifactTemplate";
+import { getTypeSelectorTemplate } from "./TypeSelectorTemplate";
+import type { AllowedLinkType } from "../../../../domain/fields/link-field-v2/AllowedLinkType";
+import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 
 export interface LinkField {
     readonly fieldId: number;
     readonly label: string;
+    readonly allowedTypes: Array<AllowedLinkType>;
     readonly content: () => HTMLElement;
     readonly controller: LinkFieldControllerType;
+    readonly artifactCrossReference: ArtifactCrossReference | null;
     presenter: LinkFieldPresenter;
 }
 export type HostElement = LinkField & HTMLElement;
@@ -46,11 +51,6 @@ const getLinksTableClasses = (presenter: LinkFieldPresenter): MapOfClasses => ({
     "tlp-table": true,
     "tuleap-artifact-modal-link-field-empty":
         presenter.has_loaded_content && presenter.error_message !== "",
-});
-
-const getInputRowNatureCellClasses = (presenter: LinkFieldPresenter): MapOfClasses => ({
-    "link-field-table-footer-type": true,
-    "link-field-table-footer-type-no-padding": presenter.linked_artifacts.length === 0,
 });
 
 const formatErrorMessage = (error_message: string): string =>
@@ -107,6 +107,11 @@ export const LinkField = define<LinkField>({
     tag: "tuleap-artifact-modal-link-field-v2",
     fieldId: 0,
     label: "",
+    allowedTypes: {
+        get: (host, types = []) => types,
+        set: (host, types) => [...types],
+    },
+    artifactCrossReference: undefined,
     controller: {
         set(host, controller: LinkFieldControllerType) {
             controller.displayLinkedArtifacts().then((presenter) => (host.presenter = presenter));
@@ -140,7 +145,9 @@ export const LinkField = define<LinkField>({
             </tbody>
             <tfoot class="link-field-table-footer">
                 <tr class="link-field-table-row">
-                    <td class="${getInputRowNatureCellClasses(host.presenter)}"></td>
+                    <td class="link-field-table-footer-type">
+                        ${getTypeSelectorTemplate(host.allowedTypes, host.artifactCrossReference)}
+                    </td>
                     <td class="link-field-table-footer-input" colspan="2">
                         <input
                             id="${"tracker_field_" + host.fieldId}"

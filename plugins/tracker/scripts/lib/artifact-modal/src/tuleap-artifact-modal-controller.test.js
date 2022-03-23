@@ -97,6 +97,9 @@ describe("TuleapArtifactModalController", () => {
                     ],
                     color: "inca_silver",
                     is_links_field_v2_enabled: false,
+                    tracker: {
+                        item_name: "story",
+                    },
                 },
                 TuleapArtifactModalLoading,
                 displayItemCallback: mockCallback,

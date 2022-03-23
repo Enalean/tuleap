@@ -81,3 +81,4 @@ export const getFileDescriptionPlaceholder = (): string =>
     gettextCatalog.getString("File description");
 export const getResetLabel = (): string => gettextCatalog.getString("Reset");
 export const getAddFileButtonlabel = (): string => gettextCatalog.getString("Add another file");
+export const getNewArtifactLabel = (): string => gettextCatalog.getString("New artifact");
