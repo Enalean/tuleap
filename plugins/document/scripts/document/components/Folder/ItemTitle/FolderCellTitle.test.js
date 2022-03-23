@@ -23,7 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import FolderCellTitle from "./FolderCellTitle.vue";
 import localVue from "../../../helpers/local-vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-import * as abort_current_uploads from "../../../helpers/abort-current-uploads.js";
+import * as abort_current_uploads from "../../../helpers/abort-current-uploads";
 
 describe("FolderCellTitle", () => {
     let router, item, component_options, store_options, store;
