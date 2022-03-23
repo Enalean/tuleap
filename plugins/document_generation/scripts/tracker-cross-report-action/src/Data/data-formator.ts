@@ -22,10 +22,16 @@ import { getReportArtifacts } from "../rest-querier";
 import type { GlobalExportProperties } from "../type";
 import { transformFieldValueIntoAFormattedCell } from "./transform-field-value-into-formatted-cell";
 
-export type FormattedCell = TextCell | NumberCell | EmptyCell;
+export type FormattedCell = TextCell | NumberCell | HTMLCell | EmptyCell;
 
 export class TextCell {
     readonly type = "text";
+
+    constructor(readonly value: string) {}
+}
+
+export class HTMLCell {
+    readonly type = "html";
 
     constructor(readonly value: string) {}
 }

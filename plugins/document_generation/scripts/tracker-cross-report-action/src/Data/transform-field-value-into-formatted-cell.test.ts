@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TextCell, NumberCell, EmptyCell } from "./data-formator";
+import { TextCell, NumberCell, EmptyCell, HTMLCell } from "./data-formator";
 import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
 import { transformFieldValueIntoAFormattedCell } from "./transform-field-value-into-formatted-cell";
 
@@ -32,6 +32,30 @@ describe("transform-field-value-into-formatted-cell", () => {
         const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
 
         expect(formatted_cell).toStrictEqual(new TextCell("string_value"));
+    });
+    it("transforms HTML text value into HTMLCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 2,
+            type: "text",
+            label: "HTML text",
+            value: "<p>string_value</p>",
+            format: "html",
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new HTMLCell("<p>string_value</p>"));
+    });
+    it("transforms plain text value into TextCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 2,
+            type: "text",
+            label: "Plan text",
+            value: "plain_text_value",
+            format: "text",
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("plain_text_value"));
     });
     it("transforms int value into NumberCell", (): void => {
         const field_value: ArtifactReportResponseFieldValue = {
@@ -117,10 +141,9 @@ describe("transform-field-value-into-formatted-cell", () => {
     it("transforms all other fields into EmptyCell", (): void => {
         const field_value: ArtifactReportResponseFieldValue = {
             field_id: 1,
-            type: "text",
+            type: "sb",
             label: "Computed field",
-            value: "Text value",
-            format: "text",
+            values: [],
         };
         const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
 
