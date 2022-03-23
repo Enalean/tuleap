@@ -53,7 +53,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import { abortCurrentUploads } from "../../../helpers/abort-current-uploads.js";
+import { abortCurrentUploads } from "../../../helpers/abort-current-uploads";
 
 export default {
     name: "FolderCellTitle",

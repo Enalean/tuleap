@@ -17,7 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function abortCurrentUploads($gettext, store) {
+import type { GettextProvider, RootState } from "../type";
+import type { Store } from "vuex";
+
+export function abortCurrentUploads(
+    $gettext: GettextProvider["$gettext"],
+    store: Store<RootState>
+): boolean {
     const message = $gettext(
         "This page is asking you to confirm that you want to leave - data you have entered may not be saved. Do you want to leave this page?"
     );
@@ -32,6 +38,6 @@ export function abortCurrentUploads($gettext, store) {
     return true;
 }
 
-function cancelAllUploadsAsynchronouslyToNotBlockTheChangeOfPage(store) {
+function cancelAllUploadsAsynchronouslyToNotBlockTheChangeOfPage(store: Store<RootState>): void {
     store.dispatch("cancelAllFileUploads");
 }
