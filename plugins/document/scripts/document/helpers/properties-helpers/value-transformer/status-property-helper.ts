@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Item } from "../../../type";
-import type { Property, ListValue } from "../../../store/properties/module";
+import type { Property, ListValue, Item } from "../../../type";
 import { getStatusFromMapping } from "../hardcoded-properties-mapping-helper";
 import { assertListIsOnlyMultipleValue } from "./list-value-helper";
 

@@ -23,8 +23,7 @@ import {
     transformDocumentPropertiesForUpdate,
     transformFolderPropertiesForRecursionAtUpdate,
 } from "./update-data-transformatter-helper";
-import type { Folder, ItemFile } from "../../type";
-import type { Property, FolderProperty, ListValue } from "../../store/properties/module";
+import type { Folder, ItemFile, Property, FolderProperty, ListValue } from "../../type";
 
 describe("transformFolderPropertiesForRecursionAtUpdate", () => {
     it("Given an existing folder, then we add specific status update key for update", () => {

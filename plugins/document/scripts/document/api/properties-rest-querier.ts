@@ -18,7 +18,7 @@
  */
 
 import { put, recursiveGet } from "tlp";
-import type { FolderStatus, Property } from "../store/properties/module";
+import type { FolderStatus, Property } from "../type";
 
 export {
     putFileProperties,

@@ -21,8 +21,7 @@ import {
     transformCustomPropertiesForItemCreation,
     transformItemPropertiesForCreation,
 } from "./creation-data-transformatter-helper";
-import type { Folder, Item } from "../../type";
-import type { Property, ListValue } from "../../store/properties/module";
+import type { Folder, Item, Property, ListValue } from "../../type";
 
 describe("creation properties transformer", () => {
     it("Given an existing document, then the default status property is the parent one", () => {

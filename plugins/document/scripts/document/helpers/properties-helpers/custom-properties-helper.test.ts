@@ -18,7 +18,7 @@
  */
 
 import { getCustomProperties } from "./custom-properties-helper";
-import type { Property } from "../../store/properties/module";
+import type { Property } from "../../type";
 
 describe("getCustomProperties", () => {
     it("only returns custom properties", () => {

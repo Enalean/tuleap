@@ -24,7 +24,7 @@ import {
     formatPropertyListMultipleValue,
     processFormattingOnKnownType,
 } from "./list-value-helper";
-import type { Property, ListValue } from "../../../store/properties/module";
+import type { Property, ListValue } from "../../../type";
 
 describe("list-value-helper", () => {
     describe("assertListIsOnlyMultipleValue", () => {

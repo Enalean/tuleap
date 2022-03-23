@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Property, ListValue } from "../../../store/properties/module";
+import type { Property, ListValue } from "../../../type";
 
 export type PropertyListValue = Array<number> | Array<ListValue>;
 export function assertListIsOnlyMultipleValue(

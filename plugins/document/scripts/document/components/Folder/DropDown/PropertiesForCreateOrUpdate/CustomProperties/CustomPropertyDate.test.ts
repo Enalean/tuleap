@@ -21,7 +21,7 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomPropertyDate from "./CustomPropertyDate.vue";
-import type { Property } from "../../../../../store/properties/module";
+import type { Property } from "../../../../../type";
 import localVue from "../../../../../helpers/local-vue";
 import DateFlatPicker from "../DateFlatPicker.vue";
 

@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import type { Property } from "../../../../../store/properties/module";
+import type { Property } from "../../../../../type";
 import DateFlatPicker from "../DateFlatPicker.vue";
 
 @Component({ components: { DateFlatPicker } })

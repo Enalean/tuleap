@@ -24,7 +24,7 @@ import { shallowMount } from "@vue/test-utils";
 import CustomPropertyListMultipleValue from "./CustomPropertyListMultipleValue.vue";
 import emitter from "../../../../../helpers/emitter";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
-import type { ListValue, Property } from "../../../../../store/properties/module";
+import type { ListValue, Property } from "../../../../../type";
 
 jest.mock("../../../../../helpers/emitter");
 

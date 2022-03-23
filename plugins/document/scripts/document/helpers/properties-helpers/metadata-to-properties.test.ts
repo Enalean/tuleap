@@ -18,8 +18,7 @@
  *
  */
 
-import type { Item } from "../../type";
-import type { Property } from "../../store/properties/module";
+import type { Item, Property } from "../../type";
 import type { RestItem } from "../../api/rest-querier";
 import { convertArrayOfItems } from "./metadata-to-properties";
 

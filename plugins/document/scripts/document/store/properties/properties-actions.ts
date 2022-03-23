@@ -32,8 +32,8 @@ import { getItem, getItemWithSize } from "../../api/rest-querier";
 import Vue from "vue";
 import { formatCustomPropertiesForFolderUpdate } from "../../helpers/properties-helpers/update-data-transformatter-helper";
 import type { ActionContext } from "vuex";
-import type { Folder, FolderProperties, Item, RootState } from "../../type";
-import type { FolderStatus, PropertiesState } from "./module";
+import type { FolderStatus, Folder, FolderProperties, Item, RootState } from "../../type";
+import type { PropertiesState } from "./module";
 import {
     isEmbedded,
     isFile,

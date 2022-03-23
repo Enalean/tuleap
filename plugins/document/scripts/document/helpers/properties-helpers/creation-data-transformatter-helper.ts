@@ -24,8 +24,7 @@ import {
     formatPropertyListValue,
     formatPropertyListMultipleValue,
 } from "./value-transformer/list-value-helper";
-import type { Folder, Item } from "../../type";
-import type { Property } from "../../store/properties/module";
+import type { Folder, Item, Property } from "../../type";
 
 export function transformItemPropertiesForCreation(
     document_to_create: Item,

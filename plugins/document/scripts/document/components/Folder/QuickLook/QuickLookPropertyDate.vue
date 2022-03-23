@@ -57,8 +57,8 @@
         </span>
     </div>
 </template>
-<script>
-import { mapState } from "vuex";
+
+<script setup lang="ts">
 import {
     formatDateUsingPreferredUserFormat,
     isDateValid,
@@ -69,41 +69,66 @@ import {
     relativeDatePlacement,
     relativeDatePreference,
 } from "@tuleap/core/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
+import { computed } from "@vue/composition-api";
+import type { Property } from "../../../type";
 
-export default {
-    name: "QuickLookPropertyDate",
-    props: {
-        property: Object,
-    },
-    computed: {
-        ...mapState("configuration", ["date_time_format", "relative_dates_display", "user_locale"]),
-        is_date_valid() {
-            return isDateValid(this.property.value);
-        },
-        has_obsolescence_date_property_unlimited_validity() {
-            return this.isPropertyObsolescenceDate() && this.property.value === null;
-        },
-        is_obsolescence_date_today() {
-            return (
-                this.isPropertyObsolescenceDate() &&
-                this.is_date_valid &&
-                isToday(this.property.value)
-            );
-        },
-        getFormattedDate() {
-            return formatDateUsingPreferredUserFormat(this.property.value, this.date_time_format);
-        },
-        relative_date_preference() {
-            return relativeDatePreference(this.relative_dates_display);
-        },
-        relative_date_placement() {
-            return relativeDatePlacement(this.relative_dates_display, "right");
-        },
-    },
-    methods: {
-        isPropertyObsolescenceDate() {
-            return this.property.short_name === PROPERTY_OBSOLESCENCE_DATE_SHORT_NAME;
-        },
-    },
-};
+const props = defineProps<{ property: Property }>();
+
+const { date_time_format, relative_dates_display, user_locale } =
+    useNamespacedState<ConfigurationState>("configuration", [
+        "date_time_format",
+        "relative_dates_display",
+        "user_locale",
+    ]);
+
+const is_date_valid = computed((): boolean => {
+    if (!isValueString(props.property.value)) {
+        return false;
+    }
+
+    return isDateValid(props.property.value);
+});
+
+const has_obsolescence_date_property_unlimited_validity = computed((): boolean => {
+    return isPropertyObsolescenceDate() && props.property.value === null;
+});
+
+const is_obsolescence_date_today = computed((): boolean => {
+    if (!isValueString(props.property.value)) {
+        return false;
+    }
+
+    return isPropertyObsolescenceDate() && is_date_valid.value && isToday(props.property.value);
+});
+
+const getFormattedDate = computed((): string => {
+    if (!isValueString(props.property.value)) {
+        return "";
+    }
+    return formatDateUsingPreferredUserFormat(props.property.value, date_time_format.value);
+});
+
+const relative_date_preference = computed((): string => {
+    return relativeDatePreference(relative_dates_display.value);
+});
+
+const relative_date_placement = computed((): string => {
+    return relativeDatePlacement(relative_dates_display.value, "right");
+});
+
+function isPropertyObsolescenceDate(): boolean {
+    return props.property.short_name === PROPERTY_OBSOLESCENCE_DATE_SHORT_NAME;
+}
+
+function isValueString(value: number | string | null): value is string {
+    return typeof value === "string";
+}
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>
