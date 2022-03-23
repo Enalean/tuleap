@@ -24,6 +24,7 @@ import type { FormattedCell, ReportSection } from "../../Data/data-formator";
 
 const CELL_MAX_CHARACTER_WIDTH = 65;
 const LINE_HEIGHT_POINTS = 12;
+const CELL_BASE_CHARACTER_WIDTH = 10;
 
 type CellObjectWithWidthAndLines = CellObject & {
     character_width: number;
@@ -92,6 +93,13 @@ function transformFormattedCellIntoASheetCell(
                 nb_lines: 1,
             };
         }
+        case "date":
+            return {
+                t: "d",
+                v: formatted_cell.value,
+                character_width: CELL_BASE_CHARACTER_WIDTH,
+                nb_lines: 1,
+            };
         case "empty":
         default:
             return {
