@@ -2950,6 +2950,9 @@ msgstr ""
 msgid "The artifact has too many children (limit is set to %1$s)."
 msgstr "L'artefact a trop d'enfants (la limite est de %1$s)."
 
+msgid "The artifact is not linked to any changeset."
+msgstr "L'artifact n'est relié à aucun changeset."
+
 #, php-format
 msgid "The artifact link type \"%s\" cannot be disabled"
 msgstr "Le lien entre artéfacts typé \"%s\" ne peut être désactivé."

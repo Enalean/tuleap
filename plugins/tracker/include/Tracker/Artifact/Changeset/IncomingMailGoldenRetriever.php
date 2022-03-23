@@ -22,18 +22,14 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Artifact_Changeset_IncomingMailGoldenRetriever
 {
-    /** @var Tracker_Artifact_Changeset_IncomingMailDao */
-    private $dao;
-
     /** @var array */
     private $cache = [];
 
     /** @var Tracker_Artifact_Changeset_IncomingMailGoldenRetriever */
     private static $instance;
 
-    public function __construct(Tracker_Artifact_Changeset_IncomingMailDao $dao)
+    public function __construct(private Tracker_Artifact_Changeset_IncomingMailDao $dao)
     {
-        $this->dao = $dao;
     }
 
     public static function instance()
@@ -47,19 +43,20 @@ class Tracker_Artifact_Changeset_IncomingMailGoldenRetriever
         return self::$instance;
     }
 
-    /** @return string | null */
-    public function getRawMailThatCreatedArtifact(Artifact $artifact)
+    public function getRawMailThatCreatedArtifact(Artifact $artifact): ?string
     {
+        if (! $artifact->getFirstChangeset()) {
+            return null;
+        }
         return $this->getRawMailForChangeset($artifact->getFirstChangeset());
     }
 
-    /** @return string | null */
-    public function getRawMailThatCreatedChangeset(Tracker_Artifact_Changeset $changeset)
+    public function getRawMailThatCreatedChangeset(Tracker_Artifact_Changeset $changeset): ?string
     {
         return $this->getRawMailForChangeset($changeset);
     }
 
-    private function getRawMailForChangeset(Tracker_Artifact_Changeset $changeset)
+    private function getRawMailForChangeset(Tracker_Artifact_Changeset $changeset): ?string
     {
         $raw_mails = $this->getCachedRawMailByChangesetsForArtifact($changeset->getArtifact());
 
