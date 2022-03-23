@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TextCell, NumberCell, EmptyCell, HTMLCell } from "./data-formator";
+import { TextCell, NumberCell, EmptyCell, HTMLCell, DateCell } from "./data-formator";
 import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
 import { transformFieldValueIntoAFormattedCell } from "./transform-field-value-into-formatted-cell";
 
@@ -137,6 +137,39 @@ describe("transform-field-value-into-formatted-cell", () => {
         const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
 
         expect(formatted_cell).toStrictEqual(new NumberCell(456));
+    });
+    it("transforms date field value into DateCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "date",
+            label: "Date field",
+            value: "03/11/2020 09:36:10",
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new DateCell(new Date("03/11/2020 09:36:10")));
+    });
+    it("transforms submitted on field value into DateCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "subon",
+            label: "Submitted On",
+            value: "03/11/2020 09:36:10",
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new DateCell(new Date("03/11/2020 09:36:10")));
+    });
+    it("transforms last update date field value into DateCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "lud",
+            label: "Last update date",
+            value: "03/11/2020 09:36:10",
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new DateCell(new Date("03/11/2020 09:36:10")));
     });
     it("transforms all other fields into EmptyCell", (): void => {
         const field_value: ArtifactReportResponseFieldValue = {

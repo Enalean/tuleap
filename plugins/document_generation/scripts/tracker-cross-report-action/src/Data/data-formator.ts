@@ -22,7 +22,7 @@ import { getReportArtifacts } from "../rest-querier";
 import type { GlobalExportProperties } from "../type";
 import { transformFieldValueIntoAFormattedCell } from "./transform-field-value-into-formatted-cell";
 
-export type FormattedCell = TextCell | NumberCell | HTMLCell | EmptyCell;
+export type FormattedCell = TextCell | NumberCell | HTMLCell | DateCell | EmptyCell;
 
 export class TextCell {
     readonly type = "text";
@@ -40,6 +40,12 @@ export class NumberCell {
     readonly type = "number";
 
     constructor(readonly value: number) {}
+}
+
+export class DateCell {
+    readonly type = "date";
+
+    constructor(readonly value: Date) {}
 }
 
 export class EmptyCell {

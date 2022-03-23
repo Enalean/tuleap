@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { EmptyCell, NumberCell, TextCell, HTMLCell } from "./data-formator";
+import { EmptyCell, NumberCell, TextCell, HTMLCell, DateCell } from "./data-formator";
 import type { FormattedCell } from "./data-formator";
 import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
 
@@ -48,6 +48,13 @@ export function transformFieldValueIntoAFormattedCell(
             }
             return getCellFromPossibleNumber(value);
         }
+        case "date":
+        case "lud":
+        case "subon":
+            if (field_value.value === null) {
+                return new EmptyCell();
+            }
+            return new DateCell(new Date(field_value.value));
         default:
             return new EmptyCell();
     }
