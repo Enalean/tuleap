@@ -18,6 +18,12 @@
  */
 import type { ErrorState } from "./module";
 
+export interface ErrorGetters {
+    readonly does_folder_have_any_error: boolean;
+    readonly does_document_have_any_error: boolean;
+    readonly has_any_loading_error: boolean;
+}
+
 export const does_folder_have_any_error = (state: ErrorState): boolean => {
     return (
         state.has_folder_permission_error ||

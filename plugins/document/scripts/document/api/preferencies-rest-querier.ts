@@ -107,7 +107,7 @@ async function getPreferenceForEmbeddedDisplay(
     user_id: number,
     project_id: number,
     document_id: number
-): Promise<string> {
+): Promise<"narrow" | false> {
     const escaped_user_id = encodeURIComponent(user_id);
     const escaped_preference_key = encodeURIComponent(
         `plugin_docman_display_embedded_${project_id}_${document_id}`
@@ -116,5 +116,5 @@ async function getPreferenceForEmbeddedDisplay(
         `/api/users/${escaped_user_id}/preferences?key=${escaped_preference_key}`
     );
 
-    return response.json();
+    return (await response.json()).value;
 }

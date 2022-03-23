@@ -304,6 +304,7 @@ export interface LinkProperties {
 }
 
 export interface EmbeddedProperties {
+    readonly content?: string;
     file_type: string;
 }
 

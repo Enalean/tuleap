@@ -60,32 +60,43 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
-export default {
-    computed: {
-        ...mapState(["currently_previewed_item"]),
-        ...mapState("preferencies", ["is_embedded_in_large_view"]),
-        narrow_view_title() {
-            return this.$gettext("Narrow view");
-        },
-        large_view_title() {
-            return this.$gettext("Large view");
-        },
-    },
-    methods: {
-        switchToLargeView() {
-            this.$store.dispatch(
-                "preferencies/displayEmbeddedInLargeMode",
-                this.currently_previewed_item
-            );
-        },
-        switchToNarrowView() {
-            this.$store.dispatch(
-                "preferencies/displayEmbeddedInNarrowMode",
-                this.currently_previewed_item
-            );
-        },
-    },
-};
+<script setup lang="ts">
+import { ref } from "@vue/composition-api";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useNamespacedActions, useState, useNamespacedState } from "vuex-composition-helpers";
+import type { PreferenciesActions } from "../../store/preferencies/preferencies-actions";
+import type { RootState } from "../../type";
+import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
+
+const { is_embedded_in_large_view } = useNamespacedState<PreferenciesState>("preferencies", [
+    "is_embedded_in_large_view",
+]);
+
+const { $gettext } = useGettext();
+const narrow_view_title = ref($gettext("Narrow view"));
+const large_view_title = ref($gettext("Large view"));
+
+const { currently_previewed_item } = useState<RootState>(["currently_previewed_item"]);
+const { displayEmbeddedInLargeMode, displayEmbeddedInNarrowMode } =
+    useNamespacedActions<PreferenciesActions>("preferencies", [
+        "displayEmbeddedInLargeMode",
+        "displayEmbeddedInNarrowMode",
+    ]);
+function switchToLargeView() {
+    if (currently_previewed_item.value) {
+        displayEmbeddedInLargeMode(currently_previewed_item.value);
+    }
+}
+
+function switchToNarrowView() {
+    if (currently_previewed_item.value) {
+        displayEmbeddedInNarrowMode(currently_previewed_item.value);
+    }
+}
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>
