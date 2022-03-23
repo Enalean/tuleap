@@ -211,6 +211,13 @@ codendi.tracker.bind.Editor = Class.create({
             onUpdate: function () {
                 checkbox_rank_alpha.checked = false;
                 this.setValuesOrderField(list);
+                setTimeout(() => {
+                    list.childElements().forEach(function (child) {
+                        if (child.style.zIndex === "0") {
+                            child.style.zIndex = "";
+                        }
+                    });
+                }, 0);
             }.bind(this),
         });
 
