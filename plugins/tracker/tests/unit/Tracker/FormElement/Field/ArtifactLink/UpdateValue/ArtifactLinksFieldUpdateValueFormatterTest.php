@@ -26,6 +26,7 @@ use Tuleap\Tracker\Test\Stub\LinkStub;
 
 final class ArtifactLinksFieldUpdateValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const FIELD_ID = 993;
     private CollectionOfArtifactLinks $already_linked;
     private CollectionOfArtifactLinks $submitted_links;
     private ?Link $parent;
@@ -40,6 +41,7 @@ final class ArtifactLinksFieldUpdateValueFormatterTest extends \Tuleap\Test\PHPU
     private function format(): array
     {
         $value = ArtifactLinksFieldUpdateValue::build(
+            self::FIELD_ID,
             $this->already_linked,
             $this->submitted_links,
             $this->parent

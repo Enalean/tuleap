@@ -245,10 +245,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     }
 
     /**
-     * @see Tracker_FormElement_Field::getFieldDataFromRESTValue()
-     * @param array $value
      * @return array
-     * @throws Exception
+     * @deprecated
      */
     public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {

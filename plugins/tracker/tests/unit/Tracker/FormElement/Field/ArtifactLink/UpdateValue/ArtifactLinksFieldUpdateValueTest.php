@@ -26,6 +26,7 @@ use Tuleap\Tracker\Test\Stub\LinkStub;
 
 final class ArtifactLinksFieldUpdateValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const FIELD_ID = 989;
     private ?CollectionOfArtifactLinks $submitted_links;
 
     protected function setUp(): void
@@ -43,13 +44,14 @@ final class ArtifactLinksFieldUpdateValueTest extends \Tuleap\Test\PHPUnit\TestC
             LinkStub::withNoType(274),
         ]);
 
-        return ArtifactLinksFieldUpdateValue::build($existing_links, $this->submitted_links, $parent);
+        return ArtifactLinksFieldUpdateValue::build(self::FIELD_ID, $existing_links, $this->submitted_links, $parent);
     }
 
     public function testItBuildsADiffBetweenExistingLinksAndSubmittedLinks(): void
     {
         $value = $this->build(null);
 
+        self::assertSame(self::FIELD_ID, $value->getFieldId());
         self::assertNotNull($value->getSubmittedValues());
         self::assertSame($this->submitted_links, $value->getSubmittedValues());
         $diff = $value->getArtifactLinksDiff();

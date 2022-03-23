@@ -107,6 +107,7 @@ use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaver;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
@@ -114,6 +115,12 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormate
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactForwardLinksRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksByChangesetCache;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksFieldUpdateValueBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksPayloadExtractor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksPayloadStructureChecker;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactParentLinkPayloadExtractor;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
@@ -278,7 +285,19 @@ class CampaignsResource
             new TestExecutionTestStatusDAO()
         );
 
-        $fields_data_builder = new FieldsDataBuilder($this->formelement_factory);
+        $fields_data_builder = new FieldsDataBuilder(
+            $this->formelement_factory,
+            new ArtifactLinksFieldUpdateValueBuilder(
+                new ArtifactLinksPayloadStructureChecker(),
+                new ArtifactLinksPayloadExtractor(),
+                new ArtifactParentLinkPayloadExtractor(),
+                new ArtifactForwardLinksRetriever(
+                    new ArtifactLinksByChangesetCache(),
+                    new ChangesetValueArtifactLinkDao(),
+                    $this->artifact_factory
+                )
+            )
+        );
 
         $artifact_creator = new Tracker_REST_Artifact_ArtifactCreator(
             $fields_data_builder,

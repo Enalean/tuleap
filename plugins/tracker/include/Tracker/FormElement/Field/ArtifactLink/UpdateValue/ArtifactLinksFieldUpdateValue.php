@@ -28,6 +28,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue;
 final class ArtifactLinksFieldUpdateValue
 {
     private function __construct(
+        private int $field_id,
         private ?ArtifactLinksDiff $artifact_links_diff,
         private ?CollectionOfArtifactLinks $submitted_values,
         private ?Link $parent_artifact_link,
@@ -35,16 +36,23 @@ final class ArtifactLinksFieldUpdateValue
     }
 
     public static function build(
+        int $field_id,
         CollectionOfArtifactLinks $existing_links,
         ?CollectionOfArtifactLinks $submitted_values,
         ?Link $parent_artifact_link,
     ): self {
         $diff = $submitted_values !== null ? ArtifactLinksDiff::build($submitted_values, $existing_links) : null;
         return new self(
+            $field_id,
             $diff,
             $submitted_values,
             $parent_artifact_link
         );
+    }
+
+    public function getFieldId(): int
+    {
+        return $this->field_id;
     }
 
     public function getArtifactLinksDiff(): ?ArtifactLinksDiff

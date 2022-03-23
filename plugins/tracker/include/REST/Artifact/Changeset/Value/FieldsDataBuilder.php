@@ -21,13 +21,17 @@
 namespace Tuleap\Tracker\REST\Artifact\Changeset\Value;
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ArtifactLinksFieldUpdateValueBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\ChangesetValuesContainer;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 final class FieldsDataBuilder
 {
-    public function __construct(private RetrieveUsedFields $fields_retriever)
-    {
+    public function __construct(
+        private RetrieveUsedFields $fields_retriever,
+        private ArtifactLinksFieldUpdateValueBuilder $artifact_link_builder,
+    ) {
     }
 
     /**
@@ -48,18 +52,33 @@ final class FieldsDataBuilder
 
     /**
      * @param ArtifactValuesRepresentation[] $values
+     * @throws \Tracker_FormElement_InvalidFieldException
+     * @throws \Tracker_FormElement_InvalidFieldValueException
      */
-    public function getFieldsDataOnUpdate(array $values, Artifact $artifact): array
-    {
+    public function getFieldsDataOnUpdate(
+        array $values,
+        Artifact $artifact,
+        \PFUser $submitter,
+    ): ChangesetValuesContainer {
         $new_values     = [];
+        $artifact_link  = null;
         $indexed_fields = $this->getIndexedFields($artifact->getTracker());
         foreach ($values as $value) {
             $array_representation = $value->toArray();
 
-            $field                       = $this->getField($indexed_fields, $array_representation);
+            $field = $this->getField($indexed_fields, $array_representation);
+            if ($field instanceof \Tracker_FormElement_Field_ArtifactLink) {
+                $artifact_link = $this->artifact_link_builder->buildArtifactLinksFieldUpdateValue(
+                    $submitter,
+                    $field,
+                    $array_representation,
+                    $artifact
+                );
+                continue;
+            }
             $new_values[$field->getId()] = $field->getFieldDataFromRESTValue($array_representation, $artifact);
         }
-        return $new_values;
+        return new ChangesetValuesContainer($new_values, $artifact_link);
     }
 
     /**
