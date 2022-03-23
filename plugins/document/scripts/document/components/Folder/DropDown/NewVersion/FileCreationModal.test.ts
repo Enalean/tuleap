@@ -73,7 +73,7 @@ describe("FileCreationModal", () => {
                 description: "It's fast",
                 type: TYPE_FILE,
                 file_properties: {
-                    file: {},
+                    file: dropped_file,
                 },
                 status: "Approved",
             },
@@ -111,7 +111,7 @@ describe("FileCreationModal", () => {
                 description: "It's fast",
                 type: TYPE_FILE,
                 file_properties: {
-                    file: {},
+                    file: dropped_file,
                 },
                 status: "Approved",
             },
@@ -159,6 +159,38 @@ describe("FileCreationModal", () => {
             await wrapper.vm.$nextTick();
 
             expect(wrapper.vm.$data.item.status).toBe("approved");
+        });
+        it("Updates the default item title", async () => {
+            const dropped_file = new File([], "Duster Pikes Peak.lol");
+            const wrapper = getWrapper(dropped_file, false);
+
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.vm.$data.item.title).toBe("");
+            emitter.emit("update-title-property", "Weird vehicle");
+
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.vm.$data.item.title).toBe("Weird vehicle");
+        });
+
+        it("Updates the default item description", async () => {
+            const dropped_file = new File([], "Duster Pikes Peak.lol");
+            const wrapper = getWrapper(dropped_file, false);
+
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.vm.$data.item.description).toBe("");
+            emitter.emit(
+                "update-description-property",
+                "A vehicule made by Renault for the Pikes Peak"
+            );
+
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.vm.$data.item.description).toBe(
+                "A vehicule made by Renault for the Pikes Peak"
+            );
         });
     });
 });

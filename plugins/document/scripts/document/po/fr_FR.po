@@ -271,6 +271,9 @@ msgstr "Fichier"
 msgid "File size"
 msgstr "Taille du fichier"
 
+msgid "Filename preview"
+msgstr "Prévisualisation du nom de fichier"
+
 msgid "Fixed date"
 msgstr "Date fixe"
 
