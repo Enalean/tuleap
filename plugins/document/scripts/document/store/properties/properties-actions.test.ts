@@ -35,8 +35,19 @@ import {
     TYPE_WIKI,
 } from "../../constants";
 import type { ActionContext } from "vuex";
-import type { Embedded, Empty, Folder, ItemFile, Link, RootState, Wiki } from "../../type";
-import type { FolderProperty, PropertiesState, Property, ListValue } from "./module";
+import type {
+    FolderProperty,
+    Embedded,
+    Empty,
+    Folder,
+    ItemFile,
+    Link,
+    RootState,
+    Wiki,
+    Property,
+    ListValue,
+} from "../../type";
+import type { PropertiesState } from "./module";
 
 describe("Properties actions", () => {
     let context: ActionContext<PropertiesState, RootState>, getProjectProperties: jest.SpyInstance;

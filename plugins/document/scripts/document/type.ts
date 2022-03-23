@@ -20,12 +20,7 @@
 import type { ConfigurationState } from "./store/configuration";
 import type { ErrorState } from "./store/error/module";
 import type { PermissionsState } from "./store/permissions/permissions-default-state";
-import type {
-    FolderProperty,
-    FolderStatus,
-    Property,
-    PropertiesState,
-} from "./store/properties/module";
+import type { PropertiesState } from "./store/properties/module";
 
 export interface State {
     is_loading_folder: boolean;
@@ -120,6 +115,42 @@ export interface Item {
     created?: boolean;
     obsolescence_date: null | number;
     properties: Array<Property> | Array<FolderProperty>;
+}
+
+/**
+ * Note of properties usage:
+ *
+ * For single and multiple list when data comes from rest route, list_value has Array<ListValue>
+ * For single property, after transformation, list_value is null, value is a number (chosen option)
+ * For multiple value property, after transformation, value is null, list value is and Array<number>
+ *
+ * Please also note that value is used for dates/string
+ */
+export interface Property {
+    short_name: string;
+    name: string;
+    description: string | null;
+    type: string;
+    is_required: boolean;
+    is_multiple_value_allowed: boolean;
+    is_used: boolean;
+    list_value: Array<number> | Array<ListValue> | null | [];
+    value: number | string | null;
+    allowed_list_values: Array<ListValue> | null;
+}
+
+export interface FolderProperty extends Property {
+    recursion: string | null;
+}
+
+export interface ListValue {
+    id: number;
+    value: string | number;
+}
+
+export interface FolderStatus {
+    value: string;
+    recursion: string;
 }
 
 export interface DefaultFileProperties {

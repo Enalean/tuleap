@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import type { ListValue, Property } from "../../../../../store/properties/module";
+import type { ListValue, Property } from "../../../../../type";
 import { namespace } from "vuex-class";
 import emitter from "../../../../../helpers/emitter";
 

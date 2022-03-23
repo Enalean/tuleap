@@ -47,7 +47,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import type { Property } from "../../../../../store/properties/module";
+import type { Property } from "../../../../../type";
 
 @Component
 export default class CustomPropertyText extends Vue {

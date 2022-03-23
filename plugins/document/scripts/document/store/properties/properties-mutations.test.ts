@@ -19,7 +19,8 @@
  */
 
 import { saveProjectProperties } from "./properties-mutations";
-import type { Property, PropertiesState } from "./module";
+import type { PropertiesState } from "./module";
+import type { Property } from "../../type";
 
 describe("Properties mutations", () => {
     it("loads properties and set the loaded information to true", () => {

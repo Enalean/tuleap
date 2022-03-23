@@ -21,7 +21,7 @@ import localVue from "../../../../../helpers/local-vue";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomPropertyString from "./CustomPropertyString.vue";
-import type { Property } from "../../../../../store/properties/module";
+import type { Property } from "../../../../../type";
 
 describe("CustomPropertyString", () => {
     function createWrapper(property: Property): Wrapper<CustomPropertyString> {

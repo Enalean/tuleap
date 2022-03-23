@@ -34,6 +34,8 @@ import type {
     AdvancedSearchParams,
     CreatedItem,
     CreatedItemFileProperties,
+    FolderProperty,
+    Property,
 } from "../type";
 import { SEARCH_LIMIT } from "../type";
 import { getRestBodyFromSearchParams } from "../helpers/get-rest-body-from-search-params";
@@ -41,7 +43,6 @@ import {
     convertArrayOfItems,
     convertRestItemToItem,
 } from "../helpers/properties-helpers/metadata-to-properties";
-import type { FolderProperty, Property } from "../store/properties/module";
 
 export {
     getDocumentManagerServiceInformation,

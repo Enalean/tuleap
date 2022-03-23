@@ -20,7 +20,7 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomPropertyText from "./CustomPropertyText.vue";
-import type { Property } from "../../../../../store/properties/module";
+import type { Property } from "../../../../../type";
 import localVue from "../../../../../helpers/local-vue";
 
 describe("CustomPropertyText", () => {

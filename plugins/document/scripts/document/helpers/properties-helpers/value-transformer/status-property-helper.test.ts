@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Property, ListValue } from "../../../store/properties/module";
-import type { Folder } from "../../../type";
+import type { Folder, Property, ListValue } from "../../../type";
 import { updateStatusProperty } from "./status-property-helper";
 
 describe("updateStatusProperty", () => {

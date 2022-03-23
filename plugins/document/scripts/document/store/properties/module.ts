@@ -20,46 +20,11 @@
 
 import * as mutations from "./properties-mutations";
 import * as actions from "./properties-actions";
+import type { Property } from "../../type";
 
 export interface PropertiesState {
     project_properties: Array<Property>;
     has_loaded_properties: boolean;
-}
-
-/**
- * Note of properties usage:
- *
- * For single and multiple list when data comes from rest route, list_value has Array<ListValue>
- * For single property, after transformation, list_value is null, value is a number (chosen option)
- * For multiple value property, after transformation, value is null, list value is and Array<number>
- *
- * Please also note that value is used for dates/string
- */
-export interface Property {
-    short_name: string;
-    name: string;
-    description: string | null;
-    type: string;
-    is_required: boolean;
-    is_multiple_value_allowed: boolean;
-    is_used: boolean;
-    list_value: Array<number> | Array<ListValue> | null | [];
-    value: number | string | null;
-    allowed_list_values: Array<ListValue> | null;
-}
-
-export interface FolderProperty extends Property {
-    recursion: string | null;
-}
-
-export interface ListValue {
-    id: number;
-    value: string | number;
-}
-
-export interface FolderStatus {
-    value: string;
-    recursion: string;
 }
 
 export default {

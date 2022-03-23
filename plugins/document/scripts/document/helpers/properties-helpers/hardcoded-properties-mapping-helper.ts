@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Property } from "../../store/properties/module";
+import type { Property } from "../../type";
 
 export function getStatusProperty(all_properties: Array<Property>): Property | undefined {
     return all_properties.find((property) => property.short_name === "status");
