@@ -22,6 +22,7 @@
         class="tlp-modal tlp-modal-danger"
         role="dialog"
         aria-labelledby="document-error-modal-title"
+        ref="root_element"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="document-error-modal-title">
@@ -72,35 +73,41 @@
         </div>
     </div>
 </template>
-<script>
-import { mapState } from "vuex";
+<script setup lang="ts">
 import { createModal } from "tlp";
+import { computed, ref, onMounted } from "@vue/composition-api";
+import { useNamespacedMutations, useNamespacedState } from "vuex-composition-helpers";
+import type { ErrorState } from "../../../store/error/module";
 
-export default {
-    name: "GlobalErrorModal",
-    data() {
-        return {
-            is_more_shown: false,
-        };
-    },
-    computed: {
-        ...mapState("error", ["global_modal_error_message"]),
-        has_more_details() {
-            return this.global_modal_error_message.length > 0;
-        },
-    },
-    mounted() {
-        const modal = createModal(this.$el, { destroy_on_hide: true });
+const is_more_shown = ref(false);
+
+const { global_modal_error_message } = useNamespacedState<
+    Pick<ErrorState, "global_modal_error_message">
+>("error", ["global_modal_error_message"]);
+
+const { resetErrors } = useNamespacedMutations("error", ["resetErrors"]);
+
+const has_more_details = computed((): boolean => {
+    if (!global_modal_error_message.value) {
+        return false;
+    }
+    return global_modal_error_message.value.length > 0;
+});
+
+const root_element = ref<InstanceType<typeof HTMLElement>>();
+
+onMounted((): void => {
+    if (root_element.value) {
+        const modal = createModal(root_element.value, { destroy_on_hide: true });
         modal.show();
-        modal.addEventListener("tlp-modal-hidden", this.reset);
-    },
-    methods: {
-        reset() {
-            this.$store.commit("error/resetErrors");
-        },
-        reloadPage() {
-            window.location.reload();
-        },
-    },
-};
+        modal.addEventListener("tlp-modal-hidden", reset);
+    }
+});
+
+function reset() {
+    resetErrors();
+}
+function reloadPage(): void {
+    window.location.reload();
+}
 </script>

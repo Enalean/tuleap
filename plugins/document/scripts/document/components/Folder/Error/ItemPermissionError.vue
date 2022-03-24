@@ -35,7 +35,7 @@
             v-bind:action="`/plugins/document/PermissionDeniedRequestMessage/${project_id}`"
             method="post"
             name="display_form"
-            ref="form"
+            ref="form_anchor"
             class="tlp-pane document-request-permission-pane"
         >
             <div class="tlp-pane-container">
@@ -74,45 +74,43 @@
         </form>
     </section>
 </template>
-
-<script>
-import { mapState } from "vuex";
+<script setup lang="ts">
 import ItemPermissionErrorSvg from "../../svg/error/ItemPermissionErrorSvg.vue";
+import { computed, ref } from "@vue/composition-api";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
 
-export default {
-    name: "ItemPermissionError",
-    components: { ItemPermissionErrorSvg },
-    props: {
-        csrf_token: {
-            type: String,
-            required: true,
-        },
-        csrf_token_name: {
-            type: String,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            error: "",
-            mail_content: "",
-        };
-    },
-    computed: {
-        ...mapState("configuration", ["project_id"]),
-        placeholder() {
-            return this.$gettext("Please write something meaningful for the admin.");
-        },
-    },
-    methods: {
-        submit() {
-            if (!this.mail_content) {
-                this.error = this.$gettext("Mail content is required");
-                return;
-            }
+const { $gettext } = useGettext();
 
-            this.$refs.form.submit();
-        },
-    },
-};
+defineProps<{
+    csrf_token: string;
+    csrf_token_name: string;
+}>();
+
+let error = ref("");
+let mail_content = ref("");
+
+const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
+    "project_id",
+]);
+
+const form_anchor = ref<InstanceType<typeof HTMLFormElement>>();
+
+function submit(): void {
+    if (!mail_content.value) {
+        error.value = $gettext("Mail content is required");
+        return;
+    }
+    if (form_anchor.value) {
+        form_anchor.value.submit();
+    }
+}
+const placeholder = computed((): string => {
+    return $gettext("Please write something meaningful for the admin.");
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>

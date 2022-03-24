@@ -18,10 +18,12 @@
  */
 
 import * as tlp from "tlp";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import GlobalErrorModal from "./GlobalErrorModal.vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { Modal } from "tlp";
 
 jest.mock("tlp", () => {
     return {
@@ -33,7 +35,7 @@ jest.mock("tlp", () => {
     };
 });
 
-function createWrapper(error_message) {
+function createWrapper(error_message: string): Wrapper<GlobalErrorModal> {
     return shallowMount(GlobalErrorModal, {
         localVue,
         mocks: {
@@ -51,7 +53,7 @@ describe(`GlobalErrorModal`, () => {
             return {
                 show: modal_show,
                 addEventListener: jest.fn(),
-            };
+            } as unknown as Modal;
         });
         createWrapper("Full error message with details");
         expect(modal_show).toHaveBeenCalledTimes(1);
@@ -78,8 +80,8 @@ describe(`GlobalErrorModal`, () => {
         jest.spyOn(tlp, "createModal").mockImplementation(() => {
             return {
                 show: jest.fn(),
-                addEventListener: (event_name, handler) => handler(),
-            };
+                addEventListener: (event_name: string, handler: () => void) => handler(),
+            } as unknown as Modal;
         });
         const wrapper = createWrapper("");
         const commit = jest.spyOn(wrapper.vm.$store, "commit");
@@ -88,11 +90,15 @@ describe(`GlobalErrorModal`, () => {
     });
 
     it(`when I click on the "reload" button, it reloads the page`, () => {
-        const { location } = window.location;
+        const location = window.location;
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         delete window.location;
+
         window.location = {
             reload: jest.fn(),
-        };
+        } as unknown as Location;
         const wrapper = createWrapper("");
         wrapper.get("[data-test=reload]").trigger("click");
 

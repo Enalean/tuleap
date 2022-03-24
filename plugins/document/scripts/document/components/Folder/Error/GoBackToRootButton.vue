@@ -21,7 +21,7 @@
     <router-link
         class="empty-state-action tlp-button-primary"
         v-bind:to="{ name: 'root_folder' }"
-        v-if="can_go_to_root"
+        v-if="$route.name !== 'root_folder'"
         data-test="item-can-go-to-root-button"
     >
         <i class="fa fa-long-arrow-right tlp-button-icon"></i>
@@ -29,12 +29,8 @@
     </router-link>
 </template>
 
-<script>
-export default {
-    computed: {
-        can_go_to_root() {
-            return this.$route.name !== "root_folder";
-        },
-    },
-};
+<script setup lang="ts"></script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>

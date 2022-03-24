@@ -19,7 +19,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import ItemPermissionError from "./ItemPermissionError.vue";
 import localVue from "../../../helpers/local-vue";
 
@@ -35,6 +35,12 @@ describe("ItemPermissionError", () => {
 
         const wrapper = shallowMount(ItemPermissionError, {
             localVue,
+            data() {
+                return {
+                    error: "",
+                    mail_content: "",
+                };
+            },
             propsData: { csrf_token: "", csrf_token_name: "challenge" },
             mocks: { $store: store },
         });
