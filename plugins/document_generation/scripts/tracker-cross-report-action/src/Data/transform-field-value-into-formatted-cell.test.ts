@@ -18,7 +18,11 @@
  */
 
 import { TextCell, NumberCell, EmptyCell, HTMLCell, DateCell } from "./data-formator";
-import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
+import type {
+    ArtifactReportResponseFieldValue,
+    ArtifactReportResponseUserRepresentation,
+    ArtifactReportResponseUserGroupRepresentation,
+} from "@tuleap/plugin-docgen-docx";
 import { transformFieldValueIntoAFormattedCell } from "./transform-field-value-into-formatted-cell";
 
 describe("transform-field-value-into-formatted-cell", () => {
@@ -171,12 +175,285 @@ describe("transform-field-value-into-formatted-cell", () => {
 
         expect(formatted_cell).toStrictEqual(new DateCell(new Date("03/11/2020 09:36:10")));
     });
-    it("transforms all other fields into EmptyCell", (): void => {
+    it("transforms selectbox field bound to static values into TextCell", (): void => {
         const field_value: ArtifactReportResponseFieldValue = {
             field_id: 1,
             type: "sb",
-            label: "Computed field",
+            label: "Selectbox Static",
+            values: [
+                {
+                    id: 300,
+                    label: "On Going",
+                    color: null,
+                    tlp_color: "lake-placid-blue",
+                },
+            ],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("On Going"));
+    });
+    it("transforms selectbox field bound to users into TextCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "sb",
+            label: "Selectbox Users",
+            values: [
+                {
+                    id: 101,
+                    display_name: "User01",
+                } as ArtifactReportResponseUserRepresentation,
+            ],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("User01"));
+    });
+    it("transforms selectbox field bound to user groups into TextCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "sb",
+            label: "Selectbox Ugroups",
+            values: [
+                {
+                    id: "101",
+                    label: "Ugroup01",
+                } as ArtifactReportResponseUserGroupRepresentation,
+            ],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("Ugroup01"));
+    });
+    it("transforms selectbox empty value into EmptyCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "sb",
+            label: "Selectbox Empty",
             values: [],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new EmptyCell());
+    });
+    it("transforms radiobutton field bound to static values into TextCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "rb",
+            label: "Radiobutton Static",
+            values: [
+                {
+                    id: 300,
+                    label: "On Going",
+                    color: null,
+                    tlp_color: "lake-placid-blue",
+                },
+            ],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("On Going"));
+    });
+    it("transforms radiobutton field bound to users into TextCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "rb",
+            label: "Radiobutton Users",
+            values: [
+                {
+                    id: 101,
+                    display_name: "User01",
+                } as ArtifactReportResponseUserRepresentation,
+            ],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("User01"));
+    });
+    it("transforms radiobutton field bound to user groups into TextCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "rb",
+            label: "Radiobutton Ugroups",
+            values: [
+                {
+                    id: "101",
+                    label: "Ugroup01",
+                } as ArtifactReportResponseUserGroupRepresentation,
+            ],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("Ugroup01"));
+    });
+    it("transforms radiobutton empty value into EmptyCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "rb",
+            label: "Radiobutton Empty",
+            values: [],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new EmptyCell());
+    });
+    it("transforms multiselectbox field bound to static values into TextCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "msb",
+            label: "Multiselectbox Static",
+            values: [
+                {
+                    id: 1,
+                    label: "value01",
+                    color: null,
+                    tlp_color: "lake-placid-blue",
+                },
+                {
+                    id: 2,
+                    label: "value02",
+                    color: null,
+                    tlp_color: "lake-placid-blue",
+                },
+            ],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("value01, value02"));
+    });
+    it("transforms multiselectbox field bound to users into TextCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "msb",
+            label: "Multiselectbox Users",
+            values: [
+                {
+                    id: 101,
+                    display_name: "User01",
+                } as ArtifactReportResponseUserRepresentation,
+                {
+                    id: 102,
+                    display_name: "User02",
+                } as ArtifactReportResponseUserRepresentation,
+            ],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("User01, User02"));
+    });
+    it("transforms multiselectbox field bound to user groups into TextCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "msb",
+            label: "Multiselectbox Ugroups",
+            values: [
+                {
+                    id: "101",
+                    label: "Ugroup01",
+                } as ArtifactReportResponseUserGroupRepresentation,
+                {
+                    id: "102",
+                    label: "Ugroup02",
+                } as ArtifactReportResponseUserGroupRepresentation,
+            ],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("Ugroup01, Ugroup02"));
+    });
+    it("transforms multiselectbox empty value into EmptyCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "msb",
+            label: "Multiselectbox Empty",
+            values: [],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new EmptyCell());
+    });
+    it("transforms checkbox field bound to static values into TextCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "cb",
+            label: "Checkbox Static",
+            values: [
+                {
+                    id: 1,
+                    label: "value01",
+                    color: null,
+                    tlp_color: "lake-placid-blue",
+                },
+                {
+                    id: 2,
+                    label: "value02",
+                    color: null,
+                    tlp_color: "lake-placid-blue",
+                },
+            ],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("value01, value02"));
+    });
+    it("transforms checkbox field bound to users into TextCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "cb",
+            label: "Checkbox Users",
+            values: [
+                {
+                    id: 101,
+                    display_name: "User01",
+                } as ArtifactReportResponseUserRepresentation,
+                {
+                    id: 102,
+                    display_name: "User02",
+                } as ArtifactReportResponseUserRepresentation,
+            ],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("User01, User02"));
+    });
+    it("transforms checkbox field bound to user groups into TextCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "cb",
+            label: "Checkbox Ugroups",
+            values: [
+                {
+                    id: "101",
+                    label: "Ugroup01",
+                } as ArtifactReportResponseUserGroupRepresentation,
+                {
+                    id: "102",
+                    label: "Ugroup02",
+                } as ArtifactReportResponseUserGroupRepresentation,
+            ],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("Ugroup01, Ugroup02"));
+    });
+    it("transforms checkbox empty value into EmptyCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "cb",
+            label: "Checkbox Empty",
+            values: [],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new EmptyCell());
+    });
+    it("transforms all other fields into EmptyCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "art_link",
+            label: "Artifact Link",
+            links: [],
+            reverse_links: [],
         };
         const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
 
