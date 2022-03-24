@@ -50,6 +50,18 @@ describe("data-formator", () => {
                         label: "Assigned to",
                         values: [],
                     },
+                    {
+                        field_id: 4,
+                        type: "art_link",
+                        label: "Artifact links",
+                        values: [],
+                    },
+                    {
+                        field_id: 5,
+                        type: "file",
+                        label: "Attachment",
+                        values: [],
+                    },
                 ],
             } as ArtifactResponse,
             {
@@ -75,6 +87,18 @@ describe("data-formator", () => {
                         field_id: 3,
                         type: "sb",
                         label: "Assigned to",
+                        values: [],
+                    },
+                    {
+                        field_id: 4,
+                        type: "art_link",
+                        label: "Artifact links",
+                        values: [],
+                    },
+                    {
+                        field_id: 5,
+                        type: "file",
+                        label: "Attachment",
                         values: [],
                     },
                 ],
