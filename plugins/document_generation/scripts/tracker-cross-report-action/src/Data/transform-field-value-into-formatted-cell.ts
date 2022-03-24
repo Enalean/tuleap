@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -55,6 +55,24 @@ export function transformFieldValueIntoAFormattedCell(
                 return new EmptyCell();
             }
             return new DateCell(new Date(field_value.value));
+        case "sb":
+        case "msb":
+        case "rb":
+        case "cb": {
+            if (field_value.values === null || field_value.values.length === 0) {
+                return new EmptyCell();
+            }
+
+            const list_values_labels: string[] = [];
+            for (const list_value of field_value.values) {
+                if ("display_name" in list_value && list_value.id !== null) {
+                    list_values_labels.push(list_value.display_name);
+                } else if ("label" in list_value) {
+                    list_values_labels.push(list_value.label);
+                }
+            }
+            return new TextCell(list_values_labels.join(", "));
+        }
         default:
             return new EmptyCell();
     }
