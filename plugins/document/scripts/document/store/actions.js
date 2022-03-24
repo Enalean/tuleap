@@ -62,7 +62,7 @@ import {
 import { addNewFolder } from "../api/rest-querier";
 import { handleErrorsForModal } from "./error/error-actions";
 
-export * from "./actions-typescript";
+export * from "./actions-delete";
 
 export const loadRootFolder = async (context) => {
     try {

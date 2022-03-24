@@ -26,12 +26,12 @@ import {
     TYPE_WIKI,
 } from "../constants";
 import * as rest_querier from "../api/rest-querier";
-import { deleteItem } from "./actions-typescript";
+import { deleteItem } from "./actions-delete";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { Item, RootState } from "../type";
 import type { ActionContext } from "vuex";
 
-describe("actions", () => {
+describe("actions-delete", () => {
     describe("deleteItem()", () => {
         let context: ActionContext<RootState, RootState>;
 
