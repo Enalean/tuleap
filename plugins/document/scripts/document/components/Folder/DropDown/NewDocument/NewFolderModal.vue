@@ -32,6 +32,8 @@
             <folder-global-properties-for-create
                 v-bind:currently-updated-item="item"
                 v-bind:parent="parent"
+                v-bind:properties="item.properties"
+                v-bind:status_value="item.status"
             />
             <creation-modal-permissions-section
                 v-if="item.permissions_for_groups"
@@ -59,7 +61,10 @@ import FolderGlobalPropertiesForCreate from "./PropertiesForCreate/FolderGlobalP
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
 import { getCustomProperties } from "../../../../helpers/properties-helpers/custom-properties-helper";
 import { handleErrors } from "../../../../store/actions-helpers/handle-errors";
-import { transformCustomPropertiesForItemCreation } from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
+import {
+    transformCustomPropertiesForItemCreation,
+    transformStatusPropertyForItemCreation,
+} from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
 import emitter from "../../../../helpers/emitter";
 
 export default {
@@ -85,7 +90,7 @@ export default {
         ...mapState(["current_folder"]),
         ...mapState("error", ["has_modal_error"]),
         ...mapState("permissions", ["project_ugroups"]),
-        ...mapState("configuration", ["project_id"]),
+        ...mapState("configuration", ["project_id", "is_status_property_used"]),
         submit_button_label() {
             return this.$gettext("Create folder");
         },
@@ -102,6 +107,7 @@ export default {
         emitter.on("show-new-folder-modal", this.show);
         emitter.on("update-multiple-properties-list-value", this.updateMultiplePropertiesListValue);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
+        emitter.on("update-status-property", this.updateStatusValue);
     },
     beforeDestroy() {
         emitter.off("show-new-folder-modal", this.show);
@@ -110,6 +116,7 @@ export default {
             this.updateMultiplePropertiesListValue
         );
         this.modal.removeEventListener("tlp-modal-hidden", this.reset);
+        emitter.off("update-status-property", this.updateStatusValue);
     },
     methods: {
         getDefaultItem() {
@@ -171,6 +178,12 @@ export default {
             if (formatted_properties.length > 0) {
                 this.item.properties = formatted_properties;
             }
+
+            transformStatusPropertyForItemCreation(
+                this.item,
+                this.parent,
+                this.is_status_property_used
+            );
         },
         updateMultiplePropertiesListValue(event) {
             if (!this.item.properties) {
@@ -180,6 +193,9 @@ export default {
                 (property) => property.short_name === event.detail.id
             );
             item_properties.list_value = event.detail.value;
+        },
+        updateStatusValue(event) {
+            this.item.status = event;
         },
     },
 };

@@ -19,40 +19,25 @@
 
 <template>
     <status-property
-        v-model="status_value"
+        v-bind:value="status_value"
         v-if="is_status_property_used"
         data-test="document-status-for-item-update"
     />
 </template>
 
-<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { mapState } from "vuex";
 import StatusProperty from "../PropertiesForCreateOrUpdate/StatusProperty.vue";
-import { transformDocumentPropertiesForUpdate } from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
-
 export default {
     name: "StatusPropertyWithCustomBindingForDocumentUpdate",
     components: {
         StatusProperty,
     },
     props: {
-        currentlyUpdatedItem: Object,
+        status_value: String,
     },
     computed: {
         ...mapState("configuration", ["is_status_property_used"]),
-        status_value: {
-            get() {
-                transformDocumentPropertiesForUpdate(
-                    this.currentlyUpdatedItem,
-                    this.is_status_property_used
-                );
-                return this.currentlyUpdatedItem.status;
-            },
-            set(value) {
-                this.currentlyUpdatedItem.status = value;
-            },
-        },
     },
 };
 </script>

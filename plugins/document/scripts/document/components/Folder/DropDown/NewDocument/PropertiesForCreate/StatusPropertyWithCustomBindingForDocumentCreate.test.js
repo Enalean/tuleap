@@ -20,7 +20,6 @@
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import localVue from "../../../../../helpers/local-vue";
-import { TYPE_FILE } from "../../../../../constants";
 import StatusPropertyWithCustomBindingForDocumentCreate from "./StatusPropertyWithCustomBindingForDocumentCreate.vue";
 
 describe("StatusPropertyWithCustomBindingForDocumentCreate", () => {
@@ -47,26 +46,7 @@ describe("StatusPropertyWithCustomBindingForDocumentCreate", () => {
     });
 
     it(`display status selectbox only when status property is enabled for project`, async () => {
-        const wrapper = status_property({
-            currentlyUpdatedItem: {
-                status: 100,
-                type: TYPE_FILE,
-                title: "title",
-            },
-            parent: {
-                id: 40,
-                properties: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 103,
-                            },
-                        ],
-                    },
-                ],
-            },
-        });
+        const wrapper = status_property({});
 
         store.state.configuration.is_status_property_used = true;
         await wrapper.vm.$nextTick();
@@ -77,95 +57,12 @@ describe("StatusPropertyWithCustomBindingForDocumentCreate", () => {
     });
 
     it(`does not display status if property is not available`, () => {
-        const wrapper = status_property({
-            currentlyUpdatedItem: {
-                type: TYPE_FILE,
-                title: "title",
-            },
-            parent: {
-                id: 40,
-                properties: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 103,
-                            },
-                        ],
-                    },
-                ],
-            },
-        });
+        const wrapper = status_property({});
 
         store.state.configuration.is_status_property_used = false;
 
         expect(
             wrapper.find("[data-test=document-status-property-for-item-create]").exists()
         ).toBeFalsy();
-        expect(wrapper.vm.status_value).toEqual(undefined);
-    });
-
-    it(`Status is inherited from current folder`, () => {
-        const wrapper = status_property({
-            currentlyUpdatedItem: {
-                type: TYPE_FILE,
-                title: "title",
-            },
-            parent: {
-                id: 40,
-                properties: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 103,
-                            },
-                        ],
-                    },
-                ],
-            },
-        });
-
-        store.state.configuration.is_status_property_used = true;
-
-        expect(wrapper.vm.status_value).toEqual("rejected");
-    });
-
-    it(`Given status value is updated Then the props used for document creation is updated`, () => {
-        const wrapper = status_property({
-            currentlyUpdatedItem: {
-                properties: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 100,
-                            },
-                        ],
-                    },
-                ],
-                type: TYPE_FILE,
-                title: "title",
-            },
-            parent: {
-                id: 40,
-                properties: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 103,
-                            },
-                        ],
-                    },
-                ],
-            },
-        });
-
-        store.state.configuration.is_status_property_used = true;
-
-        wrapper.vm.status_value = "approved";
-
-        expect(wrapper.vm.currentlyUpdatedItem.status).toEqual("approved");
     });
 });

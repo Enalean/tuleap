@@ -33,6 +33,9 @@ describe("FolderHeader", () => {
         const general_store = {
             state: {
                 is_loading_ascendant_hierarchy: false,
+                configuration: {
+                    is_status_property_used: true,
+                },
             },
             getters: {
                 current_folder_title: "My folder title",
@@ -156,7 +159,7 @@ describe("FolderHeader", () => {
             expect(wrapper.find("[data-test=document-permissions-item-modal]").exists()).toBe(
                 false
             );
-            const event = { detail: { current_item: { type: TYPE_EMPTY } } };
+            const event = { detail: { current_item: { type: TYPE_EMPTY, properties: [] } } };
             wrapper.vm.showUpdateItemPermissionsModal(event);
             await wrapper.vm.$nextTick();
             expect(wrapper.find("[data-test=document-permissions-item-modal]").exists()).toBe(true);

@@ -28,25 +28,36 @@
             class="tlp-select"
             id="document-new-item-status"
             name="status"
-            v-on:input="$emit('input', $event.target.value)"
+            v-on:change="onchange"
             v-bind:value="value"
             ref="input"
             data-test="document-new-item-status"
         >
-            <option name="none" value="none" v-translate>None</option>
-            <option name="draft" value="draft" v-translate>Draft</option>
-            <option name="approved" value="approved" v-translate>Approved</option>
-            <option name="rejected" value="rejected" v-translate>Rejected</option>
+            <option name="none" value="none" data-test="value-none" v-translate>None</option>
+            <option name="draft" value="draft" data-test="value-draft" v-translate>Draft</option>
+            <option name="approved" value="approved" data-test="value-approved" v-translate>
+                Approved
+            </option>
+            <option name="rejected" value="rejected" data-test="value-rejected" v-translate>
+                Rejected
+            </option>
         </select>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import emitter from "../../../../helpers/emitter";
 
 @Component
 export default class StatusProperty extends Vue {
     @Prop({ required: true })
     readonly value!: string;
+
+    onchange($event: Event): void {
+        if ($event.target instanceof HTMLSelectElement) {
+            emitter.emit("update-status-property", $event.target.value);
+        }
+    }
 }
 </script>

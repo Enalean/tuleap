@@ -105,6 +105,17 @@ describe("transformDocumentPropertiesForUpdate", () => {
 
         expect(item.status).toEqual(undefined);
     });
+
+    it("Given item has no properties key, it does not throw an error", () => {
+        const item: ItemFile = {
+            id: 7,
+            type: "file",
+        } as unknown as ItemFile;
+
+        transformDocumentPropertiesForUpdate(item, false);
+
+        expect(item.status).toEqual(undefined);
+    });
 });
 
 describe("transformCustomPropertiesForItemUpdate", () => {

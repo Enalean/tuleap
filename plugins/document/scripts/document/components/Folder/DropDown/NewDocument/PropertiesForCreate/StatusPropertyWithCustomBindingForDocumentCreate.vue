@@ -19,16 +19,14 @@
 
 <template>
     <status-property
-        v-model="status_value"
+        v-bind:value="status_value"
         v-if="is_status_property_used"
         data-test="document-status-property-for-item-create"
     />
 </template>
 
-<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { mapState } from "vuex";
-import { transformItemPropertiesForCreation } from "../../../../../helpers/properties-helpers/creation-data-transformatter-helper";
 import StatusProperty from "../../PropertiesForCreateOrUpdate/StatusProperty.vue";
 
 export default {
@@ -37,24 +35,10 @@ export default {
         StatusProperty,
     },
     props: {
-        currentlyUpdatedItem: Object,
-        parent: Object,
+        status_value: String,
     },
     computed: {
         ...mapState("configuration", ["is_status_property_used"]),
-        status_value: {
-            get() {
-                transformItemPropertiesForCreation(
-                    this.currentlyUpdatedItem,
-                    this.parent,
-                    this.is_status_property_used
-                );
-                return this.currentlyUpdatedItem.status;
-            },
-            set(value) {
-                this.currentlyUpdatedItem.status = value;
-            },
-        },
     },
 };
 </script>

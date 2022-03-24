@@ -94,7 +94,10 @@ import OtherInformationPropertiesForCreate from "./PropertiesForCreate/OtherInfo
 import { getCustomProperties } from "../../../../helpers/properties-helpers/custom-properties-helper";
 import { handleErrors } from "../../../../store/actions-helpers/handle-errors";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
-import { transformCustomPropertiesForItemCreation } from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
+import {
+    transformCustomPropertiesForItemCreation,
+    transformStatusPropertyForItemCreation,
+} from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
 import emitter from "../../../../helpers/emitter";
 
 export default {
@@ -146,6 +149,7 @@ export default {
         emitter.on("createItem", this.show);
         emitter.on("update-multiple-properties-list-value", this.updateMultiplePropertiesListValue);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
+        emitter.on("update-status-property", this.updateStatusValue);
     },
     beforeDestroy() {
         emitter.off("createItem", this.show);
@@ -154,6 +158,7 @@ export default {
             this.updateMultiplePropertiesListValue
         );
         this.modal.removeEventListener("tlp-modal-hidden", this.reset);
+        emitter.off("update-status-property", this.updateStatusValue);
     },
     methods: {
         getDefaultItem() {
@@ -193,6 +198,13 @@ export default {
             if (this.parent.obsolescence_date) {
                 this.item.obsolescence_date = this.parent.obsolescence_date;
             }
+
+            transformCustomPropertiesForItemCreation(this.item.properties);
+            transformStatusPropertyForItemCreation(
+                this.item,
+                this.parent,
+                this.is_status_property_used
+            );
 
             this.is_displayed = true;
             this.modal.show();
@@ -245,6 +257,9 @@ export default {
                 (property) => property.short_name === event.detail.id
             );
             item_properties.list_value = event.detail.value;
+        },
+        updateStatusValue(event) {
+            this.item.status = event;
         },
     },
 };

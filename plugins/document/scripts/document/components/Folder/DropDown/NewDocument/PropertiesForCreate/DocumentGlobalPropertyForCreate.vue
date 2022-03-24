@@ -28,7 +28,7 @@
                 v-bind:is-in-update-context="false"
             />
             <status-property-with-custom-binding-for-document-create
-                v-bind:currently-updated-item="currentlyUpdatedItem"
+                v-bind:status_value="currentlyUpdatedItem.status"
                 v-bind:parent="parent"
             />
         </div>

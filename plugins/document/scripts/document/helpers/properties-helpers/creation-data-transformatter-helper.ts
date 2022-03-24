@@ -26,7 +26,7 @@ import {
 } from "./value-transformer/list-value-helper";
 import type { Folder, Item, Property } from "../../type";
 
-export function transformItemPropertiesForCreation(
+export function transformStatusPropertyForItemCreation(
     document_to_create: Item,
     parent: Folder,
     is_status_property_used: boolean
