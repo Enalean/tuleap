@@ -327,7 +327,7 @@ function cancelUpload(item: ItemFileUploader): Promise<Response> {
     });
 }
 
-function deleteFile(item: ItemFileUploader): Promise<Response> {
+function deleteFile(item: ItemFile): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
     return del(`/api/docman_files/${escaped_item_id}`);
 }

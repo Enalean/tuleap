@@ -26,12 +26,6 @@ import {
     addNewWiki,
     cancelUpload,
     createNewVersion,
-    deleteEmbeddedFile,
-    deleteEmptyDocument,
-    deleteFile,
-    deleteFolder,
-    deleteLink,
-    deleteWiki,
     getDocumentManagerServiceInformation,
     getFolderContent,
     getItem,
@@ -48,7 +42,6 @@ import {
 import {
     getErrorMessage,
     handleErrors,
-    handleErrorsForDeletionModal,
     handleErrorsForDocument,
 } from "./actions-helpers/handle-errors";
 import { loadFolderContent } from "./actions-helpers/load-folder-content";
@@ -68,6 +61,8 @@ import {
 } from "../constants";
 import { addNewFolder } from "../api/rest-querier";
 import { handleErrorsForModal } from "./error/error-actions";
+
+export * from "./actions-typescript";
 
 export const loadRootFolder = async (context) => {
     try {
@@ -541,37 +536,6 @@ export const cancelAllFileUploads = (context) => {
             .filter((item) => item.is_uploading)
             .map((item) => cancelFileUpload(context, item))
     );
-};
-
-export const deleteItem = async (context, [item, additional_options]) => {
-    try {
-        switch (item.type) {
-            case TYPE_FILE:
-                await deleteFile(item);
-                break;
-            case TYPE_LINK:
-                await deleteLink(item);
-                break;
-            case TYPE_EMBEDDED:
-                await deleteEmbeddedFile(item);
-                break;
-            case TYPE_WIKI:
-                await deleteWiki(item, additional_options);
-                break;
-            case TYPE_EMPTY:
-                await deleteEmptyDocument(item);
-                break;
-            case TYPE_FOLDER:
-                await deleteFolder(item, additional_options);
-                break;
-        }
-
-        context.commit("clipboard/emptyClipboardAfterItemDeletion", item);
-        context.commit("removeItemFromFolderContent", item);
-        context.commit("showPostDeletionNotification");
-    } catch (exception) {
-        return handleErrorsForDeletionModal(context, exception, item);
-    }
 };
 
 export const getWikisReferencingSameWikiPage = async (context, item) => {

@@ -115,7 +115,7 @@ export default class ModalConfirmDeletion extends Vue {
     @Prop({ required: true })
     readonly item!: Item;
 
-    @Prop({ required: true })
+    @Prop({ required: false, default: false })
     readonly shouldRedirectToParentAfterDeletion!: boolean;
 
     @error.State
