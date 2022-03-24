@@ -24,16 +24,16 @@ namespace Tuleap\Tracker\Test\Stub;
 
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\CollectionOfArtifactLinks;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\UpdateValue\RetrieveForwardLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveForwardLinks;
 
 final class RetrieveForwardLinksStub implements RetrieveForwardLinks
 {
-    private function __construct(private CollectionOfArtifactLinks $links)
+    private function __construct(private CollectionOfForwardLinks $links)
     {
     }
 
-    public static function withLinks(CollectionOfArtifactLinks $links): self
+    public static function withLinks(CollectionOfForwardLinks $links): self
     {
         return new self($links);
     }
@@ -42,7 +42,7 @@ final class RetrieveForwardLinksStub implements RetrieveForwardLinks
         \PFUser $submitter,
         Tracker_FormElement_Field_ArtifactLink $link_field,
         ?Artifact $artifact,
-    ): CollectionOfArtifactLinks {
+    ): CollectionOfForwardLinks {
         return $this->links;
     }
 }

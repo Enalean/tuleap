@@ -28,7 +28,7 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
-use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 
 class ArtifactUpdater
 {

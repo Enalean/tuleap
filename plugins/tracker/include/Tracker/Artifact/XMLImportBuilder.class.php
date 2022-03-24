@@ -30,9 +30,9 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPr
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
-use Tuleap\Tracker\Artifact\Changeset\InitialChangesetValueSaverIgnoringPermissions;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
-use Tuleap\Tracker\Artifact\Changeset\Value\ChangesetValueSaverIgnoringPermissions;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaverIgnoringPermissions;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaverIgnoringPermissions;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;

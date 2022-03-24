@@ -28,7 +28,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreation;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
-use Tuleap\Tracker\Artifact\Changeset\Value\SaveChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\SaveChangesetValue;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;

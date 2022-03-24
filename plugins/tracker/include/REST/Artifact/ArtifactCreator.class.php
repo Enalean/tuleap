@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tracker\Artifact\Changeset\Value\AddDefaultValuesToFieldsData;
-use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataBuilder;
-use Tuleap\Tracker\REST\Artifact\Changeset\Value\FieldsDataFromValuesByFieldBuilder;
+use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
 
 class Tracker_REST_Artifact_ArtifactCreator
 {
