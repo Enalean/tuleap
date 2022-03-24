@@ -51,6 +51,27 @@ describe("Error modules actions", () => {
             );
         });
 
+        it("sets a global error message when a message can be extracted from the FetchWrapperError instance with i18n_error_message", async () => {
+            const response = {
+                json: () =>
+                    Promise.resolve({
+                        error: {
+                            code: 400,
+                            message: "Bad request",
+                            i18n_error_message: "with a i18n error message",
+                        },
+                    }),
+            } as Response;
+            const error = new FetchWrapperError("Bad request", response);
+            await actions.handleGlobalError(context, error);
+
+            expect(context.commit).toHaveBeenCalledTimes(1);
+            expect(context.commit).toHaveBeenCalledWith(
+                "setGlobalErrorMessage",
+                "400 Bad request: with a i18n error message"
+            );
+        });
+
         it("leaves the global error message empty when a message can not be extracted from the FetchWrapperError instance", async () => {
             const response = {
                 json: () => Promise.reject(),
@@ -80,6 +101,28 @@ describe("Error modules actions", () => {
             expect(context.commit).toHaveBeenCalledWith(
                 "setModalErrorMessage",
                 "500 Internal Server Error"
+            );
+        });
+
+        it(`when a message can be extracted from the FetchWrapperError,
+            it will set an error message that will show up in a modal window with message and i18n error message`, async () => {
+            const response = {
+                json: () =>
+                    Promise.resolve({
+                        error: {
+                            code: 400,
+                            message: "Bad request",
+                            i18n_error_message: "with a i18n error message",
+                        },
+                    }),
+            } as Response;
+            const error = new FetchWrapperError("Bad request", response);
+
+            await actions.handleModalError(context, error);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "setModalErrorMessage",
+                "400 Bad request: with a i18n error message"
             );
         });
 

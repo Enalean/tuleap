@@ -28,7 +28,11 @@ export async function handleGlobalError(
 ): Promise<void> {
     try {
         const { error } = await rest_error.response.json();
-        context.commit("setGlobalErrorMessage", error.code + " " + error.message);
+        let message = error.code + " " + error.message;
+        if (error.i18n_error_message) {
+            message += ": " + error.i18n_error_message;
+        }
+        context.commit("setGlobalErrorMessage", message);
     } catch (error) {
         context.commit("setGlobalErrorMessage", "");
     }
@@ -40,7 +44,11 @@ export async function handleModalError(
 ): Promise<void> {
     try {
         const { error } = await rest_error.response.json();
-        context.commit("setModalErrorMessage", error.code + " " + error.message);
+        let message = error.code + " " + error.message;
+        if (error.i18n_error_message) {
+            message += ": " + error.i18n_error_message;
+        }
+        context.commit("setModalErrorMessage", message);
     } catch (e) {
         context.commit("setModalErrorMessage", "");
     }

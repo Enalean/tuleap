@@ -48,7 +48,12 @@
                 >
                     Show error details
                 </a>
-                <pre v-if="is_more_shown" data-test="details">{{ modal_error_message }}</pre>
+                <pre
+                    class="taskboard-error-modal-message"
+                    v-if="is_more_shown"
+                    data-test="details"
+                    >{{ modal_error_message }}</pre
+                >
             </template>
         </div>
         <div class="tlp-modal-footer">
