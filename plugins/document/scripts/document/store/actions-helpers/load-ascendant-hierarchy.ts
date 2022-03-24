@@ -20,11 +20,10 @@
 import { getParents } from "../../api/rest-querier";
 import { handleErrors } from "./handle-errors";
 import type { ActionContext } from "vuex";
-import type { Item } from "../../type";
-import type { ErrorState } from "../error/module";
+import type { Item, RootState } from "../../type";
 
 export async function loadAscendantHierarchy(
-    context: ActionContext<ErrorState, ErrorState>,
+    context: ActionContext<RootState, RootState>,
     folder_id: number,
     loading_current_folder_promise: Promise<Item>
 ): Promise<void> {
