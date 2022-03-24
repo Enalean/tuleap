@@ -73,6 +73,24 @@ export function transformFieldValueIntoAFormattedCell(
             }
             return new TextCell(list_values_labels.join(", "));
         }
+        case "tbl": {
+            if (
+                field_value.bind_value_objects === null ||
+                field_value.bind_value_objects.length === 0
+            ) {
+                return new EmptyCell();
+            }
+
+            const formatted_open_values: string[] = [];
+            for (const open_list_value of field_value.bind_value_objects) {
+                if ("display_name" in open_list_value) {
+                    formatted_open_values.push(open_list_value.display_name);
+                } else if ("label" in open_list_value) {
+                    formatted_open_values.push(open_list_value.label);
+                }
+            }
+            return new TextCell(formatted_open_values.join(", "));
+        }
         default:
             return new EmptyCell();
     }

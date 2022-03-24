@@ -153,6 +153,17 @@ describe("transform-field-value-into-formatted-cell", () => {
 
         expect(formatted_cell).toStrictEqual(new DateCell(new Date("03/11/2020 09:36:10")));
     });
+    it("transforms null date field value into EmptyCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "date",
+            label: "Date field",
+            value: null,
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new EmptyCell());
+    });
     it("transforms submitted on field value into DateCell", (): void => {
         const field_value: ArtifactReportResponseFieldValue = {
             field_id: 1,
@@ -164,6 +175,17 @@ describe("transform-field-value-into-formatted-cell", () => {
 
         expect(formatted_cell).toStrictEqual(new DateCell(new Date("03/11/2020 09:36:10")));
     });
+    it("transforms null submitted on field value into EmptyCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "subon",
+            label: "Submitted On",
+            value: null,
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new EmptyCell());
+    });
     it("transforms last update date field value into DateCell", (): void => {
         const field_value: ArtifactReportResponseFieldValue = {
             field_id: 1,
@@ -174,6 +196,17 @@ describe("transform-field-value-into-formatted-cell", () => {
         const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
 
         expect(formatted_cell).toStrictEqual(new DateCell(new Date("03/11/2020 09:36:10")));
+    });
+    it("transforms null last update date field value into EmptyCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "lud",
+            label: "Last update date",
+            value: null,
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new EmptyCell());
     });
     it("transforms selectbox field bound to static values into TextCell", (): void => {
         const field_value: ArtifactReportResponseFieldValue = {
@@ -442,6 +475,79 @@ describe("transform-field-value-into-formatted-cell", () => {
             type: "cb",
             label: "Checkbox Empty",
             values: [],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new EmptyCell());
+    });
+    it("transforms openlist field bound to static values into TextCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "tbl",
+            label: "OpenList Static",
+            bind_value_objects: [
+                {
+                    id: 1,
+                    label: "value01",
+                },
+                {
+                    id: 1452,
+                    label: "value02",
+                    color: null,
+                    tlp_color: "lake-placid-blue",
+                },
+            ],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("value01, value02"));
+    });
+    it("transforms openlist field bound to users into TextCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "tbl",
+            label: "OpenList Users",
+            bind_value_objects: [
+                {
+                    id: 101,
+                    display_name: "User01",
+                } as ArtifactReportResponseUserRepresentation,
+                {
+                    id: 102,
+                    display_name: "User02",
+                } as ArtifactReportResponseUserRepresentation,
+            ],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("User01, User02"));
+    });
+    it("transforms openlist field bound to user groups into TextCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "tbl",
+            label: "OpenList Ugroups",
+            bind_value_objects: [
+                {
+                    id: "101",
+                    label: "Ugroup01",
+                } as ArtifactReportResponseUserGroupRepresentation,
+                {
+                    id: "102",
+                    label: "Ugroup02",
+                } as ArtifactReportResponseUserGroupRepresentation,
+            ],
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("Ugroup01, Ugroup02"));
+    });
+    it("transforms openlist empty value into EmptyCell", (): void => {
+        const field_value: ArtifactReportResponseFieldValue = {
+            field_id: 1,
+            type: "tbl",
+            label: "OpenList Empty",
+            bind_value_objects: [],
         };
         const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
 
