@@ -63,6 +63,7 @@ import { addNewFolder } from "../api/rest-querier";
 import { handleErrorsForModal } from "./error/error-actions";
 
 export * from "./actions-delete";
+export * from "./actions-quicklook";
 
 export const loadRootFolder = async (context) => {
     try {
@@ -552,25 +553,6 @@ export const getWikisReferencingSameWikiPage = async (context, item) => {
     } catch (exception) {
         return USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE;
     }
-};
-
-export const toggleQuickLook = async (context, item_id) => {
-    try {
-        context.commit("beginLoadingCurrentlyPreviewedItem");
-        const item = await getItem(item_id);
-
-        context.commit("updateCurrentlyPreviewedItem", item);
-        context.commit("toggleQuickLook", true);
-    } catch (exception) {
-        await handleErrorsForDocument(context, exception);
-    } finally {
-        context.commit("stopLoadingCurrentlyPreviewedItem");
-    }
-};
-
-export const removeQuickLook = (context) => {
-    context.commit("updateCurrentlyPreviewedItem", null);
-    context.commit("toggleQuickLook", false);
 };
 
 export const createNewVersionFromEmpty = async (context, [selected_type, item, item_to_update]) => {

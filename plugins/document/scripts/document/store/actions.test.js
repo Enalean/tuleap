@@ -36,7 +36,6 @@ import {
     loadDocumentWithAscendentHierarchy,
     loadFolder,
     loadRootFolder,
-    toggleQuickLook,
 } from "./actions.js";
 import * as load_ascendant_hierarchy from "./actions-helpers/load-ascendant-hierarchy";
 import * as load_folder_content from "./actions-helpers/load-folder-content";
@@ -1318,41 +1317,6 @@ describe("Store actions", () => {
         });
     });
 
-    describe("toggleQuickLook", () => {
-        let context;
-
-        beforeEach(() => {
-            context = {
-                commit: jest.fn(),
-                state: {
-                    folder_content: [{ id: 100, type: TYPE_FILE }],
-                },
-            };
-        });
-
-        it("should load item and store it as open in quick look", async () => {
-            const item = {
-                id: 123,
-                title: "My file",
-                type: TYPE_FILE,
-                description: "n",
-                owner: {
-                    id: 102,
-                },
-                status: "none",
-                obsolescence_date: null,
-            };
-
-            jest.spyOn(rest_querier, "getItem").mockReturnValue(Promise.resolve(item));
-
-            await toggleQuickLook(context, item.id);
-
-            expect(context.commit).toHaveBeenCalledWith("beginLoadingCurrentlyPreviewedItem");
-            expect(context.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", item);
-            expect(context.commit).toHaveBeenCalledWith("toggleQuickLook", true);
-            expect(context.commit).toHaveBeenCalledWith("stopLoadingCurrentlyPreviewedItem");
-        });
-    });
     describe("createNewVersionFromEmpty -", () => {
         let context,
             postNewLinkVersionFromEmpty,
