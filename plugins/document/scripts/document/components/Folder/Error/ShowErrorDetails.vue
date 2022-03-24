@@ -22,7 +22,7 @@
         <h1 class="empty-state-title">
             <translate>Oops, there's an issue.</translate>
         </h1>
-        <p class="empty-state-text" v-translate v-if="!has_lock_error">
+        <p class="empty-state-text" v-translate v-if="!has_document_lock_error">
             It seems the content of this element can't be loaded.
         </p>
         <p class="empty-state-text" v-translate v-else>
@@ -50,40 +50,55 @@
     </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from "vuex";
+<script setup lang="ts">
+import { computed, ref } from "@vue/composition-api";
+import { useNamespacedGetters, useNamespacedState } from "vuex-composition-helpers";
+import type { ErrorState } from "../../../store/error/module";
+import type { ErrorGetters } from "../../../store/error/error-getters";
 
-export default {
-    name: "ShowErrorDetails",
-    data() {
-        return {
-            is_more_shown: false,
-        };
-    },
-    computed: {
-        ...mapState("error", [
-            "folder_loading_error",
-            "has_folder_loading_error",
-            "has_document_loading_error",
-            "document_loading_error",
-            "has_document_lock_error",
-            "document_lock_error",
-        ]),
-        ...mapGetters("error", ["has_any_loading_error"]),
-        error_message() {
-            if (this.has_folder_loading_error) {
-                return this.folder_loading_error;
-            }
+const is_more_shown = ref(false);
 
-            if (this.has_document_lock_error) {
-                return this.document_lock_error;
-            }
+const {
+    folder_loading_error,
+    has_folder_loading_error,
+    document_loading_error,
+    has_document_lock_error,
+    document_lock_error,
+} = useNamespacedState<
+    Pick<
+        ErrorState,
+        | "folder_loading_error"
+        | "has_folder_loading_error"
+        | "document_loading_error"
+        | "has_document_lock_error"
+        | "document_lock_error"
+    >
+>("error", [
+    "folder_loading_error",
+    "has_folder_loading_error",
+    "document_loading_error",
+    "has_document_lock_error",
+    "document_lock_error",
+]);
 
-            return this.document_loading_error;
-        },
-        has_lock_error() {
-            return this.has_document_lock_error;
-        },
-    },
-};
+const { has_any_loading_error } = useNamespacedGetters<Pick<ErrorGetters, "has_any_loading_error">>(
+    "error",
+    ["has_any_loading_error"]
+);
+
+const error_message = computed((): string | null => {
+    if (has_folder_loading_error.value) {
+        return folder_loading_error.value;
+    }
+
+    if (has_document_lock_error.value) {
+        return document_lock_error.value;
+    }
+
+    return document_loading_error.value;
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>
