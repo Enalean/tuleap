@@ -21,16 +21,15 @@ import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import * as rest_querier from "../../api/rest-querier";
 import { loadFolderContent } from "./load-folder-content";
 import type { ActionContext } from "vuex";
-import type { Folder, ItemFile } from "../../type";
-import type { ErrorState } from "../error/module";
+import type { Folder, ItemFile, RootState } from "../../type";
 
 describe("loadFolderContent", () => {
-    let context: ActionContext<ErrorState, ErrorState>, getFolderContent: jest.SpyInstance;
+    let context: ActionContext<RootState, RootState>, getFolderContent: jest.SpyInstance;
 
     beforeEach(() => {
         context = {
             commit: jest.fn(),
-        } as unknown as ActionContext<ErrorState, ErrorState>;
+        } as unknown as ActionContext<RootState, RootState>;
 
         getFolderContent = jest.spyOn(rest_querier, "getFolderContent");
     });
@@ -57,7 +56,7 @@ describe("loadFolderContent", () => {
 
         getFolderContent.mockReturnValue(folder_content);
 
-        await loadFolderContent(context, 1, Promise.resolve());
+        await loadFolderContent(context, 1, Promise.resolve({} as Folder));
 
         expect(context.commit).toHaveBeenCalledWith("beginLoading");
         expect(context.commit).toHaveBeenCalledWith("saveFolderContent", folder_content);
@@ -75,7 +74,7 @@ describe("loadFolderContent", () => {
             },
         });
 
-        await loadFolderContent(context, 1, Promise.resolve());
+        await loadFolderContent(context, 1, Promise.resolve({} as Folder));
 
         expect(context.commit).not.toHaveBeenCalledWith("saveFolderContent");
         expect(context.commit).toHaveBeenCalledWith("error/setFolderLoadingError", error_message);
@@ -92,7 +91,7 @@ describe("loadFolderContent", () => {
             },
         });
 
-        await loadFolderContent(context, 1, Promise.resolve());
+        await loadFolderContent(context, 1, Promise.resolve({} as Folder));
 
         expect(context.commit).not.toHaveBeenCalledWith("saveFolderContent");
         expect(context.commit).toHaveBeenCalledWith("error/switchFolderPermissionError");

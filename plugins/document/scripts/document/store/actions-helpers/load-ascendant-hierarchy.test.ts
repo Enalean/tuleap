@@ -21,17 +21,16 @@ import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import * as rest_querier from "../../api/rest-querier";
 import { loadAscendantHierarchy } from "./load-ascendant-hierarchy";
 import type { ActionContext } from "vuex";
-import type { ErrorState } from "../error/module";
-import type { Folder, Item } from "../../type";
+import type { Folder, Item, RootState } from "../../type";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("loadAscendantHierarchy", () => {
-    let context: ActionContext<ErrorState, ErrorState>, getParents: jest.SpyInstance;
+    let context: ActionContext<RootState, RootState>, getParents: jest.SpyInstance;
 
     beforeEach(() => {
         context = {
             commit: jest.fn(),
-        } as unknown as ActionContext<ErrorState, ErrorState>;
+        } as unknown as ActionContext<RootState, RootState>;
 
         getParents = jest.spyOn(rest_querier, "getParents");
     });
