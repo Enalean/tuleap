@@ -88,6 +88,8 @@ abstract class BaseTest extends RestBase
         $index_of_valid73_when_sorted_by_id = 0;
         $campaign                           = $campaigns[$index_of_valid73_when_sorted_by_id];
         $this->assertEquals($campaign['label'], 'Tuleap 7.3');
+        $this->assertTrue($campaign['user_can_close']);
+        $this->assertTrue($campaign['user_can_open']);
 
         return $campaign;
     }

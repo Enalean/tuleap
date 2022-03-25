@@ -98,6 +98,10 @@ class FirstValidValueAccordingToDependenciesRetriever
         Artifact $artifact,
         array $rules,
     ): ?int {
+        if (empty($list_of_values->getValueIds())) {
+            return null;
+        }
+
         $this->buildCollections($field, $artifact, $rules);
         if (empty($this->rules_for_field) && ! empty($list_of_values->getValueIds())) {
             return $list_of_values->getFirstValue();

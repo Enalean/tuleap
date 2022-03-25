@@ -26,6 +26,7 @@ use ProjectManager;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_ReportFactory;
+use Tracker_Semantic_StatusFactory;
 use Tracker_URLVerification;
 use TrackerFactory;
 use Tuleap\Cryptography\KeyFactory;
@@ -44,7 +45,12 @@ use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\MalformedQueryParameterException;
 use Tuleap\TestManagement\QueryToCriterionConverter;
 use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentationBuilder;
+use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
+use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
+use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
 use UserManager;
+use Workflow_Transition_ConditionFactory;
 
 class ProjectResource
 {
@@ -111,7 +117,18 @@ class ProjectResource
             $this->testmanagement_artifact_factory,
             $campaign_retriever,
             new Config(new Dao(), $tracker_factory),
-            new TestExecutionTestStatusDAO()
+            new TestExecutionTestStatusDAO(),
+            new StatusValueRetriever(
+                new Tracker_Semantic_StatusFactory(),
+                new FirstPossibleValueInListRetriever(
+                    new FirstValidValueAccordingToDependenciesRetriever(
+                        $tracker_form_element_factory
+                    ),
+                    new ValidValuesAccordingToTransitionsRetriever(
+                        Workflow_Transition_ConditionFactory::build()
+                    )
+                )
+            )
         );
 
         $this->query_to_criterion_converter = new QueryToCriterionConverter();

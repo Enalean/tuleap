@@ -29,6 +29,10 @@ use Tuleap\TestManagement\Campaign\InformationNeededToRetrieveTestStatusOfACampa
 use Tuleap\TestManagement\Campaign\TestExecutionTestStatusDAO;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
+use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 /**
  * @psalm-immutable
@@ -86,6 +90,14 @@ class CampaignRepresentation
      * @var bool
      */
     public $is_open;
+    /**
+     * @var bool
+     */
+    public bool $user_can_close;
+    /**
+     * @var bool
+     */
+    public bool $user_can_open;
 
     public function __construct(
         string $id,
@@ -99,6 +111,8 @@ class CampaignRepresentation
         array $resources,
         JobConfigurationRepresentation $job_configuration,
         bool $user_can_update,
+        bool $user_can_close,
+        bool $user_can_open,
     ) {
         $this->id                = $id;
         $this->label             = $label;
@@ -111,17 +125,19 @@ class CampaignRepresentation
         $this->resources         = $resources;
         $this->job_configuration = $job_configuration;
         $this->user_can_update   = $user_can_update;
+        $this->user_can_close    = $user_can_close;
+        $this->user_can_open     = $user_can_open;
 
         $this->uri   = self::ROUTE . '/' . $this->id;
         $this->total = $nb_of_notrun + $nb_of_passed + $nb_of_failed + $nb_of_blocked;
     }
-
     public static function build(
         Campaign $campaign,
         Config $testmanagement_config,
         TrackerFactory $tracker_factory,
         Tracker_FormElementFactory $form_element_factory,
         TestExecutionTestStatusDAO $test_execution_test_status_dao,
+        StatusValueRetriever $status_value_retriever,
         PFUser $user,
     ): self {
         $artifact    = $campaign->getArtifact();
@@ -139,7 +155,15 @@ class CampaignRepresentation
             $test_execution_test_status_dao
         );
 
-        $user_can_update   = self::isUserAllowedToUpdateLabelField($user, $artifact, $label_field);
+        $user_can_update = self::isUserAllowedToUpdateLabelField($user, $artifact, $label_field);
+
+        $user_can_close = false;
+        $user_can_open  = false;
+        if (self::isUserAllowedToUpdateStatusField($form_element_factory, $tracker_id, $artifact, $user)) {
+            $user_can_close = self::isUserAllowedToCloseCampaign($status_value_retriever, $user, $artifact);
+            $user_can_open  = self::isUserAllowedToOpenCampaign($status_value_retriever, $user, $artifact);
+        }
+
         $job_configuration = new JobConfigurationRepresentation(
             $campaign->getJobConfiguration(),
             $user_can_update
@@ -162,6 +186,8 @@ class CampaignRepresentation
             ],
             $job_configuration,
             $user_can_update,
+            $user_can_close,
+            $user_can_open,
         );
     }
 
@@ -211,15 +237,60 @@ class CampaignRepresentation
         return $artifact->userCanUpdate($user) && $label_field->userCanUpdate($user);
     }
 
-    /**
-     * @return Tracker_FormElement_Field
-     */
-    private static function getLabelField(Tracker_FormElementFactory $form_element_factory, int $tracker_id, PFUser $user)
-    {
+    private static function getLabelField(
+        Tracker_FormElementFactory $form_element_factory,
+        int $tracker_id,
+        PFUser $user,
+    ): Tracker_FormElement_Field {
         return $form_element_factory->getUsedFieldByNameForUser(
             $tracker_id,
             self::FIELD_NAME,
             $user
         );
+    }
+
+    private static function isUserAllowedToUpdateStatusField(
+        Tracker_FormElementFactory $form_element_factory,
+        int $tracker_id,
+        Artifact $artifact,
+        PFUser $user,
+    ): bool {
+        $status_field = $form_element_factory->getUsedFieldByNameForUser(
+            $tracker_id,
+            self::FIELD_STATUS,
+            $user
+        );
+
+        if ($status_field === null) {
+            return false;
+        }
+
+        return $artifact->userCanUpdate($user) && $status_field->userCanUpdate($user);
+    }
+
+    private static function isUserAllowedToCloseCampaign(
+        StatusValueRetriever $status_value_retriever,
+        PFUser $user,
+        Artifact $artifact,
+    ): bool {
+        try {
+            $status_value_retriever->getFirstClosedValueUserCanRead($user, $artifact);
+            return true;
+        } catch (SemanticStatusNotDefinedException | SemanticStatusClosedValueNotFoundException | NoPossibleValueException $e) {
+            return false;
+        }
+    }
+
+    private static function isUserAllowedToOpenCampaign(
+        StatusValueRetriever $status_value_retriever,
+        PFUser $user,
+        Artifact $artifact,
+    ): bool {
+        try {
+            $status_value_retriever->getFirstOpenValueUserCanRead($user, $artifact);
+            return true;
+        } catch (SemanticStatusNotDefinedException | SemanticStatusClosedValueNotFoundException | NoPossibleValueException $e) {
+            return false;
+        }
     }
 }

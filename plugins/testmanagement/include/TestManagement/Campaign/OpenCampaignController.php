@@ -28,7 +28,6 @@ use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
@@ -60,9 +59,6 @@ class OpenCampaignController implements DispatchableWithRequest, DispatchableWit
 
         $user    = $request->getCurrentUser();
         $project = $campaign->getArtifact()->getTracker()->getProject();
-        if (! $user->isAdmin((int) $project->getID())) {
-            throw new ForbiddenException();
-        }
 
         $csrf_token = new CSRFSynchronizerToken(
             "/plugins/testmanagement/?group_id=" . (int) $project->getID()
