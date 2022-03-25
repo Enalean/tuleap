@@ -28,7 +28,7 @@ import {
 } from "./actions-retrieve";
 import type { ActionContext } from "vuex";
 import type { Folder, Item, RootState } from "../type";
-import type { ProjectService } from "../api/rest-querier";
+import type { ProjectService, RestFolder } from "../api/rest-querier";
 import { FetchWrapperError } from "tlp";
 import * as load_ascendant_hierarchy from "./actions-helpers/load-ascendant-hierarchy";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
@@ -59,6 +59,18 @@ describe("actions-get", () => {
                     display_name: "user (login)",
                 },
                 last_update_date: "2018-08-21T17:01:49+02:00",
+                type: TYPE_FOLDER,
+            } as RestFolder;
+
+            const item = {
+                id: 3,
+                title: "Project Documentation",
+                owner: {
+                    id: 101,
+                    display_name: "user (login)",
+                },
+                last_update_date: "2018-08-21T17:01:49+02:00",
+                type: TYPE_FOLDER,
             } as Item;
 
             const service = {
@@ -69,7 +81,7 @@ describe("actions-get", () => {
             jest.spyOn(rest_querier, "getDocumentManagerServiceInformation").mockResolvedValue(
                 service
             );
-            jest.spyOn(rest_querier, "getFolderContent").mockResolvedValue([root_item]);
+            jest.spyOn(rest_querier, "getFolderContent").mockResolvedValue([item]);
             const handle_error = jest.spyOn(error_handler, "handleErrors");
 
             await loadRootFolder(context);

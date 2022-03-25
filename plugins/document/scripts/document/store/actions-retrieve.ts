@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { RestFolder } from "../api/rest-querier";
 import {
     getDocumentManagerServiceInformation,
     getFolderContent,
@@ -28,6 +29,7 @@ import type { Folder, Item, RootState } from "../type";
 import type { ActionContext } from "vuex";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy";
 import { isFolder } from "../helpers/type-check-helper";
+import { convertFolderItemToFolder } from "../helpers/properties-helpers/metadata-to-properties";
 
 export const loadRootFolder = async (
     context: ActionContext<RootState, RootState>
@@ -37,11 +39,12 @@ export const loadRootFolder = async (
         const service = await getDocumentManagerServiceInformation(
             Number(context.state.configuration.project_id)
         );
-        const root = service.root_item;
+        const root: RestFolder = await service.root_item;
 
-        context.commit("setCurrentFolder", root);
+        const folder = convertFolderItemToFolder(root);
+        context.commit("setCurrentFolder", folder);
 
-        return await loadFolderContent(context, root.id, Promise.resolve(root));
+        return await loadFolderContent(context, root.id, Promise.resolve(folder));
     } catch (exception) {
         return handleErrors(context, exception);
     } finally {
