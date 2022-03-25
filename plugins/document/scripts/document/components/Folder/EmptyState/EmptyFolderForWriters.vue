@@ -44,20 +44,19 @@
     </section>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import EmptyFolderForWritersSvg from "../../svg/folder/EmptyFolderForWritersSvg.vue";
 import NewItemButton from "../ActionsButton/NewItemButton.vue";
 import DropDownButton from "../DropDown/DropDownButton.vue";
 import DropDownCurrentFolder from "../DropDown/DropDownCurrentFolder.vue";
-import { Component, Vue } from "vue-property-decorator";
-import { State } from "vuex-class";
-import type { Folder } from "../../../type";
+import type { RootState } from "../../../type";
+import { useNamespacedState } from "vuex-composition-helpers";
 
-@Component({
-    components: { DropDownCurrentFolder, EmptyFolderForWritersSvg, NewItemButton, DropDownButton },
-})
-export default class EmptyFolderForWriters extends Vue {
-    @State
-    readonly current_folder!: Folder;
-}
+const { current_folder } = useNamespacedState<Pick<RootState, "current_folder">>([
+    "current_folder",
+]);
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>
