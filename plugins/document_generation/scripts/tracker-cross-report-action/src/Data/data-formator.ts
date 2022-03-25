@@ -21,6 +21,7 @@ import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import { getReportArtifacts } from "../rest-querier";
 import type { GlobalExportProperties } from "../type";
 import { transformFieldValueIntoAFormattedCell } from "./transform-field-value-into-formatted-cell";
+import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
 
 export type FormattedCell = TextCell | NumberCell | HTMLCell | DateCell | EmptyCell;
 
@@ -77,6 +78,10 @@ export async function formatData(
     for (const artifact of report_artifacts) {
         artifact_value_rows = [];
         for (const field_value of artifact.values) {
+            if (!isFieldTakenIntoAccount(field_value)) {
+                continue;
+            }
+
             if (!first_row_processed) {
                 report_field_columns.push(new TextCell(field_value.label));
             }
@@ -91,4 +96,14 @@ export async function formatData(
         headers: report_field_columns,
         rows: artifact_rows,
     };
+}
+
+function isFieldTakenIntoAccount(field_value: ArtifactReportResponseFieldValue): boolean {
+    return (
+        field_value.type !== "art_link" &&
+        field_value.type !== "file" &&
+        field_value.type !== "cross" &&
+        field_value.type !== "perm" &&
+        field_value.type !== "ttmstepdef"
+    );
 }
