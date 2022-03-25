@@ -18,17 +18,25 @@
  */
 
 import VueRouter from "vue-router";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import GoBackToRootButton from "./GoBackToRootButton.vue";
 
 describe("GoBackToRootButton", () => {
-    let store, store_options;
-    beforeEach(() => {
-        store_options = {};
-        store = createStoreMock(store_options);
-    });
+    function getWrapper(router: VueRouter): Wrapper<GoBackToRootButton> {
+        const store_options = {};
+        const store = createStoreMock(store_options);
+
+        return shallowMount(GoBackToRootButton, {
+            localVue,
+            router,
+            mocks: {
+                $store: store,
+            },
+        });
+    }
 
     it(`Given we are not displaying root folder
         When error is displayed
@@ -41,13 +49,7 @@ describe("GoBackToRootButton", () => {
                 },
             ],
         });
-
-        const component_options = {
-            localVue,
-            router,
-        };
-
-        const wrapper = shallowMount(GoBackToRootButton, { store, ...component_options });
+        const wrapper = getWrapper(router);
         expect(wrapper.find("[data-test=item-can-go-to-root-button]").exists()).toBeTruthy();
     });
 
@@ -63,12 +65,7 @@ describe("GoBackToRootButton", () => {
             ],
         });
 
-        const component_options = {
-            localVue,
-            router,
-        };
-
-        const wrapper = shallowMount(GoBackToRootButton, { store, ...component_options });
+        const wrapper = getWrapper(router);
         expect(wrapper.find("[data-test=can-go-to-root-button]").exists()).toBeFalsy();
     });
 });
