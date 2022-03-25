@@ -19,4 +19,24 @@
  */
 
 import mitt from "mitt";
-export default mitt();
+import type { Item, ListValue } from "../type";
+
+export default mitt<{
+    "update-status-property": string;
+    "toggle-quick-look": { details: { item: Item } };
+    "show-update-item-properties-modal": { detail: { current_item: Item } };
+    "show-update-permissions-modal": { detail: { current_item: Item } };
+    "show-create-new-item-version-modal": { detail: { current_item: Item } };
+    "set-dropdown-shown": { is_dropdown_shown: boolean };
+    "show-max-archive-size-threshold-exceeded-modal": { detail: { current_folder_size: number } };
+    "show-archive-size-warning-modal": {
+        detail: { current_folder_size: number; folder_href: string; should_warn_osx_user: boolean };
+    };
+    "show-new-folder-modal": { detail: { parent: Item } };
+    "hide-action-menu": void;
+    "update-multiple-properties-list-value": {
+        detail: { value: number[] | [] | ListValue[] | null; id: string };
+    };
+    createItem: { item: Item };
+    deleteItem: { item: Item };
+}>();
