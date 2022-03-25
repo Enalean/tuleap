@@ -350,15 +350,15 @@ class Tracker_Workflow_Trigger_RulesManager
         return $new_triggers;
     }
 
-    public function isUsedInTrigger(Tracker_FormElement $field)
+    public function isUsedInTrigger(Tracker_FormElement $field): bool
     {
         $triggered_trackers = $this->trigger_builder->getTriggeringFieldForTracker($field->getTracker())->getFields();
 
         foreach ($triggered_trackers as $tracker_field) {
             if ($tracker_field->getId() === $field->getId()) {
-                $triggered_field =  $this->getTriggerByFieldId($field);
+                $triggered_field = $this->getTriggerByFieldId($field);
                 foreach ($triggered_field as $trigger) {
-                    if ($trigger['field_id'] === $field->getId()) {
+                    if ((int) $trigger['field_id'] === $field->getId()) {
                         return true;
                     }
                 }
