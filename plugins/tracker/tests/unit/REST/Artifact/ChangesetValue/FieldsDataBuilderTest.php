@@ -23,10 +23,12 @@ namespace Tuleap\Tracker\REST\Artifact\ChangesetValue;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldUpdateValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadExtractor;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadStructureChecker;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactParentLinkPayloadExtractor;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -129,12 +131,13 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 new ArtifactLinksPayloadExtractor(),
                 new ArtifactParentLinkPayloadExtractor(),
                 RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([]))
-            )
+            ),
+            new NewArtifactLinkInitialChangesetValueBuilder()
         );
         return $builder->getFieldsDataOnUpdate($payload, $artifact, $user);
     }
 
-    public function testItAsksEachFieldToBuildFieldsDataFromRESTUpdatePayload(): void
+    public function testItTellsEachFieldToBuildFieldsDataFromRESTUpdatePayload(): void
     {
         $int_representation              = new ArtifactValuesRepresentation();
         $int_representation->field_id    = self::INT_FIELD_ID;
@@ -167,9 +170,10 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             self::STRING_FIELD_ID => self::STRING_VALUE,
             self::TEXT_FIELD_ID   => ['format' => self::TEXT_FORMAT, 'content' => self::TEXT_VALUE],
         ], $changeset_values->getFieldsData());
+        self::assertNull($changeset_values->getArtifactLinkValue());
     }
 
-    public function testItBuildsArtifactLinkChangesetValueSeparately(): void
+    public function testItBuildsArtifactLinkChangesetValueSeparatelyFromRESTUpdatePayload(): void
     {
         $link_field             = new \Tracker_FormElement_Field_ArtifactLink(
             self::LINK_FIELD_ID,
@@ -250,7 +254,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @param ArtifactValuesRepresentation[] $payload
      */
-    private function getFieldsDataOnCreate(array $payload): array
+    private function getFieldsDataOnCreate(array $payload): InitialChangesetValuesContainer
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
 
@@ -261,12 +265,13 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 new ArtifactLinksPayloadExtractor(),
                 new ArtifactParentLinkPayloadExtractor(),
                 RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([])),
-            )
+            ),
+            new NewArtifactLinkInitialChangesetValueBuilder()
         );
         return $builder->getFieldsDataOnCreate($payload, $tracker);
     }
 
-    public function testItAsksEachFieldToBuildFieldsDataFromRESTCreatePayload(): void
+    public function testItTellsEachFieldToBuildFieldsDataFromRESTCreatePayload(): void
     {
         $int_representation              = new ArtifactValuesRepresentation();
         $int_representation->field_id    = self::INT_FIELD_ID;
@@ -287,7 +292,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->text_field,
         );
 
-        $fields_data = $this->getFieldsDataOnCreate([
+        $changeset_values = $this->getFieldsDataOnCreate([
             $int_representation,
             $float_representation,
             $string_representation,
@@ -298,7 +303,43 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             self::FLOAT_FIELD_ID  => self::FLOAT_VALUE,
             self::STRING_FIELD_ID => self::STRING_VALUE,
             self::TEXT_FIELD_ID   => ['format' => self::TEXT_FORMAT, 'content' => self::TEXT_VALUE],
-        ], $fields_data);
+        ], $changeset_values->getFieldsData());
+        self::assertNull($changeset_values->getArtifactLinkValue());
+    }
+
+    public function testItBuildsArtifactLinkChangesetValueSeparatelyFromRESTCreatePayload(): void
+    {
+        $link_field             = new \Tracker_FormElement_Field_ArtifactLink(
+            self::LINK_FIELD_ID,
+            self::TRACKER_ID,
+            null,
+            'irrelevant',
+            'Irrelevant',
+            'Irrelevant',
+            true,
+            'P',
+            false,
+            '',
+            1
+        );
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields($link_field);
+
+        $first_linked_artifact_id      = 41;
+        $second_linked_artifact_id     = 78;
+        $link_representation           = new ArtifactValuesRepresentation();
+        $link_representation->field_id = self::LINK_FIELD_ID;
+        $link_representation->links    = [
+            ['id' => $first_linked_artifact_id, 'type' => null],
+            ['id' => $second_linked_artifact_id, 'type' => 'custom_type'],
+        ];
+
+        $changeset_values = $this->getFieldsDataOnCreate([$link_representation]);
+        $artifact_link    = $changeset_values->getArtifactLinkValue();
+        self::assertNotNull($artifact_link);
+        $new_links = $artifact_link->getNewLinks()->getTargetArtifactIds();
+        self::assertCount(2, $new_links);
+        self::assertContains($first_linked_artifact_id, $new_links);
+        self::assertContains($second_linked_artifact_id, $new_links);
     }
 
     public function testItThrowsWhenCreateRepresentationDoesNotHaveAFieldID(): void
@@ -338,7 +379,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testWhenRESTCreatePayloadIsEmptyItReturnsEmptyArray(): void
     {
-        $fields_data = $this->getFieldsDataOnCreate([]);
-        self::assertEmpty($fields_data);
+        $changeset_values = $this->getFieldsDataOnCreate([]);
+        self::assertEmpty($changeset_values->getFieldsData());
     }
 }

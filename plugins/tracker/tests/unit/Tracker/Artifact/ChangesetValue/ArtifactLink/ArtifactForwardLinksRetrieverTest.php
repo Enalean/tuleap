@@ -21,11 +21,9 @@
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 
@@ -45,13 +43,12 @@ final class ArtifactForwardLinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
         $this->dao   = $this->createMock(ChangesetValueArtifactLinkDao::class);
         $this->cache = new ArtifactLinksByChangesetCache();
 
-        $tracker_456              = $this->getMockedTracker(456);
-        $artifact_103             = $this->getMockedArtifact(self::FIRST_ARTIFACT_ID, 789789, $tracker_456, true);
-        $artifact_104             = $this->getMockedArtifact(self::SECOND_ARTIFACT_ID, 789790, $tracker_456, true);
+        $artifact_103             = $this->getMockedArtifact(self::FIRST_ARTIFACT_ID, true);
+        $artifact_104             = $this->getMockedArtifact(self::SECOND_ARTIFACT_ID, true);
         $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($artifact_103, $artifact_104);
     }
 
-    private function retrieve(?Artifact $artifact): CollectionOfForwardLinks
+    private function retrieve(Artifact $artifact): CollectionOfForwardLinks
     {
         $link_field = new \Tracker_FormElement_Field_ArtifactLink(
             453,
@@ -74,12 +71,6 @@ final class ArtifactForwardLinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
             $this->artifact_retriever
         );
         return $retriever->retrieve($user, $link_field, $artifact);
-    }
-
-    public function testItReturnsAnEmptyCollectionWhenThereIsNoArtifact(): void
-    {
-        $forward_links = $this->retrieve(null);
-        self::assertEmpty($forward_links->getArtifactLinks());
     }
 
     public function testItReturnsAnEmptyCollectionWhenArtifactHasNoLastChangeset(): void
@@ -124,9 +115,8 @@ final class ArtifactForwardLinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
 
         $this->dao->expects(self::once())->method('searchChangesetValues')->willReturn($this->getDbData());
 
-        $tracker_456              = $this->getMockedTracker(456);
-        $artifact_103             = $this->getMockedArtifact(self::FIRST_ARTIFACT_ID, 789789, $tracker_456, false);
-        $artifact_104             = $this->getMockedArtifact(self::SECOND_ARTIFACT_ID, 789790, $tracker_456, false);
+        $artifact_103             = $this->getMockedArtifact(self::FIRST_ARTIFACT_ID, false);
+        $artifact_104             = $this->getMockedArtifact(self::SECOND_ARTIFACT_ID, false);
         $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($artifact_103, $artifact_104);
 
         $forward_links = $this->retrieve($artifact);
@@ -181,25 +171,14 @@ final class ArtifactForwardLinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
         ];
     }
 
-    private function getMockedTracker(int $tracker_id): \Tracker
-    {
-        return TrackerTestBuilder::aTracker()
-            ->withId($tracker_id)
-            ->withShortName("fruits")
-            ->withProject(ProjectTestBuilder::aProject()->withId(123)->build())
-            ->build();
-    }
-
     /**
      * @return \PHPUnit\Framework\MockObject\Stub & Artifact
      */
-    private function getMockedArtifact(int $artifact_id, int $last_changeset_id, \Tracker $tracker, bool $can_user_see)
+    private function getMockedArtifact(int $artifact_id, bool $can_user_see)
     {
         $artifact = $this->createStub(Artifact::class);
 
         $artifact->method('getId')->willReturn($artifact_id);
-        $artifact->method('getTracker')->willReturn($tracker);
-        $artifact->method('getLastChangeset')->willReturn(ChangesetTestBuilder::aChangeset($last_changeset_id)->build());
         $artifact->method('userCanView')->willReturn($can_user_see);
 
         return $artifact;
