@@ -54,10 +54,12 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private Mockery\LegacyMockInterface|Mockery\MockInterface|FirstPossibleValueInListRetriever $first_possible_value_retriever;
     private Artifact $artifact;
     private Tracker_Semantic_Status $semantic_status;
+    private PFUser $user;
 
     protected function setUp(): void
     {
         $this->tracker = $this->buildTracker();
+        $this->user    = UserTestBuilder::anActiveUser()->build();
 
         parent::setUp();
         $this->artifact = ArtifactTestBuilder::anArtifact(112)->inTracker($this->tracker)->build();
@@ -73,94 +75,76 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfTrackerDoesNotHaveStatusSemanticDefined(): void
     {
-        $user = UserTestBuilder::anActiveUser()->build();
-
         $this->mockSemanticStatusNotDefined();
 
         $this->expectException(SemanticStatusNotDefinedException::class);
 
         $this->retriever->getFirstClosedValueUserCanRead(
-            $user,
+            $this->user,
             $this->artifact
         );
 
         $this->expectException(SemanticStatusNotDefinedException::class);
 
         $this->retriever->getFirstOpenValueUserCanRead(
-            $user,
+            $this->user,
             $this->artifact
         );
     }
 
     public function testItThrowsAnExceptionIfUserCannotReadStatusField(): void
     {
-        $user = UserTestBuilder::anActiveUser()->build();
-
-        $this->mockSemanticStatusNotDefinedWithFieldNonReadable(
-            $user
-        );
+        $this->mockSemanticStatusNotDefinedWithFieldNonReadable();
 
         $this->expectException(SemanticStatusNotDefinedException::class);
 
         $this->retriever->getFirstClosedValueUserCanRead(
-            $user,
+            $this->user,
             $this->artifact
         );
 
         $this->expectException(SemanticStatusNotDefinedException::class);
 
         $this->retriever->getFirstOpenValueUserCanRead(
-            $user,
+            $this->user,
             $this->artifact
         );
     }
 
     public function testItThrowsAnExceptionIfAllValuesAreOpen(): void
     {
-        $user = UserTestBuilder::anActiveUser()->build();
-
-        $this->mockSemanticStatusDefinedWithAllValuesAsOpen(
-            $user
-        );
+        $this->mockSemanticStatusDefinedWithAllValuesAsOpen();
 
         $this->expectException(SemanticStatusClosedValueNotFoundException::class);
 
         $this->retriever->getFirstClosedValueUserCanRead(
-            $user,
+            $this->user,
             $this->artifact
         );
     }
 
     public function testItThrowsAnExceptionIfAllClosedValueAreHidden(): void
     {
-        $user = UserTestBuilder::anActiveUser()->build();
-
-        $this->mockSemanticStatusDefinedWithClosedValueHidden(
-            $user
-        );
+        $this->mockSemanticStatusDefinedWithClosedValueHidden();
 
         $this->expectException(SemanticStatusClosedValueNotFoundException::class);
 
         $this->retriever->getFirstClosedValueUserCanRead(
-            $user,
+            $this->user,
             $this->artifact
         );
     }
 
     public function testItReturnsTheFirstValidClosedValueFound(): void
     {
-        $user = UserTestBuilder::anActiveUser()->build();
-
-        $this->mockSemanticStatusDefinedWithClosedValue(
-            $user
-        );
+        $this->mockSemanticStatusDefinedWithClosedValue();
 
         $this->first_possible_value_retriever->shouldReceive("getFirstPossibleValue")->withArgs(
-            [$this->artifact, $this->semantic_status->getField(), Mockery::any()]
+            [$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user]
         )->andReturn(45);
 
         $field_value = $this->retriever->getFirstClosedValueUserCanRead(
-            $user,
+            $this->user,
             $this->artifact
         );
 
@@ -170,90 +154,70 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowExceptionIfNoValidClosedValueFound(): void
     {
-        $user = UserTestBuilder::anActiveUser()->build();
-
-        $this->mockSemanticStatusDefinedWithClosedValue(
-            $user
-        );
+        $this->mockSemanticStatusDefinedWithClosedValue();
 
         $this->first_possible_value_retriever->shouldReceive("getFirstPossibleValue")->withArgs(
-            [$this->artifact, $this->semantic_status->getField(), Mockery::any()]
+            [$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user]
         )->andThrow(NoPossibleValueException::class);
 
         $this->expectException(NoPossibleValueException::class);
 
         $this->retriever->getFirstClosedValueUserCanRead(
-            $user,
+            $this->user,
             $this->artifact
         );
     }
 
     public function testItThrowExceptionIfNoValidOpenValueFound(): void
     {
-        $user = UserTestBuilder::anActiveUser()->build();
-
-        $this->mockSemanticStatusDefinedWithOpenValue(
-            $user
-        );
+        $this->mockSemanticStatusDefinedWithOpenValue();
 
         $this->first_possible_value_retriever->shouldReceive("getFirstPossibleValue")->withArgs(
-            [$this->artifact, $this->semantic_status->getField(), Mockery::any()]
+            [$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user]
         )->andThrow(NoPossibleValueException::class);
 
         $this->expectException(NoPossibleValueException::class);
 
         $this->retriever->getFirstOpenValueUserCanRead(
-            $user,
+            $this->user,
             $this->artifact
         );
     }
 
     public function testItThrowsAnExceptionIfAllValuesAreClosed(): void
     {
-        $user = UserTestBuilder::anActiveUser()->build();
-
-        $this->mockSemanticStatusDefinedWithAllValuesClosed(
-            $user
-        );
+        $this->mockSemanticStatusDefinedWithAllValuesClosed();
 
         $this->expectException(SemanticStatusOpenValueNotFoundException::class);
 
         $this->retriever->getFirstOpenValueUserCanRead(
-            $user,
+            $this->user,
             $this->artifact
         );
     }
 
     public function testItThrowsAnExceptionIfAllOpenValueAreHidden(): void
     {
-        $user = UserTestBuilder::anActiveUser()->build();
-
-        $this->mockSemanticStatusDefinedWithOpenValueHidden(
-            $user
-        );
+        $this->mockSemanticStatusDefinedWithOpenValueHidden();
 
         $this->expectException(SemanticStatusOpenValueNotFoundException::class);
 
         $this->retriever->getFirstOpenValueUserCanRead(
-            $user,
+            $this->user,
             $this->artifact
         );
     }
 
     public function testItReturnsTheFirstOpenValueFound(): void
     {
-        $user = UserTestBuilder::anActiveUser()->build();
-
-        $this->mockSemanticStatusDefinedWithOpenValue(
-            $user
-        );
+        $this->mockSemanticStatusDefinedWithOpenValue();
 
         $this->first_possible_value_retriever->shouldReceive("getFirstPossibleValue")->withArgs(
-            [$this->artifact, $this->semantic_status->getField(), Mockery::any()]
+            [$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user]
         )->andReturn(44);
 
         $field_value = $this->retriever->getFirstOpenValueUserCanRead(
-            $user,
+            $this->user,
             $this->artifact
         );
 
@@ -275,12 +239,12 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             );
     }
 
-    private function mockSemanticStatusNotDefinedWithFieldNonReadable(PFUser $user): void
+    private function mockSemanticStatusNotDefinedWithFieldNonReadable(): void
     {
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
         $field->shouldReceive('userCanRead')
             ->once()
-            ->with($user)
+            ->with($this->user)
             ->andReturnFalse();
 
         $this->semantic_status_factory->shouldReceive('getByTracker')
@@ -295,12 +259,12 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             );
     }
 
-    private function mockSemanticStatusDefinedWithAllValuesAsOpen(PFUser $user): void
+    private function mockSemanticStatusDefinedWithAllValuesAsOpen(): void
     {
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
         $field->shouldReceive('userCanRead')
             ->once()
-            ->with($user)
+            ->with($this->user)
             ->andReturnTrue();
         $field->shouldReceive('getAllValues')
             ->once()
@@ -327,12 +291,12 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             );
     }
 
-    private function mockSemanticStatusDefinedWithAllValuesClosed(PFUser $user): void
+    private function mockSemanticStatusDefinedWithAllValuesClosed(): void
     {
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
         $field->shouldReceive('userCanRead')
             ->once()
-            ->with($user)
+            ->with($this->user)
             ->andReturnTrue();
         $field->shouldReceive('getAllValues')
             ->once()
@@ -359,12 +323,12 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             );
     }
 
-    private function mockSemanticStatusDefinedWithClosedValueHidden(PFUser $user): void
+    private function mockSemanticStatusDefinedWithClosedValueHidden(): void
     {
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
         $field->shouldReceive('userCanRead')
             ->once()
-            ->with($user)
+            ->with($this->user)
             ->andReturnTrue();
         $field->shouldReceive('getAllValues')
             ->once()
@@ -391,12 +355,12 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             );
     }
 
-    private function mockSemanticStatusDefinedWithOpenValueHidden(PFUser $user): void
+    private function mockSemanticStatusDefinedWithOpenValueHidden(): void
     {
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
         $field->shouldReceive('userCanRead')
             ->once()
-            ->with($user)
+            ->with($this->user)
             ->andReturnTrue();
         $field->shouldReceive('getAllValues')
             ->once()
@@ -423,7 +387,7 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             );
     }
 
-    private function mockSemanticStatusDefinedWithClosedValue(PFUser $user): void
+    private function mockSemanticStatusDefinedWithClosedValue(): void
     {
         $not_open_value = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
         $not_open_value->shouldReceive('isHidden')->andReturnFalse();
@@ -432,7 +396,7 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
         $field->shouldReceive('userCanRead')
             ->once()
-            ->with($user)
+            ->with($this->user)
             ->andReturnTrue();
         $field->shouldReceive('getAllValues')
             ->once()
@@ -456,7 +420,7 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             );
     }
 
-    private function mockSemanticStatusDefinedWithOpenValue(PFUser $user): void
+    private function mockSemanticStatusDefinedWithOpenValue(): void
     {
         $open_value = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
         $open_value->shouldReceive('isHidden')->andReturnFalse();
@@ -465,7 +429,7 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
         $field->shouldReceive('userCanRead')
             ->once()
-            ->with($user)
+            ->with($this->user)
             ->andReturnTrue();
         $field->shouldReceive('getAllValues')
             ->once()

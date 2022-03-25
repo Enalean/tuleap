@@ -76,7 +76,9 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
+use Workflow_Transition_ConditionFactory;
 
 class CardMappedFieldUpdater
 {
@@ -156,6 +158,9 @@ class CardMappedFieldUpdater
             new FirstPossibleValueInListRetriever(
                 new FirstValidValueAccordingToDependenciesRetriever(
                     $form_element_factory
+                ),
+                new ValidValuesAccordingToTransitionsRetriever(
+                    Workflow_Transition_ConditionFactory::build()
                 )
             )
         );
@@ -226,7 +231,8 @@ class CardMappedFieldUpdater
             $mapped_field,
             $artifact_to_add,
             $taskboard_tracker,
-            $column
+            $column,
+            $current_user
         );
         $representation->bind_value_ids = [$first_mapped_value];
 
@@ -276,6 +282,7 @@ class CardMappedFieldUpdater
         Artifact $artifact_to_add,
         TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column,
+        PFUser $user,
     ): int {
         $mapped_values = $this->mapped_values_retriever->getValuesMappedToColumn(
             $taskboard_tracker,
@@ -300,7 +307,8 @@ class CardMappedFieldUpdater
             return $this->first_possible_value_retriever->getFirstPossibleValue(
                 $artifact_to_add,
                 $mapped_field,
-                $mapped_values
+                $mapped_values,
+                $user
             );
         } catch (NoPossibleValueException $exception) {
             throw new I18NRestException(

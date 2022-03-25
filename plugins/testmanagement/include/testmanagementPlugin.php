@@ -93,6 +93,7 @@ use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
+use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\GetExternalExporter;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
@@ -986,6 +987,9 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         return new FirstPossibleValueInListRetriever(
             new FirstValidValueAccordingToDependenciesRetriever(
                 Tracker_FormElementFactory::instance()
+            ),
+            new ValidValuesAccordingToTransitionsRetriever(
+                Workflow_Transition_ConditionFactory::build()
             )
         );
     }

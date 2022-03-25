@@ -20,29 +20,43 @@
 
 namespace Tuleap\Tracker\Workflow;
 
+use PFUser;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindValueIdCollection;
+use Workflow;
+use Workflow_Transition_ConditionFactory;
 
 class ValidValuesAccordingToTransitionsRetriever
 {
-    public static function getValidValuesAccordingToTransitions(
+    public function __construct(private Workflow_Transition_ConditionFactory $condition_factory)
+    {
+    }
+
+    public function getValidValuesAccordingToTransitions(
         Artifact $artifact,
         \Tracker_FormElement_Field_List $field,
         BindValueIdCollection $list_of_values,
-        \Workflow $workflow,
+        Workflow $workflow,
+        PFUser $user,
     ): void {
         $changeset_value      = $artifact->getValue($field);
         $field_artifact_value = $changeset_value ? (int) $changeset_value->getValue()[0] : null;
 
         $linked_field_artifact_value = $field->getListValueById($field_artifact_value);
 
-        if (! $workflow->isUsed() || ! $linked_field_artifact_value) {
+        if (! $linked_field_artifact_value || ! $workflow->isUsed()) {
             return;
         }
 
         foreach ($list_of_values->getValueIds() as $value) {
-            $value_in_list = $field->getListValueById($value);
-            if (! $value_in_list || ! $workflow->isTransitionExist($linked_field_artifact_value, $value_in_list)) {
+            $transition = $workflow->getTransition($field_artifact_value, $value);
+            if (! $transition) {
+                $list_of_values->removeValue($value);
+                continue;
+            }
+
+            $condition = $this->condition_factory->getPermissionsCondition($transition);
+            if (! $condition->isUserAllowedToSeeTransition($user, $artifact->getTracker())) {
                 $list_of_values->removeValue($value);
             }
         }

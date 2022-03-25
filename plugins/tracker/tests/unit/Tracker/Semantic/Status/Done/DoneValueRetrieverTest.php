@@ -52,10 +52,13 @@ class DoneValueRetrieverTest extends TestCase
     private Tracker $tracker;
     private Artifact $artifact;
     private Tracker_Semantic_Status $semantic_status;
+    private PFUser $user;
 
     protected function setUp(): void
     {
         parent::setUp();
+        $this->user = UserTestBuilder::anActiveUser()->build();
+
         $this->tracker  = $this->buildTracker();
         $this->artifact = ArtifactTestBuilder::anArtifact(112)->inTracker($this->tracker)->build();
 
@@ -70,81 +73,63 @@ class DoneValueRetrieverTest extends TestCase
 
     public function testItThrowsAnExceptionIfTrackerDoesNotHaveStatusSemanticDefined(): void
     {
-        $user = UserTestBuilder::anActiveUser()->build();
-
         $this->mockSemanticStatusNotDefined();
 
         $this->expectException(SemanticDoneNotDefinedException::class);
 
         $this->retriever->getFirstDoneValueUserCanRead(
             $this->artifact,
-            $user
+            $this->user
         );
     }
 
     public function testItThrowsAnExceptionIfUserCannotReadStatusField(): void
     {
-        $user = UserTestBuilder::anActiveUser()->build();
-
-        $this->mockSemanticStatusNotDefinedWithFieldNonReadable(
-            $user
-        );
+        $this->mockSemanticStatusNotDefinedWithFieldNonReadable();
 
         $this->expectException(SemanticDoneNotDefinedException::class);
 
         $this->retriever->getFirstDoneValueUserCanRead(
             $this->artifact,
-            $user
+            $this->user
         );
     }
 
     public function testItThrowsAnExceptionIfAllDoneValueAreHidden(): void
     {
-        $user = UserTestBuilder::anActiveUser()->build();
-
-        $this->mockSemanticStatusDefinedWithAllValuesHidden(
-            $user
-        );
+        $this->mockSemanticStatusDefinedWithAllValuesHidden();
 
         $this->expectException(SemanticDoneValueNotFoundException::class);
 
         $this->retriever->getFirstDoneValueUserCanRead(
             $this->artifact,
-            $user
+            $this->user
         );
     }
 
     public function testItThrowsAnExceptionIfThreIsNoDoneValues(): void
     {
-        $user = UserTestBuilder::anActiveUser()->build();
-
-        $this->mockDoneSemanticDefinedWithoutDoneValue(
-            $user
-        );
+        $this->mockDoneSemanticDefinedWithoutDoneValue();
 
         $this->expectException(SemanticDoneValueNotFoundException::class);
 
         $this->retriever->getFirstDoneValueUserCanRead(
             $this->artifact,
-            $user
+            $this->user
         );
     }
 
     public function testItReturnsTheFirstDoneValueFound(): void
     {
-        $user = UserTestBuilder::anActiveUser()->build();
-
-        $this->mockDoneSemanticDefinedWithDoneValue(
-            $user
-        );
+        $this->mockDoneSemanticDefinedWithDoneValue();
 
         $this->first_possible_value_retriever->shouldReceive("getFirstPossibleValue")->withArgs(
-            [$this->artifact, $this->semantic_status->getField(), Mockery::any()]
+            [$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user]
         )->andReturn(45);
 
         $field_value = $this->retriever->getFirstDoneValueUserCanRead(
             $this->artifact,
-            $user
+            $this->user
         );
 
         self::assertInstanceOf(Tracker_FormElement_Field_List_BindValue::class, $field_value);
@@ -153,21 +138,17 @@ class DoneValueRetrieverTest extends TestCase
 
     public function testItThrowExceptionIfNoValidValueFound(): void
     {
-        $user = UserTestBuilder::anActiveUser()->build();
-
-        $this->mockDoneSemanticDefinedWithDoneValue(
-            $user
-        );
+        $this->mockDoneSemanticDefinedWithDoneValue();
 
         $this->first_possible_value_retriever->shouldReceive("getFirstPossibleValue")->withArgs(
-            [$this->artifact, $this->semantic_status->getField(), Mockery::any()]
+            [$this->artifact, $this->semantic_status->getField(), Mockery::any(), $this->user]
         )->andThrow(NoPossibleValueException::class);
 
         $this->expectException(NoPossibleValueException::class);
 
         $this->retriever->getFirstDoneValueUserCanRead(
             $this->artifact,
-            $user
+            $this->user
         );
     }
 
@@ -191,12 +172,12 @@ class DoneValueRetrieverTest extends TestCase
             );
     }
 
-    private function mockSemanticStatusNotDefinedWithFieldNonReadable(PFUser $user): void
+    private function mockSemanticStatusNotDefinedWithFieldNonReadable(): void
     {
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
         $field->shouldReceive('userCanRead')
             ->once()
-            ->with($user)
+            ->with($this->user)
             ->andReturnFalse();
 
         $this->semantic_status = new Tracker_Semantic_Status(
@@ -223,7 +204,7 @@ class DoneValueRetrieverTest extends TestCase
             );
     }
 
-    private function mockSemanticStatusDefinedWithAllValuesHidden(PFUser $user): void
+    private function mockSemanticStatusDefinedWithAllValuesHidden(): void
     {
         $hidden_done_value = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
         $hidden_done_value->shouldReceive('isHidden')->andReturnTrue();
@@ -232,7 +213,7 @@ class DoneValueRetrieverTest extends TestCase
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
         $field->shouldReceive('userCanRead')
             ->once()
-            ->with($user)
+            ->with($this->user)
             ->andReturnTrue();
         $field->shouldReceive('getAllValues')
             ->once()
@@ -270,7 +251,7 @@ class DoneValueRetrieverTest extends TestCase
             );
     }
 
-    private function mockDoneSemanticDefinedWithDoneValue(PFUser $user): void
+    private function mockDoneSemanticDefinedWithDoneValue(): void
     {
         $done_value = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
         $done_value->shouldReceive('isHidden')->andReturnFalse();
@@ -279,7 +260,7 @@ class DoneValueRetrieverTest extends TestCase
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
         $field->shouldReceive('userCanRead')
             ->once()
-            ->with($user)
+            ->with($this->user)
             ->andReturnTrue();
         $field->shouldReceive('getAllValues')
             ->once()
@@ -313,12 +294,12 @@ class DoneValueRetrieverTest extends TestCase
             );
     }
 
-    private function mockDoneSemanticDefinedWithoutDoneValue(PFUser $user): void
+    private function mockDoneSemanticDefinedWithoutDoneValue(): void
     {
         $field = Mockery::mock(Tracker_FormElement_Field_List::class);
         $field->shouldReceive('userCanRead')
             ->once()
-            ->with($user)
+            ->with($this->user)
             ->andReturnTrue();
         $field->shouldReceive('getAllValues')
             ->once()

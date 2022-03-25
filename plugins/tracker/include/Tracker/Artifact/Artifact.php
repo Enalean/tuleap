@@ -147,9 +147,11 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use UserManager;
 use Workflow;
+use Workflow_Transition_ConditionFactory;
 
 class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface
 {
@@ -1519,6 +1521,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return new FirstPossibleValueInListRetriever(
             new FirstValidValueAccordingToDependenciesRetriever(
                 $this->getFormElementFactory()
+            ),
+            new ValidValuesAccordingToTransitionsRetriever(
+                Workflow_Transition_ConditionFactory::build()
             )
         );
     }

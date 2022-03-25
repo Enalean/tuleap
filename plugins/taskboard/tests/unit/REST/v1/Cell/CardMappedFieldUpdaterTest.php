@@ -170,7 +170,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($mapped_values);
 
         $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')->withArgs(
-            [$this->artifact_to_add, $this->mapped_field, $mapped_values]
+            [$this->artifact_to_add, $this->mapped_field, $mapped_values, $this->current_user]
         )->andReturn(1024);
 
         $this->artifact_updater->shouldReceive('update')
@@ -191,7 +191,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mapped_values_retriever->shouldReceive('getValuesMappedToColumn')
             ->andReturn($mapped_values);
         $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')->withArgs(
-            [$this->artifact_to_add, $this->mapped_field, $mapped_values]
+            [$this->artifact_to_add, $this->mapped_field, $mapped_values, $this->current_user]
         )->andReturn(1024);
 
         $this->artifact_updater->shouldReceive('update')
@@ -212,7 +212,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($mapped_values);
 
         $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')->withArgs(
-            [$this->artifact_to_add, $this->mapped_field, $mapped_values]
+            [$this->artifact_to_add, $this->mapped_field, $mapped_values, $this->current_user]
         )->andThrow(NoPossibleValueException::class);
 
         $this->artifact_updater->shouldReceive('update')->never();
@@ -233,7 +233,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($mapped_values);
 
         $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')->withArgs(
-            [$this->artifact_to_add, $this->mapped_field, $mapped_values]
+            [$this->artifact_to_add, $this->mapped_field, $mapped_values, $this->current_user]
         )->andReturn(1024);
 
         $this->artifact_updater->shouldReceive('update')
@@ -254,7 +254,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($mapped_values);
 
           $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')->withArgs(
-              [$this->artifact_to_add, $this->mapped_field, $mapped_values]
+              [$this->artifact_to_add, $this->mapped_field, $mapped_values, $this->current_user]
           )->andReturn(1024);
 
         $this->artifact_updater->shouldReceive('update')
@@ -276,7 +276,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mapped_values_retriever->shouldReceive('getValuesMappedToColumn')
             ->andReturn($mapped_values);
         $this->first_possible_value_retriever->shouldReceive('getFirstPossibleValue')->withArgs(
-            [$this->artifact_to_add, $this->mapped_field, $mapped_values]
+            [$this->artifact_to_add, $this->mapped_field, $mapped_values, $this->current_user]
         )->andReturn(1024);
         $this->artifact_updater->shouldReceive('update')
             ->once()

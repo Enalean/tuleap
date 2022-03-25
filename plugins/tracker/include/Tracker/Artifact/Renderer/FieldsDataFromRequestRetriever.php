@@ -39,11 +39,11 @@ final class FieldsDataFromRequestRetriever
     /**
      * @throws NoPossibleValueException
      */
-    public function getAugmentedDataFromRequest(Artifact $artifact, Codendi_Request $request): array
+    public function getAugmentedDataFromRequest(Artifact $artifact, Codendi_Request $request, \PFUser $user): array
     {
         $fields_data = $request->get('artifact');
         if (isset($fields_data["possible_values"], $fields_data["field_id"])) {
-            return $this->getFirstPossibleValueFromPossibleValues($artifact, $fields_data);
+            return $this->getFirstPossibleValueFromPossibleValues($artifact, $fields_data, $user);
         }
 
         $fields_data['request_method_called'] = 'artifact-update';
@@ -56,7 +56,7 @@ final class FieldsDataFromRequestRetriever
     /**
      * @throws NoPossibleValueException
      */
-    private function getFirstPossibleValueFromPossibleValues(Artifact $artifact, array $field_values): array
+    private function getFirstPossibleValueFromPossibleValues(Artifact $artifact, array $field_values, \PFUser $user): array
     {
         $fields_data      = [];
         $value_collection = new StatusValuesCollection(json_decode($field_values["possible_values"]));
@@ -66,7 +66,8 @@ final class FieldsDataFromRequestRetriever
         $fields_data[$field->getId()] = $this->first_possible_value_retriever->getFirstPossibleValue(
             $artifact,
             $field,
-            $value_collection
+            $value_collection,
+            $user
         );
 
         return $fields_data;
