@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
@@ -113,6 +114,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
      * @var array
      */
     private $xmlFieldMapping;
+    private Tracker_Workflow_Trigger_RulesBuilderFactory|\PHPUnit\Framework\MockObject\MockObject $trigger_builder;
 
     protected function setUp(): void
     {
@@ -121,12 +123,13 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
         $this->dao                 = \Mockery::spy(\Tracker_Workflow_Trigger_RulesDao::class);
         $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
         $this->rules_processor     = \Mockery::spy(\Tracker_Workflow_Trigger_RulesProcessor::class);
+        $this->trigger_builder     = $this->createMock(\Tracker_Workflow_Trigger_RulesBuilderFactory::class);
         $this->manager             = new Tracker_Workflow_Trigger_RulesManager(
             $this->dao,
             $this->formelement_factory,
             $this->rules_processor,
             $workflow_logger,
-            \Mockery::spy(\Tracker_Workflow_Trigger_RulesBuilderFactory::class),
+            $this->trigger_builder,
             new WorkflowRulesManagerLoopSafeGuard($workflow_logger)
         );
 
@@ -693,9 +696,89 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
             public function __invoke(Tracker_Workflow_Trigger_TriggerRule $candidate)
             {
                 return $this->isConditionEqual($candidate->getCondition()) &&
-                       $this->isTargetEqual($candidate->getTarget()) &&
-                       $this->areTriggersEqual($candidate->getTriggers());
+                    $this->isTargetEqual($candidate->getTarget()) &&
+                    $this->areTriggersEqual($candidate->getTriggers());
             }
         };
+    }
+
+    public function testItReturnsFalseWhenNoTrackerIsFound(): void
+    {
+        $field   = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $tracker = TrackerTestBuilder::aTracker()->build();
+        $field->method('getTracker')->willReturn($tracker);
+
+        $this->trigger_builder->method('getTriggeringFieldForTracker')
+            ->willReturn(new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields($tracker, new ArrayIterator([])));
+
+        self::assertFalse($this->manager->isUsedInTrigger($field));
+    }
+
+    public function testItReturnsFalseWhenNoTriggeredFieldIsFound(): void
+    {
+        $field   = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $tracker = TrackerTestBuilder::aTracker()->build();
+        $field->method('getTracker')->willReturn($tracker);
+        $field->method('getId')->willReturn(1);
+
+        $this->trigger_builder->method('getTriggeringFieldForTracker')
+            ->willReturn(new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
+                $tracker,
+                new ArrayIterator(
+                    [
+                            new Tracker_FormElement_Field_Selectbox(
+                                1,
+                                1,
+                                0,
+                                'name',
+                                "select",
+                                'desc',
+                                true,
+                                'S',
+                                false,
+                                false,
+                                0
+                            ),
+                        ]
+                )
+            ));
+
+        $this->dao->shouldReceive('searchTriggersByFieldId')->andReturns([["field_id" => "200"], ["field_id" => "300"]]);
+
+        self::assertFalse($this->manager->isUsedInTrigger($field));
+    }
+
+    public function testItReturnsTrueWhenFieldIsUsedInTrigger(): void
+    {
+        $field   = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $tracker = TrackerTestBuilder::aTracker()->build();
+        $field->method('getTracker')->willReturn($tracker);
+        $field->method('getId')->willReturn(1);
+
+        $this->trigger_builder->method('getTriggeringFieldForTracker')
+            ->willReturn(new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
+                $tracker,
+                new ArrayIterator(
+                    [
+                            new Tracker_FormElement_Field_Selectbox(
+                                1,
+                                1,
+                                0,
+                                'name',
+                                "select",
+                                'desc',
+                                true,
+                                'S',
+                                false,
+                                false,
+                                0
+                            ),
+                        ]
+                )
+            ));
+
+        $this->dao->shouldReceive('searchTriggersByFieldId')->andReturns([["field_id" => "1"]]);
+
+        self::assertTrue($this->manager->isUsedInTrigger($field));
     }
 }
