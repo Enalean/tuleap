@@ -29,33 +29,12 @@ use ReferenceManager;
 
 class MetadataRecursiveUpdator
 {
-    /**
-     * @var Docman_PermissionsManager
-     */
-    private $permissions_manager;
-    /**
-     * @var Docman_MetadataValueFactory
-     */
-    private $metadata_value_factory;
-    /**
-     * @var ReferenceManager
-     */
-    private $reference_manager;
-    /**
-     * @var Docman_MetadataFactory
-     */
-    private $metadata_factory;
-
     public function __construct(
-        Docman_MetadataFactory $metadata_factory,
-        Docman_PermissionsManager $permissions_manager,
-        Docman_MetadataValueFactory $metadata_value_factory,
-        ReferenceManager $reference_manager,
+        private Docman_MetadataFactory $metadata_factory,
+        private Docman_PermissionsManager $permissions_manager,
+        private Docman_MetadataValueFactory $metadata_value_factory,
+        private ReferenceManager $reference_manager,
     ) {
-        $this->permissions_manager    = $permissions_manager;
-        $this->metadata_value_factory = $metadata_value_factory;
-        $this->reference_manager      = $reference_manager;
-        $this->metadata_factory       = $metadata_factory;
     }
 
     /**
@@ -116,6 +95,9 @@ class MetadataRecursiveUpdator
         array $list_of_elements_to_update,
     ): void {
         foreach ($collection->getValuesToExtractCrossReferences() as $value) {
+            if (is_array($value)) {
+                continue;
+            }
             foreach ($list_of_elements_to_update as $curr_item_id) {
                 $this->reference_manager->extractCrossRef(
                     $value,
