@@ -130,7 +130,7 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
         $comment_format = $this->artifact->validateCommentFormat($request, 'comment_formatnew');
 
         try {
-            $fields_data =  $this->fields_data_from_request_retriever->getAugmentedDataFromRequest($this->artifact, $request);
+            $fields_data =  $this->fields_data_from_request_retriever->getAugmentedDataFromRequest($this->artifact, $request, $current_user);
 
             $this->artifact->createNewChangeset(
                 $fields_data,
