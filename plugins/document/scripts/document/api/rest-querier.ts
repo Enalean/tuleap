@@ -79,9 +79,33 @@ export interface RestItem extends Omit<Item, "properties"> {
     readonly metadata: Array<Property> | Array<FolderProperty>;
 }
 
+export interface RestFolder extends Omit<Folder, "properties"> {
+    readonly metadata: Array<FolderProperty>;
+}
+
+export interface RestItemFile extends Omit<ItemFile, "properties"> {
+    readonly metadata: Array<Property>;
+}
+
+export interface RestLink extends Omit<Link, "properties"> {
+    readonly metadata: Array<Property>;
+}
+
+export interface RestEmbedded extends Omit<Embedded, "properties"> {
+    readonly metadata: Array<Property>;
+}
+
+export interface RestWiki extends Omit<Wiki, "properties"> {
+    readonly metadata: Array<Property>;
+}
+
+export interface RestEmpty extends Omit<Empty, "properties"> {
+    readonly metadata: Array<Property>;
+}
+
 export interface ProjectService {
     permissions_for_groups: AdminPermissions;
-    root_item: Folder;
+    root_item: RestFolder;
 }
 
 interface DeleteWikiPageOptions {
@@ -103,7 +127,7 @@ async function getItem(id: number): Promise<Item> {
     return convertRestItemToItem(item);
 }
 
-async function addNewDocumentType(url: string, item: Item): Promise<CreatedItem> {
+async function addNewDocumentType(url: string, item: RestItem): Promise<CreatedItem> {
     const headers = {
         "content-type": "application/json",
     };
@@ -151,42 +175,42 @@ async function searchInFolder(
     };
 }
 
-function addNewFile(item: ItemFile, parent_id: number): Promise<CreatedItem> {
+function addNewFile(item: RestItemFile, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/files",
         item
     );
 }
 
-function addNewEmpty(item: Empty, parent_id: number): Promise<CreatedItem> {
+function addNewEmpty(item: RestEmpty, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/empties",
         item
     );
 }
 
-function addNewEmbedded(item: Embedded, parent_id: number): Promise<CreatedItem> {
+function addNewEmbedded(item: RestEmbedded, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/embedded_files",
         item
     );
 }
 
-function addNewWiki(item: Wiki, parent_id: number): Promise<CreatedItem> {
+function addNewWiki(item: RestWiki, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/wikis",
         item
     );
 }
 
-function addNewLink(item: Link, parent_id: number): Promise<CreatedItem> {
+function addNewLink(item: RestLink, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/links",
         item
     );
 }
 
-function addNewFolder(item: Folder, parent_id: number): Promise<CreatedItem> {
+function addNewFolder(item: RestFolder, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/folders",
         item

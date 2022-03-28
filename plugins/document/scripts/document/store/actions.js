@@ -73,6 +73,9 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
         if (item_to_create.obsolescence_date === "") {
             item_to_create.obsolescence_date = null;
         }
+        if (item_to_create.properties) {
+            item_to_create.metadata = item_to_create.properties;
+        }
         switch (item_to_create.type) {
             case TYPE_FILE:
                 if (!parent.is_expanded && parent.id !== current_folder.id) {
@@ -309,7 +312,7 @@ async function createNewFile(
             },
             status: status,
             obsolescence_date: obsolescence_date,
-            properties,
+            metadata: properties,
             permissions_for_groups: permissions_for_groups,
         },
         parent.id

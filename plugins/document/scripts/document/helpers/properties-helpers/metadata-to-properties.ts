@@ -18,8 +18,8 @@
  *
  */
 
-import type { Item } from "../../type";
-import type { RestItem } from "../../api/rest-querier";
+import type { Folder, Item } from "../../type";
+import type { RestFolder, RestItem } from "../../api/rest-querier";
 
 export function convertArrayOfItems(items: ReadonlyArray<RestItem>): Array<Item> {
     return items.map(({ metadata, ...other }) => ({
@@ -30,4 +30,8 @@ export function convertArrayOfItems(items: ReadonlyArray<RestItem>): Array<Item>
 
 export function convertRestItemToItem(rest_item: RestItem): Item {
     return { properties: rest_item.metadata, ...rest_item };
+}
+
+export function convertFolderItemToFolder(rest_folder: RestFolder): Folder {
+    return { properties: rest_folder.metadata, ...rest_folder };
 }

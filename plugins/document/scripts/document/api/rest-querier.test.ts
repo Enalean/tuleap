@@ -17,7 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ProjectService } from "./rest-querier";
+import type {
+    ProjectService,
+    RestEmpty,
+    RestFolder,
+    RestItemFile,
+    RestLink,
+    RestWiki,
+} from "./rest-querier";
 import {
     addNewEmpty,
     addNewFile,
@@ -40,7 +47,6 @@ import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper"
 import * as tlp from "tlp";
 import type {
     Embedded,
-    Empty,
     FileProperties,
     Folder,
     Item,
@@ -211,7 +217,7 @@ describe("rest-querier", () => {
                     title: "my new folder",
                     description: "",
                     type: "folder",
-                } as Folder,
+                } as RestFolder,
                 2
             );
 
@@ -236,7 +242,7 @@ describe("rest-querier", () => {
                     title: "my new file",
                     description: "",
                     type: "file",
-                } as ItemFile,
+                } as RestItemFile,
                 2
             );
 
@@ -262,7 +268,7 @@ describe("rest-querier", () => {
                     title: "my empty document",
                     description: "",
                     type: "empty",
-                } as Empty,
+                } as RestEmpty,
                 2
             );
 
@@ -288,7 +294,7 @@ describe("rest-querier", () => {
                     title: "my wiki document",
                     description: "",
                     type: "wiki",
-                } as Wiki,
+                } as RestWiki,
                 2
             );
 
@@ -316,7 +322,7 @@ describe("rest-querier", () => {
                     description: "",
                     type: "link",
                     link_properties: { link_url: "http://example.test" },
-                } as Link,
+                } as RestLink,
                 2
             );
 
