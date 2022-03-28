@@ -49,7 +49,7 @@
                         />
                     </div>
                     <status-property-with-custom-binding-for-folder-update
-                        v-bind:currently-updated-item="currentlyUpdatedItem"
+                        v-bind:status_value="status_value"
                     />
                 </div>
                 <div
@@ -102,6 +102,7 @@ export default {
     props: {
         currentlyUpdatedItem: Object,
         itemProperty: Array,
+        status_value: String,
     },
     data() {
         return {

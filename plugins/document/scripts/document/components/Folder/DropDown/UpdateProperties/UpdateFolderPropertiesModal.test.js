@@ -163,4 +163,28 @@ describe("UpdateFolderPropertiesModal", () => {
 
         expect(wrapper.vm.formatted_item_properties).toEqual([properties_to_update]);
     });
+
+    it("Updates status", () => {
+        const item = {
+            id: 7,
+            type: "folder",
+            properties: [
+                {
+                    short_name: "status",
+                    list_value: [
+                        {
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const wrapper = factory({ item });
+
+        expect(wrapper.vm.item_to_update.status).toEqual({ recursion: "none", value: "rejected" });
+
+        emitter.emit("update-status-property", "draft");
+        expect(wrapper.vm.item_to_update.status).toEqual({ recursion: "none", value: "draft" });
+    });
 });

@@ -30,8 +30,8 @@
         </div>
         <description-property v-model="currentlyUpdatedItem.description" />
         <folder-default-properties-for-create
-            v-bind:currently-updated-item="currentlyUpdatedItem"
-            v-bind:parent="parent"
+            v-bind:properties="properties"
+            v-bind:status_value="status_value"
         />
     </div>
 </template>
@@ -51,6 +51,8 @@ export default {
     props: {
         currentlyUpdatedItem: Object,
         parent: Object,
+        status_value: String,
+        properties: Array,
     },
 };
 </script>

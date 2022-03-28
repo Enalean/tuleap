@@ -19,18 +19,15 @@
 
 <template>
     <status-property
-        v-model="status_value"
+        v-bind:value="status_value"
         v-if="is_status_property_used"
         data-test="document-status-property-for-folder-update"
     />
 </template>
 
-<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { mapState } from "vuex";
 import StatusProperty from "../PropertiesForCreateOrUpdate/StatusProperty.vue";
-import { getStatusIdFromName } from "../../../../helpers/properties-helpers/hardcoded-properties-mapping-helper";
-import { transformFolderPropertiesForRecursionAtUpdate } from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
 
 export default {
     name: "StatusPropertyWithCustomBindingForFolderUpdate",
@@ -38,24 +35,10 @@ export default {
         StatusProperty,
     },
     props: {
-        currentlyUpdatedItem: Object,
+        status_value: String,
     },
     computed: {
         ...mapState("configuration", ["is_status_property_used"]),
-        status_value: {
-            get() {
-                transformFolderPropertiesForRecursionAtUpdate(
-                    this.currentlyUpdatedItem,
-                    this.parent,
-                    this.is_status_property_used
-                );
-                return this.currentlyUpdatedItem.status.value;
-            },
-            set(value) {
-                this.currentlyUpdatedItem.status.id = getStatusIdFromName(value);
-                this.currentlyUpdatedItem.status.value = value;
-            },
-        },
     },
 };
 </script>

@@ -55,6 +55,14 @@ describe("NewFolderModal", () => {
                             type: "text",
                             is_required: false,
                         },
+                        {
+                            short_name: "status",
+                            list_value: [
+                                {
+                                    id: 103,
+                                },
+                            ],
+                        },
                     ],
                     permissions_for_groups: {
                         can_read: [],
@@ -71,6 +79,7 @@ describe("NewFolderModal", () => {
         store = createStoreMock(general_store, {
             permissions: { project_ugroups: null },
             properties: {},
+            configuration: { is_status_property_used: true },
         });
 
         factory = () => {
@@ -124,5 +133,28 @@ describe("NewFolderModal", () => {
             detail: { parent: store.state.current_folder },
         });
         expect(wrapper.vm.item.properties).toEqual(folder_to_create.properties);
+        expect(wrapper.vm.item.status).toEqual("rejected");
+    });
+
+    it("Updates status", () => {
+        const item = {
+            id: 7,
+            type: "folder",
+            properties: [
+                {
+                    short_name: "status",
+                    list_value: [
+                        {
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const wrapper = factory({ item });
+
+        emitter.emit("update-status-property", "draft");
+        expect(wrapper.vm.item.status).toEqual("draft");
     });
 });

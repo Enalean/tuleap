@@ -27,7 +27,7 @@
                 v-bind:is-in-update-context="true"
             />
             <status-property-with-custom-binding-for-document-update
-                v-bind:currently-updated-item="currentlyUpdatedItem"
+                v-bind:status_value="status_value"
             />
         </div>
         <description-property v-model="currentlyUpdatedItem.description" />
@@ -52,6 +52,7 @@ export default {
     props: {
         currentlyUpdatedItem: Object,
         parent: Object,
+        status_value: String,
     },
 };
 </script>

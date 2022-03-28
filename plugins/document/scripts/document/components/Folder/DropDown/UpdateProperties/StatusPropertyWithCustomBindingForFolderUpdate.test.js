@@ -20,7 +20,6 @@
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import localVue from "../../../../helpers/local-vue";
-import { TYPE_FILE } from "../../../../constants";
 import StatusPropertyWithCustomBindingForFolderUpdate from "./StatusPropertyWithCustomBindingForFolderUpdate.vue";
 
 describe("StatusPropertyWithCustomBindingForFolderUpdate", () => {
@@ -45,21 +44,7 @@ describe("StatusPropertyWithCustomBindingForFolderUpdate", () => {
 
     it(`display status selectbox only when status property is enabled for project`, async () => {
         const wrapper = status_property({
-            currentlyUpdatedItem: {
-                properties: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 100,
-                            },
-                        ],
-                    },
-                ],
-                status: 100,
-                type: TYPE_FILE,
-                title: "title",
-            },
+            status_value: "none",
         });
 
         store.state.configuration.is_status_property_used = true;
@@ -72,21 +57,7 @@ describe("StatusPropertyWithCustomBindingForFolderUpdate", () => {
 
     it(`does not display status if property is not available`, () => {
         const wrapper = status_property({
-            currentlyUpdatedItem: {
-                properties: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 100,
-                            },
-                        ],
-                    },
-                ],
-                status: 100,
-                type: TYPE_FILE,
-                title: "title",
-            },
+            status_value: "none",
         });
 
         store.state.configuration.is_status_property_used = false;
@@ -94,40 +65,5 @@ describe("StatusPropertyWithCustomBindingForFolderUpdate", () => {
         expect(
             wrapper.find("[data-test=document-status-property-for-folder-update]").exists()
         ).toBeFalsy();
-    });
-
-    it(`updates the status`, async () => {
-        const wrapper = status_property({
-            currentlyUpdatedItem: {
-                properties: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 100,
-                            },
-                        ],
-                    },
-                ],
-                status: {
-                    name: "",
-                    recursion: "",
-                },
-                type: TYPE_FILE,
-                title: "title",
-            },
-        });
-
-        store.state.configuration.is_status_property_used = true;
-
-        wrapper.vm.status_value = "approved";
-        await wrapper.vm.$nextTick();
-
-        expect(
-            wrapper.find("[data-test=document-status-property-for-folder-update]").exists()
-        ).toBeTruthy();
-
-        expect(wrapper.vm.currentlyUpdatedItem.status.value).toEqual("approved");
-        expect(wrapper.vm.currentlyUpdatedItem.status.recursion).toEqual("");
     });
 });

@@ -53,6 +53,14 @@ describe("NewItemModal", () => {
                             type: "text",
                             is_required: false,
                         },
+                        {
+                            short_name: "status",
+                            list_value: [
+                                {
+                                    id: 103,
+                                },
+                            ],
+                        },
                     ],
                     permissions_for_groups: {
                         can_read: [],
@@ -122,5 +130,27 @@ describe("NewItemModal", () => {
         await wrapper.vm.$nextTick().then(() => {});
 
         expect(wrapper.vm.item.properties).toEqual(item_to_create.properties);
+    });
+
+    it("Updates status", () => {
+        const item = {
+            id: 7,
+            type: "folder",
+            properties: [
+                {
+                    short_name: "status",
+                    list_value: [
+                        {
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const wrapper = factory({ item });
+
+        emitter.emit("update-status-property", "draft");
+        expect(wrapper.vm.item.status).toEqual("draft");
     });
 });

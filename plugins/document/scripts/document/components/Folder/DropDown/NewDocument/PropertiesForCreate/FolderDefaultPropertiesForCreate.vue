@@ -36,10 +36,9 @@
                 for the items that will be created within this folder.
             </p>
             <status-property-with-custom-binding-for-folder-create
-                v-bind:currently-updated-item="currentlyUpdatedItem"
-                v-bind:parent="parent"
+                v-bind:status_value="status_value"
             />
-            <custom-property v-bind:item-property="currentlyUpdatedItem.properties" />
+            <custom-property v-bind:item-property="properties" />
         </template>
     </div>
 </template>
@@ -53,8 +52,8 @@ export default {
     name: "FolderDefaultPropertiesForCreate",
     components: { CustomProperty, StatusPropertyWithCustomBindingForFolderCreate },
     props: {
-        currentlyUpdatedItem: Object,
-        parent: Object,
+        status_value: String,
+        properties: Array,
     },
     computed: {
         ...mapState("configuration", ["is_status_property_used"]),
@@ -62,8 +61,7 @@ export default {
         has_recursion_property() {
             return (
                 this.is_status_property_used === true ||
-                (this.currentlyUpdatedItem.properties &&
-                    this.currentlyUpdatedItem.properties.length > 0)
+                (this.properties && this.properties.length > 0)
             );
         },
     },

@@ -20,7 +20,6 @@
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import localVue from "../../../../helpers/local-vue";
-import { TYPE_FILE } from "../../../../constants";
 import StatusPropertyWithCustomBindingForDocumentUpdate from "./StatusPropertyWithCustomBindingForDocumentUpdate.vue";
 
 describe("StatusPropertyWithCustomBindingForDocumentUpdate", () => {
@@ -34,33 +33,17 @@ describe("StatusPropertyWithCustomBindingForDocumentUpdate", () => {
 
         store = createStoreMock(store_options);
 
-        status_property = (props = {}) => {
+        status_property = () => {
             return shallowMount(StatusPropertyWithCustomBindingForDocumentUpdate, {
                 localVue,
-                propsData: { ...props },
+                propsData: { status: "none" },
                 mocks: { $store: store },
             });
         };
     });
 
     it(`display status selectbox only when status property is enabled for project`, async () => {
-        const wrapper = status_property({
-            currentlyUpdatedItem: {
-                properties: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 100,
-                            },
-                        ],
-                    },
-                ],
-                status: 100,
-                type: TYPE_FILE,
-                title: "title",
-            },
-        });
+        const wrapper = status_property();
 
         store.state.configuration.is_status_property_used = true;
         await wrapper.vm.$nextTick();
@@ -69,54 +52,10 @@ describe("StatusPropertyWithCustomBindingForDocumentUpdate", () => {
     });
 
     it(`does not display status if property is not available`, () => {
-        const wrapper = status_property({
-            currentlyUpdatedItem: {
-                properties: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 100,
-                            },
-                        ],
-                    },
-                ],
-                status: 100,
-                type: TYPE_FILE,
-                title: "title",
-            },
-        });
+        const wrapper = status_property();
 
         store.state.configuration.is_status_property_used = false;
 
         expect(wrapper.find("[data-test=document-status-for-item-update]").exists()).toBeFalsy();
-    });
-
-    it(`Given status value is updated Then the props used for document update is updated`, async () => {
-        const wrapper = status_property({
-            currentlyUpdatedItem: {
-                properties: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 100,
-                            },
-                        ],
-                    },
-                ],
-                type: TYPE_FILE,
-                title: "title",
-            },
-        });
-
-        store.state.configuration.is_status_property_used = true;
-        await wrapper.vm.$nextTick();
-        wrapper.vm.status_value = "approved";
-        await wrapper.vm.$nextTick();
-
-        expect(wrapper.find("[data-test=document-status-for-item-update]").exists()).toBeTruthy();
-
-        expect(wrapper.vm.currentlyUpdatedItem.status).toEqual("approved");
     });
 });

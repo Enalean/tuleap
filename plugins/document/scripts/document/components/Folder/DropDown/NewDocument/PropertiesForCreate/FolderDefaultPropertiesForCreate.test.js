@@ -49,27 +49,18 @@ describe("FolderDefaultPropertiesForCreate", () => {
             };
 
             const wrapper = default_property({
-                currentlyUpdatedItem: {
-                    id: 123,
-                    title: "My title",
-                    description: "My description",
-                    owner: {
-                        id: 102,
+                properties: [
+                    {
+                        short_name: "status",
+                        list_value: [
+                            {
+                                id: 103,
+                            },
+                        ],
                     },
-                    properties: [
-                        {
-                            short_name: "status",
-                            list_value: [
-                                {
-                                    id: 103,
-                                },
-                            ],
-                        },
-                    ],
-                    status: {
-                        value: "rejected",
-                        recursion: "none",
-                    },
+                ],
+                status: {
+                    value: "rejected",
                 },
             });
 
@@ -86,24 +77,16 @@ describe("FolderDefaultPropertiesForCreate", () => {
             };
 
             const wrapper = default_property({
-                currentlyUpdatedItem: {
-                    id: 123,
-                    title: "My title",
-                    description: "My description",
-                    owner: {
-                        id: 102,
+                properties: [
+                    {
+                        short_name: "field_",
+                        list_value: [
+                            {
+                                id: 103,
+                            },
+                        ],
                     },
-                    properties: [
-                        {
-                            short_name: "field_",
-                            list_value: [
-                                {
-                                    id: 103,
-                                },
-                            ],
-                        },
-                    ],
-                },
+                ],
             });
 
             expect(
@@ -122,15 +105,7 @@ describe("FolderDefaultPropertiesForCreate", () => {
             };
 
             const wrapper = default_property({
-                currentlyUpdatedItem: {
-                    id: 123,
-                    title: "My title",
-                    description: "My description",
-                    owner: {
-                        id: 102,
-                    },
-                    properties: null,
-                },
+                properties: null,
             });
 
             expect(

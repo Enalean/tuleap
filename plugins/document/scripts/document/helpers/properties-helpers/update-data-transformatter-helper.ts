@@ -55,7 +55,7 @@ export function transformDocumentPropertiesForUpdate(
     document_to_update: Item,
     is_status_property_used: boolean
 ): void {
-    if (!is_status_property_used) {
+    if (!is_status_property_used || !document_to_update.properties) {
         return;
     }
 

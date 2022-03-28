@@ -19,16 +19,16 @@
 
 import {
     transformCustomPropertiesForItemCreation,
-    transformItemPropertiesForCreation,
+    transformStatusPropertyForItemCreation,
 } from "./creation-data-transformatter-helper";
-import type { Folder, Item, Property, ListValue } from "../../type";
+import type { Folder, Property, ListValue } from "../../type";
 
 describe("creation properties transformer", () => {
     it("Given an existing document, then the default status property is the parent one", () => {
         const item = {
             id: 7,
-            type: "file",
-        } as Item;
+            type: "folder",
+        } as Folder;
 
         const list_value: Array<ListValue> = [
             {
@@ -47,7 +47,7 @@ describe("creation properties transformer", () => {
             ],
         } as Folder;
 
-        transformItemPropertiesForCreation(item, parent, true);
+        transformStatusPropertyForItemCreation(item, parent, true);
 
         expect(item.status).toEqual("rejected");
     });
@@ -55,8 +55,8 @@ describe("creation properties transformer", () => {
     it("Given an existing document, when status is not used, default status is not set regardless of parent configuration", () => {
         const item = {
             id: 7,
-            type: "file",
-        } as Item;
+            type: "folder",
+        } as Folder;
 
         const list_value: Array<ListValue> = [
             {
@@ -75,7 +75,7 @@ describe("creation properties transformer", () => {
             ],
         } as Folder;
 
-        transformItemPropertiesForCreation(item, parent, false);
+        transformStatusPropertyForItemCreation(item, parent, false);
 
         expect(item.status).toEqual(undefined);
     });

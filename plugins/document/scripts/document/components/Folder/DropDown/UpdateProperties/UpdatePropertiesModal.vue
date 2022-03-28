@@ -31,6 +31,7 @@
             <document-global-property-for-update
                 v-bind:parent="current_folder"
                 v-bind:currently-updated-item="item_to_update"
+                v-bind:status_value="item_to_update.status"
             />
             <other-information-properties-for-update
                 v-bind:currently-updated-item="item_to_update"
@@ -57,7 +58,10 @@ import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import DocumentGlobalPropertyForUpdate from "./DocumentGlobalPropertyForUpdate.vue";
 import OtherInformationPropertiesForUpdate from "./OtherInformationPropertiesForUpdate.vue";
 import { getCustomProperties } from "../../../../helpers/properties-helpers/custom-properties-helper";
-import { transformCustomPropertiesForItemUpdate } from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
+import {
+    transformCustomPropertiesForItemUpdate,
+    transformDocumentPropertiesForUpdate,
+} from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
 import emitter from "../../../../helpers/emitter";
 
 export default {
@@ -81,7 +85,7 @@ export default {
     },
     computed: {
         ...mapState(["current_folder"]),
-        ...mapState("configuration", ["project_id"]),
+        ...mapState("configuration", ["project_id", "is_status_property_used"]),
         ...mapState("error", ["has_modal_error"]),
         submit_button_label() {
             return this.$gettext("Update properties");
@@ -118,15 +122,18 @@ export default {
     },
     created() {
         emitter.on("update-multiple-properties-list-value", this.updateMultiplePropertiesListValue);
+        emitter.on("update-status-property", this.updateStatusValue);
     },
     beforeDestroy() {
         emitter.off(
             "update-multiple-properties-list-value",
             this.updateMultiplePropertiesListValue
         );
+        emitter.off("update-status-property", this.updateStatusValue);
     },
     beforeMount() {
         this.item_to_update = JSON.parse(JSON.stringify(this.item));
+        transformDocumentPropertiesForUpdate(this.item_to_update, this.is_status_property_used);
     },
     mounted() {
         this.modal = createModal(this.$el);
@@ -174,6 +181,9 @@ export default {
                 (property) => property.short_name === event.detail.id
             );
             item_properties.list_value = event.detail.value;
+        },
+        updateStatusValue(event) {
+            this.item_to_update.status = event;
         },
     },
 };

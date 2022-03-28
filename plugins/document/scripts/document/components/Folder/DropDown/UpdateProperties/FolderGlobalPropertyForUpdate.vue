@@ -32,6 +32,7 @@
         <folder-default-properties-for-update
             v-bind:currently-updated-item="currentlyUpdatedItem"
             v-bind:item-property="itemProperty"
+            v-bind:status_value="status_value"
         />
     </div>
 </template>
@@ -52,6 +53,7 @@ export default {
         currentlyUpdatedItem: Object,
         parent: Object,
         itemProperty: Array,
+        status_value: String,
     },
 };
 </script>

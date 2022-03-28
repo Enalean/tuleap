@@ -20,6 +20,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../../helpers/local-vue";
+import emitter from "../../../../helpers/emitter";
 
 import UpdatePropertiesModal from "./UpdatePropertiesModal.vue";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
@@ -55,7 +56,7 @@ describe("UpdatePropertiesModal", () => {
                         },
                     ],
                 },
-                configuration: { project_id: 102 },
+                configuration: { project_id: 102, is_status_property_used: true },
             },
         };
 
@@ -120,5 +121,29 @@ describe("UpdatePropertiesModal", () => {
         const wrapper = factory({ item });
 
         expect(wrapper.vm.formatted_item_properties).toEqual([properties_in_rest_format]);
+    });
+
+    it("Updates status", () => {
+        const item = {
+            id: 7,
+            type: "folder",
+            properties: [
+                {
+                    short_name: "status",
+                    list_value: [
+                        {
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const wrapper = factory({ item });
+
+        expect(wrapper.vm.item_to_update.status).toEqual("rejected");
+
+        emitter.emit("update-status-property", "draft");
+        expect(wrapper.vm.item_to_update.status).toEqual("draft");
     });
 });

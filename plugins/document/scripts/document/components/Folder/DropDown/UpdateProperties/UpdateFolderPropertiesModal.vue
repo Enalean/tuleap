@@ -32,6 +32,7 @@
                 v-bind:currently-updated-item="item_to_update"
                 v-bind:parent="current_folder"
                 v-bind:item-property="formatted_item_properties"
+                v-bind:status_value="item_to_update.status.value"
             />
         </div>
         <modal-footer
@@ -109,6 +110,7 @@ export default {
         emitter.on("properties-recursion-list", this.setPropertiesListUpdate);
         emitter.on("properties-recursion-option", this.setRecursionOption);
         emitter.on("update-multiple-properties-list-value", this.updateMultiplePropertiesListValue);
+        emitter.on("update-status-property", this.updateStatusValue);
     },
     beforeDestroy() {
         emitter.off("properties-recursion-list", this.show);
@@ -117,6 +119,7 @@ export default {
             "update-multiple-properties-list-value",
             this.updateMultiplePropertiesListValue
         );
+        emitter.off("update-status-property", this.updateStatusValue);
     },
     methods: {
         show() {
@@ -153,6 +156,9 @@ export default {
                 (property) => property.short_name === event.detail.id
             );
             item_properties.list_value = event.detail.value;
+        },
+        updateStatusValue(event) {
+            this.item_to_update.status.value = event;
         },
     },
 };
