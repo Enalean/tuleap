@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.1
+
+* Shortcuts are not triggered anymore when the user is editing (this is an addition to the fix made in 2.0.0)
+
 ## 2.0.0
 
 * The element has an explicit height and width and is considered a block element by default.

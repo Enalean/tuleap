@@ -33,11 +33,11 @@
     </nav>
 </template>
 <script setup lang="ts">
-import { and, useActiveElement, useMagicKeys } from "@vueuse/core";
+import { useActiveElement, useMagicKeys } from "@vueuse/core";
 import Tool from "./Tool.vue";
 import { strictInject } from "../strict-inject";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
-import { computed, nextTick, onMounted, onUpdated, ref, watch } from "vue";
+import { nextTick, onMounted, onUpdated, ref, watch } from "vue";
 import { getAvailableShortcutsFromToolsConfiguration } from "../shortcuts";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
@@ -60,18 +60,19 @@ function setupShortcutsInteraction(): void {
 
         const keys = useMagicKeys();
         const active_element = useActiveElement();
-        const not_using_input_element = computed((): boolean => {
+        function notUsingInputElement(element: HTMLElement): boolean {
             return (
-                !active_element.value?.isContentEditable &&
-                active_element.value?.tagName !== "INPUT" &&
-                active_element.value?.tagName !== "TEXTAREA" &&
-                active_element.value?.tagName !== "SELECT"
+                !element.isContentEditable &&
+                element.tagName !== "INPUT" &&
+                element.tagName !== "TEXTAREA" &&
+                element.tagName !== "SELECT"
             );
-        });
+        }
 
         shortcuts.forEach((shortcut): void => {
-            watch(and(keys[shortcut.keyboard_inputs], not_using_input_element), (pressed): void => {
-                if (pressed) {
+            watch(keys[shortcut.keyboard_inputs], (pressed): void => {
+                const active_element_value = active_element.value;
+                if (pressed && active_element_value && notUsingInputElement(active_element_value)) {
                     shortcut.execute(element_to_check_for_shortcut);
                 }
             });
