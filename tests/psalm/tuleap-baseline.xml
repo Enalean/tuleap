@@ -2281,6 +2281,9 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/Kanban/KanbanResource.php">
+    <DeprecatedMethod occurrences="1">
+      <code>createNewChangeset</code>
+    </DeprecatedMethod>
     <InvalidPropertyAssignmentValue occurrences="1"/>
     <MissingParamType occurrences="10">
       <code>$column_id</code>
@@ -5680,6 +5683,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/cardwall/include/REST/v1/CardUpdater.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>createNewChangeset</code>
+    </DeprecatedMethod>
     <MissingParamType occurrences="2">
       <code>$column_id</code>
       <code>$label</code>
@@ -22388,6 +22394,12 @@
       <code>(int) $response-&gt;getStatusCode()</code>
     </RedundantCastGivenDocblockType>
   </file>
+  <file src="plugins/gitlab/include/Repository/Webhook/PostPush/PostPushCommitArtifactUpdater.php">
+    <DeprecatedMethod occurrences="2">
+      <code>createNewChangeset</code>
+      <code>createNewChangeset</code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/gitlfs/include/Admin/AdminDao.php">
     <MissingParamType occurrences="1">
       <code>$new_max_file_value</code>
@@ -28498,7 +28510,8 @@
     </UndefinedClass>
   </file>
   <file src="plugins/program_management/include/Adapter/Program/Feature/UserStoriesInMirroredProgramIncrementsPlanner.php">
-    <DeprecatedMethod occurrences="1">
+    <DeprecatedMethod occurrences="2">
+      <code>createNewChangeset</code>
       <code>getAnArtifactLinkField</code>
     </DeprecatedMethod>
   </file>
@@ -34191,6 +34204,11 @@
       <code>(int) $status_field-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
+  <file src="plugins/testmanagement/include/TestManagement/Campaign/StatusUpdater.php">
+    <DeprecatedMethod occurrences="1">
+      <code>createNewChangeset</code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/testmanagement/include/TestManagement/Config.class.php">
     <DeprecatedMethod occurrences="1">
       <code>getRow</code>
@@ -35741,7 +35759,8 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Action/CopyArtifact.class.php">
-    <DeprecatedMethod occurrences="1">
+    <DeprecatedMethod occurrences="2">
+      <code>createNewChangesetWithoutRequiredValidation</code>
       <code>userCanSubmitArtifact</code>
     </DeprecatedMethod>
     <InvalidNullableReturnType occurrences="1">
@@ -35882,6 +35901,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Action/UpdateArtifact.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>createNewChangeset</code>
+    </DeprecatedMethod>
     <InvalidArgument occurrences="1">
       <code>$remaining_effort_field</code>
     </InvalidArgument>
@@ -36075,7 +36097,8 @@
       <code>db_fetch_array($res)</code>
       <code>db_numrows($res)</code>
     </DeprecatedFunction>
-    <DeprecatedMethod occurrences="4">
+    <DeprecatedMethod occurrences="5">
+      <code>createNewChangeset</code>
       <code>getAnArtifactLinkField</code>
       <code>getAnArtifactLinkField</code>
       <code>permission_db_authorized_ugroups</code>
@@ -36804,7 +36827,8 @@
     </InvalidScalarArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/MailGateway/MailGateway.class.php">
-    <DeprecatedMethod occurrences="1">
+    <DeprecatedMethod occurrences="2">
+      <code>createNewChangeset</code>
       <code>userCanSubmitArtifact</code>
     </DeprecatedMethod>
     <MissingParamType occurrences="3">
@@ -37146,6 +37170,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Renderer/EditInPlaceRenderer.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>createNewChangeset</code>
+    </DeprecatedMethod>
     <MissingParamType occurrences="4">
       <code>$exception_message</code>
       <code>$first_followup</code>
@@ -39449,7 +39476,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ArtifactLinkUpdater.php">
-    <DeprecatedMethod occurrences="2">
+    <DeprecatedMethod occurrences="4">
+      <code>createNewChangeset</code>
+      <code>createNewChangeset</code>
       <code>getAnArtifactLinkField</code>
       <code>getAnArtifactLinkField</code>
     </DeprecatedMethod>
@@ -44113,6 +44142,11 @@
     <MissingReturnType occurrences="1">
       <code>inheritFromLegacy</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Masschange/MasschangeUpdater.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>createNewChangeset</code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/MasschangeDataValueExtractor.class.php">
     <MissingParamType occurrences="2">
@@ -50234,7 +50268,8 @@
       <code>$request</code>
       <code>TemplateRendererFactory::build()-&gt;getRenderer(dirname(TRACKER_BASE_DIR) . '/templates')</code>
     </ArgumentTypeCoercion>
-    <DeprecatedMethod occurrences="5">
+    <DeprecatedMethod occurrences="6">
+      <code>createNewChangeset</code>
       <code>userCanSubmitArtifact</code>
       <code>userCanSubmitArtifact</code>
       <code>userCanSubmitArtifact</code>
@@ -53092,6 +53127,9 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Workflow/Trigger/RulesProcessor.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>createNewChangeset</code>
+    </DeprecatedMethod>
     <MissingReturnType occurrences="3">
       <code>getRuleStrategy</code>
       <code>parentAlreadyHasTargetValue</code>
