@@ -39,11 +39,12 @@
     </section>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import EmptyFolderForReadersSvg from "../../svg/folder/EmptyFolderForReadersSvg.vue";
-import { Component, Vue } from "vue-property-decorator";
-import { State } from "vuex-class";
-import type { Folder, Item } from "../../../type";
+import type { Item } from "../../../type";
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { RootState } from "../../../type";
+import { computed } from "@vue/composition-api";
 
 interface RouterPayload {
     name: string;
@@ -52,37 +53,34 @@ interface RouterPayload {
     };
 }
 
-@Component({
-    components: { EmptyFolderForReadersSvg },
-})
-export default class EmptyFolderForReaders extends Vue {
-    @State
-    readonly current_folder!: Folder;
+const { current_folder_ascendant_hierarchy } = useNamespacedState<
+    Pick<RootState, "current_folder_ascendant_hierarchy">
+>(["current_folder_ascendant_hierarchy"]);
 
-    @State
-    readonly current_folder_ascendant_hierarchy!: Array<Folder>;
+const index_of_parent = computed((): number => {
+    return current_folder_ascendant_hierarchy.value.length - 2;
+});
 
-    get index_of_parent(): number {
-        return this.current_folder_ascendant_hierarchy.length - 2;
+const parent = computed((): Item | null => {
+    if (index_of_parent.value > 0) {
+        return current_folder_ascendant_hierarchy.value[index_of_parent.value];
     }
 
-    get parent(): Item | null {
-        if (this.index_of_parent > 0) {
-            return this.current_folder_ascendant_hierarchy[this.index_of_parent];
-        }
+    return null;
+});
 
-        return null;
-    }
+const route_to = computed((): RouterPayload => {
+    const parent_payload = parent.value;
+    return parent_payload !== null
+        ? { name: "folder", params: { item_id: parent_payload.id } }
+        : { name: "root_folder" };
+});
 
-    get route_to(): RouterPayload {
-        const parent = this.parent;
-        return parent !== null
-            ? { name: "folder", params: { item_id: parent.id } }
-            : { name: "root_folder" };
-    }
-
-    get can_go_to_parent(): boolean {
-        return this.index_of_parent >= -1;
-    }
-}
+const can_go_to_parent = (): boolean => {
+    return index_of_parent.value >= -1;
+};
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>
