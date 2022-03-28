@@ -18,7 +18,8 @@
  */
 
 import type { GlobalExportProperties } from "../type";
-import { formatData, TextCell, NumberCell, EmptyCell } from "./data-formator";
+import { formatData } from "./data-formator";
+import { TextCell, NumberCell, EmptyCell } from "@tuleap/plugin-docgen-xlsx";
 import * as rest_querier from "../rest-querier";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 

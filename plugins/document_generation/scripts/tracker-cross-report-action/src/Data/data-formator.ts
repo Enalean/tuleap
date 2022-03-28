@@ -22,40 +22,12 @@ import { getReportArtifacts } from "../rest-querier";
 import type { GlobalExportProperties } from "../type";
 import { transformFieldValueIntoAFormattedCell } from "./transform-field-value-into-formatted-cell";
 import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
-
-export type FormattedCell = TextCell | NumberCell | HTMLCell | DateCell | EmptyCell;
-
-export class TextCell {
-    readonly type = "text";
-
-    constructor(readonly value: string) {}
-}
-
-export class HTMLCell {
-    readonly type = "html";
-
-    constructor(readonly value: string) {}
-}
-
-export class NumberCell {
-    readonly type = "number";
-
-    constructor(readonly value: number) {}
-}
-
-export class DateCell {
-    readonly type = "date";
-
-    constructor(readonly value: Date) {}
-}
-
-export class EmptyCell {
-    readonly type = "empty";
-}
+import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
+import { TextCell } from "@tuleap/plugin-docgen-xlsx";
 
 export interface ReportSection {
     readonly headers?: ReadonlyArray<TextCell>;
-    readonly rows?: ReadonlyArray<ReadonlyArray<FormattedCell>>;
+    readonly rows?: ReadonlyArray<ReadonlyArray<ReportCell>>;
 }
 
 export async function formatData(
@@ -71,9 +43,9 @@ export async function formatData(
     }
 
     const report_field_columns: Array<TextCell> = [];
-    const artifact_rows: Array<Array<FormattedCell>> = [];
+    const artifact_rows: Array<Array<ReportCell>> = [];
     let first_row_processed = false;
-    let artifact_value_rows: Array<FormattedCell> = [];
+    let artifact_value_rows: Array<ReportCell> = [];
 
     for (const artifact of report_artifacts) {
         artifact_value_rows = [];

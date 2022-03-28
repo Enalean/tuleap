@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@tuleap/gettext': file:../../src/scripts/lib/gettext
   '@tuleap/plugin-docgen-docx': file:./scripts/lib/docx
+  '@tuleap/plugin-docgen-xlsx': file:./scripts/lib/xlsx
   '@tuleap/po-gettext-plugin': link:../../src/scripts/lib/po-gettext-plugin
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
@@ -19,6 +20,7 @@ specifiers:
 dependencies:
   '@tuleap/gettext': link:../../src/scripts/lib/gettext
   '@tuleap/plugin-docgen-docx': link:scripts/lib/docx
+  '@tuleap/plugin-docgen-xlsx': link:scripts/lib/xlsx
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
   '@tuleap/tlp-modal': link:../../src/scripts/lib/tlp-modal

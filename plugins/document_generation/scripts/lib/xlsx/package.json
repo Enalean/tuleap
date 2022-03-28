@@ -1,0 +1,16 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-docgen-xlsx",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/plugin-docgen-xlsx.es.js",
+  "main": "dist/plugin-docgen-xlsx.umd.js",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "jest"
+  }
+}
