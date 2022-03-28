@@ -27,8 +27,7 @@
 
 .tlp-dropdown-menu.tlp-dropdown-menu-right.tlp-dropdown-menu-on-icon {
     &.gitlab-administration-dropdown {
-        right: -12px;
-        cursor: default;
+        transform: translateX(12px);
     }
 }
 

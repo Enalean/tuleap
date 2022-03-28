@@ -266,7 +266,7 @@ Split large button dropdown
             <i class="fas fa-caret-down" aria-hidden="true"></i>
         </button>
     </div>
-    <div id="dropdown-large-split-example-menu" class="tlp-dropdown-menu tlp-dropdown-menu-large tlp-dropdown-menu-right" role="menu">
+    <div id="dropdown-large-split-example-menu" class="tlp-dropdown-menu tlp-dropdown-menu-large" role="menu">
         <a class="tlp-dropdown-menu-item steps-step-action-fail ng-binding" role="menuitem">
             <i class="fas fa-fw fa-times-circle" aria-hidden="true"></i> Failed
         </a>
@@ -282,5 +282,36 @@ Split large button dropdown
     tlp.createDropdown(
         document.getElementById("dropdown-large-split-example"),
         {dropdown_menu: document.getElementById("dropdown-large-split-example-menu")}
+    );
+</script>
+<br>
+<br>
+
+Split large button dropdown (right)
+<div class="tlp-dropdown">
+    <div class="tlp-dropdown-split-button">
+        <button class="tlp-button-primary tlp-dropdown-split-button-main tlp-button-large" type="button" title="Passed">
+            New document (right)
+        </button>
+        <button class="tlp-button-primary tlp-dropdown-split-button-caret tlp-button-large" id="dropdown-large-split-example-right">
+            <i class="fas fa-caret-down" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div id="dropdown-large-split-example-right-menu" class="tlp-dropdown-menu tlp-dropdown-menu-large tlp-dropdown-menu-right" role="menu">
+        <a class="tlp-dropdown-menu-item steps-step-action-fail ng-binding" role="menuitem">
+            <i class="fas fa-fw fa-times-circle" aria-hidden="true"></i> Failed
+        </a>
+        <a class="tlp-dropdown-menu-item steps-step-action-block ng-binding" role="menuitem">
+            <i class="fas fa-fw fa-exclamation-circle" aria-hidden="true"></i> Blocked
+        </a>
+        <a class="tlp-dropdown-menu-item steps-step-action-notrun ng-binding" role="menuitem">
+            <i class="fas fa-fw fa-question-circle" aria-hidden="true"></i> Not run
+        </a>
+    </div>
+</div>
+<script>
+    tlp.createDropdown(
+        document.getElementById("dropdown-large-split-example-right"),
+        {dropdown_menu: document.getElementById("dropdown-large-split-example-right-menu")}
     );
 </script>

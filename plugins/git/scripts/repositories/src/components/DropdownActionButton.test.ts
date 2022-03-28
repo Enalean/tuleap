@@ -23,6 +23,8 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import DropdownActionButton from "./DropdownActionButton.vue";
 
+jest.mock("tlp");
+
 describe("DropdownActionButton", () => {
     it("displays a dropdown for empty state", () => {
         const localVue = createLocalVue();

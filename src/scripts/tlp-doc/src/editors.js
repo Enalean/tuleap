@@ -278,11 +278,6 @@ import { createListPicker } from "@tuleap/list-picker";
                 });
             }
 
-            var dropdown_trigger = document.getElementById("dropdown-example");
-            if (dropdown_trigger) {
-                createDropdown(dropdown_trigger);
-            }
-
             var dropdown_trigger_options = document.getElementById("dropdown-example-options");
             if (dropdown_trigger_options) {
                 createDropdown(dropdown_trigger_options, {
@@ -326,6 +321,17 @@ import { createListPicker } from "@tuleap/list-picker";
                 });
             }
 
+            var dropdown_trigger_large_split_example_right_options = document.getElementById(
+                "dropdown-large-split-example-right"
+            );
+            if (dropdown_trigger_large_split_example_right_options) {
+                createDropdown(dropdown_trigger_large_split_example_right_options, {
+                    dropdown_menu: document.getElementById(
+                        "dropdown-large-split-example-right-menu"
+                    ),
+                });
+            }
+
             [
                 "dropdown-example",
                 "dropdown-right-example",
@@ -335,7 +341,13 @@ import { createListPicker } from "@tuleap/list-picker";
                 "dropdown-with-tabs-example",
             ]
                 .map((id) => document.getElementById(id))
-                .filter((element) => Boolean(element))
+                .filter((element) => {
+                    return (
+                        element &&
+                        element.parentElement.querySelector(".tlp-dropdown-menu") instanceof
+                            HTMLElement
+                    );
+                })
                 .forEach((trigger) => createDropdown(trigger));
         }
         setTimeout(updatePreview, 10);

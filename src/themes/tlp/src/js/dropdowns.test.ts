@@ -25,12 +25,17 @@ import {
     DROPDOWN_MENU_CLASS_NAME,
     DROPDOWN_SHOWN_CLASS_NAME,
 } from "./dropdowns";
+import * as floating_ui from "@floating-ui/dom";
+import type { ComputePositionReturn } from "@floating-ui/dom";
 
+jest.mock("@floating-ui/dom");
 jest.useFakeTimers();
 
 describe(`Dropdowns`, () => {
     let trigger_element: HTMLElement, dropdown_element: HTMLElement;
     let doc: Document;
+    let cleanup: () => void;
+    let computePosition: jest.SpyInstance<Promise<ComputePositionReturn>>;
 
     beforeEach(() => {
         doc = createLocalDocument();
@@ -38,11 +43,20 @@ describe(`Dropdowns`, () => {
         dropdown_element = doc.createElement("div");
         dropdown_element.classList.add(DROPDOWN_MENU_CLASS_NAME);
         doc.body.append(trigger_element, dropdown_element);
+        computePosition = jest.spyOn(floating_ui, "computePosition");
+        computePosition.mockResolvedValue({
+            x: 10,
+            y: 20,
+            placement: "top",
+        } as ComputePositionReturn);
+        cleanup = jest.fn();
+        jest.spyOn(floating_ui, "autoUpdate").mockReturnValue(cleanup);
     });
 
     afterEach(() => {
         trigger_element.remove();
         dropdown_element.remove();
+        jest.clearAllMocks();
     });
 
     describe(`constructor`, () => {
@@ -99,14 +113,39 @@ describe(`Dropdowns`, () => {
             expectTheDropdownToBeShown(dropdown_element);
         });
 
-        it(`will dispatch the "shown" event`, () => {
+        it(`will dispatch the "shown" event`, async () => {
             let event_dispatched = false;
             dropdown.addEventListener(EVENT_TLP_DROPDOWN_SHOWN, () => {
                 event_dispatched = true;
             });
-            dropdown.show();
+            await dropdown.show();
             expect(event_dispatched).toBe(true);
         });
+
+        it(`will compute the position of the menu`, async () => {
+            await dropdown.show();
+            expect(computePosition).toHaveBeenCalled();
+            expect(dropdown_element.style.left).toBe("10px");
+            expect(dropdown_element.style.top).toBe("20px");
+            expect(dropdown_element.dataset.placement).toBe("top");
+        });
+
+        it.each([
+            [[], "bottom-start"],
+            [["tlp-dropdown-menu-top"], "top-start"],
+            [["tlp-dropdown-menu-right"], "bottom-end"],
+            [["tlp-dropdown-menu-top", "tlp-dropdown-menu-right"], "top-end"],
+        ])(
+            `when menu has classes %s, it will try to position the menu to %s`,
+            async (classes: string[], expected_placement: string) => {
+                dropdown_element.classList.add(...classes);
+                await dropdown.show();
+                expect(computePosition).toHaveBeenCalledWith(trigger_element, dropdown_element, {
+                    placement: expected_placement,
+                    middleware: expect.anything(),
+                });
+            }
+        );
     });
 
     describe(`hide()`, () => {
@@ -130,6 +169,11 @@ describe(`Dropdowns`, () => {
             dropdown.hide();
             jest.runAllTimers();
             expect(event_dispatched).toBe(true);
+        });
+
+        it(`will cleanup @floating-ui listener (scroll, resize, …)`, () => {
+            dropdown.hide();
+            expect(cleanup).toHaveBeenCalled();
         });
     });
 

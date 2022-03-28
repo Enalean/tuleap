@@ -68,7 +68,7 @@ execution-list-header {
 
 .tlp-dropdown-menu-right.execution-header-button-edit-menu {
     // magic value to adjust the menu just at the middle of the ellipsis
-    right: -9px;
+    transform: translateX(8px);
 }
 
 $testers-padding: 4px;

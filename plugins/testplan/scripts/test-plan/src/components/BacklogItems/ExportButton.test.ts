@@ -19,6 +19,8 @@
 
 import ExportError from "./ExportError.vue";
 
+jest.mock("tlp");
+
 const downloadXlsxExportDocument = jest.fn();
 jest.mock("../../helpers/ExportAsSpreadsheet/download-export-document", () => {
     return {

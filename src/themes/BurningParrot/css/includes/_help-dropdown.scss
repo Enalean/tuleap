@@ -39,7 +39,7 @@ body.reduce-help-button .help-dropdown {
     }
 
     > .tlp-dropdown-menu {
-        right: calc(var(--tlp-small-spacing) / -2);
+        transform: translate(11px, -6px);
 
         &::before,
         &::after {

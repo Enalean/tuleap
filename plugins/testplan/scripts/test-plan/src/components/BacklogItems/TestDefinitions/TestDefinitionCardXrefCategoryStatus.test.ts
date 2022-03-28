@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+jest.mock("tlp");
+
 import { shallowMount } from "@vue/test-utils";
 import type { BacklogItem, TestDefinition } from "../../../type";
 import type { RootState } from "../../../store/type";
@@ -63,7 +65,6 @@ describe("TestDefinitionCardXrefCategoryStatus", () => {
               >
                 <a
                   class="test-plan-test-definition-xref"
-                  data-dropdown="trigger"
                   href="/plugins/tracker/?aid=123&ttm_backlog_item_id=741&ttm_milestone_id=11"
                 >
                   <span
@@ -77,7 +78,6 @@ describe("TestDefinitionCardXrefCategoryStatus", () => {
                 </a>
                 <div
                   class="tlp-dropdown-menu tlp-dropdown-menu-left"
-                  data-dropdown="menu"
                   role="menu"
                 >
                   <a

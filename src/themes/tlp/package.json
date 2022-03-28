@@ -8,6 +8,7 @@
   "version": "0.0.0",
   "module": "./src/js/index.ts",
   "dependencies": {
+    "@floating-ui/dom": "^0.4.2",
     "@tuleap/tlp-fetch": "file:../../scripts/lib/tlp-fetch",
     "@tuleap/tlp-modal": "link:../../scripts/lib/tlp-modal",
     "@tuleap/tlp-popovers": "file:../../scripts/lib/tlp-popovers",
