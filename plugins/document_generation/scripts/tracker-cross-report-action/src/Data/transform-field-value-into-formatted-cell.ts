@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { EmptyCell, NumberCell, TextCell, HTMLCell, DateCell } from "./data-formator";
-import type { FormattedCell } from "./data-formator";
+import { EmptyCell, NumberCell, TextCell, HTMLCell, DateCell } from "@tuleap/plugin-docgen-xlsx";
+import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
 
 export function transformFieldValueIntoAFormattedCell(
     field_value: Readonly<ArtifactReportResponseFieldValue>
-): FormattedCell {
+): ReportCell {
     switch (field_value.type) {
         case "string":
             return new TextCell(field_value.value ?? "");

@@ -7,6 +7,7 @@
   "dependencies": {
     "@tuleap/gettext": "file:../../src/scripts/lib/gettext",
     "@tuleap/plugin-docgen-docx": "file:./scripts/lib/docx",
+    "@tuleap/plugin-docgen-xlsx": "file:./scripts/lib/xlsx",
     "@tuleap/tlp": "link:../../src/themes/tlp",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "@tuleap/tlp-modal": "link:../../src/scripts/lib/tlp-modal",

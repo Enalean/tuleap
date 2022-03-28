@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TextCell, NumberCell, EmptyCell, HTMLCell, DateCell } from "./data-formator";
+import { EmptyCell, NumberCell, TextCell, HTMLCell, DateCell } from "@tuleap/plugin-docgen-xlsx";
 import type {
     ArtifactReportResponseFieldValue,
     ArtifactReportResponseUserRepresentation,

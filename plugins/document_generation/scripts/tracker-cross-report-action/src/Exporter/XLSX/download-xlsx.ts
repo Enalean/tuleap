@@ -20,7 +20,8 @@
 import type { CellObject, ColInfo, RowInfo } from "xlsx";
 import { utils, writeFile } from "xlsx";
 import type { GlobalExportProperties } from "../../type";
-import type { FormattedCell, ReportSection } from "../../Data/data-formator";
+import type { ReportSection } from "../../Data/data-formator";
+import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 
 const CELL_MAX_CHARACTER_WIDTH = 65;
 const LINE_HEIGHT_POINTS = 12;
@@ -78,7 +79,7 @@ function buildContent(
 }
 
 function transformFormattedCellIntoASheetCell(
-    formatted_cell: FormattedCell
+    formatted_cell: ReportCell
 ): CellObjectWithWidthAndLines {
     switch (formatted_cell.type) {
         case "text":
