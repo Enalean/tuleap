@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DateCell, EmptyCell, HTMLCell, NumberCell, TextCell } from "../../Report/report-cells";
+import { DateCell, EmptyCell, HTMLCell, NumberCell, TextCell } from "@tuleap/plugin-docgen-xlsx";
 import type { ExportReport } from "../../Report/report-creator";
 import { transformAReportIntoASheet } from "./transform-report-to-xlsx-sheet";
 

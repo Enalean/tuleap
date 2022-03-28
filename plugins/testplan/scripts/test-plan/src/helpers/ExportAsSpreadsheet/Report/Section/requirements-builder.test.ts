@@ -18,7 +18,7 @@
  */
 
 import { createVueGettextProviderPassthrough } from "../../../vue-gettext-provider-for-test";
-import { DateCell, EmptyCell, NumberCell, TextCell } from "../report-cells";
+import { DateCell, EmptyCell, NumberCell, TextCell } from "@tuleap/plugin-docgen-xlsx";
 import type { BacklogItem, TestDefinition } from "../../../../type";
 import { buildRequirementsSection } from "./requirements-builder";
 import type { Tracker } from "./Tracker/tracker";

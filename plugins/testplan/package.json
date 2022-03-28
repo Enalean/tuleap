@@ -7,6 +7,7 @@
   "dependencies": {
     "@tuleap/concurrency-limit-pool": "file:../../src/scripts/lib/concurrency-limit-pool",
     "@tuleap/plugin-docgen-docx": "file:../document_generation/scripts/lib/docx",
+    "@tuleap/plugin-docgen-xlsx": "file:../document_generation/scripts/lib/xlsx",
     "@tuleap/plugin-testmanagement": "link:../testmanagement",
     "@tuleap/vue3-gettext-init": "link:../../src/scripts/lib/vue3-gettext-init",
     "docx": "^7.3.0",

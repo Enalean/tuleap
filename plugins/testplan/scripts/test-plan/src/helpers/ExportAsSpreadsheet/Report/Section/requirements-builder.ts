@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ReportCell } from "../report-cells";
-import { EmptyCell, TextCell } from "../report-cells";
+import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
+import { EmptyCell, TextCell } from "@tuleap/plugin-docgen-xlsx";
 import type { BacklogItem } from "../../../../type";
 import { computeTestStats, getTestStatusFromStats } from "../../../BacklogItems/compute-test-stats";
 import { getInternationalizedTestStatus } from "../internationalize-test-status";

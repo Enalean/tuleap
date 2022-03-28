@@ -18,8 +18,8 @@
  */
 
 import { transformFieldValueIntoACell } from "./transform-field-value-into-cell";
-import type { ReportCell } from "../report-cells";
-import { DateCell, EmptyCell, HTMLCell, NumberCell, TextCell } from "../report-cells";
+import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
+import { DateCell, EmptyCell, HTMLCell, NumberCell, TextCell } from "@tuleap/plugin-docgen-xlsx";
 import type { TrackerFieldValue } from "./Tracker/artifact";
 
 describe("transform-field-value-into-cell", () => {

@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ReportCell } from "../report-cells";
-import { DateCell, EmptyCell, HTMLCell, NumberCell, TextCell } from "../report-cells";
+import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
+import { DateCell, EmptyCell, HTMLCell, NumberCell, TextCell } from "@tuleap/plugin-docgen-xlsx";
 import type { TextValueField, TrackerFieldValue } from "./Tracker/artifact";
 
 export function transformFieldValueIntoACell(

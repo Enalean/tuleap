@@ -18,8 +18,8 @@
  */
 
 import type { PlannedTestCaseAssociatedWithTestExecAndCampaign } from "../get-planned-test-cases";
-import type { HTMLCell } from "../report-cells";
-import { DateCell, TextCell } from "../report-cells";
+import type { HTMLCell } from "@tuleap/plugin-docgen-xlsx";
+import { DateCell, TextCell } from "@tuleap/plugin-docgen-xlsx";
 import { retrieveArtifacts } from "./Tracker/artifacts-retriever";
 import { transformTextFieldValueIntoACell } from "./transform-field-value-into-cell";
 import type { Artifact } from "./Tracker/artifact";
