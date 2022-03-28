@@ -41,7 +41,10 @@ export function downloadXLSX(export_settings: ExportSettings, formatted_data: Re
     utils.book_append_sheet(book, sheet);
     writeFile(
         book,
-        export_settings.first_level + "-" + export_settings.first_level.report_name + ".xlsx",
+        export_settings.first_level.tracker_name +
+            "-" +
+            export_settings.first_level.report_name +
+            ".xlsx",
         {
             bookSST: true,
         }
