@@ -22,8 +22,10 @@ namespace Tuleap\Tracker\REST\Artifact\ChangesetValue;
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldUpdateValueBuilder;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 final class FieldsDataBuilder
@@ -31,23 +33,31 @@ final class FieldsDataBuilder
     public function __construct(
         private RetrieveUsedFields $fields_retriever,
         private ArtifactLinksFieldUpdateValueBuilder $artifact_link_builder,
+        private NewArtifactLinkInitialChangesetValueBuilder $artifact_link_initial_builder,
     ) {
     }
 
     /**
      * @param ArtifactValuesRepresentation[] $values
+     * @throws \Tracker_FormElement_InvalidFieldException
+     * @throws \Tracker_FormElement_InvalidFieldValueException
      */
-    public function getFieldsDataOnCreate(array $values, \Tracker $tracker): array
+    public function getFieldsDataOnCreate(array $values, \Tracker $tracker): InitialChangesetValuesContainer
     {
         $new_values     = [];
+        $artifact_link  = null;
         $indexed_fields = $this->getIndexedFields($tracker);
         foreach ($values as $value) {
             $array_representation = $value->toArray();
 
-            $field                       = $this->getField($indexed_fields, $array_representation);
+            $field = $this->getField($indexed_fields, $array_representation);
+            if ($field instanceof \Tracker_FormElement_Field_ArtifactLink) {
+                $artifact_link = $this->artifact_link_initial_builder->buildFromPayload($field, $array_representation);
+                continue;
+            }
             $new_values[$field->getId()] = $field->getFieldDataFromRESTValue($array_representation);
         }
-        return $new_values;
+        return new InitialChangesetValuesContainer($new_values, $artifact_link);
     }
 
     /**
@@ -69,10 +79,10 @@ final class FieldsDataBuilder
             $field = $this->getField($indexed_fields, $array_representation);
             if ($field instanceof \Tracker_FormElement_Field_ArtifactLink) {
                 $artifact_link = $this->artifact_link_builder->buildArtifactLinksFieldUpdateValue(
-                    $submitter,
+                    $artifact,
                     $field,
-                    $array_representation,
-                    $artifact
+                    $submitter,
+                    $array_representation
                 );
                 continue;
             }

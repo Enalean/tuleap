@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
-use Tuleap\Tracker\Artifact\Artifact;
-
-interface RetrieveForwardLinks
+/**
+ * I hold an integer id that should match an Artifact that will become the parent of the current Artifact.
+ * At this stage, we cannot assume the id matches an actual Artifact or that said Artifact is visible by the current user.
+ * I could hold '-1' or '0', which are not valid artifact identifiers.
+ * I am the equivalent of an "_is_child" typed reverse link.
+ * @psalm-immutable
+ */
+interface NewParentLink
 {
-    public function retrieve(
-        \PFUser $submitter,
-        \Tracker_FormElement_Field_ArtifactLink $link_field,
-        Artifact $artifact,
-    ): CollectionOfForwardLinks;
+    public function getParentArtifactId(): int;
 }

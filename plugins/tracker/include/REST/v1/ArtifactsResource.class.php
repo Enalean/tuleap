@@ -116,6 +116,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldU
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadExtractor;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadStructureChecker;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactParentLinkPayloadExtractor;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
@@ -765,7 +766,8 @@ class ArtifactsResource extends AuthenticatedResource
                             new ChangesetValueArtifactLinkDao(),
                             $this->artifact_factory
                         )
-                    )
+                    ),
+                    new NewArtifactLinkInitialChangesetValueBuilder()
                 ),
                 $changeset_creator
             );
@@ -921,7 +923,8 @@ class ArtifactsResource extends AuthenticatedResource
                             new ChangesetValueArtifactLinkDao(),
                             $this->artifact_factory
                         )
-                    )
+                    ),
+                    new NewArtifactLinkInitialChangesetValueBuilder()
                 ),
                 $this->artifact_factory,
                 $this->tracker_factory,

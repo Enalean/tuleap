@@ -24,8 +24,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuild
 
 class Tracker_REST_Artifact_ArtifactCreator
 {
-    /** @var FieldsDataBuilder */
-    private $fields_data_builder;
+    private FieldsDataBuilder $fields_data_builder;
 
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
@@ -57,9 +56,13 @@ class Tracker_REST_Artifact_ArtifactCreator
      */
     public function create(PFUser $user, Tuleap\Tracker\REST\TrackerReference $tracker_reference, array $values, bool $should_visit_be_recorded)
     {
-        $tracker     = $this->getTracker($tracker_reference);
-        $fields_data = $this->fields_data_builder->getFieldsDataOnCreate($values, $tracker);
-        $fields_data = $this->default_values_adder->getUsedFieldsWithDefaultValue($tracker, $fields_data, $user);
+        $tracker          = $this->getTracker($tracker_reference);
+        $changeset_values = $this->fields_data_builder->getFieldsDataOnCreate($values, $tracker);
+        $fields_data      = $this->default_values_adder->getUsedFieldsWithDefaultValue(
+            $tracker,
+            $changeset_values->getFieldsData(),
+            $user
+        );
         $this->checkUserCanSubmit($user, $tracker);
 
         return $this->returnReferenceOrError(

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
+declare(strict_types=1);
 
-use Tuleap\Tracker\Artifact\Artifact;
+namespace Tuleap\Tracker\Test\Stub;
 
-interface RetrieveForwardLinks
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewParentLink;
+
+/**
+ * @psalm-immutable
+ */
+final class NewParentLinkStub implements NewParentLink
 {
-    public function retrieve(
-        \PFUser $submitter,
-        \Tracker_FormElement_Field_ArtifactLink $link_field,
-        Artifact $artifact,
-    ): CollectionOfForwardLinks;
+    private function __construct(private int $id)
+    {
+    }
+
+    public static function withId(int $id): self
+    {
+        return new self($id);
+    }
+
+    public function getParentArtifactId(): int
+    {
+        return $this->id;
+    }
 }

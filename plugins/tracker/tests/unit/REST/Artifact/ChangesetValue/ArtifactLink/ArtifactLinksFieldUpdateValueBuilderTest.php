@@ -65,10 +65,10 @@ final class ArtifactLinksFieldUpdateValueBuilderTest extends \Tuleap\Test\PHPUni
         );
 
         return $builder->buildArtifactLinksFieldUpdateValue(
-            UserTestBuilder::buildWithDefaults(),
+            ArtifactTestBuilder::anArtifact(1060)->build(),
             $link_field,
-            $payload,
-            ArtifactTestBuilder::anArtifact(1060)->build()
+            UserTestBuilder::buildWithDefaults(),
+            $payload
         );
     }
 
@@ -76,7 +76,7 @@ final class ArtifactLinksFieldUpdateValueBuilderTest extends \Tuleap\Test\PHPUni
     {
         $payload = [
             'links'  => [
-                ['id' => self::FIRST_UNCHANGED_ARTIFACT_ID, 'type' => '_is_child'],
+                ['id' => self::FIRST_UNCHANGED_ARTIFACT_ID],
                 ['id' => self::SECOND_UNCHANGED_ARTIFACT_ID, 'type' => '_is_child'],
                 ['id' => self::ADDED_ARTIFACT_ID, 'type' => '_depends_on'],
             ],
@@ -109,7 +109,7 @@ final class ArtifactLinksFieldUpdateValueBuilderTest extends \Tuleap\Test\PHPUni
     {
         $payload = [
             'links' => [
-                ['id' => self::FIRST_UNCHANGED_ARTIFACT_ID, 'type' => '_is_child'],
+                ['id' => self::FIRST_UNCHANGED_ARTIFACT_ID],
                 ['id' => self::SECOND_UNCHANGED_ARTIFACT_ID, 'type' => '_is_child'],
                 ['id' => self::ADDED_ARTIFACT_ID, 'type' => '_depends_on'],
             ],

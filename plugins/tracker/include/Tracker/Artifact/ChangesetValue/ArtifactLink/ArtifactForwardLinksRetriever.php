@@ -37,12 +37,8 @@ final class ArtifactForwardLinksRetriever implements RetrieveForwardLinks
     public function retrieve(
         \PFUser $submitter,
         \Tracker_FormElement_Field_ArtifactLink $link_field,
-        ?Artifact $artifact,
+        Artifact $artifact,
     ): CollectionOfForwardLinks {
-        if (! $artifact) {
-            return new CollectionOfForwardLinks([]);
-        }
-
         $last_changeset = $artifact->getLastChangeset();
         if (! $last_changeset) {
             return new CollectionOfForwardLinks([]);

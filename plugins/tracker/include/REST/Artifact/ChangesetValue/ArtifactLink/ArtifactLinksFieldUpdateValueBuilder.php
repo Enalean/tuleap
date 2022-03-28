@@ -41,10 +41,10 @@ final class ArtifactLinksFieldUpdateValueBuilder
      * @throws \Tracker_FormElement_InvalidFieldValueException
      */
     public function buildArtifactLinksFieldUpdateValue(
-        \PFUser $submitter,
+        Artifact $artifact,
         Tracker_FormElement_Field_ArtifactLink $link_field,
+        \PFUser $submitter,
         array $payload,
-        ?Artifact $artifact,
     ): ArtifactLinksFieldUpdateValue {
         $this->payload_structure_checker->checkPayloadStructure($payload);
 

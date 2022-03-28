@@ -21,9 +21,6 @@
 
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldUpdateValueFormatter;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
 use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
@@ -44,10 +41,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeTablePresenter;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldUpdateValueBuilder;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadExtractor;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadStructureChecker;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactParentLinkPayloadExtractor;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
@@ -250,20 +243,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      */
     public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {
-        $update_value = (
-            new ArtifactLinksFieldUpdateValueBuilder(
-                new ArtifactLinksPayloadStructureChecker(),
-                new ArtifactLinksPayloadExtractor(),
-                new ArtifactParentLinkPayloadExtractor(),
-                new ArtifactForwardLinksRetriever(
-                    new ArtifactLinksByChangesetCache(),
-                    $this->getChangesetValueArtifactLinkDao(),
-                    Tracker_ArtifactFactory::instance()
-                )
-            )
-        )->buildArtifactLinksFieldUpdateValue($this->getCurrentUser(), $this, $value, $artifact);
-
-        return ArtifactLinksFieldUpdateValueFormatter::formatForWebUI($update_value);
+        return [];
     }
 
     public function getFieldDataFromRESTValueByField($value, ?Artifact $artifact = null)
@@ -1380,14 +1360,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         }
 
         return $this->cached_changeset_value_dao;
-    }
-
-    /**
-     * For testing purpose
-     */
-    public function setChangesetValueArtifactLinkDao(ChangesetValueArtifactLinkDao $dao): void
-    {
-        $this->cached_changeset_value_dao = $dao;
     }
 
     /**

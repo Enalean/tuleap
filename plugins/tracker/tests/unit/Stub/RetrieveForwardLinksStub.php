@@ -41,7 +41,7 @@ final class RetrieveForwardLinksStub implements RetrieveForwardLinks
     public function retrieve(
         \PFUser $submitter,
         Tracker_FormElement_Field_ArtifactLink $link_field,
-        ?Artifact $artifact,
+        Artifact $artifact,
     ): CollectionOfForwardLinks {
         return $this->links;
     }

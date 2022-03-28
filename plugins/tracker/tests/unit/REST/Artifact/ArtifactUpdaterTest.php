@@ -35,6 +35,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldU
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadExtractor;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadStructureChecker;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactParentLinkPayloadExtractor;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -105,7 +106,8 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 new ArtifactLinksPayloadExtractor(),
                 new ArtifactParentLinkPayloadExtractor(),
                 RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([])),
-            )
+            ),
+            new NewArtifactLinkInitialChangesetValueBuilder()
         ), $this->changeset_creator);
         $updater->update($this->user, $this->artifact, $values, $comment);
     }
