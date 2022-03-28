@@ -21,6 +21,8 @@
  *
  */
 
+use Tuleap\User\UnixUserChecker;
+
 class BackendSystem extends Backend
 {
     protected $needRefreshUserCache  = false;
@@ -120,14 +122,7 @@ class BackendSystem extends Backend
         clearstatcache();
     }
 
-    /**
-     * Ensure user home directory is created and has the right uid
-     *
-     * @param PFUser $user the user we want to sanitize his home
-     *
-     * @return null
-     */
-    public function userHomeSanityCheck(PFUser $user)
+    public function userHomeSanityCheck(PFUser $user, array &$warning): bool
     {
         if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $this->log('No homedir_prefix, userHomeSanityCheck skipped', Backend::LOG_INFO);
@@ -135,11 +130,19 @@ class BackendSystem extends Backend
         }
 
         if (! $this->userHomeExists($user->getUserName())) {
-            $this->createUserHome($user);
+            if (! $this->createUserHome($user)) {
+                $warning[] = 'User home for ' . $user->getId() . ': ' . $user->getUserName() . ' can not be created.';
+                return false;
+            }
+        } elseif (! UnixUserChecker::doesPlatformAllowUnixUserAndIsUserNameValid($user->getUserName())) {
+            $warning[] = 'User home for ' . $user->getId() . ': ' . $user->getUserName() . ' is numeric. This can cause problems.';
         }
+
         if (! $this->isUserHomeOwnedByUser($user)) {
             $this->setUserHomeOwnership($user);
         }
+
+        return true;
     }
 
     /**
@@ -157,6 +160,11 @@ class BackendSystem extends Backend
         if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $this->log('No homedir_prefix, createUserHome skipped', Backend::LOG_INFO);
             return true;
+        }
+
+        if (! UnixUserChecker::doesPlatformAllowUnixUserAndIsUserNameValid($user->getUserName())) {
+            $this->log('User login is numeric, createUserHome skipped', Backend::LOG_ERROR);
+            return false;
         }
 
         $homedir = $user->getUnixHomeDir();
@@ -745,6 +753,11 @@ class BackendSystem extends Backend
             return true;
         }
 
+        if (! $this->isNewNameEligibleForUnixAccount($newName)) {
+            $this->log('User login is numeric, renameUserHomeDirectory skipped', Backend::LOG_ERROR);
+            return false;
+        }
+
         return rename(ForgeConfig::get('homedir_prefix') . '/' . $user->getUserName(), ForgeConfig::get('homedir_prefix') . '/' . $newName);
     }
 
@@ -766,5 +779,10 @@ class BackendSystem extends Backend
     protected function getWikiAttachment()
     {
         return new WikiAttachment();
+    }
+
+    private function isNewNameEligibleForUnixAccount(string $newName): bool
+    {
+        return ! is_numeric($newName);
     }
 }

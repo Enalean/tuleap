@@ -58,12 +58,11 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
 
         // User home sanity check should be done only once a day as
         // it is slooow (due to libnss-mysql)
-        $this->userHomeSanityCheck($backend_system);
+        $warnings = [];
 
+        $this->userHomeSanityCheck($backend_system, $warnings);
         // Purge system_event table: we only keep one year history in db
         $this->purgeSystemEventsDataOlderThanOneYear();
-
-        $warnings = [];
 
         $this->runComputeAllDailyStats($logger, $warnings);
 
@@ -93,7 +92,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         return true;
     }
 
-    private function userHomeSanityCheck(BackendSystem $backend_system)
+    private function userHomeSanityCheck(BackendSystem $backend_system, array &$warnings)
     {
         $dao   = new UserDao();
         $users = $dao
@@ -101,7 +100,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
             ->instanciateWith([UserManager::instance(), 'getUserInstanceFromRow']);
 
         foreach ($users as $user) {
-            $backend_system->userHomeSanityCheck($user);
+            $backend_system->userHomeSanityCheck($user, $warnings);
         }
     }
 

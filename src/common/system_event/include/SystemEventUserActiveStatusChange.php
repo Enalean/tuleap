@@ -28,6 +28,7 @@ use PFUser;
 use Project;
 use SystemEvent;
 use Tuleap\Project\UserRemover;
+use Tuleap\User\UnixUserChecker;
 use UserGroupDao;
 use UserManager;
 
@@ -85,7 +86,11 @@ final class SystemEventUserActiveStatusChange extends SystemEvent
                 $this->done();
                 return true;
             } else {
-                $this->error("Could not create user home " . $user->getUserName() . " id: " . $user->getId());
+                $message = "Could not create user home " . $user->getUserName() . " id: " . $user->getId();
+                if (! UnixUserChecker::doesPlatformAllowUnixUserAndIsUserNameValid($user->getUserName())) {
+                    $message .= ". The login is numeric, this is not compatible with unix users.";
+                }
+                $this->error($message);
                 return false;
             }
         } else {

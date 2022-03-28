@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\User\UnixUserChecker;
 
 /**
  *  Data Access Object for User
@@ -213,7 +214,7 @@ class UserDao extends DataAccessObject
             $columns[] = 'password';
             $values[]  = $this->password_handler->computeHashPassword($user_pw);
 
-            if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
+            if (UnixUserChecker::doesPlatformAllowUnixUserAndIsUserNameValid($user_name)) {
                 $columns[] = 'unix_pw';
                 $values[]  = $this->password_handler->computeUnixPassword($user_pw);
             } else {
@@ -321,7 +322,7 @@ class UserDao extends DataAccessObject
              * We need to keep it for old instances with non migrated accounts yet
              */
             $stmt[] = 'user_pw=""';
-            if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
+            if (UnixUserChecker::doesPlatformAllowUnixUserAndIsUserNameValid($user["user_name"])) {
                 $stmt[] = 'unix_pw=' . $this->da->quoteSmart($this->password_handler->computeUnixPassword($user['clear_password']));
             } else {
                 $stmt[] = 'unix_pw=' . $this->da->quoteSmart(self::NOT_VALID_UNIX_PASSWORD_HASH);
