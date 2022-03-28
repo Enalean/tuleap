@@ -76,12 +76,15 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
     /** @see Tracker_Artifact_View_View::fetch() */
     public function fetch()
     {
+        $html  = '';
+        $html .= '<div class="tracker_artifact">';
+
+        if (! $this->artifact->getLastChangeset()) {
+            $html .= "<div class='feedback_error'>" . dgettext('tuleap-tracker', 'The artifact is not linked to any changeset.') . "</div>";
+        }
         if ($this->artifact->userCanUpdate($this->user)) {
             self::fetchEditViewJSCode();
         }
-
-        $html  = '';
-        $html .= '<div class="tracker_artifact">';
 
         $submitted_values = $this->request->get('artifact');
         if (! $submitted_values || ! is_array($submitted_values)) {
@@ -298,10 +301,12 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         return $status->canUpdateArtifactInInsecureMode($this->artifact->getTracker());
     }
 
-    private function fetchSubmitButton()
+    private function fetchSubmitButton(): string
     {
-        if ($this->artifact->userCanUpdate($this->user)) {
+        if ($this->artifact->userCanUpdate($this->user) && $this->artifact->getLastChangeset()) {
             return $this->renderer->fetchSubmitButton($this->user);
         }
+
+        return "";
     }
 }

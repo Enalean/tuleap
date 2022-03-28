@@ -59,12 +59,12 @@ abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_Ar
         return $this->fetchArtifactInformations($this->artifact);
     }
 
-    private function fetchArtifactInformations(Artifact $artifact)
+    private function fetchArtifactInformations(Artifact $artifact): string
     {
         $html          = "";
         $html_purifier = Codendi_HTMLPurifier::instance();
         $artifact_id   = $html_purifier->purify($artifact->getId());
-        $changeset_id  = $html_purifier->purify($artifact->getLastChangeset()->getId());
+        $changeset_id  = $html_purifier->purify($artifact->getLastChangeset()?->getId());
 
         $html .= '<input type="hidden" id="artifact_informations" data-artifact-id="' . $artifact_id . '" data-changeset-id="' . $changeset_id . '" data-test="current-artifact-id" value="' . $artifact_id . '">';
 
