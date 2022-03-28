@@ -27,18 +27,15 @@
     </section>
 </template>
 
+<script setup lang="ts">
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { ErrorState } from "../../../store/error/module";
+
+const { modal_error, has_modal_error } = useNamespacedState<
+    Pick<ErrorState, "modal_error" | "has_modal_error">
+>("error", ["modal_error", "has_modal_error"]);
+</script>
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import { namespace } from "vuex-class";
-
-const error = namespace("error");
-
-@Component
-export default class ModalFeedback extends Vue {
-    @error.State
-    readonly modal_error!: string;
-
-    @error.State
-    readonly has_modal_error!: boolean;
-}
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>
