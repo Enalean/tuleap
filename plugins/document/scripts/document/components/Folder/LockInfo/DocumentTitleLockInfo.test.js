@@ -17,17 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vuex from "vuex";
 import { shallowMount } from "@vue/test-utils";
 import DocumentTitleLockInfo from "./DocumentTitleLockInfo.vue";
 import localVue from "../../../helpers/local-vue";
 import { TYPE_EMBEDDED } from "../../../constants";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
 describe("DocumentTitleLockInfo", () => {
-    let document_locked_factory, store;
+    let document_locked_factory;
 
     beforeEach(() => {
-        store = new Vuex.Store();
+        const store = createStoreMock({});
 
         document_locked_factory = (props = {}) => {
             return shallowMount(DocumentTitleLockInfo, {
@@ -49,7 +49,7 @@ describe("DocumentTitleLockInfo", () => {
 
         const wrapper = document_locked_factory({
             item,
-            isDisplayingItem: true,
+            isDisplayingInHeader: true,
         });
 
         expect(wrapper.find("[data-test=document-lock-information]").exists()).toBeFalsy();
@@ -71,7 +71,7 @@ describe("DocumentTitleLockInfo", () => {
 
         const wrapper = document_locked_factory({
             item,
-            isDisplayingItem: true,
+            isDisplayingInHeader: true,
         });
 
         expect(wrapper.find("[data-test=document-lock-information]").exists()).toBeTruthy();
