@@ -24,7 +24,7 @@ import { createStoreMock } from "../../support/store-wrapper.test-helper.js";
 import store_options from "../../store/store_options";
 import { create, createList } from "../../support/factories";
 import DepthLimitReachedMessage from "../common/DepthLimitReachedMessage.vue";
-import Artifact from "./Artifact.vue";
+import ContentArtifact from "./ContentArtifact.vue";
 import ArtifactsList from "./ArtifactsList.vue";
 
 describe("Artifact", () => {
@@ -58,7 +58,7 @@ describe("Artifact", () => {
             },
         });
 
-        wrapper = shallowMount(Artifact, {
+        wrapper = shallowMount(ContentArtifact, {
             propsData: {
                 artifact: create("baseline_artifact", {
                     title: "Epic",

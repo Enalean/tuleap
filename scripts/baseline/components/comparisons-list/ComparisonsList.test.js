@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import ComparisonsList from "./ComparisonsList.vue";
 import ComparisonSkeleton from "./ComparisonSkeleton.vue";
-import Comparison from "./Comparison.vue";
+import ComparisonItem from "./ComparisonItem.vue";
 import { createList } from "../../support/factories";
 import { createStoreMock } from "../../support/store-wrapper.test-helper";
 import store_options from "../../store/store_options";
@@ -53,7 +53,7 @@ describe("ComparisonsList", () => {
         beforeEach(() => ($store.state.comparisons.is_loading = true));
 
         it("does not show any comparison", () => {
-            expect(wrapper.findComponent(Comparison).exists()).toBeFalsy();
+            expect(wrapper.findComponent(ComparisonItem).exists()).toBeFalsy();
         });
 
         it("shows body table skeleton", () => {
@@ -75,7 +75,7 @@ describe("ComparisonsList", () => {
             });
 
             it("shows comparisons", () => {
-                expect(wrapper.findComponent(Comparison).exists()).toBeTruthy();
+                expect(wrapper.findComponent(ComparisonItem).exists()).toBeTruthy();
             });
 
             it("does not show body table skeleton", () => {
@@ -94,7 +94,7 @@ describe("ComparisonsList", () => {
             });
 
             it("does not show comparisons", () => {
-                expect(wrapper.findComponent(Comparison).exists()).toBeFalsy();
+                expect(wrapper.findComponent(ComparisonItem).exists()).toBeFalsy();
             });
 
             it("does not show body table skeleton", () => {

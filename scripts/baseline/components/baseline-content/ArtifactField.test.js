@@ -20,13 +20,13 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
-import Field from "./Field.vue";
+import ArtifactField from "./ArtifactField.vue";
 
 describe("Field", () => {
     let wrapper;
 
     beforeEach(() => {
-        wrapper = shallowMount(Field, {
+        wrapper = shallowMount(ArtifactField, {
             localVue,
             propsData: { semantic: "description", tracker_id: 1, value: "My description" },
         });

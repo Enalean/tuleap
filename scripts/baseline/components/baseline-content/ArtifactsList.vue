@@ -33,7 +33,7 @@ export default {
     name: "ArtifactList",
 
     components: {
-        artifact: () => import("./Artifact.vue"),
+        artifact: () => import("./ContentArtifact.vue"),
     },
 
     props: {

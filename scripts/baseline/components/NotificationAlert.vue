@@ -17,24 +17,24 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -
   -->
-
 <template>
-    <div>
-        <h1 class="statistic-label">
-            <slot></slot>
-            <span class="statistic-label-title">
-                {{ label }}
-            </span>
-        </h1>
+    <div v-bind:class="notification_class" class="tlp-framed-vertically">
+        {{ notification.text }}
     </div>
 </template>
-
 <script>
 export default {
-    name: "Statistic",
-
+    name: "NotificationAlert",
     props: {
-        label: { required: true, type: String },
+        notification: {
+            required: true,
+            type: Object,
+        },
+    },
+    computed: {
+        notification_class() {
+            return `tlp-alert-${this.notification.class}`;
+        },
     },
 };
 </script>

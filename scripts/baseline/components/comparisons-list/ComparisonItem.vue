@@ -15,81 +15,83 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-  -
   -->
 
 <template>
     <tr>
         <td class="tlp-table-cell-numeric">
-            <a href="#" v-on:click.prevent="showBaseline(baseline)">
-                {{ baseline.id }}
+            <a href="#" v-on:click.prevent="showComparison()">
+                {{ comparison.id }}
             </a>
         </td>
-        <td class="baselines-table-column-name">{{ baseline.name }}</td>
-        <td class="baselines-table-column-milestone">
+        <td class="comparisons-table-column">
             <artifact-link class="baselines-table-column-milestone" v-bind:artifact="milestone">
                 <artifact-badge v-bind:artifact="milestone" v-bind:tracker="milestone_tracker" />
                 {{ milestone.title }}
             </artifact-link>
         </td>
-        <td class="baselines-table-column-snapshot-date">
-            <humanized-date v-bind:date="baseline.snapshot_date" v-bind:start_with_capital="true" />
+        <td class="comparisons-table-column">
+            {{ base_baseline.name }}
         </td>
-        <td class="baselines-table-column-author">
-            <user-badge v-bind:user="author" class="baseline-badge-avatar" />
+        <td class="comparisons-table-column">
+            {{ compared_to_baseline.name }}
         </td>
         <td class="tlp-table-cell-actions">
-            <consult-baseline-button
+            <consult-comparison-button
                 class="tlp-table-cell-actions-button"
-                v-bind:baseline="baseline"
+                v-bind:comparison="comparison"
             />
-            <delete-baseline-button
+            <delete-comparison-button
                 class="tlp-table-cell-actions-button"
-                v-bind:baseline="baseline"
+                v-bind:comparison="comparison"
+                v-bind:base_baseline="base_baseline"
+                v-bind:compared_to_baseline="compared_to_baseline"
             />
         </td>
     </tr>
 </template>
 
 <script>
-import HumanizedDate from "../common/HumanizedDate.vue";
-import UserBadge from "../common/UserBadge.vue";
 import ArtifactLink from "../common/ArtifactLink.vue";
 import ArtifactBadge from "../common/ArtifactBadge.vue";
-import DeleteBaselineButton from "./DeleteBaselineButton.vue";
-import ConsultBaselineButton from "./ConsultBaselineButton.vue";
 import { mapGetters } from "vuex";
+import DeleteComparisonButton from "./DeleteComparisonButton.vue";
+import ConsultComparisonButton from "./ConsultComparisonButton.vue";
 
 export default {
-    name: "Baseline",
+    name: "ComparisonItem",
     components: {
-        ConsultBaselineButton,
+        ConsultComparisonButton,
+        DeleteComparisonButton,
         ArtifactLink,
         ArtifactBadge,
-        HumanizedDate,
-        UserBadge,
-        DeleteBaselineButton,
     },
+
     props: {
-        baseline: { required: true, type: Object },
+        comparison: { required: true, type: Object },
     },
+
     computed: {
-        ...mapGetters(["findArtifactById", "findTrackerById", "findUserById"]),
+        ...mapGetters(["findBaselineById", "findArtifactById", "findTrackerById", "findUserById"]),
+        base_baseline() {
+            return this.findBaselineById(this.comparison.base_baseline_id);
+        },
+        compared_to_baseline() {
+            return this.findBaselineById(this.comparison.compared_to_baseline_id);
+        },
         milestone() {
-            return this.findArtifactById(this.baseline.artifact_id);
+            return this.findArtifactById(this.base_baseline.artifact_id);
         },
         milestone_tracker() {
             return this.findTrackerById(this.milestone.tracker.id);
         },
-        author() {
-            return this.findUserById(this.baseline.author_id);
-        },
     },
+
     methods: {
-        showBaseline(baseline) {
+        showComparison() {
             this.$router.push({
-                name: "BaselineContentPage",
-                params: { baseline_id: baseline.id },
+                name: "ComparisonPage",
+                params: { comparison_id: this.comparison.id },
             });
         },
     },

@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import Vuex from "vuex";
 import { createList } from "../../support/factories";
-import Artifact from "./Artifact.vue";
+import ContentArtifact from "./ContentArtifact.vue";
 import ArtifactsList from "./ArtifactsList.vue";
 
 describe("ArtifactsList", () => {
@@ -51,6 +51,6 @@ describe("ArtifactsList", () => {
     });
 
     it("shows as many artifacts as given", () => {
-        expect(wrapper.findAllComponents(Artifact).length).toEqual(3);
+        expect(wrapper.findAllComponents(ContentArtifact).length).toEqual(3);
     });
 });

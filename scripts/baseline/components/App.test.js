@@ -24,7 +24,7 @@ import App from "./App.vue";
 import { createStoreMock } from "../support/store-wrapper.test-helper";
 import store_options from "../store/store_options";
 import { create } from "../support/factories.js";
-import Notification from "./Notification.vue";
+import NotificationAlert from "./NotificationAlert.vue";
 
 describe("App", () => {
     let $store, wrapper;
@@ -60,14 +60,14 @@ describe("App", () => {
     describe("With notification", () => {
         beforeEach(() => ($store.state.dialog_interface.notification = create("notification")));
         it("Show notification", () => {
-            expect(wrapper.findComponent(Notification).exists()).toBeTruthy();
+            expect(wrapper.findComponent(NotificationAlert).exists()).toBeTruthy();
         });
     });
 
     describe("Without notification", () => {
         beforeEach(() => ($store.state.dialog_interface.notification = null));
         it("Show notification", () => {
-            expect(wrapper.findComponent(Notification).exists()).toBeFalsy();
+            expect(wrapper.findComponent(NotificationAlert).exists()).toBeFalsy();
         });
     });
 });

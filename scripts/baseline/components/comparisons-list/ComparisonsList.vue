@@ -36,7 +36,7 @@
             <comparison-skeleton />
         </tbody>
         <tbody v-else-if="are_some_available">
-            <comparison
+            <comparison-item
                 v-for="comparison in comparisons"
                 v-bind:key="comparison.id"
                 v-bind:comparison="comparison"
@@ -61,13 +61,13 @@
 
 <script>
 import ComparisonSkeleton from "./ComparisonSkeleton.vue";
-import Comparison from "./Comparison.vue";
+import ComparisonItem from "./ComparisonItem.vue";
 import { mapState, mapGetters } from "vuex";
 
 export default {
     name: "ComparisonsList",
 
-    components: { ComparisonSkeleton, Comparison },
+    components: { ComparisonSkeleton, ComparisonItem },
 
     props: {
         project_id: { required: true, type: Number },

@@ -37,7 +37,7 @@
         </tbody>
 
         <tbody v-else-if="are_baselines_available">
-            <baseline
+            <baseline-list-item
                 v-for="baseline in baselines"
                 v-bind:key="baseline.id"
                 v-bind:baseline="baseline"
@@ -62,13 +62,13 @@
 
 <script>
 import BaselineSkeleton from "./BaselineSkeleton.vue";
-import Baseline from "./Baseline.vue";
+import BaselineListItem from "./BaselineListItem.vue";
 import { mapState, mapGetters } from "vuex";
 
 export default {
     name: "BaselinesList",
 
-    components: { BaselineSkeleton, Baseline },
+    components: { BaselineSkeleton, BaselineListItem },
 
     props: {
         project_id: { required: true, type: Number },

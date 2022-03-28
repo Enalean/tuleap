@@ -19,7 +19,7 @@
  */
 
 import { createLocalVue, shallowMount } from "@vue/test-utils";
-import Comparison from "./Comparison.vue";
+import ComparisonItem from "./ComparisonItem.vue";
 import { create } from "../../support/factories";
 import { createStoreMock } from "../../support/store-wrapper.test-helper";
 import store_options from "../../store/store_options";
@@ -70,7 +70,7 @@ describe("Comparison", () => {
         });
         $store.getters.findTrackerById.mockReturnValue(create("tracker"));
 
-        wrapper = shallowMount(Comparison, {
+        wrapper = shallowMount(ComparisonItem, {
             propsData: {
                 comparison: create("comparison", "saved", {
                     id: 1,

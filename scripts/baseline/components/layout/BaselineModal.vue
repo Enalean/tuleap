@@ -54,7 +54,7 @@ import { mapState } from "vuex";
 import { createModal } from "tlp";
 
 export default {
-    name: "Modal",
+    name: "BaselineModal",
 
     data() {
         return { modal: null, modal_content_version: 0 };

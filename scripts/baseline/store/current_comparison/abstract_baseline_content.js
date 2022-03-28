@@ -18,7 +18,6 @@
  *
  */
 
-import Vue from "vue";
 import { getBaselineArtifacts, getBaselineArtifactsByIds } from "../../api/rest-querier";
 import { ARTIFACTS_EXPLORATION_DEPTH_LIMIT } from "../../constants";
 import ArrayUtils from "../../support/array-utils";

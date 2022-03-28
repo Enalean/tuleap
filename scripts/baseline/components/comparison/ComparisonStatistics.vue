@@ -20,34 +20,37 @@
 
 <template>
     <div class="statistics">
-        <statistic v-bind:label="added_artifact_label" class="comparison-statistic-added-artifacts">
+        <statistic-item
+            v-bind:label="added_artifact_label"
+            class="comparison-statistic-added-artifacts"
+        >
             {{ added_artifacts_count }}
-        </statistic>
+        </statistic-item>
 
-        <statistic
+        <statistic-item
             v-bind:label="removed_artifact_label"
             class="comparison-statistic-deleted-artifacts"
         >
             {{ removed_artifacts_count }}
-        </statistic>
+        </statistic-item>
 
-        <statistic
+        <statistic-item
             v-bind:label="modified_artifact_label"
             class="comparison-statistic-modified-artifacts"
         >
             {{ modified_artifacts_count }}
-        </statistic>
+        </statistic-item>
     </div>
 </template>
 
 <script>
-import Statistic from "../common/Statistic.vue";
+import StatisticItem from "../common/StatisticItem.vue";
 import { mapState } from "vuex";
 
 export default {
     name: "ComparisonStatistics",
 
-    components: { Statistic },
+    components: { StatisticItem },
 
     filters: {
         with_sign(value) {

@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import BaselinesList from "./BaselinesList.vue";
 import BaselineSkeleton from "./BaselineSkeleton.vue";
-import Baseline from "./Baseline.vue";
+import BaselineListItem from "./BaselineListItem.vue";
 import { createList } from "../../support/factories";
 import { createStoreMock } from "../../support/store-wrapper.test-helper";
 import store_options from "../../store/store_options";
@@ -57,7 +57,7 @@ describe("BaselinesList", () => {
         beforeEach(() => ($store.state.baselines.are_baselines_loading = true));
 
         it("does not show any baseline", () => {
-            expect(wrapper.findComponent(Baseline).exists()).toBeFalsy();
+            expect(wrapper.findComponent(BaselineListItem).exists()).toBeFalsy();
         });
 
         it("shows baseline skeleton", () => {
@@ -79,7 +79,7 @@ describe("BaselinesList", () => {
             });
 
             it("shows as many baselines as given", () => {
-                let baselines = wrapper.findAllComponents(Baseline);
+                let baselines = wrapper.findAllComponents(BaselineListItem);
                 expect(baselines.length).toBe(3);
             });
 
@@ -99,7 +99,7 @@ describe("BaselinesList", () => {
             });
 
             it("does not show baselines", () => {
-                expect(wrapper.findComponent(Baseline).exists()).toBeFalsy();
+                expect(wrapper.findComponent(BaselineListItem).exists()).toBeFalsy();
             });
 
             it("does not show baseline skeleton", () => {

@@ -49,24 +49,24 @@
 
         <main class="tlp-framed-vertically">
             <div class="tlp-framed-horizontally">
-                <notification v-if="notification" v-bind:notification="notification" />
+                <notification-alert v-if="notification" v-bind:notification="notification" />
                 <router-view v-bind:project_id="project_id" v-on:title="changeTitle" />
             </div>
         </main>
 
-        <modal />
+        <baseline-modal />
     </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import Notification from "./Notification.vue";
-import Modal from "./layout/Modal.vue";
+import NotificationAlert from "./NotificationAlert.vue";
+import BaselineModal from "./layout/BaselineModal.vue";
 import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
 
 export default {
     name: "App",
-    components: { Modal, Notification, BreadcrumbPrivacy },
+    components: { BaselineModal, NotificationAlert, BreadcrumbPrivacy },
     props: {
         project_id: {
             required: false,

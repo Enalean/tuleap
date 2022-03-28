@@ -34,7 +34,7 @@
 
         <div v-show="!is_collapsed">
             <div class="baseline-content-artifact-body" data-test-type="artifact-fields">
-                <field
+                <artifact-field
                     v-if="is_description_available"
                     semantic="description"
                     v-bind:tracker_id="artifact.tracker_id"
@@ -42,7 +42,7 @@
                     data-test-type="artifact-description"
                     v-bind:html_content="true"
                 />
-                <field
+                <artifact-field
                     v-if="is_status_available"
                     semantic="status"
                     v-bind:tracker_id="artifact.tracker_id"
@@ -64,17 +64,17 @@
 <script>
 import ArtifactsList from "./ArtifactsList.vue";
 import ArtifactLabel from "../common/ArtifactLabel.vue";
-import Field from "./Field.vue";
+import ArtifactField from "./ArtifactField.vue";
 import DepthLimitReachedMessage from "../common/DepthLimitReachedMessage.vue";
 import { mapGetters } from "vuex";
 
 export default {
-    name: "Artifact",
+    name: "ContentArtifact",
 
     components: {
         ArtifactLabel,
         ArtifactsList,
-        Field,
+        ArtifactField,
         DepthLimitReachedMessage,
     },
 

@@ -35,7 +35,7 @@
 <script>
 import SemanticFieldLabel from "../common/SemanticFieldLabel.vue";
 export default {
-    name: "Field",
+    name: "ArtifactField",
 
     components: { SemanticFieldLabel },
 

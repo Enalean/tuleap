@@ -61,7 +61,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const AppComponent = Vue.extend(App);
     new AppComponent({
         store,
-        propsData: { project_id, project_public_name, project_icon, project_url, privacy, project_flags },
+        propsData: {
+            project_id,
+            project_public_name,
+            project_icon,
+            project_url,
+            privacy,
+            project_flags,
+        },
         router,
     }).$mount(vue_mount_point);
 });
