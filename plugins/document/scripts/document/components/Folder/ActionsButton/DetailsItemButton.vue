@@ -29,29 +29,27 @@
     </button>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import { namespace } from "vuex-class";
+<script setup lang="ts">
 import { redirectToUrl } from "../../../helpers/location-helper";
 import type { Item } from "../../../type";
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
 
-const configuration = namespace("configuration");
+const props = defineProps<{ item: Item; buttonClass: string }>();
 
-@Component
-export default class DetailsItemButton extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
+const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
+    "project_id",
+]);
 
-    @Prop({ required: true })
-    readonly buttonClass!: string;
-
-    @configuration.State
-    readonly project_id!: number;
-
-    goToDetails(): void {
-        redirectToUrl(
-            `/plugins/docman/?group_id=${this.project_id}&id=${this.item.id}&action=details&section=details`
-        );
-    }
+function goToDetails(): void {
+    redirectToUrl(
+        `/plugins/docman/?group_id=${encodeURIComponent(project_id.value)}&id=${encodeURIComponent(
+            props.item.id
+        )}&action=details&section=details`
+    );
 }
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>
