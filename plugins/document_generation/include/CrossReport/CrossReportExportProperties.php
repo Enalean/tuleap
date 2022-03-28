@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,10 +15,25 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-export interface GlobalExportProperties {
-    readonly current_tracker_name: string;
-    readonly current_report_id: number;
+declare(strict_types=1);
+
+namespace Tuleap\DocumentGeneration\CrossReport;
+
+/**
+ * @psalm-immutable
+ */
+final class CrossReportExportProperties
+{
+    /**
+     * @param CrossReportExportPropertiesReport[] $current_tracker_reports
+     */
+    public function __construct(
+        public string $current_tracker_name,
+        public int $current_report_id,
+        public array $current_tracker_reports,
+    ) {
+    }
 }

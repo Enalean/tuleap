@@ -19,22 +19,20 @@
 
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import { getReportArtifacts } from "../rest-querier";
-import type { GlobalExportProperties } from "../type";
 import { transformFieldValueIntoAFormattedCell } from "./transform-field-value-into-formatted-cell";
 import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
 import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 import { TextCell } from "@tuleap/plugin-docgen-xlsx";
+import type { ExportSettings } from "../export-document";
 
 export interface ReportSection {
     readonly headers?: ReadonlyArray<TextCell>;
     readonly rows?: ReadonlyArray<ReadonlyArray<ReportCell>>;
 }
 
-export async function formatData(
-    global_properties: GlobalExportProperties
-): Promise<ReportSection> {
+export async function formatData(export_settings: ExportSettings): Promise<ReportSection> {
     const report_artifacts: ArtifactResponse[] = await getReportArtifacts(
-        global_properties.report_id,
+        export_settings.first_level.report_id,
         true
     );
 

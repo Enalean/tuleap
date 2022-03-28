@@ -67,7 +67,7 @@ class Tracker_ReportFactory
 
     /**
      * @param int $tracker_id the id of the tracker
-     * @param int $user_id the user who are searching for reports. He cannot access to other user's reports
+     * @param int|null $user_id the user who are searching for reports. He cannot access to other user's reports
      *                   if null then project reports instead of user ones
      * @return Tracker_Report[]
      */

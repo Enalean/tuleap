@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\DocumentGeneration\CrossReport\CrossReportExportPropertiesFetcher;
 use Tuleap\DocumentGeneration\FeatureFlagCrossTrackerReportAction;
 use Tuleap\DocumentGeneration\Report\ReportCriteriaJsonBuilder;
 use Tuleap\Layout\IncludeViteAssets;
@@ -137,16 +138,15 @@ class document_generationPlugin extends Plugin
             return;
         }
 
+        $tracker_reports_factory         = Tracker_ReportFactory::instance();
+        $cross_report_properties_fetcher = new CrossReportExportPropertiesFetcher($tracker_reports_factory);
+
         $event->addExportItem(
             $renderer->renderToString(
                 'tracker-cross-report-action',
                 [
                     'properties' => json_encode(
-                        [
-                            "report_id" => $report_id,
-                            "report_name" => $report_name,
-                            "tracker_name" => $tracker->getName(),
-                        ],
+                        $cross_report_properties_fetcher->fetchExportProperties($tracker, $report, $current_user),
                         JSON_THROW_ON_ERROR
                     ),
                 ]

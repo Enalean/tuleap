@@ -121,7 +121,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
      * @param string  $name The name of the report
      * @param string  $description The description of the report
      * @param int     $current_renderer_id The current Renderer id to display
-     * @param int     $user_id The owner of the report (null if scope = project)
+     * @param int|null $user_id The owner of the report (null if scope = project)
      * @param bool    $is_default true if the report is the default one
      * @param int     $tracker_id The id of the tracker to which this Tracker_Report is associated.
      */

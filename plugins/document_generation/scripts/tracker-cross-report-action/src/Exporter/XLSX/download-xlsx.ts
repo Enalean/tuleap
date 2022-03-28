@@ -19,9 +19,9 @@
 
 import type { CellObject, ColInfo, RowInfo } from "xlsx";
 import { utils, writeFile } from "xlsx";
-import type { GlobalExportProperties } from "../../type";
 import type { ReportSection } from "../../Data/data-formator";
 import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
+import type { ExportSettings } from "../../export-document";
 
 const CELL_MAX_CHARACTER_WIDTH = 65;
 const LINE_HEIGHT_POINTS = 12;
@@ -32,19 +32,16 @@ type CellObjectWithWidthAndLines = CellObject & {
     nb_lines: number;
 };
 
-export function downloadXLSX(
-    global_properties: GlobalExportProperties,
-    formatted_data: ReportSection
-): void {
+export function downloadXLSX(export_settings: ExportSettings, formatted_data: ReportSection): void {
     const book = utils.book_new();
-    const cells = buildContent(global_properties, formatted_data);
+    const cells = buildContent(export_settings, formatted_data);
     const sheet = utils.aoa_to_sheet(cells);
     sheet["!cols"] = fitColumnWidthsToContent(cells);
     sheet["!rows"] = fitRowHeightsToContent(cells);
     utils.book_append_sheet(book, sheet);
     writeFile(
         book,
-        global_properties.tracker_name + "-" + global_properties.report_name + ".xlsx",
+        export_settings.first_level + "-" + export_settings.first_level.report_name + ".xlsx",
         {
             bookSST: true,
         }
@@ -52,7 +49,7 @@ export function downloadXLSX(
 }
 
 function buildContent(
-    global_properties: GlobalExportProperties,
+    export_settings: ExportSettings,
     formatted_data: ReportSection
 ): Array<Array<CellObjectWithWidthAndLines>> {
     const content: CellObjectWithWidthAndLines[][] = [];

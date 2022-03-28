@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ExportSettings } from "./export-document";
 import { downloadXLSXDocument } from "./export-document";
-import type { GlobalExportProperties } from "./type";
 import * as data_formator from "./Data/data-formator";
 import type { ReportSection } from "./Data/data-formator";
 
@@ -29,7 +29,10 @@ describe("export-document", () => {
             .spyOn(data_formator, "formatData")
             .mockResolvedValue({} as ReportSection);
 
-        await downloadXLSXDocument({ report_id: 1 } as GlobalExportProperties, document_exporter);
+        await downloadXLSXDocument(
+            { first_level: { report_id: 1 } } as ExportSettings,
+            document_exporter
+        );
 
         expect(format_data).toHaveBeenCalled();
         expect(document_exporter).toHaveBeenCalled();
