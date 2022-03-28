@@ -19,7 +19,7 @@
 
 <template>
     <span
-        v-bind:class="get_additional_classes"
+        v-bind:class="{ 'document-display-lock': isDisplayingInHeader }"
         v-if="is_locked"
         v-bind:title="document_lock_info_title"
         data-test="document-lock-information"
@@ -28,37 +28,39 @@
     </span>
 </template>
 
-<script>
-import { sprintf } from "sprintf-js";
+<script setup lang="ts">
+import type { Item } from "../../../type";
+import { computed } from "@vue/composition-api";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-export default {
-    name: "DocumentTitleLockInfo",
-    props: {
-        item: Object,
-        isDisplayingInHeader: Boolean,
-    },
-    computed: {
-        is_locked() {
-            return this.item.lock_info;
-        },
-        document_lock_info_title() {
-            if (!this.item || !this.item.lock_info || !this.item.lock_info.locked_by) {
-                return "";
-            }
+const { interpolate, $gettext } = useGettext();
 
-            return sprintf(
-                this.$gettext("Document locked by %s."),
-                this.item.lock_info.locked_by.display_name
-            );
-        },
-        get_icon_additional_classes() {
-            return this.isDisplayingInHeader
-                ? "document-display-lock-icon"
-                : "document-tree-item-toggle-quicklook-lock-icon";
-        },
-        get_additional_classes() {
-            return this.isDisplayingInHeader ? "document-display-lock" : "";
-        },
-    },
-};
+const props = defineProps<{
+    item: Item;
+    isDisplayingInHeader: boolean;
+}>();
+
+const is_locked = computed((): boolean => {
+    return Boolean(props.item.lock_info);
+});
+
+const document_lock_info_title = computed((): string => {
+    if (!props.item || !props.item.lock_info || !props.item.lock_info.lock_by) {
+        return "";
+    }
+
+    return interpolate($gettext("Document locked by %{username}."), {
+        username: props.item.lock_info.lock_by.display_name,
+    });
+});
+
+const get_icon_additional_classes = computed((): string => {
+    return props.isDisplayingInHeader
+        ? "document-display-lock-icon"
+        : "document-tree-item-toggle-quicklook-lock-icon";
+});
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>

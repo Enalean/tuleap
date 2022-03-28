@@ -212,8 +212,8 @@ msgstr "Description"
 msgid "Details"
 msgstr "Détails"
 
-msgid "Document locked by %s."
-msgstr "Document verrouillé par %s."
+msgid "Document locked by %{username}."
+msgstr "Document verrouillé par %{username}."
 
 msgid "Documents"
 msgstr "Documents"
