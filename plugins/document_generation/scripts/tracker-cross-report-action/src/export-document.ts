@@ -17,18 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GlobalExportProperties } from "./type";
 import type { ReportSection } from "./Data/data-formator";
 import { formatData } from "./Data/data-formator";
 
-export async function downloadXLSXDocument(
-    global_properties: GlobalExportProperties,
-    download_document: (
-        global_properties: GlobalExportProperties,
-        formatted_data: ReportSection
-    ) => void
-): Promise<void> {
-    const formatted_data: ReportSection = await formatData(global_properties);
+interface ExportLevelSetting {
+    readonly tracker_name: string;
+    readonly report_id: number;
+    readonly report_name: string;
+}
 
-    download_document(global_properties, formatted_data);
+export interface ExportSettings {
+    readonly first_level: ExportLevelSetting;
+}
+
+export async function downloadXLSXDocument(
+    export_settings: ExportSettings,
+    download_document: (export_settings: ExportSettings, formatted_data: ReportSection) => void
+): Promise<void> {
+    const formatted_data: ReportSection = await formatData(export_settings);
+
+    download_document(export_settings, formatted_data);
 }

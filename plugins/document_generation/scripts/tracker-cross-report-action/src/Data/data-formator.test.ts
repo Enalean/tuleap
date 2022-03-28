@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GlobalExportProperties } from "../type";
 import { formatData } from "./data-formator";
 import { TextCell, NumberCell, EmptyCell } from "@tuleap/plugin-docgen-xlsx";
 import * as rest_querier from "../rest-querier";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
+import type { ExportSettings } from "../export-document";
 
 describe("data-formator", () => {
     it("generates the formatted data that will be used to create the XLSX document", async (): Promise<void> => {
@@ -108,7 +108,9 @@ describe("data-formator", () => {
 
         jest.spyOn(rest_querier, "getReportArtifacts").mockResolvedValue(artifacts_report_response);
 
-        const formatted_data = await formatData({ report_id: 1 } as GlobalExportProperties);
+        const formatted_data = await formatData({
+            first_level: { report_id: 1 },
+        } as ExportSettings);
 
         expect(formatted_data).toStrictEqual({
             headers: [
@@ -126,7 +128,9 @@ describe("data-formator", () => {
         const artifacts_report_response: ArtifactResponse[] = [];
         jest.spyOn(rest_querier, "getReportArtifacts").mockResolvedValue(artifacts_report_response);
 
-        const formatted_data = await formatData({ report_id: 1 } as GlobalExportProperties);
+        const formatted_data = await formatData({
+            first_level: { report_id: 1 },
+        } as ExportSettings);
 
         expect(formatted_data).toStrictEqual({});
     });

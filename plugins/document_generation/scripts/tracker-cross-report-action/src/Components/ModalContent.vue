@@ -102,16 +102,18 @@ async function startExport(): Promise<void> {
     const download_xlsx_module = import("../Exporter/XLSX/download-xlsx");
 
     const search_params = new URLSearchParams(location.search);
+    const report_id =
+        search_params.get("export_report_id_1") ?? String(props.properties.current_report_id);
 
     const { downloadXLSXDocument } = await export_document_module;
     const { downloadXLSX } = await download_xlsx_module;
     downloadXLSXDocument(
         {
-            ...props.properties,
-            report_id: parseInt(
-                search_params.get("export_report_id_1") ?? String(props.properties.report_id),
-                10
-            ),
+            first_level: {
+                tracker_name: props.properties.current_tracker_name,
+                report_id: parseInt(report_id, 10),
+                report_name: report_id, // This will be replaced by the actual name once we can select the report in the UI
+            },
         },
         downloadXLSX
     );
