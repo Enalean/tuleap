@@ -153,4 +153,50 @@ describe("NewItemModal", () => {
         emitter.emit("update-status-property", "draft");
         expect(wrapper.vm.item.status).toEqual("draft");
     });
+
+    it("Updates title", () => {
+        const item = {
+            id: 7,
+            type: "folder",
+            title: "A folder",
+            properties: [
+                {
+                    short_name: "status",
+                    list_value: [
+                        {
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const wrapper = factory({ item });
+
+        emitter.emit("update-title-property", "A folder");
+        expect(wrapper.vm.item.title).toEqual("A folder");
+    });
+
+    it("Updates description", () => {
+        const item = {
+            id: 7,
+            type: "folder",
+            description: "A custom description",
+            properties: [
+                {
+                    short_name: "status",
+                    list_value: [
+                        {
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const wrapper = factory({ item });
+
+        emitter.emit("update-description-property", "A description");
+        expect(wrapper.vm.item.description).toEqual("A description");
+    });
 });

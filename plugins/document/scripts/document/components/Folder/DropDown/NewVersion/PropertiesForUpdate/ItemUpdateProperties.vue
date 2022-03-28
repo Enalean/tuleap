@@ -38,7 +38,6 @@
     </div>
 </template>
 
-<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import VersionTitleProperty from "../../PropertiesForCreateOrUpdate/VersionTitleProperty.vue";
 import ChangelogProperty from "../../PropertiesForCreateOrUpdate/ChangelogProperty.vue";

@@ -123,6 +123,9 @@ export default {
     created() {
         emitter.on("update-multiple-properties-list-value", this.updateMultiplePropertiesListValue);
         emitter.on("update-status-property", this.updateStatusValue);
+        emitter.on("update-title-property", this.updateTitleValue);
+        emitter.on("update-description-property", this.updateDescriptionValue);
+        emitter.on("update-owner-property", this.updateOwnerValue);
     },
     beforeDestroy() {
         emitter.off(
@@ -130,6 +133,9 @@ export default {
             this.updateMultiplePropertiesListValue
         );
         emitter.off("update-status-property", this.updateStatusValue);
+        emitter.off("update-title-property", this.updateTitleValue);
+        emitter.off("update-description-property", this.updateDescriptionValue);
+        emitter.off("update-owner-property", this.updateOwnerValue);
     },
     beforeMount() {
         this.item_to_update = JSON.parse(JSON.stringify(this.item));
@@ -182,8 +188,17 @@ export default {
             );
             item_properties.list_value = event.detail.value;
         },
-        updateStatusValue(event) {
-            this.item_to_update.status = event;
+        updateStatusValue(status) {
+            this.item_to_update.status = status;
+        },
+        updateTitleValue(title) {
+            this.item_to_update.title = title;
+        },
+        updateDescriptionValue(description) {
+            this.item_to_update.description = description;
+        },
+        updateOwnerValue(owner) {
+            this.item_to_update.owner.id = owner;
         },
     },
 };

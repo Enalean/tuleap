@@ -27,17 +27,24 @@
             name="description"
             v-bind:placeholder="`${$gettext('My useful document description')}`"
             v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)"
+            v-on:input="oninput"
             data-test="document-property-description"
         ></textarea>
     </div>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import emitter from "../../../../../helpers/emitter";
 
 @Component
 export default class DescriptionProperty extends Vue {
     @Prop({ required: true })
     readonly value!: string;
+
+    oninput($event: Event): void {
+        if ($event.target instanceof HTMLTextAreaElement) {
+            emitter.emit("update-description-property", $event.target.value);
+        }
+    }
 }
 </script>

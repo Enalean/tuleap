@@ -150,6 +150,8 @@ export default {
         emitter.on("update-multiple-properties-list-value", this.updateMultiplePropertiesListValue);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
         emitter.on("update-status-property", this.updateStatusValue);
+        emitter.on("update-title-property", this.updateTitleValue);
+        emitter.on("update-description-property", this.updateDescriptionValue);
     },
     beforeDestroy() {
         emitter.off("createItem", this.show);
@@ -159,6 +161,8 @@ export default {
         );
         this.modal.removeEventListener("tlp-modal-hidden", this.reset);
         emitter.off("update-status-property", this.updateStatusValue);
+        emitter.off("update-title-property", this.updateTitleValue);
+        emitter.off("update-description-property", this.updateDescriptionValue);
     },
     methods: {
         getDefaultItem() {
@@ -258,8 +262,14 @@ export default {
             );
             item_properties.list_value = event.detail.value;
         },
-        updateStatusValue(event) {
-            this.item.status = event;
+        updateStatusValue(status) {
+            this.item.status = status;
+        },
+        updateTitleValue(title) {
+            this.item.title = title;
+        },
+        updateDescriptionValue(description) {
+            this.item.description = description;
         },
     },
 };
