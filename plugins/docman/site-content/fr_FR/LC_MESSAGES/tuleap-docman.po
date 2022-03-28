@@ -2188,8 +2188,13 @@ msgstr "L'élément %1$s n'existe pas ou ne fait pas parti du projet %2$s."
 msgid "The item %d is not a folder."
 msgstr "L'objet %d n'est pas un dossier."
 
-msgid "The latest version name of the document"
-msgstr "Le dernier nom de version du document"
+msgid ""
+"The latest version name of the document. If a document is created or\n"
+"                                    if there is no version name given at "
+"document update, an empty space is returned."
+msgstr ""
+"Le dernier nom de version du document. Si un document est créé ou si aucun "
+"nom de version est donné lors de la mise à jour, un espace vide est retourné"
 
 #, php-format
 msgid "The list type property %s can accept only one value."
@@ -2870,7 +2875,8 @@ msgid "You cannot delete this folder."
 msgstr "Vous ne pouvez pas supprimer ce dossier."
 
 msgid "You cannot enforce an empty filename pattern"
-msgstr "Vous ne pouvez pas forcer l'application d'un modèle de nom de fichier vide"
+msgstr ""
+"Vous ne pouvez pas forcer l'application d'un modèle de nom de fichier vide"
 
 msgid ""
 "You cannot modify it until the lock owner or a document manager release the "
