@@ -4,6 +4,7 @@ specifiers:
   '@tuleap/concurrency-limit-pool': file:../../src/scripts/lib/concurrency-limit-pool
   '@tuleap/gettext': file:../../src/scripts/lib/gettext
   '@tuleap/plugin-docgen-docx': file:../document_generation/scripts/lib/docx
+  '@tuleap/plugin-docgen-xlsx': file:../document_generation/scripts/lib/xlsx
   '@tuleap/plugin-testmanagement': link:../testmanagement
   '@tuleap/po-gettext-plugin': link:../../src/scripts/lib/po-gettext-plugin
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
@@ -20,6 +21,7 @@ specifiers:
 dependencies:
   '@tuleap/concurrency-limit-pool': link:../../src/scripts/lib/concurrency-limit-pool
   '@tuleap/plugin-docgen-docx': link:../document_generation/scripts/lib/docx
+  '@tuleap/plugin-docgen-xlsx': link:../document_generation/scripts/lib/xlsx
   '@tuleap/plugin-testmanagement': link:../testmanagement
   '@tuleap/vue3-gettext-init': link:../../src/scripts/lib/vue3-gettext-init
   docx: 7.3.0

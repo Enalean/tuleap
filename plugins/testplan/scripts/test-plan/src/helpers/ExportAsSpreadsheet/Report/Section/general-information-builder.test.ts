@@ -19,7 +19,7 @@
 
 import { buildGeneralSection } from "./general-information-builder";
 import { createVueGettextProviderPassthrough } from "../../../vue-gettext-provider-for-test";
-import { DateCell, TextCell } from "../report-cells";
+import { DateCell, TextCell } from "@tuleap/plugin-docgen-xlsx";
 
 describe("Build general information section", () => {
     it("builds section", () => {

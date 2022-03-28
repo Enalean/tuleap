@@ -20,7 +20,7 @@
 import { createVueGettextProviderPassthrough } from "../../../vue-gettext-provider-for-test";
 import type { PlannedTestCaseAssociatedWithTestExecAndCampaign } from "../get-planned-test-cases";
 import { buildTestResultsSection } from "./test-results-builder";
-import { DateCell, TextCell } from "../report-cells";
+import { DateCell, TextCell } from "@tuleap/plugin-docgen-xlsx";
 
 describe("Build test results section", () => {
     it("buids section", () => {

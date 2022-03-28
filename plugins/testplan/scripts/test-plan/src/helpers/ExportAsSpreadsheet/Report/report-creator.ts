@@ -18,7 +18,7 @@
  */
 
 import { buildGeneralSection } from "./Section/general-information-builder";
-import type { ReportCell, TextCell } from "./report-cells";
+import type { ReportCell, TextCell } from "@tuleap/plugin-docgen-xlsx";
 import { buildRequirementsSection } from "./Section/requirements-builder";
 import type { BacklogItem, Campaign } from "../../../type";
 import { buildTestResultsSection } from "./Section/test-results-builder";

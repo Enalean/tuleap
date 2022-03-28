@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DateCell, TextCell } from "../report-cells";
+import { DateCell, TextCell } from "@tuleap/plugin-docgen-xlsx";
 import type { PlannedTestCaseAssociatedWithTestExecAndCampaign } from "../get-planned-test-cases";
 import type { VueGettextProvider } from "../../../vue-gettext-provider";
 

@@ -20,7 +20,7 @@
 import type { CellObject, ColInfo, Comments, Range, RowInfo, WorkSheet } from "xlsx";
 import { utils } from "xlsx";
 import type { ExportReport, ReportSection } from "../../Report/report-creator";
-import type { ReportCell } from "../../Report/report-cells";
+import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 
 const CELL_BASE_CHARACTER_WIDTH = 10;
 const CELL_MAX_CHARACTER_WIDTH = 65;
