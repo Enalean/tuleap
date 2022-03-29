@@ -2325,6 +2325,11 @@ msgstr "Permissions"
 msgid "Permissions on artifact"
 msgstr "Permissions sur un artefact"
 
+msgid "Personal report"
+msgid_plural "Personal reports"
+msgstr[0] "Rapport personnel"
+msgstr[1] "Rapports personnels"
+
 msgid "Pick artifacts to be linked from your recently viewed items:"
 msgstr ""
 "Sélectionnez les artefacts à lier parmis ceux que vous avez visités "
@@ -2446,6 +2451,11 @@ msgstr "Un champ texte contenant une liste de valeurs, avec auto-complétion"
 
 msgid "Public"
 msgstr "Public"
+
+msgid "Public report"
+msgid_plural "Public reports"
+msgstr[0] "Rapport public"
+msgstr[1] "Rapports publics"
 
 msgid "Query"
 msgstr "Requête"
