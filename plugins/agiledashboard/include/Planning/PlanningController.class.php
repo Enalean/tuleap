@@ -534,7 +534,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $presenter = $this->planning_edition_presenter_builder->build($planning, $this->request->getCurrentUser(), $this->project);
 
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/agiledashboard',
+            __DIR__ . '/../../frontend-assets',
             '/assets/agiledashboard'
         );
         $GLOBALS['HTML']->addStylesheet($include_assets->getFileURL('planning-admin-colorpicker.css'));
@@ -562,7 +562,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         );
 
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/agiledashboard',
+            __DIR__ . '/../../frontend-assets',
             '/assets/agiledashboard'
         );
         $GLOBALS['HTML']->addStylesheet($include_assets->getFileURL('planning-admin-colorpicker.css'));

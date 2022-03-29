@@ -160,7 +160,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         }
 
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/agiledashboard',
+            __DIR__ . '/../../../frontend-assets',
             '/assets/agiledashboard'
         );
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('burnup-chart.js'));

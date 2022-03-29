@@ -167,7 +167,7 @@ class AdminController extends BaseController
     {
         $this->redirectToKanbanPaneIfScrumAccessIsBlocked();
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/agiledashboard',
+            __DIR__ . '/../../frontend-assets',
             '/assets/agiledashboard'
         );
 

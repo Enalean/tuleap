@@ -265,7 +265,7 @@ abstract class Kanban extends Widget
 
     private function getIncludeAssets(): IncludeAssets
     {
-        return new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/agiledashboard', '/assets/agiledashboard');
+        return new IncludeAssets(__DIR__ . '/../../../frontend-assets', '/assets/agiledashboard');
     }
 
     public function getJavascriptDependencies(): array
