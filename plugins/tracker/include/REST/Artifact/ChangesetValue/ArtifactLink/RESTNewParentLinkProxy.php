@@ -43,11 +43,12 @@ final class RESTNewParentLinkProxy implements NewParentLink
         if (! array_key_exists(self::ID_KEY, $payload)) {
             throw new \Tracker_FormElement_InvalidFieldValueException("Parent must have an 'id' key");
         }
-        if (! is_int($payload[self::ID_KEY])) {
-            throw new \Tracker_FormElement_InvalidFieldValueException("Parent 'id' key must be an integer");
+        $int = (int) $payload[self::ID_KEY];
+        // To avoid backwards-incompatible change, 'id' can be a string
+        if ((string) $int !== (string) $payload[self::ID_KEY]) {
+            throw new \Tracker_FormElement_InvalidFieldValueException("Parent 'id' key must be convertible to an integer");
         }
-
-        return new self($payload[self::ID_KEY]);
+        return new self($int);
     }
 
     public function getParentArtifactId(): int
