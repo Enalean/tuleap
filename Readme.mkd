@@ -1,3 +1,0 @@
-# Baseline
-
-Set baseline on artifacts and more.
