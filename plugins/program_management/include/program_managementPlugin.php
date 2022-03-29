@@ -878,7 +878,7 @@ final class program_managementPlugin extends Plugin
             \EventManager::instance()
         );
         $assets                  = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/program_management',
+            __DIR__ . '/../frontend-assets',
             '/assets/program_management'
         );
         $user_manager_adapter    = new UserManagerAdapter(UserManager::instance());

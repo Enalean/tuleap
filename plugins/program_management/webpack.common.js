@@ -34,7 +34,7 @@ module.exports = [
         entry: entry_points,
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/program_management/"),
+            path.resolve(__dirname, "./frontend-assets/"),
             "/assets/program_management/"
         ),
         resolve: {
