@@ -214,7 +214,9 @@ document.observe("dom:loaded", function () {
 
     if ($("tracker_select_tracker")) {
         $("tracker_select_tracker").observe("change", function () {
-            if (this.ownerDocument.location.href.includes(this.value)) {
+            const url = this.ownerDocument.location.href;
+            const matches = url.match(/tracker=(\d+)/);
+            if (parseInt(matches[1], 10) === parseInt(this.value, 10)) {
                 return;
             }
 
