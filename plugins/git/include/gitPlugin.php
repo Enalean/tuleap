@@ -2710,7 +2710,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/git',
+            __DIR__ . '/../frontend-assets',
             "/assets/git"
         );
     }

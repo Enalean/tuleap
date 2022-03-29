@@ -1190,7 +1190,6 @@ fi
 %files plugin-git
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/git
-%{APP_DIR}/src/www/assets/git
 %dir %{APP_DATA_DIR}/gitolite
 %attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/repositories
 %attr(00775,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/grokmirror

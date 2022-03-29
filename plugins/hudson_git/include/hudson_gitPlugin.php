@@ -121,14 +121,6 @@ class hudson_gitPlugin extends Plugin
         );
     }
 
-    protected function getGitIncludeAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/git',
-            "/assets/git"
-        );
-    }
-
     public function display_hudson_addition_info($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['installed'] = defined('GIT_BASE_URL');

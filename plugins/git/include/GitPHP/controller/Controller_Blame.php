@@ -154,7 +154,7 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
         $this->tpl->assign('bloblines', $blob->GetData(true));
         $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
         $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($core_assets, 'syntax-highlight.js'));
-        $git_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/git', '/assets/git');
+        $git_assets = new IncludeAssets(__DIR__ . '/../../../frontend-assets', '/assets/git');
         $GLOBALS['Response']->addJavascriptAsset(new JavascriptAsset($git_assets, 'line-highlight.js'));
     }
 }

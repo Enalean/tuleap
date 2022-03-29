@@ -23,7 +23,7 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 const manifest_plugin = webpack_configurator.getManifestPlugin();
 const context = path.resolve(__dirname);
 const output = webpack_configurator.configureOutput(
-    path.resolve(__dirname, "../../src/www/assets/git"),
+    path.resolve(__dirname, "./frontend-assets"),
     "/assets/git/"
 );
 
