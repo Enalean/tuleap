@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface TrackerReport {
-    readonly id: number;
-    readonly name: string;
-    readonly is_public: boolean;
-}
+import { createGettext } from "vue3-gettext";
+import type { GlobalMountOptions } from "@vue/test-utils/dist/types";
 
-export interface GlobalExportProperties {
-    readonly current_tracker_name: string;
-    readonly current_report_id: number;
-    readonly current_tracker_reports: ReadonlyArray<TrackerReport>;
+export function getGlobalTestOptions(): GlobalMountOptions {
+    return {
+        plugins: [createGettext({ silent: true })],
+    };
 }

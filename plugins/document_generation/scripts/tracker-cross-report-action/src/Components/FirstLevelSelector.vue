@@ -32,10 +32,30 @@
             </label>
         </div>
         <div class="tlp-form-element">
-            <label class="tlp-label">
-                {{ $gettext("Report") }}
-                <select class="tlp-select" disabled></select>
-            </label>
+            <tracker-report-selector
+                v-model:report_id="report_id"
+                v-bind:current_tracker_reports="current_tracker_reports"
+            />
         </div>
     </div>
 </template>
+<script lang="ts" setup>
+import type { TrackerReport } from "../type";
+import { computed } from "vue";
+import TrackerReportSelector from "./TrackerReportSelector.vue";
+
+const props =
+    defineProps<{ current_tracker_reports: ReadonlyArray<TrackerReport>; report_id: number }>();
+const emit = defineEmits<{
+    (e: "update:report_id", value: number): void;
+}>();
+
+const report_id = computed({
+    get(): number {
+        return props.report_id;
+    },
+    set(value: number) {
+        emit("update:report_id", value);
+    },
+});
+</script>
