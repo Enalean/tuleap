@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
+
 export interface TrackerReport {
     readonly id: number;
     readonly name: string;
@@ -27,4 +29,15 @@ export interface GlobalExportProperties {
     readonly current_tracker_name: string;
     readonly current_report_id: number;
     readonly current_tracker_reports: ReadonlyArray<TrackerReport>;
+}
+
+export type ArtifactReportResponseFieldValueWithExtraFields =
+    | ArtifactReportResponseFieldValue
+    | ArtifactReportExtraFieldValue;
+
+interface ArtifactReportExtraFieldValue {
+    field_id: number;
+    type: "burndown" | "burnup" | "Encrypted" | "ttmstepexec";
+    label: string;
+    value: never;
 }
