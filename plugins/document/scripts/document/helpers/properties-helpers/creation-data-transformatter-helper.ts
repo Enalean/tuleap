@@ -43,9 +43,9 @@ export function transformStatusPropertyForItemCreation(
 }
 
 export function transformCustomPropertiesForItemCreation(
-    properties: Array<Property>
+    properties: Array<Property> | null
 ): Array<Property> {
-    if (properties.length === 0) {
+    if (properties === null || properties.length === 0) {
         return [];
     }
 
