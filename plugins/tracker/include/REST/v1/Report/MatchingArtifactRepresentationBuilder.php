@@ -140,6 +140,10 @@ class MatchingArtifactRepresentationBuilder
             );
         }
 
-        return $rest_field_values;
+        return array_values(
+            array_filter(
+                $rest_field_values
+            )
+        );
     }
 }

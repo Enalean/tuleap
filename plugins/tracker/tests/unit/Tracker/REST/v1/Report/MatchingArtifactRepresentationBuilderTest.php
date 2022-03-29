@@ -110,6 +110,7 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
 
         $field_01       = $this->createMock(Tracker_FormElement_Field::class);
         $field_02       = $this->createMock(Tracker_FormElement_Field::class);
+        $field_03       = $this->createMock(Tracker_FormElement_Field::class);
         $field_art_link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
 
         $field_01->method('getRESTValue')->willReturn(
@@ -128,6 +129,7 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
                 'Value 02'
             )
         );
+        $field_03->method('getRESTValue')->willReturn(null);
 
         $this->used_fields_retriever
             ->method('getUsedFieldsInRendererUserCanSee')
@@ -137,6 +139,7 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
             )->willReturn([
                 $field_01,
                 $field_02,
+                $field_03,
                 $field_art_link,
             ]);
 
