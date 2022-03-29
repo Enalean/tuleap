@@ -21,8 +21,8 @@ import {
     TEXT_FORMAT_HTML,
     isValidTextFormat,
     TEXT_FORMAT_COMMONMARK,
-} from "../../constants/fields-constants";
-import type { TextFieldFormat } from "../../constants/fields-constants";
+} from "@tuleap/plugin-tracker-constants";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import type {
     RichTextEditorFactory,
     RichTextEditorOptions,

@@ -18,8 +18,8 @@
  */
 
 import CKEDITOR from "ckeditor4";
-import type { TextFieldFormat } from "../../../constants/fields-constants";
-import { TEXT_FORMAT_HTML } from "../../../constants/fields-constants";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
+import { TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
 import type {
     HTMLToMarkdownConverterInterface,
     InternalTextEditorOptions,

@@ -23,8 +23,8 @@ import type {
     RichTextEditorFactory,
     RichTextEditorOptions,
 } from "@tuleap/plugin-tracker-rich-text-editor";
-import type { TextFieldFormat } from "../../constants/fields-constants";
-import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "../../constants/fields-constants";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
+import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
 import { initMentionsOnEditorDataReady } from "./init-mentions";
 
 const NEW_FOLLOWUP_TEXTAREA_ID = "tracker_followup_comment_new";

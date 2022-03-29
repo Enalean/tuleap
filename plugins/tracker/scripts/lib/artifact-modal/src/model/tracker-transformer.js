@@ -18,7 +18,7 @@
  */
 
 import AwkwardCreationFields from "./awkward-creation-fields-constant.js";
-import { STRUCTURAL_FIELDS } from "../../../../constants/fields-constants.js";
+import { STRUCTURAL_FIELDS } from "@tuleap/plugin-tracker-constants";
 import { getNone } from "../gettext-catalog";
 
 export function transform(tracker, creation_mode) {

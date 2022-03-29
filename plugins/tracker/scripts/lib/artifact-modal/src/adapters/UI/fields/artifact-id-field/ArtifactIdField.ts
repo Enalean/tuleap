@@ -18,13 +18,13 @@
  */
 
 import { define, html } from "hybrids";
-import { ARTIFACT_ID_FIELD } from "../../../../../../../constants/fields-constants";
+import { ARTIFACT_ID_FIELD } from "@tuleap/plugin-tracker-constants";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 
 import type {
     ArtifactIdFieldIdentifier,
     ArtifactIdInTrackerFieldIdentifier,
-} from "../../../../../../../constants/fields-constants";
+} from "@tuleap/plugin-tracker-constants";
 
 export type HostElement = ArtifactIdField & HTMLElement;
 

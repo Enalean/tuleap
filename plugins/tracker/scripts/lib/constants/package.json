@@ -1,0 +1,21 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-constants",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/plugin-tracker-constants.es.js",
+  "main": "dist/plugin-tracker-constants.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/plugin-tracker-constants.es.js",
+      "require": "./dist/plugin-tracker-constants.umd.js"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

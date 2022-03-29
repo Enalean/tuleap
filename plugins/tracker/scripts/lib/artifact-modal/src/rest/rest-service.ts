@@ -21,7 +21,7 @@ import { get, recursiveGet, put, post, options } from "tlp";
 import type { FetchWrapperError } from "tlp";
 
 import { resetError, setError } from "./rest-error-state";
-import type { TextFieldFormat } from "../../../../constants/fields-constants";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 
 const headers = {
     "content-type": "application/json",

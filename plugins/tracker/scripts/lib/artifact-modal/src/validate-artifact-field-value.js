@@ -22,7 +22,7 @@ import { formatComputedFieldValue } from "./fields/computed-field/computed-field
 import { formatPermissionFieldValue } from "./fields/permission-field/permission-field-value-formatter.js";
 import { formatLinkFieldValue } from "./fields/link-field/link-field-value-formatter.js";
 import { validateFileField } from "./fields/file-field/file-field-validator.js";
-import { FILE_FIELD, TEXT_FIELD } from "../../../constants/fields-constants.js";
+import { FILE_FIELD, TEXT_FIELD } from "@tuleap/plugin-tracker-constants";
 
 export function validateArtifactFieldsValues(
     field_values,

@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TextFieldFormat } from "../../../../../../constants/fields-constants";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import {
     isValidTextFormat,
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
-} from "../../../../../../constants/fields-constants";
+} from "@tuleap/plugin-tracker-constants";
 import type { GettextProvider } from "@tuleap/gettext";
 import type { TemplateResult } from "lit/html.js";
 import { html } from "lit/html.js";

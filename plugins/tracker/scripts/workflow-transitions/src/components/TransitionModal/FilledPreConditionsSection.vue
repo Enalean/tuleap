@@ -115,7 +115,7 @@ import {
     COMPUTED_FIELD,
     READ_ONLY_FIELDS,
     STRUCTURAL_FIELDS,
-} from "../../../../constants/fields-constants.js";
+} from "@tuleap/plugin-tracker-constants";
 import MultiSelect from "./MultiSelect.vue";
 import PreConditionsSection from "./PreConditionsSection.vue";
 import { compare } from "../../support/string.js";

@@ -77,7 +77,7 @@
 import PostAction from "./PostAction.vue";
 import { mapState, mapGetters } from "vuex";
 import MultiSelect from "../MultiSelect.vue";
-import { CONTAINER_FIELDSET } from "../../../../../constants/fields-constants.js";
+import { CONTAINER_FIELDSET } from "@tuleap/plugin-tracker-constants";
 import { compare } from "../../../support/string.js";
 import { createListPicker } from "@tuleap/list-picker";
 

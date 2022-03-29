@@ -21,7 +21,7 @@ import {
     FlamingParrotDocumentAdapter,
     HTML_FORMAT_CLASSNAME,
 } from "./FlamingParrotDocumentAdapter";
-import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "../../../../constants/fields-constants";
+import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
 
 describe(`FlamingParrotDocumentAdapter`, () => {
     let doc: Document, adapter: FlamingParrotDocumentAdapter;

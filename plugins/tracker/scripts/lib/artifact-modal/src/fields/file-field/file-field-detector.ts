@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { FILE_FIELD } from "../../../../../constants/fields-constants";
+import { FILE_FIELD } from "@tuleap/plugin-tracker-constants";
 import { isDisabled } from "../disabled-field-detector";
 import type { Field, FileField } from "../../types";
 

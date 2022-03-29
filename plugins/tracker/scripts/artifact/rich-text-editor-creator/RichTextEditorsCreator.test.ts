@@ -25,7 +25,7 @@ import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
-} from "../../constants/fields-constants";
+} from "@tuleap/plugin-tracker-constants";
 
 // Mock @tuleap/mention because it needs jquery in tests
 jest.mock("@tuleap/mention", () => {

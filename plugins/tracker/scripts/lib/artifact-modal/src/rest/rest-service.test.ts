@@ -22,7 +22,7 @@ import * as RestService from "./rest-service";
 import * as rest_error_state from "./rest-error-state";
 
 import * as tlp from "tlp";
-import { TEXT_FORMAT_TEXT } from "../../../../constants/fields-constants";
+import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 
 const noop = (): void => {
     //Do nothing

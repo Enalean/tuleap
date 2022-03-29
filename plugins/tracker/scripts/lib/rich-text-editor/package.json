@@ -11,6 +11,7 @@
   "style": "dist/style.css",
   "dependencies": {
     "@tuleap/gettext": "file:../../../../../src/scripts/lib/gettext",
+    "@tuleap/plugin-tracker-constants": "link:../constants",
     "@tuleap/tlp-fetch": "file:../../../../../src/scripts/lib/tlp-fetch",
     "dompurify": "^2.3.4",
     "lit": "^2.0.2",

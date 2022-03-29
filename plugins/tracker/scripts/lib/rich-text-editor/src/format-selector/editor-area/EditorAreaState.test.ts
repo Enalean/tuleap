@@ -21,7 +21,7 @@ import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
-} from "../../../../../constants/fields-constants";
+} from "@tuleap/plugin-tracker-constants";
 import { EditorAreaState } from "./EditorAreaState";
 import type { FormatSelectorPresenter } from "../FormatSelectorInterface";
 import type { TextEditorInterface } from "../../TextEditorInterface";

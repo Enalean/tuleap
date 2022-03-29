@@ -28,12 +28,12 @@ import {
     MaxSizeUploadExceededError,
     UploadError,
 } from "@tuleap/ckeditor-image-upload";
-import type { TextFieldFormat } from "../../../../constants/fields-constants";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import {
     isValidTextFormat,
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
-} from "../../../../constants/fields-constants";
+} from "@tuleap/plugin-tracker-constants";
 import {
     setIsNotUploadingInCKEditor,
     setIsUploadingInCKEditor,

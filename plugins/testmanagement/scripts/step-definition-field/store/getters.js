@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TEXT_FORMAT_TEXT } from "../../../../tracker/scripts/constants/fields-constants.js";
+import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 
 export const is_text = () => (format) => {
     return format === TEXT_FORMAT_TEXT;

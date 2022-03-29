@@ -19,7 +19,7 @@
  */
 
 import { ExistingFormatSelector } from "./ExistingFormatSelector";
-import { TEXT_FORMAT_TEXT } from "../../../../constants/fields-constants";
+import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 import type { TextEditorInterface } from "../TextEditorInterface";
 
 const emptyFunction = (): void => {

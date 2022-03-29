@@ -18,10 +18,7 @@
  */
 
 import { ArtifactIdField } from "./ArtifactIdField";
-import {
-    ARTIFACT_ID_FIELD,
-    ARTIFACT_ID_IN_TRACKER_FIELD,
-} from "../../../../../../../constants/fields-constants";
+import { ARTIFACT_ID_FIELD, ARTIFACT_ID_IN_TRACKER_FIELD } from "@tuleap/plugin-tracker-constants";
 
 import type { HostElement } from "./ArtifactIdField";
 
