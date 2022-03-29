@@ -88,6 +88,14 @@ describe("creation properties transformer", () => {
         expect(formatted_result).toEqual([]);
     });
 
+    it("Given parent properties are not set then it returns an empty array", () => {
+        const parent_properties = null;
+
+        const formatted_result = transformCustomPropertiesForItemCreation(parent_properties);
+
+        expect(formatted_result).toEqual([]);
+    });
+
     it(`Given parent has a text value,
         then the formatted property is bound to value`, () => {
         const parent_properties: Array<Property> = [
