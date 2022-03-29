@@ -40,7 +40,10 @@
         </div>
         <div class="tlp-modal-body">
             <explanations-export />
-            <first-level-selector />
+            <first-level-selector
+                v-model:report_id="report_id"
+                v-bind:current_tracker_reports="properties.current_tracker_reports"
+            />
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -74,7 +77,7 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import type { GlobalExportProperties } from "../type";
+import type { GlobalExportProperties, TrackerReport } from "../type";
 import FirstLevelSelector from "./FirstLevelSelector.vue";
 import ExplanationsExport from "./ExplanationsExport.vue";
 
@@ -94,6 +97,7 @@ onBeforeUnmount(() => {
 });
 
 const props = defineProps<{ properties: GlobalExportProperties }>();
+const report_id = ref(props.properties.current_report_id);
 
 const export_is_ongoing = ref(false);
 async function startExport(): Promise<void> {
@@ -101,18 +105,17 @@ async function startExport(): Promise<void> {
     const export_document_module = import("../export-document");
     const download_xlsx_module = import("../Exporter/XLSX/download-xlsx");
 
-    const search_params = new URLSearchParams(location.search);
-    const report_id =
-        search_params.get("export_report_id_1") ?? String(props.properties.current_report_id);
-
     const { downloadXLSXDocument } = await export_document_module;
     const { downloadXLSX } = await download_xlsx_module;
     downloadXLSXDocument(
         {
             first_level: {
                 tracker_name: props.properties.current_tracker_name,
-                report_id: parseInt(report_id, 10),
-                report_name: report_id, // This will be replaced by the actual name once we can select the report in the UI
+                report_id: report_id.value,
+                report_name:
+                    props.properties.current_tracker_reports.find(
+                        (report: TrackerReport) => report.id === report_id.value
+                    )?.name ?? "",
             },
         },
         downloadXLSX

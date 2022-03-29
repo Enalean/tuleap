@@ -27,7 +27,7 @@ jest.mock("../export-document", () => {
 
 import ModalContent from "./ModalContent.vue";
 import { shallowMount } from "@vue/test-utils";
-import { createGettext } from "vue3-gettext";
+import { getGlobalTestOptions } from "./global-options-for-test";
 
 describe("ModalContent", () => {
     beforeEach(() => {
@@ -36,11 +36,13 @@ describe("ModalContent", () => {
 
     it("starts document export", async () => {
         const wrapper = shallowMount(ModalContent, {
-            global: {
-                plugins: [createGettext({ silent: true })],
-            },
+            global: getGlobalTestOptions(),
             props: {
-                properties: {} as GlobalExportProperties,
+                properties: {
+                    current_tracker_name: "Name",
+                    current_report_id: 130,
+                    current_tracker_reports: [],
+                } as GlobalExportProperties,
             },
         });
 
