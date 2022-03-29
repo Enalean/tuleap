@@ -121,7 +121,6 @@ document.observe("dom:loaded", function () {
             }
 
             function ajaxUpdate(dragged, value_id) {
-                let values = [];
                 var artifact_id = dragged.id.split("-")[1],
                     field_id,
                     url,
@@ -129,19 +128,22 @@ document.observe("dom:loaded", function () {
 
                 if ($("tracker_report_cardwall_settings_column")) {
                     field_id = $F("tracker_report_cardwall_settings_column");
+                    parameters["artifact[" + field_id + "]"] = value_id;
                 } else {
-                    field_id = dragged.readAttribute("data-column-field-id");
+                    let values = [];
+                    parameters["artifact[field_id]"] =
+                        dragged.readAttribute("data-column-field-id");
                     let columns = document.getElementsByClassName(
                         "cardwall_column_mapping_" + value_id + "_" + field_id
                     );
+
                     [].forEach.call(columns, function (element) {
                         values.push(parseInt(element.getValue(), 10));
                     });
+                    parameters["artifact[possible_values]"] = JSON.stringify(values);
                 }
 
                 url = codendi.tracker.base_url + "?func=update-in-place&aid=" + artifact_id;
-                parameters["artifact[field_id]"] = field_id;
-                parameters["artifact[possible_values]"] = JSON.stringify(values);
 
                 //save the new state
                 // eslint-disable-next-line no-new
