@@ -577,7 +577,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/taskboard
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/testmanagement
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/testplan
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/timetracking
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/oauth2_server
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
@@ -1455,7 +1454,6 @@ fi
 %files plugin-timetracking
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/timetracking
-%{APP_DIR}/src/www/assets/timetracking
 
 %files plugin-velocity
 %defattr(-,root,root,-)
