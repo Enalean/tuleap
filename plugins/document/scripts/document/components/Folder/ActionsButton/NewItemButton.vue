@@ -31,20 +31,16 @@
     </button>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import emitter from "../../../helpers/emitter";
-import Component from "vue-class-component";
-import { Prop } from "vue-property-decorator";
 import type { Item } from "../../../type";
-import Vue from "vue";
+const props = defineProps<{ item: Item }>();
 
-@Component
-export default class NewItemButton extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
-
-    showNewDocumentModal(): void {
-        emitter.emit("createItem", { item: this.item });
-    }
+function showNewDocumentModal(): void {
+    emitter.emit("createItem", { item: props.item });
 }
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>
