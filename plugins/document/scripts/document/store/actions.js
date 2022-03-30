@@ -57,12 +57,6 @@ export * from "./actions-retrieve";
 export * from "./actions-delete";
 export * from "./actions-quicklook";
 
-export const createNewFiles = async (context, [items, parent, current_folder]) => {
-    for (const item of items) {
-        await createNewItem(context, [item, parent, current_folder]);
-    }
-};
-
 export const createNewItem = async (context, [item, parent, current_folder]) => {
     try {
         let should_display_item = true;
