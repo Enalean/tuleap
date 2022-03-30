@@ -76,7 +76,7 @@ class PullrequestDisplayer
             $GLOBALS['HTML'] = $GLOBALS['Response'] = $layout;
 
             $assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/pullrequest',
+                __DIR__ . '/../frontend-assets',
                 '/assets/pullrequest'
             );
 
