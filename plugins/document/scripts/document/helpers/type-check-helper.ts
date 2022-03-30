@@ -51,7 +51,7 @@ export function isEmbedded(
 }
 
 export function isFolder(
-    item: Item | Embedded | Empty | ItemFile | Link | Wiki | Folder
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | Folder | FakeItem
 ): item is Folder {
     return item.type === TYPE_FOLDER;
 }

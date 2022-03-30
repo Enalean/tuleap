@@ -83,8 +83,17 @@ export interface RestFolder extends Omit<Folder, "properties"> {
     readonly metadata: Array<FolderProperty>;
 }
 
-export interface RestItemFile extends Omit<ItemFile, "properties"> {
-    readonly metadata: Array<Property>;
+export interface PostRestItemFile {
+    readonly title: string;
+    readonly description?: string;
+    readonly metadata?: Array<Property>;
+    readonly file_properties?: {
+        readonly file_name: string;
+        readonly file_size: number;
+    };
+    readonly status?: string | null;
+    readonly obsolescence_date?: string | null;
+    readonly permissions_for_groups?: Permissions | null;
 }
 
 export interface RestLink extends Omit<Link, "properties"> {
@@ -127,7 +136,10 @@ async function getItem(id: number): Promise<Item> {
     return convertRestItemToItem(item);
 }
 
-async function addNewDocumentType(url: string, item: RestItem): Promise<CreatedItem> {
+async function addNewDocumentType(
+    url: string,
+    item: RestItem | PostRestItemFile
+): Promise<CreatedItem> {
     const headers = {
         "content-type": "application/json",
     };
@@ -175,7 +187,7 @@ async function searchInFolder(
     };
 }
 
-function addNewFile(item: RestItemFile, parent_id: number): Promise<CreatedItem> {
+function addNewFile(item: PostRestItemFile, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/files",
         item
