@@ -179,7 +179,7 @@ class GitRepositoryHeaderDisplayerBuilder
     private function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/git',
+            __DIR__ . '/../../../frontend-assets',
             '/assets/git'
         );
     }

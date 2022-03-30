@@ -91,7 +91,7 @@ class Notification extends Pane
             )
         );
         $html    .= $this->getPluginNotifications();
-        $assets   = new IncludeAssets(__DIR__ . "/../../../../../../src/www/assets/git", "/assets/git");
+        $assets   = new IncludeAssets(__DIR__ . "/../../../../frontend-assets", "/assets/git");
         $GLOBALS['Response']->includeFooterJavascriptFile($assets->getFileURL('repo-admin-notifications.js'));
 
         return $html;
