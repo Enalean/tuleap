@@ -31,21 +31,10 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 final class ArtifactLinkTypeImporter
 {
-    private const ISSUE_LINK_TYPE_URL = '/issueLinkType';
+    private const ISSUE_LINK_TYPE_URL = 'issueLinkType';
 
-    /**
-     * @var AllTypesRetriever
-     */
-    private $all_natures_retriever;
-    /**
-     * @var TypeCreatorInterface
-     */
-    private $creator;
-
-    public function __construct(AllTypesRetriever $all_natures_retriever, TypeCreatorInterface $creator)
+    public function __construct(private AllTypesRetriever $all_natures_retriever, private TypeCreatorInterface $creator)
     {
-        $this->all_natures_retriever = $all_natures_retriever;
-        $this->creator               = $creator;
     }
 
     /**
@@ -60,7 +49,6 @@ final class ArtifactLinkTypeImporter
         }
 
         $issue_link_types = $jira_client->getUrl(ClientWrapper::JIRA_CORE_BASE_URL . '/' . self::ISSUE_LINK_TYPE_URL);
-
         if (! isset($issue_link_types['issueLinkTypes']) || ! is_array($issue_link_types['issueLinkTypes'])) {
             throw new \RuntimeException('Payload returned by Jira ' . self::ISSUE_LINK_TYPE_URL . ' endpoint was not expected `issueLinkTypes` must be present and must be an array');
         }
