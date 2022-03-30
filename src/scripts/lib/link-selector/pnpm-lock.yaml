@@ -2,8 +2,8 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/gettext': file:../gettext
-  '@tuleap/po-gettext-plugin': link:../po-gettext-plugin
-  '@tuleap/tlp': link:../../src/themes/tlp
+  '@tuleap/po-gettext-plugin': file:../po-gettext-plugin
+  '@tuleap/tlp': file:../../src/themes/tlp
   lit: ^2.0.2
 
 dependencies:

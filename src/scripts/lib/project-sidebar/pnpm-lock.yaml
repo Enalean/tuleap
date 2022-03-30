@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@fortawesome/fontawesome-free': ^5.15.2
-  '@tuleap/project-sidebar-internal': link:../project-sidebar-internal
+  '@tuleap/project-sidebar-internal': file:../project-sidebar-internal
 
 devDependencies:
   '@fortawesome/fontawesome-free': 5.15.4

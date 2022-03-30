@@ -11,7 +11,7 @@
     "@tuleap/list-picker": "file:../../src/scripts/lib/list-picker",
     "@tuleap/mention": "file:../../src/scripts/lib/mention",
     "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "file:scripts/lib/artifact-ckeditor-image-upload",
-    "@tuleap/plugin-tracker-constants": "link:scripts/lib/constants",
+    "@tuleap/plugin-tracker-constants": "file:scripts/lib/constants",
     "@tuleap/plugin-tracker-rich-text-editor": "file:scripts/lib/rich-text-editor",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "@tuleap/tooltip": "file:../../src/scripts/lib/tooltip",
@@ -34,7 +34,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@tuleap/tlp": "link:../../src/themes/tlp",
+    "@tuleap/tlp": "file:../../src/themes/tlp",
     "@types/bootstrap": "^4.5.1",
     "@types/ckeditor": "^4.9.10",
     "@types/codemirror": "^5.60.1",

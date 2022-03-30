@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/date-helper": "file:../../src/scripts/lib/date-helper",
-    "@tuleap/tlp-fetch": "link:../../src/scripts/lib/tlp-fetch",
+    "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "@tuleap/vue-breadcrumb-privacy": "file:../../src/scripts/lib/vue-breadcrumb-privacy",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",

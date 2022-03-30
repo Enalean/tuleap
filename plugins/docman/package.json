@@ -6,8 +6,8 @@
   "private": true,
   "dependencies": {
     "@tuleap/html-escaper": "file:../../src/scripts/lib/html-escaper",
-    "@tuleap/tlp-modal": "link:../../src/scripts/lib/tlp-modal",
-    "@tuleap/tlp-popovers": "link:../../src/scripts/lib/tlp-popovers"
+    "@tuleap/tlp-modal": "file:../../src/scripts/lib/tlp-modal",
+    "@tuleap/tlp-popovers": "file:../../src/scripts/lib/tlp-popovers"
   },
   "config": {
     "bin": "../../node_modules/.bin"

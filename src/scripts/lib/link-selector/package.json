@@ -11,7 +11,7 @@
   "style": "dist/style.css",
   "dependencies": {
     "@tuleap/gettext": "file:../gettext",
-    "@tuleap/tlp": "link:../../src/themes/tlp",
+    "@tuleap/tlp": "file:../../src/themes/tlp",
     "lit": "^2.0.2"
   },
   "scripts": {
@@ -21,6 +21,6 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@tuleap/po-gettext-plugin": "link:../po-gettext-plugin"
+    "@tuleap/po-gettext-plugin": "file:../po-gettext-plugin"
   }
 }

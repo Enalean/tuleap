@@ -21,7 +21,7 @@
     "sprintf-js": "^1.1.2"
   },
   "devDependencies": {
-    "@tuleap/po-gettext-plugin": "link:../../../../../src/scripts/lib/po-gettext-plugin",
+    "@tuleap/po-gettext-plugin": "file:../../../../../src/scripts/lib/po-gettext-plugin",
     "css.escape": "^1.5.1"
   },
   "scripts": {

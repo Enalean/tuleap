@@ -2,8 +2,8 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/gettext': file:../../../../../src/scripts/lib/gettext
-  '@tuleap/plugin-tracker-constants': link:../constants
-  '@tuleap/po-gettext-plugin': link:../../../../../src/scripts/lib/po-gettext-plugin
+  '@tuleap/plugin-tracker-constants': file:../constants
+  '@tuleap/po-gettext-plugin': file:../../../../../src/scripts/lib/po-gettext-plugin
   '@tuleap/tlp-fetch': file:../../../../../src/scripts/lib/tlp-fetch
   '@types/bootstrap': ^3.4.0
   '@types/ckeditor': ^4.9.10

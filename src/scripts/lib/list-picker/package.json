@@ -20,6 +20,6 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@tuleap/po-gettext-plugin": "link:../po-gettext-plugin"
+    "@tuleap/po-gettext-plugin": "file:../po-gettext-plugin"
   }
 }
