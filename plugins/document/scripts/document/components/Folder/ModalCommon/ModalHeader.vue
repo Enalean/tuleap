@@ -37,15 +37,10 @@
         </button>
     </div>
 </template>
+<script setup lang="ts">
+defineProps<{ modalTitle: string; ariaLabelledBy: string }>();
+</script>
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-
-@Component
-export default class ModalHeader extends Vue {
-    @Prop({ required: true })
-    readonly modalTitle!: string;
-
-    @Prop({ required: true })
-    readonly ariaLabelledBy!: string;
-}
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>

@@ -22,12 +22,13 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ModalFeedback from "./ModalFeedback.vue";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
-import type { RootState } from "../../../type";
 import type { ErrorState } from "../../../store/error/module";
+import type { RootState } from "../../../type";
+import localVue from "../../../helpers/local-vue";
 
 describe("ModalFeedback", () => {
     function createWrapper(has_error: boolean): Wrapper<ModalFeedback> {
-        const error = { has_modal_error: has_error } as unknown as ErrorState;
+        const error = { modal_error: "", has_modal_error: has_error } as unknown as ErrorState;
         const state = { error: error } as RootState;
 
         const store_options = {
@@ -36,6 +37,7 @@ describe("ModalFeedback", () => {
 
         const store = createStoreMock(store_options);
         return shallowMount(ModalFeedback, {
+            localVue, //Needed to avoid conflict between Vuex and Composition API
             mocks: { $store: store },
         });
     }
