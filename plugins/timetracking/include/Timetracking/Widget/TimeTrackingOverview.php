@@ -138,7 +138,7 @@ class TimeTrackingOverview extends Widget
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/timetracking',
+            __DIR__ . '/../../../frontend-assets',
             '/assets/timetracking'
         );
     }
