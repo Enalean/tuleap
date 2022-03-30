@@ -590,7 +590,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/oauth2_server
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/program_management
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/program_management
 %endif
 %if %{with experimental}
 %else
@@ -1480,7 +1479,6 @@ fi
 %files plugin-program_management
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/program_management
-%{APP_DIR}/src/www/assets/program_management
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_program_management
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_program_management
 

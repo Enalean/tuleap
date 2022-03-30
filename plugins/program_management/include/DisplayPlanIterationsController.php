@@ -195,7 +195,7 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/program_management',
+            __DIR__ . '/../frontend-assets',
             '/assets/program_management'
         );
     }
