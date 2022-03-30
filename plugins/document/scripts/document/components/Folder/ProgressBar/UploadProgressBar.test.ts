@@ -42,7 +42,7 @@ describe("UploadProgressBar", () => {
             type: "file",
             user_can_write: true,
             is_uploading_new_version: true,
-        } as FakeItem;
+        } as unknown as FakeItem;
 
         const wrapper = getWrapper(item);
 
@@ -59,7 +59,7 @@ describe("UploadProgressBar", () => {
             title: "my item title",
             type: "file",
             user_can_write: true,
-        } as FakeItem;
+        } as unknown as FakeItem;
 
         const wrapper = getWrapper(item);
 
@@ -76,7 +76,7 @@ describe("UploadProgressBar", () => {
             title: "my item title",
             type: "folder",
             user_can_write: true,
-        } as FakeItem;
+        } as unknown as FakeItem;
 
         const wrapper = getWrapper(item);
 
@@ -93,7 +93,7 @@ describe("UploadProgressBar", () => {
             title: "my item title",
             type: "folder",
             user_can_write: true,
-        } as FakeItem;
+        } as unknown as FakeItem;
 
         const wrapper = getWrapper(item);
 

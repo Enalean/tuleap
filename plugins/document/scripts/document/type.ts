@@ -21,6 +21,7 @@ import type { ConfigurationState } from "./store/configuration";
 import type { ErrorState } from "./store/error/module";
 import type { PermissionsState } from "./store/permissions/permissions-default-state";
 import type { PropertiesState } from "./store/properties/module";
+import type { Upload } from "tus-js-client";
 
 export interface State {
     is_loading_folder: boolean;
@@ -98,9 +99,14 @@ export interface ItemSearchResult {
 
 export const SEARCH_LIMIT = 50;
 
-export interface Item {
-    id: number;
-    title: string;
+interface MinimalItem {
+    readonly id: number;
+    readonly title: string;
+    readonly parent_id: number | null;
+    readonly type: string;
+}
+
+export interface Item extends MinimalItem {
     description: string;
     post_processed_description: string;
     owner: User;
@@ -109,7 +115,6 @@ export interface Item {
     user_can_write: boolean;
     can_user_manage: boolean;
     lock_info: LockInfo | null;
-    parent_id: number | null;
     type: string;
     status: string | FolderStatus;
     created?: boolean;
@@ -164,11 +169,14 @@ export interface DefaultFileItem {
     file_properties: DefaultFileProperties;
 }
 
-export interface FakeItem extends Item {
+export interface FakeItem extends MinimalItem {
+    last_update_date?: Date;
     progress: number | null;
-    level: number;
+    level?: number;
     upload_error: string | null;
     is_uploading?: boolean;
+    uploader?: Upload;
+    file_type?: string;
     is_uploading_new_version?: boolean;
 }
 

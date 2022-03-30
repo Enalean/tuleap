@@ -21,7 +21,7 @@ import type {
     ProjectService,
     RestEmpty,
     RestFolder,
-    RestItemFile,
+    PostRestItemFile,
     RestLink,
     RestWiki,
 } from "./rest-querier";
@@ -242,7 +242,7 @@ describe("rest-querier", () => {
                     title: "my new file",
                     description: "",
                     type: "file",
-                } as RestItemFile,
+                } as PostRestItemFile,
                 2
             );
 

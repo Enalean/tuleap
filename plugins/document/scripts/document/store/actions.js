@@ -21,7 +21,6 @@ import Vue from "vue";
 import {
     addNewEmbedded,
     addNewEmpty,
-    addNewFile,
     addNewLink,
     addNewWiki,
     cancelUpload,
@@ -38,8 +37,7 @@ import {
 } from "../api/rest-querier";
 
 import { getErrorMessage } from "./actions-helpers/handle-errors";
-import { uploadFile, uploadVersion, uploadVersionFromEmpty } from "./actions-helpers/upload-file";
-import { flagItemAsCreated } from "./actions-helpers/flag-item-as-created";
+import { uploadVersion, uploadVersionFromEmpty } from "./actions-helpers/upload-file";
 import { adjustItemToContentAfterItemCreationInAFolder } from "./actions-helpers/adjust-item-to-content-after-item-creation-in-folder";
 import { buildItemPath } from "./actions-helpers/build-parent-paths";
 import {
@@ -53,6 +51,7 @@ import {
 } from "../constants";
 import { addNewFolder } from "../api/rest-querier";
 import { handleErrorsForModal } from "./error/error-actions";
+import { createNewFile } from "./actions-helpers/create-new-file";
 
 export * from "./actions-retrieve";
 export * from "./actions-delete";
@@ -285,73 +284,6 @@ function uploadVersionAndAssignUploaderFroEmpty(item, context, uploaded_file, ne
 
 function uploadVersionAndAssignUploader(item, context, uploaded_file, new_version) {
     item.uploader = uploadVersion(context, uploaded_file, item, new_version);
-}
-
-async function createNewFile(
-    context,
-    {
-        title,
-        description,
-        file_properties,
-        status,
-        obsolescence_date,
-        properties,
-        permissions_for_groups,
-    },
-    parent,
-    should_display_fake_item
-) {
-    const dropped_file = file_properties.file;
-    const new_file = await addNewFile(
-        {
-            title: title,
-            description: description,
-            file_properties: {
-                file_name: dropped_file.name,
-                file_size: dropped_file.size,
-            },
-            status: status,
-            obsolescence_date: obsolescence_date,
-            metadata: properties,
-            permissions_for_groups: permissions_for_groups,
-        },
-        parent.id
-    );
-    if (dropped_file.size === 0) {
-        const created_item = await getItem(new_file.id);
-        flagItemAsCreated(context, created_item);
-
-        return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", created_item));
-    }
-    if (context.state.folder_content.find(({ id }) => id === new_file.id)) {
-        return;
-    }
-    const fake_item = {
-        id: new_file.id,
-        title: title,
-        parent_id: parent.id,
-        type: TYPE_FILE,
-        file_type: dropped_file.type,
-        is_uploading: true,
-        progress: 0,
-        uploader: null,
-        upload_error: null,
-    };
-
-    fake_item.uploader = uploadFile(context, dropped_file, fake_item, new_file, parent);
-
-    context.commit("addJustCreatedItemToFolderContent", fake_item);
-    context.commit("addDocumentToFoldedFolder", [parent, fake_item, should_display_fake_item]);
-    context.commit("addFileInUploadsList", fake_item);
-
-    let display_progress_bar_on_folder = true;
-    if (parent.is_expanded) {
-        display_progress_bar_on_folder = false;
-    }
-    context.commit("toggleCollapsedFolderHasUploadingContent", [
-        parent,
-        display_progress_bar_on_folder,
-    ]);
 }
 
 export const addNewUploadFile = async (

@@ -19,20 +19,30 @@
  */
 
 import { replaceFolderContentByItem } from "./item-mutations";
-import type { Item, LockInfo, State, User } from "../type";
+import type { FakeItem, Item } from "../type";
+import type { LockInfo, State, User } from "../type";
 
 describe("Item mutations", () => {
+    function isFolderContentArrayOfItem(
+        folder_content: Array<Item | FakeItem>
+    ): folder_content is Array<Item> {
+        return folder_content.every((item) => "lock_info" in item);
+    }
+
     describe("replaceFolderContentByItem", () => {
         it("replace the element in folder content", () => {
-            let folder_content: Array<Item> = [];
-            folder_content = [
-                { id: 1, lock_info: { lock_by: { id: 1 } as User, lock_date: "" } } as Item,
-                { id: 2, lock_info: { lock_by: { id: 2 } as User, lock_date: "" } } as Item,
-            ];
-            const state: State = { folder_content } as unknown as State;
+            const state: State = {
+                folder_content: [
+                    { id: 1, lock_info: { lock_by: { id: 1 } as User, lock_date: "" } } as Item,
+                    { id: 2, lock_info: { lock_by: { id: 2 } as User, lock_date: "" } } as Item,
+                ],
+            } as unknown as State;
 
             replaceFolderContentByItem(state, { id: 1, lock_info: null } as Item);
 
+            if (!isFolderContentArrayOfItem(state.folder_content)) {
+                throw Error("folder_content should contain only items");
+            }
             expect(state.folder_content[0].lock_info).toBe(null);
             expect(state.folder_content[1].lock_info).toEqual({
                 lock_by: { id: 2 } as User,
@@ -53,6 +63,9 @@ describe("Item mutations", () => {
                 lock_info: { lock_by: { id: 1 } as User, lock_date: "" },
             } as Item);
 
+            if (!isFolderContentArrayOfItem(state.folder_content)) {
+                throw Error("folder_content should contain only items");
+            }
             expect(state.folder_content[0].lock_info).toBe(null);
             expect(state.folder_content[1].lock_info).toBe(null);
         });
@@ -70,6 +83,9 @@ describe("Item mutations", () => {
 
             replaceFolderContentByItem(state, { id: 3, lock_info: null } as Item);
 
+            if (!isFolderContentArrayOfItem(state.folder_content)) {
+                throw Error("folder_content should contain only items");
+            }
             expect(state.folder_content[0].lock_info).toBe(null);
             expect(state.currently_previewed_item?.lock_info).toBe(null);
         });
@@ -85,6 +101,9 @@ describe("Item mutations", () => {
 
             replaceFolderContentByItem(state, { id: 3, lock_info: null } as Item);
 
+            if (!isFolderContentArrayOfItem(state.folder_content)) {
+                throw Error("folder_content should contain only items");
+            }
             expect(state.folder_content[0].lock_info).toBe(lock_info);
             expect(state.currently_previewed_item?.lock_info).toBe(lock_info);
         });

@@ -62,7 +62,9 @@ export function uploadFile(
                 const file = await getItem(docman_item.id);
                 if (isFile(file)) {
                     flagItemAsCreated(context, file);
-                    file.level = fake_item.level;
+                    if (fake_item.level !== undefined) {
+                        file.level = fake_item.level;
+                    }
                     context.commit("replaceUploadingFileWithActualFile", [fake_item, file]);
                     context.commit("removeFileFromUploadsList", fake_item);
                 }
@@ -162,7 +164,7 @@ export function uploadVersionFromEmpty(
         onSuccess: async (): Promise<void> => {
             updated_empty.progress = null;
             updated_empty.is_uploading_new_version = false;
-            updated_empty.last_update_date = Date.now();
+            updated_empty.last_update_date = new Date();
             context.commit("removeFileFromUploadsList", updated_empty);
             const new_item_version = await getItem(updated_empty.id);
             context.commit("removeItemFromFolderContent", new_item_version);
