@@ -1,0 +1,7 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@tuleap/plugin-tracker-constants': link:../constants
+
+dependencies:
+  '@tuleap/plugin-tracker-constants': link:../constants

@@ -1,0 +1,24 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-rest-api-types",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/plugin-tracker-rest-api-types.es.js",
+  "main": "dist/plugin-tracker-rest-api-types.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/plugin-tracker-rest-api-types.es.js",
+      "require": "./dist/plugin-tracker-rest-api-types.umd.js"
+    }
+  },
+  "dependencies": {
+    "@tuleap/plugin-tracker-constants": "link:../constants"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

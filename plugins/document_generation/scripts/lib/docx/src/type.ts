@@ -17,6 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type {
+    ArtifactLink,
+    ArtifactResponse as ArtifactResponseWithoutStepDefinition,
+    BaseFieldStructure,
+    ComputedChangesetValue,
+    CrossReferenceChangesetValue,
+    DateChangesetValue,
+    ChangesetValue,
+    FileChangesetValue,
+    LastUpdateByChangesetValue,
+    NumericChangesetValue,
+    OpenListChangesetValue,
+    PermissionChangesetValue,
+    SimpleListChangesetValue,
+    StringChangesetValue,
+    StructureFields as StructureFieldsWithoutStepExecution,
+    StructureFormat,
+    SubmittedByChangesetValue,
+    TextChangesetValue,
+    TrackerResponse,
+    UnknownChangesetValue,
+    UserRepresentation,
+} from "@tuleap/plugin-tracker-rest-api-types";
+import type { ArtifactLinkFieldIdentifier } from "@tuleap/plugin-tracker-constants";
+export type {
+    StructureFormat,
+    UserRepresentation as ArtifactReportResponseUserRepresentation,
+    UserGroupRepresentation as ArtifactReportResponseUserGroupRepresentation,
+    UnknownChangesetValue as ArtifactReportResponseUnknownFieldValue,
+    ArtifactLink,
+} from "@tuleap/plugin-tracker-rest-api-types";
+
 interface ArtifactFieldValueContent {
     readonly field_name: string;
     readonly field_value: string;
@@ -141,180 +173,24 @@ export interface ArtifactReportContainer {
 }
 
 export type ArtifactReportFieldValue =
-    | ArtifactReportResponseUnknownFieldValue
-    | ArtifactReportResponseNumericFieldValue
-    | ArtifactReportResponseStringFieldValue
-    | ArtifactReportResponseTextFieldValue
-    | (ArtifactReportResponseDateFieldValue & { is_time_displayed: boolean })
-    | ArtifactReportResponseComputedFieldValue
-    | ArtifactReportResponseFileFieldValue
-    | ArtifactReportResponseSubmittedByFieldValue
-    | ArtifactReportResponseLastUpdateByFieldValue
-    | (ArtifactReportResponseSimpleListFieldValue & { formatted_values: string[] })
-    | (ArtifactReportResponseOpenListFieldValue & { formatted_open_values: string[] })
-    | (ArtifactReportResponsePermissionsOnArtifactFieldValue & {
+    | UnknownChangesetValue
+    | NumericChangesetValue
+    | StringChangesetValue
+    | TextChangesetValue
+    | (DateChangesetValue & { is_time_displayed: boolean })
+    | ComputedChangesetValue
+    | FileChangesetValue
+    | SubmittedByChangesetValue
+    | LastUpdateByChangesetValue
+    | (SimpleListChangesetValue & { formatted_values: string[] })
+    | (OpenListChangesetValue & { formatted_open_values: string[] })
+    | (PermissionChangesetValue & {
           formatted_granted_ugroups: string[];
       })
-    | ArtifactReportResponseCrossReferencesFieldValue
+    | CrossReferenceChangesetValue
     | ArtifactReportResponseStepDefinitionFieldValue
     | ArtifactStepExecutionFieldValue
     | ArtifactReportArtifactLinksFieldValue;
-
-interface ArtifactReportResponseFileDescriptionFieldValue {
-    id: number;
-    submitted_by: number;
-    description: string;
-    name: string;
-    size: number;
-    type: string;
-    html_url: string;
-    html_preview_url: string;
-    uri: string;
-}
-
-export interface ArtifactReportResponseUnknownFieldValue {
-    field_id: number;
-    type: never;
-    label: string;
-    value: never;
-}
-
-interface ArtifactReportResponseNumericFieldValue {
-    field_id: number;
-    type: "aid" | "atid" | "int" | "float" | "priority";
-    label: string;
-    value: number | null;
-}
-
-interface ArtifactReportResponseStringFieldValue {
-    field_id: number;
-    type: "string";
-    label: string;
-    value: string | null;
-}
-
-interface ArtifactReportResponseTextFieldValue {
-    field_id: number;
-    type: "text";
-    label: string;
-    value: string | null;
-    format: "text" | "html";
-}
-
-interface ArtifactReportResponseDateFieldValue {
-    field_id: number;
-    type: "date" | "lud" | "subon";
-    label: string;
-    value: string | null;
-}
-
-interface ArtifactReportResponseComputedFieldValue {
-    field_id: number;
-    type: "computed";
-    label: string;
-    value: number | null;
-    manual_value: number | null;
-    is_autocomputed: boolean;
-}
-
-interface ArtifactReportResponseFileFieldValue {
-    field_id: number;
-    type: "file";
-    label: string;
-    file_descriptions: Array<ArtifactReportResponseFileDescriptionFieldValue>;
-}
-
-interface ArtifactReportResponseSubmittedByFieldValue {
-    field_id: number;
-    type: "subby";
-    label: string;
-    value: ArtifactReportResponseUserRepresentation;
-}
-
-interface ArtifactReportResponseLastUpdateByFieldValue {
-    field_id: number;
-    type: "luby";
-    label: string;
-    value: ArtifactReportResponseUserRepresentation;
-}
-
-interface ArtifactReportResponseSimpleListFieldValue {
-    field_id: number;
-    type: "sb" | "rb" | "msb" | "cb";
-    label: string;
-    values:
-        | Array<ArtifactReportResponseUserRepresentation>
-        | Array<ArtifactReportResponseStaticValueRepresentation>
-        | Array<ArtifactReportResponseUserGroupRepresentation>;
-}
-
-interface ArtifactReportResponseOpenListFieldValue {
-    field_id: number;
-    type: "tbl";
-    label: string;
-    bind_value_objects:
-        | Array<ArtifactReportResponseUserRepresentation>
-        | Array<
-              | ArtifactReportResponseOpenListValueRepresentation
-              | ArtifactReportResponseStaticValueRepresentation
-          >
-        | Array<ArtifactReportResponseUserGroupRepresentation>;
-}
-
-export interface ArtifactReportResponseUserRepresentation {
-    email: string;
-    status: string;
-    id: number | null;
-    uri: string;
-    user_url: string;
-    real_name: string;
-    display_name: string;
-    username: string;
-    ldap_id: string;
-    avatar_url: string;
-    is_anonymous: boolean;
-    has_avatar: boolean;
-}
-
-interface ArtifactReportResponseStaticValueRepresentation {
-    id: number;
-    label: string;
-    color: string | null;
-    tlp_color: string | null;
-}
-
-interface ArtifactReportResponseOpenListValueRepresentation {
-    id: number;
-    label: string;
-}
-
-export interface ArtifactReportResponseUserGroupRepresentation {
-    id: string;
-    uri: string;
-    label: string;
-    users_uri: string;
-    short_name: string;
-    key: string;
-}
-
-interface ArtifactReportResponsePermissionsOnArtifactFieldValue {
-    field_id: number;
-    type: "perm";
-    label: string;
-    granted_groups: string[];
-    granted_groups_ids: string[];
-}
-
-interface ArtifactReportResponseCrossReferencesFieldValue {
-    field_id: number;
-    type: "cross";
-    label: string;
-    value: Array<{
-        ref: string;
-        url: string;
-        direction: string;
-    }>;
-}
 
 export interface ArtifactReportResponseStepDefinitionFieldValue {
     field_id: number;
@@ -323,28 +199,15 @@ export interface ArtifactReportResponseStepDefinitionFieldValue {
     value: Array<ArtifactReportResponseStepRepresentation>;
 }
 
-export interface ArtifactLink {
-    type: string | null;
-    id: number;
-}
-
 export interface ArtifactLinkWithTitle extends ArtifactLink {
     title: string;
     is_linked_artifact_part_of_document?: boolean;
     html_url?: string;
 }
 
-interface ArtifactReportResponseArtifactLinksFieldValue {
-    field_id: number;
-    type: "art_link";
-    label: string;
-    links: ArtifactLink[];
-    reverse_links: ArtifactLink[];
-}
-
 interface ArtifactReportArtifactLinksFieldValue {
     field_id: number;
-    type: "art_link";
+    type: ArtifactLinkFieldIdentifier;
     label: string;
     links: ReadonlyArray<ArtifactLinkWithTitle>;
     reverse_links: ReadonlyArray<ArtifactLinkWithTitle>;
@@ -382,93 +245,27 @@ export interface DateTimeLocaleInformation {
 }
 
 export type ArtifactReportResponseFieldValue =
-    | ArtifactReportResponseUnknownFieldValue
-    | ArtifactReportResponseNumericFieldValue
-    | ArtifactReportResponseStringFieldValue
-    | ArtifactReportResponseTextFieldValue
-    | ArtifactReportResponseDateFieldValue
-    | ArtifactReportResponseComputedFieldValue
-    | ArtifactReportResponseFileFieldValue
-    | ArtifactReportResponseSubmittedByFieldValue
-    | ArtifactReportResponseLastUpdateByFieldValue
-    | ArtifactReportResponseSimpleListFieldValue
-    | ArtifactReportResponseOpenListFieldValue
-    | ArtifactReportResponsePermissionsOnArtifactFieldValue
-    | ArtifactReportResponseCrossReferencesFieldValue
-    | ArtifactReportResponseStepDefinitionFieldValue
-    | ArtifactReportResponseArtifactLinksFieldValue;
+    | ChangesetValue
+    | ArtifactReportResponseStepDefinitionFieldValue;
+
+export interface ArtifactResponse extends Omit<ArtifactResponseWithoutStepDefinition, "values"> {
+    readonly values: ReadonlyArray<ArtifactReportResponseFieldValue>;
+}
 
 export interface TrackerStructure {
     fields: ReadonlyMap<number, FieldsStructure>;
     disposition: ReadonlyArray<StructureFormat>;
 }
 
-export type FieldsStructure =
-    | UnknownFieldStructure
-    | DateFieldStructure
-    | ContainerFieldStructure
-    | ListFieldStructure
-    | PermissionsOnArtifactFieldStructure
-    | StepExecutionFieldStructure
-    | ArtifactLinkFieldStructure;
-
-interface BaseFieldStructure {
-    field_id: number;
-}
-
-interface UnknownFieldStructure extends BaseFieldStructure {
-    type: never;
-}
-
-interface DateFieldStructure extends BaseFieldStructure {
-    type: "date" | "lud" | "subon";
-    is_time_displayed: boolean;
-}
-
-interface ContainerFieldStructure extends BaseFieldStructure {
-    type: "column" | "fieldset";
-    label: string;
-}
-
-interface ListFieldStructure extends BaseFieldStructure {
-    type: "sb" | "rb" | "msb" | "cb" | "tbl";
-}
+export type FieldsStructure = StructureFieldsWithoutStepExecution | StepExecutionFieldStructure;
 
 export interface StepExecutionFieldStructure extends BaseFieldStructure {
     type: "ttmstepexec";
     label: string;
 }
 
-interface PermissionsOnArtifactFieldStructure extends BaseFieldStructure {
-    type: "perm";
-    values: {
-        is_used_by_default: boolean;
-        ugroup_representations: Array<ArtifactReportResponseUserGroupRepresentation>;
-    };
-}
-
-interface ArtifactLinkFieldStructure extends BaseFieldStructure {
-    type: "art_link";
-    label: string;
-}
-
-export interface StructureFormat {
-    id: number;
-    content: null | ReadonlyArray<this>;
-}
-
-export interface TrackerDefinition {
-    fields: ReadonlyArray<FieldsStructure>;
-    structure: ReadonlyArray<StructureFormat>;
-}
-
-export interface ArtifactResponse {
-    readonly id: number;
-    readonly title: string | null;
-    readonly xref: string;
-    readonly tracker: { readonly id: number };
-    readonly html_url: string;
-    readonly values: ReadonlyArray<ArtifactReportResponseFieldValue>;
+export interface TrackerDefinition extends Omit<TrackerResponse, "fields"> {
+    readonly fields: ReadonlyArray<FieldsStructure>;
 }
 
 export interface TestExecutionAttachment {
@@ -505,7 +302,7 @@ export interface TestExecutionResponse {
     previous_result: {
         status: TestExecStatus | null;
         submitted_on: string;
-        submitted_by: ArtifactReportResponseUserRepresentation;
+        submitted_by: UserRepresentation;
         result: string;
     } | null;
     status: TestExecStatus | null;
