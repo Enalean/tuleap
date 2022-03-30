@@ -265,26 +265,30 @@ class Tracker_Report_HeaderRenderer
     private function getReportSelector(Tracker_Report $report, array $reports): string
     {
         if (count($reports) > 1) {
-            $options  = '<select id="tracker_select_report" name="select_report">';
-            $personal = '';
-            $public   = '';
+            $options     = '<select id="tracker_select_report" name="select_report">';
+            $personal    = '';
+            $personal_nb = 0;
+            $public      = '';
+            $public_nb   = 0;
             foreach ($reports as $r) {
                 $prefix   = '<option value="' . $r->id . '"';
                 $suffix   = '>' . $this->purifier->purify($r->name, CODENDI_PURIFIER_CONVERT_HTML)  . '</option>';
                 $selected = $r->id == $report->id ? 'selected="selected"' : '';
                 if ($r->isPublic()) {
                     $public .= $prefix . ' ' . $selected . $suffix;
+                    $public_nb++;
                 } else {
                     $personal .= $prefix . ' ' . $selected . $suffix;
+                    $personal_nb++;
                 }
             }
             if ($personal !== '') {
-                $options .= '<optgroup label="Personal reports">';
+                $options .= '<optgroup label="' . $this->purifier->purify(dngettext('tuleap-tracker', 'Personal report', 'Personal reports', $personal_nb)) . '">';
                 $options .= $personal;
                 $options .= '</optgroup>';
             }
             if ($public !== '') {
-                $options .= '<optgroup label="Public reports">';
+                $options .= '<optgroup label="' . $this->purifier->purify(dngettext('tuleap-tracker', 'Public report', 'Public reports', $public_nb)) . '">';
                 $options .= $public;
                 $options .= '</optgroup>';
             }
