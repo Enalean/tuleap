@@ -135,12 +135,7 @@ pipeline {
                     steps {
                         script {
                             execTestWithLimitedConcurrency({
-                                def filesToAnalyze = '.'
-                                if (env.GIT_BRANCH != 'origin/master') {
-                                    def helpers = load 'sources/tests/helpers.groovy'
-                                    filesToAnalyze = helpers.getModifiedFilesSinceFirstParentOfCurrentCommit('sources/')
-                                }
-                                actions.runPsalm('tests/psalm/psalm.xml', filesToAnalyze)
+                                actions.runPsalm('tests/psalm/psalm.xml', '.')
                         }) }
                     }
                     post {
