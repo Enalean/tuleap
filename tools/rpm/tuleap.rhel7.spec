@@ -363,6 +363,13 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-git
 
 %if %{with enterprise}
 
+%package plugin-baseline
+Summary: Set and compare baselines
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist},  tuleap-plugin-tracker
+%description plugin-baseline
+%{summary}.
+
 %package plugin-crosstracker
 Summary: Cross tracker search widget
 Group: Development/Tools
@@ -556,6 +563,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/label
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/roadmap
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/baseline
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/timetracking
@@ -1388,6 +1396,10 @@ fi
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_gitlab
 
 %if %{with enterprise}
+
+%files plugin-baseline
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/baseline
 
 %files plugin-crosstracker
 %defattr(-,root,root,-)

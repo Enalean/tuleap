@@ -1,0 +1,243 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.2.1\n"
+
+msgid "All artifacts are hidden"
+msgstr "Tous les artefacts sont masqués"
+
+msgid "Artifact added"
+msgstr "Artefact ajouté"
+
+msgid "Artifact deleted"
+msgstr "Artefact supprimé"
+
+msgid "Artifact modified"
+msgstr "Artefact modifié"
+
+msgid "Artifacts added"
+msgstr "Artefacts ajoutés"
+
+msgid "Artifacts deleted"
+msgstr "Artefacts supprimés"
+
+msgid "Artifacts modified"
+msgstr "Artefacts modifiés"
+
+msgid "Author"
+msgstr "Auteur"
+
+msgid "Baseline #%u"
+msgstr "Baselines #%u"
+
+msgid "Baselines"
+msgstr "Baselines"
+
+msgid "Baselines available"
+msgstr "Baselines disponibles"
+
+msgid "Baselines comparison #%u"
+msgstr "Comparaison de baselines #%u"
+
+msgid "Baselines comparison #%u/#%u"
+msgstr "Comparaison des baselines #%u/#%u"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Cannot create baseline"
+msgstr "Impossible de créer une baseline"
+
+msgid "Cannot delete baseline"
+msgstr "Impossible de supprimer la baseline"
+
+msgid "Cannot delete comparison"
+msgstr "Impossible de supprimer la comparaison"
+
+msgid "Cannot fetch baseline"
+msgstr "Impossible de charger la baseline"
+
+msgid "Cannot fetch baseline artifacts"
+msgstr "Impossible de charger les artefacts de la baseline"
+
+msgid "Cannot fetch milestones"
+msgstr "Impossible de charger les milestones"
+
+msgid "Cannot save comparison"
+msgstr "Impossible de sauvegarder la comparaison"
+
+msgid "Choose a baseline to compare…"
+msgstr "Choisissez une baseline à comparer…"
+
+msgid "Choose a baseline…"
+msgstr "Choisissez une baseline…"
+
+msgid "Choose a reference baseline…"
+msgstr "Choisissez une baseline de référence…"
+
+msgid "Choose a tracker…"
+msgstr "Choisissez un tracker…"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Comment"
+msgstr "Commentaire"
+
+msgid "Compare baselines"
+msgstr "Comparer des baselines"
+
+msgid "Compared to"
+msgstr "Comparée à"
+
+msgid "Comparisons"
+msgstr "Comparaisons"
+
+msgid "Comparisons available"
+msgstr "Comparaisons disponibles"
+
+msgid "Consult"
+msgstr "Consulter"
+
+msgid "Content"
+msgstr "Contenu"
+
+msgid "Create baseline"
+msgstr "Créer la baseline"
+
+msgid "Created by"
+msgstr "Créé par"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Delete baseline"
+msgstr "Supprimer la baseline"
+
+msgid "Delete comparison"
+msgstr "Supprimer la comparaison"
+
+msgid "Filters"
+msgstr "Filtres"
+
+msgid "Hidden trackers"
+msgstr "Trackers masqués"
+
+msgid "Id"
+msgstr "Id"
+
+msgid "Linked artifacts are skipped because depth limit has been reached."
+msgstr ""
+"Les artefacts liés sont ignorés parce que la limite de profondeur a été "
+"atteinte."
+
+msgid "Milestone"
+msgstr "Milestone"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "New baseline"
+msgstr "Nouvelle baseline"
+
+msgid "New comparison"
+msgstr "Nouvelle comparaison"
+
+msgid "No artifact to compare"
+msgstr "Aucun artefact à comparer"
+
+msgid "No artifacts"
+msgstr "Aucun artefact disponible"
+
+msgid "No baseline available"
+msgstr "Aucune baseline disponible"
+
+msgid "No comparison available"
+msgstr "Aucune comparaison disponible"
+
+msgid "No milestone available"
+msgstr "Aucune milestone disponible"
+
+msgid "No other baseline available on same artifact."
+msgstr "Aucune autre baseline disponible posée sur le même artefact."
+
+msgid "Only open milestone are visible here"
+msgstr "Seules les milestones ouvertes sont visibles ici"
+
+msgid "Page not found"
+msgstr "Page non trouvée"
+
+msgid "Please choose two baselines to compare"
+msgstr "Veuillez choisir deux baselines à comparer"
+
+msgid "Please confirm your action."
+msgstr "Veuillez confirmer votre action."
+
+msgid "Reference"
+msgstr "Référence"
+
+msgid "Reference…"
+msgstr "Référence…"
+
+msgid "Save"
+msgstr "Sauvegarder"
+
+msgid "Save comparison"
+msgstr "Sauvegarder la comparaison"
+
+msgid "Show comparison"
+msgstr "Afficher la comparaison"
+
+msgid "Snapshot Date"
+msgstr "Date de la capture"
+
+msgid "Snapshot date"
+msgstr "Date de la capture"
+
+msgid "The baseline was created"
+msgstr "La baseline a été créée"
+
+msgid "The baseline was deleted"
+msgstr "La baseline a été supprimée"
+
+msgid "The comparison was deleted"
+msgstr "La comparaison a été supprimée"
+
+msgid "The comparison was saved"
+msgstr "La comparaison a été sauvegardée"
+
+msgid "Without date, the baseline will be created with the current date"
+msgstr "Sans date, la baseline sera créée avec la date du jour"
+
+msgid ""
+"You are about to delete the baseline <strong>%{ baseline_name }</strong>."
+msgstr ""
+"Vous êtes sur le point de supprimer la baseline <strong>%{ baseline_name }</"
+"strong>."
+
+msgid ""
+"You are about to delete the comparison between the baselines <strong>"
+"%{ base_baseline_name }</strong>\n"
+"                and <strong>%{ compared_to_baseline_name }</strong>."
+msgstr ""
+"Vous êtes sur le point de supprimer la comparaison portant sur les baselines "
+"<strong>%{ base_baseline_name }</strong> et <strong>"
+"%{ compared_to_baseline_name }</strong>."
+
+msgid "on"
+msgstr "au"
+
+msgid "your baselines"
+msgstr "vos baselines"
+
+msgid "… compared to"
+msgstr "… comparée à"

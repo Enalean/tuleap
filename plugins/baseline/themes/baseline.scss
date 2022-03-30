@@ -1,0 +1,83 @@
+/**
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+@import "baseline/baseline-content";
+@import "baseline/baselines-list";
+@import "baseline/comparisons-list";
+@import "baseline/comparison";
+@import "baseline/comparison-content";
+@import "baseline/new-baseline-modal";
+@import "baseline/new-comparison-modal";
+@import "baseline/form";
+@import "baseline/project-header-background";
+
+.baseline-title-header {
+    margin: 0;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
+}
+
+.baseline-tooltip-icon {
+    margin-left: var(--tlp-medium-spacing);
+}
+
+.baseline-tooltip-icon-optional {
+    margin-left: 3px;
+}
+
+.baseline-label-author {
+    display: block;
+    height: 25px;
+    font-size: 14px;
+}
+
+.baseline-label-author-badge {
+    display: inline;
+    margin: 0 4px;
+}
+
+.baseline-user-badge-avatar-username {
+    &:not(:hover) {
+        color: var(--tlp-dimmed-color);
+    }
+}
+
+.baseline-empty-information-message {
+    display: block;
+    color: var(--tlp-main-color-transparent-70);
+    font-style: italic;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.baseline-artifact-badge {
+    margin-right: calc(var(--tlp-small-spacing) / 2);
+}
+
+.baseline-badge-avatar {
+    display: flex;
+    align-items: center;
+}
+
+.baseline-badge-avatar-img {
+    margin-right: 5px;
+}
+
+.baseline-collapse-link {
+    cursor: pointer;
+}

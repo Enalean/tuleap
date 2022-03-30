@@ -1,0 +1,13 @@
+{
+    "name": "baseline",
+    "gettext-vue": {
+        "baseline": {
+            "src": "scripts/baseline",
+            "po": "scripts/baseline/po"
+        }
+    },
+    "components": [
+        "themes/",
+        "scripts/"
+    ]
+}

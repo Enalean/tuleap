@@ -1,0 +1,11 @@
+{
+    "config": {
+        "platform": {
+            "php": "7.2"
+        },
+        "sort-packages": true
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.3"
+    }
+}

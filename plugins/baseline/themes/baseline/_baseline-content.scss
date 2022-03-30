@@ -1,0 +1,88 @@
+/**
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+@use "statistics";
+@use "../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+
+$artifact-body-padding: var(--tlp-medium-spacing);
+
+.baseline-panes {
+    display: flex;
+    position: relative;
+    align-items: flex-start;
+}
+
+.baseline-content-filter-pane {
+    position: sticky;
+    top: 65px;
+    min-width: 300px;
+    margin: 0 20px 0 0;
+}
+
+.baseline-content-body-pane {
+    flex-grow: 2;
+}
+
+.baseline-content-artifact-ol {
+    padding-left: $artifact-body-padding;
+    list-style: none;
+    counter-reset: artifact-counter;
+}
+
+.baseline-content-artifact-li {
+    margin-top: var(--tlp-medium-spacing);
+    counter-increment: artifact-counter;
+
+    &::before {
+        content: counters(artifact-counter, ".");
+        margin-right: 0.3rem;
+        padding-right: 0.5rem;
+        border-right: 1px solid swatch-colors.$tlp-swatch-firemist-silver;
+        color: var(--tlp-main-color);
+        font-size: 1.3rem;
+    }
+}
+
+.baseline-content-artifact {
+    display: initial;
+    color: var(--tlp-main-color);
+    font-size: 1.3rem;
+}
+
+.baseline-content-artifact-error-message {
+    color: swatch-colors.$tlp-swatch-red-wine-border;
+}
+
+.baseline-content-artifact-depth-reached-message {
+    margin-top: var(--tlp-medium-spacing);
+}
+
+.baseline-content-artifact-body {
+    padding-left: $artifact-body-padding;
+}
+
+.baseline-content-artifact-body-field-label {
+    margin-top: var(--tlp-medium-spacing);
+    margin-bottom: var(--tlp-small-spacing);
+    color: swatch-colors.$tlp-swatch-firemist-silver;
+}
+
+.baseline-content-artifact-body-field-value {
+    color: var(--tlp-typo-default-text-color);
+}

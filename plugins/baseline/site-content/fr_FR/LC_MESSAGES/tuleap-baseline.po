@@ -1,0 +1,93 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.1\n"
+
+#, php-format
+msgid "Bad snapshot date format: %s. Expected: %s"
+msgstr "Mauvais format de date de capture: %s: Attendu: %s"
+
+#, php-format
+msgid ""
+"Base baseline is not on same artifact (id %u) than compared to baseline (id "
+"%u)"
+msgstr ""
+"La baseline de référence n'est pas sur le même artefact (id %u) que la "
+"baseline à comparer (id %u)"
+
+msgid "Baseline"
+msgstr "Baseline"
+
+msgid "Baseline service is disabled for this project"
+msgstr "Le service baseline est désactivé pour ce projet"
+
+msgid "Baselines"
+msgstr "Baselines"
+
+#, php-format
+msgid "No artifact found with id %u"
+msgstr "Aucun artefact trouvée avec l'id %u"
+
+#, php-format
+msgid "No artifact found with id %u on %s"
+msgstr "Aucun artefact trouvée avec l'id %u à la date %s"
+
+#, php-format
+msgid "No baseline found with id %u"
+msgstr "Aucune baseline trouvée avec l'id %u"
+
+#, php-format
+msgid "No comparison found with id %u"
+msgstr "Aucune comparaison trouvée avec l'id %u"
+
+#, php-format
+msgid "No more than %u artifacts can be requested at once."
+msgstr "Un maximum de %u artefacts peuvent être demandés en une seule fois."
+
+msgid "No project found with this id"
+msgstr "Aucun projet trouvé avec cet identifiant"
+
+msgid "Set and compare baseline of items"
+msgstr "Poser des baselines et les comparer"
+
+#, php-format
+msgid ""
+"The baseline is associated to %u saved comparison(s). You should delete "
+"this(these) comparison(s) before deleting the baseline"
+msgstr ""
+"La baseline est associée à %u comparaison(s) sauvegardée(s). Vous devez "
+"supprimer cette(ces) comparaison(s) avant de supprimer la baseline"
+
+#, php-format
+msgid "This operation is not allowed. %s"
+msgstr "Cette opération n'est pas autorisée. %s"
+
+#, php-format
+msgid "This operation is possible for now. %s"
+msgstr "Cette opération n'est pas possible actuellement. %s"
+
+msgid "You are not allowed to create this baseline"
+msgstr "Vous n'êtes pas autorisé à créer cette baseline"
+
+msgid "You are not allowed to create this comparison"
+msgstr "Vous n'êtes pas autorisé à créer cette comparaison"
+
+msgid "You are not allowed to delete this baseline"
+msgstr "Vous n'êtes pas autorisé à supprimer cette baseline"
+
+msgid "You are not allowed to delete this comparison"
+msgstr "Vous n'êtes pas autorisé à supprimer cette comparaison"
+
+msgid "You are not allowed to read baselines of this project"
+msgstr "Vous n'êtes pas autorisé à lire les baselines de ce projet"
+
+msgid "You are not allowed to read comparisons of this project"
+msgstr "Vous n'êtes pas autorisé à lire les comparaisons de ce projet"

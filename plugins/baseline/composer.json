@@ -1,0 +1,14 @@
+{
+    "name": "tuleap/plugin-baseline",
+    "autoload": {
+        "psr-4": {
+            "Tuleap\\Baseline\\": "include/"
+        }
+    },
+    "require": {
+        "php-di/php-di": "^6.0"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

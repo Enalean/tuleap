@@ -1,0 +1,140 @@
+/**
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+@use "../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+
+$artifact-body-padding: var(--tlp-medium-spacing);
+
+%comparison-removed {
+    padding-right: var(--tlp-medium-spacing);
+    padding-left: var(--tlp-medium-spacing);
+    background-color: var(--tlp-danger-color);
+    color: var(--tlp-white-color);
+    text-decoration: line-through;
+}
+
+%comparison-added {
+    padding-right: var(--tlp-medium-spacing);
+    padding-left: var(--tlp-medium-spacing);
+    background-color: var(--tlp-success-color);
+    color: var(--tlp-white-color);
+}
+
+.comparison-content-artifact-ol {
+    padding-left: $artifact-body-padding;
+    list-style: none;
+    counter-reset: artifact-counter;
+}
+
+.comparison-content-artifact-li {
+    margin-top: var(--tlp-large-spacing);
+    counter-increment: artifact-counter;
+
+    &::before {
+        content: counters(artifact-counter, ".");
+        margin-right: 0.3rem;
+        padding-right: 0.5rem;
+        border-right: 1px solid swatch-colors.$tlp-swatch-firemist-silver;
+        color: var(--tlp-main-color);
+        font-size: 1.3rem;
+    }
+}
+
+.comparison-content
+    > .comparison-content-artifact-ol
+    > .comparison-content-artifact-li:first-child {
+    margin-top: 0;
+}
+
+.comparison-content-artifact-added {
+    &::before {
+        color: var(--tlp-success-color) !important;
+    }
+
+    .baseline-artifact-badge {
+        border-color: var(--tlp-success-color);
+        color: var(--tlp-success-color);
+    }
+
+    .baseline-artifact-title {
+        background-color: var(--tlp-success-color);
+        color: var(--tlp-white-color);
+    }
+}
+
+.comparison-content-artifact-removed {
+    &::before {
+        color: var(--tlp-danger-color) !important;
+    }
+
+    .baseline-artifact-badge {
+        border-color: var(--tlp-danger-color);
+        color: var(--tlp-danger-color);
+    }
+
+    .baseline-artifact-title {
+        background-color: var(--tlp-danger-color);
+        color: var(--tlp-white-color);
+        text-decoration: line-through;
+    }
+}
+
+.comparison-content-artifact-error-message {
+    color: swatch-colors.$tlp-swatch-red-wine-border;
+}
+
+.comparison-content-artifact-header {
+    display: initial;
+    color: var(--tlp-main-color);
+    font-size: 1.3rem;
+}
+
+.comparison-content-artifact {
+    display: inline;
+}
+
+.comparison-content-artifact-body {
+    padding-left: $artifact-body-padding;
+}
+
+.comparison-content-artifact-body-field-label {
+    margin-top: var(--tlp-medium-spacing);
+    margin-bottom: var(--tlp-small-spacing);
+    color: swatch-colors.$tlp-swatch-firemist-silver;
+}
+
+.comparison-content-field-value-reference {
+    @extend %comparison-removed;
+}
+
+.comparison-content-field-value-compare-to {
+    @extend %comparison-added;
+}
+
+ins {
+    background-color: var(--tlp-success-color);
+    color: var(--tlp-white-color);
+}
+
+del {
+    background-color: var(--tlp-danger-color);
+    color: var(--tlp-white-color);
+    text-decoration: line-through;
+}
