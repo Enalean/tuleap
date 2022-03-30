@@ -219,7 +219,7 @@ final class oauth2_serverPlugin extends Plugin
             new AdminPageRenderer(),
             UserManager::instance(),
             \Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenterBuilder::buildSelf(),
-            new IncludeAssets(__DIR__ . '/../../../src/www/assets/oauth2_server', '/assets/oauth2_server'),
+            new IncludeAssets(__DIR__ . '/../frontend-assets', '/assets/oauth2_server'),
             new CSRFSynchronizerToken(self::CSRF_TOKEN_APP_EDITION)
         );
     }

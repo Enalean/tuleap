@@ -99,7 +99,7 @@ final class AccountAppsController extends DispatchablePSR15Compatible implements
         assert($layout instanceof BaseLayout);
 
 
-        $assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/oauth2_server', '/assets/oauth2_server');
+        $assets = new IncludeAssets(__DIR__ . '/../../../frontend-assets', '/assets/oauth2_server');
         $layout->addJavascriptAsset(new JavascriptAsset($assets, 'user-preferences.js'));
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'user-preferences-style'));
         $presenter = $this->presenter_builder->build(
