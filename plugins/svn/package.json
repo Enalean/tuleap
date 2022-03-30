@@ -13,7 +13,7 @@
     "@tuleap/tlp": "link:../../src/themes/tlp"
   },
   "scripts": {
-    "build": "rm -rf ../../src/www/assets/svn && webpack --config webpack.prod.js",
+    "build": "rm -rf ./frontend-assets && webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch"
   }
 }

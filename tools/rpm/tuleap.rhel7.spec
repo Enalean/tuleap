@@ -1266,7 +1266,6 @@ fi
 %files plugin-svn
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/svn
-%{APP_DIR}/src/www/assets/svn
 %attr(00750,%{APP_USER},%{APP_USER}) %dir %{APP_DATA_DIR}/svn_plugin
 
 %files plugin-tracker
