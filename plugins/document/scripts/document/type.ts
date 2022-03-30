@@ -27,6 +27,7 @@ export interface State {
     current_folder: Folder;
     folder_content: Array<Item | FakeItem>;
     current_folder_ascendant_hierarchy: Array<Folder>;
+    is_loading_ascendant_hierarchy: boolean;
     root_title: string;
     currently_previewed_item: Item | null;
 }

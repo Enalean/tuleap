@@ -32,16 +32,13 @@
     </span>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Folder, Item } from "../../type";
 
-@Component
-export default class DocumentBreadcrumbDocument extends Vue {
-    @Prop({ required: true })
-    readonly current_document!: Item;
+defineProps<{ current_document: Item; parent_folder: Folder }>();
+</script>
 
-    @Prop({ required: true })
-    readonly parent_folder!: Folder;
-}
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>
