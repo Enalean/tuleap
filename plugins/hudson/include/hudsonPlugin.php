@@ -117,7 +117,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/hudson',
+            __DIR__ . '/../frontend-assets',
             '/assets/hudson'
         );
     }

@@ -1241,19 +1241,16 @@ fi
 %files plugin-hudson
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/hudson
-%{APP_DIR}/src/www/assets/hudson
 
 %files plugin-hudson-svn
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/hudson_svn
-%{APP_DIR}/src/www/assets/hudson_svn
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_hudson_svn
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_hudson_svn
 
 %files plugin-hudson-git
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/hudson_git
-%{APP_DIR}/src/www/assets/hudson_git
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_hudson_git
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_hudson_git
 

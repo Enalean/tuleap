@@ -116,7 +116,7 @@ class hudson_gitPlugin extends Plugin
     protected function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/hudson_git',
+            __DIR__ . '/../frontend-assets',
             "/assets/hudson_git"
         );
     }
