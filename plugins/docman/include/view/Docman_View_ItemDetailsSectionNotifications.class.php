@@ -111,7 +111,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
             );
 
             $content .= '</fieldset>';
-            $assets   = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../../src/www/assets/docman', '/assets/docman');
+            $assets   = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../frontend-assets', '/assets/docman');
             $GLOBALS['Response']->includeFooterJavascriptFile($assets->getFileURL('notifications.js'));
         }
         return $content;

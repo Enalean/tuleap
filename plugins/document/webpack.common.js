@@ -19,7 +19,7 @@
 
 const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
-const assets_dir_path = path.resolve(__dirname, "../../src/www/assets/document");
+const assets_dir_path = path.resolve(__dirname, "./frontend-assets");
 const assets_public_path = "/assets/document/";
 const MomentTimezoneDataPlugin = require("moment-timezone-data-webpack-plugin");
 

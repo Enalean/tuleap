@@ -20,9 +20,7 @@
 const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 const context = __dirname;
-const output = webpack_configurator.configureOutput(
-    path.resolve(__dirname, "../../src/www/assets/docman/")
-);
+const output = webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/"));
 
 module.exports = [
     {

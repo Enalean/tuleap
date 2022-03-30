@@ -84,7 +84,7 @@ abstract class AdminView
         $breadcrumbs->addBreadCrumb($documents_crumb);
 
         $include_assets = new \Tuleap\Layout\IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/docman/',
+            __DIR__ . '/../../../frontend-assets',
             '/assets/docman'
         );
         $this->includeStylesheets($include_assets);

@@ -373,7 +373,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/docman/',
+            __DIR__ . '/../frontend-assets',
             '/assets/docman'
         );
     }
