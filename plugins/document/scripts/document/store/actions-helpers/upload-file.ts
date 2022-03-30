@@ -117,14 +117,12 @@ export function uploadVersion(
             context.commit("removeFileFromUploadsList", updated_file);
 
             const new_item_version = await getItem(updated_file.id);
-            if (isFile(new_item_version)) {
+            if (updated_file.level) {
                 new_item_version.level = updated_file.level;
-                context.commit("replaceFileWithNewVersion", [updated_file, new_item_version]);
-                context.commit("replaceUploadingFileWithActualFile", [
-                    updated_file,
-                    new_item_version,
-                ]);
             }
+
+            context.commit("replaceFileWithNewVersion", [updated_file, new_item_version]);
+            context.commit("replaceUploadingFileWithActualFile", [updated_file, new_item_version]);
         },
         onError: (error: Error): void => {
             updated_file.upload_error = error.message;

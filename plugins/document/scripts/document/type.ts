@@ -104,6 +104,7 @@ interface MinimalItem {
     readonly title: string;
     readonly parent_id: number | null;
     readonly type: string;
+    level?: number;
 }
 
 export interface Item extends MinimalItem {
@@ -172,7 +173,6 @@ export interface DefaultFileItem {
 export interface FakeItem extends MinimalItem {
     last_update_date?: Date;
     progress: number | null;
-    level?: number;
     upload_error: string | null;
     is_uploading?: boolean;
     uploader?: Upload;
@@ -205,7 +205,6 @@ export interface ItemFile extends Item, ApprovableDocument {
     name?: string;
     size?: number;
     uploader?: FileUploader;
-    level?: number;
     status: string;
 }
 
