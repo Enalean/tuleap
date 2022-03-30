@@ -488,9 +488,6 @@
       <code>isTrackerAlreadyCreated</code>
       <code>warn</code>
     </MissingReturnType>
-    <NullArgument occurrences="1">
-      <code>null</code>
-    </NullArgument>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FirstScrumCreator.php">
     <InvalidScalarArgument occurrences="1">
@@ -847,9 +844,6 @@
     <MissingReturnType occurrences="1">
       <code>build</code>
     </MissingReturnType>
-    <NullArgument occurrences="1">
-      <code>null</code>
-    </NullArgument>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Kanban/TrackerReport/TrackerReportDao.php">
     <DeprecatedMethod occurrences="14">
@@ -4211,6 +4205,196 @@
       <code>tracker_get_editable_type_in_project</code>
       <code>tracker_is_type_valid</code>
       <code>tracker_xml_import_artifact_link_can_be_disabled</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/baseline/include/Adapter/ArtifactLinkRepository.php">
+    <DeprecatedMethod occurrences="1">
+      <code>getAnArtifactLinkField</code>
+    </DeprecatedMethod>
+  </file>
+  <file src="plugins/baseline/include/Adapter/BaselineArtifactRepositoryAdapter.php">
+    <RedundantCast occurrences="1">
+      <code>(int) $tracker-&gt;getId()</code>
+    </RedundantCast>
+  </file>
+  <file src="plugins/baseline/include/Adapter/BaselineRepositoryAdapter.php">
+    <PossiblyInvalidArgument occurrences="2">
+      <code>$rows</code>
+      <code>$rows</code>
+    </PossiblyInvalidArgument>
+    <PossiblyInvalidArrayAccess occurrences="1">
+      <code>$rows[0]</code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyNullArgument occurrences="1">
+      <code>$author</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/baseline/include/Adapter/ComparisonRepositoryAdapter.php">
+    <PossiblyInvalidArgument occurrences="2">
+      <code>$rows</code>
+      <code>$rows</code>
+    </PossiblyInvalidArgument>
+    <PossiblyInvalidArrayAccess occurrences="1">
+      <code>$rows[0]</code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyNullArgument occurrences="1">
+      <code>$author</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/baseline/include/Adapter/RoleAssignmentRepositoryAdapter.php">
+    <PossiblyInvalidIterator occurrences="1">
+      <code>$rows</code>
+    </PossiblyInvalidIterator>
+  </file>
+  <file src="plugins/baseline/include/Domain/Authorizations.php">
+    <MissingReturnType occurrences="1">
+      <code>canDeleteComparison</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/baseline/include/Domain/AuthorizationsImpl.php">
+    <InvalidScalarArgument occurrences="2">
+      <code>$project-&gt;getID()</code>
+      <code>$project-&gt;getID()</code>
+    </InvalidScalarArgument>
+  </file>
+  <file src="plugins/baseline/include/Domain/BaselineArtifactService.php">
+    <PossiblyNullArgument occurrences="2">
+      <code>$baseline-&gt;getSnapshotDate()</code>
+      <code>$baseline-&gt;getSnapshotDate()</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference occurrences="2">
+      <code>format</code>
+      <code>getSnapshotDate</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/baseline/include/Domain/BaselineRepository.php">
+    <MissingReturnType occurrences="1">
+      <code>delete</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/baseline/include/Domain/BaselineService.php">
+    <MissingReturnType occurrences="1">
+      <code>delete</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/baseline/include/REST/BaselineArtifactRepresentation.php">
+    <PossiblyNullArgument occurrences="1">
+      <code>JsonCast::toArrayOfInts($artifact-&gt;getLinkedArtifactIds())</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/baseline/include/REST/BaselineArtifactsResource.php">
+    <MissingParamType occurrences="1">
+      <code>$id</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>optionsArtifacts</code>
+    </MissingReturnType>
+    <UndefinedDocblockClass occurrences="1">
+      <code>RestException</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="plugins/baseline/include/REST/BaselineController.php">
+    <InvalidReturnType occurrences="1">
+      <code>BaselineRepresentation</code>
+    </InvalidReturnType>
+    <MissingParamType occurrences="2">
+      <code>$exception</code>
+      <code>$id</code>
+    </MissingParamType>
+    <PossiblyNullArgument occurrences="2">
+      <code>$baseline</code>
+      <code>$baseline</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/baseline/include/REST/BaselineRepresentation.php">
+    <PossiblyNullArgument occurrences="1">
+      <code>JsonCast::fromDateTimeToDate($baseline-&gt;getSnapshotDate())</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/baseline/include/REST/BaselineRestResourcesInjector.php">
+    <MissingReturnType occurrences="1">
+      <code>populate</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/baseline/include/REST/BaselinesPageRepresentation.php">
+    <MissingReturnType occurrences="1">
+      <code>build</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/baseline/include/REST/BaselinesResource.php">
+    <MissingParamType occurrences="1">
+      <code>$id</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="3">
+      <code>delete</code>
+      <code>options</code>
+      <code>optionsId</code>
+    </MissingReturnType>
+    <UndefinedDocblockClass occurrences="2">
+      <code>Tuleap\Baseline\REST\BaselineRepresentation</code>
+      <code>Tuleap\Baseline\REST\BaselineRepresentation</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="plugins/baseline/include/REST/ComparisonController.php">
+    <PossiblyNullArgument occurrences="2">
+      <code>$comparison</code>
+      <code>$comparison</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/baseline/include/REST/ComparisonRepresentation.php">
+    <PossiblyNullArgument occurrences="1">
+      <code>JsonCast::fromDateTimeToDate($comparison-&gt;getCreationDate())</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/baseline/include/REST/ComparisonsPageRepresentation.php">
+    <MissingReturnType occurrences="1">
+      <code>build</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/baseline/include/REST/ComparisonsResource.php">
+    <MissingReturnType occurrences="2">
+      <code>delete</code>
+      <code>optionsArtifacts</code>
+    </MissingReturnType>
+    <UndefinedDocblockClass occurrences="2">
+      <code>Tuleap\Baseline\REST\ComparisonRepresentation</code>
+      <code>Tuleap\Baseline\REST\ComparisonRepresentation</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="plugins/baseline/include/REST/Exception/ForbiddenRestException.php">
+    <MissingParamType occurrences="1">
+      <code>$message</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/baseline/include/REST/Exception/NotFoundRestException.php">
+    <MissingParamType occurrences="1">
+      <code>$message</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/baseline/include/REST/ProjectBaselinesResource.php">
+    <MissingReturnType occurrences="1">
+      <code>options</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/baseline/include/REST/ProjectComparisonsResource.php">
+    <MissingReturnType occurrences="1">
+      <code>options</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/baseline/include/ServiceController.php">
+    <MissingReturnType occurrences="1">
+      <code>includeJavascriptFiles</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/baseline/include/baselinePlugin.php">
+    <MissingParamType occurrences="2">
+      <code>$id</code>
+      <code>$params</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="3">
+      <code>getPluginInfo</code>
+      <code>rest_resources</code>
+      <code>serviceUrlCollector</code>
     </MissingReturnType>
   </file>
   <file src="plugins/bugzilla_reference/include/Bugzilla/Administration/Controller.php">
@@ -8269,8 +8453,7 @@
     <PossiblyNullArgument occurrences="1">
       <code>$parentItem</code>
     </PossiblyNullArgument>
-    <PossiblyUndefinedVariable occurrences="4">
-      <code>$_filename</code>
+    <PossiblyUndefinedVariable occurrences="3">
       <code>$item</code>
       <code>$mdrow</code>
       <code>$ordering</code>
@@ -8567,7 +8750,7 @@
       <code>getValidator</code>
       <code>userCanAdmin</code>
     </TooManyArguments>
-    <UndefinedMethod occurrences="20">
+    <UndefinedMethod occurrences="19">
       <code>_includeView</code>
       <code>_setView</code>
       <code>_setView</code>
@@ -8578,7 +8761,6 @@
       <code>_setView</code>
       <code>_set_createItemView_afterCreate</code>
       <code>_set_createItemView_errorParentDoesNotExist</code>
-      <code>_set_deleteView_errorPerms</code>
       <code>_set_deleteView_errorPerms</code>
       <code>_set_doesnot_belong_to_project_error</code>
       <code>_set_moveView_errorPerms</code>
@@ -11066,11 +11248,10 @@
       <code>$lock_rows</code>
       <code>getUgroupIdByObjectIdAndPermissionType</code>
     </DeprecatedMethod>
-    <InvalidScalarArgument occurrences="2">
-      <code>$this-&gt;getProject()-&gt;getID()</code>
+    <InvalidScalarArgument occurrences="1">
       <code>$this-&gt;getProject()-&gt;getID()</code>
     </InvalidScalarArgument>
-    <MissingParamType occurrences="35">
+    <MissingParamType occurrences="33">
       <code>$canManage</code>
       <code>$canRead</code>
       <code>$canWrite</code>
@@ -11078,7 +11259,6 @@
       <code>$dstItemId</code>
       <code>$force</code>
       <code>$groupId</code>
-      <code>$itemId</code>
       <code>$itemId</code>
       <code>$itemId</code>
       <code>$itemId</code>
@@ -11094,7 +11274,6 @@
       <code>$srcGroupId</code>
       <code>$srcItemId</code>
       <code>$toGroupId</code>
-      <code>$user</code>
       <code>$user</code>
       <code>$user</code>
       <code>$user</code>
@@ -30255,11 +30434,6 @@
       <code>registerExtraReferences</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/roadmap/include/roadmapPlugin.php">
-    <DeprecatedMethod occurrences="1">
-      <code>isProjectDashboard</code>
-    </DeprecatedMethod>
-  </file>
   <file src="plugins/statistics/bin/collectDiskUsage.php">
     <UndefinedClass occurrences="5">
       <code>CVSCollector</code>
@@ -34984,20 +35158,6 @@
       <code>$changeset</code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/tracker/include/REST/Artifact/ArtifactValidator.class.php">
-    <MissingParamType occurrences="1">
-      <code>$field_name</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="7">
-      <code>getField</code>
-      <code>getFieldByName</code>
-      <code>getFieldsDataOnCreate</code>
-      <code>getFieldsDataOnCreateFromValuesByField</code>
-      <code>getFieldsDataOnUpdate</code>
-      <code>getIndexedFields</code>
-      <code>getUsedFieldsWithDefaultValue</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/REST/Artifact/BurndownPointRepresentation.php">
     <MissingParamType occurrences="2">
       <code>$remaining_effort</code>
@@ -35122,15 +35282,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/REST/TrackerRestBuilder.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$dates</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>Tuleap\Tracker\REST\WorkflowRuleListRepresentation[]</code>
-    </InvalidReturnType>
-    <MissingParamType occurrences="1">
-      <code>$project_id</code>
-    </MissingParamType>
     <MissingReturnType occurrences="1">
       <code>getStructureRepresentation</code>
     </MissingReturnType>
@@ -36394,9 +36545,8 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/IncomingMailGoldenRetriever.php">
-    <MissingReturnType occurrences="3">
+    <MissingReturnType occurrences="2">
       <code>getCachedRawMailByChangesetsForArtifact</code>
-      <code>getRawMailForChangeset</code>
       <code>instance</code>
     </MissingReturnType>
     <RedundantPropertyInitializationCheck occurrences="1">
@@ -36407,19 +36557,6 @@
     <MissingParamType occurrences="1">
       <code>$submitted_value</code>
     </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Changeset/InitialChangesetCreator.class.php">
-    <DeprecatedMethod occurrences="1">
-      <code>getWorkflow</code>
-    </DeprecatedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Changeset/InitialChangesetCreatorBase.class.php">
-    <DeprecatedMethod occurrences="1">
-      <code>getWorkflow</code>
-    </DeprecatedMethod>
-    <PossiblyNullArgument occurrences="1">
-      <code>$workflow</code>
-    </PossiblyNullArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/NewChangesetFieldsValidator.class.php">
     <MissingParamType occurrences="1">
@@ -37003,14 +37140,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Renderer/EditAbstractRenderer.class.php">
-    <MissingReturnType occurrences="3">
+    <MissingReturnType occurrences="2">
       <code>display</code>
-      <code>fetchArtifactInformations</code>
       <code>fetchFormContent</code>
     </MissingReturnType>
-    <PossiblyNullReference occurrences="1">
-      <code>getId</code>
-    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Renderer/EditInPlaceRenderer.class.php">
     <MissingParamType occurrences="4">
@@ -37019,11 +37152,10 @@
       <code>$request</code>
       <code>$second_followup</code>
     </MissingParamType>
-    <MissingReturnType occurrences="9">
+    <MissingReturnType occurrences="8">
       <code>compareFollowupsByDate</code>
       <code>display</code>
       <code>fetchFollowUps</code>
-      <code>getAugmentedDataFromRequest</code>
       <code>getFollowupsContent</code>
       <code>getPriorityHistory</code>
       <code>getPriorityManager</code>
@@ -37797,12 +37929,11 @@
       <code>$submitted_comment</code>
       <code>$submitted_comment</code>
     </MissingParamType>
-    <MissingReturnType occurrences="5">
+    <MissingReturnType occurrences="4">
       <code>fetchAddNewComment</code>
       <code>fetchCommentContent</code>
       <code>fetchReplyByMailHelp</code>
       <code>fetchSettingsButton</code>
-      <code>fetchSubmitButton</code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/View/ViewCollection.class.php">
@@ -40692,7 +40823,7 @@
       <code>updateAndGetLastId</code>
       <code>updateAndGetLastId</code>
     </DeprecatedMethod>
-    <MissingParamType occurrences="38">
+    <MissingParamType occurrences="37">
       <code>$by_reference</code>
       <code>$changeset_id</code>
       <code>$description</code>
@@ -40706,7 +40837,6 @@
       <code>$field_id</code>
       <code>$field_id</code>
       <code>$from_value_id</code>
-      <code>$id</code>
       <code>$id</code>
       <code>$id</code>
       <code>$id</code>
@@ -40736,15 +40866,11 @@
       <code>$cache_canbedeleted_values</code>
       <code>$cache_canbehidden_values</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="18">
-      <code>canValueBeDeleted</code>
-      <code>canValueBeHidden</code>
+    <MissingReturnType occurrences="14">
       <code>canValueBeHiddenWithoutCheckingSemanticStatus</code>
       <code>create</code>
-      <code>delete</code>
       <code>duplicate</code>
       <code>hideValue</code>
-      <code>isValueHiddenable</code>
       <code>propagateCreation</code>
       <code>reorder</code>
       <code>reorderChildren</code>
@@ -45093,10 +45219,6 @@
     </InvalidReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Permission/ChainOfResponsibility/AllGroups.class.php">
-    <InvalidArgument occurrences="2">
-      <code>Tracker::PERMISSION_ASSIGNEE</code>
-      <code>Tracker::PERMISSION_SUBMITTER</code>
-    </InvalidArgument>
     <MissingParamType occurrences="6">
       <code>$permission_type</code>
       <code>$ugroup_id</code>
@@ -45115,10 +45237,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Permission/ChainOfResponsibility/Anonymous.class.php">
-    <InvalidArgument occurrences="2">
-      <code>ProjectUGroup::ANONYMOUS</code>
-      <code>Tracker::PERMISSION_FULL</code>
-    </InvalidArgument>
     <MissingParamType occurrences="1">
       <code>$ugroup_id</code>
     </MissingParamType>
@@ -45154,10 +45272,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Permission/ChainOfResponsibility/Registered.class.php">
-    <InvalidArgument occurrences="2">
-      <code>ProjectUGroup::REGISTERED</code>
-      <code>Tracker::PERMISSION_FULL</code>
-    </InvalidArgument>
     <MissingParamType occurrences="1">
       <code>$ugroup_id</code>
     </MissingParamType>
@@ -45301,10 +45415,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Permission/PermissionSetter.class.php">
-    <InvalidArgument occurrences="2">
-      <code>$permission_type</code>
-      <code>$ugroup_id</code>
-    </InvalidArgument>
     <MissingParamType occurrences="7">
       <code>$permission_type</code>
       <code>$permission_type</code>
@@ -45320,24 +45430,18 @@
       <code>$group_id</code>
       <code>$stored_ugroups_permissions</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="12">
+    <MissingReturnType occurrences="10">
       <code>addHistory</code>
       <code>anonymousHaveFullAccess</code>
       <code>feedback</code>
       <code>getAllGroupIds</code>
       <code>getTracker</code>
       <code>getUGroupName</code>
-      <code>grant</code>
-      <code>grantAccess</code>
       <code>groupHasPermission</code>
       <code>registeredHaveFullAccess</code>
       <code>revokeAccess</code>
       <code>revokeAll</code>
     </MissingReturnType>
-    <UndefinedDocblockClass occurrences="2">
-      <code>type</code>
-      <code>type</code>
-    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;tracker</code>
     </UndefinedThisPropertyAssignment>
@@ -48159,9 +48263,6 @@
       <code>getReportsByUserId</code>
       <code>initializeReportFromSession</code>
     </MissingReturnType>
-    <NullArgument occurrences="1">
-      <code>null</code>
-    </NullArgument>
     <NullableReturnStatement occurrences="1">
       <code>$report</code>
     </NullableReturnStatement>
@@ -50294,11 +50395,6 @@
       <code>setProject</code>
       <code>setSharedFormElementFactory</code>
     </MissingReturnType>
-    <NullArgument occurrences="3">
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-    </NullArgument>
     <NullableReturnStatement occurrences="3">
       <code>null</code>
       <code>null</code>
@@ -52576,10 +52672,8 @@
       <code>setConditions</code>
       <code>setWorkflow</code>
     </MissingReturnType>
-    <PossiblyNullPropertyAssignmentValue occurrences="4">
+    <PossiblyNullPropertyAssignmentValue occurrences="2">
       <code>WorkflowFactory::instance()-&gt;getWorkflow($this-&gt;workflow_id)</code>
-      <code>null</code>
-      <code>null</code>
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
   </file>
@@ -52807,8 +52901,7 @@
     <MissingPropertyType occurrences="1">
       <code>$cache_transition_id</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="3">
-      <code>createAndSaveTransition</code>
+    <MissingReturnType occurrences="2">
       <code>delete</code>
       <code>getTransitionId</code>
     </MissingReturnType>
@@ -52963,7 +53056,7 @@
       <code>$value_id</code>
       <code>$value_id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="16">
+    <MissingReturnType occurrences="15">
       <code>add</code>
       <code>buildRuleTargetFromTemplateTriggerRule</code>
       <code>buildRuleTriggersFromTemplateTriggerRule</code>
@@ -52977,7 +53070,6 @@
       <code>getTriggerByFieldId</code>
       <code>getTriggers</code>
       <code>getValue</code>
-      <code>isUsedInTrigger</code>
       <code>processChildrenTriggers</code>
       <code>processTriggers</code>
     </MissingReturnType>
@@ -54621,11 +54713,6 @@
       <code>getIncomingFileSize</code>
       <code>setInstance</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/webdav/include/WebdavController.php">
-    <DeprecatedMethod occurrences="1">
-      <code>exec</code>
-    </DeprecatedMethod>
   </file>
   <file src="src/common/Authentication/SplitToken/SplitTokenVerificationStringHasher.php">
     <ImplicitToStringCast occurrences="1">
@@ -62764,11 +62851,6 @@
     <DeprecatedMethod occurrences="1">
       <code>isProjectDashboard</code>
     </DeprecatedMethod>
-    <MissingReturnType occurrences="3">
-      <code>isDashboard</code>
-      <code>isPersonalDashboard</code>
-      <code>isProjectDashboard</code>
-    </MissingReturnType>
   </file>
   <file src="src/common/Request/FrontRouter.php">
     <MissingReturnType occurrences="6">
@@ -70796,7 +70878,7 @@
     <MissingPropertyType occurrences="1">
       <code>$logger</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="11">
+    <MissingReturnType occurrences="10">
       <code>invalidateFrontRouter</code>
       <code>invalidateLanguage</code>
       <code>invalidatePlugin</code>
@@ -70806,7 +70888,6 @@
       <code>invalidateWSDL</code>
       <code>recreateDirectory</code>
       <code>restoreCacheDirectories</code>
-      <code>restoreOwnership</code>
       <code>restoreRootCacheDirectory</code>
     </MissingReturnType>
   </file>
