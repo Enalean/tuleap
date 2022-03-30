@@ -26,7 +26,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "rm -rf ../../src/www/assets/agiledashboard/ && webpack --config webpack.prod.js",
+    "build": "rm -rf ./frontend-assets/ && webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
     "test": "jest --config=../../tests/jest/jest.projects-plugins.config.js \"$(pwd)\""
   }

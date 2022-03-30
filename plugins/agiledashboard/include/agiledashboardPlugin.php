@@ -1742,7 +1742,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     public function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/agiledashboard',
+            __DIR__ . '/../frontend-assets',
             '/assets/agiledashboard'
         );
     }
