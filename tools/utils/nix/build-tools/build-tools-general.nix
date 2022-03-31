@@ -13,4 +13,5 @@
     pkgs.gzip
     pkgs.cpio
     pkgs.cosign
+    pkgs.cachix
 ]
