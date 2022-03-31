@@ -22,9 +22,15 @@
  */
 
 use Tuleap\User\UnixUserChecker;
+use Tuleap\Config\ConfigCannotBeModified;
+use Tuleap\Config\ConfigKey;
 
 class BackendSystem extends Backend
 {
+    #[ConfigKey("Disable the possibility to have unix users.")]
+    #[ConfigCannotBeModified]
+    public const UNIX_USER_ARE_DISABLED = 'are_unix_users_disabled';
+
     protected $needRefreshUserCache  = false;
     protected $needRefreshGroupCache = false;
 
