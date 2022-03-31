@@ -32,22 +32,18 @@
     </div>
 </template>
 
-<script lang="ts">
-import Component from "vue-class-component";
-import Vue from "vue";
-import { Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import type { SearchCriterionText } from "../../../type";
+import { computed } from "@vue/composition-api";
 
-@Component
-export default class CriterionNumber extends Vue {
-    @Prop({ required: true })
-    readonly criterion!: SearchCriterionText;
+const props = defineProps<{ criterion: SearchCriterionText; value: string }>();
 
-    @Prop({ required: true })
-    readonly value!: string;
+const id = computed((): string => {
+    return "document-criterion-number-" + props.criterion.name;
+});
+</script>
 
-    get id(): string {
-        return "document-criterion-number-" + this.criterion.name;
-    }
-}
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>
