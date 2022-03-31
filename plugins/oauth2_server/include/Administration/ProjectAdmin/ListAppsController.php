@@ -68,7 +68,7 @@ final class ListAppsController implements DispatchableWithRequest, DispatchableW
             AdministrationLayoutHelper::buildSelf(),
             \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates'),
             AdminOAuth2AppsPresenterBuilder::buildSelf(),
-            new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/oauth2_server', '/assets/oauth2_server'),
+            new IncludeAssets(__DIR__ . '/../../../frontend-assets', '/assets/oauth2_server'),
             new \CSRFSynchronizerToken(\oauth2_serverPlugin::CSRF_TOKEN_APP_EDITION)
         );
     }

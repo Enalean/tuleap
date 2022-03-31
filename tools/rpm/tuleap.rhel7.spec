@@ -585,7 +585,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/testmanagement
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/testplan
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/oauth2_server
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/program_management
 %endif
@@ -1419,7 +1418,6 @@ fi
 %files plugin-oauth2-server
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/oauth2_server
-%{APP_DIR}/src/www/assets/oauth2_server
 
 %files plugin-project-ownership
 %defattr(-,root,root,-)

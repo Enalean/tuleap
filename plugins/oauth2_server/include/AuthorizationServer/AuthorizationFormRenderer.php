@@ -68,7 +68,7 @@ class AuthorizationFormRenderer
         $presenter = $this->presenter_builder->build($data);
         $layout->addCssAsset(
             new CssAssetWithoutVariantDeclinaisons(
-                new IncludeAssets(__DIR__ . '/../../../../src/www/assets/oauth2_server', '/assets/oauth2_server'),
+                new IncludeAssets(__DIR__ . '/../../frontend-assets', '/assets/oauth2_server'),
                 'authorization-form-style'
             )
         );
