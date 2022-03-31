@@ -19,10 +19,6 @@
 
 import Vue from "vue";
 import {
-    addNewEmbedded,
-    addNewEmpty,
-    addNewLink,
-    addNewWiki,
     cancelUpload,
     createNewVersion,
     getItem,
@@ -38,100 +34,20 @@ import {
 
 import { getErrorMessage } from "./actions-helpers/handle-errors";
 import { uploadVersion, uploadVersionFromEmpty } from "./actions-helpers/upload-file";
-import { adjustItemToContentAfterItemCreationInAFolder } from "./actions-helpers/adjust-item-to-content-after-item-creation-in-folder";
 import { buildItemPath } from "./actions-helpers/build-parent-paths";
 import {
     TYPE_EMBEDDED,
-    TYPE_EMPTY,
     TYPE_FILE,
-    TYPE_FOLDER,
     TYPE_LINK,
-    TYPE_WIKI,
     USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE,
 } from "../constants";
-import { addNewFolder } from "../api/rest-querier";
 import { handleErrorsForModal } from "./error/error-actions";
 import { createNewFile } from "./actions-helpers/create-new-file";
 
+export * from "./actions-create";
 export * from "./actions-retrieve";
 export * from "./actions-delete";
 export * from "./actions-quicklook";
-
-export const createNewItem = async (context, [item, parent, current_folder]) => {
-    try {
-        let should_display_item = true;
-        let item_reference;
-
-        const item_to_create = JSON.parse(JSON.stringify(item));
-        if (item_to_create.obsolescence_date === "") {
-            item_to_create.obsolescence_date = null;
-        }
-        if (item_to_create.properties) {
-            item_to_create.metadata = item_to_create.properties;
-        }
-        switch (item_to_create.type) {
-            case TYPE_FILE:
-                if (!parent.is_expanded && parent.id !== current_folder.id) {
-                    should_display_item = false;
-                }
-
-                item_to_create.file_properties = item.file_properties;
-                await createNewFile(context, item_to_create, parent, should_display_item);
-                break;
-            case TYPE_FOLDER:
-                item_reference = await addNewFolder(item_to_create, parent.id);
-
-                return adjustItemToContentAfterItemCreationInAFolder(
-                    context,
-                    parent,
-                    current_folder,
-                    item_reference.id
-                );
-            case TYPE_EMPTY:
-                item_reference = await addNewEmpty(item_to_create, parent.id);
-
-                return adjustItemToContentAfterItemCreationInAFolder(
-                    context,
-                    parent,
-                    current_folder,
-                    item_reference.id
-                );
-            case TYPE_WIKI:
-                item_reference = await addNewWiki(item_to_create, parent.id);
-
-                return adjustItemToContentAfterItemCreationInAFolder(
-                    context,
-                    parent,
-                    current_folder,
-                    item_reference.id
-                );
-            case TYPE_EMBEDDED:
-                item_reference = await addNewEmbedded(item_to_create, parent.id);
-
-                return adjustItemToContentAfterItemCreationInAFolder(
-                    context,
-                    parent,
-                    current_folder,
-                    item_reference.id
-                );
-            case TYPE_LINK:
-                item_reference = await addNewLink(item_to_create, parent.id);
-
-                return adjustItemToContentAfterItemCreationInAFolder(
-                    context,
-                    parent,
-                    current_folder,
-                    item_reference.id
-                );
-            default:
-                throw new Error(
-                    "Item type " + item_to_create.type + " is not supported for creation"
-                );
-        }
-    } catch (exception) {
-        return handleErrorsForModal(context, exception);
-    }
-};
 
 export async function createNewFileVersion(context, [item, dropped_file]) {
     try {
