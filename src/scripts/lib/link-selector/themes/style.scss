@@ -1,0 +1,275 @@
+/**
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+* We can't just display: none or add the attribute type="hidden" because we need the <select> for accessibility purpose.
+* Hence, we shrink it at the maximum.
+*/
+.link-selector-hidden-accessible {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    white-space: nowrap;
+
+    &:invalid {
+        box-shadow: none;
+    }
+}
+
+.link-selector {
+    z-index: 2003;
+
+    &.link-selector-disabled {
+        border-color: var(--tlp-form-element-border-color);
+        cursor: not-allowed;
+
+        .link-selector-selection {
+            cursor: not-allowed;
+        }
+    }
+
+    &.link-selector-with-open-dropdown .link-selector-selection {
+        border-radius: var(--tlp-form-element-border-radius) var(--tlp-form-element-border-radius) 0
+            0;
+        border-color: var(--tlp-main-color);
+    }
+
+    &.link-selector-with-open-dropdown {
+        &.link-selector-with-dropdown-above .link-selector-selection {
+            border-radius: 0 0 var(--tlp-form-element-border-radius)
+                var(--tlp-form-element-border-radius);
+        }
+    }
+}
+
+.link-selector-selection {
+    display: flex;
+    align-items: center;
+
+    &.link-selector-single {
+        height: var(--tlp-form-element-height);
+        padding: 0
+            calc(
+                (var(--tlp-form-element-padding-horizontal) * 2) +
+                    var(--tlp-form-element-select-background-size)
+            )
+            0 var(--tlp-form-element-padding-horizontal);
+        background: var(--tlp-form-element-background)
+            url("../../../themes/tlp/src/images/field-double-arrows.svg") no-repeat;
+        background-position: right var(--tlp-form-element-padding-horizontal) center;
+    }
+}
+
+.link-selector-placeholder {
+    color: var(--tlp-form-element-placeholder-color);
+}
+
+.link-selector-dropdown {
+    display: none;
+    position: absolute;
+    z-index: 2002;
+    flex-direction: column;
+    padding: 0;
+    border-right: 1px solid var(--tlp-main-color);
+    border-bottom: 1px solid var(--tlp-main-color);
+    border-left: 1px solid var(--tlp-main-color);
+    border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
+    background-color: var(--tlp-white-color);
+    box-shadow: var(--tlp-flyover-shadow);
+
+    &.link-selector-dropdown-over-modal {
+        z-index: 2007;
+    }
+
+    &.link-selector-dropdown-shown {
+        display: flex;
+    }
+
+    &.link-selector-dropdown-above {
+        border-top: 1px solid var(--tlp-main-color);
+        border-bottom: unset;
+        border-radius: var(--tlp-medium-radius) var(--tlp-medium-radius) 0 0;
+        box-shadow: var(--tlp-flyover-shadow-above);
+    }
+}
+
+.link-selector-group-label {
+    padding: 6px var(--tlp-form-element-padding-horizontal);
+    color: var(--tlp-dimmed-color);
+    font-size: var(--tlp-form-element-small-font-size);
+    font-weight: 600;
+    line-height: 30px;
+    text-transform: uppercase;
+}
+
+.link-selector-empty-dropdown-state {
+    padding: var(--tlp-form-element-padding-horizontal);
+    color: var(--tlp-dimmed-color);
+    font-size: var(--tlp-form-element-small-font-size);
+    line-height: normal;
+}
+
+.link-selector-single-dropdown-search-section {
+    padding: var(--tlp-form-element-padding-horizontal);
+
+    .link-selector-search-field {
+        height: var(--tlp-form-element-small-height);
+        padding: 0 4px;
+        font-size: var(--tlp-form-element-small-font-size);
+    }
+}
+
+.link-selector-dropdown-option-value {
+    &.link-selector-item-highlighted {
+        background-color: var(--tlp-main-color);
+        color: var(--tlp-white-color);
+    }
+
+    &[aria-selected="true"]::before {
+        content: "\f00c"; // fa-check
+        position: absolute;
+        top: 9px;
+        left: var(--tlp-form-element-padding-horizontal);
+        font-family: "Font Awesome 5 Free";
+        font-size: 12px;
+        font-weight: 900;
+    }
+
+    &[aria-selected="true"] {
+        position: relative;
+        padding: 6px var(--tlp-form-element-padding-horizontal) 6px 32px;
+        color: var(--tlp-main-color);
+
+        &.link-selector-item-highlighted {
+            color: var(--tlp-white-color);
+        }
+    }
+}
+
+.tlp-form-element-error {
+    .link-selector-selection {
+        border-color: var(--tlp-danger-color);
+        color: var(--tlp-danger-dark-color);
+
+        &:focus {
+            box-shadow: var(--tlp-shadow-focus-error);
+        }
+    }
+}
+
+.link-selector-dropdown-values-list {
+    max-height: 250px;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    list-style: none;
+}
+
+.link-selector-dropdown-option-value,
+.link-selector-dropdown-option-value-disabled {
+    display: flex;
+    align-items: baseline;
+    padding: 6px 12px 6px 32px;
+    font-size: 14px;
+    line-height: normal;
+    cursor: pointer;
+    user-select: none;
+}
+
+.link-selector-dropdown-option-value-disabled {
+    color: var(--tlp-dimmed-color);
+    cursor: not-allowed;
+}
+
+.link-selector-dropdown-option-group {
+    padding: 0;
+    list-style: none;
+    user-select: none;
+}
+
+.link-selector-selected-value-remove-button {
+    position: relative;
+    top: -1px;
+    float: right;
+    font-size: 18px;
+    line-height: 17px;
+    white-space: nowrap;
+}
+
+.link-selector-selected-value {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: default;
+
+    > .link-selector-search-field {
+        width: 100%;
+        border: 0;
+        line-height: 1.5rem;
+        cursor: pointer;
+    }
+}
+
+.link-selector-component-wrapper {
+    display: inline-block;
+    width: 100%;
+}
+
+.link-selector:not(.link-selector-disabled) {
+    .link-selector-selected-value-remove-button:hover,
+    .link-selector-value-remove-button:hover {
+        opacity: 0.5;
+        cursor: pointer;
+    }
+}
+
+.link-selector-value-remove-button {
+    margin: 0 5px 0 0;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+:is(.link-selector-search-field, .link-selector-selection) {
+    width: 100%;
+    padding: 0 var(--tlp-form-element-padding-horizontal);
+    transition: border-color var(--tlp-form-element-border-transition-duration) linear;
+    border: 1px solid var(--tlp-form-element-border-color);
+    border-radius: var(--tlp-form-element-border-radius);
+    background: var(--tlp-form-element-background);
+    font-family: var(--tlp-font-family);
+    font-size: var(--tlp-form-element-font-size);
+    line-height: normal;
+    cursor: default;
+    user-select: none;
+
+    &:focus {
+        transition: border-color var(--tlp-form-element-border-transition-duration) linear,
+            box-shadow 350ms;
+        border-color: var(--tlp-main-color);
+        box-shadow: var(--tlp-shadow-focus);
+    }
+}

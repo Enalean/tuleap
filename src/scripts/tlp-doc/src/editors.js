@@ -25,6 +25,7 @@ import { sanitize } from "dompurify";
 import "../../tuleap/custom-elements/relative-date";
 import { filterInlineTable } from "@tuleap/filter-inline-table";
 import { createListPicker } from "@tuleap/list-picker";
+import { createLinkSelector } from "@tuleap/link-selector";
 
 (function loadCodeMirrorEditors() {
     var demo_panels = document.querySelectorAll(".demo");
@@ -232,6 +233,12 @@ import { createListPicker } from "@tuleap/list-picker";
                             ${option_label}
                         `;
                     },
+                });
+            }
+            if (example.id === "example-link-selector-") {
+                createLinkSelector(document.querySelector("#link-selector-sb"), {
+                    locale: "en_US",
+                    placeholder: "Please select an item to link",
                 });
             }
 

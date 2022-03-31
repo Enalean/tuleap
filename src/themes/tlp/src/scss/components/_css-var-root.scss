@@ -310,4 +310,17 @@ $fade-background-color: color.mix($tlp-background-color, $tlp-white-color, 50);
     // highlight darker button
     --tlp-sidebar-action-background: rgb(255 255 255 / 25%);
     --tlp-sidebar-action-background-hover: rgb(255 255 255 / 35%);
+
+    // Form elements
+    --tlp-form-element-padding-horizontal: 12px;
+    --tlp-form-element-border-transition-duration: 150ms;
+    --tlp-form-element-border-color: var(--tlp-neutral-dark-color-darker-05);
+    --tlp-form-element-border-radius: var(--tlp-medium-radius);
+    --tlp-form-element-background: var(--tlp-white-color);
+    --tlp-form-element-font-size: 0.875rem;
+    --tlp-form-element-small-font-size: 0.8125rem;
+    --tlp-form-element-height: 40px;
+    --tlp-form-element-small-height: 32px;
+    --tlp-form-element-select-background-size: 8px;
+    --tlp-form-element-placeholder-color: var(--tlp-neutral-dark-color-darker-10);
 }

@@ -1,0 +1,26 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/link-selector",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "types": "dist/index.d.ts",
+  "module": "dist/link-selector.es.js",
+  "main": "dist/link-selector.umd.js",
+  "style": "dist/style.css",
+  "dependencies": {
+    "@tuleap/gettext": "file:../gettext",
+    "@tuleap/tlp": "link:../../src/themes/tlp",
+    "lit": "^2.0.2"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@tuleap/po-gettext-plugin": "link:../po-gettext-plugin"
+  }
+}

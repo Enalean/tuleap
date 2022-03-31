@@ -2,12 +2,14 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/filter-inline-table': file:../lib/filter-table
+  '@tuleap/link-selector': file:../lib/link-selector
   '@tuleap/list-picker': file:../lib/list-picker
   codemirror: ^5.62.0
   dompurify: ^2.3.6
 
 dependencies:
   '@tuleap/filter-inline-table': link:../lib/filter-table
+  '@tuleap/link-selector': link:../lib/link-selector
   '@tuleap/list-picker': link:../lib/list-picker
   codemirror: 5.62.0
   dompurify: 2.3.6

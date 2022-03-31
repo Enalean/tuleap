@@ -20,6 +20,7 @@
 @use "sass:color";
 @import "../../../themes/tlp/src/scss/variables/colors/common-colors";
 @import "~@tuleap/list-picker";
+@import "~@tuleap/link-selector";
 
 $nav-width: 150px;
 $nav-margin: 30px;

@@ -22,21 +22,11 @@
 @use "badges";
 @use "avatars";
 
-$tlp-form-element-font-size: 0.875rem;
 $tlp-form-element-height: 40px;
-$tlp-form-element-padding-horizontal: 12px;
-$tlp-form-element-small-font-size: 0.8125rem;
-$tlp-form-element-small-height: 32px;
 $tlp-form-element-small-padding-horizontal: var(--tlp-small-spacing);
 $tlp-form-element-large-font-size: 1rem;
 $tlp-form-element-large-height: 48px;
 $tlp-form-element-large-padding-horizontal: var(--tlp-medium-spacing);
-$tlp-form-element-border-radius: var(--tlp-medium-radius);
-$tlp-form-element-border-color: var(--tlp-neutral-dark-color-darker-05);
-$tlp-form-element-background: var(--tlp-white-color);
-$tlp-form-element-border-transition-duration: 150ms;
-$tlp-form-element-placeholder-color: var(--tlp-neutral-dark-color-darker-10);
-$tlp-form-element-select-background-size: 8px;
 $tlp-form-element-select-small-background-size: 6px;
 $tlp-form-element-select-background-url: url("../images/field-double-arrows.svg");
 $tlp-form-element-select-small-background-url: url("../images/field-double-arrows-small.svg");
@@ -196,20 +186,20 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 %tlp-form-element {
     display: block;
     width: 100%;
-    padding: 0 $tlp-form-element-padding-horizontal;
-    transition: border-color $tlp-form-element-border-transition-duration linear;
-    border: 1px solid $tlp-form-element-border-color;
-    border-radius: $tlp-form-element-border-radius;
-    background: $tlp-form-element-background;
+    padding: 0 var(--tlp-form-element-padding-horizontal);
+    transition: border-color var(--tlp-form-element-border-transition-duration) linear;
+    border: 1px solid var(--tlp-form-element-border-color);
+    border-radius: var(--tlp-form-element-border-radius);
+    background: var(--tlp-form-element-background);
     font-family: var(--tlp-font-family);
-    font-size: $tlp-form-element-font-size;
+    font-size: var(--tlp-form-element-font-size);
 
     &::placeholder {
-        color: $tlp-form-element-placeholder-color;
+        color: var(--tlp-form-element-placeholder-color);
     }
 
     &:focus {
-        transition: border-color $tlp-form-element-border-transition-duration linear,
+        transition: border-color var(--tlp-form-element-border-transition-duration) linear,
             box-shadow 350ms;
         border-color: var(--tlp-main-color);
         box-shadow: var(--tlp-shadow-focus);
@@ -219,16 +209,16 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 .tlp-input {
     @extend %tlp-form-element;
 
-    height: $tlp-form-element-height;
+    height: var(--tlp-form-element-height);
 
     &[size] {
         width: auto;
     }
 
     &.tlp-input-small {
-        height: $tlp-form-element-small-height;
+        height: var(--tlp-form-element-small-height);
         padding: 0 $tlp-form-element-small-padding-horizontal;
-        font-size: $tlp-form-element-small-font-size;
+        font-size: var(--tlp-form-element-small-font-size);
     }
 
     &.tlp-input-large {
@@ -241,10 +231,10 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 .tlp-search {
     @extend %tlp-form-element;
 
-    height: $tlp-form-element-height;
+    height: var(--tlp-form-element-height);
     padding: 0 15px 0 33px;
-    border-radius: $tlp-form-element-height / 2;
-    background: $tlp-form-element-background $tlp-form-element-search-background no-repeat;
+    border-radius: calc(var(--tlp-form-element-height) / 2);
+    background: var(--tlp-form-element-background) $tlp-form-element-search-background no-repeat;
     background-position: 13px center;
 
     &::-webkit-search-decoration {
@@ -256,19 +246,21 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
     }
 
     &.tlp-search-small {
-        height: $tlp-form-element-small-height;
+        height: var(--tlp-form-element-small-height);
         padding: 0 10px 0 26px;
-        border-radius: $tlp-form-element-small-height / 2;
-        background: $tlp-form-element-background $tlp-form-element-search-small-background no-repeat;
+        border-radius: var(--tlp-form-element-small-height) / 2;
+        background: var(--tlp-form-element-background) $tlp-form-element-search-small-background
+            no-repeat;
         background-position: 10px center;
-        font-size: $tlp-form-element-small-font-size;
+        font-size: var(--tlp-form-element-small-font-size);
     }
 
     &.tlp-search-large {
         height: $tlp-form-element-large-height;
         padding: 0 22px 0 40px;
         border-radius: $tlp-form-element-large-height / 2;
-        background: $tlp-form-element-background $tlp-form-element-search-large-background no-repeat;
+        background: var(--tlp-form-element-background) $tlp-form-element-search-large-background
+            no-repeat;
         background-position: 18px center;
         font-size: $tlp-form-element-large-font-size;
     }
@@ -277,7 +269,7 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 .tlp-textarea {
     @extend %tlp-form-element;
 
-    padding: 8px $tlp-form-element-padding-horizontal;
+    padding: 8px var(--tlp-form-element-padding-horizontal);
     overflow: auto;
 
     &[cols] {
@@ -286,7 +278,7 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 
     &.tlp-textarea-small {
         padding: 6px $tlp-form-element-small-padding-horizontal;
-        font-size: $tlp-form-element-small-font-size;
+        font-size: var(--tlp-form-element-small-font-size);
     }
 
     &.tlp-textarea-large {
@@ -298,33 +290,37 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 .tlp-select {
     @extend %tlp-form-element;
 
-    height: $tlp-form-element-height;
-    padding: 0 ($tlp-form-element-padding-horizontal * 2 + $tlp-form-element-select-background-size)
-        0 $tlp-form-element-padding-horizontal;
-    background: $tlp-form-element-background $tlp-form-element-select-background-url no-repeat;
-    background-position: right $tlp-form-element-padding-horizontal center;
+    height: var(--tlp-form-element-height);
+    padding: 0
+        calc(
+            var(--tlp-form-element-padding-horizontal) * 2 +
+                var(--tlp-form-element-select-background-size)
+        )
+        0 var(--tlp-form-element-padding-horizontal);
+    background: var(--tlp-form-element-background) $tlp-form-element-select-background-url no-repeat;
+    background-position: right var(--tlp-form-element-padding-horizontal) center;
     -moz-appearance: none; // stylelint-disable-line property-no-vendor-prefix
     -webkit-appearance: none; // stylelint-disable-line property-no-vendor-prefix
     appearance: none;
 
     &.tlp-select-small {
-        height: $tlp-form-element-small-height;
+        height: var(--tlp-form-element-small-height);
         padding: 0
             calc(
                 #{$tlp-form-element-small-padding-horizontal} * 2 + #{$tlp-form-element-select-small-background-size}
             )
             0 $tlp-form-element-small-padding-horizontal;
-        background: $tlp-form-element-background $tlp-form-element-select-small-background-url
+        background: var(--tlp-form-element-background) $tlp-form-element-select-small-background-url
             no-repeat;
         background-position: right $tlp-form-element-small-padding-horizontal center;
-        font-size: $tlp-form-element-small-font-size;
+        font-size: var(--tlp-form-element-small-font-size);
     }
 
     &.tlp-select-large {
         height: $tlp-form-element-large-height;
         padding: 0
             calc(
-                #{$tlp-form-element-large-padding-horizontal} * 2 + #{$tlp-form-element-select-background-size}
+                #{$tlp-form-element-large-padding-horizontal} * 2 + var(--tlp-form-element-select-background-size)
             )
             0 $tlp-form-element-large-padding-horizontal;
         background-position: right $tlp-form-element-large-padding-horizontal center;
@@ -337,8 +333,8 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 
     &[multiple] {
         height: auto;
-        padding: 8px $tlp-form-element-padding-horizontal;
-        background: $tlp-form-element-background;
+        padding: 8px var(--tlp-form-element-padding-horizontal);
+        background: var(--tlp-form-element-background);
 
         &.tlp-select-small {
             padding: 6px $tlp-form-element-small-padding-horizontal;
@@ -358,7 +354,7 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
     z-index: 2003;
 
     &.list-picker-disabled {
-        border-color: $tlp-form-element-border-color;
+        border-color: var(--tlp-form-element-border-color);
 
         .list-picker-badge,
         .list-picker-selection {
@@ -372,13 +368,15 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
     }
 
     &.list-picker-with-open-dropdown .list-picker-selection {
-        border-radius: $tlp-form-element-border-radius $tlp-form-element-border-radius 0 0;
+        border-radius: var(--tlp-form-element-border-radius) var(--tlp-form-element-border-radius) 0
+            0;
         border-color: var(--tlp-main-color);
     }
 
     &.list-picker-with-open-dropdown {
         &.list-picker-with-dropdown-above .list-picker-selection {
-            border-radius: 0 0 $tlp-form-element-border-radius $tlp-form-element-border-radius;
+            border-radius: 0 0 var(--tlp-form-element-border-radius)
+                var(--tlp-form-element-border-radius);
         }
     }
 
@@ -411,30 +409,30 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
         user-select: none;
 
         &.list-picker-single {
-            height: $tlp-form-element-height;
+            height: var(--tlp-form-element-height);
             padding: 0
-                (
-                    $tlp-form-element-padding-horizontal * 2 +
-                        $tlp-form-element-select-background-size
+                calc(
+                    var(--tlp-form-element-padding-horizontal) * 2 +
+                        var(--tlp-form-element-select-background-size)
                 )
-                0 $tlp-form-element-padding-horizontal;
-            background: $tlp-form-element-background $tlp-form-element-select-background-url
+                0 var(--tlp-form-element-padding-horizontal);
+            background: var(--tlp-form-element-background) $tlp-form-element-select-background-url
                 no-repeat;
-            background-position: right $tlp-form-element-padding-horizontal center;
+            background-position: right var(--tlp-form-element-padding-horizontal) center;
         }
 
         &.list-picker-multiple {
             position: relative;
-            min-height: $tlp-form-element-height;
+            min-height: var(--tlp-form-element-height);
             padding: 0 52px 5px 6px;
-            background: $tlp-form-element-background
+            background: var(--tlp-form-element-background)
                 $tlp-form-element-select-multiple-background-url no-repeat;
-            background-position: right $tlp-form-element-padding-horizontal top 17px;
+            background-position: right var(--tlp-form-element-padding-horizontal) top 17px;
         }
     }
 
     .list-picker-placeholder {
-        color: $tlp-form-element-placeholder-color;
+        color: var(--tlp-form-element-placeholder-color);
     }
 }
 
@@ -457,18 +455,18 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
     }
 
     .list-picker-group-label {
-        padding: 6px $tlp-form-element-padding-horizontal;
+        padding: 6px var(--tlp-form-element-padding-horizontal);
         color: var(--tlp-dimmed-color);
-        font-size: $tlp-form-element-small-font-size;
+        font-size: var(--tlp-form-element-small-font-size);
         font-weight: 600;
         line-height: 30px;
         text-transform: uppercase;
     }
 
     .list-picker-empty-dropdown-state {
-        padding: $tlp-form-element-padding-horizontal;
+        padding: var(--tlp-form-element-padding-horizontal);
         color: var(--tlp-dimmed-color);
-        font-size: $tlp-form-element-small-font-size;
+        font-size: var(--tlp-form-element-small-font-size);
         line-height: normal;
     }
 }
@@ -479,14 +477,14 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 }
 
 .list-picker-single-dropdown-search-section {
-    padding: $tlp-form-element-padding-horizontal;
+    padding: var(--tlp-form-element-padding-horizontal);
 
     .list-picker-search-field {
         @extend %tlp-form-element;
 
-        height: $tlp-form-element-small-height;
+        height: var(--tlp-form-element-small-height);
         padding: 0 4px;
-        font-size: $tlp-form-element-small-font-size;
+        font-size: var(--tlp-form-element-small-font-size);
     }
 }
 
@@ -500,7 +498,7 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
         content: "\f00c"; // fa-check
         position: absolute;
         top: 9px;
-        left: $tlp-form-element-padding-horizontal;
+        left: var(--tlp-form-element-padding-horizontal);
         font-family: "Font Awesome 5 Free";
         font-size: 12px;
         font-weight: 900;
@@ -508,7 +506,7 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 
     &[aria-selected="true"] {
         position: relative;
-        padding: 6px $tlp-form-element-padding-horizontal 6px 32px;
+        padding: 6px var(--tlp-form-element-padding-horizontal) 6px 32px;
         color: var(--tlp-main-color);
 
         &.list-picker-item-highlighted {
@@ -555,7 +553,7 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 
         .select2-selection--single:focus,
         .select2-selection--multiple:focus {
-            border-color: $tlp-form-element-border-color;
+            border-color: var(--tlp-form-element-border-color);
         }
     }
     /* stylelint-enable */
@@ -565,7 +563,8 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
         /* stylelint-disable selector-class-pattern */
         &.select2-container--above .select2-selection--single,
         &.select2-container--above .select2-selection--multiple {
-            border-radius: 0 0 $tlp-form-element-border-radius $tlp-form-element-border-radius;
+            border-radius: 0 0 var(--tlp-form-element-border-radius)
+                var(--tlp-form-element-border-radius);
             border-color: var(--tlp-main-color);
         }
         /* stylelint-enable */
@@ -573,19 +572,22 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
         /* stylelint-disable selector-class-pattern */
         &.select2-container--below .select2-selection--single,
         &.select2-container--below .select2-selection--multiple {
-            border-radius: $tlp-form-element-border-radius $tlp-form-element-border-radius 0 0;
+            border-radius: var(--tlp-form-element-border-radius)
+                var(--tlp-form-element-border-radius) 0 0;
             border-color: var(--tlp-main-color);
         }
         /* stylelint-enable */
 
         /* stylelint-disable-next-line selector-class-pattern */
         .select2-dropdown--above {
-            border-radius: $tlp-form-element-border-radius $tlp-form-element-border-radius 0 0;
+            border-radius: var(--tlp-form-element-border-radius)
+                var(--tlp-form-element-border-radius) 0 0;
         }
 
         /* stylelint-disable-next-line selector-class-pattern */
         .select2-dropdown--below {
-            border-radius: 0 0 $tlp-form-element-border-radius $tlp-form-element-border-radius;
+            border-radius: 0 0 var(--tlp-form-element-border-radius)
+                var(--tlp-form-element-border-radius);
         }
     }
 
@@ -595,12 +597,16 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 
         display: flex;
         align-items: center;
-        height: $tlp-form-element-height;
+        height: var(--tlp-form-element-height);
         padding: 0
-            ($tlp-form-element-padding-horizontal * 2 + $tlp-form-element-select-background-size) 0
-            $tlp-form-element-padding-horizontal;
-        background: $tlp-form-element-background $tlp-form-element-select-background-url no-repeat;
-        background-position: right $tlp-form-element-padding-horizontal center;
+            calc(
+                var(--tlp-form-element-padding-horizontal) * 2 +
+                    var(--tlp-form-element-select-background-size)
+            )
+            0 var(--tlp-form-element-padding-horizontal);
+        background: var(--tlp-form-element-background) $tlp-form-element-select-background-url
+            no-repeat;
+        background-position: right var(--tlp-form-element-padding-horizontal) center;
         cursor: default;
 
         // stylelint-disable-next-line selector-class-pattern
@@ -611,7 +617,7 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 
             // stylelint-disable-next-line selector-class-pattern
             .select2-selection__placeholder {
-                color: $tlp-form-element-placeholder-color;
+                color: var(--tlp-form-element-placeholder-color);
             }
         }
     }
@@ -620,11 +626,11 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
     .select2-selection--multiple {
         @extend %tlp-form-element;
 
-        min-height: $tlp-form-element-height;
+        min-height: var(--tlp-form-element-height);
         padding: 0 34px 5px 6px;
-        background: $tlp-form-element-background $tlp-form-element-select-multiple-background-url
-            no-repeat;
-        background-position: right $tlp-form-element-padding-horizontal top 17px;
+        background: var(--tlp-form-element-background)
+            $tlp-form-element-select-multiple-background-url no-repeat;
+        background-position: right var(--tlp-form-element-padding-horizontal) top 17px;
 
         // stylelint-disable-next-line selector-class-pattern
         .select2-selection__rendered {
@@ -681,7 +687,7 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 
                     // stylelint-disable-next-line max-nesting-depth
                     &::placeholder {
-                        color: $tlp-form-element-placeholder-color;
+                        color: var(--tlp-form-element-placeholder-color);
                     }
                 }
             }
@@ -716,15 +722,15 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 
         /* stylelint-disable-next-line selector-class-pattern */
         .select2-search--dropdown {
-            padding: $tlp-form-element-padding-horizontal;
+            padding: var(--tlp-form-element-padding-horizontal);
 
             // stylelint-disable-next-line selector-class-pattern
             .select2-search__field {
                 @extend %tlp-form-element;
 
-                height: $tlp-form-element-small-height;
+                height: var(--tlp-form-element-small-height);
                 padding: 0 4px;
-                font-size: $tlp-form-element-small-font-size;
+                font-size: var(--tlp-form-element-small-font-size);
             }
         }
 
@@ -736,9 +742,9 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 
         // stylelint-disable-next-line selector-class-pattern
         .select2-results__option {
-            padding: 6px $tlp-form-element-padding-horizontal 6px
-                ($tlp-form-element-padding-horizontal + 20px);
-            font-size: $tlp-form-element-small-font-size;
+            padding: 6px var(--tlp-form-element-padding-horizontal) 6px
+                calc(var(--tlp-form-element-padding-horizontal) + 20px);
+            font-size: var(--tlp-form-element-small-font-size);
             line-height: normal;
 
             &[role="group"] {
@@ -750,9 +756,9 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 
                 // stylelint-disable-next-line selector-class-pattern
                 .select2-results__group {
-                    padding: 6px $tlp-form-element-padding-horizontal;
+                    padding: 6px var(--tlp-form-element-padding-horizontal);
                     color: var(--tlp-dimmed-color);
-                    font-size: $tlp-form-element-small-font-size;
+                    font-size: var(--tlp-form-element-small-font-size);
                     font-weight: 600;
                     line-height: 30px;
                     text-transform: uppercase;
@@ -760,12 +766,12 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 
                 // stylelint-disable-next-line selector-class-pattern
                 .select2-results__options--nested > .select2-results__option {
-                    padding: 6px $tlp-form-element-padding-horizontal 6px
-                        ($tlp-form-element-padding-horizontal + 20px);
+                    padding: 6px var(--tlp-form-element-padding-horizontal) 6px
+                        calc(var(--tlp-form-element-padding-horizontal) + 20px);
 
                     // stylelint-disable-next-line max-nesting-depth
                     &[aria-selected="true"]::before {
-                        left: $tlp-form-element-padding-horizontal;
+                        left: var(--tlp-form-element-padding-horizontal);
                     }
                 }
             }
@@ -778,14 +784,14 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 
             &[aria-selected="true"] {
                 position: relative;
-                padding: 6px $tlp-form-element-padding-horizontal 6px 32px;
+                padding: 6px var(--tlp-form-element-padding-horizontal) 6px 32px;
                 color: var(--tlp-main-color);
 
                 &::before {
                     content: "\f00c"; // fa-check
                     position: absolute;
                     top: 9px;
-                    left: $tlp-form-element-padding-horizontal;
+                    left: var(--tlp-form-element-padding-horizontal);
                     font-family: "Font Awesome 5 Free";
                     font-size: 12px;
                     font-weight: 900;
@@ -800,7 +806,7 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
             // stylelint-disable-next-line selector-class-pattern
             &.select2-results__message,
             &.loading-results {
-                padding: $tlp-form-element-padding-horizontal;
+                padding: var(--tlp-form-element-padding-horizontal);
                 color: var(--tlp-dimmed-color);
             }
         }
@@ -827,23 +833,23 @@ span.select2-container--tlp-select2-small {
 
     /* stylelint-disable-next-line selector-class-pattern */
     .select2-selection--single {
-        height: $tlp-form-element-small-height;
+        height: var(--tlp-form-element-small-height);
         padding: 0
             calc(
                 #{$tlp-form-element-small-padding-horizontal} * 2 + #{$tlp-form-element-select-small-background-size}
             )
             0 $tlp-form-element-small-padding-horizontal;
-        background: $tlp-form-element-background $tlp-form-element-select-small-background-url
+        background: var(--tlp-form-element-background) $tlp-form-element-select-small-background-url
             no-repeat;
         background-position: right $tlp-form-element-small-padding-horizontal center;
-        font-size: $tlp-form-element-small-font-size;
+        font-size: var(--tlp-form-element-small-font-size);
     }
 
     /* stylelint-disable-next-line selector-class-pattern */
     .select2-selection--multiple {
-        min-height: $tlp-form-element-small-height;
+        min-height: var(--tlp-form-element-small-height);
         padding: 0 26px 0 $tlp-form-element-small-padding-horizontal;
-        background: $tlp-form-element-background
+        background: var(--tlp-form-element-background)
             $tlp-form-element-select-multiple-small-background-url no-repeat;
         background-position: right $tlp-form-element-small-padding-horizontal top 14px;
 
@@ -878,7 +884,7 @@ span.select2-container--tlp-select2-large {
         height: $tlp-form-element-large-height;
         padding: 0
             calc(
-                #{$tlp-form-element-large-padding-horizontal} * 2 + #{$tlp-form-element-select-background-size}
+                #{$tlp-form-element-large-padding-horizontal} * 2 + var(--tlp-form-element-select-background-size)
             )
             0 $tlp-form-element-large-padding-horizontal;
         background-position: right $tlp-form-element-large-padding-horizontal center;
@@ -956,7 +962,7 @@ span.select2-container--open {
         vertical-align: bottom;
 
         &:focus {
-            transition: outline-color $tlp-form-element-border-transition-duration linear;
+            transition: outline-color var(--tlp-form-element-border-transition-duration) linear;
             outline: 1px solid var(--tlp-main-color);
         }
     }
@@ -982,21 +988,21 @@ span.select2-container--open {
     > .tlp-append:not([class*="tlp-button"]):not([class*="tlp-dropdown"]) {
         display: flex;
         align-items: center;
-        height: $tlp-form-element-height;
-        padding: 0 $tlp-form-element-padding-horizontal;
-        transition: border-color $tlp-form-element-border-transition-duration linear;
-        border: 1px solid $tlp-form-element-border-color;
+        height: var(--tlp-form-element-height);
+        padding: 0 var(--tlp-form-element-padding-horizontal);
+        transition: border-color var(--tlp-form-element-border-transition-duration) linear;
+        border: 1px solid var(--tlp-form-element-border-color);
         background: var(--tlp-main-color-transparent-90);
         color: var(--tlp-main-color);
-        font-size: $tlp-form-element-font-size;
+        font-size: var(--tlp-form-element-font-size);
         font-weight: 600;
         vertical-align: middle;
 
         &.tlp-prepend-small,
         &.tlp-append-small {
-            height: $tlp-form-element-small-height;
+            height: var(--tlp-form-element-small-height);
             padding: 0 $tlp-form-element-small-padding-horizontal;
-            font-size: $tlp-form-element-small-font-size;
+            font-size: var(--tlp-form-element-small-font-size);
         }
 
         &.tlp-prepend-large,
@@ -1009,7 +1015,7 @@ span.select2-container--open {
 
     // stylelint-disable-next-line selector-no-qualifying-type,selector-class-pattern
     > span.select2-container--tlp-select2 .select2-selection--single {
-        padding: 0 $tlp-form-element-padding-horizontal;
+        padding: 0 var(--tlp-form-element-padding-horizontal);
         background: none;
     }
 
@@ -1035,7 +1041,7 @@ span.select2-container--open {
         box-shadow: 0 1px 2px rgb(0 0 0 / 8%);
 
         &.tlp-button-outline {
-            border-color: $tlp-form-element-border-color;
+            border-color: var(--tlp-form-element-border-color);
         }
     }
     /* stylelint-enable */
@@ -1051,14 +1057,16 @@ span.select2-container--open {
 
         &:first-child,
         &:first-child > button[class*="tlp-button"] {
-            border-radius: $tlp-form-element-border-radius 0 0 $tlp-form-element-border-radius;
+            border-radius: var(--tlp-form-element-border-radius) 0 0
+                var(--tlp-form-element-border-radius);
         }
     }
 
     > .tlp-input {
         order: 2;
         min-width: 0;
-        border-radius: 0 $tlp-form-element-border-radius $tlp-form-element-border-radius 0;
+        border-radius: 0 var(--tlp-form-element-border-radius) var(--tlp-form-element-border-radius)
+            0;
     }
 
     > .tlp-input:not(:first-child):not(:last-child) {
@@ -1073,18 +1081,19 @@ span.select2-container--open {
 
         .select2-selection--single,
         .select2-selection--multiple {
-            border-radius: 0 $tlp-form-element-border-radius $tlp-form-element-border-radius 0;
+            border-radius: 0 var(--tlp-form-element-border-radius)
+                var(--tlp-form-element-border-radius) 0;
         }
 
         &.select2-container--open {
             &.select2-container--above .select2-selection--single,
             &.select2-container--above .select2-selection--multiple {
-                border-radius: 0 0 $tlp-form-element-border-radius;
+                border-radius: 0 0 var(--tlp-form-element-border-radius);
             }
 
             &.select2-container--below .select2-selection--single,
             &.select2-container--below .select2-selection--multiple {
-                border-radius: 0 $tlp-form-element-border-radius 0 0;
+                border-radius: 0 var(--tlp-form-element-border-radius) 0 0;
             }
         }
     }
@@ -1101,7 +1110,8 @@ span.select2-container--open {
 
         &:last-child,
         &:last-child > button[class*="tlp-button"] {
-            border-radius: 0 $tlp-form-element-border-radius $tlp-form-element-border-radius 0;
+            border-radius: 0 var(--tlp-form-element-border-radius)
+                var(--tlp-form-element-border-radius) 0;
         }
     }
 
@@ -1109,7 +1119,8 @@ span.select2-container--open {
     > .tlp-select {
         order: 1;
         min-width: 0;
-        border-radius: $tlp-form-element-border-radius 0 0 $tlp-form-element-border-radius;
+        border-radius: var(--tlp-form-element-border-radius) 0 0
+            var(--tlp-form-element-border-radius);
     }
 
     /* stylelint-disable selector-no-qualifying-type,selector-class-pattern */
@@ -1118,18 +1129,19 @@ span.select2-container--open {
     > span.select2-container--tlp-select2-large {
         .select2-selection--single,
         .select2-selection--multiple {
-            border-radius: $tlp-form-element-border-radius 0 0 $tlp-form-element-border-radius;
+            border-radius: var(--tlp-form-element-border-radius) 0 0
+                var(--tlp-form-element-border-radius);
         }
 
         &.select2-container--open {
             &.select2-container--above .select2-selection--single,
             &.select2-container--above .select2-selection--multiple {
-                border-radius: 0 0 0 $tlp-form-element-border-radius;
+                border-radius: 0 0 0 var(--tlp-form-element-border-radius);
             }
 
             &.select2-container--below .select2-selection--single,
             &.select2-container--below .select2-selection--multiple {
-                border-radius: $tlp-form-element-border-radius 0 0;
+                border-radius: var(--tlp-form-element-border-radius) 0 0;
             }
         }
     }

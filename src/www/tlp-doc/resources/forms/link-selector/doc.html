@@ -1,0 +1,23 @@
+<p>
+    Link selector allows users to select an artifact to link
+    <br>
+    <br>
+    It is basically a lite version of list-picker, but tailored for a very specific, non-generic use case.
+    <br>
+    <br>
+    Options:
+    <ul>
+        <li><code class="code-inline">locale: string | undefined</code>: A locale string formatted with underscores. For example: "en_US", "fr_FR". It is used to localize link-selector. If undefined, it will fallback to "en_US"</li>
+        <li><code class="code-inline">placeholder (default: "")</code>: A string message inviting the user to fill up the field</li>
+        <li>
+            <code class="code-inline">items_template_formatter (default: none)</code>: An asynchronous callback function returning a lit/html template result to customise items templates
+            <br>
+            It takes three parameters:
+            <ul>
+                <li><code class="code-inline">html: HTMLTemplateStringProcessor</code> The lit/html tag function to help the developer to build a secured TemplateResult</li>
+                <li><code class="code-inline">option_value: string</code> The value of the current select box option</li>
+                <li><code class="code-inline">option_label: string</code> The text content of the current select box option</li>
+            </ul>
+        </li>
+    </ul>
+</p>
