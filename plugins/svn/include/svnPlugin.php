@@ -1245,7 +1245,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     private function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/svn',
+            __DIR__ . '/../frontend-assets',
             '/assets/svn'
         );
     }

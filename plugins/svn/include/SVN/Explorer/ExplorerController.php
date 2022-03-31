@@ -81,7 +81,7 @@ class ExplorerController
 
         $GLOBALS['HTML']->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/svn',
+            __DIR__ . '/../../../frontend-assets',
             '/assets/svn'
         );
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL("homepage.js"));
