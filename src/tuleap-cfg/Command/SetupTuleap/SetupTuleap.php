@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\SetupTuleap;
 
-use Tuleap\Config\ConfigKeyLegacyBool;
 use Tuleap\Config\ConfigSerializer;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\ServerHostname;
@@ -34,21 +33,8 @@ final class SetupTuleap
     {
     }
 
-    public function setup(string $fqdn): void
+    public function setup(): void
     {
-        \ForgeConfig::set(ServerHostname::DEFAULT_DOMAIN, $fqdn);
-        \ForgeConfig::set(ServerHostname::LIST_HOST, 'lists.' . $fqdn);
-        \ForgeConfig::set(ServerHostname::FULL_NAME, $fqdn);
-        \ForgeConfig::set(ConfigurationVariables::EMAIL_ADMIN, 'codendi-admin@' . $fqdn);
-        \ForgeConfig::set(ConfigurationVariables::EMAIL_CONTACT, 'codendi-contact@' . $fqdn);
-        \ForgeConfig::set(ConfigurationVariables::NOREPLY, sprintf('"Tuleap" <noreply@%s>', $fqdn));
-        \ForgeConfig::set(ConfigurationVariables::ORG_NAME, 'Tuleap');
-        \ForgeConfig::set(ConfigurationVariables::LONG_ORG_NAME, 'Tuleap');
-        \ForgeConfig::set(ConfigurationVariables::HOMEDIR_PREFIX, '');
-        \ForgeConfig::set(ConfigurationVariables::GRPDIR_PREFIX, '');
-        \ForgeConfig::set(ConfigurationVariables::MAIL_SECURE_MODE, ConfigKeyLegacyBool::FALSE);
-        \ForgeConfig::set(ConfigurationVariables::DISABLE_SUBDOMAINS, ConfigKeyLegacyBool::TRUE);
-
         (new ConfigSerializer())->save(
             $this->base_directory . '/etc/tuleap/conf/local.inc',
             0640,

@@ -74,6 +74,7 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
             '--host'           => '192.0.2.1',
             '--admin-password' => 'welcome0',
             '--app-password'   => 'a complex password',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
@@ -100,6 +101,7 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
             '--port'           => '3307',
             '--admin-password' => 'welcome0',
             '--app-password'   => 'a complex password',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
@@ -119,6 +121,7 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
             '--app-password'   => 'a complex password',
             '--ssl-mode'       => 'verify-ca',
             '--ssl-ca'         => '/some_ca.pem',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
@@ -142,6 +145,7 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
             '--skip-database'  => true,
             '--host'           => '192.0.2.1',
             '--app-password'   => 'a complex password',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(1, $this->command_tester->getStatusCode());
@@ -157,6 +161,7 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
             '--host'           => '192.0.2.1',
             '--admin-password' => 'welcome0',
             '--app-password'   => 'a complex password',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
@@ -177,6 +182,7 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
             '--host'           => '192.0.2.1',
             '--admin-password' => 'welcome0',
             '--app-password'   => 'a complex password',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
@@ -193,6 +199,7 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
             '--admin-password' => 'welcome0',
             '--app-password'   => 'a complex password',
             '--app-user'       => 'tuleap',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
@@ -207,6 +214,7 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
             '--admin-password' => 'welcome0',
             '--nss-password'   => 'another complex password',
             '--nss-user'       => 'dbauthuser',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
@@ -229,6 +237,7 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
             '--app-password'   => 'a complex password',
             '--app-user'       => 'tuleap',
             '--mediawiki'      => 'per-project',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
@@ -243,6 +252,7 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
             '--app-password'   => 'a complex password',
             '--app-user'       => 'tuleap',
             '--mediawiki'      => 'central',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
@@ -257,6 +267,7 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
             '--app-password'   => 'a complex password',
             '--app-user'       => 'tuleap',
             '--grant-hostname' => '192.0.2.1',
+            '--tuleap-fqdn'    => 'localhost',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());

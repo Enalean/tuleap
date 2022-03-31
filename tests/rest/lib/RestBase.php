@@ -208,6 +208,7 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
 
     protected function getProjectId($project_short_name)
     {
+        //var_dump($this->project_ids);
         return $this->project_ids[$project_short_name];
     }
 

@@ -27,18 +27,17 @@ use ConfigValueDatabaseProvider;
 use ConfigValueProvider;
 use ForgeAccess;
 use ForgeConfig;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\DB\DBConfig;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\ServerHostname;
 
 /**
  * @covers \Tuleap\Config\ConfigValueEnvironmentProvider
  */
 class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use GlobalLanguageMock;
 
@@ -46,15 +45,15 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         putenv('TULEAP_LOCAL_INC');
         putenv('TULEAP_SYS_DBHOST');
+        putenv('TULEAP_SYS_DEFAULT_DOMAIN');
+        putenv('TULEAP_SYS_EMAIL_ADMIN');
         parent::tearDown();
     }
 
     public function testDefaultLoadSequenceGetValueFromLocalInc(): void
     {
         putenv('TULEAP_LOCAL_INC=' . __DIR__ . '/_fixtures/sequence/local.inc');
-        $dao = $this->createMock(ConfigDao::class);
-        $dao->method('searchAll')->willReturn([]);
-        ForgeConfig::setDatabaseConfigDao($dao);
+        $this->mockConfigDao();
 
         ForgeConfig::loadInSequence();
         self::assertEquals('Matchete', ForgeConfig::get('sys_fullname'));
@@ -81,9 +80,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDatabaseParametersFallbackOnFiles(): void
     {
         putenv('TULEAP_LOCAL_INC=' . __DIR__ . '/_fixtures/sequence/local.inc');
-        $dao = $this->createMock(ConfigDao::class);
-        $dao->method('searchAll')->willReturn([]);
-        ForgeConfig::setDatabaseConfigDao($dao);
+        $this->mockConfigDao();
 
         ForgeConfig::loadInSequence();
         self::assertEquals('foo', ForgeConfig::get('sys_dbhost'));
@@ -93,28 +90,10 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         putenv('TULEAP_LOCAL_INC=' . __DIR__ . '/_fixtures/sequence/local.inc');
         putenv('TULEAP_SYS_DBHOST=db.example.com');
-        $dao = $this->createMock(ConfigDao::class);
-        $dao->method('searchAll')->willReturn([]);
-        ForgeConfig::setDatabaseConfigDao($dao);
+        $this->mockConfigDao();
 
         ForgeConfig::loadInSequence();
         self::assertEquals('db.example.com', ForgeConfig::get('sys_dbhost'));
-    }
-
-    public function testLoadDatabaseConfigFromEnvironmentWithEnv(): void
-    {
-        putenv('TULEAP_SYS_DBHOST=db.example.com');
-        ForgeConfig::loadDatabaseConfig();
-        self::assertEquals('db.example.com', ForgeConfig::get('sys_dbhost'));
-    }
-
-    public function testLoadDatabaseConfigDefaultValues(): void
-    {
-        ForgeConfig::loadDatabaseConfig();
-        self::assertEquals('localhost', ForgeConfig::get('sys_dbhost'));
-        self::assertEquals('tuleap', ForgeConfig::get(DBConfig::CONF_DBNAME));
-        self::assertSame(3306, ForgeConfig::get(DBConfig::CONF_PORT));
-        self::assertSame('0', ForgeConfig::get(DBConfig::CONF_ENABLE_SSL));
     }
 
     public function testUsage(): void
@@ -177,8 +156,9 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItLoadsFromDatabase(): void
     {
-        $dao = \Mockery::mock(\Tuleap\Config\ConfigDao::class);
-        $dao->shouldReceive('searchAll')->andReturns([['name' => 'a_var', 'value' => 'its_value']]);
+        $dao = $this->createMock(ConfigDao::class);
+        $dao->method('searchAll')->willReturn([['name' => 'a_var', 'value' => 'its_value']]);
+
         (new class extends ForgeConfig {
             public static function load(ConfigValueProvider $value_provider): void
             {
@@ -265,5 +245,84 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         self::assertEquals('a very good secret', ForgeConfig::getSecretAsClearText(\Tuleap\DB\DBAuthUserConfig::PASSWORD));
+    }
+
+    /**
+     * @dataProvider getSetupSequenceProvider
+     */
+    public function testGetSetupSequence(string $expected, string $variable, string $fqdn, array $env): void
+    {
+        foreach ($env as $key => $value) {
+            putenv("$key=$value");
+        }
+        ForgeConfig::loadForInitialSetup($fqdn);
+        self::assertEquals($expected, ForgeConfig::get($variable));
+        foreach ($env as $key => $value) {
+            putenv($key);
+        }
+    }
+
+    public function getSetupSequenceProvider(): iterable
+    {
+        return [
+            'Hostname is defined by the provided fqdn' => [
+                'expected' => 'tuleap.example.com',
+                'variable' => ServerHostname::DEFAULT_DOMAIN,
+                'fqdn' => 'tuleap.example.com',
+                'env' => [],
+            ],
+            'Hostname is defined by environment variable fqdn' => [
+                'expected' => 'another.example.com',
+                'variable' => ServerHostname::DEFAULT_DOMAIN,
+                'fqdn' => 'tuleap.example.com',
+                'env' => [
+                    'TULEAP_SYS_DEFAULT_DOMAIN' => 'another.example.com',
+                ],
+            ],
+            'Admin email is defined by the provided fqdn' => [
+                'expected' => 'codendi-admin@tuleap.example.com',
+                'variable' => ConfigurationVariables::EMAIL_ADMIN,
+                'fqdn' => 'tuleap.example.com',
+                'env' => [],
+            ],
+            'Admin email is defined by environment variable' => [
+                'expected' => 'foo@example.com',
+                'variable' => ConfigurationVariables::EMAIL_ADMIN,
+                'fqdn' => 'tuleap.example.com',
+                'env' => [
+                    'TULEAP_SYS_EMAIL_ADMIN' => 'foo@example.com',
+                ],
+            ],
+            'DB host name is the default one' => [
+                'expected' => 'localhost',
+                'variable' => DBConfig::CONF_HOST,
+                'fqdn' => 'tuleap.example.com',
+                'env' => [],
+            ],
+            'DB host name is defined by environment variable (was testLoadDatabaseConfigFromEnvironmentWithEnv)' => [
+                'expected' => 'db.example.com',
+                'variable' => DBConfig::CONF_HOST,
+                'fqdn' => 'tuleap.example.com',
+                'env' => [
+                    'TULEAP_SYS_DBHOST' => 'db.example.com',
+                ],
+            ],
+        ];
+    }
+
+    public function testLoadDatabaseConfigDefaultValues(): void
+    {
+        ForgeConfig::loadForInitialSetup('tuleap.example.com');
+        self::assertEquals('localhost', ForgeConfig::get('sys_dbhost'));
+        self::assertEquals('tuleap', ForgeConfig::get(DBConfig::CONF_DBNAME));
+        self::assertSame(3306, ForgeConfig::get(DBConfig::CONF_PORT));
+        self::assertSame('0', ForgeConfig::get(DBConfig::CONF_ENABLE_SSL));
+    }
+
+    private function mockConfigDao(): void
+    {
+        $dao = $this->createMock(ConfigDao::class);
+        $dao->method('searchAll')->willReturn([]);
+        ForgeConfig::setDatabaseConfigDao($dao);
     }
 }

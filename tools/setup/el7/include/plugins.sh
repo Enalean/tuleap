@@ -177,6 +177,7 @@ _pluginSVN() {
             dbauthuser_password="$(_setupRandomPassword)"
 
             ${tuleapcfg} setup:mysql-init \
+                --tuleap-fqdn="${server_name}" \
                 --host="${mysql_server}" \
                 --admin-user="${mysql_user}" \
                 --admin-password="${mysql_password}" \
@@ -212,7 +213,10 @@ _pluginSVN() {
 }
 
 _pluginMediawiki() {
+    local server_name=$(/usr/bin/tuleap config-get sys_default_domain)
+
     ${tuleapcfg} setup:mysql-init \
+        --tuleap-fqdn="${server_name}" \
         --host="${mysql_server}" \
         --admin-user="${mysql_user}" \
         --admin-password="${mysql_password}" \

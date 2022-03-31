@@ -138,7 +138,13 @@ final class SetupMysqlInitCommand extends Command
         }
         assert(is_string($admin_password));
 
-        \ForgeConfig::loadDatabaseConfig();
+        $fqdn = $input->getOption(self::OPT_TULEAP_FQDN);
+        if (! $fqdn) {
+            $io->getErrorStyle()->writeln('<error>FQDN is mandatory</error>');
+        }
+        assert(is_string($fqdn));
+
+        \ForgeConfig::loadForInitialSetup($fqdn);
         \ForgeConfig::set(DBConfig::CONF_HOST, $this->command_helper->getHost($input));
         try {
             \ForgeConfig::set(DBConfig::CONF_PORT, $this->command_helper->getPort($input));
