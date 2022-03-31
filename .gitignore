@@ -37,6 +37,7 @@ plugins/*/vendor/
 /.idea/
 npm-debug.log
 yarn-error.log
+.pnpm-debug.log
 .env
 .DS_Store
 .sass-cache/
