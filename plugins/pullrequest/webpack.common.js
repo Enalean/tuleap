@@ -21,7 +21,7 @@ const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
 const assets_output = webpack_configurator.configureOutput(
-    path.resolve(__dirname, "../../src/www/assets/pullrequest/")
+    path.resolve(__dirname, "./frontend-assets")
 );
 const manifest_plugin = webpack_configurator.getManifestPlugin();
 

@@ -175,7 +175,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     public function collectAssets(CollectAssets $retriever)
     {
         $assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/pullrequest',
+            __DIR__ . '/../frontend-assets',
             '/assets/pullrequest'
         );
 
