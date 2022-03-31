@@ -29,9 +29,7 @@ module.exports = [
     {
         entry: entry_points,
         context: __dirname,
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/crosstracker/")
-        ),
+        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
         externals: {
             tlp: "tlp",
         },

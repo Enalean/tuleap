@@ -187,7 +187,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/testmanagement/',
+            __DIR__ . '/../frontend-assets',
             '/assets/testmanagement'
         );
     }

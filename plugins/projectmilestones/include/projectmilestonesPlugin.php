@@ -60,7 +60,7 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
     public function burning_parrot_get_javascript_files(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/projectmilestones',
+            __DIR__ . '/../frontend-assets',
             '/assets/projectmilestones'
         );
 

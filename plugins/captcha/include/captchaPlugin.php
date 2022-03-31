@@ -85,7 +85,7 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
     {
         if (strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0 && $this->isConfigured()) {
             $assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/captcha',
+                __DIR__ . '/../frontend-assets',
                 '/assets/captcha'
             );
             echo '<link rel="stylesheet" type="text/css" href="' . $assets->getFileURL('style.css') . '" />';

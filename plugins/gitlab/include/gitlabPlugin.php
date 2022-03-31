@@ -762,7 +762,7 @@ class gitlabPlugin extends Plugin
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/gitlab',
+            __DIR__ . '/../frontend-assets',
             '/assets/gitlab'
         );
     }

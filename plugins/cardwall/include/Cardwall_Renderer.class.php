@@ -346,7 +346,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
             '/assets/trackers'
         );
         $cardwall_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/cardwall/',
+            __DIR__ . '/../frontend-assets/',
             '/assets/cardwall/'
         );
         return new CssAssetCollection([

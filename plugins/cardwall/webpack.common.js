@@ -26,9 +26,7 @@ module.exports = [
             "flamingparrot-theme": "./themes/FlamingParrot/css/style.scss",
         },
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/cardwall/")
-        ),
+        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
         module: {
             rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
         },

@@ -27,9 +27,7 @@ module.exports = [
             "style-bp": "./themes/BurningParrot/css/userlog.scss",
         },
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/userlog")
-        ),
+        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets")),
         externals: {
             tlp: "tlp",
         },

@@ -38,9 +38,7 @@ module.exports = [
             "artifact-create-branch": "./scripts/artifact-create-branch-action/src/index.ts",
         },
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/gitlab/")
-        ),
+        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
         externals: {
             codendi: "codendi",
             jquery: "jQuery",

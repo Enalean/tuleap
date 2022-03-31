@@ -32,9 +32,7 @@ module.exports = [
     {
         entry: entry_points,
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/openidconnectclient/")
-        ),
+        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
         externals: {
             tlp: "tlp",
             jquery: "jQuery",

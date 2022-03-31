@@ -160,7 +160,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/openidconnectclient',
+            __DIR__ . '/../frontend-assets',
             '/assets/openidconnectclient'
         );
     }

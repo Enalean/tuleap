@@ -210,7 +210,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/tracker_encryption',
+            __DIR__ . '/../frontend-assets',
             '/assets/tracker_encryption/'
         );
     }

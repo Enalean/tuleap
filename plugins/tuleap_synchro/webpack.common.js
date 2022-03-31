@@ -27,9 +27,7 @@ module.exports = [
             tuleap_synchro_style: "./themes/BurningParrot/css/tuleap-synchro.scss",
         },
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/tuleap_synchro/")
-        ),
+        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
         externals: {
             tlp: "tlp",
         },

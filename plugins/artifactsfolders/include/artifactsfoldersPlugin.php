@@ -122,7 +122,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
     private function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/artifactsfolders/',
+            __DIR__ . '/../frontend-assets/',
             '/assets/artifactsfolders'
         );
     }

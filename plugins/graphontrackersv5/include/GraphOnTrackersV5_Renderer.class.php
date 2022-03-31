@@ -461,7 +461,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/graphontrackersv5',
+            __DIR__ . '/../frontend-assets',
             '/assets/graphontrackersv5'
         );
     }

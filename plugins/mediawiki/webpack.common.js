@@ -27,9 +27,7 @@ module.exports = [
             admin: "./scripts/admin.js",
         },
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/mediawiki/")
-        ),
+        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
         externals: {
             jquery: "jQuery",
         },

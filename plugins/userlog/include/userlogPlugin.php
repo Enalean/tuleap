@@ -119,7 +119,7 @@ class userlogPlugin extends Plugin implements DispatchableWithRequest, Dispatcha
     public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)
     {
         $assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/userlog/',
+            __DIR__ . '/../frontend-assets/',
             '/assets/userlog/'
         );
         $layout->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'style-bp'));

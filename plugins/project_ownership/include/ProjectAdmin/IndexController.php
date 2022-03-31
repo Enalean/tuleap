@@ -78,7 +78,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
         $layout->addCssAsset(
             new CssAssetWithoutVariantDeclinaisons(
                 new IncludeAssets(
-                    __DIR__ . '/../../../../src/www/assets/project_ownership',
+                    __DIR__ . '/../../frontend-assets',
                     '/assets/project_ownership'
                 ),
                 'project-ownership-project-admin'

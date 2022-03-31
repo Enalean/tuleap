@@ -386,7 +386,7 @@ final class RoadmapProjectWidget extends \Widget
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/roadmap',
+            __DIR__ . '/../../frontend-assets',
             '/assets/roadmap'
         );
     }

@@ -80,7 +80,7 @@ class Router implements DispatchableWithRequest, DispatchableWithBurningParrot
     private function getIncludeAsset(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/bugzilla_reference',
+            __DIR__ . '/../../../frontend-assets',
             '/assets/bugzilla_reference'
         );
     }

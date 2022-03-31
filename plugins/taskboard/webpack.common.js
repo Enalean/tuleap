@@ -28,7 +28,7 @@ module.exports = [
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/taskboard/"),
+            path.resolve(__dirname, "./frontend-assets/"),
             "/assets/taskboard/"
         ),
         resolve: {
