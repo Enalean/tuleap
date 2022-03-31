@@ -72,7 +72,9 @@ class Tracker_Action_UpdateArtifact
 
         try {
             if ($current_user->isAnonymous()) {
-                $current_user->setEmail($request->get('email'));
+                $request_email = $request->get('email');
+                $email         = ($request_email !== false) ? $request_email : null;
+                $current_user->setEmail($email);
             }
             $this->artifact->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, true, $comment_format);
 
