@@ -31,9 +31,11 @@ use FRSFileFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use Tuleap\GlobalLanguageMock;
 
 final class BackendSystemTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use GlobalLanguageMock;
     use MockeryPHPUnitIntegration;
     use \Tuleap\TemporaryTestDirectory;
 
@@ -118,6 +120,20 @@ final class BackendSystemTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertDirectoryExists(ForgeConfig::get('homedir_prefix') . "/codendiadm", "Home dir should be created");
 
         $this->assertTrue(is_file(ForgeConfig::get('homedir_prefix') . "/codendiadm/.profile"), "User files from /etc/codendi_skel should be created");
+    }
+
+    public function testCreateUserHomeReturnFalseIfNumericLogin(): void
+    {
+        $user = new PFUser([
+            'language_id' => 'en',
+            'user_name' => '666',
+        ]);
+
+        $backend = \Mockery::mock(\BackendSystem::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $backend->shouldReceive('log')->withArgs(['User login is numeric, createUserHome skipped', 'error'])->once();
+
+        $this->assertFalse($backend->createUserHome($user));
+        $this->assertDirectoryDoesNotExist(ForgeConfig::get('homedir_prefix') . "/666", "Home dir should be created");
     }
 
     public function testCreateProjectHome(): void
@@ -351,6 +367,23 @@ final class BackendSystemTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertDirectoryExists(ForgeConfig::get('homedir_prefix') . "/toto", "Home dir should be created");
 
         $this->assertDirectoryDoesNotExist(ForgeConfig::get('homedir_prefix') . "/codendiadm", 'Home dir should no more exists');
+    }
+
+    public function testRenameUserHomeDirectoryDoesntWorkWithNumericUserName(): void
+    {
+        // We use codendiadm uid/gid to avoid chown warnings (because test is not run as root)
+        $user = new PFUser([
+            'language_id' => 'en',
+            'user_name' => 'codendiadm',
+        ]);
+
+        $backend = \Mockery::mock(\BackendSystem::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $backend->createUserHome($user);
+
+        $backend->shouldReceive('log')->withArgs(['User login is numeric, renameUserHomeDirectory skipped', 'error'])->once();
+        $this->assertFalse($backend->renameUserHomeDirectory($user, '666'));
+        $this->assertDirectoryDoesNotExist(ForgeConfig::get('homedir_prefix') . "/666", "Home dir should be created");
     }
 
     public function testCleanupFrs(): void
