@@ -133,7 +133,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/document',
+            __DIR__ . '/../../frontend-assets',
             '/assets/document'
         );
     }

@@ -579,7 +579,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document_generation
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/projectmilestones
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/crosstracker
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/document
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/project_ownership
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/roadmap
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/taskboard
@@ -1373,7 +1372,6 @@ fi
 %files plugin-docman
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/docman
-%{APP_DIR}/src/www/assets/docman
 %attr(00700,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/docman
 
 %files plugin-api-explorer
@@ -1406,7 +1404,6 @@ fi
 %files plugin-document
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/document
-%{APP_DIR}/src/www/assets/document
 
 %files plugin-dynamic-credentials
 %defattr(-,root,root,-)
