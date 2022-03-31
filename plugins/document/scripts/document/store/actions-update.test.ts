@@ -17,12 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createNewFileVersion } from "./actions-update";
+import {
+    createNewEmbeddedFileVersionFromModal,
+    createNewFileVersion,
+    createNewFileVersionFromModal,
+    createNewLinkVersionFromModal,
+    createNewWikiVersionFromModal,
+} from "./actions-update";
 import * as rest_querier from "../api/rest-querier";
 import * as upload_file from "./actions-helpers/upload-file";
 import type { ActionContext } from "vuex";
-import type { Folder, ItemFile, RootState } from "../type";
+import type { Embedded, Folder, ItemFile, Link, RootState, Wiki } from "../type";
 import type { ConfigurationState } from "./configuration";
+import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 describe("actions-update", () => {
     let context: ActionContext<RootState, RootState>;
@@ -85,6 +92,228 @@ describe("actions-update", () => {
                 dropped_file,
                 NO_LOCK,
                 null
+            );
+        });
+    });
+
+    describe("createNewFileVersionFromModal", () => {
+        let createNewVersion: jest.SpyInstance, uploadVersion: jest.SpyInstance;
+
+        beforeEach(() => {
+            createNewVersion = jest.spyOn(rest_querier, "createNewVersion");
+            uploadVersion = jest.spyOn(upload_file, "uploadVersion");
+        });
+
+        it("uploads a new version of a file", async () => {
+            const item = { id: 45 } as ItemFile;
+            context.state.folder_content = [{ id: 45 } as ItemFile];
+            const updated_file = { name: "filename.txt", size: 123, type: "text/plain" } as File;
+
+            const new_version = { upload_href: "/uploads/docman/version/42" };
+            createNewVersion.mockReturnValue(Promise.resolve(new_version));
+
+            const uploader = {};
+            uploadVersion.mockReturnValue(uploader);
+
+            await createNewFileVersionFromModal(context, [
+                item,
+                updated_file,
+                "My new version",
+                "Changed the version because...",
+                true,
+                null,
+            ]);
+
+            expect(createNewVersion).toHaveBeenCalled();
+            expect(uploadVersion).toHaveBeenCalled();
+        });
+
+        it("handles error when there is a problem with the version creation", async () => {
+            const item = { id: 45 } as ItemFile;
+            context.state.folder_content = [{ id: 45 } as ItemFile];
+            const update_fail = {} as File;
+
+            createNewVersion.mockImplementation(() => {
+                throw new Error("An error occurred");
+            });
+
+            await createNewFileVersionFromModal(context, [
+                item,
+                update_fail,
+                "My new version",
+                "Changed the version because...",
+                false,
+                null,
+            ]);
+            expect(createNewVersion).toHaveBeenCalled();
+            expect(context.dispatch).toHaveBeenCalledWith(
+                "error/handleErrorsForModal",
+                expect.anything()
+            );
+            expect(uploadVersion).not.toHaveBeenCalled();
+        });
+
+        it("handles error when there is an error 400 with the version creation", async () => {
+            const item = { id: 45 } as ItemFile;
+            context.state.folder_content = [{ id: 45 } as ItemFile];
+            const update_fail = {} as File;
+
+            mockFetchError(createNewVersion, {
+                status: 400,
+            });
+
+            await createNewFileVersionFromModal(context, [
+                item,
+                update_fail,
+                "My new version",
+                "Changed the version because...",
+                false,
+                null,
+            ]);
+
+            expect(createNewVersion).toHaveBeenCalled();
+            expect(context.dispatch).toHaveBeenCalledWith(
+                "error/handleErrorsForModal",
+                expect.anything()
+            );
+            expect(uploadVersion).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("createNewEmbeddedFileVersionFromModal", () => {
+        let postEmbeddedFile: jest.SpyInstance;
+
+        beforeEach(() => {
+            postEmbeddedFile = jest.spyOn(rest_querier, "postEmbeddedFile");
+        });
+
+        it("updates an embedded file", async () => {
+            const item = { id: 45 } as Embedded;
+            context.state.folder_content = [{ id: 45 } as Embedded];
+
+            await createNewEmbeddedFileVersionFromModal(context, [
+                item,
+                "<h1>Hello world!</h1>",
+                "My new version",
+                "Changed the version because...",
+                true,
+                null,
+            ]);
+
+            expect(postEmbeddedFile).toHaveBeenCalled();
+        });
+        it("handles error when there is a problem with the update", async () => {
+            const item = { id: 45 } as Embedded;
+            context.state.folder_content = [{ id: 45 } as Embedded];
+
+            postEmbeddedFile.mockImplementation(() => {
+                throw new Error("nope");
+            });
+
+            await createNewEmbeddedFileVersionFromModal(context, [
+                item,
+                "<h1>Hello world!</h1>",
+                "My new version",
+                "Changed the version because...",
+                true,
+                null,
+            ]);
+            expect(postEmbeddedFile).toHaveBeenCalled();
+            expect(context.dispatch).toHaveBeenCalledWith(
+                "error/handleErrorsForModal",
+                expect.anything()
+            );
+        });
+    });
+
+    describe("createNewWikiVersionFromModal", () => {
+        let postWiki: jest.SpyInstance;
+
+        beforeEach(() => {
+            postWiki = jest.spyOn(rest_querier, "postWiki");
+        });
+
+        it("updates a wiki page name", async () => {
+            const item = { id: 45 } as Wiki;
+            context.state.folder_content = [{ id: 45 } as Wiki];
+
+            await createNewWikiVersionFromModal(context, [
+                item,
+                "kinky wiki",
+                "NSFW",
+                "Changed title to NSFW",
+                true,
+            ]);
+
+            expect(postWiki).toHaveBeenCalled();
+        });
+        it("throws an error when there is a problem with the update", async () => {
+            const item = { id: 45 } as Wiki;
+            context.state.folder_content = [{ id: 45 } as Wiki];
+
+            postWiki.mockImplementation(() => {
+                throw new Error("nope");
+            });
+
+            await createNewWikiVersionFromModal(context, [
+                item,
+                "kinky wiki",
+                "NSFW",
+                "Changed title to NSFW",
+                true,
+            ]);
+
+            expect(postWiki).toHaveBeenCalled();
+            expect(context.dispatch).toHaveBeenCalledWith(
+                "error/handleErrorsForModal",
+                expect.anything()
+            );
+        });
+    });
+
+    describe("createNewLinkVersionFromModal", () => {
+        let postLinkVersion: jest.SpyInstance;
+
+        beforeEach(() => {
+            postLinkVersion = jest.spyOn(rest_querier, "postLinkVersion");
+        });
+
+        it("updates a link url", async () => {
+            const item = { id: 45 } as Link;
+            context.state.folder_content = [{ id: 45 } as Link];
+
+            await createNewLinkVersionFromModal(context, [
+                item,
+                "https://moogle.fr",
+                "My new version",
+                "Changed the version because...",
+                true,
+                null,
+            ]);
+
+            expect(postLinkVersion).toHaveBeenCalled();
+        });
+        it("throws an error when there is a problem with the update", async () => {
+            const item = { id: 45 } as Link;
+            context.state.folder_content = [{ id: 45 } as Link];
+
+            postLinkVersion.mockImplementation(() => {
+                throw new Error("nope");
+            });
+
+            await createNewLinkVersionFromModal(context, [
+                item,
+                "https://moogle.fr",
+                "My new version",
+                "Changed the version because...",
+                true,
+                null,
+            ]);
+
+            expect(postLinkVersion).toHaveBeenCalled();
+            expect(context.dispatch).toHaveBeenCalledWith(
+                "error/handleErrorsForModal",
+                expect.anything()
             );
         });
     });
