@@ -25,7 +25,6 @@ import {
     cancelFolderUpload,
     cancelVersionUpload,
     createNewEmbeddedFileVersionFromModal,
-    createNewFileVersion,
     createNewFileVersionFromModal,
     createNewLinkVersionFromModal,
     createNewVersionFromEmpty,
@@ -76,6 +75,8 @@ describe("Store actions", () => {
                 progress: 0,
                 uploader,
                 upload_error: null,
+                is_uploading_in_collapsed_folder: false,
+                is_uploading_new_version: false,
             };
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
@@ -106,6 +107,8 @@ describe("Store actions", () => {
                 progress: 0,
                 uploader,
                 upload_error: null,
+                is_uploading_in_collapsed_folder: false,
+                is_uploading_new_version: false,
             };
             expect(uploadFile).toHaveBeenCalledWith(
                 context,
@@ -201,55 +204,6 @@ describe("Store actions", () => {
             await cancelVersionUpload(context, item);
             expect(item.uploader.abort).toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith("removeVersionUploadProgress", item);
-        });
-    });
-    describe("createNewFileVersion", () => {
-        let createNewVersion, uploadVersion;
-
-        beforeEach(() => {
-            createNewVersion = jest.spyOn(rest_querier, "createNewVersion");
-            uploadVersion = jest.spyOn(upload_file, "uploadVersion");
-        });
-
-        it("does not trigger any upload if the file is empty", async () => {
-            const dropped_file = { name: "filename.txt", size: 0, type: "text/plain" };
-            const item = {};
-
-            createNewVersion.mockReturnValue(Promise.resolve());
-
-            await createNewFileVersion(context, [item, dropped_file]);
-
-            expect(uploadVersion).not.toHaveBeenCalled();
-        });
-
-        it("uploads a new version of the file and releases the edition lock", async () => {
-            const item = {
-                id: 45,
-                lock_info: null,
-                title: "Electronic document management for dummies.pdf",
-            };
-            const NO_LOCK = false;
-
-            context.state.folder_content = [{ id: 45 }];
-            const dropped_file = { name: "filename.txt", size: 123, type: "text/plain" };
-
-            const new_version = { upload_href: "/uploads/docman/version/42" };
-            createNewVersion.mockReturnValue(Promise.resolve(new_version));
-
-            const uploader = {};
-            uploadVersion.mockReturnValue(uploader);
-
-            await createNewFileVersion(context, [item, dropped_file]);
-
-            expect(uploadVersion).toHaveBeenCalled();
-            expect(createNewVersion).toHaveBeenCalledWith(
-                item,
-                "Electronic document management for dummies.pdf",
-                "",
-                dropped_file,
-                NO_LOCK,
-                undefined
-            );
         });
     });
     describe("createNewFileVersionFromModal", () => {

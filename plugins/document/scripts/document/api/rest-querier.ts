@@ -28,7 +28,6 @@ import type {
     ItemFile,
     Link,
     Wiki,
-    ItemFileUploader,
     UserGroup,
     SearchResult,
     AdvancedSearchParams,
@@ -36,6 +35,7 @@ import type {
     CreatedItemFileProperties,
     FolderProperty,
     Property,
+    Uploadable,
 } from "../type";
 import { SEARCH_LIMIT } from "../type";
 import { getRestBodyFromSearchParams } from "../helpers/get-rest-body-from-search-params";
@@ -233,7 +233,7 @@ async function createNewVersion(
     item: ItemFile,
     version_title: string,
     change_log: string,
-    dropped_file: ItemFile,
+    dropped_file: File,
     should_lock_file: boolean,
     approval_table_action: ApprovalTable | null
 ): Promise<CreatedItemFileProperties> {
@@ -355,7 +355,11 @@ function postLinkVersion(
     });
 }
 
-function cancelUpload(item: ItemFileUploader): Promise<Response> {
+function cancelUpload(item: Uploadable): Promise<Response | void> {
+    if (!item.uploader || !item.uploader.url) {
+        return Promise.resolve();
+    }
+
     return del(item.uploader.url, {
         headers: {
             "Tus-Resumable": "1.0.0",

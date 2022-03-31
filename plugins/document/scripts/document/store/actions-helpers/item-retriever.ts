@@ -18,12 +18,12 @@
  *
  */
 
-import type { FakeItem, Folder, Item } from "../../type";
+import type { FakeItem, Folder, Item, ItemFile } from "../../type";
 import { isFolder } from "../../helpers/type-check-helper";
 
 export function getParentFolder(
     folder_content: Array<Item | FakeItem>,
-    fake_item: FakeItem,
+    fake_item: ItemFile | FakeItem,
     current_folder: Folder
 ): Folder {
     const found_parent_folder = folder_content.find((item) => item.id === fake_item.parent_id);

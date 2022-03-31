@@ -70,6 +70,8 @@ export async function createNewFile(
         is_uploading: true,
         progress: 0,
         upload_error: null,
+        is_uploading_in_collapsed_folder: false,
+        is_uploading_new_version: false,
     };
 
     fake_item.uploader = uploadFile(context, dropped_file, fake_item, new_file, parent);

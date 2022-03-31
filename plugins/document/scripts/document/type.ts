@@ -171,14 +171,18 @@ export interface DefaultFileItem {
     file_properties: DefaultFileProperties;
 }
 
-export interface FakeItem extends MinimalItem {
-    last_update_date?: Date;
+export interface Uploadable {
     progress: number | null;
     upload_error: string | null;
-    is_uploading?: boolean;
+    is_uploading: boolean;
     uploader?: Upload;
+    is_uploading_new_version: boolean;
+    is_uploading_in_collapsed_folder: boolean;
+}
+
+export interface FakeItem extends MinimalItem, Uploadable {
+    last_update_date?: Date;
     file_type?: string;
-    is_uploading_new_version?: boolean;
 }
 
 export interface Folder extends Item {
@@ -196,25 +200,13 @@ export interface ApprovableDocument extends Item {
     approval_table: ApprovalTable | null;
 }
 
-export interface ItemFile extends Item, ApprovableDocument {
+export interface ItemFile extends Item, ApprovableDocument, Uploadable {
     parent_id: number;
     file_properties: FileProperties | null;
     type: "file";
-    is_uploading_in_collapsed_folder: boolean;
-    is_uploading: boolean;
-    is_uploading_new_version: boolean;
     name?: string;
     size?: number;
-    uploader?: FileUploader;
     status: string;
-}
-
-export interface ItemFileUploader extends ItemFile {
-    uploader: FileUploader;
-}
-
-export interface FileUploader {
-    url: string;
 }
 
 export interface Link extends Item, ApprovableDocument {
