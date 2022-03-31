@@ -36,17 +36,13 @@
     </div>
 </template>
 
-<script lang="ts">
-import Component from "vue-class-component";
-import Vue from "vue";
-import { Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import SearchInformationPopover from "./SearchInformationPopover.vue";
 
-@Component({
-    components: { SearchInformationPopover },
-})
-export default class CriterionGlobalText extends Vue {
-    @Prop({ required: true })
-    readonly value!: string;
-}
+defineProps<{ value: string }>();
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>

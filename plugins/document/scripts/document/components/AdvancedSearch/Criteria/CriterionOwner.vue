@@ -53,49 +53,47 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import type { Popover } from "tlp";
 import { createPopover } from "tlp";
-import Component from "vue-class-component";
-import Vue from "vue";
-import { Prop } from "vue-property-decorator";
 import type { SearchCriterionOwner } from "../../../type";
+import { computed, onBeforeUnmount, onMounted, ref } from "@vue/composition-api";
 
-@Component
-export default class CriterionOwner extends Vue {
-    @Prop({ required: true })
-    readonly criterion!: SearchCriterionOwner;
+const props = defineProps<{ criterion: SearchCriterionOwner; value: string }>();
 
-    @Prop({ required: true })
-    readonly value!: string;
+const popover = ref<Popover | undefined>();
+const popover_icon = ref<InstanceType<typeof HTMLElement>>();
+const popover_content = ref<InstanceType<typeof HTMLElement>>();
 
-    private popover: Popover | undefined;
-
-    mounted(): void {
-        const trigger = this.$refs.popover_icon;
-        if (!(trigger instanceof HTMLElement)) {
-            return;
-        }
-
-        const content = this.$refs.popover_content;
-        if (!(content instanceof HTMLElement)) {
-            return;
-        }
-
-        this.popover = createPopover(trigger, content, {
-            anchor: trigger,
-            placement: "bottom-start",
-        });
+onMounted((): void => {
+    const trigger = popover_icon.value;
+    if (!(trigger instanceof HTMLElement)) {
+        return;
     }
 
-    beforeDestroy(): void {
-        if (this.popover) {
-            this.popover.destroy();
-        }
+    const content = popover_content.value;
+    if (!(content instanceof HTMLElement)) {
+        return;
     }
 
-    get id(): string {
-        return "document-criterion-owner-" + this.criterion.name;
+    popover.value = createPopover(trigger, content, {
+        anchor: trigger,
+        placement: "bottom-start",
+    });
+});
+
+onBeforeUnmount((): void => {
+    if (popover.value) {
+        popover.value.destroy();
     }
-}
+});
+
+const id = computed((): string => {
+    return "document-criterion-owner-" + props.criterion.name;
+});
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>

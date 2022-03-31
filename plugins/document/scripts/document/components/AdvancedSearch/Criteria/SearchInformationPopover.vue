@@ -45,53 +45,60 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import type { Popover } from "tlp";
 import { createPopover } from "tlp";
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { computed, onBeforeUnmount, onMounted, ref } from "@vue/composition-api";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component
-export default class SearchInformationPopover extends Vue {
-    private popover: Popover | undefined;
+const { $gettext } = useGettext();
 
-    mounted(): void {
-        const trigger = this.$refs.popover_icon;
-        if (!(trigger instanceof HTMLElement)) {
-            return;
-        }
+const popover = ref<Popover | undefined>();
 
-        const content = this.$refs.popover_content;
-        if (!(content instanceof HTMLElement)) {
-            return;
-        }
+const popover_icon = ref<InstanceType<typeof HTMLElement>>();
+const popover_content = ref<InstanceType<typeof HTMLElement>>();
 
-        this.popover = createPopover(trigger, content, {
-            anchor: trigger,
-            placement: "bottom-start",
-        });
+onMounted((): void => {
+    const trigger = popover_icon.value;
+    if (!(trigger instanceof HTMLElement)) {
+        return;
     }
 
-    beforeDestroy(): void {
-        if (this.popover) {
-            this.popover.destroy();
-        }
+    const content = popover_content.value;
+    if (!(content instanceof HTMLElement)) {
+        return;
     }
 
-    get exact_message_pattern(): string {
-        return this.$gettext('lorem => exactly "lorem"');
-    }
+    popover.value = createPopover(trigger, content, {
+        anchor: trigger,
+        placement: "bottom-start",
+    });
+});
 
-    get starting_message_pattern(): string {
-        return this.$gettext('lorem* => starting by "lorem"');
+onBeforeUnmount((): void => {
+    if (popover.value) {
+        popover.value.destroy();
     }
+});
 
-    get finishing_message_pattern(): string {
-        return this.$gettext('*lorem => finishing by "lorem"');
-    }
+const exact_message_pattern = computed((): string => {
+    return $gettext('lorem => exactly "lorem"');
+});
 
-    get containing_message_pattern(): string {
-        return this.$gettext('lorem => exactly "lorem"');
-    }
-}
+const starting_message_pattern = computed((): string => {
+    return $gettext('lorem* => starting by "lorem"');
+});
+
+const finishing_message_pattern = computed((): string => {
+    return $gettext('*lorem => finishing by "lorem"');
+});
+
+const containing_message_pattern = computed((): string => {
+    return $gettext('lorem => exactly "lorem"');
+});
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>

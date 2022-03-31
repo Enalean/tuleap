@@ -19,10 +19,12 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CriterionText from "./CriterionText.vue";
+import localVue from "../../../helpers/local-vue";
 
 describe("CriterionText", () => {
     it("should render the component", async () => {
         const wrapper = shallowMount(CriterionText, {
+            localVue,
             propsData: {
                 criterion: {
                     name: "title",
@@ -39,6 +41,7 @@ describe("CriterionText", () => {
 
     it("should warn parent component when user is changing text", () => {
         const wrapper = shallowMount(CriterionText, {
+            localVue,
             propsData: {
                 criterion: {
                     name: "title",

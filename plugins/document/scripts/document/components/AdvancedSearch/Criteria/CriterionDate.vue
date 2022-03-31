@@ -40,48 +40,47 @@
     </div>
 </template>
 
-<script lang="ts">
-import Component from "vue-class-component";
-import Vue from "vue";
-import { Prop, Watch } from "vue-property-decorator";
+<script setup lang="ts">
 import type { AllowedSearchDateOperator, SearchCriterionDate, SearchDate } from "../../../type";
 import DateFlatPicker from "../../Folder/DropDown/PropertiesForCreateOrUpdate/DateFlatPicker.vue";
+import { computed, ref, watch } from "@vue/composition-api";
 
-@Component({
-    components: { DateFlatPicker },
-})
-export default class CriterionDate extends Vue {
-    @Prop({ required: true })
-    readonly criterion!: SearchCriterionDate;
+const props = defineProps<{ criterion: SearchCriterionDate; value: SearchDate | null }>();
 
-    @Prop({ required: true })
-    readonly value!: SearchDate | null;
+const emit = defineEmits<{ (e: "input", value: SearchDate): void }>();
 
-    private date = "";
-    private operator: AllowedSearchDateOperator = ">";
+const date = ref("");
+const operator = ref<AllowedSearchDateOperator>(">");
 
-    @Watch("value", { immediate: true })
-    initializeValue(value: SearchDate | null): void {
-        this.date = value?.date ?? "";
-        this.operator = value?.operator ?? ">";
-    }
+watch(
+    () => props.value,
+    (value: SearchDate | null): void => {
+        date.value = value?.date ?? "";
+        operator.value = value?.operator ?? ">";
+    },
+    { immediate: true }
+);
 
-    get id(): string {
-        return "document-criterion-date-" + this.criterion.name;
-    }
+const id = computed((): string => {
+    return "document-criterion-date-" + props.criterion.name;
+});
 
-    onChangeOperator(new_operator: AllowedSearchDateOperator): void {
-        this.onChange(new_operator, this.date);
-    }
-
-    onChangeDate(new_date: string): void {
-        this.onChange(this.operator, new_date);
-    }
-
-    onChange(operator: AllowedSearchDateOperator, date: string): void {
-        const new_value: SearchDate = { operator, date };
-
-        this.$emit("input", new_value);
-    }
+function onChangeOperator(new_operator: AllowedSearchDateOperator): void {
+    onChange(new_operator, date.value);
 }
+
+function onChangeDate(new_date: string): void {
+    onChange(operator.value, new_date);
+}
+
+function onChange(operator: AllowedSearchDateOperator, date: string): void {
+    const new_value: SearchDate = { operator, date };
+
+    emit("input", new_value);
+}
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>

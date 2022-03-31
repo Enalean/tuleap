@@ -36,26 +36,22 @@
     </div>
 </template>
 
-<script lang="ts">
-import Component from "vue-class-component";
-import Vue from "vue";
-import { Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import type { SearchCriterionList, SearchListOption } from "../../../type";
+import { computed } from "@vue/composition-api";
 
-@Component
-export default class CriterionList extends Vue {
-    @Prop({ required: true })
-    readonly criterion!: SearchCriterionList;
+const props = defineProps<{ criterion: SearchCriterionList; value: string }>();
 
-    @Prop({ required: true })
-    readonly value!: string;
+const id = computed((): string => {
+    return "document-criterion-list-" + props.criterion.name;
+});
 
-    get id(): string {
-        return "document-criterion-list-" + this.criterion.name;
-    }
-
-    isSelected(option: SearchListOption): boolean {
-        return option.value === this.value;
-    }
+function isSelected(option: SearchListOption): boolean {
+    return option.value === props.value;
 }
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>
