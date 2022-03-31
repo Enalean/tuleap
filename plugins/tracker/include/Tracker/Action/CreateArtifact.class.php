@@ -71,7 +71,8 @@ class Tracker_Action_CreateArtifact
     {
         $email = null;
         if ($user->isAnonymous()) {
-            $email = $request->get('email');
+            $request_email = $request->get('email');
+            $email         = ($request_email !== false) ? $request_email : null;
         }
 
         $fields_data = $request->get('artifact');

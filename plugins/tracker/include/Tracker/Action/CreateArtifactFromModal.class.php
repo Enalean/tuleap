@@ -53,7 +53,8 @@ class Tracker_Action_CreateArtifactFromModal
     {
         $email = null;
         if ($current_user->isAnonymous()) {
-            $email = $this->request->get('email');
+            $request_email = $this->request->get('email');
+            $email         = ($request_email !== false) ? $request_email : null;
         }
 
         $fields_data = $this->request->get('artifact');
