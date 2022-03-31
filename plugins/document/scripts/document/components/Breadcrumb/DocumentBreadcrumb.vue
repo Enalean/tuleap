@@ -44,7 +44,7 @@
                     <translate>Documents</translate>
                 </router-link>
                 <div class="breadcrumb-switch-menu-container">
-                    <nav class="breadcrumb-switch-menu" v-if="isAdmin()">
+                    <nav class="breadcrumb-switch-menu" v-if="user_is_admin">
                         <span class="breadcrumb-dropdown-item">
                             <a
                                 class="breadcrumb-dropdown-link"
@@ -99,84 +99,97 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import { namespace, State } from "vuex-class";
-import type { Folder, Item } from "../../type";
+<script setup lang="ts">
+import type { Item, State } from "../../type";
 import DocumentBreadcrumbElement from "./DocumentBreadcrumbElement.vue";
 import DocumentBreadcrumbDocument from "./DocumentBreadcrumbDocument.vue";
 import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
-import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
-import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
+import { useNamespacedState, useState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../store/configuration";
+import { ref } from "@vue/composition-api";
 
-const configuration = namespace("configuration");
+const {
+    current_folder_ascendant_hierarchy,
+    is_loading_ascendant_hierarchy,
+    currently_previewed_item,
+    current_folder,
+} = useState<
+    Pick<
+        State,
+        | "current_folder_ascendant_hierarchy"
+        | "is_loading_ascendant_hierarchy"
+        | "currently_previewed_item"
+        | "current_folder"
+    >
+>([
+    "current_folder_ascendant_hierarchy",
+    "is_loading_ascendant_hierarchy",
+    "currently_previewed_item",
+    "current_folder",
+]);
 
-@Component({
-    components: { DocumentBreadcrumbElement, DocumentBreadcrumbDocument, BreadcrumbPrivacy },
-})
-export default class DocumentBreadcrumb extends Vue {
-    @State
-    readonly current_folder_ascendant_hierarchy!: Array<Folder>;
+const {
+    project_url,
+    privacy,
+    project_flags,
+    project_id,
+    project_public_name,
+    user_is_admin,
+    project_icon,
+} = useNamespacedState<
+    Pick<
+        ConfigurationState,
+        | "project_url"
+        | "privacy"
+        | "project_flags"
+        | "project_id"
+        | "project_public_name"
+        | "user_is_admin"
+        | "project_icon"
+    >
+>("configuration", [
+    "project_url",
+    "privacy",
+    "project_flags",
+    "project_id",
+    "project_public_name",
+    "user_is_admin",
+    "project_icon",
+]);
 
-    @State
-    readonly is_loading_ascendant_hierarchy!: boolean;
+const max_nb_to_display = ref(5);
 
-    @State
-    readonly currently_previewed_item!: Item;
-
-    @State
-    readonly current_folder!: Folder;
-
-    @configuration.State
-    readonly project_url!: string;
-
-    @configuration.State
-    readonly privacy!: ProjectPrivacy;
-
-    @configuration.State
-    readonly project_flags!: Array<ProjectFlag>;
-
-    @configuration.State
-    readonly project_id!: number;
-
-    @configuration.State
-    readonly project_public_name!: string;
-
-    @configuration.State
-    readonly user_is_admin!: boolean;
-
-    @configuration.State
-    readonly project_icon!: string;
-
-    private max_nb_to_display = 5;
-
-    documentAdministrationUrl(): string {
-        return "/plugins/docman/?group_id=" + this.project_id + "&action=admin";
-    }
-    isAdmin(): boolean {
-        return this.user_is_admin;
-    }
-    getBreadcrumbClass(): string {
-        if (this.isAdmin()) {
-            return "breadcrumb-switchable breadcrumb-item";
-        }
-
-        return "breadcrumb-item";
-    }
-    isEllipsisDisplayed(): boolean {
-        if (this.is_loading_ascendant_hierarchy) {
-            return false;
-        }
-
-        return this.current_folder_ascendant_hierarchy.length > this.max_nb_to_display;
-    }
-    currentFolderAscendantHierarchyToDisplay(): Array<Item> {
-        return this.current_folder_ascendant_hierarchy
-            .filter((parent) => parent.parent_id !== 0)
-            .slice(-this.max_nb_to_display);
-    }
-    isCurrentDocumentDisplayed(): boolean {
-        return this.currently_previewed_item !== null && this.current_folder !== null;
-    }
+function documentAdministrationUrl(): string {
+    return "/plugins/docman/?group_id=" + encodeURIComponent(project_id.value) + "&action=admin";
 }
+
+function getBreadcrumbClass(): string {
+    if (user_is_admin.value) {
+        return "breadcrumb-switchable breadcrumb-item";
+    }
+
+    return "breadcrumb-item";
+}
+
+function isEllipsisDisplayed(): boolean {
+    if (is_loading_ascendant_hierarchy.value) {
+        return false;
+    }
+
+    return current_folder_ascendant_hierarchy.value.length > max_nb_to_display.value;
+}
+function currentFolderAscendantHierarchyToDisplay(): Array<Item> {
+    return current_folder_ascendant_hierarchy.value
+        .filter((parent) => parent.parent_id !== 0)
+        .slice(-max_nb_to_display.value);
+}
+
+function isCurrentDocumentDisplayed(): boolean {
+    return currently_previewed_item.value !== null && current_folder.value !== null;
+}
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>

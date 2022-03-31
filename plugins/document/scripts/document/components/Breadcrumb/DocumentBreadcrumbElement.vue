@@ -28,13 +28,13 @@
     </span>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Item } from "../../type";
 
-@Component
-export default class DocumentBreadcrumbElement extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
-}
+defineProps<{ item: Item }>();
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>
