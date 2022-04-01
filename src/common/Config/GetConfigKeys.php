@@ -37,6 +37,7 @@ use Tuleap\Layout\HomePage\NewsCollectionBuilder;
 use Tuleap\Layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Log\LogToGraylog2;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\ServerHostname;
 use Tuleap\System\ServiceControl;
 use Tuleap\User\SwitchToPresenterBuilder;
 use Tuleap\User\UserSuspensionManager;
@@ -47,10 +48,7 @@ final class GetConfigKeys implements Dispatchable
 {
     public const NAME = 'getConfigKeys';
 
-    /**
-     * @var class-string[]
-     */
-    private array $annotated_classes = [
+    public const CORE_CLASSES_WITH_CONFIG_KEYS = [
         ProjectManager::class,
         User_UserStatusManager::class,
         ForgeAccess::class,
@@ -71,12 +69,24 @@ final class GetConfigKeys implements Dispatchable
         DBConfig::class,
         DBAuthUserConfig::class,
         BackendSystem::class,
+        ConfigurationVariables::class,
+        ServerHostname::class,
     ];
+
+    /**
+     * @var class-string[]
+     */
+    private array $annotated_classes;
 
     /**
      * @var array<string, ConfigKeyMetadata>
      */
     private array $white_listed_keys = [];
+
+    public function __construct()
+    {
+        $this->annotated_classes = self::CORE_CLASSES_WITH_CONFIG_KEYS;
+    }
 
     /**
      * Declare a class that holds constants with Tuleap\Config\ConfigKey or Tuleap\Config\FeatureFlagConfigKey attributes

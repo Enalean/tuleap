@@ -50,50 +50,115 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::tearDown();
     }
 
-    public function testDefaultLoadSequenceGetValueFromLocalInc(): void
+    /**
+     * @dataProvider getDefaultSequenceProvider
+     */
+    public function testLoadInSequence(array $local_inc, array $database, array $environment, callable $tests): void
     {
-        putenv('TULEAP_LOCAL_INC=' . __DIR__ . '/_fixtures/sequence/local.inc');
-        $this->mockConfigDao();
+        // Prepare local.inc
+        $content = '<?php' . PHP_EOL;
+        foreach ($local_inc as $key => $value) {
+            $content .= sprintf('$%s = \'%s\';%s', $key, $value, PHP_EOL);
+        }
+        $root = vfsStream::setup()->url();
+        file_put_contents($root . '/local.inc', $content);
+        putenv('TULEAP_LOCAL_INC=' . $root . '/local.inc');
 
-        ForgeConfig::loadInSequence();
-        self::assertEquals('Matchete', ForgeConfig::get('sys_fullname'));
-    }
-
-    public function testDefaultLoadSequenceGetValueFromDatabase(): void
-    {
-        putenv('TULEAP_LOCAL_INC=' . __DIR__ . '/_fixtures/sequence/local.inc');
+        // Prepare database
         $dao = $this->createMock(ConfigDao::class);
-        $dao->method('searchAll')->willReturn(
-            [
-                [
-                    'name'  => \ProjectManager::CONFIG_PROJECT_APPROVAL,
-                    'value' => '1',
-                ],
-            ]
-        );
+        $dao->method('searchAll')->willReturn($database);
         ForgeConfig::setDatabaseConfigDao($dao);
 
+        // Prepare environment
+        foreach ($environment as $key => $value) {
+            putenv("$key=$value");
+        }
+
         ForgeConfig::loadInSequence();
-        self::assertEquals('1', ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL));
+
+        $tests();
+
+        // Clean-up environment
+        foreach ($environment as $key => $value) {
+            putenv("$key");
+        }
     }
 
-    public function testDatabaseParametersFallbackOnFiles(): void
+    public function getDefaultSequenceProvider(): iterable
     {
-        putenv('TULEAP_LOCAL_INC=' . __DIR__ . '/_fixtures/sequence/local.inc');
-        $this->mockConfigDao();
-
-        ForgeConfig::loadInSequence();
-        self::assertEquals('foo', ForgeConfig::get('sys_dbhost'));
-    }
-
-    public function testEnvironmentTakesPrecedenceForDatabaseParameters(): void
-    {
-        putenv('TULEAP_LOCAL_INC=' . __DIR__ . '/_fixtures/sequence/local.inc');
-        putenv('TULEAP_SYS_DBHOST=db.example.com');
-        $this->mockConfigDao();
-
-        ForgeConfig::loadInSequence();
-        self::assertEquals('db.example.com', ForgeConfig::get('sys_dbhost'));
+        return [
+            'The value comes from attributes' => [
+                'local_inc' => [],
+                'database' => [],
+                'environment' => [],
+                'tests' => function () {
+                    self::assertEquals('Tuleap', ForgeConfig::get(ConfigurationVariables::ORG_NAME));
+                },
+            ],
+            'The default value is in attributes and override in local.inc' => [
+                'local_inc' => [
+                    ConfigurationVariables::ORG_NAME => 'Acme Gmbh',
+                ],
+                'database' => [],
+                'environment' => [],
+                'tests' => function () {
+                    self::assertEquals('Acme Gmbh', ForgeConfig::get(ConfigurationVariables::ORG_NAME));
+                },
+            ],
+            'Default value is in local.inc.dist' => [
+                'local_inc' => [],
+                'database' => [],
+                'environment' => [],
+                'tests' => function () {
+                    self::assertEquals('%sys_fullname%', ForgeConfig::get('sys_fullname'));
+                },
+            ],
+            'Value is set in local.inc' => [
+                'local_inc' => [
+                    'sys_fullname' => 'Matchete',
+                ],
+                'database' => [],
+                'environment' => [],
+                'tests' => function () {
+                    self::assertEquals('Matchete', ForgeConfig::get('sys_fullname'));
+                },
+            ],
+            'Value is set in database' => [
+                'local_inc' => [],
+                'database' => [
+                    [
+                        'name'  => \ProjectManager::CONFIG_PROJECT_APPROVAL,
+                        'value' => '1',
+                    ],
+                ],
+                'environment' => [],
+                'tests' => function () {
+                    self::assertSame('1', ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL));
+                },
+            ],
+            'Database value comes from database.inc' => [
+                'local_inc' => [
+                  'db_config_file' =>  __DIR__ . '/_fixtures/sequence/database.inc',
+                ],
+                'database' => [],
+                'environment' => [],
+                'tests' => function () {
+                    self::assertEquals('foo', ForgeConfig::get('sys_dbhost'));
+                },
+            ],
+            'Environment takes precedence on database.inc' => [
+                'local_inc' => [
+                    'db_config_file' =>  __DIR__ . '/_fixtures/sequence/database.inc',
+                ],
+                'database' => [],
+                'environment' => [
+                    'TULEAP_SYS_DBHOST' => 'db.example.com',
+                ],
+                'tests' =>  function () {
+                    self::assertEquals('db.example.com', ForgeConfig::get('sys_dbhost'));
+                },
+            ],
+        ];
     }
 
     public function testUsage(): void
@@ -340,12 +405,5 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('tuleap', ForgeConfig::get(DBConfig::CONF_DBNAME));
         self::assertSame(3306, ForgeConfig::get(DBConfig::CONF_PORT));
         self::assertSame('0', ForgeConfig::get(DBConfig::CONF_ENABLE_SSL));
-    }
-
-    private function mockConfigDao(): void
-    {
-        $dao = $this->createMock(ConfigDao::class);
-        $dao->method('searchAll')->willReturn([]);
-        ForgeConfig::setDatabaseConfigDao($dao);
     }
 }
