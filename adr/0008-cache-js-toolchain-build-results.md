@@ -1,8 +1,8 @@
 # Caching of the build results of the JS toolchain
 
-* Status: ongoing experimentation, might be reverted or a completely different approach might be used in the end
-* Deciders/Lead experimenter: Thomas Gerbet
-* Date: 2021-12-31
+* Status: accepted
+* Deciders: Thomas Gerbet
+* Date: 2022-04-01 (experimentation started on 2021-12-31)
 
 Technical Story: [request #24241](https://tuleap.net/plugins/tracker/?aid=24241)
 
@@ -24,7 +24,9 @@ experience.
 
 ## Decision Outcome
 
-No decision at this point. Currently experimenting with Turborepo.
+After some testing and refactoring of the code base, Turborepo appears to be a good solution for a first
+introduction to this space. It is easy to apprehend and do not force us to learn from scratch something more complex.
+If necessary it will still be possible to evolve to something else as Turborepo does not hook into the build tools.
 
 ## Pros and Cons of the Options
 

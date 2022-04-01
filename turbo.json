@@ -1,6 +1,6 @@
 {
+  "$schema": "https://turborepo.org/schema.json",
   "baseBranch": "origin/master",
-  "npmClient": "pnpm",
   "globalDependencies": [
     "tsconfig.json",
     "tools/utils/scripts/**",
@@ -18,8 +18,7 @@
         "typecheck",
         "^build"
       ],
-      "outputs": [],
-      "cache": false
+      "outputs": ["dist/**", "frontend-assets/**", "backend-assets/**"]
     },
     "test": {
       "outputs": []
