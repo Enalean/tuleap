@@ -19,6 +19,11 @@
  */
 
 describe("Time tracking", function () {
+    let now: number;
+    beforeEach(function () {
+        now = Date.now();
+    });
+
     it("Project administrator must be able to configure timetracking", function () {
         cy.projectAdministratorLogin();
 
@@ -29,8 +34,12 @@ describe("Time tracking", function () {
         cy.get("[data-test=timetracking]").click();
 
         // enable time tracking
-        cy.get("[data-test=enable-timetracking]").click();
-        cy.get("[data-test=timetracking-save-configuration]").click();
+        cy.get("[data-test=timetracking-admin-form]").then(($timetracking) => {
+            if ($timetracking.find("[data-test=timetracking-readers]").length === 0) {
+                cy.get("[data-test=enable-timetracking]").click();
+                cy.get("[data-test=timetracking-save-configuration]").click();
+            }
+        });
 
         // give permissions
         cy.get("[data-test=timetracking-writers]").select("Project members");
@@ -91,6 +100,12 @@ describe("Time tracking", function () {
         cy.projectMemberLogin();
 
         cy.visit("/my");
+        cy.get("[data-test=dashboard-add-button]").click();
+        cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
+        cy.get("[data-test=dashboard-add-button-submit]").click();
+
+        cy.get("[data-test=dashboard-configuration-button]").click();
+
         cy.get("[data-test=dashboard-add-widget-button]").click({ force: true });
         cy.get("[data-test=timetracking]").click();
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
@@ -108,15 +123,15 @@ describe("Time tracking", function () {
         //can be invisible due to flat picker who isn't closed by type command
         cy.get("[data-test=timetracking-search-for-dates]").click({ force: true });
 
-        cy.get("[data-test=timetracking-details]").click();
+        cy.get("[data-test=timetracking-details]").first().click();
 
         cy.get("[data-test=timetracking-edit-time]").first().click();
         cy.get("[data-test=timetracking-time]").clear().type("04:00");
         cy.get("[data-test=timetracking-submit-time]").click();
 
-        cy.get("[data-test=button-set-add-mode]").click();
-        cy.get("[data-test=timetracking-time]").clear().type("04:00");
-        cy.get("[data-test=timetracking-submit-time]").click();
+        cy.get("[data-test=button-set-add-mode]").first().click();
+        cy.get("[data-test=timetracking-time]").first().clear().type("04:00");
+        cy.get("[data-test=timetracking-submit-time]").first().click();
 
         cy.get("[data-test=timetracking-delete-time]").first().click();
         // even if the modal is open, the button might be invisible
@@ -126,6 +141,12 @@ describe("Time tracking", function () {
     it("manager should be able to track time of his subordinates", function () {
         cy.projectAdministratorLogin();
         cy.visit("/my");
+
+        cy.get("[data-test=dashboard-add-button]").click();
+        cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
+        cy.get("[data-test=dashboard-add-button-submit]").click();
+
+        cy.get("[data-test=dashboard-configuration-button]").click();
 
         cy.get("[data-test=dashboard-add-widget-button]").click({ force: true });
         cy.get("[data-test=timetracking-overview]").click();
