@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProjectOwnership\ProjectOwner;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
 use ProjectUGroup;
@@ -31,40 +29,40 @@ use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdmini
 
 final class XMLProjectImportUserCreatorProjectOwnerCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testFirstProjectAdministratorFoundNotBeingTheCreatorIsSetAsProjectOwner(): void
     {
-        $updater = Mockery::mock(ProjectOwnerUpdater::class);
+        $updater = $this->createMock(ProjectOwnerUpdater::class);
         $cleaner = new XMLProjectImportUserCreatorProjectOwnerCleaner($updater);
 
-        $creator = Mockery::mock(PFUser::class);
-        $creator->shouldReceive('getId')->andReturn(101);
-        $other_admin_1 = Mockery::mock(PFUser::class);
-        $other_admin_1->shouldReceive('getId')->andReturn(102);
-        $other_admin_2 = Mockery::mock(PFUser::class);
+        $creator = $this->createMock(PFUser::class);
+        $creator->method('getId')->willReturn(101);
+        $other_admin_1 = $this->createMock(PFUser::class);
+        $other_admin_1->method('getId')->willReturn(102);
+        $other_admin_2 = $this->createMock(PFUser::class);
 
         $ugroup  = $this->createUGroupAdmin();
-        $project = Mockery::mock(Project::class);
-        $ugroup->shouldReceive('getProject')->andReturn($project);
-        $ugroup->shouldReceive('getMembers')->andReturn([$creator, $other_admin_1, $other_admin_2]);
+        $project = $this->createMock(Project::class);
+        $ugroup->method('getProject')->willReturn($project);
+        $ugroup->method('getMembers')->willReturn([$creator, $other_admin_1, $other_admin_2]);
 
-        $updater->shouldReceive('updateProjectOwner')->with($project, $other_admin_1);
+        $updater->method('updateProjectOwner')->with($project, $other_admin_1);
 
         $cleaner->updateProjectOwnership($this->createEvent($creator, $ugroup));
+
+        self::expectNotToPerformAssertions();
     }
 
     public function testNothingIsDoneWhenTheUGroupIsCorruptedAndCannotFindTheProjec(): void
     {
-        $updater = Mockery::mock(ProjectOwnerUpdater::class);
+        $updater = $this->createMock(ProjectOwnerUpdater::class);
         $cleaner = new XMLProjectImportUserCreatorProjectOwnerCleaner($updater);
 
-        $creator = Mockery::mock(PFUser::class);
+        $creator = $this->createMock(PFUser::class);
 
         $ugroup = $this->createUGroupAdmin();
-        $ugroup->shouldReceive('getProject')->andReturn(null);
+        $ugroup->method('getProject')->willReturn(null);
 
-        $updater->shouldNotReceive('updateProjectOwner');
+        $updater->expects(self::never())->method('updateProjectOwner');
 
         $cleaner->updateProjectOwnership($this->createEvent($creator, $ugroup));
     }
@@ -76,12 +74,12 @@ final class XMLProjectImportUserCreatorProjectOwnerCleanerTest extends \Tuleap\T
     }
 
     /**
-     * @return ProjectUGroup|Mockery\MockInterface
+     * @return \PHPUnit\Framework\MockObject\MockObject&ProjectUGroup
      */
     private function createUGroupAdmin(): ProjectUGroup
     {
-        $ugroup = Mockery::mock(ProjectUGroup::class);
-        $ugroup->shouldReceive('getId')->andReturn(ProjectUGroup::PROJECT_ADMIN);
+        $ugroup = $this->createMock(ProjectUGroup::class);
+        $ugroup->method('getId')->willReturn(ProjectUGroup::PROJECT_ADMIN);
 
         return $ugroup;
     }

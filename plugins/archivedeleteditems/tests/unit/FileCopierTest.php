@@ -20,16 +20,14 @@
 
 namespace Tuleap\ArchiveDeletedItems;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 require_once __DIR__ . '/bootstrap.php';
 
 class FileCopierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var LoggerInterface
      */
@@ -38,18 +36,18 @@ class FileCopierTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \org\bovigo\vfs\vfsStreamDirectory
      */
     private $file_system;
-    private $source_file;
-    private $destination_file;
+    private string $source_file;
+    private string $destination_file;
 
     protected function setUp(): void
     {
-        $this->logger           = \Mockery::spy(LoggerInterface::class);
+        $this->logger           = new NullLogger();
         $this->file_system      = vfsStream::setup();
         $this->source_file      = $this->file_system->url() . '/source_file';
         $this->destination_file = $this->file_system->url() . '/destination_file';
     }
 
-    public function testItDoesNotCopyIfSourceDoesNotExist()
+    public function testItDoesNotCopyIfSourceDoesNotExist(): void
     {
         $file_copier        = new FileCopier($this->logger);
         $is_copy_successful = $file_copier->copy(
@@ -57,27 +55,27 @@ class FileCopierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->destination_file,
             false
         );
-        $this->assertFalse($is_copy_successful);
+        self::assertFalse($is_copy_successful);
     }
 
-    public function testItDoesNotCopyIfDestinationFileExist()
+    public function testItDoesNotCopyIfDestinationFileExist(): void
     {
         touch($this->source_file);
         touch($this->destination_file);
 
         $file_copier        = new FileCopier($this->logger);
         $is_copy_successful = $file_copier->copy($this->source_file, $this->destination_file, false);
-        $this->assertFalse($is_copy_successful);
+        self::assertFalse($is_copy_successful);
     }
 
-    public function testItReturnsTrueIfDestinationFileExistAndWeAreSkippingDuplicates()
+    public function testItReturnsTrueIfDestinationFileExistAndWeAreSkippingDuplicates(): void
     {
         touch($this->source_file);
         touch($this->destination_file);
 
         $file_copier        = new FileCopier($this->logger);
         $is_copy_successful = $file_copier->copy($this->source_file, $this->destination_file, true);
-        $this->assertTrue($is_copy_successful);
+        self::assertTrue($is_copy_successful);
     }
 
     public function testItCopiesAFile(): void
@@ -87,8 +85,8 @@ class FileCopierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $file_copier        = new FileCopier($this->logger);
         $is_copy_successful = $file_copier->copy($this->source_file, $this->destination_file, false);
-        $this->assertTrue($is_copy_successful);
-        $this->assertEquals($content, file_get_contents($this->source_file));
-        $this->assertEquals($content, file_get_contents($this->destination_file));
+        self::assertTrue($is_copy_successful);
+        self::assertEquals($content, file_get_contents($this->source_file));
+        self::assertEquals($content, file_get_contents($this->destination_file));
     }
 }

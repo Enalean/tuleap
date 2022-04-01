@@ -20,33 +20,26 @@
 
 namespace Tuleap\Label\Widget;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 require_once __DIR__ . '/bootstrap.php';
 
 class ProjectLabelRequestDataValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    private ProjectLabelRequestDataValidator $validator;
     /**
-     * @var \Codendi_Request
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Codendi_Request
      */
     private $request;
-    /**
-     * @var ProjectLabelRequestDataValidator
-     */
-    private $validator;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->validator = new ProjectLabelRequestDataValidator();
-        $this->request   = \Mockery::spy(\Codendi_Request::class);
+        $this->request   = $this->createMock(\Codendi_Request::class);
     }
 
-    public function testItThrowsAnExceptionWhenLabelDoesNotBelongToProject()
+    public function testItThrowsAnExceptionWhenLabelDoesNotBelongToProject(): void
     {
-        $this->request->shouldReceive('get')->with('project-labels')->andReturn([1, 2]);
+        $this->request->method('get')->with('project-labels')->willReturn([1, 2]);
         $projects_labels = [
             [
                 'id'         => '1',
@@ -63,16 +56,16 @@ class ProjectLabelRequestDataValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'color'      => 'acid-green',
             ],
         ];
-        $this->request->shouldReceive('validArray')->andReturn(true);
+        $this->request->method('validArray')->willReturn(true);
 
         $this->expectException(\Tuleap\Label\Widget\ProjectLabelDoesNotBelongToProjectException::class);
 
         $this->validator->validateDataFromRequest($this->request, $projects_labels);
     }
 
-    public function testItThrowsAnExceptionWhenLabelAreNotSent()
+    public function testItThrowsAnExceptionWhenLabelAreNotSent(): void
     {
-        $this->request->shouldReceive('get')->with('project-labels')->andReturn([]);
+        $this->request->method('get')->with('project-labels')->willReturn([]);
         $projects_labels = [];
 
         $this->expectException(\Tuleap\Label\Widget\ProjectLabelAreMandatoryException::class);
@@ -80,10 +73,10 @@ class ProjectLabelRequestDataValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->validator->validateDataFromRequest($this->request, $projects_labels);
     }
 
-    public function testItThrowsAnExceptionWhenLabelsAreInvalid()
+    public function testItThrowsAnExceptionWhenLabelsAreInvalid(): void
     {
-        $this->request->shouldReceive('get')->with('project-labels')->andReturn(['aa', 'bb']);
-        $this->request->shouldReceive('validArray')->andReturn(false);
+        $this->request->method('get')->with('project-labels')->willReturn(['aa', 'bb']);
+        $this->request->method('validArray')->willReturn(false);
 
         $projects_labels = [];
 
@@ -92,9 +85,9 @@ class ProjectLabelRequestDataValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->validator->validateDataFromRequest($this->request, $projects_labels);
     }
 
-    public function testItDoesNotThrowExceptionWhenLabelsAreValid()
+    public function testItDoesNotThrowExceptionWhenLabelsAreValid(): void
     {
-        $this->request->shouldReceive('get')->with('project-labels')->andReturn([1, 2]);
+        $this->request->method('get')->with('project-labels')->willReturn([1, 2]);
         $projects_labels = [
             [
                 'id'         => '1',
@@ -111,8 +104,10 @@ class ProjectLabelRequestDataValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'color'      => 'acid-green',
             ],
         ];
-        $this->request->shouldReceive('validArray')->andReturn(true);
+        $this->request->method('validArray')->willReturn(true);
 
         $this->validator->validateDataFromRequest($this->request, $projects_labels);
+
+        $this->expectNotToPerformAssertions();
     }
 }

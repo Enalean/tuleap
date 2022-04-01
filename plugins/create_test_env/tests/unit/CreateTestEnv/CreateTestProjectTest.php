@@ -21,12 +21,10 @@
 
 namespace Tuleap\CreateTestEnv;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GlobalLanguageMock;
 
 final class CreateTestProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     /**
@@ -37,13 +35,13 @@ final class CreateTestProjectTest extends \Tuleap\Test\PHPUnit\TestCase
         $create = new CreateTestProject(
             $username,
             '/archive/path',
-            \Mockery::mock(\Rule_ProjectName::class),
-            \Mockery::mock(\Rule_ProjectFullName::class)
+            $this->createMock(\Rule_ProjectName::class),
+            $this->createMock(\Rule_ProjectFullName::class)
         );
         $this->assertEquals($expected_result, $create->generateProjectUnixName());
     }
 
-    public function userNameProvider()
+    public function userNameProvider(): array
     {
         return [
             ['joperesr', 'test-for-joperesr' ],
@@ -60,13 +58,13 @@ final class CreateTestProjectTest extends \Tuleap\Test\PHPUnit\TestCase
         $create = new CreateTestProject(
             $username,
             '/archive/path',
-            \Mockery::mock(\Rule_ProjectName::class),
-            \Mockery::mock(\Rule_ProjectFullName::class)
+            $this->createMock(\Rule_ProjectName::class),
+            $this->createMock(\Rule_ProjectFullName::class)
         );
         $this->assertEquals($expected_result, $create->generateProjectFullName());
     }
 
-    public function fullNameProvider()
+    public function fullNameProvider(): array
     {
         return [
             ['joperesr', 'Test project for joperesr' ],
@@ -76,10 +74,10 @@ final class CreateTestProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testTemplatedValuesAreEscaped(): void
     {
-        $rule_project_name = \Mockery::mock(\Rule_ProjectName::class);
-        $rule_project_name->shouldReceive('isValid')->once()->andReturn(true);
-        $rule_project_full_name = \Mockery::mock(\Rule_ProjectFullName::class);
-        $rule_project_full_name->shouldReceive('isValid')->once()->andReturn(true);
+        $rule_project_name = $this->createMock(\Rule_ProjectName::class);
+        $rule_project_name->expects(self::once())->method('isValid')->willReturn(true);
+        $rule_project_full_name = $this->createMock(\Rule_ProjectFullName::class);
+        $rule_project_full_name->expects(self::once())->method('isValid')->willReturn(true);
         $create = new CreateTestProject('</member><foo>', __DIR__ . '/../../../resources/sample-project', $rule_project_name, $rule_project_full_name);
         $create->generateXML();
     }

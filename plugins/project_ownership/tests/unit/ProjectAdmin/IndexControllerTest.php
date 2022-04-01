@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProjectOwnership\ProjectAdmin;
 
 use HTTPRequest;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
 use Tuleap\Layout\BaseLayout;
@@ -32,22 +30,22 @@ use Tuleap\Test\Helpers\LayoutHelperPassthrough;
 
 final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var IndexController */
-    private $controller;
-    /** @var LayoutHelperPassthrough */
-    private $helper;
-    /** @var M\LegacyMockInterface|M\MockInterface|ProjectOwnerPresenterBuilder */
+    private IndexController $controller;
+    private LayoutHelperPassthrough $helper;
+    /**
+     * @var ProjectOwnerPresenterBuilder&\PHPUnit\Framework\MockObject\MockObject
+     */
     private $presenter_builder;
-    /** @var M\LegacyMockInterface|M\MockInterface|\TemplateRenderer */
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\TemplateRenderer
+     */
     private $renderer;
 
     protected function setUp(): void
     {
         $this->helper            = new LayoutHelperPassthrough();
-        $this->presenter_builder = M::mock(ProjectOwnerPresenterBuilder::class);
-        $this->renderer          = M::mock(\TemplateRenderer::class);
+        $this->presenter_builder = $this->createMock(ProjectOwnerPresenterBuilder::class);
+        $this->renderer          = $this->createMock(\TemplateRenderer::class);
         $this->controller        = new IndexController(
             $this->helper,
             $this->renderer,
@@ -57,19 +55,17 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessRenders(): void
     {
-        $project      = M::mock(Project::class)->shouldReceive('getID')
-            ->andReturn('102')
-            ->getMock();
-        $current_user = M::mock(PFUser::class);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn('102');
+
+        $current_user = $this->createMock(PFUser::class);
         $this->helper->setCallbackParams($project, $current_user);
 
-        $request = M::mock(HTTPRequest::class);
-        $layout  = M::mock(BaseLayout::class);
-        $layout->shouldReceive('addCssAsset')->once();
-        $this->presenter_builder->shouldReceive('build')
-            ->once()
-            ->with($project);
-        $this->renderer->shouldReceive('renderToPage')->once();
+        $request = $this->createMock(HTTPRequest::class);
+        $layout  = $this->createMock(BaseLayout::class);
+        $layout->expects(self::once())->method('addCssAsset');
+        $this->presenter_builder->expects(self::once())->method('build')->with($project);
+        $this->renderer->expects(self::once())->method('renderToPage');
 
         $this->controller->process($request, $layout, ['project_id' => '102']);
     }

@@ -25,7 +25,6 @@ namespace Tuleap\APIExplorer\Specification\Swagger;
 use ForgeConfig;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Luracast\Restler\Restler;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -38,15 +37,14 @@ use Tuleap\REST\Specification\Swagger\SwaggerJsonSecurityDefinitionsCollection;
 
 final class SwaggerJsonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testBuildsSwaggerSpecificationGoldenTest(): void
     {
         ForgeConfig::set('codendi_cache_dir', vfsStream::setup()->url());
 
-        $event_manager = \Mockery::mock(\EventManager::class);
-        $event_manager->shouldReceive('processEvent');
+        $event_manager = $this->createMock(\EventManager::class);
+        $event_manager->method('processEvent');
         $collection_security_definitions = new SwaggerJsonSecurityDefinitionsCollection();
         $collection_security_definitions->addSecurityDefinition(
             SwaggerJsonSecurityDefinitionsCollection::TYPE_NAME_OAUTH2,
@@ -55,9 +53,7 @@ final class SwaggerJsonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         );
 
-        $event_manager->shouldReceive('dispatch')->with(
-            \Mockery::type(SwaggerJsonSecurityDefinitionsCollection::class)
-        )->andReturn($collection_security_definitions);
+        $event_manager->method('dispatch')->willReturn($collection_security_definitions);
 
         $resources_injector = new class extends ResourcesInjector
         {
@@ -77,13 +73,13 @@ final class SwaggerJsonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $event_manager,
             \Codendi_HTMLPurifier::instance(),
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            \Mockery::mock(EmitterInterface::class)
+            $this->createMock(EmitterInterface::class)
         );
 
         $response = $controller->handle(
             (new NullServerRequest())->withUri(HTTPFactoryBuilder::URIFactory()->createUri('https://example.com:8443/api/explorer/'))
         );
 
-        $this->assertJsonStringEqualsJsonFile(__DIR__ . '/_fixtures/swagger.json', $response->getBody()->getContents());
+        self::assertJsonStringEqualsJsonFile(__DIR__ . '/_fixtures/swagger.json', $response->getBody()->getContents());
     }
 }

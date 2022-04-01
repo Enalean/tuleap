@@ -20,50 +20,46 @@
 
 namespace Tuleap\ProjectOwnership\ProjectOwner;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class ProjectOwnerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectOwnerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\MockInterface
+     * @var ProjectOwnerDAO&\PHPUnit\Framework\MockObject\MockObject
      */
     private $dao;
     /**
-     * @var \Mockery\MockInterface
+     * @var \UserManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $user_manager;
 
     protected function setUp(): void
     {
-        $this->dao          = \Mockery::mock(ProjectOwnerDAO::class);
-        $this->user_manager = \Mockery::mock(\UserManager::class);
+        $this->dao          = $this->createMock(ProjectOwnerDAO::class);
+        $this->user_manager = $this->createMock(\UserManager::class);
     }
 
-    public function testProjectOwnerCanBeRetrieved()
+    public function testProjectOwnerCanBeRetrieved(): void
     {
-        $this->dao->shouldReceive('searchByProjectID')->andReturns(['user_id' => 101, 'project_id' => 102]);
-        $expected_user = \Mockery::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getUserById')->andReturns($expected_user);
+        $this->dao->method('searchByProjectID')->willReturn(['user_id' => 101, 'project_id' => 102]);
+        $expected_user = $this->createMock(\PFUser::class);
+        $this->user_manager->method('getUserById')->willReturn($expected_user);
 
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturns(102);
+        $project = $this->createMock(\Project::class);
+        $project->method('getID')->willReturn(102);
 
         $retriever     = new ProjectOwnerRetriever($this->dao, $this->user_manager);
         $project_owner = $retriever->getProjectOwner($project);
 
-        $this->assertSame($expected_user, $project_owner);
+        self::assertSame($expected_user, $project_owner);
     }
 
-    public function testNoProjectOwner()
+    public function testNoProjectOwner(): void
     {
-        $this->dao->shouldReceive('searchByProjectID')->andReturns([]);
+        $this->dao->method('searchByProjectID')->willReturn([]);
 
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturns(102);
+        $project = $this->createMock(\Project::class);
+        $project->method('getID')->willReturn(102);
 
         $retriever = new ProjectOwnerRetriever($this->dao, $this->user_manager);
-        $this->assertNull($retriever->getProjectOwner($project));
+        self::assertNull($retriever->getProjectOwner($project));
     }
 }
